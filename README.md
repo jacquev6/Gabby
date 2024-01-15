@@ -3,6 +3,10 @@ It's part of the MALIN project.
 
 *Gabby* is still in the early days of its development.
 
+# Hosted demo
+
+The development version of *Gabby* is running at https://gabby.vincent-jacques.net/.
+
 # Run locally
 
 You only need a recent version of [Docker](https://www.docker.com/) and a not ancient version of Bash to run:
