@@ -1,0 +1,19 @@
+# https://docs.docker.com/compose/compose-file/
+
+name: gabby-dev
+
+services:
+  frontend:
+    image: node:20
+    ports:
+      - "${GABBY_DEV_PORT:-8080}:8080"
+    volumes:
+      - ../frontend:/app
+      - frontend-node-modules:/app/node_modules
+    working_dir: /app
+    environment:
+      PORT: 80
+    command: [ "bash", "-c", "npm install && exec npm run dev" ]
+
+volumes:
+  frontend-node-modules:
