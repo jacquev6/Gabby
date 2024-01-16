@@ -41,17 +41,29 @@ var directives = ref('')
       <div class="col">
         <h2>PDF</h2>
         <PdfPicker src="/test.pdf" :page="1" @text-selected="text_selected" />
-        <div v-if="showFloatingMenu" ref="floatingMenu" :style="{...floatingStyles, zIndex: 1000, padding: '5px', border: '1px solid black', background: 'white'}">
-          <p>Selection:</p>
-          <pre>{{ selectedText }}</pre>
-          <p>Add to:</p>
-          <div class="row">
-            <div class="col">
-              <p><button @click="wording += selectedText; showFloatingMenu = false">Wording</button></p>
-            </div>
-            <div class="col">
-              <p><button @click="directives += selectedText; showFloatingMenu = false">Directives</button></p>
+        <div v-if="showFloatingMenu" ref="floatingMenu" :style="{...floatingStyles, zIndex: 1000}">
+          <!-- This 'modal' is not actually modal. It just looks good, like a Bootstrap modal. -->
+          <div class="modal position-static d-block">
+            <div class="modal-dialog modal-xl">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h3 class="modal-title">Selected text</h3>
+                  <button type="button" class="btn-close" @click="showFloatingMenu = false" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <pre>{{ selectedText }}</pre>
+                  <p>Add to:</p>
+                  <div class="row">
+                    <div class="col">
+                      <p><button class="btn btn-primary" @click="wording += selectedText; showFloatingMenu = false">Wording</button></p>
+                    </div>
+                    <div class="col">
+                      <p><button class="btn btn-primary" @click="directives += selectedText; showFloatingMenu = false">Directives</button></p>
+                      </div>
+                  </div>
+                </div>
               </div>
+            </div>
           </div>
         </div>
       </div>
