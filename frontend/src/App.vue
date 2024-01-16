@@ -1,6 +1,6 @@
 <script setup>
-import { ref, reactive } from 'vue'
-import { useFloating, autoPlacement } from '@floating-ui/vue';
+import { ref } from 'vue'
+import { useFloating, shift, flip, offset } from '@floating-ui/vue';
 
 import PdfPicker from './components/PdfPicker.vue'
 
@@ -8,7 +8,7 @@ const selectedText = ref(null)
 const showFloatingMenu = ref(false)
 const floatingMenuReference = ref(null);
 const floatingMenu = ref(null);
-const {floatingStyles} = useFloating(floatingMenuReference, floatingMenu, { middleware: [autoPlacement()] });
+const {floatingStyles} = useFloating(floatingMenuReference, floatingMenu, { placement: 'top', middleware: [offset(-40), flip(), shift()] });
 
 function text_selected(text, point) {
   selectedText.value = text
@@ -44,7 +44,7 @@ var directives = ref('')
         <div v-if="showFloatingMenu" ref="floatingMenu" :style="{...floatingStyles, zIndex: 1000}">
           <!-- This 'modal' is not actually modal. It just looks good, like a Bootstrap modal. -->
           <div class="modal position-static d-block">
-            <div class="modal-dialog modal-xl">
+            <div class="modal-dialog modal-xl" style="margin: 0">
               <div class="modal-content">
                 <div class="modal-header">
                   <h3 class="modal-title">Selected text</h3>
