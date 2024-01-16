@@ -1,25 +1,33 @@
 <script setup>
 import { ref, reactive } from 'vue'
+import { useFloating, autoPlacement } from '@floating-ui/vue';
 
 import PdfPicker from './components/PdfPicker.vue'
 
 const selectedText = ref(null)
-const menuStyle = reactive({
-  'position': 'absolute',
-  'left': '0px',
-  'top': '0px',
-  'background-color': 'white',
-  'z-index': '1000',
-  'display': 'none',
-  'border': '1px solid black',
-  'padding': '5px',
-})
+const showFloatingMenu = ref(false)
+const floatingMenuReference = ref(null);
+const floatingMenu = ref(null);
+const {floatingStyles} = useFloating(floatingMenuReference, floatingMenu, { middleware: [autoPlacement()] });
 
 function text_selected(text, point) {
   selectedText.value = text
-  menuStyle.left = point.clientX + 'px'
-  menuStyle.top = point.clientY + 'px'
-  menuStyle.display = 'block'
+  showFloatingMenu.value = true
+  floatingMenuReference.value = {
+    getBoundingClientRect() {
+      const { clientX, clientY } = point
+      return {
+        width: 0,
+        height: 0,
+        x: clientX,
+        y: clientY,
+        top: clientY,
+        left: clientX,
+        right: clientX,
+        bottom: clientY,
+      }
+    }
+  }
 }
 
 var wording = ref('')
@@ -33,16 +41,16 @@ var directives = ref('')
       <div class="col">
         <h2>PDF</h2>
         <PdfPicker src="/test.pdf" :page="1" @text-selected="text_selected" />
-        <div :style="menuStyle">
+        <div v-if="showFloatingMenu" ref="floatingMenu" :style="{...floatingStyles, zIndex: 1000, padding: '5px', border: '1px solid black', background: 'white'}">
           <p>Selection:</p>
           <pre>{{ selectedText }}</pre>
           <p>Add to:</p>
           <div class="row">
             <div class="col">
-              <p><button @click="wording += selectedText; menuStyle.display='none'">Wording</button></p>
+              <p><button @click="wording += selectedText; showFloatingMenu = false">Wording</button></p>
             </div>
             <div class="col">
-              <p><button @click="directives += selectedText; menuStyle.display='none'">Directives</button></p>
+              <p><button @click="directives += selectedText; showFloatingMenu = false">Directives</button></p>
               </div>
           </div>
         </div>
