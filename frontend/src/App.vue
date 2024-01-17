@@ -1,14 +1,14 @@
 <script setup>
 import { ref } from 'vue'
-import { useFloating, shift, flip, offset } from '@floating-ui/vue';
+import { useFloating, shift, flip, offset } from '@floating-ui/vue'
 
 import PdfPicker from './components/PdfPicker.vue'
 
 const selectedText = ref(null)
 const showFloatingMenu = ref(false)
-const floatingMenuReference = ref(null);
-const floatingMenu = ref(null);
-const {floatingStyles} = useFloating(floatingMenuReference, floatingMenu, { placement: 'top', middleware: [offset(-40), flip(), shift()] });
+const floatingMenuReference = ref(null)
+const floatingMenu = ref(null)
+const {floatingStyles} = useFloating(floatingMenuReference, floatingMenu, { placement: 'top', middleware: [offset(-40), flip(), shift()] })
 
 function text_selected(text, point) {
   selectedText.value = text
