@@ -10,7 +10,7 @@ const emit = defineEmits([
 ])
 
 // @todo Upgrade pdfjs-dist. 2.4.456 is OK but I couldn't get more recent versions to work.
-// (Some versions result in pdfjs being undefined; others juste fail to import.)
+// (Some versions result in pdfjs being undefined; others just fail to import.)
 import pdfjs from 'pdfjs-dist/build/pdf'
 pdfjs.GlobalWorkerOptions.workerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`
 
