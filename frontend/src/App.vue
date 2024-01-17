@@ -1,5 +1,6 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted } from 'vue'
+import bootstrap from 'bootstrap/dist/js/bootstrap.bundle.min.js'
 
 import PdfPicker from './components/PdfPicker.vue'
 import FloatingModal from './components/FloatingModal.vue'
@@ -40,6 +41,7 @@ function textSelected(text, point) {
   textSelectionMenuReference.value = {x: point.clientX, y: point.clientY}
 }
 
+// @todo Use a single 'reactive' object instead of several 'ref's
 const sections = {
   // French vocabulary used here to avoid a translation roundtrip from the specs in French
   consignes: ref(''),
@@ -50,6 +52,11 @@ const sections = {
 
 const wording = ref('')
 const directives = ref('')
+
+const modal = ref(null)
+onMounted(() => {
+  (new bootstrap.Modal(modal.value)).show()
+})
 </script>
 
 <template>
@@ -110,7 +117,37 @@ const directives = ref('')
       </div>
       <div class="col">
         <h2>{{ $t('visualization') }}</h2>
+        <p>({{ $t('not-yet-implemented') }})</p>
         <p v-for="(content) in sections" class="mb-3">{{ content.value }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div ref="modal" class="modal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title">Bienvenue&nbsp;!</h3>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Bienvenue sur la démo de <em>Gabby</em>, l'interface d'adaptation de manuels scolaires pour le projet MALIN et le Cartable Fantastique.</p>
+          <p>
+            Le développement de <em>Gabby</em> vient de commencer, donc rien n'est définitif.
+            Cette démo est là pour vous permettre de me donner aussi tôt que vous le souhaitez votre avis sur l'interface.
+            Pour l'instant c'est une coquille vide ; il y a encore énormément à faire, dont beaucoup sera invisible.
+          </p>
+          <p>
+            Cliquez partout, essayez tout ce que vous voulez !
+            Gardez à l'esprit que rien n'est enregistré.
+            Faites-moi part de vos remarques, posez-moi vos questions et rapportez-moi les bugs et comportements contre-intuitifs.
+            Je rebouclerai avec Caroline si j'ai besoin de clarifier les priorités.
+            Si vous trouvez des problèmes spécifiques à un PDF, il serait pratique que vous me l'envoyiez si vous le pouvez.
+            Il est également pratique pour moi que vous me disiez quel navigateur web vous utilisez et que vous joigniez des captures d'écran à votre prose.
+          </p>
+
+          <p>Merci d'avance, <a href="mailto:vincent@vincent-jacques.net">Vincent Jacques &lt;vincent@vincent-jacques.net&gt;</a></p>
+        </div>
       </div>
     </div>
   </div>
