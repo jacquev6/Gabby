@@ -70,13 +70,26 @@ const directives = ref('')
     </template>
   </FloatingModal>
 
+  <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+      <a class="navbar-brand"><img src="/favicon.ico" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">Gabby</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
+        <form>
+          <select class="form-control" v-model="$i18n.locale">
+            <option v-for="locale in $i18n.availableLocales" :key="locale" :value="locale">{{ {'en': '🇺🇸 English (US)', 'fr': '🇫🇷 Français'}[locale] }}</option>
+          </select>
+        </form>
+      </div>
+    </div>
+  </nav>
+
   <div class="container-fluid">
     <div class="row">
       <div class="col">
-        <h1>Gabby</h1>
-        <select v-model="$i18n.locale">
-          <option v-for="locale in $i18n.availableLocales" :key="locale" :value="locale">{{ {'en': '🇺🇸', 'fr': '🇫🇷'}[locale] }}</option>
-        </select>
         <p>Page <input type="number" v-model="pageNumber" /> of {{ pagesCount }} in {{ pdfName }}</p>
         <p><input type="file" @change="(e) => { pdf = e.target.files[0] }" /></p>
         <h2>{{ $t('headers.form') }}</h2>
