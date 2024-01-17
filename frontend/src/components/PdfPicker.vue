@@ -12,7 +12,7 @@ const emit = defineEmits([
 
 // @todo Upgrade pdfjs-dist. 2.4.456 is OK but I couldn't get more recent versions to work.
 // (Some versions result in pdfjs being undefined; others juste fail to import.)
-import pdfjs from 'pdfjs-dist/build/pdf';
+import pdfjs from 'pdfjs-dist/build/pdf'
 pdfjs.GlobalWorkerOptions.workerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`
 
 var textContent = []
@@ -66,29 +66,19 @@ var startPoint = null
 
 function pointerdown(event) {
   startPoint = makeCanvasPoint(event)
-  uiCanvas.setPointerCapture(event.pointerId);
+  uiCanvas.setPointerCapture(event.pointerId)
 }
 
 function pointermove(event) {
   if (startPoint !== null) {
     clearCanvas()
-    
-    const endPoint = makeCanvasPoint(event)
 
-    const minX = Math.min(startPoint.x, endPoint.x)
-    const maxX = Math.max(startPoint.x, endPoint.x)
-    const minY = Math.min(startPoint.y, endPoint.y)
-    const maxY = Math.max(startPoint.y, endPoint.y)
+    const r = selectionRectangle(startPoint, makeCanvasPoint(event))
 
     uiContext.save()
     uiContext.beginPath()
-    for (var item of textContent.items) {
-      if (
-        item.left >= minX && item.right <= maxX
-        && item.bottom >= minY && item.top <= maxY
-      ) {
-        uiContext.rect(item.left, item.bottom, item.width, item.height)
-      }
+    for (var item of textContent.items.filter(r.contains)) {
+      uiContext.rect(item.left, item.bottom, item.width, item.height)
     }
     uiContext.fillStyle = 'rgba(255, 255, 0, 0.5)'
     uiContext.strokeStyle = 'rgba(255, 128, 0, 0.5)'
@@ -97,44 +87,31 @@ function pointermove(event) {
     uiContext.restore()
 
     uiContext.beginPath()
-    uiContext.rect(minX, minY, maxX - minX, maxY - minY)
+    uiContext.rect(r.minX, r.minY, r.maxX - r.minX, r.maxY - r.minY)
     uiContext.stroke()
   }
 }
 
 function pointerup(event) {
-  uiCanvas.releasePointerCapture(event.pointerId);
+  uiCanvas.releasePointerCapture(event.pointerId)
   if (startPoint !== null) {
     clearCanvas()
 
-    const endPoint = makeCanvasPoint(event)
-
-    const minX = Math.min(startPoint.x, endPoint.x)
-    const maxX = Math.max(startPoint.x, endPoint.x)
-    const minY = Math.min(startPoint.y, endPoint.y)
-    const maxY = Math.max(startPoint.y, endPoint.y)
+    const r = selectionRectangle(startPoint, makeCanvasPoint(event))
 
     var lines = ['']
     var previousItem = null
-    // console.log('New selection')
-    for (var item of textContent.items) {
-      if (
-        item.left >= minX && item.right <= maxX
-        && item.bottom >= minY && item.top <= maxY
-      ) {
-        // console.log(item)
-
-        if (previousItem !== null) {
-          if (Math.abs(previousItem.bottom - item.bottom) > textSpacingTolerance) {
-            lines.push('')
-          } else if(previousItem.right + textSpacingTolerance < item.left) {
-            lines[lines.length - 1] += ' '
-          }
+    for (var item of textContent.items.filter(r.contains)) {
+      if (previousItem !== null) {
+        if (Math.abs(previousItem.bottom - item.bottom) > textSpacingTolerance) {
+          lines.push('')
+        } else if(previousItem.right + textSpacingTolerance < item.left) {
+          lines[lines.length - 1] += ' '
         }
-
-        lines[lines.length - 1] += item.str
-        previousItem = item
       }
+
+      lines[lines.length - 1] += item.str
+      previousItem = item
     }
 
     var text = ''
@@ -158,6 +135,23 @@ function makeCanvasPoint(event) {
   return uiContext.getTransform().inverse().transformPoint(
     new DOMPoint(event.clientX - rect.left, event.clientY - rect.top)
   )
+}
+
+function selectionRectangle(startPoint, endPoint) {
+  const minX = Math.min(startPoint.x, endPoint.x)
+  const maxX = Math.max(startPoint.x, endPoint.x)
+  const minY = Math.min(startPoint.y, endPoint.y)
+  const maxY = Math.max(startPoint.y, endPoint.y)
+
+  return {
+    minX, maxX, minY, maxY,
+    contains(item) {
+      return (
+        item.left >= minX && item.right <= maxX
+        && item.bottom >= minY && item.top <= maxY
+      )
+    },
+  }
 }
 
 function clearCanvas() {
