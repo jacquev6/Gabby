@@ -64,11 +64,12 @@ onMounted(async () => {
 
 var startPoint = null
 
-function mousedown(event) {
+function pointerdown(event) {
   startPoint = makeCanvasPoint(event)
+  uiCanvas.setPointerCapture(event.pointerId);
 }
 
-function mousemove(event) {
+function pointermove(event) {
   if (startPoint !== null) {
     clearCanvas()
     
@@ -101,7 +102,8 @@ function mousemove(event) {
   }
 }
 
-function mouseup(event) {
+function pointerup(event) {
+  uiCanvas.releasePointerCapture(event.pointerId);
   if (startPoint !== null) {
     clearCanvas()
 
@@ -170,7 +172,7 @@ function clearCanvas() {
   <p>Page {{ page }} of {{ src }}:</p>
   <div ref="container" class="container">
     <canvas ref="pdfCanvas" class="pdf"></canvas>
-    <canvas ref="uiCanvas" class="ui" @mousedown="mousedown" @mousemove="mousemove" @mouseup="mouseup"></canvas>
+    <canvas ref="uiCanvas" class="ui" @pointerdown="pointerdown" @pointermove="pointermove" @pointerup="pointerup"></canvas>
   </div>
 </template>
 
