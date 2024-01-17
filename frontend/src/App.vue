@@ -108,6 +108,10 @@ const directives = ref('')
           </div>
         </form>
       </div>
+      <div class="col">
+        <h2>{{ $t('visualization') }}</h2>
+        <p v-for="(content) in sections" class="mb-3">{{ content.value }}</p>
+      </div>
     </div>
   </div>
 </template>

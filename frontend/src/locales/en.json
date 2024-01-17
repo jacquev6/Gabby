@@ -1,5 +1,6 @@
 {
   "edition": "Edition",
+  "visualization": "Visualization",
   "inputFile": "Input file",
 
   "selectedText": "Selected text",
