@@ -1,7 +1,19 @@
 import { createApp } from 'vue'
+import { createI18n } from 'vue-i18n'
+
 import App from './App.vue'
+import en from './locales/en.json'
+import fr from './locales/fr.json'
 
 import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap"
 
-createApp(App).mount('#app')
+
+createApp(App)
+  .use(createI18n({
+    legacy: false,
+    locale: 'fr',
+    fallbackLocale: 'fr',
+    messages: {en, fr},
+  }))
+  .mount('#app')

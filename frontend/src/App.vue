@@ -21,33 +21,36 @@ const directives = ref('')
 <template>
   <div class="container-fluid">
     <h1>Gabby</h1>
+    <select v-model="$i18n.locale">
+      <option v-for="locale in $i18n.availableLocales" :key="locale" :value="locale">{{ {'en': '🇺🇸', 'fr': '🇫🇷'}[locale] }}</option>
+    </select>
     <div class="row">
       <div class="col">
         <h2>PDF</h2>
         <PdfPicker @text-selected="text_selected" />
         <FloatingModal
           v-if="showTextSelectionMenu"
-          title="Selected text"
+          :title="$t('headers.selectedText')"
           :reference="textSelectionMenuReference"
           @dismissed="showTextSelectionMenu=false"
         >
           <pre>{{ selectedText }}</pre>
-          <p>Add to:</p>
+          <p>{{ $t('headers.addTo') }}</p>
           <div class="row">
             <div class="col">
-              <p><button class="btn btn-primary" @click="wording += selectedText; showTextSelectionMenu=false">Wording</button></p>
+              <p><button class="btn btn-primary" @click="wording += selectedText; showTextSelectionMenu=false">{{ $t('headers.wording') }}</button></p>
             </div>
             <div class="col">
-              <p><button class="btn btn-primary" @click="directives += selectedText; showTextSelectionMenu=false">Directives</button></p>
+              <p><button class="btn btn-primary" @click="directives += selectedText; showTextSelectionMenu=false">{{ $t('headers.directives') }}</button></p>
               </div>
           </div>
         </FloatingModal>
       </div>
       <div class="col">
-        <h2>Form</h2>
-        <h3>Wording</h3>
+        <h2>{{ $t('headers.form') }}</h2>
+        <h3>{{ $t('headers.wording') }}</h3>
         <pre>{{ wording }}</pre>
-        <h3>Directives</h3>
+        <h3>{{ $t('headers.directives') }}</h3>
         <pre>{{ directives }}</pre>
       </div>
     </div>
