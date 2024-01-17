@@ -164,14 +164,14 @@ function clearCanvas() {
 
 <template>
   <p>Page {{ page }} of {{ src }}:</p>
-  <div ref="container" class="container">
+  <div ref="container" class="pdf-picker">
     <canvas ref="pdfCanvas" class="pdf"></canvas>
     <canvas ref="uiCanvas" class="ui" @pointerdown="pointerdown" @pointermove="pointermove" @pointerup="pointerup"></canvas>
   </div>
 </template>
 
 <style scoped>
-div.container {
+div.pdf-picker {
   position: relative;
   border: 1px solid black;
 }
