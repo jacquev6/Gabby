@@ -4,6 +4,13 @@ import { ref, reactive, watch } from 'vue'
 import PdfPicker from './components/PdfPicker.vue'
 import FloatingModal from './components/FloatingModal.vue'
 
+const windowHeight = ref(null)
+function onResize() {
+  windowHeight.value = window.innerHeight
+}
+onResize()
+window.addEventListener('resize', onResize);
+
 const pdf = ref('/test.pdf')
 const pdfName = ref(null)
 const pageNumber = ref(1)
@@ -46,7 +53,7 @@ const directives = ref('')
 </script>
 
 <template>
-  <PdfPicker style="float: left" :pdf="pdf" :page="pageNumber" @text-selected="textSelected" @pdf-loaded="pdfLoaded" />
+  <PdfPicker style="float: left" :pdf="pdf" :page="pageNumber" :targetHeight="windowHeight" @text-selected="textSelected" @pdf-loaded="pdfLoaded" />
 
   <FloatingModal
     v-if="showTextSelectionMenu"

@@ -4,6 +4,7 @@ import { ref, onMounted, watch } from 'vue'
 const props = defineProps({
   pdf: null,  // string or File, but I don't know yet how to say that in JS
   page: Number,
+  targetHeight: Number,
 })
 
 const emit = defineEmits([
@@ -53,13 +54,14 @@ async function load() {
 }
 
 watch(() => props.page, display)
+watch(() => props.targetHeight, display)
 
 async function display() {
   console.assert(props.page >= 1 && props.page <= pdfDocument.value.numPages, 'Invalid page number', props.page, pdfDocument.value.numPages)
   const pdfPage = await pdfDocument.value.getPage(props.page)
 
-  var scale = 1
-  var viewport = pdfPage.getViewport({scale})
+  const scale = (props.targetHeight - 2) / pdfPage.getViewport({scale: 1}).height
+  const viewport = pdfPage.getViewport({scale})
   container.style.width = (viewport.width + 2) + 'px'
   container.style.height = (viewport.height + 2) + 'px'
   pdfCanvas.height = viewport.height
