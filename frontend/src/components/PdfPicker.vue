@@ -1,7 +1,13 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue'
 
+const props = defineProps({
+  pdf: null,  // string or File, but I don't know yet how to say that in JS
+  page: Number,
+})
+
 const emit = defineEmits([
+  'pdf-loaded',  // (name: string, numPages: number) => void
   'text-selected',  // (text: string, point: {clientX: number, clientY: number}) => void
 ])
 
@@ -18,73 +24,71 @@ var pdfContext = null
 var uiCanvas = null
 var uiContext = null
 
-const pdfLocation = ref('test.pdf')
 const pdfDocument = ref(null)
-const pagesCount = ref(null)
-const page = ref(null)
 var textContent = []
 
 onMounted(async () => {
   pdfContext = pdfCanvas.getContext('2d')
   uiContext = uiCanvas.getContext('2d')
 
-  pdfDocument.value = await pdfjs.getDocument(pdfLocation.value).promise
+  await load()
 })
 
-async function loadLocalFile(event) {
-  pdfLocation.value = event.target.files[0].name
-  const reader = new FileReader()
-  reader.onload = async () => {
-    pdfDocument.value = await pdfjs.getDocument({data: reader.result}).promise
+watch(() => props.pdf, load)
+
+async function load() {
+  if (typeof props.pdf === 'string') {
+    pdfDocument.value = await pdfjs.getDocument(props.pdf).promise
+    emit('pdf-loaded', props.pdf, pdfDocument.value.numPages)
+    await display()
+  } else if (props.pdf instanceof File) {
+    const reader = new FileReader()
+    reader.onload = async () => {
+      pdfDocument.value = await pdfjs.getDocument({data: reader.result}).promise
+      emit('pdf-loaded', props.pdf.name, pdfDocument.value.numPages)
+      await display()
+    }
+    reader.readAsArrayBuffer(props.pdf)
   }
-  reader.readAsArrayBuffer(event.target.files[0])
 }
 
-watch(pdfDocument, () => {
-  pagesCount.value = pdfDocument.value.numPages
-  page.value = 0
-})
+watch(() => props.page, display)
 
-watch(page, async () => {
-  if (page.value < 1) {
-    page.value = 1
-  } else if (page.value > pdfDocument.value.numPages) {
-    page.value = pdfDocument.value.numPages
-  } else {
-    const pdfPage = await pdfDocument.value.getPage(page.value)
+async function display() {
+  console.assert(props.page >= 1 && props.page <= pdfDocument.value.numPages, 'Invalid page number', props.page, pdfDocument.value.numPages)
+  const pdfPage = await pdfDocument.value.getPage(props.page)
 
-    var scale = 1
-    var viewport = pdfPage.getViewport({scale})
-    container.style.width = (viewport.width + 2) + 'px'
-    container.style.height = (viewport.height + 2) + 'px'
-    pdfCanvas.height = viewport.height
-    pdfCanvas.width = viewport.width
-    uiCanvas.height = viewport.height
-    uiCanvas.width = viewport.width
+  var scale = 1
+  var viewport = pdfPage.getViewport({scale})
+  container.style.width = (viewport.width + 2) + 'px'
+  container.style.height = (viewport.height + 2) + 'px'
+  pdfCanvas.height = viewport.height
+  pdfCanvas.width = viewport.width
+  uiCanvas.height = viewport.height
+  uiCanvas.width = viewport.width
 
-    // Somewhat arbitrary. If the tolerance is too small, then the selected text will contain to many spaces,
-    // not a big deal. If the tolerance is too big, then the selected text could contain too few spaces,
-    // which is a problem.
-    textSpacingTolerance = Math.min(viewport.width, viewport.height) / 1e3
-    // console.log('textSpacingTolerance', textSpacingTolerance)
+  // Somewhat arbitrary. If the tolerance is too small, then the selected text will contain to many spaces,
+  // not a big deal. If the tolerance is too big, then the selected text could contain too few spaces,
+  // which is a problem.
+  textSpacingTolerance = Math.min(viewport.width, viewport.height) / 1e3
+  // console.log('textSpacingTolerance', textSpacingTolerance)
 
-    uiContext.setTransform(viewport.transform[0], viewport.transform[1], viewport.transform[2], viewport.transform[3], viewport.transform[4], viewport.transform[5])
+  uiContext.setTransform(viewport.transform[0], viewport.transform[1], viewport.transform[2], viewport.transform[3], viewport.transform[4], viewport.transform[5])
 
-    await pdfPage.render({
-      canvasContext: pdfContext,
-      viewport,
-    }).promise
+  await pdfPage.render({
+    canvasContext: pdfContext,
+    viewport,
+  }).promise
 
-    textContent = await pdfPage.getTextContent()
-    for (var item of textContent.items) {
-      item.left = item.transform[4]
-      item.right = item.transform[4] + item.width
-      item.bottom = item.transform[5]
-      item.top = item.transform[5] + item.height
-      delete item.transform
-    }
+  textContent = await pdfPage.getTextContent()
+  for (var item of textContent.items) {
+    item.left = item.transform[4]
+    item.right = item.transform[4] + item.width
+    item.bottom = item.transform[5]
+    item.top = item.transform[5] + item.height
+    delete item.transform
   }
-})
+}
 
 var startPoint = null
 
@@ -187,11 +191,7 @@ function clearCanvas() {
 </script>
 
 <template>
-  <p>
-    Page <input type="number" min="1" :max="pagesCount" v-model="page" /> of {{ pagesCount }} in {{ pdfLocation }}
-    <input type="file" @change="loadLocalFile">
-  </p>
-  <div ref="container">
+  <div class="pdf-picker" ref="container">
     <canvas ref="pdfCanvas" class="pdf"></canvas>
     <canvas ref="uiCanvas" class="ui" @pointerdown="pointerdown" @pointermove="pointermove" @pointerup="pointerup"></canvas>
   </div>
