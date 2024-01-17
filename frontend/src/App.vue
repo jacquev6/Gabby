@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, reactive } from 'vue'
 
 import PdfPicker from './components/PdfPicker.vue'
 import FloatingModal from './components/FloatingModal.vue'
@@ -13,6 +13,14 @@ function text_selected(text, point) {
   showTextSelectionMenu.value = true
   textSelectionMenuReference.value = {x: point.clientX, y: point.clientY}
 }
+
+const sections = reactive({
+  // French vocabulary used here to avoid a translation roundtrip from the specs in French
+  consignes: '',
+  exemple: '',
+  indice: '',
+  énoncé: '',
+})
 
 const wording = ref('')
 const directives = ref('')
@@ -35,23 +43,20 @@ const directives = ref('')
           @dismissed="showTextSelectionMenu=false"
         >
           <pre>{{ selectedText }}</pre>
+          <hr/>
           <p>{{ $t('headers.addTo') }}</p>
-          <div class="row">
-            <div class="col">
-              <p><button class="btn btn-primary" @click="wording += selectedText; showTextSelectionMenu=false">{{ $t('headers.wording') }}</button></p>
-            </div>
-            <div class="col">
-              <p><button class="btn btn-primary" @click="directives += selectedText; showTextSelectionMenu=false">{{ $t('headers.directives') }}</button></p>
-              </div>
-          </div>
+          <template v-for="(_, section, index) in sections">
+            <template v-if="index !== 0">&nbsp;</template>
+            <button class="btn btn-primary" @click="sections[section] += selectedText; showTextSelectionMenu=false">{{ $t('headers.' + section) }}</button>
+          </template>
         </FloatingModal>
       </div>
       <div class="col">
         <h2>{{ $t('headers.form') }}</h2>
-        <h3>{{ $t('headers.wording') }}</h3>
-        <pre>{{ wording }}</pre>
-        <h3>{{ $t('headers.directives') }}</h3>
-        <pre>{{ directives }}</pre>
+        <template v-for="(content, section) in sections">
+          <h3>{{ $t('headers.' + section) }}</h3>
+          <pre>{{ content }}</pre>
+        </template>
       </div>
     </div>
   </div>

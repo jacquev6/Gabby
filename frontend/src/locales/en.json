@@ -2,8 +2,10 @@
   "headers": {
     "selectedText": "Selected text",
     "addTo": "Add to:",
-    "form": "Form",
-    "wording": "Wording",
-    "directives": "Directives"
+    "form": "Edition",
+    "consignes": "Directives",
+    "exemple": "Example",
+    "indice": "Clue",
+    "énoncé": "Wording"
   }
 }
