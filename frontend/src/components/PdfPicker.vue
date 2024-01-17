@@ -1,9 +1,8 @@
 <script setup>
-import { onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 
 const props = defineProps({
   src: String,
-  page: Number,
 })
 
 const emit = defineEmits([
@@ -15,7 +14,6 @@ const emit = defineEmits([
 import pdfjs from 'pdfjs-dist/build/pdf'
 pdfjs.GlobalWorkerOptions.workerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`
 
-var textContent = []
 var textSpacingTolerance = 0
 
 var container = null
@@ -24,12 +22,31 @@ var pdfContext = null
 var uiCanvas = null
 var uiContext = null
 
+var pdfDocument = null
+var pagesCount = ref(null)
+var page = ref(null)
+var textContent = []
+
 onMounted(async () => {
-  var pdf = await pdfjs.getDocument(props.src).promise
-  var page = await pdf.getPage(1)
+  pdfContext = pdfCanvas.getContext('2d')
+  uiContext = uiCanvas.getContext('2d')
+
+  pdfDocument = await pdfjs.getDocument(props.src).promise
+
+  pagesCount.value = pdfDocument.numPages
+  page.value = 1
+})
+
+watch(page, async () => {
+  page.value = Math.min(pdfDocument.numPages, Math.max(1, page.value))
+  await drawPage()
+})
+
+async function drawPage() {
+  const pdfPage = await pdfDocument.getPage(page.value)
 
   var scale = 1
-  var viewport = page.getViewport({scale})
+  var viewport = pdfPage.getViewport({scale})
   container.style.width = (viewport.width + 2) + 'px'
   container.style.height = (viewport.height + 2) + 'px'
   pdfCanvas.height = viewport.height
@@ -43,16 +60,14 @@ onMounted(async () => {
   textSpacingTolerance = Math.min(viewport.width, viewport.height) / 1e3
   // console.log('textSpacingTolerance', textSpacingTolerance)
 
-  pdfContext = pdfCanvas.getContext('2d')
-  uiContext = uiCanvas.getContext('2d')
   uiContext.setTransform(viewport.transform[0], viewport.transform[1], viewport.transform[2], viewport.transform[3], viewport.transform[4], viewport.transform[5])
 
-  await page.render({
+  await pdfPage.render({
     canvasContext: pdfContext,
     viewport,
   }).promise
 
-  textContent = await page.getTextContent()
+  textContent = await pdfPage.getTextContent()
   for (var item of textContent.items) {
     item.left = item.transform[4]
     item.right = item.transform[4] + item.width
@@ -60,7 +75,7 @@ onMounted(async () => {
     item.top = item.transform[5] + item.height
     delete item.transform
   }
-})
+}
 
 var startPoint = null
 
@@ -163,15 +178,15 @@ function clearCanvas() {
 </script>
 
 <template>
-  <p>Page {{ page }} of {{ src }}:</p>
-  <div ref="container" class="pdf-picker">
+  <p>Page <input type="number" min="1" :max="pagesCount" v-model="page" /> of {{ pagesCount }}</p>
+  <div ref="container">
     <canvas ref="pdfCanvas" class="pdf"></canvas>
     <canvas ref="uiCanvas" class="ui" @pointerdown="pointerdown" @pointermove="pointermove" @pointerup="pointerup"></canvas>
   </div>
 </template>
 
 <style scoped>
-div.pdf-picker {
+div {
   position: relative;
   border: 1px solid black;
 }

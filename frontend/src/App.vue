@@ -24,7 +24,7 @@ const directives = ref('')
     <div class="row">
       <div class="col">
         <h2>PDF</h2>
-        <PdfPicker src="/test.pdf" :page="1" @text-selected="text_selected" />
+        <PdfPicker src="/test.pdf" @text-selected="text_selected" />
         <FloatingModal
           v-if="showTextSelectionMenu"
           title="Selected text"
