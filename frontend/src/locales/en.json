@@ -1,11 +1,12 @@
 {
-  "headers": {
-    "selectedText": "Selected text",
-    "addTo": "Add to:",
-    "form": "Edition",
-    "consignes": "Directives",
-    "exemple": "Example",
-    "indice": "Clue",
-    "énoncé": "Wording"
-  }
+  "edition": "Edition",
+  "inputFile": "Input file",
+
+  "selectedText": "Selected text",
+  "addTo": "Add to:",
+
+  "consignes": "Instructions",
+  "exemple": "Example",
+  "indice": "Clue",
+  "énoncé": "Wording"
 }

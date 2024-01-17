@@ -1,11 +1,12 @@
 {
-  "headers": {
-    "selectedText": "Texte sélectionné",
-    "addTo": "Ajouter à :",
-    "form": "Édition",
-    "consignes": "Consignes",
-    "exemple": "Exemple",
-    "indice": "Indice",
-    "énoncé": "Énoncé"
-  }
+  "edition": "Édition",
+  "inputFile": "Fichier d'entrée",
+
+  "selectedText": "Texte sélectionné",
+  "addTo": "Ajouter à :",
+
+  "consignes": "Consignes",
+  "exemple": "Exemple",
+  "indice": "Indice",
+  "énoncé": "Énoncé"
 }

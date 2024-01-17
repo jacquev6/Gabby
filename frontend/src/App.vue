@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, watch } from 'vue'
+import { ref, watch } from 'vue'
 
 import PdfPicker from './components/PdfPicker.vue'
 import FloatingModal from './components/FloatingModal.vue'
@@ -40,13 +40,13 @@ function textSelected(text, point) {
   textSelectionMenuReference.value = {x: point.clientX, y: point.clientY}
 }
 
-const sections = reactive({
+const sections = {
   // French vocabulary used here to avoid a translation roundtrip from the specs in French
-  consignes: '',
-  exemple: '',
-  indice: '',
-  énoncé: '',
-})
+  consignes: ref(''),
+  exemple: ref(''),
+  indice: ref(''),
+  énoncé: ref(''),
+}
 
 const wording = ref('')
 const directives = ref('')
@@ -57,16 +57,16 @@ const directives = ref('')
 
   <FloatingModal
     v-if="showTextSelectionMenu"
-    :title="$t('headers.selectedText')"
+    :title="$t('selectedText')"
     :reference="textSelectionMenuReference"
     @dismissed="showTextSelectionMenu=false"
   >
     <pre>{{ selectedText }}</pre>
     <hr/>
-    <p>{{ $t('headers.addTo') }}</p>
+    <p>{{ $t('addTo') }}</p>
     <template v-for="(_, section, index) in sections">
       <template v-if="index !== 0">&nbsp;</template>
-      <button class="btn btn-primary" @click="sections[section] += selectedText; showTextSelectionMenu=false">{{ $t('headers.' + section) }}</button>
+      <button class="btn btn-primary" @click="sections[section].value += selectedText; showTextSelectionMenu=false">{{ $t(section) }}</button>
     </template>
   </FloatingModal>
 
@@ -90,13 +90,23 @@ const directives = ref('')
   <div class="container-fluid">
     <div class="row">
       <div class="col">
-        <p>Page <input type="number" v-model="pageNumber" /> of {{ pagesCount }} in {{ pdfName }}</p>
-        <p><input type="file" @change="(e) => { pdf = e.target.files[0] }" /></p>
-        <h2>{{ $t('headers.form') }}</h2>
-        <template v-for="(content, section) in sections">
-          <h3>{{ $t('headers.' + section) }}</h3>
-          <pre>{{ content }}</pre>
-        </template>
+        <h2>{{ $t('edition') }}</h2>
+        <form>
+          <div class="mb-3">
+            <label class="form-label">{{ $t('inputFile') }}</label>
+            <input class="form-control" type="file" @change="(e) => { pdf = e.target.files[0] }" />
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Page (sur {{ pagesCount }})</label>
+            <input class="form-control" type="number" v-model="pageNumber" />
+          </div>
+
+          <div v-for="(content, section) in sections" class="mb-3">
+            <label class="form-label">{{ $t(section) }}</label>
+            <textarea class="form-control" rows="3" v-model="sections[section].value"></textarea>
+          </div>
+        </form>
       </div>
     </div>
   </div>
