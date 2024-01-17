@@ -1,19 +1,21 @@
 <script setup>
 import { ref } from 'vue'
 import { useFloating, shift, flip, offset } from '@floating-ui/vue'
+import bootstrap from 'bootstrap/dist/js/bootstrap.bundle.min.js'
 
 import PdfPicker from './components/PdfPicker.vue'
 
 const selectedText = ref(null)
-const showFloatingMenu = ref(false)
-const floatingMenuReference = ref(null)
-const floatingMenu = ref(null)
-const {floatingStyles} = useFloating(floatingMenuReference, floatingMenu, { placement: 'top', middleware: [offset(-40), flip(), shift()] })
+const floatingModal = ref(null)
+const floatingModalDialog = ref(null)
+const floatingModalReference = ref(null)
+const {floatingStyles: floatingModalDialogStyle} = useFloating(floatingModalReference, floatingModalDialog, { placement: 'top', middleware: [offset(-40), flip(), shift()] })
 
 function text_selected(text, point) {
   selectedText.value = text
-  showFloatingMenu.value = true
-  floatingMenuReference.value = {
+  bootstrap.Modal.getOrCreateInstance(floatingModal.value).show()
+
+  floatingModalReference.value = {
     getBoundingClientRect() {
       const { clientX, clientY } = point
       return {
@@ -41,26 +43,23 @@ var directives = ref('')
       <div class="col">
         <h2>PDF</h2>
         <PdfPicker src="/test.pdf" :page="1" @text-selected="text_selected" />
-        <div v-if="showFloatingMenu" ref="floatingMenu" :style="{...floatingStyles, zIndex: 1000}">
-          <!-- This 'modal' is not actually modal. It just looks good, like a Bootstrap modal. -->
-          <div class="modal position-static d-block">
-            <div class="modal-dialog modal-xl" style="margin: 0">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h3 class="modal-title">Selected text</h3>
-                  <button type="button" class="btn-close" @click="showFloatingMenu = false" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                  <pre>{{ selectedText }}</pre>
-                  <p>Add to:</p>
-                  <div class="row">
-                    <div class="col">
-                      <p><button class="btn btn-primary" @click="wording += selectedText; showFloatingMenu = false">Wording</button></p>
-                    </div>
-                    <div class="col">
-                      <p><button class="btn btn-primary" @click="directives += selectedText; showFloatingMenu = false">Directives</button></p>
-                      </div>
+        <div ref="floatingModal" class="modal">
+          <div ref="floatingModalDialog" class="modal-dialog modal-xl" :style="{...floatingModalDialogStyle, margin: 0}">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h3 class="modal-title">Selected text</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <pre>{{ selectedText }}</pre>
+                <p>Add to:</p>
+                <div class="row">
+                  <div class="col">
+                    <p><button class="btn btn-primary" @click="wording += selectedText" data-bs-dismiss="modal">Wording</button></p>
                   </div>
+                  <div class="col">
+                    <p><button class="btn btn-primary" @click="directives += selectedText" data-bs-dismiss="modal">Directives</button></p>
+                    </div>
                 </div>
               </div>
             </div>
