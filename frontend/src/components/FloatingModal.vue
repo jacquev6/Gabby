@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
-import { useFloating, shift, flip, offset } from '@floating-ui/vue'
+import { useFloating, shift, flip } from '@floating-ui/vue'
 import bootstrap from 'bootstrap/dist/js/bootstrap.bundle.min.js'
 
 const props = defineProps({
@@ -15,7 +15,7 @@ const emit = defineEmits([
 const modal = ref(null)
 const dialog = ref(null)
 const floatingReference = ref(null)
-const {floatingStyles} = useFloating(floatingReference, dialog, { placement: 'top', middleware: [offset(-40), flip(), shift()] })
+const {floatingStyles} = useFloating(floatingReference, dialog, { placement: 'top', middleware: [flip(), shift()] })
 
 onMounted(() => {
   bootstrap.Modal.getOrCreateInstance(modal.value).show()
