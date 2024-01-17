@@ -14,8 +14,8 @@ function text_selected(text, point) {
   textSelectionMenuReference.value = {x: point.clientX, y: point.clientY}
 }
 
-var wording = ref('')
-var directives = ref('')
+const wording = ref('')
+const directives = ref('')
 </script>
 
 <template>
