@@ -9,7 +9,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits([
-  'dismissed',
+  'dismissed',  // () => void
 ])
 
 const modal = ref(null)

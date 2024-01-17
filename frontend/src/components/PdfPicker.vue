@@ -7,7 +7,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits([
-  'text-selected',
+  'text-selected',  // (text: string, point: {clientX: number, clientY: number}) => void
 ])
 
 // @todo Upgrade pdfjs-dist. 2.4.456 is OK but I couldn't get more recent versions to work.
