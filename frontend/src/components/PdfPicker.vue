@@ -2,8 +2,8 @@
 import { onMounted } from 'vue'
 
 const props = defineProps({
-  'src': String,
-  'page': Number,
+  src: String,
+  page: Number,
 })
 
 const emit = defineEmits([
