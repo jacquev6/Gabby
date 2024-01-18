@@ -5,11 +5,19 @@ import bootstrap from 'bootstrap/dist/js/bootstrap.bundle.min.js'
 import PdfPicker from './components/PdfPicker.vue'
 import FloatingModal from './components/FloatingModal.vue'
 
+
+const gabbyVersion = import.meta.env.VITE_GABBY_VERSION
+const userAgent = window.navigator.userAgent
+
+const windowWidth = ref(null)
+const windowHeight = ref(null)
 const pdfMaxWidth = ref(null)
 const pdfMaxHeight = ref(null)
 function onResize() {
-  pdfMaxWidth.value = window.innerWidth * 0.4
-  pdfMaxHeight.value = window.innerHeight
+  windowWidth.value = window.innerWidth
+  windowHeight.value = window.innerHeight
+  pdfMaxWidth.value = windowWidth.value * 0.4
+  pdfMaxHeight.value = windowHeight.value
 }
 onResize()
 window.addEventListener('resize', onResize);
@@ -126,29 +134,48 @@ onMounted(() => {
   </div>
 
   <div id="aboutModal" class="modal">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
       <div class="modal-content">
         <div class="modal-header">
           <h1 class="modal-title">{{ $t('about.transitive') }} <em>Gabby</em></h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <p>{{ $t('french-only') }} Bienvenue sur la démo de <em>Gabby</em>, l'interface d'adaptation de manuels scolaires pour le projet MALIN et le Cartable Fantastique.</p>
-          <p>
-            Le développement de <em>Gabby</em> vient de commencer, donc rien n'est définitif.
-            Cette démo est là pour vous permettre de me donner aussi tôt que vous le souhaitez votre avis sur l'interface.
-            Pour l'instant c'est une coquille vide ; il y a encore énormément à faire, dont beaucoup sera invisible.
-          </p>
-          <p>
-            Cliquez partout, essayez tout ce que vous voulez !
-            Gardez à l'esprit que rien n'est enregistré.
-            Faites-moi part de vos remarques, posez-moi vos questions et rapportez-moi les bugs et comportements contre-intuitifs.
-            Je rebouclerai avec Caroline si j'ai besoin de clarifier les priorités.
-            Si vous trouvez des problèmes spécifiques à un PDF, il serait pratique que vous me l'envoyiez si vous le pouvez.
-            Il est également pratique pour moi que vous me disiez quel navigateur web vous utilisez et que vous joigniez des captures d'écran à votre prose.
-          </p>
-
-          <p>Merci d'avance, <a href="mailto:vincent@vincent-jacques.net">Vincent Jacques &lt;vincent@vincent-jacques.net&gt;</a></p>
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col">
+                <p>{{ $t('french-only') }} Bienvenue sur la démo de <em>Gabby</em>, l'interface d'adaptation de manuels scolaires pour le projet MALIN et le Cartable Fantastique.</p>
+                <p>
+                  Je viens de commencer le développement de <em>Gabby</em> donc tout peut encore très facilement être modifié.
+                  Cette démo est là pour vous permettre de me donner votre avis sur l'interface aussi tôt que vous le souhaitez.
+                  Pour l'instant c'est une coquille vide ; il y a encore énormément à faire, dont beaucoup sera invisible.
+                </p>
+                <p>
+                  Cliquez partout, essayez tout ce que vous voulez&nbsp;!
+                  Gardez à l'esprit que rien n'est enregistré.
+                  Faites-moi part de vos remarques, posez-moi vos questions et rapportez-moi les bugs et comportements contre-intuitifs.
+                  Je rebouclerai avec Caroline si j'ai besoin de clarifier les priorités.
+                  Merci de joindre à vos messages les informations figurant dans la colone de droite
+                  et, si ça vous semble judicieux, des captures d'écran et le PDF que vous utilisez.
+                </p>
+                <p>Merci d'avance&nbsp;!</p>
+                <p class="text-end">Vincent Jacques</p>
+                <p>
+                  E-mail: <a href="mailto:vincent@vincent-jacques.net">vincent@vincent-jacques.net</a><br />
+                  GitHub: <a href="https://github.com/jacquev6/Gabby">@jacquev6/Gabby</a>
+                </p>
+              </div>
+              <div class="col-4">
+                <p>Information à joindre à tout rapport de bug ou question&nbsp;:</p>
+                <pre>
+Gabby version: {{ gabbyVersion }}
+Locale: {{ $i18n.locale }}
+User agent: {{ userAgent }}
+Window size: {{ windowWidth }}x{{ windowHeight }}
+                </pre>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -13,6 +13,7 @@ services:
     working_dir: /app
     environment:
       PORT: 80
+      VITE_GABBY_VERSION: dev
     command: [ "bash", "-c", "npm install && exec npm run dev" ]
 
 volumes:
