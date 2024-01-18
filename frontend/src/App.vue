@@ -5,9 +5,11 @@ import bootstrap from 'bootstrap/dist/js/bootstrap.bundle.min.js'
 import PdfPicker from './components/PdfPicker.vue'
 import FloatingModal from './components/FloatingModal.vue'
 
-const windowHeight = ref(null)
+const pdfMaxWidth = ref(null)
+const pdfMaxHeight = ref(null)
 function onResize() {
-  windowHeight.value = window.innerHeight
+  pdfMaxWidth.value = window.innerWidth * 0.4
+  pdfMaxHeight.value = window.innerHeight
 }
 onResize()
 window.addEventListener('resize', onResize);
@@ -60,7 +62,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <PdfPicker style="float: left" :pdf="pdf" :page="pageNumber" :targetHeight="windowHeight" @text-selected="textSelected" @pdf-loaded="pdfLoaded" />
+  <PdfPicker style="float: left" :pdf="pdf" :page="pageNumber" :maxWidth="pdfMaxWidth" :maxHeight="pdfMaxHeight" @text-selected="textSelected" @pdf-loaded="pdfLoaded" />
 
   <FloatingModal
     v-if="showTextSelectionMenu"
