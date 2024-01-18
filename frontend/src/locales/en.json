@@ -1,4 +1,8 @@
 {
+  "about": "About",
+  "about.transitive": "About",
+  "french-only": "🇫🇷 French version only, sorry! 🇫🇷",
+
   "edition": "Edition",
   "visualization": "Visualization",
   "inputFile": "Input file",

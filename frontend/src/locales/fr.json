@@ -1,4 +1,8 @@
 {
+  "about": "À propos",
+  "about.transitive": "À propos de",
+  "french-only": "",
+
   "edition": "Édition",
   "visualization": "Visualisation",
   "inputFile": "Fichier d'entrée",

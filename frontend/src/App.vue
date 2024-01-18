@@ -55,9 +55,8 @@ const sections = {
 const wording = ref('')
 const directives = ref('')
 
-const modal = ref(null)
 onMounted(() => {
-  (new bootstrap.Modal(modal.value)).show()
+  bootstrap.Modal.getOrCreateInstance('#aboutModal').show()
 })
 </script>
 
@@ -87,7 +86,8 @@ onMounted(() => {
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
-        <form>
+        <form class="d-flex">
+          <button class="btn form-control btn-secondary" data-bs-toggle="modal" data-bs-target="#aboutModal">{{ $t('about') }}</button>
           <select class="form-control" v-model="$i18n.locale">
             <option v-for="locale in $i18n.availableLocales" :key="locale" :value="locale">{{ {'en': '🇺🇸 English (US)', 'fr': '🇫🇷 Français'}[locale] }}</option>
           </select>
@@ -125,15 +125,15 @@ onMounted(() => {
     </div>
   </div>
 
-  <div ref="modal" class="modal">
+  <div id="aboutModal" class="modal">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <h3 class="modal-title">Bienvenue&nbsp;!</h3>
+          <h1 class="modal-title">{{ $t('about.transitive') }} <em>Gabby</em></h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <p>Bienvenue sur la démo de <em>Gabby</em>, l'interface d'adaptation de manuels scolaires pour le projet MALIN et le Cartable Fantastique.</p>
+          <p>{{ $t('french-only') }} Bienvenue sur la démo de <em>Gabby</em>, l'interface d'adaptation de manuels scolaires pour le projet MALIN et le Cartable Fantastique.</p>
           <p>
             Le développement de <em>Gabby</em> vient de commencer, donc rien n'est définitif.
             Cette démo est là pour vous permettre de me donner aussi tôt que vous le souhaitez votre avis sur l'interface.
