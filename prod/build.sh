@@ -6,8 +6,16 @@ set -o pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
 
-tag=$(date +%Y%m%d-%H%M%S)
+# Check cleanliness
+git diff --stat --exit-code
+git diff --stat --staged --exit-code
 
-docker build .. --file frontend/Dockerfile --build-arg GABBY_VERSION=$tag --tag jacquev6/gabby-frontend:$tag
+# Build
+timestamp=$(date +%Y%m%d-%H%M%S)
 
-docker push jacquev6/gabby-frontend:$tag
+git tag $timestamp
+docker build .. --file frontend/Dockerfile --build-arg GABBY_VERSION=$timestamp --tag jacquev6/gabby-frontend:$timestamp
+
+# Publish
+git push origin --tags
+docker push jacquev6/gabby-frontend:$timestamp
