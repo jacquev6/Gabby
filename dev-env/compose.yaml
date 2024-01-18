@@ -4,17 +4,16 @@ name: gabby-dev
 
 services:
   frontend:
-    image: node:20
+    build: frontend
     ports:
       - "${GABBY_DEV_PORT:-8080}:8080"
     volumes:
       - ../frontend:/app
-      - frontend-node-modules:/app/node_modules
+      # 'node_modules' not cached, to let Cypress' cache do its thing. Could be improved as described here:
+      # https://docs.cypress.io/guides/continuous-integration/introduction#Caching
+      - /app/node_modules
     working_dir: /app
     environment:
       PORT: 80
       VITE_GABBY_VERSION: dev
     command: [ "bash", "-c", "npm install && exec npm run dev" ]
-
-volumes:
-  frontend-node-modules:

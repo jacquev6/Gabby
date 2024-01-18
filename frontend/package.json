@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite --host 0.0.0.0 --port 8080 --strictPort",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test:e2e": "start-server-and-test 'vite --port 4173 --strictPort' http://localhost:4173/ 'cypress run --e2e --config baseUrl=http://localhost:4173/'",
+    "test:unit": "cypress run --component"
   },
   "dependencies": {
     "@floating-ui/vue": "^1.0.4",
@@ -18,6 +20,8 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.5.2",
+    "cypress": "^13.6.3",
+    "start-server-and-test": "^2.0.3",
     "vite": "^5.0.10"
   }
 }

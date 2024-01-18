@@ -14,3 +14,10 @@ You only need a recent version of [Docker](https://www.docker.com/) and a not an
     dev-env/run.sh
 
 And then open your browser at http://localhost:8080/.
+
+# Run tests
+
+With the development environment running:
+
+    dev-env/frontend/shell.sh -c 'npm run test:unit'  # Component tests
+    dev-env/frontend/shell.sh -c 'npm run test:e2e'  # End-to-end tests on development server
