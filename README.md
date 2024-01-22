@@ -7,7 +7,7 @@ It's part of the MALIN project.
 
 The development version of *Gabby* is running at https://gabby.vincent-jacques.net/.
 
-# Run locally
+# Run locally: the development environment
 
 You only need a recent version of [Docker](https://www.docker.com/) and a not ancient version of Bash to run:
 
@@ -16,7 +16,7 @@ You only need a recent version of [Docker](https://www.docker.com/) and a not an
 And then open your browser at http://localhost:8080/.
 Hit Ctrl+C to stop the development environment.
 
-# Run shells in the development environment
+## Shells
 
 With the development environment running:
 
@@ -24,9 +24,17 @@ With the development environment running:
     dev-env/backend/shell.sh
     dev-env/db/shell.sh
 
-# Adminer in the development environment
+## Django Admin
+
+The Django Admin is available at http://localhost:8080/api/admin/ with the following credentials:
+
+- Username: `gabby`
+- Password: `password`
+
+## Adminer
 
 [Adminer](https://www.adminer.org/) is a DB management tool similar to phpMyAdmin.
+You'll probably need it less often than the Django Admin.
 
 In the development environment, it is available at http://localhost:8080/api/adminer/ with the following credentials:
 
@@ -36,7 +44,7 @@ In the development environment, it is available at http://localhost:8080/api/adm
 - Password: `password`
 - Database: `gabby`
 
-# Run tests in the development environment
+# Tests
 
 With the development environment running:
 
