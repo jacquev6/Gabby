@@ -16,6 +16,12 @@ You only need a recent version of [Docker](https://www.docker.com/) and a not an
 And then open your browser at http://localhost:8080/.
 Hit Ctrl+C to stop the development environment.
 
+# Run shells in the development environment
+
+    dev-env/frontend/shell.sh
+    dev-env/backend/shell.sh
+    dev-env/db/shell.sh
+
 # Run tests
 
 With the development environment running:
