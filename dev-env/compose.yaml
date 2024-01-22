@@ -3,17 +3,31 @@
 name: gabby-dev
 
 services:
+  fanout:
+    image: nginx:latest
+    ports:
+      - "${GABBY_DEV_PORT:-8080}:80"
+    volumes:
+      - ./fanout/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - backend
+      - frontend
+
+  backend:
+    image: nginx:latest
+
   frontend:
     build: frontend
-    ports:
-      - "${GABBY_DEV_PORT:-8080}:8080"
     volumes:
       - ../frontend:/app
-      # 'node_modules' not cached, to let Cypress' cache do its thing. Could be improved as described here:
+      # This caching of 'node_modules' interferes with Cypress' cache
+      # @todo Improve as explained here:
       # https://docs.cypress.io/guides/continuous-integration/introduction#Caching
-      - /app/node_modules
+      - frontend-node-modules:/app/node_modules
     working_dir: /app
     environment:
-      PORT: 80
       VITE_GABBY_VERSION: dev
-    command: [ "bash", "-c", "npm install && exec npm run dev" ]
+    command: [ "bash", "-c", "npm install && npx vite --host 0.0.0.0 --port 80 --strictPort" ]
+
+volumes:
+  frontend-node-modules:
