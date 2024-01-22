@@ -1,3 +1,9 @@
-from django.shortcuts import render
+from rest_framework_json_api.views import ModelViewSet
 
-# Create your views here.
+from .models import Exercise
+from .serializers import ExerciseSerializer
+
+
+class ExerciseViewSet(ModelViewSet):
+    queryset = Exercise.objects.all()
+    serializer_class = ExerciseSerializer

@@ -4,8 +4,12 @@ from rest_framework import routers
 from rest_framework_json_api.schemas.openapi import SchemaGenerator
 from rest_framework.schemas import get_schema_view
 
+from .views import ExerciseViewSet
+
 
 router = routers.DefaultRouter(trailing_slash=False)
+
+router.register(r"exercises", ExerciseViewSet)
 
 urlpatterns = [
     path("", include(router.urls)),
