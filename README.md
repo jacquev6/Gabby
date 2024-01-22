@@ -24,6 +24,10 @@ With the development environment running:
     dev-env/backend/shell.sh
     dev-env/db/shell.sh
 
+## JSON:API documentation
+
+The [JSON:API](https://jsonapi.org/) is available at http://localhost:8080/api/, with a [Swagger](https://swagger.io/) UI at http://localhost:8080/api/swagger/ (and its [OpenAPI](https://www.openapis.org/) schema at http://localhost:8080/api/schema).
+
 ## Django Admin
 
 The Django Admin is available at http://localhost:8080/api/admin/ with the following credentials:

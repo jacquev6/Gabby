@@ -18,13 +18,13 @@ services:
       context: ../backend
       dockerfile: ../dev-env/backend/Dockerfile
     volumes:
-      - ../backend:/app
+      - ../backend:/app/code
       - ./backend:/app/dev-env:ro
-    working_dir: /app
+    working_dir: /app/code
     command: [
       "bash",
       "-c",
-      "./manage.py migrate && ./manage.py shell <dev-env/startup.py && exec ./manage.py runserver 0.0.0.0:80",
+      "./manage.py migrate && ./manage.py shell <../dev-env/startup.py && exec ./manage.py runserver 0.0.0.0:80",
     ]
     depends_on:
       db:

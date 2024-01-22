@@ -1,2 +1,4 @@
-django
+django-filter
+djangorestframework-jsonapi
 psycopg2-binary
+PyYaml
