@@ -24,6 +24,16 @@ services:
     depends_on:
       db:
         condition: service_healthy
+  # @todo Find a maintained alternative to either of these two images
+  adminer:
+    image: adminer:4
+    environment:
+      ADMINER_DEFAULT_DB_DRIVER: pgsql
+      ADMINER_DEFAULT_DB_HOST: db
+      ADMINER_DEFAULT_DB_NAME: gabby
+    depends_on:
+      db:
+        condition: service_healthy
   db:
     image: postgres:16
     volumes:

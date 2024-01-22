@@ -12,4 +12,5 @@ docker compose up --build --remove-orphans --detach
 docker compose logs --follow || true
 # Clean-up after Ctrl+C
 echo "Gabby dev-env: clean-up"
+docker compose down --remove-orphans
 docker compose rm --stop --volumes --force

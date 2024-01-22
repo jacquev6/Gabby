@@ -18,11 +18,25 @@ Hit Ctrl+C to stop the development environment.
 
 # Run shells in the development environment
 
+With the development environment running:
+
     dev-env/frontend/shell.sh
     dev-env/backend/shell.sh
     dev-env/db/shell.sh
 
-# Run tests
+# Adminer in the development environment
+
+[Adminer](https://www.adminer.org/) is a DB management tool similar to phpMyAdmin.
+
+In the development environment, it is available at http://localhost:8080/api/adminer/ with the following credentials:
+
+- System: `PostgreSQL`
+- Server: `db`
+- Username: `gabby`
+- Password: `password`
+- Database: `gabby`
+
+# Run tests in the development environment
 
 With the development environment running:
 
