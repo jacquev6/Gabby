@@ -24,11 +24,14 @@ window.addEventListener('resize', onResize);
 
 const pdf = ref('/test.pdf')
 const pdfName = ref(null)
+const pdfSha1 = ref(null)
 const pageNumber = ref(1)
 const pagesCount = ref(null)
 
-function pdfLoaded(name, numPages) {
+function pdfLoaded(name, sha1, numPages) {
+  console.log('pdfLoaded', name, sha1, numPages)
   pdfName.value = name
+  pdfSha1.value = sha1
   pagesCount.value = numPages
   pageNumber.value = 1
 }
@@ -112,6 +115,7 @@ onMounted(() => {
           <div class="mb-3">
             <label class="form-label">{{ $t('inputFile') }}</label>
             <input class="form-control" type="file" @change="(e) => { pdf = e.target.files[0] }" />
+            <p>(SHA-1: {{ pdfSha1 }})</p>
           </div>
 
           <div class="mb-3">

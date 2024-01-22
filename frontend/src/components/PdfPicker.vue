@@ -9,7 +9,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits([
-  'pdf-loaded',  // (name: string, numPages: number) => void
+  'pdf-loaded',  // (name: string, sha1: string, numPages: number) => void
   'text-selected',  // (text: string, point: {clientX: number, clientY: number}) => void
 ])
 
@@ -41,17 +41,24 @@ watch(() => props.pdf, load)
 async function load() {
   if (typeof props.pdf === 'string') {
     pdfDocument.value = await pdfjs.getDocument(props.pdf).promise
-    emit('pdf-loaded', props.pdf, pdfDocument.value.numPages)
+    const sha1 = await hexSha1(await pdfDocument.value.getData())
+    emit('pdf-loaded', props.pdf, sha1, pdfDocument.value.numPages)
     await display()
   } else if (props.pdf instanceof File) {
     const reader = new FileReader()
     reader.onload = async () => {
       pdfDocument.value = await pdfjs.getDocument({data: reader.result}).promise
-      emit('pdf-loaded', props.pdf.name, pdfDocument.value.numPages)
+      const sha1 = await hexSha1(reader.result)
+      emit('pdf-loaded', props.pdf.name, sha1, pdfDocument.value.numPages)
       await display()
     }
     reader.readAsArrayBuffer(props.pdf)
   }
+}
+
+async function hexSha1(data) {
+  const buffer = await crypto.subtle.digest("SHA-1", data)
+  return Array.from(new Uint8Array(buffer)).map((b) => b.toString(16).padStart(2, "0")).join("")
 }
 
 watch(() => props.page, display)
