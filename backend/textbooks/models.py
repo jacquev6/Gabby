@@ -13,3 +13,6 @@ class Exercise(models.Model):
     example = models.TextField(null=False, blank=True)
     clue = models.TextField(null=False, blank=True)
     wording = models.TextField(null=False, blank=True)
+
+    def __str__(self):
+        return f"Exercice {self.number} page {self.pdf_page} in {self.pdf_sha1}"
