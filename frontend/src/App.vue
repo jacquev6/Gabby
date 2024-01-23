@@ -18,21 +18,23 @@ window.addEventListener('resize', onResize);
 const pdf = ref('/test.pdf')
 const pdfName = ref(null)
 const pdfSha1 = ref(null)
-const pageNumber = ref(1)
-const pagesCount = ref(null)
+const pdfPageNumber = ref(null)
+const pdfPagesCount = ref(null)
 
-function pdfLoaded(name, sha1, numPages) {
+function pdfDisplayed(name, sha1, pagesCount, page) {
   pdfName.value = name
   pdfSha1.value = sha1
-  pagesCount.value = numPages
-  pageNumber.value = 1
+  pdfPagesCount.value = pagesCount
+  pdfPageNumber.value = page
 }
 
-watch(pageNumber, () => {
-  if (pageNumber.value < 1) {
-    pageNumber.value = 1
-  } else if (pageNumber.value > pagesCount.value) {
-    pageNumber.value = pagesCount.value
+// The PdfPicker doesn't rely on this clamping logic:
+// this is just to avoid a flash when the user selects an out-of-range page number.
+watch(pdfPageNumber, () => {
+  if (pdfPageNumber.value < 1) {
+    pdfPageNumber.value = 1
+  } else if (pdfPageNumber.value > pdfPagesCount.value) {
+    pdfPageNumber.value = pdfPagesCount.value
   }
 })
 
@@ -69,7 +71,7 @@ async function save() {
         id: null,
         attributes: {
           pdfSha1: pdfSha1.value,
-          pdfPage: pageNumber.value,
+          pdfPage: pdfPageNumber.value,
           number: exerciseNumber.value,
           ...Object.fromEntries(Object.entries(sections).map(([k, v]) => [k, v.value]))
         },
@@ -80,7 +82,7 @@ async function save() {
 </script>
 
 <template>
-  <PdfPicker style="float: left" :pdf="pdf" :page="pageNumber" :maxWidth="pdfMaxWidth" :maxHeight="pdfMaxHeight" @text-selected="textSelected" @pdf-loaded="pdfLoaded" />
+  <PdfPicker style="float: left" :pdf="pdf" :page="pdfPageNumber" :maxWidth="pdfMaxWidth" :maxHeight="pdfMaxHeight" @displayed="pdfDisplayed" @text-selected="textSelected" />
 
   <FloatingModal
     v-if="showTextSelectionMenu"
@@ -127,8 +129,8 @@ async function save() {
           </div>
 
           <div class="mb-3">
-            <label class="form-label">{{ $t('pageOver', {count : pagesCount}) }}</label>
-            <input class="form-control" type="number" v-model="pageNumber" />
+            <label class="form-label">{{ $t('pageOver', {count : pdfPagesCount}) }}</label>
+            <input class="form-control" type="number" v-model="pdfPageNumber" />
           </div>
 
           <div class="mb-3">
