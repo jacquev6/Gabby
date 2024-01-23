@@ -93,7 +93,8 @@ async function display() {
 
   uiContext.setTransform(viewport.transform[0], viewport.transform[1], viewport.transform[2], viewport.transform[3], viewport.transform[4], viewport.transform[5])
 
-  // @todo Ensure we don't get the "the same canvas can't be used for two render operations" error
+  // @todo Ensure we don't get this error:
+  // "Cannot use the same canvas during multiple render() operations. Use different canvas or ensure previous operations were cancelled or completed."
   await pdfPage.render({
     canvasContext: pdfContext,
     viewport,
