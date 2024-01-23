@@ -66,6 +66,7 @@ watch(() => props.maxWidth, display)
 watch(() => props.maxHeight, display)
 
 async function display() {
+  // @todo Avoid the case where page is '2' and a one-page PDF is loaded. It currently triggers this assert.
   console.assert(props.page >= 1 && props.page <= pdfDocument.value.numPages, 'Invalid page number', props.page, pdfDocument.value.numPages)
   const pdfPage = await pdfDocument.value.getPage(props.page)
 
@@ -92,6 +93,7 @@ async function display() {
 
   uiContext.setTransform(viewport.transform[0], viewport.transform[1], viewport.transform[2], viewport.transform[3], viewport.transform[4], viewport.transform[5])
 
+  // @todo Ensure we don't get the "the same canvas can't be used for two render operations" error
   await pdfPage.render({
     canvasContext: pdfContext,
     viewport,
