@@ -6,6 +6,7 @@
   "edition": "Edition",
   "visualization": "Visualization",
   "inputFile": "Input file",
+  "pageOver": "Page (on {count})",
 
   "selectedText": "Selected text",
   "addTo": "Add to:",

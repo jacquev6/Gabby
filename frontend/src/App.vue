@@ -119,7 +119,7 @@ onMounted(() => {
           </div>
 
           <div class="mb-3">
-            <label class="form-label">Page (sur {{ pagesCount }})</label>
+            <label class="form-label">{{ $t('pageOver', {count : pagesCount}) }}</label>
             <input class="form-control" type="number" v-model="pageNumber" />
           </div>
 
