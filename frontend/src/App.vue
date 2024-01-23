@@ -29,7 +29,6 @@ const pageNumber = ref(1)
 const pagesCount = ref(null)
 
 function pdfLoaded(name, sha1, numPages) {
-  console.log('pdfLoaded', name, sha1, numPages)
   pdfName.value = name
   pdfSha1.value = sha1
   pagesCount.value = numPages
@@ -54,21 +53,40 @@ function textSelected(text, point) {
   textSelectionMenuReference.value = {x: point.clientX, y: point.clientY}
 }
 
+const exerciseNumber = ref('')
 // @todo Use a single 'reactive' object instead of several 'ref's
 const sections = {
-  // French vocabulary used here to avoid a translation roundtrip from the specs in French
-  consignes: ref(''),
-  exemple: ref(''),
-  indice: ref(''),
-  énoncé: ref(''),
+  instructions: ref(''),
+  example: ref(''),
+  clue: ref(''),
+  wording: ref(''),
 }
 
-const wording = ref('')
-const directives = ref('')
 
 onMounted(() => {
   bootstrap.Modal.getOrCreateInstance('#aboutModal').show()
 })
+
+async function save() {
+  fetch('/api/exercises', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/vnd.api+json',
+    },
+    body: JSON.stringify({
+      data: {
+        type: 'exercise',
+        id: null,
+        attributes: {
+          pdfSha1: pdfSha1.value,
+          pdfPage: pageNumber.value,
+          number: exerciseNumber.value,
+          ...Object.fromEntries(Object.entries(sections).map(([k, v]) => [k, v.value]))
+        },
+      },
+    }),
+  })
+}
 </script>
 
 <template>
@@ -110,7 +128,7 @@ onMounted(() => {
   <div class="container-fluid">
     <div class="row">
       <div class="col">
-        <h2>{{ $t('edition') }}</h2>
+        <h2>{{ $t('exercise') }}</h2>
         <form>
           <div class="mb-3">
             <label class="form-label">{{ $t('inputFile') }}</label>
@@ -123,9 +141,21 @@ onMounted(() => {
             <input class="form-control" type="number" v-model="pageNumber" />
           </div>
 
+          <div class="mb-3">
+            <label class="form-label">{{ $t('exerciseNumber') }}</label>
+            <input class="form-control" type="text" v-model="exerciseNumber" />
+          </div>
+        </form>
+
+        <h2>{{ $t('edition') }}</h2>
+        <form>
           <div v-for="(content, section) in sections" class="mb-3">
             <label class="form-label">{{ $t(section) }}</label>
             <textarea class="form-control" rows="3" v-model="sections[section].value"></textarea>
+          </div>
+
+          <div class="mb-3">
+            <button class="btn btn-primary" type="text" @click.prevent="save">{{ $t('save') }}</button>
           </div>
         </form>
       </div>

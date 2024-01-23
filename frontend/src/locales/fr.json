@@ -3,18 +3,21 @@
   "about.transitive": "À propos de",
   "french-only": "",
 
+  "exercise": "Exercice",
   "edition": "Édition",
   "visualization": "Visualisation",
   "inputFile": "Fichier d'entrée",
   "pageOver": "Page (sur {count})",
+  "exerciseNumber": "Numéro",
+  "save": "Enregistrer",
 
   "selectedText": "Texte sélectionné",
   "addTo": "Ajouter à :",
 
-  "consignes": "Consignes",
-  "exemple": "Exemple",
-  "indice": "Indice",
-  "énoncé": "Énoncé",
+  "instructions": "Consignes",
+  "example": "Exemple",
+  "clue": "Indice",
+  "wording": "Énoncé",
 
   "not-yet-implemented": "Pas encore implémenté"
 }

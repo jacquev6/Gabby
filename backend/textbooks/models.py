@@ -7,9 +7,9 @@ class Exercise(models.Model):
     pdf_sha1 = models.CharField(null=False, blank=False, max_length=40)
     pdf_page = models.IntegerField(null=False)
 
-    number = models.TextField(null=False)
+    number = models.TextField(null=False, blank=False)
 
-    instructions = models.TextField(null=True, default=None)
-    example = models.TextField(null=True, default=None)
-    clue = models.TextField(null=True, default=None)
-    wording = models.TextField(null=True, default=None)
+    instructions = models.TextField(null=False, blank=True)
+    example = models.TextField(null=False, blank=True)
+    clue = models.TextField(null=False, blank=True)
+    wording = models.TextField(null=False, blank=True)

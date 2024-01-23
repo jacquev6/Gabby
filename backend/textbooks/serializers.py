@@ -9,6 +9,9 @@ class ExerciseSerializer(serializers.ModelSerializer):
         fields = (
             "pdf_sha1", "pdf_page",
             "number",
+            "url",
             "instructions", "example", "clue", "wording",
         )
-        read_only_fields = ("pdf_sha1", "pdf_page")
+        # @todo Mark read-only fields
+        # Currently the next line causes a failure in POST: 'null value in column "pdf_page"'
+        # read_only_fields = ("pdf_sha1", "pdf_page")
