@@ -63,10 +63,8 @@ services:
     build: frontend
     volumes:
       - ../frontend:/app
-      # This caching of 'node_modules' interferes with Cypress' cache
-      # @todo Improve as explained here:
-      # https://docs.cypress.io/guides/continuous-integration/introduction#Caching
       - frontend-node-modules:/app/node_modules
+      - frontend-cache:/root/.cache
     working_dir: /app
     environment:
       VITE_GABBY_VERSION: dev
@@ -75,3 +73,4 @@ services:
 volumes:
   db-data:
   frontend-node-modules:
+  frontend-cache:
