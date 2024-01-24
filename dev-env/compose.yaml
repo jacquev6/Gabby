@@ -21,6 +21,8 @@ services:
       - ../backend:/app/code
       - ./backend:/app/dev-env:ro
     working_dir: /app/code
+    environment:
+      DJANGO_SETTINGS_MODULE: gabby.settings.dev
     command: [
       "bash",
       "-c",
