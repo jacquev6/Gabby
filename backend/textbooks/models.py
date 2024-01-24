@@ -7,9 +7,16 @@ class Exercise(models.Model):
     pdf_sha1 = models.CharField(null=False, blank=False, max_length=40)
     pdf_page = models.IntegerField(null=False)
 
-    number = models.TextField(null=False)
+    # Exercise 'numbers' may very well not be actual numbers
+    # (e.g. single letters, or combinations of digits, letters and dots)
+    # But sorting such identifiers properly requires specification and implementation,
+    # so for now we assume they are indeed numbers.
+    number = models.IntegerField(null=False)
 
-    instructions = models.TextField(null=True, default=None)
-    example = models.TextField(null=True, default=None)
-    clue = models.TextField(null=True, default=None)
-    wording = models.TextField(null=True, default=None)
+    instructions = models.TextField(null=False, blank=True)
+    example = models.TextField(null=False, blank=True)
+    clue = models.TextField(null=False, blank=True)
+    wording = models.TextField(null=False, blank=True)
+
+    def __str__(self):
+        return f"Exercice {self.number} page {self.pdf_page} in {self.pdf_sha1}"

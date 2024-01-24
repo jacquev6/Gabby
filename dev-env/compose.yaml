@@ -24,7 +24,7 @@ services:
     command: [
       "bash",
       "-c",
-      "./manage.py migrate && ./manage.py shell <../dev-env/startup.py && exec ./manage.py runserver 0.0.0.0:80",
+      "./manage.py migrate && ./manage.py loaddata test-exercises && ./manage.py shell <../dev-env/startup.py && exec ./manage.py runserver 0.0.0.0:80",
     ]
     depends_on:
       db:

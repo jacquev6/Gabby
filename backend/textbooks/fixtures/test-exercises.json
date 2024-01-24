@@ -1,0 +1,41 @@
+[
+  {
+    "model": "textbooks.exercise",
+    "pk": 2,
+    "fields": {
+      "pdf_sha1": "7c68c50fb724712363be2ca9f050d8c7526ed983",
+      "pdf_page": 1,
+      "number": 3,
+      "instructions": "Complète avec : le, une, un, des, tu, elles, ils.\nPuis, souligne les verbes.",
+      "example": "",
+      "clue": "Il peut y avoir plusieurs solutions.",
+      "wording": "... vide\n... vident\n... dépenses\n... dépensent\n... savon\n... savons\n... commande"
+    }
+  },
+  {
+    "model": "textbooks.exercise",
+    "pk": 1,
+    "fields": {
+      "pdf_sha1": "7c68c50fb724712363be2ca9f050d8c7526ed983",
+      "pdf_page": 1,
+      "number": 4,
+      "instructions": "Écris une phrase en respectant l'ordre des classes grammaticales indiquées.",
+      "example": "pronom personnel / verbe / déterminant / nom commun :\nJe mange une pomme.",
+      "clue": "",
+      "wording": "nom propre / verbe / déterminant / adjectif / nom commun"
+    }
+  },
+  {
+    "model": "textbooks.exercise",
+    "pk": 3,
+    "fields": {
+      "pdf_sha1": "7c68c50fb724712363be2ca9f050d8c7526ed983",
+      "pdf_page": 2,
+      "number": 9,
+      "instructions": "Recopie l’intrus qui se cache dans chaque liste et écris sa classe.",
+      "example": "",
+      "clue": "",
+      "wording": "a. partons ◆ bidons ◆ allons ◆ vendons\nb. vidons ◆ mentons ◆ ballons ◆ salons\nc. voir ◆ armoire ◆ couloir ◆ dortoir"
+    }
+  }
+]
