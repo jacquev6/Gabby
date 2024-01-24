@@ -1,8 +1,8 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, reactive, watch } from 'vue'
 
 import AboutModal from './components/AboutModal.vue'
-import FloatingModal from './components/FloatingModal.vue'
+import ExerciseForm from './components/ExerciseForm.vue'
 import PdfPicker from './components/PdfPicker.vue'
 
 
@@ -21,11 +21,11 @@ const pdfSha1 = ref(null)
 const pdfPageNumber = ref(null)
 const pdfPagesCount = ref(null)
 
-function pdfDisplayed(name, sha1, pagesCount, page) {
+function pdfDisplayed(name, sha1, pagesCount, pageNumber) {
   pdfName.value = name
   pdfSha1.value = sha1
   pdfPagesCount.value = pagesCount
-  pdfPageNumber.value = page
+  pdfPageNumber.value = pageNumber
 }
 
 // The PdfPicker doesn't rely on this clamping logic:
@@ -38,66 +38,118 @@ watch(pdfPageNumber, () => {
   }
 })
 
-const selectedText = ref(null)
-const showTextSelectionMenu = ref(false)
-const textSelectionMenuReference = ref({x: 0, y: 0})
+const exercisesOnPage = reactive([])
+const mode = ref(null)
+const exerciseForm = ref(null)
+const fields = ['instructions', 'example', 'clue', 'wording']
+const currentExercise = reactive({})
+
+async function switchToListMode() {
+  currentExercise.attributes = {}
+  currentExercise.id = null
+  mode.value = 'list'
+  // @todo Ensure this list is sorted by exercise number (numerically even if they are strings)
+  const r = await fetch(`/api/exercises?filter[pdfSha1]=${pdfSha1.value}&filter[pdfPage]=${pdfPageNumber.value}`)
+  const exercises = (await r.json()).data  // @todo Handle pagination (or ensure results are not paginated when filtered by pdfSha1 and pdfPage)
+  exercisesOnPage.splice(0, exercisesOnPage.length, ...exercises)
+}
+
+async function switchToCreateMode() {
+  currentExercise.attributes = {
+    number: '',
+    instructions: '',
+    example: '',
+    clue: '',
+    wording: '',
+  }
+  currentExercise.id = null
+  mode.value = 'create'
+}
+
+async function switchToEditMode(e) {
+  currentExercise.id = e.id
+  currentExercise.attributes = e.attributes
+  mode.value = 'edit'
+}
+
+watch([pdfSha1, pdfPageNumber], switchToListMode)
 
 function textSelected(text, point) {
-  selectedText.value = text
-  showTextSelectionMenu.value = true
-  textSelectionMenuReference.value = {x: point.clientX, y: point.clientY}
+  exerciseForm.value?.textSelected(text, point)
 }
 
-const exerciseNumber = ref('')
-// @todo Use a single 'reactive' object instead of several 'ref's
-const sections = {
-  instructions: ref(''),
-  example: ref(''),
-  clue: ref(''),
-  wording: ref(''),
-}
-
-
-
-async function save() {
-  fetch('/api/exercises', {
-    method: 'POST',
-    headers: {
-      'content-type': 'application/vnd.api+json',
-    },
-    body: JSON.stringify({
-      data: {
-        type: 'exercise',
-        id: null,
-        attributes: {
-          pdfSha1: pdfSha1.value,
-          pdfPage: pdfPageNumber.value,
-          number: exerciseNumber.value,
-          ...Object.fromEntries(Object.entries(sections).map(([k, v]) => [k, v.value]))
-        },
+async function createExercise() {
+  await fetch(
+    '/api/exercises',
+    {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/vnd.api+json',
       },
-    }),
-  })
+      body: JSON.stringify({
+        data: {
+          type: 'exercise',
+          id: null,
+          attributes: {
+            pdfSha1: pdfSha1.value,
+            pdfPage: pdfPageNumber.value,
+            ...currentExercise.attributes,
+          },
+        }
+      }),
+    },
+  )
+
+  await switchToListMode()
+}
+
+async function updateExercise() {
+  await fetch(
+    `/api/exercises/${currentExercise.id}`,
+      {
+      method: 'PATCH',
+      headers: {
+        'content-type': 'application/vnd.api+json',
+      },
+      body: JSON.stringify({
+        data: {
+          type: 'exercise',
+          id: currentExercise.id,
+          attributes: {
+            pdfSha1: pdfSha1.value,
+            pdfPage: pdfPageNumber.value,
+            ...currentExercise.attributes,
+          },
+        }
+      }),
+    },
+  )
+
+  await switchToListMode()
+}
+
+async function deleteExercise(exercise) {
+  await fetch(
+    `/api/exercises/${exercise.id}`,
+    {
+      method: 'DELETE',
+    },
+  )
+
+  await switchToListMode()
 }
 </script>
 
 <template>
-  <PdfPicker style="float: left" :pdf="pdf" :page="pdfPageNumber" :maxWidth="pdfMaxWidth" :maxHeight="pdfMaxHeight" @displayed="pdfDisplayed" @text-selected="textSelected" />
-
-  <FloatingModal
-    v-if="showTextSelectionMenu"
-    :title="$t('selectedText')"
-    :reference="textSelectionMenuReference"
-    @dismissed="showTextSelectionMenu=false"
-  >
-    <pre>{{ selectedText }}</pre>
-    <hr/>
-    <p>{{ $t('addTo') }}</p>
-    <template v-for="(_, section, index) in sections">
-      <template v-if="index !== 0">&nbsp;</template>
-      <button class="btn btn-primary" @click="sections[section].value += selectedText; showTextSelectionMenu=false">{{ $t(section) }}</button>
-    </template>
-  </FloatingModal>
+  <PdfPicker
+    style="float: left"
+    :pdf="pdf"
+    :page="pdfPageNumber"
+    :maxWidth="pdfMaxWidth"
+    :maxHeight="pdfMaxHeight"
+    @displayed="pdfDisplayed"
+    @text-selected="textSelected"
+  />
 
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
@@ -120,41 +172,58 @@ async function save() {
   <div class="container-fluid">
     <div class="row">
       <div class="col">
-        <h2>{{ $t('exercise') }}</h2>
-        <form>
-          <div class="mb-3">
-            <label class="form-label">{{ $t('inputFile') }}</label>
-            <input class="form-control" type="file" @change="(e) => { pdf = e.target.files[0] }" />
-            <p>(SHA-1: {{ pdfSha1 }})</p>
-          </div>
+        <h2>{{ $t('edition') }}</h2>
+        <div class="mb-3">
+          <label class="form-label">{{ $t('inputFile') }}</label>
+          <input class="form-control" type="file" :disabled="mode !== 'list'" @change="(e) => { pdf = e.target.files[0] }" />
+        </div>
 
-          <div class="mb-3">
-            <label class="form-label">{{ $t('pageOver', {count : pdfPagesCount}) }}</label>
-            <input class="form-control" type="number" v-model="pdfPageNumber" />
-          </div>
+        <div class="mb-3">
+          <label class="form-label">{{ $t('pageOver', {count : pdfPagesCount}) }}</label>
+          <input class="form-control" type="number" :disabled="mode !== 'list'" v-model="pdfPageNumber" />
+        </div>
 
+        <template v-if="mode === 'list'">
+          <template v-if="exercisesOnPage.length">
+            <p>Exercices existants&nbsp;:</p>
+            <ul>
+              <li v-for="exercise in exercisesOnPage">
+                {{ exercise.attributes.number }} <button class="btn btn-primary" @click="switchToEditMode(exercise)">Éditer</button> <button class="btn btn-secondary" @click="deleteExercise(exercise)">Supprimer</button></li>
+            </ul>
+          </template>
+          <p><button class="btn btn-primary" @click="switchToCreateMode">Nouvel exercice</button></p>
+        </template>
+        <template v-else-if="mode !== null">
           <div class="mb-3">
             <label class="form-label">{{ $t('exerciseNumber') }}</label>
-            <input class="form-control" type="text" v-model="exerciseNumber" />
+            <input class="form-control" type="text" v-model="currentExercise.attributes.number" :disabled="mode === 'edit'"/>
           </div>
-        </form>
-
-        <h2>{{ $t('edition') }}</h2>
-        <form>
-          <div v-for="(content, section) in sections" class="mb-3">
-            <label class="form-label">{{ $t(section) }}</label>
-            <textarea class="form-control" rows="3" v-model="sections[section].value"></textarea>
+          <ExerciseForm
+            ref="exerciseForm"
+            :fields="fields"
+            :pdfSha1="pdfSha1"
+            :pdfPage="pdfPageNumber"
+            v-model="currentExercise.attributes"
+          />
+          <div v-if="mode === 'create'" class="mb-3">
+            <button class="btn btn-secondary" type="text" @click="switchToListMode">{{ $t('cancel') }}</button>
+            <button class="btn btn-primary" type="text" @click="createExercise" :disabled="currentExercise.attributes.number === ''">{{ $t('save') }}</button>
           </div>
-
-          <div class="mb-3">
-            <button class="btn btn-primary" type="text" @click.prevent="save">{{ $t('save') }}</button>
+          <div v-else-if="mode === 'edit'" class="mb-3">
+            <button class="btn btn-secondary" type="text" @click="switchToListMode">{{ $t('cancel') }}</button>
+            <button class="btn btn-primary" type="text" @click="updateExercise">{{ $t('save') }}</button>
           </div>
-        </form>
+        </template>
       </div>
       <div class="col">
         <h2>{{ $t('visualization') }}</h2>
         <p>({{ $t('not-yet-implemented') }})</p>
-        <p v-for="(content) in sections" class="mb-3">{{ content.value }}</p>
+        <template v-if="mode === 'create' || mode === 'edit'">
+          <template  v-for="field in fields">
+            <p>{{ $t(field) }}:</p>
+            <pre class="mb-3">{{ currentExercise.attributes[field] }}</pre>
+          </template>
+        </template>
       </div>
     </div>
   </div>

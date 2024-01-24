@@ -3,13 +3,13 @@
   "about.transitive": "À propos de",
   "french-only": "",
 
-  "exercise": "Exercice",
   "edition": "Édition",
   "visualization": "Visualisation",
   "inputFile": "Fichier d'entrée",
   "pageOver": "Page (sur {count})",
   "exerciseNumber": "Numéro",
   "save": "Enregistrer",
+  "cancel": "Annuler",
 
   "selectedText": "Texte sélectionné",
   "addTo": "Ajouter à :",

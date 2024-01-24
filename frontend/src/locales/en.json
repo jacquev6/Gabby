@@ -3,13 +3,13 @@
   "about.transitive": "About",
   "french-only": "🇫🇷 French version only, sorry! 🇫🇷",
 
-  "exercise": "Exercise",
   "edition": "Edition",
   "visualization": "Visualization",
   "inputFile": "Input file",
   "pageOver": "Page (on {count})",
   "exerciseNumber": "Number",
   "save": "Save",
+  "cancel": "Cancel",
 
   "selectedText": "Selected text",
   "addTo": "Add to:",
