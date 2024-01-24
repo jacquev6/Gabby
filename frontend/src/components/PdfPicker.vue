@@ -1,5 +1,9 @@
 <script setup>
 import { onMounted, watch } from 'vue'
+// @todo Upgrade pdfjs-dist. Version 4 fails to import using Vite, with the following error:
+// Top-level await is not available in the configured target environment
+import * as pdfjs from 'pdfjs-dist/build/pdf'
+pdfjs.GlobalWorkerOptions.workerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`
 
 const props = defineProps({
   pdf: null,  // string or File, but I don't know yet how to say that in JS
@@ -12,11 +16,6 @@ const emit = defineEmits([
   'displayed',  // (name: string, sha1: string, pagesCount: number, page: number) => void
   'text-selected',  // (text: string, point: {clientX: number, clientY: number}) => void
 ])
-
-// @todo Upgrade pdfjs-dist. 2.4.456 is OK but I couldn't get more recent versions to work.
-// (Some versions result in pdfjs being undefined; others just fail to import.)
-import pdfjs from 'pdfjs-dist/build/pdf'
-pdfjs.GlobalWorkerOptions.workerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`
 
 var textSpacingTolerance = 0
 
