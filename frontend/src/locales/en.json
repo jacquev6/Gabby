@@ -8,7 +8,12 @@
   "inputFile": "Input file",
   "pageOver": "Page (on {count})",
   "exerciseNumber": "Number",
+  "existingExercises": "Existing exercises:",
+  "create": "New exercise",
+  "edit": "Edit",
+  "delete": "Delete",
   "save": "Save",
+  "save.next": "Save then create next",
   "cancel": "Cancel",
 
   "selectedText": "Selected text",

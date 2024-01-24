@@ -58,9 +58,9 @@ async function switchToListMode() {
   }
 }
 
-async function switchToCreateMode() {
+function switchToCreateMode(number) {
   currentExercise.attributes = {
-    number: null,
+    number,
     instructions: '',
     example: '',
     clue: '',
@@ -70,7 +70,7 @@ async function switchToCreateMode() {
   mode.value = 'create'
 }
 
-async function switchToEditMode(e) {
+function switchToEditMode(e) {
   currentExercise.id = e.id
   currentExercise.attributes = e.attributes
   mode.value = 'edit'
@@ -103,8 +103,6 @@ async function createExercise() {
       }),
     },
   )
-
-  await switchToListMode()
 }
 
 async function updateExercise() {
@@ -128,8 +126,6 @@ async function updateExercise() {
       }),
     },
   )
-
-  await switchToListMode()
 }
 
 async function deleteExercise(exercise) {
@@ -139,8 +135,6 @@ async function deleteExercise(exercise) {
       method: 'DELETE',
     },
   )
-
-  await switchToListMode()
 }
 </script>
 
@@ -189,13 +183,13 @@ async function deleteExercise(exercise) {
 
         <template v-if="mode === 'list'">
           <template v-if="exercisesOnPage.length">
-            <p>Exercices existants&nbsp;:</p>
+            <p>{{ $t('existingExercises') }}</p>
             <ul>
               <li v-for="exercise in exercisesOnPage">
-                {{ exercise.attributes.number }} <button class="btn btn-primary" @click="switchToEditMode(exercise)">Éditer</button> <button class="btn btn-secondary" @click="deleteExercise(exercise)">Supprimer</button></li>
+                {{ exercise.attributes.number }} <button class="btn btn-primary" @click="switchToEditMode(exercise)">{{ $t('edit') }}</button> <button class="btn btn-secondary" @click="deleteExercise(exercise).then(switchToListMode)">{{ $t('delete') }}</button></li>
             </ul>
           </template>
-          <p><button class="btn btn-primary" @click="switchToCreateMode">Nouvel exercice</button></p>
+          <p><button class="btn btn-primary" @click="switchToCreateMode(null)">{{ $t('create') }}</button></p>
         </template>
         <template v-else-if="mode !== null">
           <div class="mb-3">
@@ -210,12 +204,12 @@ async function deleteExercise(exercise) {
             v-model="currentExercise.attributes"
           />
           <div v-if="mode === 'create'" class="mb-3">
-            <button class="btn btn-secondary" type="text" @click="switchToListMode">{{ $t('cancel') }}</button>
-            <button class="btn btn-primary" type="text" @click="createExercise" :disabled="currentExercise.attributes.number === null">{{ $t('save') }}</button>
+            <button class="btn btn-secondary" type="text" @click="switchToListMode()">{{ $t('cancel') }}</button>
+            <button class="btn btn-primary" type="text" @click="createExercise().then(() => switchToCreateMode(currentExercise.attributes.number + 1))" :disabled="currentExercise.attributes.number === null">{{ $t('save.next') }}</button>
           </div>
           <div v-else-if="mode === 'edit'" class="mb-3">
-            <button class="btn btn-secondary" type="text" @click="switchToListMode">{{ $t('cancel') }}</button>
-            <button class="btn btn-primary" type="text" @click="updateExercise">{{ $t('save') }}</button>
+            <button class="btn btn-secondary" type="text" @click="switchToListMode()">{{ $t('cancel') }}</button>
+            <button class="btn btn-primary" type="text" @click="updateExercise().then(switchToListMode)">{{ $t('save') }}</button>
           </div>
         </template>
       </div>
