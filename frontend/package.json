@@ -3,10 +3,6 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "scripts": {
-    "test:e2e": "start-server-and-test 'vite --port 4173 --strictPort' http://localhost:4173/ 'cypress run --e2e --config baseUrl=http://localhost:4173/'",
-    "test:unit": "cypress run --component"
-  },
   "dependencies": {
     "@floating-ui/vue": "^1.0.4",
     "@popperjs/core": "^2.11.8",
