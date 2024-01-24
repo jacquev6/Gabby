@@ -52,7 +52,7 @@ In the development environment, it is available at http://localhost:8080/api/adm
 
 With the development environment running:
 
-    dev-env/backend/shell.sh -c 'python manage.py test'  # Back-end unit tests
+    dev-env/backend/shell.sh -c 'python -Wa manage.py test --shuffle'  # Back-end unit tests
     dev-env/frontend/shell.sh -c 'npm run test:unit'  # Front-end component tests
     dev-env/frontend/shell.sh -c 'npm run test:e2e'  # End-to-end tests on development server
 
