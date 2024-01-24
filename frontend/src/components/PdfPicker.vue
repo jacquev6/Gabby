@@ -47,6 +47,7 @@ async function load() {
     arg = {data}
     name = props.pdf.name
   }
+  // @todo Handle loading failures
   document = await pdfjs.getDocument(arg).promise
   sha1 = await hexSha1(await document.getData())
   await display(1)

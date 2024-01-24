@@ -43,6 +43,7 @@ defineExpose({
     :reference="textSelectionMenuReference"
     @dismissed="showTextSelectionMenu=false"
   >
+    <!-- @todo? Consider making this an editable field (to allow editing before adding to the form) -->
     <pre>{{ selectedText }}</pre>
     <hr/>
     <p>{{ $t('addTo') }}</p>

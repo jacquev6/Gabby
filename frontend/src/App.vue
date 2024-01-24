@@ -6,6 +6,8 @@ import ExerciseForm from './components/ExerciseForm.vue'
 import PdfPicker from './components/PdfPicker.vue'
 
 
+// @todo Handle API failures and slow-downs
+
 const pdfMaxWidth = ref(null)
 const pdfMaxHeight = ref(null)
 function onResize() {
@@ -17,6 +19,7 @@ window.addEventListener('resize', onResize);
 
 const pdf = ref('/test.pdf')
 const pdfName = ref(null)
+// @todo Use a stronger hash function
 const pdfSha1 = ref(null)
 const pdfPageNumber = ref(null)
 const pdfPagesCount = ref(null)
@@ -139,6 +142,7 @@ async function deleteExercise(exercise) {
 </script>
 
 <template>
+  <!-- @todo Disable when not usable -->
   <PdfPicker
     style="float: left"
     :pdf="pdf"
@@ -171,6 +175,9 @@ async function deleteExercise(exercise) {
     <div class="row">
       <div class="col">
         <h2>{{ $t('edition') }}</h2>
+        <!-- @todo Make this section smaller:
+        either keep pdf and page fields on the same line or maybe page and exercise numbers on the same line?
+        But keep it visually stable when switching modes (list <-> create/edit) -->
         <div class="mb-3">
           <label class="form-label">{{ $t('inputFile') }}</label>
           <input class="form-control" type="file" :disabled="mode !== 'list'" @change="(e) => { pdf = e.target.files[0] }" />
@@ -184,6 +191,9 @@ async function deleteExercise(exercise) {
         <template v-if="mode === 'list'">
           <template v-if="exercisesOnPage.length">
             <p>{{ $t('existingExercises') }}</p>
+            <!-- @todo Make this list prettier: currently, its large buttons stick to each other -->
+            <!-- @todo? Maybe replace buttons by icons (a pen to edit, a bin to delete) -->
+            <!-- @todo Add the first few words on the exercise.instructions in the list, after the .number -->
             <ul>
               <li v-for="exercise in exercisesOnPage">
                 {{ exercise.attributes.number }} <button class="btn btn-primary" @click="switchToEditMode(exercise)">{{ $t('edit') }}</button> <button class="btn btn-secondary" @click="deleteExercise(exercise).then(switchToListMode)">{{ $t('delete') }}</button></li>
@@ -216,6 +226,7 @@ async function deleteExercise(exercise) {
       <div class="col">
         <h2>{{ $t('visualization') }}</h2>
         <template v-if="mode === 'create' || mode === 'edit'">
+          <!-- @todo Retrieve from the back-end -->
           <p>({{ $t('not-yet-implemented') }})</p>
           <template  v-for="field in fields">
             <p>{{ $t(field) }}:</p>

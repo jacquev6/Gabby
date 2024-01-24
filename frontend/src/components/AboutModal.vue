@@ -41,6 +41,7 @@ onMounted(() => {
                 </p>
                 <p>
                   Cliquez partout, essayez tout ce que vous voulez&nbsp;!
+                  <!-- @todo Update to say things are stored, but shared -->
                   Gardez à l'esprit que rien n'est enregistré.
                   Faites-moi part de vos remarques, posez-moi vos questions et rapportez-moi les bugs et comportements contre-intuitifs.
                   Je rebouclerai avec Caroline si j'ai besoin de clarifier les priorités.
