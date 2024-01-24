@@ -3,13 +3,6 @@ import { ref, onMounted } from 'vue'
 import bootstrap from 'bootstrap/dist/js/bootstrap.bundle.min.js'
 
 
-// @todo Fix this scenario or report the bug to Bootstrap:
-// - display the page
-// - click *in the background* to close the modal
-// - click the "About" button
-// - observe a log with the error "Uncaught TypeError: Modal.getInstance(...) is null"
-// (Note that this doe not happen if the modal is closed by clicking the "Close" button.)
-
 const gabbyVersion = import.meta.env.VITE_GABBY_VERSION
 const userAgent = window.navigator.userAgent
 
@@ -29,7 +22,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div ref="aboutModal" class="modal">
+  <div ref="aboutModal" class="modal fade">
     <div class="modal-dialog modal-xl">
       <div class="modal-content">
         <div class="modal-header">
