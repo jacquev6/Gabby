@@ -48,15 +48,14 @@ async function switchToListMode() {
   currentExercise.attributes = {}
   currentExercise.id = null
   mode.value = 'list'
-  // @todo Ensure this list is sorted by exercise number (numerically even if they are strings)
-  const r = await fetch(`/api/exercises?filter[pdfSha1]=${pdfSha1.value}&filter[pdfPage]=${pdfPageNumber.value}`)
+  const r = await fetch(`/api/exercises?sort=number&filter[pdfSha1]=${pdfSha1.value}&filter[pdfPage]=${pdfPageNumber.value}`)
   const exercises = (await r.json()).data  // @todo Handle pagination (or ensure results are not paginated when filtered by pdfSha1 and pdfPage)
   exercisesOnPage.splice(0, exercisesOnPage.length, ...exercises)
 }
 
 async function switchToCreateMode() {
   currentExercise.attributes = {
-    number: '',
+    number: null,
     instructions: '',
     example: '',
     clue: '',
@@ -196,7 +195,7 @@ async function deleteExercise(exercise) {
         <template v-else-if="mode !== null">
           <div class="mb-3">
             <label class="form-label">{{ $t('exerciseNumber') }}</label>
-            <input class="form-control" type="text" v-model="currentExercise.attributes.number" :disabled="mode === 'edit'"/>
+            <input class="form-control" type="number" v-model="currentExercise.attributes.number" :disabled="mode === 'edit'"/>
           </div>
           <ExerciseForm
             ref="exerciseForm"
@@ -207,7 +206,7 @@ async function deleteExercise(exercise) {
           />
           <div v-if="mode === 'create'" class="mb-3">
             <button class="btn btn-secondary" type="text" @click="switchToListMode">{{ $t('cancel') }}</button>
-            <button class="btn btn-primary" type="text" @click="createExercise" :disabled="currentExercise.attributes.number === ''">{{ $t('save') }}</button>
+            <button class="btn btn-primary" type="text" @click="createExercise" :disabled="currentExercise.attributes.number === null">{{ $t('save') }}</button>
           </div>
           <div v-else-if="mode === 'edit'" class="mb-3">
             <button class="btn btn-secondary" type="text" @click="switchToListMode">{{ $t('cancel') }}</button>

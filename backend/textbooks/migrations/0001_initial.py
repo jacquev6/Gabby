@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(primary_key=True, serialize=False)),
                 ('pdf_sha1', models.CharField(max_length=40)),
                 ('pdf_page', models.IntegerField()),
-                ('number', models.TextField()),
+                ('number', models.IntegerField()),
                 ('instructions', models.TextField(blank=True)),
                 ('example', models.TextField(blank=True)),
                 ('clue', models.TextField(blank=True)),

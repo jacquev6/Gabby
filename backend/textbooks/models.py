@@ -7,7 +7,11 @@ class Exercise(models.Model):
     pdf_sha1 = models.CharField(null=False, blank=False, max_length=40)
     pdf_page = models.IntegerField(null=False)
 
-    number = models.TextField(null=False, blank=False)
+    # Exercise 'numbers' may very well not be actual numbers
+    # (e.g. single letters, or combinations of digits, letters and dots)
+    # But sorting such identifiers properly requires specification and implementation,
+    # so for now we assume they are indeed numbers.
+    number = models.IntegerField(null=False)
 
     instructions = models.TextField(null=False, blank=True)
     example = models.TextField(null=False, blank=True)
