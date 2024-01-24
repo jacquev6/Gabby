@@ -55,7 +55,6 @@ async function switchToListMode() {
     const r = await (await fetch(next)).json()
     exercisesOnPage.splice(exercisesOnPage.length, 0, ...r.data)
     next = r.links.next
-    console.log(exercisesOnPage)
   }
 }
 
