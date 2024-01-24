@@ -29,7 +29,6 @@ services:
     depends_on:
       db:
         condition: service_healthy
-  # @todo Find a maintained alternative to either of these two images
   adminer:
     image: adminer:4
     environment:
