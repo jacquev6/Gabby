@@ -215,11 +215,11 @@ async function deleteExercise(exercise) {
       </div>
       <div class="col">
         <h2>{{ $t('visualization') }}</h2>
-        <p>({{ $t('not-yet-implemented') }})</p>
         <template v-if="mode === 'create' || mode === 'edit'">
+          <p>({{ $t('not-yet-implemented') }})</p>
           <template  v-for="field in fields">
             <p>{{ $t(field) }}:</p>
-            <pre class="mb-3">{{ currentExercise.attributes[field] }}</pre>
+            <p>{{ currentExercise.attributes[field] }}</p>
           </template>
         </template>
       </div>
