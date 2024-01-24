@@ -190,7 +190,7 @@ class ExerciseTests(APITransactionTestCase):
                 "type": "exercise",
                 "id": "1",
                 "attributes": {
-                    "pdfSha1": "3f786850e387550fdab836ed7e6dc881de23001b", "pdfPage": 16, "number": 12,
+                    "pdfSha1": "3f786850e387550fdab836ed7e6dc881de23001b", "pdfPage": 16, "number": 11,
                     "instructions": "INSTRUCTIONS", "example": "EXAMPLE", "clue": "CLUE", "wording": "WORDING",
                 },
             },
@@ -202,7 +202,7 @@ class ExerciseTests(APITransactionTestCase):
                 "type": "exercise",
                 "id": "1",
                 "attributes": {
-                    "pdfSha1": "3f786850e387550fdab836ed7e6dc881de23001b", "pdfPage": 16, "number": 12,
+                    "pdfSha1": "3f786850e387550fdab836ed7e6dc881de23001b", "pdfPage": 16, "number": 11,
                     "instructions": "INSTRUCTIONS", "example": "EXAMPLE", "clue": "CLUE", "wording": "WORDING",
                 },
                 "links": {"self": "http://testserver/api/exercises/1"},
@@ -214,7 +214,7 @@ class ExerciseTests(APITransactionTestCase):
         self.assertEqual(exercise.id, 1)
         self.assertEqual(exercise.pdf_sha1, "3f786850e387550fdab836ed7e6dc881de23001b")
         self.assertEqual(exercise.pdf_page, 16)
-        self.assertEqual(exercise.number, 12)
+        self.assertEqual(exercise.number, 11)
         self.assertEqual(exercise.instructions, "INSTRUCTIONS")
         self.assertEqual(exercise.example, "EXAMPLE")
         self.assertEqual(exercise.clue, "CLUE")
