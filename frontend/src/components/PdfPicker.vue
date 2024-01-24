@@ -1,9 +1,7 @@
 <script setup>
 import { onMounted, watch } from 'vue'
-// @todo Upgrade pdfjs-dist. Version 4 fails to import using Vite, with the following error:
-// Top-level await is not available in the configured target environment
 import * as pdfjs from 'pdfjs-dist/build/pdf'
-pdfjs.GlobalWorkerOptions.workerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`
+pdfjs.GlobalWorkerOptions.workerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`
 
 const props = defineProps({
   pdf: null,  // string or File, but I don't know yet how to say that in JS
