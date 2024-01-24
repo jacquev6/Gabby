@@ -48,9 +48,15 @@ async function switchToListMode() {
   currentExercise.attributes = {}
   currentExercise.id = null
   mode.value = 'list'
-  const r = await fetch(`/api/exercises?sort=number&filter[pdfSha1]=${pdfSha1.value}&filter[pdfPage]=${pdfPageNumber.value}`)
-  const exercises = (await r.json()).data  // @todo Handle pagination (or ensure results are not paginated when filtered by pdfSha1 and pdfPage)
-  exercisesOnPage.splice(0, exercisesOnPage.length, ...exercises)
+
+  exercisesOnPage.splice(0, exercisesOnPage.length)
+  var next = `/api/exercises?filter[pdfPage]=${pdfPageNumber.value}&filter[pdfSha1]=${pdfSha1.value}&sort=number`
+  while (next) {
+    const r = await (await fetch(next)).json()
+    exercisesOnPage.splice(exercisesOnPage.length, 0, ...r.data)
+    next = r.links.next
+    console.log(exercisesOnPage)
+  }
 }
 
 async function switchToCreateMode() {

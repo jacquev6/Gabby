@@ -133,7 +133,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 JSON_API_FORMAT_FIELD_NAMES = "camelize"
 JSON_API_FORMAT_TYPES = "camelize"
 REST_FRAMEWORK = {
-    "PAGE_SIZE": 5,
+    "PAGE_SIZE": 2,  # @todo Increase for production: this very small value ensures we detect early if clients don't get all pages
     "EXCEPTION_HANDLER": "rest_framework_json_api.exceptions.exception_handler",
     "DEFAULT_PAGINATION_CLASS": "rest_framework_json_api.pagination.JsonApiPageNumberPagination",  # noqa: B950
     "DEFAULT_PARSER_CLASSES": (
