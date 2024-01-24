@@ -4,8 +4,6 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "vite build  # @todo Document use or remove",
-    "preview": "vite preview  # @todo Document use or remove",
     "test:e2e": "start-server-and-test 'vite --port 4173 --strictPort' http://localhost:4173/ 'cypress run --e2e --config baseUrl=http://localhost:4173/'",
     "test:unit": "cypress run --component"
   },
