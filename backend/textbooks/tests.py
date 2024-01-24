@@ -265,6 +265,123 @@ class ExerciseTests(APITransactionTestCase):
         self.assertEqual(exercise.clue, "clue")
         self.assertEqual(exercise.wording, "wording")
 
+    def test_patch__read_only_pdf_sha1(self):
+        Exercise.objects.create(
+            pdf_sha1="3f786850e387550fdab836ed7e6dc881de23001b",
+            pdf_page=16,
+            number=11,
+            instructions="instructions",
+            example="example",
+            clue="clue",
+            wording="wording",
+        )
+
+        payload = {
+            "data": {
+                "type": "exercise",
+                "id": "1",
+                "attributes": {
+                    "pdfSha1": "foobar",
+                },
+            },
+        }
+        response = self.client.patch(reverse("exercise-detail", args=[1]), payload, format="vnd.api+json")
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.json(), {'errors': [{'code': 'invalid',
+             'detail': 'pdfSha1 is immutable once set',
+             'source': {'pointer': '/data/attributes/pdfSha1'},
+             'status': '400'}
+        ]})
+
+        self.assertEqual(Exercise.objects.count(), 1)
+        exercise = Exercise.objects.get()
+        self.assertEqual(exercise.id, 1)
+        self.assertEqual(exercise.pdf_sha1, "3f786850e387550fdab836ed7e6dc881de23001b")
+        self.assertEqual(exercise.pdf_page, 16)
+        self.assertEqual(exercise.number, 11)
+        self.assertEqual(exercise.instructions, "instructions")
+        self.assertEqual(exercise.example, "example")
+        self.assertEqual(exercise.clue, "clue")
+        self.assertEqual(exercise.wording, "wording")
+
+    def test_patch__read_only_pdf_page(self):
+        Exercise.objects.create(
+            pdf_sha1="3f786850e387550fdab836ed7e6dc881de23001b",
+            pdf_page=16,
+            number=11,
+            instructions="instructions",
+            example="example",
+            clue="clue",
+            wording="wording",
+        )
+
+        payload = {
+            "data": {
+                "type": "exercise",
+                "id": "1",
+                "attributes": {
+                    "pdfPage": 42,
+                },
+            },
+        }
+        response = self.client.patch(reverse("exercise-detail", args=[1]), payload, format="vnd.api+json")
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.json(), {'errors': [{'code': 'invalid',
+             'detail': 'pdfPage is immutable once set',
+             'source': {'pointer': '/data/attributes/pdfPage'},
+             'status': '400'}
+        ]})
+
+        self.assertEqual(Exercise.objects.count(), 1)
+        exercise = Exercise.objects.get()
+        self.assertEqual(exercise.id, 1)
+        self.assertEqual(exercise.pdf_sha1, "3f786850e387550fdab836ed7e6dc881de23001b")
+        self.assertEqual(exercise.pdf_page, 16)
+        self.assertEqual(exercise.number, 11)
+        self.assertEqual(exercise.instructions, "instructions")
+        self.assertEqual(exercise.example, "example")
+        self.assertEqual(exercise.clue, "clue")
+        self.assertEqual(exercise.wording, "wording")
+
+    def test_patch__read_only_number(self):
+        Exercise.objects.create(
+            pdf_sha1="3f786850e387550fdab836ed7e6dc881de23001b",
+            pdf_page=16,
+            number=11,
+            instructions="instructions",
+            example="example",
+            clue="clue",
+            wording="wording",
+        )
+
+        payload = {
+            "data": {
+                "type": "exercise",
+                "id": "1",
+                "attributes": {
+                    "number": 12,
+                },
+            },
+        }
+        response = self.client.patch(reverse("exercise-detail", args=[1]), payload, format="vnd.api+json")
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.json(), {'errors': [{'code': 'invalid',
+             'detail': 'number is immutable once set',
+             'source': {'pointer': '/data/attributes/number'},
+             'status': '400'}
+        ]})
+
+        self.assertEqual(Exercise.objects.count(), 1)
+        exercise = Exercise.objects.get()
+        self.assertEqual(exercise.id, 1)
+        self.assertEqual(exercise.pdf_sha1, "3f786850e387550fdab836ed7e6dc881de23001b")
+        self.assertEqual(exercise.pdf_page, 16)
+        self.assertEqual(exercise.number, 11)
+        self.assertEqual(exercise.instructions, "instructions")
+        self.assertEqual(exercise.example, "example")
+        self.assertEqual(exercise.clue, "clue")
+        self.assertEqual(exercise.wording, "wording")
+
     def test_delete(self):
         Exercise.objects.create(
             pdf_sha1="3f786850e387550fdab836ed7e6dc881de23001b",
