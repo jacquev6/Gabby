@@ -158,8 +158,8 @@ async function deleteExercise(exercise) {
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
         <div class="d-flex">
-          <button class="btn form-control btn-secondary" data-bs-toggle="modal" data-bs-target="#aboutModal">{{ $t('about') }}</button>
-          <select class="form-control" v-model="$i18n.locale">
+          <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#aboutModal">{{ $t('about') }}</button>
+          <select v-model="$i18n.locale">
             <option v-for="locale in $i18n.availableLocales" :key="locale" :value="locale">{{ {'en': '🇺🇸 English (US)', 'fr': '🇫🇷 Français'}[locale] }}</option>
           </select>
         </div>
