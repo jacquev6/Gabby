@@ -8,6 +8,6 @@ class ExerciseViewSet(ModelViewSet):
     queryset = Exercise.objects.all()
     serializer_class = ExerciseSerializer
     filterset_fields = {
-        "pdf_sha1": ["exact"],
+        "pdf_sha256": ["exact"],
         "pdf_page": ["exact"],
     }

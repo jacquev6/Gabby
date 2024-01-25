@@ -13,7 +13,7 @@ const props = defineProps({
 
 const emit = defineEmits([
   'loading-failed',  // (e: Exception) => void
-  'displayed',  // (name: string, sha1: string, pagesCount: number, page: number) => void
+  'displayed',  // (name: string, sha256: string, pagesCount: number, page: number) => void
   'text-selected',  // (text: string, point: {clientX: number, clientY: number}) => void
 ])
 
@@ -27,7 +27,7 @@ var uiContext = null
 
 var document = null
 var name = null
-var sha1 = null
+var sha256 = null
 var textContent = []
 
 onMounted(async () => {
@@ -56,12 +56,12 @@ async function load() {
     emit('loading-failed', e)
     return
   }
-  sha1 = await hexSha1(await document.getData())
+  sha256 = await hexSha256(await document.getData())
   await display(1)
 }
 
-async function hexSha1(data) {
-  const buffer = await crypto.subtle.digest("SHA-1", data)
+async function hexSha256(data) {
+  const buffer = await crypto.subtle.digest("SHA-256", data)
   return Array.from(new Uint8Array(buffer)).map((b) => b.toString(16).padStart(2, "0")).join("")
 }
 
@@ -125,7 +125,7 @@ async function display(page) {
     delete item.transform
   }
 
-  emit('displayed', name, sha1, document.numPages, page)
+  emit('displayed', name, sha256, document.numPages, page)
 }
 
 var startPoint = null

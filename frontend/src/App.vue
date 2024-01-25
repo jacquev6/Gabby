@@ -19,15 +19,14 @@ window.addEventListener('resize', onResize);
 
 const pdf = ref('/test.pdf')
 const pdfName = ref(null)
-// @todo Use a stronger hash function
-const pdfSha1 = ref(null)
+const pdfSha256 = ref(null)
 const pdfPageNumber = ref(null)
 const pdfPagesCount = ref(null)
 const pdfException = ref(null)
 
-function pdfDisplayed(name, sha1, pagesCount, pageNumber) {
+function pdfDisplayed(name, sha256, pagesCount, pageNumber) {
   pdfName.value = name
-  pdfSha1.value = sha1
+  pdfSha256.value = sha256
   pdfPagesCount.value = pagesCount
   pdfPageNumber.value = pageNumber
   pdfException.value = null
@@ -35,7 +34,7 @@ function pdfDisplayed(name, sha1, pagesCount, pageNumber) {
 
 function pdfLoadingFailed(e) {
   pdfName.value = null
-  pdfSha1.value = null
+  pdfSha256.value = null
   exercisesOnPage.splice(0, exercisesOnPage.length)
   pdfException.value = e
 }
@@ -62,7 +61,7 @@ async function switchToListMode() {
   mode.value = 'list'
 
   exercisesOnPage.splice(0, exercisesOnPage.length)
-  var next = `/api/exercises?filter[pdfPage]=${pdfPageNumber.value}&filter[pdfSha1]=${pdfSha1.value}&sort=number`
+  var next = `/api/exercises?filter[pdfPage]=${pdfPageNumber.value}&filter[pdfSha256]=${pdfSha256.value}&sort=number`
   while (next) {
     const r = await (await fetch(next)).json()
     exercisesOnPage.splice(exercisesOnPage.length, 0, ...r.data)
@@ -88,7 +87,7 @@ function switchToEditMode(e) {
   mode.value = 'edit'
 }
 
-watch([pdfSha1, pdfPageNumber], switchToListMode)
+watch([pdfSha256, pdfPageNumber], switchToListMode)
 
 function textSelected(text, point) {
   exerciseForm.value?.textSelected(text, point)
@@ -107,7 +106,7 @@ async function createExercise() {
           type: 'exercise',
           id: null,
           attributes: {
-            pdfSha1: pdfSha1.value,
+            pdfSha256: pdfSha256.value,
             pdfPage: pdfPageNumber.value,
             ...currentExercise.attributes,
           },
@@ -130,7 +129,7 @@ async function updateExercise() {
           type: 'exercise',
           id: currentExercise.id,
           attributes: {
-            pdfSha1: pdfSha1.value,
+            pdfSha256: pdfSha256.value,
             pdfPage: pdfPageNumber.value,
             ...currentExercise.attributes,
           },
@@ -199,7 +198,7 @@ function ellipsis(s) {
           <div class="col-3">
             <div class="mb-3">
               <label class="form-label">{{ $t('pageOver', {count : pdfPagesCount}) }}</label>
-              <input class="form-control" type="number" :disabled="pdfSha1 === null || mode !== 'list'" v-model="pdfPageNumber" />
+              <input class="form-control" type="number" :disabled="pdfSha256 === null || mode !== 'list'" v-model="pdfPageNumber" />
             </div>
           </div>
         </div>
@@ -230,7 +229,7 @@ function ellipsis(s) {
           <ExerciseForm
             ref="exerciseForm"
             :fields="fields"
-            :pdfSha1="pdfSha1"
+            :pdfSha256="pdfSha256"
             :pdfPage="pdfPageNumber"
             v-model="currentExercise.attributes"
           />

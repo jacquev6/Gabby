@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
             name='Exercise',
             fields=[
                 ('id', models.AutoField(primary_key=True, serialize=False)),
-                ('pdf_sha1', models.CharField(max_length=40)),
+                ('pdf_sha256', models.CharField(max_length=64)),
                 ('pdf_page', models.IntegerField()),
                 ('number', models.IntegerField()),
                 ('instructions', models.TextField(blank=True)),

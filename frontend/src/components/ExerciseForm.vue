@@ -9,7 +9,7 @@ const props = defineProps({
     type: Array,
     required: true,
   },
-  pdfSha1: {
+  pdfSha256: {
     type: String,
     required: true,
   },
