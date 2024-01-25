@@ -39,10 +39,12 @@ onMounted(() => {
                   Cette démo est là pour vous permettre de me donner votre avis sur l'interface aussi tôt que vous le souhaitez.
                   Pour l'instant c'est une coquille vide ; il y a encore énormément à faire, dont beaucoup sera invisible.
                 </p>
+                <p>Cliquez partout, essayez tout ce que vous voulez&nbsp;!</p>
                 <p>
-                  Cliquez partout, essayez tout ce que vous voulez&nbsp;!
-                  <!-- @todo Update to say things are stored, but shared -->
-                  Gardez à l'esprit que rien n'est enregistré.
+                  Les changements que vous faites sont enregistrés, mais de façon temporaire : la base de données sera effacée à la prochaine version.
+                  Notez aussi que ce que vous faites est visible et modifiable par tous les utilisateurs.
+                </p>
+                <p>
                   Faites-moi part de vos remarques, posez-moi vos questions et rapportez-moi les bugs et comportements contre-intuitifs.
                   Je rebouclerai avec Caroline si j'ai besoin de clarifier les priorités.
                   Merci de joindre à vos messages les informations figurant dans la colone de droite
