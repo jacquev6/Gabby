@@ -179,17 +179,19 @@ function ellipsis(s) {
     <div class="row">
       <div class="col">
         <h2>{{ $t('edition') }}</h2>
-        <!-- @todo Make this section smaller:
-        either keep pdf and page fields on the same line or maybe page and exercise numbers on the same line?
-        But keep it visually stable when switching modes (list <-> create/edit) -->
-        <div class="mb-3">
-          <label class="form-label">{{ $t('inputFile') }}</label>
-          <input class="form-control" type="file" :disabled="mode !== 'list'" @change="(e) => { pdf = e.target.files[0] }" />
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label">{{ $t('pageOver', {count : pdfPagesCount}) }}</label>
-          <input class="form-control" type="number" :disabled="mode !== 'list'" v-model="pdfPageNumber" />
+        <div class="row">
+          <div class="col">
+            <div class="mb-3">
+              <label class="form-label">{{ $t('inputFile') }}</label>
+              <input class="form-control" type="file" :disabled="mode !== 'list'" @change="(e) => { pdf = e.target.files[0] }" />
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="mb-3">
+              <label class="form-label">{{ $t('pageOver', {count : pdfPagesCount}) }}</label>
+              <input class="form-control" type="number" :disabled="mode !== 'list'" v-model="pdfPageNumber" />
+            </div>
+          </div>
         </div>
 
         <template v-if="mode === 'list'">
