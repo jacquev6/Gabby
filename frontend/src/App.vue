@@ -146,13 +146,13 @@ function ellipsis(s) {
 </script>
 
 <template>
-  <!-- @todo Disable when not usable -->
   <PdfPicker
     style="float: left"
     :pdf="pdf"
     :page="pdfPageNumber"
     :maxWidth="pdfMaxWidth"
     :maxHeight="pdfMaxHeight"
+    :disabled="mode === null || mode === 'list'"
     @displayed="pdfDisplayed"
     @text-selected="textSelected"
   />

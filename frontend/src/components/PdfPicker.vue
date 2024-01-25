@@ -8,6 +8,7 @@ const props = defineProps({
   page: Number,
   maxWidth: Number,
   maxHeight: Number,
+  disabled: Boolean,
 })
 
 const emit = defineEmits([
@@ -124,6 +125,7 @@ async function display(page) {
 var startPoint = null
 
 function pointerdown(event) {
+  if (props.disabled) { return }
   startPoint = makeCanvasPoint(event)
   uiCanvas.setPointerCapture(event.pointerId)
 }
