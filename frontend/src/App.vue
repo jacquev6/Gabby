@@ -201,13 +201,13 @@ function ellipsis(s) {
             </ul>
           </template>
           <div class="d-grid gap-2">
-            <button class="btn btn-primary" @click="switchToCreateMode(null)">{{ $t('create') }}</button>
+            <button class="btn btn-primary" @click="switchToCreateMode('')">{{ $t('create') }}</button>
           </div>
         </template>
         <template v-else-if="mode !== null">
           <div class="mb-3">
             <label class="form-label">{{ $t('exerciseNumber') }}</label>
-            <input class="form-control" type="number" v-model="currentExercise.attributes.number" :disabled="mode === 'edit'"/>
+            <input class="form-control" type="number" min="1" v-model="currentExercise.attributes.number" :disabled="mode === 'edit'"/>
           </div>
           <ExerciseForm
             ref="exerciseForm"
@@ -217,12 +217,13 @@ function ellipsis(s) {
             v-model="currentExercise.attributes"
           />
           <div v-if="mode === 'create'" class="mb-3">
-            <button class="btn btn-secondary" type="text" @click="switchToListMode()">{{ $t('cancel') }}</button>
-            <button class="btn btn-primary" type="text" @click="createExercise().then(() => switchToCreateMode(currentExercise.attributes.number + 1))" :disabled="currentExercise.attributes.number === null">{{ $t('save.next') }}</button>
+            <button class="btn btn-secondary" type="text" @click="switchToListMode()">{{ $t('cancel') }}
+            <!-- @todo How do I keep a space between buttons more explicitly than that? -->
+            </button> <button class="btn btn-primary" type="text" @click="createExercise().then(() => switchToCreateMode(currentExercise.attributes.number + 1))" :disabled="currentExercise.attributes.number === ''">{{ $t('save.next') }}</button>
           </div>
           <div v-else-if="mode === 'edit'" class="mb-3">
-            <button class="btn btn-secondary" type="text" @click="switchToListMode()">{{ $t('cancel') }}</button>
-            <button class="btn btn-primary" type="text" @click="updateExercise().then(switchToListMode)">{{ $t('save') }}</button>
+            <button class="btn btn-secondary" type="text" @click="switchToListMode()">{{ $t('cancel') }}
+            </button> <button class="btn btn-primary" type="text" @click="updateExercise().then(switchToListMode)">{{ $t('save') }}</button>
           </div>
         </template>
       </div>
