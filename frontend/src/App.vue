@@ -197,7 +197,9 @@ function ellipsis(s) {
             <p>{{ $t('existingExercises') }}</p>
             <ul>
               <li v-for="exercise in exercisesOnPage">
-                <strong>{{ exercise.attributes.number }}</strong> {{ ellipsis(exercise.attributes.instructions) }} <button class="btn btn-primary btn-sm" @click="switchToEditMode(exercise)">{{ $t('edit') }}</button> <button class="btn btn-primary btn-sm" @click="deleteExercise(exercise).then(switchToListMode)">{{ $t('delete') }}</button></li>
+                <strong>{{ exercise.attributes.number }}</strong> {{ ellipsis(exercise.attributes.instructions) }}
+                <button class="btn btn-primary btn-sm" @click="switchToEditMode(exercise)">{{ $t('edit') }}
+                </button> <button class="btn btn-secondary btn-sm" @click="deleteExercise(exercise).then(switchToListMode)">{{ $t('delete') }}</button></li>
             </ul>
           </template>
           <div class="d-grid gap-2">
