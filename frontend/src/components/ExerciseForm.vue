@@ -43,9 +43,7 @@ defineExpose({
     :reference="textSelectionMenuReference"
     @dismissed="showTextSelectionMenu=false"
   >
-    <!-- @todo? Consider making this an editable field (to allow editing before adding to the form) -->
-    <pre>{{ selectedText }}</pre>
-    <hr/>
+    <textarea class="form-control" rows="5" v-model="selectedText"></textarea>
     <p>{{ $t('addTo') }}</p>
     <template v-for="(field, index) in props.fields">
       <template v-if="index !== 0">&nbsp;</template>
