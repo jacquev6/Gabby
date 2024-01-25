@@ -12,6 +12,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits([
+  'loading-failed',  // (e: Exception) => void
   'displayed',  // (name: string, sha1: string, pagesCount: number, page: number) => void
   'text-selected',  // (text: string, point: {clientX: number, clientY: number}) => void
 ])
@@ -48,8 +49,13 @@ async function load() {
     arg = {data}
     name = props.pdf.name
   }
-  // @todo Handle loading failures
-  document = await pdfjs.getDocument(arg).promise
+  clearCanvas(pdfContext)
+  try {
+    document = await pdfjs.getDocument(arg).promise
+  } catch (e) {
+    emit('loading-failed', e)
+    return
+  }
   sha1 = await hexSha1(await document.getData())
   await display(1)
 }
@@ -132,7 +138,7 @@ function pointerdown(event) {
 
 function pointermove(event) {
   if (startPoint !== null) {
-    clearCanvas()
+    clearCanvas(uiContext)
 
     const r = selectionRectangle(startPoint, makeCanvasPoint(event))
 
@@ -156,7 +162,7 @@ function pointermove(event) {
 function pointerup(event) {
   uiCanvas.releasePointerCapture(event.pointerId)
   if (startPoint !== null) {
-    clearCanvas()
+    clearCanvas(uiContext)
 
     const r = selectionRectangle(startPoint, makeCanvasPoint(event))
 
@@ -215,11 +221,11 @@ function selectionRectangle(startPoint, endPoint) {
   }
 }
 
-function clearCanvas() {
-  uiContext.save()
-  uiContext.setTransform(1, 0, 0, 1, 0, 0)
-  uiContext.clearRect(0, 0, uiCanvas.width, uiCanvas.height)
-  uiContext.restore()
+function clearCanvas(context) {
+  context.save()
+  context.setTransform(1, 0, 0, 1, 0, 0)
+  context.clearRect(0, 0, uiCanvas.width, uiCanvas.height)
+  context.restore()
 }
 </script>
 

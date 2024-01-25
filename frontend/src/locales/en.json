@@ -3,6 +3,8 @@
   "about.transitive": "About",
   "french-only": "🇫🇷 French version only, sorry! 🇫🇷",
 
+  "error.pdf": "Error while loading the PDF:",
+
   "edition": "Edition",
   "visualization": "Visualization",
   "inputFile": "Input file",

@@ -23,12 +23,21 @@ const pdfName = ref(null)
 const pdfSha1 = ref(null)
 const pdfPageNumber = ref(null)
 const pdfPagesCount = ref(null)
+const pdfException = ref(null)
 
 function pdfDisplayed(name, sha1, pagesCount, pageNumber) {
   pdfName.value = name
   pdfSha1.value = sha1
   pdfPagesCount.value = pagesCount
   pdfPageNumber.value = pageNumber
+  pdfException.value = null
+}
+
+function pdfLoadingFailed(e) {
+  pdfName.value = null
+  pdfSha1.value = null
+  exercisesOnPage.splice(0, exercisesOnPage.length)
+  pdfException.value = e
 }
 
 // The PdfPicker doesn't rely on this clamping logic:
@@ -42,7 +51,7 @@ watch(pdfPageNumber, () => {
 })
 
 const exercisesOnPage = reactive([])
-const mode = ref(null)
+const mode = ref('list')
 const exerciseForm = ref(null)
 const fields = ['instructions', 'example', 'clue', 'wording']
 const currentExercise = reactive({})
@@ -152,7 +161,8 @@ function ellipsis(s) {
     :page="pdfPageNumber"
     :maxWidth="pdfMaxWidth"
     :maxHeight="pdfMaxHeight"
-    :disabled="mode === null || mode === 'list'"
+    :disabled="mode === 'list'"
+    @loading-failed="pdfLoadingFailed"
     @displayed="pdfDisplayed"
     @text-selected="textSelected"
   />
@@ -183,18 +193,22 @@ function ellipsis(s) {
           <div class="col">
             <div class="mb-3">
               <label class="form-label">{{ $t('inputFile') }}</label>
-              <input class="form-control" type="file" :disabled="mode !== 'list'" @change="(e) => { pdf = e.target.files[0] }" />
+              <input class="form-control" type="file" accept=".pdf" :disabled="mode !== 'list'" @change="(e) => { pdf = e.target.files[0] }" />
             </div>
           </div>
           <div class="col-3">
             <div class="mb-3">
               <label class="form-label">{{ $t('pageOver', {count : pdfPagesCount}) }}</label>
-              <input class="form-control" type="number" :disabled="mode !== 'list'" v-model="pdfPageNumber" />
+              <input class="form-control" type="number" :disabled="pdfSha1 === null || mode !== 'list'" v-model="pdfPageNumber" />
             </div>
           </div>
         </div>
 
-        <template v-if="mode === 'list'">
+        <template v-if="pdfException !== null">
+          <p>{{ $t('error.pdf') }}</p>
+          <pre>{{ pdfException }}</pre>
+        </template>
+        <template v-else-if="mode === 'list'">
           <template v-if="exercisesOnPage.length">
             <p>{{ $t('existingExercises') }}</p>
             <ul>
@@ -208,7 +222,7 @@ function ellipsis(s) {
             <button class="btn btn-primary" @click="switchToCreateMode('')">{{ $t('create') }}</button>
           </div>
         </template>
-        <template v-else-if="mode !== null">
+        <template v-else>
           <div class="mb-3">
             <label class="form-label">{{ $t('exerciseNumber') }}</label>
             <input class="form-control" type="number" min="1" v-model="currentExercise.attributes.number" :disabled="mode === 'edit'"/>
@@ -233,7 +247,7 @@ function ellipsis(s) {
       </div>
       <div class="col">
         <h2>{{ $t('visualization') }}</h2>
-        <template v-if="mode === 'create' || mode === 'edit'">
+        <template v-if="mode !== 'list'">
           <!-- @todo Retrieve from the back-end -->
           <p>({{ $t('not-yet-implemented') }})</p>
           <template  v-for="field in fields">
