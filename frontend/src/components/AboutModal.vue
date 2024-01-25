@@ -44,6 +44,7 @@ onMounted(() => {
                   Les changements que vous faites sont enregistrés, mais de façon temporaire : la base de données sera effacée à la prochaine version.
                   Notez aussi que ce que vous faites est visible et modifiable par tous les utilisateurs.
                 </p>
+                <p>Attention, les numéros d'exercises sont forcément numériques pour l'instant. Donc pas de "Défis langue" pour l'instant.</p>
                 <p>
                   Faites-moi part de vos remarques, posez-moi vos questions et rapportez-moi les bugs et comportements contre-intuitifs.
                   Je rebouclerai avec Caroline si j'ai besoin de clarifier les priorités.
