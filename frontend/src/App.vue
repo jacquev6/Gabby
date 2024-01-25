@@ -139,6 +139,10 @@ async function deleteExercise(exercise) {
     },
   )
 }
+
+function ellipsis(s) {
+  return s.length > 25 ? s.slice(0, 25) + '…' : s
+}
 </script>
 
 <template>
@@ -191,15 +195,14 @@ async function deleteExercise(exercise) {
         <template v-if="mode === 'list'">
           <template v-if="exercisesOnPage.length">
             <p>{{ $t('existingExercises') }}</p>
-            <!-- @todo Make this list prettier: currently, its large buttons stick to each other -->
-            <!-- @todo? Maybe replace buttons by icons (a pen to edit, a bin to delete) -->
-            <!-- @todo Add the first few words on the exercise.instructions in the list, after the .number -->
             <ul>
               <li v-for="exercise in exercisesOnPage">
-                {{ exercise.attributes.number }} <button class="btn btn-primary" @click="switchToEditMode(exercise)">{{ $t('edit') }}</button> <button class="btn btn-secondary" @click="deleteExercise(exercise).then(switchToListMode)">{{ $t('delete') }}</button></li>
+                <strong>{{ exercise.attributes.number }}</strong> {{ ellipsis(exercise.attributes.instructions) }} <button class="btn btn-primary btn-sm" @click="switchToEditMode(exercise)">{{ $t('edit') }}</button> <button class="btn btn-primary btn-sm" @click="deleteExercise(exercise).then(switchToListMode)">{{ $t('delete') }}</button></li>
             </ul>
           </template>
-          <p><button class="btn btn-primary" @click="switchToCreateMode(null)">{{ $t('create') }}</button></p>
+          <div class="d-grid gap-2">
+            <button class="btn btn-primary" @click="switchToCreateMode(null)">{{ $t('create') }}</button>
+          </div>
         </template>
         <template v-else-if="mode !== null">
           <div class="mb-3">
