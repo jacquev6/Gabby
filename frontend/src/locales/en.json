@@ -3,17 +3,28 @@
   "about.transitive": "About",
   "french-only": "🇫🇷 French version only, sorry! 🇫🇷",
 
+  "error.pdf": "Error while loading the PDF:",
+
   "edition": "Edition",
   "visualization": "Visualization",
   "inputFile": "Input file",
+  "pageOver": "Page (on {count})",
+  "exerciseNumber": "Number",
+  "existingExercises": "Existing exercises:",
+  "create": "New exercise",
+  "edit": "Edit",
+  "delete": "Delete",
+  "save": "Save",
+  "save.next": "Save then create next",
+  "cancel": "Cancel",
 
   "selectedText": "Selected text",
   "addTo": "Add to:",
 
-  "consignes": "Instructions",
-  "exemple": "Example",
-  "indice": "Clue",
-  "énoncé": "Wording",
+  "instructions": "Instructions",
+  "example": "Example",
+  "clue": "Clue",
+  "wording": "Wording",
 
   "not-yet-implemented": "Not yet implemented"
 }

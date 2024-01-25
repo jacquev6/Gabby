@@ -3,17 +3,28 @@
   "about.transitive": "À propos de",
   "french-only": "",
 
+  "error.pdf": "Erreur pendant le chargement du PDF :",
+
   "edition": "Édition",
   "visualization": "Visualisation",
   "inputFile": "Fichier d'entrée",
+  "pageOver": "Page (sur {count})",
+  "exerciseNumber": "Numéro",
+  "existingExercises": "Exercices existants :",
+  "create": "Nouvel exercice",
+  "edit": "Modifier",
+  "delete": "Supprimer",
+  "save": "Enregistrer",
+  "save.next": "Enregistrer puis créer le suivant",
+  "cancel": "Annuler",
 
   "selectedText": "Texte sélectionné",
   "addTo": "Ajouter à :",
 
-  "consignes": "Consignes",
-  "exemple": "Exemple",
-  "indice": "Indice",
-  "énoncé": "Énoncé",
+  "instructions": "Consignes",
+  "example": "Exemple",
+  "clue": "Indice",
+  "wording": "Énoncé",
 
   "not-yet-implemented": "Pas encore implémenté"
 }

@@ -1,22 +1,21 @@
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { onMounted, watch } from 'vue'
+import * as pdfjs from 'pdfjs-dist/build/pdf'
+pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs'
 
 const props = defineProps({
   pdf: null,  // string or File, but I don't know yet how to say that in JS
   page: Number,
   maxWidth: Number,
   maxHeight: Number,
+  disabled: Boolean,
 })
 
 const emit = defineEmits([
-  'pdf-loaded',  // (name: string, numPages: number) => void
+  'loading-failed',  // (e: Exception) => void
+  'displayed',  // (name: string, sha256: string, pagesCount: number, page: number) => void
   'text-selected',  // (text: string, point: {clientX: number, clientY: number}) => void
 ])
-
-// @todo Upgrade pdfjs-dist. 2.4.456 is OK but I couldn't get more recent versions to work.
-// (Some versions result in pdfjs being undefined; others just fail to import.)
-import pdfjs from 'pdfjs-dist/build/pdf'
-pdfjs.GlobalWorkerOptions.workerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`
 
 var textSpacingTolerance = 0
 
@@ -26,7 +25,9 @@ var pdfContext = null
 var uiCanvas = null
 var uiContext = null
 
-const pdfDocument = ref(null)
+var document = null
+var name = null
+var sha256 = null
 var textContent = []
 
 onMounted(async () => {
@@ -39,28 +40,42 @@ onMounted(async () => {
 watch(() => props.pdf, load)
 
 async function load() {
+  var arg = null
   if (typeof props.pdf === 'string') {
-    pdfDocument.value = await pdfjs.getDocument(props.pdf).promise
-    emit('pdf-loaded', props.pdf, pdfDocument.value.numPages)
-    await display()
-  } else if (props.pdf instanceof File) {
-    const reader = new FileReader()
-    reader.onload = async () => {
-      pdfDocument.value = await pdfjs.getDocument({data: reader.result}).promise
-      emit('pdf-loaded', props.pdf.name, pdfDocument.value.numPages)
-      await display()
-    }
-    reader.readAsArrayBuffer(props.pdf)
+    arg = props.pdf
+    name = props.pdf
+  } else {
+    const data = await props.pdf.arrayBuffer()
+    arg = {data}
+    name = props.pdf.name
   }
+  clearCanvas(pdfContext)
+  try {
+    document = await pdfjs.getDocument(arg).promise
+  } catch (e) {
+    emit('loading-failed', e)
+    return
+  }
+  sha256 = await hexSha256(await document.getData())
+  await display(1)
 }
 
-watch(() => props.page, display)
-watch(() => props.maxWidth, display)
-watch(() => props.maxHeight, display)
+async function hexSha256(data) {
+  const buffer = await crypto.subtle.digest("SHA-256", data)
+  return Array.from(new Uint8Array(buffer)).map((b) => b.toString(16).padStart(2, "0")).join("")
+}
 
-async function display() {
-  console.assert(props.page >= 1 && props.page <= pdfDocument.value.numPages, 'Invalid page number', props.page, pdfDocument.value.numPages)
-  const pdfPage = await pdfDocument.value.getPage(props.page)
+watch(() => props.page, () => display(props.page))
+watch(() => props.maxWidth, () => display(props.page))
+watch(() => props.maxHeight, () => display(props.page))
+
+var renderTask = null
+
+async function display(page) {
+  if (page < 1) { page = 1 }
+  if (page > document.numPages) { page = document.numPages }
+
+  const pdfPage = await document.getPage(page)
 
   const scale = (() => {
     const viewport = pdfPage.getViewport({scale: 1})
@@ -85,10 +100,21 @@ async function display() {
 
   uiContext.setTransform(viewport.transform[0], viewport.transform[1], viewport.transform[2], viewport.transform[3], viewport.transform[4], viewport.transform[5])
 
-  await pdfPage.render({
+  renderTask?.cancel()
+  renderTask = pdfPage.render({
     canvasContext: pdfContext,
     viewport,
-  }).promise
+  })
+  try {
+    await renderTask.promise
+  } catch (e) {
+    if (e.name === 'RenderingCancelledException') {
+      return
+    } else {
+      throw e
+    }
+  }
+  renderTask = null
 
   textContent = await pdfPage.getTextContent()
   for (var item of textContent.items) {
@@ -98,18 +124,21 @@ async function display() {
     item.top = item.transform[5] + item.height
     delete item.transform
   }
+
+  emit('displayed', name, sha256, document.numPages, page)
 }
 
 var startPoint = null
 
 function pointerdown(event) {
+  if (props.disabled) { return }
   startPoint = makeCanvasPoint(event)
   uiCanvas.setPointerCapture(event.pointerId)
 }
 
 function pointermove(event) {
   if (startPoint !== null) {
-    clearCanvas()
+    clearCanvas(uiContext)
 
     const r = selectionRectangle(startPoint, makeCanvasPoint(event))
 
@@ -133,7 +162,7 @@ function pointermove(event) {
 function pointerup(event) {
   uiCanvas.releasePointerCapture(event.pointerId)
   if (startPoint !== null) {
-    clearCanvas()
+    clearCanvas(uiContext)
 
     const r = selectionRectangle(startPoint, makeCanvasPoint(event))
 
@@ -192,11 +221,11 @@ function selectionRectangle(startPoint, endPoint) {
   }
 }
 
-function clearCanvas() {
-  uiContext.save()
-  uiContext.setTransform(1, 0, 0, 1, 0, 0)
-  uiContext.clearRect(0, 0, uiCanvas.width, uiCanvas.height)
-  uiContext.restore()
+function clearCanvas(context) {
+  context.save()
+  context.setTransform(1, 0, 0, 1, 0, 0)
+  context.clearRect(0, 0, uiCanvas.width, uiCanvas.height)
+  context.restore()
 }
 </script>
 
