@@ -6,8 +6,6 @@ pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs'
 const props = defineProps({
   pdf: null,  // string or File, but I don't know yet how to say that in JS
   page: Number,
-  maxWidth: Number,
-  maxHeight: Number,
   disabled: Boolean,
 })
 
@@ -77,16 +75,7 @@ async function display(page) {
 
   const pdfPage = await document.getPage(page)
 
-  const scale = (() => {
-    const viewport = pdfPage.getViewport({scale: 1})
-    return Math.min(
-      (props.maxHeight - 2) / viewport.height,
-      (props.maxWidth - 2) / viewport.width
-    )
-  })()
-  const viewport = pdfPage.getViewport({scale})
-  container.style.width = (viewport.width + 2) + 'px'
-  container.style.height = (viewport.height + 2) + 'px'
+  const viewport = pdfPage.getViewport({scale: 1})
   pdfCanvas.height = viewport.height
   pdfCanvas.width = viewport.width
   uiCanvas.height = viewport.height
@@ -199,8 +188,10 @@ function pointerup(event) {
 
 function makeCanvasPoint(event) {
   const rect = uiCanvas.getBoundingClientRect()
+  const scaleX = uiCanvas.width / rect.width
+  const scaleY = uiCanvas.height / rect.height
   return uiContext.getTransform().inverse().transformPoint(
-    new DOMPoint(event.clientX - rect.left, event.clientY - rect.top)
+    new DOMPoint((event.clientX - rect.left) * scaleX, (event.clientY - rect.top) * scaleY)
   )
 }
 
@@ -230,29 +221,8 @@ function clearCanvas(context) {
 </script>
 
 <template>
-  <div class="pdf-picker" ref="container">
-    <canvas ref="pdfCanvas" class="pdf"></canvas>
-    <canvas ref="uiCanvas" class="ui" @pointerdown="pointerdown" @pointermove="pointermove" @pointerup="pointerup"></canvas>
+  <div style="position: relative" ref="container">
+    <canvas ref="pdfCanvas" class="img img-fluid" style="border: 1px solid black"></canvas>
+    <canvas ref="uiCanvas" class="img img-fluid" style="position: absolute; top: 0; left: 0" @pointerdown="pointerdown" @pointermove="pointermove" @pointerup="pointerup"></canvas>
   </div>
 </template>
-
-<style scoped>
-div {
-  position: relative;
-  border: 1px solid black;
-}
-
-canvas {
-  position: absolute;
-  left: 0;
-  top: 0;
-}
-
-canvas.pdf {
-  z-index: 0;
-}
-
-canvas.ui {
-  z-index: 1;
-}
-</style>
