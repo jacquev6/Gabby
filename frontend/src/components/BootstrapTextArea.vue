@@ -7,6 +7,10 @@ defineOptions({
   inheritAttrs: false
 })
 
+const props = defineProps({
+  label: { type: String, required: true },
+})
+
 const model = defineModel({ type: String })
 
 const id = self.crypto.randomUUID()
@@ -20,7 +24,7 @@ defineExpose({
 
 <template>
   <div class="mb-3">
-    <label class="form-label" :for="id"><slot></slot></label>
+    <label class="form-label" :for="id">{{ label }}</label>
     <textarea class="form-control" :id="id" ref="textarea" v-model="model" v-bind="$attrs"></textarea>
   </div>
 </template>

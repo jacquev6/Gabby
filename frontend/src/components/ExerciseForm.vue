@@ -81,8 +81,8 @@ defineExpose({
     <label class="form-label" :for="numberFieldId">{{ $t('exerciseNumber') }}</label>
     <input class="form-control" :id="numberFieldId" type="number" min="1" v-model="model.number" :disabled="fixedNumber"/>
   </div>
-  <RequiredExerciseTextArea v-model="model.instructions">{{ $t('instructions') }}</RequiredExerciseTextArea>
-  <OptionalExerciseTextArea v-model="model.example">{{ $t('example') }}</OptionalExerciseTextArea>
-  <OptionalExerciseTextArea v-model="model.clue">{{ $t('clue') }}</OptionalExerciseTextArea>
-  <RequiredExerciseTextArea v-model="model.wording">{{ $t('wording') }}</RequiredExerciseTextArea>
+  <RequiredExerciseTextArea :label="$t('instructions')" v-model="model.instructions" />
+  <OptionalExerciseTextArea :label="$t('example')" v-model="model.example" />
+  <OptionalExerciseTextArea :label="$t('clue')" v-model="model.clue" />
+  <RequiredExerciseTextArea :label="$t('wording')" v-model="model.wording" />
 </template>
