@@ -15,6 +15,9 @@ const pdfPageNumber = ref(null)
 const pdfPagesCount = ref(null)
 const pdfException = ref(null)
 
+const fileFieldId = self.crypto.randomUUID()
+const pageNumberId = self.crypto.randomUUID()
+
 function pdfDisplayed(name, sha256, pagesCount, pageNumber) {
   pdfName.value = name
   pdfSha256.value = sha256
@@ -153,15 +156,15 @@ function ellipsis(s) {
           <div class="col">
             <div class="mb-3">
               <!-- @todo Display a "loading" animation when loading a new PDF or navigating to another page, until the page is displayed, and the list of existing exercices is retrieved -->
-              <label class="form-label">{{ $t('inputFile') }}</label>
-              <input class="form-control" type="file" accept=".pdf" :disabled="mode !== 'list'" @change="(e) => { pdf = e.target.files[0] }" />
+              <label class="form-label" :for="fileFieldId">{{ $t('inputFile') }}</label>
+              <input class="form-control" :id="fileFieldId" type="file" accept=".pdf" :disabled="mode !== 'list'" @change="(e) => { pdf = e.target.files[0] }" />
             </div>
           </div>
           <div class="col-3">
             <div class="mb-3">
-              <label class="form-label">{{ $t('pageOver', {count : pdfPagesCount}) }}</label>
+              <label class="form-label" :for="pageNumberId">{{ $t('pageOver', {count : pdfPagesCount}) }}</label>
               <!-- @todo Debounce changes in pdfPageNumber: don't start a render for intermediate pages when the user presses "up" a few times in this field -->
-              <input class="form-control" type="number" :disabled="pdfSha256 === null || mode !== 'list'" v-model="pdfPageNumber" />
+              <input class="form-control" :id="pageNumberId" type="number" :disabled="pdfSha256 === null || mode !== 'list'" v-model="pdfPageNumber" />
             </div>
           </div>
         </div>

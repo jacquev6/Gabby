@@ -23,6 +23,9 @@ const props = defineProps({
 
 const model = defineModel({ type: Object })
 
+const numberFieldId = self.crypto.randomUUID()
+const doStripCheckboxId = self.crypto.randomUUID()
+
 const selectedText = ref(null)
 const doStripExerciceNumber = ref(true)
 const textToAdd = ref(null)
@@ -59,10 +62,8 @@ defineExpose({
     @dismissed="showTextSelectionMenu=false"
   >
     <div class="form-check">
-      <label class="form-check-label">
-        <input class="form-check-input" type="checkbox" :disabled="!canStripExerciceNumber" v-model="doStripExerciceNumber">
-        {{ $t('doStripExerciceNumber') }}
-      </label>
+      <label class="form-check-label" :for="doStripCheckboxId">{{ $t('doStripExerciceNumber') }}</label>
+      <input class="form-check-input" :id="doStripCheckboxId" type="checkbox" :disabled="!canStripExerciceNumber" v-model="doStripExerciceNumber">
     </div>
 
     <textarea class="form-control" rows="5" v-model="textToAdd"></textarea>
@@ -77,8 +78,8 @@ defineExpose({
   </FloatingModal>
 
   <div class="mb-3">
-    <label class="form-label">{{ $t('exerciseNumber') }}</label>
-    <input class="form-control" type="number" min="1" v-model="model.number" :disabled="fixedNumber"/>
+    <label class="form-label" :for="numberFieldId">{{ $t('exerciseNumber') }}</label>
+    <input class="form-control" :id="numberFieldId" type="number" min="1" v-model="model.number" :disabled="fixedNumber"/>
   </div>
   <RequiredExerciseTextArea v-model="model.instructions">{{ $t('instructions') }}</RequiredExerciseTextArea>
   <OptionalExerciseTextArea v-model="model.example">{{ $t('example') }}</OptionalExerciseTextArea>
