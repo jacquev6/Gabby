@@ -19,6 +19,8 @@ function pdfDisplayed(name, sha256, pagesCount, pageNumber) {
   pdfName.value = name
   pdfSha256.value = sha256
   pdfPagesCount.value = pagesCount
+  // @todo This is not a great idea because when the user presses "up" a few times in the page selector,
+  // we could end up changing the page back to an unwanted, intermediate, page.
   pdfPageNumber.value = pageNumber
   pdfException.value = null
 }
@@ -151,6 +153,7 @@ function ellipsis(s) {
         <div class="row">
           <div class="col">
             <div class="mb-3">
+              <!-- @todo Display a "loading" animation when loading a new PDF or navigating to another page, until the page is displayed, and the list of existing exercices is retrieved -->
               <label class="form-label">{{ $t('inputFile') }}</label>
               <input class="form-control" type="file" accept=".pdf" :disabled="mode !== 'list'" @change="(e) => { pdf = e.target.files[0] }" />
             </div>
@@ -158,6 +161,7 @@ function ellipsis(s) {
           <div class="col-3">
             <div class="mb-3">
               <label class="form-label">{{ $t('pageOver', {count : pdfPagesCount}) }}</label>
+              <!-- @todo Debounce changes in pdfPageNumber: don't start a render for intermediate pages when the user presses "up" a few times in this field -->
               <input class="form-control" type="number" :disabled="pdfSha256 === null || mode !== 'list'" v-model="pdfPageNumber" />
             </div>
           </div>
