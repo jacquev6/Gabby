@@ -26,16 +26,16 @@ onMounted(() => {
     <div class="modal-dialog modal-xl">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title">{{ $t('about.transitive') }} <em>Gabby</em></h1>
+          <h1 class="modal-title">{{ $t('about') }}</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <div class="container-fluid">
             <div class="row">
               <div class="col">
-                <p>{{ $t('french-only') }} Bienvenue sur la démo de <em>Gabby</em>, l'interface d'adaptation de manuels scolaires pour le projet MALIN et le Cartable Fantastique.</p>
+                <p>{{ $t('french-only') }} Bienvenue sur la démo de l'interface d'adaptation de manuels scolaires pour le projet MALIN et le Cartable Fantastique.</p>
                 <p>
-                  Je viens de commencer le développement de <em>Gabby</em> donc tout peut encore très facilement être modifié.
+                  Je viens de commencer le développement donc tout peut encore très facilement être modifié.
                   Cette démo est là pour vous permettre de me donner votre avis sur l'interface aussi tôt que vous le souhaitez.
                   Pour l'instant c'est une coquille vide ; il y a encore énormément à faire, dont beaucoup sera invisible.
                 </p>

@@ -42,8 +42,6 @@ Gabby must be usable with screen readers and similar technologies.
 
 ## To be classified
 
-> On propose MALIN comme nom et le logo du Cartable plutôt qu'un nounours (Justine va te l'envoyer). On verra dans un deuxième temps si on créé un logo spécifique au projet MALIN
-
 > Pour le changement de page, ce serait plus intuitif que ça se fasse au niveau du pdf. Peut-être garder les deux façons de passer à la page mais dans la mesure où on travaille sur le pdf au départ, je pense que c'est mieux de passer par le pdf. Accessoirement, les flèches sont contreintuitives pour Léa et Isabelle parce que pour elles, il faut appuyer sur la flèche du haut pour descendre dans les pages donc elles ont le sentiment que c'est à l'envers alors que pour moi qui me rattache au numéro de page, ça parait logique d'appuyer sur la flèche du haut pour augmenter le numéro de page. Dans Adobe, tu cliques sur la flèche du bas pour passer à la page suivante.
 
 > Il faut enlever le s à consigne
