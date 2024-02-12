@@ -11,6 +11,8 @@ test $(git branch --show-current) == main
 git diff --stat --exit-code
 git diff --stat --staged --exit-code
 
+# @todo Pre-fill changelog and ask to edit; git commit -m "Publish version $tag"
+
 # Build
 timestamp=$(date +%Y%m%d-%H%M%S)
 
