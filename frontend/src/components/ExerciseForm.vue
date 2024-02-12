@@ -4,6 +4,8 @@ import { ref, watch } from 'vue'
 import FloatingModal from './FloatingModal.vue'
 import OptionalExerciseTextArea from './OptionalExerciseTextArea.vue'
 import RequiredExerciseTextArea from './RequiredExerciseTextArea.vue'
+import BCheckBox from './BootstrapCheckBox.vue'
+import BInput from './BootstrapInput.vue'
 
 
 const props = defineProps({
@@ -22,9 +24,6 @@ const props = defineProps({
 })
 
 const model = defineModel({ type: Object })
-
-const numberFieldId = self.crypto.randomUUID()
-const doStripCheckboxId = self.crypto.randomUUID()
 
 const selectedText = ref(null)
 const doStripExerciceNumber = ref(true)
@@ -61,12 +60,9 @@ defineExpose({
     :reference="textSelectionMenuReference"
     @dismissed="showTextSelectionMenu=false"
   >
-    <div class="form-check">
-      <label class="form-check-label" :for="doStripCheckboxId">{{ $t('doStripExerciceNumber') }}</label>
-      <input class="form-check-input" :id="doStripCheckboxId" type="checkbox" :disabled="!canStripExerciceNumber" v-model="doStripExerciceNumber">
-    </div>
+    <BCheckBox :label="$t('doStripExerciceNumber')" v-model="doStripExerciceNumber" />
+    <RequiredExerciseTextArea :label="$t('selectedText')" v-model="textToAdd" />
 
-    <textarea class="form-control" rows="5" v-model="textToAdd"></textarea>
     <p>{{ $t('addTo') }}</p>
     <button class="btn btn-primary" @click="model.instructions += textToAdd; showTextSelectionMenu=false">{{ $t('instructions') }}</button>
     &nbsp;
@@ -77,10 +73,8 @@ defineExpose({
     <button class="btn btn-primary" @click="model.wording += textToAdd; showTextSelectionMenu=false">{{ $t('wording') }}</button>
   </FloatingModal>
 
-  <div class="mb-3">
-    <label class="form-label" :for="numberFieldId">{{ $t('exerciseNumber') }}</label>
-    <input class="form-control" :id="numberFieldId" type="number" min="1" v-model="model.number" :disabled="fixedNumber"/>
-  </div>
+  <BInput :label="$t('exerciseNumber')" type="number" min="1" v-model="model.number" :disabled="fixedNumber"/>
+
   <RequiredExerciseTextArea :label="$t('instructions')" v-model="model.instructions" />
   <OptionalExerciseTextArea :label="$t('example')" v-model="model.example" />
   <OptionalExerciseTextArea :label="$t('clue')" v-model="model.clue" />
