@@ -58,8 +58,6 @@ Gabby must be usable with screen readers and similar technologies.
 
 > On a besoin de pouvoir inclure les images des exercices
 
-> Est-ce qu'on pourrait modifier directement le texte sélectionné dans la fenêtre qui s'ouvre ? On peut certes modifier dans la partie Edition mais c'est moins ergonomique que de modifier directement au moment de la sélection quand on a sélectionné une phrase en trop parce que 2 phrases étaient très proches par exemple.
-
 > En termes d'ergonomie de la fenêtre qui s'ouvre quand on sélectionne, il faudrait qu'on puisse l'agrandir et la déplacer. Pour la police, il faudrait mettre de l'arial par défaut. Idéalement, il faudrait que ce soit paramétrable pour chaque adaptateur (taille de la fenêtre, emplacement, police, taille de la police, interligne).
 
 > Lorsqu'on ajoute du texte à un bloc, indiquer où le texte a été rajouté (par une surbrillance du bloc par exemple), cela permet à l'utilisateur d'avoir un feedback visuel sur son action, notamment pour vérifier s'il s'est trompé en cliquant. Dans la même gamme d'idée, pour permettre la vérification instantanée par l'utilisateur que tout le texte a bien été ajouté, peut-on adapter la taille de la fenêtre à la totalité du texte pour éviter de devoir scroller dans la fenêtre correspondante de la partie Edition ?
