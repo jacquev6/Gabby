@@ -45,7 +45,6 @@ watch(pdfPageNumber, () => {
 const exercisesOnPage = reactive([])
 const mode = ref('list')
 const exerciseForm = ref(null)
-const fields = ['instructions', 'example', 'clue', 'wording']
 const currentExercise = reactive({})
 
 async function switchToListMode() {
@@ -216,15 +215,11 @@ function ellipsis(s) {
               </div>
             </template>
             <template v-else>
-              <div class="mb-3">
-                <label class="form-label">{{ $t('exerciseNumber') }}</label>
-                <input class="form-control" type="number" min="1" v-model="currentExercise.attributes.number" :disabled="mode === 'edit'"/>
-              </div>
               <ExerciseForm
                 ref="exerciseForm"
-                :fields="fields"
                 :pdfSha256="pdfSha256"
                 :pdfPage="pdfPageNumber"
+                :fixedNumber="mode === 'edit'"
                 v-model="currentExercise.attributes"
               />
               <div v-if="mode === 'create'" class="mb-3">
@@ -243,10 +238,14 @@ function ellipsis(s) {
             <template v-if="mode !== 'list'">
               <!-- @todo Retrieve from the back-end -->
               <p>({{ $t('not-yet-implemented') }})</p>
-              <template  v-for="field in fields">
-                <p>{{ $t(field) }}:</p>
-                <p>{{ currentExercise.attributes[field] }}</p>
-              </template>
+              <p>{{ $t('instructions') }}:</p>
+              <p>{{ currentExercise.attributes.instructions }}</p>
+              <p>{{ $t('example') }}:</p>
+              <p>{{ currentExercise.attributes.example }}</p>
+              <p>{{ $t('clue') }}:</p>
+              <p>{{ currentExercise.attributes.clue }}</p>
+              <p>{{ $t('wording') }}:</p>
+              <p>{{ currentExercise.attributes.wording }}</p>
             </template>
           </div>
         </div>

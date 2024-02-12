@@ -2,19 +2,21 @@
 import { ref, watch } from 'vue'
 
 import FloatingModal from './FloatingModal.vue'
+import OptionalExerciseTextArea from './OptionalExerciseTextArea.vue'
+import RequiredExerciseTextArea from './RequiredExerciseTextArea.vue'
 
 
 const props = defineProps({
-  fields: {
-    type: Array,
-    required: true,
-  },
   pdfSha256: {
     type: String,
     required: true,
   },
   pdfPage: {
     type: Number,
+    required: true,
+  },
+  fixedNumber: {
+    type: Boolean,
     required: true,
   },
 })
@@ -65,14 +67,21 @@ defineExpose({
 
     <textarea class="form-control" rows="5" v-model="textToAdd"></textarea>
     <p>{{ $t('addTo') }}</p>
-    <template v-for="(field, index) in props.fields">
-      <template v-if="index !== 0">&nbsp;</template>
-      <button class="btn btn-primary" @click="model[field] += textToAdd; showTextSelectionMenu=false">{{ $t(field) }}</button>
-    </template>
+    <button class="btn btn-primary" @click="model.instructions += textToAdd; showTextSelectionMenu=false">{{ $t('instructions') }}</button>
+    &nbsp;
+    <button class="btn btn-primary" @click="model.example += textToAdd; showTextSelectionMenu=false">{{ $t('example') }}</button>
+    &nbsp;
+    <button class="btn btn-primary" @click="model.clue += textToAdd; showTextSelectionMenu=false">{{ $t('clue') }}</button>
+    &nbsp;
+    <button class="btn btn-primary" @click="model.wording += textToAdd; showTextSelectionMenu=false">{{ $t('wording') }}</button>
   </FloatingModal>
 
-  <div v-for="field in props.fields" class="mb-3">
-    <label class="form-label">{{ $t(field) }}</label>
-    <textarea class="form-control" rows="3" v-model="model[field]"></textarea>
+  <div class="mb-3">
+    <label class="form-label">{{ $t('exerciseNumber') }}</label>
+    <input class="form-control" type="number" min="1" v-model="model.number" :disabled="fixedNumber"/>
   </div>
+  <RequiredExerciseTextArea v-model="model.instructions">{{ $t('instructions') }}</RequiredExerciseTextArea>
+  <OptionalExerciseTextArea v-model="model.example">{{ $t('example') }}</OptionalExerciseTextArea>
+  <OptionalExerciseTextArea v-model="model.clue">{{ $t('clue') }}</OptionalExerciseTextArea>
+  <RequiredExerciseTextArea v-model="model.wording">{{ $t('wording') }}</RequiredExerciseTextArea>
 </template>
