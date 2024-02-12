@@ -8,18 +8,7 @@ Other text is mine.
 
 # Known bugs
 
-## PDF upside down
-
-    Gabby version: 20240118-095444
-    Locale: fr
-    User agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Edg/120.0.0.0
-    Window size: 1528x742
-
-> Des fois quand on navigue entre les pages, tout d'un coup l'une se met à l'envers.
-
-Input file: 03581037_nouvel_explorons_int_complet.pdf
-Screenshot: ![](bug-0001.png)
-
+None at the moment.
 
 # Functional roadmap
 
