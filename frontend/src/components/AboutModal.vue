@@ -1,6 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
-import bootstrap from 'bootstrap/dist/js/bootstrap.bundle.min.js'
+import { ref } from 'vue'
 
 
 const gabbyVersion = import.meta.env.VITE_GABBY_VERSION
@@ -14,15 +13,10 @@ function onResize() {
 }
 onResize()
 window.addEventListener('resize', onResize);
-
-const aboutModal = ref(null)
-onMounted(() => {
-  bootstrap.Modal.getOrCreateInstance(`#${aboutModal.value.id}`).show()
-})
 </script>
 
 <template>
-  <div ref="aboutModal" class="modal fade">
+  <div class="modal fade">
     <div class="modal-dialog modal-xl">
       <div class="modal-content">
         <div class="modal-header">
