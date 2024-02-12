@@ -1,9 +1,9 @@
 <script setup>
 import { ref, watch, nextTick } from 'vue'
 
-const model = defineModel({ type: String })
+import BTextArea from './BootstrapTextArea.vue';
 
-const id = self.crypto.randomUUID()
+const model = defineModel({ type: String })
 
 const force = ref(false)
 
@@ -18,8 +18,6 @@ function activate() {
 </script>
 
 <template>
-  <div class="mb-3">
-    <label class="form-label" :for="id"><slot></slot> <button class="btn btn-sm btn-primary" v-if="!model && !force" href="#" @click.prevent="activate">+</button></label>
-    <textarea class="form-control" :id="id" ref="textarea" v-if="model || force" v-model="model" :rows="model.split('\n').length + 1"></textarea>
-  </div>
+  <BTextArea v-if="model || force" ref="textarea" v-model="model" :rows="model.split('\n').length + 1"><slot></slot></BTextArea>
+  <p v-else @click="activate"><slot></slot> <button class="btn btn-sm btn-primary">+</button></p>
 </template>

@@ -1,12 +1,9 @@
 <script setup>
-const model = defineModel({ type: String })
+import BTextArea from './BootstrapTextArea.vue';
 
-const id = self.crypto.randomUUID()
+const model = defineModel({ type: String })
 </script>
 
 <template>
-  <div class="mb-3">
-    <label class="form-label" :for="id"><slot></slot></label>
-    <textarea class="form-control" :id="id" v-model="model" :rows="model.split('\n').length + 1"></textarea>
-  </div>
+  <BTextArea v-model="model" :rows="model.split('\n').length + 1"><slot></slot></BTextArea>
 </template>
