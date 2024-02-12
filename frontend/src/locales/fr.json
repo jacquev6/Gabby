@@ -16,6 +16,7 @@
   "save": "Enregistrer",
   "save.next": "Enregistrer puis créer le suivant",
   "cancel": "Annuler",
+  "doStripExerciceNumber": "Enlever le numéro d'exercice automatiquement",
 
   "selectedText": "Texte sélectionné",
   "addTo": "Ajouter à :",

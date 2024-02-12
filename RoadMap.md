@@ -27,10 +27,6 @@ Essayer d'y inclure des videos de démonstration, à condition de pouvoir les ga
 
 > Il faudrait aussi, comme pour un fichier pdf classique pouvoir aller directement à une page (par exemple, page 274) parce que lorsqu'on adapte, on ne fait pas forcément dans l'ordre et surtout on ne fait pas tout d'un coup. Par exemple, on adapte 10 pages le lundi et le mardi on veut aller directement à la page 11. Ou alors, l'enseignant nous donne une liste d'exercices et on doit adapter l'exercice 2 page 12 et le 4 page 130. On arrive à entrer le numéro dans le champ page des fois mais parfois on n'arrive pas à retirer le 1 dans le champ. Si on tape 78, on arrive bien à la page 78 mais le problème est que spontanément on tape sur la touche retour et dans ce cas-là on retombe sur la page démo.
 
-### Automate removing exercice number from instructions
-
-> Lorsqu'on sélectionne la consigne cela met aussi le numéro d'exercice dans la consigne, ce qu'on ne souhaite pas. Il faudrait le retirer et le mettre dans le champ numéro d'exercice à venir
-
 ### Adapt field sizes
 
 > Concernant les champs de la partie édition : réduire le champ exemple, réduire le champ indice, agrandir le champ énoncé. On a vu qu'on peut le faire à la main mais peut-on le proposer par défaut ? Idéalement, est-ce que ce serait envisageable de ne pas faire apparaitre les champs exemple et indice quand il n'y en a pas dans l'exercice, ce qui est fréquent ?

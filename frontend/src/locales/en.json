@@ -16,6 +16,7 @@
   "save": "Save",
   "save.next": "Save then create next",
   "cancel": "Cancel",
+  "doStripExerciceNumber": "Strip exercise number automatically",
 
   "selectedText": "Selected text",
   "addTo": "Add to:",
