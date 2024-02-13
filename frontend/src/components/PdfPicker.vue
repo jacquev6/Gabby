@@ -38,13 +38,12 @@ onMounted(async () => {
 watch(() => props.pdf, load)
 
 async function load() {
-  var arg = null
+  const arg = {}
   if (typeof props.pdf === 'string') {
-    arg = props.pdf
+    arg.url = props.pdf
     name = props.pdf
   } else {
-    const data = await props.pdf.arrayBuffer()
-    arg = {data}
+    arg.data = await props.pdf.arrayBuffer()
     name = props.pdf.name
   }
   clearCanvas(pdfContext)
@@ -105,13 +104,20 @@ async function display(page) {
   }
   renderTask = null
 
-  textContent = await pdfPage.getTextContent()
-  for (var item of textContent.items) {
-    item.left = item.transform[4]
-    item.right = item.transform[4] + item.width
-    item.bottom = item.transform[5]
-    item.top = item.transform[5] + item.height
-    delete item.transform
+  textContent = []
+  for (const item of (await pdfPage.getTextContent()).items) {
+    textContent.push({
+      str: item.str,
+
+      font: item.fontName,
+
+      left: item.transform[4],
+      width: item.width,
+      right: item.transform[4] + item.width,
+      bottom: item.transform[5],
+      height: item.height,
+      top: item.transform[5] + item.height,
+    })
   }
 
   emit('displayed', name, sha256, document.numPages, page)
@@ -133,7 +139,7 @@ function pointermove(event) {
 
     uiContext.save()
     uiContext.beginPath()
-    for (var item of textContent.items.filter(r.contains)) {
+    for (var item of textContent.filter(r.contains)) {
       uiContext.rect(item.left, item.bottom, item.width, item.height)
     }
     uiContext.fillStyle = 'rgba(255, 255, 0, 0.5)'
@@ -155,9 +161,9 @@ function pointerup(event) {
 
     const r = selectionRectangle(startPoint, makeCanvasPoint(event))
 
-    var lines = ['']
+    const lines = ['']
     var previousItem = null
-    for (var item of textContent.items.filter(r.contains)) {
+    for (const item of textContent.filter(r.contains)) {
       if (previousItem !== null) {
         if (Math.abs(previousItem.bottom - item.bottom) > textSpacingTolerance) {
           lines.push('')
