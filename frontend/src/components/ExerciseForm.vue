@@ -35,7 +35,7 @@ const textSelectionMenuReference = ref({x: 0, y: 0})
 function updateTextToAdd() {
   const originalText = selectedText.value
   const number = model.value.number.toString()
-  canStripExerciceNumber.value = originalText.startsWith(number)
+  canStripExerciceNumber.value = number !== '' && originalText.startsWith(number)
   textToAdd.value = canStripExerciceNumber.value && doStripExerciceNumber.value ? originalText.slice(number.length).trim() : originalText
 }
 
