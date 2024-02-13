@@ -36,7 +36,7 @@ function updateTextToAdd() {
   const originalText = selectedText.value
   const number = model.value.number.toString()
   canStripExerciceNumber.value = number !== '' && originalText.startsWith(number)
-  textToAdd.value = canStripExerciceNumber.value && doStripExerciceNumber.value ? originalText.slice(number.length).trim() : originalText
+  textToAdd.value = canStripExerciceNumber.value && doStripExerciceNumber.value ? originalText.slice(number.length).trimStart() : originalText
 }
 
 watch(doStripExerciceNumber, updateTextToAdd)
