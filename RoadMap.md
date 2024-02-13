@@ -31,6 +31,21 @@ Essayer d'y inclure des videos de démonstration, à condition de pouvoir les ga
 
 > Est-ce qu'il y a un moyen de garder les caractéristiques typographiques genre souligné ou gras facilement ? Parce que parfois, il faut remplacer le mot en gras par exemple.
 
+It's difficult in general because the PDF does not contain the information:
+
+- https://github.com/mozilla/pdf.js/issues/7372#issuecomment-222665266
+- https://github.com/mozilla/pdf.js/issues/7297#issuecomment-217627918
+- https://stackoverflow.com/a/28068493/905845
+
+A few ideas:
+
+- Grouped by fontName, on the whole page:
+    - Measure the average darkness of rendered text rectangles. The darker, the more likely it is bold.
+    - Measure the amount of slanted transitions between black and white pixels in the rendered text (i.e. detect slanted line in the gradient). The more slanted, the more likely it is italic.
+- The same idea, but on the glyphs in the fonts.
+- Try to render the text with a bold font and compare the result with the original rendering. If the result is similar, it's bold. This approach could also work for italic text, and bold italic text.
+- Use the relative number of chars in each font. We could assume that the most used font is the normal one, the second most used is the bold one, and the third most used is the italic one.
+
 ## Version after the next
 
 ### Manage PDFs and their mapping to schoolbooks
