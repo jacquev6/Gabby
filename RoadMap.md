@@ -27,10 +27,6 @@ Essayer d'y inclure des videos de démonstration, à condition de pouvoir les ga
 
 > Il faudrait aussi, comme pour un fichier pdf classique pouvoir aller directement à une page (par exemple, page 274) parce que lorsqu'on adapte, on ne fait pas forcément dans l'ordre et surtout on ne fait pas tout d'un coup. Par exemple, on adapte 10 pages le lundi et le mardi on veut aller directement à la page 11. Ou alors, l'enseignant nous donne une liste d'exercices et on doit adapter l'exercice 2 page 12 et le 4 page 130. On arrive à entrer le numéro dans le champ page des fois mais parfois on n'arrive pas à retirer le 1 dans le champ. Si on tape 78, on arrive bien à la page 78 mais le problème est que spontanément on tape sur la touche retour et dans ce cas-là on retombe sur la page démo.
 
-### Visualize changes done through the floating modal
-
-> Lorsqu'on ajoute du texte à un bloc, indiquer où le texte a été rajouté (par une surbrillance du bloc par exemple), cela permet à l'utilisateur d'avoir un feedback visuel sur son action, notamment pour vérifier s'il s'est trompé en cliquant. Dans la même gamme d'idée, pour permettre la vérification instantanée par l'utilisateur que tout le texte a bien été ajouté, peut-on adapter la taille de la fenêtre à la totalité du texte pour éviter de devoir scroller dans la fenêtre correspondante de la partie Edition ?
-
 ### Keep formatting
 
 > Est-ce qu'il y a un moyen de garder les caractéristiques typographiques genre souligné ou gras facilement ? Parce que parfois, il faut remplacer le mot en gras par exemple.
