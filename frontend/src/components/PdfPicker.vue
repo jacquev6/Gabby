@@ -174,7 +174,10 @@ function pointerup(event) {
     for (var line of lines) {
       line = line.replace(/[ \t]+/g, ' ').trim()
       if (line !== '') {
-        text += line + '\n'
+        if (text !== '') {
+          text += '\n'
+        }
+        text += line
       }
     }
 
