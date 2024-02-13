@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, watch } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import * as pdfjs from 'pdfjs-dist/build/pdf'
 pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs'
 
@@ -11,7 +11,7 @@ const props = defineProps({
 
 const emit = defineEmits([
   'loading-failed',  // (e: Exception) => void
-  'displayed',  // (name: string, sha256: string, pagesCount: number, page: number) => void
+  'loaded',  // (sha256: string, pagesCount: number) => void
   'text-selected',  // (text: string, point: {clientX: number, clientY: number}) => void
 ])
 
@@ -22,10 +22,10 @@ var pdfCanvas = null
 var pdfContext = null
 var uiCanvas = null
 var uiContext = null
+var loadedPdf = null
+const busy = ref(false)
 
 var document = null
-var name = null
-var sha256 = null
 var textContent = []
 
 onMounted(async () => {
@@ -33,94 +33,123 @@ onMounted(async () => {
   uiContext = uiCanvas.getContext('2d')
 
   await load()
+  await display(1)
 })
 
-watch(() => props.pdf, load)
+watch(() => props.pdf, () => load().then(() => display(1)))
 
 async function load() {
-  const arg = {}
-  if (typeof props.pdf === 'string') {
-    arg.url = props.pdf
-    name = props.pdf
-  } else {
-    arg.data = await props.pdf.arrayBuffer()
-    name = props.pdf.name
-  }
-  clearCanvas(pdfContext)
+  busy.value = true
   try {
-    document = await pdfjs.getDocument(arg).promise
-  } catch (e) {
-    emit('loading-failed', e)
-    return
+    pdfCanvas.height = 2970
+    pdfCanvas.width = 2100
+    uiCanvas.height = 2970
+    uiCanvas.width = 2100
+    clearCanvas(pdfContext)
+    const arg = {}
+    if (typeof props.pdf === 'string') {
+      arg.url = props.pdf
+    } else {
+      arg.data = await props.pdf.arrayBuffer()
+    }
+    try {
+      document = await pdfjs.getDocument(arg).promise
+    } catch (e) {
+      emit('loading-failed', e)
+      return
+    }
+    const sha256 = await hexSha256(await document.getData())
+    emit('loaded', sha256, document.numPages)
+    loadedPdf = props.pdf
+  } finally {
+    busy.value = false
   }
-  sha256 = await hexSha256(await document.getData())
-  await display(1)
 }
 
 async function hexSha256(data) {
-  const buffer = await crypto.subtle.digest("SHA-256", data)
-  return Array.from(new Uint8Array(buffer)).map((b) => b.toString(16).padStart(2, "0")).join("")
+  const buffer = await crypto.subtle.digest('SHA-256', data)
+  return Array.from(new Uint8Array(buffer)).map((b) => b.toString(16).padStart(2, '0')).join('')
 }
 
-watch(() => props.page, () => display(props.page))
-watch(() => props.maxWidth, () => display(props.page))
-watch(() => props.maxHeight, () => display(props.page))
+watch(() => props.page, () => { if (loadedPdf === props.pdf) { display(props.page) } })
 
 var renderTask = null
 
 async function display(page) {
-  if (page < 1) { page = 1 }
-  if (page > document.numPages) { page = document.numPages }
-
-  const pdfPage = await document.getPage(page)
-
-  const viewport = pdfPage.getViewport({scale: 1})
-  pdfCanvas.height = viewport.height
-  pdfCanvas.width = viewport.width
-  uiCanvas.height = viewport.height
-  uiCanvas.width = viewport.width
-
-  // Somewhat arbitrary. If the tolerance is too small, then the selected text will contain to many spaces,
-  // not a big deal. If the tolerance is too big, then the selected text could contain too few spaces,
-  // which is a problem.
-  textSpacingTolerance = Math.min(viewport.width, viewport.height) / 1e3
-  // console.log('textSpacingTolerance', textSpacingTolerance)
-
-  uiContext.setTransform(viewport.transform[0], viewport.transform[1], viewport.transform[2], viewport.transform[3], viewport.transform[4], viewport.transform[5])
-
-  renderTask?.cancel()
-  renderTask = pdfPage.render({
-    canvasContext: pdfContext,
-    viewport,
-  })
+  busy.value = true
+  var resetBusy = true
   try {
-    await renderTask.promise
-  } catch (e) {
-    if (e.name === 'RenderingCancelledException') {
-      return
-    } else {
-      throw e
+    if (!Number.isInteger(page)) {
+      console.warn('Non-integer page', page, 'requested to PdfPicker')
+      page = 1
+    }
+    if (page < 1) {
+      console.warn('Page', page, '< 1 requested to PdfPicker')
+      page = 1
+    }
+    if (page > document.numPages) {
+      console.warn('Page', page, '>', document.numPages, 'requested to PdfPicker')
+      page = document.numPages
+    }
+    console.info('PdfPicker displaying page ', page, '/', document.numPages)
+    const startTime = performance.now()
+
+    const pdfPage = await document.getPage(page)
+
+    const viewport = pdfPage.getViewport({scale: 1.5})
+    pdfCanvas.height = viewport.height
+    pdfCanvas.width = viewport.width
+    uiCanvas.height = viewport.height
+    uiCanvas.width = viewport.width
+
+    // Somewhat arbitrary. If the tolerance is too small, then the selected text will contain too many spaces,
+    // not a big deal. If the tolerance is too big, then the selected text could contain too few spaces,
+    // which is a problem.
+    textSpacingTolerance = Math.min(viewport.width, viewport.height) / 1e3
+    // console.log('textSpacingTolerance', textSpacingTolerance)
+
+    uiContext.setTransform(viewport.transform[0], viewport.transform[1], viewport.transform[2], viewport.transform[3], viewport.transform[4], viewport.transform[5])
+
+    renderTask?.cancel()
+    renderTask = pdfPage.render({
+      canvasContext: pdfContext,
+      viewport,
+    })
+    try {
+      await renderTask.promise
+    } catch (e) {
+      if (e.name === 'RenderingCancelledException') {
+        console.warn('PdfPicker was interrupted displaying page', page, '/', document.numPages, 'after', performance.now() - startTime, 'ms')
+        resetBusy = false
+        return
+      } else {
+        console.error('PdfPicker failed to display page', page, '/', document.numPages)
+        throw e
+      }
+    }
+    renderTask = null
+    console.info('PdfPicker displayed page', page, '/', document.numPages, 'in', performance.now() - startTime, 'ms')
+
+    textContent = []
+    for (const item of (await pdfPage.getTextContent()).items) {
+      textContent.push({
+        str: item.str,
+
+        font: item.fontName,
+
+        left: item.transform[4],
+        width: item.width,
+        right: item.transform[4] + item.width,
+        bottom: item.transform[5],
+        height: item.height,
+        top: item.transform[5] + item.height,
+      })
+    }
+  } finally {
+    if (resetBusy) {
+      busy.value = false
     }
   }
-  renderTask = null
-
-  textContent = []
-  for (const item of (await pdfPage.getTextContent()).items) {
-    textContent.push({
-      str: item.str,
-
-      font: item.fontName,
-
-      left: item.transform[4],
-      width: item.width,
-      right: item.transform[4] + item.width,
-      bottom: item.transform[5],
-      height: item.height,
-      top: item.transform[5] + item.height,
-    })
-  }
-
-  emit('displayed', name, sha256, document.numPages, page)
 }
 
 var startPoint = null
@@ -232,6 +261,14 @@ function clearCanvas(context) {
 <template>
   <div style="position: relative" ref="container">
     <canvas ref="pdfCanvas" class="img img-fluid" style="border: 1px solid black"></canvas>
-    <canvas ref="uiCanvas" class="img img-fluid" style="position: absolute; top: 0; left: 0" @pointerdown="pointerdown" @pointermove="pointermove" @pointerup="pointerup"></canvas>
+    <canvas
+      ref="uiCanvas" class="img img-fluid" style="position: absolute; top: 0; left: 0"
+      @pointerdown="pointerdown" @pointermove="pointermove" @pointerup="pointerup"
+    ></canvas>
+    <div v-if="busy" class="d-flex justify-content-center align-items-center" style="position: absolute; top: 0; left: 0; height: 100%; width: 100%; background: rgba(0,0,0,0.5)">
+      <div class="spinner-border" style="width: 7rem; height: 7rem;" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
   </div>
 </template>

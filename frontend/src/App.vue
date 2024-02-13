@@ -9,43 +9,40 @@ import BInput from './components/BootstrapInput.vue'
 
 // @todo Handle API failures and slow-downs
 
-const pdf = ref('/test.pdf')
-const pdfName = ref(null)
+const pdfRequested = ref('/test.pdf')
+const pdfRequestedPageNumber = ref(1)
+
+const pdf = ref(pdfRequested.value)
+const pdfPageNumber = ref(pdfRequestedPageNumber.value)
 const pdfSha256 = ref(null)
-const pdfPageNumber = ref(null)
-const pdfPagesCount = ref(null)
+const pdfPagesCount = ref(0)
 const pdfException = ref(null)
 
-const fileFieldId = self.crypto.randomUUID()
-const pageNumberId = self.crypto.randomUUID()
-
-function pdfDisplayed(name, sha256, pagesCount, pageNumber) {
-  pdfName.value = name
-  pdfSha256.value = sha256
-  pdfPagesCount.value = pagesCount
-  // @todo This is not a great idea because when the user presses "up" a few times in the page selector,
-  // we could end up changing the page back to an unwanted, intermediate, page.
-  pdfPageNumber.value = pageNumber
-  pdfException.value = null
-}
-
-function pdfLoadingFailed(e) {
-  pdfName.value = null
-  pdfSha256.value = null
-  exercisesOnPage.splice(0, exercisesOnPage.length)
-  pdfException.value = e
-}
-
-// The PdfPicker doesn't rely on this clamping logic:
-// this is just to avoid a flash when the user selects an out-of-range page number.
-watch(pdfPageNumber, () => {
-  if (pdfPageNumber.value < 1) {
-    pdfPageNumber.value = 1
-  } else if (pdfPageNumber.value > pdfPagesCount.value) {
-    pdfPageNumber.value = pdfPagesCount.value
+watch(pdfRequestedPageNumber, (n) => {
+  if (Number.isInteger(n) && n >= 1 && n <= pdfPagesCount.value) {
+    pdfPageNumber.value = n
   }
 })
 
+watch(pdfRequested, (p) => {
+  pdfRequestedPageNumber.value = 1
+  pdf.value = p
+  pdfPageNumber.value = 1
+  pdfSha256.value = null
+  pdfPagesCount.value = 0
+  pdfException.value = null
+})
+
+function pdfLoaded(sha256, pagesCount) {
+  pdfSha256.value = sha256
+  pdfPagesCount.value = pagesCount
+}
+
+function pdfLoadingFailed(e) {
+  pdfException.value = e
+}
+
+const loadingExercises = ref(true)
 const exercisesOnPage = reactive([])
 const mode = ref('list')
 const exerciseForm = ref(null)
@@ -57,11 +54,16 @@ async function switchToListMode() {
   mode.value = 'list'
 
   exercisesOnPage.splice(0, exercisesOnPage.length)
-  var next = `/api/exercises?filter[pdfPage]=${pdfPageNumber.value}&filter[pdfSha256]=${pdfSha256.value}&sort=number`
-  while (next) {
-    const r = await (await fetch(next)).json()
-    exercisesOnPage.splice(exercisesOnPage.length, 0, ...r.data)
-    next = r.links.next
+  loadingExercises.value = true
+  try {
+    var next = `/api/exercises?filter[pdfPage]=${pdfPageNumber.value}&filter[pdfSha256]=${pdfSha256.value}&sort=number`
+    while (next) {
+      const r = await (await fetch(next)).json()
+      exercisesOnPage.splice(exercisesOnPage.length, 0, ...r.data)
+      next = r.links.next
+    }
+  } finally {
+    loadingExercises.value = false
   }
 }
 
@@ -153,22 +155,19 @@ function ellipsis(s) {
   <div class="container-fluid">
     <div class="row">
       <div class="col-4">
-        <div class="row">
-          <div class="col">
-            <!-- @todo Display a "loading" animation when loading a new PDF or navigating to another page, until the page is displayed, and the list of existing exercices is retrieved -->
-            <BInput :label="$t('inputFile')" type="file" accept=".pdf" :disabled="mode !== 'list'" @change="(e) => { pdf = e.target.files[0] }" />
-          </div>
-          <div class="col-3">
-            <!-- @todo Debounce changes in pdfPageNumber: don't start a render for intermediate pages when the user presses "up" a few times in this field -->
-            <BInput :label="$t('pageOver', {count : pdfPagesCount})" type="number" :disabled="pdfSha256 === null || mode !== 'list'" v-model="pdfPageNumber" />
-          </div>
-        </div>
+        <BInput :label="$t('inputFile')" type="file" accept=".pdf" :disabled="mode !== 'list'" @change="(e) => { pdfRequested = e.target.files[0] }" />
+        <!-- @todo Consider debouncing changes in pdfPageNumber: don't start a render for intermediate pages when the user presses "up" a few times in this field -->
+        <p class="text-center">
+          <button class="btn btn-primary btn-sm" @click="pdfRequestedPageNumber = pdfPageNumber - 1" :disabled="pdfSha256 === null || mode !== 'list' || pdfPageNumber <= 1">&lt;</button> <label>
+            {{ $t('Page') }} <input class="number-no-spin" v-model="pdfRequestedPageNumber" type="number" min="1" :max="pdfPagesCount" :disabled="pdfSha256 === null || mode !== 'list'" @blur="pdfRequestedPageNumber = pdfPageNumber"/> {{ $t('pageOver', pdfPagesCount) }}
+          </label> <button class="btn btn-primary btn-sm" @click="pdfRequestedPageNumber = pdfPageNumber + 1" :disabled="pdfSha256 === null || mode !== 'list' || pdfPageNumber >= pdfPagesCount">&gt;</button>
+        </p>
         <PdfPicker
           :pdf="pdf"
           :page="pdfPageNumber"
           :disabled="mode === 'list'"
           @loading-failed="pdfLoadingFailed"
-          @displayed="pdfDisplayed"
+          @loaded="pdfLoaded"
           @text-selected="textSelected"
         />
       </div>
@@ -199,15 +198,18 @@ function ellipsis(s) {
               <pre>{{ pdfException }}</pre>
             </template>
             <template v-else-if="mode === 'list'">
-              <template v-if="exercisesOnPage.length">
+              <template v-if="exercisesOnPage.length || loadingExercises">
                 <p>{{ $t('existingExercises') }}</p>
                 <ul>
                   <li v-for="exercise in exercisesOnPage">
                     <strong>{{ exercise.attributes.number }}</strong> {{ ellipsis(exercise.attributes.instructions) }}
                     <button class="btn btn-primary btn-sm" @click="switchToEditMode(exercise)">{{ $t('edit') }}
-                    </button> <button class="btn btn-secondary btn-sm" @click="deleteExercise(exercise).then(switchToListMode)">{{ $t('delete') }}</button></li>
+                    </button> <button class="btn btn-secondary btn-sm" @click="deleteExercise(exercise).then(switchToListMode)">{{ $t('delete') }}</button>
+                  </li>
+                  <li v-if="loadingExercises" class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></li>
                 </ul>
               </template>
+              <p v-else>{{ $t('noExercises') }}</p>
               <div class="d-grid gap-2">
                 <button class="btn btn-primary" @click="switchToCreateMode('')">{{ $t('create') }}</button>
               </div>
@@ -233,9 +235,9 @@ function ellipsis(s) {
           </div>
           <div class="col">
             <h2>{{ $t('visualization') }}</h2>
+            <p>({{ $t('not-yet-implemented') }})</p>
             <template v-if="mode !== 'list'">
               <!-- @todo Retrieve from the back-end -->
-              <p>({{ $t('not-yet-implemented') }})</p>
               <p>{{ $t('instructions') }}:</p>
               <p>{{ currentExercise.attributes.instructions }}</p>
               <p>{{ $t('example') }}:</p>
@@ -253,3 +255,15 @@ function ellipsis(s) {
 
   <AboutModal id="aboutModal" />
 </template>
+
+<style>
+/* https://www.w3schools.com/howto/howto_css_hide_arrow_number.asp */
+input.number-no-spin {
+  -moz-appearance: textfield;
+}
+input.number-no-spin::-webkit-outer-spin-button,
+input.number-no-spin::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+</style>
