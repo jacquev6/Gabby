@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, nextTick } from 'vue'
 
 import FloatingModal from './FloatingModal.vue'
 import OptionalExerciseTextArea from './OptionalExerciseTextArea.vue'
@@ -41,6 +41,44 @@ function updateTextToAdd() {
 
 watch(doStripExerciceNumber, updateTextToAdd)
 
+function addTextTo(field, textArea) {
+  if (model.value[field] !== '' && !model.value[field].endsWith('\n')) {
+    model.value[field] += '\n'
+  }
+  const selectionBegin = model.value[field].length
+  const selectionEnd = selectionBegin + textToAdd.value.length
+  model.value[field] += textToAdd.value
+  nextTick(() => {
+    textArea.value.focus()
+    textArea.value.setSelectionRange(selectionBegin, selectionEnd)
+  })
+  showTextSelectionMenu.value = false
+}
+
+const instructionsTextArea = ref(null)
+
+function addTextToInstructions() {
+  addTextTo('instructions', instructionsTextArea)
+}
+
+const exampleTextArea = ref(null)
+
+function addTextToExample() {
+  addTextTo('example', exampleTextArea)
+}
+
+const clueTextArea = ref(null)
+
+function addTextToClue() {
+  addTextTo('clue', clueTextArea)
+}
+
+const wordingTextArea = ref(null)
+
+function addTextToWording() {
+  addTextTo('wording', wordingTextArea)
+}
+
 function textSelected(text, point) {
   selectedText.value = text
   updateTextToAdd()
@@ -64,19 +102,19 @@ defineExpose({
     <RequiredExerciseTextArea :label="$t('selectedText')" v-model="textToAdd" />
 
     <p>{{ $t('addTo') }}</p>
-    <button class="btn btn-primary" @click="model.instructions += textToAdd; showTextSelectionMenu=false">{{ $t('instructions') }}</button>
+    <button class="btn btn-primary" @click="addTextToInstructions">{{ $t('instructions') }}</button>
     &nbsp;
-    <button class="btn btn-primary" @click="model.example += textToAdd; showTextSelectionMenu=false">{{ $t('example') }}</button>
+    <button class="btn btn-primary" @click="addTextToExample">{{ $t('example') }}</button>
     &nbsp;
-    <button class="btn btn-primary" @click="model.clue += textToAdd; showTextSelectionMenu=false">{{ $t('clue') }}</button>
+    <button class="btn btn-primary" @click="addTextToClue">{{ $t('clue') }}</button>
     &nbsp;
-    <button class="btn btn-primary" @click="model.wording += textToAdd; showTextSelectionMenu=false">{{ $t('wording') }}</button>
+    <button class="btn btn-primary" @click="addTextToWording">{{ $t('wording') }}</button>
   </FloatingModal>
 
   <BInput :label="$t('exerciseNumber')" type="number" min="1" v-model="model.number" :disabled="fixedNumber"/>
 
-  <RequiredExerciseTextArea :label="$t('instructions')" v-model="model.instructions" />
-  <OptionalExerciseTextArea :label="$t('example')" v-model="model.example" />
-  <OptionalExerciseTextArea :label="$t('clue')" v-model="model.clue" />
-  <RequiredExerciseTextArea :label="$t('wording')" v-model="model.wording" />
+  <RequiredExerciseTextArea ref="instructionsTextArea" :label="$t('instructions')" v-model="model.instructions" />
+  <OptionalExerciseTextArea ref="exampleTextArea" :label="$t('example')" v-model="model.example" />
+  <OptionalExerciseTextArea ref="clueTextArea" :label="$t('clue')" v-model="model.clue" />
+  <RequiredExerciseTextArea ref="wordingTextArea" :label="$t('wording')" v-model="model.wording" />
 </template>

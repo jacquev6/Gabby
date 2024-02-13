@@ -18,7 +18,8 @@ const id = self.crypto.randomUUID()
 const textarea = ref(null)
 
 defineExpose({
-  focus: () => textarea.value.focus()
+  focus: () => textarea.value.focus(),
+  setSelectionRange: (start, end) => textarea.value.setSelectionRange(start, end),
 })
 </script>
 
