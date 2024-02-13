@@ -98,7 +98,7 @@ defineExpose({
     :reference="textSelectionMenuReference"
     @dismissed="showTextSelectionMenu=false"
   >
-    <BCheckBox :label="$t('doStripExerciceNumber')" v-model="doStripExerciceNumber" />
+    <BCheckBox :label="$t('doStripExerciceNumber')" v-model="doStripExerciceNumber" :disabled="!canStripExerciceNumber" />
     <RequiredExerciseTextArea :label="$t('selectedText')" v-model="textToAdd" />
 
     <p>{{ $t('addTo') }}</p>
