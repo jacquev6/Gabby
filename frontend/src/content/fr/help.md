@@ -1,6 +1,6 @@
 # Documentation utilisateur
 
-## Grands principes d'utilisation
+## Grands principes
 
 La vue principale est divisée en trois colonnes :
 

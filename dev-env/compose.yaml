@@ -18,15 +18,14 @@ services:
       context: ../backend
       dockerfile: ../dev-env/backend/Dockerfile
     volumes:
-      - ../backend:/app/code
-      - ./backend:/app/dev-env:ro
-    working_dir: /app/code
+      - ..:/gabby
+    working_dir: /gabby/backend
     environment:
       DJANGO_SETTINGS_MODULE: gabby.settings.dev
     command: [
       "bash",
       "-c",
-      "./manage.py migrate && ./manage.py loaddata test-exercises && ./manage.py shell <../dev-env/startup.py && exec ./manage.py runserver 0.0.0.0:80",
+      "./manage.py migrate && ./manage.py loaddata test-exercises && ./manage.py shell <../dev-env/backend/startup.py && exec ./manage.py runserver 0.0.0.0:80",
     ]
     depends_on:
       db:
@@ -64,10 +63,10 @@ services:
   frontend:
     build: frontend
     volumes:
-      - ../frontend:/app
-      - frontend-node-modules:/app/node_modules
+      - ..:/gabby
+      - frontend-node-modules:/gabby/frontend/node_modules
       - frontend-cache:/root/.cache
-    working_dir: /app
+    working_dir: /gabby/frontend
     environment:
       VITE_GABBY_VERSION: dev
     command: ["bash", "-c", "npm install && cp node_modules/pdfjs-dist/build/pdf.worker.min.mjs public && npx vite --host 0.0.0.0 --port 80 --strictPort"]
