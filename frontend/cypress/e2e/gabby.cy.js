@@ -40,7 +40,10 @@ describe('Gabby', () => {
     canvas.trigger('pointermove', 55, 35)
     canvas.trigger('pointermove', 75, 45)
     canvas.trigger('pointermove', 95, 55)
+    canvas.trigger('pointermove', 140, 55)
+    canvas.screenshot('help/selecting-in-pdf', { clip: { x: 0, y: 0, width: 190, height: 75 } })
     canvas.trigger('pointerup', 140, 55, { pointerId: 1 })
+    cy.screenshot('help/selected-in-pdf', { capture: 'viewport', clip: { x: 0, y: 0, width: 500, height: 660 } })
     cy.get('button').contains('Consigne').click()
     cy.get('label').contains('Consigne').next().should('have.value', 'Recopie les mots suivants, puis\nentoure les pronoms personnels.\nIndique la classe des autres mots.')
 
