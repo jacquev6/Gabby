@@ -40,6 +40,6 @@ describe('Gabby', () => {
     cy.get('label').contains('Consigne').next().type('Recopie les mots suivants, puis\nentoure les pronoms personnels.\nIndique la classe des autres mots.')
     cy.get('label').contains('Énoncé').next().type('a. je ◆ une ◆ petit ◆ arroser\nb. vous ◆ un ◆ arbre ◆ ce\nc. ils ◆ des ◆ grandir ◆ port\nd. dessin ◆ tu ◆ aller ◆ mon\ne. elle ◆ gomme ◆ peindre ◆ ces\nf. histoire ◆ nous ◆ gentil ◆ la')
 
-    cy.screenshot('three-columns', { capture: 'viewport' })
+    cy.screenshot('help/three-columns', { capture: 'viewport' })
   })
 })
