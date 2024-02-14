@@ -1,11 +1,7 @@
 describe('Gabby', () => {
-  it('responds to the root url', () => {
-    cy.visit('/')
-    cy.contains('nav', 'MALIN')
-  })
-
   it('performs extraction', () => {
     cy.visit('/')
+    cy.contains('nav', 'MALIN')
 
     cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
     cy.waitUntilLoaded()
@@ -36,9 +32,22 @@ describe('Gabby', () => {
 
     cy.get('button').contains('Enregistrer').should('be.enabled')
 
-    // @todo Simulate clicks in the PdfPicker instead of typing in the form
-    cy.get('label').contains('Consigne').next().type('Recopie les mots suivants, puis\nentoure les pronoms personnels.\nIndique la classe des autres mots.')
-    cy.get('label').contains('Énoncé').next().type('a. je ◆ une ◆ petit ◆ arroser\nb. vous ◆ un ◆ arbre ◆ ce\nc. ils ◆ des ◆ grandir ◆ port\nd. dessin ◆ tu ◆ aller ◆ mon\ne. elle ◆ gomme ◆ peindre ◆ ces\nf. histoire ◆ nous ◆ gentil ◆ la')
+    const canvas = cy.get('canvas[style="position: absolute; top: 0px; left: 0px;"]')
+
+    canvas.trigger('pointermove', 5, 5)
+    canvas.trigger('pointerdown', 15, 15, { pointerId: 1 })
+    canvas.trigger('pointermove', 25, 25)
+    canvas.trigger('pointermove', 55, 35)
+    canvas.trigger('pointermove', 75, 45)
+    canvas.trigger('pointermove', 95, 55)
+    canvas.trigger('pointerup', 140, 55, { pointerId: 1 })
+    cy.get('button').contains('Consigne').click()
+    cy.get('label').contains('Consigne').next().should('have.value', 'Recopie les mots suivants, puis\nentoure les pronoms personnels.\nIndique la classe des autres mots.')
+
+    canvas.trigger('pointerdown', 15, 45, { pointerId: 1 })
+    canvas.trigger('pointerup', 140, 105, { pointerId: 1 })
+    cy.get('button').contains('Énoncé').click()
+    cy.get('label').contains('Énoncé').next().should('have.value', 'a. je ◆ une ◆ petit ◆ arroser\nb. vous ◆ un ◆ arbre ◆ ce\nc. ils ◆ des ◆ grandir ◆ port\nd. dessin ◆ tu ◆ aller ◆ mon\ne. elle ◆ gomme ◆ peindre ◆ ces\nf. histoire ◆ nous ◆ gentil ◆ la')
 
     cy.screenshot('help/three-columns', { capture: 'viewport' })
   })

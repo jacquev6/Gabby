@@ -66,9 +66,11 @@ services:
       - ..:/gabby
       - frontend-node-modules:/gabby/frontend/node_modules
       - frontend-cache:/root/.cache
+      - /tmp/.X11-unix:/tmp/.X11-unix  # Allow running GUI apps in container, displaying on host
     working_dir: /gabby/frontend
     environment:
       VITE_GABBY_VERSION: dev
+      DISPLAY: $DISPLAY  # Allow running GUI apps in container, displaying on host
     command: ["bash", "-c", "npm install && cp node_modules/pdfjs-dist/build/pdf.worker.min.mjs public && npx vite --host 0.0.0.0 --port 80 --strictPort"]
 
 volumes:
