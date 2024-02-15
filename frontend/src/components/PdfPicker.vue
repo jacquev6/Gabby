@@ -112,6 +112,9 @@ async function display(page) {
     uiContext.setTransform(viewport.transform[0], viewport.transform[1], viewport.transform[2], viewport.transform[3], viewport.transform[4], viewport.transform[5])
 
     renderTask?.cancel()
+    // @todo Disable Chromium's warning:
+    // > Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true.
+    // Unlikely, this seems to originate from canvases internal to PDF.js, not from our canvases.
     renderTask = pdfPage.render({
       canvasContext: pdfContext,
       viewport,
