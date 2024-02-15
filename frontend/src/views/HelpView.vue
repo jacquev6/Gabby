@@ -11,5 +11,13 @@ const content = reactive({ en, fr })
 </script>
 
 <template>
-  <markdown html :source="content[$i18n.locale]" />
+  <div class="markdown">
+    <markdown html :source="content[$i18n.locale]" />
+  </div>
 </template>
+
+<style>
+  div.markdown img {
+    border: 1px solid black;
+  }
+</style>
