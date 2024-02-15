@@ -15,10 +15,7 @@ ALLOWED_HOSTS = os.environ["GABBY_ALLOWED_HOSTS"].split(",")
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.environ["GABBY_DB_NAME"],
-        "USER": os.environ["GABBY_DB_USER"],
-        "PASSWORD": os.environ["GABBY_DB_PASSWORD"],
-        "HOST": os.environ["GABBY_DB_HOST"],
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": "/gabby-test.sqlite3",
     },
 }
