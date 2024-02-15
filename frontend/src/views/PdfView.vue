@@ -171,7 +171,7 @@ function ellipsis(s) {
     </div>
 
     <div class="col">
-      <h2>{{ $t('edition') }}</h2>
+      <h1>{{ $t('edition') }}</h1>
       <template v-if="pdfException !== null">
         <p>{{ $t('error.pdf') }}</p>
         <pre>{{ pdfException }}</pre>
@@ -214,7 +214,7 @@ function ellipsis(s) {
     </div>
 
     <div class="col">
-      <h2>{{ $t('visualization') }}</h2>
+      <h1>{{ $t('visualization') }}</h1>
       <p>({{ $t('not-yet-implemented') }})</p>
       <template v-if="mode !== 'list'">
         <!-- @todo Retrieve from the back-end -->
