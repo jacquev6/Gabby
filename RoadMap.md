@@ -14,13 +14,6 @@ None at the moment.
 
 ## Next version
 
-### Write user documentation
-
-Choisir si elle fait partie du site ou si elle est un document à part.
-Essayer d'y inclure des videos de démonstration, à condition de pouvoir les garder à jour automatiquement quand l'application évolue.
-
-> Je dois te dire qu'Isabelle comme moi avons regardé sans comprendre du tout comment ça marchait. On s'est donc dit que c'était juste une image de ce que serait la future plateforme sans possibilité d'actions. Heureusement qu'il y a Léa, qui a cliqué sur le pdf à divers endroits avant de voir que ça faisait quelque chose.
-
 ### Keep formatting
 
 > Est-ce qu'il y a un moyen de garder les caractéristiques typographiques genre souligné ou gras facilement ? Parce que parfois, il faut remplacer le mot en gras par exemple.
