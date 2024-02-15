@@ -7,9 +7,13 @@
     "@floating-ui/vue": "^1.0.4",
     "@popperjs/core": "^2.11.8",
     "bootstrap": "^5.3.2",
+    "cypress-wait-until": "^3.0.1",
     "pdfjs-dist": "^4.0.379",
+    "sha.js": "^2.4.11",
     "vue": "^3.3.11",
-    "vue-i18n": "^9.9.0"
+    "vue-i18n": "^9.9.0",
+    "vue-router": "^4.2.5",
+    "vue3-markdown-it": "^1.0.10"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.5.2",

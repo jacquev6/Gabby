@@ -56,6 +56,10 @@ With the development environment running:
     dev-env/frontend/unit-tests.sh
     dev-env/end-to-end-tests.sh
 
+On Linux only, the Cypress GUI can be launched to run tests interactively with:
+
+    dev-env/cypress-gui.sh
+
 # Build Docker images for production
 
     prod/build.sh

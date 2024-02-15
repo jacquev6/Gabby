@@ -14,9 +14,12 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf import settings
 from django.contrib import admin
 from django.urls import path, include
+from django.views.decorators.csrf import csrf_exempt
 
+from . import views
 import textbooks.urls
 
 
@@ -24,3 +27,9 @@ urlpatterns = [
     path('api/admin/', admin.site.urls),
     path('api/', include(textbooks.urls.urlpatterns)),
 ]
+
+# Test-only URL. Not in 'api/...' to avoid accidentally exposing it.
+if settings.DEBUG:
+    urlpatterns += [
+        path('reset-for-tests/yes-im-sure', csrf_exempt(views.reset_for_tests)),
+    ]

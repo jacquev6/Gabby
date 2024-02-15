@@ -2,6 +2,8 @@
 import { ref, onMounted, watch } from 'vue'
 import * as pdfjs from 'pdfjs-dist/build/pdf'
 pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs'
+import shajs from 'sha.js'
+
 
 const props = defineProps({
   pdf: null,  // string or File, but I don't know yet how to say that in JS
@@ -67,8 +69,7 @@ async function load() {
 }
 
 async function hexSha256(data) {
-  const buffer = await crypto.subtle.digest('SHA-256', data)
-  return Array.from(new Uint8Array(buffer)).map((b) => b.toString(16).padStart(2, '0')).join('')
+  return shajs('sha256').update(data).digest('hex')
 }
 
 watch(() => props.page, () => { if (loadedPdf === props.pdf) { display(props.page) } })
@@ -111,6 +112,9 @@ async function display(page) {
     uiContext.setTransform(viewport.transform[0], viewport.transform[1], viewport.transform[2], viewport.transform[3], viewport.transform[4], viewport.transform[5])
 
     renderTask?.cancel()
+    // @todo Disable Chromium's warning:
+    // > Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true.
+    // Unlikely, this seems to originate from canvases internal to PDF.js, not from our canvases.
     renderTask = pdfPage.render({
       canvasContext: pdfContext,
       viewport,

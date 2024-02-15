@@ -10,6 +10,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     set -x \
  && apt-get update \
  && DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends \
+    fonts-noto-color-emoji \
     libasound2 \
     libgbm-dev \
     libgtk-3-0 \
@@ -19,4 +20,5 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     libxss1 \
     libxtst6 \
     xauth \
-    xvfb
+    xvfb \
+ && true
