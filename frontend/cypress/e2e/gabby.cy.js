@@ -1,5 +1,7 @@
 describe('Gabby', () => {
   it('performs extraction', () => {
+    cy.request('POST', '/reset-for-tests/yes-im-sure')
+
     cy.visit('/')
     cy.contains('nav', 'MALIN')
 
@@ -18,6 +20,8 @@ describe('Gabby', () => {
     cy.get('button').contains('<').should('be.enabled')
     cy.get('input.number-no-spin').should('have.value', '2').should('be.enabled')
     cy.get('button').contains('>').should('be.disabled')
+
+    cy.get('li').contains('Recopie les mots suivants').should('not.exist')
 
     cy.get('button').contains('Nouvel exercice').click()
 
@@ -53,5 +57,10 @@ describe('Gabby', () => {
     cy.get('label').contains('Énoncé').next().should('have.value', 'a. je ◆ une ◆ petit ◆ arroser\nb. vous ◆ un ◆ arbre ◆ ce\nc. ils ◆ des ◆ grandir ◆ port\nd. dessin ◆ tu ◆ aller ◆ mon\ne. elle ◆ gomme ◆ peindre ◆ ces\nf. histoire ◆ nous ◆ gentil ◆ la')
 
     cy.screenshot('help/three-columns', { capture: 'viewport' })
+
+    cy.get('button').contains('Enregistrer').click()
+    cy.get('button').contains('Annuler').click()
+
+    cy.get('li').contains('Recopie les mots suivants').should('exist')
   })
 })
