@@ -2,6 +2,8 @@
 import { ref, onMounted, watch } from 'vue'
 import * as pdfjs from 'pdfjs-dist/build/pdf'
 pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs'
+import shajs from 'sha.js'
+
 
 const props = defineProps({
   pdf: null,  // string or File, but I don't know yet how to say that in JS
@@ -67,8 +69,7 @@ async function load() {
 }
 
 async function hexSha256(data) {
-  const buffer = await crypto.subtle.digest('SHA-256', data)
-  return Array.from(new Uint8Array(buffer)).map((b) => b.toString(16).padStart(2, '0')).join('')
+  return shajs('sha256').update(data).digest('hex')
 }
 
 watch(() => props.page, () => { if (loadedPdf === props.pdf) { display(props.page) } })

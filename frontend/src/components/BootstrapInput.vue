@@ -1,6 +1,4 @@
 <script setup>
-import { ref } from 'vue'
-
 defineOptions({
   // Disable attribute inheritance to apply all fallthrough attributes to the textarea
   // https://vuejs.org/guide/components/attrs#disabling-attribute-inheritance
@@ -13,7 +11,7 @@ const props = defineProps({
 
 const model = defineModel({})
 
-const id = self.crypto.randomUUID()
+const id = `input-${ Math.floor(Math.random() * 4000000000) }`
 </script>
 
 <template>

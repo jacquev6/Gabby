@@ -13,7 +13,7 @@ const props = defineProps({
 
 const model = defineModel({ type: String })
 
-const id = self.crypto.randomUUID()
+const id = `textarea-${ Math.floor(Math.random() * 4000000000) }`
 
 const textarea = ref(null)
 
