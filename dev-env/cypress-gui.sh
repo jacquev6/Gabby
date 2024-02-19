@@ -6,4 +6,5 @@ set -o pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/."
 
 
-frontend/shell.sh -c 'npx cypress open --config baseUrl=http://fanout:8080/'
+xhost +
+docker compose exec --env DISPLAY frontend npx cypress open --config baseUrl=http://fanout:8080/
