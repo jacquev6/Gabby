@@ -7,8 +7,14 @@ from .common import *
 
 
 SECRET_KEY = os.environ["GABBY_SECRET_KEY"]
-# @todo(Project management, soon) Serve static files ('manage.py collectstatic' then serve them using a web server)
 DEBUG = False
+
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/5.0/howto/static-files/
+
+STATIC_ROOT = BASE_DIR / "static"
+STATIC_URL = 'static/'
 
 
 ALLOWED_HOSTS = os.environ["GABBY_ALLOWED_HOSTS"].split(",")
