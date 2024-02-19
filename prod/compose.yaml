@@ -19,7 +19,7 @@ services:
   backend:
     image: jacquev6/gabby-backend:preview
     environment:
-      GABBY_SECRET_KEY: not-so-secret
+      GABBY_SECRET_KEY: not-so-secret-not-so-secret-not-so-secret-not-so-secret-not-so-secret
       GABBY_ALLOWED_HOSTS: localhost
       GABBY_DB_NAME: gabby-prod-preview
       GABBY_DB_USER: gabby-prod-preview
@@ -32,7 +32,7 @@ services:
   migrator:
     image: jacquev6/gabby-backend:preview
     environment:
-      GABBY_SECRET_KEY: not-so-secret
+      GABBY_SECRET_KEY: not-so-secret-not-so-secret-not-so-secret-not-so-secret-not-so-secret
       GABBY_ALLOWED_HOSTS: localhost
       GABBY_DB_NAME: gabby-prod-preview
       GABBY_DB_USER: gabby-prod-preview

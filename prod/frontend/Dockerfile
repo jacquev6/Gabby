@@ -27,13 +27,13 @@ RUN pip install -r requirements.txt
 ADD backend /app
 
 ENV DJANGO_SETTINGS_MODULE=gabby.settings.prod
-ENV GABBY_SECRET_KEY=not-a-secret
+ENV GABBY_SECRET_KEY=not-a-secret-but-still-quite-long-not-a-secret-but-still-quite-long-not-a-secret-but-still
 ENV GABBY_ALLOWED_HOSTS=not-a-host
 ENV GABBY_DB_NAME=not-a-db
 ENV GABBY_DB_USER=not-a-user
 ENV GABBY_DB_PASSWORD=not-a-password
 ENV GABBY_DB_HOST=not-a-host-either
-
+RUN ./manage.py check --fail-level DEBUG --verbosity 3 --deploy
 RUN ./manage.py collectstatic --noinput
 
 
