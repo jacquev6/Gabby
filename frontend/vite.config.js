@@ -23,9 +23,6 @@ export default defineConfig({
       target: 'esnext'
     }
   },
-  build: {
-    target: 45
-  },
   esbuild: {
     supported: {
       'top-level-await': true //browsers can handle top-level-await features

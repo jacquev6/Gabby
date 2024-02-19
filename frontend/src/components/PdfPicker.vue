@@ -20,9 +20,9 @@ const emit = defineEmits([
 var textSpacingTolerance = 0
 
 var container = null
-var pdfCanvas = null
+const pdfCanvas = ref(null)
 var pdfContext = null
-var uiCanvas = null
+const uiCanvas = ref(null)
 var uiContext = null
 var loadedPdf = null
 const busy = ref(false)
@@ -30,9 +30,13 @@ const busy = ref(false)
 var document = null
 var textContent = []
 
+console.info('PdfPicker::setup', props.pdf)
+
 onMounted(async () => {
-  pdfContext = pdfCanvas.getContext('2d')
-  uiContext = uiCanvas.getContext('2d')
+  console.info('PdfPicker::onMounted', props.pdf, pdfCanvas, uiCanvas)
+
+  pdfContext = pdfCanvas.value.getContext('2d')
+  uiContext = uiCanvas.value.getContext('2d')
 
   await load()
   await display(1)
@@ -41,12 +45,13 @@ onMounted(async () => {
 watch(() => props.pdf, () => load().then(() => display(1)))
 
 async function load() {
+  console.info('PdfPicker loading ', props.pdf)
   busy.value = true
   try {
-    pdfCanvas.height = 2970
-    pdfCanvas.width = 2100
-    uiCanvas.height = 2970
-    uiCanvas.width = 2100
+    pdfCanvas.value.height = 2970
+    pdfCanvas.value.width = 2100
+    uiCanvas.value.height = 2970
+    uiCanvas.value.width = 2100
     clearCanvas(pdfContext)
     const arg = {}
     if (typeof props.pdf === 'string') {
@@ -63,6 +68,7 @@ async function load() {
     const sha256 = await hexSha256(await document.getData())
     emit('loaded', sha256, document.numPages)
     loadedPdf = props.pdf
+    console.info('PdfPicker loaded ', props.pdf)
   } finally {
     busy.value = false
   }
@@ -98,10 +104,10 @@ async function display(page) {
     const pdfPage = await document.getPage(page)
 
     const viewport = pdfPage.getViewport({scale: 1.5})
-    pdfCanvas.height = viewport.height
-    pdfCanvas.width = viewport.width
-    uiCanvas.height = viewport.height
-    uiCanvas.width = viewport.width
+    pdfCanvas.value.height = viewport.height
+    pdfCanvas.value.width = viewport.width
+    uiCanvas.value.height = viewport.height
+    uiCanvas.value.width = viewport.width
 
     // Somewhat arbitrary. If the tolerance is too small, then the selected text will contain too many spaces,
     // not a big deal. If the tolerance is too big, then the selected text could contain too few spaces,
@@ -161,7 +167,7 @@ var startPoint = null
 function pointerdown(event) {
   if (props.disabled) { return }
   startPoint = makeCanvasPoint(event)
-  uiCanvas.setPointerCapture(event.pointerId)
+  uiCanvas.value.setPointerCapture(event.pointerId)
 }
 
 function pointermove(event) {
@@ -188,7 +194,7 @@ function pointermove(event) {
 }
 
 function pointerup(event) {
-  uiCanvas.releasePointerCapture(event.pointerId)
+  uiCanvas.value.releasePointerCapture(event.pointerId)
   if (startPoint !== null) {
     clearCanvas(uiContext)
 
@@ -229,9 +235,9 @@ function pointerup(event) {
 }
 
 function makeCanvasPoint(event) {
-  const rect = uiCanvas.getBoundingClientRect()
-  const scaleX = uiCanvas.width / rect.width
-  const scaleY = uiCanvas.height / rect.height
+  const rect = uiCanvas.value.getBoundingClientRect()
+  const scaleX = uiCanvas.value.width / rect.width
+  const scaleY = uiCanvas.value.height / rect.height
   return uiContext.getTransform().inverse().transformPoint(
     new DOMPoint((event.clientX - rect.left) * scaleX, (event.clientY - rect.top) * scaleY)
   )
@@ -257,7 +263,7 @@ function selectionRectangle(startPoint, endPoint) {
 function clearCanvas(context) {
   context.save()
   context.setTransform(1, 0, 0, 1, 0, 0)
-  context.clearRect(0, 0, uiCanvas.width, uiCanvas.height)
+  context.clearRect(0, 0, uiCanvas.value.width, uiCanvas.value.height)
   context.restore()
 }
 </script>
