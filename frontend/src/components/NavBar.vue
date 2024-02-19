@@ -14,9 +14,7 @@ import AboutModal from '../components/AboutModal.vue'
           <li class="nav-item"><router-link to="/help" class="nav-link">{{ $t('help') }}</router-link></li>
           <li class="nav-item"><a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#about-modal">{{ $t('about') }}</a></li>
         </ul>
-        <div class="d-flex">
-          <select v-model="$i18n.locale"><option v-for="locale in $i18n.availableLocales" :key="locale" :value="locale">{{ {'en': '🇺🇸 English', 'fr': '🇫🇷 Français'}[locale] }}</option></select>
-        </div>
+        <select v-model="$i18n.locale"><option v-for="locale in $i18n.availableLocales" :key="locale" :value="locale">{{ {'en': '🇺🇸 English', 'fr': '🇫🇷 Français'}[locale] }}</option></select>
       </div>
     </div>
   </nav>
