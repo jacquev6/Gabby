@@ -7,7 +7,7 @@ from .common import *
 
 
 SECRET_KEY = os.environ["GABBY_SECRET_KEY"]
-# @todo Serve static files ('manage.py collectstatic' then serve them using a web server)
+# @todo(Project management, soon) Serve static files ('manage.py collectstatic' then serve them using a web server)
 DEBUG = False
 
 

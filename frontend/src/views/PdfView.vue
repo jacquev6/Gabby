@@ -6,7 +6,7 @@ import PdfPicker from '../components/PdfPicker.vue'
 import BInput from '../components/BootstrapInput.vue'
 
 
-// @todo Handle API failures and slow-downs
+// @todo(Project management, soon) Handle API failures and slow-downs
 
 const pdfRequested = ref('/test.pdf')
 const pdfRequestedPageNumber = ref(1)
@@ -154,7 +154,7 @@ function ellipsis(s) {
   <div class="row">
     <div class="col">
       <BInput :label="$t('inputFile')" type="file" accept=".pdf" :disabled="mode !== 'list'" @change="(e) => { pdfRequested = e.target.files[0] }" />
-      <!-- @todo Consider debouncing changes in pdfPageNumber: don't start a render for intermediate pages when the user presses "up" a few times in this field -->
+      <!-- @todo(Feature, later) Consider debouncing changes in pdfPageNumber: don't start a render for intermediate pages when the user presses "up" a few times in this field -->
       <p class="text-center">
         <button class="btn btn-primary btn-sm" @click="pdfRequestedPageNumber = pdfPageNumber - 1" :disabled="pdfSha256 === null || mode !== 'list' || pdfPageNumber <= 1">&lt;</button> <label>
           {{ $t('Page') }} <input class="number-no-spin" v-model="pdfRequestedPageNumber" type="number" min="1" :max="pdfPagesCount" :disabled="pdfSha256 === null || mode !== 'list'" @blur="pdfRequestedPageNumber = pdfPageNumber"/> {{ $t('pageOver', pdfPagesCount) }}
@@ -203,7 +203,7 @@ function ellipsis(s) {
         />
         <div v-if="mode === 'create'" class="mb-3">
           <button class="btn btn-secondary" type="text" @click="switchToListMode()">{{ $t('cancel') }}
-          <!-- @todo How do I keep a space between buttons more explicitly than that? -->
+          <!-- @todo(Project management, soon) How do I keep a space between buttons more explicitly than that? -->
           </button> <button class="btn btn-primary" type="text" @click="createExercise().then(() => switchToCreateMode(currentExercise.attributes.number + 1))" :disabled="currentExercise.attributes.number === ''">{{ $t('save.next') }}</button>
         </div>
         <div v-else-if="mode === 'edit'" class="mb-3">
@@ -217,7 +217,7 @@ function ellipsis(s) {
       <h1>{{ $t('visualization') }}</h1>
       <p>({{ $t('not-yet-implemented') }})</p>
       <template v-if="mode !== 'list'">
-        <!-- @todo Retrieve from the back-end -->
+        <!-- @todo(Feature, later) Retrieve from the back-end -->
         <p>{{ $t('instructions') }}:</p>
         <p>{{ currentExercise.attributes.instructions }}</p>
         <p>{{ $t('example') }}:</p>
