@@ -39,5 +39,7 @@ RUN ./manage.py collectstatic --noinput
 
 FROM nginx:alpine AS final
 
+RUN rm /etc/nginx/conf.d/default.conf
+ADD prod/frontend/frontend.conf /etc/nginx/conf.d/frontend.conf
 COPY --from=fontend-builder /app/dist /usr/share/nginx/html
 COPY --from=backend-builder /app/static /usr/share/nginx/html/static
