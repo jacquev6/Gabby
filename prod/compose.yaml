@@ -1,0 +1,63 @@
+# https://docs.docker.com/compose/compose-file/
+
+name: gabby-prod-preview
+
+services:
+  fanout:
+    image: nginx:latest
+    ports:
+      - 9090:80
+    volumes:
+      - ./fanout/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - frontend
+      - backend
+
+  frontend:
+    image: jacquev6/gabby-frontend:preview
+
+  backend:
+    image: jacquev6/gabby-backend:preview
+    environment:
+      GABBY_SECRET_KEY: not-so-secret
+      GABBY_ALLOWED_HOSTS: localhost
+      GABBY_DB_NAME: gabby-prod-preview
+      GABBY_DB_USER: gabby-prod-preview
+      GABBY_DB_PASSWORD: password
+      GABBY_DB_HOST: db
+    depends_on:
+      db:
+        condition: service_healthy
+
+  migrator:
+    image: jacquev6/gabby-backend:preview
+    environment:
+      GABBY_SECRET_KEY: not-so-secret
+      GABBY_ALLOWED_HOSTS: localhost
+      GABBY_DB_NAME: gabby-prod-preview
+      GABBY_DB_USER: gabby-prod-preview
+      GABBY_DB_PASSWORD: password
+      GABBY_DB_HOST: db
+    command: ["bash", "-c", "./manage.py migrate && ./manage.py loaddata test-exercises"]
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: gabby-prod-preview
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: gabby-prod-preview
+    healthcheck:
+      test: [
+        "CMD",
+        "pg_isready",
+        "--timeout=0",
+        "--dbname=gabby-prod-preview",
+        "--username=gabby-prod-preview",
+      ]
+      start_period: 0s
+      interval: 0.5s
+      timeout: 1s
+      retries: 10

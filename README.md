@@ -60,8 +60,17 @@ On Linux only, the Cypress GUI can be launched to run tests interactively with:
 
     dev-env/cypress-gui.sh
 
-# Build Docker images for production
+# Docker images for production
 
-    prod/build.sh
+Preview with:
+
+    prod/preview.sh
+
+And then open your browser at http://localhost:9090/.
+Hit Ctrl+C to stop the production preview environment.
+
+Publish Docker images with:
+
+    prod/publish.sh
 
 (That command will push to hub.docker.com as @jacquev6, so it will fail if ran by anyone else than Vincent Jacques)
