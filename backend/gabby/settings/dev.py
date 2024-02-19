@@ -28,3 +28,6 @@ DATABASES = {
         "HOST": os.environ["GABBY_DB_HOST"],
     },
 }
+
+
+EXPOSE_RESET_FOR_TESTS_URL = False

@@ -20,11 +20,12 @@ services:
     image: jacquev6/gabby-backend:preview
     environment:
       GABBY_SECRET_KEY: not-so-secret-not-so-secret-not-so-secret-not-so-secret-not-so-secret
-      GABBY_ALLOWED_HOSTS: localhost
+      GABBY_ALLOWED_HOSTS: localhost,fanout
       GABBY_DB_NAME: gabby-prod-preview
       GABBY_DB_USER: gabby-prod-preview
       GABBY_DB_PASSWORD: password
       GABBY_DB_HOST: db
+      GABBY_EXPOSE_RESET_FOR_TESTS_URL: yes-i-m-sure--it-s-not-really-prod
     depends_on:
       db:
         condition: service_healthy
@@ -42,6 +43,21 @@ services:
     depends_on:
       db:
         condition: service_healthy
+
+  tester:
+    build:
+      context: ../frontend
+      dockerfile: ../prod/tester/Dockerfile
+    volumes:
+      - ../pdf-examples:/app/pdf-examples
+    environment:
+      VITE_GABBY_VERSION: preview
+    command: ["npx", "cypress", "run", "--e2e", "--config", "baseUrl=http://fanout/"]
+    depends_on:
+      migrator:
+        condition: service_completed_successfully
+      fanout:
+        condition: service_started
 
   db:
     image: postgres:16

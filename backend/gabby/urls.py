@@ -29,7 +29,7 @@ urlpatterns = [
 ]
 
 # Test-only URL. Not in 'api/...' to avoid accidentally exposing it.
-if settings.DEBUG:
+if settings.EXPOSE_RESET_FOR_TESTS_URL:
     urlpatterns += [
         path('reset-for-tests/yes-im-sure', csrf_exempt(views.reset_for_tests)),
     ]

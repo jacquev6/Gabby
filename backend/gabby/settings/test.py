@@ -25,3 +25,6 @@ DATABASES = {
         "NAME": "/gabby-test.sqlite3",
     },
 }
+
+
+EXPOSE_RESET_FOR_TESTS_URL = True

@@ -44,3 +44,6 @@ DATABASES = {
 
 
 REST_FRAMEWORK["PAGE_SIZE"] = 20
+
+
+EXPOSE_RESET_FOR_TESTS_URL = os.environ.get("GABBY_EXPOSE_RESET_FOR_TESTS_URL") == "yes-i-m-sure--it-s-not-really-prod"

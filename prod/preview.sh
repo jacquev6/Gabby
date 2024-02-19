@@ -9,7 +9,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
 ./build.sh preview false
 
 echo "Gabby prod-preview: start"
-docker compose up --remove-orphans --detach
+docker compose up --build --remove-orphans --detach
 docker compose logs --follow || true
 
 echo "Gabby prod-preview: clean-up"
