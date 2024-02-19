@@ -28,4 +28,4 @@ coverage
 
 *.tsbuildinfo
 
-public/pdf.worker.min.mjs
+public/pdf.worker.min.js

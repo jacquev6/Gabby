@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue'
 import * as pdfjs from 'pdfjs-dist/build/pdf'
-pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs'
+pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.js'
 import shajs from 'sha.js'
 
 
