@@ -6,8 +6,8 @@ import router from './router'
 import en from './locales/en.json'
 import fr from './locales/fr.json'
 
-import "bootstrap/dist/css/bootstrap.min.css"
-import "bootstrap"
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap'
 
 
 createApp(App)
