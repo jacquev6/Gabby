@@ -19,13 +19,6 @@ assert len(SECRET_KEY) > 50, "The secret key is too short"  # Required by './man
 DEBUG = False
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.0/howto/static-files/
-
-STATIC_ROOT = BASE_DIR / "static"
-STATIC_URL = 'static/'
-
-
 ALLOWED_HOSTS = os.environ["GABBY_ALLOWED_HOSTS"].split(",")
 
 

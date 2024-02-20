@@ -3,7 +3,6 @@ describe('Gabby', () => {
     cy.request('POST', '/reset-for-tests/yes-im-sure')
 
     cy.visit('/')
-    cy.contains('nav', 'MALIN')
 
     cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
     cy.waitUntilLoaded()
@@ -88,5 +87,11 @@ describe('Gabby', () => {
     cy.get('html').invoke('css', 'scroll-behavior', 'auto');
     cy.get('body').invoke('css', 'scroll-behavior', 'auto');
     cy.screenshot('doc/modify-exercise')
+  })
+
+  it('navigates to user documentation', () => {
+    cy.visit('/')
+    cy.get('a').contains('Aide').click()
+    cy.contains('h1', 'Documentation de MALIN')
   })
 })
