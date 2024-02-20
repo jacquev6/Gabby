@@ -3,12 +3,12 @@
 name: gabby-prod-preview
 
 services:
-  fanout:
+  preview-fanout:
     image: nginx:latest
     ports:
-      - 9090:80
+      - 8090:8090
     volumes:
-      - ./fanout/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./preview-fanout/nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
       - frontend
       - backend
@@ -20,7 +20,7 @@ services:
     image: jacquev6/gabby-backend:preview
     environment:
       GABBY_SECRET_KEY: not-so-secret-not-so-secret-not-so-secret-not-so-secret-not-so-secret
-      GABBY_ALLOWED_HOSTS: localhost,fanout
+      GABBY_ALLOWED_HOSTS: localhost,preview-fanout
       GABBY_DB_NAME: gabby-prod-preview
       GABBY_DB_USER: gabby-prod-preview
       GABBY_DB_PASSWORD: password
@@ -30,7 +30,7 @@ services:
       db:
         condition: service_healthy
 
-  migrator:
+  preview-migrator:
     image: jacquev6/gabby-backend:preview
     environment:
       GABBY_SECRET_KEY: not-so-secret-not-so-secret-not-so-secret-not-so-secret-not-so-secret
@@ -44,19 +44,19 @@ services:
       db:
         condition: service_healthy
 
-  tester:
+  preview-tester:
     build:
       context: ../frontend
-      dockerfile: ../prod/tester/Dockerfile
+      dockerfile: ../prod/preview-tester/Dockerfile
     volumes:
       - ../pdf-examples:/app/pdf-examples
     environment:
       VITE_GABBY_VERSION: preview
-    command: ["npx", "cypress", "run", "--e2e", "--config", "baseUrl=http://fanout/"]
+    command: ["npx", "cypress", "run", "--e2e", "--config", "baseUrl=http://preview-fanout:8090/"]
     depends_on:
-      migrator:
+      preview-migrator:
         condition: service_completed_successfully
-      fanout:
+      preview-fanout:
         condition: service_started
 
   db:
