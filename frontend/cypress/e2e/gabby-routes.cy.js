@@ -25,17 +25,15 @@ describe('Gabby has routes that', () => {
     cy.contains('h1', 'Documentation de MALIN')
   })
 
-  // @todo(Project management, soon) Fix this test in prod preview
-  // it('can access its documentation as path to directory with trailing /', () => {
-  //   cy.visit('/doc/')
-  //   cy.contains('h1', 'Documentation de MALIN')
-  // })
+  it('can access its documentation as path to directory with trailing /', () => {
+    cy.visit('/doc/')
+    cy.contains('h1', 'Documentation de MALIN')
+  })
 
-  // @todo(Project management, soon) Fix this test in prod preview
-  // it('can access its documentation as path to directory without trailing /', () => {
-  //   cy.visit('/doc')
-  //   cy.contains('h1', 'Documentation de MALIN')
-  // })
+  it('can access its documentation as path to directory without trailing /', () => {
+    cy.visit('/doc')
+    cy.contains('h1', 'Documentation de MALIN')
+  })
 
   it('can access Django API without trailing /', () => {
     cy.visit('/api')

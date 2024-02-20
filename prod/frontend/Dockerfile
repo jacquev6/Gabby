@@ -54,7 +54,8 @@ RUN sphinx-build -b html . build
 FROM nginx:alpine AS final
 
 RUN rm /etc/nginx/conf.d/default.conf
+RUN rm /usr/share/nginx/html/*.html
 ADD prod/frontend/frontend.conf /etc/nginx/conf.d/frontend.conf
-COPY --from=fontend-builder /app/dist /usr/share/nginx/html
+COPY --from=fontend-builder /app/dist /usr/share/nginx/html/vue
 COPY --from=backend-builder /app/static /usr/share/nginx/html/static
 COPY --from=doc-builder /app/build /usr/share/nginx/html/doc
