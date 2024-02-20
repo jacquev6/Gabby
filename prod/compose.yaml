@@ -6,7 +6,7 @@ services:
   preview-fanout:
     image: nginx:latest
     ports:
-      - 9090:80
+      - 8090:8090
     volumes:
       - ./preview-fanout/nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
@@ -52,7 +52,7 @@ services:
       - ../pdf-examples:/app/pdf-examples
     environment:
       VITE_GABBY_VERSION: preview
-    command: ["npx", "cypress", "run", "--e2e", "--config", "baseUrl=http://preview-fanout/"]
+    command: ["npx", "cypress", "run", "--e2e", "--config", "baseUrl=http://preview-fanout:8090/"]
     depends_on:
       preview-migrator:
         condition: service_completed_successfully
