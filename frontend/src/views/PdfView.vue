@@ -156,9 +156,9 @@ function ellipsis(s) {
       <BInput :label="$t('inputFile')" type="file" accept=".pdf" :disabled="mode !== 'list'" @change="(e) => { pdfRequested = e.target.files[0] }" />
       <!-- @todo(Feature, later) Consider debouncing changes in pdfPageNumber: don't start a render for intermediate pages when the user presses "up" a few times in this field -->
       <p class="text-center">
-        <button class="btn btn-primary btn-sm" @click="pdfRequestedPageNumber = pdfPageNumber - 1" :disabled="pdfSha256 === null || mode !== 'list' || pdfPageNumber <= 1">&lt;</button> <label>
-          {{ $t('Page') }} <input class="number-no-spin" v-model="pdfRequestedPageNumber" type="number" min="1" :max="pdfPagesCount" :disabled="pdfSha256 === null || mode !== 'list'" @blur="pdfRequestedPageNumber = pdfPageNumber"/> {{ $t('pageOver', pdfPagesCount) }}
-        </label> <button class="btn btn-primary btn-sm" @click="pdfRequestedPageNumber = pdfPageNumber + 1" :disabled="pdfSha256 === null || mode !== 'list' || pdfPageNumber >= pdfPagesCount">&gt;</button>
+        <button class="btn btn-primary btn-sm" @click="pdfRequestedPageNumber = pdfPageNumber - 1" :disabled="pdfSha256 === null || mode !== 'list' || pdfPageNumber <= 1">&lt;</button>
+        <label>{{ $t('Page') }} <input class="number-no-spin" v-model="pdfRequestedPageNumber" type="number" min="1" :max="pdfPagesCount" :disabled="pdfSha256 === null || mode !== 'list'" @blur="pdfRequestedPageNumber = pdfPageNumber"/> {{ $t('pageOver', pdfPagesCount) }}</label>
+        <button class="btn btn-primary btn-sm" @click="pdfRequestedPageNumber = pdfPageNumber + 1" :disabled="pdfSha256 === null || mode !== 'list' || pdfPageNumber >= pdfPagesCount">&gt;</button>
       </p>
       <PdfPicker
         :pdf="pdf"
@@ -182,8 +182,8 @@ function ellipsis(s) {
           <ul>
             <li v-for="exercise in exercisesOnPage">
               <strong>{{ exercise.attributes.number }}</strong> {{ ellipsis(exercise.attributes.instructions) }}
-              <button class="btn btn-primary btn-sm" @click="switchToEditMode(exercise)">{{ $t('edit') }}
-              </button> <button class="btn btn-secondary btn-sm" @click="deleteExercise(exercise).then(switchToListMode)">{{ $t('delete') }}</button>
+              <button class="btn btn-primary btn-sm" @click="switchToEditMode(exercise)">{{ $t('edit') }}</button>
+              <button class="btn btn-secondary btn-sm" @click="deleteExercise(exercise).then(switchToListMode)">{{ $t('delete') }}</button>
             </li>
             <li v-if="loadingExercises" class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></li>
           </ul>
@@ -202,13 +202,12 @@ function ellipsis(s) {
           v-model="currentExercise.attributes"
         />
         <div v-if="mode === 'create'" class="mb-3">
-          <button class="btn btn-secondary" type="text" @click="switchToListMode()">{{ $t('cancel') }}
-          <!-- @todo(Project management, soon) How do I keep a space between buttons more explicitly than that? -->
-          </button> <button class="btn btn-primary" type="text" @click="createExercise().then(() => switchToCreateMode(currentExercise.attributes.number + 1))" :disabled="currentExercise.attributes.number === ''">{{ $t('save.next') }}</button>
+          <button class="btn btn-secondary" type="text" @click="switchToListMode()">{{ $t('cancel') }}</button>
+          <button class="btn btn-primary" type="text" @click="createExercise().then(() => switchToCreateMode(currentExercise.attributes.number + 1))" :disabled="currentExercise.attributes.number === ''">{{ $t('save.next') }}</button>
         </div>
         <div v-else-if="mode === 'edit'" class="mb-3">
-          <button class="btn btn-secondary" type="text" @click="switchToListMode()">{{ $t('cancel') }}
-          </button> <button class="btn btn-primary" type="text" @click="updateExercise().then(switchToListMode)">{{ $t('save') }}</button>
+          <button class="btn btn-secondary" type="text" @click="switchToListMode()">{{ $t('cancel') }}</button>
+          <button class="btn btn-primary" type="text" @click="updateExercise().then(switchToListMode)">{{ $t('save') }}</button>
         </div>
       </template>
     </div>
