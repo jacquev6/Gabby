@@ -30,11 +30,7 @@ const busy = ref(false)
 var document = null
 var textContent = []
 
-console.info('PdfPicker::setup', props.pdf)
-
 onMounted(async () => {
-  console.info('PdfPicker::onMounted', props.pdf, pdfCanvas, uiCanvas)
-
   pdfContext = pdfCanvas.value.getContext('2d')
   uiContext = uiCanvas.value.getContext('2d')
 
@@ -45,7 +41,8 @@ onMounted(async () => {
 watch(() => props.pdf, () => load().then(() => display(1)))
 
 async function load() {
-  console.info('PdfPicker loading ', props.pdf)
+  const startTime = performance.now()
+  console.info('PdfPicker loading', props.pdf)
   busy.value = true
   try {
     pdfCanvas.value.height = 2970
@@ -63,12 +60,13 @@ async function load() {
       document = await pdfjs.getDocument(arg).promise
     } catch (e) {
       emit('loading-failed', e)
-      return
+      console.error('PdfPicker failed to load', props.pdf, 'after', performance.now() - startTime, 'ms')
+      throw e
     }
     const sha256 = await hexSha256(await document.getData())
     emit('loaded', sha256, document.numPages)
     loadedPdf = props.pdf
-    console.info('PdfPicker loaded ', props.pdf)
+    console.info('PdfPicker loaded', props.pdf, 'in', performance.now() - startTime, 'ms')
   } finally {
     busy.value = false
   }
