@@ -34,7 +34,7 @@ describe('Gabby', () => {
 
     cy.get('label').contains('Numéro').next().type(5)
 
-    cy.screenshot('help/create-exercise')
+    cy.screenshot('doc/create-exercise')
 
     cy.get('button').contains('Enregistrer').should('be.enabled')
 
@@ -47,9 +47,9 @@ describe('Gabby', () => {
     canvas.trigger('pointermove', 75, 45)
     canvas.trigger('pointermove', 95, 55)
     canvas.trigger('pointermove', 140, 55)
-    canvas.screenshot('help/selecting-in-pdf', { clip: { x: 0, y: 0, width: 190, height: 75 } })
+    canvas.screenshot('doc/selecting-in-pdf', { clip: { x: 0, y: 0, width: 190, height: 75 } })
     canvas.trigger('pointerup', 140, 55, { pointerId: 1 })
-    cy.screenshot('help/selected-in-pdf', { clip: { x: 0, y: 0, width: 500, height: 660 } })
+    cy.screenshot('doc/selected-in-pdf', { clip: { x: 0, y: 0, width: 500, height: 660 } })
     cy.get('button').contains('Consigne').click()
     cy.get('label').contains('Consigne').next().should('have.value', 'Recopie les mots suivants, puis\nentoure les pronoms personnels.\nIndique la classe des autres mots.')
 
@@ -58,7 +58,7 @@ describe('Gabby', () => {
     cy.get('button').contains('Énoncé').click()
     cy.get('label').contains('Énoncé').next().should('have.value', 'a. je ◆ une ◆ petit ◆ arroser\nb. vous ◆ un ◆ arbre ◆ ce\nc. ils ◆ des ◆ grandir ◆ port\nd. dessin ◆ tu ◆ aller ◆ mon\ne. elle ◆ gomme ◆ peindre ◆ ces\nf. histoire ◆ nous ◆ gentil ◆ la')
 
-    cy.screenshot('help/three-columns', { clip: { x: 0, y: 0, width: 1000, height: 330 } })
+    cy.screenshot('doc/three-columns', { clip: { x: 0, y: 0, width: 1000, height: 330 } })
 
     cy.get('button').contains('Enregistrer').click()
     cy.get('button').contains('Annuler').click()
@@ -77,7 +77,7 @@ describe('Gabby', () => {
     cy.get('p').contains('Exercices existants ').next().children().should('have.length', 2)
     cy.get('p').contains('Exercices existants ').next().children().first().should('contain', '3 Complète avec : le, une, …')
 
-    cy.screenshot('help/existing-exercises', { clip: { x: 0, y: 0, width: 1000, height: 330 } })
+    cy.screenshot('doc/existing-exercises', { clip: { x: 0, y: 0, width: 1000, height: 330 } })
 
     cy.get('button').contains('Modifier').click()
 
@@ -87,6 +87,6 @@ describe('Gabby', () => {
     // https://github.com/cypress-io/cypress/issues/2681#issuecomment-1120146874
     cy.get('html').invoke('css', 'scroll-behavior', 'auto');
     cy.get('body').invoke('css', 'scroll-behavior', 'auto');
-    cy.screenshot('help/modify-exercise')
+    cy.screenshot('doc/modify-exercise')
   })
 })

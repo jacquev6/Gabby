@@ -2,7 +2,7 @@ describe('Gabby doc', () => {
   it('is accessible from default', () => {
     cy.visit('/')
     cy.get('a').contains('Aide').click()
-    cy.contains('h1', 'Documentation utilisateur')
+    cy.contains('h1', 'Documentation de MALIN')
   })
 
   it('is accessible as path to index', () => {

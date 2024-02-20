@@ -11,10 +11,12 @@ const router = createRouter({
       name: 'pdf',
       component: PdfView
     },
+    // This route shall be removed when we actually need the Vue Router.
+    // Until then, it's used in end-to-end tests checking the Vue Router is working in all environments.
     {
-      path: '/help',
-      name: 'help',
-      component: () => import('../views/HelpView.vue')
+      path: '/other',
+      name: 'other',
+      component: () => import('../views/OtherView.vue')
     },
   ],
 })
