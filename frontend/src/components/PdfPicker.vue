@@ -267,8 +267,10 @@ function clearCanvas(context) {
 </script>
 
 <template>
-  <div style="position: relative" ref="container">
-    <canvas ref="pdfCanvas" class="img img-fluid" style="border: 1px solid black"></canvas>
+  <div style="position: relative; border: 1px solid black" ref="container">
+    <canvas
+      ref="pdfCanvas" class="img img-fluid"
+    ></canvas>
     <canvas
       ref="uiCanvas" class="img img-fluid" style="position: absolute; top: 0; left: 0"
       @pointerdown="pointerdown" @pointermove="pointermove" @pointerup="pointerup"
