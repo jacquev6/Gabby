@@ -1,8 +1,6 @@
 Documentation utilisateur
 =========================
 
-Cette documentation est encore succincte ; n'hésitez pas à me contacter comme indiqué dans le "À propos".
-
 Structure générale
 ------------------
 

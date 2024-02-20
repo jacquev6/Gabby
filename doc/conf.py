@@ -23,3 +23,4 @@ language = 'fr'
 
 html_theme = 'alabaster'
 html_static_path = ['_static']
+html_logo = "../frontend/public/logo-cartable-fantastique.png"
