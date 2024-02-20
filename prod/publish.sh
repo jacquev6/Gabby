@@ -12,10 +12,14 @@ test $(git branch --show-current) == main
 git diff --stat --exit-code
 git diff --stat --staged --exit-code
 
-# @todo(Project management, soon) Pre-fill changelog and ask to edit; git commit -m "Publish version $tag"
+gabby_version=$(date +%Y%m%d-%H%M%S)
+
+echo "Edit the changelog for version $gabby_version and press enter to continue"
+read
+git add .
+git commit -m "Publish version $gabby_version"
 
 # Build and publish
-gabby_version=$(date +%Y%m%d-%H%M%S)
 ./build.sh $gabby_version true
 git tag $gabby_version
-git push origin --tags
+git push origin main --tags
