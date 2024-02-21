@@ -43,6 +43,7 @@ WORKDIR /app
 
 RUN pip install sphinx
 
+# @todo(Feature, soon) Make sure the logo is available when building the doc
 ADD doc /app
 
 ARG GABBY_VERSION
