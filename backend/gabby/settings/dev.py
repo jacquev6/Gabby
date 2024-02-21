@@ -1,9 +1,13 @@
+import os
+
 from .common import *
 
 
 SECRET_KEY = "not-a-secret"
 DEBUG = True
-ALLOWED_HOSTS = []
+
+
+ALLOWED_HOSTS = os.environ["GABBY_ALLOWED_HOSTS"].split(",")
 
 
 # Database
@@ -12,9 +16,12 @@ ALLOWED_HOSTS = []
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "gabby",
-        "USER": "gabby",
-        "PASSWORD": "password",
-        "HOST": "db",
+        "NAME": os.environ["GABBY_DB_NAME"],
+        "USER": os.environ["GABBY_DB_USER"],
+        "PASSWORD": os.environ["GABBY_DB_PASSWORD"],
+        "HOST": os.environ["GABBY_DB_HOST"],
     },
 }
+
+
+EXPOSE_RESET_FOR_TESTS_URL = False

@@ -6,19 +6,24 @@ set -o pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
 
-# Check cleanliness
-test $(git branch --show-current) == main
-git diff --stat --exit-code
-git diff --stat --staged --exit-code
+gabby_version=$1
+test -n "$gabby_version"
 
-# Build
-timestamp=$(date +%Y%m%d-%H%M%S)
+push=$2
 
-git tag $timestamp
-docker build .. --file frontend/Dockerfile --build-arg GABBY_VERSION=$timestamp --tag jacquev6/gabby-frontend:$timestamp
-docker build .. --file backend/Dockerfile --build-arg GABBY_VERSION=$timestamp --tag jacquev6/gabby-backend:$timestamp
+if $push
+then
+  args="--platform linux/amd64,linux/arm64 --push"
+else
+  args="--platform linux/amd64 --load"
+fi
 
-# Publish
-git push origin --tags
-docker push jacquev6/gabby-frontend:$timestamp
-docker push jacquev6/gabby-backend:$timestamp
+docker buildx use gabby-multi-platform-builder 2>/dev/null || docker buildx create --name gabby-multi-platform-builder --use
+
+for part in frontend backend
+do
+  docker buildx build .. --file $part/Dockerfile \
+    --build-arg GABBY_VERSION=$gabby_version \
+    --tag jacquev6/gabby-$part:$gabby_version \
+    $args
+done

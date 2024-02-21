@@ -1,6 +1,6 @@
 {
+  "help": "Help",
   "about": "About",
-  "about.transitive": "About",
   "french-only": "🇫🇷 French version only, sorry! 🇫🇷",
 
   "error.pdf": "Error while loading the PDF:",
@@ -8,15 +8,18 @@
   "edition": "Edition",
   "visualization": "Visualization",
   "inputFile": "Input file",
-  "pageOver": "Page (on {count})",
+  "Page": "Page",
+  "pageOver": "(on {count})",
   "exerciseNumber": "Number",
   "existingExercises": "Existing exercises:",
+  "noExercises": "No exercises yet.",
   "create": "New exercise",
   "edit": "Edit",
   "delete": "Delete",
   "save": "Save",
   "save.next": "Save then create next",
   "cancel": "Cancel",
+  "doStripExerciceNumber": "Strip exercise number automatically",
 
   "selectedText": "Selected text",
   "addTo": "Add to:",
