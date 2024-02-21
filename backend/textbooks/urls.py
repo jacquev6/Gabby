@@ -7,6 +7,11 @@ from rest_framework.schemas import get_schema_view
 from .views import ExerciseViewSet
 
 
+# @todo(Project management, later): Migrate schema generation to DRF-spectacular
+# (See deprecation notice on top of https://www.django-rest-framework.org/api-guide/schemas/)
+
+# @todo(Project management, later): Save the schema to a file on startup (to make changes more explicit)
+
 router = routers.DefaultRouter(trailing_slash=False)
 
 router.register(r"exercises", ExerciseViewSet)
