@@ -6,7 +6,7 @@ set -o pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
 
-./build.sh preview false
+./build.sh preview load
 
 echo "Gabby prod-preview: start"
 docker compose up --build --remove-orphans --detach

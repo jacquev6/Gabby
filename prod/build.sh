@@ -9,13 +9,16 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
 gabby_version=$1
 test -n "$gabby_version"
 
-push=$2
+action=$2
 
-if $push
+if [ "$action" == "push" ]
 then
   args="--platform linux/amd64,linux/arm64 --push"
-else
+elif [ "$action" == "load" ]
+then
   args="--platform linux/amd64 --load"
+else
+  exit 1
 fi
 
 docker buildx use gabby-multi-platform-builder 2>/dev/null || docker buildx create --name gabby-multi-platform-builder --use
