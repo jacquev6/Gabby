@@ -63,8 +63,10 @@ loadTextbooks()
               <p>Il contient :</p>
               <ul>
                 <li v-for="section in api.cache.get('pdfFile', lastPdfOpened).relationships.sections">
-                  les pages {{ section.attributes.textbookStartPage }} à {{ section.attributes.textbookStartPage + section.attributes.pagesCount - 1 }}
-                  de {{ section.relationships.textbook.attributes.title }}, {{ section.relationships.textbook.attributes.publisher }}, {{ section.relationships.textbook.attributes.year }}
+                  <router-link :to="{name: 'textbook-page', params: {textbookId: section.relationships.textbook.id, page: section.attributes.textbookStartPage }}">
+                    les pages {{ section.attributes.textbookStartPage }} à {{ section.attributes.textbookStartPage + section.attributes.pagesCount - 1 }}
+                    de {{ section.relationships.textbook.attributes.title }}, {{ section.relationships.textbook.attributes.publisher }}, {{ section.relationships.textbook.attributes.year }}
+                  </router-link>
                 </li>
               </ul>
             </template>
@@ -95,7 +97,9 @@ loadTextbooks()
             {{ textbook.attributes.title }}, {{ textbook.attributes.publisher }}, {{ textbook.attributes.year }}, dont
             <ul v-if="textbook.relationships.sections">
               <li v-for="section in textbook.relationships.sections">
-                les pages {{ section.attributes.textbookStartPage }} à {{ section.attributes.textbookStartPage + section.attributes.pagesCount - 1 }}
+                <router-link :to="{name: 'textbook-page', params: {textbookId: textbook.id, page: section.attributes.textbookStartPage }}">
+                  les pages {{ section.attributes.textbookStartPage }} à {{ section.attributes.textbookStartPage + section.attributes.pagesCount - 1 }}
+                </router-link>
                 sont dans {{ pdfs.getSource(section.relationships.pdfFile.attributes.sha256) ? formatPdfSource(pdfs.getSource(section.relationships.pdfFile.attributes.sha256)) : ' un PDF précédent nommé ' + section.relationships.pdfFile.relationships.namings[0].attributes.name }}
               </li>
             </ul>

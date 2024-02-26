@@ -6,6 +6,7 @@
   "dependencies": {
     "@floating-ui/vue": "^1.0.4",
     "@popperjs/core": "^2.11.8",
+    "@vueuse/core": "^10.8.0",
     "bootstrap": "^5.3.2",
     "pdfjs-dist": "^4.0.379",
     "pinia": "^2.1.7",
