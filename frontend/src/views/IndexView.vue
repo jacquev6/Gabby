@@ -4,6 +4,7 @@ import { ref, reactive } from 'vue'
 import { usePdfsStore } from '../stores/pdfs'
 import { useApiStore } from '../stores/api'
 import BInput from '../components/BootstrapInput.vue'
+import { BRow, BCol } from '../components/bootstrap'
 
 
 const pdfs = usePdfsStore()
@@ -47,8 +48,8 @@ loadTextbooks()
 </script>
 
 <template>
-  <div class="row">
-    <div class="col">
+  <b-row>
+    <b-col>
       <h1>Ouvrir un PDF</h1>
       <div v-if="loadingPdf" class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div>
       <div v-else>
@@ -57,8 +58,8 @@ loadTextbooks()
       </div>
       <template v-if="lastPdfOpened">
         <h1>PDF ouvert</h1>
-        <div class="row">
-          <div class="col">
+        <b-row>
+          <b-col>
             <template v-if="api.cache.get('pdfFile', lastPdfOpened)?.relationships.sections">
               <p>Il contient :</p>
               <ul>
@@ -75,8 +76,8 @@ loadTextbooks()
             </template>
             <p>@todo(Feature, now) Créer un nouveau manuel (pour les PDFs contenant (des extraits de) plusieurs manuels)</p>
             <p>@todo(Feature, soon) Associer un manuel existant (pour les manuels répartis sur plusieurs PDFs)</p>
-          </div>
-          <div class="col">
+          </b-col>
+          <b-col>
             <p class="text-center">
               @todo(Feature, now) Display a preview of the PDF<br>
               <button class="btn btn-primary btn-sm">&lt;</button>
@@ -84,11 +85,11 @@ loadTextbooks()
               <button class="btn btn-primary btn-sm" >&gt;</button>
             </p>
             <canvas class="img img-fluid" height="2970" width="2100" style="border: 1px solid black"></canvas>
-          </div>
-        </div>
+          </b-col>
+        </b-row>
       </template>
-    </div>
-    <div class="col-4">
+    </b-col>
+    <b-col :w="4">
       <h1>Manuels existants</h1>
       <li v-if="loadingTextbooks" class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></li>
       <template v-else-if="textbooks.length">
@@ -107,6 +108,6 @@ loadTextbooks()
         </ul>
       </template>
       <p v-else>Aucun manuel existant.</p>
-    </div>
-  </div>
+    </b-col>
+  </b-row>
 </template>
