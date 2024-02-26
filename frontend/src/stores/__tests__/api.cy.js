@@ -32,6 +32,49 @@ describe('ApiStore', () => {
     ).to.equal(6)
   })
 
+  it('keeps single included', async () => {
+    const api = useApiStore()
+
+    await api.client.get('textbooks', {include: 'sections'})
+
+    expect(
+      api.cache.get('textbook', '1').relationships.
+        sections[0].attributes.textbookStartPage
+    ).to.equal(6)
+  })
+
+  it('keeps deep included', async () => {
+    const api = useApiStore()
+
+    await api.client.get('textbooks', {include: 'sections.pdfFile.namings'})
+
+    expect(
+      api.cache.get('textbook', '1')
+        .relationships.sections[0]
+        .relationships.pdfFile
+        .relationships.namings[0]
+        .attributes.name
+    ).to.equal('test.pdf')
+  })
+
+  it('keeps multiple included', async () => {
+    const api = useApiStore()
+
+    await api.client.get('sections', {include: ['textbook', 'pdfFile.namings']})
+
+    expect(
+      api.cache.get('section', '1')
+        .relationships.textbook
+        .attributes.title
+    ).to.equal('Français CE2')
+    expect(
+      api.cache.get('section', '1')
+        .relationships.pdfFile
+        .relationships.namings[0]
+        .attributes.name
+    ).to.equal('test.pdf')
+  })
+
   it('updates a component reactively', () => {
     cy.mount(ApiTestComponent)
 

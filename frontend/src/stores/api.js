@@ -46,13 +46,23 @@ export function defineApiStore(name, options) {
 
     return {
       client: {
-        get: async function(path) {
-          const url = baseUrl + path
+        get: async function(path, options) {
+          let url = baseUrl + path
+          if (options?.include) {
+            // This obviously works for a single string,
+            // and fortunately for a list of strings: it adds them comma-separated
+            url += `?include=${options?.include}`
+          }
           const response = await (await fetch(url, {headers: {'Content-Type': 'application/vnd.api+json'}})).json()
           const got = []
           for (const item of response.data) {
             update(item)
             got.push(get(item))
+          }
+          if (response.included) {
+            for (const item of response.included) {
+              update(item)
+            }
           }
           return got
         },
