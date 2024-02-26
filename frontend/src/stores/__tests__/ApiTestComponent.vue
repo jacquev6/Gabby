@@ -1,7 +1,8 @@
 <script setup>
-import { useApiStore } from '../api.js'
+import { defineApiStore } from '../api.js'
 
-const api = useApiStore()
+
+const api = defineApiStore('api', {baseUrl: 'http://fanout:8081/api/'})()
 </script>
 
 <template>

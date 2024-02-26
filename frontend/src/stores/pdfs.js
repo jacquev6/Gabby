@@ -4,10 +4,10 @@ import * as pdfjs from 'pdfjs-dist/build/pdf'
 import shajs from 'sha.js'
 
 
-export function definePdfsStore(options) {
+export function definePdfsStore(name, options) {
   const weak_ref = (options && options.weak_ref) || ((o) => new WeakRef(o))
 
-  return defineStore('pdfs', () => {
+  return defineStore(name, () => {
     const infosBySha256 = reactive({})
 
     async function loadDocument(source) {
@@ -90,4 +90,4 @@ export function definePdfsStore(options) {
   })
 }
 
-export const usePdfsStore = definePdfsStore()
+export const usePdfsStore = definePdfsStore('pdfs', {})

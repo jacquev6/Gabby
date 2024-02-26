@@ -1,8 +1,10 @@
 import { setActivePinia, createPinia } from 'pinia'
 
-import { useApiStore } from '../api.js'
+import { defineApiStore } from '../api.js'
 import ApiTestComponent from './ApiTestComponent.vue'  // @todo(Project management, later) Define this component locally
 
+
+const useApiStore = defineApiStore('api', {baseUrl: 'http://fanout:8081/api/'})
 
 describe('ApiStore', () => {
   beforeEach(() => {
@@ -20,7 +22,6 @@ describe('ApiStore', () => {
 
     expect(api.cache.get('textbook', '0')).to.equal(null)
     expect(api.cache.get('textbook', '1').attributes.title).to.equal('Français CE2')
-    console.log(api.cache.get('textbook', '1').relationships)
     expect(api.cache.get('textbook', '1').relationships.sections[0]).to.be.null
 
     await api.client.get('sections')

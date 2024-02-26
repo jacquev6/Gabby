@@ -61,7 +61,7 @@ describe('PdfsStore', () => {
       }
     }
 
-    const pdfs = definePdfsStore({weak_ref})()
+    const pdfs = definePdfsStore('pdfs', {weak_ref})()
 
     await pdfs.load(url)
 
