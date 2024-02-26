@@ -3,6 +3,8 @@ from rest_framework_json_api import serializers
 from .models import PdfFile, PdfFileNaming, Textbook, Section, Exercise
 
 
+# @todo(Project management, soon) Use https://sqids.org/python for auto-increment ids
+
 class PdfFileSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = PdfFile
