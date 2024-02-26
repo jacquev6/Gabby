@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
+import IndexView from '../views/IndexView.vue'
 import PdfView from '../views/PdfView.vue'
 
 
@@ -8,6 +9,11 @@ const router = createRouter({
   routes: [
     {
       path: '/',
+      name: 'index',
+      component: IndexView,
+    },
+    {
+      path: '/pdf',
       name: 'pdf',
       component: PdfView
     },
