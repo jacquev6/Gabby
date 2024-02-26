@@ -9,14 +9,6 @@ import BInput from './BootstrapInput.vue'
 
 
 const props = defineProps({
-  pdfSha256: {
-    type: String,
-    required: true,
-  },
-  pdfPage: {
-    type: Number,
-    required: true,
-  },
   fixedNumber: {
     type: Boolean,
     required: true,

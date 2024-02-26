@@ -225,8 +225,6 @@ function ellipsis(s) {
       <template v-else>
         <ExerciseForm
           ref="exerciseForm"
-          :pdfSha256="pdfSha256"
-          :pdfPage="pdfPageNumber"
           :fixedNumber="mode === 'edit'"
           v-model="currentExercise.attributes"
         />
