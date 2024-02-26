@@ -94,4 +94,20 @@ describe('ApiStore', () => {
     cy.get('p').should('contain', 'Section start page: [6]')
     cy.get('p').should('contain', 'Textbook section start page: [6]')
   })
+
+  it('paginates exercises', async () => {
+    const api = useApiStore()
+
+    const exercises = await api.client.get('exercises')
+
+    expect(exercises.length).to.equal(3)
+  })
+
+  it('filters exercises by textbook and page', async () => {
+    const api = useApiStore()
+
+    expect((await api.client.get('exercises', {filter: {textbook: '1'}})).length).to.equal(3)
+    expect((await api.client.get('exercises', {filter: {textbook: '1', page: 6}})).length).to.equal(2)
+    expect((await api.client.get('exercises', {filter: {textbook: '1', page: 7}})).length).to.equal(1)
+  })
 })
