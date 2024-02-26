@@ -47,6 +47,25 @@ const mode = ref('list')
 const exerciseForm = ref(null)
 const currentExercise = reactive({})
 
+async function getTextbookPage(sha256) {
+  const sectionsResponse = await (await fetch(`/api/sections?filter[pdfFile.sha256]=${sha256}`)).json()
+  let section = null
+  for (const sec of sectionsResponse.data) {
+    if (
+      pdfPageNumber.value >= sec.attributes.pdfFileStartPage
+      && sec.attributes.pdfFileStartPage + sec.attributes.pagesCount > pdfPageNumber.value
+    ) {
+      section = sec
+      break
+    }
+  }
+
+  const textbook = section.relationships.textbook.data.id
+  const page = section.attributes.textbookStartPage + pdfPageNumber.value - section.attributes.pdfFileStartPage
+
+  return { textbook, page }
+}
+
 async function switchToListMode() {
   currentExercise.attributes = {}
   currentExercise.id = null
@@ -54,8 +73,11 @@ async function switchToListMode() {
 
   exercisesOnPage.splice(0, exercisesOnPage.length)
   loadingExercises.value = true
+
+  const { textbook, page } = await getTextbookPage(pdfSha256.value)
+
   try {
-    var next = `/api/exercises?filter[pdfPage]=${pdfPageNumber.value}&filter[pdfSha256]=${pdfSha256.value}&sort=number`
+    var next = `/api/exercises?filter[textbook]=${textbook}&filter[page]=${page}&sort=number`
     while (next) {
       const r = await (await fetch(next)).json()
       exercisesOnPage.splice(exercisesOnPage.length, 0, ...r.data)
@@ -91,6 +113,8 @@ function textSelected(text, point) {
 }
 
 async function createExercise() {
+  const { textbook, page } = await getTextbookPage(pdfSha256.value)
+
   await fetch(
     '/api/exercises',
     {
@@ -103,9 +127,16 @@ async function createExercise() {
           type: 'exercise',
           id: null,
           attributes: {
-            pdfSha256: pdfSha256.value,
-            pdfPage: pdfPageNumber.value,
+            page,
             ...currentExercise.attributes,
+          },
+          relationships: {
+            textbook: {
+              data: {
+                type: 'textbook',
+                id: textbook,
+              },
+            },
           },
         }
       }),
@@ -126,8 +157,6 @@ async function updateExercise() {
           type: 'exercise',
           id: currentExercise.id,
           attributes: {
-            pdfSha256: pdfSha256.value,
-            pdfPage: pdfPageNumber.value,
             ...currentExercise.attributes,
           },
         }

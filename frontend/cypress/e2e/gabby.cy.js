@@ -2,7 +2,7 @@ describe('Gabby', () => {
   it('performs extraction', () => {
     cy.request('POST', '/reset-for-tests/yes-im-sure')
 
-    cy.visit('/')
+    cy.visit('/pdf')
 
     cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
     cy.waitUntilLoaded()
@@ -68,7 +68,7 @@ describe('Gabby', () => {
   it('loads and modifies exercises', () => {
     cy.request('POST', '/reset-for-tests/yes-im-sure')
 
-    cy.visit('/')
+    cy.visit('/pdf')
     cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
     cy.waitUntilLoaded()
 
