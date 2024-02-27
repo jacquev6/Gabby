@@ -5,7 +5,7 @@ from .models import PdfFile, PdfFileNaming, Textbook, Section, Exercise
 
 # @todo(Project management, soon) Use https://sqids.org/python for auto-increment ids
 
-class PdfFileSerializer(serializers.HyperlinkedModelSerializer):
+class PdfFileSerializer(serializers.ModelSerializer):
     class Meta:
         model = PdfFile
         fields = (
@@ -19,7 +19,7 @@ class PdfFileSerializer(serializers.HyperlinkedModelSerializer):
         "sections": 'textbooks.serializers.SectionSerializer',
     }
 
-class PdfFileNamingSerializer(serializers.HyperlinkedModelSerializer):
+class PdfFileNamingSerializer(serializers.ModelSerializer):
     class Meta:
         model = PdfFileNaming
         fields = (
@@ -33,7 +33,7 @@ class PdfFileNamingSerializer(serializers.HyperlinkedModelSerializer):
     }
 
 
-class TextbookSerializer(serializers.HyperlinkedModelSerializer):
+class TextbookSerializer(serializers.ModelSerializer):
     class Meta:
         model = Textbook
         fields = (
@@ -48,7 +48,7 @@ class TextbookSerializer(serializers.HyperlinkedModelSerializer):
     }
 
 
-class SectionSerializer(serializers.HyperlinkedModelSerializer):
+class SectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Section
         fields = (

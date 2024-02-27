@@ -146,7 +146,6 @@ class PdfFileTests(APITransactionTestCase):
                     "relationships": {
                         "pdfFile": {
                             "data": {"type": "pdfFile", "id": "87428fc522803d31065e7bce3cf03fe475096631e5e07bbd7a0fde60c4cf25c7"},
-                            "links": {"related": "http://testserver/api/pdfFiles/87428fc522803d31065e7bce3cf03fe475096631e5e07bbd7a0fde60c4cf25c7"},
                         },
                     },
                 },
@@ -160,7 +159,6 @@ class PdfFileTests(APITransactionTestCase):
                     "relationships": {
                         "pdfFile": {
                             "data": {"type": "pdfFile", "id": "87428fc522803d31065e7bce3cf03fe475096631e5e07bbd7a0fde60c4cf25c7"},
-                            "links": {"related": "http://testserver/api/pdfFiles/87428fc522803d31065e7bce3cf03fe475096631e5e07bbd7a0fde60c4cf25c7"},
                         },
                     },
                 },
@@ -1478,9 +1476,10 @@ class RealisticUseTests(APITransactionTestCase):
                     "relationships": {
                         "pdfFile": {
                             "data": {"type": "pdfFile", "id": "87428fc522803d31065e7bce3cf03fe475096631e5e07bbd7a0fde60c4cf25c7"},
-                            "links": {"related": "http://testserver/api/pdfFiles/87428fc522803d31065e7bce3cf03fe475096631e5e07bbd7a0fde60c4cf25c7"},
                         },
-                        "textbook": {"data": {"id": "2", "type": "textbook"}, "links": {"related": "http://testserver/api/textbooks/2"}},
+                        "textbook": {
+                            "data": {"id": "2", "type": "textbook"},
+                        },
                     },
                 },
             ],
