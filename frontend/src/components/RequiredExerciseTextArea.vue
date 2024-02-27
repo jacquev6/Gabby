@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 
-import BTextArea from './BootstrapTextArea.vue';
+import BTextArea from './BootstrapTextArea.vue'
 
 
 const model = defineModel({ type: String })

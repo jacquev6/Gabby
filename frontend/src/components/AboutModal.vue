@@ -12,7 +12,7 @@ function onResize() {
   windowHeight.value = window.innerHeight
 }
 onResize()
-window.addEventListener('resize', onResize);
+window.addEventListener('resize', onResize)
 </script>
 
 <template>

@@ -97,11 +97,11 @@ describe('Gabby', () => {
     cy.get('button').contains('Modifier').click()
 
     // https://github.com/cypress-io/cypress/issues/2681#issuecomment-442890537
-    cy.get('html').invoke('css', 'height', 'initial');
-    cy.get('body').invoke('css', 'height', 'initial');
+    cy.get('html').invoke('css', 'height', 'initial')
+    cy.get('body').invoke('css', 'height', 'initial')
     // https://github.com/cypress-io/cypress/issues/2681#issuecomment-1120146874
-    cy.get('html').invoke('css', 'scroll-behavior', 'auto');
-    cy.get('body').invoke('css', 'scroll-behavior', 'auto');
+    cy.get('html').invoke('css', 'scroll-behavior', 'auto')
+    cy.get('body').invoke('css', 'scroll-behavior', 'auto')
     cy.screenshot('doc/modify-exercise')
   })
 

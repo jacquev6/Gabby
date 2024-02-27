@@ -51,7 +51,7 @@ export function defineApiStore(name, options) {
       client: {
         // @todo(Project management, soon) Factorize common parts in these functions
         get_all: async function(path, options) {
-          const params = new URLSearchParams();
+          const params = new URLSearchParams()
           if (options?.include) {
             // This obviously works for a single string,
             // and fortunately for a list of strings: it adds them comma-separated
@@ -90,7 +90,7 @@ export function defineApiStore(name, options) {
           return got
         },
         get_one: async function(type, id, options) {
-          const params = new URLSearchParams();
+          const params = new URLSearchParams()
           if (options?.include) {
             params.append('include', options.include)
           }
@@ -111,7 +111,7 @@ export function defineApiStore(name, options) {
           return get(response.data)
         },
         post: async function(type, attributes, relationships_, options) {
-          const params = new URLSearchParams();
+          const params = new URLSearchParams()
           if (options?.include) {
             params.append('include', options.include)
           }
@@ -148,7 +148,7 @@ export function defineApiStore(name, options) {
           return get(response.data)
         },
         patch: async function(type, id, attributes, relationships_, options) {
-          const params = new URLSearchParams();
+          const params = new URLSearchParams()
           if (options?.include) {
             params.append('include', options.include)
           }
