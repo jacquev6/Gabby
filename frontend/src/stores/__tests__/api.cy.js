@@ -9,6 +9,7 @@ const useApiStore = defineApiStore('api', {baseUrl: 'http://fanout:8081/api/'})
 describe('ApiStore', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
+    cy.request('POST', 'http://fanout:8081/reset-for-tests/yes-im-sure')
   })
 
   it('fetches textbooks and sections', async () => {
@@ -109,5 +110,109 @@ describe('ApiStore', () => {
     expect((await api.client.get('exercises', {filter: {textbook: '1'}})).length).to.equal(3)
     expect((await api.client.get('exercises', {filter: {textbook: '1', page: 6}})).length).to.equal(2)
     expect((await api.client.get('exercises', {filter: {textbook: '1', page: 7}})).length).to.equal(1)
+  })
+
+  it('creates a new exercise', async () => {
+    const api = useApiStore()
+
+    expect((await api.client.get('exercises', {filter: {textbook: '1', page: 6}})).length).to.equal(2)
+
+    expect(api.cache.get('textbook', '1')).to.be.null
+
+    const newExercise = await api.client.post(
+      'exercise',
+      {
+        page: 6,
+        number: 14,
+        instructions: 'Do this',
+      },
+      {
+        textbook: {type: 'textbook', id: '1'},
+      },
+    )
+
+    expect(newExercise.id).to.equal('4')
+    expect(newExercise.attributes.instructions).to.equal('Do this')
+
+    expect(api.cache.get('textbook', '1')).to.be.null
+  })
+
+  it('creates a new exercise and retrieves its textbook', async () => {
+    const api = useApiStore()
+
+    expect((await api.client.get('exercises', {filter: {textbook: '1', page: 6}})).length).to.equal(2)
+
+    expect(api.cache.get('textbook', '1')).to.be.null
+
+    const newExercise = await api.client.post(
+      'exercise',
+      {
+        page: 6,
+        number: 14,
+        instructions: 'Do that',
+      },
+      {
+        textbook: {type: 'textbook', id: '1'},
+      },
+      {
+        include: 'textbook'
+      },
+    )
+
+    expect(newExercise.id).to.equal('4')
+    expect(newExercise.attributes.instructions).to.equal('Do that')
+
+    expect(api.cache.get('textbook', '1').attributes.title).to.equal('Français CE2')
+  })
+
+  it('updates an exercise', async () => {
+    const api = useApiStore()
+
+    const updatedExercise = await api.client.patch('exercise', '1', {instructions: 'Do that'}, {})
+
+    expect(updatedExercise.attributes.instructions).to.equal('Do that')
+    expect(api.cache.get('exercise', '1').attributes.instructions).to.equal('Do that')
+  })
+
+  it('updates an exercise and retrieves its textbook', async () => {
+    const api = useApiStore()
+
+    expect(api.cache.get('textbook', '1')).to.be.null
+
+    const updatedExercise = await api.client.patch(
+      'exercise',
+      '1',
+      {instructions: 'Do that'},
+      {},
+      {include: 'textbook'},
+    )
+
+    expect(updatedExercise.attributes.instructions).to.equal('Do that')
+    expect(api.cache.get('exercise', '1').attributes.instructions).to.equal('Do that')
+
+    expect(api.cache.get('textbook', '1').attributes.title).to.equal('Français CE2')
+  })
+
+  it('deletes an exercise', async () => {
+    const api = useApiStore()
+
+    expect(api.cache.get('exercise', '1')).to.be.null
+
+    await api.client.delete('exercise', '1')
+
+    expect(api.cache.get('exercise', '1')).to.be.null
+    expect((await api.client.get('exercises', {filter: {textbook: '1', page: 6}})).length).to.equal(1)
+  })
+
+  it('deletes an exercise and updates the cache', async () => {
+    const api = useApiStore()
+
+    expect((await api.client.get('exercises', {filter: {textbook: '1', page: 6}})).length).to.equal(2)
+    expect(api.cache.get('exercise', '1').attributes.number).to.equal(3)
+
+    await api.client.delete('exercise', '1')
+
+    expect(api.cache.get('exercise', '1')).to.be.null
+    expect((await api.client.get('exercises', {filter: {textbook: '1', page: 6}})).length).to.equal(1)
   })
 })

@@ -18,17 +18,20 @@ export function defineApiStore(name, options) {
     }
 
     function get(itemId) {
-      const attributes = attributesCache[itemId.type]?.[itemId.id]
+      const type = itemId.type
+      const id = itemId.id
+      const attributes = attributesCache[type]?.[id]
       if (!attributes) {
         return null
       } else {
         return {
-          ...itemId,
+          type,
+          id,
           attributes,
           get relationships() {
             const relationships = {}
-            for (const relationship of Object.keys(relationshipsCache[itemId.type][itemId.id])) {
-              const data = relationshipsCache[itemId.type][itemId.id][relationship].data
+            for (const relationship of Object.keys(relationshipsCache[type][id])) {
+              const data = relationshipsCache[type][id][relationship].data
               if (Array.isArray(data)) {
                 relationships[relationship] = []
                 for (const relationId of data) {
@@ -46,6 +49,7 @@ export function defineApiStore(name, options) {
 
     return {
       client: {
+        // @todo(Project management, soon) Factorize common parts in these functions
         get: async function(path, options) {
           const params = new URLSearchParams();
           if (options?.include) {
@@ -58,14 +62,20 @@ export function defineApiStore(name, options) {
               params.append(`filter[${key}]`, value)
             }
           }
-          let url = baseUrl + path + '?' + params.toString()
+          let url = `${baseUrl}${path}?${params.toString()}`
 
           const got = []
           // @todo(Project management, later) Handle pagination more... subtly
           // This is just getting all pages so the name of the function should reflect that,
           // and this store should also provide functions that paginate explicitly
           while (url) {
-            const response = await (await fetch(url, {headers: {'Content-Type': 'application/vnd.api+json'}})).json()
+            const raw_response = await fetch(
+              url,
+              {
+                headers: {'Content-Type': 'application/vnd.api+json'},
+              },
+            )
+            const response = await raw_response.json()
             for (const item of response.data) {
               update(item)
               got.push(get(item))
@@ -79,6 +89,94 @@ export function defineApiStore(name, options) {
           }
           return got
         },
+        post: async function(type, attributes, relationships_, options) {
+          const params = new URLSearchParams();
+          if (options?.include) {
+            params.append('include', options.include)
+          }
+          const url = `${baseUrl}${type}s?${params.toString()}`
+
+          const relationships = {}
+          for (const [key, value] of Object.entries(relationships_)) {
+            if (Array.isArray(value)) {
+              relationships[key] = {data: value.map(item => ({type: item.type, id: item.id}))}
+            } else {
+              relationships[key] = {data: {type: value.type, id: value.id}}
+            }
+          }
+          const data = {
+            type,
+            attributes,
+            relationships,
+          }
+          const raw_response = await fetch(
+            url,
+            {
+              method: 'POST',
+              headers: {'Content-Type': 'application/vnd.api+json'},
+              body: JSON.stringify({data}),
+            },
+          )
+          const response = await raw_response.json()
+          update(response.data)
+          if (response.included) {
+            for (const item of response.included) {
+              update(item)
+            }
+          }
+          return get(response.data)
+        },
+        patch: async function(type, id, attributes, relationships_, options) {
+          const params = new URLSearchParams();
+          if (options?.include) {
+            params.append('include', options.include)
+          }
+          const url = `${baseUrl}${type}s/${id}?${params.toString()}`
+
+          const relationships = {}
+          for (const [key, value] of Object.entries(relationships_)) {
+            if (Array.isArray(value)) {
+              relationships[key] = {data: value.map(item => ({type: item.type, id: item.id}))}
+            } else {
+              relationships[key] = {data: {type: value.type, id: value.id}}
+            }
+          }
+          const data = {
+            type,
+            id,
+            attributes,
+            relationships,
+          }
+          const raw_response = await fetch(
+            url,
+            {
+              method: 'PATCH',
+              headers: {'Content-Type': 'application/vnd.api+json'},
+              body: JSON.stringify({data}),
+            },
+          )
+          const response = await raw_response.json()
+          update(response.data)
+          if (response.included) {
+            for (const item of response.included) {
+              update(item)
+            }
+          }
+          return get(response.data)
+        },
+        delete: async function(type, id) {
+          const url = `${baseUrl}${type}s/${id}`
+          await fetch(
+            url,
+            {
+              method: 'DELETE',
+              headers: {'Content-Type': 'application/vnd.api+json'},
+            },
+          )
+          if (attributesCache[type]) {
+            attributesCache[type][id] = null
+          }
+        }
       },
       cache: {
         get: function(type, id) {
