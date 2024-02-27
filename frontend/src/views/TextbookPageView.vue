@@ -49,8 +49,7 @@ const pdfDocument = computedAsync(async () => {
 })
 
 if (api.cache.get('textbook', props.textbookId) === null) {
-  // @todo(Project management, soon) Load only one textbook
-  api.client.get(`textbooks`, {include: 'sections.pdfFile'})
+  api.client.get_one('textbook', props.textbookId, {include: 'sections.pdfFile'})
 }
 </script>
 

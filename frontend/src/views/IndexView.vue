@@ -38,7 +38,7 @@ async function loadTextbooks() {
   loadingTextbooks.value = true
   try {
     textbooks.splice(0, textbooks.length)
-    const response = await api.client.get('textbooks', {include: 'sections.pdfFile.namings'})
+    const response = await api.client.get_all('textbooks', {include: 'sections.pdfFile.namings'})
     textbooks.push(...response)
   } finally {
     loadingTextbooks.value = false

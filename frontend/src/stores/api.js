@@ -50,7 +50,7 @@ export function defineApiStore(name, options) {
     return {
       client: {
         // @todo(Project management, soon) Factorize common parts in these functions
-        get: async function(path, options) {
+        get_all: async function(path, options) {
           const params = new URLSearchParams();
           if (options?.include) {
             // This obviously works for a single string,
@@ -88,6 +88,27 @@ export function defineApiStore(name, options) {
             url = response.links?.next
           }
           return got
+        },
+        get_one: async function(type, id, options) {
+          const params = new URLSearchParams();
+          if (options?.include) {
+            params.append('include', options.include)
+          }
+          const url = `${baseUrl}${type}s/${id}?${params.toString()}`
+          const raw_response = await fetch(
+            url,
+            {
+              headers: {'Content-Type': 'application/vnd.api+json'},
+            },
+          )
+          const response = await raw_response.json()
+          update(response.data)
+          if (response.included) {
+            for (const item of response.included) {
+              update(item)
+            }
+          }
+          return get(response.data)
         },
         post: async function(type, attributes, relationships_, options) {
           const params = new URLSearchParams();
