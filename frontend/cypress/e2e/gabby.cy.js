@@ -1,6 +1,6 @@
 describe('Gabby', () => {
   it('performs extraction', () => {
-    cy.request('POST', '/reset-for-tests/yes-im-sure')
+    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises')
 
     cy.visit('/pdf')
 
@@ -66,7 +66,7 @@ describe('Gabby', () => {
   })
 
   it('loads and modifies exercises', () => {
-    cy.request('POST', '/reset-for-tests/yes-im-sure')
+    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises')
 
     cy.visit('/pdf')
     cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
