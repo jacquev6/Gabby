@@ -1,8 +1,9 @@
 describe('Gabby', () => {
-  it('performs extraction', () => {
-    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises')
+  it('performs extraction from scratch', () => {
+    cy.request('POST', '/reset-for-tests/yes-im-sure')
 
-    cy.visit('/pdf')
+    cy.visit('/')
+    cy.get('p').contains('Aucun manuel existant').should('exist')
 
     cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
     cy.waitUntilLoaded()
@@ -20,11 +21,23 @@ describe('Gabby', () => {
     cy.get('input.number-no-spin').should('have.value', '2').should('be.enabled')
     cy.get('button').contains('>').should('be.disabled')
 
-    cy.get('li').contains('Recopie les mots suivants').should('not.exist')
+    cy.get('button').contains('Nouveau manuel').click()
+
+    cy.get('label').contains('Titre').next().type('Français CE2')
+    cy.get('label').contains('Éditeur').next().type('Slabeuf')
+    cy.get('label').contains('Année').next().type('2021')
+    cy.get('label').contains('ISBN').next().type('01234567890123')
+
+    cy.get('button').contains('Enregistrer').click()
+
+    cy.get('a').contains('les pages 1 à 2 de Français CE2, Slabeuf, 2021').click()
+
+    cy.get('button').contains('>').click()
+
+    cy.get('p').contains('Pas encore d\'exercices').should('exist')
 
     cy.get('button').contains('Nouvel exercice').click()
 
-    cy.get('input[type=file]').should('have.value', 'C:\\fakepath\\test.pdf').should('be.disabled')
     cy.get('button').contains('<').should('be.disabled')
     cy.get('input.number-no-spin').should('have.value', '2').should('be.disabled')
     cy.get('button').contains('>').should('be.disabled')
@@ -68,11 +81,14 @@ describe('Gabby', () => {
   it('loads and modifies exercises', () => {
     cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises')
 
-    cy.visit('/pdf')
+    cy.visit('/')
     cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
     cy.waitUntilLoaded()
 
-    cy.get('p').contains('Exercices existants ').next().should('have.prop', 'tagName' ).should('eq', 'UL')
+    cy.get('a').contains('les pages 6 à 7 de Français CE2, Slabeuf, 2021').click()
+    cy.waitUntilLoaded()
+
+    cy.get('p').contains('Exercices existants ').next().should('have.prop', 'tagName').should('eq', 'UL')
     cy.get('p').contains('Exercices existants ').next().children().should('have.length', 2)
     cy.get('p').contains('Exercices existants ').next().children().first().should('contain', '3 Complète avec : le, une, …')
 
