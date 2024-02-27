@@ -20,11 +20,6 @@ const router = createRouter({
         return {...route.params, page: Number.parseInt(route.params.page, 10)}
       },
     },
-    {
-      path: '/pdf',
-      name: 'pdf',
-      component: () => import('../views/PdfView.vue')
-    },
   ],
 })
 
