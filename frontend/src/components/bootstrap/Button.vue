@@ -11,6 +11,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  secondary: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const classes = computed(() => {
@@ -19,6 +23,7 @@ const classes = computed(() => {
     {
       'btn-sm': props.sm,
       'btn-primary': props.primary,
+      'btn-secondary': props.secondary,
     },
   ]
 })

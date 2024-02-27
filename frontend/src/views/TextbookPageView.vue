@@ -198,11 +198,11 @@ watch(requestedPage, (requested) => {
         <p>@todo(Feature, now) Add a "settings" link that opens a dialog to edit the section and the number of pages in the textbook</p>
         <p class="text-center">
           <router-link :to="{name: 'textbook-page', params: {textbookId, page: page - 1}}" custom v-slot="{ navigate }" >
-            <b-button sm primary :disabled="disablePrevPage" @click="navigate">&lt;</b-button>
+            <b-button primary sm :disabled="disablePrevPage" @click="navigate">&lt;</b-button>
           </router-link>
           <label>{{ $t('Page') }} <input class="number-no-spin" v-model="requestedPage" type="number" min="1" :max="textbookPagesCount" :disabled="disableSetPage" @blur="requestedPage = page"/> {{ $t('pageOver', textbookPagesCount) }}</label>
           <router-link :to="{name: 'textbook-page', params: {textbookId, page: page + 1}}" custom v-slot="{ navigate }" >
-            <b-button sm primary :disabled="disableNextPage" @click="navigate">&gt;</b-button>
+            <b-button primary sm :disabled="disableNextPage" @click="navigate">&gt;</b-button>
           </router-link>
         </p>
         <template v-if="section">
@@ -245,16 +245,14 @@ watch(requestedPage, (requested) => {
               <ul>
                 <li v-for="exercise in exercisesOnPage">
                   <strong>{{ exercise.attributes.number }}</strong> {{ ellipsis(exercise.attributes.instructions) }}
-                  <button class="btn btn-primary btn-sm" @click="switchToEditMode(exercise)">{{ $t('edit') }}</button>
-                  <button class="btn btn-secondary btn-sm" @click="deleteExercise(exercise).then(switchToListMode)">{{ $t('delete') }}</button>
+                  <b-button primary sm @click="switchToEditMode(exercise)">{{ $t('edit') }}</b-button>
+                  <b-button secondary sm @click="deleteExercise(exercise).then(switchToListMode)">{{ $t('delete') }}</b-button>
                 </li>
               </ul>
             </template>
             <p v-else>{{ $t('noExercises') }}</p>
           </loading>
-          <div class="d-grid gap-2">
-            <button class="btn btn-primary" @click="switchToCreateMode('')">{{ $t('create') }}</button>
-          </div>
+          <p class="d-grid"><b-button primary @click="switchToCreateMode('')">{{ $t('create') }}</b-button></p>
         </template>
         <template v-else>
           <ExerciseForm
@@ -263,12 +261,12 @@ watch(requestedPage, (requested) => {
             v-model="currentExercise.attributes"
           />
           <div v-if="mode === 'create'" class="mb-3">
-            <button class="btn btn-secondary" type="text" @click="switchToListMode()">{{ $t('cancel') }}</button>
-            <button class="btn btn-primary" type="text" @click="createExercise().then(() => switchToCreateMode(currentExercise.attributes.number + 1))" :disabled="currentExercise.attributes.number === ''">{{ $t('save.next') }}</button>
+            <b-button secondary type="text" @click="switchToListMode()">{{ $t('cancel') }}</b-button>
+            <b-button primary type="text" @click="createExercise().then(() => switchToCreateMode(currentExercise.attributes.number + 1))" :disabled="currentExercise.attributes.number === ''">{{ $t('save.next') }}</b-button>
           </div>
           <div v-else-if="mode === 'edit'" class="mb-3">
-            <button class="btn btn-secondary" type="text" @click="switchToListMode()">{{ $t('cancel') }}</button>
-            <button class="btn btn-primary" type="text" @click="updateExercise().then(switchToListMode)">{{ $t('save') }}</button>
+            <b-button secondary type="text" @click="switchToListMode()">{{ $t('cancel') }}</b-button>
+            <b-button primary type="text" @click="updateExercise().then(switchToListMode)">{{ $t('save') }}</b-button>
           </div>
         </template>
       </b-col>
