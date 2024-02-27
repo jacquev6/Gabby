@@ -61,14 +61,14 @@ const pdfLoading = ref(false)
 const pdf = computedAsync(
   async () => {
     if (section.value) {
-      const page = section.value.attributes.pdfFileStartPage + props.page - section.value.attributes.textbookStartPage
+      const pageNumber = section.value.attributes.pdfFileStartPage + props.page - section.value.attributes.textbookStartPage
       const pdf = await pdfs.get(section.value.relationships.pdfFile.id)
+      // WARNING: no reactivity to dependencies accessed after this first await (https://vueuse.org/core/computedAsync/#caveats)
       const document = pdf?.document
+      const page = await document?.getPage(pageNumber)
       const textContent = []
-      if (document) {
-        // @todo(Project management, now) getPage in a single place (currently, here and in the PdfRenderer)
-        const pdfPage = await document.getPage(page)
-        for (const item of (await pdfPage.getTextContent()).items) {
+      if (page) {
+        for (const item of (await page.getTextContent()).items) {
           textContent.push({
             str: item.str,
 
@@ -83,7 +83,7 @@ const pdf = computedAsync(
           })
         }
       }
-      return {document, page, textContent}
+      return {page, textContent}
     } else {
       return null
     }
@@ -206,11 +206,11 @@ watch(requestedPage, (requested) => {
         </p>
         <template v-if="section">
           <loading size="7rem" :loading="pdfLoading">
-            <template v-if="pdf?.document">
+            <template v-if="pdf?.page">
               <div style="border: 1px solid black">
                 <pdf-renderer
                   ref="pdfRenderer"
-                  :pdf="pdf.document" :page="pdf.page"
+                  :page="pdf.page"
                   class="img img-fluid"
                 />
                 <text-picker
