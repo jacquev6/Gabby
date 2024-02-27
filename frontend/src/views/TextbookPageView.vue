@@ -177,6 +177,7 @@ async function deleteExercise(exercise) {
   await api.client.delete('exercise', exercise.id)
 }
 
+// @todo(Project management, soon) Factorize with 'PdfPreview' component
 const requestedPage = ref(props.page)
 watch(() => props.page, (n) => {
   requestedPage.value = n

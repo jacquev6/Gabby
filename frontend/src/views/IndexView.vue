@@ -1,21 +1,23 @@
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, shallowRef } from 'vue'
 
 import { usePdfsStore } from '../stores/pdfs'
 import { useApiStore } from '../stores/api'
 import BInput from '../components/BootstrapInput.vue'
 import { BRow, BCol } from '../components/bootstrap'
+import Loading from '../components/Loading.vue'
+import PdfPreview from '../components/PdfPreview.vue'
 
 
 const pdfs = usePdfsStore()
 const loadingPdf = ref(false)
-const lastPdfOpened = ref(null)
+const lastPdfOpened = shallowRef(null)  // Don't interfere with '.document': it must remain an actual 'PDFDocumentProxy' for '.getPage' to work
 
 async function loadPdf(source) {
   loadingPdf.value = true
   lastPdfOpened.value = null
   try {
-    lastPdfOpened.value = (await pdfs.load(source)).sha256
+    lastPdfOpened.value = await pdfs.load(source)
   } finally {
     loadingPdf.value = false
   }
@@ -51,19 +53,18 @@ loadTextbooks()
   <b-row>
     <b-col>
       <h1>Ouvrir un PDF</h1>
-      <div v-if="loadingPdf" class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div>
-      <div v-else>
+      <loading :loading="loadingPdf">
         <BInput :label="$t('inputFile')" type="file" accept=".pdf" @change="(e) => loadPdf(e.target.files[0])" />
         <p>(Ou ouvrir le <a href="#" @click.prevent="loadPdf('/test.pdf')">PDF de test</a>)</p>
-      </div>
+      </loading>
       <template v-if="lastPdfOpened">
         <h1>PDF ouvert</h1>
         <b-row>
           <b-col>
-            <template v-if="api.cache.get('pdfFile', lastPdfOpened)?.relationships.sections">
+            <template v-if="api.cache.get('pdfFile', lastPdfOpened.sha256)?.relationships.sections">
               <p>Il contient :</p>
               <ul>
-                <li v-for="section in api.cache.get('pdfFile', lastPdfOpened).relationships.sections">
+                <li v-for="section in api.cache.get('pdfFile', lastPdfOpened.sha256).relationships.sections">
                   <router-link :to="{name: 'textbook-page', params: {textbookId: section.relationships.textbook.id, page: section.attributes.textbookStartPage }}">
                     les pages {{ section.attributes.textbookStartPage }} à {{ section.attributes.textbookStartPage + section.attributes.pagesCount - 1 }}
                     de {{ section.relationships.textbook.attributes.title }}, {{ section.relationships.textbook.attributes.publisher }}, {{ section.relationships.textbook.attributes.year }}
@@ -78,13 +79,7 @@ loadTextbooks()
             <p>@todo(Feature, soon) Associer un manuel existant (pour les manuels répartis sur plusieurs PDFs)</p>
           </b-col>
           <b-col>
-            <p class="text-center">
-              @todo(Feature, now) Display a preview of the PDF<br>
-              <button class="btn btn-primary btn-sm">&lt;</button>
-              <label>{{ $t('Page') }} <input class="number-no-spin" type="number" min="1" /> {{ $t('pageOver', 42) }}</label>
-              <button class="btn btn-primary btn-sm" >&gt;</button>
-            </p>
-            <canvas class="img img-fluid" height="2970" width="2100" style="border: 1px solid black"></canvas>
+            <pdf-preview :pdf="lastPdfOpened.document" />
           </b-col>
         </b-row>
       </template>
