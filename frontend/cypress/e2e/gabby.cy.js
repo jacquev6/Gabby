@@ -1,11 +1,14 @@
 describe('Gabby', () => {
-  it('performs extraction', () => {
+  it('performs extraction from scratch', () => {
     cy.request('POST', '/reset-for-tests/yes-im-sure')
 
     cy.visit('/')
+    cy.get('p').contains('Aucun manuel existant').should('exist')
 
     cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
     cy.waitUntilLoaded()
+
+    cy.screenshot('doc/index-new-pdf', { clip: { x: 0, y: 200, width: 666, height: 400 } })
 
     cy.get('input[type=file]').should('have.value', 'C:\\fakepath\\test.pdf').should('be.enabled')
     cy.get('button').contains('<').should('be.disabled')
@@ -20,13 +23,42 @@ describe('Gabby', () => {
     cy.get('input.number-no-spin').should('have.value', '2').should('be.enabled')
     cy.get('button').contains('>').should('be.disabled')
 
-    cy.get('li').contains('Recopie les mots suivants').should('not.exist')
+    cy.get('button').contains('Nouveau manuel').click()
+
+    cy.get('label').contains('Titre').next().type('Français CE2')
+    cy.get('label').contains('Éditeur').next().type('Slabeuf')
+    cy.get('label').contains('Année').next().type('2021')
+    cy.get('label').contains('ISBN').next().type('01234567890123')
+
+    cy.screenshot('doc/index-new-textbook-form', { clip: { x: 0, y: 200, width: 666, height: 600 } })
+
+    cy.get('button').contains('Enregistrer').click()
+
+    cy.get('a').contains('les pages 1 à 2 de Français CE2, Slabeuf, 2021').should('exist')
+    cy.screenshot('doc/index-columns', { clip: { x: 0, y: 0, width: 1000, height: 400 } })
+
+    cy.get('a').contains('les pages 1 à 2 de Français CE2, Slabeuf, 2021').click()
+
+    cy.get('h1').contains('Lien entre PDF et manuel').should('not.exist')
+    cy.get('button').contains('⚙').click()
+    cy.get('h1').contains('Lien entre PDF et manuel').should('exist')
+    cy.get('button').contains('Enregistrer').should('be.enabled')
+
+    cy.get('.modal-content:visible').screenshot('doc/textbook-page-section-editor')
+
+    cy.get('label').contains('Début dans le manuel').next().type('{selectAll}5')
+    cy.get('button').contains('Enregistrer').click()
+    cy.get('h1').contains('Lien entre PDF et manuel').should('not.exist')
+
+    cy.get('label').contains('Page').click()
+    cy.focused().type('{selectAll}6')
+
+    cy.get('p').contains('Pas encore d\'exercices').should('exist')
 
     cy.get('button').contains('Nouvel exercice').click()
 
-    cy.get('input[type=file]').should('have.value', 'C:\\fakepath\\test.pdf').should('be.disabled')
     cy.get('button').contains('<').should('be.disabled')
-    cy.get('input.number-no-spin').should('have.value', '2').should('be.disabled')
+    cy.get('input.number-no-spin').should('have.value', '6').should('be.disabled')
     cy.get('button').contains('>').should('be.disabled')
     cy.get('button').contains('Annuler').should('be.enabled')
     cy.get('button').contains('Enregistrer').should('be.disabled')
@@ -65,14 +97,32 @@ describe('Gabby', () => {
     cy.get('li').contains('Recopie les mots suivants').should('exist')
   })
 
+  it('shows and hides the section editor dialog', () => {
+    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises')
+
+    cy.visit('/textbook/1/page/6')
+    cy.waitUntilLoaded()
+
+    cy.get('h1').contains('Lien entre PDF et manuel').should('not.exist')
+
+    cy.get('button').contains('⚙').click()
+    cy.get('h1').contains('Lien entre PDF et manuel').should('exist')
+
+    cy.get('button').contains('Annuler').click()
+    cy.get('h1').contains('Lien entre PDF et manuel').should('not.exist')
+  })
+
   it('loads and modifies exercises', () => {
-    cy.request('POST', '/reset-for-tests/yes-im-sure')
+    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises')
 
     cy.visit('/')
     cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
     cy.waitUntilLoaded()
 
-    cy.get('p').contains('Exercices existants ').next().should('have.prop', 'tagName' ).should('eq', 'UL')
+    cy.get('a').contains('les pages 6 à 7 de Français CE2, Slabeuf, 2021').click()
+    cy.waitUntilLoaded()
+
+    cy.get('p').contains('Exercices existants ').next().should('have.prop', 'tagName').should('eq', 'UL')
     cy.get('p').contains('Exercices existants ').next().children().should('have.length', 2)
     cy.get('p').contains('Exercices existants ').next().children().first().should('contain', '3 Complète avec : le, une, …')
 
@@ -81,11 +131,11 @@ describe('Gabby', () => {
     cy.get('button').contains('Modifier').click()
 
     // https://github.com/cypress-io/cypress/issues/2681#issuecomment-442890537
-    cy.get('html').invoke('css', 'height', 'initial');
-    cy.get('body').invoke('css', 'height', 'initial');
+    cy.get('html').invoke('css', 'height', 'initial')
+    cy.get('body').invoke('css', 'height', 'initial')
     // https://github.com/cypress-io/cypress/issues/2681#issuecomment-1120146874
-    cy.get('html').invoke('css', 'scroll-behavior', 'auto');
-    cy.get('body').invoke('css', 'scroll-behavior', 'auto');
+    cy.get('html').invoke('css', 'scroll-behavior', 'auto')
+    cy.get('body').invoke('css', 'scroll-behavior', 'auto')
     cy.screenshot('doc/modify-exercise')
   })
 

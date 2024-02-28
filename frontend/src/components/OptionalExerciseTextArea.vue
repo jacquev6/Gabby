@@ -1,7 +1,7 @@
 <script setup>
 import { ref, watch, nextTick } from 'vue'
 
-import BTextArea from './BootstrapTextArea.vue';
+import BTextArea from './BootstrapTextArea.vue'
 
 const props = defineProps({
   label: { type: String, required: true },

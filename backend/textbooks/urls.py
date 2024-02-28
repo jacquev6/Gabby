@@ -4,12 +4,20 @@ from rest_framework import routers
 from rest_framework_json_api.schemas.openapi import SchemaGenerator
 from rest_framework.schemas import get_schema_view
 
-from .views import ExerciseViewSet
+from .views import PdfFileViewSet, PdfFileNamingViewSet, TextbookViewSet, SectionViewSet, ExerciseViewSet
 
+
+# @todo(Project management, later): Migrate schema generation to DRF-spectacular
+# (See deprecation notice on top of https://www.django-rest-framework.org/api-guide/schemas/)
+
+# @todo(Project management, later): Save the schema to a file on startup (to make changes more explicit)
 
 router = routers.DefaultRouter(trailing_slash=False)
-
-router.register(r"exercises", ExerciseViewSet)
+router.register("pdfFiles", PdfFileViewSet)
+router.register("pdfFileNamings", PdfFileNamingViewSet)
+router.register("textbooks", TextbookViewSet)
+router.register("sections", SectionViewSet)
+router.register("exercises", ExerciseViewSet)
 
 urlpatterns = [
     path("", include(router.urls)),

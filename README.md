@@ -52,6 +52,10 @@ In the development environment, it is available at http://localhost:8080/api/adm
 
 With the development environment running:
 
+    dev-env/all-tests.sh
+
+Or:
+
     dev-env/backend/unit-tests.sh
     dev-env/frontend/unit-tests.sh
     dev-env/end-to-end-tests.sh

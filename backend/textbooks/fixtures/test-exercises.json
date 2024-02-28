@@ -1,10 +1,47 @@
 [
   {
-    "model": "textbooks.exercise",
-    "pk": 2,
+    "model": "textbooks.pdffile",
+    "pk": "f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c",
     "fields": {
-      "pdf_sha256": "f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c",
-      "pdf_page": 1,
+      "bytes_count": 484714,
+      "pages_count": 2
+    }
+  },
+  {
+    "model": "textbooks.pdffilenaming",
+    "pk": 1,
+    "fields": {
+      "pdf_file": "f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c",
+      "name": "test.pdf"
+    }
+  },
+  {
+    "model": "textbooks.textbook",
+    "pk": 1,
+    "fields": {
+      "title": "Français CE2",
+      "publisher": "Slabeuf",
+      "year": 2021,
+      "isbn": "1234567890123"
+    }
+  },
+  {
+    "model": "textbooks.section",
+    "pk": 1,
+    "fields": {
+      "textbook": 1,
+      "pdf_file": "f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c",
+      "textbook_start_page": 6,
+      "pdf_file_start_page": 1,
+      "pages_count": 2
+    }
+  },
+  {
+    "model": "textbooks.exercise",
+    "pk": 1,
+    "fields": {
+      "textbook": 1,
+      "page": 6,
       "number": 3,
       "instructions": "Complète avec : le, une, un, des, tu, elles, ils.\nPuis, souligne les verbes.",
       "example": "",
@@ -14,10 +51,10 @@
   },
   {
     "model": "textbooks.exercise",
-    "pk": 1,
+    "pk": 2,
     "fields": {
-      "pdf_sha256": "f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c",
-      "pdf_page": 1,
+      "textbook": 1,
+      "page": 6,
       "number": 4,
       "instructions": "Écris une phrase en respectant l'ordre des classes grammaticales indiquées.",
       "example": "pronom personnel / verbe / déterminant / nom commun :\nJe mange une pomme.",
@@ -29,8 +66,8 @@
     "model": "textbooks.exercise",
     "pk": 3,
     "fields": {
-      "pdf_sha256": "f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c",
-      "pdf_page": 2,
+      "textbook": 1,
+      "page": 7,
       "number": 9,
       "instructions": "Recopie l’intrus qui se cache dans chaque liste et écris sa classe.",
       "example": "",
