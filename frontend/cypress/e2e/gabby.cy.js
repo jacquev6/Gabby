@@ -8,6 +8,8 @@ describe('Gabby', () => {
     cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
     cy.waitUntilLoaded()
 
+    cy.screenshot('doc/index-new-pdf', { clip: { x: 0, y: 200, width: 666, height: 400 } })
+
     cy.get('input[type=file]').should('have.value', 'C:\\fakepath\\test.pdf').should('be.enabled')
     cy.get('button').contains('<').should('be.disabled')
     cy.get('input.number-no-spin').should('have.value', '1').should('be.enabled')
@@ -28,7 +30,12 @@ describe('Gabby', () => {
     cy.get('label').contains('Année').next().type('2021')
     cy.get('label').contains('ISBN').next().type('01234567890123')
 
+    cy.screenshot('doc/index-new-textbook-form', { clip: { x: 0, y: 200, width: 666, height: 600 } })
+
     cy.get('button').contains('Enregistrer').click()
+
+    cy.get('a').contains('les pages 1 à 2 de Français CE2, Slabeuf, 2021').should('exist')
+    cy.screenshot('doc/index-columns', { clip: { x: 0, y: 0, width: 1000, height: 400 } })
 
     cy.get('a').contains('les pages 1 à 2 de Français CE2, Slabeuf, 2021').click()
 
@@ -36,6 +43,9 @@ describe('Gabby', () => {
     cy.get('button').contains('⚙').click()
     cy.get('h1').contains('Lien entre PDF et manuel').should('exist')
     cy.get('button').contains('Enregistrer').should('be.enabled')
+
+    cy.get('.modal-content:visible').screenshot('doc/textbook-page-section-editor')
+
     cy.get('label').contains('Début dans le manuel').next().type('{selectAll}5')
     cy.get('button').contains('Enregistrer').click()
     cy.get('h1').contains('Lien entre PDF et manuel').should('not.exist')
