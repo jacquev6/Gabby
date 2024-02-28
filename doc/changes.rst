@@ -7,6 +7,11 @@ Les améliorations techniques ne figurent que dans le `log git <https://github.c
 Les titres des sections de ce document correspondent au champ ``Gabby version`` dans le "À propos".
 Les versions sont nommées selon leur date de publication, au format ``YYYYMMDD-HHMMSS`` (année, mois, jour, tiret, heure, minute, seconde).
 
+20240228-163737
+---------------
+
+- Gestion de la correspondance entre les PDFs et les manuels, adaptation de l'interface en conséquence
+
 20240221-075646
 ---------------
 
