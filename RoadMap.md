@@ -35,11 +35,9 @@ A few ideas:
 
 ## Version after the next
 
-### Manage PDFs and their mapping to schoolbooks
+### Display textbook title on extraction page
 
-> Il manque le nom du manuel en haut. Dans l'idéal, il faudrait qu'on rentre les métadonnées du manuel quelque part avec le nom, l'éditeur, l'année, l'ISBN pour le référencement du manuel à terme
-
-> Il faudrait faire correspondre le numéro de page du manuel (qui n'est pas forcément le rang de la page du pdf) avec la page indiquée dans la fenêtre édition. Ma technique perso consiste à supprimer les pages du pdf qui sont avant la page 1 mais on doit pouvoir implémenter ça, soit de façon automatique, soit de façon manuelle en indiquant au début que les pages commencent à la page 4 du pdf.
+> Il manque le nom du manuel en haut.
 
 ### Allow textual exercice identifiers
 
