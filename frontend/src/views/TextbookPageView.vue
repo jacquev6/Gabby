@@ -9,7 +9,8 @@ import { BRow, BCol, BButton } from '../components/bootstrap'
 import PdfRenderer from '../components/PdfRenderer.vue'
 import Loading from '../components/Loading.vue'
 import ExerciseForm from '../components/ExerciseForm.vue'
-import TextPicker from '@/components/TextPicker.vue'
+import TextPicker from '../components/TextPicker.vue'
+import SectionEditor from '../components/SectionEditor.vue'
 
 
 const props = defineProps({
@@ -29,6 +30,8 @@ const props = defineProps({
 const router = useRouter()
 const api = useApiStore()
 const pdfs = usePdfsStore()
+
+const sectionEditor = ref(null)
 
 const textbookLoading = ref(false)
 const textbook = computedAsync(
@@ -195,7 +198,6 @@ watch(requestedPage, (requested) => {
   <loading size="7rem" :loading="textbookLoading">
     <b-row>
       <b-col>
-        <p>@todo(Feature, now) Add a "settings" link that opens a dialog to edit the section and the number of pages in the textbook</p>
         <p class="text-center">
           <router-link :to="{name: 'textbook-page', params: {textbookId, page: page - 1}}" custom v-slot="{ navigate }" >
             <b-button primary sm :disabled="disablePrevPage" @click="navigate">&lt;</b-button>
@@ -204,7 +206,9 @@ watch(requestedPage, (requested) => {
           <router-link :to="{name: 'textbook-page', params: {textbookId, page: page + 1}}" custom v-slot="{ navigate }" >
             <b-button primary sm :disabled="disableNextPage" @click="navigate">&gt;</b-button>
           </router-link>
+          <b-button secondary sm :disabled="!section" @click="sectionEditor.show(section.id)">&#9881;</b-button>
         </p>
+        <section-editor ref="sectionEditor" />
         <template v-if="section">
           <loading size="7rem" :loading="pdfLoading">
             <template v-if="pdf?.page">

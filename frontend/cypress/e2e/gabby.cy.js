@@ -32,14 +32,23 @@ describe('Gabby', () => {
 
     cy.get('a').contains('les pages 1 à 2 de Français CE2, Slabeuf, 2021').click()
 
-    cy.get('button').contains('>').click()
+    cy.get('h1').contains('Lien entre PDF et manuel').should('not.exist')
+    cy.get('button').contains('⚙').click()
+    cy.get('h1').contains('Lien entre PDF et manuel').should('exist')
+    cy.get('button').contains('Enregistrer').should('be.enabled')
+    cy.get('label').contains('Début dans le manuel').next().type('{selectAll}5')
+    cy.get('button').contains('Enregistrer').click()
+    cy.get('h1').contains('Lien entre PDF et manuel').should('not.exist')
+
+    cy.get('label').contains('Page').click()
+    cy.focused().type('{selectAll}6')
 
     cy.get('p').contains('Pas encore d\'exercices').should('exist')
 
     cy.get('button').contains('Nouvel exercice').click()
 
     cy.get('button').contains('<').should('be.disabled')
-    cy.get('input.number-no-spin').should('have.value', '2').should('be.disabled')
+    cy.get('input.number-no-spin').should('have.value', '6').should('be.disabled')
     cy.get('button').contains('>').should('be.disabled')
     cy.get('button').contains('Annuler').should('be.enabled')
     cy.get('button').contains('Enregistrer').should('be.disabled')
@@ -76,6 +85,21 @@ describe('Gabby', () => {
     cy.get('button').contains('Annuler').click()
 
     cy.get('li').contains('Recopie les mots suivants').should('exist')
+  })
+
+  it('shows and hides the section editor dialog', () => {
+    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises')
+
+    cy.visit('/textbook/1/page/6')
+    cy.waitUntilLoaded()
+
+    cy.get('h1').contains('Lien entre PDF et manuel').should('not.exist')
+
+    cy.get('button').contains('⚙').click()
+    cy.get('h1').contains('Lien entre PDF et manuel').should('exist')
+
+    cy.get('button').contains('Annuler').click()
+    cy.get('h1').contains('Lien entre PDF et manuel').should('not.exist')
   })
 
   it('loads and modifies exercises', () => {
