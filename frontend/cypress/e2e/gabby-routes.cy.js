@@ -1,17 +1,21 @@
 describe('Gabby has routes that', () => {
   it('can access the default Vue Router view', () => {
     cy.visit('/')
-    cy.contains('nav', 'MALIN')
+    cy.contains('h1', 'Ouvrir un PDF')
   })
 
   it('can access a Vue Router view without trailing /', () => {
-    cy.visit('/other')
-    cy.contains('h1', 'Other View')
+    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises')
+
+    cy.visit('/textbook/1/page/6')
+    cy.contains('h1', 'Édition')
   })
 
   it('can access a Vue Router view with trailing /', () => {
-    cy.visit('/other/')
-    cy.contains('h1', 'Other View')
+    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises')
+
+    cy.visit('/textbook/1/page/6/')
+    cy.contains('h1', 'Édition')
   })
 
   it('can access Vue statics', () => {

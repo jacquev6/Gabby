@@ -6,4 +6,7 @@ set -o pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/."
 
 
-./shell.sh -c 'npx cypress run --component'
+docker compose exec \
+  frontend \
+    npx cypress run \
+      --component

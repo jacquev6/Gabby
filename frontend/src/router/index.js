@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-import PdfView from '../views/PdfView.vue'
+import IndexView from '../views/IndexView.vue'
+import TextbookPageView from '../views/TextbookPageView.vue'
 
 
 const router = createRouter({
@@ -8,15 +9,16 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'pdf',
-      component: PdfView
+      name: 'index',
+      component: IndexView,
     },
-    // This route shall be removed when we actually need the Vue Router.
-    // Until then, it's used in end-to-end tests checking the Vue Router is working in all environments.
     {
-      path: '/other',
-      name: 'other',
-      component: () => import('../views/OtherView.vue')
+      path: '/textbook/:textbookId/page/:page',
+      name: 'textbook-page',
+      component: TextbookPageView,
+      props: (route) => {
+        return {...route.params, page: Number.parseInt(route.params.page, 10)}
+      },
     },
   ],
 })
