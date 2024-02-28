@@ -12,7 +12,17 @@ None at the moment.
 
 # Functional roadmap
 
-## Next version
+## 20240313
+
+### Display textbook title on extraction page
+
+> Il manque le nom du manuel en haut.
+
+### Allow textual exercice identifiers
+
+> Il manque un champ numéro d'exercice, indispensable pour nous. Il faudrait réduire le champ page en longueur et mettre à côté un champ numéro d'exercice. Attention certains exercices sont indiqués non pas par un numéro mais par un nom (par exemple Défi Langue). Il faut donc pouvoir mettre Defi Langue dans le champ du numéro de l'exercice.
+
+## Later
 
 ### Keep formatting
 
@@ -32,18 +42,6 @@ A few ideas:
 - The same idea, but on the glyphs in the fonts.
 - Try to render the text with a bold font and compare the result with the original rendering. If the result is similar, it's bold. This approach could also work for italic text, and bold italic text.
 - Use the relative number of chars in each font. We could assume that the most used font is the normal one, the second most used is the bold one, and the third most used is the italic one.
-
-## Version after the next
-
-### Display textbook title on extraction page
-
-> Il manque le nom du manuel en haut.
-
-### Allow textual exercice identifiers
-
-> Il manque un champ numéro d'exercice, indispensable pour nous. Il faudrait réduire le champ page en longueur et mettre à côté un champ numéro d'exercice. Attention certains exercices sont indiqués non pas par un numéro mais par un nom (par exemple Défi Langue). Il faut donc pouvoir mettre Defi Langue dans le champ du numéro de l'exercice.
-
-## Later
 
 ### Ensure usability
 
