@@ -11,6 +11,11 @@ const router = createRouter({
       name: 'index',
       component: IndexView,
     },
+    {
+      path: '/ping',
+      name: 'ping',
+      component: () => import('../views/PingView.vue'),
+    },
   ]
 })
 

@@ -1,2 +1,4 @@
-django~=5.0  # Fundamental
+djangorestframework-jsonapi[django-filter]  # Fundamental
 psycopg2-binary  # For PostgreSQL
+PyYaml  # For Swagger
+uritemplate  # For Swagger
