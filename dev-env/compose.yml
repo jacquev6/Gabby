@@ -1,0 +1,75 @@
+name: $OPINION_APP_NAME-dev
+
+services:
+  fanout:
+    image: nginx:latest
+    ports:
+      - 8080:8080
+    volumes:
+      - ./fanout/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - frontend
+      - dev-backend
+      - dev-adminer
+
+  # Frontend is stateless, so it can be shared between dev and test instances
+  frontend:
+    build:
+      context: ..
+      dockerfile: dev-env/frontend/docker/Dockerfile
+    volumes:
+      - ..:/app
+      - frontend-node-modules:/app/frontend/node_modules
+      - frontend-cache:/root/.cache
+      - /tmp/.X11-unix:/tmp/.X11-unix  # Allow running GUI apps in container, displaying on host
+    working_dir: /app/frontend
+    command: ["bash", "-c", "npm install && npx vite --host 0.0.0.0 --port 80 --strictPort"]
+
+  dev-backend:
+    build:
+      context: ..
+      dockerfile: dev-env/backend/docker/Dockerfile
+    volumes:
+      - ..:/app
+    working_dir: /app/backend
+    environment:
+      DJANGO_SETTINGS_MODULE: opinion.settings.dev
+    command: [
+      "bash",
+      "-c",
+      "./manage.py migrate && ./manage.py shell <../dev-env/backend/startup.py && exec ./manage.py runserver 0.0.0.0:80",
+    ]
+    depends_on:
+      dev-db:
+        condition: service_healthy
+  dev-adminer:
+    image: adminer:4
+    environment:
+      ADMINER_DEFAULT_DB_DRIVER: pgsql
+      ADMINER_DEFAULT_DB_HOST: dev-db
+      ADMINER_DEFAULT_DB_NAME: db
+    depends_on:
+      dev-db:
+        condition: service_healthy
+  dev-db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: db
+    healthcheck:
+      test: [
+        "CMD",
+        "pg_isready",
+        "--timeout=0",
+        "--dbname=db",
+        "--username=admin",
+      ]
+      start_period: 0s
+      interval: 0.5s
+      timeout: 1s
+      retries: 10
+
+volumes:
+  frontend-node-modules:
+  frontend-cache:

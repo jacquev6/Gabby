@@ -1,0 +1,2 @@
+django~=5.0  # Fundamental
+psycopg2-binary  # For PostgreSQL
