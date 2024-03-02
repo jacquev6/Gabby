@@ -8,5 +8,11 @@ class PingSerializer(serializers.ModelSerializer):
         model = Ping
         fields = (
             "url",
-            "created_at",
+            "created_at", "message",
+            "next", "prev",
         )
+
+    included_serializers = {
+        "next": "opinion_ping.serializers.PingSerializer",
+        "prev": "opinion_ping.serializers.PingSerializer",
+    }

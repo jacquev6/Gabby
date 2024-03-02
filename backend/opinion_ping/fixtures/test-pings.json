@@ -1,0 +1,54 @@
+[
+  {
+    "model": "opinion_ping.ping",
+    "pk": 1,
+    "fields": {
+      "created_at": "2024-02-29T12:10:15Z",
+      "message": "Hello 1"
+    }
+  },
+  {
+    "model": "opinion_ping.ping",
+    "pk": 2,
+    "fields": {
+      "created_at": "2024-02-29T12:10:16Z",
+      "message": "Hello 2"
+    }
+  },
+  {
+    "model": "opinion_ping.ping",
+    "pk": 3,
+    "fields": {
+      "created_at": "2024-02-29T12:10:17Z",
+      "prev": 2,
+      "message": "Hello 3"
+    }
+  },
+  {
+    "model": "opinion_ping.ping",
+    "pk": 4,
+    "fields": {
+      "created_at": "2024-02-29T12:10:18Z",
+      "prev": 3,
+      "message": "Hello 4"
+    }
+  },
+  {
+    "model": "opinion_ping.ping",
+    "pk": 5,
+    "fields": {
+      "created_at": "2024-02-29T12:10:19Z",
+      "prev": 3,
+      "message": "Hello 5"
+    }
+  },
+  {
+    "model": "opinion_ping.ping",
+    "pk": 6,
+    "fields": {
+      "created_at": "2024-02-29T12:10:20Z",
+      "prev": 5,
+      "message": "Hello 6"
+    }
+  }
+]

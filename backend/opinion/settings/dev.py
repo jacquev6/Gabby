@@ -8,7 +8,7 @@ SECRET_KEY = "not-so-secret"
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["localhost", "fanout"]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -18,12 +18,14 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_filters",
+    "corsheaders",
     "rest_framework",
     "rest_framework_json_api",
     "opinion_ping",
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -127,3 +129,7 @@ REST_FRAMEWORK = {
     ),
     "TEST_REQUEST_DEFAULT_FORMAT": "vnd.api+json",
 }
+
+EXPOSE_RESET_FOR_TESTS_URL = True
+
+CORS_ALLOW_ALL_ORIGINS = True
