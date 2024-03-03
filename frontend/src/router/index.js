@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
+// @todo Move this router into an 'opinion' directory, move the view into a 'opinion' directory
+// @todo Rename the view in kebab-case?
 import IndexView from '../views/IndexView.vue'
 
 

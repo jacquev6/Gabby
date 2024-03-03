@@ -26,12 +26,16 @@ async function createPing() {
 </script>
 
 <template>
+  <!-- @todo Create a BBusy and use it -->
   <p v-if="loading">Loading...</p>
   <ul v-else-if="pings.length">
     <li v-for="ping in pings" :key="ping.id">
       {{ ping.id }} - {{ ping.attributes.createdAt }}
     </li>
   </ul>
-  <p v-else>No pings.</p>
-  <p><button @click="createPing">Ping</button></p>
+  <p v-else>{{ $t('opinion.noPings') }}</p>
+  <!-- @todo Create a BButton and use it -->
+  <p><button @click="createPing">{{ $t('opinion.ping') }}</button></p>
 </template>
+
+<!-- @todo Make https://vue-i18n.intlify.dev/guide/advanced/sfc.html work and move translations from locales/opinion to here -->
