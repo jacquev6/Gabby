@@ -1,5 +1,3 @@
-import { ref, reactive } from 'vue'
-
 import { BSelect } from '.'
 
 
