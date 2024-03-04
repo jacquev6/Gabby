@@ -23,4 +23,6 @@ language = "fr"
 
 html_theme = "alabaster"
 html_static_path = ["_static"]
-html_logo = "../frontend/public/logo-cartable-fantastique.png"
+html_theme_options = dict(
+    sidebar_width = "270px",
+)
