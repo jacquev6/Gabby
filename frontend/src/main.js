@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import { createI18n } from 'vue-i18n'
 import { createPinia } from 'pinia'
+import { PiniaSharedState } from 'pinia-shared-state'
 import * as pdfjs from 'pdfjs-dist/build/pdf'
 
 import App from './App.vue'
@@ -21,6 +22,6 @@ createApp(App)
     fallbackLocale: 'fr',
     messages: {en, fr},
   }))
-  .use(createPinia())
+  .use(createPinia().use(PiniaSharedState({enable: false})))
   .use(router)
   .mount('#app')

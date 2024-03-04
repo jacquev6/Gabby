@@ -18,17 +18,9 @@ async function loadPdf(source) {
   loadingPdf.value = true
   lastPdfOpened.value = null
   try {
-    lastPdfOpened.value = await pdfs.load(source)
+    lastPdfOpened.value = await pdfs.open(source)
   } finally {
     loadingPdf.value = false
-  }
-}
-
-function formatPdfSource(source) {
-  if (typeof source === 'string') {
-    return source
-  } else {
-    return source.name
   }
 }
 
@@ -41,12 +33,12 @@ async function createTextbook() {
   try {
     const pdfFile = await api.client.post(
       'pdfFile',
-      {sha256: lastPdfOpened.value.sha256, bytesCount: 0, pagesCount: lastPdfOpened.value.document.numPages},
+      {sha256: lastPdfOpened.value.info.sha256, bytesCount: 0, pagesCount: lastPdfOpened.value.document.numPages},
       {namings: [], sections: []},
     )
     const pdfFileNaming = await api.client.post(
       'pdfFileNaming',
-      {name: formatPdfSource(lastPdfOpened.value.source)},
+      {name: lastPdfOpened.value.info.name},
       {pdfFile},
     )
     const textbook = await api.client.post(
@@ -85,16 +77,25 @@ const textbooks = computedAsync(
       <h1>Ouvrir un PDF</h1>
       <loading :loading="loadingPdf">
         <BInput :label="$t('inputFile')" type="file" accept=".pdf" @change="(e) => loadPdf(e.target.files[0])" />
-        <p>(Ou ouvrir le <a href="#" @click.prevent="loadPdf('/test.pdf')">PDF de test</a>)</p>
+        <p>(Ou ouvrir le <a href="#" @click.prevent="loadPdf({url: '/test.pdf'})">PDF de test</a>)</p>
       </loading>
+      <h1>PDFs ouverts</h1>
+      <ul v-if="pdfs.known.length">
+        <li v-for="info in pdfs.known">
+          <a href="#" @click.prevent="pdfs.getDocument(info.sha256).then((document) => lastPdfOpened = {info, document})">{{ info.name }}</a>
+          ({{ info.size }} octets)
+          <b-button sm secondary @click="pdfs.close(info.sha256)">Fermer</b-button>
+        </li>
+      </ul>
+      <p v-else>Aucun PDF ouvert actuellement.</p>
       <template v-if="lastPdfOpened">
-        <h1>PDF ouvert</h1>
+        <h1>PDF sélectionné <b-button sm secondary @click="lastPdfOpened = null">Désélectionner</b-button></h1>
         <b-row>
           <b-col>
-            <template v-if="api.cache.get('pdfFile', lastPdfOpened.sha256)?.relationships.sections">
+            <template v-if="api.cache.get('pdfFile', lastPdfOpened.info.sha256)?.relationships.sections">
               <p>Il contient :</p>
               <ul>
-                <li v-for="section in api.cache.get('pdfFile', lastPdfOpened.sha256).relationships.sections">
+                <li v-for="section in api.cache.get('pdfFile', lastPdfOpened.info.sha256).relationships.sections">
                   aux pages {{  section.attributes.pdfFileStartPage }} à {{ section.attributes.pdfFileStartPage + section.attributes.pagesCount - 1 }},
                   <router-link :to="{name: 'textbook-page', params: {textbookId: section.relationships.textbook.id, page: section.attributes.textbookStartPage }}">
                     les pages {{ section.attributes.textbookStartPage }} à {{ section.attributes.textbookStartPage + section.attributes.pagesCount - 1 }}
@@ -139,7 +140,7 @@ const textbooks = computedAsync(
                 <router-link :to="{name: 'textbook-page', params: {textbookId: textbook.id, page: section.attributes.textbookStartPage }}">
                   les pages {{ section.attributes.textbookStartPage }} à {{ section.attributes.textbookStartPage + section.attributes.pagesCount - 1 }}
                 </router-link>
-                sont dans {{ pdfs.getSource(section.relationships.pdfFile.attributes.sha256) ? formatPdfSource(pdfs.getSource(section.relationships.pdfFile.attributes.sha256)) : ' un PDF précédent nommé ' + section.relationships.pdfFile.relationships.namings[0].attributes.name }}
+                sont dans {{ pdfs.getInfo(section.relationships.pdfFile.attributes.sha256)?.name ?? ' un PDF précédent nommé ' + section.relationships.pdfFile.relationships.namings[0].attributes.name }}
               </li>
             </ul>
           </li>

@@ -65,31 +65,31 @@ const pdf = computedAsync(
   async () => {
     if (section.value) {
       const pageNumber = section.value.attributes.pdfFileStartPage + props.page - section.value.attributes.textbookStartPage
-      const pdf = await pdfs.get(section.value.relationships.pdfFile.id)
-      // WARNING: no reactivity to dependencies accessed after this first await (https://vueuse.org/core/computedAsync/#caveats)
-      const document = pdf?.document
-      const page = await document?.getPage(pageNumber)
-      const textContent = []
-      if (page) {
-        for (const item of (await page.getTextContent()).items) {
-          textContent.push({
-            str: item.str,
+      if (pdfs.getInfo(section.value.relationships.pdfFile.id)) {
+        const document = await pdfs.getDocument(section.value.relationships.pdfFile.id)
+        // WARNING: no reactivity to dependencies accessed after this first await (https://vueuse.org/core/computedAsync/#caveats)
+        const page = await document?.getPage(pageNumber)
+        const textContent = []
+        if (page) {
+          for (const item of (await page.getTextContent()).items) {
+            textContent.push({
+              str: item.str,
 
-            font: item.fontName,
+              font: item.fontName,
 
-            left: item.transform[4],
-            width: item.width,
-            right: item.transform[4] + item.width,
-            bottom: item.transform[5],
-            height: item.height,
-            top: item.transform[5] + item.height,
-          })
+              left: item.transform[4],
+              width: item.width,
+              right: item.transform[4] + item.width,
+              bottom: item.transform[5],
+              height: item.height,
+              top: item.transform[5] + item.height,
+            })
+          }
+          return {page, textContent}
         }
       }
-      return {page, textContent}
-    } else {
-      return null
     }
+    return null
   },
   null,
   pdfLoading,
@@ -231,7 +231,7 @@ watch(requestedPage, (requested) => {
               <p>Le PDF contenant cette page ({{ section.relationships.pdfFile.relationships.namings[0].attributes.name }}) n'a pas encore été ouvert.</p>
               <p>@todo(Feature, soon) Display all names known for this PDF</p>
               <p>@todo(Feature, soon) Let user open PDF from here</p>
-              <p>@todo(Project management, later) Remove this button: <button @click="pdfs.load('/test.pdf')">Load test.pdf</button></p>
+              <p>@todo(Project management, later) Remove this button: <button @click="pdfs.open({url: '/test.pdf'})">Load test.pdf</button></p>
             </template>
           </loading>
         </template>

@@ -29,7 +29,6 @@ async function draw([page, canvasContext]) {
   console.assert(page)
 
   if (canvasContext) {
-    console.info('Rendering page', page.pageNumber)
     const startTime = performance.now()
 
     loading.value = true
@@ -50,7 +49,7 @@ async function draw([page, canvasContext]) {
         await renderTask.promise
       } catch (e) {
         if (e.name === 'RenderingCancelledException') {
-          console.warn('Was interrupted rendering page', page.pageNumber, 'after', performance.now() - startTime, 'ms')
+          console.warn('Was interrupted rendering page', page.pageNumber, 'after', Math.round(performance.now() - startTime), 'ms')
           resetOnExit = false
           return
         } else {
@@ -58,7 +57,7 @@ async function draw([page, canvasContext]) {
           throw e
         }
       }
-      console.info('Rendered page', page.pageNumber, 'in', performance.now() - startTime, 'ms')
+      console.info('Rendered page', page.pageNumber, 'in', Math.round(performance.now() - startTime), 'ms')
     } finally {
       if (resetOnExit) {
         renderTask = null
