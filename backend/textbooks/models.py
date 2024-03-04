@@ -1,6 +1,6 @@
-from django.core.validators import RegexValidator, MinLengthValidator
+from django.core.validators import RegexValidator
 from django.db.models import Model
-from django.db.models import CharField, ManyToManyField, ForeignKey, IntegerField, TextField, AutoField
+from django.db.models import CharField, ForeignKey, IntegerField, TextField, AutoField
 from django.db.models import CASCADE, PROTECT
 
 
