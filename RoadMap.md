@@ -12,7 +12,17 @@ None at the moment.
 
 # Functional roadmap
 
-## 20240313
+## 20240314
+
+### Add this roadmap to the help page
+
+### Backup DB
+
+In a safe place like Amazon S3.
+
+### Log user actions on the PDF
+
+Olivier Pons would love to know which rectangles were used to extract which text.
 
 ### Display textbook title on extraction page
 
@@ -22,7 +32,35 @@ None at the moment.
 
 > Il manque un champ numéro d'exercice, indispensable pour nous. Il faudrait réduire le champ page en longueur et mettre à côté un champ numéro d'exercice. Attention certains exercices sont indiqués non pas par un numéro mais par un nom (par exemple Défi Langue). Il faut donc pouvoir mettre Defi Langue dans le champ du numéro de l'exercice.
 
+### Attach exercises to a project
+
+Instead of a textbook.
+
+### Add a view for a project
+
+> Centraliser les exercices d'un manuel. Avec mise en valeur des exos pas extraits.
+
+## 20240404
+
+### Add users and profiles
+
+"Users" belong to "organisations".
+All users can list all their organisation's projects and none from other organisations.
+"Viewers" can with a few selected projects.
+"Editors" can edit a few selected projects.
+"Admins" can edit all projects and grant viewer and editor role to some users.
+
+### Keep a history of who does what
+
 ## Later
+
+### Ensure concurrent use is safe
+
+How can Gabby help coordinating several people working on the same textbook? Locks? Merging? Conflict resolution? Simple flags saying "[Name] is working on this page"? Continuous save and update in other's view?
+
+### Ensure safety of DB
+
+Extracted exercises are copyrighted material. We should ensure their safety.
 
 ### Keep formatting
 
@@ -71,6 +109,20 @@ Gabby must be usable with screen readers and similar technologies.
 
 > Quand le texte est en 2 colonnes, on est obligé de sélectionner la première colonne puis la seconde si on veut que ça se mette dans l'ordre. Je ne sais pas si c'est arrangeable.
 
+### Adapt exercises
+
+Implement the third column.
+
+> Types d'exos à adapter en priorité:
+> - mots à cocher
+> - remplir au clavier
+> - QCM
+
+### Export adapted exercises
+
+Exporting as a .zip file is error-prone.
+
+It should be possible to export as a single html file, with all the exercises in it. Let's explore that.
 
 # Technical roadmap
 
