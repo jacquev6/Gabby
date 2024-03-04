@@ -14,9 +14,6 @@ Aucun pour le moment.
 20240314
 --------
 
-Ajouter cette roadmap à l'aide
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 Logger les actions de l'utilisateur dans le PDF
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
