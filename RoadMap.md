@@ -16,10 +16,6 @@ None at the moment.
 
 ### Add this roadmap to the help page
 
-### Ensure I get notified on 500s
-
-By e-mail.
-
 ### Log user actions on the PDF
 
 Olivier Pons would love to know which rectangles were used to extract which text.
