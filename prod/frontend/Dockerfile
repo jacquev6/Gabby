@@ -33,6 +33,10 @@ ENV GABBY_DB_NAME=not-a-db
 ENV GABBY_DB_USER=not-a-user
 ENV GABBY_DB_PASSWORD=not-a-password
 ENV GABBY_DB_HOST=not-a-host-either
+ENV GABBY_BACKUP_BUCKET_NAME=not-a-bucket
+ENV GABBY_BACKUP_LOCATION=not-a-location
+ENV GABBY_BACKUP_ACCESS_KEY=not-an-access-key
+ENV GABBY_BACKUP_SECRET_KEY=not-a-secret-key
 RUN ./manage.py check --fail-level DEBUG --verbosity 3 --deploy
 RUN ./manage.py collectstatic --noinput
 

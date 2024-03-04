@@ -20,10 +20,6 @@ None at the moment.
 
 By e-mail.
 
-### Backup DB
-
-In a safe place like Amazon S3.
-
 ### Log user actions on the PDF
 
 Olivier Pons would love to know which rectangles were used to extract which text.

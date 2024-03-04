@@ -25,3 +25,9 @@ DATABASES = {
 
 
 EXPOSE_RESET_FOR_TESTS_URL = False
+
+
+# https://django-dbbackup.readthedocs.io/en/master/configuration.html
+
+DBBACKUP_STORAGE = "django.core.files.storage.FileSystemStorage"
+DBBACKUP_STORAGE_OPTIONS = {"location": "/gabby/dev-env/backups/"}

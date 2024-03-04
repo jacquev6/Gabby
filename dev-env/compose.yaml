@@ -59,7 +59,7 @@ services:
       dev-db:
         condition: service_healthy
   dev-db:
-    image: postgres:16
+    image: postgres:15
     environment:
       POSTGRES_USER: gabby-dev
       POSTGRES_PASSWORD: password

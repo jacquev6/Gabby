@@ -18,27 +18,18 @@ services:
 
   backend:
     image: jacquev6/gabby-backend:preview
-    environment:
-      GABBY_SECRET_KEY: not-so-secret-not-so-secret-not-so-secret-not-so-secret-not-so-secret
-      GABBY_ALLOWED_HOSTS: localhost,preview-fanout
-      GABBY_DB_NAME: gabby-prod-preview
-      GABBY_DB_USER: gabby-prod-preview
-      GABBY_DB_PASSWORD: password
-      GABBY_DB_HOST: db
-      GABBY_EXPOSE_RESET_FOR_TESTS_URL: yes-i-m-sure--it-s-not-really-prod
+    env_file:
+      - backend.env
+      - secrets.env
     depends_on:
       db:
         condition: service_healthy
 
   preview-migrator:
     image: jacquev6/gabby-backend:preview
-    environment:
-      GABBY_SECRET_KEY: not-so-secret-not-so-secret-not-so-secret-not-so-secret-not-so-secret
-      GABBY_ALLOWED_HOSTS: localhost
-      GABBY_DB_NAME: gabby-prod-preview
-      GABBY_DB_USER: gabby-prod-preview
-      GABBY_DB_PASSWORD: password
-      GABBY_DB_HOST: db
+    env_file:
+      - backend.env
+      - secrets.env
     command: ["bash", "-c", "./manage.py migrate && ./manage.py loaddata test-exercises"]
     depends_on:
       db:
@@ -59,8 +50,10 @@ services:
       preview-fanout:
         condition: service_started
 
+  # Add a line like this in your crontab:
+  # 10 *   * * *   user  (cd /path/to/compose/env && docker compose exec backend python manage.py dbbackup)
   db:
-    image: postgres:16
+    image: postgres:15
     environment:
       POSTGRES_USER: gabby-prod-preview
       POSTGRES_PASSWORD: password

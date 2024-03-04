@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     "corsheaders",
     'rest_framework',
     'rest_framework_json_api',
+    "dbbackup",
     'textbooks',
 ]
 
@@ -137,3 +138,10 @@ REST_FRAMEWORK = {
     ),
     "TEST_REQUEST_DEFAULT_FORMAT": "vnd.api+json",
 }
+
+
+# https://django-dbbackup.readthedocs.io/en/master/configuration.html
+
+DBBACKUP_DATE_FORMAT = '%Y%m%d-%H%M%S'
+DBBACKUP_FILENAME_TEMPLATE = "{datetime}.{extension}"
+DBBACKUP_MEDIA_FILENAME_TEMPLATE = "{datetime}.{extension}"

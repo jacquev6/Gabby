@@ -1,5 +1,11 @@
 FROM python:3.12-slim
 
+RUN set -x \
+ && apt-get update \
+ && DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends \
+    postgresql-client \
+ && true
+
 WORKDIR /app
 
 RUN pip install gunicorn
