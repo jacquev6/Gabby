@@ -16,6 +16,10 @@ None at the moment.
 
 ### Add this roadmap to the help page
 
+### Ensure I get notified on 500s
+
+By e-mail.
+
 ### Backup DB
 
 In a safe place like Amazon S3.
@@ -94,6 +98,8 @@ Gabby must be usable with screen readers and similar technologies.
 ### Allow images in exercices
 
 > On a besoin de pouvoir inclure les images des exercices
+
+Make sure they are included in the DB backups.
 
 ### Customize the floating modal
 
