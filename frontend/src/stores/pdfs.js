@@ -27,53 +27,55 @@ export function definePdfsStore(name, options) {
     return sha256
   }
 
-  const persistentStore = (() => {
-    async function getFileHandle(sha256, create=false) {
+  const persistentStore = {
+    async save(sha256, info, data) {
+      localStorage.setItem('pdfs/info/' + sha256, JSON.stringify(info))
       const rootStorageDirectory = await navigator.storage.getDirectory()
       const directoryHandle = await rootStorageDirectory.getDirectoryHandle('pdf', {create: true})
+      const fileHandle = await directoryHandle.getFileHandle(sha256, {create: true})
+      const writable = await fileHandle.createWritable()
+      await writable.write(data)
+      await writable.close()
+    },
+    async load(sha256) {
+      const info = JSON.parse(localStorage.getItem('pdfs/info/' + sha256))
+      if (!info) return null
+
+      const rootStorageDirectory = await navigator.storage.getDirectory()
+      const directoryHandle = await rootStorageDirectory.getDirectoryHandle('pdf', {create: true})
+      var fileHandle = null
       try {
-        return await directoryHandle.getFileHandle(sha256, {create})
+        fileHandle = await directoryHandle.getFileHandle(sha256, {create: false})
       } catch (e) {
-        if (e.name === 'NotFoundError' && !create) {
+        if (e.name === 'NotFoundError') {
+          localStorage.removeItem('pdfs/info/' + sha256)
           return null
         } else {
           throw e
         }
       }
-    }
+      console.assert(fileHandle)
+      const file = await fileHandle.getFile()
+      const data = await file.arrayBuffer()
 
-    return {
-      async save(sha256, info, data) {
-        localStorage.setItem('pdfs/info/' + sha256, JSON.stringify(info))
-        const writable = await (await getFileHandle(sha256, true)).createWritable()
-        await writable.write(data)
-        await writable.close()
-      },
-      async load(sha256) {
-        const info = JSON.parse(localStorage.getItem('pdfs/info/' + sha256))
-        if (!info) return null
-
-        const fileHandle = await getFileHandle(sha256, false)
-        if (!fileHandle) return null
-        const data = await (await fileHandle.getFile()).arrayBuffer()
-
-        return {info, data}
-      },
-      list() {
-        const l = []
-        for (const [key, info] of Object.entries(localStorage)) {
-          if (key.startsWith('pdfs/info/')) {
-            l.push(JSON.parse(info))
-          }
+      return {info, data}
+    },
+    list() {
+      const l = []
+      for (const [key, info] of Object.entries(localStorage)) {
+        if (key.startsWith('pdfs/info/')) {
+          l.push(JSON.parse(info))
         }
-        return l
-      },
-      async delete(sha256) {
-        localStorage.removeItem('pdfs/info/' + sha256)
-        await (await getFileHandle(sha256, false))?.remove()
-      },
-    }
-  })()
+      }
+      return l
+    },
+    async delete(sha256) {
+      localStorage.removeItem('pdfs/info/' + sha256)
+      const rootStorageDirectory = await navigator.storage.getDirectory()
+      const directoryHandle = await rootStorageDirectory.getDirectoryHandle('pdf', {create: true})
+      directoryHandle.removeEntry(sha256)
+    },
+  }
 
   return defineStore(name, {
     state: () => {
