@@ -43,10 +43,10 @@ You'll probably need it less often than the Django Admin.
 In the development environment, it is available at http://localhost:8080/api/adminer/ with the following credentials:
 
 - System: `PostgreSQL`
-- Server: `db`
-- Username: `gabby`
+- Server: `dev-db`
+- Username: `gabby-dev`
 - Password: `password`
-- Database: `gabby`
+- Database: `gabby-dev`
 
 # Tests
 
@@ -70,7 +70,7 @@ Preview with:
 
     prod/preview.sh
 
-And then open your browser at http://localhost:9090/.
+And then open your browser at http://localhost:8090/.
 Hit Ctrl+C to stop the production preview environment.
 
 Publish Docker images with:
