@@ -12,7 +12,6 @@ services:
       - dev-backend
       - dev-adminer
 
-  # Frontend is stateless, so it can be shared between dev and test instances
   frontend:
     build:
       context: ..
