@@ -27,7 +27,10 @@ export function definePdfsStore(name, options) {
     return sha256
   }
 
-  const persistentStore = {
+  // @todo(Project management) Add an end-to-end test for reloading a PDF from local storage
+  // (Requires running against localhost or an https server)
+
+  const actualPersistentStore = {
     async save(sha256, info, data) {
       localStorage.setItem('pdfs/info/' + sha256, JSON.stringify(info))
       const rootStorageDirectory = await navigator.storage.getDirectory()
@@ -76,6 +79,15 @@ export function definePdfsStore(name, options) {
       directoryHandle.removeEntry(sha256)
     },
   }
+
+  const nullPersistentStore = {
+    async save() {},
+    async load() { return null },
+    list() { return [] },
+    async delete() {},
+  }
+
+  const persistentStore = navigator.storage ? actualPersistentStore : nullPersistentStore
 
   return defineStore(name, {
     state: () => {
