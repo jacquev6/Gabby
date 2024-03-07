@@ -32,7 +32,7 @@ The [JSON:API](https://jsonapi.org/) is available at http://localhost:8080/api/,
 
 The Django Admin is available at http://localhost:8080/api/admin/ with the following credentials:
 
-- Username: `gabby`
+- Username: `admin`
 - Password: `password`
 
 ## Adminer
@@ -43,10 +43,10 @@ You'll probably need it less often than the Django Admin.
 In the development environment, it is available at http://localhost:8080/api/adminer/ with the following credentials:
 
 - System: `PostgreSQL`
-- Server: `dev-db`
-- Username: `gabby-dev`
+- Server: `db`
+- Username: `admin`
 - Password: `password`
-- Database: `gabby-dev`
+- Database: `db`
 
 # Tests
 

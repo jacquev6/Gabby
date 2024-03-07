@@ -6,11 +6,11 @@ import { defineApiStore } from '../../stores/api'
 import SectionEditor from '../SectionEditor.vue'
 
 
-const useApiStore = defineApiStore('api', {baseUrl: 'http://fanout:8081/api/'})
+const useApiStore = defineApiStore('api', {baseUrl: 'http://fanout:8080/api/'})
 
 describe('SectionEditor', () => {
   beforeEach(() => {
-    cy.request('POST', 'http://fanout:8081/reset-for-tests/yes-im-sure?fixtures=test-exercises')
+    cy.request('POST', 'http://fanout:8080/reset-for-tests/yes-im-sure?fixtures=test-exercises')
 
     setActivePinia(createPinia())
     cy.wrap(useApiStore()).then((api) => api.client.get_all('sections')).should('have.length', 1)

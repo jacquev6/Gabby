@@ -2,7 +2,7 @@
 import { defineApiStore } from '../api.js'
 
 
-const api = defineApiStore('api', {baseUrl: 'http://fanout:8081/api/'})()
+const api = defineApiStore('api', {baseUrl: 'http://fanout:8080/api/'})()
 </script>
 
 <template>

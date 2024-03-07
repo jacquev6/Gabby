@@ -11,4 +11,4 @@ docker compose exec \
   --env DISPLAY \
   frontend \
     npx cypress open \
-      --config baseUrl=http://fanout:8081/
+      --config baseUrl=http://fanout:8080/

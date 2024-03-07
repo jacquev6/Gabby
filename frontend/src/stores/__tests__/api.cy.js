@@ -4,12 +4,12 @@ import { defineApiStore } from '../api.js'
 import ApiTestComponent from './ApiTestComponent.vue'  // @todo(Project management, later) Define this component locally
 
 
-const useApiStore = defineApiStore('api', {baseUrl: 'http://fanout:8081/api/'})
+const useApiStore = defineApiStore('api', {baseUrl: 'http://fanout:8080/api/'})
 
 describe('ApiStore', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
-    cy.request('POST', 'http://fanout:8081/reset-for-tests/yes-im-sure?fixtures=test-exercises')
+    cy.request('POST', 'http://fanout:8080/reset-for-tests/yes-im-sure?fixtures=test-exercises')
   })
 
   it('gets all textbooks and sections', async () => {

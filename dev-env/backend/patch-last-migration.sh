@@ -12,9 +12,9 @@ then
   exit 1
 fi
 
-docker compose exec dev-backend ./manage.py migrate textbooks zero
+docker compose exec backend ./manage.py migrate textbooks zero
 rm -f ../../backend/textbooks/migrations/????_*.py
-docker compose exec dev-backend ./manage.py makemigrations textbooks
-docker compose exec dev-backend ./manage.py migrate textbooks
-docker compose exec dev-backend ./manage.py loaddata test-exercises
-docker compose exec dev-backend bash -c './manage.py shell <../dev-env/backend/startup.py'
+docker compose exec backend ./manage.py makemigrations textbooks
+docker compose exec backend ./manage.py migrate textbooks
+docker compose exec backend ./manage.py loaddata test-exercises
+docker compose exec backend bash -c './manage.py shell <../dev-env/backend/startup.py'

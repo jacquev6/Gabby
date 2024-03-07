@@ -24,7 +24,12 @@ DATABASES = {
 }
 
 
-EXPOSE_RESET_FOR_TESTS_URL = False
+EXPOSE_RESET_FOR_TESTS_URL = True
+
+
+# https://github.com/adamchainz/django-cors-headers
+
+CORS_ALLOW_ALL_ORIGINS = True
 
 
 # https://django-dbbackup.readthedocs.io/en/master/configuration.html
