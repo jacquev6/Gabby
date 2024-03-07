@@ -17,6 +17,10 @@ const props = defineProps({
 
 const model = defineModel({ type: Object })
 
+const emit = defineEmits([
+  'extractionEvent'  // Object => void
+])
+
 const selectedText = ref(null)
 const doStripExerciceNumber = ref(true)
 const textToAdd = ref(null)
@@ -34,6 +38,7 @@ function updateTextToAdd() {
 watch(doStripExerciceNumber, updateTextToAdd)
 
 function addTextTo(field, textArea) {
+  const valueBefore = model.value[field]
   if (model.value[field] !== '' && !model.value[field].endsWith('\n')) {
     model.value[field] += '\n'
   }
@@ -44,6 +49,7 @@ function addTextTo(field, textArea) {
     textArea.value.focus()
     textArea.value.setSelectionRange(selectionBegin, selectionEnd)
   })
+  emit('extractionEvent', {kind: `SelectedTextAddedTo${field.charAt(0).toUpperCase()}${field.slice(1)}`, valueBefore, valueAfter: model.value[field]})
   showTextSelectionMenu.value = false
 }
 
@@ -91,7 +97,7 @@ defineExpose({
     @dismissed="showTextSelectionMenu=false"
   >
     <BCheckBox :label="$t('doStripExerciceNumber')" v-model="doStripExerciceNumber" :disabled="!canStripExerciceNumber" />
-    <RequiredExerciseTextArea :label="$t('selectedText')" v-model="textToAdd" />
+    <RequiredExerciseTextArea :label="$t('selectedText')" v-model="textToAdd" @change="emit('extractionEvent', {kind: 'SelectedTextEdited', value: textToAdd})" />
 
     <p>{{ $t('addTo') }}</p>
     <button class="btn btn-primary" @click="addTextToInstructions">{{ $t('instructions') }}</button>
@@ -103,10 +109,10 @@ defineExpose({
     <button class="btn btn-primary" @click="addTextToWording">{{ $t('wording') }}</button>
   </FloatingModal>
 
-  <BInput :label="$t('exerciseNumber')" type="number" min="1" v-model="model.number" :disabled="fixedNumber"/>
+  <BInput :label="$t('exerciseNumber')" type="number" min="1" v-model="model.number" :disabled="fixedNumber" @change="emit('extractionEvent', {kind: 'ExerciseNumberSetManually', value: model.number})"/>
 
-  <RequiredExerciseTextArea ref="instructionsTextArea" :label="$t('instructions')" v-model="model.instructions" />
-  <OptionalExerciseTextArea ref="exampleTextArea" :label="$t('example')" v-model="model.example" />
-  <OptionalExerciseTextArea ref="clueTextArea" :label="$t('clue')" v-model="model.clue" />
-  <RequiredExerciseTextArea ref="wordingTextArea" :label="$t('wording')" v-model="model.wording" />
+  <RequiredExerciseTextArea ref="instructionsTextArea" :label="$t('instructions')" v-model="model.instructions" @change="emit('extractionEvent', {kind: 'InstructionsSetManually', value: model.instructions})"/>
+  <OptionalExerciseTextArea ref="exampleTextArea" :label="$t('example')" v-model="model.example" @change="emit('extractionEvent', {kind: 'ExampleSetManually', value: model.example})"/>
+  <OptionalExerciseTextArea ref="clueTextArea" :label="$t('clue')" v-model="model.clue" @change="emit('extractionEvent', {kind: 'ClueSetManually', value: model.clue})"/>
+  <RequiredExerciseTextArea ref="wordingTextArea" :label="$t('wording')" v-model="model.wording" @change="emit('extractionEvent', {kind: 'WordingSetManually', value: model.wording})"/>
 </template>

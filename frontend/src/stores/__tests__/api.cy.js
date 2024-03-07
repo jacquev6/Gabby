@@ -140,6 +140,7 @@ describe('ApiStore', () => {
       },
       {
         textbook: {type: 'textbook', id: '1'},
+        extractionEvents: [],
       },
     )
 
@@ -165,6 +166,7 @@ describe('ApiStore', () => {
       },
       {
         textbook: {type: 'textbook', id: '1'},
+        extractionEvents: [],
       },
       {
         include: 'textbook'

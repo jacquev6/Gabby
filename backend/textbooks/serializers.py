@@ -1,6 +1,6 @@
 from rest_framework_json_api import serializers
 
-from .models import PdfFile, PdfFileNaming, Textbook, Section, Exercise
+from .models import PdfFile, PdfFileNaming, Textbook, Section, Exercise, ExtractionEvent
 
 
 # @todo(Project management, soon) Use https://sqids.org/python for auto-increment ids
@@ -70,11 +70,12 @@ class ExerciseSerializer(serializers.ModelSerializer):
             "url",
             "page", "number",
             "instructions", "example", "clue", "wording",
-            "textbook",
+            "textbook", "extraction_events",
         )
 
     included_serializers = {
         "textbook": TextbookSerializer,
+        "extraction_events": 'textbooks.serializers.ExtractionEventSerializer',
     }
 
     # https://stackoverflow.com/questions/22124555 has many answers;
@@ -93,3 +94,17 @@ class ExerciseSerializer(serializers.ModelSerializer):
         if self.instance and value != self.instance.number:
             raise serializers.ValidationError("'number' is immutable once set.")
         return value
+
+
+class ExtractionEventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ExtractionEvent
+        fields = (
+            "url",
+            "event",
+            "exercise",
+        )
+
+    included_serializers = {
+        "exercise": ExerciseSerializer,
+    }

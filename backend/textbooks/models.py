@@ -95,3 +95,10 @@ class Exercise(Model):
 
     def __str__(self):
         return f"Exercice {self.number} page {self.page} in {self.textbook.short_str()}"
+
+
+class ExtractionEvent(Model):
+    id = AutoField(primary_key=True)
+
+    exercise = ForeignKey(Exercise, on_delete=CASCADE, related_name="extraction_events")
+    event = TextField(null=False, blank=False)  # Free form for the backend, defined by the frontend

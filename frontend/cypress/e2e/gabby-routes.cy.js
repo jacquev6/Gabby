@@ -1,4 +1,6 @@
 describe('Gabby has routes that', () => {
+  before(console.clear)
+
   it('can access the default Vue Router view', () => {
     cy.visit('/')
     cy.contains('h1', 'Ouvrir un PDF')

@@ -98,6 +98,7 @@ const pdf = computedAsync(
 const pdfRenderer = ref(null)
 
 const mode = ref('list')
+const modeIsLoading = ref(false)
 const refreshCounter = ref(1)
 
 const loadingExercises = ref(false)
@@ -117,6 +118,7 @@ const exercisesOnPage = computedAsync(
 )
 
 const currentExercise = reactive({})
+const extractionEvents = reactive([])
 
 const disablePrevPage = computed(() => {
   return mode.value !== 'list' || props.page <= 1
@@ -130,9 +132,10 @@ const disableSetPage = computed(() => {
   return mode.value !== 'list'
 })
 
-async function switchToListMode() {
+function switchToListMode() {
   currentExercise.attributes = {}
   currentExercise.id = null
+  extractionEvents.splice(0)
   mode.value = 'list'
   ++refreshCounter.value
 }
@@ -150,34 +153,73 @@ function switchToCreateMode(number) {
     wording: '',
   }
   currentExercise.id = null
+  extractionEvents.splice(0)
+  if (number) {
+    extractionEvents.push({kind: 'ExerciseNumberSetAutomatically', value: number})
+  }
   mode.value = 'create'
 }
 
 function switchToEditMode(e) {
   currentExercise.id = e.id
   currentExercise.attributes = e.attributes
+  extractionEvents.splice(0)
   mode.value = 'edit'
 }
 
 const exerciseForm = ref(null)
-function textSelected(text, point) {
+function textSelected(text, point, textItems, rectangle) {
+  extractionEvents.push({
+    kind: "TextSelectedInPdf",
+    pdf: {
+      name: section.value.relationships.pdfFile.relationships.namings[0].attributes.name,
+      sha256: section.value.relationships.pdfFile.id,
+      page: pdf.value.page.pageNumber,
+      rectangle,
+    },
+    value: text,
+    textItems,
+  })
   exerciseForm.value?.textSelected(text, point)
 }
 
 async function createExercise() {
-  await api.client.post(
+  modeIsLoading.value = true
+  const exercise = await api.client.post(
     'exercise',
     {page: props.page, ...currentExercise.attributes},
-    {textbook: {type: 'textbook', id: props.textbookId}},
+    {textbook: {type: 'textbook', id: props.textbookId}, extractionEvents: []},
   )
+  for (const event of extractionEvents) {
+    await api.client.post(
+      'extractionEvent',
+      {event: JSON.stringify(event)},
+      {exercise: {type: 'exercise', id: exercise.id}},
+    )
+  }
+  switchToCreateMode(currentExercise.attributes.number + 1)
+  modeIsLoading.value = false
 }
 
 async function updateExercise() {
+  modeIsLoading.value = true
   await api.client.patch('exercise', currentExercise.id, currentExercise.attributes, {})
+  for (const event of extractionEvents) {
+    await api.client.post(
+      'extractionEvent',
+      {event: JSON.stringify(event)},
+      {exercise: {type: 'exercise', id: currentExercise.id}},
+    )
+  }
+  switchToListMode()
+  modeIsLoading.value = false
 }
 
 async function deleteExercise(exercise) {
+  modeIsLoading.value = true
   await api.client.delete('exercise', exercise.id)
+  modeIsLoading.value = false
+  switchToListMode()
 }
 
 // @todo(Project management, soon) Factorize with 'PdfPreview' component
@@ -242,37 +284,41 @@ watch(requestedPage, (requested) => {
       </b-col>
       <b-col>
         <h1>{{ $t('edition') }}</h1>
-        <template v-if="mode === 'list'">
-          <loading :loading="loadingExercises">
-            <template v-if="exercisesOnPage.length">
-              <p>{{ $t('existingExercises') }}</p>
-              <ul>
-                <li v-for="exercise in exercisesOnPage">
-                  <strong>{{ exercise.attributes.number }}</strong> {{ ellipsis(exercise.attributes.instructions) }}
-                  <b-button primary sm @click="switchToEditMode(exercise)">{{ $t('edit') }}</b-button>
-                  <b-button secondary sm @click="deleteExercise(exercise).then(switchToListMode)">{{ $t('delete') }}</b-button>
-                </li>
-              </ul>
-            </template>
-            <p v-else>{{ $t('noExercises') }}</p>
-          </loading>
-          <p class="d-grid"><b-button primary @click="switchToCreateMode('')">{{ $t('create') }}</b-button></p>
-        </template>
-        <template v-else>
-          <ExerciseForm
-            ref="exerciseForm"
-            :fixedNumber="mode === 'edit'"
-            v-model="currentExercise.attributes"
-          />
-          <div v-if="mode === 'create'" class="mb-3">
-            <b-button secondary type="text" @click="switchToListMode()">{{ $t('cancel') }}</b-button>
-            <b-button primary type="text" @click="createExercise().then(() => switchToCreateMode(currentExercise.attributes.number + 1))" :disabled="currentExercise.attributes.number === ''">{{ $t('save.next') }}</b-button>
-          </div>
-          <div v-else-if="mode === 'edit'" class="mb-3">
-            <b-button secondary type="text" @click="switchToListMode()">{{ $t('cancel') }}</b-button>
-            <b-button primary type="text" @click="updateExercise().then(switchToListMode)">{{ $t('save') }}</b-button>
-          </div>
-        </template>
+        <loading :loading="modeIsLoading">
+          <template v-if="mode === 'list'">
+            <loading :loading="loadingExercises">
+              <template v-if="exercisesOnPage.length">
+                <p>{{ $t('existingExercises') }}</p>
+                <ul>
+                  <li v-for="exercise in exercisesOnPage">
+                    <strong>{{ exercise.attributes.number }}</strong> {{ ellipsis(exercise.attributes.instructions) }}
+                    <b-button primary sm @click="switchToEditMode(exercise)">{{ $t('edit') }}</b-button>
+                    <b-button secondary sm @click="deleteExercise(exercise)">{{ $t('delete') }}</b-button>
+                  </li>
+                </ul>
+              </template>
+              <p v-else>{{ $t('noExercises') }}</p>
+            </loading>
+            <p class="d-grid"><b-button primary @click="switchToCreateMode('')">{{ $t('create') }}</b-button></p>
+          </template>
+          <template v-else>
+            <ExerciseForm
+              ref="exerciseForm"
+              :fixedNumber="mode === 'edit'"
+              v-model="currentExercise.attributes"
+              @extractionEvent="(event) => extractionEvents.push(event)"
+            />
+            <div class="mb-3">
+              <b-button secondary type="text" @click="switchToListMode">{{ $t('cancel') }}</b-button>
+              <template v-if="mode === 'create'">
+                <b-button primary type="text" @click="createExercise" :disabled="currentExercise.attributes.number === ''">{{ $t('save.next') }}</b-button>
+              </template>
+              <template v-else-if="mode === 'edit'">
+                <b-button primary type="text" @click="updateExercise">{{ $t('save') }}</b-button>
+              </template>
+            </div>
+          </template>
+        </loading>
       </b-col>
       <b-col>
         <h1>{{ $t('visualization') }}</h1>

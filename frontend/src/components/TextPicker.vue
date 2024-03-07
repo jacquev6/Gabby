@@ -69,11 +69,14 @@ function pointerup(event) {
   if (startPoint !== null) {
     clearCanvas()
 
-    const r = selectionRectangle(startPoint, makeCanvasPoint(event))
+    const stopPoint = makeCanvasPoint(event)
+    const r = selectionRectangle(startPoint, stopPoint)
 
     const lines = ['']
     var previousItem = null
+    const items = []
     for (const item of props.textContent.filter(r.contains)) {
+      items.push(item)
       if (previousItem !== null) {
         if (Math.abs(previousItem.bottom - item.bottom) > textSpacingTolerance) {
           lines.push('')
@@ -98,7 +101,13 @@ function pointerup(event) {
     }
 
     if (text !== '') {
-      emit('text-selected', text, {clientX: event.clientX, clientY: event.clientY})
+      emit(
+        'text-selected',
+        text,
+        {clientX: event.clientX, clientY: event.clientY},
+        items,
+        {start: {x: startPoint.x, y: startPoint.y}, stop: {x: stopPoint.x, y: stopPoint.y}},
+      )
     }
 
     startPoint = null

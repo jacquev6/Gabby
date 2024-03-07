@@ -317,6 +317,7 @@ class TextbookTests(APITransactionTestCase):
                         "instructions": "", "example": "", "clue": "", "wording": "",
                     },
                     "relationships": {
+                        "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "1"}},
                     },
                 },
@@ -329,6 +330,7 @@ class TextbookTests(APITransactionTestCase):
                         "instructions": "", "example": "", "clue": "", "wording": "",
                     },
                     "relationships": {
+                        "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "1"}},
                     },
                 },
@@ -494,7 +496,10 @@ class TextbookTests(APITransactionTestCase):
                         "page": 12, "number": 4,
                         "instructions": "", "example": "", "clue": "", "wording": "",
                     },
-                    "relationships": {"textbook": {"data": {"id": "1", "type": "textbook"}}},
+                    "relationships": {
+                        "extractionEvents": {"data": [], "meta": {"count": 0}},
+                        "textbook": {"data": {"id": "1", "type": "textbook"}},
+                    },
                     "links": {"self": "http://testserver/api/exercises/1"},
                 },
                 {
@@ -504,7 +509,10 @@ class TextbookTests(APITransactionTestCase):
                         "page": 13, "number": 5,
                         "instructions": "", "example": "", "clue": "", "wording": "",
                     },
-                    "relationships": {"textbook": {"data": {"id": "1", "type": "textbook"}}},
+                    "relationships": {
+                        "extractionEvents": {"data": [], "meta": {"count": 0}},
+                        "textbook": {"data": {"id": "1", "type": "textbook"}},
+                    },
                     "links": {"self": "http://testserver/api/exercises/2"},
                 },
                 {
@@ -514,7 +522,10 @@ class TextbookTests(APITransactionTestCase):
                         "page": 14, "number": 6,
                         "instructions": "", "example": "", "clue": "", "wording": "",
                     },
-                    "relationships": {"textbook": {"data": {"id": "2", "type": "textbook"}}},
+                    "relationships": {
+                        "extractionEvents": {"data": [], "meta": {"count": 0}},
+                        "textbook": {"data": {"id": "2", "type": "textbook"}},
+                    },
                     "links": {"self": "http://testserver/api/exercises/3"},
                 },
             ],
@@ -555,7 +566,10 @@ class TextbookTests(APITransactionTestCase):
                         "page": 15, "number": 7,
                         "instructions": "", "example": "", "clue": "", "wording": "",
                     },
-                    "relationships": {"textbook": {"data": {"id": "3", "type": "textbook"}}},
+                    "relationships": {
+                        "extractionEvents": {"data": [], "meta": {"count": 0}},
+                        "textbook": {"data": {"id": "3", "type": "textbook"}},
+                    },
                     "links": {"self": "http://testserver/api/exercises/4"},
                 },
                 {
@@ -565,7 +579,10 @@ class TextbookTests(APITransactionTestCase):
                         "page": 16, "number": 8,
                         "instructions": "", "example": "", "clue": "", "wording": "",
                     },
-                    "relationships": {"textbook": {"data": {"id": "3", "type": "textbook"}}},
+                    "relationships": {
+                        "extractionEvents": {"data": [], "meta": {"count": 0}},
+                        "textbook": {"data": {"id": "3", "type": "textbook"}},
+                    },
                     "links": {"self": "http://testserver/api/exercises/5"},
                 },
                 {
@@ -575,7 +592,10 @@ class TextbookTests(APITransactionTestCase):
                         "page": 17, "number": 9,
                         "instructions": "", "example": "", "clue": "", "wording": "",
                     },
-                    "relationships": {"textbook": {"data": {"id": "3", "type": "textbook"}}},
+                    "relationships": {
+                        "extractionEvents": {"data": [], "meta": {"count": 0}},
+                        "textbook": {"data": {"id": "3", "type": "textbook"}},
+                    },
                     "links": {"self": "http://testserver/api/exercises/6"},
                 },
             ],
@@ -778,6 +798,7 @@ class ExerciseTests(APITransactionTestCase):
                     "page": 12, "number": 42,
                 },
                 "relationships": {
+                    "extractionEvents": {"data": []},
                     "textbook": {"data": {"type": "textbook", "id": "1"}},
                 },
             },
@@ -794,6 +815,7 @@ class ExerciseTests(APITransactionTestCase):
                     "instructions": "", "example": "", "clue": "", "wording": "",
                 },
                 "relationships": {
+                    "extractionEvents": {"data": [], "meta": {"count": 0}},
                     "textbook": {
                         "data": {
                             "type": "textbook",
@@ -824,6 +846,7 @@ class ExerciseTests(APITransactionTestCase):
                     "instructions": "instructions", "example": "example", "clue": "clue", "wording": "wording",
                 },
                 "relationships": {
+                    "extractionEvents": {"data": []},
                     "textbook": {"data": {"type": "textbook", "id": "1"}},
                 },
             },
@@ -840,6 +863,7 @@ class ExerciseTests(APITransactionTestCase):
                     "instructions": "instructions", "example": "example", "clue": "clue", "wording": "wording",
                 },
                 "relationships": {
+                    "extractionEvents": {"data": [], "meta": {"count": 0}},
                     "textbook": {
                         "data": {
                             "type": "textbook",
@@ -883,6 +907,7 @@ class ExerciseTests(APITransactionTestCase):
                     "instructions": "instructions", "example": "example", "clue": "clue", "wording": "wording",
                 },
                 "relationships": {
+                    "extractionEvents": {"data": [], "meta": {"count": 0}},
                     "textbook": {"data": {"type": "textbook", "id": "1"}},
                 },
             },
@@ -910,6 +935,7 @@ class ExerciseTests(APITransactionTestCase):
                     "instructions": "instructions", "example": "example", "clue": "clue", "wording": "wording",
                 },
                 "relationships": {
+                    "extractionEvents": {"data": [], "meta": {"count": 0}},
                     "textbook": {"data": {"type": "textbook", "id": "1"}},
                 },
             },
@@ -948,6 +974,7 @@ class ExerciseTests(APITransactionTestCase):
                         "instructions": "", "example": "", "clue": "", "wording": "",
                     },
                     "relationships": {
+                        "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "1"}},
                     },
                 },
@@ -960,6 +987,7 @@ class ExerciseTests(APITransactionTestCase):
                         "instructions": "", "example": "", "clue": "", "wording": "",
                     },
                     "relationships": {
+                        "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "1"}},
                     },
                 },
@@ -986,6 +1014,7 @@ class ExerciseTests(APITransactionTestCase):
                         "instructions": "", "example": "", "clue": "", "wording": "",
                     },
                     "relationships": {
+                        "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "1"}},
                     },
                 },
@@ -1018,6 +1047,7 @@ class ExerciseTests(APITransactionTestCase):
                         "instructions": "", "example": "", "clue": "", "wording": "",
                     },
                     "relationships": {
+                        "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "1"}},
                     },
                 },
@@ -1030,6 +1060,7 @@ class ExerciseTests(APITransactionTestCase):
                         "instructions": "", "example": "", "clue": "", "wording": "",
                     },
                     "relationships": {
+                        "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "1"}},
                     },
                 },
@@ -1078,6 +1109,7 @@ class ExerciseTests(APITransactionTestCase):
                         "instructions": "", "example": "", "clue": "", "wording": "",
                     },
                     "relationships": {
+                        "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "1"}},
                     },
                 },
@@ -1090,6 +1122,7 @@ class ExerciseTests(APITransactionTestCase):
                         "instructions": "", "example": "", "clue": "", "wording": "",
                     },
                     "relationships": {
+                        "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "2"}},
                     },
                 },
@@ -1162,6 +1195,7 @@ class ExerciseTests(APITransactionTestCase):
                         "instructions": "", "example": "", "clue": "", "wording": "",
                     },
                     "relationships": {
+                        "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "1"}},
                     },
                 },
@@ -1174,6 +1208,7 @@ class ExerciseTests(APITransactionTestCase):
                         "instructions": "", "example": "", "clue": "", "wording": "",
                     },
                     "relationships": {
+                        "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "1"}},
                     },
                 },
@@ -1200,6 +1235,7 @@ class ExerciseTests(APITransactionTestCase):
                         "instructions": "", "example": "", "clue": "", "wording": "",
                     },
                     "relationships": {
+                        "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "1"}},
                     },
                 },
@@ -1254,6 +1290,7 @@ class ExerciseTests(APITransactionTestCase):
                     "instructions": "INSTRUCTIONS", "example": "EXAMPLE", "clue": "CLUE", "wording": "WORDING",
                 },
                 "relationships": {
+                    "extractionEvents": {"data": [], "meta": {"count": 0}},
                     "textbook": {"data": {"type": "textbook", "id": "1"}},
                 },
             },
@@ -1301,6 +1338,7 @@ class ExerciseTests(APITransactionTestCase):
                     "instructions": "INSTRUCTIONS", "example": "example", "clue": "clue", "wording": "wording",
                 },
                 "relationships": {
+                    "extractionEvents": {"data": [], "meta": {"count": 0}},
                     "textbook": {"data": {"type": "textbook", "id": "1"}},
                 },
             },
@@ -1535,7 +1573,10 @@ class RealisticUseTests(APITransactionTestCase):
                         "page": 16, "number": 11,
                         "instructions": "instructions", "clue": "clue", "example": "example", "wording": "wording",
                     },
-                    "relationships": {"textbook": {"data": {"id": "2", "type": "textbook"}}},
+                    "relationships": {
+                        "extractionEvents": {"data": [], "meta": {"count": 0}},
+                        "textbook": {"data": {"id": "2", "type": "textbook"}},
+                    },
                 }
             ],
             "links": {
@@ -1557,6 +1598,7 @@ class RealisticUseTests(APITransactionTestCase):
                     "instructions": "instructions", "example": "example", "clue": "clue", "wording": "wording",
                 },
                 "relationships": {
+                    "extractionEvents": {"data": [], "meta": {"count": 0}},
                     "textbook": {"data": {"type": "textbook", "id": "2"}},
                 },
             },
@@ -1573,6 +1615,7 @@ class RealisticUseTests(APITransactionTestCase):
                     "instructions": "instructions", "example": "example", "clue": "clue", "wording": "wording",
                 },
                 "relationships": {
+                    "extractionEvents": {"data": [], "meta": {"count": 0}},
                     "textbook": {"data": {"type": "textbook", "id": "2"}},
                 },
             },
