@@ -74,20 +74,26 @@ const textbooks = computedAsync(
 <template>
   <b-row>
     <b-col>
-      <h1>Ouvrir un PDF</h1>
-      <loading :loading="loadingPdf">
-        <BInput :label="$t('inputFile')" type="file" accept=".pdf" @change="(e) => loadPdf(e.target.files[0])" />
-        <p>(Ou ouvrir le <a href="#" @click.prevent="loadPdf({url: '/test.pdf'})">PDF de test</a>)</p>
-      </loading>
-      <h1>PDFs ouverts</h1>
-      <ul v-if="pdfs.known.length">
-        <li v-for="info in pdfs.known">
-          <a href="#" @click.prevent="pdfs.getDocument(info.sha256).then((document) => lastPdfOpened = {info, document})">{{ info.name }}</a>
-          ({{ info.size }} octets)
-          <b-button sm secondary @click="pdfs.close(info.sha256)">Fermer</b-button>
-        </li>
-      </ul>
-      <p v-else>Aucun PDF ouvert actuellement.</p>
+      <b-row>
+        <b-col>
+          <h1>Ouvrir un PDF</h1>
+          <loading :loading="loadingPdf">
+            <BInput :label="$t('inputFile')" type="file" accept=".pdf" @change="(e) => loadPdf(e.target.files[0])" />
+            <p>(Ou ouvrir le <a href="#" @click.prevent="loadPdf({url: '/test.pdf'})">PDF de test</a>)</p>
+          </loading>
+        </b-col>
+        <b-col>
+          <h1>PDFs ouverts</h1>
+          <ul v-if="pdfs.known.length">
+            <li v-for="info in pdfs.known">
+              <a href="#" @click.prevent="pdfs.getDocument(info.sha256).then((document) => lastPdfOpened = {info, document})">{{ info.name }}</a>
+              ({{ info.size }} octets)
+              <b-button sm secondary @click="pdfs.close(info.sha256)">Fermer</b-button>
+            </li>
+          </ul>
+          <p v-else>Aucun PDF ouvert actuellement.</p>
+        </b-col>
+      </b-row>
       <template v-if="lastPdfOpened">
         <h1>PDF sélectionné <b-button sm secondary @click="lastPdfOpened = null">Désélectionner</b-button></h1>
         <b-row>
