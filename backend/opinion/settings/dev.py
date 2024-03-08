@@ -61,7 +61,7 @@ DATABASES = {
         "NAME": "db",
         "USER": "admin",
         "PASSWORD": "password",
-        "HOST": "dev-db",
+        "HOST": "db",
     },
 }
 
