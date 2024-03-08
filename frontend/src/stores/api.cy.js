@@ -4,8 +4,20 @@ import { defineApiStore } from './api.js'
 
 
 const useApiStore = defineApiStore('api', {baseUrl: 'http://fanout:8080/api/'})
+// @todo Synchronize between tabs:
+// Make api.cache an option store, synchronized using 'pinia-shared-state'
+// Make api.client a simple manipulator of the cache, not an actual store
+
+// @todo Make api.client.get_all return a reactive object
+// Very useful once state is shared between tabs
+// Test:
+// - get and display the pings twice
+// - add a ping, refresh one list explicitly
+// - observe that the second list is updated as well
 
 describe('ApiStore', () => {
+  before(console.clear)
+
   beforeEach(() => {
     setActivePinia(createPinia())
     cy.request('POST', 'http://fanout:8080/reset-for-tests/yes-im-sure?fixtures=test-pings')
