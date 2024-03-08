@@ -53,7 +53,7 @@ async function save() {
 
 function show(id) {
   sectionId.value = id
-  const section = api.cache.get('section', id)
+  const section = api.cache.get_one('section', id)
   pdfFileFirstPage.value = section.attributes.pdfFileStartPage
   pdfFileLastPage.value = section.attributes.pdfFileStartPage + section.attributes.pagesCount - 1
   textbookFirstPage.value = section.attributes.textbookStartPage

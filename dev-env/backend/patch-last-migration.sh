@@ -18,3 +18,4 @@ docker compose exec backend ./manage.py makemigrations textbooks
 docker compose exec backend ./manage.py migrate textbooks
 docker compose exec backend ./manage.py loaddata test-exercises
 docker compose exec backend bash -c './manage.py shell <../dev-env/backend/startup.py'
+docker compose exec backend ./manage.py graph_models textbooks --disable-sort-fields --rankdir BT --output textbooks/models.png

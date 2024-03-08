@@ -14,14 +14,9 @@ import SectionEditor from '../components/SectionEditor.vue'
 
 
 const props = defineProps({
-  textbookId: {
-    type: String,
-    required: true,
-  },
-  page: {
-    type: Number,
-    required: true,
-  },
+  projectId: {type: String, required: true},
+  textbookId: {type: String, required: true},
+  page: {type: Number, required: true},
 })
 
 // @todo(Feature, now) Set title according to props
@@ -108,7 +103,7 @@ const exercisesOnPage = computedAsync(
       refreshCounter.value = 1
     }
     if (mode.value === 'list') {
-      return await api.client.get_all('exercises', {filter: {textbook: props.textbookId, page: props.page}})
+      return await api.client.get_all('exercises', {include: 'textbookExercise', filter: {'textbookExercise.textbook': props.textbookId, 'textbookExercise.page': props.page}})
     } else {
       return []
     }
@@ -185,10 +180,19 @@ function textSelected(text, point, textItems, rectangle) {
 
 async function createExercise() {
   modeIsLoading.value = true
+  const textbookExercise = await api.client.post(
+    'textbookExercise',
+    {page: props.page, number: currentExercise.attributes.number},
+    {textbook: {type: 'textbook', id: props.textbookId}},
+  )
   const exercise = await api.client.post(
     'exercise',
-    {page: props.page, ...currentExercise.attributes},
-    {textbook: {type: 'textbook', id: props.textbookId}, extractionEvents: []},
+    currentExercise.attributes,
+    {
+      project: {type: 'project', id: props.projectId},
+      textbookExercise: {type: 'textbookExercise', id: textbookExercise.id},
+      extractionEvents: [],
+    },
   )
   for (const event of extractionEvents) {
     await api.client.post(
@@ -231,7 +235,7 @@ watch(() => props.page, (n) => {
 watch(requestedPage, (requested) => {
   const page = Number.parseInt(requested, 10)
   if (Number.isInteger(page) && page >= 1 && page <= textbookPagesCount.value) {
-    router.push({name: 'textbook-page', params: {textbookId: props.textbookId, page}})
+    router.push({name: 'project-textbook-page', params: {projectId: props.projectId, textbookId: props.textbookId, page}})
   }
 })
 </script>
@@ -241,11 +245,11 @@ watch(requestedPage, (requested) => {
     <b-row>
       <b-col>
         <p class="text-center">
-          <router-link :to="{name: 'textbook-page', params: {textbookId, page: page - 1}}" custom v-slot="{ navigate }" >
+          <router-link :to="{name: 'project-textbook-page', params: {projectId, textbookId, page: page - 1}}" custom v-slot="{ navigate }" >
             <b-button primary sm :disabled="disablePrevPage" @click="navigate">&lt;</b-button>
           </router-link>
           <label>{{ $t('Page') }} <input class="number-no-spin" v-model="requestedPage" type="number" min="1" :max="textbookPagesCount" :disabled="disableSetPage" @blur="requestedPage = page"/> {{ $t('pageOver', textbookPagesCount) }}</label>
-          <router-link :to="{name: 'textbook-page', params: {textbookId, page: page + 1}}" custom v-slot="{ navigate }" >
+          <router-link :to="{name: 'project-textbook-page', params: {projectId, textbookId, page: page + 1}}" custom v-slot="{ navigate }" >
             <b-button primary sm :disabled="disableNextPage" @click="navigate">&gt;</b-button>
           </router-link>
           <b-button secondary sm :disabled="!section" @click="sectionEditor.show(section.id)">&#9881;</b-button>
@@ -291,7 +295,7 @@ watch(requestedPage, (requested) => {
                 <p>{{ $t('existingExercises') }}</p>
                 <ul>
                   <li v-for="exercise in exercisesOnPage">
-                    <strong>{{ exercise.attributes.number }}</strong> {{ ellipsis(exercise.attributes.instructions) }}
+                    <strong>{{ exercise.relationships.textbookExercise.attributes.number }}</strong> {{ ellipsis(exercise.attributes.instructions) }}
                     <b-button primary sm @click="switchToEditMode(exercise)">{{ $t('edit') }}</b-button>
                     <b-button secondary sm @click="deleteExercise(exercise)">{{ $t('delete') }}</b-button>
                   </li>
@@ -323,17 +327,6 @@ watch(requestedPage, (requested) => {
       <b-col>
         <h1>{{ $t('visualization') }}</h1>
         <p>({{ $t('not-yet-implemented') }})</p>
-        <template v-if="mode !== 'list'">
-          <!-- @todo(Feature, later) Retrieve from the back-end -->
-          <p>{{ $t('instructions') }}:</p>
-          <p>{{ currentExercise.attributes.instructions }}</p>
-          <p>{{ $t('example') }}:</p>
-          <p>{{ currentExercise.attributes.example }}</p>
-          <p>{{ $t('clue') }}:</p>
-          <p>{{ currentExercise.attributes.clue }}</p>
-          <p>{{ $t('wording') }}:</p>
-          <p>{{ currentExercise.attributes.wording }}</p>
-        </template>
       </b-col>
     </b-row>
   </loading>

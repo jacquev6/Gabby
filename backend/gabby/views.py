@@ -1,5 +1,6 @@
 import django.core.management
 import django.http
+from django.contrib.auth.models import User
 
 
 def reset_for_tests(request):
@@ -9,5 +10,9 @@ def reset_for_tests(request):
     django.core.management.call_command("migrate", interactive=False)
     for fixture in request.GET.getlist("fixtures"):
         django.core.management.call_command("loaddata", fixture)
-    # django.core.management.call_command("loaddata", "test-exercises")
+    User.objects.create_superuser(
+        "admin",
+        email="admin@localhost",
+        password="password",
+    )
     return django.http.HttpResponse("OK")

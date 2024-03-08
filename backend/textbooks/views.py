@@ -1,7 +1,8 @@
 from rest_framework_json_api.views import ModelViewSet
 
-from .models import PdfFile, PdfFileNaming, Textbook, Section, Exercise, ExtractionEvent
-from .serializers import PdfFileSerializer, PdfFileNamingSerializer, TextbookSerializer, SectionSerializer, ExerciseSerializer, ExtractionEventSerializer
+from .models import PdfFile, PdfFileNaming, Textbook, Section, TextbookExercise, Project, Exercise, ExtractionEvent
+from .serializers import PdfFileSerializer, PdfFileNamingSerializer, TextbookSerializer, SectionSerializer, TextbookExerciseSerializer, ProjectSerializer, ExerciseSerializer, ExtractionEventSerializer
+
 
 
 class PdfFileViewSet(ModelViewSet):
@@ -22,17 +23,24 @@ class TextbookViewSet(ModelViewSet):
 class SectionViewSet(ModelViewSet):
     queryset = Section.objects.order_by("id")
     serializer_class = SectionSerializer
-    filterset_fields = {
-        "pdf_file__sha256": ["exact"],
-    }
+
+
+class TextbookExerciseViewSet(ModelViewSet):
+    queryset = TextbookExercise.objects.order_by("id")
+    serializer_class = TextbookExerciseSerializer
+
+
+class ProjectViewSet(ModelViewSet):
+    queryset = Project.objects.order_by("id")
+    serializer_class = ProjectSerializer
 
 
 class ExerciseViewSet(ModelViewSet):
     queryset = Exercise.objects.order_by("id")
     serializer_class = ExerciseSerializer
     filterset_fields = {
-        "textbook": ["exact"],
-        "page": ["exact"],
+        "textbook_exercise__textbook": ["exact"],
+        "textbook_exercise__page": ["exact"],
     }
 
 

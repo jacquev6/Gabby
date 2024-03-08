@@ -57,6 +57,7 @@ describe('Extraction events', () => {
       {kind: 'WordingSetManually', value: 'Ceci est l\'énoncé'},
     ])
 
+    // @todo Log a rectangle around the whole exercise
     cy.wrap(getAllExtractionEvents).then(f => f(5)).should('deep.eq', [
       {kind: 'ExerciseNumberSetAutomatically', value: 2},
       {

@@ -5,3 +5,5 @@ uritemplate  # For Swagger
 django-cors-headers
 django-dbbackup  # For backups
 django-storages[s3]  # For backups
+django-extensions
+pydotplus

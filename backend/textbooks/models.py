@@ -1,7 +1,8 @@
 from django.core.validators import RegexValidator
+from django.db import models
 from django.db.models import Model
 from django.db.models import CharField, ForeignKey, IntegerField, TextField, AutoField
-from django.db.models import CASCADE, PROTECT
+from django.db.models import CASCADE
 
 
 # @todo(Feature, later) Add timestamps (created_at, modified_at, etc.) and user ids (created_by, modified_by, etc.) to all models
@@ -32,7 +33,7 @@ class PdfFile(Model):
 
 
 class PdfFileNaming(Model):
-    pdf_file = ForeignKey(PdfFile, on_delete=CASCADE, related_name="namings")
+    pdf_file = ForeignKey(PdfFile, on_delete=models.CASCADE, related_name="namings")
 
     name = CharField(null=False, blank=False, max_length=255)
     # Could have other fields, e.g. the user who named it
@@ -41,8 +42,20 @@ class PdfFileNaming(Model):
         unique_together = ["pdf_file", "name"]
 
 
+class Project(Model):
+    id = AutoField(primary_key=True)
+
+    title = CharField(null=True, blank=False, max_length=255)
+    description = TextField(null=True, blank=False)
+
+    def __str__(self):
+        return f"Project '{self.title}'"
+
+
 class Textbook(Model):
     id = AutoField(primary_key=True)
+
+    project = ForeignKey(Project, on_delete=CASCADE, related_name="textbooks")
 
     title = CharField(null=False, blank=False, max_length=255)
     publisher = CharField(null=True, blank=False, max_length=255)  # De-normalized
@@ -60,11 +73,29 @@ class Textbook(Model):
         return f'"{self.title}" by {self.publisher} ({self.year})'
 
 
+class TextbookExercise(Model):
+    id = AutoField(primary_key=True)
+
+    textbook = ForeignKey(Textbook, on_delete=CASCADE, related_name="exercises")
+    page = IntegerField(null=False)
+    # Exercise 'numbers' may very well not be actual numbers
+    # (e.g. single letters, or combinations of digits, letters and dots)
+    # But sorting such identifiers properly requires specification and implementation,
+    # so for now we assume they are indeed numbers.
+    number = IntegerField(null=False)
+
+    class Meta:
+        unique_together = ["textbook", "page", "number"]
+
+    def __str__(self):
+        return f"Exercise {self.number} page {self.page} in {self.textbook.short_str()}"
+
+
 class Section(Model):
     id = AutoField(primary_key=True)
 
-    textbook = ForeignKey(Textbook, on_delete=CASCADE, related_name="sections")
-    pdf_file = ForeignKey(PdfFile, on_delete=CASCADE, related_name="sections")
+    textbook = ForeignKey(Textbook, on_delete=models.CASCADE, related_name="sections")
+    pdf_file = ForeignKey(PdfFile, on_delete=models.CASCADE, related_name="sections")
 
     textbook_start_page = IntegerField(null=False)
     pdf_file_start_page = IntegerField(null=False)
@@ -77,16 +108,11 @@ class Section(Model):
 class Exercise(Model):
     id = AutoField(primary_key=True)
 
-    textbook = ForeignKey(Textbook, on_delete=PROTECT, related_name="exercises")
-    page = IntegerField(null=False)
-    # Exercise 'numbers' may very well not be actual numbers
-    # (e.g. single letters, or combinations of digits, letters and dots)
-    # But sorting such identifiers properly requires specification and implementation,
-    # so for now we assume they are indeed numbers.
-    number = IntegerField(null=False)
+    project = models.ForeignKey(Project, null=False, on_delete=models.CASCADE, related_name="exercises")
 
-    class Meta:
-        unique_together = ["textbook", "page", "number"]
+    # Morally, these two fields are exclusive, but this is not enforced
+    textbook_exercise = models.ForeignKey(TextbookExercise, null=True, default=None, on_delete=models.SET_NULL, related_name="exercise")
+    title = CharField(null=False, blank=True, max_length=255)
 
     instructions = TextField(null=False, blank=True)
     example = TextField(null=False, blank=True)
@@ -94,7 +120,10 @@ class Exercise(Model):
     wording = TextField(null=False, blank=True)
 
     def __str__(self):
-        return f"Exercice {self.number} page {self.page} in {self.textbook.short_str()}"
+        if self.textbook_exercise:
+            return f"{self.textbook_exercise}, extracted"
+        else:
+            return f"Exercice '{self.title}'"
 
 
 class ExtractionEvent(Model):

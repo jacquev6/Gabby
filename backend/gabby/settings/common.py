@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     "corsheaders",
     'rest_framework',
     'rest_framework_json_api',
+    "django_extensions",
     "dbbackup",
     'textbooks',
 ]
