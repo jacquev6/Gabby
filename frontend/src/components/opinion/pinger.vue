@@ -47,6 +47,8 @@ async function deletePing(id) {
           <b-button sm secondary @click="setMessage(ping.id)">Set message</b-button>
           <b-button sm secondary @click="resetMessage(ping.id)">Reset message</b-button>
           <b-button sm secondary @click="deletePing(ping.id)">Delete</b-button>
+          <template v-if="ping.relationships.prev">Prev: {{ ping.relationships.prev.id }}</template>
+          <template v-if="ping.relationships.next.length">Next:<template v-for="next in ping.relationships.next">&nbsp;{{ next.id }}</template></template>
         </b-busy>
       </li>
     </ul>

@@ -41,20 +41,16 @@ describe('ApiStore', () => {
     cy.expect(pings[2].id).to.equal('3')
 
     const after = api.cache.getOne('ping', '1')
-    cy.expect(after.type).to.equal('ping')
-    cy.expect(after.id).to.equal('1')
-    cy.expect(after.inCache).to.be.true
-    cy.expect(after.exists).to.be.true
-    cy.expect(after.attributes.message).to.equal('Hello 1')
-    cy.expect(after.relationships.prev).to.be.null
 
     // Previously existing reference is still usable and has been updated
-    cy.expect(before.type).to.equal('ping')
-    cy.expect(before.id).to.equal('1')
-    cy.expect(before.inCache).to.be.true
-    cy.expect(before.exists).to.be.true
-    cy.expect(before.attributes.message).to.equal('Hello 1')
-    cy.expect(before.relationships.prev).to.be.null
+    for (const ping of [before, pings[0], after]) {
+      cy.expect(ping.type).to.equal('ping')
+      cy.expect(ping.id).to.equal('1')
+      cy.expect(ping.inCache).to.be.true
+      cy.expect(ping.exists).to.be.true
+      cy.expect(ping.attributes.message).to.equal('Hello 1')
+      cy.expect(ping.relationships.prev).to.be.null
+    }
 
     // Implementation details that brings a lot of safety to the assertions above
     cy.expect(after).to.equal(before)
@@ -95,21 +91,16 @@ describe('ApiStore', () => {
     cy.expect(got.relationships.next.length).to.equal(0)
 
     const after = api.cache.getOne('ping', '1')
-    cy.expect(after.type).to.equal('ping')
-    cy.expect(after.id).to.equal('1')
-    cy.expect(after.inCache).to.be.true
-    cy.expect(after.exists).to.be.true
-    cy.expect(after.attributes.message).to.equal('Hello 1')
-    cy.expect(after.relationships.prev).to.be.null
-    cy.expect(after.relationships.next.length).to.equal(0)
 
-    cy.expect(before.type).to.equal('ping')
-    cy.expect(before.id).to.equal('1')
-    cy.expect(before.inCache).to.be.true
-    cy.expect(before.exists).to.be.true
-    cy.expect(before.attributes.message).to.equal('Hello 1')
-    cy.expect(before.relationships.prev).to.be.null
-    cy.expect(before.relationships.next.length).to.equal(0)
+    for (const ping of [before, after]) {
+      cy.expect(ping.type).to.equal('ping')
+      cy.expect(ping.id).to.equal('1')
+      cy.expect(ping.inCache).to.be.true
+      cy.expect(ping.exists).to.be.true
+      cy.expect(ping.attributes.message).to.equal('Hello 1')
+      cy.expect(ping.relationships.prev).to.be.null
+      cy.expect(ping.relationships.next.length).to.equal(0)
+    }
 
     cy.expect(after).to.equal(before)
     cy.expect(got).to.equal(before)
@@ -258,6 +249,7 @@ describe('ApiStore', () => {
 
     const got = await api.client.getOne('ping', '0')
     const cached = api.cache.getOne('ping', '0')
+
     for (const ping of [got, cached]) {
       cy.expect(ping.type).to.equal('ping')
       cy.expect(ping.id).to.equal('0')
@@ -458,19 +450,15 @@ describe('ApiStore', () => {
     cy.expect((await api.client.getAll('pings')).length).to.equal(5)
 
     const after = api.cache.getOne('ping', '1')
-    cy.expect(after.type).to.equal('ping')
-    cy.expect(after.id).to.equal('1')
-    cy.expect(after.inCache).to.be.true
-    cy.expect(after.exists).to.be.false
-    cy.expect(after.attributes).to.be.undefined
-    cy.expect(after.relationships).to.be.undefined
 
-    cy.expect(before.type).to.equal('ping')
-    cy.expect(before.id).to.equal('1')
-    cy.expect(before.inCache).to.be.true
-    cy.expect(before.exists).to.be.false
-    cy.expect(before.attributes).to.be.undefined
-    cy.expect(before.relationships).to.be.undefined
+    for (const ping of [before, after]) {
+      cy.expect(ping.type).to.equal('ping')
+      cy.expect(ping.id).to.equal('1')
+      cy.expect(ping.inCache).to.be.true
+      cy.expect(ping.exists).to.be.false
+      cy.expect(ping.attributes).to.be.undefined
+      cy.expect(ping.relationships).to.be.undefined
+    }
 
     cy.expect(after).to.equal(before)
   })
@@ -585,22 +573,8 @@ describe('ApiStore', () => {
     cy.expect(pings.length).to.equal(5)
   })
 
-  // it('returns the same list when the same request is made twice', async () => {
-  //   const api = useApiStore()
-
-  //   const pings1 = await api.client.getAll('pings')
-  //   const pings2 = await api.client.getAll('pings')
-
-  //   cy.expect(pings1).to.equal(pings2)
-  // })
-
-  // it('returns the same list when the same request is made twice at the same time', async () => {
-  //   const api = useApiStore()
-
-  //   const pings1 = api.client.getAll('pings')
-  //   const pings2 = api.client.getAll('pings')
-
-  //   cy.expect(await pings1).to.equal(await pings2)
+  // @todo Implement: remove the ping from the relationship list (lazily in 'get relationships', not proactively)
+  // it('deletes one ping that was in a relationship', async () => {
   // })
 
   it('reacts to ping message edition', () => {
@@ -632,6 +606,7 @@ describe('ApiStore', () => {
   it('reacts to ping creation', () => {
     cy.mount(TestComponent)
 
+    cy.get('.spinner-border').should('not.exist')
     cy.get('li').should('have.length', 12)
 
     cy.get('button').contains('Ping').click()
