@@ -12,5 +12,5 @@ docker compose exec \
       --component
 
 
-# @todo(Project management, soon) Ensure that templates have no untranslated content
-# @body(Project management, soon) Ensure that no data-bs-* attributes are used
+# @todo Ensure that templates have no untranslated content
+# @body Ensure that no data-bs-* attributes are used
