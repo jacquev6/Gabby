@@ -6,7 +6,7 @@ describe('Gabby', () => {
 
     cy.visit('/')
 
-    cy.waitUntilLoaded()
+    cy.get('.spinner-border').should('not.exist')
 
     cy.get('p').contains('Aucun projet pour le moment.').should('exist')
     cy.get('button').contains('Créer').should('be.disabled')
@@ -14,7 +14,7 @@ describe('Gabby', () => {
     cy.get('label').contains('Description').next().type('Quelques exercices de Slabeuf.')
     cy.get('button').contains('Créer').should('be.enabled').click()
 
-    cy.waitUntilLoaded()
+    cy.get('.spinner-border').should('not.exist')
 
     cy.get('p').contains('Aucun exercice pour le moment.').should('exist')
     cy.get('button').contains('Créer').should('be.disabled')
@@ -25,7 +25,7 @@ describe('Gabby', () => {
     cy.get('label').contains('ISBN').next().type('01234567890123')
     cy.get('button').contains('Créer').should('be.enabled').click()
 
-    cy.waitUntilLoaded()
+    cy.get('.spinner-border').should('not.exist')
 
     // cy.screenshot('doc/index-new-pdf', { clip: { x: 0, y: 200, width: 666, height: 400 } })
 
@@ -35,7 +35,7 @@ describe('Gabby', () => {
     // cy.get('button').contains('>').should('be.enabled')
 
     // cy.get('button').contains('>').click()
-    // cy.waitUntilLoaded()
+    // cy.get('.spinner-border').should('not.exist')
 
     // cy.get('input[type=file]').should('have.value', 'C:\\fakepath\\test.pdf').should('be.enabled')
     // cy.get('button').contains('<').should('be.enabled')
@@ -129,7 +129,7 @@ describe('Gabby', () => {
 
     cy.visit('/')
 
-    cy.waitUntilLoaded()
+    cy.get('.spinner-border').should('not.exist')
 
     cy.get('p').contains('Aucun projet pour le moment.').should('exist')
     cy.get('button').contains('Créer').should('be.disabled')
@@ -139,7 +139,7 @@ describe('Gabby', () => {
     cy.get('button').contains('Créer').should('be.enabled').click()
 
   
-    cy.waitUntilLoaded()
+    cy.get('.spinner-border').should('not.exist')
   
     cy.get('p').contains('Aucun exercice pour le moment.').should('exist')
     cy.get('button').contains('Créer').should('be.disabled')
@@ -151,7 +151,7 @@ describe('Gabby', () => {
     cy.get('label').contains('ISBN').next().type('01234567890123')
     cy.get('button').contains('Créer').should('be.enabled').click()
 
-    cy.waitUntilLoaded()
+    cy.get('.spinner-border').should('not.exist')
 
     cy.visit('/')
 
@@ -164,7 +164,7 @@ describe('Gabby', () => {
     cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises')
 
     cy.visit('/project/1/textbook/1/page/6')
-    cy.waitUntilLoaded()
+    cy.get('.spinner-border').should('not.exist')
 
     cy.get('h1').contains('Lien entre PDF et manuel').should('not.exist')
 
@@ -217,6 +217,8 @@ describe('Gabby', () => {
     cy.get('h3').contains('Indépendants').should('exist')
     cy.get('li strong').contains('L1').should('exist')
   })
+
+  // @todo Add test showing we can delete and recreate an exercise (hunt possible bug in deletion)
 
   it('navigates to user documentation', () => {
     cy.visit('/')

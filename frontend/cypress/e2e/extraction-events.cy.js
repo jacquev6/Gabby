@@ -15,11 +15,14 @@ describe('Extraction events', () => {
   it('are all gathered during extraction', () => {
     cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises')
 
-    cy.visit('/')
-    cy.get('a').contains('PDF de test').click()
-    cy.waitUntilLoaded()
-    cy.get('a').contains('les pages 6 à 7').click()
-    cy.waitUntilLoaded()
+    cy.visit('/project/1')
+    cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
+    cy.get('.spinner-border').should('exist')
+    cy.get('.spinner-border').should('not.exist')
+
+    cy.get('a').contains('Page 6').click()
+    cy.get('.spinner-border').should('not.exist')
+
     cy.get('button').contains('Nouvel exercice').click()
 
     cy.get('label').contains('Numéro').next().type('1')
@@ -30,7 +33,7 @@ describe('Extraction events', () => {
     cy.focused().type('Ceci est un indice')
     cy.get('label').contains('Énoncé').next().type('Ceci est l\'énoncé')
     cy.get('button').contains('Enregistrer').click()
-    cy.waitUntilLoaded()
+    cy.get('.spinner-border').should('not.exist')
 
     cy.get('canvas[style="position: absolute; top: 0px; left: 0px;"]').as('canvas')
     cy.get('@canvas').trigger('pointermove', 5, 5)
@@ -45,11 +48,11 @@ describe('Extraction events', () => {
     cy.get('label').contains('Texte sélectionné').next().type('Blah blah blah')
     cy.get('button').contains('Énoncé').click()
     cy.get('button').contains('Enregistrer').click()
-    cy.waitUntilLoaded()
+    cy.get('.spinner-border').should('not.exist')
     
     cy.get('button').contains('Annuler').click()
 
-    cy.wrap(getAllExtractionEvents).then(f => f(4)).should('deep.eq', [
+    cy.wrap(getAllExtractionEvents).then(f => f(7)).should('deep.eq', [
       {kind: 'ExerciseNumberSetManually', value: 1},
       {kind: 'InstructionsSetManually', value: 'Ceci est la consigne'},
       {kind: 'ExampleSetManually', value: 'Ceci est un exemple'},
@@ -58,7 +61,7 @@ describe('Extraction events', () => {
     ])
 
     // @todo Log a rectangle around the whole exercise
-    cy.wrap(getAllExtractionEvents).then(f => f(5)).should('deep.eq', [
+    cy.wrap(getAllExtractionEvents).then(f => f(8)).should('deep.eq', [
       {kind: 'ExerciseNumberSetAutomatically', value: 2},
       {
         kind: 'TextSelectedInPdf',

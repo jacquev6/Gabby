@@ -31,7 +31,7 @@ const sectionEditor = ref(null)
 const textbookLoading = ref(false)
 const textbook = computedAsync(
   async () => {
-    return await api.client.get_one('textbook', props.textbookId, {include: 'sections.pdfFile.namings'})
+    return await api.client.getOne('textbook', props.textbookId, {include: 'sections.pdfFile.namings'})
   },
   null,
   textbookLoading,
@@ -103,7 +103,7 @@ const exercisesOnPage = computedAsync(
       refreshCounter.value = 1
     }
     if (mode.value === 'list') {
-      return await api.client.get_all('exercises', {include: 'textbookExercise', filter: {'textbookExercise.textbook': props.textbookId, 'textbookExercise.page': props.page}})
+      return await api.client.getAll('exercises', {include: 'textbookExercise', filter: {'textbookExercise.textbook': props.textbookId, 'textbookExercise.page': props.page}})
     } else {
       return []
     }

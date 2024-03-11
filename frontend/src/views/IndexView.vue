@@ -19,7 +19,7 @@ const projects = computedAsync(
   async () => {
     projectsCreated.value  // Dependency for reactivity
     // await new Promise(r => setTimeout(r, 1000))
-    return await api.client.get_all('projects')
+    return await api.client.getAll('projects')
   },
   [],
   loadingProjects,

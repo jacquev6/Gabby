@@ -63,7 +63,7 @@ const projectLoading = ref(false)
 const project = computedAsync(
   async () => {
     // await new Promise(r => setTimeout(r, 1000))
-    return await api.client.get_one('project', props.projectId, {include: 'textbooks.exercises,exercises.textbook_exercise.textbook'})
+    return await api.client.getOne('project', props.projectId, {include: 'textbooks.exercises,exercises.textbook_exercise.textbook'})
   },
   null,
   projectLoading,
