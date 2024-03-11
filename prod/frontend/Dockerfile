@@ -11,7 +11,8 @@ ADD frontend /app
 RUN cp node_modules/pdfjs-dist/build/pdf.worker.min.mjs public/pdf.worker.min.js
 
 ARG GABBY_VERSION
-ENV VITE_GABBY_VERSION=$GABBY_VERSION
+ENV VITE_OPINION_APP_VERSION=$GABBY_VERSION
+ENV VITE_OPINION_APP_DEFAULT_LOCALE=fr
 
 RUN npx vite build
 
@@ -20,13 +21,17 @@ FROM python:3.12-slim AS backend-builder
 
 WORKDIR /app
 
-ADD backend/requirements.txt /app
+ADD backend/requirements.opinion.txt /app
 
-RUN pip install -r requirements.txt
+RUN pip install -r requirements.opinion.txt
+
+ADD backend/requirements.app.txt /app
+
+RUN pip install -r requirements.app.txt
 
 ADD backend /app
 
-ENV DJANGO_SETTINGS_MODULE=gabby.settings.prod
+ENV DJANGO_SETTINGS_MODULE=opinion.settings.prod
 ENV GABBY_SECRET_KEY=not-a-secret-but-still-quite-long-not-a-secret-but-still-quite-long-not-a-secret-but-still
 ENV GABBY_ALLOWED_HOSTS=not-a-host
 ENV GABBY_DB_NAME=not-a-db
@@ -61,5 +66,5 @@ RUN rm /etc/nginx/conf.d/default.conf
 RUN rm /usr/share/nginx/html/*.html
 ADD prod/frontend/frontend.conf /etc/nginx/conf.d/frontend.conf
 COPY --from=fontend-builder /app/dist /usr/share/nginx/html/vue
-COPY --from=backend-builder /app/static /usr/share/nginx/html/static
+COPY --from=backend-builder /app/api/static /usr/share/nginx/html/api/static
 COPY --from=doc-builder /app/build /usr/share/nginx/html/doc

@@ -10,6 +10,7 @@ describe('Gabby has routes that', () => {
     cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises')
 
     cy.visit('/project/1/textbook/1/page/6')
+    cy.get('select').select('en')
     cy.contains('h1', 'Edition')
   })
 
@@ -17,6 +18,7 @@ describe('Gabby has routes that', () => {
     cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises')
 
     cy.visit('/project/1/textbook/1/page/6/')
+    cy.get('select').select('en')
     cy.contains('h1', 'Edition')
   })
 

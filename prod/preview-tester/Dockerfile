@@ -25,9 +25,11 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 
 WORKDIR /app/frontend
 
-ADD package.json /app/frontend
-ADD package-lock.json /app/frontend
+ADD frontend/package.json /app/frontend
+ADD frontend/package-lock.json /app/frontend
 
 RUN npm install
 
-ADD . /app/frontend
+ADD frontend /app/frontend
+ADD tests /app/tests
+ADD pdf-examples /app/pdf-examples

@@ -10,11 +10,15 @@ WORKDIR /app
 
 RUN pip install gunicorn
 
-ADD backend/requirements.txt /app
+ADD backend/requirements.opinion.txt /app
 
-RUN pip install -r requirements.txt
+RUN pip install -r requirements.opinion.txt
+
+ADD backend/requirements.app.txt /app
+
+RUN pip install -r requirements.app.txt
 
 ADD backend /app
 
-ENV DJANGO_SETTINGS_MODULE=gabby.settings.prod
-CMD ["gunicorn", "gabby.wsgi:application", "--bind", "0.0.0.0:80"]
+ENV DJANGO_SETTINGS_MODULE=opinion.settings.prod
+CMD ["gunicorn", "opinion.wsgi:application", "--bind", "0.0.0.0:80"]

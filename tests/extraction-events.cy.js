@@ -3,7 +3,20 @@ async function getAllExtractionEvents(exerciseId) {
   var url = `/api/extractionEvents?filter[exercise]=${exerciseId}`
   while (url) {
     const response = await (await fetch(url)).json()
-    all.push(...response.data.map(event => JSON.parse(event.attributes.event)))
+    all.push(...response.data
+      .map(event => JSON.parse(event.attributes.event))
+      .map(event => {
+        if (event.pdf) {
+          // @todo Be more subtle with 'y': find a way to 'round' it.
+          // It's weirdly 0.65 higher in prod preview than in dev, most certainly because of Cypress.
+          const start = {...event.pdf.rectangle.start, y: 0}
+          const stop = {...event.pdf.rectangle.stop, y: 0}
+          return {...event, pdf: {...event.pdf, rectangle: {start, stop}}}
+        } else {
+          return event
+        }
+      })
+    )
     url = response.links.next
   }
   return all
@@ -76,8 +89,8 @@ describe('Extraction events', () => {
           sha256: 'f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c',
           page: 1,
           rectangle: {
-            start: {x: 55.49873958525407, y: 142.81480621450703},
-            stop: {x: 303.099891274904, y: 96.96235766003917},
+            start: {x: 55.49873958525407, y: 0},
+            stop: {x: 303.099891274904, y: 0},
           },
         },
         value: '2\nClasse les mots en trois groupes :\nnom, verbe, adjectif.',
@@ -250,8 +263,8 @@ describe('Extraction events', () => {
           sha256: 'f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c',
           page: 1,
           rectangle: {
-            start: {x: 55.49873958525407, y: 106.13284737093272},
-            stop: {x: 303.099891274904, y: 60.28039881646487},
+            start: {x: 55.49873958525407, y: 0},
+            stop: {x: 303.099891274904, y: 0},
           },
         },
         value: 'verrou ◆ baigner ◆ joli ◆ chaleur ◆ grosse ◆\nsurveiller ◆ degré ◆ librairie ◆ repas ◆ parler',

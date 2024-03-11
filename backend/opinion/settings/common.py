@@ -51,7 +51,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "opinion.wsgi.application"
 
-STATIC_ROOT = BASE_DIR / "static"
+STATIC_ROOT = BASE_DIR / "api/static"
 STATIC_URL = "api/static/"
 
 AUTH_PASSWORD_VALIDATORS = [

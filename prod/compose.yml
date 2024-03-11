@@ -37,12 +37,8 @@ services:
 
   preview-tester:
     build:
-      context: ../frontend
-      dockerfile: ../prod/preview-tester/Dockerfile
-    volumes:
-      - ../pdf-examples:/app/pdf-examples
-    environment:
-      VITE_GABBY_VERSION: preview
+      context: ..
+      dockerfile: prod/preview-tester/Dockerfile
     command: ["npx", "cypress", "run", "--e2e", "--config", "baseUrl=http://preview-fanout:8090/"]
     depends_on:
       preview-migrator:
