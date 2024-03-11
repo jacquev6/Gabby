@@ -22,6 +22,8 @@ services:
       - frontend-cache:/root/.cache
       - /tmp/.X11-unix:/tmp/.X11-unix  # Allow running GUI apps in container, displaying on host
     working_dir: /app/frontend
+    environment:
+      VITE_OPINION_APP_VERSION: dev
     command: ["bash", "-c", "npm install && npx vite --host 0.0.0.0 --port 80 --strictPort"]
 
   backend:
@@ -51,7 +53,7 @@ services:
       db:
         condition: service_healthy
   db:
-    image: postgres:16
+    image: postgres:15
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: password
@@ -68,6 +70,17 @@ services:
       interval: 0.5s
       timeout: 1s
       retries: 10
+
+  doc:
+    build:
+      context: ..
+      dockerfile: dev-env/doc/docker/Dockerfile
+    volumes:
+      - ..:/app
+    working_dir: /app/doc
+    environment:
+      GABBY_VERSION: dev
+    command: ["sphinx-autobuild", ".", "/tmp/doc", "--host", "0.0.0.0", "--port", "80"]
 
 volumes:
   frontend-node-modules:

@@ -6,7 +6,7 @@ from opinion_reset import urlpatterns as opinion_reset
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('api/admin/', admin.site.urls),
     path('api/', include(opinion_ping)),
     path('reset-for-tests/', include(opinion_reset)),
 ]
