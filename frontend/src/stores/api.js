@@ -12,6 +12,9 @@ import _ from 'lodash'
 // The case {inCache: false, exists: false} is impossible.
 
 export function defineApiStore(name, options) {
+  const promises = {}
+  const refreshQueued = {}
+
   const useCache = defineStore(name, {
     state: () => ({
       _items: {},
@@ -26,14 +29,13 @@ export function defineApiStore(name, options) {
           this._lists[mainUrl] = []
           const ret = this._lists[mainUrl]
           ret.loading = false
-          ret._loadingPromise = null
           ret.refresh = async () => {
-            ret._refreshQueued = true  // Ensure the last call to .refresh() is honored
-            if (!ret._loadingPromise) {
-              ret._loadingPromise = (async () => {
+            refreshQueued[mainUrl] = true  // Ensure the last call to .refresh() is honored
+            if (!promises[mainUrl]) {
+              promises[mainUrl] = (async () => {
                 ret.loading = true
-                while (ret._refreshQueued) {
-                  ret._refreshQueued = false
+                while (refreshQueued[mainUrl]) {
+                  refreshQueued[mainUrl] = false
                   const got = []
                   let url = mainUrl
                   while (url) {
@@ -52,10 +54,10 @@ export function defineApiStore(name, options) {
                   ret.splice(0, ret.length, ...got)
                 }
                 ret.loading = false
-                ret._loadingPromise = null
+                promises[mainUrl] = null
               })()
             }
-            await ret._loadingPromise
+            await promises[mainUrl]
           }
         }
         return this._lists[mainUrl]

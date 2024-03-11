@@ -580,24 +580,24 @@ describe('ApiStore', () => {
   it('reacts to ping message edition', () => {
     cy.mount(TestComponent)
 
-    cy.get('li').should('have.length', 12)
-    cy.get('li:contains(Hello 3)').should('have.length', 2)
+    cy.get('li').should('have.length', 18)
+    cy.get('li:contains(Hello 3)').should('have.length', 3)
 
     cy.get('ul > :nth-child(3) button').contains('Reset message').click()
 
-    cy.get('li').should('have.length', 12)
+    cy.get('li').should('have.length', 18)
     cy.get('li:contains(Hello 3)').should('not.exist')
   })
 
   it('reacts to ping deletion', () => {
     cy.mount(TestComponent)
 
-    cy.get('li').should('have.length', 12)
-    cy.get('li:contains(Hello 3)').should('have.length', 2)
+    cy.get('li').should('have.length', 18)
+    cy.get('li:contains(Hello 3)').should('have.length', 3)
 
     cy.get('ul > :nth-child(3) button').contains('Delete').click()
 
-    cy.get('li').should('have.length', 10)
+    cy.get('li').should('have.length', 15)
     cy.get('li:contains(Hello 3)').should('not.exist')
 
     cy.get('.spinner-border').should('not.exist')
@@ -607,10 +607,10 @@ describe('ApiStore', () => {
     cy.mount(TestComponent)
 
     cy.get('.spinner-border').should('not.exist')
-    cy.get('li').should('have.length', 12)
+    cy.get('li').should('have.length', 18)
 
     cy.get('button').contains('Ping').click()
 
-    cy.get('li').should('have.length', 14)
+    cy.get('li').should('have.length', 21)
   })
 })
