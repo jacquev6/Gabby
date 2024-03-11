@@ -16,10 +16,10 @@ describe('Ping', () => {
   it('pings', () => {
     cy.visit('/ping/')
 
-    cy.get('li').should('not.exist')
+    cy.get('li button').should('not.exist')
 
     cy.get('button').contains('Ping').click()
 
-    cy.get('li').should('exist')
+    cy.get('li button').should('exist')
   })
 });
