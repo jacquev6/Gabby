@@ -16,6 +16,8 @@ describe('Extraction events', () => {
     cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises')
 
     cy.visit('/project/1')
+    cy.get('select').select('fr')
+
     cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
     cy.get('.spinner-border').should('exist')
     cy.get('.spinner-border').should('not.exist')

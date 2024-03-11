@@ -10,14 +10,14 @@ describe('Gabby has routes that', () => {
     cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises')
 
     cy.visit('/project/1/textbook/1/page/6')
-    cy.contains('h1', 'Édition')
+    cy.contains('h1', 'Edition')
   })
 
   it('can access a Vue Router view with trailing /', () => {
     cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises')
 
     cy.visit('/project/1/textbook/1/page/6/')
-    cy.contains('h1', 'Édition')
+    cy.contains('h1', 'Edition')
   })
 
   it('can access Vue statics', () => {

@@ -5,6 +5,7 @@ describe('Gabby', () => {
     cy.request('POST', '/reset-for-tests/yes-im-sure')
 
     cy.visit('/')
+    cy.get('select').select('fr')
 
     cy.get('.spinner-border').should('not.exist')
 
@@ -128,6 +129,7 @@ describe('Gabby', () => {
     cy.request('POST', '/reset-for-tests/yes-im-sure')
 
     cy.visit('/')
+    cy.get('select').select('fr')
 
     cy.get('.spinner-border').should('not.exist')
 
@@ -164,6 +166,7 @@ describe('Gabby', () => {
     cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises')
 
     cy.visit('/project/1/textbook/1/page/6')
+    cy.get('select').select('fr')
     cy.get('.spinner-border').should('not.exist')
 
     cy.get('h1').contains('Lien entre PDF et manuel').should('not.exist')
@@ -179,6 +182,7 @@ describe('Gabby', () => {
     cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises')
 
     cy.visit('/')
+    cy.get('select').select('fr')
     cy.get('a').contains('Premier projet de test').click()
 
     cy.get('h3').contains('Français CE2, Slabeuf (2021)').should('exist')
@@ -212,6 +216,7 @@ describe('Gabby', () => {
     cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises')
 
     cy.visit('/')
+    cy.get('select').select('fr')
     cy.get('a').contains('Deuxième projet de test').click()
 
     cy.get('h3').contains('Indépendants').should('exist')
@@ -222,6 +227,7 @@ describe('Gabby', () => {
 
   it('navigates to user documentation', () => {
     cy.visit('/')
+    cy.get('select').select('fr')
     cy.get('a').contains('Aide').click()
     cy.contains('h1', 'Documentation de MALIN')
   })
