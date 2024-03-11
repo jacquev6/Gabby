@@ -1,9 +1,0 @@
-djangorestframework-jsonapi[django-filter]  # Fundamental
-psycopg2-binary  # For PostgreSQL
-PyYaml  # For Swagger
-uritemplate  # For Swagger
-django-cors-headers
-django-dbbackup  # For backups
-django-storages[s3]  # For backups
-django-extensions
-pydotplus

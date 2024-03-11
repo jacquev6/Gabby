@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 
 
-const gabbyVersion = import.meta.env.VITE_GABBY_VERSION
+const gabbyVersion = import.meta.env.VITE_OPINION_APP_VERSION
 const userAgent = JSON.stringify(window.navigator.userAgentData || window.navigator.userAgent)
 
 const windowWidth = ref(null)

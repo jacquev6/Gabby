@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
 
-import { BButton, BRow, BCol, BModal } from './bootstrap'
+import { BButton, BRow, BCol, BModal } from './opinion/bootstrap'
 import BInput from './BootstrapInput.vue'
 import Loading from './Loading.vue'
 import { useApiStore } from '../stores/api'
