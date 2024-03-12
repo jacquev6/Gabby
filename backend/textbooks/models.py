@@ -36,7 +36,12 @@ class PdfFileNaming(models.Model):
     # Could have other fields, e.g. the user who named it
 
     class Meta:
-        unique_together = ["pdf_file", "name"]
+        constraints = [
+            models.UniqueConstraint(
+                "pdf_file", "name",
+                name="unique_naming",
+            ),
+        ]
 
 
 class Project(models.Model):
