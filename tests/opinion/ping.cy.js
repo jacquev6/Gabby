@@ -1,6 +1,6 @@
 describe('Ping', () => {
   beforeEach(() => {
-    cy.request('POST', 'http://fanout:8080/reset-for-tests/yes-im-sure')
+    cy.request('POST', '/reset-for-tests/yes-im-sure')
   })
 
   it('accesses the route without trailing slash', () => {

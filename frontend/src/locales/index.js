@@ -8,8 +8,8 @@ import appFr from './fr.json'
 
 export const i18n = createI18n({
   legacy: false,
-  locale: 'en',
-  fallbackLocale: 'en',
+  locale: import.meta.env.VITE_OPINION_APP_DEFAULT_LOCALE ?? 'en',
+  fallbackLocale: import.meta.env.VITE_OPINION_APP_DEFAULT_LOCALE ?? 'en',
   messages: {
     en: {
       ...appEn,
