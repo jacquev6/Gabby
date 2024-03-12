@@ -100,32 +100,27 @@ describe('ApiStore', () => {
   it('filters exercises by textbook and page', async () => {
     const api = useApiStore()
 
-    expect((await api.client.getAll('exercises', {filter: {'textbookExercise.textbook': '1'}})).length).to.equal(3)
-    expect((await api.client.getAll('exercises', {filter: {'textbookExercise.textbook': '1', 'textbookExercise.page': 6}})).length).to.equal(2)
-    expect((await api.client.getAll('exercises', {filter: {'textbookExercise.textbook': '1', 'textbookExercise.page': 7}})).length).to.equal(1)
+    expect((await api.client.getAll('exercises', {filter: {textbook: '1'}})).length).to.equal(3)
+    expect((await api.client.getAll('exercises', {filter: {textbook: '1', textbookPage: 6}})).length).to.equal(2)
+    expect((await api.client.getAll('exercises', {filter: {textbook: '1', textbookPage: 7}})).length).to.equal(1)
   })
 
   it('creates a new exercise', async () => {
     const api = useApiStore()
 
-    expect((await api.client.getAll('exercises', {filter: {'textbookExercise.textbook': '1', 'textbookExercise.page': 6}})).length).to.equal(2)
+    expect((await api.client.getAll('exercises', {filter: {textbook: '1', textbookPage: 6}})).length).to.equal(2)
 
     expect(api.cache.getOne('textbook', '1').inCache).to.be.false
-
-    const textbookExercise = await api.client.post(
-      'textbookExercise',
-      {page: 6, number: 14},
-      {textbook: {type: 'textbook', id: '1'}},
-    )
 
     const newExercise = await api.client.post(
       'exercise',
       {
+        textbookPage: 6, number: 14,
         instructions: 'Do this',
       },
       {
         project: {type: 'project', id: '1'},
-        textbookExercise: {type: 'textbookExercise', id: textbookExercise.id},
+        textbook: {type: 'textbook', id: '1'},
         extractionEvents: [],
       },
     )
@@ -139,28 +134,23 @@ describe('ApiStore', () => {
   it('creates a new exercise and retrieves its textbook', async () => {
     const api = useApiStore()
 
-    expect((await api.client.getAll('exercises', {filter: {'textbookExercise.textbook': '1', 'textbookExercise.page': 6}})).length).to.equal(2)
+    expect((await api.client.getAll('exercises', {filter: {textbook: '1', textbookPage: 6}})).length).to.equal(2)
 
     expect(api.cache.getOne('textbook', '1').inCache).to.be.false
-
-    const textbookExercise = await api.client.post(
-      'textbookExercise',
-      {page: 6, number: 14},
-      {textbook: {type: 'textbook', id: '1'}},
-    )
 
     const newExercise = await api.client.post(
       'exercise',
       {
+        textbookPage: 6, number: 14,
         instructions: 'Do that',
       },
       {
         project: {type: 'project', id: '1'},
-        textbookExercise: {type: 'textbookExercise', id: textbookExercise.id},
+        textbook: {type: 'textbook', id: '1'},
         extractionEvents: [],
       },
       {
-        include: 'textbookExercise.textbook'
+        include: 'textbook'
       },
     )
 
@@ -189,7 +179,7 @@ describe('ApiStore', () => {
       '1',
       {instructions: 'Do that'},
       {},
-      {include: 'textbookExercise.textbook'},
+      {include: 'textbook'},
     )
 
     expect(updatedExercise.attributes.instructions).to.equal('Do that')
@@ -207,6 +197,6 @@ describe('ApiStore', () => {
 
     expect(api.cache.getOne('exercise', '1').inCache).to.be.true
     expect(api.cache.getOne('exercise', '1').exists).to.be.false
-    expect((await api.client.getAll('exercises', {filter: {'textbookExercise.textbook': '1', 'textbookExercise.page': 6}})).length).to.equal(1)
+    expect((await api.client.getAll('exercises', {filter: {textbook: '1', textbookPage: 6}})).length).to.equal(1)
   })
 })

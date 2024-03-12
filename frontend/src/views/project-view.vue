@@ -62,8 +62,7 @@ async function createTextbook() {
 const projectLoading = ref(false)
 const project = computedAsync(
   async () => {
-    // await new Promise(r => setTimeout(r, 1000))
-    return await api.client.getOne('project', props.projectId, {include: 'textbooks.exercises,exercises.textbook_exercise.textbook'})
+    return await api.client.getOne('project', props.projectId, {include: ['textbooks', 'exercises.textbook']})
   },
   null,
   projectLoading,
@@ -72,10 +71,10 @@ const project = computedAsync(
 const exercisesByTextbookAndPage = computed(() => {
   const textbooks = {}
   for (const exercise of project.value?.relationships.exercises) {
-    const textbook = exercise.relationships.textbookExercise?.relationships.textbook
+    const textbook = exercise.relationships.textbook
     if (textbook) {
       textbooks[textbook.id] = textbooks[textbook.id] ?? { textbook, pages: [] }
-      const page = exercise.relationships.textbookExercise.attributes.page
+      const page = exercise.attributes.textbookPage
       textbooks[textbook.id].pages[page] = textbooks[textbook.id].pages[page] ?? []
       textbooks[textbook.id].pages[page].push(exercise)
     }
@@ -86,7 +85,7 @@ const exercisesByTextbookAndPage = computed(() => {
 const independentExercises = computed(() => {
   const exercises = []
   for (const exercise of project.value?.relationships.exercises) {
-    if (!exercise.relationships.textbookExercise) {
+    if (!exercise.relationships.textbook) {
       exercises.push(exercise)
     }
   }
@@ -127,7 +126,7 @@ function ellipsis(s) {
             <h3>Indépendants</h3>
             <ul>
               <li v-for="exercise in independentExercises">
-                <strong>{{ exercise.attributes.title }}</strong> : {{ ellipsis(exercise.attributes.instructions) }}
+                <strong>{{ exercise.attributes.number }}</strong> : {{ ellipsis(exercise.attributes.instructions) }}
               </li>
             </ul>
           </template>
@@ -139,7 +138,7 @@ function ellipsis(s) {
                   <router-link :to="{name: 'project-textbook-page', params: {projectId, textbookId: textbook.id, page}}">Page {{ page }}</router-link>
                   <ul>
                     <li v-for="exercise in exercises">
-                    <strong>{{ exercise.relationships.textbookExercise.attributes.number }}</strong> : {{ ellipsis(exercise.attributes.instructions) }}
+                    <strong>{{ exercise.attributes.number }}</strong> : {{ ellipsis(exercise.attributes.instructions) }}
                   </li>
                   </ul>
                 </li>

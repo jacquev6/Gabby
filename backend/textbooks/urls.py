@@ -4,7 +4,7 @@ from rest_framework import routers
 from rest_framework_json_api.schemas.openapi import SchemaGenerator
 from rest_framework.schemas import get_schema_view
 
-from .views import PdfFileViewSet, PdfFileNamingViewSet, TextbookViewSet, SectionViewSet, TextbookExerciseViewSet, ProjectViewSet, ExerciseViewSet, ExtractionEventViewSet
+from .views import PdfFileViewSet, PdfFileNamingViewSet, ProjectViewSet, TextbookViewSet, SectionViewSet, ExerciseViewSet, ExtractionEventViewSet
 
 
 # @todo(Project management, later): Migrate schema generation to DRF-spectacular
@@ -15,10 +15,9 @@ from .views import PdfFileViewSet, PdfFileNamingViewSet, TextbookViewSet, Sectio
 router = routers.DefaultRouter(trailing_slash=False)
 router.register("pdfFiles", PdfFileViewSet)
 router.register("pdfFileNamings", PdfFileNamingViewSet)
+router.register("projects", ProjectViewSet)
 router.register("textbooks", TextbookViewSet)
 router.register("sections", SectionViewSet)
-router.register("textbookExercises", TextbookExerciseViewSet)
-router.register("projects", ProjectViewSet)
 router.register("exercises", ExerciseViewSet)
 router.register("extractionEvents", ExtractionEventViewSet)
 

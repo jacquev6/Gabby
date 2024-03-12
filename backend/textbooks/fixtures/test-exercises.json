@@ -27,33 +27,6 @@
     }
   },
   {
-    "model": "textbooks.textbookexercise",
-    "pk": 1,
-    "fields": {
-      "textbook": 1,
-      "page": 6,
-      "number": 3
-    }
-  },
-  {
-    "model": "textbooks.textbookexercise",
-    "pk": 2,
-    "fields": {
-      "textbook": 1,
-      "page": 6,
-      "number": 4
-    }
-  },
-  {
-    "model": "textbooks.textbookexercise",
-    "pk": 3,
-    "fields": {
-      "textbook": 1,
-      "page": 7,
-      "number": 9
-    }
-  },
-  {
     "model": "textbooks.section",
     "pk": 1,
     "fields": {
@@ -85,8 +58,9 @@
     "pk": 1,
     "fields": {
       "project": 1,
-      "textbook_exercise": 1,
-      "title": "",
+      "textbook": 1,
+      "textbook_page": 6,
+      "number": "3",
       "instructions": "Complète avec : le, une, un, des, tu, elles, ils.\r\nPuis, souligne les verbes.",
       "example": "",
       "clue": "Il peut y avoir plusieurs solutions.",
@@ -98,8 +72,9 @@
     "pk": 2,
     "fields": {
       "project": 1,
-      "textbook_exercise": 2,
-      "title": "",
+      "textbook": 1,
+      "textbook_page": 6,
+      "number": "4",
       "instructions": "Écris une phrase en respectant l'ordre des classes grammaticales indiquées.",
       "example": "pronom personnel / verbe / déterminant / nom commun :\r\nJe mange une pomme.",
       "clue": "",
@@ -111,8 +86,9 @@
     "pk": 3,
     "fields": {
       "project": 1,
-      "textbook_exercise": 3,
-      "title": "",
+      "textbook": 1,
+      "textbook_page": 7,
+      "number": "9",
       "instructions": "Recopie l’intrus qui se cache dans chaque liste et écris sa classe.",
       "example": "",
       "clue": "",
@@ -124,8 +100,9 @@
     "pk": 4,
     "fields": {
       "project": 2,
-      "textbook_exercise": null,
-      "title": "L1",
+      "textbook": null,
+      "textbook_page": null,
+      "number": "L1",
       "instructions": "Faire des choses intelligentes.",
       "example": "",
       "clue": "",
@@ -137,8 +114,9 @@
     "pk": 5,
     "fields": {
       "project": 2,
-      "textbook_exercise": null,
-      "title": "L2",
+      "textbook": null,
+      "textbook_page": null,
+      "number": "L2",
       "instructions": "Faire d'autres choses intelligentes.",
       "example": "",
       "clue": "",
@@ -150,8 +128,9 @@
     "pk": 6,
     "fields": {
       "project": 2,
-      "textbook_exercise": null,
-      "title": "L3",
+      "textbook": null,
+      "textbook_page": null,
+      "number": "L3",
       "instructions": "Prendre le temps de faire aussi des choses banales.",
       "example": "",
       "clue": "",

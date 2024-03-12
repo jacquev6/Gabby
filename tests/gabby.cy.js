@@ -73,6 +73,8 @@ describe('Gabby', () => {
     cy.get('label').contains('Page').click()
     cy.focused().type('{selectAll}6')
 
+    cy.get('.spinner-border').should('not.exist')
+
     cy.get('p').contains('Pas encore d\'exercices').should('exist')
 
     cy.get('button').contains('Nouvel exercice').click()
@@ -230,5 +232,29 @@ describe('Gabby', () => {
     cy.get('select').select('fr')
     cy.get('a').contains('Aide').click()
     cy.contains('h1', 'Documentation de MALIN')
+  })
+
+  it('allows textual exercise "number"', () => {
+    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises')
+
+    cy.visit('/project/1/textbook/1/page/6')
+    cy.get('select').select('fr')
+    cy.get('button').contains('Nouvel exercice').click()
+
+    cy.get('label').contains('Numéro').next().type('Défis langue')
+    cy.get('button').contains('Enregistrer').click()
+    cy.get('label').contains('Numéro').next().should('have.value', '')
+  })
+
+  it('increments integer exercise number', () => {
+    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises')
+
+    cy.visit('/project/1/textbook/1/page/6')
+    cy.get('select').select('fr')
+    cy.get('button').contains('Nouvel exercice').click()
+
+    cy.get('label').contains('Numéro').next().type('1')
+    cy.get('button').contains('Enregistrer').click()
+    cy.get('label').contains('Numéro').next().should('have.value', '2')
   })
 })

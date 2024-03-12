@@ -1,22 +1,19 @@
 from django.core.validators import RegexValidator
 from django.db import models
-from django.db.models import Model
-from django.db.models import CharField, ForeignKey, IntegerField, TextField, AutoField
-from django.db.models import CASCADE
 
 
 # @todo(Feature, later) Add timestamps (created_at, modified_at, etc.) and user ids (created_by, modified_by, etc.) to all models
 
-class PdfFile(Model):
-    sha256 = CharField(
+class PdfFile(models.Model):
+    sha256 = models.CharField(
         primary_key=True,
         null=False, blank=False,
         max_length=64,
         validators=[RegexValidator(r'^[0-9a-f]{64}$')],
     )
 
-    bytes_count = IntegerField(null=False)
-    pages_count = IntegerField(null=False)
+    bytes_count = models.IntegerField(null=False)
+    pages_count = models.IntegerField(null=False)
 
     def __str__(self):
         if self.namings:
@@ -32,35 +29,35 @@ class PdfFile(Model):
             return f"PDF file with sha256={self.sha256[0:8]}..."
 
 
-class PdfFileNaming(Model):
-    pdf_file = ForeignKey(PdfFile, on_delete=models.CASCADE, related_name="namings")
+class PdfFileNaming(models.Model):
+    pdf_file = models.ForeignKey(PdfFile, on_delete=models.CASCADE, related_name="namings")
 
-    name = CharField(null=False, blank=False, max_length=255)
+    name = models.CharField(null=False, blank=False, max_length=255)
     # Could have other fields, e.g. the user who named it
 
     class Meta:
         unique_together = ["pdf_file", "name"]
 
 
-class Project(Model):
-    id = AutoField(primary_key=True)
+class Project(models.Model):
+    id = models.AutoField(primary_key=True)
 
-    title = CharField(null=True, blank=False, max_length=255)
-    description = TextField(null=True, blank=False)
+    title = models.CharField(null=True, blank=False, max_length=255)
+    description = models.TextField(null=True, blank=False)
 
     def __str__(self):
         return f"Project '{self.title}'"
 
 
-class Textbook(Model):
-    id = AutoField(primary_key=True)
+class Textbook(models.Model):
+    id = models.AutoField(primary_key=True)
 
-    project = ForeignKey(Project, on_delete=CASCADE, related_name="textbooks")
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="textbooks")
 
-    title = CharField(null=False, blank=False, max_length=255)
-    publisher = CharField(null=True, blank=False, max_length=255)  # De-normalized
-    year = IntegerField(null=True)
-    isbn = CharField(
+    title = models.CharField(null=False, blank=False, max_length=255)
+    publisher = models.CharField(null=True, blank=False, max_length=255)  # De-normalized
+    year = models.IntegerField(null=True)
+    isbn = models.CharField(
         null=True, blank=False,
         max_length=25, # Max length as of 2024 is 13, established in 2007, so this should be future-proof
         validators=[RegexValidator(r'[0-9]')],
@@ -73,61 +70,58 @@ class Textbook(Model):
         return f'"{self.title}" by {self.publisher} ({self.year})'
 
 
-class TextbookExercise(Model):
-    id = AutoField(primary_key=True)
+class Section(models.Model):
+    id = models.AutoField(primary_key=True)
 
-    textbook = ForeignKey(Textbook, on_delete=CASCADE, related_name="exercises")
-    page = IntegerField(null=False)
-    # Exercise 'numbers' may very well not be actual numbers
-    # (e.g. single letters, or combinations of digits, letters and dots)
-    # But sorting such identifiers properly requires specification and implementation,
-    # so for now we assume they are indeed numbers.
-    number = IntegerField(null=False)
+    textbook = models.ForeignKey(Textbook, on_delete=models.CASCADE, related_name="sections")
+    pdf_file = models.ForeignKey(PdfFile, on_delete=models.CASCADE, related_name="sections")
 
-    class Meta:
-        unique_together = ["textbook", "page", "number"]
-
-    def __str__(self):
-        return f"Exercise {self.number} page {self.page} in {self.textbook.short_str()}"
-
-
-class Section(Model):
-    id = AutoField(primary_key=True)
-
-    textbook = ForeignKey(Textbook, on_delete=models.CASCADE, related_name="sections")
-    pdf_file = ForeignKey(PdfFile, on_delete=models.CASCADE, related_name="sections")
-
-    textbook_start_page = IntegerField(null=False)
-    pdf_file_start_page = IntegerField(null=False)
-    pages_count = IntegerField(null=False)
+    textbook_start_page = models.IntegerField(null=False)
+    pdf_file_start_page = models.IntegerField(null=False)
+    pages_count = models.IntegerField(null=False)
 
     def __str__(self):
         return f"Pages {self.textbook_start_page}-{self.textbook_start_page+self.pages_count-1} of {self.textbook.short_str()} in {self.pdf_file.short_str()}"
 
 
-class Exercise(Model):
-    id = AutoField(primary_key=True)
+class Exercise(models.Model):
+    id = models.AutoField(primary_key=True)
 
     project = models.ForeignKey(Project, null=False, on_delete=models.CASCADE, related_name="exercises")
 
-    # Morally, these two fields are exclusive, but this is not enforced
-    textbook_exercise = models.ForeignKey(TextbookExercise, null=True, default=None, on_delete=models.SET_NULL, related_name="exercise")
-    title = CharField(null=False, blank=True, max_length=255)
+    textbook = models.ForeignKey(Textbook, null=True, on_delete=models.CASCADE, related_name="exercises")
+    textbook_page = models.IntegerField(null=True)
 
-    instructions = TextField(null=False, blank=True)
-    example = TextField(null=False, blank=True)
-    clue = TextField(null=False, blank=True)
-    wording = TextField(null=False, blank=True)
+    # Custom collation: https://dba.stackexchange.com/a/285230
+    number = models.CharField(null=False, db_collation="textbooks_exercise_number")
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                "textbook", "textbook_page", "number",
+                name="unique_exercise",
+            ),
+            models.CheckConstraint(
+                check=models.Q(textbook=None, textbook_page=None) | models.Q(textbook__isnull=False, textbook_page__isnull=False),
+                name="textbook_and_page_consistently_null",
+            ),
+        ]
+
+    instructions = models.TextField(null=False, blank=True)
+    example = models.TextField(null=False, blank=True)
+    clue = models.TextField(null=False, blank=True)
+    wording = models.TextField(null=False, blank=True)
 
     def __str__(self):
-        if self.textbook_exercise:
-            return f"{self.textbook_exercise}, extracted"
+        assert((self.textbook is None) == (self.textbook_page is None))
+        if self.textbook:
+            return f"Exercise '{self.number}' page {self.textbook_page} of {self.textbook.short_str()}"
         else:
-            return f"Exercice '{self.title}'"
+            return f"Exercise '{self.number}'"
 
 
-class ExtractionEvent(Model):
-    id = AutoField(primary_key=True)
+class ExtractionEvent(models.Model):
+    id = models.AutoField(primary_key=True)
 
-    exercise = ForeignKey(Exercise, on_delete=CASCADE, related_name="extraction_events")
-    event = TextField(null=False, blank=False)  # Free form for the backend, defined by the frontend
+    exercise = models.ForeignKey(Exercise, on_delete=models.CASCADE, related_name="extraction_events")
+    event = models.TextField(null=False, blank=False)  # Free form for the backend, defined by the frontend

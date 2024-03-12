@@ -68,7 +68,7 @@ describe('Extraction events', () => {
     cy.get('button').contains('Annuler').click()
 
     cy.wrap(getAllExtractionEvents).then(f => f(7)).should('deep.eq', [
-      {kind: 'ExerciseNumberSetManually', value: 1},
+      {kind: 'ExerciseNumberSetManually', value: '1'},
       {kind: 'InstructionsSetManually', value: 'Ceci est la consigne'},
       {kind: 'ExampleSetManually', value: 'Ceci est un exemple'},
       {kind: 'ClueSetManually', value: 'Ceci est un indice'},
@@ -79,7 +79,7 @@ describe('Extraction events', () => {
     cy.wrap(getAllExtractionEvents).then(f => f(8)).as('events')
     cy.get('@events').should('have.length', 6)
     cy.get('@events').its(0).should('deep.eq',
-      {kind: 'ExerciseNumberSetAutomatically', value: 2},
+      {kind: 'ExerciseNumberSetAutomatically', value: '2'},
     )
     cy.get('@events').its(1).should('deep.eq',
       {

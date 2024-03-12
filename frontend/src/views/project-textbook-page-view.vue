@@ -103,7 +103,7 @@ const exercisesOnPage = computedAsync(
       refreshCounter.value = 1
     }
     if (mode.value === 'list') {
-      return await api.client.getAll('exercises', {include: 'textbookExercise', filter: {'textbookExercise.textbook': props.textbookId, 'textbookExercise.page': props.page}})
+      return await api.client.getAll('exercises', {filter: {'textbook': props.textbookId, 'textbook_page': props.page}})
     } else {
       return []
     }
@@ -128,9 +128,9 @@ const disableSetPage = computed(() => {
 })
 
 function switchToListMode() {
-  currentExercise.attributes = {}
   currentExercise.id = null
   extractionEvents.splice(0)
+  currentExercise.attributes = {}
   mode.value = 'list'
   ++refreshCounter.value
 }
@@ -139,7 +139,21 @@ function ellipsis(s) {
   return s.length > 25 ? s.slice(0, 25) + '…' : s
 }
 
-function switchToCreateMode(number) {
+function switchToCreateMode(incrementNumber) {
+  currentExercise.id = null
+  extractionEvents.splice(0)
+
+  const number = (() => {
+    const prevNumber = currentExercise.attributes.number
+    if (incrementNumber && Number.isInteger(+prevNumber)) {
+      const number = (+prevNumber + 1).toString()
+      extractionEvents.push({kind: 'ExerciseNumberSetAutomatically', value: number})
+      return number
+    } else {
+      return ''
+    }
+  })()
+
   currentExercise.attributes = {
     number,
     instructions: '',
@@ -147,18 +161,13 @@ function switchToCreateMode(number) {
     clue: '',
     wording: '',
   }
-  currentExercise.id = null
-  extractionEvents.splice(0)
-  if (number) {
-    extractionEvents.push({kind: 'ExerciseNumberSetAutomatically', value: number})
-  }
   mode.value = 'create'
 }
 
 function switchToEditMode(e) {
   currentExercise.id = e.id
-  currentExercise.attributes = e.attributes
   extractionEvents.splice(0)
+  currentExercise.attributes = e.attributes
   mode.value = 'edit'
 }
 
@@ -180,17 +189,12 @@ function textSelected(text, point, textItems, rectangle) {
 
 async function createExercise() {
   modeIsLoading.value = true
-  const textbookExercise = await api.client.post(
-    'textbookExercise',
-    {page: props.page, number: currentExercise.attributes.number},
-    {textbook: {type: 'textbook', id: props.textbookId}},
-  )
   const exercise = await api.client.post(
     'exercise',
-    currentExercise.attributes,
+    {...currentExercise.attributes, textbook_page: props.page},
     {
       project: {type: 'project', id: props.projectId},
-      textbookExercise: {type: 'textbookExercise', id: textbookExercise.id},
+      textbook: {type: 'textbook', id: props.textbookId},
       extractionEvents: [],
     },
   )
@@ -201,7 +205,7 @@ async function createExercise() {
       {exercise: {type: 'exercise', id: exercise.id}},
     )
   }
-  switchToCreateMode(currentExercise.attributes.number + 1)
+  switchToCreateMode(true)
   modeIsLoading.value = false
 }
 
@@ -295,7 +299,7 @@ watch(requestedPage, (requested) => {
                 <p>{{ $t('existingExercises') }}</p>
                 <ul>
                   <li v-for="exercise in exercisesOnPage">
-                    <strong>{{ exercise.relationships.textbookExercise.attributes.number }}</strong> {{ ellipsis(exercise.attributes.instructions) }}
+                    <strong>{{ exercise.attributes.number }}</strong> {{ ellipsis(exercise.attributes.instructions) }}
                     <b-button primary sm @click="switchToEditMode(exercise)">{{ $t('edit') }}</b-button>
                     <b-button secondary sm @click="deleteExercise(exercise)">{{ $t('delete') }}</b-button>
                   </li>
@@ -303,7 +307,7 @@ watch(requestedPage, (requested) => {
               </template>
               <p v-else>{{ $t('noExercises') }}</p>
             </loading>
-            <p class="d-grid"><b-button primary @click="switchToCreateMode('')">{{ $t('create') }}</b-button></p>
+            <p class="d-grid"><b-button primary @click="switchToCreateMode(false)">{{ $t('create') }}</b-button></p>
           </template>
           <template v-else>
             <ExerciseForm

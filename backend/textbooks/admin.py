@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import PdfFile, PdfFileNaming, Textbook, TextbookExercise, Section, Project, Exercise, ExtractionEvent
+from .models import PdfFile, PdfFileNaming, Project, Textbook, Section, Exercise, ExtractionEvent
 
 
 
@@ -17,13 +17,9 @@ class PdfFileAdmin(admin.ModelAdmin):
     inlines = [PdfFileNamingInline, SectionInline]
 
 
-class TextbookExerciseInline(admin.TabularInline):
-    model = TextbookExercise
-    extra = 3
-
 @admin.register(Textbook)
 class TextbookAdmin(admin.ModelAdmin):
-    inlines = [TextbookExerciseInline]
+    pass
 
 
 @admin.register(Project)

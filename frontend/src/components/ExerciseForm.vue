@@ -109,7 +109,7 @@ defineExpose({
     <button class="btn btn-primary" @click="addTextToWording">{{ $t('wording') }}</button>
   </FloatingModal>
 
-  <BInput :label="$t('exerciseNumber')" type="number" min="1" v-model="model.number" :disabled="fixedNumber" @change="emit('extractionEvent', {kind: 'ExerciseNumberSetManually', value: model.number})"/>
+  <BInput :label="$t('exerciseNumber')" v-model="model.number" :disabled="fixedNumber" @change="emit('extractionEvent', {kind: 'ExerciseNumberSetManually', value: model.number})"/>
 
   <RequiredExerciseTextArea ref="instructionsTextArea" :label="$t('instructions')" v-model="model.instructions" @change="emit('extractionEvent', {kind: 'InstructionsSetManually', value: model.instructions})"/>
   <OptionalExerciseTextArea ref="exampleTextArea" :label="$t('example')" v-model="model.example" @change="emit('extractionEvent', {kind: 'ExampleSetManually', value: model.example})"/>
