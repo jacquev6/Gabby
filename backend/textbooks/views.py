@@ -1,3 +1,5 @@
+import json
+from django.http import JsonResponse
 from rest_framework_json_api.views import ModelViewSet
 
 from .models import PdfFile, PdfFileNaming, Project, Textbook, Section, Exercise, ExtractionEvent
@@ -45,3 +47,29 @@ class ExtractionEventViewSet(ModelViewSet):
     filterset_fields = {
         "exercise": ["exact"],
     }
+
+
+def extraction_report_view(request, project_id):
+    project = Project.objects.get(id=project_id)
+    return JsonResponse({
+        "project": {
+            "title": project.title,
+            "textbooks": [
+                {
+                    "title": textbook.title,
+                    "exercises": [
+                        {
+                            "page": exercise.textbook_page,
+                            "number": exercise.number,
+                            "events": [
+                                json.loads(event.event)
+                                for event in exercise.extraction_events.order_by('id')
+                            ],
+                        }
+                        for exercise in textbook.exercises.order_by("textbook_page", "number")
+                    ],
+                }
+                for textbook in project.textbooks.order_by("id")
+            ],
+        },
+    })

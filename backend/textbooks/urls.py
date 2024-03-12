@@ -5,6 +5,7 @@ from rest_framework_json_api.schemas.openapi import SchemaGenerator
 from rest_framework.schemas import get_schema_view
 
 from .views import PdfFileViewSet, PdfFileNamingViewSet, ProjectViewSet, TextbookViewSet, SectionViewSet, ExerciseViewSet, ExtractionEventViewSet
+from .views import extraction_report_view
 
 
 # @todo(Project management, later): Migrate schema generation to DRF-spectacular
@@ -23,6 +24,7 @@ router.register("extractionEvents", ExtractionEventViewSet)
 
 urlpatterns = [
     path("", include(router.urls)),
+    path("project-<int:project_id>-extraction-report.json", extraction_report_view, name="extraction-report"),
     path(
         "schema",
         get_schema_view(

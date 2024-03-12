@@ -101,6 +101,7 @@ function ellipsis(s) {
   <b-loading :loading="projectLoading">
     <h1>Projet "{{ project?.attributes.title }}"</h1>
     <p>{{ project?.attributes.description }}</p>
+    <p>Téléchargez <a :href="`/api/project-${props.projectId}-extraction-report.json`">le rapport d'extraction</a>.</p>
     <b-row>
       <b-col>
         <h2>Nouveau manuel</h2>

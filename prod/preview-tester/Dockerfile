@@ -31,5 +31,3 @@ ADD frontend/package-lock.json /app/frontend
 RUN npm install
 
 ADD frontend /app/frontend
-ADD tests /app/tests
-ADD pdf-examples /app/pdf-examples

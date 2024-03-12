@@ -39,7 +39,11 @@ services:
     build:
       context: ..
       dockerfile: prod/preview-tester/Dockerfile
-    command: ["npx", "cypress", "run", "--e2e", "--config", "baseUrl=http://preview-fanout:8090/"]
+    volumes:
+      - ../tests:/app/tests
+      - ../pdf-examples:/app/pdf-examples
+      - /tmp/.X11-unix:/tmp/.X11-unix  # Allow running GUI apps in container, displaying on host
+    command: ["bash", "-c", "npx cypress run --e2e --env IS_PROD_PREVIEW=true --config baseUrl=http://preview-fanout:8090/ && echo OK; sleep infinity"]
     depends_on:
       preview-migrator:
         condition: service_completed_successfully
