@@ -7,7 +7,7 @@ from rest_framework.test import APITransactionTestCase
 from .models import Ping
 
 
-class pingTests(APITransactionTestCase):
+class PingTests(APITransactionTestCase):
     maxDiff = None
     reset_sequences = True  # Primary keys appear in API responses
 
