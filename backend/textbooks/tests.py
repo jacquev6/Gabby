@@ -44,6 +44,12 @@ class ExerciseTests(TransactionTestCase):
         with self.assertRaises(IntegrityError):
             Exercise.objects.create(project=None, textbook=self.textbook, textbook_page=5, number="5")
 
+    def test_create_with_inconsistent_project(self):
+        other_project = Project.objects.create(title="Other project")
+        # Implemented using a "fat" foreign key added outside Django's ORM, in 'migrations/0003_initial_patch.py'
+        with self.assertRaises(IntegrityError):
+            Exercise.objects.create(project=other_project, textbook=self.textbook, textbook_page=5, number="5")
+
     def test_ordering(self):
         Exercise.objects.create(project=self.project, textbook=self.textbook, textbook_page=5, number="5.b")
         Exercise.objects.create(project=self.project, textbook=self.textbook, textbook_page=5, number="5.a")

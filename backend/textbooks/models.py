@@ -54,6 +54,15 @@ class Textbook(models.Model):
 
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="textbooks")
 
+    class Meta:
+        constraints = [
+            # Seemingly redondent (as 'id' is unique by itself), but required to add the "fat" foreign key in 'migrations/0003_initial_patch.py'
+            models.UniqueConstraint(
+                "id", "project",
+                name="unique_id_and_project_id",
+            ),
+        ]
+
     title = models.CharField(null=False, blank=False, max_length=255)
     publisher = models.CharField(null=True, blank=False, max_length=255)  # De-normalized
     year = models.IntegerField(null=True)
