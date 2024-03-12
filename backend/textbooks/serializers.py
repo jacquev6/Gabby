@@ -64,6 +64,11 @@ class TextbookSerializer(serializers.ModelSerializer):
         "sections": "textbooks.serializers.SectionSerializer",
     }
 
+    def validate_project(self, value):
+        if self.instance and value != self.instance.project:
+            raise serializers.ValidationError("'project' is immutable once set.")
+        return value
+
 
 class SectionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -98,19 +103,25 @@ class ExerciseSerializer(serializers.ModelSerializer):
 
     # https://stackoverflow.com/questions/22124555 has many answers;
     # I chose the approach described in https://stackoverflow.com/a/50842440/905845
+
+    def validate_project(self, value):
+        if self.instance and value != self.instance.project:
+            raise serializers.ValidationError("'project' is immutable once set.")
+        return value
+
     def validate_textbook(self, value):
         if self.instance and value != self.instance.textbook:
-            raise serializers.ValidationError("\"textbook\" is immutable once set.")
+            raise serializers.ValidationError("'textbook' is immutable once set.")
         return value
 
     def validate_textbook_page(self, value):
         if self.instance and value != self.instance.textbook_page:
-            raise serializers.ValidationError("\"textbook_page\" is immutable once set.")
+            raise serializers.ValidationError("'textbook_page' is immutable once set.")
         return value
 
     def validate_number(self, value):
         if self.instance and value != self.instance.number:
-            raise serializers.ValidationError("\"number\" is immutable once set.")
+            raise serializers.ValidationError("'number' is immutable once set.")
         return value
 
 

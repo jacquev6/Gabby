@@ -15,6 +15,7 @@ class Migration(migrations.Migration):
             ADD CONSTRAINT textbooks_exercise_textbook_project_matches_exercise_project
               FOREIGN KEY (project_id, textbook_id)
               REFERENCES textbooks_textbook(project_id, id)
+              ON DELETE CASCADE
             """,
             """
             ALTER TABLE textbooks_exercise

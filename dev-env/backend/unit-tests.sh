@@ -6,4 +6,10 @@ set -o pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/."
 
 
-docker compose exec backend python -Wa manage.py test --shuffle "$@"
+shuffle=""
+if [ $# -eq 0 ]
+then
+  shuffle=--shuffle
+fi
+
+docker compose exec backend python -Wa manage.py test $shuffle "$@"
