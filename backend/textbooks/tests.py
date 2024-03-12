@@ -4,7 +4,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITransactionTestCase
 
-from .models import PdfFile, PdfFileNaming, Project, Textbook, Section, Exercise, ExtractionEvent
+from .models import PdfFile, PdfFileNaming, Project, Textbook, Exercise
 
 
 class PdfFileApiTests(APITransactionTestCase):
@@ -829,7 +829,6 @@ class TextbookApiTests(APITransactionTestCase):
         self.assertEqual(textbook.publisher, "The publisher")
         self.assertEqual(textbook.year, 2023)
         self.assertEqual(textbook.isbn, "9783161484100")
-
 
     def test_delete__without_exercises(self):
         Textbook.objects.create(project=self.project, title="The title", publisher="The publisher", year=2023, isbn="9783161484100")

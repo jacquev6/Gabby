@@ -3,7 +3,6 @@ from django.contrib import admin
 from .models import PdfFile, PdfFileNaming, Project, Textbook, Section, Exercise, ExtractionEvent
 
 
-
 class SectionInline(admin.TabularInline):
     model = Section
     extra = 0
