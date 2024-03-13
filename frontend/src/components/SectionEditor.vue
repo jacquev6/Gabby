@@ -1,8 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 
-import { BLabeledInput, BButton, BRow, BCol, BModal } from './opinion/bootstrap'
-import Loading from './Loading.vue'
+import { BBusy, BLabeledInput, BButton, BRow, BCol, BModal } from './opinion/bootstrap'
 import { useApiStore } from '../stores/api'
 
 
@@ -77,7 +76,7 @@ defineExpose({
       <h1 class="modal-title" :id="labelId">Lien entre PDF et manuel</h1>
     </template>
     <template #body>
-      <loading :loading="saving">
+      <b-busy :busy="saving">
         <b-row>
           <b-col>
             <b-labeled-input label="Début dans le PDF" v-model="pdfFileFirstPage" type="number" min="1" />
@@ -99,13 +98,13 @@ defineExpose({
           Les pages {{ pdfFileFirstPage }} à {{ pdfFileLastPage }} du PDF
           correspondent aux pages {{ textbookFirstPage }} à {{ textbookLastPage }} du manuel.
         </p>
-      </loading>
+      </b-busy>
     </template>
     <template #footer>
-      <loading :loading="saving">
+      <b-busy :busy="saving">
         <b-button secondary @click="hide" :disabled="!active">Annuler</b-button>
         <b-button primary @click="save().then(hide)" :disabled="!active || disabled">Enregistrer</b-button>
-      </loading>
+      </b-busy>
     </template>
   </b-modal>
 </template>

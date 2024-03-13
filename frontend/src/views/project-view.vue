@@ -5,8 +5,7 @@ import { RouterLink, useRouter } from 'vue-router'
 
 import { useApiStore } from '../stores/api'
 import { usePdfsStore } from '../stores/pdfs'
-import BLoading from '../components/Loading.vue'
-import { BLabeledInput, BRow, BCol, BButton } from '../components/opinion/bootstrap'
+import { BBusy, BLabeledInput, BRow, BCol, BButton } from '../components/opinion/bootstrap'
 
 
 const pdfs = usePdfsStore()
@@ -97,23 +96,23 @@ function ellipsis(s) {
 </script>
 
 <template>
-  <b-loading :loading="projectLoading">
+  <b-busy :busy="projectLoading">
     <h1>Projet "{{ project?.attributes.title }}"</h1>
     <p>{{ project?.attributes.description }}</p>
     <p>Téléchargez <a :href="`/api/project-${props.projectId}-extraction-report.json`">le rapport d'extraction</a>.</p>
     <b-row>
       <b-col>
         <h2>Nouveau manuel</h2>
-        <b-loading :loading="creatingTextbook">
-          <b-loading :loading="loadingPdf">
+        <b-busy :busy="creatingTextbook">
+          <b-busy :busy="loadingPdf">
             <b-labeled-input :label="$t('inputFile')" type="file" accept=".pdf" @change="(e) => loadPdf(e.target.files[0])" />
-          </b-loading>
+          </b-busy>
           <b-labeled-input label="Titre" v-model="newTextbookTitle"/>
           <b-labeled-input label="Éditeur" v-model="newTextbookPublisher"/>
           <b-labeled-input label="Année" type="number" v-model="newTextbookYear"/>
           <b-labeled-input label="ISBN" v-model="newTextbookIsbn"/>
           <b-button primary @click="createTextbook" :disabled="createTextbookDisabled">Créer</b-button>
-        </b-loading>
+        </b-busy>
       </b-col>
       <b-col>
         <h2>Nouvel exercice indépendant</h2>
@@ -149,5 +148,5 @@ function ellipsis(s) {
         <p v-else>Aucun exercice pour le moment.</p>
       </b-col>
     </b-row>
-  </b-loading>
+  </b-busy>
 </template>

@@ -4,8 +4,7 @@ import { computedAsync } from '@vueuse/core'
 import { RouterLink, useRouter } from 'vue-router'
 
 import { useApiStore } from '../stores/api'
-import BLoading from '../components/Loading.vue'
-import { BLabeledInput, BLabeledTextarea, BRow, BCol, BButton } from '../components/opinion/bootstrap'
+import { BBusy, BLabeledInput, BLabeledTextarea, BRow, BCol, BButton } from '../components/opinion/bootstrap'
 
 
 const router = useRouter()
@@ -46,15 +45,15 @@ async function createProject() {
   <b-row>
     <b-col>
       <h1>Nouveau projet</h1>
-      <b-loading :loading="creatingProject">
+      <b-busy :busy="creatingProject">
         <b-labeled-input v-model="newProjectTitle" label="Titre" />
         <b-labeled-textarea v-model="newProjectDescription" label="Description" />
         <b-button primary @click="createProject" :disabled="createProjectDisabled">Créer</b-button>
-      </b-loading>
+      </b-busy>
     </b-col>
     <b-col>
       <h1>Projets existants</h1>
-      <b-loading :loading="loadingProjects">
+      <b-busy :busy="loadingProjects">
         <template v-if="projects.length">
           <ul>
             <li v-for="project in projects" :key="project.id">
@@ -63,7 +62,7 @@ async function createProject() {
           </ul>
         </template>
         <p v-else>Aucun projet pour le moment.</p>
-      </b-loading>
+      </b-busy>
     </b-col>
   </b-row>
 </template>

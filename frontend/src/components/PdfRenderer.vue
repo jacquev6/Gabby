@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
 
-import Loading from './Loading.vue'
+import { BBusy } from './opinion/bootstrap'
 
 
 defineOptions({
@@ -73,11 +73,11 @@ defineExpose({width, height, transform})
 </script>
 
 <template>
-  <loading size="7rem" :loading="loading">
+  <b-busy size="7rem" :busy="loading">
     <canvas
       ref="canvas"
       :width="width" :height="height"
       v-bind="$attrs"
     ></canvas>
-  </loading>
+  </b-busy>
 </template>

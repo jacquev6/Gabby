@@ -5,9 +5,8 @@ import { computedAsync } from '@vueuse/core'
 
 import { useApiStore } from '../stores/api'
 import { usePdfsStore } from '../stores/pdfs'
-import { BRow, BCol, BButton } from '../components/opinion/bootstrap'
+import { BBusy, BRow, BCol, BButton } from '../components/opinion/bootstrap'
 import PdfRenderer from '../components/PdfRenderer.vue'
-import Loading from '../components/Loading.vue'
 import ExerciseForm from '../components/ExerciseForm.vue'
 import TextPicker from '../components/TextPicker.vue'
 import SectionEditor from '../components/SectionEditor.vue'
@@ -245,7 +244,7 @@ watch(requestedPage, (requested) => {
 </script>
 
 <template>
-  <loading size="7rem" :loading="textbookLoading">
+  <b-busy size="7rem" :busy="textbookLoading">
     <b-row>
       <b-col>
         <p class="text-center">
@@ -260,7 +259,7 @@ watch(requestedPage, (requested) => {
         </p>
         <section-editor ref="sectionEditor" />
         <template v-if="section">
-          <loading size="7rem" :loading="pdfLoading">
+          <b-busy size="7rem" :busy="pdfLoading">
             <template v-if="pdf?.page">
               <div style="border: 1px solid black">
                 <pdf-renderer
@@ -283,7 +282,7 @@ watch(requestedPage, (requested) => {
               <p>@todo(Feature, soon) Let user open PDF from here</p>
               <p>@todo(Project management, later) Remove this button: <button @click="pdfs.open({url: '/test.pdf'})">Load test.pdf</button></p>
             </template>
-          </loading>
+          </b-busy>
         </template>
         <template v-else>
           <p>Aucun PDF enregistré ne contient cette page.</p>
@@ -292,9 +291,9 @@ watch(requestedPage, (requested) => {
       </b-col>
       <b-col>
         <h1>{{ $t('edition') }}</h1>
-        <loading :loading="modeIsLoading">
+        <b-busy :busy="modeIsLoading">
           <template v-if="mode === 'list'">
-            <loading :loading="loadingExercises">
+            <b-busy :busy="loadingExercises">
               <template v-if="exercisesOnPage.length">
                 <p>{{ $t('existingExercises') }}</p>
                 <ul>
@@ -306,7 +305,7 @@ watch(requestedPage, (requested) => {
                 </ul>
               </template>
               <p v-else>{{ $t('noExercises') }}</p>
-            </loading>
+            </b-busy>
             <p class="d-grid"><b-button primary @click="switchToCreateMode(false)">{{ $t('create') }}</b-button></p>
           </template>
           <template v-else>
@@ -326,14 +325,14 @@ watch(requestedPage, (requested) => {
               </template>
             </div>
           </template>
-        </loading>
+        </b-busy>
       </b-col>
       <b-col>
         <h1>{{ $t('visualization') }}</h1>
         <p>({{ $t('not-yet-implemented') }})</p>
       </b-col>
     </b-row>
-  </loading>
+  </b-busy>
 </template>
 
 <style>
