@@ -13,7 +13,7 @@ describe('Gabby', () => {
 
     cy.get('.spinner-border').should('not.exist')
 
-    cy.get('p').contains('Aucun projet pour le moment.').should('exist')
+    cy.get('p').contains('Aucun projet pour le moment').should('exist')
     cy.get('button').contains('Créer').should('be.disabled')
     cy.get('label').contains('Titre').next().type('Projet de test')
     cy.get('label').contains('Description').next().type('Quelques exercices de Slabeuf.')
@@ -21,7 +21,7 @@ describe('Gabby', () => {
 
     cy.get('.spinner-border').should('not.exist')
 
-    cy.get('p').contains('Aucun exercice pour le moment.').should('exist')
+    cy.get('p').contains('Aucun exercice pour le moment').should('exist')
     cy.get('button').contains('Créer').should('be.disabled')
     cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
     cy.get('label').contains('Titre').next().type('Français CE2')
@@ -139,7 +139,7 @@ describe('Gabby', () => {
 
     cy.get('.spinner-border').should('not.exist')
 
-    cy.get('p').contains('Aucun projet pour le moment.').should('exist')
+    cy.get('p').contains('Aucun projet pour le moment').should('exist')
     cy.get('button').contains('Créer').should('be.disabled')
     cy.get('label').contains('Titre').next().type('Projet de test')
     // @todo Allow creating a project with an empty description
@@ -149,7 +149,7 @@ describe('Gabby', () => {
   
     cy.get('.spinner-border').should('not.exist')
   
-    cy.get('p').contains('Aucun exercice pour le moment.').should('exist')
+    cy.get('p').contains('Aucun exercice pour le moment').should('exist')
     cy.get('button').contains('Créer').should('be.disabled')
     cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
     cy.get('label').contains('Titre').next().type('Français CE2')

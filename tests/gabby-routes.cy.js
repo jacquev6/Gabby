@@ -3,7 +3,7 @@ describe('Gabby has routes that', () => {
 
   it('can access the default Vue Router view', () => {
     cy.visit('/')
-    cy.contains('h1', 'Projets existants')
+    cy.contains('h1', 'Existing projects')
   })
 
   it('can access a Vue Router view without trailing /', () => {
