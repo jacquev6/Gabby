@@ -143,4 +143,37 @@ describe('Gabby\'s project view', () => {
     cy.get('li:contains("L2 : Faire d\'autres choses int…")').should('exist')
     cy.get('li:contains("L3 : Prendre le temps de faire…")').should('exist')
   })
+
+  it('creates a minimal independent exercise', () => {
+    cy.visit('/project/1')
+
+    cy.get('label:contains("Number")').next().type('10')
+    cy.get('label:contains("Instructions")').next().type('Do something smart.')
+    cy.get('button:contains("Create exercise")').click()
+
+    cy.get('div.busy').should('not.exist')
+
+    cy.get('label:contains("Number")').next().should('have.value', '11')
+
+    cy.get('li:contains("10 : Do something smart.")').should('exist')
+  })
+
+  it('creates a full independent exercise', () => {
+    cy.visit('/project/1')
+
+    cy.get('label:contains("Number")').next().type('L10')
+    cy.get('label:contains("Instructions")').next().type('Do the smartest thing ever.')
+    cy.get('label:contains("Wording")').next().type('The wording')
+    cy.get('p:contains("Example")').click()
+    cy.focused().type('The example')
+    cy.get('p:contains("Clue")').click()
+    cy.focused().type('The clue')
+    cy.get('button:contains("Create exercise")').click()
+
+    cy.get('div.busy').should('not.exist')
+
+    cy.get('label:contains("Number")').next().should('have.value', '')
+
+    cy.get('li:contains("L10 : Do the smartest thing eve…")').should('exist')
+  })
 })

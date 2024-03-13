@@ -17,5 +17,5 @@ defineExpose({
 <!-- @todo Move the auto-rows feature inside b-labeled-textarea? -->
 
 <template>
-  <b-labeled-textarea ref="textArea" v-model="model" :rows="model.split('\n').length + 1"><slot></slot></b-labeled-textarea>
+  <b-labeled-textarea ref="textArea" v-model="model" :rows="model.split('\n').length + 1" />
 </template>

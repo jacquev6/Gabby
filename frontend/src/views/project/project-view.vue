@@ -8,6 +8,7 @@ import Layout from '../../components/layout.vue'
 import { BBusy, BRow, BCol } from '../../components/opinion/bootstrap'
 import EditableProjectHeader from './editable-project-header.vue'
 import CreateTextbookForm from './create-textbook-form.vue'
+import CreateExerciseForm from './create-exercise-form.vue'
 import ExercisesList from './exercises-list.vue'
 
 
@@ -22,9 +23,11 @@ function goToTextbook(textbookId) {
   router.push({name: 'project-textbook-page', params: {projectId: props.projectId, textbookId, page: 1}})
 }
 
+const exercisesCreated = ref(0)
 const projectLoading = ref(false)
 const project = computedAsync(
   async () => {
+    ++exercisesCreated.value  // Dependency for reactivity
     return await api.client.getOne('project', props.projectId, {include: ['textbooks', 'exercises.textbook']})
   },
   null,
@@ -63,7 +66,7 @@ const title = computed(() => {
           </b-col>
           <b-col>
             <h2>{{ $t('newIndependentExercise') }}</h2>
-            <p>({{ $t('not-yet-implemented') }})</p>
+            <create-exercise-form :project="project" @created="++exercisesCreated" />
           </b-col>
           <b-col>
             <h2>{{ $t('existingTextbooksAndExercises') }}</h2>

@@ -7,6 +7,8 @@ import RequiredExerciseTextArea from './RequiredExerciseTextArea.vue'
 import { BLabeledCheckbox, BLabeledInput } from './opinion/bootstrap'
 
 
+// @todo Factorize with exercise-form, everywhere
+
 const props = defineProps({
   fixedNumber: {
     type: Boolean,
