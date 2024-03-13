@@ -6,6 +6,7 @@ import { RouterLink, useRouter } from 'vue-router'
 import { useApiStore } from '../../stores/api'
 import { usePdfsStore } from '../../stores/pdfs'
 import { BBusy, BLabeledInput, BRow, BCol, BButton } from '../../components/opinion/bootstrap'
+import EditableProjectHeader from './editable-project-header.vue'
 
 
 const pdfs = usePdfsStore()
@@ -98,8 +99,7 @@ function ellipsis(s) {
 <template>
   <b-busy :busy="projectLoading">
     <template v-if="project?.exists">
-      <h1>{{ $t('projectHeader', {title: project.attributes.title}) }}</h1>
-      <p>{{ project.attributes.description }}</p>
+      <editable-project-header :project="project" />
       <p>Téléchargez <a :href="`/api/project-${props.projectId}-extraction-report.json`">le rapport d'extraction</a>.</p>
       <b-row>
         <b-col>

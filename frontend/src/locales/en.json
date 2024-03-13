@@ -15,6 +15,9 @@
 
   "projectHeader": "Project \"{title}\"",
   "projectNotFound": "Project not found",
+  "edit": "Edit",
+  "saveProject": "Save project",
+  "cancel": "Cancel",
 
 
   "error.pdf": "Error while loading the PDF:",
@@ -28,11 +31,9 @@
   "existingExercises": "Existing exercises:",
   "noExercises": "No exercises yet.",
   "create": "New exercise",
-  "edit": "Edit",
   "delete": "Delete",
   "save": "Save",
   "save.next": "Save then create next",
-  "cancel": "Cancel",
   "doStripExerciceNumber": "Strip exercise number automatically",
 
   "selectedText": "Selected text",

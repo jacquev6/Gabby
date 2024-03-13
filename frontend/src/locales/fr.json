@@ -15,6 +15,9 @@
 
   "projectHeader": "Projet \"{title}\"",
   "projectNotFound": "Projet introuvable",
+  "edit": "Modifier",
+  "saveProject": "Enregistrer le project",
+  "cancel": "Annuler",
 
 
   "error.pdf": "Erreur pendant le chargement du PDF :",
@@ -28,11 +31,9 @@
   "existingExercises": "Exercices existants :",
   "noExercises": "Pas encore d'exercices.",
   "create": "Nouvel exercice",
-  "edit": "Modifier",
   "delete": "Supprimer",
   "save": "Enregistrer",
   "save.next": "Enregistrer puis créer le suivant",
-  "cancel": "Annuler",
   "doStripExerciceNumber": "Enlever le numéro d'exercice automatiquement",
 
   "selectedText": "Texte sélectionné",
