@@ -3,6 +3,10 @@ const isProdPreview = Cypress.env('IS_PROD_PREVIEW')
 describe('Extraction events', () => {
   before(console.clear)
 
+  after(() => {
+    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises')
+  })
+
   it('are all gathered during extraction', () => {
     cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises')
 

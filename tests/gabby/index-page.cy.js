@@ -6,7 +6,7 @@ describe('Gabby\'s index page', () => {
   })
 
   after(() => {
-    cy.request('POST', '/reset-for-tests/yes-im-sure')
+    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises')
   })
 
   it('shows "No projects', () => {

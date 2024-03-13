@@ -1,6 +1,10 @@
 describe('Gabby', () => {
   before(console.clear)
 
+  after(() => {
+    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises')
+  })
+
   it('performs extraction from scratch', () => {
     cy.request('POST', '/reset-for-tests/yes-im-sure')
 
