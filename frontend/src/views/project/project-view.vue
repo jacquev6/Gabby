@@ -3,9 +3,9 @@ import { ref, computed } from 'vue'
 import { computedAsync } from '@vueuse/core'
 import { RouterLink, useRouter } from 'vue-router'
 
-import { useApiStore } from '../stores/api'
-import { usePdfsStore } from '../stores/pdfs'
-import { BBusy, BLabeledInput, BRow, BCol, BButton } from '../components/opinion/bootstrap'
+import { useApiStore } from '../../stores/api'
+import { usePdfsStore } from '../../stores/pdfs'
+import { BBusy, BLabeledInput, BRow, BCol, BButton } from '../../components/opinion/bootstrap'
 
 
 const pdfs = usePdfsStore()
@@ -154,4 +154,4 @@ function ellipsis(s) {
       <h1>{{ $t('projectNotFound') }}</h1>
     </template>
   </b-busy>
-</template>
+</template>../../stores/api../../stores/pdfs../../components/opinion/bootstrap
