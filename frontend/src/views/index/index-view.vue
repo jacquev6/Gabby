@@ -9,8 +9,8 @@ import ProjectsList from './projects-list.vue'
 
 const router = useRouter()
 
-function goToProject(projectId) {
-  router.push({name: 'project', params: {projectId}})
+function goToProject(project) {
+  router.push({name: 'project', params: {projectId: project.id}})
 }
 </script>
 

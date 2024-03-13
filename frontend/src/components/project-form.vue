@@ -10,7 +10,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits([
-  'created',  // (projectId: string) => void
+  'created',  // (project: Object) => void
   'saved',  // () => void
 ])
 
@@ -41,7 +41,7 @@ async function create() {
   busy.value = false
   title.value = ''
   description.value = ''
-  emit('created', project.id)
+  emit('created', project)
 }
 
 async function save() {
@@ -58,9 +58,9 @@ async function save() {
 </script>
 
 <template>
-  <b-busy :busy="busy">
+  <b-busy :busy>
     <b-labeled-input v-model="title" :label="$t('projectTitle')" />
     <b-labeled-textarea v-model="description" :label="$t('projectDescription')" />
-    <slot :disabled="disabled" :create="create" :save="save"></slot>
+    <slot :disabled :create :save></slot>
   </b-busy>
 </template>
