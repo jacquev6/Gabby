@@ -1,7 +1,8 @@
 <script setup>
 import { RouterLink } from 'vue-router'
 
-import AboutModal from '../components/AboutModal.vue'
+import AboutModal from './AboutModal.vue'
+import languageSelector from './opinion/language-selector.vue'
 </script>
 
 <template>
@@ -13,8 +14,8 @@ import AboutModal from '../components/AboutModal.vue'
         <ul class="navbar-nav ms-auto">
           <li class="nav-item"><a href="/doc/" class="nav-link">{{ $t('help') }}</a></li>
           <li class="nav-item"><a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#about-modal">{{ $t('about') }}</a></li>
+          <li><language-selector class="w-auto" /></li>
         </ul>
-        <select v-model="$i18n.locale"><option v-for="locale in $i18n.availableLocales" :key="locale" :value="locale">{{ {'en': '🇺🇸 English', 'fr': '🇫🇷 Français'}[locale] }}</option></select>
       </div>
     </div>
   </nav>
