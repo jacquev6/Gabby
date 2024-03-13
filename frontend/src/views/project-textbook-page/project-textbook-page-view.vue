@@ -19,9 +19,6 @@ const props = defineProps({
   page: {type: Number, required: true},
 })
 
-// @todo(Feature, now) Set title according to props
-// @todo(Feature, now) Set navbar according to props
-
 const router = useRouter()
 const api = useApiStore()
 const pdfs = usePdfsStore()
