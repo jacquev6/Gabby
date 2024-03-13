@@ -1,5 +1,5 @@
 <script setup>
-import { ref, defineProps } from 'vue'
+import { ref } from 'vue'
 
 import { useApiStore } from '../../stores/api'
 import { BButton, BBusy, BLabeledInput, BLabeledTextarea } from '../../components/opinion/bootstrap'

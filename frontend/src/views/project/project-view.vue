@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { computedAsync } from '@vueuse/core'
-import { RouterLink, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 
 import { useApiStore } from '../../stores/api'
 import { usePdfsStore } from '../../stores/pdfs'
