@@ -1,6 +1,7 @@
 <script setup>
 import { useRouter } from 'vue-router'
 
+import NavBarred from '../../components/NavBarred.vue'
 import { BRow, BCol } from '../../components/opinion/bootstrap'
 import CreateProjectForm from './create-project-form.vue'
 import ProjectsList from './projects-list.vue'
@@ -14,14 +15,16 @@ function goToProject(projectId) {
 </script>
 
 <template>
-  <b-row>
-    <b-col>
-      <h1>{{ $t('newProject') }}</h1>
-      <create-project-form @created="goToProject" />
-    </b-col>
-    <b-col>
-      <h1>{{ $t('existingProjects' )}}</h1>
-      <projects-list />
-    </b-col>
-  </b-row>
+  <nav-barred>
+    <b-row>
+      <b-col>
+        <h1>{{ $t('newProject') }}</h1>
+        <create-project-form @created="goToProject" />
+      </b-col>
+      <b-col>
+        <h1>{{ $t('existingProjects' )}}</h1>
+        <projects-list />
+      </b-col>
+    </b-row>
+  </nav-barred>
 </template>
