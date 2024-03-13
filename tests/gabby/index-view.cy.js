@@ -17,7 +17,7 @@ describe('Gabby\'s index view', () => {
     cy.title().should('eq', 'MALIN')
   })
 
-  it('enables the "Create project" button when the title is filled in', () => {
+  it('enables the "Create project" button', () => {
     cy.visit('/')
 
     cy.get('button:contains("Create project")').should('be.disabled')

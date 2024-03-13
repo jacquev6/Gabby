@@ -55,7 +55,7 @@ describe('Gabby\'s project view', () => {
     cy.get('button:contains("Save")').should('be.disabled')
   })
 
-  it('enables the "Create textbook" button when the pdf and title are filled in', () => {
+  it('enables the "Create textbook" button', () => {
     cy.visit('/project/1')
     cy.get('button:contains("Create textbook")').should('be.disabled')
 
@@ -144,6 +144,19 @@ describe('Gabby\'s project view', () => {
     cy.get('li:contains("L3 : Prendre le temps de faire…")').should('exist')
   })
 
+  it('enables the "Create exercise" button', () => {
+    cy.visit('/project/1')
+    cy.get('button:contains("Create exercise")').should('be.disabled')
+
+    cy.get('label:contains("Number")').next().type('a')
+
+    cy.get('button:contains("Create exercise")').should('be.enabled')
+
+    cy.get('label:contains("Number")').next().clear()
+
+    cy.get('button:contains("Create exercise")').should('be.disabled')
+  })
+
   it('creates a minimal independent exercise', () => {
     cy.visit('/project/1')
 
@@ -176,4 +189,6 @@ describe('Gabby\'s project view', () => {
 
     cy.get('li:contains("L10 : Do the smartest thing eve…")').should('exist')
   })
+
+  // @todo Edit independent exercise
 })
