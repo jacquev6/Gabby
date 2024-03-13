@@ -232,6 +232,7 @@ export function defineApiStore(name, options) {
         ret.refresh()
         return ret
       },
+      // @todo api.auto.getOne
     }
 
     return {cache, client, auto}
