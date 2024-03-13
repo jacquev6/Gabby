@@ -5,7 +5,7 @@ import { computedAsync } from '@vueuse/core'
 
 import { useApiStore } from '../../stores/api'
 import { usePdfsStore } from '../../stores/pdfs'
-import NavBarred from '../../components/NavBarred.vue'
+import Layout from '../../components/layout.vue'
 import { BBusy, BRow, BCol, BButton } from '../../components/opinion/bootstrap'
 import PdfRenderer from '../../components/PdfRenderer.vue'
 import ExerciseForm from '../../components/ExerciseForm.vue'
@@ -50,6 +50,17 @@ const textbook = computedAsync(
   null,
   textbookLoading,
 )
+
+const breadcrumbs = computed(() => {
+  if (project.value?.exists && textbook.value?.exists) {
+    return [
+      {title: project.value.attributes.title, to: {name: 'project', params: {projectId: props.projectId}}},
+      {title: textbook.value.attributes.title},
+    ]
+  } else {
+    return []
+  }
+})
 
 // @todo(Feature, soon) Get the number of pages from the textbook itself
 const textbookPagesCount = computed(() => {
@@ -259,8 +270,7 @@ watch(requestedPage, (requested) => {
 </script>
 
 <template>
-  <nav-barred>
-    <template #navbar v-if="project?.exists && textbook?.exists">{{ project.attributes.title }} - {{ textbook.attributes.title }}</template>
+  <layout :breadcrumbs="breadcrumbs">
     <b-busy size="7rem" :busy="projectLoading || textbookLoading">
       <template v-if="project?.exists">
         <template v-if="textbook?.exists">
@@ -360,7 +370,7 @@ watch(requestedPage, (requested) => {
         <h1>{{ $t('projectNotFound') }}</h1>
       </template>
     </b-busy>
-  </nav-barred>
+  </layout>
 </template>
 
 <style>
@@ -373,4 +383,4 @@ input.number-no-spin::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-</style>../../stores/api../../stores/pdfs../../components/opinion/bootstrap
+</style>

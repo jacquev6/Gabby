@@ -5,7 +5,7 @@ import { RouterLink, useRouter } from 'vue-router'
 
 import { useApiStore } from '../../stores/api'
 import { usePdfsStore } from '../../stores/pdfs'
-import NavBarred from '../../components/NavBarred.vue'
+import Layout from '../../components/layout.vue'
 import { BBusy, BLabeledInput, BRow, BCol, BButton } from '../../components/opinion/bootstrap'
 import EditableProjectHeader from './editable-project-header.vue'
 
@@ -68,6 +68,16 @@ const project = computedAsync(
   projectLoading,
 )
 
+const breadcrumbs = computed(() => {
+  if (project.value?.exists) {
+    return [
+      {title: project.value.attributes.title},
+    ]
+  } else {
+    return []
+  }
+})
+
 const exercisesByTextbookAndPage = computed(() => {
   const textbooks = {}
   for (const exercise of project.value?.relationships.exercises) {
@@ -98,8 +108,7 @@ function ellipsis(s) {
 </script>
 
 <template>
-  <nav-barred>
-    <template #navbar v-if="project?.exists">{{ project.attributes.title }}</template>
+  <layout :breadcrumbs="breadcrumbs">
     <b-busy :busy="projectLoading">
       <template v-if="project?.exists">
         <editable-project-header :project="project" />
@@ -157,5 +166,5 @@ function ellipsis(s) {
         <h1>{{ $t('projectNotFound') }}</h1>
       </template>
     </b-busy>
-  </nav-barred>
+  </layout>
 </template>
