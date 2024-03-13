@@ -33,6 +33,10 @@ describe('Gabby\'s project\'s textbook page view', () => {
     cy.title().should('eq', 'MALIN')
   })
 
+  // @todo Add test where the page is a negative number
+  // @todo Add test where the page is larger than the textbook's number of pages
+  // @todo Add test where the page is not a number
+
   it('lands', () => {
     cy.visit('/project/1/textbook/1/page/6')
 
