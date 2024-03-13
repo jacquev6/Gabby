@@ -69,10 +69,10 @@ class Textbook(models.Model):
         ]
 
     title = models.CharField(null=False, blank=False, max_length=255)
-    publisher = models.CharField(null=True, blank=False, max_length=255)  # De-normalized
-    year = models.IntegerField(null=True)
+    publisher = models.CharField(null=True, blank=True, max_length=255)  # De-normalized
+    year = models.IntegerField(null=True, blank=True)
     isbn = models.CharField(
-        null=True, blank=False,
+        null=True, blank=True,
         max_length=25, # Max length as of 2024 is 13, established in 2007, so this should be future-proof
         validators=[RegexValidator(r'[0-9]')],
     )

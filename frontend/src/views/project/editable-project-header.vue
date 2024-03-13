@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 import { useApiStore } from '../../stores/api'
 import { BButton, BBusy, BLabeledInput, BLabeledTextarea } from '../../components/opinion/bootstrap'
@@ -20,6 +20,8 @@ function startEditing() {
   editing.value = true
 }
 
+// @todo Factorize with create-project-form.vue
+const disabled = computed(() => !title.value)
 const saving = ref(false)
 async function save() {
   saving.value = true
@@ -33,10 +35,10 @@ async function save() {
   <template v-if="editing">
     <h1>Project</h1>
     <b-busy :busy="saving">
-      <b-labeled-input :label="$t('title')" v-model="title" />
-      <b-labeled-textarea :label="$t('description')" v-model="description" />
+      <b-labeled-input :label="$t('projectTitle')" v-model="title" />
+      <b-labeled-textarea :label="$t('projectDescription')" v-model="description" />
       <b-button sm secondary @click="editing = false">{{ $t('cancel') }}</b-button>
-      <b-button sm primary @click="save">{{ $t('saveProject') }}</b-button>
+      <b-button sm primary @click="save" :disabled="disabled">{{ $t('saveProject') }}</b-button>
     </b-busy>
   </template>
   <template v-else>

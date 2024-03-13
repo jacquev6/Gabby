@@ -13,7 +13,7 @@ const api = useApiStore()
 
 const title = ref('')
 const description = ref('')
-const createDisabled = computed(() => !title.value)
+const disabled = computed(() => !title.value)
 const creating = ref(false)
 async function create() {
   creating.value = true
@@ -31,8 +31,8 @@ async function create() {
 
 <template>
   <b-busy :busy="creating">
-    <b-labeled-input v-model="title" :label="$t('title')" />
-    <b-labeled-textarea v-model="description" :label="$t('description')" />
-    <b-button primary @click="create" :disabled="createDisabled">{{ $t('createProject' )}}</b-button>
+    <b-labeled-input v-model="title" :label="$t('projectTitle')" />
+    <b-labeled-textarea v-model="description" :label="$t('projectDescription')" />
+    <b-button primary @click="create" :disabled="disabled">{{ $t('createProject' )}}</b-button>
   </b-busy>
 </template>

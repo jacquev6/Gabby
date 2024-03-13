@@ -6,11 +6,11 @@
 
 
   "newProject": "Nouveau projet",
-  "title": "Titre",
-  "description": "Description",
+  "projectTitle": "Titre",
+  "projectDescription": "Description",
   "createProject": "Créer le projet",
   "existingProjects": "Projets existants",
-  "noProjectsForNow": "Aucun projet pour le moment",
+  "noProjectsForNow": "Aucun projet pour le moment.",
 
 
   "projectHeader": "Projet \"{title}\"",
@@ -18,6 +18,17 @@
   "edit": "Modifier",
   "saveProject": "Enregistrer le project",
   "cancel": "Annuler",
+  "download": "Télécharger",
+  "theExtractionReport": "le rapport d'extraction",
+  "newTextbook": "Nouveau manuel",
+  "textbookTitle": "Titre",
+  "textbookPublisher": "Éditeur",
+  "textbookYear": "Année",
+  "textbookIsbn": "ISBN",
+  "createTextbook": "Créer le manuel",
+  "newIndependentExercise": "Nouvel exercice indépendant",
+  "existingTextbooksAndExercises": "Manuels et exercices existants",
+  "noExercisesForNow": "Aucun exercice pour le moment.",
 
 
   "textbookNotFound": "Manuel introuvable",
