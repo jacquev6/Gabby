@@ -9,11 +9,12 @@ describe('Gabby\'s index view', () => {
     cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises')
   })
 
-  it('shows "No projects', () => {
+  it('lands', () => {
     cy.visit('/')
 
     cy.get('div.busy').should('not.exist')
     cy.get('p').should('contain', 'No projects')
+    cy.title().should('eq', 'MALIN')
   })
 
   it('enables the "Create project" button when the title is filled in', () => {

@@ -15,7 +15,7 @@ function goToProject(projectId) {
 </script>
 
 <template>
-  <layout>
+  <layout title="MALIN">
     <b-row>
       <b-col>
         <h1>{{ $t('newProject') }}</h1>

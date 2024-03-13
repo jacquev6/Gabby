@@ -36,7 +36,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
   it('lands', () => {
     cy.visit('/project/1/textbook/1/page/6')
 
-    // @todo cy.title().should('eq', 'MALIN - Premier projet de test - Français CE2 - Page 6')
+    cy.title().should('eq', 'MALIN - Premier projet de test - Français CE2 - Page 6')
     cy.get('.navbar').should('contain', 'Premier projet de test')
     cy.get('.navbar').should('contain', 'Français CE2')
   })

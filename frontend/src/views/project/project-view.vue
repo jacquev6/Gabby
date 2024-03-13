@@ -78,6 +78,14 @@ const breadcrumbs = computed(() => {
   }
 })
 
+const title = computed(() => {
+  if (project.value?.exists) {
+    return `MALIN - ${project.value.attributes.title}`
+  } else {
+    return 'MALIN'
+  }
+})
+
 const exercisesByTextbookAndPage = computed(() => {
   const textbooks = {}
   for (const exercise of project.value?.relationships.exercises) {
@@ -108,7 +116,7 @@ function ellipsis(s) {
 </script>
 
 <template>
-  <layout :breadcrumbs="breadcrumbs">
+  <layout :title="title" :breadcrumbs="breadcrumbs">
     <b-busy :busy="projectLoading">
       <template v-if="project?.exists">
         <editable-project-header :project="project" />

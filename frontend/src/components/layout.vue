@@ -1,12 +1,18 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { useHead } from '@unhead/vue'
 
 import AboutModal from './AboutModal.vue'
 import languageSelector from './opinion/language-selector.vue'
 
 
 const props = defineProps({
+  title: {type: String, required: true},
   breadcrumbs: {type: Array, default: []},
+})
+
+useHead({
+  title: computed(() => props.title)  // 'useHead' does not react to props directly,
 })
 
 const about = ref(null)

@@ -21,7 +21,7 @@ describe('Gabby\'s project view', () => {
     cy.visit('/project/1')
 
     cy.get('h1:contains("Test project")').should('exist')
-    // @todo cy.title().should('eq', 'MALIN - Test project')
+    cy.title().should('eq', 'MALIN - Test project')
     cy.get('p:contains("This is a test project, created empty in a fixture.")').should('exist')
     cy.get('.navbar').should('contain', 'Test project')
   })
@@ -36,13 +36,13 @@ describe('Gabby\'s project view', () => {
     cy.get('button:contains("Save")').click()
 
     cy.get('h1:contains("New title")').should('exist')
-    // @todo cy.title().should('eq', 'MALIN - New title')
+    cy.title().should('eq', 'MALIN - New title')
     cy.get('p:contains("New description.")').should('exist')
 
     cy.visit('/project/1')
     cy.get('div.busy').should('not.exist')
     cy.get('h1:contains("New title")').should('exist')
-    // @todo cy.title().should('eq', 'MALIN - New title')
+    cy.title().should('eq', 'MALIN - New title')
     cy.get('p:contains("New description.")').should('exist')
   })
 })

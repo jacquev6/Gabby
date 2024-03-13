@@ -2,6 +2,7 @@
   "dependencies": {
     "@floating-ui/vue": "^1.0.4",
     "@popperjs/core": "^2.11.8",
+    "@unhead/vue": "^1.8.16",
     "@vueuse/core": "^10.9.0",
     "bootstrap": "^5.3.3",
     "lodash": "^4.17.21",

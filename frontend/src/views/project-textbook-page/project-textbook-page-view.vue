@@ -62,6 +62,14 @@ const breadcrumbs = computed(() => {
   }
 })
 
+const title = computed(() => {
+  if (project.value?.exists && textbook.value?.exists) {
+    return `MALIN - ${project.value?.attributes.title} - ${textbook.value?.attributes.title} - Page ${props.page}`
+  } else {
+    return 'MALIN'
+  }
+})
+
 // @todo(Feature, soon) Get the number of pages from the textbook itself
 const textbookPagesCount = computed(() => {
   let c = 1
@@ -270,7 +278,7 @@ watch(requestedPage, (requested) => {
 </script>
 
 <template>
-  <layout :breadcrumbs="breadcrumbs">
+  <layout :title="title" :breadcrumbs="breadcrumbs">
     <b-busy size="7rem" :busy="projectLoading || textbookLoading">
       <template v-if="project?.exists">
         <template v-if="textbook?.exists">
