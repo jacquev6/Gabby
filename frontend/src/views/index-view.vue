@@ -1,6 +1,5 @@
 <script setup>
 import { ref, computed } from 'vue'
-import { computedAsync } from '@vueuse/core'
 import { RouterLink, useRouter } from 'vue-router'
 
 import { useApiStore } from '../stores/api'
@@ -10,22 +9,11 @@ import { BBusy, BLabeledInput, BLabeledTextarea, BRow, BCol, BButton } from '../
 const router = useRouter()
 const api = useApiStore()
 
-const projectsCreated = ref(0)
-const loadingProjects = ref(false)
-const projects = computedAsync(
-  async () => {
-    projectsCreated.value  // Dependency for reactivity
-    // await new Promise(r => setTimeout(r, 1000))
-    return await api.client.getAll('projects')
-  },
-  [],
-  loadingProjects,
-)
-
+const projects = api.auto.getAll('projects')
 
 const newProjectTitle = ref('')
 const newProjectDescription = ref('')
-const createProjectDisabled = computed(() => !newProjectTitle.value || !newProjectDescription.value)
+const createProjectDisabled = computed(() => !newProjectTitle.value)
 const creatingProject = ref(false)
 async function createProject() {
   creatingProject.value = true
@@ -53,7 +41,7 @@ async function createProject() {
     </b-col>
     <b-col>
       <h1>{{ $t('existingProjects' )}}</h1>
-      <b-busy :busy="loadingProjects">
+      <b-busy :busy="projects.loading">
         <template v-if="projects.length">
           <ul>
             <li v-for="project in projects" :key="project.id">
