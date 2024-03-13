@@ -1,7 +1,8 @@
 <script setup>
 import { ref, watch, nextTick } from 'vue'
 
-import BTextArea from './BootstrapTextArea.vue'
+import { BLabeledTextarea } from './opinion/bootstrap'
+
 
 const props = defineProps({
   label: { type: String, required: true },
@@ -27,6 +28,6 @@ defineExpose({
 </script>
 
 <template>
-  <BTextArea v-if="model || force" ref="textArea" :label="label" v-model="model" :rows="model.split('\n').length + 1" />
+  <BLabeledTextarea v-if="model || force" ref="textArea" :label="label" v-model="model" :rows="model.split('\n').length + 1" />
   <p v-else @click="activate">{{ label }} <button class="btn btn-sm btn-primary">+</button></p>
 </template>

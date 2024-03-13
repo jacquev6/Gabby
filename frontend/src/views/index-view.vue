@@ -5,9 +5,7 @@ import { RouterLink, useRouter } from 'vue-router'
 
 import { useApiStore } from '../stores/api'
 import BLoading from '../components/Loading.vue'
-import { BRow, BCol, BButton } from '../components/opinion/bootstrap'
-import BInput from '../components/BootstrapInput.vue'
-import BTextarea from '../components/BootstrapTextArea.vue'
+import { BLabeledInput, BLabeledTextarea, BRow, BCol, BButton } from '../components/opinion/bootstrap'
 
 
 const router = useRouter()
@@ -49,8 +47,8 @@ async function createProject() {
     <b-col>
       <h1>Nouveau projet</h1>
       <b-loading :loading="creatingProject">
-        <b-input v-model="newProjectTitle" label="Titre" />
-        <b-textarea v-model="newProjectDescription" label="Description" />
+        <b-labeled-input v-model="newProjectTitle" label="Titre" />
+        <b-labeled-textarea v-model="newProjectDescription" label="Description" />
         <b-button primary @click="createProject" :disabled="createProjectDisabled">Créer</b-button>
       </b-loading>
     </b-col>

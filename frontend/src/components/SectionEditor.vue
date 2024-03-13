@@ -1,8 +1,7 @@
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed } from 'vue'
 
-import { BButton, BRow, BCol, BModal } from './opinion/bootstrap'
-import BInput from './BootstrapInput.vue'
+import { BLabeledInput, BButton, BRow, BCol, BModal } from './opinion/bootstrap'
 import Loading from './Loading.vue'
 import { useApiStore } from '../stores/api'
 
@@ -81,18 +80,18 @@ defineExpose({
       <loading :loading="saving">
         <b-row>
           <b-col>
-            <b-input label="Début dans le PDF" v-model="pdfFileFirstPage" type="number" min="1" />
+            <b-labeled-input label="Début dans le PDF" v-model="pdfFileFirstPage" type="number" min="1" />
           </b-col>
           <b-col>
-            <b-input label="Fin dans le PDF" v-model="pdfFileLastPage" type="number" min="1" />
+            <b-labeled-input label="Fin dans le PDF" v-model="pdfFileLastPage" type="number" min="1" />
           </b-col>
         </b-row>
         <b-row>
           <b-col>
-            <b-input label="Début dans le manuel" v-model="textbookFirstPage" type="number" min="1" />
+            <b-labeled-input label="Début dans le manuel" v-model="textbookFirstPage" type="number" min="1" />
           </b-col>
           <b-col>
-            <b-input label="Fin dans le manuel" v-model="textbookLastPage" type="number" min="1" disabled />
+            <b-labeled-input label="Fin dans le manuel" v-model="textbookLastPage" type="number" min="1" disabled />
           </b-col>
         </b-row>
         <hr>

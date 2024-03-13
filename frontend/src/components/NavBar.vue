@@ -1,8 +1,12 @@
 <script setup>
 import { RouterLink } from 'vue-router'
+import { ref } from 'vue'
 
 import AboutModal from './AboutModal.vue'
 import languageSelector from './opinion/language-selector.vue'
+
+
+const about = ref(null)
 </script>
 
 <template>
@@ -13,11 +17,11 @@ import languageSelector from './opinion/language-selector.vue'
       <div class="collapse navbar-collapse" id="navbar-collapse">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item"><a href="/doc/" class="nav-link">{{ $t('help') }}</a></li>
-          <li class="nav-item"><a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#about-modal">{{ $t('about') }}</a></li>
+          <li class="nav-item"><a href="#" class="nav-link" @click.prevent="about.show()">{{ $t('about') }}</a></li>
           <li><language-selector class="w-auto" /></li>
         </ul>
       </div>
     </div>
   </nav>
-  <about-modal id="about-modal" />
+  <about-modal ref="about"/>
 </template>
