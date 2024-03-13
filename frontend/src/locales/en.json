@@ -13,6 +13,10 @@
   "noProjectsForNow": "No projects for now",
 
 
+  "projectHeader": "Project \"{title}\"",
+  "projectNotFound": "Project not found",
+
+
   "error.pdf": "Error while loading the PDF:",
 
   "edition": "Edition",

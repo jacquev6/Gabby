@@ -97,56 +97,61 @@ function ellipsis(s) {
 
 <template>
   <b-busy :busy="projectLoading">
-    <h1>Projet "{{ project?.attributes.title }}"</h1>
-    <p>{{ project?.attributes.description }}</p>
-    <p>Téléchargez <a :href="`/api/project-${props.projectId}-extraction-report.json`">le rapport d'extraction</a>.</p>
-    <b-row>
-      <b-col>
-        <h2>Nouveau manuel</h2>
-        <b-busy :busy="creatingTextbook">
-          <b-busy :busy="loadingPdf">
-            <b-labeled-input :label="$t('inputFile')" type="file" accept=".pdf" @change="(e) => loadPdf(e.target.files[0])" />
+    <template v-if="project?.exists">
+      <h1>{{ $t('projectHeader', {title: project.attributes.title}) }}</h1>
+      <p>{{ project.attributes.description }}</p>
+      <p>Téléchargez <a :href="`/api/project-${props.projectId}-extraction-report.json`">le rapport d'extraction</a>.</p>
+      <b-row>
+        <b-col>
+          <h2>Nouveau manuel</h2>
+          <b-busy :busy="creatingTextbook">
+            <b-busy :busy="loadingPdf">
+              <b-labeled-input :label="$t('inputFile')" type="file" accept=".pdf" @change="(e) => loadPdf(e.target.files[0])" />
+            </b-busy>
+            <b-labeled-input label="Titre" v-model="newTextbookTitle"/>
+            <b-labeled-input label="Éditeur" v-model="newTextbookPublisher"/>
+            <b-labeled-input label="Année" type="number" v-model="newTextbookYear"/>
+            <b-labeled-input label="ISBN" v-model="newTextbookIsbn"/>
+            <b-button primary @click="createTextbook" :disabled="createTextbookDisabled">Créer</b-button>
           </b-busy>
-          <b-labeled-input label="Titre" v-model="newTextbookTitle"/>
-          <b-labeled-input label="Éditeur" v-model="newTextbookPublisher"/>
-          <b-labeled-input label="Année" type="number" v-model="newTextbookYear"/>
-          <b-labeled-input label="ISBN" v-model="newTextbookIsbn"/>
-          <b-button primary @click="createTextbook" :disabled="createTextbookDisabled">Créer</b-button>
-        </b-busy>
-      </b-col>
-      <b-col>
-        <h2>Nouvel exercice indépendant</h2>
-        <p>({{ $t('not-yet-implemented') }})</p>
-      </b-col>
-      <b-col>
-        <h2>Exercices existants</h2>
-        <template v-if="project?.relationships.textbooks.length || project?.relationships.exercises.length">
-          <template v-if="independentExercises.length">
-            <h3>Indépendants</h3>
-            <ul>
-              <li v-for="exercise in independentExercises">
-                <strong>{{ exercise.attributes.number }}</strong> : {{ ellipsis(exercise.attributes.instructions) }}
-              </li>
-            </ul>
-          </template>
-          <template v-for="textbook in project.relationships.textbooks">
-            <h3><router-link :to="{name: 'project-textbook-page', params: {projectId, textbookId: textbook.id, page: 1}}">{{ textbook.attributes.title }}</router-link>, {{ textbook.attributes.publisher }} ({{ textbook.attributes.year }})</h3>
-            <template v-if="exercisesByTextbookAndPage[textbook.id]">
-              <ul v-for="[page, exercises] of Object.entries(exercisesByTextbookAndPage[textbook.id]?.pages)">
-                <li>
-                  <router-link :to="{name: 'project-textbook-page', params: {projectId, textbookId: textbook.id, page}}">Page {{ page }}</router-link>
-                  <ul>
-                    <li v-for="exercise in exercises">
-                    <strong>{{ exercise.attributes.number }}</strong> : {{ ellipsis(exercise.attributes.instructions) }}
-                  </li>
-                  </ul>
+        </b-col>
+        <b-col>
+          <h2>Nouvel exercice indépendant</h2>
+          <p>({{ $t('not-yet-implemented') }})</p>
+        </b-col>
+        <b-col>
+          <h2>Exercices existants</h2>
+          <template v-if="project.relationships.textbooks.length || project.relationships.exercises.length">
+            <template v-if="independentExercises.length">
+              <h3>Indépendants</h3>
+              <ul>
+                <li v-for="exercise in independentExercises">
+                  <strong>{{ exercise.attributes.number }}</strong> : {{ ellipsis(exercise.attributes.instructions) }}
                 </li>
               </ul>
             </template>
+            <template v-for="textbook in project.relationships.textbooks">
+              <h3><router-link :to="{name: 'project-textbook-page', params: {projectId, textbookId: textbook.id, page: 1}}">{{ textbook.attributes.title }}</router-link>, {{ textbook.attributes.publisher }} ({{ textbook.attributes.year }})</h3>
+              <template v-if="exercisesByTextbookAndPage[textbook.id]">
+                <ul v-for="[page, exercises] of Object.entries(exercisesByTextbookAndPage[textbook.id]?.pages)">
+                  <li>
+                    <router-link :to="{name: 'project-textbook-page', params: {projectId, textbookId: textbook.id, page}}">Page {{ page }}</router-link>
+                    <ul>
+                      <li v-for="exercise in exercises">
+                      <strong>{{ exercise.attributes.number }}</strong> : {{ ellipsis(exercise.attributes.instructions) }}
+                    </li>
+                    </ul>
+                  </li>
+                </ul>
+              </template>
+            </template>
           </template>
-        </template>
-        <p v-else>Aucun exercice pour le moment.</p>
-      </b-col>
-    </b-row>
+          <p v-else>Aucun exercice pour le moment.</p>
+        </b-col>
+      </b-row>
+    </template>
+    <template v-else>
+      <h1>{{ $t('projectNotFound') }}</h1>
+    </template>
   </b-busy>
 </template>

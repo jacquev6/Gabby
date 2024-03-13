@@ -1,0 +1,10 @@
+[
+  {
+    "model": "textbooks.project",
+    "pk": 1,
+    "fields": {
+      "title": "Test project",
+      "description": "This is a test project, created empty in a fixture."
+    }
+  }
+]
