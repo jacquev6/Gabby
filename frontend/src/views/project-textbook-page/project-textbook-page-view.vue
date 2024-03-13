@@ -3,14 +3,14 @@ import { ref, reactive, watch, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { computedAsync } from '@vueuse/core'
 
-import { useApiStore } from '../stores/api'
-import { usePdfsStore } from '../stores/pdfs'
-import NavBarred from '../components/NavBarred.vue'
-import { BBusy, BRow, BCol, BButton } from '../components/opinion/bootstrap'
-import PdfRenderer from '../components/PdfRenderer.vue'
-import ExerciseForm from '../components/ExerciseForm.vue'
-import TextPicker from '../components/TextPicker.vue'
-import SectionEditor from '../components/SectionEditor.vue'
+import { useApiStore } from '../../stores/api'
+import { usePdfsStore } from '../../stores/pdfs'
+import NavBarred from '../../components/NavBarred.vue'
+import { BBusy, BRow, BCol, BButton } from '../../components/opinion/bootstrap'
+import PdfRenderer from '../../components/PdfRenderer.vue'
+import ExerciseForm from '../../components/ExerciseForm.vue'
+import TextPicker from '../../components/TextPicker.vue'
+import SectionEditor from '../../components/SectionEditor.vue'
 
 
 const props = defineProps({
@@ -373,4 +373,4 @@ input.number-no-spin::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-</style>
+</style>../../stores/api../../stores/pdfs../../components/opinion/bootstrap

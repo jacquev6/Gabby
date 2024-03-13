@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import IndexView from '../views/index/index-view.vue'
 import ProjectView from '../views/project/project-view.vue'
-import ProjectTextbookPageView from '../views/project-textbook-page-view.vue'
+import ProjectTextbookPageView from '../views/project-textbook-page/project-textbook-page-view.vue'
 
 
 const router = createRouter({
