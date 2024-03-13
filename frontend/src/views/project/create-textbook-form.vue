@@ -31,16 +31,32 @@ const disabled = computed(() => !pdf.value || !title.value)
 const creating = ref(false)
 async function create() {
   creating.value = true
-  const pdfFile = await api.client.post(
-    'pdfFile',
-    {sha256: pdf.value.info.sha256, bytesCount: 0, pagesCount: pdf.value.document.numPages},
-    {namings: [], sections: []},
-  )
-  await api.client.post(
-    'pdfFileNaming',
-    {name: pdf.value.info.name},
-    {pdfFile},
-  )
+  try {
+    await api.client.post(
+      'pdfFile',
+      {sha256: pdf.value.info.sha256, bytesCount: 0, pagesCount: pdf.value.document.numPages},
+      {namings: [], sections: []},
+    )
+  } catch (e) {
+    if (e?.cause?.errors?.[0].code === 'unique') {  // @todo Make the server idempotent so that there is no error at all
+      // The PDF file already exists
+    } else {
+      throw e
+    }
+  }
+  try {
+    await api.client.post(
+      'pdfFileNaming',
+      {name: pdf.value.info.name},
+      {pdfFile: {type: 'pdfFile', id: pdf.value.info.sha256}},
+    )
+  } catch (e) {
+    if (e?.cause?.status === 500) {  // @todo Don't 500, make the server idempotent :-/
+      // The naming already exists
+    } else {
+      throw e
+    }
+  }
   const textbook = await api.client.post(
     'textbook',
     {title: title.value, publisher: publisher.value || undefined, year: year.value || undefined, isbn: isbn.value || undefined},
@@ -49,7 +65,7 @@ async function create() {
   await api.client.post(
     'section',
     {pdfFileStartPage: 1, pagesCount: pdf.value.document.numPages, textbookStartPage: 1},
-    {pdfFile, textbook},
+    {pdfFile: {type: 'pdfFile', id: pdf.value.info.sha256}, textbook},
   )
   creating.value = false
   emit('created', textbook.id)

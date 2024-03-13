@@ -103,6 +103,24 @@ describe('Gabby\'s project view', () => {
     cy.get('h3:contains("Test textbook, Test publisher (2024)")').should('exist')
   })
 
+  it('creates two textbooks from the same PDF', () => {
+    cy.visit('/project/1')
+    cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
+    cy.get('label:contains("Title")').next().type('First textbook')
+    cy.get('button:contains("Create textbook")').click()
+    cy.get('p:contains("No exercises yet")').should('exist')
+    cy.visit('/project/1')
+
+    cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
+    cy.get('label:contains("Title")').next().type('Second textbook')
+    cy.get('button:contains("Create textbook")').click()
+    cy.get('p:contains("No exercises yet")').should('exist')
+
+    cy.visit('/project/1')
+    cy.get('h3:contains("First textbook")').should('exist')
+    cy.get('h3:contains("Second textbook")').should('exist')
+  })
+
   it('lists textbooks and exercises', () => {
     cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises')
 
