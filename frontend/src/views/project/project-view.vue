@@ -99,7 +99,7 @@ function ellipsis(s) {
 
 <template>
   <nav-barred>
-    <template #navbar v-if="project?.exists"> - {{ project.attributes.title }}</template>
+    <template #navbar v-if="project?.exists">{{ project.attributes.title }}</template>
     <b-busy :busy="projectLoading">
       <template v-if="project?.exists">
         <editable-project-header :project="project" />

@@ -28,10 +28,24 @@ const pdfs = usePdfsStore()
 
 const sectionEditor = ref(null)
 
+const projectLoading = ref(false)
+const project = computedAsync(
+  async () => {
+    return await api.client.getOne('project', props.projectId)
+  },
+  null,
+  projectLoading,
+)
+
 const textbookLoading = ref(false)
 const textbook = computedAsync(
   async () => {
-    return await api.client.getOne('textbook', props.textbookId, {include: 'sections.pdfFile.namings'})
+    const textbook = await api.client.getOne('textbook', props.textbookId, {include: 'sections.pdfFile.namings'})
+    if (textbook.relationships.project.id === props.projectId) {
+      return textbook
+    } else {
+      return null
+    }
   },
   null,
   textbookLoading,
@@ -40,14 +54,14 @@ const textbook = computedAsync(
 // @todo(Feature, soon) Get the number of pages from the textbook itself
 const textbookPagesCount = computed(() => {
   let c = 1
-  for (const section of textbook.value?.relationships.sections || []) {
+  for (const section of textbook.value?.relationships?.sections || []) {
     c = Math.max(c, section.attributes.textbookStartPage + section.attributes.pagesCount - 1)
   }
   return c
 })
 
 const section = computed(() => {
-  for (const section of textbook.value?.relationships.sections || []) {
+  for (const section of textbook.value?.relationships?.sections || []) {
     if (props.page >= section.attributes.textbookStartPage && props.page < section.attributes.textbookStartPage + section.attributes.pagesCount) {
       return section
     }
@@ -246,94 +260,105 @@ watch(requestedPage, (requested) => {
 
 <template>
   <nav-barred>
-    <b-busy size="7rem" :busy="textbookLoading">
-      <b-row>
-        <b-col>
-          <p class="text-center">
-            <router-link :to="{name: 'project-textbook-page', params: {projectId, textbookId, page: page - 1}}" custom v-slot="{ navigate }" >
-              <b-button primary sm :disabled="disablePrevPage" @click="navigate">&lt;</b-button>
-            </router-link>
-            <label>{{ $t('Page') }} <input class="number-no-spin" v-model="requestedPage" type="number" min="1" :max="textbookPagesCount" :disabled="disableSetPage" @blur="requestedPage = page"/> {{ $t('pageOver', textbookPagesCount) }}</label>
-            <router-link :to="{name: 'project-textbook-page', params: {projectId, textbookId, page: page + 1}}" custom v-slot="{ navigate }" >
-              <b-button primary sm :disabled="disableNextPage" @click="navigate">&gt;</b-button>
-            </router-link>
-            <b-button secondary sm :disabled="!section" @click="sectionEditor.show(section.id)">&#9881;</b-button>
-          </p>
-          <section-editor ref="sectionEditor" />
-          <template v-if="section">
-            <b-busy size="7rem" :busy="pdfLoading">
-              <template v-if="pdf?.page">
-                <div style="border: 1px solid black">
-                  <pdf-renderer
-                    ref="pdfRenderer"
-                    :page="pdf.page"
-                    class="img img-fluid"
-                  />
-                  <text-picker
-                    v-if="mode !== 'list'"
-                    class="img img-fluid" style="position: absolute; top: 0; left: 0"
-                    :width="pdfRenderer.width" :height="pdfRenderer.height" :transform="pdfRenderer.transform"
-                    :textContent="pdf.textContent"
-                    @text-selected="textSelected"
-                  />
-                </div>
+    <template #navbar v-if="project?.exists && textbook?.exists">{{ project.attributes.title }} - {{ textbook.attributes.title }}</template>
+    <b-busy size="7rem" :busy="projectLoading || textbookLoading">
+      <template v-if="project?.exists">
+        <template v-if="textbook?.exists">
+          <b-row>
+            <b-col>
+              <p class="text-center">
+                <router-link :to="{name: 'project-textbook-page', params: {projectId, textbookId, page: page - 1}}" custom v-slot="{ navigate }" >
+                  <b-button primary sm :disabled="disablePrevPage" @click="navigate">&lt;</b-button>
+                </router-link>
+                <label>{{ $t('Page') }} <input class="number-no-spin" v-model="requestedPage" type="number" min="1" :max="textbookPagesCount" :disabled="disableSetPage" @blur="requestedPage = page"/> {{ $t('pageOver', textbookPagesCount) }}</label>
+                <router-link :to="{name: 'project-textbook-page', params: {projectId, textbookId, page: page + 1}}" custom v-slot="{ navigate }" >
+                  <b-button primary sm :disabled="disableNextPage" @click="navigate">&gt;</b-button>
+                </router-link>
+                <b-button secondary sm :disabled="!section" @click="sectionEditor.show(section.id)">&#9881;</b-button>
+              </p>
+              <section-editor ref="sectionEditor" />
+              <template v-if="section">
+                <b-busy size="7rem" :busy="pdfLoading">
+                  <template v-if="pdf?.page">
+                    <div style="border: 1px solid black">
+                      <pdf-renderer
+                        ref="pdfRenderer"
+                        :page="pdf.page"
+                        class="img img-fluid"
+                      />
+                      <text-picker
+                        v-if="mode !== 'list'"
+                        class="img img-fluid" style="position: absolute; top: 0; left: 0"
+                        :width="pdfRenderer.width" :height="pdfRenderer.height" :transform="pdfRenderer.transform"
+                        :textContent="pdf.textContent"
+                        @text-selected="textSelected"
+                      />
+                    </div>
+                  </template>
+                  <template v-else>
+                    <p>Le PDF contenant cette page ({{ section.relationships.pdfFile.relationships.namings[0].attributes.name }}) n'a pas encore été ouvert.</p>
+                    <p>@todo(Feature, soon) Display all names known for this PDF</p>
+                    <p>@todo(Feature, soon) Let user open PDF from here</p>
+                    <p>@todo(Project management, later) Remove this button: <button @click="pdfs.open({url: '/test.pdf'})">Load test.pdf</button></p>
+                  </template>
+                </b-busy>
               </template>
               <template v-else>
-                <p>Le PDF contenant cette page ({{ section.relationships.pdfFile.relationships.namings[0].attributes.name }}) n'a pas encore été ouvert.</p>
-                <p>@todo(Feature, soon) Display all names known for this PDF</p>
-                <p>@todo(Feature, soon) Let user open PDF from here</p>
-                <p>@todo(Project management, later) Remove this button: <button @click="pdfs.open({url: '/test.pdf'})">Load test.pdf</button></p>
+                <p>Aucun PDF enregistré ne contient cette page.</p>
+                <p>@todo(Feature, soon) Let user associate PDF to page from here</p>
               </template>
-            </b-busy>
-          </template>
-          <template v-else>
-            <p>Aucun PDF enregistré ne contient cette page.</p>
-            <p>@todo(Feature, soon) Let user associate PDF to page from here</p>
-          </template>
-        </b-col>
-        <b-col>
-          <h1>{{ $t('edition') }}</h1>
-          <b-busy :busy="modeIsLoading">
-            <template v-if="mode === 'list'">
-              <b-busy :busy="loadingExercises">
-                <template v-if="exercisesOnPage.length">
-                  <p>{{ $t('existingExercises') }}</p>
-                  <ul>
-                    <li v-for="exercise in exercisesOnPage">
-                      <strong>{{ exercise.attributes.number }}</strong> {{ ellipsis(exercise.attributes.instructions) }}
-                      <b-button primary sm @click="switchToEditMode(exercise)">{{ $t('edit') }}</b-button>
-                      <b-button secondary sm @click="deleteExercise(exercise)">{{ $t('delete') }}</b-button>
-                    </li>
-                  </ul>
+            </b-col>
+            <b-col>
+              <h1>{{ $t('edition') }}</h1>
+              <b-busy :busy="modeIsLoading">
+                <template v-if="mode === 'list'">
+                  <b-busy :busy="loadingExercises">
+                    <template v-if="exercisesOnPage.length">
+                      <p>{{ $t('existingExercises') }}</p>
+                      <ul>
+                        <li v-for="exercise in exercisesOnPage">
+                          <strong>{{ exercise.attributes.number }}</strong> {{ ellipsis(exercise.attributes.instructions) }}
+                          <b-button primary sm @click="switchToEditMode(exercise)">{{ $t('edit') }}</b-button>
+                          <b-button secondary sm @click="deleteExercise(exercise)">{{ $t('delete') }}</b-button>
+                        </li>
+                      </ul>
+                    </template>
+                    <p v-else>{{ $t('noExercises') }}</p>
+                  </b-busy>
+                  <p class="d-grid"><b-button primary @click="switchToCreateMode(false)">{{ $t('create') }}</b-button></p>
                 </template>
-                <p v-else>{{ $t('noExercises') }}</p>
+                <template v-else>
+                  <ExerciseForm
+                    ref="exerciseForm"
+                    :fixedNumber="mode === 'edit'"
+                    v-model="currentExercise.attributes"
+                    @extractionEvent="(event) => extractionEvents.push(event)"
+                  />
+                  <div class="mb-3">
+                    <b-button secondary type="text" @click="switchToListMode">{{ $t('cancel') }}</b-button>
+                    <template v-if="mode === 'create'">
+                      <b-button primary type="text" @click="createExercise" :disabled="currentExercise.attributes.number === ''">{{ $t('save.next') }}</b-button>
+                    </template>
+                    <template v-else-if="mode === 'edit'">
+                      <b-button primary type="text" @click="updateExercise">{{ $t('save') }}</b-button>
+                    </template>
+                  </div>
+                </template>
               </b-busy>
-              <p class="d-grid"><b-button primary @click="switchToCreateMode(false)">{{ $t('create') }}</b-button></p>
-            </template>
-            <template v-else>
-              <ExerciseForm
-                ref="exerciseForm"
-                :fixedNumber="mode === 'edit'"
-                v-model="currentExercise.attributes"
-                @extractionEvent="(event) => extractionEvents.push(event)"
-              />
-              <div class="mb-3">
-                <b-button secondary type="text" @click="switchToListMode">{{ $t('cancel') }}</b-button>
-                <template v-if="mode === 'create'">
-                  <b-button primary type="text" @click="createExercise" :disabled="currentExercise.attributes.number === ''">{{ $t('save.next') }}</b-button>
-                </template>
-                <template v-else-if="mode === 'edit'">
-                  <b-button primary type="text" @click="updateExercise">{{ $t('save') }}</b-button>
-                </template>
-              </div>
-            </template>
-          </b-busy>
-        </b-col>
-        <b-col>
-          <h1>{{ $t('visualization') }}</h1>
-          <p>({{ $t('not-yet-implemented') }})</p>
-        </b-col>
-      </b-row>
+            </b-col>
+            <b-col>
+              <h1>{{ $t('visualization') }}</h1>
+              <p>({{ $t('not-yet-implemented') }})</p>
+            </b-col>
+          </b-row>
+        </template>
+        <template v-else>
+          <h1>{{ $t('textbookNotFound') }}</h1>
+        </template>
+      </template>
+      <template v-else>
+        <h1>{{ $t('projectNotFound') }}</h1>
+      </template>
     </b-busy>
   </nav-barred>
 </template>
