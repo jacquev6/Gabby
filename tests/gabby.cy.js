@@ -225,7 +225,7 @@ describe('Gabby', () => {
     cy.get('select').select('fr')
     cy.get('a').contains('Deuxième projet de test').click()
 
-    cy.get('h3').contains('Indépendants').should('exist')
+    cy.get('h3').contains('Exercices indépendants').should('exist')
     cy.get('li strong').contains('L1').should('exist')
   })
 

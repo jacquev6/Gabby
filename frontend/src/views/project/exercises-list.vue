@@ -38,7 +38,7 @@ function ellipsis(s) {
 <template>
   <template v-if="project.relationships.textbooks.length || project.relationships.exercises.length">
     <template v-if="independentExercises.length">
-      <h3>Indépendants</h3>
+      <h3>{{ $t('independentExercises') }}</h3>
       <ul>
         <li v-for="exercise in independentExercises">
           <strong>{{ exercise.attributes.number }}</strong> : {{ ellipsis(exercise.attributes.instructions) }}
