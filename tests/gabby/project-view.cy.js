@@ -1,4 +1,4 @@
-describe('Gabby\'s project page', () => {
+describe('Gabby\'s project view', () => {
   before(console.clear)
 
   beforeEach(() => {

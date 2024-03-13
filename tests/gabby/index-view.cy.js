@@ -1,4 +1,4 @@
-describe('Gabby\'s index page', () => {
+describe('Gabby\'s index view', () => {
   before(console.clear)
 
   beforeEach(() => {
