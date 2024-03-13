@@ -3,6 +3,15 @@
   "about": "À propos",
   "french-only": "",
 
+
+  "newProject": "Nouveau projet",
+  "title": "Titre",
+  "description": "Description",
+  "createProject": "Créer le projet",
+  "existingProjects": "Projets existants",
+  "noProjectsForNow": "Aucun projet pour le moment",
+
+
   "error.pdf": "Erreur pendant le chargement du PDF :",
 
   "edition": "Édition",

@@ -44,15 +44,15 @@ async function createProject() {
 <template>
   <b-row>
     <b-col>
-      <h1>Nouveau projet</h1>
+      <h1>{{ $t('newProject') }}</h1>
       <b-busy :busy="creatingProject">
-        <b-labeled-input v-model="newProjectTitle" label="Titre" />
-        <b-labeled-textarea v-model="newProjectDescription" label="Description" />
-        <b-button primary @click="createProject" :disabled="createProjectDisabled">Créer</b-button>
+        <b-labeled-input v-model="newProjectTitle" :label="$t('title')" />
+        <b-labeled-textarea v-model="newProjectDescription" :label="$t('description')" />
+        <b-button primary @click="createProject" :disabled="createProjectDisabled">{{ $t('createProject' )}}</b-button>
       </b-busy>
     </b-col>
     <b-col>
-      <h1>Projets existants</h1>
+      <h1>{{ $t('existingProjects' )}}</h1>
       <b-busy :busy="loadingProjects">
         <template v-if="projects.length">
           <ul>
@@ -61,7 +61,7 @@ async function createProject() {
             </li>
           </ul>
         </template>
-        <p v-else>Aucun projet pour le moment.</p>
+        <p v-else>{{ $t('noProjectsForNow' )}}</p>
       </b-busy>
     </b-col>
   </b-row>
