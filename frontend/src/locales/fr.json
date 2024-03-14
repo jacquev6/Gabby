@@ -41,15 +41,14 @@
 
 
   "textbookNotFound": "Manuel introuvable",
-
+  "pdfNotYetOpen": "Le PDF contenant cette page ({name}) n'a pas encore été ouvert.",
+  "pageNoKnown": "Aucun PDF enregistré ne contient cette page.",
 
   "error.pdf": "Erreur pendant le chargement du PDF :",
 
   "edition": "Édition",
   "visualization": "Visualisation",
   "inputFile": "Fichier d'entrée",
-  "Page": "Page",
-  "pageOver": "(sur {count})",
   "existingExercises": "Exercices existants :",
   "noExercises": "Pas encore d'exercices.",
   "create": "Nouvel exercice",

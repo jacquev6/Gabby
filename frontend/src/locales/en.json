@@ -41,6 +41,8 @@
 
 
   "textbookNotFound": "Textbook not found",
+  "pdfNotYetOpen": "The PDF that contains this page ({name}) has not been loaded yet.",
+  "pageNoKnown": "No known PDF contains this page.",
 
 
   "error.pdf": "Error while loading the PDF:",
@@ -48,8 +50,6 @@
   "edition": "Edition",
   "visualization": "Visualization",
   "inputFile": "Input file",
-  "Page": "Page",
-  "pageOver": "(on {count})",
   "existingExercises": "Existing exercises:",
   "noExercises": "No exercises yet.",
   "create": "New exercise",

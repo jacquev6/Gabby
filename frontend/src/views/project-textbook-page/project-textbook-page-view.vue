@@ -311,7 +311,7 @@ watch(requestedPage, (requested) => {
                     </div>
                   </template>
                   <template v-else>
-                    <p>Le PDF contenant cette page ({{ section.relationships.pdfFile.relationships.namings[0].attributes.name }}) n'a pas encore été ouvert.</p>
+                    <p>{{ $t('pdfNotYetOpen', {name: section.relationships.pdfFile.relationships.namings[0].attributes.name }) }}</p>
                     <p>@todo(Feature, soon) Display all names known for this PDF</p>
                     <p>@todo(Feature, soon) Let user open PDF from here</p>
                     <p>@todo(Project management, later) Remove this button: <button @click="pdfs.open({url: '/test.pdf'})">Load test.pdf</button></p>
@@ -319,7 +319,7 @@ watch(requestedPage, (requested) => {
                 </b-busy>
               </template>
               <template v-else>
-                <p>Aucun PDF enregistré ne contient cette page.</p>
+                <p>{{ $t('pageNoKnown') }}</p>
                 <p>@todo(Feature, soon) Let user associate PDF to page from here</p>
               </template>
             </b-col>
