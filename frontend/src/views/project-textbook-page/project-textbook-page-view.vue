@@ -12,6 +12,7 @@ import ExerciseForm from '../../components/ExerciseForm.vue'
 import TextPicker from '../../components/TextPicker.vue'
 import SectionEditor from '../../components/SectionEditor.vue'
 import PdfNavigationControls from '../../components/pdf-navigation-controls.vue'
+import ExercisesList from './exercises-list.vue'
 
 
 const props = defineProps({
@@ -126,22 +127,6 @@ const pdfRenderer = ref(null)
 const mode = ref('list')
 const modeIsLoading = ref(false)
 const refreshCounter = ref(1)
-
-const loadingExercises = ref(false)
-const exercisesOnPage = computedAsync(
-  async () => {
-    if (refreshCounter.value !== 0) {
-      refreshCounter.value = 1
-    }
-    if (mode.value === 'list') {
-      return await api.client.getAll('exercises', {filter: {'textbook': props.textbookId, 'textbook_page': props.page}})
-    } else {
-      return []
-    }
-  },
-  [],
-  loadingExercises,
-)
 
 const currentExercise = reactive({})
 const extractionEvents = reactive([])
@@ -318,19 +303,12 @@ function changePage(page) {
               <h1>{{ $t('edition') }}</h1>
               <b-busy :busy="modeIsLoading">
                 <template v-if="mode === 'list'">
-                  <b-busy :busy="loadingExercises">
-                    <template v-if="exercisesOnPage.length">
-                      <p>{{ $t('existingExercises') }}</p>
-                      <ul>
-                        <li v-for="exercise in exercisesOnPage">
-                          <strong>{{ exercise.attributes.number }}</strong> {{ ellipsis(exercise.attributes.instructions) }}
-                          <b-button primary sm @click="switchToEditMode(exercise)">{{ $t('edit') }}</b-button>
-                          <b-button secondary sm @click="deleteExercise(exercise)">{{ $t('delete') }}</b-button>
-                        </li>
-                      </ul>
+                  <exercises-list :textbook :page >
+                    <template v-slot="{exercise}">
+                      <b-button primary sm @click="switchToEditMode(exercise)">{{ $t('edit') }}</b-button>
+                      <b-button secondary sm @click="deleteExercise(exercise)">{{ $t('delete') }}</b-button>
                     </template>
-                    <p v-else>{{ $t('noExercises') }}</p>
-                  </b-busy>
+                  </exercises-list>
                   <p class="d-grid"><b-button primary @click="switchToCreateMode(false)">{{ $t('create') }}</b-button></p>
                 </template>
                 <template v-else>
