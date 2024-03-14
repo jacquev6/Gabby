@@ -23,7 +23,7 @@ const height = ref(297)
 const transform = ref(null)
 
 var renderTask = null
-const loading = ref(false)
+const busy = ref(false)
 
 async function draw([page, canvasContext]) {
   console.assert(page)
@@ -31,7 +31,7 @@ async function draw([page, canvasContext]) {
   if (canvasContext) {
     const startTime = performance.now()
 
-    loading.value = true
+    busy.value = true
     var resetOnExit = true
 
     try {
@@ -61,7 +61,7 @@ async function draw([page, canvasContext]) {
     } finally {
       if (resetOnExit) {
         renderTask = null
-        loading.value = false
+        busy.value = false
       }
     }
   }
@@ -73,10 +73,10 @@ defineExpose({width, height, transform})
 </script>
 
 <template>
-  <b-busy size="7rem" :busy="loading">
+  <b-busy size="7rem" :busy>
     <canvas
       ref="canvas"
-      :width="width" :height="height"
+      :width :height
       v-bind="$attrs"
     ></canvas>
   </b-busy>

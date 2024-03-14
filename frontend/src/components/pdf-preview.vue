@@ -1,9 +1,10 @@
 <script setup>
-import { ref, watch, toRaw } from 'vue'
+import { ref, toRaw } from 'vue'
 import { computedAsync } from '@vueuse/core'
 
-import { BButton } from './opinion/bootstrap'
-import PdfRenderer from './PdfRenderer.vue'
+import PdfNavigationControls from './pdf-navigation-controls.vue'
+import PdfRenderer from './pdf-renderer.vue'
+
 
 const props = defineProps({
   pdf: {
@@ -13,13 +14,6 @@ const props = defineProps({
 })
 
 const pageNumber = ref(1)
-const requestedPageNumber = ref(1)
-watch(requestedPageNumber, (n) => {
-  const page = Number.parseInt(n, 10)
-  if (Number.isInteger(page) && page >= 1 && page <= props.pdf.numPages) {
-    pageNumber.value = page
-  }
-})
 
 const page = computedAsync(
   async () => {
@@ -30,15 +24,7 @@ const page = computedAsync(
 </script>
 
 <template>
-  <p class="text-center">
-    <b-button sm primary :disabled="pageNumber <= 1" @click="--requestedPageNumber">&lt;</b-button>
-    <label>
-      {{ $t('pdfNavigationPage') }}
-      <input class="number-no-spin" type="number" min="1" :max="pdf.numPages" v-model="requestedPageNumber" @blur="requestedPageNumber = pageNumber" />
-      {{ $t('pdfNavigationPageOver', props.pdf.numPages) }}
-    </label>
-    <b-button sm primary :disabled="pageNumber >= pdf.numPages" @click="++requestedPageNumber">&gt;</b-button>
-  </p>
+  <pdf-navigation-controls :pagesCount="pdf.numPages" v-model="pageNumber" />
   <template v-if="page">
     <pdf-renderer
       class="img img-fluid"

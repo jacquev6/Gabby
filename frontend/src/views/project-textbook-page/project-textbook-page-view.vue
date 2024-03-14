@@ -7,7 +7,7 @@ import { useApiStore } from '../../stores/api'
 import { usePdfsStore } from '../../stores/pdfs'
 import Layout from '../../components/layout.vue'
 import { BBusy, BRow, BCol, BButton } from '../../components/opinion/bootstrap'
-import PdfRenderer from '../../components/PdfRenderer.vue'
+import PdfRenderer from '../../components/pdf-renderer.vue'
 import ExerciseForm from '../../components/ExerciseForm.vue'
 import TextPicker from '../../components/TextPicker.vue'
 import SectionEditor from '../../components/SectionEditor.vue'
@@ -378,6 +378,7 @@ watch(requestedPage, (requested) => {
   </layout>
 </template>
 
+<!-- @todo Remove (when pdf-navigation-controls is used on this view) -->
 <style>
 /* https://www.w3schools.com/howto/howto_css_hide_arrow_number.asp */
 input.number-no-spin {
