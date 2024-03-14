@@ -19,6 +19,7 @@
     "model": "textbooks.textbook",
     "pk": 1,
     "fields": {
+      "project": 1,
       "title": "Français CE2",
       "publisher": "Slabeuf",
       "year": 2021,
@@ -37,27 +38,45 @@
     }
   },
   {
+    "model": "textbooks.project",
+    "pk": 1,
+    "fields": {
+      "title": "Premier projet de test",
+      "description": "Ce projet contient des exercices d'un seul manuel."
+    }
+  },
+  {
+    "model": "textbooks.project",
+    "pk": 2,
+    "fields": {
+      "title": "Deuxième projet de test",
+      "description": "Ce projet contient des exercices originaux."
+    }
+  },
+  {
     "model": "textbooks.exercise",
     "pk": 1,
     "fields": {
+      "project": 1,
       "textbook": 1,
-      "page": 6,
-      "number": 3,
-      "instructions": "Complète avec : le, une, un, des, tu, elles, ils.\nPuis, souligne les verbes.",
+      "textbook_page": 6,
+      "number": "3",
+      "instructions": "Complète avec : le, une, un, des, tu, elles, ils.\r\nPuis, souligne les verbes.",
       "example": "",
       "clue": "Il peut y avoir plusieurs solutions.",
-      "wording": "... vide\n... vident\n... dépenses\n... dépensent\n... savon\n... savons\n... commande"
+      "wording": "... vide\r\n... vident\r\n... dépenses\r\n... dépensent\r\n... savon\r\n... savons\r\n... commande"
     }
   },
   {
     "model": "textbooks.exercise",
     "pk": 2,
     "fields": {
+      "project": 1,
       "textbook": 1,
-      "page": 6,
-      "number": 4,
+      "textbook_page": 6,
+      "number": "4",
       "instructions": "Écris une phrase en respectant l'ordre des classes grammaticales indiquées.",
-      "example": "pronom personnel / verbe / déterminant / nom commun :\nJe mange une pomme.",
+      "example": "pronom personnel / verbe / déterminant / nom commun :\r\nJe mange une pomme.",
       "clue": "",
       "wording": "nom propre / verbe / déterminant / adjectif / nom commun"
     }
@@ -66,13 +85,56 @@
     "model": "textbooks.exercise",
     "pk": 3,
     "fields": {
+      "project": 1,
       "textbook": 1,
-      "page": 7,
-      "number": 9,
+      "textbook_page": 7,
+      "number": "9",
       "instructions": "Recopie l’intrus qui se cache dans chaque liste et écris sa classe.",
       "example": "",
       "clue": "",
-      "wording": "a. partons ◆ bidons ◆ allons ◆ vendons\nb. vidons ◆ mentons ◆ ballons ◆ salons\nc. voir ◆ armoire ◆ couloir ◆ dortoir"
+      "wording": "a. partons ◆ bidons ◆ allons ◆ vendons\r\nb. vidons ◆ mentons ◆ ballons ◆ salons\r\nc. voir ◆ armoire ◆ couloir ◆ dortoir"
+    }
+  },
+  {
+    "model": "textbooks.exercise",
+    "pk": 4,
+    "fields": {
+      "project": 2,
+      "textbook": null,
+      "textbook_page": null,
+      "number": "L1",
+      "instructions": "Faire des choses intelligentes.",
+      "example": "",
+      "clue": "",
+      "wording": ""
+    }
+  },
+  {
+    "model": "textbooks.exercise",
+    "pk": 5,
+    "fields": {
+      "project": 2,
+      "textbook": null,
+      "textbook_page": null,
+      "number": "L2",
+      "instructions": "Faire d'autres choses intelligentes.",
+      "example": "",
+      "clue": "",
+      "wording": ""
+    }
+  },
+  {
+    "model": "textbooks.exercise",
+    "pk": 6,
+    "fields": {
+      "project": 2,
+      "textbook": null,
+      "textbook_page": null,
+      "number": "L3",
+      "instructions": "Prendre le temps de faire aussi des choses banales.",
+      "example": "",
+      "clue": "",
+      "wording": ""
     }
   }
 ]

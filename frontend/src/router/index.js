@@ -1,7 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-import IndexView from '../views/IndexView.vue'
-import TextbookPageView from '../views/TextbookPageView.vue'
+import IndexView from '../views/index/index-view.vue'
+import ProjectView from '../views/project/project-view.vue'
+import ProjectTextbookPageView from '../views/project-textbook-page/project-textbook-page-view.vue'
 
 
 const router = createRouter({
@@ -13,9 +14,25 @@ const router = createRouter({
       component: IndexView,
     },
     {
-      path: '/textbook/:textbookId/page/:page',
-      name: 'textbook-page',
-      component: TextbookPageView,
+      path: '/ping',
+      name: 'ping',
+      component: () => import('../views/ping-view.vue'),
+    },
+    {
+      path: '/pdfs',
+      name: 'pdfs',
+      component: () => import('../views/pdfs-view.vue'),
+    },
+    {
+      path: '/project/:projectId',
+      name: 'project',
+      component: ProjectView,
+      props: true,
+    },
+    {
+      path: '/project/:projectId/textbook/:textbookId/page/:page',
+      name: 'project-textbook-page',
+      component: ProjectTextbookPageView,
       props: (route) => {
         return {...route.params, page: Number.parseInt(route.params.page, 10)}
       },

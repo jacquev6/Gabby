@@ -32,7 +32,7 @@ The [JSON:API](https://jsonapi.org/) is available at http://localhost:8080/api/,
 
 The Django Admin is available at http://localhost:8080/api/admin/ with the following credentials:
 
-- Username: `gabby`
+- Username: `admin`
 - Password: `password`
 
 ## Adminer
@@ -44,9 +44,9 @@ In the development environment, it is available at http://localhost:8080/api/adm
 
 - System: `PostgreSQL`
 - Server: `db`
-- Username: `gabby`
+- Username: `admin`
 - Password: `password`
-- Database: `gabby`
+- Database: `db`
 
 # Tests
 
@@ -70,7 +70,7 @@ Preview with:
 
     prod/preview.sh
 
-And then open your browser at http://localhost:9090/.
+And then open your browser at http://localhost:8090/.
 Hit Ctrl+C to stop the production preview environment.
 
 Publish Docker images with:

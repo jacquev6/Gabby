@@ -10,3 +10,7 @@ docker compose exec \
   frontend \
     npx cypress run \
       --component
+
+
+# @todo Ensure that templates have no untranslated content
+# @body Ensure that no data-bs-* attributes are used

@@ -3,28 +3,25 @@ Vue d'accueil
 
 La vue d'accueil de l'application est composée de deux parties :
 
-- sur la gauche pour ouvrir un PDF local et l'associer à un manuel
-- sur la droite les liste des manuels existants
+- sur la gauche un formulaire pour créer un nouveau projet
+- sur la droite la liste des projets existants
 
-.. image:: user/index-columns.png
+.. image:: user/index.png
    :alt: Screenshot
    :align: center
 
-Ouverture d'un PDF et création d'un manuel
-------------------------------------------
+Un "projet" est un lot d'exercices destinés à être fournis ensemble aux élèves.
 
-Après avoir ouvrir un PDF, vous pouvez en parcourir les pages.
+Création d'un projet
+--------------------
 
-.. image:: user/index-new-pdf.png
-   :alt: Screenshot
-   :align: center
+Un projet doit avoir un titre ; il est affiché dans la colonne de droite.
 
-S'il n'est pas encore connu, vous pouvez créer un manuel associé à ce PDF,
-en utilisant le bouton "Nouveau manuel" puis en remplissant le formulaire et en validant avec le bouton "Enregistrer".
+Il peut avoir une description fournissant davantage d'informations.
 
-.. image:: user/index-new-textbook-form.png
-   :alt: Screenshot
-   :align: center
+Une fois le projet créé, la :doc:`vue projet <user-project>` est affichée.
 
-Après ça, le manuel apparaît comme associé à ce PDF, ainsi que dans la liste des manuels existants.
-Ces liens vous emmèneront jusqu'à la :doc:`vue d'extraction <user-textbook-page>`.
+Projets existants
+-----------------
+
+Les liens dans la liste des projets permettent eux aussi d'arriver à la vue projet.

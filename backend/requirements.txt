@@ -1,5 +1,0 @@
-djangorestframework-jsonapi[django-filter]  # Fundamental
-psycopg2-binary  # For PostgreSQL
-PyYaml  # For Swagger
-uritemplate  # For Swagger
-django-cors-headers

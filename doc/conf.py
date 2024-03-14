@@ -3,9 +3,9 @@ import os
 
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'MALIN'
-copyright = '2024, Vincent Jacques'
-author = 'Vincent Jacques'
+project = "MALIN"
+copyright = "2024, Vincent Jacques"
+author = "Vincent Jacques"
 release = os.environ["GABBY_VERSION"]
 
 
@@ -13,14 +13,16 @@ release = os.environ["GABBY_VERSION"]
 
 extensions = []
 
-templates_path = ['_templates']
+templates_path = ["_templates"]
 exclude_patterns = []
 
-language = 'fr'
+language = "fr"
 
 
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = 'alabaster'
-html_static_path = ['_static']
-html_logo = "../frontend/public/logo-cartable-fantastique.png"
+html_theme = "alabaster"
+html_static_path = ["_static"]
+html_theme_options = dict(
+    sidebar_width = "270px",
+)

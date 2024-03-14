@@ -1,26 +1,19 @@
 import { createApp } from 'vue'
-import { createI18n } from 'vue-i18n'
+import { RouterView } from 'vue-router'
 import { createPinia } from 'pinia'
+import { createHead } from '@unhead/vue'
+import { PiniaSharedState } from 'pinia-shared-state'
 import * as pdfjs from 'pdfjs-dist/build/pdf'
 
-import App from './App.vue'
 import router from './router'
-import en from './locales/en.json'
-import fr from './locales/fr.json'
-
-import 'bootstrap/dist/css/bootstrap.min.css'
-import 'bootstrap'
+import { i18n } from './locales'
 
 
 pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.js'
 
-createApp(App)
-  .use(createI18n({
-    legacy: false,
-    locale: 'fr',
-    fallbackLocale: 'fr',
-    messages: {en, fr},
-  }))
-  .use(createPinia())
+createApp(RouterView)
+  .use(i18n)
+  .use(createHead())
+  .use(createPinia().use(PiniaSharedState({enable: false})))
   .use(router)
   .mount('#app')
