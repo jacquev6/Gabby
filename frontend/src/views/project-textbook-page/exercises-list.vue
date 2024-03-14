@@ -1,4 +1,7 @@
 <script setup>
+import { ref } from 'vue'
+import { computedAsync } from '@vueuse/core'
+
 import { BBusy } from '../../components/opinion/bootstrap'
 import { useApiStore } from '../../stores/api'
 
@@ -10,7 +13,12 @@ const props = defineProps({
 
 const api = useApiStore()
 
-const exercises = api.auto.getAll('exercises', {filter: {'textbook': props.textbook.id, 'textbook_page': props.page}})
+const busy = ref(false)
+const exercises = computedAsync(
+  async () => await api.client.getAll('exercises', {filter: {'textbook': props.textbook.id, 'textbook_page': props.page}}),
+  [],
+  busy,
+)
 
 function ellipsis(s) {
   return s.length > 25 ? s.slice(0, 25) + '…' : s
@@ -18,7 +26,7 @@ function ellipsis(s) {
 </script>
 
 <template>
-  <b-busy :busy="exercises.loading">
+  <b-busy :busy>
     <template v-if="exercises.length">
       <p>{{ $t('existingExercises') }}</p>
       <ul>
