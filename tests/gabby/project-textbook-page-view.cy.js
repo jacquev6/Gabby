@@ -139,7 +139,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
     cy.get('input[type=file]').should('not.exist')
   })
 
-  it('collects extraction events', () => {
+  it('collects extraction events on new exercises', () => {
     cy.visit('/project/1/textbook/1/page/6')
     cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
     cy.get('div.busy').should('not.exist')
@@ -813,5 +813,83 @@ describe('Gabby\'s project\'s textbook page view', () => {
         },
       ],
     }})
+  })
+
+  it('collects extraction events when editing exercises', () => {
+    cy.visit('/project/1/textbook/1/page/6')
+    cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
+    cy.get('div.busy').should('not.exist')
+
+    cy.get('li:contains("3 Complète avec : le, une, …") button:contains("Edit")').click()
+    cy.get('label:contains("Instructions")').next().clear().type('Ceci est la consigne')
+    cy.get('button:contains("Save")').click()
+    cy.get('div.busy').should('not.exist')
+
+    cy.get('li:contains("4 Écris une phrase en respe…") button:contains("Edit")').click()
+    cy.get('canvas[style="position: absolute; top: 0px; left: 0px;"]').as('canvas')
+    cy.get('@canvas').trigger('pointermove', 5, 5)
+    cy.get('@canvas').trigger('pointerdown', 150, 375, { pointerId: 1 })
+    cy.get('@canvas').trigger('pointermove', 300, 400)
+    cy.get('@canvas').trigger('pointerup', 300, 400, { pointerId: 1 })
+    cy.get('button:contains("Example")').click()
+    cy.get('button:contains("Save")').click()
+    cy.get('div.busy').should('not.exist')
+
+    cy.request('/api/project-1-extraction-report.json').as('report')
+    cy.get('@report').its('body.project.textbooks[0].exercises[0].events').should('deep.eq', [
+      {'kind': 'InstructionsSetManually', 'value': 'Ceci est la consigne'},
+    ])
+    cy.get('@report').its('body.project.textbooks[0].exercises[1].events').should('deep.eq', [
+      {
+        kind: 'TextSelectedInPdf',
+        pdf: {
+          name: 'test.pdf',
+          sha256: 'f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c',
+          page: 1,
+          rectangle: {
+            start: {x: 303.099891274904, y: 133.64431650361348},
+            stop: {x: 578.2122820411818, y: 87.79186794914563},
+          },
+        },
+        value: 'pronom personnel / verbe / déterminant / nom\ncommun : Je mange une pomme.',
+        textItems: [
+          {
+            str: '',
+            font: 'g_d0_f6',
+            left: 328.8189,
+            width: 0,
+            right: 328.8189,
+            bottom: 115.6276,
+            height: 0,
+            top: 115.6276,
+          },
+          {
+            str: 'pronom personnel / verbe / déterminant / nom',
+            font: 'g_d0_f6',
+            left: 328.8189,
+            width: 215.80899999999994,
+            right: 544.6279,
+            bottom: 115.6276,
+            height: 11.5,
+            top: 127.1276,
+          },
+          {
+            str: 'commun : Je mange une pomme.',
+            font: 'g_d0_f6',
+            left: 328.8189,
+            width: 152.8580000000001,
+            right: 481.67690000000005,
+            bottom: 102.6096,
+            height: 11.5,
+            top: 114.1096,
+          },
+        ],
+      },
+      {
+        'kind': 'SelectedTextAddedToExample',
+        'valueBefore': 'pronom personnel / verbe / déterminant / nom commun :\r\nJe mange une pomme.',
+        'valueAfter': 'pronom personnel / verbe / déterminant / nom commun :\r\nJe mange une pomme.\npronom personnel / verbe / déterminant / nom\ncommun : Je mange une pomme.',
+      },
+    ])
   })
 })
