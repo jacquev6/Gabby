@@ -2,8 +2,8 @@ import { setActivePinia, createPinia } from 'pinia'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap'
 
-import { defineApiStore } from '../stores/api'
-import SectionEditor from './SectionEditor.vue'
+import { defineApiStore } from '../../stores/api'
+import SectionEditor from './section-editor.vue'
 
 
 const useApiStore = defineApiStore('api', {baseUrl: 'http://fanout:8080/api/'})

@@ -1,4 +1,4 @@
-import TextPickerVue from './TextPicker.vue'
+import TextPicker from './text-picker.vue'
 
 
 // Actual content from exercise 3 in test.pdf
@@ -699,7 +699,7 @@ describe('TextPicker', () => {
   it('picks text', () => {
     const onTextSelectedSpy = cy.spy().as('onTextSelectedSpy')
 
-    cy.mount(TextPickerVue, {props: {
+    cy.mount(TextPicker, {props: {
       width: 410, height: 297,
       transform: [1, 0, 0, 1, 0, 0],
       textContent,

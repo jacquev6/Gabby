@@ -1,9 +1,9 @@
 <script setup>
 import { ref, watch, nextTick } from 'vue'
 
-import FloatingModal from './FloatingModal.vue'
-import OptionalTextarea from './optional-textarea.vue'
-import { BButton, BLabeledCheckbox, BLabeledInput, BLabeledTextarea } from './opinion/bootstrap'
+import FloatingModal from './floating-modal.vue'
+import OptionalTextarea from '../../components/optional-textarea.vue'
+import { BButton, BLabeledCheckbox, BLabeledInput, BLabeledTextarea } from '../../components/opinion/bootstrap'
 
 
 // @todo Factorize with exercise-form, everywhere
@@ -116,4 +116,3 @@ defineExpose({
   <optional-textarea ref="clueTextArea" :label="$t('clue')" v-model="model.clue" @change="emit('extractionEvent', {kind: 'ClueSetManually', value: model.clue})" />
   <b-labeled-textarea ref="wordingTextArea" :label="$t('wording')" v-model="model.wording" @change="emit('extractionEvent', {kind: 'WordingSetManually', value: model.wording})" />
 </template>
-./optional-textarea.vue

@@ -3,6 +3,7 @@ import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useFloating, shift, flip } from '@floating-ui/vue'
 import bootstrap from 'bootstrap/dist/js/bootstrap.bundle.min.js'
 
+
 const props = defineProps({
   title: String,
   reference: Object

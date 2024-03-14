@@ -1,8 +1,8 @@
 <script setup>
 import { ref, computed } from 'vue'
 
-import { BBusy, BLabeledInput, BButton, BRow, BCol, BModal } from './opinion/bootstrap'
-import { useApiStore } from '../stores/api'
+import { BBusy, BLabeledInput, BButton, BRow, BCol, BModal } from '../../components/opinion/bootstrap'
+import { useApiStore } from '../../stores/api'
 
 
 const sectionId = ref(null)
