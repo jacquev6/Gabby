@@ -132,17 +132,6 @@ const refreshCounter = ref(1)
 const currentExercise = reactive({})
 const extractionEvents = reactive([])
 
-const disablePrevPage = computed(() => {
-  return mode.value !== 'list' || props.page <= 1
-})
-
-const disableNextPage = computed(() => {
-  return mode.value !== 'list' || props.page >= textbookPagesCount.value
-})
-
-const disableSetPage = computed(() => {
-  return mode.value !== 'list'
-})
 const navigationDisabled = computed(() => {
   return mode.value !== 'list'
 })
@@ -153,10 +142,6 @@ function switchToListMode() {
   currentExercise.attributes = {}
   mode.value = 'list'
   ++refreshCounter.value
-}
-
-function ellipsis(s) {
-  return s.length > 25 ? s.slice(0, 25) + '…' : s
 }
 
 function switchToCreateMode(incrementNumber) {
