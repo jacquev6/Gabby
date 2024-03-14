@@ -6,9 +6,10 @@ import { BButton } from './opinion/bootstrap'
 
 const props = defineProps({
   pagesCount: {type: Number, required: true},
+  disabled: {type: Boolean, default: false},
 })
 
-const pageNumber = defineModel()
+const pageNumber = defineModel('page', {type: Number, default: 1})
 
 const requestedPageNumber = ref(1)
 watch(requestedPageNumber, (n) => {
@@ -17,17 +18,26 @@ watch(requestedPageNumber, (n) => {
     pageNumber.value = page
   }
 })
+
+watch(
+  pageNumber,
+  (n) => {
+    requestedPageNumber.value = n
+  },
+  {immediate: true},
+)
 </script>
 
 <template>
   <p class="text-center">
-    <b-button sm primary :disabled="pageNumber <= 1" @click="--requestedPageNumber">&lt;</b-button>
+    <b-button sm primary :disabled="disabled || pageNumber <= 1" @click="--requestedPageNumber">&lt;</b-button>
     <label>
       {{ $t('pdfNavigationPage') }}
-      <input type="number" min="1" :max="pagesCount" v-model="requestedPageNumber" @blur="requestedPageNumber = pageNumber" />
+      <input type="number" min="1" :max="pagesCount" :disabled v-model="requestedPageNumber" @blur="requestedPageNumber = pageNumber" />
       {{ $t('pdfNavigationPageOver', pagesCount) }}
     </label>
-    <b-button sm primary :disabled="pageNumber >= pagesCount" @click="++requestedPageNumber">&gt;</b-button>
+    <b-button sm primary :disabled="disabled || pageNumber >= pagesCount" @click="++requestedPageNumber">&gt;</b-button>
+    <slot></slot>
   </p>
 </template>
 

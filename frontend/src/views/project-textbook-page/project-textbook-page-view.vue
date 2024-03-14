@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, watch, computed } from 'vue'
+import { ref, reactive, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { computedAsync } from '@vueuse/core'
 
@@ -11,6 +11,7 @@ import PdfRenderer from '../../components/pdf-renderer.vue'
 import ExerciseForm from '../../components/ExerciseForm.vue'
 import TextPicker from '../../components/TextPicker.vue'
 import SectionEditor from '../../components/SectionEditor.vue'
+import PdfNavigationControls from '../../components/pdf-navigation-controls.vue'
 
 
 const props = defineProps({
@@ -156,6 +157,9 @@ const disableNextPage = computed(() => {
 const disableSetPage = computed(() => {
   return mode.value !== 'list'
 })
+const navigationDisabled = computed(() => {
+  return mode.value !== 'list'
+})
 
 function switchToListMode() {
   currentExercise.id = null
@@ -260,18 +264,12 @@ async function deleteExercise(exercise) {
   switchToListMode()
 }
 
-// @todo(Project management, soon) Factorize with 'PdfPreview' component
-const requestedPage = ref(props.page)
-watch(() => props.page, (n) => {
-  requestedPage.value = n
-  switchToListMode()
-}, {immediate: true})
-watch(requestedPage, (requested) => {
-  const page = Number.parseInt(requested, 10)
-  if (Number.isInteger(page) && page >= 1 && page <= textbookPagesCount.value) {
-    router.push({name: 'project-textbook-page', params: {projectId: props.projectId, textbookId: props.textbookId, page}})
-  }
-})
+onMounted(switchToListMode)
+
+function changePage(page) {
+  console.assert(Number.isInteger(page) && page >= 1 && page <= textbookPagesCount.value)
+  router.push({name: 'project-textbook-page', params: {projectId: props.projectId, textbookId: props.textbookId, page}})
+}
 </script>
 
 <template>
@@ -281,16 +279,9 @@ watch(requestedPage, (requested) => {
         <template v-if="textbook?.exists">
           <b-row>
             <b-col>
-              <p class="text-center">
-                <router-link :to="{name: 'project-textbook-page', params: {projectId, textbookId, page: page - 1}}" custom v-slot="{ navigate }" >
-                  <b-button primary sm :disabled="disablePrevPage" @click="navigate">&lt;</b-button>
-                </router-link>
-                <label>{{ $t('Page') }} <input class="number-no-spin" v-model="requestedPage" type="number" min="1" :max="textbookPagesCount" :disabled="disableSetPage" @blur="requestedPage = page"/> {{ $t('pageOver', textbookPagesCount) }}</label>
-                <router-link :to="{name: 'project-textbook-page', params: {projectId, textbookId, page: page + 1}}" custom v-slot="{ navigate }" >
-                  <b-button primary sm :disabled="disableNextPage" @click="navigate">&gt;</b-button>
-                </router-link>
+              <pdf-navigation-controls :page @update:page="changePage" :pagesCount="textbookPagesCount" :disabled="navigationDisabled">
                 <b-button secondary sm :disabled="!section" @click="sectionEditor.show(section.id)">&#9881;</b-button>
-              </p>
+              </pdf-navigation-controls>
               <section-editor ref="sectionEditor" />
               <template v-if="section">
                 <b-busy size="7rem" :busy="pdfLoading">
@@ -377,16 +368,3 @@ watch(requestedPage, (requested) => {
     </b-busy>
   </layout>
 </template>
-
-<!-- @todo Remove (when pdf-navigation-controls is used on this view) -->
-<style>
-/* https://www.w3schools.com/howto/howto_css_hide_arrow_number.asp */
-input.number-no-spin {
-  -moz-appearance: textfield;
-}
-input.number-no-spin::-webkit-outer-spin-button,
-input.number-no-spin::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-</style>
