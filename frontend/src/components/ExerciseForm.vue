@@ -2,9 +2,8 @@
 import { ref, watch, nextTick } from 'vue'
 
 import FloatingModal from './FloatingModal.vue'
-import OptionalExerciseTextArea from './OptionalExerciseTextArea.vue'
-import RequiredExerciseTextArea from './RequiredExerciseTextArea.vue'
-import { BLabeledCheckbox, BLabeledInput } from './opinion/bootstrap'
+import OptionalTextarea from './optional-textarea.vue'
+import { BButton, BLabeledCheckbox, BLabeledInput, BLabeledTextarea } from './opinion/bootstrap'
 
 
 // @todo Factorize with exercise-form, everywhere
@@ -91,29 +90,30 @@ defineExpose({
 </script>
 
 <template>
-  <FloatingModal
+  <floating-modal
     v-if="showTextSelectionMenu"
     :title="$t('selectedText')"
     :reference="textSelectionMenuReference"
     @dismissed="showTextSelectionMenu=false"
   >
-    <BLabeledCheckbox :label="$t('doStripExerciceNumber')" v-model="doStripExerciceNumber" :disabled="!canStripExerciceNumber" />
-    <RequiredExerciseTextArea :label="$t('selectedText')" v-model="textToAdd" @change="emit('extractionEvent', {kind: 'SelectedTextEdited', value: textToAdd})" />
+    <b-labeled-checkbox :label="$t('doStripExerciceNumber')" v-model="doStripExerciceNumber" :disabled="!canStripExerciceNumber" />
+    <b-labeled-textarea :label="$t('selectedText')" v-model="textToAdd" @change="emit('extractionEvent', {kind: 'SelectedTextEdited', value: textToAdd})" />
 
     <p>{{ $t('addTo') }}</p>
-    <button class="btn btn-primary" @click="addTextToInstructions">{{ $t('instructions') }}</button>
+    <b-button primary @click="addTextToInstructions">{{ $t('instructions') }}</b-button>
     &nbsp;
-    <button class="btn btn-primary" @click="addTextToExample">{{ $t('example') }}</button>
+    <b-button primary @click="addTextToExample">{{ $t('example') }}</b-button>
     &nbsp;
-    <button class="btn btn-primary" @click="addTextToClue">{{ $t('clue') }}</button>
+    <b-button primary @click="addTextToClue">{{ $t('clue') }}</b-button>
     &nbsp;
-    <button class="btn btn-primary" @click="addTextToWording">{{ $t('wording') }}</button>
-  </FloatingModal>
+    <b-button primary @click="addTextToWording">{{ $t('wording') }}</b-button>
+  </floating-modal>
 
-  <BLabeledInput :label="$t('exerciseNumber')" v-model="model.number" :disabled="fixedNumber" @change="emit('extractionEvent', {kind: 'ExerciseNumberSetManually', value: model.number})" />
+  <b-labeled-input :label="$t('exerciseNumber')" v-model="model.number" :disabled="fixedNumber" @change="emit('extractionEvent', {kind: 'ExerciseNumberSetManually', value: model.number})" />
 
-  <RequiredExerciseTextArea ref="instructionsTextArea" :label="$t('instructions')" v-model="model.instructions" @change="emit('extractionEvent', {kind: 'InstructionsSetManually', value: model.instructions})" />
-  <OptionalExerciseTextArea ref="exampleTextArea" :label="$t('example')" v-model="model.example" @change="emit('extractionEvent', {kind: 'ExampleSetManually', value: model.example})" />
-  <OptionalExerciseTextArea ref="clueTextArea" :label="$t('clue')" v-model="model.clue" @change="emit('extractionEvent', {kind: 'ClueSetManually', value: model.clue})" />
-  <RequiredExerciseTextArea ref="wordingTextArea" :label="$t('wording')" v-model="model.wording" @change="emit('extractionEvent', {kind: 'WordingSetManually', value: model.wording})" />
+  <b-labeled-textarea ref="instructionsTextArea" :label="$t('instructions')" v-model="model.instructions" @change="emit('extractionEvent', {kind: 'InstructionsSetManually', value: model.instructions})" />
+  <optional-textarea ref="exampleTextArea" :label="$t('example')" v-model="model.example" @change="emit('extractionEvent', {kind: 'ExampleSetManually', value: model.example})" />
+  <optional-textarea ref="clueTextArea" :label="$t('clue')" v-model="model.clue" @change="emit('extractionEvent', {kind: 'ClueSetManually', value: model.clue})" />
+  <b-labeled-textarea ref="wordingTextArea" :label="$t('wording')" v-model="model.wording" @change="emit('extractionEvent', {kind: 'WordingSetManually', value: model.wording})" />
 </template>
+./optional-textarea.vue

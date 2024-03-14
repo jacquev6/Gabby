@@ -44,4 +44,17 @@ describe('Gabby\'s project\'s textbook page view', () => {
     cy.get('.navbar').should('contain', 'Premier projet de test')
     cy.get('.navbar').should('contain', 'Français CE2')
   })
+
+  it('adjusts textarea heights', () => {
+    cy.visit('/project/1/textbook/1/page/6')
+    cy.get('button:contains("New exercise")').click()
+    cy.get('p:contains("Example")').click()
+    cy.get('p:contains("Clue")').click()
+
+    for (const label of ['Instructions', 'Example', 'Clue', 'Wording']) {
+      cy.get(`label:contains("${label}")`).next().should('have.attr', 'rows', '2')
+      cy.get(`label:contains("${label}")`).next().type('a\nb\nc\nd')
+      cy.get(`label:contains("${label}")`).next().should('have.attr', 'rows', '5')
+    }
+  })
 })

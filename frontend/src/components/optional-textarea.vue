@@ -28,6 +28,6 @@ defineExpose({
 </script>
 
 <template>
-  <BLabeledTextarea v-if="model || force" ref="textArea" :label="label" v-model="model" :rows="model.split('\n').length + 1" />
+  <BLabeledTextarea v-if="model || force" ref="textArea" :label v-model="model" />
   <p v-else @click="activate">{{ label }} <button class="btn btn-sm btn-primary">+</button></p>
 </template>

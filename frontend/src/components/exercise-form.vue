@@ -1,9 +1,8 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
 
-import { BBusy, BLabeledInput } from './opinion/bootstrap'
-import RequiredTextarea from './RequiredExerciseTextArea.vue'
-import OptionalTextarea from './OptionalExerciseTextArea.vue'
+import { BBusy, BLabeledInput, BLabeledTextarea } from './opinion/bootstrap'
+import OptionalTextarea from './optional-textarea.vue'
 import { useApiStore } from '../stores/api'
 
 
@@ -74,8 +73,8 @@ async function create() {
   <b-busy :busy>
     <b-labeled-input :label="$t('exerciseNumber')" v-model="number" :disabled="fixedNumber" @change="emit('extractionEvent', {kind: 'ExerciseNumberSetManually', value: number})" />
 
-    <required-textarea :label="$t('exerciseInstructions')" v-model="instructions" @change="emit('extractionEvent', {kind: 'InstructionsSetManually', value: instructions})" />
-    <required-textarea :label="$t('exerciseWording')" v-model="wording" @change="emit('extractionEvent', {kind: 'WordingSetManually', value: wording})" />
+    <b-labeled-textarea :label="$t('exerciseInstructions')" v-model="instructions" @change="emit('extractionEvent', {kind: 'InstructionsSetManually', value: instructions})" />
+    <b-labeled-textarea :label="$t('exerciseWording')" v-model="wording" @change="emit('extractionEvent', {kind: 'WordingSetManually', value: wording})" />
     <optional-textarea :label="$t('exerciseExample')" v-model="example" @change="emit('extractionEvent', {kind: 'ExampleSetManually', value: example})" />
     <optional-textarea :label="$t('exerciseClue')" v-model="clue" @change="emit('extractionEvent', {kind: 'ClueSetManually', value: clue})" />
     <slot :disabled :create></slot>
