@@ -50,6 +50,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
   it('adjusts textarea heights', () => {
     cy.visit('/project/1/textbook/1/page/6')
     cy.get('button:contains("New exercise")').click()
+    cy.get('button:contains("Passer cette étape")').click()
     cy.get('p:contains("Example")').click()
     cy.get('p:contains("Clue")').click()
 
@@ -99,6 +100,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
   it('enables the "Save exercise" button', () => {
     cy.visit('/project/1/textbook/1/page/6')
     cy.get('button:contains("New exercise")').click()
+    cy.get('button:contains("Passer cette étape")').click()
 
     cy.get('button:contains("Save then create next")').should('be.disabled')
 
@@ -142,10 +144,12 @@ describe('Gabby\'s project\'s textbook page view', () => {
   it('creates a minimal exercise', () => {
     cy.visit('/project/1/textbook/1/page/6')
     cy.get('button:contains("New exercise")').click()
+    cy.get('button:contains("Passer cette étape")').click()
 
     cy.get('label:contains("Number")').next().type('1')
     cy.get('button:contains("Save")').click()
     cy.get('div.busy').should('not.exist')
+    cy.get('button:contains("Passer cette étape")').click()
 
     cy.get('label:contains("Number")').next().should('have.value', '2')
 
@@ -157,6 +161,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
   it('creates a full exercise', () => {
     cy.visit('/project/1/textbook/1/page/6')
     cy.get('button:contains("New exercise")').click()
+    cy.get('button:contains("Passer cette étape")').click()
 
     cy.get('label:contains("Number")').next().type('Défis')
     cy.get('label:contains("Instructions")').next().type('Do the smartest thing ever.')
@@ -167,6 +172,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
     cy.focused().type('The clue')
     cy.get('button:contains("Save")').click()
     cy.get('div.busy').should('not.exist')
+    cy.get('button:contains("Passer cette étape")').click()
 
     cy.get('label:contains("Number")').next().should('have.value', '')
 
@@ -181,6 +187,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
     cy.get('div.busy').should('not.exist')
 
     cy.get('button:contains("New exercise")').click()
+    cy.get('button:contains("Passer cette étape")').click()
 
     cy.get('label:contains("Number")').next().type('1')
     cy.get('label:contains("Instructions")').next().type('Ceci est la consigne')
@@ -193,7 +200,12 @@ describe('Gabby\'s project\'s textbook page view', () => {
     cy.get('div.busy').should('not.exist')
 
     cy.get('canvas[style="position: absolute; top: 0px; left: 0px;"]').as('canvas')
-    // @todo Log a rectangle around the whole exercise
+    cy.get('button:contains("Passer cette étape")').should('exist')
+    cy.get('@canvas').trigger('pointermove', 5, 5)
+    cy.get('@canvas').trigger('pointerdown', 15, 370, { pointerId: 1 })
+    cy.get('@canvas').trigger('pointermove', 150, 420)
+    cy.get('@canvas').trigger('pointerup', 150, 420, { pointerId: 1 })
+    cy.get('button:contains("Passer cette étape")').should('not.exist')
     cy.get('@canvas').trigger('pointermove', 5, 5)
     cy.get('@canvas').trigger('pointerdown', 15, 370, { pointerId: 1 })
     cy.get('@canvas').trigger('pointermove', 150, 395)
@@ -234,6 +246,18 @@ describe('Gabby\'s project\'s textbook page view', () => {
               number: '2',
               events: [
                 {kind: 'ExerciseNumberSetAutomatically', value: '2'},
+                {
+                  kind: 'BoundingRectangleSelectedInPdf',
+                  pdf: {
+                    name: 'test.pdf',
+                    sha256: 'f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c',
+                    page: 1,
+                    rectangle: {
+                      start: {x: 55.49873958525407, y: 142.81480621450703},
+                      stop: {x: 303.099891274904, y: 51.10990910557143},
+                    },
+                  },
+                },
                 {
                   kind: 'TextSelectedInPdf',
                   pdf: {

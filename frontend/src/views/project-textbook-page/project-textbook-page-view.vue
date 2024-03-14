@@ -129,6 +129,7 @@ const mode = ref('list')
 const modeIsLoading = ref(false)
 const refreshCounter = ref(1)
 
+const needsBoundingRectangle = ref(false)
 const currentExercise = reactive({})
 const extractionEvents = reactive([])
 
@@ -137,6 +138,7 @@ const navigationDisabled = computed(() => {
 })
 
 function switchToListMode() {
+  needsBoundingRectangle.value = false
   currentExercise.id = null
   extractionEvents.splice(0)
   currentExercise.attributes = {}
@@ -145,6 +147,7 @@ function switchToListMode() {
 }
 
 function switchToCreateMode(incrementNumber) {
+  needsBoundingRectangle.value = true
   currentExercise.id = null
   extractionEvents.splice(0)
 
@@ -170,6 +173,7 @@ function switchToCreateMode(incrementNumber) {
 }
 
 function switchToEditMode(e) {
+  needsBoundingRectangle.value = false
   currentExercise.id = e.id
   extractionEvents.splice(0)
   currentExercise.attributes = e.attributes
@@ -178,18 +182,31 @@ function switchToEditMode(e) {
 
 const exerciseForm = ref(null)
 function textSelected(text, point, textItems, rectangle) {
-  extractionEvents.push({
-    kind: "TextSelectedInPdf",
-    pdf: {
-      name: section.value.relationships.pdfFile.relationships.namings[0].attributes.name,
-      sha256: section.value.relationships.pdfFile.id,
-      page: pdf.value.page.pageNumber,
-      rectangle,
-    },
-    value: text,
-    textItems,
-  })
-  exerciseForm.value?.textSelected(text, point)
+  if (needsBoundingRectangle.value) {
+    extractionEvents.push({
+      kind: "BoundingRectangleSelectedInPdf",
+      pdf: {
+        name: section.value.relationships.pdfFile.relationships.namings[0].attributes.name,
+        sha256: section.value.relationships.pdfFile.id,
+        page: pdf.value.page.pageNumber,
+        rectangle,
+      },
+    })
+    needsBoundingRectangle.value = false
+  } else {
+    extractionEvents.push({
+      kind: "TextSelectedInPdf",
+      pdf: {
+        name: section.value.relationships.pdfFile.relationships.namings[0].attributes.name,
+        sha256: section.value.relationships.pdfFile.id,
+        page: pdf.value.page.pageNumber,
+        rectangle,
+      },
+      value: text,
+      textItems,
+    })
+    exerciseForm.value?.textSelected(text, point)
+  }
 }
 
 async function createExercise() {
@@ -295,12 +312,20 @@ function changePage(page) {
                   <p class="d-grid"><b-button primary @click="switchToCreateMode(false)">{{ $t('create') }}</b-button></p>
                 </template>
                 <template v-else>
-                  <ExerciseForm
-                    ref="exerciseForm"
-                    :fixedNumber="mode === 'edit'"
-                    v-model="currentExercise.attributes"
-                    @extractionEvent="(event) => extractionEvents.push(event)"
-                  />
+                  <div style="position: relative">
+                    <ExerciseForm
+                      ref="exerciseForm"
+                      :fixedNumber="mode === 'edit'"
+                      v-model="currentExercise.attributes"
+                      @extractionEvent="(event) => extractionEvents.push(event)"
+                    />
+                    <div v-if="needsBoundingRectangle" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8);" class="text-center">
+                      <div style="position: absolute; left: 25%; top: 25%; width: 50%; height: 50%; background-color: white">
+                        <p>Merci de commencer par dessiner un rectangle autour de l'exercice entier.</p>
+                        <b-button sm secondary @click="needsBoundingRectangle = false">Passer cette étape</b-button>
+                      </div>
+                    </div>
+                  </div>
                   <div class="mb-3">
                     <b-button secondary type="text" @click="switchToListMode">{{ $t('cancel') }}</b-button>
                     <template v-if="mode === 'create'">

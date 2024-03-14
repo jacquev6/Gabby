@@ -34,6 +34,7 @@ describe('Gabby', () => {
     cy.get('div.busy').should('not.exist')
 
     cy.get('button').contains('Nouvel exercice').click()
+    cy.get('button:contains("Passer cette étape")').click()
     cy.get('label').contains('Numéro').next().type(5)
 
     cy.screenshot('doc/textbook-page-create-exercise', {clip: {x: 0, y: 50, width: 670, height: 750}})
