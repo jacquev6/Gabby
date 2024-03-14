@@ -72,6 +72,31 @@ describe('Gabby\'s project view', () => {
     cy.get('button:contains("Create textbook")').should('be.disabled')
   })
 
+  it('previews the pdf', () => {
+    cy.visit('/project/1')
+
+    cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
+
+    cy.get('p:contains("Page"):contains("(on 2)") input').should('have.value', '1')
+    cy.get('p:contains("Page"):contains("(on 2)") button:contains("<")').should('be.disabled')
+    cy.get('p:contains("Page"):contains("(on 2)") button:contains(">")').click()
+    cy.get('p:contains("Page"):contains("(on 2)") input').should('have.value', '2')
+    cy.get('p:contains("Page"):contains("(on 2)") button:contains(">")').should('be.disabled')
+
+    cy.get('p:contains("Page"):contains("(on 2)") input').clear().type('37').blur()
+    cy.get('p:contains("Page"):contains("(on 2)") input').should('have.value', '2')
+
+    cy.get('p:contains("Page"):contains("(on 2)") input').clear().type('137').blur()
+    cy.get('p:contains("Page"):contains("(on 2)") input').should('have.value', '1')
+
+    cy.get('button:contains("Cancel")').click()
+    cy.get('p:contains("Page"):contains("(on 2)")').should('not.exist')
+
+    cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
+
+    cy.get('p:contains("Page"):contains("(on 2)")').should('exist')
+  })
+
   it('creates a minimal textbook', () => {
     cy.visit('/project/1')
 

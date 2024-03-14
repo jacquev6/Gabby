@@ -10,6 +10,7 @@ import EditableProjectHeader from './editable-project-header.vue'
 import CreateTextbookForm from './create-textbook-form.vue'
 import CreateExerciseForm from './create-exercise-form.vue'
 import ExercisesList from './exercises-list.vue'
+import PdfPreview from '../../components/pdf-preview.vue'
 
 
 const api = useApiStore()
@@ -51,6 +52,8 @@ const title = computed(() => {
     return 'MALIN'
   }
 })
+
+const pdfToPreview = ref(null)
 </script>
 
 <template>
@@ -62,13 +65,25 @@ const title = computed(() => {
         <b-row>
           <b-col>
             <h2>{{ $t('newTextbook') }}</h2>
-            <create-textbook-form :projectId="project.id" @created="goToTextbook" />
+            <b-row>
+              <b-col>
+                <create-textbook-form
+                  :projectId="project.id"
+                  @loadedPdf="pdf => pdfToPreview = pdf"
+                  @unloadedPdf="pdfToPreview = null"
+                  @created="goToTextbook"
+                />
+              </b-col>
+              <b-col v-if="pdfToPreview !== null" :w="6">
+                <pdf-preview :pdf="pdfToPreview.document" />
+              </b-col>
+            </b-row>
           </b-col>
-          <b-col>
+          <b-col v-if="pdfToPreview === null">
             <h2>{{ $t('newIndependentExercise') }}</h2>
             <create-exercise-form :project="project" @created="++exercisesCreated" />
           </b-col>
-          <b-col>
+          <b-col :w="4">
             <h2>{{ $t('existingTextbooksAndExercises') }}</h2>
             <exercises-list :project="project" />
           </b-col>

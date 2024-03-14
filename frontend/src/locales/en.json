@@ -21,6 +21,8 @@
   "download": "Download",
   "theExtractionReport": "the extraction report",
   "newTextbook": "New textbook",
+  "pdfNavigationPage": "Page",
+  "pdfNavigationPageOver": "(on {count})",
   "textbookTitle": "Title",
   "textbookPublisher": "Publisher",
   "textbookYear": "Year",

@@ -21,6 +21,8 @@
   "download": "Télécharger",
   "theExtractionReport": "le rapport d'extraction",
   "newTextbook": "Nouveau manuel",
+  "pdfNavigationPage": "Page",
+  "pdfNavigationPageOver": "(sur {count})",
   "textbookTitle": "Titre",
   "textbookPublisher": "Éditeur",
   "textbookYear": "Année",

@@ -10,6 +10,8 @@ const props = defineProps({
 })
 
 const emit = defineEmits([
+  'loadedPdf',  // (pdf: Object) => void
+  'unloadedPdf',  // () => void
   'created',  // (textbookId: string) => void
 ])
 
@@ -21,6 +23,7 @@ const loadingPdf = ref(false)
 async function loadPdf(source) {
   loadingPdf.value = true
   pdf.value = await pdfs.open(source)
+  emit('loadedPdf', pdf.value)
   loadingPdf.value = false
 }
 const title = ref('')
@@ -81,6 +84,7 @@ async function create() {
     <b-labeled-input :label="$t('textbookPublisher')" v-model="publisher"/>
     <b-labeled-input :label="$t('textbookYear')" type="number" v-model="year"/>
     <b-labeled-input :label="$t('textbookIsbn')" v-model="isbn"/>
+    <b-button secondary @click="emit('unloadedPdf')">{{ $t('cancel') }}</b-button>
     <b-button primary @click="create" :disabled="disabled">{{ $t('createTextbook') }}</b-button>
   </b-busy>
 </template>

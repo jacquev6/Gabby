@@ -1,8 +1,8 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, toRaw } from 'vue'
 import { computedAsync } from '@vueuse/core'
 
-import { BButton } from '../components/bootstrap'
+import { BButton } from './opinion/bootstrap'
 import PdfRenderer from './PdfRenderer.vue'
 
 const props = defineProps({
@@ -23,7 +23,7 @@ watch(requestedPageNumber, (n) => {
 
 const page = computedAsync(
   async () => {
-    return await props.pdf.getPage(pageNumber.value)
+    return await toRaw(props.pdf).getPage(pageNumber.value)
   },
   null,
 )
@@ -32,7 +32,11 @@ const page = computedAsync(
 <template>
   <p class="text-center">
     <b-button sm primary :disabled="pageNumber <= 1" @click="--requestedPageNumber">&lt;</b-button>
-    <label>{{ $t('Page') }} <input class="number-no-spin" type="number" min="1" :max="pdf.numPages" v-model="requestedPageNumber" @blur="requestedPageNumber = pageNumber" /> {{ $t('pageOver', props.pdf.numPages) }}</label>
+    <label>
+      {{ $t('pdfNavigationPage') }}
+      <input class="number-no-spin" type="number" min="1" :max="pdf.numPages" v-model="requestedPageNumber" @blur="requestedPageNumber = pageNumber" />
+      {{ $t('pdfNavigationPageOver', props.pdf.numPages) }}
+    </label>
     <b-button sm primary :disabled="pageNumber >= pdf.numPages" @click="++requestedPageNumber">&gt;</b-button>
   </p>
   <template v-if="page">
