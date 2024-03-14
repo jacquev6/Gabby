@@ -7,4 +7,5 @@ Cette documentation destinée aux utilisateurs présente les différentes vues d
    :maxdepth: 1
 
    user-index
-   user-textbook-page
+   user-project
+   user-project-textbook-page

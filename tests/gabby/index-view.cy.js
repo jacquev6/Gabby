@@ -58,4 +58,10 @@ describe('Gabby\'s index view', () => {
 
     cy.get('li a:contains("Test project")').should('exist')
   })
+
+  it('navigates to user documentation', () => {
+    cy.visit('/')
+    cy.get('a:contains("Help")').click()
+    cy.contains('h1', 'Documentation de MALIN')
+  })
 })

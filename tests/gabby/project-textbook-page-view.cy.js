@@ -139,6 +139,42 @@ describe('Gabby\'s project\'s textbook page view', () => {
     cy.get('input[type=file]').should('not.exist')
   })
 
+  it('creates a minimal exercise', () => {
+    cy.visit('/project/1/textbook/1/page/6')
+    cy.get('button:contains("New exercise")').click()
+
+    cy.get('label:contains("Number")').next().type('1')
+    cy.get('button:contains("Save")').click()
+    cy.get('div.busy').should('not.exist')
+
+    cy.get('label:contains("Number")').next().should('have.value', '2')
+
+    cy.get('button:contains("Cancel")').click()
+    cy.get('div.busy').should('not.exist')
+    cy.get('li:contains("1")').should('exist')
+  })
+
+  it('creates a full exercise', () => {
+    cy.visit('/project/1/textbook/1/page/6')
+    cy.get('button:contains("New exercise")').click()
+
+    cy.get('label:contains("Number")').next().type('Défis')
+    cy.get('label:contains("Instructions")').next().type('Do the smartest thing ever.')
+    cy.get('label:contains("Wording")').next().type('The wording')
+    cy.get('p:contains("Example")').click()
+    cy.focused().type('The example')
+    cy.get('p:contains("Clue")').click()
+    cy.focused().type('The clue')
+    cy.get('button:contains("Save")').click()
+    cy.get('div.busy').should('not.exist')
+
+    cy.get('label:contains("Number")').next().should('have.value', '')
+
+    cy.get('button:contains("Cancel")').click()
+    cy.get('div.busy').should('not.exist')
+    cy.get('li:contains("Défis")').should('exist')
+  })
+
   it('collects extraction events on new exercises', () => {
     cy.visit('/project/1/textbook/1/page/6')
     cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
@@ -891,5 +927,21 @@ describe('Gabby\'s project\'s textbook page view', () => {
         'valueAfter': 'pronom personnel / verbe / déterminant / nom commun :\r\nJe mange une pomme.\npronom personnel / verbe / déterminant / nom\ncommun : Je mange une pomme.',
       },
     ])
+  })
+
+  // @todo Add test showing we can delete and recreate an exercise (hunt possible bug in deletion)
+
+  it('shows and hides the section editor dialog', () => {
+    cy.visit('/project/1/textbook/1/page/6')
+    cy.get('select').select('fr')
+    cy.get('div.busy').should('not.exist')
+
+    cy.get('h1').contains('Lien entre PDF et manuel').should('not.exist')
+
+    cy.get('button').contains('⚙').click()
+    cy.get('h1').contains('Lien entre PDF et manuel').should('exist')
+
+    cy.get('button').contains('Annuler').click()
+    cy.get('h1').contains('Lien entre PDF et manuel').should('not.exist')
   })
 })
