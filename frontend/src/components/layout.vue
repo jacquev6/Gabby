@@ -2,7 +2,7 @@
 import { ref, computed } from 'vue'
 import { useHead } from '@unhead/vue'
 
-import AboutModal from './AboutModal.vue'
+import AboutModal from './about-modal.vue'
 import languageSelector from './opinion/language-selector.vue'
 
 
