@@ -7,6 +7,16 @@ Les améliorations techniques ne figurent que dans le `log git <https://github.c
 Les titres des sections de ce document correspondent au champ ``Gabby version`` dans le "À propos".
 Les versions sont nommées selon leur date de publication, au format ``YYYYMMDD-HHMMSS`` (année, mois, jour, tiret, heure, minute, seconde).
 
+20240314-174534
+---------------
+
+- Ajout de la notion de "projet" et des exercices indépendants des manuels, adaptation de l'interface en conséquence
+- Gestion des exercices ayant des "numéros" textuels
+- Collecte des "événements d'extraction" pour l'équipe "machine learning"
+- Enregistrement *dans le navigateur* des PDFs déjà ouverts
+- Sauvegarde régulière de la base de données
+- Ajout d'une section "Evolutions prévues" dans l'aide
+
 20240228-163737
 ---------------
 

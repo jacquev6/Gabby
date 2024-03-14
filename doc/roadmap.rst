@@ -11,35 +11,6 @@ Correction des bugs connus
 
 Aucun pour le moment.
 
-20240314
---------
-
-Logger les actions de l'utilisateur dans le PDF
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Pour chaque rectangle cliqué: le texte détecté, le champ auquel il a été ajouté, etc.
-
-Autoriser les numéros d'exercices en texte libre
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-*E.g.* "Défi langue".
-
-Attacher les exercices à un "projet"
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Au lieu d'un manuel.
-Et certains projet contiendront une liste d'extraits de manuels.
-
-Ajouter une vue de projet
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Avec la liste des exercices extraits, et une mise en valeur des exercices pas encore extraits.
-
-Afficher les informations de projet et de manuel dans la barre de navigation
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Sur la page d'extraction.
-
 20240404
 --------
 
