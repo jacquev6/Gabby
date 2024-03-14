@@ -109,4 +109,19 @@ describe('Gabby\'s project\'s textbook page view', () => {
     cy.get('label:contains("Number")').next().type('A')
     cy.get('button:contains("Save then create next")').should('be.enabled')
   })
+
+  it('lists existing exercises', () => {
+    cy.visit('/project/1/textbook/1/page/7')
+    cy.get('button:contains("Delete")').click()
+    cy.get('div.busy').should('not.exist')
+
+    cy.visit('/project/1/textbook/1/page/7')
+    cy.get('div.busy').should('not.exist')
+    cy.get('p:contains("No exercises yet.")').should('exist')
+
+    cy.visit('/project/1/textbook/1/page/6')
+    cy.get('p:contains("Existing exercises:")').should('exist')
+    cy.get('li:contains("3 Complète avec : le, une, …")').should('exist')
+    cy.get('li:contains("4 Écris une phrase en respe…")').should('exist')
+  })
 })

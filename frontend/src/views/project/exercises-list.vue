@@ -41,7 +41,7 @@ function ellipsis(s) {
       <h3>{{ $t('independentExercises') }}</h3>
       <ul>
         <li v-for="exercise in independentExercises">
-          <strong>{{ exercise.attributes.number }}</strong> : {{ ellipsis(exercise.attributes.instructions) }}
+          <strong>{{ exercise.attributes.number }}</strong> {{ ellipsis(exercise.attributes.instructions) }}
         </li>
       </ul>
     </template>
@@ -53,7 +53,7 @@ function ellipsis(s) {
             <router-link :to="{name: 'project-textbook-page', params: {projectId: project.ud, textbookId: textbook.id, page}}">Page {{ page }}</router-link>
             <ul>
               <li v-for="exercise in exercises">
-              <strong>{{ exercise.attributes.number }}</strong> : {{ ellipsis(exercise.attributes.instructions) }}
+              <strong>{{ exercise.attributes.number }}</strong> {{ ellipsis(exercise.attributes.instructions) }}
             </li>
             </ul>
           </li>

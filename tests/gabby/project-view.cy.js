@@ -154,19 +154,19 @@ describe('Gabby\'s project view', () => {
     cy.get('h3:contains("Français CE2, Slabeuf (2021)")').should('exist')
     cy.get('a:contains("Français CE2")').should('exist')
     cy.get('li a:contains("Page 6")').should('exist')
-    cy.get('li:contains("Page 6") ul li:contains("3 : Complète avec : le, une, …")').should('exist')
-    cy.get('li:contains("Page 6") ul li:contains("4 : Écris une phrase en respe…")').should('exist')
+    cy.get('li:contains("Page 6") ul li:contains("3 Complète avec : le, une, …")').should('exist')
+    cy.get('li:contains("Page 6") ul li:contains("4 Écris une phrase en respe…")').should('exist')
     cy.get('li a:contains("Page 7")').should('exist')
-    cy.get('li:contains("Page 7") ul li:contains("9 : Recopie l’intrus qui se c…")').should('exist')
+    cy.get('li:contains("Page 7") ul li:contains("9 Recopie l’intrus qui se c…")').should('exist')
   })
 
   it('lists independent exercises', () => {
     cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises')
 
     cy.visit('/project/2')
-    cy.get('li:contains("L1 : Faire des choses intellig…")').should('exist')
-    cy.get('li:contains("L2 : Faire d\'autres choses int…")').should('exist')
-    cy.get('li:contains("L3 : Prendre le temps de faire…")').should('exist')
+    cy.get('li:contains("L1 Faire des choses intellig…")').should('exist')
+    cy.get('li:contains("L2 Faire d\'autres choses int…")').should('exist')
+    cy.get('li:contains("L3 Prendre le temps de faire…")').should('exist')
   })
 
   it('enables the "Create exercise" button', () => {
@@ -193,7 +193,7 @@ describe('Gabby\'s project view', () => {
 
     cy.get('label:contains("Number")').next().should('have.value', '11')
 
-    cy.get('li:contains("10 : Do something smart.")').should('exist')
+    cy.get('li:contains("10 Do something smart.")').should('exist')
   })
 
   it('creates a full independent exercise', () => {
@@ -212,7 +212,7 @@ describe('Gabby\'s project view', () => {
 
     cy.get('label:contains("Number")').next().should('have.value', '')
 
-    cy.get('li:contains("L10 : Do the smartest thing eve…")').should('exist')
+    cy.get('li:contains("L10 Do the smartest thing eve…")').should('exist')
   })
 
   // @todo Edit independent exercise
