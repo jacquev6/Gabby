@@ -11,6 +11,7 @@ describe('Gabby\'s index view', () => {
 
   it('lands', () => {
     cy.visit('/')
+    cy.get('select').select('en')
 
     cy.get('div.busy').should('not.exist')
     cy.get('p').should('contain', 'No projects')
@@ -19,6 +20,7 @@ describe('Gabby\'s index view', () => {
 
   it('enables the "Create project" button', () => {
     cy.visit('/')
+    cy.get('select').select('en')
 
     cy.get('button:contains("Create project")').should('be.disabled')
 
@@ -33,6 +35,7 @@ describe('Gabby\'s index view', () => {
 
   it('creates a minimal project', () => {
     cy.visit('/')
+    cy.get('select').select('en')
 
     cy.get('label:contains("Title")').next().type('Test project')
     cy.get('button:contains("Create project")').click()
@@ -46,6 +49,7 @@ describe('Gabby\'s index view', () => {
 
   it('creates a full project', () => {
     cy.visit('/')
+    cy.get('select').select('en')
 
     cy.get('label:contains("Title")').next().type('Test project')
     cy.get('label:contains("Description")').next().type('This is a test project')
@@ -61,6 +65,8 @@ describe('Gabby\'s index view', () => {
 
   it('navigates to user documentation', () => {
     cy.visit('/')
+    cy.get('select').select('en')
+
     cy.get('a:contains("Help")').click()
     cy.contains('h1', 'Documentation de MALIN')
   })

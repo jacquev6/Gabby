@@ -12,6 +12,7 @@ describe('Gabby\'s project view', () => {
   it('displays an error message if the project does not exist', () => {
     cy.visit('/project/0')
     cy.get('div.busy').should('not.exist')
+    cy.get('select').select('en')
 
     cy.get('h1:contains("Project not found")').should('exist')
     cy.title().should('eq', 'MALIN')
@@ -19,6 +20,7 @@ describe('Gabby\'s project view', () => {
 
   it('lands', () => {
     cy.visit('/project/1')
+    cy.get('select').select('en')
 
     cy.get('h1:contains("Test project")').should('exist')
     cy.title().should('eq', 'MALIN - Test project')
@@ -31,6 +33,7 @@ describe('Gabby\'s project view', () => {
 
   it('edits title and description', () => {
     cy.visit('/project/1')
+    cy.get('select').select('en')
 
     cy.get('h1:contains("Test project") button:contains("Edit")').click()
     cy.get('label:contains("Title")').first().next().clear().type('New title')
@@ -49,6 +52,7 @@ describe('Gabby\'s project view', () => {
 
   it('refuses to empty title', () => {
     cy.visit('/project/1')
+    cy.get('select').select('en')
 
     cy.get('h1:contains("Test project") button:contains("Edit")').click()
     cy.get('label:contains("Title")').first().next().clear()
@@ -57,6 +61,7 @@ describe('Gabby\'s project view', () => {
 
   it('enables the "Create textbook" button', () => {
     cy.visit('/project/1')
+    cy.get('select').select('en')
     cy.get('button:contains("Create textbook")').should('be.disabled')
 
     cy.get('label:contains("Title")').next().type('Test textbook')
@@ -74,6 +79,7 @@ describe('Gabby\'s project view', () => {
 
   it('previews the pdf', () => {
     cy.visit('/project/1')
+    cy.get('select').select('en')
 
     cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
 
@@ -99,6 +105,7 @@ describe('Gabby\'s project view', () => {
 
   it('creates a minimal textbook', () => {
     cy.visit('/project/1')
+    cy.get('select').select('en')
 
     cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
     cy.get('label:contains("Title")').next().type('Test textbook')
@@ -113,6 +120,7 @@ describe('Gabby\'s project view', () => {
 
   it('creates a full textbook', () => {
     cy.visit('/project/1')
+    cy.get('select').select('en')
 
     cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
     cy.get('label:contains("Title")').next().type('Test textbook')
@@ -130,11 +138,13 @@ describe('Gabby\'s project view', () => {
 
   it('creates two textbooks from the same PDF', () => {
     cy.visit('/project/1')
+    cy.get('select').select('en')
     cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
     cy.get('label:contains("Title")').next().type('First textbook')
     cy.get('button:contains("Create textbook")').click()
     cy.get('p:contains("No exercises yet")').should('exist')
     cy.visit('/project/1')
+    cy.get('select').select('en')
 
     cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
     cy.get('label:contains("Title")').next().type('Second textbook')
@@ -142,6 +152,7 @@ describe('Gabby\'s project view', () => {
     cy.get('p:contains("No exercises yet")').should('exist')
 
     cy.visit('/project/1')
+    cy.get('select').select('en')
     cy.get('h3:contains("First textbook")').should('exist')
     cy.get('h3:contains("Second textbook")').should('exist')
   })
@@ -150,6 +161,7 @@ describe('Gabby\'s project view', () => {
     cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises')
 
     cy.visit('/project/1')
+    cy.get('select').select('en')
 
     cy.get('h3:contains("Français CE2, Slabeuf (2021)")').should('exist')
     cy.get('a:contains("Français CE2")').should('exist')
@@ -171,6 +183,7 @@ describe('Gabby\'s project view', () => {
 
   it('enables the "Create exercise" button', () => {
     cy.visit('/project/1')
+    cy.get('select').select('en')
     cy.get('button:contains("Create exercise")').should('be.disabled')
 
     cy.get('label:contains("Number")').next().type('a')
@@ -184,6 +197,7 @@ describe('Gabby\'s project view', () => {
 
   it('creates a minimal independent exercise', () => {
     cy.visit('/project/1')
+    cy.get('select').select('en')
 
     cy.get('label:contains("Number")').next().type('10')
     cy.get('label:contains("Instructions")').next().type('Do something smart.')
@@ -198,6 +212,7 @@ describe('Gabby\'s project view', () => {
 
   it('creates a full independent exercise', () => {
     cy.visit('/project/1')
+    cy.get('select').select('en')
 
     cy.get('label:contains("Number")').next().type('L10')
     cy.get('label:contains("Instructions")').next().type('Do the smartest thing ever.')

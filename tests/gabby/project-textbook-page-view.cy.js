@@ -14,6 +14,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
   it('displays an error message if the project does not exist', () => {
     cy.visit('/project/0/textbook/1/page/6')
     cy.get('div.busy').should('not.exist')
+    cy.get('select').select('en')
 
     cy.get('h1:contains("Project not found")').should('exist')
     cy.title().should('eq', 'MALIN')
@@ -22,6 +23,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
   it('displays an error message if the textbook does not exist', () => {
     cy.visit('/project/1/textbook/0/page/6')
     cy.get('div.busy').should('not.exist')
+    cy.get('select').select('en')
 
     cy.get('h1:contains("Textbook not found")').should('exist')
     cy.title().should('eq', 'MALIN')
@@ -30,6 +32,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
   it('displays an error message if the textbook does not belong to this project', () => {
     cy.visit('/project/2/textbook/1/page/6')
     cy.get('div.busy').should('not.exist')
+    cy.get('select').select('en')
 
     cy.get('h1:contains("Textbook not found")').should('exist')
     cy.title().should('eq', 'MALIN')
@@ -41,6 +44,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
 
   it('lands', () => {
     cy.visit('/project/1/textbook/1/page/6')
+    cy.get('select').select('en')
 
     cy.title().should('eq', 'MALIN - Premier projet de test - Français CE2 - Page 6')
     cy.get('.navbar').should('contain', 'Premier projet de test')
@@ -49,6 +53,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
 
   it('adjusts textarea heights', () => {
     cy.visit('/project/1/textbook/1/page/6')
+    cy.get('select').select('en')
     cy.get('button:contains("New exercise")').click()
     cy.get('button:contains("Passer cette étape")').click()
     cy.get('p:contains("Example")').click()
@@ -63,6 +68,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
 
   it('navigates the textbook', () => {
     cy.visit('/project/1/textbook/1/page/6')
+    cy.get('select').select('en')
     cy.get('p:contains("Page"):contains("(on 7)") input').should('have.value', '6')
     cy.get('p:contains("The PDF that contains this page (test.pdf) has not been loaded yet.")').should('exist')
 
@@ -99,6 +105,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
 
   it('enables the "Save exercise" button', () => {
     cy.visit('/project/1/textbook/1/page/6')
+    cy.get('select').select('en')
     cy.get('button:contains("New exercise")').click()
     cy.get('button:contains("Passer cette étape")').click()
 
@@ -116,12 +123,14 @@ describe('Gabby\'s project\'s textbook page view', () => {
 
   it('lists existing exercises', () => {
     cy.visit('/project/1/textbook/1/page/7')
+    cy.get('select').select('en')
     cy.get('button:contains("Delete")').click()
     cy.get('div.busy').should('not.exist')
     cy.get('p:contains("No exercises yet.")').should('exist')
 
     cy.visit('/project/1/textbook/1/page/7')
     cy.get('div.busy').should('not.exist')
+    cy.get('select').select('en')
     cy.get('p:contains("No exercises yet.")').should('exist')
 
     cy.get('button:contains("<")').click()
@@ -132,6 +141,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
 
   it('loads a PDF', () => {
     cy.visit('/project/1/textbook/1/page/6')
+    cy.get('select').select('en')
     cy.get('div.busy').should('not.exist')
     cy.get('p:contains("The PDF that contains this page (test.pdf) has not been loaded yet.")').should('exist')
 
@@ -143,6 +153,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
 
   it('creates a minimal exercise', () => {
     cy.visit('/project/1/textbook/1/page/6')
+    cy.get('select').select('en')
     cy.get('button:contains("New exercise")').click()
     cy.get('button:contains("Passer cette étape")').click()
 
@@ -160,6 +171,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
 
   it('creates a full exercise', () => {
     cy.visit('/project/1/textbook/1/page/6')
+    cy.get('select').select('en')
     cy.get('button:contains("New exercise")').click()
     cy.get('button:contains("Passer cette étape")').click()
 
@@ -183,6 +195,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
 
   it('collects extraction events on new exercises', () => {
     cy.visit('/project/1/textbook/1/page/6')
+    cy.get('select').select('en')
     cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
     cy.get('div.busy').should('not.exist')
 
@@ -221,6 +234,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
     cy.get('div.busy').should('not.exist')
 
     cy.visit('/project/1')
+    cy.get('select').select('en')
 
     cy.get('a').contains('the extraction report').should('have.attr', 'href', '/api/project-1-extraction-report.json')
 
@@ -253,8 +267,8 @@ describe('Gabby\'s project\'s textbook page view', () => {
                     sha256: 'f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c',
                     page: 1,
                     rectangle: {
-                      start: {x: 55.49873958525407, y: 142.81480621450703},
-                      stop: {x: 303.099891274904, y: 51.10990910557143},
+                      start: {x: 55.49873958525407, y: (isProdPreview ? 142.1556772665365 : 142.81480621450703)},
+                      stop: {x: 303.099891274904, y: (isProdPreview ? 50.45078015760089 : 51.10990910557143)},
                     },
                   },
                 },
@@ -877,6 +891,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
 
   it('collects extraction events when editing exercises', () => {
     cy.visit('/project/1/textbook/1/page/6')
+    cy.get('select').select('en')
     cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
     cy.get('div.busy').should('not.exist')
 
@@ -907,8 +922,8 @@ describe('Gabby\'s project\'s textbook page view', () => {
           sha256: 'f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c',
           page: 1,
           rectangle: {
-            start: {x: 303.099891274904, y: 133.64431650361348},
-            stop: {x: 578.2122820411818, y: 87.79186794914563},
+            start: {x: 303.099891274904, y: (isProdPreview ? 132.98518755564305 : 133.64431650361348)},
+            stop: {x: 578.2122820411818, y: (isProdPreview ? 87.13273900117508 : 87.79186794914563)},
           },
         },
         value: 'pronom personnel / verbe / déterminant / nom\ncommun : Je mange une pomme.',

@@ -3,6 +3,7 @@ describe('Gabby has routes that', () => {
 
   it('can access the default Vue Router view', () => {
     cy.visit('/')
+    cy.get('select').select('en')
     cy.contains('h1', 'Existing projects')
   })
 
