@@ -124,4 +124,15 @@ describe('Gabby\'s project\'s textbook page view', () => {
     cy.get('li:contains("3 Complète avec : le, une, …")').should('exist')
     cy.get('li:contains("4 Écris une phrase en respe…")').should('exist')
   })
+
+  it('loads a PDF', () => {
+    cy.visit('/project/1/textbook/1/page/6')
+    cy.get('div.busy').should('not.exist')
+    cy.get('p:contains("The PDF that contains this page (test.pdf) has not been loaded yet.")').should('exist')
+
+    cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
+    cy.get('div.busy').should('not.exist')
+    cy.get('p:contains("The PDF that contains this page (test.pdf) has not been loaded yet.")').should('not.exist')
+    cy.get('input[type=file]').should('not.exist')
+  })
 })

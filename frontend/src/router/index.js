@@ -19,6 +19,11 @@ const router = createRouter({
       component: () => import('../views/ping-view.vue'),
     },
     {
+      path: '/pdfs',
+      name: 'pdfs',
+      component: () => import('../views/pdfs-view.vue'),
+    },
+    {
       path: '/project/:projectId',
       name: 'project',
       component: ProjectView,

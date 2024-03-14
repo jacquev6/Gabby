@@ -13,6 +13,7 @@ import TextPicker from '../../components/TextPicker.vue'
 import SectionEditor from '../../components/SectionEditor.vue'
 import PdfNavigationControls from '../../components/pdf-navigation-controls.vue'
 import ExercisesList from './exercises-list.vue'
+import PdfNotLoaded from './pdf-not-loaded.vue'
 
 
 const props = defineProps({
@@ -287,16 +288,13 @@ function changePage(page) {
                     </div>
                   </template>
                   <template v-else>
-                    <p>{{ $t('pdfNotYetOpen', {name: section.relationships.pdfFile.relationships.namings[0].attributes.name }) }}</p>
-                    <p>@todo(Feature, soon) Display all names known for this PDF</p>
-                    <p>@todo(Feature, soon) Let user open PDF from here</p>
-                    <p>@todo(Project management, later) Remove this button: <button @click="pdfs.open({url: '/test.pdf'})">Load test.pdf</button></p>
+                    <pdf-not-loaded :name="section.relationships.pdfFile.relationships.namings[0].attributes.name" />
                   </template>
                 </b-busy>
               </template>
               <template v-else>
                 <p>{{ $t('pageNoKnown') }}</p>
-                <p>@todo(Feature, soon) Let user associate PDF to page from here</p>
+                <!-- @todo Let user associate PDF to page from here -->
               </template>
             </b-col>
             <b-col>
