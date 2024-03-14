@@ -11,17 +11,8 @@ const emit = defineEmits([
 
 const number = ref('')
 
-function setNextNumber(exercise) {
-  const prevNumber = parseInt(exercise.attributes.number)
-  if (Number.isInteger(prevNumber)) {
-    number.value = (prevNumber + 1).toString()
-  } else {
-    number.value = ''
-  }
-}
-
-function created(exercise) {
-  setNextNumber(exercise)
+function created(exercise, suggestedNextExerciseNumber) {
+  number.value = suggestedNextExerciseNumber
   emit('created', exercise)
 }
 </script>

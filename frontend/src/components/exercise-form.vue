@@ -15,7 +15,7 @@ const props = defineProps({
 
 const emit = defineEmits([
   'extractionEvent',  // (event: Object) => void
-  'created',  // (exercise: Object) => void
+  'created',  // (exercise: Object, suggestedNextExerciseNumber: string) => void
 ])
 
 const api = useApiStore()
@@ -37,6 +37,15 @@ watch(
 const disabled = computed(() => !number.value)
 const busy = ref(false)
 
+function tryIncrement(s) {
+  const n = parseInt(s)
+  if (Number.isInteger(n)) {
+    return (n + 1).toString()
+  } else {
+    return ''
+  }
+}
+
 async function create() {
   busy.value = true
   const exercise = await api.client.post(
@@ -56,7 +65,8 @@ async function create() {
   wording.value = ''
   example.value = ''
   clue.value = ''
-  emit('created', exercise)
+
+  emit('created', exercise, tryIncrement(exercise.attributes.number))
 }
 </script>
 
