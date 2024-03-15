@@ -11,7 +11,7 @@ const router = createRouter({
       name: 'ping',
       component: () => import('../views/ping-view.vue'),
     },
-  ]
+  ],
 })
 
 export default router

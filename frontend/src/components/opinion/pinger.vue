@@ -2,7 +2,7 @@
 import { ref, reactive } from 'vue'
 
 import { useApiStore } from '../../stores/api'
-import { BBusy, BInput, BButton } from './bootstrap'
+import { BBusy, BLabeledInput, BButton } from './bootstrap'
 
 
 const api = useApiStore()
@@ -55,7 +55,7 @@ async function deletePing(id) {
     <p v-else>{{ $t('opinion.noPings') }}</p>
   </b-busy>
   <b-busy :busy="creatingPing">
-    <b-input label="Message" v-model="newPingMessage"/>
+    <b-labeled-input label="Message" v-model="newPingMessage"/>
     <b-button primary @click="createPing">{{ $t('opinion.ping') }}</b-button>
   </b-busy>
 </template>
