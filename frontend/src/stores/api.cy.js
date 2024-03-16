@@ -70,6 +70,68 @@ describe('ApiStore', () => {
     cy.expect(pings[0].relationships.prev).to.be.null
   })
 
+  it('gets all pings, filtered, and include relationships', async () => {
+    const api = useApiStore()
+
+    const pings = await api.client.getAll('pings', {filter: {message: 'Hello 3'}, include: ['prev', 'next']})
+    cy.expect(pings.length).to.equal(1)
+    cy.expect(pings[0].type).to.equal('ping')
+    cy.expect(pings[0].id).to.equal('3')
+    cy.expect(pings[0].inCache).to.be.true
+    cy.expect(pings[0].exists).to.be.true
+    cy.expect(pings[0].attributes.message).to.equal('Hello 3')
+
+    cy.expect(pings[0].relationships.prev.type).to.equal('ping')
+    cy.expect(pings[0].relationships.prev.id).to.equal('2')
+    cy.expect(pings[0].relationships.prev.inCache).to.be.true
+    cy.expect(pings[0].relationships.prev.exists).to.be.true
+    cy.expect(pings[0].relationships.prev.attributes.message).to.equal('Hello 2')
+    cy.expect(pings[0].relationships.prev.relationships.prev).to.be.null
+    cy.expect(pings[0].relationships.prev.relationships.next[0].type).to.equal('ping')
+    cy.expect(pings[0].relationships.prev.relationships.next[0].id).to.equal('3')
+    cy.expect(pings[0].relationships.prev.relationships.next[0].inCache).to.be.true
+    cy.expect(pings[0].relationships.prev.relationships.next[0].exists).to.be.true
+    cy.expect(pings[0].relationships.prev.relationships.next[0].attributes.message).to.equal('Hello 3')
+
+    cy.expect(pings[0].relationships.next.length).to.equal(2)
+    cy.expect(pings[0].relationships.next[0].type).to.equal('ping')
+    cy.expect(pings[0].relationships.next[0].id).to.equal('4')
+    cy.expect(pings[0].relationships.next[0].inCache).to.be.true
+    cy.expect(pings[0].relationships.next[0].exists).to.be.true
+    cy.expect(pings[0].relationships.next[0].attributes.message).to.equal('Hello 4')
+    cy.expect(pings[0].relationships.next[0].relationships.prev.type).to.equal('ping')
+    cy.expect(pings[0].relationships.next[0].relationships.prev.id).to.equal('3')
+    cy.expect(pings[0].relationships.next[0].relationships.prev.inCache).to.be.true
+    cy.expect(pings[0].relationships.next[0].relationships.prev.exists).to.be.true
+    cy.expect(pings[0].relationships.next[0].relationships.prev.attributes.message).to.equal('Hello 3')
+    cy.expect(pings[0].relationships.next[0].relationships.next.length).to.equal(0)
+
+    cy.expect(pings[0].relationships.next[1].type).to.equal('ping')
+    cy.expect(pings[0].relationships.next[1].id).to.equal('5')
+    cy.expect(pings[0].relationships.next[1].inCache).to.be.true
+    cy.expect(pings[0].relationships.next[1].exists).to.be.true
+    cy.expect(pings[0].relationships.next[1].attributes.message).to.equal('Hello 5')
+    cy.expect(pings[0].relationships.next[1].relationships.prev.type).to.equal('ping')
+    cy.expect(pings[0].relationships.next[1].relationships.prev.id).to.equal('3')
+    cy.expect(pings[0].relationships.next[1].relationships.prev.inCache).to.be.true
+    cy.expect(pings[0].relationships.next[1].relationships.prev.exists).to.be.true
+    cy.expect(pings[0].relationships.next[1].relationships.prev.attributes.message).to.equal('Hello 3')
+    cy.expect(pings[0].relationships.next[1].relationships.next.length).to.equal(1)
+    cy.expect(pings[0].relationships.next[1].relationships.next[0].type).to.equal('ping')
+    cy.expect(pings[0].relationships.next[1].relationships.next[0].id).to.equal('6')
+    cy.expect(pings[0].relationships.next[1].relationships.next[0].inCache).to.be.false
+    cy.expect(pings[0].relationships.next[1].relationships.next[0].exists).to.be.true
+    cy.expect(pings[0].relationships.next[1].relationships.next[0].attributes).to.be.undefined
+
+    const ping6 = api.cache.getOne('ping', '6')
+    cy.expect(ping6.type).to.equal('ping')
+    cy.expect(ping6.id).to.equal('6')
+    cy.expect(ping6.inCache).to.be.false
+    cy.expect(ping6.exists).to.be.true
+    cy.expect(ping6.attributes).to.be.undefined
+    cy.expect(ping6.relationships).to.be.undefined
+  })
+
   it('gets one ping with empty relationships', async () => {
     const api = useApiStore()
 
