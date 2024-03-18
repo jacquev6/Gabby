@@ -154,6 +154,11 @@ class PingTestsMixin:
             },
         })
 
+    def test_get_one__nonexisting(self):
+        ping = Ping.objects.create()
+        response = self.get("http://testserver/api/pings/0")
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.json())
+
     def test_get_all(self):
         ping1 = Ping.objects.create()
         ping2 = Ping.objects.create(prev=ping1)
@@ -485,6 +490,21 @@ class PingTestsAgainstDjango(PingTestsMixin, APITransactionTestCase):
 
     def patch(self, url, payload):
         return self.client.patch(url, payload, format="vnd.api+json")
+
+
+class PingTestsAgainstFastApi(PingTestsMixin, TransactionTestCase):
+    def setUp(self):
+        super().setUp()
+        self.__client = TestClient(app)
+
+    def get(self, url):
+        return self.__client.get(url, headers={"Content-Type": "application/vnd.api+json"})
+
+    def post(self, url, payload):
+        return self.__client.post(url, content=json.dumps(payload), headers={"Content-Type": "application/vnd.api+json"})
+
+    def patch(self, url, payload):
+        return self.__client.patch(url, content=json.dumps(payload), headers={"Content-Type": "application/vnd.api+json"})
 
 
 class SchemaTest(TestCase):
