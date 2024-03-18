@@ -1,9 +1,14 @@
 import datetime
+import json
+import os
 
+from django.test import TransactionTestCase, TestCase
+from fastapi.testclient import TestClient
 from rest_framework import status
 from rest_framework.test import APITransactionTestCase
 
 from .models import Ping
+from main import app
 
 
 class PingTests(APITransactionTestCase):
@@ -478,3 +483,21 @@ class PingTests(APITransactionTestCase):
         self.assertEqual(ping.message, "Hello")
         self.assertEqual(ping.prev, Ping.objects.get(id=1))
         self.assertEqual(list(ping.next.all()), [])
+
+
+class SchemaTest(TestCase):
+    def test(self):
+        file_path = os.path.join(os.path.dirname(__file__), "..", "openapi.json")
+        with open(file_path) as file:
+            expected = json.load(file)
+
+        response = TestClient(app).get("http://server/api/openapi.json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
+        actual = response.json()
+
+        try:
+            self.assertEqual(actual, expected)
+        finally:
+            with open(file_path, "w") as file:
+                json.dump(actual, file, indent=2, sort_keys=True)
+                file.write("\n")

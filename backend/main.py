@@ -6,7 +6,12 @@ import fastapi
 django.setup()
 
 
-app = fastapi.FastAPI()
+app = fastapi.FastAPI(
+    # We want '/reset-...' to be at the root, so can't use root_path="/api", so we have to specify these individually:
+    openapi_url="/api/openapi.json",
+    docs_url="/api/docs",
+    redoc_url="/api/redoc",
+)
 
 
 # Test-only URL. Not in 'api/...' to avoid accidentally exposing it.
