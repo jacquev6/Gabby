@@ -12,4 +12,4 @@ then
   shuffle=--shuffle
 fi
 
-docker compose exec backend python -Wa manage.py test $shuffle "$@"
+docker compose exec old-backend python -Wa manage.py test $shuffle "$@"
