@@ -164,7 +164,7 @@
           "meta": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/fastjsonapi__make_jsonapi_models___locals___ListRelationShip__Meta"
+                "$ref": "#/components/schemas/fastjsonapi__router__make_jsonapi_models___locals___ListRelationShip__Meta"
               }
             ],
             "default": {
@@ -239,7 +239,7 @@
             "type": "string"
           },
           "links": {
-            "$ref": "#/components/schemas/fastjsonapi__make_jsonapi_models___locals___OutputItemModel__Links"
+            "$ref": "#/components/schemas/fastjsonapi__router__make_jsonapi_models___locals___OutputItemModel__Links"
           },
           "relationships": {
             "$ref": "#/components/schemas/OutputRelationships"
@@ -304,10 +304,10 @@
             "type": "array"
           },
           "links": {
-            "$ref": "#/components/schemas/fastjsonapi__make_jsonapi_models___locals___PageOutputModel__Links"
+            "$ref": "#/components/schemas/fastjsonapi__router__make_jsonapi_models___locals___PageOutputModel__Links"
           },
           "meta": {
-            "$ref": "#/components/schemas/fastjsonapi__make_jsonapi_models___locals___PageOutputModel__Meta"
+            "$ref": "#/components/schemas/fastjsonapi__router__make_jsonapi_models___locals___PageOutputModel__Meta"
           }
         },
         "required": [
@@ -483,7 +483,7 @@
         "title": "ValidationError",
         "type": "object"
       },
-      "fastjsonapi__make_jsonapi_models___locals___ListRelationShip__Meta": {
+      "fastjsonapi__router__make_jsonapi_models___locals___ListRelationShip__Meta": {
         "properties": {
           "count": {
             "default": 0,
@@ -494,7 +494,7 @@
         "title": "Meta",
         "type": "object"
       },
-      "fastjsonapi__make_jsonapi_models___locals___OutputItemModel__Links": {
+      "fastjsonapi__router__make_jsonapi_models___locals___OutputItemModel__Links": {
         "properties": {
           "self": {
             "title": "Self",
@@ -507,7 +507,7 @@
         "title": "Links",
         "type": "object"
       },
-      "fastjsonapi__make_jsonapi_models___locals___PageOutputModel__Links": {
+      "fastjsonapi__router__make_jsonapi_models___locals___PageOutputModel__Links": {
         "properties": {
           "first": {
             "title": "First",
@@ -549,7 +549,7 @@
         "title": "Links",
         "type": "object"
       },
-      "fastjsonapi__make_jsonapi_models___locals___PageOutputModel__Meta": {
+      "fastjsonapi__router__make_jsonapi_models___locals___PageOutputModel__Meta": {
         "properties": {
           "pagination": {
             "$ref": "#/components/schemas/Pagination"
