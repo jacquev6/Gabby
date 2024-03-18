@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { computedAsync } from '@vueuse/core'
 
 import Pinger from '../components/opinion/pinger.vue'
-import { BRow, BCol } from '../components/opinion/bootstrap'
+import { BBusy, BRow, BCol } from '../components/opinion/bootstrap'
 import { useApiStore } from './api'
 
 
