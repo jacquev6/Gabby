@@ -11,18 +11,9 @@ from .models import Ping
 from main import app
 
 
-class PingTests(APITransactionTestCase):
+class PingTestsMixin:
     maxDiff = None
     reset_sequences = True  # Primary keys appear in API responses
-
-    def post(self, url, payload):
-        return self.client.post(url, payload, format="vnd.api+json")
-
-    def get(self, url):
-        return self.client.get(url, format="vnd.api+json")
-
-    def patch(self, url, payload):
-        return self.client.patch(url, payload, format="vnd.api+json")
 
     def test_create__minimal(self):
         before = datetime.datetime.now(tz=datetime.timezone.utc)
@@ -483,6 +474,17 @@ class PingTests(APITransactionTestCase):
         self.assertEqual(ping.message, "Hello")
         self.assertEqual(ping.prev, Ping.objects.get(id=1))
         self.assertEqual(list(ping.next.all()), [])
+
+
+class PingTestsAgainstDjango(PingTestsMixin, APITransactionTestCase):
+    def post(self, url, payload):
+        return self.client.post(url, payload, format="vnd.api+json")
+
+    def get(self, url):
+        return self.client.get(url, format="vnd.api+json")
+
+    def patch(self, url, payload):
+        return self.client.patch(url, payload, format="vnd.api+json")
 
 
 class SchemaTest(TestCase):
