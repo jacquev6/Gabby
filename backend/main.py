@@ -1,10 +1,16 @@
 import django.conf
 import django.core.management
 import fastapi
+from fastapi.middleware.cors import CORSMiddleware
+
+from fastjsonapi import make_jsonapi_router
+django.setup()  # Required before importing any module that uses the Django ORM
+from opinion_ping.resources import PingsResource
 
 
-django.setup()
+api_router = fastapi.APIRouter()
 
+api_router.include_router(make_jsonapi_router(PingsResource()))
 
 app = fastapi.FastAPI(
     # We want '/reset-...' to be at the root, so can't use root_path="/api", so we have to specify these individually:
@@ -13,6 +19,15 @@ app = fastapi.FastAPI(
     redoc_url="/api/redoc",
 )
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.include_router(api_router, prefix="/api")
 
 # Test-only URL. Not in 'api/...' to avoid accidentally exposing it.
 if django.conf.settings.EXPOSE_RESET_FOR_TESTS_URL:
