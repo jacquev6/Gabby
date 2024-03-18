@@ -6,10 +6,13 @@ set -o pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/."
 
 
+git checkout -- ../../backend/openapi.json
+
 shuffle=""
 if [ $# -eq 0 ]
 then
   shuffle=--shuffle
 fi
 
-docker compose exec backend python -Wa manage.py test $shuffle "$@"
+# @todo Understand why we get errors saying the DB is till in use without the '--keepdb' option
+docker compose exec old-backend python -Wa manage.py test --keepdb $shuffle "$@"

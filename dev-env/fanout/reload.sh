@@ -6,4 +6,4 @@ set -o pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
 
-docker compose exec old-backend bash "$@"
+docker compose exec fanout nginx -s reload

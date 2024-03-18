@@ -1,3 +1,4 @@
+# Old
 djangorestframework-jsonapi[django-filter]  # Fundamental
 django-cors-headers
 psycopg2-binary  # For PostgreSQL
@@ -7,3 +8,8 @@ django-dbbackup  # For backups
 django-storages[s3]  # For backups
 django-extensions  # For 'manage.py graph_models'
 pydotplus  # For 'manage.py graph_models'
+
+# New
+fastapi  # Fundamental
+uvicorn[standard]  # Fundamental
+httpx  # For unit testing: https://fastapi.tiangolo.com/tutorial/testing/

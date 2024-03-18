@@ -443,22 +443,6 @@ describe('ApiStore', () => {
     cy.expect(got).to.equal(before)
   })
 
-  it('makes a bad request', async () => {
-    const api = useApiStore()
-
-    try {
-      await api.client.post('ping', {}, {next: null})
-      cy.fail('expected error')
-    } catch (e) {
-      cy.expect(e.cause.errors[0]).to.deep.equal({
-        code: 'null',
-        detail: 'This field may not be null.',
-        source: {pointer: '/data/relationships/next'},
-        status: '400',
-      })
-    }
-  })
-
   it('updates one ping', async () => {
     const api = useApiStore()
 
