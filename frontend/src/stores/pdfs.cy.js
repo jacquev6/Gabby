@@ -43,7 +43,9 @@ describe('PdfsStore', () => {
       .then(async (buffer) => {
         const file = new File([buffer], 'large.pdf', {type: 'application/pdf'})
         const pdf = await pdfs.open(file)
-        expect(pdf.info).to.deep.equal({sha256: '5c1416ac31a531d024dec446b47613d9342cb390efa76fd3687b9720e27505ab', name: 'large.pdf', size: 15487897})
+        // 'pdf-examples/large.pdf' is not in git and made using 'pdf-examples/make_large.sh'
+        // that doesn't always produce the same file :-/, so we can't test its sha256 and size.
+        expect(pdf.info.name).to.equal('large.pdf')
         expect(pdf.document.numPages).to.equal(64)
       })
   })
@@ -154,17 +156,16 @@ describe('PdfsStore', () => {
 
   it('gets a large PDF opened in a previous session or another tab', () => {
     const pdfs1 = usePdfsStore()
-    const sha256 = '5c1416ac31a531d024dec446b47613d9342cb390efa76fd3687b9720e27505ab'
 
     cy.fixture('../../../pdf-examples/large.pdf', null)
       .then(async (buffer) => {
         const file = new File([buffer], 'large.pdf', {type: 'application/pdf'})
-        await pdfs1.open(file)
+        const {sha256, size} = (await pdfs1.open(file)).info
 
         setActivePinia(createPinia())
         const pdfs2 = usePdfsStore()
 
-        expect(await pdfs2.getInfo(sha256)).to.deep.equal({sha256, name: 'large.pdf', size: 15487897})
+        expect(await pdfs2.getInfo(sha256)).to.deep.equal({sha256, name: 'large.pdf', size})
         expect((await pdfs2.getDocument(sha256)).numPages).to.equal(64)
         pdfs2.close(sha256)
         expect(await pdfs2.getInfo(sha256)).to.be.null
