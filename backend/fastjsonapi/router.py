@@ -66,8 +66,8 @@ class CompiledResource:
         self.PluralName = humps.pascalize(resource.plural_name)
 
         self.default_page_size = resource.default_page_size
-        self.filters = resource.filters
 
+        filterable_attributes = {}
         create_input_attributes_can_be_defaulted = True
         create_input_attributes = {}
         # create_input_relationships = {}
@@ -81,6 +81,9 @@ class CompiledResource:
                 if isinstance(annotation, Annotation):
                     annotation.apply(annotations)
 
+            if annotations.filter:
+                filterable_attributes[name] = info.annotation
+
             name = humps.camelize(name)
 
             if annotations.create_input:
@@ -91,6 +94,28 @@ class CompiledResource:
                 self.output_attributes[name] = (info.annotation, ...)
             if annotations.update_input:
                 update_input_attributes[name] = (info.annotation, None)
+
+        Filters = create_model(
+            f"{self.SingularName}-Filters",
+            **{
+                key: (value | None, ...)
+                for (key, value) in filterable_attributes.items()
+            },
+            __config__ = ConfigDict(extra="forbid"),
+        )
+        # @todo Keep things structured all they way (avoid generating textual code)
+        # See... my old answer here: https://stackoverflow.com/a/29927459/905845
+        def filter_code():
+            yield "def filters("
+            for (name, annotation) in filterable_attributes.items():
+                yield f"    {name}: Annotated[{annotation.__name__}, Query(alias='filter[{humps.camelize(name)}]')] = None,"
+            yield "):"
+            yield "    return Filters("
+            for name in filterable_attributes:
+                yield f"        {name}={name},"
+            yield "    )"
+        exec("\n".join(filter_code()), {"Filters": Filters}, filter_globals := {"Query": Query, "Annotated": Annotated})
+        self.filters = filter_globals["filters"]
 
         CreateInputDataAttributes = create_model(
             f"{self.SingularName}-CreateInput-Data-Attributes",
@@ -210,7 +235,7 @@ class CompiledResource:
                 "page[size]": page_size,
                 "page[number]": number,
             }
-            for (key, value) in sorted(filters.items()):
+            for (key, value) in sorted(filters.model_dump(exclude_unset=True).items()):
                 if value is not None:
                     qs[f"filter[{humps.camelize(key)}]"] = value
             return base_url + "?" + urlencode(qs)
@@ -276,7 +301,7 @@ def add_resource_routes(resources, resource, router):
     )
     def get_page(
         urls: Urls,
-        filters: Annotated[dict, Depends(resource.filters)],
+        filters: Annotated[resource.filters, Depends()],
         page_size: Annotated[int, Query(alias="page[size]")] = resource.default_page_size,
         page_number: Annotated[int, Query(alias="page[number]")] = 1,
         include: str = None,

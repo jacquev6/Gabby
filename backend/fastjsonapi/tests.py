@@ -5,12 +5,12 @@ import json
 from typing import Annotated
 
 from django.test import TestCase
-from fastapi import FastAPI, Query
+from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from pydantic import BaseModel
 from starlette import status
 
-from .annotations import Computed, Constant, Secret
+from .annotations import Computed, Constant, Secret, Filterable
 from .router import make_jsonapi_router
 
 
@@ -68,14 +68,7 @@ class AllAttributesTestCase(TextCaseMixin, TestCase):
             constant_str: Annotated[str, Constant()]
             defaulted_constant_float: Annotated[float, Constant()] = 3.14
             secret_str: Annotated[str, Secret()]
-            computed_str: Annotated[str, Computed()]
-
-        # @todo Provide utility to avoid writing 'filter[whatever]' here
-        @staticmethod
-        def filters(filter_computed_str: Annotated[str, Query(alias="filter[computedStr]")] = None):
-            return {
-                "computed_str": filter_computed_str,
-            }
+            computed_str: Annotated[str, Computed(), Filterable()]
 
         _next_id = 1
         _items = {}
@@ -116,8 +109,8 @@ class AllAttributesTestCase(TextCaseMixin, TestCase):
         @classmethod
         def get_page(cls, filters, first_index, page_size):
             items = sorted(cls._items.values(), key=lambda item: int(item.id))
-            if filters["computed_str"]:
-                items = [item for item in items if item.computed_str == filters["computed_str"]]
+            if filters.computed_str:
+                items = [item for item in items if item.computed_str == filters.computed_str]
             return (len(items), items[first_index:first_index + page_size])
 
     resources = [Resource()]
@@ -800,10 +793,6 @@ class EmptyTestCase(TextCaseMixin, TestCase):
 
         class Model(BaseModel):
             pass
-
-        @staticmethod
-        def filters():
-            return None
 
         _next_id = 1
         _items = {}
