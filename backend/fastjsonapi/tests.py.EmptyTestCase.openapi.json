@@ -25,6 +25,14 @@
             ],
             "default": {}
           },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EmptyResource-CreateInput-Data-Relationships"
+              }
+            ],
+            "default": {}
+          },
           "type": {
             "title": "Type",
             "type": "string"
@@ -40,6 +48,12 @@
         "additionalProperties": false,
         "properties": {},
         "title": "EmptyResource-CreateInput-Data-Attributes",
+        "type": "object"
+      },
+      "EmptyResource-CreateInput-Data-Relationships": {
+        "additionalProperties": false,
+        "properties": {},
+        "title": "EmptyResource-CreateInput-Data-Relationships",
         "type": "object"
       },
       "EmptyResource-ItemOutput": {
@@ -120,6 +134,14 @@
             "title": "Id",
             "type": "string"
           },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EmptyResource-UpdateInput-Data-Relationships"
+              }
+            ],
+            "default": {}
+          },
           "type": {
             "title": "Type",
             "type": "string"
@@ -136,6 +158,12 @@
         "additionalProperties": false,
         "properties": {},
         "title": "EmptyResource-UpdateInput-Data-Attributes",
+        "type": "object"
+      },
+      "EmptyResource-UpdateInput-Data-Relationships": {
+        "additionalProperties": false,
+        "properties": {},
+        "title": "EmptyResource-UpdateInput-Data-Relationships",
         "type": "object"
       },
       "EmptyResources-PageOutput": {

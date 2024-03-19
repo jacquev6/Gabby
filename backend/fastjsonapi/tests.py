@@ -55,6 +55,32 @@ class TextCaseMixin:
                 file.write("\n")
 
 
+# @todo Use this factory in all test cases
+class ItemsFactory:
+    def __init__(self):
+        self.__next_id = 1
+        self.__items = {}
+
+    def create_item(self, cls, **kwds):
+        item = cls(id=str(self.__next_id), **kwds)
+        self.__items[item.id] = item
+        self.__next_id += 1
+        return item
+
+    def get_item(self, cls, id):
+        item = self.__items.get(id)
+        if item is None:
+            return None
+        else:
+            assert isinstance(item, cls)
+            return item
+
+    def get_page(self, cls):
+        items = filter(lambda item: isinstance(item, cls), self.__items.values())
+        items = sorted(items, key=lambda item: int(item.id))
+        return items
+
+
 class AllAttributesTestCase(TextCaseMixin, TestCase):
     class Resource:
         singular_name = "resource"
@@ -119,6 +145,18 @@ class AllAttributesTestCase(TextCaseMixin, TestCase):
         super().setUp()
         self.Resource._next_id = 1
         self.Resource._items = {}
+
+    def test_create__insufficient(self):
+        response = self.post("http://server/resources", {
+            "data": {
+                "type": "Resource",
+                "attributes": {
+                    "plainInt": 57,
+                    "secretStr": "My password",
+                },
+            },
+        })
+        self.assertEqual(response.status_code, status.HTTP_422_UNPROCESSABLE_ENTITY, response.json())
 
     def test_create__minimal(self):
         response = self.post("http://server/resources", {
@@ -838,21 +876,695 @@ class EmptyTestCase(TextCaseMixin, TestCase):
             },
         })
 
+    def test_create__weirdly_empty(self):
+        response = self.post("http://server/emptyResources", {
+            "data": {
+                "type": "EmptyResource",
+                "attributes": {},
+                "relationships": {},
+            },
+        })
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
+        self.assertEqual(response.json(), {
+            "data": {
+                "type": "EmptyResource",
+                "id": "1",
+                "links": {"self": "http://server/emptyResources/1"},
+                # No "attributes", no "relationships"
+            },
+        })
 
-# @todo Add test case for a resource with attributes and relationships, but all optional
-# It must allow creation without "attributes" and "relationships"
-# class TreeTestCase(TextCaseMixin, TestCase):
-#     class Node:
-#         singular_name = "empty_resource"
-#         plural_name = "empty_resources"
+
+class TopModel(BaseModel):
+    lefts: list[LeftModel] = []
+    rights: list[RightModel] = []
+
+class LeftModel(BaseModel):
+    top: TopModel
+    right_or_none: RightModel | None = None
+
+class RightModel(BaseModel):
+    top: TopModel
+    left_or_none: LeftModel | None = None
+
+class AllRelationsTestCase(TextCaseMixin, TestCase):
+    class TopResource:
+        singular_name = "top"
+        plural_name = "tops"
+
+        default_page_size = 2
+
+        Model = TopModel
+
+        class Item:
+            def __init__(self, id, lefts, rights):
+                self.id = id
+                self.lefts = lefts
+                self.rights = rights
+                self.saved = 0
+
+            def save(self):
+                self.saved += 1
+
+        @classmethod
+        def create_item(cls, **kwds):
+            return AllRelationsTestCase.factory.create_item(cls.Item, **kwds)
+
+        @classmethod
+        def get_item(cls, id):
+            return AllRelationsTestCase.factory.get_item(cls.Item, id)
+
+        @classmethod
+        def get_page(cls, filters, first_index, page_size):
+            assert dict(filters) == {}
+            items = AllRelationsTestCase.factory.get_page(cls.Item)
+            return (len(items), items[first_index:first_index + page_size])
+
+    class LeftResource:
+        singular_name = "left"
+        plural_name = "lefts"
+
+        default_page_size = 2
+
+        Model = LeftModel
+
+        class Item:
+            def __init__(self, id, top, right_or_none):
+                self.id = id
+                assert top is not None
+                self.top = top
+                self.right_or_none = right_or_none
+                self.saved = 0
+
+            def save(self):
+                self.saved += 1
+
+        @classmethod
+        def create_item(cls, **kwds):
+            return AllRelationsTestCase.factory.create_item(cls.Item, **kwds)
+
+        @classmethod
+        def get_item(cls, id):
+            return AllRelationsTestCase.factory.get_item(cls.Item, id)
+
+    class RightResource:
+        singular_name = "right"
+        plural_name = "rights"
+
+        default_page_size = 2
+
+        Model = RightModel
+
+        class Item:
+            def __init__(self, id, top, left_or_none):
+                self.id = id
+                assert top is not None
+                self.top = top
+                self.left_or_none = left_or_none
+                self.saved = 0
+
+            def save(self):
+                self.saved += 1
+
+        @classmethod
+        def create_item(cls, **kwds):
+            return AllRelationsTestCase.factory.create_item(cls.Item, **kwds)
+
+        @classmethod
+        def get_item(cls, id):
+            return AllRelationsTestCase.factory.get_item(cls.Item, id)
+
+    # @todo Shuffle the resources to test their order doesn't matter. Use Django's shuffle seed
+    resources = [TopResource(), LeftResource(), RightResource()]
+
+    def setUp(self):
+        super().setUp()
+        AllRelationsTestCase.factory = ItemsFactory()
+
+    def test_create_top__minimal(self):
+        response = self.post("http://server/tops", {
+            "data": {
+                "type": "TopResource",
+            },
+        })
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
+        self.assertEqual(response.json(), {
+            "data": {
+                "type": "Top",
+                "id": "1",
+                "links": {"self": "http://server/tops/1"},
+                "relationships": {
+                    "lefts": {
+                        "data": [],
+                        "meta": {"count": 0},
+                        # @todo Add links
+                        # "links": {
+                        #     "self": "http://server/tops/1/relationships/lefts",
+                        #     "related": "http://server/tops/1/lefts"
+                        # },
+                    },
+                    "rights": {
+                        "data": [],
+                        "meta": {"count": 0},
+                    },
+                },
+            },
+        })
+
+        top = self.TopResource.get_item("1")
+        self.assertEqual(top.lefts, [])
+        self.assertEqual(top.rights, [])
+
+    def test_create_top__weirdly_empty(self):
+        response = self.post("http://server/tops", {
+            "data": {
+                "type": "TopResource",
+                "relationships": {},
+            },
+        })
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
+        self.assertEqual(response.json(), {
+            "data": {
+                "type": "Top",
+                "id": "1",
+                "links": {"self": "http://server/tops/1"},
+                "relationships": {
+                    "lefts": {
+                        "data": [],
+                        "meta": {"count": 0},
+                    },
+                    "rights": {
+                        "data": [],
+                        "meta": {"count": 0},
+                    },
+                },
+            },
+        })
+
+        top = self.TopResource.get_item("1")
+        self.assertEqual(top.lefts, [])
+        self.assertEqual(top.rights, [])
+
+    def test_create_top__explicitly_empty(self):
+        response = self.post("http://server/tops", {
+            "data": {
+                "type": "TopResource",
+                "relationships": {
+                    "lefts": {"data": []},
+                    "rights": {"data": []},
+                },
+            },
+        })
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
+        self.assertEqual(response.json(), {
+            "data": {
+                "type": "Top",
+                "id": "1",
+                "links": {"self": "http://server/tops/1"},
+                "relationships": {
+                    "lefts": {
+                        "data": [],
+                        "meta": {"count": 0},
+                    },
+                    "rights": {
+                        "data": [],
+                        "meta": {"count": 0},
+                    },
+                },
+            },
+        })
+
+        top = self.TopResource.get_item("1")
+        self.assertEqual(top.lefts, [])
+        self.assertEqual(top.rights, [])
+
+    def test_create_top__full(self):
+        top = self.TopResource.create_item(lefts=[], rights=[])
+        self.LeftResource.create_item(top=top, right_or_none=None)
+        self.LeftResource.create_item(top=top, right_or_none=None)
+        self.RightResource.create_item(top=top, left_or_none=None)
+        self.RightResource.create_item(top=top, left_or_none=None)
+
+        response = self.post("http://server/tops", {
+            "data": {
+                "type": "TopResource",
+                "relationships": {
+                    "lefts": {"data": [{"type": "Left", "id": "2"}, {"type": "Left", "id": "3"}]},
+                    "rights": {"data": [{"type": "Right", "id": "4"}, {"type": "Right", "id": "5"}]},
+                },
+            },
+        })
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
+        self.assertEqual(response.json(), {
+            "data": {
+                "type": "Top",
+                "id": "6",
+                "links": {"self": "http://server/tops/6"},
+                "relationships": {
+                    "lefts": {
+                        "data": [{"type": "Left", "id": "2"}, {"type": "Left", "id": "3"}],
+                        "meta": {"count": 2},
+                    },
+                    "rights": {
+                        "data": [{"type": "Right", "id": "4"}, {"type": "Right", "id": "5"}],
+                        "meta": {"count": 2},
+                    },
+                },
+            },
+        })
+
+        top = self.TopResource.get_item("6")
+        self.assertEqual(top.lefts, [self.LeftResource.get_item("2"), self.LeftResource.get_item("3")])
+        self.assertEqual(top.rights, [self.RightResource.get_item("4"), self.RightResource.get_item("5")])
+
+    def test_create_left__minimal(self):
+        self.TopResource.create_item(lefts=[], rights=[])
+
+        response = self.post("http://server/lefts", {
+            "data": {
+                "type": "Left",
+                "relationships": {
+                    "top": {"data": {"type": "Top", "id": "1"}},
+                },
+            },
+        })
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
+        self.assertEqual(response.json(), {
+            "data": {
+                "type": "Left",
+                "id": "2",
+                "links": {"self": "http://server/lefts/2"},
+                "relationships": {
+                    "top": {"data": {"type": "Top", "id": "1"}},
+                    "rightOrNone": {"data": None},
+                },
+            },
+        })
+
+        left = self.LeftResource.get_item("2")
+        self.assertEqual(left.top, self.TopResource.get_item("1"))
+        self.assertEqual(left.right_or_none, None)
+
+    def test_create_left__explicitly_none(self):
+        self.TopResource.create_item(lefts=[], rights=[])
+
+        response = self.post("http://server/lefts", {
+            "data": {
+                "type": "Left",
+                "relationships": {
+                    "top": {"data": {"type": "Top", "id": "1"}},
+                    "rightOrNone": {"data": None},
+                },
+            },
+        })
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
+        self.assertEqual(response.json(), {
+            "data": {
+                "type": "Left",
+                "id": "2",
+                "links": {"self": "http://server/lefts/2"},
+                "relationships": {
+                    "top": {"data": {"type": "Top", "id": "1"}},
+                    "rightOrNone": {"data": None},
+                },
+            },
+        })
+
+        left = self.LeftResource.get_item("2")
+        self.assertEqual(left.top, self.TopResource.get_item("1"))
+        self.assertEqual(left.right_or_none, None)
+
+    def test_create_left__full(self):
+        top = self.TopResource.create_item(lefts=[], rights=[])
+        self.RightResource.create_item(top=top, left_or_none=None)
+
+        response = self.post("http://server/lefts", {
+            "data": {
+                "type": "Left",
+                "relationships": {
+                    "top": {"data": {"type": "Top", "id": "1"}},
+                    "rightOrNone": {"data": {"type": "Right", "id": "2"}},
+                },
+            },
+        })
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
+        self.assertEqual(response.json(), {
+            "data": {
+                "type": "Left",
+                "id": "3",
+                "links": {"self": "http://server/lefts/3"},
+                "relationships": {
+                    "top": {"data": {"type": "Top", "id": "1"}},
+                    "rightOrNone": {"data": {"type": "Right", "id": "2"}},
+                },
+            },
+        })
+
+        left = self.LeftResource.get_item("3")
+        self.assertEqual(left.top, self.TopResource.get_item("1"))
+        self.assertEqual(left.right_or_none, self.RightResource.get_item("2"))
+
+    def test_get_page__tops(self):
+        top = self.TopResource.create_item(lefts=[], rights=[])
+        for i in range(4):
+            lefts = [self.LeftResource.create_item(top=top, right_or_none=None) for _ in range(i + 1)]
+            rights = [self.RightResource.create_item(top=top, left_or_none=None) for _ in range(i + 1)]
+            self.TopResource.create_item(lefts=lefts, rights=rights)
+
+        response = self.get("http://server/tops?page[size]=3")
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
+        self.assertEqual(response.json(), {
+            "data": [
+                {
+                    "type": "Top",
+                    "id": "1",
+                    "links": {"self": "http://server/tops/1"},
+                    "relationships": {
+                        "lefts": {
+                            "data": [],
+                            "meta": {"count": 0},
+                        },
+                        "rights": {
+                            "data": [],
+                            "meta": {"count": 0},
+                        },
+                    },
+                },
+                {
+                    "type": "Top",
+                    "id": "4",
+                    "links": {"self": "http://server/tops/4"},
+                    "relationships": {
+                        "lefts": {
+                            "data": [{"id": "2", "type": "Left"}],
+                            "meta": {"count": 1},
+                        },
+                        "rights": {
+                            "data": [{"id": "3", "type": "Right"}],
+                            "meta": {"count": 1},
+                        },
+                    },
+                },
+                {
+                    "type": "Top",
+                    "id": "9",
+                    "links": {"self": "http://server/tops/9"},
+                    "relationships": {
+                        "lefts": {
+                            "data": [{"id": "5", "type": "Left"}, {"id": "6", "type": "Left"}],
+                            "meta": {"count": 2},
+                        },
+                        "rights": {
+                            "data": [{"id": "7", "type": "Right"}, {"id": "8", "type": "Right"}],
+                            "meta": {"count": 2},
+                        },
+                    },
+                },
+            ],
+            "links": {
+                "first": "http://server/tops?page%5Bsize%5D=3&page%5Bnumber%5D=1",
+                "last": "http://server/tops?page%5Bsize%5D=3&page%5Bnumber%5D=2",
+                "next": "http://server/tops?page%5Bsize%5D=3&page%5Bnumber%5D=2",
+                "prev": None,
+            },
+            "meta": {
+                "pagination": {
+                    "count": 5,
+                    "page": 1,
+                    "pages": 2,
+                },
+            },
+        })
+
+    def test_update_top__nothing(self):
+        self.TopResource.create_item(lefts=[], rights=[])
+
+        response = self.patch("http://server/tops/1", {
+            "data": {
+                "type": "TopResource",
+                "id": "1",
+                # No "attributes", no "relationships"
+            },
+        })
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
+        self.assertEqual(response.json(), {
+            "data": {
+                "type": "Top",
+                "id": "1",
+                "links": {"self": "http://server/tops/1"},
+                "relationships": {
+                    "lefts": {
+                        "data": [],
+                        "meta": {"count": 0},
+                    },
+                    "rights": {
+                        "data": [],
+                        "meta": {"count": 0},
+                    },
+                },
+            },
+        })
+
+        top = self.TopResource.get_item("1")
+        self.assertEqual(top.lefts, [])
+        self.assertEqual(top.rights, [])
+        self.assertEqual(top.saved, 0)
+
+    def test_update_top__one(self):
+        top1 = self.TopResource.create_item(lefts=[], rights=[])
+        right = self.RightResource.create_item(top=top1, left_or_none=None)
+        top = self.TopResource.create_item(lefts=[], rights=[right])
+        self.LeftResource.create_item(top=top, right_or_none=None)
+
+        response = self.patch("http://server/tops/3", {
+            "data": {
+                "type": "TopResource",
+                "id": "3",
+                "relationships": {
+                    "lefts": {"data": [{"type": "Left", "id": "4"}]},
+                }
+            },
+        })
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
+        self.assertEqual(response.json(), {
+            "data": {
+                "type": "Top",
+                "id": "3",
+                "links": {"self": "http://server/tops/3"},
+                "relationships": {
+                    "lefts": {
+                        "data": [{"type": "Left", "id": "4"}],
+                        "meta": {"count": 1},
+                    },
+                    "rights": {
+                        "data": [{"type": "Right", "id": "2"}],
+                        "meta": {"count": 1},
+                    },
+                },
+            },
+        })
+
+        top = self.TopResource.get_item("3")
+        self.assertEqual(top.lefts, [self.LeftResource.get_item("4")])
+        self.assertEqual(top.rights, [self.RightResource.get_item("2")])
+        self.assertEqual(top.saved, 1)
+
+    def test_update_top__full(self):
+        top1 = self.TopResource.create_item(lefts=[], rights=[])
+        left1 = self.LeftResource.create_item(top=top1, right_or_none=None)
+        left2 = self.LeftResource.create_item(top=top1, right_or_none=None)
+        top = self.TopResource.create_item(lefts=[left1, left2], rights=[])
+        self.RightResource.create_item(top=top, left_or_none=None)
+        self.RightResource.create_item(top=top, left_or_none=None)
+
+        response = self.patch("http://server/tops/4", {
+            "data": {
+                "type": "TopResource",
+                "id": "4",
+                "relationships": {
+                    "lefts": {"data": []},
+                    "rights": {"data": [{"type": "Right", "id": "5"}, {"type": "Right", "id": "6"}]},
+                }
+            },
+        })
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
+        self.assertEqual(response.json(), {
+            "data": {
+                "type": "Top",
+                "id": "4",
+                "links": {"self": "http://server/tops/4"},
+                "relationships": {
+                    "lefts": {
+                        "data": [],
+                        "meta": {"count": 0},
+                    },
+                    "rights": {
+                        "data": [{"type": "Right", "id": "5"}, {"type": "Right", "id": "6"}],
+                        "meta": {"count": 2},
+                    },
+                },
+            },
+        })
+
+        top = self.TopResource.get_item("4")
+        self.assertEqual(top.lefts, [])
+        self.assertEqual(top.rights, [self.RightResource.get_item("5"), self.RightResource.get_item("6")])
+        self.assertEqual(top.saved, 1)
+
+    def test_update_left__nothing(self):
+        top = self.TopResource.create_item(lefts=[], rights=[])
+        self.LeftResource.create_item(top=top, right_or_none=None)
+
+        response = self.patch("http://server/lefts/2", {
+            "data": {
+                "type": "Left",
+                "id": "2",
+                # No "attributes", no "relationships"
+            },
+        })
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
+        self.assertEqual(response.json(), {
+            "data": {
+                "type": "Left",
+                "id": "2",
+                "links": {"self": "http://server/lefts/2"},
+                "relationships": {
+                    "top": {"data": {"type": "Top", "id": "1"}},
+                    "rightOrNone": {"data": None},
+                },
+            },
+        })
+
+        left = self.LeftResource.get_item("2")
+        self.assertEqual(left.top, top)
+        self.assertEqual(left.right_or_none, None)
+        self.assertEqual(left.saved, 0)
+
+    def test_update_left__right_some(self):
+        top = self.TopResource.create_item(lefts=[], rights=[])
+        self.LeftResource.create_item(top=top, right_or_none=None)
+        self.RightResource.create_item(top=top, left_or_none=None)
+
+        response = self.patch("http://server/lefts/2", {
+            "data": {
+                "type": "Left",
+                "id": "2",
+                "relationships": {
+                    "rightOrNone": {"data": {"type": "Right", "id": "3"}},
+                },
+            },
+        })
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
+        self.assertEqual(response.json(), {
+            "data": {
+                "type": "Left",
+                "id": "2",
+                "links": {"self": "http://server/lefts/2"},
+                "relationships": {
+                    "top": {"data": {"type": "Top", "id": "1"}},
+                    "rightOrNone": {"data": {"type": "Right", "id": "3"}},
+                },
+            },
+        })
+
+        left = self.LeftResource.get_item("2")
+        self.assertEqual(left.top, self.TopResource.get_item("1"))
+        self.assertEqual(left.right_or_none, self.RightResource.get_item("3"))
+        self.assertEqual(left.saved, 1)
+
+    def test_update_left__right_none(self):
+        top = self.TopResource.create_item(lefts=[], rights=[])
+        self.LeftResource.create_item(top=top, right_or_none=None)
+
+        response = self.patch("http://server/lefts/2", {
+            "data": {
+                "type": "Left",
+                "id": "2",
+                "relationships": {
+                    "rightOrNone": {"data": None},
+                },
+            },
+        })
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
+        self.assertEqual(response.json(), {
+            "data": {
+                "type": "Left",
+                "id": "2",
+                "links": {"self": "http://server/lefts/2"},
+                "relationships": {
+                    "top": {"data": {"type": "Top", "id": "1"}},
+                    "rightOrNone": {"data": None},
+                },
+            },
+        })
+
+        left = self.LeftResource.get_item("2")
+        self.assertEqual(left.top, self.TopResource.get_item("1"))
+        self.assertEqual(left.right_or_none, None)
+        self.assertEqual(left.saved, 1)
+
+    def test_update_left__top(self):
+        top = self.TopResource.create_item(lefts=[], rights=[])
+        self.LeftResource.create_item(top=top, right_or_none=None)
+        self.TopResource.create_item(lefts=[], rights=[])
+
+        response = self.patch("http://server/lefts/2", {
+            "data": {
+                "type": "Left",
+                "id": "2",
+                "relationships": {
+                    "top": {"data": {"type": "Top", "id": "3"}},
+                },
+            },
+        })
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
+        self.assertEqual(response.json(), {
+            "data": {
+                "type": "Left",
+                "id": "2",
+                "links": {"self": "http://server/lefts/2"},
+                "relationships": {
+                    "top": {"data": {"type": "Top", "id": "3"}},
+                    "rightOrNone": {"data": None},
+                },
+            },
+        })
+
+        left = self.LeftResource.get_item("2")
+        self.assertEqual(left.top, self.TopResource.get_item("3"))
+        self.assertEqual(left.right_or_none, None)
+        self.assertEqual(left.saved, 1)
+
+    def test_update_left__top_none(self):
+        top = self.TopResource.create_item(lefts=[], rights=[])
+        self.LeftResource.create_item(top=top, right_or_none=None)
+
+        response = self.patch("http://server/lefts/2", {
+            "data": {
+                "type": "Left",
+                "id": "2",
+                "relationships": {
+                    "top": {"data": None},
+                },
+            },
+        })
+        self.assertEqual(response.status_code, status.HTTP_422_UNPROCESSABLE_ENTITY, response.json())
+
+
+# class TreeNode(BaseModel):
+#     label: str | None = None
+#     parent : TreeNode | None = None
+#     children : list[TreeNode] = []
+
+# class TreeNodeTestCase(TextCaseMixin, TestCase):
+#     class NodeResource:
+#         singular_name = "node"
+#         plural_name = "nodes"
 
 #         default_page_size = 2
 
-#         class Model(BaseModel):
-#             label: str | None = None
-#             parent : TreeTestCase.Node.Model | None = None
-#             children : list[TreeTestCase.Node.Model] = []
+#         Model = TreeNode
 
-#     resources = [Node()]
-#     # @todo Add test case for a resource with attributes and relationships, but all optional
-#     # It must allow creation without "attributes" and "relationships"
+#     resources = [NodeResource()]
+
+#     # @todo Test it allows creation without "attributes" and "relationships"

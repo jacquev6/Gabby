@@ -113,6 +113,14 @@
           "attributes": {
             "$ref": "#/components/schemas/Resource-CreateInput-Data-Attributes"
           },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Resource-CreateInput-Data-Relationships"
+              }
+            ],
+            "default": {}
+          },
           "type": {
             "title": "Type",
             "type": "string"
@@ -158,6 +166,12 @@
           "secretStr"
         ],
         "title": "Resource-CreateInput-Data-Attributes",
+        "type": "object"
+      },
+      "Resource-CreateInput-Data-Relationships": {
+        "additionalProperties": false,
+        "properties": {},
+        "title": "Resource-CreateInput-Data-Relationships",
         "type": "object"
       },
       "Resource-ItemOutput": {
@@ -277,6 +291,14 @@
             "title": "Id",
             "type": "string"
           },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Resource-UpdateInput-Data-Relationships"
+              }
+            ],
+            "default": {}
+          },
           "type": {
             "title": "Type",
             "type": "string"
@@ -307,6 +329,12 @@
           }
         },
         "title": "Resource-UpdateInput-Data-Attributes",
+        "type": "object"
+      },
+      "Resource-UpdateInput-Data-Relationships": {
+        "additionalProperties": false,
+        "properties": {},
+        "title": "Resource-UpdateInput-Data-Relationships",
         "type": "object"
       },
       "Resources-PageOutput": {

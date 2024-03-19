@@ -18,7 +18,13 @@ class JSONAPIResponse(JSONResponse):
 
 
 def make_jsonapi_router(resources):
-    resources = {resource.singular_name: CompiledResource(resource) for resource in resources}
+    resource_models = {
+        resource.Model: humps.pascalize(resource.singular_name) for resource in resources
+    }
+    resources = {
+        humps.pascalize(resource.singular_name): CompiledResource(resource_models, resource)
+        for resource in resources
+    }
 
     router = APIRouter(
         default_response_class=JSONAPIResponse,
@@ -31,7 +37,7 @@ def make_jsonapi_router(resources):
 
 
 class PageMetaModel(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra="forbid")  # @todo Create a custom model base and use it instead of repeating this line
 
     class Pagination(BaseModel):
         model_config = ConfigDict(extra="forbid")
@@ -52,9 +58,50 @@ class PageLinksModel(BaseModel):
     prev: str | None
 
 
+class ObjectId(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    type: str
+    id: str
+
+class MandatoryRelationship(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    data: ObjectId
+
+class OptionalRelationship(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    data: ObjectId | None = None
+
+class CreateInputListRelationship(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    data: list[ObjectId] = []
+
+class OutputListRelationship(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    class Meta(BaseModel):
+        model_config = ConfigDict(extra="forbid")
+
+        count: int
+
+    data: list[ObjectId]
+    meta: Meta
+
+class UpdateInputListRelationship(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    data: list[ObjectId]
+
+
 class CompiledResource:
-    def __init__(self, resource):
+    def __init__(self, resource_models, resource):
         self._resource = resource
+
+        optional_resource_models = {model | None : name for (model, name) in resource_models.items()}
+        list_resource_models = {list[model] : name for (model, name) in resource_models.items()}
 
         assert humps.is_snakecase(resource.singular_name)
         self.singular_name = resource.singular_name
@@ -65,16 +112,21 @@ class CompiledResource:
         self.pluralName = humps.camelize(resource.plural_name)
         self.PluralName = humps.pascalize(resource.plural_name)
 
+        self.Model = resource.Model
+
         self.default_page_size = resource.default_page_size
 
         filterable_attributes = {}
         create_input_attributes_can_be_defaulted = True
         create_input_attributes = {}
-        # create_input_relationships = {}
-        self.output_attributes = {}
-        # output_relationships = {}
+        create_input_relationships_can_be_defaulted = True
+        create_input_relationships = {}
+        self.output_attributes = []
+        output_attributes = {}
+        self.output_relationships = []
+        output_relationships = {}
         update_input_attributes = {}
-        # update_input_relationships = {}
+        update_input_relationships = {}
         for (name, info) in resource.Model.model_fields.items():
             annotations = Annotations()
             for annotation in info.metadata:
@@ -86,14 +138,44 @@ class CompiledResource:
 
             name = humps.camelize(name)
 
-            if annotations.create_input:
-                if info.default == PydanticUndefined:
-                    create_input_attributes_can_be_defaulted = False
-                create_input_attributes[name] = (info.annotation, info.default)
-            if annotations.output:
-                self.output_attributes[name] = (info.annotation, ...)
-            if annotations.update_input:
-                update_input_attributes[name] = (info.annotation, None)
+            if (resource_name := resource_models.get(info.annotation)) is not None:
+                assert info.default is PydanticUndefined
+                create_input_relationships_can_be_defaulted = False
+                if annotations.create_input:
+                    create_input_relationships[name] = (MandatoryRelationship, ...)
+                if annotations.output:
+                    self.output_relationships.append((name, False, resource_name))
+                    output_relationships[name] = (MandatoryRelationship, ...)
+                if annotations.update_input:
+                    update_input_relationships[name] = (MandatoryRelationship, None)
+            elif (resource_name := optional_resource_models.get(info.annotation)) is not None:
+                assert info.default is None
+                if annotations.create_input:
+                    create_input_relationships[name] = (OptionalRelationship, OptionalRelationship())
+                if annotations.output:
+                    self.output_relationships.append((name, False, resource_name))
+                    output_relationships[name] = (OptionalRelationship, ...)
+                if annotations.update_input:
+                    update_input_relationships[name] = (OptionalRelationship, None)
+            elif (resource_name := list_resource_models.get(info.annotation)) is not None:
+                assert info.default is PydanticUndefined
+                if annotations.create_input:
+                    create_input_relationships[name] = (CreateInputListRelationship, CreateInputListRelationship())
+                if annotations.output:
+                    self.output_relationships.append((name, True, resource_name))
+                    output_relationships[name] = (OutputListRelationship, ...)
+                if annotations.update_input:
+                    update_input_relationships[name] = (UpdateInputListRelationship, None)
+            else:
+                if annotations.create_input:
+                    if info.default == PydanticUndefined:
+                        create_input_attributes_can_be_defaulted = False
+                    create_input_attributes[name] = (info.annotation, info.default)
+                if annotations.output:
+                    self.output_attributes.append(name)
+                    output_attributes[name] = (info.annotation, ...)
+                if annotations.update_input:
+                    update_input_attributes[name] = (info.annotation, None)
 
         Filters = create_model(
             f"{self.SingularName}-Filters",
@@ -125,6 +207,14 @@ class CompiledResource:
 
         create_input_attributes_default = CreateInputDataAttributes() if create_input_attributes_can_be_defaulted else ...
 
+        CreateInputDataRelationships = create_model(
+            f"{self.SingularName}-CreateInput-Data-Relationships",
+            **create_input_relationships,
+            __config__ = ConfigDict(extra="forbid"),
+        )
+
+        create_input_relationships_default = CreateInputDataRelationships() if create_input_relationships_can_be_defaulted else ...
+
         self.CreateInputModel = create_model(
             f"{self.SingularName}-CreateInput",
             data=(
@@ -132,7 +222,7 @@ class CompiledResource:
                     f"{self.SingularName}-CreateInput-Data",
                     type=(str, ...),
                     attributes=(CreateInputDataAttributes, create_input_attributes_default),
-                    # relationships=(CreateInputRelationships, ...),
+                    relationships=(CreateInputDataRelationships, create_input_relationships_default),
                     __config__ = ConfigDict(extra="forbid"),
                 ),
                 ...
@@ -155,12 +245,19 @@ class CompiledResource:
             **(dict(attributes=(
                 create_model(
                     f"{self.SingularName}-OutputItem-Attributes",
-                    **self.output_attributes,
+                    **output_attributes,
                     __config__ = ConfigDict(extra="forbid"),
                 ),
                 ...
-            )) if self.output_attributes else {}),
-            # relationships=(CreateInputRelationships, ...),
+            )) if output_attributes else {}),
+            **(dict(relationships=(
+                create_model(
+                    f"{self.SingularName}-OutputItem-Relationships",
+                    **output_relationships,
+                    __config__ = ConfigDict(extra="forbid"),
+                ),
+                ...
+            )) if output_relationships else {}),
             __config__ = ConfigDict(extra="forbid"),
         )
 
@@ -184,6 +281,12 @@ class CompiledResource:
             __config__ = ConfigDict(extra="forbid"),
         )
 
+        UpdateInputDataRelationships = create_model(
+            f"{self.SingularName}-UpdateInput-Data-Relationships",
+            **update_input_relationships,
+            __config__ = ConfigDict(extra="forbid"),
+        )
+
         self.UpdateInputModel = create_model(
             f"{self.SingularName}-UpdateInput",
             data=(
@@ -192,7 +295,7 @@ class CompiledResource:
                     type=(str, ...),
                     id=(str, ...),
                     attributes=(UpdateInputDataAttributes, UpdateInputDataAttributes()),
-                    # relationships=(CreateInputRelationships, ...),
+                    relationships=(UpdateInputDataRelationships, UpdateInputDataRelationships()),
                     __config__ = ConfigDict(extra="forbid"),
                 ),
                 ...
@@ -200,8 +303,24 @@ class CompiledResource:
             __config__ = ConfigDict(extra="forbid"),
         )
 
-    def create_item(self, attributes):
-        return self._resource.create_item(**{humps.decamelize(key) : value for (key, value) in attributes.model_dump().items()})
+    def create_item(self, resources, attributes, relationships):
+        attrs = {
+            humps.decamelize(key) : value
+            for (key, value) in dict(attributes).items()
+        }
+
+        rels = {}
+        for (key, value) in dict(relationships).items():
+            key = humps.decamelize(key)
+            if isinstance(value.data, list):
+                # @todo Check item type against relationship type
+                rels[key] = [resources[item.type].get_item(item.id) for item in value.data]
+            elif value.data is None:
+                rels[key] = None
+            else:
+                rels[key] = resources[value.data.type].get_item(value.data.id)
+
+        return self._resource.create_item(**attrs, **rels)
 
     def get_item(self, id):
         return self._resource.get_item(id)
@@ -209,23 +328,33 @@ class CompiledResource:
     def get_page(self, filters, first_index, page_size):
         return self._resource.get_page(filters, first_index, page_size)
 
-    def update_item(self, item, attributes):
+    def update_item(self, resources, item, attributes, relationships):
         needs_save = False
         for (key, value) in attributes.model_dump(exclude_unset=True).items():
             setattr(item, humps.decamelize(key), value)
             needs_save = True
+        for (key, value) in dict(relationships).items():
+            if key in relationships.model_fields_set:
+                if isinstance(value.data, list):
+                    # @todo Check item type against relationship type
+                    setattr(item, humps.decamelize(key), [resources[item.type].get_item(item.id) for item in value.data])
+                elif value.data is None:
+                    setattr(item, humps.decamelize(key), None)
+                else:
+                    setattr(item, humps.decamelize(key), resources[value.data.type].get_item(value.data.id))
+                needs_save = True
         if needs_save:
             item.save()
 
     def delete_item(self, item):
         item.delete()
 
-    def make_item_response(self, *, urls, item, include):
+    def make_item_response(self, resources, *, urls, item, include):
         return {
-            "data": self.make_item(urls=urls, item=item),
+            "data": self.make_item(resources, urls=urls, item=item),
         }
 
-    def make_page_response(self, *, urls, items_count, filters, page_number, page_size, items, include):
+    def make_page_response(self, resources, *, urls, items_count, filters, page_number, page_size, items, include):
         pages_count = (items_count + 1) // page_size
         pagination = dict(count=items_count, page=page_number, pages=pages_count)
 
@@ -256,20 +385,39 @@ class CompiledResource:
         )
 
         return {
-            "data": [self.make_item(urls=urls, item=item) for item in items],
+            "data": [self.make_item(resources, urls=urls, item=item) for item in items],
             "links": links,
             "meta": dict(pagination=pagination),
         }
 
-    def make_item(self, *, urls, item):
+    def make_item(self, resources, *, urls, item):
         r = {
             "type": self.SingularName,
             "id": item.id,
-            "links": {"self": urls.make(f"get_{self.singular_name}", id=str(item.id))},
-            # "relationships": self.make_relationships(item),
+            "links": {"self": urls.make(f"get_{self.singular_name}", id=item.id)},
         }
         if self.output_attributes:
-            r["attributes"] = {key: getattr(item, humps.decamelize(key)) for key in self.output_attributes.keys()}
+            attributes = {}
+            for key in self.output_attributes:
+                attr = getattr(item, humps.decamelize(key))
+                attributes[key] = attr
+            r["attributes"] = attributes
+        if self.output_relationships:
+            relationships = {}
+            for (key, is_list, resource_name) in self.output_relationships:
+                attr = getattr(item, humps.decamelize(key))
+                if is_list:
+                    data = [{"type": resource_name, "id": rel.id} for rel in attr]
+                    relationship = {
+                        "data": data,
+                        "meta": {"count": len(data)},
+                    }
+                elif attr is None:
+                    relationship = {"data": None}
+                else:
+                    relationship = {"data": {"type": resource_name, "id": attr.id}}
+                relationships[key] = relationship
+            r["relationships"] = relationships
         return r
 
 
@@ -287,11 +435,12 @@ def add_resource_routes(resources, resource, router):
         include: str = None
     ):
         item = resource.create_item(
+            resources,
             payload.data.attributes,
-            # payload.data.relationships,
+            payload.data.relationships,
         )
 
-        return resource.make_item_response(urls=urls, item=item, include=include)
+        return resource.make_item_response(resources, urls=urls, item=item, include=include)
 
     @router.get(
         f"/{resource.pluralName}",
@@ -309,6 +458,7 @@ def add_resource_routes(resources, resource, router):
         (items_count, items) = resource.get_page(filters, (page_number - 1) * page_size, page_size)
         assert len(items) <= page_size
         return resource.make_page_response(
+            resources,
             urls=urls,
             items_count=items_count,
             filters=filters,
@@ -331,7 +481,7 @@ def add_resource_routes(resources, resource, router):
     ):
         item = resource.get_item(id)
         if item:
-            return resource.make_item_response(urls=urls, item=item, include=include)
+            return resource.make_item_response(resources, urls=urls, item=item, include=include)
         else:
             raise HTTPException(status_code=404, detail="Item not found")
 
@@ -350,11 +500,12 @@ def add_resource_routes(resources, resource, router):
         item = resource.get_item(id)
         if item:
             resource.update_item(
+                resources,
                 item,
                 payload.data.attributes,
-                # payload.data.relationships,
+                payload.data.relationships,
             )
-            return resource.make_item_response(urls=urls, item=item, include=include)
+            return resource.make_item_response(resources, urls=urls, item=item, include=include)
         else:
             raise HTTPException(status_code=404, detail="Item not found")
 
