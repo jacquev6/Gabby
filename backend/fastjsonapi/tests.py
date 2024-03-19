@@ -14,9 +14,48 @@ from .annotations import Computed, Constant, Secret
 from .router import make_jsonapi_router
 
 
-class AllAttributesTestCase(TestCase):
+class TextCaseMixin:
     maxDiff = None
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.__app = FastAPI()
+        cls.__app.include_router(make_jsonapi_router(cls.resources))
+        cls.__client = TestClient(cls.__app)
+
+    def get(self, url):
+        return self.__client.get(url, headers={"Content-Type": "application/vnd.api+json"})
+
+    def post(self, url, payload):
+        return self.__client.post(url, content=json.dumps(payload), headers={"Content-Type": "application/vnd.api+json"})
+
+    def patch(self, url, payload):
+        return self.__client.patch(url, content=json.dumps(payload), headers={"Content-Type": "application/vnd.api+json"})
+
+    def delete(self, url):
+        return self.__client.delete(url, headers={"Content-Type": "application/vnd.api+json"})
+
+    def test_schema(self):
+        file_path =  f"{__file__}.{self.__class__.__name__}.openapi.json"
+        try:
+            with open(file_path) as file:
+                expected = json.load(file)
+        except FileNotFoundError:
+            expected = {}
+
+        actual = self.__app.openapi()
+        # @todo Remove all 'application/json' from schema; use only 'application/vnd.api+json'
+
+        try:
+            self.assertEqual(actual, expected)
+        finally:
+            with open(file_path, "w") as file:
+                json.dump(actual, file, indent=2, sort_keys=True)
+                file.write("\n")
+
+
+class AllAttributesTestCase(TextCaseMixin, TestCase):
     class Resource:
         singular_name = "resource"
         plural_name = "resources"
@@ -81,44 +120,12 @@ class AllAttributesTestCase(TestCase):
                 items = [item for item in items if item.computed_str == filters["computed_str"]]
             return (len(items), items[first_index:first_index + page_size])
 
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls.__app = FastAPI()
-        cls.__app.include_router(make_jsonapi_router([cls.Resource()]))
-        cls.__client = TestClient(cls.__app)
+    resources = [Resource()]
 
     def setUp(self):
         super().setUp()
         self.Resource._next_id = 1
         self.Resource._items = {}
-
-    def get(self, url):
-        return self.__client.get(url, headers={"Content-Type": "application/vnd.api+json"})
-
-    def post(self, url, payload):
-        return self.__client.post(url, content=json.dumps(payload), headers={"Content-Type": "application/vnd.api+json"})
-
-    def patch(self, url, payload):
-        return self.__client.patch(url, content=json.dumps(payload), headers={"Content-Type": "application/vnd.api+json"})
-
-    def delete(self, url):
-        return self.__client.delete(url, headers={"Content-Type": "application/vnd.api+json"})
-
-    def test_schema(self):
-        file_path =  f"{__file__}.AllAttributesTestCase.openapi.json"
-        with open(file_path) as file:
-            expected = json.load(file)
-
-        actual = self.__app.openapi()
-        # @todo Remove all 'application/json' from schema; use only 'application/vnd.api+json'
-
-        try:
-            self.assertEqual(actual, expected)
-        finally:
-            with open(file_path, "w") as file:
-                json.dump(actual, file, indent=2, sort_keys=True)
-                file.write("\n")
 
     def test_create__minimal(self):
         response = self.post("http://server/resources", {
@@ -422,9 +429,7 @@ class AllAttributesTestCase(TestCase):
         self.assertIsNone(self.Resource.get_item("1"))
 
 
-class EmptyTestCase(TestCase):
-    maxDiff = None
-
+class EmptyTestCase(TextCaseMixin, TestCase):
     class EmptyResource:
         singular_name = "empty_resource"
         plural_name = "empty_resources"
@@ -458,43 +463,12 @@ class EmptyTestCase(TestCase):
             cls._next_id += 1
             return item
 
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls.__app = FastAPI()
-        cls.__app.include_router(make_jsonapi_router([cls.EmptyResource()]))
-        cls.__client = TestClient(cls.__app)
+    resources = [EmptyResource()]
 
     def setUp(self):
         super().setUp()
         self.EmptyResource._next_id = 1
         self.EmptyResource._items = {}
-
-    def get(self, url):
-        return self.__client.get(url, headers={"Content-Type": "application/vnd.api+json"})
-
-    def post(self, url, payload):
-        return self.__client.post(url, content=json.dumps(payload), headers={"Content-Type": "application/vnd.api+json"})
-
-    def patch(self, url, payload):
-        return self.__client.patch(url, content=json.dumps(payload), headers={"Content-Type": "application/vnd.api+json"})
-
-    def delete(self, url):
-        return self.__client.delete(url, headers={"Content-Type": "application/vnd.api+json"})
-
-    def test_schema(self):
-        file_path =  f"{__file__}.EmptyTestCase.openapi.json"
-        with open(file_path) as file:
-            expected = json.load(file)
-
-        actual = self.__app.openapi()
-
-        try:
-            self.assertEqual(actual, expected)
-        finally:
-            with open(file_path, "w") as file:
-                json.dump(actual, file, indent=2, sort_keys=True)
-                file.write("\n")
 
     def test_create(self):
         response = self.post("http://server/emptyResources", {
@@ -514,7 +488,20 @@ class EmptyTestCase(TestCase):
         })
 
 
-class FullyOptionalTestCase(TestCase):
-    pass
-    # @todo Add test case for a resource with attributes and relationships, but all optional
-    # It must allow creation without "attributes" and "relationships"
+# @todo Add test case for a resource with attributes and relationships, but all optional
+# It must allow creation without "attributes" and "relationships"
+# class TreeTestCase(TextCaseMixin, TestCase):
+#     class Node:
+#         singular_name = "empty_resource"
+#         plural_name = "empty_resources"
+
+#         default_page_size = 2
+
+#         class Model(BaseModel):
+#             label: str | None = None
+#             parent : TreeTestCase.Node.Model | None = None
+#             children : list[TreeTestCase.Node.Model] = []
+
+#     resources = [Node()]
+#     # @todo Add test case for a resource with attributes and relationships, but all optional
+#     # It must allow creation without "attributes" and "relationships"
