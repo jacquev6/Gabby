@@ -233,7 +233,7 @@ class AllAttributesTestCase(TextCaseMixin, TestCase):
         response = self.get(f"http://server/resources/1")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.json())
 
-    def test_get_page(self):
+    def test_get_page__first(self):
         for i in range(5):
             self.Resource.create_item(plain_int=i + 1)
 
@@ -267,16 +267,378 @@ class AllAttributesTestCase(TextCaseMixin, TestCase):
                 },
             ],
             "links": {
-                "first": "http://server/resources?page%5Bnumber%5D=1",
-                "last": "http://server/resources?page%5Bnumber%5D=3",
-                "next": "http://server/resources?page%5Bnumber%5D=2",
-                "prev": None
+                "first": "http://server/resources?page%5Bsize%5D=2&page%5Bnumber%5D=1",
+                "last": "http://server/resources?page%5Bsize%5D=2&page%5Bnumber%5D=3",
+                "next": "http://server/resources?page%5Bsize%5D=2&page%5Bnumber%5D=2",
+                "prev": None,
             },
             "meta": {
                 "pagination": {
                     "count": 5,
                     "page": 1,
                     "pages": 3,
+                },
+            },
+        })
+
+    def test_get_page__second(self):
+        for i in range(5):
+            self.Resource.create_item(plain_int=i + 1)
+
+        response = self.get(f"http://server/resources?page[number]=2")
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
+        self.assertEqual(response.json(), {
+            "data": [
+                {
+                    "type": "Resource",
+                    "id": "3",
+                    "links": {"self": f"http://server/resources/3"},
+                    "attributes": {
+                        "plainInt": 3,
+                        "defaultedDatetime": "2021-01-01T01:00:00Z",
+                        "constantStr": "Constant",
+                        "defaultedConstantFloat": 6.18,
+                        "computedStr": "SECRET",
+                    },
+                },
+                {
+                    "type": "Resource",
+                    "id": "4",
+                    "links": {"self": f"http://server/resources/4"},
+                    "attributes": {
+                        "plainInt": 4,
+                        "defaultedDatetime": "2021-01-01T01:00:00Z",
+                        "constantStr": "Constant",
+                        "defaultedConstantFloat": 6.18,
+                        "computedStr": "SECRET",
+                    },
+                },
+            ],
+            "links": {
+                "first": "http://server/resources?page%5Bsize%5D=2&page%5Bnumber%5D=1",
+                "last": "http://server/resources?page%5Bsize%5D=2&page%5Bnumber%5D=3",
+                "next": "http://server/resources?page%5Bsize%5D=2&page%5Bnumber%5D=3",
+                "prev": "http://server/resources?page%5Bsize%5D=2&page%5Bnumber%5D=1",
+            },
+            "meta": {
+                "pagination": {
+                    "count": 5,
+                    "page": 2,
+                    "pages": 3,
+                },
+            },
+        })
+
+    def test_get_page__third(self):
+        for i in range(5):
+            self.Resource.create_item(plain_int=i + 1)
+
+        response = self.get(f"http://server/resources?page[number]=3")
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
+        self.assertEqual(response.json(), {
+            "data": [
+                {
+                    "type": "Resource",
+                    "id": "5",
+                    "links": {"self": f"http://server/resources/5"},
+                    "attributes": {
+                        "plainInt": 5,
+                        "defaultedDatetime": "2021-01-01T01:00:00Z",
+                        "constantStr": "Constant",
+                        "defaultedConstantFloat": 6.18,
+                        "computedStr": "SECRET",
+                    },
+                },
+            ],
+            "links": {
+                "first": "http://server/resources?page%5Bsize%5D=2&page%5Bnumber%5D=1",
+                "last": "http://server/resources?page%5Bsize%5D=2&page%5Bnumber%5D=3",
+                "next": None,
+                "prev": "http://server/resources?page%5Bsize%5D=2&page%5Bnumber%5D=2",
+            },
+            "meta": {
+                "pagination": {
+                    "count": 5,
+                    "page": 3,
+                    "pages": 3,
+                },
+            },
+        })
+
+    def test_get_page__medium_page_size__first(self):
+        for i in range(5):
+            self.Resource.create_item(plain_int=i + 1)
+
+        response = self.get(f"http://server/resources?page[size]=3")
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
+        self.assertEqual(response.json(), {
+            "data": [
+                {
+                    "type": "Resource",
+                    "id": "1",
+                    "links": {"self": f"http://server/resources/1"},
+                    "attributes": {
+                        "plainInt": 1,
+                        "defaultedDatetime": "2021-01-01T01:00:00Z",
+                        "constantStr": "Constant",
+                        "defaultedConstantFloat": 6.18,
+                        "computedStr": "SECRET",
+                    },
+                },
+                {
+                    "type": "Resource",
+                    "id": "2",
+                    "links": {"self": f"http://server/resources/2"},
+                    "attributes": {
+                        "plainInt": 2,
+                        "defaultedDatetime": "2021-01-01T01:00:00Z",
+                        "constantStr": "Constant",
+                        "defaultedConstantFloat": 6.18,
+                        "computedStr": "SECRET",
+                    },
+                },
+                {
+                    "type": "Resource",
+                    "id": "3",
+                    "links": {"self": f"http://server/resources/3"},
+                    "attributes": {
+                        "plainInt": 3,
+                        "defaultedDatetime": "2021-01-01T01:00:00Z",
+                        "constantStr": "Constant",
+                        "defaultedConstantFloat": 6.18,
+                        "computedStr": "SECRET",
+                    },
+                },
+            ],
+            "links": {
+                "first": "http://server/resources?page%5Bsize%5D=3&page%5Bnumber%5D=1",
+                "last": "http://server/resources?page%5Bsize%5D=3&page%5Bnumber%5D=2",
+                "next": "http://server/resources?page%5Bsize%5D=3&page%5Bnumber%5D=2",
+                "prev": None,
+            },
+            "meta": {
+                "pagination": {
+                    "count": 5,
+                    "page": 1,
+                    "pages": 2,
+                },
+            },
+        })
+
+    def test_get_page__medium_page_size__second(self):
+        for i in range(5):
+            self.Resource.create_item(plain_int=i + 1)
+
+        response = self.get(f"http://server/resources?page[number]=2&page[size]=3")
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
+        self.assertEqual(response.json(), {
+            "data": [
+                {
+                    "type": "Resource",
+                    "id": "4",
+                    "links": {"self": f"http://server/resources/4"},
+                    "attributes": {
+                        "plainInt": 4,
+                        "defaultedDatetime": "2021-01-01T01:00:00Z",
+                        "constantStr": "Constant",
+                        "defaultedConstantFloat": 6.18,
+                        "computedStr": "SECRET",
+                    },
+                },
+                {
+                    "type": "Resource",
+                    "id": "5",
+                    "links": {"self": f"http://server/resources/5"},
+                    "attributes": {
+                        "plainInt": 5,
+                        "defaultedDatetime": "2021-01-01T01:00:00Z",
+                        "constantStr": "Constant",
+                        "defaultedConstantFloat": 6.18,
+                        "computedStr": "SECRET",
+                    },
+                },
+            ],
+            "links": {
+                "first": "http://server/resources?page%5Bsize%5D=3&page%5Bnumber%5D=1",
+                "last": "http://server/resources?page%5Bsize%5D=3&page%5Bnumber%5D=2",
+                "next": None,
+                "prev": "http://server/resources?page%5Bsize%5D=3&page%5Bnumber%5D=1",
+            },
+            "meta": {
+                "pagination": {
+                    "count": 5,
+                    "page": 2,
+                    "pages": 2,
+                },
+            },
+        })
+
+    def test_get_page__large_page_size(self):
+        for i in range(5):
+            self.Resource.create_item(plain_int=i + 1)
+
+        response = self.get(f"http://server/resources?page[size]=5")
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
+        self.assertEqual(response.json(), {
+            "data": [
+                {
+                    "type": "Resource",
+                    "id": "1",
+                    "links": {"self": f"http://server/resources/1"},
+                    "attributes": {
+                        "plainInt": 1,
+                        "defaultedDatetime": "2021-01-01T01:00:00Z",
+                        "constantStr": "Constant",
+                        "defaultedConstantFloat": 6.18,
+                        "computedStr": "SECRET",
+                    },
+                },
+                {
+                    "type": "Resource",
+                    "id": "2",
+                    "links": {"self": f"http://server/resources/2"},
+                    "attributes": {
+                        "plainInt": 2,
+                        "defaultedDatetime": "2021-01-01T01:00:00Z",
+                        "constantStr": "Constant",
+                        "defaultedConstantFloat": 6.18,
+                        "computedStr": "SECRET",
+                    },
+                },
+                {
+                    "type": "Resource",
+                    "id": "3",
+                    "links": {"self": f"http://server/resources/3"},
+                    "attributes": {
+                        "plainInt": 3,
+                        "defaultedDatetime": "2021-01-01T01:00:00Z",
+                        "constantStr": "Constant",
+                        "defaultedConstantFloat": 6.18,
+                        "computedStr": "SECRET",
+                    },
+                },
+                {
+                    "type": "Resource",
+                    "id": "4",
+                    "links": {"self": f"http://server/resources/4"},
+                    "attributes": {
+                        "plainInt": 4,
+                        "defaultedDatetime": "2021-01-01T01:00:00Z",
+                        "constantStr": "Constant",
+                        "defaultedConstantFloat": 6.18,
+                        "computedStr": "SECRET",
+                    },
+                },
+                {
+                    "type": "Resource",
+                    "id": "5",
+                    "links": {"self": f"http://server/resources/5"},
+                    "attributes": {
+                        "plainInt": 5,
+                        "defaultedDatetime": "2021-01-01T01:00:00Z",
+                        "constantStr": "Constant",
+                        "defaultedConstantFloat": 6.18,
+                        "computedStr": "SECRET",
+                    },
+                },
+            ],
+            "links": {
+                "first": "http://server/resources?page%5Bsize%5D=5&page%5Bnumber%5D=1",
+                "last": "http://server/resources?page%5Bsize%5D=5&page%5Bnumber%5D=1",
+                "next": None,
+                "prev": None,
+            },
+            "meta": {
+                "pagination": {
+                    "count": 5,
+                    "page": 1,
+                    "pages": 1,
+                },
+            },
+        })
+
+    def test_get_page__filtered__first(self):
+        for i in range(5):
+            secret_str = "Even" if i % 2 else "Odd"
+            self.Resource.create_item(plain_int=i + 1, secret_str=secret_str)
+
+        response = self.get(f"http://server/resources?filter[computedStr]=ODD")
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
+        self.assertEqual(response.json(), {
+            "data": [
+                {
+                    "type": "Resource",
+                    "id": "1",
+                    "links": {"self": f"http://server/resources/1"},
+                    "attributes": {
+                        "plainInt": 1,
+                        "defaultedDatetime": "2021-01-01T01:00:00Z",
+                        "constantStr": "Constant",
+                        "defaultedConstantFloat": 6.18,
+                        "computedStr": "ODD",
+                    },
+                },
+                {
+                    "type": "Resource",
+                    "id": "3",
+                    "links": {"self": f"http://server/resources/3"},
+                    "attributes": {
+                        "plainInt": 3,
+                        "defaultedDatetime": "2021-01-01T01:00:00Z",
+                        "constantStr": "Constant",
+                        "defaultedConstantFloat": 6.18,
+                        "computedStr": "ODD",
+                    },
+                },
+            ],
+            "links": {
+                "first": "http://server/resources?page%5Bsize%5D=2&page%5Bnumber%5D=1&filter%5BcomputedStr%5D=ODD",
+                "last": "http://server/resources?page%5Bsize%5D=2&page%5Bnumber%5D=2&filter%5BcomputedStr%5D=ODD",
+                "next": "http://server/resources?page%5Bsize%5D=2&page%5Bnumber%5D=2&filter%5BcomputedStr%5D=ODD",
+                "prev": None,
+            },
+            "meta": {
+                "pagination": {
+                    "count": 3,
+                    "page": 1,
+                    "pages": 2,
+                },
+            },
+        })
+
+    def test_get_page__filtered__second(self):
+        for i in range(5):
+            secret_str = "Even" if i % 2 else "Odd"
+            self.Resource.create_item(plain_int=i + 1, secret_str=secret_str)
+
+        response = self.get(f"http://server/resources?filter[computedStr]=ODD&page[number]=2")
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
+        self.assertEqual(response.json(), {
+            "data": [
+                {
+                    "type": "Resource",
+                    "id": "5",
+                    "links": {"self": f"http://server/resources/5"},
+                    "attributes": {
+                        "plainInt": 5,
+                        "defaultedDatetime": "2021-01-01T01:00:00Z",
+                        "constantStr": "Constant",
+                        "defaultedConstantFloat": 6.18,
+                        "computedStr": "ODD",
+                    },
+                },
+            ],
+            "links": {
+                "first": "http://server/resources?page%5Bsize%5D=2&page%5Bnumber%5D=1&filter%5BcomputedStr%5D=ODD",
+                "last": "http://server/resources?page%5Bsize%5D=2&page%5Bnumber%5D=2&filter%5BcomputedStr%5D=ODD",
+                "next": None,
+                "prev": "http://server/resources?page%5Bsize%5D=2&page%5Bnumber%5D=1&filter%5BcomputedStr%5D=ODD",
+            },
+            "meta": {
+                "pagination": {
+                    "count": 3,
+                    "page": 2,
+                    "pages": 2,
                 },
             },
         })

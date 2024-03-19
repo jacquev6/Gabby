@@ -1,5 +1,6 @@
 # from __future__ import annotations  # This doesn't work because we're annotating with local types. So this code won't work on Python 4. OK.
 from typing import Annotated
+from urllib.parse import urlencode
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Response
 from fastapi.responses import JSONResponse
@@ -199,24 +200,32 @@ class CompiledResource:
             "data": self.make_item(urls=urls, item=item),
         }
 
-    def make_page_response(self, *, urls, items_count, page_number, page_size, items, include):
+    def make_page_response(self, *, urls, items_count, filters, page_number, page_size, items, include):
         pages_count = (items_count + 1) // page_size
         pagination = dict(count=items_count, page=page_number, pages=pages_count)
 
-        # @todo Add original query parameters except page[number] to links
         base_url = urls.make(f"get_{self.plural_name}")
+        def make_url_for_page(number):
+            qs = {
+                "page[size]": page_size,
+                "page[number]": number,
+            }
+            for (key, value) in sorted(filters.items()):
+                if value is not None:
+                    qs[f"filter[{humps.camelize(key)}]"] = value
+            return base_url + "?" + urlencode(qs)
 
         if page_number < pages_count:
-            next = f"{base_url}?page%5Bnumber%5D={page_number + 1}"
+            next = make_url_for_page(page_number + 1)
         else:
             next = None
         if page_number > 1:
-            prev = f"{base_url}?page%5Bnumber%5D={page_number - 1}"
+            prev = make_url_for_page(page_number - 1)
         else:
             prev = None
         links = dict(
-            first=f"{base_url}?page%5Bnumber%5D=1",
-            last=f"{base_url}?page%5Bnumber%5D={pages_count}",
+            first=make_url_for_page(1),
+            last=make_url_for_page(pages_count),
             next=next,
             prev=prev,
         )
@@ -277,6 +286,7 @@ def add_resource_routes(resources, resource, router):
         return resource.make_page_response(
             urls=urls,
             items_count=items_count,
+            filters=filters,
             page_number=page_number,
             page_size=page_size,
             items=items,
