@@ -9,7 +9,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")/."
 docker compose exec \
   frontend \
     npx cypress run \
-      --component
+      --component "$@"
 
 
 # @todo Ensure that templates have no untranslated content

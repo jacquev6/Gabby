@@ -13,3 +13,4 @@ pydotplus  # For 'manage.py graph_models'
 fastapi  # Fundamental
 uvicorn[standard]  # Fundamental
 httpx  # For unit testing: https://fastapi.tiangolo.com/tutorial/testing/
+pyhumps  # Convert between cases
