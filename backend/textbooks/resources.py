@@ -28,7 +28,7 @@ class PdfFilesResource:
     default_page_size = default_page_size
 
     def create_item(self, *, sha256, bytes_count, pages_count):
-        pdf_file = PdfFile.objects.create(
+        (pdf_file, created) = PdfFile.objects.get_or_create(
             sha256=sha256,
             bytes_count=bytes_count,
             pages_count=pages_count,
@@ -64,7 +64,7 @@ class PdfFileNamingsResource:
     default_page_size = default_page_size
 
     def create_item(self, *, name, pdf_file):
-        naming = PdfFileNaming.objects.create(
+        (naming, created) = PdfFileNaming.objects.get_or_create(
             name=name,
             pdf_file=unwrap(pdf_file),
         )
