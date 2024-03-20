@@ -1,19 +1,20 @@
 import datetime
-import json
-import os
 
-from django.test import TransactionTestCase, TestCase
-from fastapi.testclient import TestClient
-from rest_framework import status
-from rest_framework.test import APITransactionTestCase
+from starlette import status
+from django.test import TransactionTestCase
 
 from .models import Ping
+from fastjsonapi.testing import TestMixin
 from main import app
 
 
-class PingTestsMixin:
-    maxDiff = None
+class PingTests(TestMixin, TransactionTestCase):
     reset_sequences = True  # Primary keys appear in API responses
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.set_app(app)
 
     def test_create__minimal(self):
         before = datetime.datetime.now(tz=datetime.timezone.utc)
@@ -285,7 +286,7 @@ class PingTestsMixin:
             },
         })
 
-    def test_filter__message_some(self):
+    def test_filter__prev_some(self):
         prev = Ping.objects.create()
         Ping.objects.create(prev=prev)
         Ping.objects.create(prev=None)
@@ -614,48 +615,3 @@ class PingTestsMixin:
         self.assertEqual(ping.message, "Hello")
         self.assertEqual(ping.prev, Ping.objects.get(id=1))
         self.assertEqual(list(ping.next.all()), [])
-
-
-class PingTestsAgainstDjango(PingTestsMixin, APITransactionTestCase):
-    def post(self, url, payload):
-        return self.client.post(url, payload, format="vnd.api+json")
-
-    def get(self, url):
-        return self.client.get(url, format="vnd.api+json")
-
-    def patch(self, url, payload):
-        return self.client.patch(url, payload, format="vnd.api+json")
-
-
-class PingTestsAgainstFastApi(PingTestsMixin, TransactionTestCase):
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls.__client = TestClient(app)
-
-    def get(self, url):
-        return self.__client.get(url, headers={"Content-Type": "application/vnd.api+json"})
-
-    def post(self, url, payload):
-        return self.__client.post(url, content=json.dumps(payload), headers={"Content-Type": "application/vnd.api+json"})
-
-    def patch(self, url, payload):
-        return self.__client.patch(url, content=json.dumps(payload), headers={"Content-Type": "application/vnd.api+json"})
-
-
-class SchemaTest(TestCase):
-    def test(self):
-        file_path = os.path.join(os.path.dirname(__file__), "..", "openapi.json")
-        with open(file_path) as file:
-            expected = json.load(file)
-
-        response = TestClient(app).get("http://server/api/openapi.json")
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
-        actual = response.json()
-
-        try:
-            self.assertEqual(actual, expected)
-        finally:
-            with open(file_path, "w") as file:
-                json.dump(actual, file, indent=2, sort_keys=True)
-                file.write("\n")

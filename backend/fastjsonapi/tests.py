@@ -12,47 +12,18 @@ from starlette import status
 
 from .annotations import Computed, Constant, Secret, Filterable
 from .router import make_jsonapi_router
+from .testing import TestMixin
 
 
-class TextCaseMixin:
+class TestCaseMixin(TestMixin):
     maxDiff = None
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.__app = FastAPI()
-        cls.__app.include_router(make_jsonapi_router(cls.resources))
-        cls.__client = TestClient(cls.__app)
-
-    def get(self, url):
-        return self.__client.get(url, headers={"Content-Type": "application/vnd.api+json"})
-
-    def post(self, url, payload):
-        return self.__client.post(url, content=json.dumps(payload), headers={"Content-Type": "application/vnd.api+json"})
-
-    def patch(self, url, payload):
-        return self.__client.patch(url, content=json.dumps(payload), headers={"Content-Type": "application/vnd.api+json"})
-
-    def delete(self, url):
-        return self.__client.delete(url, headers={"Content-Type": "application/vnd.api+json"})
-
-    def test_schema(self):
-        file_path =  f"{__file__}.{self.__class__.__name__}.openapi.json"
-        try:
-            with open(file_path) as file:
-                expected = json.load(file)
-        except FileNotFoundError:
-            expected = {}
-
-        actual = self.__app.openapi()
-        # @todo Remove all 'application/json' from schema; use only 'application/vnd.api+json'
-
-        try:
-            self.assertEqual(actual, expected)
-        finally:
-            with open(file_path, "w") as file:
-                json.dump(actual, file, indent=2, sort_keys=True)
-                file.write("\n")
+        app = FastAPI()
+        app.include_router(make_jsonapi_router(cls.resources))
+        cls.set_app(app)
 
 
 # @todo Use this factory in all test cases
@@ -81,7 +52,7 @@ class ItemsFactory:
         return items
 
 
-class AllAttributesTestCase(TextCaseMixin, TestCase):
+class AllAttributesTestCase(TestCaseMixin, TestCase):
     class Resource:
         singular_name = "resource"
         plural_name = "resources"
@@ -822,7 +793,7 @@ class AllAttributesTestCase(TextCaseMixin, TestCase):
         self.assertIsNone(self.Resource.get_item("1"))
 
 
-class EmptyTestCase(TextCaseMixin, TestCase):
+class EmptyTestCase(TestCaseMixin, TestCase):
     class EmptyResource:
         singular_name = "empty_resource"
         plural_name = "empty_resources"
@@ -907,7 +878,7 @@ class RightModel(BaseModel):
     top: TopModel
     left_or_none: LeftModel | None = None
 
-class AllRelationsTestCase(TextCaseMixin, TestCase):
+class AllRelationsTestCase(TestCaseMixin, TestCase):
     class TopResource:
         singular_name = "top"
         plural_name = "tops"
@@ -1846,7 +1817,7 @@ class AllRelationsTestCase(TextCaseMixin, TestCase):
 #     parent : TreeNode | None = None
 #     children : list[TreeNode] = []
 
-# class TreeNodeTestCase(TextCaseMixin, TestCase):
+# class TreeNodeTestCase(TestCaseMixin, TestCase):
 #     class NodeResource:
 #         singular_name = "node"
 #         plural_name = "nodes"

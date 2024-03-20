@@ -1,10 +1,11 @@
 import django.conf
 import django.core.management
+django.setup()  # Required before importing any module that uses the Django ORM
 import fastapi
+from django.contrib.auth.models import User
 from fastapi.middleware.cors import CORSMiddleware
 
 from fastjsonapi import make_jsonapi_router
-django.setup()  # Required before importing any module that uses the Django ORM
 from opinion_ping.resources import PingsResource
 from textbooks.resources import PdfFilesResource, PdfFileNamingsResource, ProjectsResource, TextbooksResource, SectionsResource, ExercisesResource, ExtractionEventsResource
 from textbooks.views import make_extraction_report
@@ -50,6 +51,13 @@ if django.conf.settings.EXPOSE_RESET_FOR_TESTS_URL:
     def reset_for_tests(fixtures: str = None):
         django.core.management.call_command("flush", interactive=False)
         django.core.management.call_command("migrate", interactive=False)
+        superuser = User.objects.filter(username="admin").first()
+        if superuser is None:
+            superuser = User.objects.create_superuser(
+                "admin",
+                email="admin@localhost",
+                password="password",
+            )
         if fixtures is not None:
             for fixture in fixtures.split(","):
                 django.core.management.call_command("loaddata", fixture)

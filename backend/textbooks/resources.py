@@ -1,10 +1,12 @@
 from __future__ import annotations
 from typing import Annotated
 
+from fastapi import HTTPException
 from pydantic import BaseModel
 import django.conf
+from django.core.exceptions import ValidationError
 
-from fastjsonapi import Computed, Filterable
+from fastjsonapi import Computed, Filterable, Constant
 from fastjsonapi.django import DjangoOrmWrapper, unwrap
 from .models import PdfFile, PdfFileNaming, Project, Textbook, Section, Exercise, ExtractionEvent
 
@@ -13,9 +15,9 @@ default_page_size = django.conf.settings.REST_FRAMEWORK["PAGE_SIZE"]
 
 
 class PdfFileModel(BaseModel):
-    sha256: str
-    bytes_count: int
-    pages_count: int
+    sha256: Annotated[str, Constant()]
+    bytes_count: Annotated[int, Constant()]
+    pages_count: Annotated[int, Constant()]
     namings: Annotated[list[PdfFileNamingModel], Computed()] = []
     sections: Annotated[list[SectionModel], Computed()] = []
 
@@ -28,17 +30,23 @@ class PdfFilesResource:
     default_page_size = default_page_size
 
     def create_item(self, *, sha256, bytes_count, pages_count):
-        (pdf_file, created) = PdfFile.objects.get_or_create(
+        pdf_file = PdfFile(
             sha256=sha256,
             bytes_count=bytes_count,
             pages_count=pages_count,
         )
+        try:
+            pdf_file.full_clean(validate_unique=False)
+        except ValidationError as e:
+            raise HTTPException(status_code=400, detail=e.message_dict)
+        pdf_file.save()
         return DjangoOrmWrapper(pdf_file)
 
     def get_item(self, id):
         try:
             return DjangoOrmWrapper(PdfFile.objects.get(sha256=id))
         except PdfFile.DoesNotExist:
+            # @todo Raise the 404 here instead of 'fastjsonapi.router' (for all resources)
             return None
 
     def get_page(self, filters, first_index, page_size):
@@ -52,8 +60,8 @@ class PdfFilesResource:
 
 
 class PdfFileNamingModel(BaseModel):
-    name: str
-    pdf_file: PdfFileModel
+    name: Annotated[str, Constant()]
+    pdf_file: Annotated[PdfFileModel, Constant()]
 
 class PdfFileNamingsResource:
     singular_name = "pdf_file_naming"
@@ -128,7 +136,7 @@ class TextbookModel(BaseModel):
     publisher: str | None = None
     year: int | None = None
     isbn: str | None = None
-    project: ProjectModel
+    project: Annotated[ProjectModel, Constant()]
     exercises: Annotated[list[ExerciseModel], Computed()] = []
     sections: Annotated[list[SectionModel], Computed()] = []
 
@@ -141,13 +149,18 @@ class TextbooksResource:
     default_page_size = default_page_size
 
     def create_item(self, *, title, publisher, year, isbn, project):
-        textbook = Textbook.objects.create(
+        textbook = Textbook(
             title=title,
             publisher=publisher,
             year=year,
             isbn=isbn,
             project=unwrap(project),
         )
+        try:
+            textbook.full_clean()
+        except ValidationError as e:
+            raise HTTPException(status_code=400, detail=e.message_dict)
+        textbook.save()
         return DjangoOrmWrapper(textbook)
 
     def get_item(self, id):
@@ -170,8 +183,8 @@ class SectionModel(BaseModel):
     textbook_start_page: int
     pdf_file_start_page: int
     pages_count: int
-    textbook: TextbookModel
-    pdf_file: PdfFileModel
+    textbook: Annotated[TextbookModel, Constant()]
+    pdf_file: Annotated[PdfFileModel, Constant()]
 
 class SectionsResource:
     singular_name = "section"
@@ -208,14 +221,14 @@ class SectionsResource:
 
 
 class ExerciseModel(BaseModel):
-    textbook_page: Annotated[int | None, Filterable()] = None
-    number: str
+    textbook_page: Annotated[int | None, Filterable(), Constant()] = None
+    number: Annotated[str, Constant()]
     instructions: str = ""
     example: str = ""
     clue: str = ""
     wording: str = ""
-    project: ProjectModel
-    textbook: Annotated[TextbookModel | None, Filterable()] = None
+    project: Annotated[ProjectModel, Constant()]
+    textbook: Annotated[TextbookModel | None, Filterable(), Constant()] = None
     extraction_events: Annotated[list[ExtractionEventModel], Computed()] = []
 
 class ExercisesResource:
@@ -262,8 +275,8 @@ class ExercisesResource:
 
 
 class ExtractionEventModel(BaseModel):
-    event: str
-    exercise: ExerciseModel
+    event: Annotated[str, Constant()]
+    exercise: Annotated[ExerciseModel, Constant()]
 
 class ExtractionEventsResource:
     singular_name = "extraction_event"

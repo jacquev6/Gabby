@@ -232,7 +232,17 @@ async function createExercise() {
 
 async function updateExercise() {
   modeIsLoading.value = true
-  await api.client.patch('exercise', currentExercise.id, currentExercise.attributes, {})
+  await api.client.patch(
+    'exercise',
+    currentExercise.id,
+    {
+      instructions: currentExercise.attributes.instructions,
+      example: currentExercise.attributes.example,
+      clue: currentExercise.attributes.clue,
+      wording: currentExercise.attributes.wording,
+    },
+    {},
+  )
   for (const event of extractionEvents) {
     await api.client.post(
       'extractionEvent',

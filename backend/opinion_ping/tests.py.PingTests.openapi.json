@@ -567,21 +567,6 @@
             "title": "Instructions",
             "type": "string"
           },
-          "number": {
-            "title": "Number",
-            "type": "string"
-          },
-          "textbookPage": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Textbookpage"
-          },
           "wording": {
             "title": "Wording",
             "type": "string"
@@ -592,22 +577,7 @@
       },
       "exercise-UpdateInput-Data-Relationships": {
         "additionalProperties": false,
-        "properties": {
-          "project": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/MandatoryRelationship"
-              }
-            ]
-          },
-          "textbook": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/OptionalRelationship"
-              }
-            ]
-          }
-        },
+        "properties": {},
         "title": "exercise-UpdateInput-Data-Relationships",
         "type": "object"
       },
@@ -843,26 +813,13 @@
       },
       "extractionEvent-UpdateInput-Data-Attributes": {
         "additionalProperties": false,
-        "properties": {
-          "event": {
-            "title": "Event",
-            "type": "string"
-          }
-        },
+        "properties": {},
         "title": "extractionEvent-UpdateInput-Data-Attributes",
         "type": "object"
       },
       "extractionEvent-UpdateInput-Data-Relationships": {
         "additionalProperties": false,
-        "properties": {
-          "exercise": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/MandatoryRelationship"
-              }
-            ]
-          }
-        },
+        "properties": {},
         "title": "extractionEvent-UpdateInput-Data-Relationships",
         "type": "object"
       },
@@ -1119,20 +1076,7 @@
       },
       "pdfFile-UpdateInput-Data-Attributes": {
         "additionalProperties": false,
-        "properties": {
-          "bytesCount": {
-            "title": "Bytescount",
-            "type": "integer"
-          },
-          "pagesCount": {
-            "title": "Pagescount",
-            "type": "integer"
-          },
-          "sha256": {
-            "title": "Sha256",
-            "type": "string"
-          }
-        },
+        "properties": {},
         "title": "pdfFile-UpdateInput-Data-Attributes",
         "type": "object"
       },
@@ -1374,26 +1318,13 @@
       },
       "pdfFileNaming-UpdateInput-Data-Attributes": {
         "additionalProperties": false,
-        "properties": {
-          "name": {
-            "title": "Name",
-            "type": "string"
-          }
-        },
+        "properties": {},
         "title": "pdfFileNaming-UpdateInput-Data-Attributes",
         "type": "object"
       },
       "pdfFileNaming-UpdateInput-Data-Relationships": {
         "additionalProperties": false,
-        "properties": {
-          "pdfFile": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/MandatoryRelationship"
-              }
-            ]
-          }
-        },
+        "properties": {},
         "title": "pdfFileNaming-UpdateInput-Data-Relationships",
         "type": "object"
       },
@@ -2253,22 +2184,7 @@
       },
       "section-UpdateInput-Data-Relationships": {
         "additionalProperties": false,
-        "properties": {
-          "pdfFile": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/MandatoryRelationship"
-              }
-            ]
-          },
-          "textbook": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/MandatoryRelationship"
-              }
-            ]
-          }
-        },
+        "properties": {},
         "title": "section-UpdateInput-Data-Relationships",
         "type": "object"
       },
@@ -2625,15 +2541,7 @@
       },
       "textbook-UpdateInput-Data-Relationships": {
         "additionalProperties": false,
-        "properties": {
-          "project": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/MandatoryRelationship"
-              }
-            ]
-          }
-        },
+        "properties": {},
         "title": "textbook-UpdateInput-Data-Relationships",
         "type": "object"
       }

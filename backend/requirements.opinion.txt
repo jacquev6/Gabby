@@ -1,9 +1,6 @@
 # Old
-djangorestframework-jsonapi[django-filter]  # Fundamental
-django-cors-headers
+django  # Fundamental
 psycopg2-binary  # For PostgreSQL
-PyYaml  # For Swagger
-uritemplate  # For Swagger
 django-dbbackup  # For backups
 django-storages[s3]  # For backups
 django-extensions  # For 'manage.py graph_models'
