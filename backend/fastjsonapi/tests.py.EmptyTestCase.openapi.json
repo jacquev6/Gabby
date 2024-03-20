@@ -176,6 +176,11 @@
             "title": "Data",
             "type": "array"
           },
+          "included": {
+            "items": {},
+            "title": "Included",
+            "type": "array"
+          },
           "links": {
             "$ref": "#/components/schemas/PageLinksModel"
           },

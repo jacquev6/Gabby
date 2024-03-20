@@ -123,7 +123,7 @@ class CompiledResource:
         create_input_relationships = {}
         self.output_attributes = []
         output_attributes = {}
-        self.output_relationships = []
+        self.output_relationships = {}
         output_relationships = {}
         update_input_attributes = {}
         update_input_relationships = {}
@@ -144,7 +144,7 @@ class CompiledResource:
                 if annotations.create_input:
                     create_input_relationships[name] = (MandatoryRelationship, ...)
                 if annotations.output:
-                    self.output_relationships.append((name, False, resource_name))
+                    self.output_relationships[name] = (False, resource_name)
                     output_relationships[name] = (MandatoryRelationship, ...)
                 if annotations.update_input:
                     update_input_relationships[name] = (MandatoryRelationship, None)
@@ -153,16 +153,16 @@ class CompiledResource:
                 if annotations.create_input:
                     create_input_relationships[name] = (OptionalRelationship, OptionalRelationship())
                 if annotations.output:
-                    self.output_relationships.append((name, False, resource_name))
+                    self.output_relationships[name] = (False, resource_name)
                     output_relationships[name] = (OptionalRelationship, ...)
                 if annotations.update_input:
                     update_input_relationships[name] = (OptionalRelationship, None)
             elif (resource_name := list_resource_models.get(info.annotation)) is not None:
-                assert info.default is PydanticUndefined
+                assert info.default == []
                 if annotations.create_input:
                     create_input_relationships[name] = (CreateInputListRelationship, CreateInputListRelationship())
                 if annotations.output:
-                    self.output_relationships.append((name, True, resource_name))
+                    self.output_relationships[name] = (True, resource_name)
                     output_relationships[name] = (OutputListRelationship, ...)
                 if annotations.update_input:
                     update_input_relationships[name] = (UpdateInputListRelationship, None)
@@ -272,6 +272,7 @@ class CompiledResource:
             data=(list[OutputItemModel], ...),
             meta=(PageMetaModel, ...),
             links=(PageLinksModel, ...),
+            included=(list, None),
             __config__ = ConfigDict(extra="forbid"),
         )
 
@@ -323,6 +324,7 @@ class CompiledResource:
         return self._resource.create_item(**attrs, **rels)
 
     def get_item(self, id):
+        # @todo Pass parsed 'include' to allow pre-fetching
         return self._resource.get_item(id)
 
     def get_page(self, filters, first_index, page_size):
@@ -350,11 +352,14 @@ class CompiledResource:
         item.delete()
 
     def make_item_response(self, resources, *, urls, item, include):
-        return {
+        return_value = {
             "data": self.make_item(resources, urls=urls, item=item),
         }
+        if include is not None:
+            return_value["included"] = self.make_included(resources, urls, [item], include)
+        return return_value
 
-    def make_page_response(self, resources, *, urls, items_count, filters, page_number, page_size, items, include):
+    def make_page_response(self, resources, *, urls, items_count, filters, page_number, page_size, items, raw_include, include):
         pages_count = (items_count + 1) // page_size
         pagination = dict(count=items_count, page=page_number, pages=pages_count)
 
@@ -364,6 +369,8 @@ class CompiledResource:
                 "page[size]": page_size,
                 "page[number]": number,
             }
+            if raw_include is not None:
+                qs["include"] = raw_include
             for (key, value) in sorted(filters.model_dump(exclude_unset=True).items()):
                 if value is not None:
                     qs[f"filter[{humps.camelize(key)}]"] = value
@@ -384,11 +391,14 @@ class CompiledResource:
             prev=prev,
         )
 
-        return {
+        return_value = {
             "data": [self.make_item(resources, urls=urls, item=item) for item in items],
             "links": links,
             "meta": dict(pagination=pagination),
         }
+        if include is not None:
+            return_value["included"] = self.make_included(resources, urls, items, include)
+        return return_value
 
     def make_item(self, resources, *, urls, item):
         r = {
@@ -404,7 +414,7 @@ class CompiledResource:
             r["attributes"] = attributes
         if self.output_relationships:
             relationships = {}
-            for (key, is_list, resource_name) in self.output_relationships:
+            for (key, (is_list, resource_name)) in self.output_relationships.items():
                 attr = getattr(item, humps.decamelize(key))
                 if is_list:
                     data = [{"type": resource_name, "id": rel.id} for rel in attr]
@@ -420,6 +430,30 @@ class CompiledResource:
             r["relationships"] = relationships
         return r
 
+    def make_included(self, resources, urls, items, include):
+        included = {}
+
+        # @todo Add test showing we don't include the root items even if they appear in included relationships
+        # @todo Add test showing we don't include the same item twice
+
+        def recurse(resource, item, include):
+            for (name, nested_include) in include.items():
+                (is_list, resource_name) = resource.output_relationships[name]
+                resource = resources[resource_name]
+                attr = getattr(item, humps.decamelize(name))
+                if is_list:
+                    for incl in attr:
+                        included[(resource_name, incl.id)] = resource.make_item(resources, urls=urls, item=incl)
+                        recurse(resource, incl, nested_include)
+                elif attr is not None:
+                    # @todo Add tests exercising this branch
+                    included[(resource_name, attr.id)] = resource.make_item(resources, urls=urls, item=attr)
+                    recurse(resource, attr, nested_include)
+
+        for item in items:
+            recurse(self, item, include)
+
+        return list(included.values())
 
 def add_resource_routes(resources, resource, router):
     @router.post(
@@ -440,7 +474,7 @@ def add_resource_routes(resources, resource, router):
             payload.data.relationships,
         )
 
-        return resource.make_item_response(resources, urls=urls, item=item, include=include)
+        return resource.make_item_response(resources, urls=urls, item=item, include=parse_include(include))
 
     @router.get(
         f"/{resource.pluralName}",
@@ -465,7 +499,8 @@ def add_resource_routes(resources, resource, router):
             page_number=page_number,
             page_size=page_size,
             items=items,
-            include=include,
+            raw_include=include,
+            include=parse_include(include),
         )
 
     @router.get(
@@ -481,7 +516,7 @@ def add_resource_routes(resources, resource, router):
     ):
         item = resource.get_item(id)
         if item:
-            return resource.make_item_response(resources, urls=urls, item=item, include=include)
+            return resource.make_item_response(resources, urls=urls, item=item, include=parse_include(include))
         else:
             raise HTTPException(status_code=404, detail="Item not found")
 
@@ -505,7 +540,7 @@ def add_resource_routes(resources, resource, router):
                 payload.data.attributes,
                 payload.data.relationships,
             )
-            return resource.make_item_response(resources, urls=urls, item=item, include=include)
+            return resource.make_item_response(resources, urls=urls, item=item, include=parse_include(include))
         else:
             raise HTTPException(status_code=404, detail="Item not found")
 
@@ -560,6 +595,22 @@ def add_resource_routes(resources, resource, router):
     #         "attributes": resource.make_attributes(item),
     #         "relationships": resource.make_relationships(item),
     #     }
+
+
+def parse_include(include):
+    if include is None:
+        return None
+    elif include == "":
+        return {}
+    else:
+        paths = [path.split(".") for path in include.split(",")]
+        return_value = {}
+        for path in paths:
+            current = return_value
+            for part in path:
+                current = current.setdefault(part, {})
+        return return_value
+
 
 
 # def make_jsonapi_models(resource):

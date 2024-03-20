@@ -251,6 +251,11 @@
             "title": "Data",
             "type": "array"
           },
+          "included": {
+            "items": {},
+            "title": "Included",
+            "type": "array"
+          },
           "links": {
             "$ref": "#/components/schemas/PageLinksModel"
           },
@@ -652,6 +657,11 @@
             "title": "Data",
             "type": "array"
           },
+          "included": {
+            "items": {},
+            "title": "Included",
+            "type": "array"
+          },
           "links": {
             "$ref": "#/components/schemas/PageLinksModel"
           },
@@ -904,6 +914,11 @@
               "$ref": "#/components/schemas/Top-OutputItem"
             },
             "title": "Data",
+            "type": "array"
+          },
+          "included": {
+            "items": {},
+            "title": "Included",
             "type": "array"
           },
           "links": {

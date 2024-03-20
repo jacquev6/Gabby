@@ -1296,6 +1296,296 @@ class AllRelationsTestCase(TextCaseMixin, TestCase):
             },
         })
 
+    def test_get_page__tops__include_empty(self):
+        top = self.TopResource.create_item(lefts=[], rights=[])
+        for i in range(4):
+            lefts = [self.LeftResource.create_item(top=top, right_or_none=None) for _ in range(i + 1)]
+            rights = [self.RightResource.create_item(top=top, left_or_none=None) for _ in range(i + 1)]
+            self.TopResource.create_item(lefts=lefts, rights=rights)
+
+        response = self.get("http://server/tops?page[size]=3&include=")
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
+        self.assertEqual(response.json(), {
+            "data": [
+                {
+                    "type": "Top",
+                    "id": "1",
+                    "links": {"self": "http://server/tops/1"},
+                    "relationships": {
+                        "lefts": {
+                            "data": [],
+                            "meta": {"count": 0},
+                        },
+                        "rights": {
+                            "data": [],
+                            "meta": {"count": 0},
+                        },
+                    },
+                },
+                {
+                    "type": "Top",
+                    "id": "4",
+                    "links": {"self": "http://server/tops/4"},
+                    "relationships": {
+                        "lefts": {
+                            "data": [{"id": "2", "type": "Left"}],
+                            "meta": {"count": 1},
+                        },
+                        "rights": {
+                            "data": [{"id": "3", "type": "Right"}],
+                            "meta": {"count": 1},
+                        },
+                    },
+                },
+                {
+                    "type": "Top",
+                    "id": "9",
+                    "links": {"self": "http://server/tops/9"},
+                    "relationships": {
+                        "lefts": {
+                            "data": [{"id": "5", "type": "Left"}, {"id": "6", "type": "Left"}],
+                            "meta": {"count": 2},
+                        },
+                        "rights": {
+                            "data": [{"id": "7", "type": "Right"}, {"id": "8", "type": "Right"}],
+                            "meta": {"count": 2},
+                        },
+                    },
+                },
+            ],
+            "included": [],
+            "links": {
+                "first": "http://server/tops?page%5Bsize%5D=3&page%5Bnumber%5D=1&include=",
+                "last": "http://server/tops?page%5Bsize%5D=3&page%5Bnumber%5D=2&include=",
+                "next": "http://server/tops?page%5Bsize%5D=3&page%5Bnumber%5D=2&include=",
+                "prev": None,
+            },
+            "meta": {
+                "pagination": {
+                    "count": 5,
+                    "page": 1,
+                    "pages": 2,
+                },
+            },
+        })
+
+    def test_get_page__tops__include_lefts(self):
+        top = self.TopResource.create_item(lefts=[], rights=[])
+        for i in range(4):
+            lefts = [self.LeftResource.create_item(top=top, right_or_none=None) for _ in range(i + 1)]
+            rights = [self.RightResource.create_item(top=top, left_or_none=None) for _ in range(i + 1)]
+            self.TopResource.create_item(lefts=lefts, rights=rights)
+
+        response = self.get("http://server/tops?page[size]=3&include=lefts")
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
+        self.assertEqual(response.json(), {
+            "data": [
+                {
+                    "type": "Top",
+                    "id": "1",
+                    "links": {"self": "http://server/tops/1"},
+                    "relationships": {
+                        "lefts": {
+                            "data": [],
+                            "meta": {"count": 0},
+                        },
+                        "rights": {
+                            "data": [],
+                            "meta": {"count": 0},
+                        },
+                    },
+                },
+                {
+                    "type": "Top",
+                    "id": "4",
+                    "links": {"self": "http://server/tops/4"},
+                    "relationships": {
+                        "lefts": {
+                            "data": [{"id": "2", "type": "Left"}],
+                            "meta": {"count": 1},
+                        },
+                        "rights": {
+                            "data": [{"id": "3", "type": "Right"}],
+                            "meta": {"count": 1},
+                        },
+                    },
+                },
+                {
+                    "type": "Top",
+                    "id": "9",
+                    "links": {"self": "http://server/tops/9"},
+                    "relationships": {
+                        "lefts": {
+                            "data": [{"id": "5", "type": "Left"}, {"id": "6", "type": "Left"}],
+                            "meta": {"count": 2},
+                        },
+                        "rights": {
+                            "data": [{"id": "7", "type": "Right"}, {"id": "8", "type": "Right"}],
+                            "meta": {"count": 2},
+                        },
+                    },
+                },
+            ],
+            "included": [
+                {
+                    "type": "Left",
+                    "id": "2",
+                    "links": {"self": "http://server/lefts/2"},
+                    "relationships": {
+                        "top": {"data": {"type": "Top", "id": "1"}},
+                        "rightOrNone": {"data": None},
+                    },
+                },
+                {
+                    "type": "Left",
+                    "id": "5",
+                    "links": {"self": "http://server/lefts/5"},
+                    "relationships": {
+                        "top": {"data": {"type": "Top", "id": "1"}},
+                        "rightOrNone": {"data": None},
+                    },
+                },
+                {
+                    "type": "Left",
+                    "id": "6",
+                    "links": {"self": "http://server/lefts/6"},
+                    "relationships": {
+                        "top": {"data": {"type": "Top", "id": "1"}},
+                        "rightOrNone": {"data": None},
+                    },
+                },
+            ],
+            "links": {
+                "first": "http://server/tops?page%5Bsize%5D=3&page%5Bnumber%5D=1&include=lefts",
+                "last": "http://server/tops?page%5Bsize%5D=3&page%5Bnumber%5D=2&include=lefts",
+                "next": "http://server/tops?page%5Bsize%5D=3&page%5Bnumber%5D=2&include=lefts",
+                "prev": None,
+            },
+            "meta": {
+                "pagination": {
+                    "count": 5,
+                    "page": 1,
+                    "pages": 2,
+                },
+            },
+        })
+
+    def test_get_page__tops__include_lefts_top(self):
+        top = self.TopResource.create_item(lefts=[], rights=[])
+        for i in range(4):
+            lefts = [self.LeftResource.create_item(top=top, right_or_none=None) for _ in range(i + 1)]
+            rights = [self.RightResource.create_item(top=top, left_or_none=None) for _ in range(i + 1)]
+            self.TopResource.create_item(lefts=lefts, rights=rights)
+
+        response = self.get("http://server/tops?page[size]=3&include=lefts.top")
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
+        self.assertEqual(response.json(), {
+            "data": [
+                {
+                    "type": "Top",
+                    "id": "1",
+                    "links": {"self": "http://server/tops/1"},
+                    "relationships": {
+                        "lefts": {
+                            "data": [],
+                            "meta": {"count": 0},
+                        },
+                        "rights": {
+                            "data": [],
+                            "meta": {"count": 0},
+                        },
+                    },
+                },
+                {
+                    "type": "Top",
+                    "id": "4",
+                    "links": {"self": "http://server/tops/4"},
+                    "relationships": {
+                        "lefts": {
+                            "data": [{"id": "2", "type": "Left"}],
+                            "meta": {"count": 1},
+                        },
+                        "rights": {
+                            "data": [{"id": "3", "type": "Right"}],
+                            "meta": {"count": 1},
+                        },
+                    },
+                },
+                {
+                    "type": "Top",
+                    "id": "9",
+                    "links": {"self": "http://server/tops/9"},
+                    "relationships": {
+                        "lefts": {
+                            "data": [{"id": "5", "type": "Left"}, {"id": "6", "type": "Left"}],
+                            "meta": {"count": 2},
+                        },
+                        "rights": {
+                            "data": [{"id": "7", "type": "Right"}, {"id": "8", "type": "Right"}],
+                            "meta": {"count": 2},
+                        },
+                    },
+                },
+            ],
+            "included": [
+                {
+                    "type": "Left",
+                    "id": "2",
+                    "links": {"self": "http://server/lefts/2"},
+                    "relationships": {
+                        "top": {"data": {"type": "Top", "id": "1"}},
+                        "rightOrNone": {"data": None},
+                    },
+                },
+                {
+                    "type": "Top",
+                    "id": "1",
+                    "links": {"self": "http://server/tops/1"},
+                    "relationships": {
+                        "lefts": {
+                            "data": [],
+                            "meta": {"count": 0},
+                        },
+                        "rights": {
+                            "data": [],
+                            "meta": {"count": 0},
+                        },
+                    },
+                },
+                {
+                    "type": "Left",
+                    "id": "5",
+                    "links": {"self": "http://server/lefts/5"},
+                    "relationships": {
+                        "top": {"data": {"type": "Top", "id": "1"}},
+                        "rightOrNone": {"data": None},
+                    },
+                },
+                {
+                    "type": "Left",
+                    "id": "6",
+                    "links": {"self": "http://server/lefts/6"},
+                    "relationships": {
+                        "top": {"data": {"type": "Top", "id": "1"}},
+                        "rightOrNone": {"data": None},
+                    },
+                },
+            ],
+            "links": {
+                "first": "http://server/tops?page%5Bsize%5D=3&page%5Bnumber%5D=1&include=lefts.top",
+                "last": "http://server/tops?page%5Bsize%5D=3&page%5Bnumber%5D=2&include=lefts.top",
+                "next": "http://server/tops?page%5Bsize%5D=3&page%5Bnumber%5D=2&include=lefts.top",
+                "prev": None,
+            },
+            "meta": {
+                "pagination": {
+                    "count": 5,
+                    "page": 1,
+                    "pages": 2,
+                },
+            },
+        })
+
     def test_update_top__nothing(self):
         self.TopResource.create_item(lefts=[], rights=[])
 
