@@ -149,7 +149,7 @@ class AllAttributesTestCase(TextCaseMixin, TestCase):
     def test_create__insufficient(self):
         response = self.post("http://server/resources", {
             "data": {
-                "type": "Resource",
+                "type": "resource",
                 "attributes": {
                     "plainInt": 57,
                     "secretStr": "My password",
@@ -161,7 +161,7 @@ class AllAttributesTestCase(TextCaseMixin, TestCase):
     def test_create__minimal(self):
         response = self.post("http://server/resources", {
             "data": {
-                "type": "Resource",
+                "type": "resource",
                 "attributes": {
                     "plainInt": 57,
                     "constantStr": "Constant string",
@@ -173,7 +173,7 @@ class AllAttributesTestCase(TextCaseMixin, TestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
         self.assertEqual(response.json(), {
             "data": {
-                "type": "Resource",
+                "type": "resource",
                 "id": "1",
                 "links": {"self": "http://server/resources/1"},
                 "attributes": {
@@ -190,7 +190,7 @@ class AllAttributesTestCase(TextCaseMixin, TestCase):
     def test_create__full(self):
         response = self.post("http://server/resources", {
             "data": {
-                "type": "Resource",
+                "type": "resource",
                 "attributes": {
                     "plainInt": 42,
                     "defaultedDatetime": "2024-01-02T03:04:05+01:00",
@@ -203,7 +203,7 @@ class AllAttributesTestCase(TextCaseMixin, TestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
         self.assertEqual(response.json(), {
             "data": {
-                "type": "Resource",
+                "type": "resource",
                 "id": "1",
                 "links": {"self": "http://server/resources/1"},
                 "attributes": {
@@ -229,7 +229,7 @@ class AllAttributesTestCase(TextCaseMixin, TestCase):
     def test_create__computed(self):
         response = self.post("http://server/resources", {
             "data": {
-                "type": "Resource",
+                "type": "resource",
                 "attributes": {
                     "plainInt": 57,
                     "constantStr": "Constant string",
@@ -247,7 +247,7 @@ class AllAttributesTestCase(TextCaseMixin, TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": {
-                "type": "Resource",
+                "type": "resource",
                 "id": "1",
                 "links": {"self": f"http://server/resources/1"},
                 "attributes": {
@@ -273,7 +273,7 @@ class AllAttributesTestCase(TextCaseMixin, TestCase):
         self.assertEqual(response.json(), {
             "data": [
                 {
-                    "type": "Resource",
+                    "type": "resource",
                     "id": "1",
                     "links": {"self": f"http://server/resources/1"},
                     "attributes": {
@@ -285,7 +285,7 @@ class AllAttributesTestCase(TextCaseMixin, TestCase):
                     },
                 },
                 {
-                    "type": "Resource",
+                    "type": "resource",
                     "id": "2",
                     "links": {"self": f"http://server/resources/2"},
                     "attributes": {
@@ -298,9 +298,9 @@ class AllAttributesTestCase(TextCaseMixin, TestCase):
                 },
             ],
             "links": {
-                "first": "http://server/resources?page%5Bsize%5D=2&page%5Bnumber%5D=1",
-                "last": "http://server/resources?page%5Bsize%5D=2&page%5Bnumber%5D=3",
-                "next": "http://server/resources?page%5Bsize%5D=2&page%5Bnumber%5D=2",
+                "first": "http://server/resources?page%5Bnumber%5D=1",
+                "last": "http://server/resources?page%5Bnumber%5D=3",
+                "next": "http://server/resources?page%5Bnumber%5D=2",
                 "prev": None,
             },
             "meta": {
@@ -321,7 +321,7 @@ class AllAttributesTestCase(TextCaseMixin, TestCase):
         self.assertEqual(response.json(), {
             "data": [
                 {
-                    "type": "Resource",
+                    "type": "resource",
                     "id": "3",
                     "links": {"self": f"http://server/resources/3"},
                     "attributes": {
@@ -333,7 +333,7 @@ class AllAttributesTestCase(TextCaseMixin, TestCase):
                     },
                 },
                 {
-                    "type": "Resource",
+                    "type": "resource",
                     "id": "4",
                     "links": {"self": f"http://server/resources/4"},
                     "attributes": {
@@ -346,10 +346,10 @@ class AllAttributesTestCase(TextCaseMixin, TestCase):
                 },
             ],
             "links": {
-                "first": "http://server/resources?page%5Bsize%5D=2&page%5Bnumber%5D=1",
-                "last": "http://server/resources?page%5Bsize%5D=2&page%5Bnumber%5D=3",
-                "next": "http://server/resources?page%5Bsize%5D=2&page%5Bnumber%5D=3",
-                "prev": "http://server/resources?page%5Bsize%5D=2&page%5Bnumber%5D=1",
+                "first": "http://server/resources?page%5Bnumber%5D=1",
+                "last": "http://server/resources?page%5Bnumber%5D=3",
+                "next": "http://server/resources?page%5Bnumber%5D=3",
+                "prev": "http://server/resources?page%5Bnumber%5D=1",
             },
             "meta": {
                 "pagination": {
@@ -369,7 +369,7 @@ class AllAttributesTestCase(TextCaseMixin, TestCase):
         self.assertEqual(response.json(), {
             "data": [
                 {
-                    "type": "Resource",
+                    "type": "resource",
                     "id": "5",
                     "links": {"self": f"http://server/resources/5"},
                     "attributes": {
@@ -382,10 +382,10 @@ class AllAttributesTestCase(TextCaseMixin, TestCase):
                 },
             ],
             "links": {
-                "first": "http://server/resources?page%5Bsize%5D=2&page%5Bnumber%5D=1",
-                "last": "http://server/resources?page%5Bsize%5D=2&page%5Bnumber%5D=3",
+                "first": "http://server/resources?page%5Bnumber%5D=1",
+                "last": "http://server/resources?page%5Bnumber%5D=3",
                 "next": None,
-                "prev": "http://server/resources?page%5Bsize%5D=2&page%5Bnumber%5D=2",
+                "prev": "http://server/resources?page%5Bnumber%5D=2",
             },
             "meta": {
                 "pagination": {
@@ -405,7 +405,7 @@ class AllAttributesTestCase(TextCaseMixin, TestCase):
         self.assertEqual(response.json(), {
             "data": [
                 {
-                    "type": "Resource",
+                    "type": "resource",
                     "id": "1",
                     "links": {"self": f"http://server/resources/1"},
                     "attributes": {
@@ -417,7 +417,7 @@ class AllAttributesTestCase(TextCaseMixin, TestCase):
                     },
                 },
                 {
-                    "type": "Resource",
+                    "type": "resource",
                     "id": "2",
                     "links": {"self": f"http://server/resources/2"},
                     "attributes": {
@@ -429,7 +429,7 @@ class AllAttributesTestCase(TextCaseMixin, TestCase):
                     },
                 },
                 {
-                    "type": "Resource",
+                    "type": "resource",
                     "id": "3",
                     "links": {"self": f"http://server/resources/3"},
                     "attributes": {
@@ -442,9 +442,9 @@ class AllAttributesTestCase(TextCaseMixin, TestCase):
                 },
             ],
             "links": {
-                "first": "http://server/resources?page%5Bsize%5D=3&page%5Bnumber%5D=1",
-                "last": "http://server/resources?page%5Bsize%5D=3&page%5Bnumber%5D=2",
-                "next": "http://server/resources?page%5Bsize%5D=3&page%5Bnumber%5D=2",
+                "first": "http://server/resources?page%5Bnumber%5D=1&page%5Bsize%5D=3",
+                "last": "http://server/resources?page%5Bnumber%5D=2&page%5Bsize%5D=3",
+                "next": "http://server/resources?page%5Bnumber%5D=2&page%5Bsize%5D=3",
                 "prev": None,
             },
             "meta": {
@@ -465,7 +465,7 @@ class AllAttributesTestCase(TextCaseMixin, TestCase):
         self.assertEqual(response.json(), {
             "data": [
                 {
-                    "type": "Resource",
+                    "type": "resource",
                     "id": "4",
                     "links": {"self": f"http://server/resources/4"},
                     "attributes": {
@@ -477,7 +477,7 @@ class AllAttributesTestCase(TextCaseMixin, TestCase):
                     },
                 },
                 {
-                    "type": "Resource",
+                    "type": "resource",
                     "id": "5",
                     "links": {"self": f"http://server/resources/5"},
                     "attributes": {
@@ -490,10 +490,10 @@ class AllAttributesTestCase(TextCaseMixin, TestCase):
                 },
             ],
             "links": {
-                "first": "http://server/resources?page%5Bsize%5D=3&page%5Bnumber%5D=1",
-                "last": "http://server/resources?page%5Bsize%5D=3&page%5Bnumber%5D=2",
+                "first": "http://server/resources?page%5Bnumber%5D=1&page%5Bsize%5D=3",
+                "last": "http://server/resources?page%5Bnumber%5D=2&page%5Bsize%5D=3",
                 "next": None,
-                "prev": "http://server/resources?page%5Bsize%5D=3&page%5Bnumber%5D=1",
+                "prev": "http://server/resources?page%5Bnumber%5D=1&page%5Bsize%5D=3",
             },
             "meta": {
                 "pagination": {
@@ -513,7 +513,7 @@ class AllAttributesTestCase(TextCaseMixin, TestCase):
         self.assertEqual(response.json(), {
             "data": [
                 {
-                    "type": "Resource",
+                    "type": "resource",
                     "id": "1",
                     "links": {"self": f"http://server/resources/1"},
                     "attributes": {
@@ -525,7 +525,7 @@ class AllAttributesTestCase(TextCaseMixin, TestCase):
                     },
                 },
                 {
-                    "type": "Resource",
+                    "type": "resource",
                     "id": "2",
                     "links": {"self": f"http://server/resources/2"},
                     "attributes": {
@@ -537,7 +537,7 @@ class AllAttributesTestCase(TextCaseMixin, TestCase):
                     },
                 },
                 {
-                    "type": "Resource",
+                    "type": "resource",
                     "id": "3",
                     "links": {"self": f"http://server/resources/3"},
                     "attributes": {
@@ -549,7 +549,7 @@ class AllAttributesTestCase(TextCaseMixin, TestCase):
                     },
                 },
                 {
-                    "type": "Resource",
+                    "type": "resource",
                     "id": "4",
                     "links": {"self": f"http://server/resources/4"},
                     "attributes": {
@@ -561,7 +561,7 @@ class AllAttributesTestCase(TextCaseMixin, TestCase):
                     },
                 },
                 {
-                    "type": "Resource",
+                    "type": "resource",
                     "id": "5",
                     "links": {"self": f"http://server/resources/5"},
                     "attributes": {
@@ -574,8 +574,8 @@ class AllAttributesTestCase(TextCaseMixin, TestCase):
                 },
             ],
             "links": {
-                "first": "http://server/resources?page%5Bsize%5D=5&page%5Bnumber%5D=1",
-                "last": "http://server/resources?page%5Bsize%5D=5&page%5Bnumber%5D=1",
+                "first": "http://server/resources?page%5Bnumber%5D=1&page%5Bsize%5D=5",
+                "last": "http://server/resources?page%5Bnumber%5D=1&page%5Bsize%5D=5",
                 "next": None,
                 "prev": None,
             },
@@ -598,7 +598,7 @@ class AllAttributesTestCase(TextCaseMixin, TestCase):
         self.assertEqual(response.json(), {
             "data": [
                 {
-                    "type": "Resource",
+                    "type": "resource",
                     "id": "1",
                     "links": {"self": f"http://server/resources/1"},
                     "attributes": {
@@ -610,7 +610,7 @@ class AllAttributesTestCase(TextCaseMixin, TestCase):
                     },
                 },
                 {
-                    "type": "Resource",
+                    "type": "resource",
                     "id": "3",
                     "links": {"self": f"http://server/resources/3"},
                     "attributes": {
@@ -623,9 +623,9 @@ class AllAttributesTestCase(TextCaseMixin, TestCase):
                 },
             ],
             "links": {
-                "first": "http://server/resources?page%5Bsize%5D=2&page%5Bnumber%5D=1&filter%5BcomputedStr%5D=ODD",
-                "last": "http://server/resources?page%5Bsize%5D=2&page%5Bnumber%5D=2&filter%5BcomputedStr%5D=ODD",
-                "next": "http://server/resources?page%5Bsize%5D=2&page%5Bnumber%5D=2&filter%5BcomputedStr%5D=ODD",
+                "first": "http://server/resources?page%5Bnumber%5D=1&filter%5BcomputedStr%5D=ODD",
+                "last": "http://server/resources?page%5Bnumber%5D=2&filter%5BcomputedStr%5D=ODD",
+                "next": "http://server/resources?page%5Bnumber%5D=2&filter%5BcomputedStr%5D=ODD",
                 "prev": None,
             },
             "meta": {
@@ -647,7 +647,7 @@ class AllAttributesTestCase(TextCaseMixin, TestCase):
         self.assertEqual(response.json(), {
             "data": [
                 {
-                    "type": "Resource",
+                    "type": "resource",
                     "id": "5",
                     "links": {"self": f"http://server/resources/5"},
                     "attributes": {
@@ -660,10 +660,10 @@ class AllAttributesTestCase(TextCaseMixin, TestCase):
                 },
             ],
             "links": {
-                "first": "http://server/resources?page%5Bsize%5D=2&page%5Bnumber%5D=1&filter%5BcomputedStr%5D=ODD",
-                "last": "http://server/resources?page%5Bsize%5D=2&page%5Bnumber%5D=2&filter%5BcomputedStr%5D=ODD",
+                "first": "http://server/resources?page%5Bnumber%5D=1&filter%5BcomputedStr%5D=ODD",
+                "last": "http://server/resources?page%5Bnumber%5D=2&filter%5BcomputedStr%5D=ODD",
                 "next": None,
-                "prev": "http://server/resources?page%5Bsize%5D=2&page%5Bnumber%5D=1&filter%5BcomputedStr%5D=ODD",
+                "prev": "http://server/resources?page%5Bnumber%5D=1&filter%5BcomputedStr%5D=ODD",
             },
             "meta": {
                 "pagination": {
@@ -679,7 +679,7 @@ class AllAttributesTestCase(TextCaseMixin, TestCase):
 
         response = self.patch(f"http://server/resources/1", {
             "data": {
-                "type": "Resource",
+                "type": "resource",
                 "id": "1",
                 # No "attributes", no "relationships"
             },
@@ -687,7 +687,7 @@ class AllAttributesTestCase(TextCaseMixin, TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": {
-                "type": "Resource",
+                "type": "resource",
                 "id": "1",
                 "links": {"self": f"http://server/resources/1"},
                 "attributes": {
@@ -714,7 +714,7 @@ class AllAttributesTestCase(TextCaseMixin, TestCase):
 
         response = self.patch(f"http://server/resources/1", {
             "data": {
-                "type": "Resource",
+                "type": "resource",
                 "id": "1",
                 "attributes": {
                     "plainInt": 57,
@@ -724,7 +724,7 @@ class AllAttributesTestCase(TextCaseMixin, TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": {
-                "type": "Resource",
+                "type": "resource",
                 "id": "1",
                 "links": {"self": f"http://server/resources/1"},
                 "attributes": {
@@ -751,7 +751,7 @@ class AllAttributesTestCase(TextCaseMixin, TestCase):
 
         response = self.patch(f"http://server/resources/1", {
             "data": {
-                "type": "Resource",
+                "type": "resource",
                 "id": "1",
                 "attributes": {
                     "plainInt": 57,
@@ -763,7 +763,7 @@ class AllAttributesTestCase(TextCaseMixin, TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": {
-                "type": "Resource",
+                "type": "resource",
                 "id": "1",
                 "links": {"self": f"http://server/resources/1"},
                 "attributes": {
@@ -790,7 +790,7 @@ class AllAttributesTestCase(TextCaseMixin, TestCase):
 
         response = self.patch(f"http://server/resources/1", {
             "data": {
-                "type": "Resource",
+                "type": "resource",
                 "id": "1",
                 "attributes": {
                     "computedStr": "Refused on update",
@@ -804,7 +804,7 @@ class AllAttributesTestCase(TextCaseMixin, TestCase):
 
         response = self.patch(f"http://server/resources/1", {
             "data": {
-                "type": "Resource",
+                "type": "resource",
                 "id": "1",
                 "attributes": {
                     "constantStr": "Refused on update",
@@ -862,14 +862,14 @@ class EmptyTestCase(TextCaseMixin, TestCase):
     def test_create(self):
         response = self.post("http://server/emptyResources", {
             "data": {
-                "type": "EmptyResource",
+                "type": "emptyResource",
                 # No "attributes", no "relationships"
             },
         })
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
         self.assertEqual(response.json(), {
             "data": {
-                "type": "EmptyResource",
+                "type": "emptyResource",
                 "id": "1",
                 "links": {"self": "http://server/emptyResources/1"},
                 # No "attributes", no "relationships"
@@ -879,7 +879,7 @@ class EmptyTestCase(TextCaseMixin, TestCase):
     def test_create__weirdly_empty(self):
         response = self.post("http://server/emptyResources", {
             "data": {
-                "type": "EmptyResource",
+                "type": "emptyResource",
                 "attributes": {},
                 "relationships": {},
             },
@@ -887,7 +887,7 @@ class EmptyTestCase(TextCaseMixin, TestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
         self.assertEqual(response.json(), {
             "data": {
-                "type": "EmptyResource",
+                "type": "emptyResource",
                 "id": "1",
                 "links": {"self": "http://server/emptyResources/1"},
                 # No "attributes", no "relationships"
@@ -1004,13 +1004,13 @@ class AllRelationsTestCase(TextCaseMixin, TestCase):
     def test_create_top__minimal(self):
         response = self.post("http://server/tops", {
             "data": {
-                "type": "TopResource",
+                "type": "topResource",
             },
         })
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
         self.assertEqual(response.json(), {
             "data": {
-                "type": "Top",
+                "type": "top",
                 "id": "1",
                 "links": {"self": "http://server/tops/1"},
                 "relationships": {
@@ -1038,14 +1038,14 @@ class AllRelationsTestCase(TextCaseMixin, TestCase):
     def test_create_top__weirdly_empty(self):
         response = self.post("http://server/tops", {
             "data": {
-                "type": "TopResource",
+                "type": "topResource",
                 "relationships": {},
             },
         })
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
         self.assertEqual(response.json(), {
             "data": {
-                "type": "Top",
+                "type": "top",
                 "id": "1",
                 "links": {"self": "http://server/tops/1"},
                 "relationships": {
@@ -1068,7 +1068,7 @@ class AllRelationsTestCase(TextCaseMixin, TestCase):
     def test_create_top__explicitly_empty(self):
         response = self.post("http://server/tops", {
             "data": {
-                "type": "TopResource",
+                "type": "topResource",
                 "relationships": {
                     "lefts": {"data": []},
                     "rights": {"data": []},
@@ -1078,7 +1078,7 @@ class AllRelationsTestCase(TextCaseMixin, TestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
         self.assertEqual(response.json(), {
             "data": {
-                "type": "Top",
+                "type": "top",
                 "id": "1",
                 "links": {"self": "http://server/tops/1"},
                 "relationships": {
@@ -1107,26 +1107,26 @@ class AllRelationsTestCase(TextCaseMixin, TestCase):
 
         response = self.post("http://server/tops", {
             "data": {
-                "type": "TopResource",
+                "type": "topResource",
                 "relationships": {
-                    "lefts": {"data": [{"type": "Left", "id": "2"}, {"type": "Left", "id": "3"}]},
-                    "rights": {"data": [{"type": "Right", "id": "4"}, {"type": "Right", "id": "5"}]},
+                    "lefts": {"data": [{"type": "left", "id": "2"}, {"type": "left", "id": "3"}]},
+                    "rights": {"data": [{"type": "right", "id": "4"}, {"type": "right", "id": "5"}]},
                 },
             },
         })
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
         self.assertEqual(response.json(), {
             "data": {
-                "type": "Top",
+                "type": "top",
                 "id": "6",
                 "links": {"self": "http://server/tops/6"},
                 "relationships": {
                     "lefts": {
-                        "data": [{"type": "Left", "id": "2"}, {"type": "Left", "id": "3"}],
+                        "data": [{"type": "left", "id": "2"}, {"type": "left", "id": "3"}],
                         "meta": {"count": 2},
                     },
                     "rights": {
-                        "data": [{"type": "Right", "id": "4"}, {"type": "Right", "id": "5"}],
+                        "data": [{"type": "right", "id": "4"}, {"type": "right", "id": "5"}],
                         "meta": {"count": 2},
                     },
                 },
@@ -1142,20 +1142,20 @@ class AllRelationsTestCase(TextCaseMixin, TestCase):
 
         response = self.post("http://server/lefts", {
             "data": {
-                "type": "Left",
+                "type": "left",
                 "relationships": {
-                    "top": {"data": {"type": "Top", "id": "1"}},
+                    "top": {"data": {"type": "top", "id": "1"}},
                 },
             },
         })
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
         self.assertEqual(response.json(), {
             "data": {
-                "type": "Left",
+                "type": "left",
                 "id": "2",
                 "links": {"self": "http://server/lefts/2"},
                 "relationships": {
-                    "top": {"data": {"type": "Top", "id": "1"}},
+                    "top": {"data": {"type": "top", "id": "1"}},
                     "rightOrNone": {"data": None},
                 },
             },
@@ -1170,9 +1170,9 @@ class AllRelationsTestCase(TextCaseMixin, TestCase):
 
         response = self.post("http://server/lefts", {
             "data": {
-                "type": "Left",
+                "type": "left",
                 "relationships": {
-                    "top": {"data": {"type": "Top", "id": "1"}},
+                    "top": {"data": {"type": "top", "id": "1"}},
                     "rightOrNone": {"data": None},
                 },
             },
@@ -1180,11 +1180,11 @@ class AllRelationsTestCase(TextCaseMixin, TestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
         self.assertEqual(response.json(), {
             "data": {
-                "type": "Left",
+                "type": "left",
                 "id": "2",
                 "links": {"self": "http://server/lefts/2"},
                 "relationships": {
-                    "top": {"data": {"type": "Top", "id": "1"}},
+                    "top": {"data": {"type": "top", "id": "1"}},
                     "rightOrNone": {"data": None},
                 },
             },
@@ -1200,22 +1200,22 @@ class AllRelationsTestCase(TextCaseMixin, TestCase):
 
         response = self.post("http://server/lefts", {
             "data": {
-                "type": "Left",
+                "type": "left",
                 "relationships": {
-                    "top": {"data": {"type": "Top", "id": "1"}},
-                    "rightOrNone": {"data": {"type": "Right", "id": "2"}},
+                    "top": {"data": {"type": "top", "id": "1"}},
+                    "rightOrNone": {"data": {"type": "right", "id": "2"}},
                 },
             },
         })
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
         self.assertEqual(response.json(), {
             "data": {
-                "type": "Left",
+                "type": "left",
                 "id": "3",
                 "links": {"self": "http://server/lefts/3"},
                 "relationships": {
-                    "top": {"data": {"type": "Top", "id": "1"}},
-                    "rightOrNone": {"data": {"type": "Right", "id": "2"}},
+                    "top": {"data": {"type": "top", "id": "1"}},
+                    "rightOrNone": {"data": {"type": "right", "id": "2"}},
                 },
             },
         })
@@ -1236,7 +1236,7 @@ class AllRelationsTestCase(TextCaseMixin, TestCase):
         self.assertEqual(response.json(), {
             "data": [
                 {
-                    "type": "Top",
+                    "type": "top",
                     "id": "1",
                     "links": {"self": "http://server/tops/1"},
                     "relationships": {
@@ -1251,40 +1251,40 @@ class AllRelationsTestCase(TextCaseMixin, TestCase):
                     },
                 },
                 {
-                    "type": "Top",
+                    "type": "top",
                     "id": "4",
                     "links": {"self": "http://server/tops/4"},
                     "relationships": {
                         "lefts": {
-                            "data": [{"id": "2", "type": "Left"}],
+                            "data": [{"id": "2", "type": "left"}],
                             "meta": {"count": 1},
                         },
                         "rights": {
-                            "data": [{"id": "3", "type": "Right"}],
+                            "data": [{"id": "3", "type": "right"}],
                             "meta": {"count": 1},
                         },
                     },
                 },
                 {
-                    "type": "Top",
+                    "type": "top",
                     "id": "9",
                     "links": {"self": "http://server/tops/9"},
                     "relationships": {
                         "lefts": {
-                            "data": [{"id": "5", "type": "Left"}, {"id": "6", "type": "Left"}],
+                            "data": [{"id": "5", "type": "left"}, {"id": "6", "type": "left"}],
                             "meta": {"count": 2},
                         },
                         "rights": {
-                            "data": [{"id": "7", "type": "Right"}, {"id": "8", "type": "Right"}],
+                            "data": [{"id": "7", "type": "right"}, {"id": "8", "type": "right"}],
                             "meta": {"count": 2},
                         },
                     },
                 },
             ],
             "links": {
-                "first": "http://server/tops?page%5Bsize%5D=3&page%5Bnumber%5D=1",
-                "last": "http://server/tops?page%5Bsize%5D=3&page%5Bnumber%5D=2",
-                "next": "http://server/tops?page%5Bsize%5D=3&page%5Bnumber%5D=2",
+                "first": "http://server/tops?page%5Bnumber%5D=1&page%5Bsize%5D=3",
+                "last": "http://server/tops?page%5Bnumber%5D=2&page%5Bsize%5D=3",
+                "next": "http://server/tops?page%5Bnumber%5D=2&page%5Bsize%5D=3",
                 "prev": None,
             },
             "meta": {
@@ -1308,7 +1308,7 @@ class AllRelationsTestCase(TextCaseMixin, TestCase):
         self.assertEqual(response.json(), {
             "data": [
                 {
-                    "type": "Top",
+                    "type": "top",
                     "id": "1",
                     "links": {"self": "http://server/tops/1"},
                     "relationships": {
@@ -1323,31 +1323,31 @@ class AllRelationsTestCase(TextCaseMixin, TestCase):
                     },
                 },
                 {
-                    "type": "Top",
+                    "type": "top",
                     "id": "4",
                     "links": {"self": "http://server/tops/4"},
                     "relationships": {
                         "lefts": {
-                            "data": [{"id": "2", "type": "Left"}],
+                            "data": [{"id": "2", "type": "left"}],
                             "meta": {"count": 1},
                         },
                         "rights": {
-                            "data": [{"id": "3", "type": "Right"}],
+                            "data": [{"id": "3", "type": "right"}],
                             "meta": {"count": 1},
                         },
                     },
                 },
                 {
-                    "type": "Top",
+                    "type": "top",
                     "id": "9",
                     "links": {"self": "http://server/tops/9"},
                     "relationships": {
                         "lefts": {
-                            "data": [{"id": "5", "type": "Left"}, {"id": "6", "type": "Left"}],
+                            "data": [{"id": "5", "type": "left"}, {"id": "6", "type": "left"}],
                             "meta": {"count": 2},
                         },
                         "rights": {
-                            "data": [{"id": "7", "type": "Right"}, {"id": "8", "type": "Right"}],
+                            "data": [{"id": "7", "type": "right"}, {"id": "8", "type": "right"}],
                             "meta": {"count": 2},
                         },
                     },
@@ -1355,9 +1355,9 @@ class AllRelationsTestCase(TextCaseMixin, TestCase):
             ],
             "included": [],
             "links": {
-                "first": "http://server/tops?page%5Bsize%5D=3&page%5Bnumber%5D=1&include=",
-                "last": "http://server/tops?page%5Bsize%5D=3&page%5Bnumber%5D=2&include=",
-                "next": "http://server/tops?page%5Bsize%5D=3&page%5Bnumber%5D=2&include=",
+                "first": "http://server/tops?page%5Bnumber%5D=1&page%5Bsize%5D=3&include=",
+                "last": "http://server/tops?page%5Bnumber%5D=2&page%5Bsize%5D=3&include=",
+                "next": "http://server/tops?page%5Bnumber%5D=2&page%5Bsize%5D=3&include=",
                 "prev": None,
             },
             "meta": {
@@ -1381,7 +1381,7 @@ class AllRelationsTestCase(TextCaseMixin, TestCase):
         self.assertEqual(response.json(), {
             "data": [
                 {
-                    "type": "Top",
+                    "type": "top",
                     "id": "1",
                     "links": {"self": "http://server/tops/1"},
                     "relationships": {
@@ -1396,31 +1396,31 @@ class AllRelationsTestCase(TextCaseMixin, TestCase):
                     },
                 },
                 {
-                    "type": "Top",
+                    "type": "top",
                     "id": "4",
                     "links": {"self": "http://server/tops/4"},
                     "relationships": {
                         "lefts": {
-                            "data": [{"id": "2", "type": "Left"}],
+                            "data": [{"id": "2", "type": "left"}],
                             "meta": {"count": 1},
                         },
                         "rights": {
-                            "data": [{"id": "3", "type": "Right"}],
+                            "data": [{"id": "3", "type": "right"}],
                             "meta": {"count": 1},
                         },
                     },
                 },
                 {
-                    "type": "Top",
+                    "type": "top",
                     "id": "9",
                     "links": {"self": "http://server/tops/9"},
                     "relationships": {
                         "lefts": {
-                            "data": [{"id": "5", "type": "Left"}, {"id": "6", "type": "Left"}],
+                            "data": [{"id": "5", "type": "left"}, {"id": "6", "type": "left"}],
                             "meta": {"count": 2},
                         },
                         "rights": {
-                            "data": [{"id": "7", "type": "Right"}, {"id": "8", "type": "Right"}],
+                            "data": [{"id": "7", "type": "right"}, {"id": "8", "type": "right"}],
                             "meta": {"count": 2},
                         },
                     },
@@ -1428,37 +1428,37 @@ class AllRelationsTestCase(TextCaseMixin, TestCase):
             ],
             "included": [
                 {
-                    "type": "Left",
+                    "type": "left",
                     "id": "2",
                     "links": {"self": "http://server/lefts/2"},
                     "relationships": {
-                        "top": {"data": {"type": "Top", "id": "1"}},
+                        "top": {"data": {"type": "top", "id": "1"}},
                         "rightOrNone": {"data": None},
                     },
                 },
                 {
-                    "type": "Left",
+                    "type": "left",
                     "id": "5",
                     "links": {"self": "http://server/lefts/5"},
                     "relationships": {
-                        "top": {"data": {"type": "Top", "id": "1"}},
+                        "top": {"data": {"type": "top", "id": "1"}},
                         "rightOrNone": {"data": None},
                     },
                 },
                 {
-                    "type": "Left",
+                    "type": "left",
                     "id": "6",
                     "links": {"self": "http://server/lefts/6"},
                     "relationships": {
-                        "top": {"data": {"type": "Top", "id": "1"}},
+                        "top": {"data": {"type": "top", "id": "1"}},
                         "rightOrNone": {"data": None},
                     },
                 },
             ],
             "links": {
-                "first": "http://server/tops?page%5Bsize%5D=3&page%5Bnumber%5D=1&include=lefts",
-                "last": "http://server/tops?page%5Bsize%5D=3&page%5Bnumber%5D=2&include=lefts",
-                "next": "http://server/tops?page%5Bsize%5D=3&page%5Bnumber%5D=2&include=lefts",
+                "first": "http://server/tops?page%5Bnumber%5D=1&page%5Bsize%5D=3&include=lefts",
+                "last": "http://server/tops?page%5Bnumber%5D=2&page%5Bsize%5D=3&include=lefts",
+                "next": "http://server/tops?page%5Bnumber%5D=2&page%5Bsize%5D=3&include=lefts",
                 "prev": None,
             },
             "meta": {
@@ -1482,7 +1482,7 @@ class AllRelationsTestCase(TextCaseMixin, TestCase):
         self.assertEqual(response.json(), {
             "data": [
                 {
-                    "type": "Top",
+                    "type": "top",
                     "id": "1",
                     "links": {"self": "http://server/tops/1"},
                     "relationships": {
@@ -1497,31 +1497,31 @@ class AllRelationsTestCase(TextCaseMixin, TestCase):
                     },
                 },
                 {
-                    "type": "Top",
+                    "type": "top",
                     "id": "4",
                     "links": {"self": "http://server/tops/4"},
                     "relationships": {
                         "lefts": {
-                            "data": [{"id": "2", "type": "Left"}],
+                            "data": [{"id": "2", "type": "left"}],
                             "meta": {"count": 1},
                         },
                         "rights": {
-                            "data": [{"id": "3", "type": "Right"}],
+                            "data": [{"id": "3", "type": "right"}],
                             "meta": {"count": 1},
                         },
                     },
                 },
                 {
-                    "type": "Top",
+                    "type": "top",
                     "id": "9",
                     "links": {"self": "http://server/tops/9"},
                     "relationships": {
                         "lefts": {
-                            "data": [{"id": "5", "type": "Left"}, {"id": "6", "type": "Left"}],
+                            "data": [{"id": "5", "type": "left"}, {"id": "6", "type": "left"}],
                             "meta": {"count": 2},
                         },
                         "rights": {
-                            "data": [{"id": "7", "type": "Right"}, {"id": "8", "type": "Right"}],
+                            "data": [{"id": "7", "type": "right"}, {"id": "8", "type": "right"}],
                             "meta": {"count": 2},
                         },
                     },
@@ -1529,16 +1529,16 @@ class AllRelationsTestCase(TextCaseMixin, TestCase):
             ],
             "included": [
                 {
-                    "type": "Left",
+                    "type": "left",
                     "id": "2",
                     "links": {"self": "http://server/lefts/2"},
                     "relationships": {
-                        "top": {"data": {"type": "Top", "id": "1"}},
+                        "top": {"data": {"type": "top", "id": "1"}},
                         "rightOrNone": {"data": None},
                     },
                 },
                 {
-                    "type": "Top",
+                    "type": "top",
                     "id": "1",
                     "links": {"self": "http://server/tops/1"},
                     "relationships": {
@@ -1553,28 +1553,28 @@ class AllRelationsTestCase(TextCaseMixin, TestCase):
                     },
                 },
                 {
-                    "type": "Left",
+                    "type": "left",
                     "id": "5",
                     "links": {"self": "http://server/lefts/5"},
                     "relationships": {
-                        "top": {"data": {"type": "Top", "id": "1"}},
+                        "top": {"data": {"type": "top", "id": "1"}},
                         "rightOrNone": {"data": None},
                     },
                 },
                 {
-                    "type": "Left",
+                    "type": "left",
                     "id": "6",
                     "links": {"self": "http://server/lefts/6"},
                     "relationships": {
-                        "top": {"data": {"type": "Top", "id": "1"}},
+                        "top": {"data": {"type": "top", "id": "1"}},
                         "rightOrNone": {"data": None},
                     },
                 },
             ],
             "links": {
-                "first": "http://server/tops?page%5Bsize%5D=3&page%5Bnumber%5D=1&include=lefts.top",
-                "last": "http://server/tops?page%5Bsize%5D=3&page%5Bnumber%5D=2&include=lefts.top",
-                "next": "http://server/tops?page%5Bsize%5D=3&page%5Bnumber%5D=2&include=lefts.top",
+                "first": "http://server/tops?page%5Bnumber%5D=1&page%5Bsize%5D=3&include=lefts.top",
+                "last": "http://server/tops?page%5Bnumber%5D=2&page%5Bsize%5D=3&include=lefts.top",
+                "next": "http://server/tops?page%5Bnumber%5D=2&page%5Bsize%5D=3&include=lefts.top",
                 "prev": None,
             },
             "meta": {
@@ -1591,7 +1591,7 @@ class AllRelationsTestCase(TextCaseMixin, TestCase):
 
         response = self.patch("http://server/tops/1", {
             "data": {
-                "type": "TopResource",
+                "type": "topResource",
                 "id": "1",
                 # No "attributes", no "relationships"
             },
@@ -1599,7 +1599,7 @@ class AllRelationsTestCase(TextCaseMixin, TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": {
-                "type": "Top",
+                "type": "top",
                 "id": "1",
                 "links": {"self": "http://server/tops/1"},
                 "relationships": {
@@ -1628,26 +1628,26 @@ class AllRelationsTestCase(TextCaseMixin, TestCase):
 
         response = self.patch("http://server/tops/3", {
             "data": {
-                "type": "TopResource",
+                "type": "topResource",
                 "id": "3",
                 "relationships": {
-                    "lefts": {"data": [{"type": "Left", "id": "4"}]},
+                    "lefts": {"data": [{"type": "left", "id": "4"}]},
                 }
             },
         })
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": {
-                "type": "Top",
+                "type": "top",
                 "id": "3",
                 "links": {"self": "http://server/tops/3"},
                 "relationships": {
                     "lefts": {
-                        "data": [{"type": "Left", "id": "4"}],
+                        "data": [{"type": "left", "id": "4"}],
                         "meta": {"count": 1},
                     },
                     "rights": {
-                        "data": [{"type": "Right", "id": "2"}],
+                        "data": [{"type": "right", "id": "2"}],
                         "meta": {"count": 1},
                     },
                 },
@@ -1669,18 +1669,18 @@ class AllRelationsTestCase(TextCaseMixin, TestCase):
 
         response = self.patch("http://server/tops/4", {
             "data": {
-                "type": "TopResource",
+                "type": "topResource",
                 "id": "4",
                 "relationships": {
                     "lefts": {"data": []},
-                    "rights": {"data": [{"type": "Right", "id": "5"}, {"type": "Right", "id": "6"}]},
+                    "rights": {"data": [{"type": "right", "id": "5"}, {"type": "right", "id": "6"}]},
                 }
             },
         })
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": {
-                "type": "Top",
+                "type": "top",
                 "id": "4",
                 "links": {"self": "http://server/tops/4"},
                 "relationships": {
@@ -1689,7 +1689,7 @@ class AllRelationsTestCase(TextCaseMixin, TestCase):
                         "meta": {"count": 0},
                     },
                     "rights": {
-                        "data": [{"type": "Right", "id": "5"}, {"type": "Right", "id": "6"}],
+                        "data": [{"type": "right", "id": "5"}, {"type": "right", "id": "6"}],
                         "meta": {"count": 2},
                     },
                 },
@@ -1707,7 +1707,7 @@ class AllRelationsTestCase(TextCaseMixin, TestCase):
 
         response = self.patch("http://server/lefts/2", {
             "data": {
-                "type": "Left",
+                "type": "left",
                 "id": "2",
                 # No "attributes", no "relationships"
             },
@@ -1715,11 +1715,11 @@ class AllRelationsTestCase(TextCaseMixin, TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": {
-                "type": "Left",
+                "type": "left",
                 "id": "2",
                 "links": {"self": "http://server/lefts/2"},
                 "relationships": {
-                    "top": {"data": {"type": "Top", "id": "1"}},
+                    "top": {"data": {"type": "top", "id": "1"}},
                     "rightOrNone": {"data": None},
                 },
             },
@@ -1737,22 +1737,22 @@ class AllRelationsTestCase(TextCaseMixin, TestCase):
 
         response = self.patch("http://server/lefts/2", {
             "data": {
-                "type": "Left",
+                "type": "left",
                 "id": "2",
                 "relationships": {
-                    "rightOrNone": {"data": {"type": "Right", "id": "3"}},
+                    "rightOrNone": {"data": {"type": "right", "id": "3"}},
                 },
             },
         })
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": {
-                "type": "Left",
+                "type": "left",
                 "id": "2",
                 "links": {"self": "http://server/lefts/2"},
                 "relationships": {
-                    "top": {"data": {"type": "Top", "id": "1"}},
-                    "rightOrNone": {"data": {"type": "Right", "id": "3"}},
+                    "top": {"data": {"type": "top", "id": "1"}},
+                    "rightOrNone": {"data": {"type": "right", "id": "3"}},
                 },
             },
         })
@@ -1768,7 +1768,7 @@ class AllRelationsTestCase(TextCaseMixin, TestCase):
 
         response = self.patch("http://server/lefts/2", {
             "data": {
-                "type": "Left",
+                "type": "left",
                 "id": "2",
                 "relationships": {
                     "rightOrNone": {"data": None},
@@ -1778,11 +1778,11 @@ class AllRelationsTestCase(TextCaseMixin, TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": {
-                "type": "Left",
+                "type": "left",
                 "id": "2",
                 "links": {"self": "http://server/lefts/2"},
                 "relationships": {
-                    "top": {"data": {"type": "Top", "id": "1"}},
+                    "top": {"data": {"type": "top", "id": "1"}},
                     "rightOrNone": {"data": None},
                 },
             },
@@ -1800,21 +1800,21 @@ class AllRelationsTestCase(TextCaseMixin, TestCase):
 
         response = self.patch("http://server/lefts/2", {
             "data": {
-                "type": "Left",
+                "type": "left",
                 "id": "2",
                 "relationships": {
-                    "top": {"data": {"type": "Top", "id": "3"}},
+                    "top": {"data": {"type": "top", "id": "3"}},
                 },
             },
         })
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": {
-                "type": "Left",
+                "type": "left",
                 "id": "2",
                 "links": {"self": "http://server/lefts/2"},
                 "relationships": {
-                    "top": {"data": {"type": "Top", "id": "3"}},
+                    "top": {"data": {"type": "top", "id": "3"}},
                     "rightOrNone": {"data": None},
                 },
             },
@@ -1831,7 +1831,7 @@ class AllRelationsTestCase(TextCaseMixin, TestCase):
 
         response = self.patch("http://server/lefts/2", {
             "data": {
-                "type": "Left",
+                "type": "left",
                 "id": "2",
                 "relationships": {
                     "top": {"data": None},

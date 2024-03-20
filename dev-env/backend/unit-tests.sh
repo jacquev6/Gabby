@@ -6,8 +6,6 @@ set -o pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/."
 
 
-git checkout -- ../../backend/openapi.json
-
 shuffle=""
 if [ $# -eq 0 ]
 then

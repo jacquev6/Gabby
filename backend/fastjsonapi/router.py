@@ -1,4 +1,5 @@
 # from __future__ import annotations  # This doesn't work because we're annotating with local types. So this code won't work on Python 4. OK.
+from types import UnionType
 from typing import Annotated
 from urllib.parse import urlencode
 
@@ -19,10 +20,10 @@ class JSONAPIResponse(JSONResponse):
 
 def make_jsonapi_router(resources):
     resource_models = {
-        resource.Model: humps.pascalize(resource.singular_name) for resource in resources
+        resource.Model: humps.camelize(resource.singular_name) for resource in resources
     }
     resources = {
-        humps.pascalize(resource.singular_name): CompiledResource(resource_models, resource)
+        humps.camelize(resource.singular_name): CompiledResource(resource_models, resource)
         for resource in resources
     }
 
@@ -105,12 +106,10 @@ class CompiledResource:
 
         assert humps.is_snakecase(resource.singular_name)
         self.singular_name = resource.singular_name
-        # self.singularName = humps.camelize(resource.singular_name)
-        self.SingularName = humps.pascalize(resource.singular_name)
+        self.singularName = humps.camelize(resource.singular_name)
         assert humps.is_snakecase(resource.plural_name)
         self.plural_name = resource.plural_name
         self.pluralName = humps.camelize(resource.plural_name)
-        self.PluralName = humps.pascalize(resource.plural_name)
 
         self.Model = resource.Model
 
@@ -178,7 +177,7 @@ class CompiledResource:
                     update_input_attributes[name] = (info.annotation, None)
 
         Filters = create_model(
-            f"{self.SingularName}-Filters",
+            f"{self.singularName}-Filters",
             **{
                 key: (value | None, ...)
                 for (key, value) in filterable_attributes.items()
@@ -190,6 +189,10 @@ class CompiledResource:
         def filter_code():
             yield "def filters("
             for (name, annotation) in filterable_attributes.items():
+                if isinstance(annotation, UnionType):
+                    assert len(annotation.__args__) == 2
+                    assert annotation.__args__[1] is type(None)
+                    annotation = annotation.__args__[0]
                 yield f"    {name}: Annotated[{annotation.__name__}, Query(alias='filter[{humps.camelize(name)}]')] = None,"
             yield "):"
             yield "    return Filters("
@@ -200,7 +203,7 @@ class CompiledResource:
         self.filters = filter_globals["filters"]
 
         CreateInputDataAttributes = create_model(
-            f"{self.SingularName}-CreateInput-Data-Attributes",
+            f"{self.singularName}-CreateInput-Data-Attributes",
             **create_input_attributes,
             __config__ = ConfigDict(extra="forbid"),
         )
@@ -208,7 +211,7 @@ class CompiledResource:
         create_input_attributes_default = CreateInputDataAttributes() if create_input_attributes_can_be_defaulted else ...
 
         CreateInputDataRelationships = create_model(
-            f"{self.SingularName}-CreateInput-Data-Relationships",
+            f"{self.singularName}-CreateInput-Data-Relationships",
             **create_input_relationships,
             __config__ = ConfigDict(extra="forbid"),
         )
@@ -216,10 +219,10 @@ class CompiledResource:
         create_input_relationships_default = CreateInputDataRelationships() if create_input_relationships_can_be_defaulted else ...
 
         self.CreateInputModel = create_model(
-            f"{self.SingularName}-CreateInput",
+            f"{self.singularName}-CreateInput",
             data=(
                 create_model(
-                    f"{self.SingularName}-CreateInput-Data",
+                    f"{self.singularName}-CreateInput-Data",
                     type=(str, ...),
                     attributes=(CreateInputDataAttributes, create_input_attributes_default),
                     relationships=(CreateInputDataRelationships, create_input_relationships_default),
@@ -231,12 +234,12 @@ class CompiledResource:
         )
 
         OutputItemModel = create_model(
-            f"{self.SingularName}-OutputItem",
+            f"{self.singularName}-OutputItem",
             type=(str, ...),
             id=(str, ...),
             links=(
                 create_model(
-                    f"{self.SingularName}-OutputItem-Links",
+                    f"{self.singularName}-OutputItem-Links",
                     self=(str, ...),
                     __config__ = ConfigDict(extra="forbid"),
                 ),
@@ -244,7 +247,7 @@ class CompiledResource:
             ),
             **(dict(attributes=(
                 create_model(
-                    f"{self.SingularName}-OutputItem-Attributes",
+                    f"{self.singularName}-OutputItem-Attributes",
                     **output_attributes,
                     __config__ = ConfigDict(extra="forbid"),
                 ),
@@ -252,7 +255,7 @@ class CompiledResource:
             )) if output_attributes else {}),
             **(dict(relationships=(
                 create_model(
-                    f"{self.SingularName}-OutputItem-Relationships",
+                    f"{self.singularName}-OutputItem-Relationships",
                     **output_relationships,
                     __config__ = ConfigDict(extra="forbid"),
                 ),
@@ -262,13 +265,14 @@ class CompiledResource:
         )
 
         self.ItemOutputModel = create_model(
-            f"{self.SingularName}-ItemOutput",
+            f"{self.singularName}-ItemOutput",
             data=(OutputItemModel, ...),
+            included=(list, None),
             __config__ = ConfigDict(extra="forbid"),
         )
 
         self.PageOutputModel = create_model(
-            f"{self.PluralName}-PageOutput",
+            f"{self.singularName}-PageOutput",
             data=(list[OutputItemModel], ...),
             meta=(PageMetaModel, ...),
             links=(PageLinksModel, ...),
@@ -277,22 +281,22 @@ class CompiledResource:
         )
 
         UpdateInputDataAttributes = create_model(
-            f"{self.SingularName}-UpdateInput-Data-Attributes",
+            f"{self.singularName}-UpdateInput-Data-Attributes",
             **update_input_attributes,
             __config__ = ConfigDict(extra="forbid"),
         )
 
         UpdateInputDataRelationships = create_model(
-            f"{self.SingularName}-UpdateInput-Data-Relationships",
+            f"{self.singularName}-UpdateInput-Data-Relationships",
             **update_input_relationships,
             __config__ = ConfigDict(extra="forbid"),
         )
 
         self.UpdateInputModel = create_model(
-            f"{self.SingularName}-UpdateInput",
+            f"{self.singularName}-UpdateInput",
             data=(
                 create_model(
-                    f"{self.SingularName}-UpdateInput-Data",
+                    f"{self.singularName}-UpdateInput-Data",
                     type=(str, ...),
                     id=(str, ...),
                     attributes=(UpdateInputDataAttributes, UpdateInputDataAttributes()),
@@ -366,9 +370,10 @@ class CompiledResource:
         base_url = urls.make(f"get_{self.plural_name}")
         def make_url_for_page(number):
             qs = {
-                "page[size]": page_size,
                 "page[number]": number,
             }
+            if page_size != self.default_page_size:
+                qs["page[size]"] = page_size
             if raw_include is not None:
                 qs["include"] = raw_include
             for (key, value) in sorted(filters.model_dump(exclude_unset=True).items()):
@@ -402,7 +407,7 @@ class CompiledResource:
 
     def make_item(self, resources, *, urls, item):
         r = {
-            "type": self.SingularName,
+            "type": self.singularName,
             "id": item.id,
             "links": {"self": urls.make(f"get_{self.singular_name}", id=item.id)},
         }

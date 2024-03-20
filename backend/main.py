@@ -8,10 +8,6 @@ django.setup()  # Required before importing any module that uses the Django ORM
 from opinion_ping.resources import PingsResource
 
 
-api_router = fastapi.APIRouter()
-
-api_router.include_router(make_jsonapi_router(PingsResource()))
-
 app = fastapi.FastAPI(
     # We want '/reset-...' to be at the root, so can't use root_path="/api", so we have to specify these individually:
     openapi_url="/api/openapi.json",
@@ -27,7 +23,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(api_router, prefix="/api")
+app.include_router(
+    make_jsonapi_router([PingsResource()]),
+    prefix="/api",
+)
 
 # Test-only URL. Not in 'api/...' to avoid accidentally exposing it.
 if django.conf.settings.EXPOSE_RESET_FOR_TESTS_URL:

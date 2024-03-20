@@ -29,248 +29,6 @@
         "title": "HTTPValidationError",
         "type": "object"
       },
-      "Left-CreateInput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/Left-CreateInput-Data"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "Left-CreateInput",
-        "type": "object"
-      },
-      "Left-CreateInput-Data": {
-        "additionalProperties": false,
-        "properties": {
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Left-CreateInput-Data-Attributes"
-              }
-            ],
-            "default": {}
-          },
-          "relationships": {
-            "$ref": "#/components/schemas/Left-CreateInput-Data-Relationships"
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "relationships"
-        ],
-        "title": "Left-CreateInput-Data",
-        "type": "object"
-      },
-      "Left-CreateInput-Data-Attributes": {
-        "additionalProperties": false,
-        "properties": {},
-        "title": "Left-CreateInput-Data-Attributes",
-        "type": "object"
-      },
-      "Left-CreateInput-Data-Relationships": {
-        "additionalProperties": false,
-        "properties": {
-          "rightOrNone": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/OptionalRelationship"
-              }
-            ],
-            "default": {}
-          },
-          "top": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
-          }
-        },
-        "required": [
-          "top"
-        ],
-        "title": "Left-CreateInput-Data-Relationships",
-        "type": "object"
-      },
-      "Left-ItemOutput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/Left-OutputItem"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "Left-ItemOutput",
-        "type": "object"
-      },
-      "Left-OutputItem": {
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "links": {
-            "$ref": "#/components/schemas/Left-OutputItem-Links"
-          },
-          "relationships": {
-            "$ref": "#/components/schemas/Left-OutputItem-Relationships"
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "id",
-          "links",
-          "relationships"
-        ],
-        "title": "Left-OutputItem",
-        "type": "object"
-      },
-      "Left-OutputItem-Links": {
-        "additionalProperties": false,
-        "properties": {
-          "self": {
-            "title": "Self",
-            "type": "string"
-          }
-        },
-        "required": [
-          "self"
-        ],
-        "title": "Left-OutputItem-Links",
-        "type": "object"
-      },
-      "Left-OutputItem-Relationships": {
-        "additionalProperties": false,
-        "properties": {
-          "rightOrNone": {
-            "$ref": "#/components/schemas/OptionalRelationship"
-          },
-          "top": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
-          }
-        },
-        "required": [
-          "top",
-          "rightOrNone"
-        ],
-        "title": "Left-OutputItem-Relationships",
-        "type": "object"
-      },
-      "Left-UpdateInput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/Left-UpdateInput-Data"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "Left-UpdateInput",
-        "type": "object"
-      },
-      "Left-UpdateInput-Data": {
-        "additionalProperties": false,
-        "properties": {
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Left-UpdateInput-Data-Attributes"
-              }
-            ],
-            "default": {}
-          },
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Left-UpdateInput-Data-Relationships"
-              }
-            ],
-            "default": {}
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "id"
-        ],
-        "title": "Left-UpdateInput-Data",
-        "type": "object"
-      },
-      "Left-UpdateInput-Data-Attributes": {
-        "additionalProperties": false,
-        "properties": {},
-        "title": "Left-UpdateInput-Data-Attributes",
-        "type": "object"
-      },
-      "Left-UpdateInput-Data-Relationships": {
-        "additionalProperties": false,
-        "properties": {
-          "rightOrNone": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/OptionalRelationship"
-              }
-            ]
-          },
-          "top": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/MandatoryRelationship"
-              }
-            ]
-          }
-        },
-        "title": "Left-UpdateInput-Data-Relationships",
-        "type": "object"
-      },
-      "Lefts-PageOutput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "items": {
-              "$ref": "#/components/schemas/Left-OutputItem"
-            },
-            "title": "Data",
-            "type": "array"
-          },
-          "included": {
-            "items": {},
-            "title": "Included",
-            "type": "array"
-          },
-          "links": {
-            "$ref": "#/components/schemas/PageLinksModel"
-          },
-          "meta": {
-            "$ref": "#/components/schemas/PageMetaModel"
-          }
-        },
-        "required": [
-          "data",
-          "meta",
-          "links"
-        ],
-        "title": "Lefts-PageOutput",
-        "type": "object"
-      },
       "MandatoryRelationship": {
         "additionalProperties": false,
         "properties": {
@@ -435,507 +193,6 @@
         "title": "Pagination",
         "type": "object"
       },
-      "Right-CreateInput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/Right-CreateInput-Data"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "Right-CreateInput",
-        "type": "object"
-      },
-      "Right-CreateInput-Data": {
-        "additionalProperties": false,
-        "properties": {
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Right-CreateInput-Data-Attributes"
-              }
-            ],
-            "default": {}
-          },
-          "relationships": {
-            "$ref": "#/components/schemas/Right-CreateInput-Data-Relationships"
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "relationships"
-        ],
-        "title": "Right-CreateInput-Data",
-        "type": "object"
-      },
-      "Right-CreateInput-Data-Attributes": {
-        "additionalProperties": false,
-        "properties": {},
-        "title": "Right-CreateInput-Data-Attributes",
-        "type": "object"
-      },
-      "Right-CreateInput-Data-Relationships": {
-        "additionalProperties": false,
-        "properties": {
-          "leftOrNone": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/OptionalRelationship"
-              }
-            ],
-            "default": {}
-          },
-          "top": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
-          }
-        },
-        "required": [
-          "top"
-        ],
-        "title": "Right-CreateInput-Data-Relationships",
-        "type": "object"
-      },
-      "Right-ItemOutput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/Right-OutputItem"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "Right-ItemOutput",
-        "type": "object"
-      },
-      "Right-OutputItem": {
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "links": {
-            "$ref": "#/components/schemas/Right-OutputItem-Links"
-          },
-          "relationships": {
-            "$ref": "#/components/schemas/Right-OutputItem-Relationships"
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "id",
-          "links",
-          "relationships"
-        ],
-        "title": "Right-OutputItem",
-        "type": "object"
-      },
-      "Right-OutputItem-Links": {
-        "additionalProperties": false,
-        "properties": {
-          "self": {
-            "title": "Self",
-            "type": "string"
-          }
-        },
-        "required": [
-          "self"
-        ],
-        "title": "Right-OutputItem-Links",
-        "type": "object"
-      },
-      "Right-OutputItem-Relationships": {
-        "additionalProperties": false,
-        "properties": {
-          "leftOrNone": {
-            "$ref": "#/components/schemas/OptionalRelationship"
-          },
-          "top": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
-          }
-        },
-        "required": [
-          "top",
-          "leftOrNone"
-        ],
-        "title": "Right-OutputItem-Relationships",
-        "type": "object"
-      },
-      "Right-UpdateInput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/Right-UpdateInput-Data"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "Right-UpdateInput",
-        "type": "object"
-      },
-      "Right-UpdateInput-Data": {
-        "additionalProperties": false,
-        "properties": {
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Right-UpdateInput-Data-Attributes"
-              }
-            ],
-            "default": {}
-          },
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Right-UpdateInput-Data-Relationships"
-              }
-            ],
-            "default": {}
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "id"
-        ],
-        "title": "Right-UpdateInput-Data",
-        "type": "object"
-      },
-      "Right-UpdateInput-Data-Attributes": {
-        "additionalProperties": false,
-        "properties": {},
-        "title": "Right-UpdateInput-Data-Attributes",
-        "type": "object"
-      },
-      "Right-UpdateInput-Data-Relationships": {
-        "additionalProperties": false,
-        "properties": {
-          "leftOrNone": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/OptionalRelationship"
-              }
-            ]
-          },
-          "top": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/MandatoryRelationship"
-              }
-            ]
-          }
-        },
-        "title": "Right-UpdateInput-Data-Relationships",
-        "type": "object"
-      },
-      "Rights-PageOutput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "items": {
-              "$ref": "#/components/schemas/Right-OutputItem"
-            },
-            "title": "Data",
-            "type": "array"
-          },
-          "included": {
-            "items": {},
-            "title": "Included",
-            "type": "array"
-          },
-          "links": {
-            "$ref": "#/components/schemas/PageLinksModel"
-          },
-          "meta": {
-            "$ref": "#/components/schemas/PageMetaModel"
-          }
-        },
-        "required": [
-          "data",
-          "meta",
-          "links"
-        ],
-        "title": "Rights-PageOutput",
-        "type": "object"
-      },
-      "Top-CreateInput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/Top-CreateInput-Data"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "Top-CreateInput",
-        "type": "object"
-      },
-      "Top-CreateInput-Data": {
-        "additionalProperties": false,
-        "properties": {
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Top-CreateInput-Data-Attributes"
-              }
-            ],
-            "default": {}
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Top-CreateInput-Data-Relationships"
-              }
-            ],
-            "default": {
-              "lefts": {
-                "data": []
-              },
-              "rights": {
-                "data": []
-              }
-            }
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type"
-        ],
-        "title": "Top-CreateInput-Data",
-        "type": "object"
-      },
-      "Top-CreateInput-Data-Attributes": {
-        "additionalProperties": false,
-        "properties": {},
-        "title": "Top-CreateInput-Data-Attributes",
-        "type": "object"
-      },
-      "Top-CreateInput-Data-Relationships": {
-        "additionalProperties": false,
-        "properties": {
-          "lefts": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/CreateInputListRelationship"
-              }
-            ],
-            "default": {
-              "data": []
-            }
-          },
-          "rights": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/CreateInputListRelationship"
-              }
-            ],
-            "default": {
-              "data": []
-            }
-          }
-        },
-        "title": "Top-CreateInput-Data-Relationships",
-        "type": "object"
-      },
-      "Top-ItemOutput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/Top-OutputItem"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "Top-ItemOutput",
-        "type": "object"
-      },
-      "Top-OutputItem": {
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "links": {
-            "$ref": "#/components/schemas/Top-OutputItem-Links"
-          },
-          "relationships": {
-            "$ref": "#/components/schemas/Top-OutputItem-Relationships"
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "id",
-          "links",
-          "relationships"
-        ],
-        "title": "Top-OutputItem",
-        "type": "object"
-      },
-      "Top-OutputItem-Links": {
-        "additionalProperties": false,
-        "properties": {
-          "self": {
-            "title": "Self",
-            "type": "string"
-          }
-        },
-        "required": [
-          "self"
-        ],
-        "title": "Top-OutputItem-Links",
-        "type": "object"
-      },
-      "Top-OutputItem-Relationships": {
-        "additionalProperties": false,
-        "properties": {
-          "lefts": {
-            "$ref": "#/components/schemas/OutputListRelationship"
-          },
-          "rights": {
-            "$ref": "#/components/schemas/OutputListRelationship"
-          }
-        },
-        "required": [
-          "lefts",
-          "rights"
-        ],
-        "title": "Top-OutputItem-Relationships",
-        "type": "object"
-      },
-      "Top-UpdateInput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/Top-UpdateInput-Data"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "Top-UpdateInput",
-        "type": "object"
-      },
-      "Top-UpdateInput-Data": {
-        "additionalProperties": false,
-        "properties": {
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Top-UpdateInput-Data-Attributes"
-              }
-            ],
-            "default": {}
-          },
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Top-UpdateInput-Data-Relationships"
-              }
-            ],
-            "default": {}
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "id"
-        ],
-        "title": "Top-UpdateInput-Data",
-        "type": "object"
-      },
-      "Top-UpdateInput-Data-Attributes": {
-        "additionalProperties": false,
-        "properties": {},
-        "title": "Top-UpdateInput-Data-Attributes",
-        "type": "object"
-      },
-      "Top-UpdateInput-Data-Relationships": {
-        "additionalProperties": false,
-        "properties": {
-          "lefts": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/UpdateInputListRelationship"
-              }
-            ]
-          },
-          "rights": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/UpdateInputListRelationship"
-              }
-            ]
-          }
-        },
-        "title": "Top-UpdateInput-Data-Relationships",
-        "type": "object"
-      },
-      "Tops-PageOutput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "items": {
-              "$ref": "#/components/schemas/Top-OutputItem"
-            },
-            "title": "Data",
-            "type": "array"
-          },
-          "included": {
-            "items": {},
-            "title": "Included",
-            "type": "array"
-          },
-          "links": {
-            "$ref": "#/components/schemas/PageLinksModel"
-          },
-          "meta": {
-            "$ref": "#/components/schemas/PageMetaModel"
-          }
-        },
-        "required": [
-          "data",
-          "meta",
-          "links"
-        ],
-        "title": "Tops-PageOutput",
-        "type": "object"
-      },
       "UpdateInputListRelationship": {
         "additionalProperties": false,
         "properties": {
@@ -985,6 +242,764 @@
         ],
         "title": "ValidationError",
         "type": "object"
+      },
+      "left-CreateInput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/left-CreateInput-Data"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "left-CreateInput",
+        "type": "object"
+      },
+      "left-CreateInput-Data": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/left-CreateInput-Data-Attributes"
+              }
+            ],
+            "default": {}
+          },
+          "relationships": {
+            "$ref": "#/components/schemas/left-CreateInput-Data-Relationships"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "relationships"
+        ],
+        "title": "left-CreateInput-Data",
+        "type": "object"
+      },
+      "left-CreateInput-Data-Attributes": {
+        "additionalProperties": false,
+        "properties": {},
+        "title": "left-CreateInput-Data-Attributes",
+        "type": "object"
+      },
+      "left-CreateInput-Data-Relationships": {
+        "additionalProperties": false,
+        "properties": {
+          "rightOrNone": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OptionalRelationship"
+              }
+            ],
+            "default": {}
+          },
+          "top": {
+            "$ref": "#/components/schemas/MandatoryRelationship"
+          }
+        },
+        "required": [
+          "top"
+        ],
+        "title": "left-CreateInput-Data-Relationships",
+        "type": "object"
+      },
+      "left-ItemOutput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/left-OutputItem"
+          },
+          "included": {
+            "items": {},
+            "title": "Included",
+            "type": "array"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "left-ItemOutput",
+        "type": "object"
+      },
+      "left-OutputItem": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "links": {
+            "$ref": "#/components/schemas/left-OutputItem-Links"
+          },
+          "relationships": {
+            "$ref": "#/components/schemas/left-OutputItem-Relationships"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "links",
+          "relationships"
+        ],
+        "title": "left-OutputItem",
+        "type": "object"
+      },
+      "left-OutputItem-Links": {
+        "additionalProperties": false,
+        "properties": {
+          "self": {
+            "title": "Self",
+            "type": "string"
+          }
+        },
+        "required": [
+          "self"
+        ],
+        "title": "left-OutputItem-Links",
+        "type": "object"
+      },
+      "left-OutputItem-Relationships": {
+        "additionalProperties": false,
+        "properties": {
+          "rightOrNone": {
+            "$ref": "#/components/schemas/OptionalRelationship"
+          },
+          "top": {
+            "$ref": "#/components/schemas/MandatoryRelationship"
+          }
+        },
+        "required": [
+          "top",
+          "rightOrNone"
+        ],
+        "title": "left-OutputItem-Relationships",
+        "type": "object"
+      },
+      "left-PageOutput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/left-OutputItem"
+            },
+            "title": "Data",
+            "type": "array"
+          },
+          "included": {
+            "items": {},
+            "title": "Included",
+            "type": "array"
+          },
+          "links": {
+            "$ref": "#/components/schemas/PageLinksModel"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/PageMetaModel"
+          }
+        },
+        "required": [
+          "data",
+          "meta",
+          "links"
+        ],
+        "title": "left-PageOutput",
+        "type": "object"
+      },
+      "left-UpdateInput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/left-UpdateInput-Data"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "left-UpdateInput",
+        "type": "object"
+      },
+      "left-UpdateInput-Data": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/left-UpdateInput-Data-Attributes"
+              }
+            ],
+            "default": {}
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/left-UpdateInput-Data-Relationships"
+              }
+            ],
+            "default": {}
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "left-UpdateInput-Data",
+        "type": "object"
+      },
+      "left-UpdateInput-Data-Attributes": {
+        "additionalProperties": false,
+        "properties": {},
+        "title": "left-UpdateInput-Data-Attributes",
+        "type": "object"
+      },
+      "left-UpdateInput-Data-Relationships": {
+        "additionalProperties": false,
+        "properties": {
+          "rightOrNone": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OptionalRelationship"
+              }
+            ]
+          },
+          "top": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MandatoryRelationship"
+              }
+            ]
+          }
+        },
+        "title": "left-UpdateInput-Data-Relationships",
+        "type": "object"
+      },
+      "right-CreateInput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/right-CreateInput-Data"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "right-CreateInput",
+        "type": "object"
+      },
+      "right-CreateInput-Data": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/right-CreateInput-Data-Attributes"
+              }
+            ],
+            "default": {}
+          },
+          "relationships": {
+            "$ref": "#/components/schemas/right-CreateInput-Data-Relationships"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "relationships"
+        ],
+        "title": "right-CreateInput-Data",
+        "type": "object"
+      },
+      "right-CreateInput-Data-Attributes": {
+        "additionalProperties": false,
+        "properties": {},
+        "title": "right-CreateInput-Data-Attributes",
+        "type": "object"
+      },
+      "right-CreateInput-Data-Relationships": {
+        "additionalProperties": false,
+        "properties": {
+          "leftOrNone": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OptionalRelationship"
+              }
+            ],
+            "default": {}
+          },
+          "top": {
+            "$ref": "#/components/schemas/MandatoryRelationship"
+          }
+        },
+        "required": [
+          "top"
+        ],
+        "title": "right-CreateInput-Data-Relationships",
+        "type": "object"
+      },
+      "right-ItemOutput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/right-OutputItem"
+          },
+          "included": {
+            "items": {},
+            "title": "Included",
+            "type": "array"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "right-ItemOutput",
+        "type": "object"
+      },
+      "right-OutputItem": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "links": {
+            "$ref": "#/components/schemas/right-OutputItem-Links"
+          },
+          "relationships": {
+            "$ref": "#/components/schemas/right-OutputItem-Relationships"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "links",
+          "relationships"
+        ],
+        "title": "right-OutputItem",
+        "type": "object"
+      },
+      "right-OutputItem-Links": {
+        "additionalProperties": false,
+        "properties": {
+          "self": {
+            "title": "Self",
+            "type": "string"
+          }
+        },
+        "required": [
+          "self"
+        ],
+        "title": "right-OutputItem-Links",
+        "type": "object"
+      },
+      "right-OutputItem-Relationships": {
+        "additionalProperties": false,
+        "properties": {
+          "leftOrNone": {
+            "$ref": "#/components/schemas/OptionalRelationship"
+          },
+          "top": {
+            "$ref": "#/components/schemas/MandatoryRelationship"
+          }
+        },
+        "required": [
+          "top",
+          "leftOrNone"
+        ],
+        "title": "right-OutputItem-Relationships",
+        "type": "object"
+      },
+      "right-PageOutput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/right-OutputItem"
+            },
+            "title": "Data",
+            "type": "array"
+          },
+          "included": {
+            "items": {},
+            "title": "Included",
+            "type": "array"
+          },
+          "links": {
+            "$ref": "#/components/schemas/PageLinksModel"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/PageMetaModel"
+          }
+        },
+        "required": [
+          "data",
+          "meta",
+          "links"
+        ],
+        "title": "right-PageOutput",
+        "type": "object"
+      },
+      "right-UpdateInput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/right-UpdateInput-Data"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "right-UpdateInput",
+        "type": "object"
+      },
+      "right-UpdateInput-Data": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/right-UpdateInput-Data-Attributes"
+              }
+            ],
+            "default": {}
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/right-UpdateInput-Data-Relationships"
+              }
+            ],
+            "default": {}
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "right-UpdateInput-Data",
+        "type": "object"
+      },
+      "right-UpdateInput-Data-Attributes": {
+        "additionalProperties": false,
+        "properties": {},
+        "title": "right-UpdateInput-Data-Attributes",
+        "type": "object"
+      },
+      "right-UpdateInput-Data-Relationships": {
+        "additionalProperties": false,
+        "properties": {
+          "leftOrNone": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OptionalRelationship"
+              }
+            ]
+          },
+          "top": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MandatoryRelationship"
+              }
+            ]
+          }
+        },
+        "title": "right-UpdateInput-Data-Relationships",
+        "type": "object"
+      },
+      "top-CreateInput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/top-CreateInput-Data"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "top-CreateInput",
+        "type": "object"
+      },
+      "top-CreateInput-Data": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/top-CreateInput-Data-Attributes"
+              }
+            ],
+            "default": {}
+          },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/top-CreateInput-Data-Relationships"
+              }
+            ],
+            "default": {
+              "lefts": {
+                "data": []
+              },
+              "rights": {
+                "data": []
+              }
+            }
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type"
+        ],
+        "title": "top-CreateInput-Data",
+        "type": "object"
+      },
+      "top-CreateInput-Data-Attributes": {
+        "additionalProperties": false,
+        "properties": {},
+        "title": "top-CreateInput-Data-Attributes",
+        "type": "object"
+      },
+      "top-CreateInput-Data-Relationships": {
+        "additionalProperties": false,
+        "properties": {
+          "lefts": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CreateInputListRelationship"
+              }
+            ],
+            "default": {
+              "data": []
+            }
+          },
+          "rights": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CreateInputListRelationship"
+              }
+            ],
+            "default": {
+              "data": []
+            }
+          }
+        },
+        "title": "top-CreateInput-Data-Relationships",
+        "type": "object"
+      },
+      "top-ItemOutput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/top-OutputItem"
+          },
+          "included": {
+            "items": {},
+            "title": "Included",
+            "type": "array"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "top-ItemOutput",
+        "type": "object"
+      },
+      "top-OutputItem": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "links": {
+            "$ref": "#/components/schemas/top-OutputItem-Links"
+          },
+          "relationships": {
+            "$ref": "#/components/schemas/top-OutputItem-Relationships"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "links",
+          "relationships"
+        ],
+        "title": "top-OutputItem",
+        "type": "object"
+      },
+      "top-OutputItem-Links": {
+        "additionalProperties": false,
+        "properties": {
+          "self": {
+            "title": "Self",
+            "type": "string"
+          }
+        },
+        "required": [
+          "self"
+        ],
+        "title": "top-OutputItem-Links",
+        "type": "object"
+      },
+      "top-OutputItem-Relationships": {
+        "additionalProperties": false,
+        "properties": {
+          "lefts": {
+            "$ref": "#/components/schemas/OutputListRelationship"
+          },
+          "rights": {
+            "$ref": "#/components/schemas/OutputListRelationship"
+          }
+        },
+        "required": [
+          "lefts",
+          "rights"
+        ],
+        "title": "top-OutputItem-Relationships",
+        "type": "object"
+      },
+      "top-PageOutput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/top-OutputItem"
+            },
+            "title": "Data",
+            "type": "array"
+          },
+          "included": {
+            "items": {},
+            "title": "Included",
+            "type": "array"
+          },
+          "links": {
+            "$ref": "#/components/schemas/PageLinksModel"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/PageMetaModel"
+          }
+        },
+        "required": [
+          "data",
+          "meta",
+          "links"
+        ],
+        "title": "top-PageOutput",
+        "type": "object"
+      },
+      "top-UpdateInput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/top-UpdateInput-Data"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "top-UpdateInput",
+        "type": "object"
+      },
+      "top-UpdateInput-Data": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/top-UpdateInput-Data-Attributes"
+              }
+            ],
+            "default": {}
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/top-UpdateInput-Data-Relationships"
+              }
+            ],
+            "default": {}
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "top-UpdateInput-Data",
+        "type": "object"
+      },
+      "top-UpdateInput-Data-Attributes": {
+        "additionalProperties": false,
+        "properties": {},
+        "title": "top-UpdateInput-Data-Attributes",
+        "type": "object"
+      },
+      "top-UpdateInput-Data-Relationships": {
+        "additionalProperties": false,
+        "properties": {
+          "lefts": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UpdateInputListRelationship"
+              }
+            ]
+          },
+          "rights": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UpdateInputListRelationship"
+              }
+            ]
+          }
+        },
+        "title": "top-UpdateInput-Data-Relationships",
+        "type": "object"
       }
     }
   },
@@ -1033,7 +1048,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Lefts-PageOutput"
+                  "$ref": "#/components/schemas/left-PageOutput"
                 }
               }
             },
@@ -1069,7 +1084,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Left-CreateInput"
+                "$ref": "#/components/schemas/left-CreateInput"
               }
             }
           },
@@ -1080,7 +1095,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Left-ItemOutput"
+                  "$ref": "#/components/schemas/left-ItemOutput"
                 }
               }
             },
@@ -1158,7 +1173,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Left-ItemOutput"
+                  "$ref": "#/components/schemas/left-ItemOutput"
                 }
               }
             },
@@ -1203,7 +1218,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Left-UpdateInput"
+                "$ref": "#/components/schemas/left-UpdateInput"
               }
             }
           },
@@ -1214,7 +1229,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Left-ItemOutput"
+                  "$ref": "#/components/schemas/left-ItemOutput"
                 }
               }
             },
@@ -1273,7 +1288,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Rights-PageOutput"
+                  "$ref": "#/components/schemas/right-PageOutput"
                 }
               }
             },
@@ -1309,7 +1324,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Right-CreateInput"
+                "$ref": "#/components/schemas/right-CreateInput"
               }
             }
           },
@@ -1320,7 +1335,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Right-ItemOutput"
+                  "$ref": "#/components/schemas/right-ItemOutput"
                 }
               }
             },
@@ -1398,7 +1413,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Right-ItemOutput"
+                  "$ref": "#/components/schemas/right-ItemOutput"
                 }
               }
             },
@@ -1443,7 +1458,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Right-UpdateInput"
+                "$ref": "#/components/schemas/right-UpdateInput"
               }
             }
           },
@@ -1454,7 +1469,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Right-ItemOutput"
+                  "$ref": "#/components/schemas/right-ItemOutput"
                 }
               }
             },
@@ -1513,7 +1528,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Tops-PageOutput"
+                  "$ref": "#/components/schemas/top-PageOutput"
                 }
               }
             },
@@ -1549,7 +1564,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Top-CreateInput"
+                "$ref": "#/components/schemas/top-CreateInput"
               }
             }
           },
@@ -1560,7 +1575,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Top-ItemOutput"
+                  "$ref": "#/components/schemas/top-ItemOutput"
                 }
               }
             },
@@ -1638,7 +1653,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Top-ItemOutput"
+                  "$ref": "#/components/schemas/top-ItemOutput"
                 }
               }
             },
@@ -1683,7 +1698,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Top-UpdateInput"
+                "$ref": "#/components/schemas/top-UpdateInput"
               }
             }
           },
@@ -1694,7 +1709,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Top-ItemOutput"
+                  "$ref": "#/components/schemas/top-ItemOutput"
                 }
               }
             },

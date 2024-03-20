@@ -94,279 +94,6 @@
         "title": "Pagination",
         "type": "object"
       },
-      "Resource-CreateInput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/Resource-CreateInput-Data"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "Resource-CreateInput",
-        "type": "object"
-      },
-      "Resource-CreateInput-Data": {
-        "additionalProperties": false,
-        "properties": {
-          "attributes": {
-            "$ref": "#/components/schemas/Resource-CreateInput-Data-Attributes"
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Resource-CreateInput-Data-Relationships"
-              }
-            ],
-            "default": {}
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "attributes"
-        ],
-        "title": "Resource-CreateInput-Data",
-        "type": "object"
-      },
-      "Resource-CreateInput-Data-Attributes": {
-        "additionalProperties": false,
-        "properties": {
-          "constantStr": {
-            "title": "Constantstr",
-            "type": "string"
-          },
-          "defaultedConstantFloat": {
-            "default": 3.14,
-            "title": "Defaultedconstantfloat",
-            "type": "number"
-          },
-          "defaultedDatetime": {
-            "default": "2024-03-18T15:38:15Z",
-            "format": "date-time",
-            "title": "Defaulteddatetime",
-            "type": "string"
-          },
-          "plainInt": {
-            "title": "Plainint",
-            "type": "integer"
-          },
-          "secretStr": {
-            "title": "Secretstr",
-            "type": "string"
-          }
-        },
-        "required": [
-          "plainInt",
-          "constantStr",
-          "secretStr"
-        ],
-        "title": "Resource-CreateInput-Data-Attributes",
-        "type": "object"
-      },
-      "Resource-CreateInput-Data-Relationships": {
-        "additionalProperties": false,
-        "properties": {},
-        "title": "Resource-CreateInput-Data-Relationships",
-        "type": "object"
-      },
-      "Resource-ItemOutput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/Resource-OutputItem"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "Resource-ItemOutput",
-        "type": "object"
-      },
-      "Resource-OutputItem": {
-        "additionalProperties": false,
-        "properties": {
-          "attributes": {
-            "$ref": "#/components/schemas/Resource-OutputItem-Attributes"
-          },
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "links": {
-            "$ref": "#/components/schemas/Resource-OutputItem-Links"
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "id",
-          "links",
-          "attributes"
-        ],
-        "title": "Resource-OutputItem",
-        "type": "object"
-      },
-      "Resource-OutputItem-Attributes": {
-        "additionalProperties": false,
-        "properties": {
-          "computedStr": {
-            "title": "Computedstr",
-            "type": "string"
-          },
-          "constantStr": {
-            "title": "Constantstr",
-            "type": "string"
-          },
-          "defaultedConstantFloat": {
-            "title": "Defaultedconstantfloat",
-            "type": "number"
-          },
-          "defaultedDatetime": {
-            "format": "date-time",
-            "title": "Defaulteddatetime",
-            "type": "string"
-          },
-          "plainInt": {
-            "title": "Plainint",
-            "type": "integer"
-          }
-        },
-        "required": [
-          "plainInt",
-          "defaultedDatetime",
-          "constantStr",
-          "defaultedConstantFloat",
-          "computedStr"
-        ],
-        "title": "Resource-OutputItem-Attributes",
-        "type": "object"
-      },
-      "Resource-OutputItem-Links": {
-        "additionalProperties": false,
-        "properties": {
-          "self": {
-            "title": "Self",
-            "type": "string"
-          }
-        },
-        "required": [
-          "self"
-        ],
-        "title": "Resource-OutputItem-Links",
-        "type": "object"
-      },
-      "Resource-UpdateInput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/Resource-UpdateInput-Data"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "Resource-UpdateInput",
-        "type": "object"
-      },
-      "Resource-UpdateInput-Data": {
-        "additionalProperties": false,
-        "properties": {
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Resource-UpdateInput-Data-Attributes"
-              }
-            ],
-            "default": {}
-          },
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Resource-UpdateInput-Data-Relationships"
-              }
-            ],
-            "default": {}
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "id"
-        ],
-        "title": "Resource-UpdateInput-Data",
-        "type": "object"
-      },
-      "Resource-UpdateInput-Data-Attributes": {
-        "additionalProperties": false,
-        "properties": {
-          "defaultedDatetime": {
-            "format": "date-time",
-            "title": "Defaulteddatetime",
-            "type": "string"
-          },
-          "plainInt": {
-            "title": "Plainint",
-            "type": "integer"
-          },
-          "secretStr": {
-            "title": "Secretstr",
-            "type": "string"
-          }
-        },
-        "title": "Resource-UpdateInput-Data-Attributes",
-        "type": "object"
-      },
-      "Resource-UpdateInput-Data-Relationships": {
-        "additionalProperties": false,
-        "properties": {},
-        "title": "Resource-UpdateInput-Data-Relationships",
-        "type": "object"
-      },
-      "Resources-PageOutput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "items": {
-              "$ref": "#/components/schemas/Resource-OutputItem"
-            },
-            "title": "Data",
-            "type": "array"
-          },
-          "included": {
-            "items": {},
-            "title": "Included",
-            "type": "array"
-          },
-          "links": {
-            "$ref": "#/components/schemas/PageLinksModel"
-          },
-          "meta": {
-            "$ref": "#/components/schemas/PageMetaModel"
-          }
-        },
-        "required": [
-          "data",
-          "meta",
-          "links"
-        ],
-        "title": "Resources-PageOutput",
-        "type": "object"
-      },
       "ValidationError": {
         "properties": {
           "loc": {
@@ -398,6 +125,284 @@
           "type"
         ],
         "title": "ValidationError",
+        "type": "object"
+      },
+      "resource-CreateInput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/resource-CreateInput-Data"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "resource-CreateInput",
+        "type": "object"
+      },
+      "resource-CreateInput-Data": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "$ref": "#/components/schemas/resource-CreateInput-Data-Attributes"
+          },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resource-CreateInput-Data-Relationships"
+              }
+            ],
+            "default": {}
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "attributes"
+        ],
+        "title": "resource-CreateInput-Data",
+        "type": "object"
+      },
+      "resource-CreateInput-Data-Attributes": {
+        "additionalProperties": false,
+        "properties": {
+          "constantStr": {
+            "title": "Constantstr",
+            "type": "string"
+          },
+          "defaultedConstantFloat": {
+            "default": 3.14,
+            "title": "Defaultedconstantfloat",
+            "type": "number"
+          },
+          "defaultedDatetime": {
+            "default": "2024-03-18T15:38:15Z",
+            "format": "date-time",
+            "title": "Defaulteddatetime",
+            "type": "string"
+          },
+          "plainInt": {
+            "title": "Plainint",
+            "type": "integer"
+          },
+          "secretStr": {
+            "title": "Secretstr",
+            "type": "string"
+          }
+        },
+        "required": [
+          "plainInt",
+          "constantStr",
+          "secretStr"
+        ],
+        "title": "resource-CreateInput-Data-Attributes",
+        "type": "object"
+      },
+      "resource-CreateInput-Data-Relationships": {
+        "additionalProperties": false,
+        "properties": {},
+        "title": "resource-CreateInput-Data-Relationships",
+        "type": "object"
+      },
+      "resource-ItemOutput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/resource-OutputItem"
+          },
+          "included": {
+            "items": {},
+            "title": "Included",
+            "type": "array"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "resource-ItemOutput",
+        "type": "object"
+      },
+      "resource-OutputItem": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "$ref": "#/components/schemas/resource-OutputItem-Attributes"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "links": {
+            "$ref": "#/components/schemas/resource-OutputItem-Links"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "links",
+          "attributes"
+        ],
+        "title": "resource-OutputItem",
+        "type": "object"
+      },
+      "resource-OutputItem-Attributes": {
+        "additionalProperties": false,
+        "properties": {
+          "computedStr": {
+            "title": "Computedstr",
+            "type": "string"
+          },
+          "constantStr": {
+            "title": "Constantstr",
+            "type": "string"
+          },
+          "defaultedConstantFloat": {
+            "title": "Defaultedconstantfloat",
+            "type": "number"
+          },
+          "defaultedDatetime": {
+            "format": "date-time",
+            "title": "Defaulteddatetime",
+            "type": "string"
+          },
+          "plainInt": {
+            "title": "Plainint",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "plainInt",
+          "defaultedDatetime",
+          "constantStr",
+          "defaultedConstantFloat",
+          "computedStr"
+        ],
+        "title": "resource-OutputItem-Attributes",
+        "type": "object"
+      },
+      "resource-OutputItem-Links": {
+        "additionalProperties": false,
+        "properties": {
+          "self": {
+            "title": "Self",
+            "type": "string"
+          }
+        },
+        "required": [
+          "self"
+        ],
+        "title": "resource-OutputItem-Links",
+        "type": "object"
+      },
+      "resource-PageOutput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/resource-OutputItem"
+            },
+            "title": "Data",
+            "type": "array"
+          },
+          "included": {
+            "items": {},
+            "title": "Included",
+            "type": "array"
+          },
+          "links": {
+            "$ref": "#/components/schemas/PageLinksModel"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/PageMetaModel"
+          }
+        },
+        "required": [
+          "data",
+          "meta",
+          "links"
+        ],
+        "title": "resource-PageOutput",
+        "type": "object"
+      },
+      "resource-UpdateInput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/resource-UpdateInput-Data"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "resource-UpdateInput",
+        "type": "object"
+      },
+      "resource-UpdateInput-Data": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resource-UpdateInput-Data-Attributes"
+              }
+            ],
+            "default": {}
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resource-UpdateInput-Data-Relationships"
+              }
+            ],
+            "default": {}
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "resource-UpdateInput-Data",
+        "type": "object"
+      },
+      "resource-UpdateInput-Data-Attributes": {
+        "additionalProperties": false,
+        "properties": {
+          "defaultedDatetime": {
+            "format": "date-time",
+            "title": "Defaulteddatetime",
+            "type": "string"
+          },
+          "plainInt": {
+            "title": "Plainint",
+            "type": "integer"
+          },
+          "secretStr": {
+            "title": "Secretstr",
+            "type": "string"
+          }
+        },
+        "title": "resource-UpdateInput-Data-Attributes",
+        "type": "object"
+      },
+      "resource-UpdateInput-Data-Relationships": {
+        "additionalProperties": false,
+        "properties": {},
+        "title": "resource-UpdateInput-Data-Relationships",
         "type": "object"
       }
     }
@@ -456,7 +461,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Resources-PageOutput"
+                  "$ref": "#/components/schemas/resource-PageOutput"
                 }
               }
             },
@@ -492,7 +497,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Resource-CreateInput"
+                "$ref": "#/components/schemas/resource-CreateInput"
               }
             }
           },
@@ -503,7 +508,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Resource-ItemOutput"
+                  "$ref": "#/components/schemas/resource-ItemOutput"
                 }
               }
             },
@@ -581,7 +586,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Resource-ItemOutput"
+                  "$ref": "#/components/schemas/resource-ItemOutput"
                 }
               }
             },
@@ -626,7 +631,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Resource-UpdateInput"
+                "$ref": "#/components/schemas/resource-UpdateInput"
               }
             }
           },
@@ -637,7 +642,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Resource-ItemOutput"
+                  "$ref": "#/components/schemas/resource-ItemOutput"
                 }
               }
             },

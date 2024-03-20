@@ -1,97 +1,19 @@
 {
   "components": {
     "schemas": {
-      "CreateInputAttributes": {
-        "properties": {
-          "message": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Message"
-          }
-        },
-        "title": "CreateInputAttributes",
-        "type": "object"
-      },
-      "CreateInputItemModel": {
-        "properties": {
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/CreateInputAttributes"
-              }
-            ],
-            "default": {}
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/CreateInputRelationships"
-              }
-            ],
-            "default": {
-              "next": {
-                "data": [],
-                "meta": {
-                  "count": 0
-                }
-              },
-              "prev": {}
-            }
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type"
-        ],
-        "title": "CreateInputItemModel",
-        "type": "object"
-      },
-      "CreateInputModel": {
+      "CreateInputListRelationship": {
+        "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/CreateInputItemModel"
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/ObjectId"
+            },
+            "title": "Data",
+            "type": "array"
           }
         },
-        "required": [
-          "data"
-        ],
-        "title": "CreateInputModel",
-        "type": "object"
-      },
-      "CreateInputRelationships": {
-        "properties": {
-          "next": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ListRelationShip-Input"
-              }
-            ],
-            "default": {
-              "data": [],
-              "meta": {
-                "count": 0
-              }
-            }
-          },
-          "prev": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ScalarRelationShip"
-              }
-            ],
-            "default": {}
-          }
-        },
-        "title": "CreateInputRelationships",
+        "title": "CreateInputListRelationship",
         "type": "object"
       },
       "HTTPValidationError": {
@@ -107,86 +29,22 @@
         "title": "HTTPValidationError",
         "type": "object"
       },
-      "ItemOutputModel": {
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/OutputItemModel"
-          },
-          "included": {
-            "default": [],
-            "items": {
-              "$ref": "#/components/schemas/OutputItemModel"
-            },
-            "title": "Included",
-            "type": "array"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "ItemOutputModel",
-        "type": "object"
-      },
-      "ListRelationShip-Input": {
-        "properties": {
-          "data": {
-            "default": [],
-            "items": {
-              "$ref": "#/components/schemas/ObjectId"
-            },
-            "title": "Data",
-            "type": "array"
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Meta-Input"
-              }
-            ],
-            "default": {
-              "count": 0
-            }
-          }
-        },
-        "title": "ListRelationShip",
-        "type": "object"
-      },
-      "ListRelationShip-Output": {
-        "properties": {
-          "data": {
-            "default": [],
-            "items": {
-              "$ref": "#/components/schemas/ObjectId"
-            },
-            "title": "Data",
-            "type": "array"
-          },
-          "meta": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/fastjsonapi__router__make_jsonapi_models___locals___ListRelationShip__Meta"
-              }
-            ],
-            "default": {
-              "count": 0
-            }
-          }
-        },
-        "title": "ListRelationShip",
-        "type": "object"
-      },
-      "Meta-Input": {
+      "Meta": {
+        "additionalProperties": false,
         "properties": {
           "count": {
-            "default": 0,
             "title": "Count",
             "type": "integer"
           }
         },
+        "required": [
+          "count"
+        ],
         "title": "Meta",
         "type": "object"
       },
       "ObjectId": {
+        "additionalProperties": false,
         "properties": {
           "id": {
             "title": "Id",
@@ -204,144 +62,8 @@
         "title": "ObjectId",
         "type": "object"
       },
-      "OutputAttributes": {
-        "properties": {
-          "createdAt": {
-            "format": "date-time",
-            "title": "Createdat",
-            "type": "string"
-          },
-          "message": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Message"
-          }
-        },
-        "required": [
-          "createdAt"
-        ],
-        "title": "OutputAttributes",
-        "type": "object"
-      },
-      "OutputItemModel": {
-        "properties": {
-          "attributes": {
-            "$ref": "#/components/schemas/OutputAttributes"
-          },
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "links": {
-            "$ref": "#/components/schemas/fastjsonapi__router__make_jsonapi_models___locals___OutputItemModel__Links"
-          },
-          "relationships": {
-            "$ref": "#/components/schemas/OutputRelationships"
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "id",
-          "links",
-          "attributes",
-          "relationships"
-        ],
-        "title": "OutputItemModel",
-        "type": "object"
-      },
-      "OutputRelationships": {
-        "properties": {
-          "next": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ListRelationShip-Output"
-              }
-            ],
-            "default": {
-              "data": [],
-              "meta": {
-                "count": 0
-              }
-            }
-          },
-          "prev": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ScalarRelationShip"
-              }
-            ],
-            "default": {}
-          }
-        },
-        "title": "OutputRelationships",
-        "type": "object"
-      },
-      "PageOutputModel": {
-        "properties": {
-          "data": {
-            "items": {
-              "$ref": "#/components/schemas/OutputItemModel"
-            },
-            "title": "Data",
-            "type": "array"
-          },
-          "included": {
-            "default": [],
-            "items": {
-              "$ref": "#/components/schemas/OutputItemModel"
-            },
-            "title": "Included",
-            "type": "array"
-          },
-          "links": {
-            "$ref": "#/components/schemas/fastjsonapi__router__make_jsonapi_models___locals___PageOutputModel__Links"
-          },
-          "meta": {
-            "$ref": "#/components/schemas/fastjsonapi__router__make_jsonapi_models___locals___PageOutputModel__Meta"
-          }
-        },
-        "required": [
-          "data",
-          "links",
-          "meta"
-        ],
-        "title": "PageOutputModel",
-        "type": "object"
-      },
-      "Pagination": {
-        "properties": {
-          "count": {
-            "title": "Count",
-            "type": "integer"
-          },
-          "page": {
-            "title": "Page",
-            "type": "integer"
-          },
-          "pages": {
-            "title": "Pages",
-            "type": "integer"
-          }
-        },
-        "required": [
-          "count",
-          "page",
-          "pages"
-        ],
-        "title": "Pagination",
-        "type": "object"
-      },
-      "ScalarRelationShip": {
+      "OptionalRelationship": {
+        "additionalProperties": false,
         "properties": {
           "data": {
             "anyOf": [
@@ -354,160 +76,32 @@
             ]
           }
         },
-        "title": "ScalarRelationShip",
+        "title": "OptionalRelationship",
         "type": "object"
       },
-      "UpdateInputAttributes": {
-        "properties": {
-          "message": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Message"
-          }
-        },
-        "title": "UpdateInputAttributes",
-        "type": "object"
-      },
-      "UpdateInputItemModel": {
-        "properties": {
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/UpdateInputAttributes"
-              }
-            ],
-            "default": {}
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/UpdateInputRelationships"
-              }
-            ],
-            "default": {
-              "next": {
-                "data": [],
-                "meta": {
-                  "count": 0
-                }
-              },
-              "prev": {}
-            }
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type"
-        ],
-        "title": "UpdateInputItemModel",
-        "type": "object"
-      },
-      "UpdateInputModel": {
+      "OutputListRelationship": {
+        "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/UpdateInputItemModel"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "UpdateInputModel",
-        "type": "object"
-      },
-      "UpdateInputRelationships": {
-        "properties": {
-          "next": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ListRelationShip-Input"
-              }
-            ],
-            "default": {
-              "data": [],
-              "meta": {
-                "count": 0
-              }
-            }
-          },
-          "prev": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ScalarRelationShip"
-              }
-            ],
-            "default": {}
-          }
-        },
-        "title": "UpdateInputRelationships",
-        "type": "object"
-      },
-      "ValidationError": {
-        "properties": {
-          "loc": {
             "items": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "integer"
-                }
-              ]
+              "$ref": "#/components/schemas/ObjectId"
             },
-            "title": "Location",
+            "title": "Data",
             "type": "array"
           },
-          "msg": {
-            "title": "Message",
-            "type": "string"
-          },
-          "type": {
-            "title": "Error Type",
-            "type": "string"
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
           }
         },
         "required": [
-          "loc",
-          "msg",
-          "type"
+          "data",
+          "meta"
         ],
-        "title": "ValidationError",
+        "title": "OutputListRelationship",
         "type": "object"
       },
-      "fastjsonapi__router__make_jsonapi_models___locals___ListRelationShip__Meta": {
-        "properties": {
-          "count": {
-            "default": 0,
-            "title": "Count",
-            "type": "integer"
-          }
-        },
-        "title": "Meta",
-        "type": "object"
-      },
-      "fastjsonapi__router__make_jsonapi_models___locals___OutputItemModel__Links": {
-        "properties": {
-          "self": {
-            "title": "Self",
-            "type": "string"
-          }
-        },
-        "required": [
-          "self"
-        ],
-        "title": "Links",
-        "type": "object"
-      },
-      "fastjsonapi__router__make_jsonapi_models___locals___PageOutputModel__Links": {
+      "PageLinksModel": {
+        "additionalProperties": false,
         "properties": {
           "first": {
             "title": "First",
@@ -546,10 +140,11 @@
           "next",
           "prev"
         ],
-        "title": "Links",
+        "title": "PageLinksModel",
         "type": "object"
       },
-      "fastjsonapi__router__make_jsonapi_models___locals___PageOutputModel__Meta": {
+      "PageMetaModel": {
+        "additionalProperties": false,
         "properties": {
           "pagination": {
             "$ref": "#/components/schemas/Pagination"
@@ -558,7 +153,396 @@
         "required": [
           "pagination"
         ],
-        "title": "Meta",
+        "title": "PageMetaModel",
+        "type": "object"
+      },
+      "Pagination": {
+        "additionalProperties": false,
+        "properties": {
+          "count": {
+            "title": "Count",
+            "type": "integer"
+          },
+          "page": {
+            "title": "Page",
+            "type": "integer"
+          },
+          "pages": {
+            "title": "Pages",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "count",
+          "page",
+          "pages"
+        ],
+        "title": "Pagination",
+        "type": "object"
+      },
+      "UpdateInputListRelationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/ObjectId"
+            },
+            "title": "Data",
+            "type": "array"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "UpdateInputListRelationship",
+        "type": "object"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "title": "Location",
+            "type": "array"
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError",
+        "type": "object"
+      },
+      "ping-CreateInput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/ping-CreateInput-Data"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "ping-CreateInput",
+        "type": "object"
+      },
+      "ping-CreateInput-Data": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ping-CreateInput-Data-Attributes"
+              }
+            ],
+            "default": {}
+          },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ping-CreateInput-Data-Relationships"
+              }
+            ],
+            "default": {
+              "next": {
+                "data": []
+              },
+              "prev": {}
+            }
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type"
+        ],
+        "title": "ping-CreateInput-Data",
+        "type": "object"
+      },
+      "ping-CreateInput-Data-Attributes": {
+        "additionalProperties": false,
+        "properties": {
+          "message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Message"
+          }
+        },
+        "title": "ping-CreateInput-Data-Attributes",
+        "type": "object"
+      },
+      "ping-CreateInput-Data-Relationships": {
+        "additionalProperties": false,
+        "properties": {
+          "next": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CreateInputListRelationship"
+              }
+            ],
+            "default": {
+              "data": []
+            }
+          },
+          "prev": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OptionalRelationship"
+              }
+            ],
+            "default": {}
+          }
+        },
+        "title": "ping-CreateInput-Data-Relationships",
+        "type": "object"
+      },
+      "ping-ItemOutput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/ping-OutputItem"
+          },
+          "included": {
+            "items": {},
+            "title": "Included",
+            "type": "array"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "ping-ItemOutput",
+        "type": "object"
+      },
+      "ping-OutputItem": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "$ref": "#/components/schemas/ping-OutputItem-Attributes"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "links": {
+            "$ref": "#/components/schemas/ping-OutputItem-Links"
+          },
+          "relationships": {
+            "$ref": "#/components/schemas/ping-OutputItem-Relationships"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "links",
+          "attributes",
+          "relationships"
+        ],
+        "title": "ping-OutputItem",
+        "type": "object"
+      },
+      "ping-OutputItem-Attributes": {
+        "additionalProperties": false,
+        "properties": {
+          "createdAt": {
+            "format": "date-time",
+            "title": "Createdat",
+            "type": "string"
+          },
+          "message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Message"
+          }
+        },
+        "required": [
+          "message",
+          "createdAt"
+        ],
+        "title": "ping-OutputItem-Attributes",
+        "type": "object"
+      },
+      "ping-OutputItem-Links": {
+        "additionalProperties": false,
+        "properties": {
+          "self": {
+            "title": "Self",
+            "type": "string"
+          }
+        },
+        "required": [
+          "self"
+        ],
+        "title": "ping-OutputItem-Links",
+        "type": "object"
+      },
+      "ping-OutputItem-Relationships": {
+        "additionalProperties": false,
+        "properties": {
+          "next": {
+            "$ref": "#/components/schemas/OutputListRelationship"
+          },
+          "prev": {
+            "$ref": "#/components/schemas/OptionalRelationship"
+          }
+        },
+        "required": [
+          "prev",
+          "next"
+        ],
+        "title": "ping-OutputItem-Relationships",
+        "type": "object"
+      },
+      "ping-PageOutput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/ping-OutputItem"
+            },
+            "title": "Data",
+            "type": "array"
+          },
+          "included": {
+            "items": {},
+            "title": "Included",
+            "type": "array"
+          },
+          "links": {
+            "$ref": "#/components/schemas/PageLinksModel"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/PageMetaModel"
+          }
+        },
+        "required": [
+          "data",
+          "meta",
+          "links"
+        ],
+        "title": "ping-PageOutput",
+        "type": "object"
+      },
+      "ping-UpdateInput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/ping-UpdateInput-Data"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "ping-UpdateInput",
+        "type": "object"
+      },
+      "ping-UpdateInput-Data": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ping-UpdateInput-Data-Attributes"
+              }
+            ],
+            "default": {}
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ping-UpdateInput-Data-Relationships"
+              }
+            ],
+            "default": {}
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "ping-UpdateInput-Data",
+        "type": "object"
+      },
+      "ping-UpdateInput-Data-Attributes": {
+        "additionalProperties": false,
+        "properties": {
+          "message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Message"
+          }
+        },
+        "title": "ping-UpdateInput-Data-Attributes",
+        "type": "object"
+      },
+      "ping-UpdateInput-Data-Relationships": {
+        "additionalProperties": false,
+        "properties": {
+          "next": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UpdateInputListRelationship"
+              }
+            ]
+          },
+          "prev": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OptionalRelationship"
+              }
+            ]
+          }
+        },
+        "title": "ping-UpdateInput-Data-Relationships",
         "type": "object"
       }
     }
@@ -573,6 +557,16 @@
       "get": {
         "operationId": "get_pings_api_pings_get",
         "parameters": [
+          {
+            "in": "query",
+            "name": "page[size]",
+            "required": false,
+            "schema": {
+              "default": 2,
+              "title": "Page[Size]",
+              "type": "integer"
+            }
+          },
           {
             "in": "query",
             "name": "page[number]",
@@ -607,7 +601,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PageOutputModel"
+                  "$ref": "#/components/schemas/ping-PageOutput"
                 }
               }
             },
@@ -643,7 +637,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateInputModel"
+                "$ref": "#/components/schemas/ping-CreateInput"
               }
             }
           },
@@ -654,7 +648,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ItemOutputModel"
+                  "$ref": "#/components/schemas/ping-ItemOutput"
                 }
               }
             },
@@ -732,7 +726,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ItemOutputModel"
+                  "$ref": "#/components/schemas/ping-ItemOutput"
                 }
               }
             },
@@ -777,7 +771,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateInputModel"
+                "$ref": "#/components/schemas/ping-UpdateInput"
               }
             }
           },
@@ -788,7 +782,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ItemOutputModel"
+                  "$ref": "#/components/schemas/ping-ItemOutput"
                 }
               }
             },
