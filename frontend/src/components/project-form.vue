@@ -36,7 +36,7 @@ async function create() {
   const project = await api.client.post(
     'project',
     {title: title.value, description: description.value},
-    {textbooks: [], exercises: []},
+    {},
   )
   busy.value = false
   title.value = ''

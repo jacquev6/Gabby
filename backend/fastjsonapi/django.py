@@ -33,7 +33,7 @@ class DjangoOrmWrapper:
             attr = getattr(self._wrapped, name)
             if attr.__class__.__name__ == "RelatedManager":
                 attr.set([unwrap(v) for v in value])
-            elif isinstance(attr, models.Model):
+            elif isinstance(value, DjangoOrmWrapper):
                 setattr(self._wrapped, name, unwrap(value))
             else:
                 setattr(self._wrapped, name, value)

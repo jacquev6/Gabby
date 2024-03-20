@@ -338,7 +338,7 @@ class PingTestsMixin:
         self.assertEqual(ping.prev, Ping.objects.get(id=1))
         self.assertEqual(list(ping.next.all()), [Ping.objects.get(id=3)])
 
-    def test_update_prev(self):
+    def test_update_prev__some_to_some(self):
         ping = Ping.objects.create(message="Hello", prev=Ping.objects.create())
         Ping.objects.create(prev=ping)
         Ping.objects.create()
@@ -374,7 +374,7 @@ class PingTestsMixin:
         self.assertEqual(ping.prev, Ping.objects.get(id=4))
         self.assertEqual(list(ping.next.all()), [Ping.objects.get(id=3)])
 
-    def test_update_prev_to_none(self):
+    def test_update_prev__some_to_none(self):
         ping = Ping.objects.create(message="Hello", prev=Ping.objects.create())
         Ping.objects.create(prev=ping)
 
@@ -408,6 +408,42 @@ class PingTestsMixin:
         self.assertEqual(ping.message, "Hello")
         self.assertEqual(ping.prev, None)
         self.assertEqual(list(ping.next.all()), [Ping.objects.get(id=3)])
+
+    def test_update_prev__none_to_some(self):
+        ping = Ping.objects.create(message="Hello", prev=None)
+        Ping.objects.create(prev=ping)
+        Ping.objects.create()
+
+        response = self.patch("http://testserver/api/pings/1", {
+            "data": {
+                "type": "ping",
+                "id": "1",
+                "relationships": {
+                    "prev": {"data": {"type": "ping", "id": "3"}},
+                },
+            },
+        })
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
+        self.assertEqual(response.json(), {
+            "data": {
+                "type": "ping",
+                "id": "1",
+                "links": {"self": "http://testserver/api/pings/1"},
+                "attributes": {
+                    "createdAt": ping.created_at.isoformat().replace("+00:00", "Z"),
+                    "message": "Hello",
+                },
+                "relationships": {
+                    "prev": {"data": {"type": "ping", "id": "3"}},
+                    "next": {"data": [{"type": "ping", "id": "2"}], "meta": {"count": 1}},
+                },
+            },
+        })
+
+        ping = Ping.objects.get(id=1)
+        self.assertEqual(ping.message, "Hello")
+        self.assertEqual(ping.prev, Ping.objects.get(id=3))
+        self.assertEqual(list(ping.next.all()), [Ping.objects.get(id=2)])
 
     def test_update_next(self):
         ping = Ping.objects.create(message="Hello", prev=Ping.objects.create())

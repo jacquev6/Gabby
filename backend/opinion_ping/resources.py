@@ -42,7 +42,13 @@ class PingsResource:
 
     def get_page(self, filters, first_index, page_size):
         pings = Ping.objects.all()
+        # @todo Use proper SQL filtering
         if filters.message:
             pings = [ping for ping in pings if ping.message == filters.message]
 
-        return (len(pings), [DjangoOrmWrapper(ping) for ping in pings[first_index:first_index + page_size]])
+        return (
+            # @todo Use proper SQL counting
+            len(pings),
+            # @todo Use proper SQL limits
+            [DjangoOrmWrapper(ping) for ping in pings[first_index:first_index + page_size]],
+        )

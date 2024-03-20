@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastjsonapi import make_jsonapi_router
 django.setup()  # Required before importing any module that uses the Django ORM
 from opinion_ping.resources import PingsResource
+from textbooks.resources import PdfFilesResource, PdfFileNamingsResource, ProjectsResource, TextbooksResource, SectionsResource, ExercisesResource, ExtractionEventsResource
 
 
 app = fastapi.FastAPI(
@@ -24,7 +25,16 @@ app.add_middleware(
 )
 
 app.include_router(
-    make_jsonapi_router([PingsResource()]),
+    make_jsonapi_router([
+        PingsResource(),
+        PdfFilesResource(),
+        PdfFileNamingsResource(),
+        ProjectsResource(),
+        TextbooksResource(),
+        SectionsResource(),
+        ExercisesResource(),
+        ExtractionEventsResource(),
+    ]),
     prefix="/api",
 )
 
