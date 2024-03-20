@@ -234,7 +234,106 @@ class PingTestsMixin:
             },
         })
 
-    # @todo Add tests for the 'filter[message]': one where it's set to a string, and one where it's set to null. How do we even set a query parameter to null?
+    # @todo Add tests for 'filter[message]' set to null. How do we even set a query parameter to null?
+
+    def test_filter__message_some(self):
+        Ping.objects.create(message="Hello")
+        Ping.objects.create(message="Good bye")
+        Ping.objects.create(message="Hello")
+        Ping.objects.create(message="Good bye")
+        Ping.objects.create(message="Hello")
+
+        response = self.get("http://testserver/api/pings?filter[message]=Hello")
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
+        self.assertEqual(response.json(), {
+            "data": [
+                {
+                    "type": "ping",
+                    "id": "1",
+                    "links": {"self": "http://testserver/api/pings/1"},
+                    "attributes": {
+                        "createdAt": Ping.objects.get(id=1).created_at.isoformat().replace("+00:00", "Z"),
+                        "message": "Hello",
+                    },
+                    "relationships": {
+                        "prev": {"data": None},
+                        "next": {"data": [], "meta": {"count": 0}},
+                    },
+                },
+                {
+                    "type": "ping",
+                    "id": "3",
+                    "links": {"self": "http://testserver/api/pings/3"},
+                    "attributes": {
+                        "createdAt": Ping.objects.get(id=3).created_at.isoformat().replace("+00:00", "Z"),
+                        "message": "Hello",
+                    },
+                    "relationships": {
+                        "prev": {"data": None},
+                        "next": {"data": [], "meta": {"count": 0}},
+                    },
+                },
+            ],
+            "links": {
+                "first": "http://testserver/api/pings?filter%5Bmessage%5D=Hello&page%5Bnumber%5D=1",
+                "last": "http://testserver/api/pings?filter%5Bmessage%5D=Hello&page%5Bnumber%5D=2",
+                "next": "http://testserver/api/pings?filter%5Bmessage%5D=Hello&page%5Bnumber%5D=2",
+                "prev": None,
+            },
+            "meta": {
+                "pagination": {"count": 3, "page": 1, "pages": 2},
+            },
+        })
+
+    def test_filter__message_some(self):
+        prev = Ping.objects.create()
+        Ping.objects.create(prev=prev)
+        Ping.objects.create(prev=None)
+        Ping.objects.create(prev=prev)
+        Ping.objects.create(prev=None)
+        Ping.objects.create(prev=prev)
+
+        response = self.get("http://testserver/api/pings?filter[prev]=1")
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
+        self.assertEqual(response.json(), {
+            "data": [
+                {
+                    "type": "ping",
+                    "id": "2",
+                    "links": {"self": "http://testserver/api/pings/2"},
+                    "attributes": {
+                        "createdAt": Ping.objects.get(id=2).created_at.isoformat().replace("+00:00", "Z"),
+                        "message": None,
+                    },
+                    "relationships": {
+                        "prev": {"data": {"type": "ping", "id": "1"}},
+                        "next": {"data": [], "meta": {"count": 0}},
+                    },
+                },
+                {
+                    "type": "ping",
+                    "id": "4",
+                    "links": {"self": "http://testserver/api/pings/4"},
+                    "attributes": {
+                        "createdAt": Ping.objects.get(id=4).created_at.isoformat().replace("+00:00", "Z"),
+                        "message": None,
+                    },
+                    "relationships": {
+                        "prev": {"data": {"type": "ping", "id": "1"}},
+                        "next": {"data": [], "meta": {"count": 0}},
+                    },
+                },
+            ],
+            "links": {
+                "first": "http://testserver/api/pings?filter%5Bprev%5D=1&page%5Bnumber%5D=1",
+                "last": "http://testserver/api/pings?filter%5Bprev%5D=1&page%5Bnumber%5D=2",
+                "next": "http://testserver/api/pings?filter%5Bprev%5D=1&page%5Bnumber%5D=2",
+                "prev": None,
+            },
+            "meta": {
+                "pagination": {"count": 3, "page": 1, "pages": 2},
+            },
+        })
 
     def test_update_nothing(self):
         ping = Ping.objects.create(message="Hello", prev=Ping.objects.create())

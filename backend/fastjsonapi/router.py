@@ -14,6 +14,12 @@ from .annotations import Annotations, Annotation
 from .utils import Urls
 
 
+# @todo Check consistency of "type" attributes in input 'ObjectId's
+# @todo Check consistency of "id" attributes in input 'ObjectId's
+# @todo Check Content-Type header in requests (vnd.api+json for requests with payloads, not set for requests without payloads)
+# @todo Check Accept header in requests (vnd.api+json)
+
+
 class JSONAPIResponse(JSONResponse):
     media_type = "application/vnd.api+json"
 
@@ -132,9 +138,6 @@ class CompiledResource:
                 if isinstance(annotation, Annotation):
                     annotation.apply(annotations)
 
-            if annotations.filter:
-                filterable_attributes[name] = info.annotation
-
             name = humps.camelize(name)
 
             if (resource_name := resource_models.get(info.annotation)) is not None:
@@ -147,6 +150,8 @@ class CompiledResource:
                     output_relationships[name] = (MandatoryRelationship, ...)
                 if annotations.update_input:
                     update_input_relationships[name] = (MandatoryRelationship, None)
+                if annotations.filter:
+                    filterable_attributes[humps.decamelize(name)] = str
             elif (resource_name := optional_resource_models.get(info.annotation)) is not None:
                 assert info.default is None
                 if annotations.create_input:
@@ -156,6 +161,8 @@ class CompiledResource:
                     output_relationships[name] = (OptionalRelationship, ...)
                 if annotations.update_input:
                     update_input_relationships[name] = (OptionalRelationship, None)
+                if annotations.filter:
+                    filterable_attributes[humps.decamelize(name)] = str
             elif (resource_name := list_resource_models.get(info.annotation)) is not None:
                 assert info.default == []
                 if annotations.create_input:
@@ -175,6 +182,8 @@ class CompiledResource:
                     output_attributes[name] = (info.annotation, ...)
                 if annotations.update_input:
                     update_input_attributes[name] = (info.annotation, None)
+                if annotations.filter:
+                    filterable_attributes[humps.decamelize(name)] = info.annotation
 
         Filters = create_model(
             f"{self.singularName}-Filters",
@@ -369,16 +378,15 @@ class CompiledResource:
 
         base_url = urls.make(f"get_{self.plural_name}")
         def make_url_for_page(number):
-            qs = {
-                "page[number]": number,
-            }
+            qs = {}
+            for (key, value) in sorted(filters.model_dump(exclude_unset=True).items()):
+                if value is not None:
+                    qs[f"filter[{humps.camelize(key)}]"] = value
+            qs["page[number]"] = number
             if page_size != self.default_page_size:
                 qs["page[size]"] = page_size
             if raw_include is not None:
                 qs["include"] = raw_include
-            for (key, value) in sorted(filters.model_dump(exclude_unset=True).items()):
-                if value is not None:
-                    qs[f"filter[{humps.camelize(key)}]"] = value
             return base_url + "?" + urlencode(qs)
 
         if page_number < pages_count:
@@ -444,21 +452,23 @@ class CompiledResource:
         def recurse(resource, item, include):
             for (name, nested_include) in include.items():
                 (is_list, resource_name) = resource.output_relationships[name]
-                resource = resources[resource_name]
+                # @todo Add test showing that this variable ('nested_resource') cannot be named 'resource' (bug fixed using tests from Gabby, deserves test in fastjsonapi)
+                nested_resource = resources[resource_name]
                 attr = getattr(item, humps.decamelize(name))
                 if is_list:
                     for incl in attr:
-                        included[(resource_name, incl.id)] = resource.make_item(resources, urls=urls, item=incl)
-                        recurse(resource, incl, nested_include)
+                        included[(resource_name, incl.id)] = nested_resource.make_item(resources, urls=urls, item=incl)
+                        recurse(nested_resource, incl, nested_include)
                 elif attr is not None:
                     # @todo Add tests exercising this branch
-                    included[(resource_name, attr.id)] = resource.make_item(resources, urls=urls, item=attr)
-                    recurse(resource, attr, nested_include)
+                    included[(resource_name, attr.id)] = nested_resource.make_item(resources, urls=urls, item=attr)
+                    recurse(nested_resource, attr, nested_include)
 
         for item in items:
             recurse(self, item, include)
 
         return list(included.values())
+
 
 def add_resource_routes(resources, resource, router):
     @router.post(

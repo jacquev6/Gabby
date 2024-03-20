@@ -17,7 +17,7 @@ default_page_size = django.conf.settings.REST_FRAMEWORK["PAGE_SIZE"]
 class PingModel(BaseModel):
     message: Annotated[str | None, Filterable()] = None
     created_at: Annotated[datetime.datetime, Computed()]
-    prev: PingModel | None = None
+    prev: Annotated[PingModel | None, Filterable()] = None
     next: list[PingModel] = []
 
 class PingsResource:
@@ -45,6 +45,8 @@ class PingsResource:
         # @todo Use proper SQL filtering
         if filters.message:
             pings = [ping for ping in pings if ping.message == filters.message]
+        if filters.prev:
+            pings = [ping for ping in pings if ping.prev is not None and str(ping.prev.id) == filters.prev]
 
         return (
             # @todo Use proper SQL counting

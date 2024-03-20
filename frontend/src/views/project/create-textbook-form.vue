@@ -38,10 +38,10 @@ async function create() {
     await api.client.post(
       'pdfFile',
       {sha256: pdf.value.info.sha256, bytesCount: 0, pagesCount: pdf.value.document.numPages},
-      {namings: [], sections: []},
+      {},
     )
   } catch (e) {
-    if (e?.cause?.errors?.[0].code === 'unique') {  // @todo Make the server idempotent so that there is no error at all
+    if (e?.cause?.errors?.[0].code === 'unique' || e?.cause?.status === 500) {  // @todo Make the server idempotent so that there is no error at all
       // The PDF file already exists
     } else {
       throw e
@@ -63,7 +63,7 @@ async function create() {
   const textbook = await api.client.post(
     'textbook',
     {title: title.value, publisher: publisher.value || undefined, year: year.value || undefined, isbn: isbn.value || undefined},
-    {project: {type: 'project', id: props.projectId}, exercises: [], sections: []}
+    {project: {type: 'project', id: props.projectId}}
   )
   await api.client.post(
     'section',

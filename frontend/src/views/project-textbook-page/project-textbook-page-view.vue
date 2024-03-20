@@ -213,11 +213,10 @@ async function createExercise() {
   modeIsLoading.value = true
   const exercise = await api.client.post(
     'exercise',
-    {...currentExercise.attributes, textbook_page: props.page},
+    {...currentExercise.attributes, textbookPage: props.page},
     {
       project: {type: 'project', id: props.projectId},
       textbook: {type: 'textbook', id: props.textbookId},
-      extractionEvents: [],
     },
   )
   for (const event of extractionEvents) {

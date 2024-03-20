@@ -9,4 +9,5 @@ class PingViewSet(ModelViewSet):
     serializer_class = PingSerializer
     filterset_fields = {
         "message": ["exact"],
+        "prev": ["exact"],
     }

@@ -44,14 +44,14 @@ describe('Gabby has routes that', () => {
     cy.contains('h1', 'Documentation de MALIN')
   })
 
-  it('can access Django API without trailing /', () => {
-    cy.visit('/api')
-    cy.contains('h1', 'Api Root')
+  it('can access API docs without trailing /', () => {
+    cy.visit('/api/docs')
+    cy.contains('h2', 'FastAPI')
   })
 
-  it('can access Django API with trailing /', () => {
-    cy.visit('/api/')
-    cy.contains('h1', 'Api Root')
+  it('can access API docs with trailing /', () => {
+    cy.visit('/api/docs/')
+    cy.contains('h2', 'FastAPI')
   })
 
   it('can access Django admin without trailing /', () => {

@@ -7,6 +7,7 @@ from fastjsonapi import make_jsonapi_router
 django.setup()  # Required before importing any module that uses the Django ORM
 from opinion_ping.resources import PingsResource
 from textbooks.resources import PdfFilesResource, PdfFileNamingsResource, ProjectsResource, TextbooksResource, SectionsResource, ExercisesResource, ExtractionEventsResource
+from textbooks.views import make_extraction_report
 
 
 app = fastapi.FastAPI(
@@ -37,6 +38,11 @@ app.include_router(
     ]),
     prefix="/api",
 )
+
+@app.get("/api/project-{project_id}-extraction-report.json")
+def extraction_report(project_id: int):
+    return make_extraction_report(project_id)
+
 
 # Test-only URL. Not in 'api/...' to avoid accidentally exposing it.
 if django.conf.settings.EXPOSE_RESET_FOR_TESTS_URL:

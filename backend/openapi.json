@@ -326,16 +326,6 @@
       "exercise-CreateInput-Data-Relationships": {
         "additionalProperties": false,
         "properties": {
-          "extractionEvents": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/CreateInputListRelationship"
-              }
-            ],
-            "default": {
-              "data": []
-            }
-          },
           "project": {
             "$ref": "#/components/schemas/MandatoryRelationship"
           },
@@ -603,13 +593,6 @@
       "exercise-UpdateInput-Data-Relationships": {
         "additionalProperties": false,
         "properties": {
-          "extractionEvents": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/UpdateInputListRelationship"
-              }
-            ]
-          },
           "project": {
             "allOf": [
               {
@@ -908,14 +891,7 @@
                 "$ref": "#/components/schemas/pdfFile-CreateInput-Data-Relationships"
               }
             ],
-            "default": {
-              "namings": {
-                "data": []
-              },
-              "sections": {
-                "data": []
-              }
-            }
+            "default": {}
           },
           "type": {
             "title": "Type",
@@ -955,28 +931,7 @@
       },
       "pdfFile-CreateInput-Data-Relationships": {
         "additionalProperties": false,
-        "properties": {
-          "namings": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/CreateInputListRelationship"
-              }
-            ],
-            "default": {
-              "data": []
-            }
-          },
-          "sections": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/CreateInputListRelationship"
-              }
-            ],
-            "default": {
-              "data": []
-            }
-          }
-        },
+        "properties": {},
         "title": "pdfFile-CreateInput-Data-Relationships",
         "type": "object"
       },
@@ -1183,22 +1138,7 @@
       },
       "pdfFile-UpdateInput-Data-Relationships": {
         "additionalProperties": false,
-        "properties": {
-          "namings": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/UpdateInputListRelationship"
-              }
-            ]
-          },
-          "sections": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/UpdateInputListRelationship"
-              }
-            ]
-          }
-        },
+        "properties": {},
         "title": "pdfFile-UpdateInput-Data-Relationships",
         "type": "object"
       },
@@ -2417,28 +2357,8 @@
       "textbook-CreateInput-Data-Relationships": {
         "additionalProperties": false,
         "properties": {
-          "exercises": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/CreateInputListRelationship"
-              }
-            ],
-            "default": {
-              "data": []
-            }
-          },
           "project": {
             "$ref": "#/components/schemas/MandatoryRelationship"
-          },
-          "sections": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/CreateInputListRelationship"
-              }
-            ],
-            "default": {
-              "data": []
-            }
           }
         },
         "required": [
@@ -2706,24 +2626,10 @@
       "textbook-UpdateInput-Data-Relationships": {
         "additionalProperties": false,
         "properties": {
-          "exercises": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/UpdateInputListRelationship"
-              }
-            ]
-          },
           "project": {
             "allOf": [
               {
                 "$ref": "#/components/schemas/MandatoryRelationship"
-              }
-            ]
-          },
-          "sections": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/UpdateInputListRelationship"
               }
             ]
           }
@@ -2769,6 +2675,24 @@
             "required": false,
             "schema": {
               "title": "Include",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "filter[textbookPage]",
+            "required": false,
+            "schema": {
+              "title": "Filter[Textbookpage]",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "filter[textbook]",
+            "required": false,
+            "schema": {
+              "title": "Filter[Textbook]",
               "type": "string"
             }
           }
@@ -3740,6 +3664,15 @@
               "title": "Filter[Message]",
               "type": "string"
             }
+          },
+          {
+            "in": "query",
+            "name": "filter[prev]",
+            "required": false,
+            "schema": {
+              "title": "Filter[Prev]",
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -3946,6 +3879,43 @@
           }
         },
         "summary": "Update Ping"
+      }
+    },
+    "/api/project-{project_id}-extraction-report.json": {
+      "get": {
+        "operationId": "extraction_report_api_project__project_id__extraction_report_json_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
+              "title": "Project Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Extraction Report"
       }
     },
     "/api/projects": {

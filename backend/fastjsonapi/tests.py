@@ -623,9 +623,9 @@ class AllAttributesTestCase(TextCaseMixin, TestCase):
                 },
             ],
             "links": {
-                "first": "http://server/resources?page%5Bnumber%5D=1&filter%5BcomputedStr%5D=ODD",
-                "last": "http://server/resources?page%5Bnumber%5D=2&filter%5BcomputedStr%5D=ODD",
-                "next": "http://server/resources?page%5Bnumber%5D=2&filter%5BcomputedStr%5D=ODD",
+                "first": "http://server/resources?filter%5BcomputedStr%5D=ODD&page%5Bnumber%5D=1",
+                "last": "http://server/resources?filter%5BcomputedStr%5D=ODD&page%5Bnumber%5D=2",
+                "next": "http://server/resources?filter%5BcomputedStr%5D=ODD&page%5Bnumber%5D=2",
                 "prev": None,
             },
             "meta": {
@@ -660,10 +660,10 @@ class AllAttributesTestCase(TextCaseMixin, TestCase):
                 },
             ],
             "links": {
-                "first": "http://server/resources?page%5Bnumber%5D=1&filter%5BcomputedStr%5D=ODD",
-                "last": "http://server/resources?page%5Bnumber%5D=2&filter%5BcomputedStr%5D=ODD",
+                "first": "http://server/resources?filter%5BcomputedStr%5D=ODD&page%5Bnumber%5D=1",
+                "last": "http://server/resources?filter%5BcomputedStr%5D=ODD&page%5Bnumber%5D=2",
                 "next": None,
-                "prev": "http://server/resources?page%5Bnumber%5D=1&filter%5BcomputedStr%5D=ODD",
+                "prev": "http://server/resources?filter%5BcomputedStr%5D=ODD&page%5Bnumber%5D=1",
             },
             "meta": {
                 "pagination": {

@@ -49,9 +49,9 @@ class ExtractionEventViewSet(ModelViewSet):
     }
 
 
-def extraction_report_view(request, project_id):
+def make_extraction_report(project_id):
     project = Project.objects.get(id=project_id)
-    return JsonResponse({
+    return {
         "project": {
             "title": project.title,
             "textbooks": [
@@ -72,4 +72,7 @@ def extraction_report_view(request, project_id):
                 for textbook in project.textbooks.order_by("id")
             ],
         },
-    })
+    }
+
+def extraction_report_view(request, project_id):
+    return JsonResponse(make_extraction_report(project_id))
