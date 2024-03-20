@@ -493,9 +493,10 @@ class PingTestsAgainstDjango(PingTestsMixin, APITransactionTestCase):
 
 
 class PingTestsAgainstFastApi(PingTestsMixin, TransactionTestCase):
-    def setUp(self):
-        super().setUp()
-        self.__client = TestClient(app)
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.__client = TestClient(app)
 
     def get(self, url):
         return self.__client.get(url, headers={"Content-Type": "application/vnd.api+json"})
