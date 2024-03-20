@@ -3,10 +3,15 @@ from typing import Annotated
 import datetime
 
 from pydantic import BaseModel
+import django.conf
+
 
 from fastjsonapi import Computed, Filterable
 from fastjsonapi.django import DjangoOrmWrapper, unwrap
 from .models import Ping
+
+
+default_page_size = django.conf.settings.REST_FRAMEWORK["PAGE_SIZE"]
 
 
 class PingModel(BaseModel):
@@ -21,7 +26,7 @@ class PingsResource:
 
     Model = PingModel
 
-    default_page_size = 2
+    default_page_size = default_page_size
 
     def create_item(self, *, message, prev, next):
         ping = Ping.objects.create(message=message, prev=unwrap(prev))
