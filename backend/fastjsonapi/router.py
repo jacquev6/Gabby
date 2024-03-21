@@ -340,8 +340,8 @@ class CompiledResource:
         # @todo Pass parsed 'include' to allow pre-fetching
         return self._resource.get_item(id)
 
-    def get_page(self, filters, first_index, page_size):
-        return self._resource.get_page(filters, first_index, page_size)
+    def get_page(self, sort, filters, first_index, page_size):
+        return self._resource.get_page(sort, filters, first_index, page_size)
 
     def update_item(self, resources, item, attributes, relationships):
         needs_save = False
@@ -372,7 +372,7 @@ class CompiledResource:
             return_value["included"] = self.make_included(resources, urls, [item], include)
         return return_value
 
-    def make_page_response(self, resources, *, urls, items_count, filters, page_number, page_size, items, raw_include, include):
+    def make_page_response(self, resources, *, urls, items_count, filters, sort, page_number, page_size, items, raw_include, include):
         pages_count = (items_count + 1) // page_size
         pagination = dict(count=items_count, page=page_number, pages=pages_count)
 
@@ -387,6 +387,8 @@ class CompiledResource:
                 qs["page[size]"] = page_size
             if raw_include is not None:
                 qs["include"] = raw_include
+            if sort is not None:
+                qs["sort"] = sort
             return base_url + "?" + urlencode(qs)
 
         if page_number < pages_count:
@@ -467,7 +469,7 @@ class CompiledResource:
         for item in items:
             recurse(self, item, include)
 
-        return list(included.values())
+        return sorted(included.values(), key=lambda item: (item["type"], item["id"]))
 
 
 def add_resource_routes(resources, resource, router):
@@ -502,15 +504,21 @@ def add_resource_routes(resources, resource, router):
         filters: Annotated[resource.filters, Depends()],
         page_size: Annotated[int, Query(alias="page[size]")] = resource.default_page_size,
         page_number: Annotated[int, Query(alias="page[number]")] = 1,
+        sort: str = None,
         include: str = None,
     ):
-        (items_count, items) = resource.get_page(filters, (page_number - 1) * page_size, page_size)
+        # @todo Work out authorized values for 'sort' from the resources' definition
+        # @todo Sort descending when the sort field is prefixed with a minus sign
+        # @todo Allow explicit ascending sorting with a prefix plus sign
+        parsed_sort = None if sort is None else [humps.decamelize(part) for part in sort.split(",")]
+        (items_count, items) = resource.get_page(parsed_sort, filters, (page_number - 1) * page_size, page_size)
         assert len(items) <= page_size
         return resource.make_page_response(
             resources,
             urls=urls,
             items_count=items_count,
             filters=filters,
+            sort=sort,
             page_number=page_number,
             page_size=page_size,
             items=items,

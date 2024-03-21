@@ -40,8 +40,10 @@ class PingsResource:
         except Ping.DoesNotExist:
             return None
 
-    def get_page(self, filters, first_index, page_size):
-        pings = Ping.objects.all()
+    def get_page(self, sort, filters, first_index, page_size):
+        sort = sort or ["id"]
+        pings = Ping.objects.order_by(*sort)
+
         # @todo Use proper SQL filtering
         if filters.message:
             pings = [ping for ping in pings if ping.message == filters.message]

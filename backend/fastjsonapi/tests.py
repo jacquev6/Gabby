@@ -104,7 +104,7 @@ class AllAttributesTestCase(TestCaseMixin, TestCase):
             return cls._items.get(id)
 
         @classmethod
-        def get_page(cls, filters, first_index, page_size):
+        def get_page(cls, sort, filters, first_index, page_size):
             items = sorted(cls._items.values(), key=lambda item: int(item.id))
             if filters.computed_str:
                 items = [item for item in items if item.computed_str == filters.computed_str]
@@ -645,6 +645,8 @@ class AllAttributesTestCase(TestCaseMixin, TestCase):
             },
         })
 
+    # @todo Add tests for sorting
+
     def test_update__nothing(self):
         self.assertEqual(self.Resource.create_item().id, "1")
 
@@ -906,7 +908,7 @@ class AllRelationsTestCase(TestCaseMixin, TestCase):
             return AllRelationsTestCase.factory.get_item(cls.Item, id)
 
         @classmethod
-        def get_page(cls, filters, first_index, page_size):
+        def get_page(cls, sort, filters, first_index, page_size):
             assert dict(filters) == {}
             items = AllRelationsTestCase.factory.get_page(cls.Item)
             return (len(items), items[first_index:first_index + page_size])
@@ -1509,21 +1511,6 @@ class AllRelationsTestCase(TestCaseMixin, TestCase):
                     },
                 },
                 {
-                    "type": "top",
-                    "id": "1",
-                    "links": {"self": "http://server/tops/1"},
-                    "relationships": {
-                        "lefts": {
-                            "data": [],
-                            "meta": {"count": 0},
-                        },
-                        "rights": {
-                            "data": [],
-                            "meta": {"count": 0},
-                        },
-                    },
-                },
-                {
                     "type": "left",
                     "id": "5",
                     "links": {"self": "http://server/lefts/5"},
@@ -1539,6 +1526,21 @@ class AllRelationsTestCase(TestCaseMixin, TestCase):
                     "relationships": {
                         "top": {"data": {"type": "top", "id": "1"}},
                         "rightOrNone": {"data": None},
+                    },
+                },
+                {
+                    "type": "top",
+                    "id": "1",
+                    "links": {"self": "http://server/tops/1"},
+                    "relationships": {
+                        "lefts": {
+                            "data": [],
+                            "meta": {"count": 0},
+                        },
+                        "rights": {
+                            "data": [],
+                            "meta": {"count": 0},
+                        },
                     },
                 },
             ],

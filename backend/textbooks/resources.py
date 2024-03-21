@@ -49,8 +49,10 @@ class PdfFilesResource:
             # @todo Raise the 404 here instead of 'fastjsonapi.router' (for all resources)
             return None
 
-    def get_page(self, filters, first_index, page_size):
-        pdf_files = PdfFile.objects.all()
+    def get_page(self, sort, filters, first_index, page_size):
+        sort = sort or ["sha256"]
+        pdf_files = PdfFile.objects.order_by(*sort)
+
         return (
             # @todo Use proper SQL counting
             len(pdf_files),
@@ -84,8 +86,10 @@ class PdfFileNamingsResource:
         except PdfFileNaming.DoesNotExist:
             return None
 
-    def get_page(self, filters, first_index, page_size):
-        namings = PdfFileNaming.objects.all()
+    def get_page(self, sort, filters, first_index, page_size):
+        sort = sort or ["id"]
+        namings = PdfFileNaming.objects.order_by(*sort)
+
         return (
             # @todo Use proper SQL counting
             len(namings),
@@ -121,8 +125,10 @@ class ProjectsResource:
         except Project.DoesNotExist:
             return None
 
-    def get_page(self, filters, first_index, page_size):
-        projects = Project.objects.all()
+    def get_page(self, sort, filters, first_index, page_size):
+        sort = sort or ["id"]
+        projects = Project.objects.order_by(*sort)
+
         return (
             # @todo Use proper SQL counting
             len(projects),
@@ -169,8 +175,10 @@ class TextbooksResource:
         except Textbook.DoesNotExist:
             return None
 
-    def get_page(self, filters, first_index, page_size):
-        textbooks = Textbook.objects.all()
+    def get_page(self, sort, filters, first_index, page_size):
+        sort = sort or ["id"]
+        textbooks = Textbook.objects.order_by(*sort)
+
         return (
             # @todo Use proper SQL counting
             len(textbooks),
@@ -210,8 +218,10 @@ class SectionsResource:
         except Section.DoesNotExist:
             return None
 
-    def get_page(self, filters, first_index, page_size):
-        sections = Section.objects.all()
+    def get_page(self, sort, filters, first_index, page_size):
+        sort = sort or ["id"]
+        sections = Section.objects.order_by(*sort)
+
         return (
             # @todo Use proper SQL counting
             len(sections),
@@ -258,8 +268,10 @@ class ExercisesResource:
         except Exercise.DoesNotExist:
             return None
 
-    def get_page(self, filters, first_index, page_size):
-        exercises = Exercise.objects.all()
+    def get_page(self, sort, filters, first_index, page_size):
+        sort = sort or ["textbook", "textbook_page", "number"]
+        exercises = Exercise.objects.order_by(*sort)
+
         # @todo Use proper SQL filtering
         if filters.textbook_page:
             exercises = [exercise for exercise in exercises if exercise.textbook_page == filters.textbook_page]
@@ -299,8 +311,10 @@ class ExtractionEventsResource:
         except ExtractionEvent.DoesNotExist:
             return None
 
-    def get_page(self, filters, first_index, page_size):
-        events = ExtractionEvent.objects.all()
+    def get_page(self, sort, filters, first_index, page_size):
+        sort = sort or ["id"]
+        events = ExtractionEvent.objects.order_by(*sort)
+
         return (
             # @todo Use proper SQL counting
             len(events),
