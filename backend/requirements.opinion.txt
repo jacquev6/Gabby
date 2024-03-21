@@ -11,3 +11,6 @@ fastapi  # Fundamental
 uvicorn[standard]  # Fundamental
 httpx  # For unit testing: https://fastapi.tiangolo.com/tutorial/testing/
 pyhumps  # Convert between cases
+python-multipart  # OAuth2 authentication uses multipart
+pyjwt  # For authentication tokens
+argon2-cffi  # Password hasher

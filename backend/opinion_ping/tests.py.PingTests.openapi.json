@@ -1,6 +1,74 @@
 {
   "components": {
     "schemas": {
+      "Body_login_api_token_post": {
+        "properties": {
+          "client_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Client Id"
+          },
+          "client_secret": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Client Secret"
+          },
+          "grant_type": {
+            "anyOf": [
+              {
+                "pattern": "password",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Grant Type"
+          },
+          "options": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Options"
+          },
+          "password": {
+            "title": "Password",
+            "type": "string"
+          },
+          "scope": {
+            "default": "",
+            "title": "Scope",
+            "type": "string"
+          },
+          "username": {
+            "title": "Username",
+            "type": "string"
+          }
+        },
+        "required": [
+          "username",
+          "password"
+        ],
+        "title": "Body_login_api_token_post",
+        "type": "object"
+      },
       "CreateInputListRelationship": {
         "additionalProperties": false,
         "properties": {
@@ -2545,6 +2613,17 @@
         "title": "textbook-UpdateInput-Data-Relationships",
         "type": "object"
       }
+    },
+    "securitySchemes": {
+      "OAuth2PasswordBearer": {
+        "flows": {
+          "password": {
+            "scopes": {},
+            "tokenUrl": "token"
+          }
+        },
+        "type": "oauth2"
+      }
     }
   },
   "info": {
@@ -2553,6 +2632,27 @@
   },
   "openapi": "3.1.0",
   "paths": {
+    "/api/authenticated-user": {
+      "get": {
+        "operationId": "get_authenticated_user_api_authenticated_user_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "summary": "Get Authenticated User"
+      }
+    },
     "/api/exercises": {
       "get": {
         "operationId": "get_exercises_api_exercises_get",
@@ -4616,6 +4716,42 @@
           }
         },
         "summary": "Update Textbook"
+      }
+    },
+    "/api/token": {
+      "post": {
+        "operationId": "login_api_token_post",
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_login_api_token_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Login"
       }
     },
     "/reset-for-tests/yes-im-sure": {
