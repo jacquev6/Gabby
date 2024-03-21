@@ -213,11 +213,10 @@ async function createExercise() {
   modeIsLoading.value = true
   const exercise = await api.client.post(
     'exercise',
-    {...currentExercise.attributes, textbook_page: props.page},
+    {...currentExercise.attributes, textbookPage: props.page},
     {
       project: {type: 'project', id: props.projectId},
       textbook: {type: 'textbook', id: props.textbookId},
-      extractionEvents: [],
     },
   )
   for (const event of extractionEvents) {
@@ -233,7 +232,17 @@ async function createExercise() {
 
 async function updateExercise() {
   modeIsLoading.value = true
-  await api.client.patch('exercise', currentExercise.id, currentExercise.attributes, {})
+  await api.client.patch(
+    'exercise',
+    currentExercise.id,
+    {
+      instructions: currentExercise.attributes.instructions,
+      example: currentExercise.attributes.example,
+      clue: currentExercise.attributes.clue,
+      wording: currentExercise.attributes.wording,
+    },
+    {},
+  )
   for (const event of extractionEvents) {
     await api.client.post(
       'extractionEvent',

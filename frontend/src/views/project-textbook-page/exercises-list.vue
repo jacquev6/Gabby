@@ -15,7 +15,7 @@ const api = useApiStore()
 
 const busy = ref(false)
 const exercises = computedAsync(
-  async () => await api.client.getAll('exercises', {filter: {'textbook': props.textbook.id, 'textbook_page': props.page}}),
+  async () => await api.client.getAll('exercises', {filter: {'textbook': props.textbook.id, 'textbookPage': props.page}}),
   [],
   busy,
 )

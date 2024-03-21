@@ -100,6 +100,7 @@ describe('ApiStore', () => {
   it('filters exercises by textbook and page', async () => {
     const api = useApiStore()
 
+    expect((await api.client.getAll('exercises')).length).to.equal(6)
     expect((await api.client.getAll('exercises', {filter: {textbook: '1'}})).length).to.equal(3)
     expect((await api.client.getAll('exercises', {filter: {textbook: '1', textbookPage: 6}})).length).to.equal(2)
     expect((await api.client.getAll('exercises', {filter: {textbook: '1', textbookPage: 7}})).length).to.equal(1)
@@ -115,13 +116,12 @@ describe('ApiStore', () => {
     const newExercise = await api.client.post(
       'exercise',
       {
-        textbookPage: 6, number: 14,
+        textbookPage: 6, number: '14',
         instructions: 'Do this',
       },
       {
         project: {type: 'project', id: '1'},
         textbook: {type: 'textbook', id: '1'},
-        extractionEvents: [],
       },
     )
 
@@ -129,6 +129,8 @@ describe('ApiStore', () => {
     expect(newExercise.attributes.instructions).to.equal('Do this')
 
     expect(api.cache.getOne('textbook', '1').inCache).to.be.false
+
+    expect((await api.client.getAll('exercises', {filter: {textbook: '1', textbookPage: 6}})).length).to.equal(3)
   })
 
   it('creates a new exercise and retrieves its textbook', async () => {
@@ -141,13 +143,12 @@ describe('ApiStore', () => {
     const newExercise = await api.client.post(
       'exercise',
       {
-        textbookPage: 6, number: 14,
+        textbookPage: 6, number: '14',
         instructions: 'Do that',
       },
       {
         project: {type: 'project', id: '1'},
         textbook: {type: 'textbook', id: '1'},
-        extractionEvents: [],
       },
       {
         include: 'textbook'
@@ -158,6 +159,8 @@ describe('ApiStore', () => {
     expect(newExercise.attributes.instructions).to.equal('Do that')
 
     expect(api.cache.getOne('textbook', '1').attributes.title).to.equal('Français CE2')
+
+    expect((await api.client.getAll('exercises', {filter: {textbook: '1', textbookPage: 6}})).length).to.equal(3)
   })
 
   it('updates an exercise', async () => {

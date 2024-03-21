@@ -1,9 +1,6 @@
 # Old
-djangorestframework-jsonapi[django-filter]  # Fundamental
-django-cors-headers
+django  # Fundamental
 psycopg2-binary  # For PostgreSQL
-PyYaml  # For Swagger
-uritemplate  # For Swagger
 django-dbbackup  # For backups
 django-storages[s3]  # For backups
 django-extensions  # For 'manage.py graph_models'
@@ -13,3 +10,4 @@ pydotplus  # For 'manage.py graph_models'
 fastapi  # Fundamental
 uvicorn[standard]  # Fundamental
 httpx  # For unit testing: https://fastapi.tiangolo.com/tutorial/testing/
+pyhumps  # Convert between cases

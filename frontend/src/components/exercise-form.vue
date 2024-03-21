@@ -56,7 +56,7 @@ async function create() {
       example: example.value,
       clue: clue.value,
     },
-    {project: props.project, extractionEvents: []},
+    {project: props.project},
   )
   busy.value = false
   number.value = ''

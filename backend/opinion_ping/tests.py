@@ -1,19 +1,20 @@
 import datetime
-import json
-import os
 
-from django.test import TransactionTestCase, TestCase
-from fastapi.testclient import TestClient
-from rest_framework import status
-from rest_framework.test import APITransactionTestCase
+from starlette import status
+from django.test import TransactionTestCase
 
 from .models import Ping
+from fastjsonapi.testing import TestMixin
 from main import app
 
 
-class PingTestsMixin:
-    maxDiff = None
+class PingTests(TestMixin, TransactionTestCase):
     reset_sequences = True  # Primary keys appear in API responses
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.set_app(app)
 
     def test_create__minimal(self):
         before = datetime.datetime.now(tz=datetime.timezone.utc)
@@ -234,7 +235,106 @@ class PingTestsMixin:
             },
         })
 
-    # @todo Add tests for the 'filter[message]': one where it's set to a string, and one where it's set to null. How do we even set a query parameter to null?
+    # @todo Add tests for 'filter[message]' set to null. How do we even set a query parameter to null?
+
+    def test_filter__message_some(self):
+        Ping.objects.create(message="Hello")
+        Ping.objects.create(message="Good bye")
+        Ping.objects.create(message="Hello")
+        Ping.objects.create(message="Good bye")
+        Ping.objects.create(message="Hello")
+
+        response = self.get("http://testserver/api/pings?filter[message]=Hello")
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
+        self.assertEqual(response.json(), {
+            "data": [
+                {
+                    "type": "ping",
+                    "id": "1",
+                    "links": {"self": "http://testserver/api/pings/1"},
+                    "attributes": {
+                        "createdAt": Ping.objects.get(id=1).created_at.isoformat().replace("+00:00", "Z"),
+                        "message": "Hello",
+                    },
+                    "relationships": {
+                        "prev": {"data": None},
+                        "next": {"data": [], "meta": {"count": 0}},
+                    },
+                },
+                {
+                    "type": "ping",
+                    "id": "3",
+                    "links": {"self": "http://testserver/api/pings/3"},
+                    "attributes": {
+                        "createdAt": Ping.objects.get(id=3).created_at.isoformat().replace("+00:00", "Z"),
+                        "message": "Hello",
+                    },
+                    "relationships": {
+                        "prev": {"data": None},
+                        "next": {"data": [], "meta": {"count": 0}},
+                    },
+                },
+            ],
+            "links": {
+                "first": "http://testserver/api/pings?filter%5Bmessage%5D=Hello&page%5Bnumber%5D=1",
+                "last": "http://testserver/api/pings?filter%5Bmessage%5D=Hello&page%5Bnumber%5D=2",
+                "next": "http://testserver/api/pings?filter%5Bmessage%5D=Hello&page%5Bnumber%5D=2",
+                "prev": None,
+            },
+            "meta": {
+                "pagination": {"count": 3, "page": 1, "pages": 2},
+            },
+        })
+
+    def test_filter__prev_some(self):
+        prev = Ping.objects.create()
+        Ping.objects.create(prev=prev)
+        Ping.objects.create(prev=None)
+        Ping.objects.create(prev=prev)
+        Ping.objects.create(prev=None)
+        Ping.objects.create(prev=prev)
+
+        response = self.get("http://testserver/api/pings?filter[prev]=1")
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
+        self.assertEqual(response.json(), {
+            "data": [
+                {
+                    "type": "ping",
+                    "id": "2",
+                    "links": {"self": "http://testserver/api/pings/2"},
+                    "attributes": {
+                        "createdAt": Ping.objects.get(id=2).created_at.isoformat().replace("+00:00", "Z"),
+                        "message": None,
+                    },
+                    "relationships": {
+                        "prev": {"data": {"type": "ping", "id": "1"}},
+                        "next": {"data": [], "meta": {"count": 0}},
+                    },
+                },
+                {
+                    "type": "ping",
+                    "id": "4",
+                    "links": {"self": "http://testserver/api/pings/4"},
+                    "attributes": {
+                        "createdAt": Ping.objects.get(id=4).created_at.isoformat().replace("+00:00", "Z"),
+                        "message": None,
+                    },
+                    "relationships": {
+                        "prev": {"data": {"type": "ping", "id": "1"}},
+                        "next": {"data": [], "meta": {"count": 0}},
+                    },
+                },
+            ],
+            "links": {
+                "first": "http://testserver/api/pings?filter%5Bprev%5D=1&page%5Bnumber%5D=1",
+                "last": "http://testserver/api/pings?filter%5Bprev%5D=1&page%5Bnumber%5D=2",
+                "next": "http://testserver/api/pings?filter%5Bprev%5D=1&page%5Bnumber%5D=2",
+                "prev": None,
+            },
+            "meta": {
+                "pagination": {"count": 3, "page": 1, "pages": 2},
+            },
+        })
 
     def test_update_nothing(self):
         ping = Ping.objects.create(message="Hello", prev=Ping.objects.create())
@@ -338,7 +438,7 @@ class PingTestsMixin:
         self.assertEqual(ping.prev, Ping.objects.get(id=1))
         self.assertEqual(list(ping.next.all()), [Ping.objects.get(id=3)])
 
-    def test_update_prev(self):
+    def test_update_prev__some_to_some(self):
         ping = Ping.objects.create(message="Hello", prev=Ping.objects.create())
         Ping.objects.create(prev=ping)
         Ping.objects.create()
@@ -374,7 +474,7 @@ class PingTestsMixin:
         self.assertEqual(ping.prev, Ping.objects.get(id=4))
         self.assertEqual(list(ping.next.all()), [Ping.objects.get(id=3)])
 
-    def test_update_prev_to_none(self):
+    def test_update_prev__some_to_none(self):
         ping = Ping.objects.create(message="Hello", prev=Ping.objects.create())
         Ping.objects.create(prev=ping)
 
@@ -408,6 +508,42 @@ class PingTestsMixin:
         self.assertEqual(ping.message, "Hello")
         self.assertEqual(ping.prev, None)
         self.assertEqual(list(ping.next.all()), [Ping.objects.get(id=3)])
+
+    def test_update_prev__none_to_some(self):
+        ping = Ping.objects.create(message="Hello", prev=None)
+        Ping.objects.create(prev=ping)
+        Ping.objects.create()
+
+        response = self.patch("http://testserver/api/pings/1", {
+            "data": {
+                "type": "ping",
+                "id": "1",
+                "relationships": {
+                    "prev": {"data": {"type": "ping", "id": "3"}},
+                },
+            },
+        })
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
+        self.assertEqual(response.json(), {
+            "data": {
+                "type": "ping",
+                "id": "1",
+                "links": {"self": "http://testserver/api/pings/1"},
+                "attributes": {
+                    "createdAt": ping.created_at.isoformat().replace("+00:00", "Z"),
+                    "message": "Hello",
+                },
+                "relationships": {
+                    "prev": {"data": {"type": "ping", "id": "3"}},
+                    "next": {"data": [{"type": "ping", "id": "2"}], "meta": {"count": 1}},
+                },
+            },
+        })
+
+        ping = Ping.objects.get(id=1)
+        self.assertEqual(ping.message, "Hello")
+        self.assertEqual(ping.prev, Ping.objects.get(id=3))
+        self.assertEqual(list(ping.next.all()), [Ping.objects.get(id=2)])
 
     def test_update_next(self):
         ping = Ping.objects.create(message="Hello", prev=Ping.objects.create())
@@ -479,47 +615,3 @@ class PingTestsMixin:
         self.assertEqual(ping.message, "Hello")
         self.assertEqual(ping.prev, Ping.objects.get(id=1))
         self.assertEqual(list(ping.next.all()), [])
-
-
-class PingTestsAgainstDjango(PingTestsMixin, APITransactionTestCase):
-    def post(self, url, payload):
-        return self.client.post(url, payload, format="vnd.api+json")
-
-    def get(self, url):
-        return self.client.get(url, format="vnd.api+json")
-
-    def patch(self, url, payload):
-        return self.client.patch(url, payload, format="vnd.api+json")
-
-
-class PingTestsAgainstFastApi(PingTestsMixin, TransactionTestCase):
-    def setUp(self):
-        super().setUp()
-        self.__client = TestClient(app)
-
-    def get(self, url):
-        return self.__client.get(url, headers={"Content-Type": "application/vnd.api+json"})
-
-    def post(self, url, payload):
-        return self.__client.post(url, content=json.dumps(payload), headers={"Content-Type": "application/vnd.api+json"})
-
-    def patch(self, url, payload):
-        return self.__client.patch(url, content=json.dumps(payload), headers={"Content-Type": "application/vnd.api+json"})
-
-
-class SchemaTest(TestCase):
-    def test(self):
-        file_path = os.path.join(os.path.dirname(__file__), "..", "openapi.json")
-        with open(file_path) as file:
-            expected = json.load(file)
-
-        response = TestClient(app).get("http://server/api/openapi.json")
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
-        actual = response.json()
-
-        try:
-            self.assertEqual(actual, expected)
-        finally:
-            with open(file_path, "w") as file:
-                json.dump(actual, file, indent=2, sort_keys=True)
-                file.write("\n")

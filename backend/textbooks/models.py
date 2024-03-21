@@ -15,6 +15,10 @@ class PdfFile(models.Model):
     bytes_count = models.IntegerField(null=False)
     pages_count = models.IntegerField(null=False)
 
+    @property
+    def id(self):
+        return self.sha256
+
     def __str__(self):
         if self.namings:
             names = ", ".join(naming.name for naming in self.namings.all())

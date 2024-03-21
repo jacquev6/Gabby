@@ -5,6 +5,7 @@ class Annotations(BaseModel):
     create_input : bool = True
     update_input : bool = True
     output : bool = True
+    filter : bool = False
 
 
 class Annotation:
@@ -25,3 +26,8 @@ class Computed(Annotation):
 class Secret(Annotation):
     def apply(self, annotations : Annotations):
         annotations.output = False
+
+
+class Filterable(Annotation):
+    def apply(self, annotations : Annotations):
+        annotations.filter = True
