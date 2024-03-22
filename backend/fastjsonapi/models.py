@@ -64,10 +64,9 @@ class UpdateInputListRelationship(BaseModel):
     data: list[ObjectId]
 
 
-def make_create_input_model(resource_name: str, model, resource_models: dict[Type, str]):
+def make_create_input_model(resource_name: str, model, resource_models: set[Type]):
     assert humps.is_camelcase(resource_name)
 
-    resource_models = set(resource_models.keys())
     optional_resource_models = {model | None for model in resource_models}
     list_resource_models = {list[model] for model in resource_models}
 
@@ -112,10 +111,9 @@ def make_create_input_model(resource_name: str, model, resource_models: dict[Typ
     )
 
 
-def make_output_models(resource_name: str, model, resource_models: dict[Type, str]):
+def make_output_models(resource_name: str, model, resource_models: set[Type]):
     assert humps.is_camelcase(resource_name)
 
-    resource_models = set(resource_models.keys())
     optional_resource_models = {model | None for model in resource_models}
     list_resource_models = {list[model] for model in resource_models}
 
@@ -173,10 +171,9 @@ def make_output_models(resource_name: str, model, resource_models: dict[Type, st
     return (ItemOutputModel, PageOutputModel)
 
 
-def make_update_input_model(resource_name: str, model, resource_models: dict[Type, str]):
+def make_update_input_model(resource_name: str, model, resource_models: set[Type]):
     assert humps.is_camelcase(resource_name)
 
-    resource_models = set(resource_models.keys())
     optional_resource_models = {model | None for model in resource_models}
     list_resource_models = {list[model] for model in resource_models}
 

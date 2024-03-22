@@ -114,6 +114,7 @@ class CompiledResource:
         exec("\n".join(filter_code()), {"Filters": Filters}, filter_globals := {"Query": Query, "Annotated": Annotated})
         self.filters = filter_globals["filters"]
 
+        resource_models = set(resource_models.keys())
         self.CreateInputModel = make_create_input_model(self.singularName, resource.Model, resource_models)
         (self.ItemOutputModel, self.PageOutputModel) = make_output_models(self.singularName, resource.Model, resource_models)
         self.UpdateInputModel = make_update_input_model(self.singularName, resource.Model, resource_models)
