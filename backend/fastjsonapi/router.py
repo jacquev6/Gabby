@@ -6,13 +6,12 @@ from urllib.parse import urlencode
 from django.test import TestCase
 from fastapi import APIRouter, Depends, HTTPException, Query, Response
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel, ConfigDict, create_model
-from pydantic_core import PydanticUndefined
 from starlette import status
 import humps
 
-from .annotations import Annotations, Annotation
+from .annotations import Annotations
 from .utils import Urls
+from .models import create_model, make_create_input_model, make_output_models, make_update_input_model
 
 
 # @todo Check consistency of "type" attributes in input 'ObjectId's
@@ -44,66 +43,6 @@ def make_jsonapi_router(resources):
     return router
 
 
-class PageMetaModel(BaseModel):
-    model_config = ConfigDict(extra="forbid")  # @todo Create a custom model base and use it instead of repeating this line
-
-    class Pagination(BaseModel):
-        model_config = ConfigDict(extra="forbid")
-
-        count: int
-        page: int
-        pages: int
-
-    pagination: Pagination
-
-
-class PageLinksModel(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-
-    first: str
-    last: str
-    next: str | None
-    prev: str | None
-
-
-class ObjectId(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-
-    type: str
-    id: str
-
-class MandatoryRelationship(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-
-    data: ObjectId
-
-class OptionalRelationship(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-
-    data: ObjectId | None = None
-
-class CreateInputListRelationship(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-
-    data: list[ObjectId] = []
-
-class OutputListRelationship(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-
-    class Meta(BaseModel):
-        model_config = ConfigDict(extra="forbid")
-
-        count: int
-
-    data: list[ObjectId]
-    meta: Meta
-
-class UpdateInputListRelationship(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-
-    data: list[ObjectId]
-
-
 class CompiledResource:
     def __init__(self, resource_models, resource):
         self._resource = resource
@@ -123,66 +62,30 @@ class CompiledResource:
         self.default_page_size = resource.default_page_size
 
         filterable_attributes = {}
-        create_input_attributes_can_be_defaulted = True
-        create_input_attributes = {}
-        create_input_relationships_can_be_defaulted = True
-        create_input_relationships = {}
         self.output_attributes = []
-        output_attributes = {}
         self.output_relationships = {}
-        output_relationships = {}
-        update_input_attributes = {}
-        update_input_relationships = {}
         for (name, info) in resource.Model.model_fields.items():
-            annotations = Annotations()
-            for annotation in info.metadata:
-                if isinstance(annotation, Annotation):
-                    annotation.apply(annotations)
-
             name = humps.camelize(name)
+            annotations = Annotations(info.metadata)
 
             if (resource_name := resource_models.get(info.annotation)) is not None:
-                assert info.default is PydanticUndefined
-                create_input_relationships_can_be_defaulted = False
-                if annotations.create_input:
-                    create_input_relationships[name] = (MandatoryRelationship, ...)
                 if annotations.output:
                     self.output_relationships[name] = (False, resource_name)
-                    output_relationships[name] = (MandatoryRelationship, ...)
-                if annotations.update_input:
-                    update_input_relationships[name] = (MandatoryRelationship, None)
                 if annotations.filter:
                     filterable_attributes[humps.decamelize(name)] = str
             elif (resource_name := optional_resource_models.get(info.annotation)) is not None:
                 assert info.default is None
-                if annotations.create_input:
-                    create_input_relationships[name] = (OptionalRelationship, OptionalRelationship())
                 if annotations.output:
                     self.output_relationships[name] = (False, resource_name)
-                    output_relationships[name] = (OptionalRelationship, ...)
-                if annotations.update_input:
-                    update_input_relationships[name] = (OptionalRelationship, None)
                 if annotations.filter:
                     filterable_attributes[humps.decamelize(name)] = str
             elif (resource_name := list_resource_models.get(info.annotation)) is not None:
                 assert info.default == []
-                if annotations.create_input:
-                    create_input_relationships[name] = (CreateInputListRelationship, CreateInputListRelationship())
                 if annotations.output:
                     self.output_relationships[name] = (True, resource_name)
-                    output_relationships[name] = (OutputListRelationship, ...)
-                if annotations.update_input:
-                    update_input_relationships[name] = (UpdateInputListRelationship, None)
             else:
-                if annotations.create_input:
-                    if info.default == PydanticUndefined:
-                        create_input_attributes_can_be_defaulted = False
-                    create_input_attributes[name] = (info.annotation, info.default)
                 if annotations.output:
                     self.output_attributes.append(name)
-                    output_attributes[name] = (info.annotation, ...)
-                if annotations.update_input:
-                    update_input_attributes[name] = (info.annotation, None)
                 if annotations.filter:
                     filterable_attributes[humps.decamelize(name)] = info.annotation
 
@@ -192,7 +95,6 @@ class CompiledResource:
                 key: (value | None, ...)
                 for (key, value) in filterable_attributes.items()
             },
-            __config__ = ConfigDict(extra="forbid"),
         )
         # @todo Keep things structured all they way (avoid generating textual code)
         # See... my old answer here: https://stackoverflow.com/a/29927459/905845
@@ -212,111 +114,9 @@ class CompiledResource:
         exec("\n".join(filter_code()), {"Filters": Filters}, filter_globals := {"Query": Query, "Annotated": Annotated})
         self.filters = filter_globals["filters"]
 
-        CreateInputDataAttributes = create_model(
-            f"{self.singularName}-CreateInput-Data-Attributes",
-            **create_input_attributes,
-            __config__ = ConfigDict(extra="forbid"),
-        )
-
-        create_input_attributes_default = CreateInputDataAttributes() if create_input_attributes_can_be_defaulted else ...
-
-        CreateInputDataRelationships = create_model(
-            f"{self.singularName}-CreateInput-Data-Relationships",
-            **create_input_relationships,
-            __config__ = ConfigDict(extra="forbid"),
-        )
-
-        create_input_relationships_default = CreateInputDataRelationships() if create_input_relationships_can_be_defaulted else ...
-
-        self.CreateInputModel = create_model(
-            f"{self.singularName}-CreateInput",
-            data=(
-                create_model(
-                    f"{self.singularName}-CreateInput-Data",
-                    type=(str, ...),
-                    attributes=(CreateInputDataAttributes, create_input_attributes_default),
-                    relationships=(CreateInputDataRelationships, create_input_relationships_default),
-                    __config__ = ConfigDict(extra="forbid"),
-                ),
-                ...
-            ),
-            __config__ = ConfigDict(extra="forbid"),
-        )
-
-        OutputItemModel = create_model(
-            f"{self.singularName}-OutputItem",
-            type=(str, ...),
-            id=(str, ...),
-            links=(
-                create_model(
-                    f"{self.singularName}-OutputItem-Links",
-                    self=(str, ...),
-                    __config__ = ConfigDict(extra="forbid"),
-                ),
-                ...
-            ),
-            **(dict(attributes=(
-                create_model(
-                    f"{self.singularName}-OutputItem-Attributes",
-                    **output_attributes,
-                    __config__ = ConfigDict(extra="forbid"),
-                ),
-                ...
-            )) if output_attributes else {}),
-            **(dict(relationships=(
-                create_model(
-                    f"{self.singularName}-OutputItem-Relationships",
-                    **output_relationships,
-                    __config__ = ConfigDict(extra="forbid"),
-                ),
-                ...
-            )) if output_relationships else {}),
-            __config__ = ConfigDict(extra="forbid"),
-        )
-
-        self.ItemOutputModel = create_model(
-            f"{self.singularName}-ItemOutput",
-            data=(OutputItemModel, ...),
-            included=(list, None),
-            __config__ = ConfigDict(extra="forbid"),
-        )
-
-        self.PageOutputModel = create_model(
-            f"{self.singularName}-PageOutput",
-            data=(list[OutputItemModel], ...),
-            meta=(PageMetaModel, ...),
-            links=(PageLinksModel, ...),
-            included=(list, None),
-            __config__ = ConfigDict(extra="forbid"),
-        )
-
-        UpdateInputDataAttributes = create_model(
-            f"{self.singularName}-UpdateInput-Data-Attributes",
-            **update_input_attributes,
-            __config__ = ConfigDict(extra="forbid"),
-        )
-
-        UpdateInputDataRelationships = create_model(
-            f"{self.singularName}-UpdateInput-Data-Relationships",
-            **update_input_relationships,
-            __config__ = ConfigDict(extra="forbid"),
-        )
-
-        self.UpdateInputModel = create_model(
-            f"{self.singularName}-UpdateInput",
-            data=(
-                create_model(
-                    f"{self.singularName}-UpdateInput-Data",
-                    type=(str, ...),
-                    id=(str, ...),
-                    attributes=(UpdateInputDataAttributes, UpdateInputDataAttributes()),
-                    relationships=(UpdateInputDataRelationships, UpdateInputDataRelationships()),
-                    __config__ = ConfigDict(extra="forbid"),
-                ),
-                ...
-            ),
-            __config__ = ConfigDict(extra="forbid"),
-        )
+        self.CreateInputModel = make_create_input_model(self.singularName, resource.Model, resource_models)
+        (self.ItemOutputModel, self.PageOutputModel) = make_output_models(self.singularName, resource.Model, resource_models)
+        self.UpdateInputModel = make_update_input_model(self.singularName, resource.Model, resource_models)
 
     def create_item(self, resources, attributes, relationships):
         attrs = {
