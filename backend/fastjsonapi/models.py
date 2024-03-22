@@ -24,10 +24,15 @@ class PageMetaModel(BaseModel):
 
 
 class PageLinksModel(BaseModel):
+    # @todo Consider adding 'self'
     first: str
     last: str
     next: str | None
     prev: str | None
+
+
+class ItemLinksModel(BaseModel):
+    self: str
 
 
 class ObjectId(BaseModel):
@@ -134,14 +139,7 @@ def make_output_models(resource_name: str, model, resource_models: dict[Type, st
         f"{resource_name}-OutputItem",
         type=(str, ...),
         id=(str, ...),
-        links=(
-            # @todo Make a static model for item links
-            create_model(
-                f"{resource_name}-OutputItem-Links",
-                self=(str, ...),
-            ),
-            ...
-        ),
+        links=(ItemLinksModel, ...),
         **(dict(attributes=(
             create_model(
                 f"{resource_name}-OutputItem-Attributes",

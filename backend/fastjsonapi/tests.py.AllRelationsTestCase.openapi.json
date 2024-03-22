@@ -29,6 +29,20 @@
         "title": "HTTPValidationError",
         "type": "object"
       },
+      "ItemLinksModel": {
+        "additionalProperties": false,
+        "properties": {
+          "self": {
+            "title": "Self",
+            "type": "string"
+          }
+        },
+        "required": [
+          "self"
+        ],
+        "title": "ItemLinksModel",
+        "type": "object"
+      },
       "MandatoryRelationship": {
         "additionalProperties": false,
         "properties": {
@@ -335,7 +349,7 @@
             "type": "string"
           },
           "links": {
-            "$ref": "#/components/schemas/left-OutputItem-Links"
+            "$ref": "#/components/schemas/ItemLinksModel"
           },
           "relationships": {
             "$ref": "#/components/schemas/left-OutputItem-Relationships"
@@ -352,20 +366,6 @@
           "relationships"
         ],
         "title": "left-OutputItem",
-        "type": "object"
-      },
-      "left-OutputItem-Links": {
-        "additionalProperties": false,
-        "properties": {
-          "self": {
-            "title": "Self",
-            "type": "string"
-          }
-        },
-        "required": [
-          "self"
-        ],
-        "title": "left-OutputItem-Links",
         "type": "object"
       },
       "left-OutputItem-Relationships": {
@@ -582,7 +582,7 @@
             "type": "string"
           },
           "links": {
-            "$ref": "#/components/schemas/right-OutputItem-Links"
+            "$ref": "#/components/schemas/ItemLinksModel"
           },
           "relationships": {
             "$ref": "#/components/schemas/right-OutputItem-Relationships"
@@ -599,20 +599,6 @@
           "relationships"
         ],
         "title": "right-OutputItem",
-        "type": "object"
-      },
-      "right-OutputItem-Links": {
-        "additionalProperties": false,
-        "properties": {
-          "self": {
-            "title": "Self",
-            "type": "string"
-          }
-        },
-        "required": [
-          "self"
-        ],
-        "title": "right-OutputItem-Links",
         "type": "object"
       },
       "right-OutputItem-Relationships": {
@@ -846,7 +832,7 @@
             "type": "string"
           },
           "links": {
-            "$ref": "#/components/schemas/top-OutputItem-Links"
+            "$ref": "#/components/schemas/ItemLinksModel"
           },
           "relationships": {
             "$ref": "#/components/schemas/top-OutputItem-Relationships"
@@ -863,20 +849,6 @@
           "relationships"
         ],
         "title": "top-OutputItem",
-        "type": "object"
-      },
-      "top-OutputItem-Links": {
-        "additionalProperties": false,
-        "properties": {
-          "self": {
-            "title": "Self",
-            "type": "string"
-          }
-        },
-        "required": [
-          "self"
-        ],
-        "title": "top-OutputItem-Links",
         "type": "object"
       },
       "top-OutputItem-Relationships": {

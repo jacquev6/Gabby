@@ -14,6 +14,20 @@
         "title": "HTTPValidationError",
         "type": "object"
       },
+      "ItemLinksModel": {
+        "additionalProperties": false,
+        "properties": {
+          "self": {
+            "title": "Self",
+            "type": "string"
+          }
+        },
+        "required": [
+          "self"
+        ],
+        "title": "ItemLinksModel",
+        "type": "object"
+      },
       "PageLinksModel": {
         "additionalProperties": false,
         "properties": {
@@ -236,7 +250,7 @@
             "type": "string"
           },
           "links": {
-            "$ref": "#/components/schemas/resource-OutputItem-Links"
+            "$ref": "#/components/schemas/ItemLinksModel"
           },
           "type": {
             "title": "Type",
@@ -285,20 +299,6 @@
           "computedStr"
         ],
         "title": "resource-OutputItem-Attributes",
-        "type": "object"
-      },
-      "resource-OutputItem-Links": {
-        "additionalProperties": false,
-        "properties": {
-          "self": {
-            "title": "Self",
-            "type": "string"
-          }
-        },
-        "required": [
-          "self"
-        ],
-        "title": "resource-OutputItem-Links",
         "type": "object"
       },
       "resource-PageOutput": {
