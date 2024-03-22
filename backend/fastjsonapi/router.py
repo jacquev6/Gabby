@@ -3,6 +3,7 @@ from types import UnionType
 from typing import Annotated
 from urllib.parse import urlencode
 
+from django.test import TestCase
 from fastapi import APIRouter, Depends, HTTPException, Query, Response
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, ConfigDict, create_model
@@ -594,3 +595,26 @@ def parse_include(include):
             for part in path:
                 current = current.setdefault(part, {})
         return return_value
+
+
+class ParseIncludeTests(TestCase):
+    def test_none(self):
+        self.assertEqual(parse_include(None), None)
+
+    def test_empty_string(self):
+        self.assertEqual(parse_include(""), {})
+
+    def test_single_item(self):
+        self.assertEqual(parse_include("author"), {"author": {}})
+
+    def test_multiple_items(self):
+        self.assertEqual(parse_include("author,comments"), {"author": {}, "comments": {}})
+
+    def test_nested_items(self):
+        self.assertEqual(parse_include("comments.author.team.members"), {"comments": {"author": {"team": {"members": {}}}}})
+
+    def test_repeated_prefix(self):
+        self.assertEqual(
+            parse_include("comments.author.team.members.posts,comments.author.team.leader.comments"),
+            {"comments": {"author": {"team": {"members": {"posts": {}}, "leader": {"comments": {}}}}}},
+        )

@@ -1,18 +1,18 @@
 from __future__ import annotations
+from typing import Annotated
 import dataclasses
 import datetime
-import json
-from typing import Annotated
 
 from django.test import TestCase
-from fastapi import FastAPI
-from fastapi.testclient import TestClient
 from pydantic import BaseModel
 from starlette import status
 
 from .annotations import Computed, Constant, Secret, Filterable
-from .router import make_jsonapi_router
 from .testing import TestMixin
+
+# @todo Run tests from *all* Python files, not just 'test*.py'. Then remove these imports.
+# Impossible right now because opinion.config.prod is not importable without several environment variables set.
+from .router import ParseIncludeTests
 
 
 # @todo Use this factory in all test cases
