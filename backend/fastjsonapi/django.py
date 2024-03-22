@@ -39,5 +39,7 @@ class DjangoOrmWrapper:
                 setattr(self._wrapped, name, value)
 
 
+wrap = DjangoOrmWrapper
+
 def unwrap(wrapper):
     return None if wrapper is None else wrapper._wrapped

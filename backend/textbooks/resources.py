@@ -1,14 +1,14 @@
 from __future__ import annotations
 from typing import Annotated
 
+from django.core.exceptions import ValidationError
 from fastapi import HTTPException
 from pydantic import BaseModel
 import django.conf
-from django.core.exceptions import ValidationError
 
-from fastjsonapi import Computed, Filterable, Constant
-from fastjsonapi.django import DjangoOrmWrapper, unwrap
 from .models import PdfFile, PdfFileNaming, Project, Textbook, Section, Exercise, ExtractionEvent
+from fastjsonapi import Computed, Filterable, Constant
+from fastjsonapi.django import wrap, unwrap
 
 
 default_page_size = django.conf.settings.REST_FRAMEWORK["PAGE_SIZE"]
@@ -40,11 +40,11 @@ class PdfFilesResource:
         except ValidationError as e:
             raise HTTPException(status_code=400, detail=e.message_dict)
         pdf_file.save()
-        return DjangoOrmWrapper(pdf_file)
+        return wrap(pdf_file)
 
     def get_item(self, id):
         try:
-            return DjangoOrmWrapper(PdfFile.objects.get(sha256=id))
+            return wrap(PdfFile.objects.get(sha256=id))
         except PdfFile.DoesNotExist:
             # @todo Raise the 404 here instead of 'fastjsonapi.router' (for all resources)
             return None
@@ -57,7 +57,7 @@ class PdfFilesResource:
             # @todo Use proper SQL counting
             len(pdf_files),
             # @todo Use proper SQL limits
-            [DjangoOrmWrapper(pdf_file) for pdf_file in pdf_files[first_index:first_index + page_size]],
+            [wrap(pdf_file) for pdf_file in pdf_files[first_index:first_index + page_size]],
         )
 
 
@@ -78,11 +78,11 @@ class PdfFileNamingsResource:
             name=name,
             pdf_file=unwrap(pdf_file),
         )
-        return DjangoOrmWrapper(naming)
+        return wrap(naming)
 
     def get_item(self, id):
         try:
-            return DjangoOrmWrapper(PdfFileNaming.objects.get(id=id))
+            return wrap(PdfFileNaming.objects.get(id=id))
         except PdfFileNaming.DoesNotExist:
             return None
 
@@ -94,7 +94,7 @@ class PdfFileNamingsResource:
             # @todo Use proper SQL counting
             len(namings),
             # @todo Use proper SQL limits
-            [DjangoOrmWrapper(naming) for naming in namings[first_index:first_index + page_size]],
+            [wrap(naming) for naming in namings[first_index:first_index + page_size]],
         )
 
 
@@ -117,11 +117,11 @@ class ProjectsResource:
             title=title,
             description=description,
         )
-        return DjangoOrmWrapper(project)
+        return wrap(project)
 
     def get_item(self, id):
         try:
-            return DjangoOrmWrapper(Project.objects.get(id=id))
+            return wrap(Project.objects.get(id=id))
         except Project.DoesNotExist:
             return None
 
@@ -133,7 +133,7 @@ class ProjectsResource:
             # @todo Use proper SQL counting
             len(projects),
             # @todo Use proper SQL limits
-            [DjangoOrmWrapper(project) for project in projects[first_index:first_index + page_size]],
+            [wrap(project) for project in projects[first_index:first_index + page_size]],
         )
 
 
@@ -167,11 +167,11 @@ class TextbooksResource:
         except ValidationError as e:
             raise HTTPException(status_code=400, detail=e.message_dict)
         textbook.save()
-        return DjangoOrmWrapper(textbook)
+        return wrap(textbook)
 
     def get_item(self, id):
         try:
-            return DjangoOrmWrapper(Textbook.objects.get(id=id))
+            return wrap(Textbook.objects.get(id=id))
         except Textbook.DoesNotExist:
             return None
 
@@ -183,7 +183,7 @@ class TextbooksResource:
             # @todo Use proper SQL counting
             len(textbooks),
             # @todo Use proper SQL limits
-            [DjangoOrmWrapper(textbook) for textbook in textbooks[first_index:first_index + page_size]],
+            [wrap(textbook) for textbook in textbooks[first_index:first_index + page_size]],
         )
 
 
@@ -210,11 +210,11 @@ class SectionsResource:
             textbook=unwrap(textbook),
             pdf_file=unwrap(pdf_file),
         )
-        return DjangoOrmWrapper(section)
+        return wrap(section)
 
     def get_item(self, id):
         try:
-            return DjangoOrmWrapper(Section.objects.get(id=id))
+            return wrap(Section.objects.get(id=id))
         except Section.DoesNotExist:
             return None
 
@@ -226,7 +226,7 @@ class SectionsResource:
             # @todo Use proper SQL counting
             len(sections),
             # @todo Use proper SQL limits
-            [DjangoOrmWrapper(section) for section in sections[first_index:first_index + page_size]],
+            [wrap(section) for section in sections[first_index:first_index + page_size]],
         )
 
 
@@ -260,11 +260,11 @@ class ExercisesResource:
             project=unwrap(project),
             textbook=unwrap(textbook),
         )
-        return DjangoOrmWrapper(exercise)
+        return wrap(exercise)
 
     def get_item(self, id):
         try:
-            return DjangoOrmWrapper(Exercise.objects.get(id=id))
+            return wrap(Exercise.objects.get(id=id))
         except Exercise.DoesNotExist:
             return None
 
@@ -282,7 +282,7 @@ class ExercisesResource:
             # @todo Use proper SQL counting
             len(exercises),
             # @todo Use proper SQL limits
-            [DjangoOrmWrapper(exercise) for exercise in exercises[first_index:first_index + page_size]],
+            [wrap(exercise) for exercise in exercises[first_index:first_index + page_size]],
         )
 
 
@@ -303,11 +303,11 @@ class ExtractionEventsResource:
             event=event,
             exercise=unwrap(exercise),
         )
-        return DjangoOrmWrapper(e)
+        return wrap(e)
 
     def get_item(self, id):
         try:
-            return DjangoOrmWrapper(ExtractionEvent.objects.get(id=id))
+            return wrap(ExtractionEvent.objects.get(id=id))
         except ExtractionEvent.DoesNotExist:
             return None
 
@@ -319,5 +319,5 @@ class ExtractionEventsResource:
             # @todo Use proper SQL counting
             len(events),
             # @todo Use proper SQL limits
-            [DjangoOrmWrapper(event) for event in events[first_index:first_index + page_size]],
+            [wrap(event) for event in events[first_index:first_index + page_size]],
         )

@@ -5,10 +5,9 @@ import datetime
 from pydantic import BaseModel
 import django.conf
 
-
-from fastjsonapi import Computed, Filterable
-from fastjsonapi.django import DjangoOrmWrapper, unwrap
 from .models import Ping
+from fastjsonapi import Computed, Filterable
+from fastjsonapi.django import wrap, unwrap
 
 
 default_page_size = django.conf.settings.REST_FRAMEWORK["PAGE_SIZE"]
@@ -32,11 +31,11 @@ class PingsResource:
         ping = Ping.objects.create(message=message, prev=unwrap(prev))
         ping.next.set([unwrap(n) for n in next])
         ping.save()
-        return DjangoOrmWrapper(ping)
+        return wrap(ping)
 
     def get_item(self, id):
         try:
-            return DjangoOrmWrapper(Ping.objects.get(id=id))
+            return wrap(Ping.objects.get(id=id))
         except Ping.DoesNotExist:
             return None
 
@@ -54,5 +53,5 @@ class PingsResource:
             # @todo Use proper SQL counting
             len(pings),
             # @todo Use proper SQL limits
-            [DjangoOrmWrapper(ping) for ping in pings[first_index:first_index + page_size]],
+            [wrap(ping) for ping in pings[first_index:first_index + page_size]],
         )
