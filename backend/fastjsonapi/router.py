@@ -11,7 +11,7 @@ import humps
 
 from .annotations import Annotations
 from .utils import Urls
-from .models import create_model, make_create_input_model, make_output_models, make_update_input_model
+from .models import create_model, make_create_input_model, make_filters_dependable, make_output_models, make_update_input_model
 
 
 # @todo Check consistency of "type" attributes in input 'ObjectId's
@@ -61,7 +61,6 @@ class CompiledResource:
 
         self.default_page_size = resource.default_page_size
 
-        filterable_attributes = {}
         self.output_attributes = []
         self.output_relationships = {}
         for (name, info) in resource.Model.model_fields.items():
@@ -71,14 +70,10 @@ class CompiledResource:
             if (resource_name := resource_models.get(info.annotation)) is not None:
                 if annotations.output:
                     self.output_relationships[name] = (False, resource_name)
-                if annotations.filter:
-                    filterable_attributes[humps.decamelize(name)] = str
             elif (resource_name := optional_resource_models.get(info.annotation)) is not None:
                 assert info.default is None
                 if annotations.output:
                     self.output_relationships[name] = (False, resource_name)
-                if annotations.filter:
-                    filterable_attributes[humps.decamelize(name)] = str
             elif (resource_name := list_resource_models.get(info.annotation)) is not None:
                 assert info.default == []
                 if annotations.output:
@@ -86,37 +81,11 @@ class CompiledResource:
             else:
                 if annotations.output:
                     self.output_attributes.append(name)
-                if annotations.filter:
-                    filterable_attributes[humps.decamelize(name)] = info.annotation
-
-        Filters = create_model(
-            f"{self.singularName}-Filters",
-            **{
-                key: (value | None, ...)
-                for (key, value) in filterable_attributes.items()
-            },
-        )
-        # @todo Keep things structured all they way (avoid generating textual code)
-        # See... my old answer here: https://stackoverflow.com/a/29927459/905845
-        def filter_code():
-            yield "def filters("
-            for (name, annotation) in filterable_attributes.items():
-                if isinstance(annotation, UnionType):
-                    assert len(annotation.__args__) == 2
-                    assert annotation.__args__[1] is type(None)
-                    annotation = annotation.__args__[0]
-                yield f"    {name}: Annotated[{annotation.__name__}, Query(alias='filter[{humps.camelize(name)}]')] = None,"
-            yield "):"
-            yield "    return Filters("
-            for name in filterable_attributes:
-                yield f"        {name}={name},"
-            yield "    )"
-        exec("\n".join(filter_code()), {"Filters": Filters}, filter_globals := {"Query": Query, "Annotated": Annotated})
-        self.filters = filter_globals["filters"]
 
         resource_models = set(resource_models.keys())
         self.CreateInputModel = make_create_input_model(self.singularName, resource.Model, resource_models)
         (self.ItemOutputModel, self.PageOutputModel) = make_output_models(self.singularName, resource.Model, resource_models)
+        self.filters = make_filters_dependable(self.singularName, resource.Model, resource_models)
         self.UpdateInputModel = make_update_input_model(self.singularName, resource.Model, resource_models)
 
     def create_item(self, resources, attributes, relationships):
