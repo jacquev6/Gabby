@@ -1,87 +1,170 @@
 {
   "components": {
     "schemas": {
-      "Body_login_api_token_post": {
+      "ExerciseModel-Input": {
         "properties": {
-          "client_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Client Id"
-          },
-          "client_secret": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Client Secret"
-          },
-          "grant_type": {
-            "anyOf": [
-              {
-                "pattern": "password",
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Grant Type"
-          },
-          "options": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Options"
-          },
-          "password": {
-            "title": "Password",
-            "type": "string"
-          },
-          "scope": {
+          "clue": {
             "default": "",
-            "title": "Scope",
+            "title": "Clue",
             "type": "string"
           },
-          "username": {
-            "title": "Username",
+          "example": {
+            "default": "",
+            "title": "Example",
+            "type": "string"
+          },
+          "extraction_events": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/ExtractionEventModel-Input"
+            },
+            "title": "Extraction Events",
+            "type": "array"
+          },
+          "instructions": {
+            "default": "",
+            "title": "Instructions",
+            "type": "string"
+          },
+          "number": {
+            "title": "Number",
+            "type": "string"
+          },
+          "project": {
+            "$ref": "#/components/schemas/ProjectModel-Input"
+          },
+          "textbook": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TextbookModel-Input"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "textbook_page": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Textbook Page"
+          },
+          "wording": {
+            "default": "",
+            "title": "Wording",
             "type": "string"
           }
         },
         "required": [
-          "username",
-          "password"
+          "number",
+          "project"
         ],
-        "title": "Body_login_api_token_post",
+        "title": "ExerciseModel",
         "type": "object"
       },
-      "CreateInputListRelationship": {
-        "additionalProperties": false,
+      "ExerciseModel-Output": {
         "properties": {
-          "data": {
+          "clue": {
+            "default": "",
+            "title": "Clue",
+            "type": "string"
+          },
+          "example": {
+            "default": "",
+            "title": "Example",
+            "type": "string"
+          },
+          "extraction_events": {
             "default": [],
             "items": {
-              "$ref": "#/components/schemas/ObjectId"
+              "$ref": "#/components/schemas/ExtractionEventModel-Output"
             },
-            "title": "Data",
+            "title": "Extraction Events",
             "type": "array"
+          },
+          "instructions": {
+            "default": "",
+            "title": "Instructions",
+            "type": "string"
+          },
+          "number": {
+            "title": "Number",
+            "type": "string"
+          },
+          "project": {
+            "$ref": "#/components/schemas/ProjectModel-Output"
+          },
+          "textbook": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TextbookModel-Output"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "textbook_page": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Textbook Page"
+          },
+          "wording": {
+            "default": "",
+            "title": "Wording",
+            "type": "string"
           }
         },
-        "title": "CreateInputListRelationship",
+        "required": [
+          "number",
+          "project"
+        ],
+        "title": "ExerciseModel",
+        "type": "object"
+      },
+      "ExtractionEventModel-Input": {
+        "properties": {
+          "event": {
+            "title": "Event",
+            "type": "string"
+          },
+          "exercise": {
+            "$ref": "#/components/schemas/ExerciseModel-Input"
+          }
+        },
+        "required": [
+          "event",
+          "exercise"
+        ],
+        "title": "ExtractionEventModel",
+        "type": "object"
+      },
+      "ExtractionEventModel-Output": {
+        "properties": {
+          "event": {
+            "title": "Event",
+            "type": "string"
+          },
+          "exercise": {
+            "$ref": "#/components/schemas/ExerciseModel-Output"
+          }
+        },
+        "required": [
+          "event",
+          "exercise"
+        ],
+        "title": "ExtractionEventModel",
         "type": "object"
       },
       "HTTPValidationError": {
@@ -261,21 +344,378 @@
         "title": "Pagination",
         "type": "object"
       },
-      "UpdateInputListRelationship": {
-        "additionalProperties": false,
+      "PdfFileModel-Input": {
         "properties": {
-          "data": {
+          "bytes_count": {
+            "title": "Bytes Count",
+            "type": "integer"
+          },
+          "namings": {
+            "default": [],
             "items": {
-              "$ref": "#/components/schemas/ObjectId"
+              "$ref": "#/components/schemas/PdfFileNamingModel-Input"
             },
-            "title": "Data",
+            "title": "Namings",
             "type": "array"
+          },
+          "pages_count": {
+            "title": "Pages Count",
+            "type": "integer"
+          },
+          "sections": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/SectionModel-Input"
+            },
+            "title": "Sections",
+            "type": "array"
+          },
+          "sha256": {
+            "title": "Sha256",
+            "type": "string"
           }
         },
         "required": [
-          "data"
+          "sha256",
+          "bytes_count",
+          "pages_count"
         ],
-        "title": "UpdateInputListRelationship",
+        "title": "PdfFileModel",
+        "type": "object"
+      },
+      "PdfFileModel-Output": {
+        "properties": {
+          "bytes_count": {
+            "title": "Bytes Count",
+            "type": "integer"
+          },
+          "namings": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/PdfFileNamingModel-Output"
+            },
+            "title": "Namings",
+            "type": "array"
+          },
+          "pages_count": {
+            "title": "Pages Count",
+            "type": "integer"
+          },
+          "sections": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/SectionModel-Output"
+            },
+            "title": "Sections",
+            "type": "array"
+          },
+          "sha256": {
+            "title": "Sha256",
+            "type": "string"
+          }
+        },
+        "required": [
+          "sha256",
+          "bytes_count",
+          "pages_count"
+        ],
+        "title": "PdfFileModel",
+        "type": "object"
+      },
+      "PdfFileNamingModel-Input": {
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "pdf_file": {
+            "$ref": "#/components/schemas/PdfFileModel-Input"
+          }
+        },
+        "required": [
+          "name",
+          "pdf_file"
+        ],
+        "title": "PdfFileNamingModel",
+        "type": "object"
+      },
+      "PdfFileNamingModel-Output": {
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "pdf_file": {
+            "$ref": "#/components/schemas/PdfFileModel-Output"
+          }
+        },
+        "required": [
+          "name",
+          "pdf_file"
+        ],
+        "title": "PdfFileNamingModel",
+        "type": "object"
+      },
+      "ProjectModel-Input": {
+        "properties": {
+          "description": {
+            "default": "",
+            "title": "Description",
+            "type": "string"
+          },
+          "exercises": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/ExerciseModel-Input"
+            },
+            "title": "Exercises",
+            "type": "array"
+          },
+          "textbooks": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/TextbookModel-Input"
+            },
+            "title": "Textbooks",
+            "type": "array"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title"
+        ],
+        "title": "ProjectModel",
+        "type": "object"
+      },
+      "ProjectModel-Output": {
+        "properties": {
+          "description": {
+            "default": "",
+            "title": "Description",
+            "type": "string"
+          },
+          "exercises": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/ExerciseModel-Output"
+            },
+            "title": "Exercises",
+            "type": "array"
+          },
+          "textbooks": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/TextbookModel-Output"
+            },
+            "title": "Textbooks",
+            "type": "array"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title"
+        ],
+        "title": "ProjectModel",
+        "type": "object"
+      },
+      "SectionModel-Input": {
+        "properties": {
+          "pages_count": {
+            "title": "Pages Count",
+            "type": "integer"
+          },
+          "pdf_file": {
+            "$ref": "#/components/schemas/PdfFileModel-Input"
+          },
+          "pdf_file_start_page": {
+            "title": "Pdf File Start Page",
+            "type": "integer"
+          },
+          "textbook": {
+            "$ref": "#/components/schemas/TextbookModel-Input"
+          },
+          "textbook_start_page": {
+            "title": "Textbook Start Page",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "textbook_start_page",
+          "pdf_file_start_page",
+          "pages_count",
+          "textbook",
+          "pdf_file"
+        ],
+        "title": "SectionModel",
+        "type": "object"
+      },
+      "SectionModel-Output": {
+        "properties": {
+          "pages_count": {
+            "title": "Pages Count",
+            "type": "integer"
+          },
+          "pdf_file": {
+            "$ref": "#/components/schemas/PdfFileModel-Output"
+          },
+          "pdf_file_start_page": {
+            "title": "Pdf File Start Page",
+            "type": "integer"
+          },
+          "textbook": {
+            "$ref": "#/components/schemas/TextbookModel-Output"
+          },
+          "textbook_start_page": {
+            "title": "Textbook Start Page",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "textbook_start_page",
+          "pdf_file_start_page",
+          "pages_count",
+          "textbook",
+          "pdf_file"
+        ],
+        "title": "SectionModel",
+        "type": "object"
+      },
+      "TextbookModel-Input": {
+        "properties": {
+          "exercises": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/ExerciseModel-Input"
+            },
+            "title": "Exercises",
+            "type": "array"
+          },
+          "isbn": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Isbn"
+          },
+          "project": {
+            "$ref": "#/components/schemas/ProjectModel-Input"
+          },
+          "publisher": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Publisher"
+          },
+          "sections": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/SectionModel-Input"
+            },
+            "title": "Sections",
+            "type": "array"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Year"
+          }
+        },
+        "required": [
+          "title",
+          "project"
+        ],
+        "title": "TextbookModel",
+        "type": "object"
+      },
+      "TextbookModel-Output": {
+        "properties": {
+          "exercises": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/ExerciseModel-Output"
+            },
+            "title": "Exercises",
+            "type": "array"
+          },
+          "isbn": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Isbn"
+          },
+          "project": {
+            "$ref": "#/components/schemas/ProjectModel-Output"
+          },
+          "publisher": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Publisher"
+          },
+          "sections": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/SectionModel-Output"
+            },
+            "title": "Sections",
+            "type": "array"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Year"
+          }
+        },
+        "required": [
+          "title",
+          "project"
+        ],
+        "title": "TextbookModel",
         "type": "object"
       },
       "ValidationError": {
@@ -891,826 +1331,6 @@
         "title": "extractionEvent-UpdateInput-Data-Relationships",
         "type": "object"
       },
-      "pdfFile-CreateInput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/pdfFile-CreateInput-Data"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "pdfFile-CreateInput",
-        "type": "object"
-      },
-      "pdfFile-CreateInput-Data": {
-        "additionalProperties": false,
-        "properties": {
-          "attributes": {
-            "$ref": "#/components/schemas/pdfFile-CreateInput-Data-Attributes"
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/pdfFile-CreateInput-Data-Relationships"
-              }
-            ],
-            "default": {}
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "attributes"
-        ],
-        "title": "pdfFile-CreateInput-Data",
-        "type": "object"
-      },
-      "pdfFile-CreateInput-Data-Attributes": {
-        "additionalProperties": false,
-        "properties": {
-          "bytesCount": {
-            "title": "Bytescount",
-            "type": "integer"
-          },
-          "pagesCount": {
-            "title": "Pagescount",
-            "type": "integer"
-          },
-          "sha256": {
-            "title": "Sha256",
-            "type": "string"
-          }
-        },
-        "required": [
-          "sha256",
-          "bytesCount",
-          "pagesCount"
-        ],
-        "title": "pdfFile-CreateInput-Data-Attributes",
-        "type": "object"
-      },
-      "pdfFile-CreateInput-Data-Relationships": {
-        "additionalProperties": false,
-        "properties": {},
-        "title": "pdfFile-CreateInput-Data-Relationships",
-        "type": "object"
-      },
-      "pdfFile-ItemOutput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/pdfFile-OutputItem"
-          },
-          "included": {
-            "items": {},
-            "title": "Included",
-            "type": "array"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "pdfFile-ItemOutput",
-        "type": "object"
-      },
-      "pdfFile-OutputItem": {
-        "additionalProperties": false,
-        "properties": {
-          "attributes": {
-            "$ref": "#/components/schemas/pdfFile-OutputItem-Attributes"
-          },
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "links": {
-            "$ref": "#/components/schemas/pdfFile-OutputItem-Links"
-          },
-          "relationships": {
-            "$ref": "#/components/schemas/pdfFile-OutputItem-Relationships"
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "id",
-          "links",
-          "attributes",
-          "relationships"
-        ],
-        "title": "pdfFile-OutputItem",
-        "type": "object"
-      },
-      "pdfFile-OutputItem-Attributes": {
-        "additionalProperties": false,
-        "properties": {
-          "bytesCount": {
-            "title": "Bytescount",
-            "type": "integer"
-          },
-          "pagesCount": {
-            "title": "Pagescount",
-            "type": "integer"
-          },
-          "sha256": {
-            "title": "Sha256",
-            "type": "string"
-          }
-        },
-        "required": [
-          "sha256",
-          "bytesCount",
-          "pagesCount"
-        ],
-        "title": "pdfFile-OutputItem-Attributes",
-        "type": "object"
-      },
-      "pdfFile-OutputItem-Links": {
-        "additionalProperties": false,
-        "properties": {
-          "self": {
-            "title": "Self",
-            "type": "string"
-          }
-        },
-        "required": [
-          "self"
-        ],
-        "title": "pdfFile-OutputItem-Links",
-        "type": "object"
-      },
-      "pdfFile-OutputItem-Relationships": {
-        "additionalProperties": false,
-        "properties": {
-          "namings": {
-            "$ref": "#/components/schemas/OutputListRelationship"
-          },
-          "sections": {
-            "$ref": "#/components/schemas/OutputListRelationship"
-          }
-        },
-        "required": [
-          "namings",
-          "sections"
-        ],
-        "title": "pdfFile-OutputItem-Relationships",
-        "type": "object"
-      },
-      "pdfFile-PageOutput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "items": {
-              "$ref": "#/components/schemas/pdfFile-OutputItem"
-            },
-            "title": "Data",
-            "type": "array"
-          },
-          "included": {
-            "items": {},
-            "title": "Included",
-            "type": "array"
-          },
-          "links": {
-            "$ref": "#/components/schemas/PageLinksModel"
-          },
-          "meta": {
-            "$ref": "#/components/schemas/PageMetaModel"
-          }
-        },
-        "required": [
-          "data",
-          "meta",
-          "links"
-        ],
-        "title": "pdfFile-PageOutput",
-        "type": "object"
-      },
-      "pdfFile-UpdateInput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/pdfFile-UpdateInput-Data"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "pdfFile-UpdateInput",
-        "type": "object"
-      },
-      "pdfFile-UpdateInput-Data": {
-        "additionalProperties": false,
-        "properties": {
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/pdfFile-UpdateInput-Data-Attributes"
-              }
-            ],
-            "default": {}
-          },
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/pdfFile-UpdateInput-Data-Relationships"
-              }
-            ],
-            "default": {}
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "id"
-        ],
-        "title": "pdfFile-UpdateInput-Data",
-        "type": "object"
-      },
-      "pdfFile-UpdateInput-Data-Attributes": {
-        "additionalProperties": false,
-        "properties": {},
-        "title": "pdfFile-UpdateInput-Data-Attributes",
-        "type": "object"
-      },
-      "pdfFile-UpdateInput-Data-Relationships": {
-        "additionalProperties": false,
-        "properties": {},
-        "title": "pdfFile-UpdateInput-Data-Relationships",
-        "type": "object"
-      },
-      "pdfFileNaming-CreateInput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/pdfFileNaming-CreateInput-Data"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "pdfFileNaming-CreateInput",
-        "type": "object"
-      },
-      "pdfFileNaming-CreateInput-Data": {
-        "additionalProperties": false,
-        "properties": {
-          "attributes": {
-            "$ref": "#/components/schemas/pdfFileNaming-CreateInput-Data-Attributes"
-          },
-          "relationships": {
-            "$ref": "#/components/schemas/pdfFileNaming-CreateInput-Data-Relationships"
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "attributes",
-          "relationships"
-        ],
-        "title": "pdfFileNaming-CreateInput-Data",
-        "type": "object"
-      },
-      "pdfFileNaming-CreateInput-Data-Attributes": {
-        "additionalProperties": false,
-        "properties": {
-          "name": {
-            "title": "Name",
-            "type": "string"
-          }
-        },
-        "required": [
-          "name"
-        ],
-        "title": "pdfFileNaming-CreateInput-Data-Attributes",
-        "type": "object"
-      },
-      "pdfFileNaming-CreateInput-Data-Relationships": {
-        "additionalProperties": false,
-        "properties": {
-          "pdfFile": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
-          }
-        },
-        "required": [
-          "pdfFile"
-        ],
-        "title": "pdfFileNaming-CreateInput-Data-Relationships",
-        "type": "object"
-      },
-      "pdfFileNaming-ItemOutput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/pdfFileNaming-OutputItem"
-          },
-          "included": {
-            "items": {},
-            "title": "Included",
-            "type": "array"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "pdfFileNaming-ItemOutput",
-        "type": "object"
-      },
-      "pdfFileNaming-OutputItem": {
-        "additionalProperties": false,
-        "properties": {
-          "attributes": {
-            "$ref": "#/components/schemas/pdfFileNaming-OutputItem-Attributes"
-          },
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "links": {
-            "$ref": "#/components/schemas/pdfFileNaming-OutputItem-Links"
-          },
-          "relationships": {
-            "$ref": "#/components/schemas/pdfFileNaming-OutputItem-Relationships"
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "id",
-          "links",
-          "attributes",
-          "relationships"
-        ],
-        "title": "pdfFileNaming-OutputItem",
-        "type": "object"
-      },
-      "pdfFileNaming-OutputItem-Attributes": {
-        "additionalProperties": false,
-        "properties": {
-          "name": {
-            "title": "Name",
-            "type": "string"
-          }
-        },
-        "required": [
-          "name"
-        ],
-        "title": "pdfFileNaming-OutputItem-Attributes",
-        "type": "object"
-      },
-      "pdfFileNaming-OutputItem-Links": {
-        "additionalProperties": false,
-        "properties": {
-          "self": {
-            "title": "Self",
-            "type": "string"
-          }
-        },
-        "required": [
-          "self"
-        ],
-        "title": "pdfFileNaming-OutputItem-Links",
-        "type": "object"
-      },
-      "pdfFileNaming-OutputItem-Relationships": {
-        "additionalProperties": false,
-        "properties": {
-          "pdfFile": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
-          }
-        },
-        "required": [
-          "pdfFile"
-        ],
-        "title": "pdfFileNaming-OutputItem-Relationships",
-        "type": "object"
-      },
-      "pdfFileNaming-PageOutput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "items": {
-              "$ref": "#/components/schemas/pdfFileNaming-OutputItem"
-            },
-            "title": "Data",
-            "type": "array"
-          },
-          "included": {
-            "items": {},
-            "title": "Included",
-            "type": "array"
-          },
-          "links": {
-            "$ref": "#/components/schemas/PageLinksModel"
-          },
-          "meta": {
-            "$ref": "#/components/schemas/PageMetaModel"
-          }
-        },
-        "required": [
-          "data",
-          "meta",
-          "links"
-        ],
-        "title": "pdfFileNaming-PageOutput",
-        "type": "object"
-      },
-      "pdfFileNaming-UpdateInput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/pdfFileNaming-UpdateInput-Data"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "pdfFileNaming-UpdateInput",
-        "type": "object"
-      },
-      "pdfFileNaming-UpdateInput-Data": {
-        "additionalProperties": false,
-        "properties": {
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/pdfFileNaming-UpdateInput-Data-Attributes"
-              }
-            ],
-            "default": {}
-          },
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/pdfFileNaming-UpdateInput-Data-Relationships"
-              }
-            ],
-            "default": {}
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "id"
-        ],
-        "title": "pdfFileNaming-UpdateInput-Data",
-        "type": "object"
-      },
-      "pdfFileNaming-UpdateInput-Data-Attributes": {
-        "additionalProperties": false,
-        "properties": {},
-        "title": "pdfFileNaming-UpdateInput-Data-Attributes",
-        "type": "object"
-      },
-      "pdfFileNaming-UpdateInput-Data-Relationships": {
-        "additionalProperties": false,
-        "properties": {},
-        "title": "pdfFileNaming-UpdateInput-Data-Relationships",
-        "type": "object"
-      },
-      "ping-CreateInput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/ping-CreateInput-Data"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "ping-CreateInput",
-        "type": "object"
-      },
-      "ping-CreateInput-Data": {
-        "additionalProperties": false,
-        "properties": {
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ping-CreateInput-Data-Attributes"
-              }
-            ],
-            "default": {}
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ping-CreateInput-Data-Relationships"
-              }
-            ],
-            "default": {
-              "next": {
-                "data": []
-              },
-              "prev": {}
-            }
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type"
-        ],
-        "title": "ping-CreateInput-Data",
-        "type": "object"
-      },
-      "ping-CreateInput-Data-Attributes": {
-        "additionalProperties": false,
-        "properties": {
-          "message": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Message"
-          }
-        },
-        "title": "ping-CreateInput-Data-Attributes",
-        "type": "object"
-      },
-      "ping-CreateInput-Data-Relationships": {
-        "additionalProperties": false,
-        "properties": {
-          "next": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/CreateInputListRelationship"
-              }
-            ],
-            "default": {
-              "data": []
-            }
-          },
-          "prev": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/OptionalRelationship"
-              }
-            ],
-            "default": {}
-          }
-        },
-        "title": "ping-CreateInput-Data-Relationships",
-        "type": "object"
-      },
-      "ping-ItemOutput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/ping-OutputItem"
-          },
-          "included": {
-            "items": {},
-            "title": "Included",
-            "type": "array"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "ping-ItemOutput",
-        "type": "object"
-      },
-      "ping-OutputItem": {
-        "additionalProperties": false,
-        "properties": {
-          "attributes": {
-            "$ref": "#/components/schemas/ping-OutputItem-Attributes"
-          },
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "links": {
-            "$ref": "#/components/schemas/ping-OutputItem-Links"
-          },
-          "relationships": {
-            "$ref": "#/components/schemas/ping-OutputItem-Relationships"
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "id",
-          "links",
-          "attributes",
-          "relationships"
-        ],
-        "title": "ping-OutputItem",
-        "type": "object"
-      },
-      "ping-OutputItem-Attributes": {
-        "additionalProperties": false,
-        "properties": {
-          "createdAt": {
-            "format": "date-time",
-            "title": "Createdat",
-            "type": "string"
-          },
-          "message": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Message"
-          }
-        },
-        "required": [
-          "message",
-          "createdAt"
-        ],
-        "title": "ping-OutputItem-Attributes",
-        "type": "object"
-      },
-      "ping-OutputItem-Links": {
-        "additionalProperties": false,
-        "properties": {
-          "self": {
-            "title": "Self",
-            "type": "string"
-          }
-        },
-        "required": [
-          "self"
-        ],
-        "title": "ping-OutputItem-Links",
-        "type": "object"
-      },
-      "ping-OutputItem-Relationships": {
-        "additionalProperties": false,
-        "properties": {
-          "next": {
-            "$ref": "#/components/schemas/OutputListRelationship"
-          },
-          "prev": {
-            "$ref": "#/components/schemas/OptionalRelationship"
-          }
-        },
-        "required": [
-          "prev",
-          "next"
-        ],
-        "title": "ping-OutputItem-Relationships",
-        "type": "object"
-      },
-      "ping-PageOutput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "items": {
-              "$ref": "#/components/schemas/ping-OutputItem"
-            },
-            "title": "Data",
-            "type": "array"
-          },
-          "included": {
-            "items": {},
-            "title": "Included",
-            "type": "array"
-          },
-          "links": {
-            "$ref": "#/components/schemas/PageLinksModel"
-          },
-          "meta": {
-            "$ref": "#/components/schemas/PageMetaModel"
-          }
-        },
-        "required": [
-          "data",
-          "meta",
-          "links"
-        ],
-        "title": "ping-PageOutput",
-        "type": "object"
-      },
-      "ping-UpdateInput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/ping-UpdateInput-Data"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "ping-UpdateInput",
-        "type": "object"
-      },
-      "ping-UpdateInput-Data": {
-        "additionalProperties": false,
-        "properties": {
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ping-UpdateInput-Data-Attributes"
-              }
-            ],
-            "default": {}
-          },
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ping-UpdateInput-Data-Relationships"
-              }
-            ],
-            "default": {}
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "id"
-        ],
-        "title": "ping-UpdateInput-Data",
-        "type": "object"
-      },
-      "ping-UpdateInput-Data-Attributes": {
-        "additionalProperties": false,
-        "properties": {
-          "message": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Message"
-          }
-        },
-        "title": "ping-UpdateInput-Data-Attributes",
-        "type": "object"
-      },
-      "ping-UpdateInput-Data-Relationships": {
-        "additionalProperties": false,
-        "properties": {
-          "next": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/UpdateInputListRelationship"
-              }
-            ]
-          },
-          "prev": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/OptionalRelationship"
-              }
-            ]
-          }
-        },
-        "title": "ping-UpdateInput-Data-Relationships",
-        "type": "object"
-      },
       "project-CreateInput": {
         "additionalProperties": false,
         "properties": {
@@ -2015,6 +1635,9 @@
             "title": "Pagescount",
             "type": "integer"
           },
+          "pdfFile": {
+            "$ref": "#/components/schemas/PdfFileModel-Input"
+          },
           "pdfFileStartPage": {
             "title": "Pdffilestartpage",
             "type": "integer"
@@ -2027,7 +1650,8 @@
         "required": [
           "textbookStartPage",
           "pdfFileStartPage",
-          "pagesCount"
+          "pagesCount",
+          "pdfFile"
         ],
         "title": "section-CreateInput-Data-Attributes",
         "type": "object"
@@ -2035,16 +1659,12 @@
       "section-CreateInput-Data-Relationships": {
         "additionalProperties": false,
         "properties": {
-          "pdfFile": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
-          },
           "textbook": {
             "$ref": "#/components/schemas/MandatoryRelationship"
           }
         },
         "required": [
-          "textbook",
-          "pdfFile"
+          "textbook"
         ],
         "title": "section-CreateInput-Data-Relationships",
         "type": "object"
@@ -2105,6 +1725,9 @@
             "title": "Pagescount",
             "type": "integer"
           },
+          "pdfFile": {
+            "$ref": "#/components/schemas/PdfFileModel-Output"
+          },
           "pdfFileStartPage": {
             "title": "Pdffilestartpage",
             "type": "integer"
@@ -2117,7 +1740,8 @@
         "required": [
           "textbookStartPage",
           "pdfFileStartPage",
-          "pagesCount"
+          "pagesCount",
+          "pdfFile"
         ],
         "title": "section-OutputItem-Attributes",
         "type": "object"
@@ -2139,16 +1763,12 @@
       "section-OutputItem-Relationships": {
         "additionalProperties": false,
         "properties": {
-          "pdfFile": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
-          },
           "textbook": {
             "$ref": "#/components/schemas/MandatoryRelationship"
           }
         },
         "required": [
-          "textbook",
-          "pdfFile"
+          "textbook"
         ],
         "title": "section-OutputItem-Relationships",
         "type": "object"
@@ -2613,17 +2233,6 @@
         "title": "textbook-UpdateInput-Data-Relationships",
         "type": "object"
       }
-    },
-    "securitySchemes": {
-      "OAuth2PasswordBearer": {
-        "flows": {
-          "password": {
-            "scopes": {},
-            "tokenUrl": "token"
-          }
-        },
-        "type": "oauth2"
-      }
     }
   },
   "info": {
@@ -2632,30 +2241,9 @@
   },
   "openapi": "3.1.0",
   "paths": {
-    "/api/authenticated-user": {
+    "/exercises": {
       "get": {
-        "operationId": "get_authenticated_user_api_authenticated_user_get",
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            },
-            "description": "Successful Response"
-          }
-        },
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "summary": "Get Authenticated User"
-      }
-    },
-    "/api/exercises": {
-      "get": {
-        "operationId": "get_exercises_api_exercises_get",
+        "operationId": "get_exercises_exercises_get",
         "parameters": [
           {
             "in": "query",
@@ -2739,7 +2327,7 @@
         "summary": "Get Exercises"
       },
       "post": {
-        "operationId": "create_exercise_api_exercises_post",
+        "operationId": "create_exercise_exercises_post",
         "parameters": [
           {
             "in": "query",
@@ -2786,9 +2374,9 @@
         "summary": "Create Exercise"
       }
     },
-    "/api/exercises/{id}": {
+    "/exercises/{id}": {
       "delete": {
-        "operationId": "delete_exercise_api_exercises__id__delete",
+        "operationId": "delete_exercise_exercises__id__delete",
         "parameters": [
           {
             "in": "path",
@@ -2818,7 +2406,7 @@
         "summary": "Delete Exercise"
       },
       "get": {
-        "operationId": "get_exercise_api_exercises__id__get",
+        "operationId": "get_exercise_exercises__id__get",
         "parameters": [
           {
             "in": "path",
@@ -2864,7 +2452,7 @@
         "summary": "Get Exercise"
       },
       "patch": {
-        "operationId": "update_exercise_api_exercises__id__patch",
+        "operationId": "update_exercise_exercises__id__patch",
         "parameters": [
           {
             "in": "path",
@@ -2920,9 +2508,9 @@
         "summary": "Update Exercise"
       }
     },
-    "/api/extractionEvents": {
+    "/extractionEvents": {
       "get": {
-        "operationId": "get_extraction_events_api_extractionEvents_get",
+        "operationId": "get_extraction_events_extractionEvents_get",
         "parameters": [
           {
             "in": "query",
@@ -2988,7 +2576,7 @@
         "summary": "Get Extraction Events"
       },
       "post": {
-        "operationId": "create_extraction_event_api_extractionEvents_post",
+        "operationId": "create_extraction_event_extractionEvents_post",
         "parameters": [
           {
             "in": "query",
@@ -3035,9 +2623,9 @@
         "summary": "Create Extraction Event"
       }
     },
-    "/api/extractionEvents/{id}": {
+    "/extractionEvents/{id}": {
       "delete": {
-        "operationId": "delete_extraction_event_api_extractionEvents__id__delete",
+        "operationId": "delete_extraction_event_extractionEvents__id__delete",
         "parameters": [
           {
             "in": "path",
@@ -3067,7 +2655,7 @@
         "summary": "Delete Extraction Event"
       },
       "get": {
-        "operationId": "get_extraction_event_api_extractionEvents__id__get",
+        "operationId": "get_extraction_event_extractionEvents__id__get",
         "parameters": [
           {
             "in": "path",
@@ -3113,7 +2701,7 @@
         "summary": "Get Extraction Event"
       },
       "patch": {
-        "operationId": "update_extraction_event_api_extractionEvents__id__patch",
+        "operationId": "update_extraction_event_extractionEvents__id__patch",
         "parameters": [
           {
             "in": "path",
@@ -3169,811 +2757,9 @@
         "summary": "Update Extraction Event"
       }
     },
-    "/api/pdfFileNamings": {
+    "/projects": {
       "get": {
-        "operationId": "get_pdf_file_namings_api_pdfFileNamings_get",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "page[size]",
-            "required": false,
-            "schema": {
-              "default": 2,
-              "title": "Page[Size]",
-              "type": "integer"
-            }
-          },
-          {
-            "in": "query",
-            "name": "page[number]",
-            "required": false,
-            "schema": {
-              "default": 1,
-              "title": "Page[Number]",
-              "type": "integer"
-            }
-          },
-          {
-            "in": "query",
-            "name": "sort",
-            "required": false,
-            "schema": {
-              "title": "Sort",
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "include",
-            "required": false,
-            "schema": {
-              "title": "Include",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/pdfFileNaming-PageOutput"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Get Pdf File Namings"
-      },
-      "post": {
-        "operationId": "create_pdf_file_naming_api_pdfFileNamings_post",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "include",
-            "required": false,
-            "schema": {
-              "title": "Include",
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/pdfFileNaming-CreateInput"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "201": {
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/pdfFileNaming-ItemOutput"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Create Pdf File Naming"
-      }
-    },
-    "/api/pdfFileNamings/{id}": {
-      "delete": {
-        "operationId": "delete_pdf_file_naming_api_pdfFileNamings__id__delete",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "title": "Id",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Delete Pdf File Naming"
-      },
-      "get": {
-        "operationId": "get_pdf_file_naming_api_pdfFileNamings__id__get",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "title": "Id",
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "include",
-            "required": false,
-            "schema": {
-              "title": "Include",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/pdfFileNaming-ItemOutput"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Get Pdf File Naming"
-      },
-      "patch": {
-        "operationId": "update_pdf_file_naming_api_pdfFileNamings__id__patch",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "title": "Id",
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "include",
-            "required": false,
-            "schema": {
-              "title": "Include",
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/pdfFileNaming-UpdateInput"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/pdfFileNaming-ItemOutput"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Update Pdf File Naming"
-      }
-    },
-    "/api/pdfFiles": {
-      "get": {
-        "operationId": "get_pdf_files_api_pdfFiles_get",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "page[size]",
-            "required": false,
-            "schema": {
-              "default": 2,
-              "title": "Page[Size]",
-              "type": "integer"
-            }
-          },
-          {
-            "in": "query",
-            "name": "page[number]",
-            "required": false,
-            "schema": {
-              "default": 1,
-              "title": "Page[Number]",
-              "type": "integer"
-            }
-          },
-          {
-            "in": "query",
-            "name": "sort",
-            "required": false,
-            "schema": {
-              "title": "Sort",
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "include",
-            "required": false,
-            "schema": {
-              "title": "Include",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/pdfFile-PageOutput"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Get Pdf Files"
-      },
-      "post": {
-        "operationId": "create_pdf_file_api_pdfFiles_post",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "include",
-            "required": false,
-            "schema": {
-              "title": "Include",
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/pdfFile-CreateInput"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "201": {
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/pdfFile-ItemOutput"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Create Pdf File"
-      }
-    },
-    "/api/pdfFiles/{id}": {
-      "delete": {
-        "operationId": "delete_pdf_file_api_pdfFiles__id__delete",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "title": "Id",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Delete Pdf File"
-      },
-      "get": {
-        "operationId": "get_pdf_file_api_pdfFiles__id__get",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "title": "Id",
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "include",
-            "required": false,
-            "schema": {
-              "title": "Include",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/pdfFile-ItemOutput"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Get Pdf File"
-      },
-      "patch": {
-        "operationId": "update_pdf_file_api_pdfFiles__id__patch",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "title": "Id",
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "include",
-            "required": false,
-            "schema": {
-              "title": "Include",
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/pdfFile-UpdateInput"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/pdfFile-ItemOutput"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Update Pdf File"
-      }
-    },
-    "/api/pings": {
-      "get": {
-        "operationId": "get_pings_api_pings_get",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "page[size]",
-            "required": false,
-            "schema": {
-              "default": 2,
-              "title": "Page[Size]",
-              "type": "integer"
-            }
-          },
-          {
-            "in": "query",
-            "name": "page[number]",
-            "required": false,
-            "schema": {
-              "default": 1,
-              "title": "Page[Number]",
-              "type": "integer"
-            }
-          },
-          {
-            "in": "query",
-            "name": "sort",
-            "required": false,
-            "schema": {
-              "title": "Sort",
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "include",
-            "required": false,
-            "schema": {
-              "title": "Include",
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "filter[message]",
-            "required": false,
-            "schema": {
-              "title": "Filter[Message]",
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "filter[prev]",
-            "required": false,
-            "schema": {
-              "title": "Filter[Prev]",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ping-PageOutput"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Get Pings"
-      },
-      "post": {
-        "operationId": "create_ping_api_pings_post",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "include",
-            "required": false,
-            "schema": {
-              "title": "Include",
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ping-CreateInput"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "201": {
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ping-ItemOutput"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Create Ping"
-      }
-    },
-    "/api/pings/{id}": {
-      "delete": {
-        "operationId": "delete_ping_api_pings__id__delete",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "title": "Id",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Delete Ping"
-      },
-      "get": {
-        "operationId": "get_ping_api_pings__id__get",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "title": "Id",
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "include",
-            "required": false,
-            "schema": {
-              "title": "Include",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ping-ItemOutput"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Get Ping"
-      },
-      "patch": {
-        "operationId": "update_ping_api_pings__id__patch",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "title": "Id",
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "include",
-            "required": false,
-            "schema": {
-              "title": "Include",
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ping-UpdateInput"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ping-ItemOutput"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Update Ping"
-      }
-    },
-    "/api/project-{project_id}-extraction-report.json": {
-      "get": {
-        "operationId": "extraction_report_api_project__project_id__extraction_report_json_get",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "project_id",
-            "required": true,
-            "schema": {
-              "title": "Project Id",
-              "type": "integer"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Extraction Report"
-      }
-    },
-    "/api/projects": {
-      "get": {
-        "operationId": "get_projects_api_projects_get",
+        "operationId": "get_projects_projects_get",
         "parameters": [
           {
             "in": "query",
@@ -4039,7 +2825,7 @@
         "summary": "Get Projects"
       },
       "post": {
-        "operationId": "create_project_api_projects_post",
+        "operationId": "create_project_projects_post",
         "parameters": [
           {
             "in": "query",
@@ -4086,9 +2872,9 @@
         "summary": "Create Project"
       }
     },
-    "/api/projects/{id}": {
+    "/projects/{id}": {
       "delete": {
-        "operationId": "delete_project_api_projects__id__delete",
+        "operationId": "delete_project_projects__id__delete",
         "parameters": [
           {
             "in": "path",
@@ -4118,7 +2904,7 @@
         "summary": "Delete Project"
       },
       "get": {
-        "operationId": "get_project_api_projects__id__get",
+        "operationId": "get_project_projects__id__get",
         "parameters": [
           {
             "in": "path",
@@ -4164,7 +2950,7 @@
         "summary": "Get Project"
       },
       "patch": {
-        "operationId": "update_project_api_projects__id__patch",
+        "operationId": "update_project_projects__id__patch",
         "parameters": [
           {
             "in": "path",
@@ -4220,9 +3006,9 @@
         "summary": "Update Project"
       }
     },
-    "/api/sections": {
+    "/sections": {
       "get": {
-        "operationId": "get_sections_api_sections_get",
+        "operationId": "get_sections_sections_get",
         "parameters": [
           {
             "in": "query",
@@ -4288,7 +3074,7 @@
         "summary": "Get Sections"
       },
       "post": {
-        "operationId": "create_section_api_sections_post",
+        "operationId": "create_section_sections_post",
         "parameters": [
           {
             "in": "query",
@@ -4335,9 +3121,9 @@
         "summary": "Create Section"
       }
     },
-    "/api/sections/{id}": {
+    "/sections/{id}": {
       "delete": {
-        "operationId": "delete_section_api_sections__id__delete",
+        "operationId": "delete_section_sections__id__delete",
         "parameters": [
           {
             "in": "path",
@@ -4367,7 +3153,7 @@
         "summary": "Delete Section"
       },
       "get": {
-        "operationId": "get_section_api_sections__id__get",
+        "operationId": "get_section_sections__id__get",
         "parameters": [
           {
             "in": "path",
@@ -4413,7 +3199,7 @@
         "summary": "Get Section"
       },
       "patch": {
-        "operationId": "update_section_api_sections__id__patch",
+        "operationId": "update_section_sections__id__patch",
         "parameters": [
           {
             "in": "path",
@@ -4469,9 +3255,9 @@
         "summary": "Update Section"
       }
     },
-    "/api/textbooks": {
+    "/textbooks": {
       "get": {
-        "operationId": "get_textbooks_api_textbooks_get",
+        "operationId": "get_textbooks_textbooks_get",
         "parameters": [
           {
             "in": "query",
@@ -4537,7 +3323,7 @@
         "summary": "Get Textbooks"
       },
       "post": {
-        "operationId": "create_textbook_api_textbooks_post",
+        "operationId": "create_textbook_textbooks_post",
         "parameters": [
           {
             "in": "query",
@@ -4584,9 +3370,9 @@
         "summary": "Create Textbook"
       }
     },
-    "/api/textbooks/{id}": {
+    "/textbooks/{id}": {
       "delete": {
-        "operationId": "delete_textbook_api_textbooks__id__delete",
+        "operationId": "delete_textbook_textbooks__id__delete",
         "parameters": [
           {
             "in": "path",
@@ -4616,7 +3402,7 @@
         "summary": "Delete Textbook"
       },
       "get": {
-        "operationId": "get_textbook_api_textbooks__id__get",
+        "operationId": "get_textbook_textbooks__id__get",
         "parameters": [
           {
             "in": "path",
@@ -4662,7 +3448,7 @@
         "summary": "Get Textbook"
       },
       "patch": {
-        "operationId": "update_textbook_api_textbooks__id__patch",
+        "operationId": "update_textbook_textbooks__id__patch",
         "parameters": [
           {
             "in": "path",
@@ -4716,79 +3502,6 @@
           }
         },
         "summary": "Update Textbook"
-      }
-    },
-    "/api/token": {
-      "post": {
-        "operationId": "login_api_token_post",
-        "requestBody": {
-          "content": {
-            "application/x-www-form-urlencoded": {
-              "schema": {
-                "$ref": "#/components/schemas/Body_login_api_token_post"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Login"
-      }
-    },
-    "/reset-for-tests/yes-im-sure": {
-      "post": {
-        "operationId": "reset_for_tests_reset_for_tests_yes_im_sure_post",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "fixtures",
-            "required": false,
-            "schema": {
-              "title": "Fixtures",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Reset For Tests"
       }
     }
   }

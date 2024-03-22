@@ -15,17 +15,6 @@ from .router import make_jsonapi_router
 from .testing import TestMixin
 
 
-class TestCaseMixin(TestMixin):
-    maxDiff = None
-
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        app = FastAPI()
-        app.include_router(make_jsonapi_router(cls.resources))
-        cls.set_app(app)
-
-
 # @todo Use this factory in all test cases
 class ItemsFactory:
     def __init__(self):
@@ -52,7 +41,7 @@ class ItemsFactory:
         return items
 
 
-class AllAttributesTestCase(TestCaseMixin, TestCase):
+class AllAttributesTestCase(TestMixin, TestCase):
     class Resource:
         singular_name = "resource"
         plural_name = "resources"
@@ -795,7 +784,7 @@ class AllAttributesTestCase(TestCaseMixin, TestCase):
         self.assertIsNone(self.Resource.get_item("1"))
 
 
-class EmptyTestCase(TestCaseMixin, TestCase):
+class EmptyTestCase(TestMixin, TestCase):
     class EmptyResource:
         singular_name = "empty_resource"
         plural_name = "empty_resources"
@@ -880,7 +869,7 @@ class RightModel(BaseModel):
     top: TopModel
     left_or_none: LeftModel | None = None
 
-class AllRelationsTestCase(TestCaseMixin, TestCase):
+class AllRelationsTestCase(TestMixin, TestCase):
     class TopResource:
         singular_name = "top"
         plural_name = "tops"
@@ -1819,7 +1808,7 @@ class AllRelationsTestCase(TestCaseMixin, TestCase):
 #     parent : TreeNode | None = None
 #     children : list[TreeNode] = []
 
-# class TreeNodeTestCase(TestCaseMixin, TestCase):
+# class TreeNodeTestCase(TestMixin, TestCase):
 #     class NodeResource:
 #         singular_name = "node"
 #         plural_name = "nodes"

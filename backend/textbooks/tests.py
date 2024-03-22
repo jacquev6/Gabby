@@ -5,16 +5,18 @@ from starlette import status
 
 from .models import PdfFile, PdfFileNaming, Project, Textbook, Exercise
 from fastjsonapi.testing import TestMixin
+from .resources import PdfFilesResource, PdfFileNamingsResource, ProjectsResource, TextbooksResource, SectionsResource, ExercisesResource, ExtractionEventsResource
 from main import app
 
 
 class PdfFileApiTests(TestMixin, TransactionTestCase):
     reset_sequences = True  # Primary keys appear in API responses
 
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls.set_app(app)
+    resources = [
+        PdfFilesResource(),
+        PdfFileNamingsResource(),
+        SectionsResource(),
+    ]
 
     def test_create(self):
         payload = {
@@ -26,13 +28,13 @@ class PdfFileApiTests(TestMixin, TransactionTestCase):
                 },
             },
         }
-        response = self.post("http://testserver/api/pdfFiles", payload)
+        response = self.post("http://server/pdfFiles", payload)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
         self.assertEqual(response.json(), {
             "data": {
                 "type": "pdfFile",
                 "id": "87428fc522803d31065e7bce3cf03fe475096631e5e07bbd7a0fde60c4cf25c7",
-                "links": {"self": "http://testserver/api/pdfFiles/87428fc522803d31065e7bce3cf03fe475096631e5e07bbd7a0fde60c4cf25c7"},
+                "links": {"self": "http://server/pdfFiles/87428fc522803d31065e7bce3cf03fe475096631e5e07bbd7a0fde60c4cf25c7"},
                 "attributes": {
                     "sha256": "87428fc522803d31065e7bce3cf03fe475096631e5e07bbd7a0fde60c4cf25c7",
                     "bytesCount": 123456789, "pagesCount": 42,
@@ -60,15 +62,15 @@ class PdfFileApiTests(TestMixin, TransactionTestCase):
                 },
             },
         }
-        response = self.post("http://testserver/api/pdfFiles", payload)
+        response = self.post("http://server/pdfFiles", payload)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
-        response = self.post("http://testserver/api/pdfFiles", payload)
+        response = self.post("http://server/pdfFiles", payload)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
         self.assertEqual(response.json(), {
             "data": {
                 "type": "pdfFile",
                 "id": "87428fc522803d31065e7bce3cf03fe475096631e5e07bbd7a0fde60c4cf25c7",
-                "links": {"self": "http://testserver/api/pdfFiles/87428fc522803d31065e7bce3cf03fe475096631e5e07bbd7a0fde60c4cf25c7"},
+                "links": {"self": "http://server/pdfFiles/87428fc522803d31065e7bce3cf03fe475096631e5e07bbd7a0fde60c4cf25c7"},
                 "attributes": {
                     "sha256": "87428fc522803d31065e7bce3cf03fe475096631e5e07bbd7a0fde60c4cf25c7",
                     "bytesCount": 123456789, "pagesCount": 42,
@@ -96,7 +98,7 @@ class PdfFileApiTests(TestMixin, TransactionTestCase):
                 },
             },
         }
-        response = self.post("http://testserver/api/pdfFiles", payload)
+        response = self.post("http://server/pdfFiles", payload)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.json())
         self.assertEqual(response.json(), {"detail": {"sha256": ["Enter a valid value."]}})
 
@@ -112,7 +114,7 @@ class PdfFileApiTests(TestMixin, TransactionTestCase):
                 },
             },
         }
-        response = self.post("http://testserver/api/pdfFiles", payload)
+        response = self.post("http://server/pdfFiles", payload)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.json())
         self.assertEqual(response.json(), {"detail": {"sha256": ["Enter a valid value."]}})
 
@@ -122,13 +124,13 @@ class PdfFileApiTests(TestMixin, TransactionTestCase):
         pdf_file = PdfFile.objects.create(sha256="87428fc522803d31065e7bce3cf03fe475096631e5e07bbd7a0fde60c4cf25c7", bytes_count=123456789, pages_count=42)
         pdf_file.namings.create(name="amazing.pdf")
 
-        response = self.get("http://testserver/api/pdfFiles/87428fc522803d31065e7bce3cf03fe475096631e5e07bbd7a0fde60c4cf25c7")
+        response = self.get("http://server/pdfFiles/87428fc522803d31065e7bce3cf03fe475096631e5e07bbd7a0fde60c4cf25c7")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": {
                 "type": "pdfFile",
                 "id": "87428fc522803d31065e7bce3cf03fe475096631e5e07bbd7a0fde60c4cf25c7",
-                "links": {"self": "http://testserver/api/pdfFiles/87428fc522803d31065e7bce3cf03fe475096631e5e07bbd7a0fde60c4cf25c7"},
+                "links": {"self": "http://server/pdfFiles/87428fc522803d31065e7bce3cf03fe475096631e5e07bbd7a0fde60c4cf25c7"},
                 "attributes": {
                     "sha256": "87428fc522803d31065e7bce3cf03fe475096631e5e07bbd7a0fde60c4cf25c7",
                     "bytesCount": 123456789, "pagesCount": 42,
@@ -145,13 +147,13 @@ class PdfFileApiTests(TestMixin, TransactionTestCase):
         pdf_file.namings.create(name="amazing.pdf")
         PdfFileNaming.objects.create(pdf_file=pdf_file, name="alias.pdf")
 
-        response = self.get("http://testserver/api/pdfFiles/87428fc522803d31065e7bce3cf03fe475096631e5e07bbd7a0fde60c4cf25c7?include=namings")
+        response = self.get("http://server/pdfFiles/87428fc522803d31065e7bce3cf03fe475096631e5e07bbd7a0fde60c4cf25c7?include=namings")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": {
                 "type": "pdfFile",
                 "id": "87428fc522803d31065e7bce3cf03fe475096631e5e07bbd7a0fde60c4cf25c7",
-                "links": {"self": "http://testserver/api/pdfFiles/87428fc522803d31065e7bce3cf03fe475096631e5e07bbd7a0fde60c4cf25c7"},
+                "links": {"self": "http://server/pdfFiles/87428fc522803d31065e7bce3cf03fe475096631e5e07bbd7a0fde60c4cf25c7"},
                 "attributes": {
                     "sha256": "87428fc522803d31065e7bce3cf03fe475096631e5e07bbd7a0fde60c4cf25c7",
                     "bytesCount": 123456789, "pagesCount": 42,
@@ -171,7 +173,7 @@ class PdfFileApiTests(TestMixin, TransactionTestCase):
                 {
                     "type": "pdfFileNaming",
                     "id": "1",
-                    "links": {"self": "http://testserver/api/pdfFileNamings/1"},
+                    "links": {"self": "http://server/pdfFileNamings/1"},
                     "attributes": {
                         "name": "amazing.pdf",
                     },
@@ -184,7 +186,7 @@ class PdfFileApiTests(TestMixin, TransactionTestCase):
                 {
                     "type": "pdfFileNaming",
                     "id": "2",
-                    "links": {"self": "http://testserver/api/pdfFileNamings/2"},
+                    "links": {"self": "http://server/pdfFileNamings/2"},
                     "attributes": {
                         "name": "alias.pdf",
                     },
@@ -201,10 +203,13 @@ class PdfFileApiTests(TestMixin, TransactionTestCase):
 class TextbookApiTests(TestMixin, TransactionTestCase):
     reset_sequences = True  # Primary keys appear in API responses
 
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls.set_app(app)
+    resources = [
+        ProjectsResource(),
+        TextbooksResource(),
+        SectionsResource(),
+        ExercisesResource(),
+        ExtractionEventsResource(),
+    ]
 
     def setUp(self):
         self.project = Project.objects.create(title="The project", description="Description")
@@ -221,13 +226,13 @@ class TextbookApiTests(TestMixin, TransactionTestCase):
                 },
             },
         }
-        response = self.post("http://testserver/api/textbooks", payload)
+        response = self.post("http://server/textbooks", payload)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
         self.assertEqual(response.json(), {
             "data": {
                 "type": "textbook",
                 "id": "1",
-                "links": {"self": "http://testserver/api/textbooks/1"},
+                "links": {"self": "http://server/textbooks/1"},
                 "attributes": {
                     "title": "The title",
                     "publisher": None, "year": None, "isbn": None,
@@ -264,13 +269,13 @@ class TextbookApiTests(TestMixin, TransactionTestCase):
                 },
             },
         }
-        response = self.post("http://testserver/api/textbooks", payload)
+        response = self.post("http://server/textbooks", payload)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
         self.assertEqual(response.json(), {
             "data": {
                 "type": "textbook",
                 "id": "1",
-                "links": {"self": "http://testserver/api/textbooks/1"},
+                "links": {"self": "http://server/textbooks/1"},
                 "attributes": {
                     "title": "The title",
                     "publisher": "The publisher",
@@ -307,7 +312,7 @@ class TextbookApiTests(TestMixin, TransactionTestCase):
                 },
             },
         }
-        response = self.post("http://testserver/api/textbooks", payload)
+        response = self.post("http://server/textbooks", payload)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.json())
         self.assertEqual(response.json(), {"detail": {"isbn": ["Enter a valid value."]}})
 
@@ -318,13 +323,13 @@ class TextbookApiTests(TestMixin, TransactionTestCase):
         textbook.exercises.create(project=textbook.project, textbook_page=16, number="11")
         textbook.exercises.create(project=textbook.project, textbook_page=17, number="13")
 
-        response = self.get("http://testserver/api/textbooks/1")
+        response = self.get("http://server/textbooks/1")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": {
                 "type": "textbook",
                 "id": "1",
-                "links": {"self": "http://testserver/api/textbooks/1"},
+                "links": {"self": "http://server/textbooks/1"},
                 "attributes": {
                     "title": "The title",
                     "publisher": "The publisher",
@@ -350,13 +355,13 @@ class TextbookApiTests(TestMixin, TransactionTestCase):
         textbook.exercises.create(project=textbook.project, textbook_page=16, number="11")
         textbook.exercises.create(project=textbook.project, textbook_page=17, number="13")
 
-        response = self.get("http://testserver/api/textbooks/1?include=exercises")
+        response = self.get("http://server/textbooks/1?include=exercises")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": {
                 "type": "textbook",
                 "id": "1",
-                "links": {"self": "http://testserver/api/textbooks/1"},
+                "links": {"self": "http://server/textbooks/1"},
                 "attributes": {
                     "title": "The title",
                     "publisher": "The publisher",
@@ -379,7 +384,7 @@ class TextbookApiTests(TestMixin, TransactionTestCase):
                 {
                     "type": "exercise",
                     "id": "1",
-                    "links": {"self": "http://testserver/api/exercises/1"},
+                    "links": {"self": "http://server/exercises/1"},
                     "attributes": {
                         "textbookPage": 16, "number": "11",
                         "instructions": "", "example": "", "clue": "", "wording": "",
@@ -393,7 +398,7 @@ class TextbookApiTests(TestMixin, TransactionTestCase):
                 {
                     "type": "exercise",
                     "id": "2",
-                    "links": {"self": "http://testserver/api/exercises/2"},
+                    "links": {"self": "http://server/exercises/2"},
                     "attributes": {
                         "textbookPage": 17, "number": "13",
                         "instructions": "", "example": "", "clue": "", "wording": "",
@@ -418,14 +423,14 @@ class TextbookApiTests(TestMixin, TransactionTestCase):
         textbook.exercises.create(project=textbook.project, textbook_page=16, number="8")
         textbook.exercises.create(project=textbook.project, textbook_page=17, number="9")
 
-        response = self.get("http://testserver/api/textbooks?sort=title")
+        response = self.get("http://server/textbooks?sort=title")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": [
                 {
                     "type": "textbook",
                     "id": "2",
-                    "links": {"self": "http://testserver/api/textbooks/2"},
+                    "links": {"self": "http://server/textbooks/2"},
                     "attributes": {
                         "title": "Another title",
                         "publisher": "Another publisher",
@@ -441,7 +446,7 @@ class TextbookApiTests(TestMixin, TransactionTestCase):
                 {
                     "type": "textbook",
                     "id": "1",
-                    "links": {"self": "http://testserver/api/textbooks/1"},
+                    "links": {"self": "http://server/textbooks/1"},
                     "attributes": {
                         "title": "The title",
                         "publisher": "The publisher",
@@ -456,22 +461,22 @@ class TextbookApiTests(TestMixin, TransactionTestCase):
                 },
             ],
             "links": {
-                "first": "http://testserver/api/textbooks?page%5Bnumber%5D=1&sort=title",
-                "last": "http://testserver/api/textbooks?page%5Bnumber%5D=2&sort=title",
-                "next": "http://testserver/api/textbooks?page%5Bnumber%5D=2&sort=title",
+                "first": "http://server/textbooks?page%5Bnumber%5D=1&sort=title",
+                "last": "http://server/textbooks?page%5Bnumber%5D=2&sort=title",
+                "next": "http://server/textbooks?page%5Bnumber%5D=2&sort=title",
                 "prev": None,
             },
             "meta": {"pagination": {"count": 3, "page": 1, "pages": 2}},
         })
 
-        response = self.get("http://testserver/api/textbooks?page[number]=2&sort=title")
+        response = self.get("http://server/textbooks?page[number]=2&sort=title")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": [
                 {
                     "type": "textbook",
                     "id": "3",
-                    "links": {"self": "http://testserver/api/textbooks/3"},
+                    "links": {"self": "http://server/textbooks/3"},
                     "attributes": {
                         "title": "Yet another title",
                         "publisher": "Yet another publisher",
@@ -486,10 +491,10 @@ class TextbookApiTests(TestMixin, TransactionTestCase):
                 },
             ],
             "links": {
-                "first": "http://testserver/api/textbooks?page%5Bnumber%5D=1&sort=title",
-                "last": "http://testserver/api/textbooks?page%5Bnumber%5D=2&sort=title",
+                "first": "http://server/textbooks?page%5Bnumber%5D=1&sort=title",
+                "last": "http://server/textbooks?page%5Bnumber%5D=2&sort=title",
                 "next": None,
-                "prev": "http://testserver/api/textbooks?page%5Bnumber%5D=1&sort=title",
+                "prev": "http://server/textbooks?page%5Bnumber%5D=1&sort=title",
             },
             "meta": {"pagination": {"count": 3, "page": 2, "pages": 2}},
         })
@@ -505,14 +510,14 @@ class TextbookApiTests(TestMixin, TransactionTestCase):
         textbook.exercises.create(project=textbook.project, textbook_page=16, number="8")
         textbook.exercises.create(project=textbook.project, textbook_page=17, number="9")
 
-        response = self.get("http://testserver/api/textbooks?sort=publisher")
+        response = self.get("http://server/textbooks?sort=publisher")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": [
                 {
                     "type": "textbook",
                     "id": "2",
-                    "links": {"self": "http://testserver/api/textbooks/2"},
+                    "links": {"self": "http://server/textbooks/2"},
                     "attributes": {
                         "title": "Another title",
                         "publisher": "Another publisher",
@@ -528,7 +533,7 @@ class TextbookApiTests(TestMixin, TransactionTestCase):
                 {
                     "type": "textbook",
                     "id": "3",
-                    "links": {"self": "http://testserver/api/textbooks/3"},
+                    "links": {"self": "http://server/textbooks/3"},
                     "attributes": {
                         "title": "Yet another title",
                         "publisher": "The publisher",
@@ -543,22 +548,22 @@ class TextbookApiTests(TestMixin, TransactionTestCase):
                 },
             ],
             "links": {
-                "first": "http://testserver/api/textbooks?page%5Bnumber%5D=1&sort=publisher",
-                "last": "http://testserver/api/textbooks?page%5Bnumber%5D=2&sort=publisher",
-                "next": "http://testserver/api/textbooks?page%5Bnumber%5D=2&sort=publisher",
+                "first": "http://server/textbooks?page%5Bnumber%5D=1&sort=publisher",
+                "last": "http://server/textbooks?page%5Bnumber%5D=2&sort=publisher",
+                "next": "http://server/textbooks?page%5Bnumber%5D=2&sort=publisher",
                 "prev": None,
             },
             "meta": {"pagination": {"count": 3, "page": 1, "pages": 2}},
         })
 
-        response = self.get("http://testserver/api/textbooks?page[number]=2&sort=publisher")
+        response = self.get("http://server/textbooks?page[number]=2&sort=publisher")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": [
                 {
                     "type": "textbook",
                     "id": "1",
-                    "links": {"self": "http://testserver/api/textbooks/1"},
+                    "links": {"self": "http://server/textbooks/1"},
                     "attributes": {
                         "title": "The title",
                         "publisher": "Yet another publisher",
@@ -573,10 +578,10 @@ class TextbookApiTests(TestMixin, TransactionTestCase):
                 },
             ],
             "links": {
-                "first": "http://testserver/api/textbooks?page%5Bnumber%5D=1&sort=publisher",
-                "last": "http://testserver/api/textbooks?page%5Bnumber%5D=2&sort=publisher",
+                "first": "http://server/textbooks?page%5Bnumber%5D=1&sort=publisher",
+                "last": "http://server/textbooks?page%5Bnumber%5D=2&sort=publisher",
                 "next": None,
-                "prev": "http://testserver/api/textbooks?page%5Bnumber%5D=1&sort=publisher",
+                "prev": "http://server/textbooks?page%5Bnumber%5D=1&sort=publisher",
             },
             "meta": {"pagination": {"count": 3, "page": 2, "pages": 2}},
         })
@@ -592,14 +597,14 @@ class TextbookApiTests(TestMixin, TransactionTestCase):
         textbook.exercises.create(project=textbook.project, textbook_page=16, number="8")
         textbook.exercises.create(project=textbook.project, textbook_page=17, number="9")
 
-        response = self.get("http://testserver/api/textbooks?include=exercises&sort=title")
+        response = self.get("http://server/textbooks?include=exercises&sort=title")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": [
                 {
                     "type": "textbook",
                     "id": "2",
-                    "links": {"self": "http://testserver/api/textbooks/2"},
+                    "links": {"self": "http://server/textbooks/2"},
                     "attributes": {
                         "title": "Another title",
                         "publisher": "Another publisher",
@@ -615,7 +620,7 @@ class TextbookApiTests(TestMixin, TransactionTestCase):
                 {
                     "type": "textbook",
                     "id": "1",
-                    "links": {"self": "http://testserver/api/textbooks/1"},
+                    "links": {"self": "http://server/textbooks/1"},
                     "attributes": {
                         "title": "The title",
                         "publisher": "The publisher",
@@ -642,7 +647,7 @@ class TextbookApiTests(TestMixin, TransactionTestCase):
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"id": "1", "type": "textbook"}},
                     },
-                    "links": {"self": "http://testserver/api/exercises/1"},
+                    "links": {"self": "http://server/exercises/1"},
                 },
                 {
                     "type": "exercise",
@@ -656,7 +661,7 @@ class TextbookApiTests(TestMixin, TransactionTestCase):
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"id": "1", "type": "textbook"}},
                     },
-                    "links": {"self": "http://testserver/api/exercises/2"},
+                    "links": {"self": "http://server/exercises/2"},
                 },
                 {
                     "type": "exercise",
@@ -670,26 +675,26 @@ class TextbookApiTests(TestMixin, TransactionTestCase):
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"id": "2", "type": "textbook"}},
                     },
-                    "links": {"self": "http://testserver/api/exercises/3"},
+                    "links": {"self": "http://server/exercises/3"},
                 },
             ],
             "links": {
-                "first": "http://testserver/api/textbooks?page%5Bnumber%5D=1&include=exercises&sort=title",
-                "last": "http://testserver/api/textbooks?page%5Bnumber%5D=2&include=exercises&sort=title",
-                "next": "http://testserver/api/textbooks?page%5Bnumber%5D=2&include=exercises&sort=title",
+                "first": "http://server/textbooks?page%5Bnumber%5D=1&include=exercises&sort=title",
+                "last": "http://server/textbooks?page%5Bnumber%5D=2&include=exercises&sort=title",
+                "next": "http://server/textbooks?page%5Bnumber%5D=2&include=exercises&sort=title",
                 "prev": None,
             },
             "meta": {"pagination": {"count": 3, "page": 1, "pages": 2}},
         })
 
-        response = self.get("http://testserver/api/textbooks?include=exercises&page[number]=2&sort=title")
+        response = self.get("http://server/textbooks?include=exercises&page[number]=2&sort=title")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": [
                 {
                     "type": "textbook",
                     "id": "3",
-                    "links": {"self": "http://testserver/api/textbooks/3"},
+                    "links": {"self": "http://server/textbooks/3"},
                     "attributes": {
                         "title": "Yet another title",
                         "publisher": "Yet another publisher",
@@ -716,7 +721,7 @@ class TextbookApiTests(TestMixin, TransactionTestCase):
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"id": "3", "type": "textbook"}},
                     },
-                    "links": {"self": "http://testserver/api/exercises/4"},
+                    "links": {"self": "http://server/exercises/4"},
                 },
                 {
                     "type": "exercise",
@@ -730,7 +735,7 @@ class TextbookApiTests(TestMixin, TransactionTestCase):
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"id": "3", "type": "textbook"}},
                     },
-                    "links": {"self": "http://testserver/api/exercises/5"},
+                    "links": {"self": "http://server/exercises/5"},
                 },
                 {
                     "type": "exercise",
@@ -744,14 +749,14 @@ class TextbookApiTests(TestMixin, TransactionTestCase):
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"id": "3", "type": "textbook"}},
                     },
-                    "links": {"self": "http://testserver/api/exercises/6"},
+                    "links": {"self": "http://server/exercises/6"},
                 },
             ],
             "links": {
-                "first": "http://testserver/api/textbooks?page%5Bnumber%5D=1&include=exercises&sort=title",
-                "last": "http://testserver/api/textbooks?page%5Bnumber%5D=2&include=exercises&sort=title",
+                "first": "http://server/textbooks?page%5Bnumber%5D=1&include=exercises&sort=title",
+                "last": "http://server/textbooks?page%5Bnumber%5D=2&include=exercises&sort=title",
                 "next": None,
-                "prev": "http://testserver/api/textbooks?page%5Bnumber%5D=1&include=exercises&sort=title",
+                "prev": "http://server/textbooks?page%5Bnumber%5D=1&include=exercises&sort=title",
             },
             "meta": {"pagination": {"count": 3, "page": 2, "pages": 2}},
         })
@@ -771,13 +776,13 @@ class TextbookApiTests(TestMixin, TransactionTestCase):
                 },
             },
         }
-        response = self.patch("http://testserver/api/textbooks/1", payload)
+        response = self.patch("http://server/textbooks/1", payload)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": {
                 "type": "textbook",
                 "id": "1",
-                "links": {"self": "http://testserver/api/textbooks/1"},
+                "links": {"self": "http://server/textbooks/1"},
                 "attributes": {
                     "title": "The new title",
                     "publisher": "The new publisher",
@@ -813,13 +818,13 @@ class TextbookApiTests(TestMixin, TransactionTestCase):
                 },
             },
         }
-        response = self.patch("http://testserver/api/textbooks/1", payload)
+        response = self.patch("http://server/textbooks/1", payload)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": {
                 "type": "textbook",
                 "id": "1",
-                "links": {"self": "http://testserver/api/textbooks/1"},
+                "links": {"self": "http://server/textbooks/1"},
                 "attributes": {
                     "title": "The new title",
                     "publisher": "The publisher",
@@ -856,7 +861,7 @@ class TextbookApiTests(TestMixin, TransactionTestCase):
                 },
             },
         }
-        response = self.patch("http://testserver/api/textbooks/1", payload)
+        response = self.patch("http://server/textbooks/1", payload)
         self.assertEqual(response.status_code, status.HTTP_422_UNPROCESSABLE_ENTITY, response.json())
         self.assertEqual(response.json(), {"detail": [{
             "input": {"data": {"id": "2", "type": "project"}},
@@ -878,7 +883,7 @@ class TextbookApiTests(TestMixin, TransactionTestCase):
     def test_delete__without_exercises(self):
         Textbook.objects.create(project=self.project, title="The title", publisher="The publisher", year=2023, isbn="9783161484100")
 
-        response = self.delete("http://testserver/api/textbooks/1")
+        response = self.delete("http://server/textbooks/1")
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Textbook.objects.count(), 0)
 
@@ -887,7 +892,7 @@ class TextbookApiTests(TestMixin, TransactionTestCase):
         textbook.exercises.create(project=textbook.project, textbook_page=12, number="4")
         textbook.exercises.create(project=textbook.project, textbook_page=13, number="5")
 
-        response = self.delete("http://testserver/api/textbooks/1")
+        response = self.delete("http://server/textbooks/1")
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Textbook.objects.count(), 0)
         self.assertEqual(Exercise.objects.count(), 0)
@@ -985,10 +990,15 @@ class ExerciseModelTests(TransactionTestCase):
 class ExerciseApiTests(TestMixin, TransactionTestCase):
     reset_sequences = True  # Primary keys appear in API responses
 
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls.set_app(app)
+    resources = [
+        # PdfFilesResource(),
+        # PdfFileNamingsResource(),
+        ProjectsResource(),
+        TextbooksResource(),
+        SectionsResource(),
+        ExercisesResource(),
+        ExtractionEventsResource(),
+    ]
 
     def setUp(self):
         self.project = Project.objects.create(title="The project", description="Description")
@@ -1007,13 +1017,13 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                 },
             },
         }
-        response = self.post("http://testserver/api/exercises", payload)
+        response = self.post("http://server/exercises", payload)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
         self.assertEqual(response.json(), {
             "data": {
                 "type": "exercise",
                 "id": "1",
-                "links": {"self": "http://testserver/api/exercises/1"},
+                "links": {"self": "http://server/exercises/1"},
                 "attributes": {
                     "textbookPage": None, "number": "42",
                     "instructions": "", "example": "", "clue": "", "wording": "",
@@ -1051,13 +1061,13 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                 },
             },
         }
-        response = self.post("http://testserver/api/exercises", payload)
+        response = self.post("http://server/exercises", payload)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
         self.assertEqual(response.json(), {
             "data": {
                 "type": "exercise",
                 "id": "1",
-                "links": {"self": "http://testserver/api/exercises/1"},
+                "links": {"self": "http://server/exercises/1"},
                 "attributes": {
                     "textbookPage": 12, "number": "42",
                     "instructions": "", "example": "", "clue": "", "wording": "",
@@ -1096,13 +1106,13 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                 },
             },
         }
-        response = self.post("http://testserver/api/exercises", payload)
+        response = self.post("http://server/exercises", payload)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
         self.assertEqual(response.json(), {
             "data": {
                 "type": "exercise",
                 "id": "1",
-                "links": {"self": "http://testserver/api/exercises/1"},
+                "links": {"self": "http://server/exercises/1"},
                 "attributes": {
                     "textbookPage": 14, "number": "1",
                     "instructions": "instructions", "example": "example", "clue": "clue", "wording": "wording",
@@ -1138,13 +1148,13 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
             wording="wording",
         )
 
-        response = self.get("http://testserver/api/exercises/1")
+        response = self.get("http://server/exercises/1")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": {
                 "type": "exercise",
                 "id": "1",
-                "links": {"self": "http://testserver/api/exercises/1"},
+                "links": {"self": "http://server/exercises/1"},
                 "attributes": {
                     "textbookPage": 16, "number": "11",
                     "instructions": "instructions", "example": "example", "clue": "clue", "wording": "wording",
@@ -1168,13 +1178,13 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
             wording="wording",
         )
 
-        response = self.get("http://testserver/api/exercises/1?include=textbook")
+        response = self.get("http://server/exercises/1?include=textbook")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": {
                 "type": "exercise",
                 "id": "1",
-                "links": {"self": "http://testserver/api/exercises/1"},
+                "links": {"self": "http://server/exercises/1"},
                 "attributes": {
                     "textbookPage": 16, "number": "11",
                     "instructions": "instructions", "example": "example", "clue": "clue", "wording": "wording",
@@ -1189,7 +1199,7 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                 {
                     "type": "textbook",
                     "id": "1",
-                    "links": {"self": "http://testserver/api/textbooks/1"},
+                    "links": {"self": "http://server/textbooks/1"},
                     "attributes": {
                         "title": "The title",
                         "publisher": None, "year": None, "isbn": None,
@@ -1208,14 +1218,14 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
         self.textbook.exercises.create(project=self.textbook.project, textbook_page=17, number="3")
         self.textbook.exercises.create(project=self.textbook.project, textbook_page=17, number="4")
 
-        response = self.get("http://testserver/api/exercises")
+        response = self.get("http://server/exercises")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": [
                 {
                     "type": "exercise",
                     "id": "1",
-                    "links": {"self": "http://testserver/api/exercises/1"},
+                    "links": {"self": "http://server/exercises/1"},
                     "attributes": {
                         "textbookPage": 16, "number": "11",
                         "instructions": "", "example": "", "clue": "", "wording": "",
@@ -1229,7 +1239,7 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                 {
                     "type": "exercise",
                     "id": "2",
-                    "links": {"self": "http://testserver/api/exercises/2"},
+                    "links": {"self": "http://server/exercises/2"},
                     "attributes": {
                         "textbookPage": 17, "number": "3",
                         "instructions": "", "example": "", "clue": "", "wording": "",
@@ -1242,22 +1252,22 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                 },
             ],
             "links": {
-                "first": "http://testserver/api/exercises?page%5Bnumber%5D=1",
-                "last": "http://testserver/api/exercises?page%5Bnumber%5D=2",
-                "next": "http://testserver/api/exercises?page%5Bnumber%5D=2",
+                "first": "http://server/exercises?page%5Bnumber%5D=1",
+                "last": "http://server/exercises?page%5Bnumber%5D=2",
+                "next": "http://server/exercises?page%5Bnumber%5D=2",
                 "prev": None,
             },
             "meta": {"pagination": {"count": 3, "page": 1, "pages": 2}},
         })
 
-        response = self.get("http://testserver/api/exercises?page[number]=2")
+        response = self.get("http://server/exercises?page[number]=2")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": [
                 {
                     "type": "exercise",
                     "id": "3",
-                    "links": {"self": "http://testserver/api/exercises/3"},
+                    "links": {"self": "http://server/exercises/3"},
                     "attributes": {
                         "textbookPage": 17, "number": "4",
                         "instructions": "", "example": "", "clue": "", "wording": "",
@@ -1270,10 +1280,10 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                 },
             ],
             "links": {
-                "first": "http://testserver/api/exercises?page%5Bnumber%5D=1",
-                "last": "http://testserver/api/exercises?page%5Bnumber%5D=2",
+                "first": "http://server/exercises?page%5Bnumber%5D=1",
+                "last": "http://server/exercises?page%5Bnumber%5D=2",
                 "next": None,
-                "prev": "http://testserver/api/exercises?page%5Bnumber%5D=1",
+                "prev": "http://server/exercises?page%5Bnumber%5D=1",
             },
             "meta": {"pagination": {"count": 3, "page": 2, "pages": 2}},
         })
@@ -1283,14 +1293,14 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
         self.textbook.exercises.create(project=self.textbook.project, textbook_page=17, number="3")
         self.textbook.exercises.create(project=self.textbook.project, textbook_page=17, number="4")
 
-        response = self.get("http://testserver/api/exercises?sort=textbook,textbookPage,number")
+        response = self.get("http://server/exercises?sort=textbook,textbookPage,number")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": [
                 {
                     "type": "exercise",
                     "id": "1",
-                    "links": {"self": "http://testserver/api/exercises/1"},
+                    "links": {"self": "http://server/exercises/1"},
                     "attributes": {
                         "textbookPage": 16, "number": "11",
                         "instructions": "", "example": "", "clue": "", "wording": "",
@@ -1304,7 +1314,7 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                 {
                     "type": "exercise",
                     "id": "2",
-                    "links": {"self": "http://testserver/api/exercises/2"},
+                    "links": {"self": "http://server/exercises/2"},
                     "attributes": {
                         "textbookPage": 17, "number": "3",
                         "instructions": "", "example": "", "clue": "", "wording": "",
@@ -1317,22 +1327,22 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                 },
             ],
             "links": {
-                "first": "http://testserver/api/exercises?page%5Bnumber%5D=1&sort=textbook%2CtextbookPage%2Cnumber",
-                "last": "http://testserver/api/exercises?page%5Bnumber%5D=2&sort=textbook%2CtextbookPage%2Cnumber",
-                "next": "http://testserver/api/exercises?page%5Bnumber%5D=2&sort=textbook%2CtextbookPage%2Cnumber",
+                "first": "http://server/exercises?page%5Bnumber%5D=1&sort=textbook%2CtextbookPage%2Cnumber",
+                "last": "http://server/exercises?page%5Bnumber%5D=2&sort=textbook%2CtextbookPage%2Cnumber",
+                "next": "http://server/exercises?page%5Bnumber%5D=2&sort=textbook%2CtextbookPage%2Cnumber",
                 "prev": None,
             },
             "meta": {"pagination": {"count": 3, "page": 1, "pages": 2}},
         })
 
-        response = self.get("http://testserver/api/exercises?page[number]=2&sort=textbook,textbookPage,number")
+        response = self.get("http://server/exercises?page[number]=2&sort=textbook,textbookPage,number")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": [
                 {
                     "type": "exercise",
                     "id": "3",
-                    "links": {"self": "http://testserver/api/exercises/3"},
+                    "links": {"self": "http://server/exercises/3"},
                     "attributes": {
                         "textbookPage": 17, "number": "4",
                         "instructions": "", "example": "", "clue": "", "wording": "",
@@ -1345,10 +1355,10 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                 },
             ],
             "links": {
-                "first": "http://testserver/api/exercises?page%5Bnumber%5D=1&sort=textbook%2CtextbookPage%2Cnumber",
-                "last": "http://testserver/api/exercises?page%5Bnumber%5D=2&sort=textbook%2CtextbookPage%2Cnumber",
+                "first": "http://server/exercises?page%5Bnumber%5D=1&sort=textbook%2CtextbookPage%2Cnumber",
+                "last": "http://server/exercises?page%5Bnumber%5D=2&sort=textbook%2CtextbookPage%2Cnumber",
                 "next": None,
-                "prev": "http://testserver/api/exercises?page%5Bnumber%5D=1&sort=textbook%2CtextbookPage%2Cnumber",
+                "prev": "http://server/exercises?page%5Bnumber%5D=1&sort=textbook%2CtextbookPage%2Cnumber",
             },
             "meta": {"pagination": {"count": 3, "page": 2, "pages": 2}},
         })
@@ -1358,14 +1368,14 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
         self.textbook.exercises.create(project=self.textbook.project, textbook_page=17, number="3")
         self.textbook.exercises.create(project=self.textbook.project, textbook_page=17, number="4")
 
-        response = self.get("http://testserver/api/exercises?sort=number")
+        response = self.get("http://server/exercises?sort=number")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": [
                 {
                     "type": "exercise",
                     "id": "2",
-                    "links": {"self": "http://testserver/api/exercises/2"},
+                    "links": {"self": "http://server/exercises/2"},
                     "attributes": {
                         "textbookPage": 17, "number": "3",
                         "instructions": "", "example": "", "clue": "", "wording": "",
@@ -1379,7 +1389,7 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                 {
                     "type": "exercise",
                     "id": "3",
-                    "links": {"self": "http://testserver/api/exercises/3"},
+                    "links": {"self": "http://server/exercises/3"},
                     "attributes": {
                         "textbookPage": 17, "number": "4",
                         "instructions": "", "example": "", "clue": "", "wording": "",
@@ -1392,22 +1402,22 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                 },
             ],
             "links": {
-                "first": "http://testserver/api/exercises?page%5Bnumber%5D=1&sort=number",
-                "last": "http://testserver/api/exercises?page%5Bnumber%5D=2&sort=number",
-                "next": "http://testserver/api/exercises?page%5Bnumber%5D=2&sort=number",
+                "first": "http://server/exercises?page%5Bnumber%5D=1&sort=number",
+                "last": "http://server/exercises?page%5Bnumber%5D=2&sort=number",
+                "next": "http://server/exercises?page%5Bnumber%5D=2&sort=number",
                 "prev": None,
             },
             "meta": {"pagination": {"count": 3, "page": 1, "pages": 2}},
         })
 
-        response = self.get("http://testserver/api/exercises?page[number]=2&sort=number")
+        response = self.get("http://server/exercises?page[number]=2&sort=number")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": [
                 {
                     "type": "exercise",
                     "id": "1",
-                    "links": {"self": "http://testserver/api/exercises/1"},
+                    "links": {"self": "http://server/exercises/1"},
                     "attributes": {
                         "textbookPage": 16, "number": "11",
                         "instructions": "", "example": "", "clue": "", "wording": "",
@@ -1420,10 +1430,10 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                 },
             ],
             "links": {
-                "first": "http://testserver/api/exercises?page%5Bnumber%5D=1&sort=number",
-                "last": "http://testserver/api/exercises?page%5Bnumber%5D=2&sort=number",
+                "first": "http://server/exercises?page%5Bnumber%5D=1&sort=number",
+                "last": "http://server/exercises?page%5Bnumber%5D=2&sort=number",
                 "next": None,
-                "prev": "http://testserver/api/exercises?page%5Bnumber%5D=1&sort=number",
+                "prev": "http://server/exercises?page%5Bnumber%5D=1&sort=number",
             },
             "meta": {"pagination": {"count": 3, "page": 2, "pages": 2}},
         })
@@ -1435,14 +1445,14 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
         other_textbook = Textbook.objects.create(project=self.project, title="The other title")
         other_textbook.exercises.create(project=other_textbook.project, textbook_page=12, number="4")
 
-        response = self.get("http://testserver/api/exercises?include=textbook")
+        response = self.get("http://server/exercises?include=textbook")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": [
                 {
                     "type": "exercise",
                     "id": "1",
-                    "links": {"self": "http://testserver/api/exercises/1"},
+                    "links": {"self": "http://server/exercises/1"},
                     "attributes": {
                         "textbookPage": 16, "number": "11",
                         "instructions": "", "example": "", "clue": "", "wording": "",
@@ -1456,7 +1466,7 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                 {
                     "type": "exercise",
                     "id": "2",
-                    "links": {"self": "http://testserver/api/exercises/2"},
+                    "links": {"self": "http://server/exercises/2"},
                     "attributes": {
                         "textbookPage": 17, "number": "13",
                         "instructions": "", "example": "", "clue": "", "wording": "",
@@ -1472,7 +1482,7 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                 {
                     "type": "textbook",
                     "id": "1",
-                    "links": {"self": "http://testserver/api/textbooks/1"},
+                    "links": {"self": "http://server/textbooks/1"},
                     "attributes": {
                         "title": "The title",
                         "publisher": None, "year": None, "isbn": None,
@@ -1492,22 +1502,22 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                 },
             ],
             "links": {
-                "first": "http://testserver/api/exercises?page%5Bnumber%5D=1&include=textbook",
-                "last": "http://testserver/api/exercises?page%5Bnumber%5D=2&include=textbook",
-                "next": "http://testserver/api/exercises?page%5Bnumber%5D=2&include=textbook",
+                "first": "http://server/exercises?page%5Bnumber%5D=1&include=textbook",
+                "last": "http://server/exercises?page%5Bnumber%5D=2&include=textbook",
+                "next": "http://server/exercises?page%5Bnumber%5D=2&include=textbook",
                 "prev": None,
             },
             "meta": {"pagination": {"count": 4, "page": 1, "pages": 2}},
         })
 
-        response = self.get("http://testserver/api/exercises?include=textbook&page[number]=2")
+        response = self.get("http://server/exercises?include=textbook&page[number]=2")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": [
                 {
                     "type": "exercise",
                     "id": "3",
-                    "links": {"self": "http://testserver/api/exercises/3"},
+                    "links": {"self": "http://server/exercises/3"},
                     "attributes": {
                         "textbookPage": 17, "number": "14",
                         "instructions": "", "example": "", "clue": "", "wording": "",
@@ -1521,7 +1531,7 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                 {
                     "type": "exercise",
                     "id": "4",
-                    "links": {"self": "http://testserver/api/exercises/4"},
+                    "links": {"self": "http://server/exercises/4"},
                     "attributes": {
                         "textbookPage": 12, "number": "4",
                         "instructions": "", "example": "", "clue": "", "wording": "",
@@ -1537,7 +1547,7 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                 {
                     "type": "textbook",
                     "id": "1",
-                    "links": {"self": "http://testserver/api/textbooks/1"},
+                    "links": {"self": "http://server/textbooks/1"},
                     "attributes": {
                         "title": "The title",
                         "publisher": None, "year": None, "isbn": None,
@@ -1558,7 +1568,7 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                 {
                     "type": "textbook",
                     "id": "2",
-                    "links": {"self": "http://testserver/api/textbooks/2"},
+                    "links": {"self": "http://server/textbooks/2"},
                     "attributes": {
                         "title": "The other title",
                         "publisher": None, "year": None, "isbn": None,
@@ -1576,10 +1586,10 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                 },
             ],
             "links": {
-                "first": "http://testserver/api/exercises?page%5Bnumber%5D=1&include=textbook",
-                "last": "http://testserver/api/exercises?page%5Bnumber%5D=2&include=textbook",
+                "first": "http://server/exercises?page%5Bnumber%5D=1&include=textbook",
+                "last": "http://server/exercises?page%5Bnumber%5D=2&include=textbook",
                 "next": None,
-                "prev": "http://testserver/api/exercises?page%5Bnumber%5D=1&include=textbook",
+                "prev": "http://server/exercises?page%5Bnumber%5D=1&include=textbook",
             },
             "meta": {"pagination": {"count": 4, "page": 2, "pages": 2}},
         })
@@ -1591,14 +1601,14 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
         other_textbook = Textbook.objects.create(project=self.project, title="The other title")
         other_textbook.exercises.create(project=other_textbook.project, textbook_page=12, number="4")
 
-        response = self.get("http://testserver/api/exercises?filter[textbook]=1")
+        response = self.get("http://server/exercises?filter[textbook]=1")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": [
                 {
                     "type": "exercise",
                     "id": "1",
-                    "links": {"self": "http://testserver/api/exercises/1"},
+                    "links": {"self": "http://server/exercises/1"},
                     "attributes": {
                         "textbookPage": 16, "number": "11",
                         "instructions": "", "example": "", "clue": "", "wording": "",
@@ -1612,7 +1622,7 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                 {
                     "type": "exercise",
                     "id": "2",
-                    "links": {"self": "http://testserver/api/exercises/2"},
+                    "links": {"self": "http://server/exercises/2"},
                     "attributes": {
                         "textbookPage": 17, "number": "13",
                         "instructions": "", "example": "", "clue": "", "wording": "",
@@ -1625,22 +1635,22 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                 },
             ],
             "links": {
-                "first": "http://testserver/api/exercises?filter%5Btextbook%5D=1&page%5Bnumber%5D=1",
-                "last": "http://testserver/api/exercises?filter%5Btextbook%5D=1&page%5Bnumber%5D=2",
-                "next": "http://testserver/api/exercises?filter%5Btextbook%5D=1&page%5Bnumber%5D=2",
+                "first": "http://server/exercises?filter%5Btextbook%5D=1&page%5Bnumber%5D=1",
+                "last": "http://server/exercises?filter%5Btextbook%5D=1&page%5Bnumber%5D=2",
+                "next": "http://server/exercises?filter%5Btextbook%5D=1&page%5Bnumber%5D=2",
                 "prev": None,
             },
             "meta": {"pagination": {"count": 3, "page": 1, "pages": 2}},
         })
 
-        response = self.get("http://testserver/api/exercises?filter[textbook]=1&page[number]=2")
+        response = self.get("http://server/exercises?filter[textbook]=1&page[number]=2")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": [
                 {
                     "type": "exercise",
                     "id": "3",
-                    "links": {"self": "http://testserver/api/exercises/3"},
+                    "links": {"self": "http://server/exercises/3"},
                     "attributes": {
                         "textbookPage": 17, "number": "14",
                         "instructions": "", "example": "", "clue": "", "wording": "",
@@ -1653,10 +1663,10 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                 },
             ],
             "links": {
-                "first": "http://testserver/api/exercises?filter%5Btextbook%5D=1&page%5Bnumber%5D=1",
-                "last": "http://testserver/api/exercises?filter%5Btextbook%5D=1&page%5Bnumber%5D=2",
+                "first": "http://server/exercises?filter%5Btextbook%5D=1&page%5Bnumber%5D=1",
+                "last": "http://server/exercises?filter%5Btextbook%5D=1&page%5Bnumber%5D=2",
                 "next": None,
-                "prev": "http://testserver/api/exercises?filter%5Btextbook%5D=1&page%5Bnumber%5D=1",
+                "prev": "http://server/exercises?filter%5Btextbook%5D=1&page%5Bnumber%5D=1",
             },
             "meta": {"pagination": {"count": 3, "page": 2, "pages": 2}},
         })
@@ -1691,13 +1701,13 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                 },
             },
         }
-        response = self.patch("http://testserver/api/exercises/1", payload)
+        response = self.patch("http://server/exercises/1", payload)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": {
                 "type": "exercise",
                 "id": "1",
-                "links": {"self": "http://testserver/api/exercises/1"},
+                "links": {"self": "http://server/exercises/1"},
                 "attributes": {
                     "textbookPage": 16, "number": "11",
                     "instructions": "INSTRUCTIONS", "example": "EXAMPLE", "clue": "CLUE", "wording": "WORDING",
@@ -1742,13 +1752,13 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                 },
             },
         }
-        response = self.patch("http://testserver/api/exercises/1", payload)
+        response = self.patch("http://server/exercises/1", payload)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": {
                 "type": "exercise",
                 "id": "1",
-                "links": {"self": "http://testserver/api/exercises/1"},
+                "links": {"self": "http://server/exercises/1"},
                 "attributes": {
                     "textbookPage": 16, "number": "11",
                     "instructions": "INSTRUCTIONS", "example": "example", "clue": "clue", "wording": "wording",
@@ -1794,7 +1804,7 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                 },
             },
         }
-        response = self.patch("http://testserver/api/exercises/1", payload)
+        response = self.patch("http://server/exercises/1", payload)
         self.assertEqual(response.status_code, status.HTTP_422_UNPROCESSABLE_ENTITY, response.json())
         self.assertEqual(response.json(), {"detail": [{
             "input": {"data": {"id": "2", "type": "project"}},
@@ -1837,7 +1847,7 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                 },
             },
         }
-        response = self.patch("http://testserver/api/exercises/1", payload)
+        response = self.patch("http://server/exercises/1", payload)
         self.assertEqual(response.status_code, status.HTTP_422_UNPROCESSABLE_ENTITY, response.json())
         self.assertEqual(response.json(), {"detail": [{
             "input": {"data": {"id": "2", "type": "textbook"}},
@@ -1879,7 +1889,7 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                 },
             },
         }
-        response = self.patch("http://testserver/api/exercises/1", payload)
+        response = self.patch("http://server/exercises/1", payload)
         self.assertEqual(response.status_code, status.HTTP_422_UNPROCESSABLE_ENTITY, response.json())
         self.assertEqual(response.json(), {"detail": [{
             "input": 42,
@@ -1921,7 +1931,7 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                 },
             },
         }
-        response = self.patch("http://testserver/api/exercises/1", payload)
+        response = self.patch("http://server/exercises/1", payload)
         self.assertEqual(response.status_code, status.HTTP_422_UNPROCESSABLE_ENTITY, response.json())
         self.assertEqual(response.json(), {"detail": [{
             "input": "12",
@@ -1947,7 +1957,7 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
         self.textbook.exercises.create(project=self.textbook.project, textbook_page=16, number="11")
         self.assertEqual(Exercise.objects.count(), 1)
 
-        response = self.delete("http://testserver/api/exercises/1")
+        response = self.delete("http://server/exercises/1")
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(response.content, b"")
 

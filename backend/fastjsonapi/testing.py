@@ -1,19 +1,23 @@
 import json
 import inspect
 
+from fastapi import FastAPI
 from fastapi.testclient import TestClient
+
+from .router import make_jsonapi_router
 
 
 class TestMixin:
     maxDiff = None
 
     @classmethod
-    def set_app(cls, app):
-        assert not hasattr(cls, "_TestMixin__app")
-        cls.__app = app
-        assert hasattr(cls, "_TestMixin__app")
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.__app = FastAPI()
+        cls.__app.include_router(make_jsonapi_router(cls.resources))
+
         cls.__schema_file_path = f"{inspect.getfile(cls)}.{cls.__name__}.openapi.json"
-        cls.__client = TestClient(app)
+        cls.__client = TestClient(cls.__app)
 
     def get(self, url):
         return self.__client.get(url, headers={"Content-Type": "application/vnd.api+json"})
