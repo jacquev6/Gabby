@@ -1,11 +1,16 @@
-from pydantic import BaseModel
+from typing import Any, Iterable
 
 
-class Annotations(BaseModel):
-    create_input : bool = True
-    update_input : bool = True
-    output : bool = True
-    filter : bool = False
+class Annotations:
+    def __init__(self, annotations: Iterable[Any]):
+        self.create_input = True
+        self.update_input = True
+        self.output = True
+        self.filter = False
+
+        for annotation in annotations:
+            if isinstance(annotation, Annotation):
+                annotation.apply(self)
 
 
 class Annotation:

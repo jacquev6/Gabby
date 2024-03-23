@@ -4,22 +4,19 @@ from starlette import status
 from django.test import TransactionTestCase
 
 from .models import Ping
+from .resources import PingsResource
 from fastjsonapi.testing import TestMixin
-from main import app
 
 
 class PingTests(TestMixin, TransactionTestCase):
     reset_sequences = True  # Primary keys appear in API responses
 
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls.set_app(app)
+    resources = [PingsResource()]
 
     def test_create__minimal(self):
         before = datetime.datetime.now(tz=datetime.timezone.utc)
         response = self.post(
-            "http://testserver/api/pings",
+            "http://server/pings",
             {
                 "data": {
                     "type": "ping",
@@ -38,7 +35,7 @@ class PingTests(TestMixin, TransactionTestCase):
             "data": {
                 "type": "ping",
                 "id": "1",
-                "links": {"self": "http://testserver/api/pings/1"},
+                "links": {"self": "http://server/pings/1"},
                 "attributes": {
                     "createdAt": created_at,
                     "message": None,
@@ -67,7 +64,7 @@ class PingTests(TestMixin, TransactionTestCase):
         self.assertEqual(Ping.objects.create().id, 2)
 
         response = self.post(
-            "http://testserver/api/pings?include=prev,next",
+            "http://server/pings?include=prev,next",
             {
                 "data": {
                     "type": "ping",
@@ -87,7 +84,7 @@ class PingTests(TestMixin, TransactionTestCase):
             "data": {
                 "type": "ping",
                 "id": "3",
-                "links": {"self": "http://testserver/api/pings/3"},
+                "links": {"self": "http://server/pings/3"},
                 "attributes": {
                     "createdAt": created_at,
                     "message": "hello",
@@ -101,7 +98,7 @@ class PingTests(TestMixin, TransactionTestCase):
                 {
                     "type": "ping",
                     "id": "1",
-                    "links": {"self": "http://testserver/api/pings/1"},
+                    "links": {"self": "http://server/pings/1"},
                     "attributes": {
                         "createdAt": response.json()["included"][0]["attributes"]["createdAt"],
                         "message": None,
@@ -114,7 +111,7 @@ class PingTests(TestMixin, TransactionTestCase):
                 {
                     "type": "ping",
                     "id": "2",
-                    "links": {"self": "http://testserver/api/pings/2"},
+                    "links": {"self": "http://server/pings/2"},
                     "attributes": {
                         "createdAt": response.json()["included"][1]["attributes"]["createdAt"],
                         "message": None,
@@ -137,13 +134,13 @@ class PingTests(TestMixin, TransactionTestCase):
 
     def test_get_one(self):
         ping = Ping.objects.create()
-        response = self.get("http://testserver/api/pings/1")
+        response = self.get("http://server/pings/1")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": {
                 "type": "ping",
                 "id": "1",
-                "links": {"self": "http://testserver/api/pings/1"},
+                "links": {"self": "http://server/pings/1"},
                 "attributes": {
                     "createdAt": ping.created_at.isoformat().replace("+00:00", "Z"),
                     "message": None,
@@ -157,7 +154,7 @@ class PingTests(TestMixin, TransactionTestCase):
 
     def test_get_one__nonexisting(self):
         ping = Ping.objects.create()
-        response = self.get("http://testserver/api/pings/0")
+        response = self.get("http://server/pings/0")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.json())
 
     def test_get_all(self):
@@ -165,14 +162,14 @@ class PingTests(TestMixin, TransactionTestCase):
         ping2 = Ping.objects.create(prev=ping1)
         ping3 = Ping.objects.create()
 
-        response = self.get("http://testserver/api/pings")
+        response = self.get("http://server/pings")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": [
                 {
                     "type": "ping",
                     "id": "1",
-                    "links": {"self": "http://testserver/api/pings/1"},
+                    "links": {"self": "http://server/pings/1"},
                     "attributes": {
                         "createdAt": ping1.created_at.isoformat().replace("+00:00", "Z"),
                         "message": None,
@@ -185,7 +182,7 @@ class PingTests(TestMixin, TransactionTestCase):
                 {
                     "type": "ping",
                     "id": "2",
-                    "links": {"self": "http://testserver/api/pings/2"},
+                    "links": {"self": "http://server/pings/2"},
                     "attributes": {
                         "createdAt": ping2.created_at.isoformat().replace("+00:00", "Z"),
                         "message": None,
@@ -197,9 +194,9 @@ class PingTests(TestMixin, TransactionTestCase):
                 },
             ],
             "links": {
-                "first": "http://testserver/api/pings?page%5Bnumber%5D=1",
-                "last": "http://testserver/api/pings?page%5Bnumber%5D=2",
-                "next": "http://testserver/api/pings?page%5Bnumber%5D=2",
+                "first": "http://server/pings?page%5Bnumber%5D=1",
+                "last": "http://server/pings?page%5Bnumber%5D=2",
+                "next": "http://server/pings?page%5Bnumber%5D=2",
                 "prev": None,
             },
             "meta": {
@@ -213,7 +210,7 @@ class PingTests(TestMixin, TransactionTestCase):
                 {
                     "type": "ping",
                     "id": "3",
-                    "links": {"self": "http://testserver/api/pings/3"},
+                    "links": {"self": "http://server/pings/3"},
                     "attributes": {
                         "createdAt": ping3.created_at.isoformat().replace("+00:00", "Z"),
                         "message": None,
@@ -225,10 +222,10 @@ class PingTests(TestMixin, TransactionTestCase):
                 },
             ],
             "links": {
-                "first": "http://testserver/api/pings?page%5Bnumber%5D=1",
-                "last": "http://testserver/api/pings?page%5Bnumber%5D=2",
+                "first": "http://server/pings?page%5Bnumber%5D=1",
+                "last": "http://server/pings?page%5Bnumber%5D=2",
                 "next": None,
-                "prev": "http://testserver/api/pings?page%5Bnumber%5D=1",
+                "prev": "http://server/pings?page%5Bnumber%5D=1",
             },
             "meta": {
                 "pagination": {"count": 3, "page": 2, "pages": 2},
@@ -244,14 +241,14 @@ class PingTests(TestMixin, TransactionTestCase):
         Ping.objects.create(message="Good bye")
         Ping.objects.create(message="Hello")
 
-        response = self.get("http://testserver/api/pings?filter[message]=Hello")
+        response = self.get("http://server/pings?filter[message]=Hello")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": [
                 {
                     "type": "ping",
                     "id": "1",
-                    "links": {"self": "http://testserver/api/pings/1"},
+                    "links": {"self": "http://server/pings/1"},
                     "attributes": {
                         "createdAt": Ping.objects.get(id=1).created_at.isoformat().replace("+00:00", "Z"),
                         "message": "Hello",
@@ -264,7 +261,7 @@ class PingTests(TestMixin, TransactionTestCase):
                 {
                     "type": "ping",
                     "id": "3",
-                    "links": {"self": "http://testserver/api/pings/3"},
+                    "links": {"self": "http://server/pings/3"},
                     "attributes": {
                         "createdAt": Ping.objects.get(id=3).created_at.isoformat().replace("+00:00", "Z"),
                         "message": "Hello",
@@ -276,9 +273,9 @@ class PingTests(TestMixin, TransactionTestCase):
                 },
             ],
             "links": {
-                "first": "http://testserver/api/pings?filter%5Bmessage%5D=Hello&page%5Bnumber%5D=1",
-                "last": "http://testserver/api/pings?filter%5Bmessage%5D=Hello&page%5Bnumber%5D=2",
-                "next": "http://testserver/api/pings?filter%5Bmessage%5D=Hello&page%5Bnumber%5D=2",
+                "first": "http://server/pings?filter%5Bmessage%5D=Hello&page%5Bnumber%5D=1",
+                "last": "http://server/pings?filter%5Bmessage%5D=Hello&page%5Bnumber%5D=2",
+                "next": "http://server/pings?filter%5Bmessage%5D=Hello&page%5Bnumber%5D=2",
                 "prev": None,
             },
             "meta": {
@@ -294,14 +291,14 @@ class PingTests(TestMixin, TransactionTestCase):
         Ping.objects.create(prev=None)
         Ping.objects.create(prev=prev)
 
-        response = self.get("http://testserver/api/pings?filter[prev]=1")
+        response = self.get("http://server/pings?filter[prev]=1")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": [
                 {
                     "type": "ping",
                     "id": "2",
-                    "links": {"self": "http://testserver/api/pings/2"},
+                    "links": {"self": "http://server/pings/2"},
                     "attributes": {
                         "createdAt": Ping.objects.get(id=2).created_at.isoformat().replace("+00:00", "Z"),
                         "message": None,
@@ -314,7 +311,7 @@ class PingTests(TestMixin, TransactionTestCase):
                 {
                     "type": "ping",
                     "id": "4",
-                    "links": {"self": "http://testserver/api/pings/4"},
+                    "links": {"self": "http://server/pings/4"},
                     "attributes": {
                         "createdAt": Ping.objects.get(id=4).created_at.isoformat().replace("+00:00", "Z"),
                         "message": None,
@@ -326,9 +323,9 @@ class PingTests(TestMixin, TransactionTestCase):
                 },
             ],
             "links": {
-                "first": "http://testserver/api/pings?filter%5Bprev%5D=1&page%5Bnumber%5D=1",
-                "last": "http://testserver/api/pings?filter%5Bprev%5D=1&page%5Bnumber%5D=2",
-                "next": "http://testserver/api/pings?filter%5Bprev%5D=1&page%5Bnumber%5D=2",
+                "first": "http://server/pings?filter%5Bprev%5D=1&page%5Bnumber%5D=1",
+                "last": "http://server/pings?filter%5Bprev%5D=1&page%5Bnumber%5D=2",
+                "next": "http://server/pings?filter%5Bprev%5D=1&page%5Bnumber%5D=2",
                 "prev": None,
             },
             "meta": {
@@ -340,7 +337,7 @@ class PingTests(TestMixin, TransactionTestCase):
         ping = Ping.objects.create(message="Hello", prev=Ping.objects.create())
         Ping.objects.create(prev=ping)
 
-        response = self.patch("http://testserver/api/pings/2", {
+        response = self.patch("http://server/pings/2", {
             "data": {
                 "type": "ping",
                 "id": "2",
@@ -351,7 +348,7 @@ class PingTests(TestMixin, TransactionTestCase):
             "data": {
                 "type": "ping",
                 "id": "2",
-                "links": {"self": "http://testserver/api/pings/2"},
+                "links": {"self": "http://server/pings/2"},
                 "attributes": {
                     "createdAt": ping.created_at.isoformat().replace("+00:00", "Z"),
                     "message": "Hello",
@@ -372,7 +369,7 @@ class PingTests(TestMixin, TransactionTestCase):
         ping = Ping.objects.create(message="Hello", prev=Ping.objects.create())
         Ping.objects.create(prev=ping)
 
-        response = self.patch("http://testserver/api/pings/2", {
+        response = self.patch("http://server/pings/2", {
             "data": {
                 "type": "ping",
                 "id": "2",
@@ -386,7 +383,7 @@ class PingTests(TestMixin, TransactionTestCase):
             "data": {
                 "type": "ping",
                 "id": "2",
-                "links": {"self": "http://testserver/api/pings/2"},
+                "links": {"self": "http://server/pings/2"},
                 "attributes": {
                     "createdAt": ping.created_at.isoformat().replace("+00:00", "Z"),
                     "message": "Bonjour",
@@ -407,7 +404,7 @@ class PingTests(TestMixin, TransactionTestCase):
         ping = Ping.objects.create(message="Hello", prev=Ping.objects.create())
         Ping.objects.create(prev=ping)
 
-        response = self.patch("http://testserver/api/pings/2", {
+        response = self.patch("http://server/pings/2", {
             "data": {
                 "type": "ping",
                 "id": "2",
@@ -421,7 +418,7 @@ class PingTests(TestMixin, TransactionTestCase):
             "data": {
                 "type": "ping",
                 "id": "2",
-                "links": {"self": "http://testserver/api/pings/2"},
+                "links": {"self": "http://server/pings/2"},
                 "attributes": {
                     "createdAt": ping.created_at.isoformat().replace("+00:00", "Z"),
                     "message": None,
@@ -443,7 +440,7 @@ class PingTests(TestMixin, TransactionTestCase):
         Ping.objects.create(prev=ping)
         Ping.objects.create()
 
-        response = self.patch("http://testserver/api/pings/2", {
+        response = self.patch("http://server/pings/2", {
             "data": {
                 "type": "ping",
                 "id": "2",
@@ -457,7 +454,7 @@ class PingTests(TestMixin, TransactionTestCase):
             "data": {
                 "type": "ping",
                 "id": "2",
-                "links": {"self": "http://testserver/api/pings/2"},
+                "links": {"self": "http://server/pings/2"},
                 "attributes": {
                     "createdAt": ping.created_at.isoformat().replace("+00:00", "Z"),
                     "message": "Hello",
@@ -478,7 +475,7 @@ class PingTests(TestMixin, TransactionTestCase):
         ping = Ping.objects.create(message="Hello", prev=Ping.objects.create())
         Ping.objects.create(prev=ping)
 
-        response = self.patch("http://testserver/api/pings/2", {
+        response = self.patch("http://server/pings/2", {
             "data": {
                 "type": "ping",
                 "id": "2",
@@ -492,7 +489,7 @@ class PingTests(TestMixin, TransactionTestCase):
             "data": {
                 "type": "ping",
                 "id": "2",
-                "links": {"self": "http://testserver/api/pings/2"},
+                "links": {"self": "http://server/pings/2"},
                 "attributes": {
                     "createdAt": ping.created_at.isoformat().replace("+00:00", "Z"),
                     "message": "Hello",
@@ -514,7 +511,7 @@ class PingTests(TestMixin, TransactionTestCase):
         Ping.objects.create(prev=ping)
         Ping.objects.create()
 
-        response = self.patch("http://testserver/api/pings/1", {
+        response = self.patch("http://server/pings/1", {
             "data": {
                 "type": "ping",
                 "id": "1",
@@ -528,7 +525,7 @@ class PingTests(TestMixin, TransactionTestCase):
             "data": {
                 "type": "ping",
                 "id": "1",
-                "links": {"self": "http://testserver/api/pings/1"},
+                "links": {"self": "http://server/pings/1"},
                 "attributes": {
                     "createdAt": ping.created_at.isoformat().replace("+00:00", "Z"),
                     "message": "Hello",
@@ -550,7 +547,7 @@ class PingTests(TestMixin, TransactionTestCase):
         Ping.objects.create(prev=ping)
         Ping.objects.create()
 
-        response = self.patch("http://testserver/api/pings/2", {
+        response = self.patch("http://server/pings/2", {
             "data": {
                 "type": "ping",
                 "id": "2",
@@ -564,7 +561,7 @@ class PingTests(TestMixin, TransactionTestCase):
             "data": {
                 "type": "ping",
                 "id": "2",
-                "links": {"self": "http://testserver/api/pings/2"},
+                "links": {"self": "http://server/pings/2"},
                 "attributes": {
                     "createdAt": ping.created_at.isoformat().replace("+00:00", "Z"),
                     "message": "Hello",
@@ -585,7 +582,7 @@ class PingTests(TestMixin, TransactionTestCase):
         ping = Ping.objects.create(message="Hello", prev=Ping.objects.create())
         Ping.objects.create(prev=ping)
 
-        response = self.patch("http://testserver/api/pings/2", {
+        response = self.patch("http://server/pings/2", {
             "data": {
                 "type": "ping",
                 "id": "2",
@@ -599,7 +596,7 @@ class PingTests(TestMixin, TransactionTestCase):
             "data": {
                 "type": "ping",
                 "id": "2",
-                "links": {"self": "http://testserver/api/pings/2"},
+                "links": {"self": "http://server/pings/2"},
                 "attributes": {
                     "createdAt": ping.created_at.isoformat().replace("+00:00", "Z"),
                     "message": "Hello",

@@ -3,15 +3,15 @@ from types import UnionType
 from typing import Annotated
 from urllib.parse import urlencode
 
+from django.test import TestCase
 from fastapi import APIRouter, Depends, HTTPException, Query, Response
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel, ConfigDict, create_model
-from pydantic_core import PydanticUndefined
 from starlette import status
 import humps
 
-from .annotations import Annotations, Annotation
+from .annotations import Annotations
 from .utils import Urls
+from .models import create_model, make_create_input_model, make_filters_dependable, make_output_models, make_update_input_model
 
 
 # @todo Check consistency of "type" attributes in input 'ObjectId's
@@ -43,66 +43,6 @@ def make_jsonapi_router(resources):
     return router
 
 
-class PageMetaModel(BaseModel):
-    model_config = ConfigDict(extra="forbid")  # @todo Create a custom model base and use it instead of repeating this line
-
-    class Pagination(BaseModel):
-        model_config = ConfigDict(extra="forbid")
-
-        count: int
-        page: int
-        pages: int
-
-    pagination: Pagination
-
-
-class PageLinksModel(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-
-    first: str
-    last: str
-    next: str | None
-    prev: str | None
-
-
-class ObjectId(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-
-    type: str
-    id: str
-
-class MandatoryRelationship(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-
-    data: ObjectId
-
-class OptionalRelationship(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-
-    data: ObjectId | None = None
-
-class CreateInputListRelationship(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-
-    data: list[ObjectId] = []
-
-class OutputListRelationship(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-
-    class Meta(BaseModel):
-        model_config = ConfigDict(extra="forbid")
-
-        count: int
-
-    data: list[ObjectId]
-    meta: Meta
-
-class UpdateInputListRelationship(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-
-    data: list[ObjectId]
-
-
 class CompiledResource:
     def __init__(self, resource_models, resource):
         self._resource = resource
@@ -118,251 +58,40 @@ class CompiledResource:
         self.pluralName = humps.camelize(resource.plural_name)
 
         self.Model = resource.Model
+        self.ItemCreator = getattr(resource, "ItemCreator", None)
+        self.ItemGetter = getattr(resource, "ItemGetter", None)
+        self.PageGetter = getattr(resource, "PageGetter", None)
+        self.ItemSaver = getattr(resource, "ItemSaver", None)
+        self.ItemDeleter = getattr(resource, "ItemDeleter", None)
 
         self.default_page_size = resource.default_page_size
 
-        filterable_attributes = {}
-        create_input_attributes_can_be_defaulted = True
-        create_input_attributes = {}
-        create_input_relationships_can_be_defaulted = True
-        create_input_relationships = {}
         self.output_attributes = []
-        output_attributes = {}
         self.output_relationships = {}
-        output_relationships = {}
-        update_input_attributes = {}
-        update_input_relationships = {}
         for (name, info) in resource.Model.model_fields.items():
-            annotations = Annotations()
-            for annotation in info.metadata:
-                if isinstance(annotation, Annotation):
-                    annotation.apply(annotations)
-
             name = humps.camelize(name)
+            annotations = Annotations(info.metadata)
 
             if (resource_name := resource_models.get(info.annotation)) is not None:
-                assert info.default is PydanticUndefined
-                create_input_relationships_can_be_defaulted = False
-                if annotations.create_input:
-                    create_input_relationships[name] = (MandatoryRelationship, ...)
                 if annotations.output:
                     self.output_relationships[name] = (False, resource_name)
-                    output_relationships[name] = (MandatoryRelationship, ...)
-                if annotations.update_input:
-                    update_input_relationships[name] = (MandatoryRelationship, None)
-                if annotations.filter:
-                    filterable_attributes[humps.decamelize(name)] = str
             elif (resource_name := optional_resource_models.get(info.annotation)) is not None:
                 assert info.default is None
-                if annotations.create_input:
-                    create_input_relationships[name] = (OptionalRelationship, OptionalRelationship())
                 if annotations.output:
                     self.output_relationships[name] = (False, resource_name)
-                    output_relationships[name] = (OptionalRelationship, ...)
-                if annotations.update_input:
-                    update_input_relationships[name] = (OptionalRelationship, None)
-                if annotations.filter:
-                    filterable_attributes[humps.decamelize(name)] = str
             elif (resource_name := list_resource_models.get(info.annotation)) is not None:
                 assert info.default == []
-                if annotations.create_input:
-                    create_input_relationships[name] = (CreateInputListRelationship, CreateInputListRelationship())
                 if annotations.output:
                     self.output_relationships[name] = (True, resource_name)
-                    output_relationships[name] = (OutputListRelationship, ...)
-                if annotations.update_input:
-                    update_input_relationships[name] = (UpdateInputListRelationship, None)
             else:
-                if annotations.create_input:
-                    if info.default == PydanticUndefined:
-                        create_input_attributes_can_be_defaulted = False
-                    create_input_attributes[name] = (info.annotation, info.default)
                 if annotations.output:
                     self.output_attributes.append(name)
-                    output_attributes[name] = (info.annotation, ...)
-                if annotations.update_input:
-                    update_input_attributes[name] = (info.annotation, None)
-                if annotations.filter:
-                    filterable_attributes[humps.decamelize(name)] = info.annotation
 
-        Filters = create_model(
-            f"{self.singularName}-Filters",
-            **{
-                key: (value | None, ...)
-                for (key, value) in filterable_attributes.items()
-            },
-            __config__ = ConfigDict(extra="forbid"),
-        )
-        # @todo Keep things structured all they way (avoid generating textual code)
-        # See... my old answer here: https://stackoverflow.com/a/29927459/905845
-        def filter_code():
-            yield "def filters("
-            for (name, annotation) in filterable_attributes.items():
-                if isinstance(annotation, UnionType):
-                    assert len(annotation.__args__) == 2
-                    assert annotation.__args__[1] is type(None)
-                    annotation = annotation.__args__[0]
-                yield f"    {name}: Annotated[{annotation.__name__}, Query(alias='filter[{humps.camelize(name)}]')] = None,"
-            yield "):"
-            yield "    return Filters("
-            for name in filterable_attributes:
-                yield f"        {name}={name},"
-            yield "    )"
-        exec("\n".join(filter_code()), {"Filters": Filters}, filter_globals := {"Query": Query, "Annotated": Annotated})
-        self.filters = filter_globals["filters"]
-
-        CreateInputDataAttributes = create_model(
-            f"{self.singularName}-CreateInput-Data-Attributes",
-            **create_input_attributes,
-            __config__ = ConfigDict(extra="forbid"),
-        )
-
-        create_input_attributes_default = CreateInputDataAttributes() if create_input_attributes_can_be_defaulted else ...
-
-        CreateInputDataRelationships = create_model(
-            f"{self.singularName}-CreateInput-Data-Relationships",
-            **create_input_relationships,
-            __config__ = ConfigDict(extra="forbid"),
-        )
-
-        create_input_relationships_default = CreateInputDataRelationships() if create_input_relationships_can_be_defaulted else ...
-
-        self.CreateInputModel = create_model(
-            f"{self.singularName}-CreateInput",
-            data=(
-                create_model(
-                    f"{self.singularName}-CreateInput-Data",
-                    type=(str, ...),
-                    attributes=(CreateInputDataAttributes, create_input_attributes_default),
-                    relationships=(CreateInputDataRelationships, create_input_relationships_default),
-                    __config__ = ConfigDict(extra="forbid"),
-                ),
-                ...
-            ),
-            __config__ = ConfigDict(extra="forbid"),
-        )
-
-        OutputItemModel = create_model(
-            f"{self.singularName}-OutputItem",
-            type=(str, ...),
-            id=(str, ...),
-            links=(
-                create_model(
-                    f"{self.singularName}-OutputItem-Links",
-                    self=(str, ...),
-                    __config__ = ConfigDict(extra="forbid"),
-                ),
-                ...
-            ),
-            **(dict(attributes=(
-                create_model(
-                    f"{self.singularName}-OutputItem-Attributes",
-                    **output_attributes,
-                    __config__ = ConfigDict(extra="forbid"),
-                ),
-                ...
-            )) if output_attributes else {}),
-            **(dict(relationships=(
-                create_model(
-                    f"{self.singularName}-OutputItem-Relationships",
-                    **output_relationships,
-                    __config__ = ConfigDict(extra="forbid"),
-                ),
-                ...
-            )) if output_relationships else {}),
-            __config__ = ConfigDict(extra="forbid"),
-        )
-
-        self.ItemOutputModel = create_model(
-            f"{self.singularName}-ItemOutput",
-            data=(OutputItemModel, ...),
-            included=(list, None),
-            __config__ = ConfigDict(extra="forbid"),
-        )
-
-        self.PageOutputModel = create_model(
-            f"{self.singularName}-PageOutput",
-            data=(list[OutputItemModel], ...),
-            meta=(PageMetaModel, ...),
-            links=(PageLinksModel, ...),
-            included=(list, None),
-            __config__ = ConfigDict(extra="forbid"),
-        )
-
-        UpdateInputDataAttributes = create_model(
-            f"{self.singularName}-UpdateInput-Data-Attributes",
-            **update_input_attributes,
-            __config__ = ConfigDict(extra="forbid"),
-        )
-
-        UpdateInputDataRelationships = create_model(
-            f"{self.singularName}-UpdateInput-Data-Relationships",
-            **update_input_relationships,
-            __config__ = ConfigDict(extra="forbid"),
-        )
-
-        self.UpdateInputModel = create_model(
-            f"{self.singularName}-UpdateInput",
-            data=(
-                create_model(
-                    f"{self.singularName}-UpdateInput-Data",
-                    type=(str, ...),
-                    id=(str, ...),
-                    attributes=(UpdateInputDataAttributes, UpdateInputDataAttributes()),
-                    relationships=(UpdateInputDataRelationships, UpdateInputDataRelationships()),
-                    __config__ = ConfigDict(extra="forbid"),
-                ),
-                ...
-            ),
-            __config__ = ConfigDict(extra="forbid"),
-        )
-
-    def create_item(self, resources, attributes, relationships):
-        attrs = {
-            humps.decamelize(key) : value
-            for (key, value) in dict(attributes).items()
-        }
-
-        rels = {}
-        for (key, value) in dict(relationships).items():
-            key = humps.decamelize(key)
-            if isinstance(value.data, list):
-                # @todo Check item type against relationship type
-                rels[key] = [resources[item.type].get_item(item.id) for item in value.data]
-            elif value.data is None:
-                rels[key] = None
-            else:
-                rels[key] = resources[value.data.type].get_item(value.data.id)
-
-        return self._resource.create_item(**attrs, **rels)
-
-    def get_item(self, id):
-        # @todo Pass parsed 'include' to allow pre-fetching
-        return self._resource.get_item(id)
-
-    def get_page(self, sort, filters, first_index, page_size):
-        return self._resource.get_page(sort, filters, first_index, page_size)
-
-    def update_item(self, resources, item, attributes, relationships):
-        needs_save = False
-        for (key, value) in attributes.model_dump(exclude_unset=True).items():
-            setattr(item, humps.decamelize(key), value)
-            needs_save = True
-        for (key, value) in dict(relationships).items():
-            if key in relationships.model_fields_set:
-                if isinstance(value.data, list):
-                    # @todo Check item type against relationship type
-                    setattr(item, humps.decamelize(key), [resources[item.type].get_item(item.id) for item in value.data])
-                elif value.data is None:
-                    setattr(item, humps.decamelize(key), None)
-                else:
-                    setattr(item, humps.decamelize(key), resources[value.data.type].get_item(value.data.id))
-                needs_save = True
-        if needs_save:
-            item.save()
-
-    def delete_item(self, item):
-        item.delete()
+        resource_models = set(resource_models.keys())
+        self.CreateInputModel = make_create_input_model(self.singularName, resource.Model, resource_models)
+        (self.ItemOutputModel, self.PageOutputModel) = make_output_models(self.singularName, resource.Model, resource_models)
+        self.filters = make_filters_dependable(self.singularName, resource.Model, resource_models)
+        self.UpdateInputModel = make_update_input_model(self.singularName, resource.Model, resource_models)
 
     def make_item_response(self, resources, *, urls, item, include):
         return_value = {
@@ -473,112 +202,175 @@ class CompiledResource:
 
 
 def add_resource_routes(resources, resource, router):
-    @router.post(
-        f"/{resource.pluralName}",
-        name=f"create_{resource.singular_name}",
-        status_code=status.HTTP_201_CREATED,
-        response_model=resource.ItemOutputModel,
-        response_model_exclude_unset=True,
-    )
-    def create_item(
-        urls: Urls,
-        payload: resource.CreateInputModel,
-        include: str = None
-    ):
-        item = resource.create_item(
-            resources,
-            payload.data.attributes,
-            payload.data.relationships,
+    # @todo Keep things structured all they way (avoid generating textual code)
+    # See... my old answer here: https://stackoverflow.com/a/29927459/905845
+    def make_related_getters_code():
+        yield "def make_related_getters("
+        for name in resources.keys():
+            yield f'    {name}: Annotated[resources["{name}"].ItemGetter, Depends()],'
+        yield "):"
+        yield "    return {"
+        for name in resources.keys():
+            yield f'        "{name}": {name},'
+        yield "    }"
+    exec("\n".join(make_related_getters_code()), {"resources": resources}, make_related_getters_globals := {"Annotated": Annotated, "Depends": Depends})
+    make_related_getters = make_related_getters_globals["make_related_getters"]
+
+    if resource.ItemCreator:
+        @router.post(
+            f"/{resource.pluralName}",
+            name=f"create_{resource.singular_name}",
+            status_code=status.HTTP_201_CREATED,
+            response_model=resource.ItemOutputModel,
+            response_model_exclude_unset=True,
         )
+        def create_item(
+            urls: Urls,
+            create_item: Annotated[resource.ItemCreator, Depends()],
+            get_related_item: Annotated[dict, Depends(make_related_getters)],
+            payload: resource.CreateInputModel,
+            include: str = None
+        ):
+            attributes = {
+                humps.decamelize(key) : value
+                for (key, value) in dict(payload.data.attributes).items()
+            }
 
-        return resource.make_item_response(resources, urls=urls, item=item, include=parse_include(include))
+            relationships = {}
+            for (key, value) in dict(payload.data.relationships).items():
+                key = humps.decamelize(key)
+                if isinstance(value.data, list):
+                    # @todo Check item type against relationship type
+                    relationships[key] = [get_related_item[item.type](item.id) for item in value.data]
+                elif value.data is None:
+                    relationships[key] = None
+                else:
+                    relationships[key] = get_related_item[value.data.type](value.data.id)
 
-    @router.get(
-        f"/{resource.pluralName}",
-        name=f"get_{resource.plural_name}",
-        response_model=resource.PageOutputModel,
-        response_model_exclude_unset=True,
-    )
-    def get_page(
-        urls: Urls,
-        filters: Annotated[resource.filters, Depends()],
-        page_size: Annotated[int, Query(alias="page[size]")] = resource.default_page_size,
-        page_number: Annotated[int, Query(alias="page[number]")] = 1,
-        sort: str = None,
-        include: str = None,
-    ):
-        # @todo Work out authorized values for 'sort' from the resources' definition
-        # @todo Sort descending when the sort field is prefixed with a minus sign
-        # @todo Allow explicit ascending sorting with a prefix plus sign
-        parsed_sort = None if sort is None else [humps.decamelize(part) for part in sort.split(",")]
-        (items_count, items) = resource.get_page(parsed_sort, filters, (page_number - 1) * page_size, page_size)
-        assert len(items) <= page_size
-        return resource.make_page_response(
-            resources,
-            urls=urls,
-            items_count=items_count,
-            filters=filters,
-            sort=sort,
-            page_number=page_number,
-            page_size=page_size,
-            items=items,
-            raw_include=include,
-            include=parse_include(include),
-        )
+            # @todo Pass parsed 'include' to allow pre-fetching
+            item = create_item(**attributes, **relationships)
 
-    @router.get(
-        f"/{resource.pluralName}""/{id}",
-        name=f"get_{resource.singular_name}",
-        response_model=resource.ItemOutputModel,
-        response_model_exclude_unset=True,
-    )
-    def get_item(
-        urls: Urls,
-        id: str,
-        include: str = None,
-    ):
-        item = resource.get_item(id)
-        if item:
             return resource.make_item_response(resources, urls=urls, item=item, include=parse_include(include))
-        else:
-            raise HTTPException(status_code=404, detail="Item not found")
 
-    @router.patch(
-        f"/{resource.pluralName}""/{id}",
-        name=f"update_{resource.singular_name}",
-        response_model=resource.ItemOutputModel,
-        response_model_exclude_unset=True,
-    )
-    def update_item(
-        urls: Urls,
-        id: str,
-        payload: resource.UpdateInputModel,
-        include: str = None,
-    ):
-        item = resource.get_item(id)
-        if item:
-            resource.update_item(
+    if resource.PageGetter:
+        @router.get(
+            f"/{resource.pluralName}",
+            name=f"get_{resource.plural_name}",
+            response_model=resource.PageOutputModel,
+            response_model_exclude_unset=True,
+        )
+        def get_page(
+            urls: Urls,
+            get_page: Annotated[resource.PageGetter, Depends()],
+            filters: Annotated[resource.filters, Depends()],
+            page_size: Annotated[int, Query(alias="page[size]")] = resource.default_page_size,
+            page_number: Annotated[int, Query(alias="page[number]")] = 1,
+            sort: str = None,
+            include: str = None,
+        ):
+            # @todo Work out authorized values for 'sort' from the resources' definition
+            # @todo Sort descending when the sort field is prefixed with a minus sign
+            # @todo Allow explicit ascending sorting with a prefix plus sign
+            parsed_sort = None if sort is None else [humps.decamelize(part) for part in sort.split(",")]
+            # @todo Pass parsed 'include' to allow pre-fetching
+            (items_count, items) = get_page(parsed_sort, filters, (page_number - 1) * page_size, page_size)
+            assert len(items) <= page_size
+            return resource.make_page_response(
                 resources,
-                item,
-                payload.data.attributes,
-                payload.data.relationships,
+                urls=urls,
+                items_count=items_count,
+                filters=filters,
+                sort=sort,
+                page_number=page_number,
+                page_size=page_size,
+                items=items,
+                raw_include=include,
+                include=parse_include(include),
             )
-            return resource.make_item_response(resources, urls=urls, item=item, include=parse_include(include))
-        else:
-            raise HTTPException(status_code=404, detail="Item not found")
 
-    @router.delete(
-        f"/{resource.pluralName}""/{id}",
-        name=f"delete_{resource.singular_name}",
-        status_code=status.HTTP_204_NO_CONTENT,
-        response_class=Response,
-    )
-    def delete_item(id: str):
-        item = resource.get_item(id)
-        if item:
-            resource.delete_item(item)
-        else:
-            raise HTTPException(status_code=404, detail="Item not found")
+    if resource.ItemGetter:
+        @router.get(
+            f"/{resource.pluralName}""/{id}",
+            name=f"get_{resource.singular_name}",
+            response_model=resource.ItemOutputModel,
+            response_model_exclude_unset=True,
+        )
+        def get_item(
+            urls: Urls,
+            get_item: Annotated[resource.ItemGetter, Depends()],
+            id: str,
+            include: str = None,
+        ):
+            # @todo Pass parsed 'include' to allow pre-fetching
+            item = get_item(id)
+            if item:
+                return resource.make_item_response(resources, urls=urls, item=item, include=parse_include(include))
+            else:
+                raise HTTPException(status_code=404, detail="Item not found")
+
+    if resource.ItemSaver:
+        @router.patch(
+            f"/{resource.pluralName}""/{id}",
+            name=f"update_{resource.singular_name}",
+            response_model=resource.ItemOutputModel,
+            response_model_exclude_unset=True,
+        )
+        def update_item(
+            urls: Urls,
+            get_item: Annotated[resource.ItemGetter, Depends()],
+            save_item: Annotated[resource.ItemSaver, Depends()],
+            get_related_item: Annotated[dict, Depends(make_related_getters)],
+            id: str,
+            payload: resource.UpdateInputModel,
+            include: str = None,
+        ):
+            # @todo Pass parsed 'include' to allow pre-fetching
+            item = get_item(id)
+            if item:
+                class NothingToSave(Exception):
+                    pass
+
+                try:
+                    with save_item(item):
+                        needs_save = False
+                        for (key, value) in payload.data.attributes.model_dump(exclude_unset=True).items():
+                            setattr(item, humps.decamelize(key), value)
+                            needs_save = True
+                        for (key, value) in dict(payload.data.relationships).items():
+                            if key in payload.data.relationships.model_fields_set:
+                                if isinstance(value.data, list):
+                                    # @todo Check item type against relationship type
+                                    setattr(item, humps.decamelize(key), [get_related_item[item.type](item.id) for item in value.data])
+                                elif value.data is None:
+                                    setattr(item, humps.decamelize(key), None)
+                                else:
+                                    setattr(item, humps.decamelize(key), get_related_item[value.data.type](value.data.id))
+                                needs_save = True
+                        if not needs_save:
+                            raise NothingToSave()
+                except NothingToSave:
+                    pass
+                return resource.make_item_response(resources, urls=urls, item=item, include=parse_include(include))
+            else:
+                raise HTTPException(status_code=404, detail="Item not found")
+
+    if resource.ItemDeleter:
+        @router.delete(
+            f"/{resource.pluralName}""/{id}",
+            name=f"delete_{resource.singular_name}",
+            status_code=status.HTTP_204_NO_CONTENT,
+            response_class=Response,
+        )
+        def delete_item(
+            get_item: Annotated[resource.ItemGetter, Depends()],
+            delete_item: Annotated[resource.ItemDeleter, Depends()],
+            id: str,
+        ):
+            item = get_item(id)
+            if item:
+                delete_item(item)
+            else:
+                raise HTTPException(status_code=404, detail="Item not found")
 
 
 def parse_include(include):
@@ -594,3 +386,26 @@ def parse_include(include):
             for part in path:
                 current = current.setdefault(part, {})
         return return_value
+
+
+class ParseIncludeTestCase(TestCase):
+    def test_none(self):
+        self.assertEqual(parse_include(None), None)
+
+    def test_empty_string(self):
+        self.assertEqual(parse_include(""), {})
+
+    def test_single_item(self):
+        self.assertEqual(parse_include("author"), {"author": {}})
+
+    def test_multiple_items(self):
+        self.assertEqual(parse_include("author,comments"), {"author": {}, "comments": {}})
+
+    def test_nested_items(self):
+        self.assertEqual(parse_include("comments.author.team.members"), {"comments": {"author": {"team": {"members": {}}}}})
+
+    def test_repeated_prefix(self):
+        self.assertEqual(
+            parse_include("comments.author.team.members.posts,comments.author.team.leader.comments"),
+            {"comments": {"author": {"team": {"members": {"posts": {}}, "leader": {"comments": {}}}}}},
+        )
