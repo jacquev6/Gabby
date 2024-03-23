@@ -11,12 +11,6 @@ class DjangoOrmWrapper:
     def id(self):
         return str(self._wrapped.id)
 
-    def save(self):
-        self._wrapped.save()
-
-    def delete(self):
-        self._wrapped.delete()
-
     def __getattr__(self, name):
         attr = getattr(self._wrapped, name)
         if attr.__class__.__name__ == "RelatedManager":

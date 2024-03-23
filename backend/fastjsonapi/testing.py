@@ -47,3 +47,32 @@ class TestMixin:
             with open(self.__class__.__schema_file_path, "w") as file:
                 json.dump(actual, file, indent=2, sort_keys=True)
                 file.write("\n")
+
+
+class ItemsFactory:
+    def __init__(self):
+        self.__next_id = 1
+        self.__items = {}
+
+    def create(self, cls, **kwds):
+        item = cls(id=str(self.__next_id), **kwds)
+        self.__items[item.id] = item
+        self.__next_id += 1
+        return item
+
+    def get(self, cls, id):
+        item = self.__items.get(id)
+        if item is None:
+            return None
+        else:
+            assert isinstance(item, cls)
+            return item
+
+    def get_all(self, cls):
+        items = filter(lambda item: isinstance(item, cls), self.__items.values())
+        items = sorted(items, key=lambda item: int(item.id))
+        return items
+
+    def delete(self, cls, id):
+        item = self.__items.pop(id)
+        assert isinstance(item, cls)

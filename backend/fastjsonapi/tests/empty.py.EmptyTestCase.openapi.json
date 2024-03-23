@@ -1,0 +1,266 @@
+{
+  "components": {
+    "schemas": {
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "title": "Detail",
+            "type": "array"
+          }
+        },
+        "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "ItemLinksModel": {
+        "additionalProperties": false,
+        "properties": {
+          "self": {
+            "title": "Self",
+            "type": "string"
+          }
+        },
+        "required": [
+          "self"
+        ],
+        "title": "ItemLinksModel",
+        "type": "object"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "title": "Location",
+            "type": "array"
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError",
+        "type": "object"
+      },
+      "emptyResource-CreateInput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/emptyResource-CreateInput-Data"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "emptyResource-CreateInput",
+        "type": "object"
+      },
+      "emptyResource-CreateInput-Data": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/emptyResource-CreateInput-Data-Attributes"
+              }
+            ],
+            "default": {}
+          },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/emptyResource-CreateInput-Data-Relationships"
+              }
+            ],
+            "default": {}
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type"
+        ],
+        "title": "emptyResource-CreateInput-Data",
+        "type": "object"
+      },
+      "emptyResource-CreateInput-Data-Attributes": {
+        "additionalProperties": false,
+        "properties": {},
+        "title": "emptyResource-CreateInput-Data-Attributes",
+        "type": "object"
+      },
+      "emptyResource-CreateInput-Data-Relationships": {
+        "additionalProperties": false,
+        "properties": {},
+        "title": "emptyResource-CreateInput-Data-Relationships",
+        "type": "object"
+      },
+      "emptyResource-ItemOutput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/emptyResource-OutputItem"
+          },
+          "included": {
+            "items": {},
+            "title": "Included",
+            "type": "array"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "emptyResource-ItemOutput",
+        "type": "object"
+      },
+      "emptyResource-OutputItem": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "links": {
+            "$ref": "#/components/schemas/ItemLinksModel"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "links"
+        ],
+        "title": "emptyResource-OutputItem",
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "title": "FastAPI",
+    "version": "0.1.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/emptyResources": {
+      "post": {
+        "operationId": "create_empty_resource_emptyResources_post",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/emptyResource-CreateInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/emptyResource-ItemOutput"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Empty Resource"
+      }
+    },
+    "/emptyResources/{id}": {
+      "get": {
+        "operationId": "get_empty_resource_emptyResources__id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/emptyResource-ItemOutput"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Empty Resource"
+      }
+    }
+  }
+}

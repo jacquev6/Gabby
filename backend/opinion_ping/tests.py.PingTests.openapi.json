@@ -29,6 +29,20 @@
         "title": "HTTPValidationError",
         "type": "object"
       },
+      "ItemLinksModel": {
+        "additionalProperties": false,
+        "properties": {
+          "self": {
+            "title": "Self",
+            "type": "string"
+          }
+        },
+        "required": [
+          "self"
+        ],
+        "title": "ItemLinksModel",
+        "type": "object"
+      },
       "Meta": {
         "additionalProperties": false,
         "properties": {
@@ -350,7 +364,7 @@
             "type": "string"
           },
           "links": {
-            "$ref": "#/components/schemas/ping-OutputItem-Links"
+            "$ref": "#/components/schemas/ItemLinksModel"
           },
           "relationships": {
             "$ref": "#/components/schemas/ping-OutputItem-Relationships"
@@ -395,20 +409,6 @@
           "createdAt"
         ],
         "title": "ping-OutputItem-Attributes",
-        "type": "object"
-      },
-      "ping-OutputItem-Links": {
-        "additionalProperties": false,
-        "properties": {
-          "self": {
-            "title": "Self",
-            "type": "string"
-          }
-        },
-        "required": [
-          "self"
-        ],
-        "title": "ping-OutputItem-Links",
         "type": "object"
       },
       "ping-OutputItem-Relationships": {

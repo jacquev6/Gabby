@@ -180,6 +180,20 @@
         "title": "HTTPValidationError",
         "type": "object"
       },
+      "ItemLinksModel": {
+        "additionalProperties": false,
+        "properties": {
+          "self": {
+            "title": "Self",
+            "type": "string"
+          }
+        },
+        "required": [
+          "self"
+        ],
+        "title": "ItemLinksModel",
+        "type": "object"
+      },
       "MandatoryRelationship": {
         "additionalProperties": false,
         "properties": {
@@ -881,7 +895,7 @@
             "type": "string"
           },
           "links": {
-            "$ref": "#/components/schemas/exercise-OutputItem-Links"
+            "$ref": "#/components/schemas/ItemLinksModel"
           },
           "relationships": {
             "$ref": "#/components/schemas/exercise-OutputItem-Relationships"
@@ -945,20 +959,6 @@
           "wording"
         ],
         "title": "exercise-OutputItem-Attributes",
-        "type": "object"
-      },
-      "exercise-OutputItem-Links": {
-        "additionalProperties": false,
-        "properties": {
-          "self": {
-            "title": "Self",
-            "type": "string"
-          }
-        },
-        "required": [
-          "self"
-        ],
-        "title": "exercise-OutputItem-Links",
         "type": "object"
       },
       "exercise-OutputItem-Relationships": {
@@ -1180,7 +1180,7 @@
             "type": "string"
           },
           "links": {
-            "$ref": "#/components/schemas/extractionEvent-OutputItem-Links"
+            "$ref": "#/components/schemas/ItemLinksModel"
           },
           "relationships": {
             "$ref": "#/components/schemas/extractionEvent-OutputItem-Relationships"
@@ -1212,20 +1212,6 @@
           "event"
         ],
         "title": "extractionEvent-OutputItem-Attributes",
-        "type": "object"
-      },
-      "extractionEvent-OutputItem-Links": {
-        "additionalProperties": false,
-        "properties": {
-          "self": {
-            "title": "Self",
-            "type": "string"
-          }
-        },
-        "required": [
-          "self"
-        ],
-        "title": "extractionEvent-OutputItem-Links",
         "type": "object"
       },
       "extractionEvent-OutputItem-Relationships": {
@@ -1424,7 +1410,7 @@
             "type": "string"
           },
           "links": {
-            "$ref": "#/components/schemas/project-OutputItem-Links"
+            "$ref": "#/components/schemas/ItemLinksModel"
           },
           "relationships": {
             "$ref": "#/components/schemas/project-OutputItem-Relationships"
@@ -1461,20 +1447,6 @@
           "description"
         ],
         "title": "project-OutputItem-Attributes",
-        "type": "object"
-      },
-      "project-OutputItem-Links": {
-        "additionalProperties": false,
-        "properties": {
-          "self": {
-            "title": "Self",
-            "type": "string"
-          }
-        },
-        "required": [
-          "self"
-        ],
-        "title": "project-OutputItem-Links",
         "type": "object"
       },
       "project-OutputItem-Relationships": {
@@ -1698,7 +1670,7 @@
             "type": "string"
           },
           "links": {
-            "$ref": "#/components/schemas/section-OutputItem-Links"
+            "$ref": "#/components/schemas/ItemLinksModel"
           },
           "relationships": {
             "$ref": "#/components/schemas/section-OutputItem-Relationships"
@@ -1744,20 +1716,6 @@
           "pdfFile"
         ],
         "title": "section-OutputItem-Attributes",
-        "type": "object"
-      },
-      "section-OutputItem-Links": {
-        "additionalProperties": false,
-        "properties": {
-          "self": {
-            "title": "Self",
-            "type": "string"
-          }
-        },
-        "required": [
-          "self"
-        ],
-        "title": "section-OutputItem-Links",
         "type": "object"
       },
       "section-OutputItem-Relationships": {
@@ -2000,7 +1958,7 @@
             "type": "string"
           },
           "links": {
-            "$ref": "#/components/schemas/textbook-OutputItem-Links"
+            "$ref": "#/components/schemas/ItemLinksModel"
           },
           "relationships": {
             "$ref": "#/components/schemas/textbook-OutputItem-Relationships"
@@ -2068,20 +2026,6 @@
           "isbn"
         ],
         "title": "textbook-OutputItem-Attributes",
-        "type": "object"
-      },
-      "textbook-OutputItem-Links": {
-        "additionalProperties": false,
-        "properties": {
-          "self": {
-            "title": "Self",
-            "type": "string"
-          }
-        },
-        "required": [
-          "self"
-        ],
-        "title": "textbook-OutputItem-Links",
         "type": "object"
       },
       "textbook-OutputItem-Relationships": {

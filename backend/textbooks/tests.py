@@ -6,7 +6,6 @@ from starlette import status
 from .models import PdfFile, PdfFileNaming, Project, Textbook, Exercise
 from fastjsonapi.testing import TestMixin
 from .resources import PdfFilesResource, PdfFileNamingsResource, ProjectsResource, TextbooksResource, SectionsResource, ExercisesResource, ExtractionEventsResource
-from main import app
 
 
 class PdfFileApiTests(TestMixin, TransactionTestCase):

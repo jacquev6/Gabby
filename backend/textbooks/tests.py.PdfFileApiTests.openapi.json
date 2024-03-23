@@ -180,6 +180,20 @@
         "title": "HTTPValidationError",
         "type": "object"
       },
+      "ItemLinksModel": {
+        "additionalProperties": false,
+        "properties": {
+          "self": {
+            "title": "Self",
+            "type": "string"
+          }
+        },
+        "required": [
+          "self"
+        ],
+        "title": "ItemLinksModel",
+        "type": "object"
+      },
       "MandatoryRelationship": {
         "additionalProperties": false,
         "properties": {
@@ -832,7 +846,7 @@
             "type": "string"
           },
           "links": {
-            "$ref": "#/components/schemas/pdfFile-OutputItem-Links"
+            "$ref": "#/components/schemas/ItemLinksModel"
           },
           "relationships": {
             "$ref": "#/components/schemas/pdfFile-OutputItem-Relationships"
@@ -874,20 +888,6 @@
           "pagesCount"
         ],
         "title": "pdfFile-OutputItem-Attributes",
-        "type": "object"
-      },
-      "pdfFile-OutputItem-Links": {
-        "additionalProperties": false,
-        "properties": {
-          "self": {
-            "title": "Self",
-            "type": "string"
-          }
-        },
-        "required": [
-          "self"
-        ],
-        "title": "pdfFile-OutputItem-Links",
         "type": "object"
       },
       "pdfFile-OutputItem-Relationships": {
@@ -1088,7 +1088,7 @@
             "type": "string"
           },
           "links": {
-            "$ref": "#/components/schemas/pdfFileNaming-OutputItem-Links"
+            "$ref": "#/components/schemas/ItemLinksModel"
           },
           "relationships": {
             "$ref": "#/components/schemas/pdfFileNaming-OutputItem-Relationships"
@@ -1120,20 +1120,6 @@
           "name"
         ],
         "title": "pdfFileNaming-OutputItem-Attributes",
-        "type": "object"
-      },
-      "pdfFileNaming-OutputItem-Links": {
-        "additionalProperties": false,
-        "properties": {
-          "self": {
-            "title": "Self",
-            "type": "string"
-          }
-        },
-        "required": [
-          "self"
-        ],
-        "title": "pdfFileNaming-OutputItem-Links",
         "type": "object"
       },
       "pdfFileNaming-OutputItem-Relationships": {
@@ -1344,7 +1330,7 @@
             "type": "string"
           },
           "links": {
-            "$ref": "#/components/schemas/section-OutputItem-Links"
+            "$ref": "#/components/schemas/ItemLinksModel"
           },
           "relationships": {
             "$ref": "#/components/schemas/section-OutputItem-Relationships"
@@ -1390,20 +1376,6 @@
           "textbook"
         ],
         "title": "section-OutputItem-Attributes",
-        "type": "object"
-      },
-      "section-OutputItem-Links": {
-        "additionalProperties": false,
-        "properties": {
-          "self": {
-            "title": "Self",
-            "type": "string"
-          }
-        },
-        "required": [
-          "self"
-        ],
-        "title": "section-OutputItem-Links",
         "type": "object"
       },
       "section-OutputItem-Relationships": {

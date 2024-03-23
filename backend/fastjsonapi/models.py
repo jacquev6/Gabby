@@ -12,8 +12,8 @@ class BaseModel(pydantic.BaseModel):
     model_config = pydantic.ConfigDict(extra="forbid")
 
 
-def create_model(name, **fields):
-    return pydantic.create_model(name, **fields, __base__=BaseModel)
+def create_model(*args, **kwds):
+    return pydantic.create_model(*args, **kwds, __base__=BaseModel)
 
 
 class PageMetaModel(BaseModel):
