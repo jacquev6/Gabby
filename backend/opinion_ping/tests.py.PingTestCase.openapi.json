@@ -111,19 +111,6 @@
         "title": "ItemLinksModel",
         "type": "object"
       },
-      "MandatoryRelationship": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/ObjectId"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "MandatoryRelationship",
-        "type": "object"
-      },
       "Meta": {
         "additionalProperties": false,
         "properties": {
@@ -325,291 +312,26 @@
         "title": "ValidationError",
         "type": "object"
       },
-      "left-CreateInput": {
+      "ping-CreateInput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/left-CreateInput-Data"
+            "$ref": "#/components/schemas/ping-CreateInput-Data"
           }
         },
         "required": [
           "data"
         ],
-        "title": "left-CreateInput",
+        "title": "ping-CreateInput",
         "type": "object"
       },
-      "left-CreateInput-Data": {
+      "ping-CreateInput-Data": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/left-CreateInput-Data-Attributes"
-              }
-            ],
-            "default": {}
-          },
-          "relationships": {
-            "$ref": "#/components/schemas/left-CreateInput-Data-Relationships"
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "relationships"
-        ],
-        "title": "left-CreateInput-Data",
-        "type": "object"
-      },
-      "left-CreateInput-Data-Attributes": {
-        "additionalProperties": false,
-        "properties": {},
-        "title": "left-CreateInput-Data-Attributes",
-        "type": "object"
-      },
-      "left-CreateInput-Data-Relationships": {
-        "additionalProperties": false,
-        "properties": {
-          "rightOrNone": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/OptionalRelationship"
-              }
-            ],
-            "default": {}
-          },
-          "top": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
-          }
-        },
-        "required": [
-          "top"
-        ],
-        "title": "left-CreateInput-Data-Relationships",
-        "type": "object"
-      },
-      "left-ItemOutput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/left-OutputItem"
-          },
-          "included": {
-            "items": {},
-            "title": "Included",
-            "type": "array"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "left-ItemOutput",
-        "type": "object"
-      },
-      "left-OutputItem": {
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "links": {
-            "$ref": "#/components/schemas/ItemLinksModel"
-          },
-          "relationships": {
-            "$ref": "#/components/schemas/left-OutputItem-Relationships"
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "id",
-          "links",
-          "relationships"
-        ],
-        "title": "left-OutputItem",
-        "type": "object"
-      },
-      "left-OutputItem-Relationships": {
-        "additionalProperties": false,
-        "properties": {
-          "rightOrNone": {
-            "$ref": "#/components/schemas/OptionalRelationship"
-          },
-          "top": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
-          }
-        },
-        "required": [
-          "top",
-          "rightOrNone"
-        ],
-        "title": "left-OutputItem-Relationships",
-        "type": "object"
-      },
-      "left-UpdateInput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/left-UpdateInput-Data"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "left-UpdateInput",
-        "type": "object"
-      },
-      "left-UpdateInput-Data": {
-        "additionalProperties": false,
-        "properties": {
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/left-UpdateInput-Data-Attributes"
-              }
-            ],
-            "default": {}
-          },
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/left-UpdateInput-Data-Relationships"
-              }
-            ],
-            "default": {}
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "id"
-        ],
-        "title": "left-UpdateInput-Data",
-        "type": "object"
-      },
-      "left-UpdateInput-Data-Attributes": {
-        "additionalProperties": false,
-        "properties": {},
-        "title": "left-UpdateInput-Data-Attributes",
-        "type": "object"
-      },
-      "left-UpdateInput-Data-Relationships": {
-        "additionalProperties": false,
-        "properties": {
-          "rightOrNone": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/OptionalRelationship"
-              }
-            ]
-          },
-          "top": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/MandatoryRelationship"
-              }
-            ]
-          }
-        },
-        "title": "left-UpdateInput-Data-Relationships",
-        "type": "object"
-      },
-      "right-ItemOutput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/right-OutputItem"
-          },
-          "included": {
-            "items": {},
-            "title": "Included",
-            "type": "array"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "right-ItemOutput",
-        "type": "object"
-      },
-      "right-OutputItem": {
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "links": {
-            "$ref": "#/components/schemas/ItemLinksModel"
-          },
-          "relationships": {
-            "$ref": "#/components/schemas/right-OutputItem-Relationships"
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "id",
-          "links",
-          "relationships"
-        ],
-        "title": "right-OutputItem",
-        "type": "object"
-      },
-      "right-OutputItem-Relationships": {
-        "additionalProperties": false,
-        "properties": {
-          "leftOrNone": {
-            "$ref": "#/components/schemas/OptionalRelationship"
-          },
-          "top": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
-          }
-        },
-        "required": [
-          "top",
-          "leftOrNone"
-        ],
-        "title": "right-OutputItem-Relationships",
-        "type": "object"
-      },
-      "top-CreateInput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/top-CreateInput-Data"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "top-CreateInput",
-        "type": "object"
-      },
-      "top-CreateInput-Data": {
-        "additionalProperties": false,
-        "properties": {
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/top-CreateInput-Data-Attributes"
+                "$ref": "#/components/schemas/ping-CreateInput-Data-Attributes"
               }
             ],
             "default": {}
@@ -617,16 +339,14 @@
           "relationships": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/top-CreateInput-Data-Relationships"
+                "$ref": "#/components/schemas/ping-CreateInput-Data-Relationships"
               }
             ],
             "default": {
-              "lefts": {
+              "next": {
                 "data": []
               },
-              "rights": {
-                "data": []
-              }
+              "prev": {}
             }
           },
           "type": {
@@ -637,19 +357,31 @@
         "required": [
           "type"
         ],
-        "title": "top-CreateInput-Data",
+        "title": "ping-CreateInput-Data",
         "type": "object"
       },
-      "top-CreateInput-Data-Attributes": {
-        "additionalProperties": false,
-        "properties": {},
-        "title": "top-CreateInput-Data-Attributes",
-        "type": "object"
-      },
-      "top-CreateInput-Data-Relationships": {
+      "ping-CreateInput-Data-Attributes": {
         "additionalProperties": false,
         "properties": {
-          "lefts": {
+          "message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Message"
+          }
+        },
+        "title": "ping-CreateInput-Data-Attributes",
+        "type": "object"
+      },
+      "ping-CreateInput-Data-Relationships": {
+        "additionalProperties": false,
+        "properties": {
+          "next": {
             "allOf": [
               {
                 "$ref": "#/components/schemas/CreateInputListRelationship"
@@ -659,25 +391,23 @@
               "data": []
             }
           },
-          "rights": {
+          "prev": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/CreateInputListRelationship"
+                "$ref": "#/components/schemas/OptionalRelationship"
               }
             ],
-            "default": {
-              "data": []
-            }
+            "default": {}
           }
         },
-        "title": "top-CreateInput-Data-Relationships",
+        "title": "ping-CreateInput-Data-Relationships",
         "type": "object"
       },
-      "top-ItemOutput": {
+      "ping-ItemOutput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/top-OutputItem"
+            "$ref": "#/components/schemas/ping-OutputItem"
           },
           "included": {
             "items": {},
@@ -688,12 +418,15 @@
         "required": [
           "data"
         ],
-        "title": "top-ItemOutput",
+        "title": "ping-ItemOutput",
         "type": "object"
       },
-      "top-OutputItem": {
+      "ping-OutputItem": {
         "additionalProperties": false,
         "properties": {
+          "attributes": {
+            "$ref": "#/components/schemas/ping-OutputItem-Attributes"
+          },
           "id": {
             "title": "Id",
             "type": "string"
@@ -702,7 +435,7 @@
             "$ref": "#/components/schemas/ItemLinksModel"
           },
           "relationships": {
-            "$ref": "#/components/schemas/top-OutputItem-Relationships"
+            "$ref": "#/components/schemas/ping-OutputItem-Relationships"
           },
           "type": {
             "title": "Type",
@@ -713,34 +446,76 @@
           "type",
           "id",
           "links",
+          "attributes",
           "relationships"
         ],
-        "title": "top-OutputItem",
+        "title": "ping-OutputItem",
         "type": "object"
       },
-      "top-OutputItem-Relationships": {
+      "ping-OutputItem-Attributes": {
         "additionalProperties": false,
         "properties": {
-          "lefts": {
-            "$ref": "#/components/schemas/OutputListRelationship"
+          "createdAt": {
+            "format": "date-time",
+            "title": "Createdat",
+            "type": "string"
           },
-          "rights": {
-            "$ref": "#/components/schemas/OutputListRelationship"
+          "message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Message"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "title": "Updatedat",
+            "type": "string"
           }
         },
         "required": [
-          "lefts",
-          "rights"
+          "message",
+          "createdAt",
+          "updatedAt"
         ],
-        "title": "top-OutputItem-Relationships",
+        "title": "ping-OutputItem-Attributes",
         "type": "object"
       },
-      "top-PageOutput": {
+      "ping-OutputItem-Relationships": {
+        "additionalProperties": false,
+        "properties": {
+          "createdBy": {
+            "$ref": "#/components/schemas/OptionalRelationship"
+          },
+          "next": {
+            "$ref": "#/components/schemas/OutputListRelationship"
+          },
+          "prev": {
+            "$ref": "#/components/schemas/OptionalRelationship"
+          },
+          "updatedBy": {
+            "$ref": "#/components/schemas/OptionalRelationship"
+          }
+        },
+        "required": [
+          "createdBy",
+          "updatedBy",
+          "prev",
+          "next"
+        ],
+        "title": "ping-OutputItem-Relationships",
+        "type": "object"
+      },
+      "ping-PageOutput": {
         "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
-              "$ref": "#/components/schemas/top-OutputItem"
+              "$ref": "#/components/schemas/ping-OutputItem"
             },
             "title": "Data",
             "type": "array"
@@ -762,29 +537,29 @@
           "meta",
           "links"
         ],
-        "title": "top-PageOutput",
+        "title": "ping-PageOutput",
         "type": "object"
       },
-      "top-UpdateInput": {
+      "ping-UpdateInput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/top-UpdateInput-Data"
+            "$ref": "#/components/schemas/ping-UpdateInput-Data"
           }
         },
         "required": [
           "data"
         ],
-        "title": "top-UpdateInput",
+        "title": "ping-UpdateInput",
         "type": "object"
       },
-      "top-UpdateInput-Data": {
+      "ping-UpdateInput-Data": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/top-UpdateInput-Data-Attributes"
+                "$ref": "#/components/schemas/ping-UpdateInput-Data-Attributes"
               }
             ],
             "default": {}
@@ -796,7 +571,7 @@
           "relationships": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/top-UpdateInput-Data-Relationships"
+                "$ref": "#/components/schemas/ping-UpdateInput-Data-Relationships"
               }
             ],
             "default": {}
@@ -810,35 +585,117 @@
           "type",
           "id"
         ],
-        "title": "top-UpdateInput-Data",
+        "title": "ping-UpdateInput-Data",
         "type": "object"
       },
-      "top-UpdateInput-Data-Attributes": {
-        "additionalProperties": false,
-        "properties": {},
-        "title": "top-UpdateInput-Data-Attributes",
-        "type": "object"
-      },
-      "top-UpdateInput-Data-Relationships": {
+      "ping-UpdateInput-Data-Attributes": {
         "additionalProperties": false,
         "properties": {
-          "lefts": {
+          "message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Message"
+          }
+        },
+        "title": "ping-UpdateInput-Data-Attributes",
+        "type": "object"
+      },
+      "ping-UpdateInput-Data-Relationships": {
+        "additionalProperties": false,
+        "properties": {
+          "next": {
             "allOf": [
               {
                 "$ref": "#/components/schemas/UpdateInputListRelationship"
               }
             ]
           },
-          "rights": {
+          "prev": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/UpdateInputListRelationship"
+                "$ref": "#/components/schemas/OptionalRelationship"
               }
             ]
           }
         },
-        "title": "top-UpdateInput-Data-Relationships",
+        "title": "ping-UpdateInput-Data-Relationships",
         "type": "object"
+      },
+      "user-ItemOutput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/user-OutputItem"
+          },
+          "included": {
+            "items": {},
+            "title": "Included",
+            "type": "array"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "user-ItemOutput",
+        "type": "object"
+      },
+      "user-OutputItem": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "$ref": "#/components/schemas/user-OutputItem-Attributes"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "links": {
+            "$ref": "#/components/schemas/ItemLinksModel"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "links",
+          "attributes"
+        ],
+        "title": "user-OutputItem",
+        "type": "object"
+      },
+      "user-OutputItem-Attributes": {
+        "additionalProperties": false,
+        "properties": {
+          "username": {
+            "title": "Username",
+            "type": "string"
+          }
+        },
+        "required": [
+          "username"
+        ],
+        "title": "user-OutputItem-Attributes",
+        "type": "object"
+      }
+    },
+    "securitySchemes": {
+      "OAuth2PasswordBearer": {
+        "flows": {
+          "password": {
+            "scopes": {},
+            "tokenUrl": "token"
+          }
+        },
+        "type": "oauth2"
       }
     }
   },
@@ -848,246 +705,9 @@
   },
   "openapi": "3.1.0",
   "paths": {
-    "/lefts": {
-      "post": {
-        "operationId": "create_left_lefts_post",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "include",
-            "required": false,
-            "schema": {
-              "title": "Include",
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/left-CreateInput"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "201": {
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/left-ItemOutput"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Create Left"
-      }
-    },
-    "/lefts/{id}": {
+    "/pings": {
       "get": {
-        "operationId": "get_left_lefts__id__get",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "title": "Id",
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "include",
-            "required": false,
-            "schema": {
-              "title": "Include",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/left-ItemOutput"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Get Left"
-      },
-      "patch": {
-        "operationId": "update_left_lefts__id__patch",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "title": "Id",
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "include",
-            "required": false,
-            "schema": {
-              "title": "Include",
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/left-UpdateInput"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/left-ItemOutput"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Update Left"
-      }
-    },
-    "/rights/{id}": {
-      "get": {
-        "operationId": "get_right_rights__id__get",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "title": "Id",
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "include",
-            "required": false,
-            "schema": {
-              "title": "Include",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/right-ItemOutput"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Get Right"
-      }
-    },
-    "/token": {
-      "post": {
-        "operationId": "login_token_post",
-        "requestBody": {
-          "content": {
-            "application/x-www-form-urlencoded": {
-              "schema": {
-                "$ref": "#/components/schemas/Body_login_token_post"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Login"
-      }
-    },
-    "/tops": {
-      "get": {
-        "operationId": "get_tops_tops_get",
+        "operationId": "get_pings_pings_get",
         "parameters": [
           {
             "in": "query",
@@ -1126,6 +746,24 @@
               "title": "Include",
               "type": "string"
             }
+          },
+          {
+            "in": "query",
+            "name": "filter[message]",
+            "required": false,
+            "schema": {
+              "title": "Filter[Message]",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "filter[prev]",
+            "required": false,
+            "schema": {
+              "title": "Filter[Prev]",
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1133,7 +771,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/top-PageOutput"
+                  "$ref": "#/components/schemas/ping-PageOutput"
                 }
               }
             },
@@ -1150,10 +788,10 @@
             "description": "Validation Error"
           }
         },
-        "summary": "Get Tops"
+        "summary": "Get Pings"
       },
       "post": {
-        "operationId": "create_top_tops_post",
+        "operationId": "create_ping_pings_post",
         "parameters": [
           {
             "in": "query",
@@ -1169,7 +807,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/top-CreateInput"
+                "$ref": "#/components/schemas/ping-CreateInput"
               }
             }
           },
@@ -1180,7 +818,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/top-ItemOutput"
+                  "$ref": "#/components/schemas/ping-ItemOutput"
                 }
               }
             },
@@ -1197,12 +835,52 @@
             "description": "Validation Error"
           }
         },
-        "summary": "Create Top"
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "summary": "Create Ping"
       }
     },
-    "/tops/{id}": {
+    "/pings/{id}": {
+      "delete": {
+        "operationId": "delete_ping_pings__id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "summary": "Delete Ping"
+      },
       "get": {
-        "operationId": "get_top_tops__id__get",
+        "operationId": "get_ping_pings__id__get",
         "parameters": [
           {
             "in": "path",
@@ -1228,7 +906,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/top-ItemOutput"
+                  "$ref": "#/components/schemas/ping-ItemOutput"
                 }
               }
             },
@@ -1245,10 +923,10 @@
             "description": "Validation Error"
           }
         },
-        "summary": "Get Top"
+        "summary": "Get Ping"
       },
       "patch": {
-        "operationId": "update_top_tops__id__patch",
+        "operationId": "update_ping_pings__id__patch",
         "parameters": [
           {
             "in": "path",
@@ -1273,7 +951,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/top-UpdateInput"
+                "$ref": "#/components/schemas/ping-UpdateInput"
               }
             }
           },
@@ -1284,7 +962,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/top-ItemOutput"
+                  "$ref": "#/components/schemas/ping-ItemOutput"
                 }
               }
             },
@@ -1301,7 +979,96 @@
             "description": "Validation Error"
           }
         },
-        "summary": "Update Top"
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "summary": "Update Ping"
+      }
+    },
+    "/token": {
+      "post": {
+        "operationId": "login_token_post",
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_login_token_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Login"
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "operationId": "get_user_users__id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/user-ItemOutput"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get User"
       }
     }
   }
