@@ -10,7 +10,6 @@ from ..testing import TestMixin, ItemsFactory
 from .relationships_models import TopModel, LeftModel, RightModel, TopItem, LeftItem, RightItem
 
 
-
 class FactoryMixin:
     def __init__(self, factory: Annotated[ItemsFactory, Depends(lambda: RelationshipsTestCase.factory)]):
         self.factory = factory
@@ -310,6 +309,8 @@ class RelationshipsTestCase(TestMixin, TestCase):
         left = self.factory.get(LeftItem, "3")
         self.assertEqual(left.top, self.factory.get(TopItem, "1"))
         self.assertEqual(left.right_or_none, self.factory.get(RightItem, "2"))
+
+    # @todo Add a test showing that "lid" can be used to create a resource related to itself
 
     def test_get_page__tops(self):
         top = self.factory.create(TopItem, lefts=[], rights=[])

@@ -81,6 +81,8 @@ class AttributesTestCase(TestMixin, TestCase):
         super().setUp()
         self.__class__.factory = ItemsFactory()
 
+    # @todo Add tests where the id is given by the client (sha256, etc.)
+
     def test_create__insufficient(self):
         response = self.post("http://server/resources", {
             "data": {

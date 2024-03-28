@@ -312,41 +312,36 @@
         "title": "ValidationError",
         "type": "object"
       },
-      "ping-CreateInput": {
+      "resource-CreateInput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/ping-CreateInput-Data"
+            "$ref": "#/components/schemas/resource-CreateInput-Data"
           }
         },
         "required": [
           "data"
         ],
-        "title": "ping-CreateInput",
+        "title": "resource-CreateInput",
         "type": "object"
       },
-      "ping-CreateInput-Data": {
+      "resource-CreateInput-Data": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ping-CreateInput-Data-Attributes"
-              }
-            ],
-            "default": {}
+            "$ref": "#/components/schemas/resource-CreateInput-Data-Attributes"
           },
           "relationships": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ping-CreateInput-Data-Relationships"
+                "$ref": "#/components/schemas/resource-CreateInput-Data-Relationships"
               }
             ],
             "default": {
-              "next": {
+              "several": {
                 "data": []
               },
-              "prev": {}
+              "single": {}
             }
           },
           "type": {
@@ -355,33 +350,30 @@
           }
         },
         "required": [
-          "type"
+          "type",
+          "attributes"
         ],
-        "title": "ping-CreateInput-Data",
+        "title": "resource-CreateInput-Data",
         "type": "object"
       },
-      "ping-CreateInput-Data-Attributes": {
+      "resource-CreateInput-Data-Attributes": {
         "additionalProperties": false,
         "properties": {
-          "message": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Message"
+          "name": {
+            "title": "Name",
+            "type": "string"
           }
         },
-        "title": "ping-CreateInput-Data-Attributes",
+        "required": [
+          "name"
+        ],
+        "title": "resource-CreateInput-Data-Attributes",
         "type": "object"
       },
-      "ping-CreateInput-Data-Relationships": {
+      "resource-CreateInput-Data-Relationships": {
         "additionalProperties": false,
         "properties": {
-          "next": {
+          "several": {
             "allOf": [
               {
                 "$ref": "#/components/schemas/CreateInputListRelationship"
@@ -391,7 +383,7 @@
               "data": []
             }
           },
-          "prev": {
+          "single": {
             "allOf": [
               {
                 "$ref": "#/components/schemas/OptionalRelationship"
@@ -400,14 +392,14 @@
             "default": {}
           }
         },
-        "title": "ping-CreateInput-Data-Relationships",
+        "title": "resource-CreateInput-Data-Relationships",
         "type": "object"
       },
-      "ping-ItemOutput": {
+      "resource-ItemOutput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/ping-OutputItem"
+            "$ref": "#/components/schemas/resource-OutputItem"
           },
           "included": {
             "items": {},
@@ -418,14 +410,14 @@
         "required": [
           "data"
         ],
-        "title": "ping-ItemOutput",
+        "title": "resource-ItemOutput",
         "type": "object"
       },
-      "ping-OutputItem": {
+      "resource-OutputItem": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "$ref": "#/components/schemas/ping-OutputItem-Attributes"
+            "$ref": "#/components/schemas/resource-OutputItem-Attributes"
           },
           "id": {
             "title": "Id",
@@ -435,7 +427,7 @@
             "$ref": "#/components/schemas/ItemLinksModel"
           },
           "relationships": {
-            "$ref": "#/components/schemas/ping-OutputItem-Relationships"
+            "$ref": "#/components/schemas/resource-OutputItem-Relationships"
           },
           "type": {
             "title": "Type",
@@ -449,73 +441,46 @@
           "attributes",
           "relationships"
         ],
-        "title": "ping-OutputItem",
+        "title": "resource-OutputItem",
         "type": "object"
       },
-      "ping-OutputItem-Attributes": {
+      "resource-OutputItem-Attributes": {
         "additionalProperties": false,
         "properties": {
-          "createdAt": {
-            "format": "date-time",
-            "title": "Createdat",
-            "type": "string"
-          },
-          "message": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Message"
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "title": "Updatedat",
+          "name": {
+            "title": "Name",
             "type": "string"
           }
         },
         "required": [
-          "message",
-          "createdAt",
-          "updatedAt"
+          "name"
         ],
-        "title": "ping-OutputItem-Attributes",
+        "title": "resource-OutputItem-Attributes",
         "type": "object"
       },
-      "ping-OutputItem-Relationships": {
+      "resource-OutputItem-Relationships": {
         "additionalProperties": false,
         "properties": {
-          "createdBy": {
-            "$ref": "#/components/schemas/OptionalRelationship"
-          },
-          "next": {
+          "several": {
             "$ref": "#/components/schemas/OutputListRelationship"
           },
-          "prev": {
-            "$ref": "#/components/schemas/OptionalRelationship"
-          },
-          "updatedBy": {
+          "single": {
             "$ref": "#/components/schemas/OptionalRelationship"
           }
         },
         "required": [
-          "createdBy",
-          "updatedBy",
-          "prev",
-          "next"
+          "single",
+          "several"
         ],
-        "title": "ping-OutputItem-Relationships",
+        "title": "resource-OutputItem-Relationships",
         "type": "object"
       },
-      "ping-PageOutput": {
+      "resource-PageOutput": {
         "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
-              "$ref": "#/components/schemas/ping-OutputItem"
+              "$ref": "#/components/schemas/resource-OutputItem"
             },
             "title": "Data",
             "type": "array"
@@ -537,29 +502,29 @@
           "meta",
           "links"
         ],
-        "title": "ping-PageOutput",
+        "title": "resource-PageOutput",
         "type": "object"
       },
-      "ping-UpdateInput": {
+      "resource-UpdateInput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/ping-UpdateInput-Data"
+            "$ref": "#/components/schemas/resource-UpdateInput-Data"
           }
         },
         "required": [
           "data"
         ],
-        "title": "ping-UpdateInput",
+        "title": "resource-UpdateInput",
         "type": "object"
       },
-      "ping-UpdateInput-Data": {
+      "resource-UpdateInput-Data": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ping-UpdateInput-Data-Attributes"
+                "$ref": "#/components/schemas/resource-UpdateInput-Data-Attributes"
               }
             ],
             "default": {}
@@ -571,7 +536,7 @@
           "relationships": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ping-UpdateInput-Data-Relationships"
+                "$ref": "#/components/schemas/resource-UpdateInput-Data-Relationships"
               }
             ],
             "default": {}
@@ -585,38 +550,31 @@
           "type",
           "id"
         ],
-        "title": "ping-UpdateInput-Data",
+        "title": "resource-UpdateInput-Data",
         "type": "object"
       },
-      "ping-UpdateInput-Data-Attributes": {
+      "resource-UpdateInput-Data-Attributes": {
         "additionalProperties": false,
         "properties": {
-          "message": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Message"
+          "name": {
+            "title": "Name",
+            "type": "string"
           }
         },
-        "title": "ping-UpdateInput-Data-Attributes",
+        "title": "resource-UpdateInput-Data-Attributes",
         "type": "object"
       },
-      "ping-UpdateInput-Data-Relationships": {
+      "resource-UpdateInput-Data-Relationships": {
         "additionalProperties": false,
         "properties": {
-          "next": {
+          "several": {
             "allOf": [
               {
                 "$ref": "#/components/schemas/UpdateInputListRelationship"
               }
             ]
           },
-          "prev": {
+          "single": {
             "allOf": [
               {
                 "$ref": "#/components/schemas/OptionalRelationship"
@@ -624,78 +582,8 @@
             ]
           }
         },
-        "title": "ping-UpdateInput-Data-Relationships",
+        "title": "resource-UpdateInput-Data-Relationships",
         "type": "object"
-      },
-      "user-ItemOutput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/user-OutputItem"
-          },
-          "included": {
-            "items": {},
-            "title": "Included",
-            "type": "array"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "user-ItemOutput",
-        "type": "object"
-      },
-      "user-OutputItem": {
-        "additionalProperties": false,
-        "properties": {
-          "attributes": {
-            "$ref": "#/components/schemas/user-OutputItem-Attributes"
-          },
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "links": {
-            "$ref": "#/components/schemas/ItemLinksModel"
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "id",
-          "links",
-          "attributes"
-        ],
-        "title": "user-OutputItem",
-        "type": "object"
-      },
-      "user-OutputItem-Attributes": {
-        "additionalProperties": false,
-        "properties": {
-          "username": {
-            "title": "Username",
-            "type": "string"
-          }
-        },
-        "required": [
-          "username"
-        ],
-        "title": "user-OutputItem-Attributes",
-        "type": "object"
-      }
-    },
-    "securitySchemes": {
-      "OAuth2PasswordBearer": {
-        "flows": {
-          "password": {
-            "scopes": {},
-            "tokenUrl": "token"
-          }
-        },
-        "type": "oauth2"
       }
     }
   },
@@ -739,17 +627,12 @@
             "description": "Validation Error"
           }
         },
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
         "summary": "Batch"
       }
     },
-    "/pings": {
+    "/resources": {
       "get": {
-        "operationId": "get_pings_pings_get",
+        "operationId": "get_resources_resources_get",
         "parameters": [
           {
             "in": "query",
@@ -788,24 +671,6 @@
               "title": "Include",
               "type": "string"
             }
-          },
-          {
-            "in": "query",
-            "name": "filter[message]",
-            "required": false,
-            "schema": {
-              "title": "Filter[Message]",
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "filter[prev]",
-            "required": false,
-            "schema": {
-              "title": "Filter[Prev]",
-              "type": "string"
-            }
           }
         ],
         "responses": {
@@ -813,7 +678,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ping-PageOutput"
+                  "$ref": "#/components/schemas/resource-PageOutput"
                 }
               }
             },
@@ -830,10 +695,10 @@
             "description": "Validation Error"
           }
         },
-        "summary": "Get Pings"
+        "summary": "Get Resources"
       },
       "post": {
-        "operationId": "create_ping_pings_post",
+        "operationId": "create_resource_resources_post",
         "parameters": [
           {
             "in": "query",
@@ -849,7 +714,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ping-CreateInput"
+                "$ref": "#/components/schemas/resource-CreateInput"
               }
             }
           },
@@ -860,7 +725,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ping-ItemOutput"
+                  "$ref": "#/components/schemas/resource-ItemOutput"
                 }
               }
             },
@@ -877,17 +742,12 @@
             "description": "Validation Error"
           }
         },
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "summary": "Create Ping"
+        "summary": "Create Resource"
       }
     },
-    "/pings/{id}": {
+    "/resources/{id}": {
       "delete": {
-        "operationId": "delete_ping_pings__id__delete",
+        "operationId": "delete_resource_resources__id__delete",
         "parameters": [
           {
             "in": "path",
@@ -914,15 +774,10 @@
             "description": "Validation Error"
           }
         },
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "summary": "Delete Ping"
+        "summary": "Delete Resource"
       },
       "get": {
-        "operationId": "get_ping_pings__id__get",
+        "operationId": "get_resource_resources__id__get",
         "parameters": [
           {
             "in": "path",
@@ -948,7 +803,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ping-ItemOutput"
+                  "$ref": "#/components/schemas/resource-ItemOutput"
                 }
               }
             },
@@ -965,10 +820,10 @@
             "description": "Validation Error"
           }
         },
-        "summary": "Get Ping"
+        "summary": "Get Resource"
       },
       "patch": {
-        "operationId": "update_ping_pings__id__patch",
+        "operationId": "update_resource_resources__id__patch",
         "parameters": [
           {
             "in": "path",
@@ -993,7 +848,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ping-UpdateInput"
+                "$ref": "#/components/schemas/resource-UpdateInput"
               }
             }
           },
@@ -1004,7 +859,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ping-ItemOutput"
+                  "$ref": "#/components/schemas/resource-ItemOutput"
                 }
               }
             },
@@ -1021,12 +876,7 @@
             "description": "Validation Error"
           }
         },
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "summary": "Update Ping"
+        "summary": "Update Resource"
       }
     },
     "/token": {
@@ -1063,54 +913,6 @@
           }
         },
         "summary": "Login"
-      }
-    },
-    "/users/{id}": {
-      "get": {
-        "operationId": "get_user_users__id__get",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "title": "Id",
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "include",
-            "required": false,
-            "schema": {
-              "title": "Include",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/user-ItemOutput"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Get User"
       }
     }
   }

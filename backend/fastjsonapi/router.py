@@ -40,6 +40,8 @@ def make_jsonapi_router(resources):
     for resource in resources.values():
         add_resource_routes(resources, resource, router)
 
+    add_batch_route(resources, router)
+
     return router
 
 
@@ -376,6 +378,103 @@ def add_resource_routes(resources, resource, router):
                 delete_item(item)
             else:
                 raise HTTPException(status_code=404, detail="Item not found")
+
+
+def add_batch_route(resources, router):
+    # @todo Keep things structured all they way (avoid generating textual code)
+    # See... my old answer here: https://stackoverflow.com/a/29927459/905845
+    def make_item_creators_code():
+        yield "def make_item_creators("
+        for name, resource in resources.items():
+            if resource.ItemCreator:
+                yield f'    {name}: Annotated[resources["{name}"].ItemCreator, Depends()],'
+        yield "):"
+        yield "    return {"
+        for name, resource in resources.items():
+            if resource.ItemCreator:
+                yield f'        "{name}": {name},'
+        yield "    }"
+    exec("\n".join(make_item_creators_code()), {"resources": resources}, make_item_creators_globals := {"Annotated": Annotated, "Depends": Depends})
+    make_item_creators = make_item_creators_globals["make_item_creators"]
+
+    def make_item_getters_code():
+        yield "def make_item_getters("
+        for name, resource in resources.items():
+            if resource.ItemGetter:
+                yield f'    {name}: Annotated[resources["{name}"].ItemGetter, Depends()],'
+        yield "):"
+        yield "    return {"
+        for name, resource in resources.items():
+            if resource.ItemGetter:
+                yield f'        "{name}": {name},'
+        yield "    }"
+    exec("\n".join(make_item_getters_code()), {"resources": resources}, make_item_getters_globals := {"Annotated": Annotated, "Depends": Depends})
+    make_item_getters = make_item_getters_globals["make_item_getters"]
+
+    @router.post(
+        f"/batch",
+        # response_model=,  # @todo Use a proper response model
+        # response_model_exclude_unset=True,
+    )
+    def batch(
+        urls: Urls,
+        item_creators: Annotated[dict, Depends(make_item_creators)],
+        item_getters: Annotated[dict, Depends(make_item_getters)],
+        payload: dict,  # @todo Use a proper payload model
+    ):
+        results = []
+
+        lid_to_id = {}
+
+        for operation in payload["atomic:operations"]:
+            op = operation["op"]
+            if op == "add":
+                data = operation["data"]
+                type = data["type"]
+                lid = data.pop("lid", None)
+
+                for relationship in data.get("relationships", {}).values():
+                    relationship = relationship["data"]
+                    if isinstance(relationship, dict):
+                        if "lid" in relationship:
+                            relationship["id"] = lid_to_id[relationship.pop("lid")]
+                    else:
+                        assert isinstance(relationship, list)
+                        for rel in relationship:
+                            if "lid" in rel:
+                                rel["id"] = lid_to_id[rel.pop("lid")]
+
+                create_payload = resources[type].CreateInputModel(data=data)
+
+                # @todo Factorize this code with 'create_item'
+                attributes = {
+                    humps.decamelize(key) : value
+                    for (key, value) in dict(create_payload.data.attributes).items()
+                }
+
+                relationships = {}
+                for (key, value) in dict(create_payload.data.relationships).items():
+                    key = humps.decamelize(key)
+                    if isinstance(value.data, list):
+                        # @todo Check item type against relationship type
+                        relationships[key] = [item_getters[item.type](item.id) for item in value.data]
+                    elif value.data is None:
+                        relationships[key] = None
+                    else:
+                        relationships[key] = item_getters[value.data.type](value.data.id)
+
+                item = item_creators[type](**attributes, **relationships)
+
+                if lid is not None:
+                    lid_to_id[lid] = item.id
+
+                results.append({"data": resources[type].make_item(resources, urls=urls, item=item)})
+            else:
+                # @todo Support other operations ('update', 'delete', and operations on relationships)
+                assert False
+        return {
+            "atomic:results": results,
+        }
 
 
 def parse_include(include):

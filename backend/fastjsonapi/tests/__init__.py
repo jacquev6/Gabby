@@ -3,6 +3,7 @@
 from ..router import ParseIncludeTestCase
 from ..django import AuthenticationTestCase
 from .attributes import AttributesTestCase
+from .batching import BatchingTestCase
 from .dependencies import DependenciesTestCase
 from .empty import EmptyTestCase
 from .relationships import RelationshipsTestCase
