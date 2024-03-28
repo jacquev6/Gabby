@@ -58,6 +58,11 @@ class CompiledResource:
         self.pluralName = humps.camelize(resource.plural_name)
 
         self.Model = resource.Model
+        # @todo Generate the following attributes:
+        # Let client code have a plain 'get_item' function accepting an 'id' and any FastAPI dependables,
+        # and extract dependables by 'inspect'ing it. The create a dynamyc 'ItemGetter', taking dependables
+        # in its constructor and calling 'get_item' with them and the 'id'.
+        # Same for 'get_page', 'create_item', 'save_item' and 'delete_item'.
         self.ItemCreator = getattr(resource, "ItemCreator", None)
         self.ItemGetter = getattr(resource, "ItemGetter", None)
         self.PageGetter = getattr(resource, "PageGetter", None)
