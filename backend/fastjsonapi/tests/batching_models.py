@@ -1,5 +1,4 @@
 from __future__ import annotations
-import dataclasses
 
 from pydantic import BaseModel
 
@@ -10,10 +9,11 @@ class Model(BaseModel):
     several: list[Model] = []
 
 
-@dataclasses.dataclass
 class Item:
-    id: str
-
-    name: str
-    single: Item | None
-    several: list[Item]
+    def __init__(self, id: str, name: str, single: Item | None, several: list[Item]):
+        if name == "raise":
+            raise ValueError("name == 'raise'")
+        self.id = id
+        self.name = name
+        self.single = single
+        self.several = several

@@ -8,8 +8,17 @@ from ..testing import ItemsFactory, TestMixin
 from .batching_models import Item, Model as BatchingModel
 
 
+def make_transaction():
+    with BatchingTestCase.factory.atomic():
+        yield
+
+
 class FactoryMixin:
-    def __init__(self, factory: Annotated[ItemsFactory, Depends(lambda: BatchingTestCase.factory)]):
+    def __init__(
+        self,
+        factory: Annotated[ItemsFactory, Depends(lambda: BatchingTestCase.factory)],
+        transaction: Annotated[None, Depends(make_transaction)],
+    ):
         self.factory = factory
 
 
@@ -259,7 +268,35 @@ class BatchingTestCase(TestMixin, TestCase):
             },
         ]})
 
-    # @todo Add test showing the updates happen atomicaly or not at all
+    def test_atomicity(self):
+        with self.assertRaises(ValueError):
+            self.post("http://server/batch", {"atomic:operations": [
+                {
+                    "op": "add",
+                    "data": {
+                        "type": "resource",
+                        "lid": "single",
+                        "attributes": {
+                            "name": "item1",
+                        },
+                    },
+                },
+                {
+                    "op": "add",
+                    "data": {
+                        "type": "resource",
+                        "lid": "several",
+                        "attributes": {
+                            "name": "raise",
+                        },
+                    },
+                },
+            ]})
+
+        self.assertEqual(self.factory.commits_count, 0)
+        self.assertEqual(self.factory.rollbacks_count, 1)
+        self.assertEqual(len(self.factory.get_all(Item)), 0)
+
     # @todo Add test showing an error if a same lid is associated to several created resources
 
     # def test_dependent_adds__refering_to_object_to_be_created(self):

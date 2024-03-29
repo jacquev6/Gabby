@@ -1,3 +1,4 @@
+from contextlib import contextmanager
 import json
 import inspect
 
@@ -70,6 +71,22 @@ class ItemsFactory:
     def __init__(self):
         self.__next_id = 1
         self.__items = {}
+        self.commits_count = 0
+        self.rollbacks_count = 0
+
+    @contextmanager
+    def atomic(self):
+        prev_next_id = self.__next_id
+        prev_items = self.__items.copy()
+        try:
+            yield
+        except:
+            self.__next_id = prev_next_id
+            self.__items = prev_items
+            self.rollbacks_count += 1
+            raise
+        else:
+            self.commits_count += 1
 
     def create(self, cls, **kwds):
         item = cls(id=str(self.__next_id), **kwds)
