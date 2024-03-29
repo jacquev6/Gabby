@@ -259,6 +259,7 @@ class BatchingTestCase(TestMixin, TestCase):
             },
         ]})
 
+    # @todo Add test showing the updates happen atomicaly or not at all
     # @todo Add test showing an error if a same lid is associated to several created resources
 
     # def test_dependent_adds__refering_to_object_to_be_created(self):

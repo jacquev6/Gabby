@@ -7,6 +7,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")/."
 
 
 docker compose exec \
+  --env ELECTRON_ENABLE_LOGGING=1 \
   frontend \
     npx cypress run \
       --component "$@"

@@ -34,28 +34,30 @@ const disabled = computed(() => !pdf.value || !title.value)
 const creating = ref(false)
 async function create() {
   creating.value = true
-  await api.client.post(
-    'pdfFile',
-    {sha256: pdf.value.info.sha256, bytesCount: 0, pagesCount: pdf.value.document.numPages},
-    {},
-  )
-  await api.client.post(
-    'pdfFileNaming',
-    {name: pdf.value.info.name},
-    {pdfFile: {type: 'pdfFile', id: pdf.value.info.sha256}},
-  )
-  const textbook = await api.client.post(
-    'textbook',
-    {title: title.value, publisher: publisher.value || undefined, year: year.value || undefined, isbn: isbn.value || undefined},
-    {project: {type: 'project', id: props.projectId}}
-  )
-  await api.client.post(
-    'section',
-    {pdfFileStartPage: 1, pagesCount: pdf.value.document.numPages, textbookStartPage: 1},
-    {pdfFile: {type: 'pdfFile', id: pdf.value.info.sha256}, textbook},
+  const results = await api.client.batch(
+    [
+      'add', 'pdfFile', 'pdf',
+      {sha256: pdf.value.info.sha256, bytesCount: 0, pagesCount: pdf.value.document.numPages},
+      {},
+    ],
+    [
+      'add', 'pdfFileNaming', null,
+      {name: pdf.value.info.name},
+      {pdfFile: {type: 'pdfFile', lid: 'pdf'}},
+    ],
+    [
+      'add', 'textbook', 'tb',
+      {title: title.value, publisher: publisher.value || undefined, year: year.value || undefined, isbn: isbn.value || undefined},
+      {project: {type: 'project', id: props.projectId}}
+    ],
+    [
+      'add', 'section', null,
+      {pdfFileStartPage: 1, pagesCount: pdf.value.document.numPages, textbookStartPage: 1},
+      {pdfFile: {type: 'pdfFile', lid: 'pdf'}, textbook: {type: 'textbook', lid: 'tb'}},
+    ],
   )
   creating.value = false
-  emit('created', textbook.id)
+  emit('created', results[2].id)
 }
 </script>
 

@@ -139,9 +139,9 @@ export function defineApiStore(name, options) {
         for (const [key, value] of Object.entries(relationships_)) {
           if (value) {
             if (Array.isArray(value)) {
-              relationships[key] = {data: value.map(item => ({type: item.type, id: item.id}))}
+              relationships[key] = {data: value.map(item => ({type: item.type, id: item.id, lid: item.lid}))}
             } else {
-              relationships[key] = {data: {type: value.type, id: value.id}}
+              relationships[key] = {data: {type: value.type, id: value.id, lid: value.lid}}
             }
           } else {
             relationships[key] = {data: null}
@@ -223,6 +223,43 @@ export function defineApiStore(name, options) {
       async delete(type, id) {
         await cache._request('DELETE', cache._makeUrl(`${type}s/${id}`))
         cache._deleteOne(type, id)
+      },
+      async batch() {
+        const url = `${cache._baseUrl}batch`
+        const operations = []
+
+        for (const arg of arguments) {
+          if (arg[0] == 'add') {
+            console.assert(arg.length == 5)
+            const [_, type, lid, attributes, relationships] = arg
+            operations.push({
+              op: 'add',
+              data: {
+                type,
+                lid: lid || undefined,
+                attributes,
+                relationships: cache._makeRelationships(relationships),
+              },
+            })
+          } else {
+            console.assert(false)
+          }
+        }
+
+        const raw_response = await fetch(url, {method: 'POST', headers: {'Content-Type': 'application/vnd.api+json'}, body: JSON.stringify({'atomic:operations': operations})})
+        const json_response = raw_response.headers.get('Content-Type') == 'application/vnd.api+json' ? await raw_response.json() : null
+        if (raw_response.ok) {
+          const results = []
+          for (const result of json_response['atomic:results']) {
+            cache._updateOne(result.data)
+            results.push(cache.getOne(result.data.type, result.data.id))
+          }
+          return results
+        } else {
+          const response = json_response ?? raw_response
+          console.error({request: {method, url, json_body, body}, response})
+          throw new Error('API request failed', {cause: response})
+        }
       },
     }
 

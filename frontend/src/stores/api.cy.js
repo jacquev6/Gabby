@@ -398,6 +398,112 @@ describe('ApiStore', () => {
     cy.expect(got).to.equal(before)
   })
 
+  it('creates one ping in batch', async () => {
+    const api = useApiStore()
+
+    const before = api.cache.getOne('ping', '7')
+    cy.expect(before.type).to.equal('ping')
+    cy.expect(before.id).to.equal('7')
+    cy.expect(before.inCache).to.be.false
+    cy.expect(before.exists).to.be.undefined
+    cy.expect(before.attributes).to.be.undefined
+    cy.expect(before.relationships).to.be.undefined
+
+    const posted = await api.client.batch(
+      [
+        'add',
+        'ping', null,
+        {message: 'Hello 7'},
+        {prev: {type: 'ping', id: '2'}, next: [{type: 'ping', id: '5'}]},
+      ],
+    )
+    const after = api.cache.getOne('ping', '7')
+    const got = await api.client.getOne('ping', '7', {include: ['prev', 'next']})
+
+    cy.expect(posted.length).to.equal(1)
+    for (const ping of [before, posted[0], after, got]) {
+      cy.expect(ping.type).to.equal('ping')
+      cy.expect(ping.id).to.equal('7')
+      cy.expect(before.inCache).to.be.true
+      cy.expect(before.exists).to.be.true
+      cy.expect(ping.attributes.message).to.equal('Hello 7')
+      cy.expect(ping.relationships.prev.type).to.equal('ping')
+      cy.expect(ping.relationships.prev.id).to.equal('2')
+      cy.expect(ping.relationships.prev.inCache).to.be.true
+      cy.expect(ping.relationships.prev.exists).to.be.true
+      cy.expect(ping.relationships.prev.attributes.message).to.equal('Hello 2')
+      cy.expect(ping.relationships.next.length).to.equal(1)
+      cy.expect(ping.relationships.next[0].type).to.equal('ping')
+      cy.expect(ping.relationships.next[0].id).to.equal('5')
+      cy.expect(ping.relationships.next[0].inCache).to.be.true
+      cy.expect(ping.relationships.next[0].exists).to.be.true
+      cy.expect(ping.relationships.next[0].attributes.message).to.equal('Hello 5')
+    }
+
+    cy.expect(after).to.equal(before)
+    cy.expect(posted[0]).to.equal(before)
+    cy.expect(got).to.equal(before)
+  })
+
+  it('creates several related pings in batch', async () => {
+    const api = useApiStore()
+
+    const before = api.cache.getOne('ping', '9')
+    cy.expect(before.type).to.equal('ping')
+    cy.expect(before.id).to.equal('9')
+    cy.expect(before.inCache).to.be.false
+    cy.expect(before.exists).to.be.undefined
+    cy.expect(before.attributes).to.be.undefined
+    cy.expect(before.relationships).to.be.undefined
+
+    const posted = await api.client.batch(
+      [
+        'add',
+        'ping', 'prev',
+        {message: 'Hello 7'},
+        {},
+      ],
+      [
+        'add',
+        'ping', 'next',
+        {message: 'Hello 8'},
+        {},
+      ],
+      [
+        'add',
+        'ping', null,
+        {message: 'Hello 9'},
+        {prev: {type: 'ping', lid: 'prev'}, next: [{type: 'ping', lid: 'next'}]},
+      ]
+    )
+    const after = api.cache.getOne('ping', '9')
+    const got = await api.client.getOne('ping', '9', {include: ['prev', 'next']})
+
+    cy.expect(posted.length).to.equal(3)
+    for (const ping of [before, posted[2], after, got]) {
+      cy.expect(ping.type).to.equal('ping')
+      cy.expect(ping.id).to.equal('9')
+      cy.expect(before.inCache).to.be.true
+      cy.expect(before.exists).to.be.true
+      cy.expect(ping.attributes.message).to.equal('Hello 9')
+      cy.expect(ping.relationships.prev.type).to.equal('ping')
+      cy.expect(ping.relationships.prev.id).to.equal('7')
+      cy.expect(ping.relationships.prev.inCache).to.be.true
+      cy.expect(ping.relationships.prev.exists).to.be.true
+      cy.expect(ping.relationships.prev.attributes.message).to.equal('Hello 7')
+      cy.expect(ping.relationships.next.length).to.equal(1)
+      cy.expect(ping.relationships.next[0].type).to.equal('ping')
+      cy.expect(ping.relationships.next[0].id).to.equal('8')
+      cy.expect(ping.relationships.next[0].inCache).to.be.true
+      cy.expect(ping.relationships.next[0].exists).to.be.true
+      cy.expect(ping.relationships.next[0].attributes.message).to.equal('Hello 8')
+    }
+
+    cy.expect(after).to.equal(before)
+    cy.expect(posted[2]).to.equal(before)
+    cy.expect(got).to.equal(before)
+  })
+
   it('creates one full ping but does not include related', async () => {
     const api = useApiStore()
 
