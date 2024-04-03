@@ -1,10 +1,10 @@
 import django
 django.setup()  # Required before importing any module that uses the Django ORM
 
-import django.contrib.auth
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import django.conf
+import django.contrib.auth
 import django.core.management
 
 from fastjsonapi import make_jsonapi_router
