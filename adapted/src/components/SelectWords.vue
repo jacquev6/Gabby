@@ -1,7 +1,8 @@
 <script setup>
 import { reactive, computed } from 'vue'
-
 import chroma from "chroma-js"
+
+import { tokenize } from './tokenize'
 
 
 const props = defineProps({
@@ -11,9 +12,7 @@ const props = defineProps({
   },
 })
 
-const words = computed(() => {
-  return props.exercise.wording.match(/[\p{L}\p{M}]+|\d+|\p{Zs}+|[^\p{L}\p{M}\p{Zs}]/gu).map(word => word.trim() === '' ? null : word)
-})
+const words = computed(() => tokenize(props.exercise.wording))
 
 const colors = computed(() => chroma.scale('Set2').colors(props.exercise.adaptation.colors))
 
@@ -51,11 +50,11 @@ const styles = computed(() => {
   <p>{{ words }}</p>
   <p>
     <template v-for="(token, index) in words">
-      <template v-if="token === null">
+      <template v-if="token.kind === 'whitespace'">
         <wbr> <!-- The two <wbr> element work around Vue.js removing spaces despite 'whitespace: 'preserve' in its configuration --><wbr>
       </template>
       <template v-else>
-        <button :style="styles[index]" @click="toggle(index)">{{ token }}</button>
+        <button :style="styles[index]" @click="toggle(index)">{{ token.token }}</button>
       </template>
     </template>
   </p>
