@@ -9,6 +9,7 @@ services:
       - ./fanout/nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
       - frontend
+      - adapted
       - new-backend
       - old-backend
       - adminer
@@ -26,6 +27,14 @@ services:
     environment:
       VITE_OPINION_APP_VERSION: dev
     command: ["bash", "-c", "npm install && npx vite --host 0.0.0.0 --port 80 --strictPort"]
+
+  adapted:
+    image: node:20
+    volumes:
+      - ..:/app
+      - adapted-node-modules:/app/adapted/node_modules
+    working_dir: /app/adapted
+    command: ["bash", "-c", "npm install && npx vite --base=/adapted --host 0.0.0.0 --port 80 --strictPort"]
 
   new-backend:
     build:
@@ -65,7 +74,7 @@ services:
     command: [
       "bash",
       "-c",
-      "./manage.py migrate && ./manage.py shell <../dev-env/backend/startup.py",
+      "./manage.py migrate && ./manage.py shell <../dev-env/backend/startup.py && ./manage.py loaddata test-exercises",
     ]
     depends_on:
       db:
@@ -112,3 +121,4 @@ services:
 volumes:
   frontend-node-modules:
   frontend-cache:
+  adapted-node-modules:

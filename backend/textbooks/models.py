@@ -1,5 +1,6 @@
 from django.core.validators import RegexValidator
 from django.db import models
+from polymorphic.models import PolymorphicModel
 
 
 # @todo(Feature, later) Add timestamps (created_at, modified_at, etc.) and user ids (created_by, modified_by, etc.) to all models
@@ -143,3 +144,17 @@ class ExtractionEvent(models.Model):
 
     exercise = models.ForeignKey(Exercise, on_delete=models.CASCADE, related_name="extraction_events")
     event = models.TextField(null=False, blank=False)  # Free form for the backend, defined by the frontend
+
+
+class AdaptedExercise(PolymorphicModel):
+    id = models.AutoField(primary_key=True)
+
+    exercise = models.OneToOneField(Exercise, on_delete=models.CASCADE, related_name="adapted")
+
+
+class SelectWordsAdaptedExercise(AdaptedExercise):
+    colors = models.IntegerField(null=False)
+
+
+class FillWithFreeTextAdaptedExercise(AdaptedExercise):
+    placeholder = models.CharField(null=False, blank=False, max_length=10)

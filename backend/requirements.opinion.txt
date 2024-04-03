@@ -1,5 +1,6 @@
 # Old
 django  # Fundamental
+django-polymorphic
 psycopg2-binary  # For PostgreSQL
 django-dbbackup  # For backups
 django-storages[s3]  # For backups

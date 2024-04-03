@@ -4,6 +4,7 @@ from django.test import TransactionTestCase
 from starlette import status
 
 from .models import PdfFile, PdfFileNaming, Project, Textbook, Exercise
+from .models import FillWithFreeTextAdaptedExercise, SelectWordsAdaptedExercise
 from fastjsonapi.testing import TestMixin
 from .resources import PdfFilesResource, PdfFileNamingsResource, ProjectsResource, TextbooksResource, SectionsResource, ExercisesResource, ExtractionEventsResource
 
@@ -984,6 +985,29 @@ class ExerciseModelTests(TransactionTestCase):
                 (False, None, "Some text"),
             ],
         )
+
+
+class AdaptedExerciseModelTests(TransactionTestCase):
+    def setUp(self):
+        self.project = Project.objects.create(title="Project")
+        self.textbook = Textbook.objects.create(project=self.project, title="Textbook")
+        self.exercise = Exercise.objects.create(project=self.project, number="Exercise")
+
+    def test_none_on_creation(self):
+        with self.assertRaises(Exercise.adapted.RelatedObjectDoesNotExist):
+            self.exercise.adapted
+
+    def test_fill_with_free_text(self):
+        FillWithFreeTextAdaptedExercise.objects.create(exercise=self.exercise, placeholder="...")
+        self.assertIsInstance(self.exercise.adapted, FillWithFreeTextAdaptedExercise)
+        self.assertEqual(self.exercise.adapted.placeholder, "...")
+        self.assertFalse(hasattr(self.exercise.adapted, "colors"))
+
+    def test_select_words(self):
+        SelectWordsAdaptedExercise.objects.create(exercise=self.exercise, colors=3)
+        self.assertIsInstance(self.exercise.adapted, SelectWordsAdaptedExercise)
+        self.assertEqual(self.exercise.adapted.colors, 3)
+        self.assertFalse(hasattr(self.exercise.adapted, "placeholder"))
 
 
 class ExerciseApiTests(TestMixin, TransactionTestCase):

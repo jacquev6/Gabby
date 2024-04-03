@@ -267,6 +267,17 @@ function changePage(page) {
   console.assert(Number.isInteger(page) && page >= 1 && page <= textbookPagesCount.value)
   router.push({name: 'project-textbook-page', params: {projectId: props.projectId, textbookId: props.textbookId, page}})
 }
+
+const visualizationIFrame = ref(null)
+
+const visualizationUrl = computed(() => {
+  if (currentExercise.id) {
+    const data = {exercises: {a: {...currentExercise.attributes, adaptation: {type: 'selectWords', colors: 3}}}}
+    return `/adapted?data=${JSON.stringify(data)}&exerciseId=a`
+  } else {
+    return null
+  }
+})
 </script>
 
 <template>
@@ -349,7 +360,9 @@ function changePage(page) {
             </b-col>
             <b-col>
               <h1>{{ $t('visualization') }}</h1>
-              <p>({{ $t('not-yet-implemented') }})</p>
+              <template v-if="mode === 'edit'">
+                <iframe ref="visualizationIFrame" :src="visualizationUrl" style="width: 100%; height: 100%"></iframe>
+              </template>
             </b-col>
           </b-row>
         </template>
