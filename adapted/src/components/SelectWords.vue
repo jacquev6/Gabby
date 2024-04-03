@@ -40,14 +40,6 @@ const styles = computed(() => {
 </script>
 
 <template>
-  <p>Select words ({{ exercise.adaptation.colors }} types:
-    <template v-for="color in colors">
-      <span :style="{background: color}">{{ color }}</span>
-      <template> </template>
-    </template>
-  )</p>
-  <p>{{ exercise.wording }}</p>
-  <p>{{ words }}</p>
   <p>
     <template v-for="(token, index) in words">
       <template v-if="token.kind === 'whitespace'">
@@ -61,12 +53,6 @@ const styles = computed(() => {
 </template>
 
 <style scoped>
-* {
-  font-family: sans-serif;
-  font-size: 20px;
-  line-height: 30px;
-}
-
 button {
   border: none;
   border-top: 2px solid transparent;
