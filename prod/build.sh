@@ -23,6 +23,10 @@ fi
 
 docker buildx use gabby-multi-platform-builder 2>/dev/null || docker buildx create --name gabby-multi-platform-builder --use
 
+# @todo Merge the two 'Dockerfile's into one (they have common parts and are interdependent)
+# @todo Use 'docker build --target' to choose what to build in the merged 'Dockerfile'
+# @todo Change tags from 'jacquev6/gabby-$part:$version' to 'jacquev6/gabby:$version-$part'
+
 for part in frontend backend
 do
   docker buildx build .. --file $part/Dockerfile \

@@ -62,6 +62,7 @@ const pdfToPreview = ref(null)
       <template v-if="project?.exists">
         <editable-project-header :project="project" />
         <p>{{ $t('download') }} <a :href="`/api/project-${project.id}-extraction-report.json`">{{ $t('theExtractionReport') }}</a>.</p>
+        <p>{{ $t('download') }} <a :href="`/api/project-${project.id}.html`">{{ $t('theExportedHtml') }}</a>.</p>
         <b-row>
           <b-col>
             <h2>{{ $t('newTextbook') }}</h2>

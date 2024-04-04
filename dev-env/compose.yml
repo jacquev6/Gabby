@@ -53,6 +53,28 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      adapted-builder:
+        condition: service_healthy
+  adapted-builder:
+    build:
+      context: ..
+      dockerfile: dev-env/adapted/docker/Dockerfile
+    volumes:
+      - ..:/app
+      - adapted-builder-node-modules:/app/adapted/node_modules
+    working_dir: /app/adapted
+    command: ["bash", "-c", "npm install && npx vite build --watch"]
+    healthcheck:
+      test: [
+        "CMD",
+        "test",
+        "-f",
+        "/app/adapted/dist/index.html",
+      ]
+      start_period: 0s
+      interval: 0.5s
+      timeout: 1s
+      retries: 10
   old-backend:
     build:
       context: ..
@@ -127,3 +149,4 @@ volumes:
   frontend-cache:
   adapted-node-modules:
   adapted-cache:
+  adapted-builder-node-modules:

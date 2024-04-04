@@ -155,6 +155,18 @@ class AdaptedExercise(PolymorphicModel):
 class SelectWordsAdaptedExercise(AdaptedExercise):
     colors = models.IntegerField(null=False)
 
+    def make_adaptation_dict(self):
+        return {
+            "type": "selectWords",
+            "colors": self.colors,
+        }
+
 
 class FillWithFreeTextAdaptedExercise(AdaptedExercise):
     placeholder = models.CharField(null=False, blank=False, max_length=10)
+
+    def make_adaptation_dict(self):
+        return {
+            "type": "fillWithFreeText",
+            "placeholder": self.placeholder,
+        }

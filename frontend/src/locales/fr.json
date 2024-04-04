@@ -20,6 +20,7 @@
   "cancel": "Annuler",
   "download": "Télécharger",
   "theExtractionReport": "le rapport d'extraction",
+  "theExportedHtml": "le HTML exporté",
   "newTextbook": "Nouveau manuel",
   "pdfNavigationPage": "Page",
   "pdfNavigationPageOver": "(sur {count})",

@@ -28,7 +28,7 @@ RUN npm install
 
 ADD adapted /app
 
-RUN npx vite build --base=/adapted
+RUN npx vite build
 
 
 FROM python:3.12-slim AS backend-builder
@@ -74,7 +74,7 @@ ENV GABBY_VERSION=$GABBY_VERSION
 RUN sphinx-build -b html . build
 
 
-FROM nginx:alpine AS final
+FROM nginx:alpine AS frontend
 
 RUN rm /etc/nginx/conf.d/default.conf
 RUN rm /usr/share/nginx/html/*.html
