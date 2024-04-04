@@ -17,6 +17,20 @@ ENV VITE_OPINION_APP_DEFAULT_LOCALE=fr
 RUN npx vite build
 
 
+FROM node:20 AS adapted-builder
+
+WORKDIR /app
+
+ADD adapted/package.json /app
+ADD adapted/package-lock.json /app
+
+RUN npm install
+
+ADD adapted /app
+
+RUN npx vite build --base=/adapted
+
+
 FROM python:3.12-slim AS backend-builder
 
 WORKDIR /app
@@ -65,6 +79,7 @@ FROM nginx:alpine AS final
 RUN rm /etc/nginx/conf.d/default.conf
 RUN rm /usr/share/nginx/html/*.html
 ADD prod/frontend/frontend.conf /etc/nginx/conf.d/frontend.conf
-COPY --from=fontend-builder /app/dist /usr/share/nginx/html/vue
+COPY --from=fontend-builder /app/dist /usr/share/nginx/html/frontend
+COPY --from=adapted-builder /app/dist /usr/share/nginx/html/adapted
 COPY --from=backend-builder /app/api/static /usr/share/nginx/html/api/static
 COPY --from=doc-builder /app/build /usr/share/nginx/html/doc

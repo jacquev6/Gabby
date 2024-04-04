@@ -922,8 +922,8 @@ describe('Gabby\'s project\'s textbook page view', () => {
           sha256: 'f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c',
           page: 1,
           rectangle: {
-            start: {x: 307.61988742652943, y: (isProdPreview ? 132.98518755564305 : 137.24052227597565)},
-            stop: {x: 587.2522743444326, y: (isProdPreview ? 87.13273900117508 : 90.63382745925708)},
+            start: {x: 307.61988742652943, y: (isProdPreview ? 136.5705510379853 : 137.24052227597565)},
+            stop: {x: 587.2522743444326, y: (isProdPreview ? 89.96385622126661 : 90.63382745925708)},
           },
         },
         value: 'pronom personnel / verbe / déterminant / nom\ncommun : Je mange une pomme.',

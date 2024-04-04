@@ -8,8 +8,6 @@ RUN set -x \
 
 WORKDIR /app
 
-RUN pip install gunicorn
-
 ADD backend/requirements.opinion.txt /app
 
 RUN pip install -r requirements.opinion.txt
@@ -21,4 +19,4 @@ RUN pip install -r requirements.app.txt
 ADD backend /app
 
 ENV DJANGO_SETTINGS_MODULE=opinion.settings.prod
-CMD ["gunicorn", "opinion.wsgi:application", "--bind", "0.0.0.0:80"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]

@@ -1,3 +1,5 @@
+const isProdPreview = Cypress.env('IS_PROD_PREVIEW')
+
 describe('Gabby has routes that', () => {
   before(console.clear)
 
@@ -54,15 +56,17 @@ describe('Gabby has routes that', () => {
     cy.contains('h2', 'FastAPI')
   })
 
-  it('can access Django admin without trailing /', () => {
-    cy.visit('/api/admin')
-    cy.contains('header', 'Django administration')
-  })
+  if (!isProdPreview) {
+    it('can access Django admin without trailing /', () => {
+      cy.visit('/api/admin')
+      cy.contains('header', 'Django administration')
+    })
 
-  it('can access Django admin with trailing /', () => {
-    cy.visit('/api/admin/')
-    cy.contains('header', 'Django administration')
-  })
+    it('can access Django admin with trailing /', () => {
+      cy.visit('/api/admin/')
+      cy.contains('header', 'Django administration')
+    })
+  }
 
   it('can access Django statics', () => {
     cy.request('/api/static/admin/css/base.css').then(response => {
