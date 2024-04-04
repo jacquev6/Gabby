@@ -29,10 +29,14 @@ services:
     command: ["bash", "-c", "npm install && npx vite --host 0.0.0.0 --port 80 --strictPort"]
 
   adapted:
-    image: node:20
+    build:
+      context: ..
+      dockerfile: dev-env/adapted/docker/Dockerfile
     volumes:
       - ..:/app
       - adapted-node-modules:/app/adapted/node_modules
+      - adapted-cache:/root/.cache
+      - /tmp/.X11-unix:/tmp/.X11-unix  # Allow running GUI apps in container, displaying on host
     working_dir: /app/adapted
     command: ["bash", "-c", "npm install && npx vite --base=/adapted --host 0.0.0.0 --port 80 --strictPort"]
 
@@ -122,3 +126,4 @@ volumes:
   frontend-node-modules:
   frontend-cache:
   adapted-node-modules:
+  adapted-cache:

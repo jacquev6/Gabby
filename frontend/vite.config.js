@@ -13,12 +13,6 @@ export default defineConfig({
       },
     }),
   ],
-  server: {
-    fs: {
-      // Access Cypress specs in adapted
-      allow: ['..'],
-    },
-  },
   // This section works around the following error when importing pdfjs-dist@4:
   //     "Top-level await is not available in the configured target environment"
   // It's a mix of these solutions:

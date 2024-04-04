@@ -9,13 +9,13 @@ export function tokenize(input) {
 
   console.assert(tokens.join('') === input, `Tokenization failed: ${input} !== ${tokens.join(' ')}`)
 
-  return tokens.map(token => {
-    if (token.match(wordRegex)) {
-      return {kind: 'word', token}
-    } else if (token.match(whitespaceRegex)) {
-      return {kind: 'whitespace', token}
+  return tokens.map(text => {
+    if (text.match(wordRegex)) {
+      return {kind: 'word', text}
+    } else if (text.match(whitespaceRegex)) {
+      return {kind: 'whitespace', text}
     } else {
-      return {kind: 'punctuation', token}
+      return {kind: 'punctuation', text}
     }
   })
 }

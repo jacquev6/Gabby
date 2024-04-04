@@ -6,7 +6,8 @@ set -o pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/."
 
 
-backend/unit-tests.sh
-frontend/unit-tests.sh
-adapted/unit-tests.sh
-./end-to-end-tests.sh
+xhost +
+docker compose exec \
+  --env DISPLAY \
+  adapted \
+    npx cypress open

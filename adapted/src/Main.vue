@@ -1,5 +1,6 @@
 <script setup>
-import SelectWords from './components/SelectWords.vue'
+import SelectWords from './components/select-words.vue'
+import ColoredParagraph from './components/colored-paragraph.vue'
 
 
 const params = new URLSearchParams(window.location.search)
@@ -8,7 +9,7 @@ const exercise = data.exercises[params.get('exerciseId')]
 </script>
 
 <template>
-  <p>{{ exercise.instructions }}</p>
+  <colored-paragraph :text="exercise.instructions" />
 
   <SelectWords v-if="exercise.adaptation.type === 'selectWords'" :exercise="exercise" />
 </template>
