@@ -78,7 +78,7 @@ services:
     command: [
       "bash",
       "-c",
-      "./manage.py migrate && ./manage.py shell <../dev-env/backend/startup.py && ./manage.py loaddata test-exercises",
+      "./manage.py migrate && ./manage.py shell <../dev-env/backend/startup.py && ./manage.py loaddata test-exercises more-test-exercises",
     ]
     depends_on:
       db:

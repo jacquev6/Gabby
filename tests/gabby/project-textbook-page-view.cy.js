@@ -903,9 +903,9 @@ describe('Gabby\'s project\'s textbook page view', () => {
     cy.get('li:contains("4 Écris une phrase en respe…") button:contains("Edit")').click()
     cy.get('canvas[style="position: absolute; top: 0px; left: 0px;"]').as('canvas')
     cy.get('@canvas').trigger('pointermove', 5, 5)
-    cy.get('@canvas').trigger('pointerdown', 150, 375, { pointerId: 1 })
-    cy.get('@canvas').trigger('pointermove', 300, 400)
-    cy.get('@canvas').trigger('pointerup', 300, 400, { pointerId: 1 })
+    cy.get('@canvas').trigger('pointerdown', 150, 367, { pointerId: 1 })
+    cy.get('@canvas').trigger('pointermove', 300, 392)
+    cy.get('@canvas').trigger('pointerup', 300, 392, { pointerId: 1 })
     cy.get('button:contains("Example")').click()
     cy.get('button:contains("Save")').click()
     cy.get('div.busy').should('not.exist')
@@ -922,8 +922,8 @@ describe('Gabby\'s project\'s textbook page view', () => {
           sha256: 'f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c',
           page: 1,
           rectangle: {
-            start: {x: 303.099891274904, y: (isProdPreview ? 132.98518755564305 : 133.64431650361348)},
-            stop: {x: 578.2122820411818, y: (isProdPreview ? 87.13273900117508 : 87.79186794914563)},
+            start: {x: 307.61988742652943, y: (isProdPreview ? 132.98518755564305 : 137.24052227597565)},
+            stop: {x: 587.2522743444326, y: (isProdPreview ? 87.13273900117508 : 90.63382745925708)},
           },
         },
         value: 'pronom personnel / verbe / déterminant / nom\ncommun : Je mange une pomme.',
