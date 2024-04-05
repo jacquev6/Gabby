@@ -17,6 +17,7 @@ services:
   frontend:
     build:
       context: ..
+      # @todo Use a single common Dockerfile with targets for each service
       dockerfile: dev-env/frontend/docker/Dockerfile
     volumes:
       - ..:/app
@@ -27,6 +28,7 @@ services:
     environment:
       VITE_OPINION_APP_VERSION: dev
       GABBY_ENTRY_POINT_NAME: frontend
+    # @todo Factorize the npm install with a 'condition: service_completed_successfully' to an initializer service
     command: ["bash", "-c", "npm install && npx vite --host 0.0.0.0 --port 80 --strictPort"]
 
   adapted:
@@ -98,6 +100,7 @@ services:
     working_dir: /app/backend
     environment:
       DJANGO_SETTINGS_MODULE: opinion.settings.dev
+    # @todo Extract migration and loaddata with a 'condition: service_completed_successfully' to initializer services
     command: [
       "bash",
       "-c",
