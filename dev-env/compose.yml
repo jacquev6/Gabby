@@ -26,6 +26,7 @@ services:
     working_dir: /app/frontend
     environment:
       VITE_OPINION_APP_VERSION: dev
+      GABBY_ENTRY_POINT_NAME: frontend
     command: ["bash", "-c", "npm install && npx vite --host 0.0.0.0 --port 80 --strictPort"]
 
   adapted:

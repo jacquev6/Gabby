@@ -1,9 +1,21 @@
+import { promises as fs } from 'fs'
+
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
 
+function renameIndexHtml(name) {
+  return {
+    name: 'vite-plugin-rename-index-html',
+    async transformIndexHtml() {
+      return await fs.readFile(`./${name}.html`, 'utf8');
+    },
+  }
+}
+
 export default defineConfig({
   plugins: [
+    renameIndexHtml(process.env.GABBY_ENTRY_POINT_NAME),
     vue({
       template: {
         compilerOptions: {
