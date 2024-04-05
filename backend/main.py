@@ -57,7 +57,7 @@ def extraction_report(project_id: int):
 env = jinja2.Environment(
     loader=jinja2.PackageLoader("textbooks"),
 )
-template = env.get_template("adapted.html")
+template = env.get_template("adapted/index.html")
 
 @app.get("/api/project-{project_id}.html")
 def export_project(project_id: int):

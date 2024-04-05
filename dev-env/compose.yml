@@ -37,10 +37,12 @@ services:
       dockerfile: dev-env/adapted/docker/Dockerfile
     volumes:
       - ..:/app
-      - adapted-node-modules:/app/adapted/node_modules
+      - adapted-node-modules:/app/frontend/node_modules
       - adapted-cache:/root/.cache
       - /tmp/.X11-unix:/tmp/.X11-unix  # Allow running GUI apps in container, displaying on host
-    working_dir: /app/adapted
+    working_dir: /app/frontend
+    environment:
+      GABBY_ENTRY_POINT_NAME: adapted
     command: ["bash", "-c", "npm install && npx vite --base=/adapted --host 0.0.0.0 --port 80 --strictPort"]
 
   new-backend:
@@ -64,15 +66,17 @@ services:
       dockerfile: dev-env/adapted/docker/Dockerfile
     volumes:
       - ..:/app
-      - adapted-builder-node-modules:/app/adapted/node_modules
-    working_dir: /app/adapted
-    command: ["bash", "-c", "npm install && npx vite build --watch"]
+      - adapted-builder-node-modules:/app/frontend/node_modules
+    working_dir: /app/frontend
+    environment:
+      GABBY_ENTRY_POINT_NAME: adapted
+    command: ["bash", "-c", "npm install && npx vite build --watch --mode development --outDir ../backend/textbooks/templates/adapted --emptyOutDir"]
     healthcheck:
       test: [
         "CMD",
         "test",
         "-f",
-        "/app/adapted/dist/index.html",
+        "/app/backend/textbooks/templates/adapted/index.html",
       ]
       start_period: 0s
       interval: 0.5s
