@@ -21,6 +21,7 @@ else
   exit 1
 fi
 
+# @todo Don't 'docker buildx use' the multi-platform builder globaly. Use the '--use' option of 'docker buildx build' instead. (To avoid changing the system's builder for every projects)
 docker buildx use gabby-multi-platform-builder 2>/dev/null || docker buildx create --name gabby-multi-platform-builder --use
 
 # @todo Merge the two 'Dockerfile's into one (they have common parts and are interdependent)

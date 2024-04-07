@@ -95,13 +95,7 @@ if django.conf.settings.EXPOSE_RESET_FOR_TESTS_URL:
     def reset_for_tests(fixtures: str = None):
         django.core.management.call_command("flush", interactive=False)
         django.core.management.call_command("migrate", interactive=False)
-        superuser = User.objects.filter(username="admin").first()
-        if superuser is None:
-            superuser = User.objects.create_superuser(
-                "admin",
-                email="admin@localhost",
-                password="password",
-            )
+        django.core.management.call_command("loaddata", "test-users")
         if fixtures is not None:
             for fixture in fixtures.split(","):
                 django.core.management.call_command("loaddata", fixture)

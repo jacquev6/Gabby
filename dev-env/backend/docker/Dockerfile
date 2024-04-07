@@ -15,16 +15,4 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     postgresql-client `# For DB backup` \
  && true
 
-ADD backend/requirements.opinion.txt /tmp/requirements.opinion.txt
-
-RUN --mount=type=cache,target=/root/.cache/pip,sharing=locked \
-    set -x \
- && pip3 install \
-      -r /tmp/requirements.opinion.txt
-
-ADD backend/requirements.app.txt /tmp/requirements.app.txt
-
-RUN --mount=type=cache,target=/root/.cache/pip,sharing=locked \
-    set -x \
- && pip3 install \
-      -r /tmp/requirements.app.txt
+ENV PATH=$PATH:/root/.local/bin

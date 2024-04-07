@@ -7,7 +7,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")/."
 
 
 docker compose exec \
-  frontend \
+  frontend-shell \
     npx cypress run \
       --e2e "$@"
 

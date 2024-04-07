@@ -7,5 +7,5 @@ cd "$(dirname "${BASH_SOURCE[0]}")/."
 
 
 docker compose exec \
-  frontend \
+  frontend-shell \
     cp node_modules/pdfjs-dist/build/pdf.worker.min.mjs public/pdf.worker.min.js
