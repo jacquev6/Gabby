@@ -104,3 +104,8 @@ if django.conf.settings.EXPOSE_RESET_FOR_TESTS_URL:
             for fixture in fixtures.split(","):
                 django.core.management.call_command("loaddata", fixture)
         return {}
+
+if django.conf.settings.DEBUG:
+    with open("openapi.json", "w") as file:
+        json.dump(app.openapi(), file, indent=2, sort_keys=True)
+        file.write("\n")
