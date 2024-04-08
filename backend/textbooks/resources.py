@@ -8,6 +8,7 @@ from pydantic import BaseModel
 import django.conf
 
 from .models import PdfFile, PdfFileNaming, Project, Textbook, Section, Exercise, ExtractionEvent
+from .models import SelectWordsAdaptedExercise, FillWithFreeTextAdaptedExercise
 from fastjsonapi import Computed, Filterable, Constant
 from fastjsonapi.django import wrap, unwrap
 
@@ -307,6 +308,8 @@ class ExerciseModel(BaseModel):
     textbook: Annotated[TextbookModel | None, Filterable(), Constant()] = None
     extraction_events: Annotated[list[ExtractionEventModel], Computed()] = []
 
+    adapted: SelectWordsAdaptedExerciseModel | FillWithFreeTextAdaptedExerciseModel | None = None
+
 class ExercisesResource:
     singular_name = "exercise"
     plural_name = "exercises"
@@ -316,7 +319,7 @@ class ExercisesResource:
     default_page_size = default_page_size
 
     class ItemCreator:
-        def __call__(self, *, textbook_page, number, instructions, example, clue, wording, project, textbook):
+        def __call__(self, *, textbook_page, number, instructions, example, clue, wording, project, textbook, adapted):
             exercise = Exercise.objects.create(
                 textbook_page=textbook_page,
                 number=number,
@@ -326,6 +329,7 @@ class ExercisesResource:
                 wording=wording,
                 project=unwrap(project),
                 textbook=unwrap(textbook),
+                adapted=unwrap(adapted),
             )
             return wrap(exercise)
 
@@ -357,8 +361,11 @@ class ExercisesResource:
     class ItemSaver:
         @contextmanager
         def __call__(self, item):
+            previous_adapted = item.adapted
             yield
             item.save()
+            if previous_adapted is not None and item.adapted != previous_adapted:
+                previous_adapted.delete()
 
     class ItemDeleter:
         def __call__(self, item):
@@ -403,6 +410,90 @@ class ExtractionEventsResource:
                 # @todo Use proper SQL limits
                 [wrap(event) for event in events[first_index:first_index + page_size]],
             )
+
+    class ItemSaver:
+        @contextmanager
+        def __call__(self, item):
+            yield
+            item.save()
+
+    class ItemDeleter:
+        def __call__(self, item):
+            item.delete()
+
+
+class SelectWordsAdaptedExerciseModel(BaseModel):
+    exercise: Annotated[ExerciseModel, Constant()]
+    colors: int
+
+class SelectWordsAdaptedExercisesResource:
+    singular_name = "select_words"
+    plural_name = "select_wordss"
+
+    Model = SelectWordsAdaptedExerciseModel
+
+    default_page_size = default_page_size
+
+    class ItemCreator:
+        def __call__(self, *, exercise, colors):
+            if exercise.adapted is not None:
+                exercise.adapted.delete()
+            adapted = SelectWordsAdaptedExercise(
+                exercise=unwrap(exercise),
+                colors=colors,
+            )
+            adapted.save()
+            exercise.save()
+            return wrap(adapted)
+
+    class ItemGetter:
+        def __call__(self, id):
+            try:
+                return wrap(SelectWordsAdaptedExercise.objects.get(id=id))
+            except SelectWordsAdaptedExercise.DoesNotExist:
+                return None
+
+    class ItemSaver:
+        @contextmanager
+        def __call__(self, item):
+            yield
+            item.save()
+
+    class ItemDeleter:
+        def __call__(self, item):
+            item.delete()
+
+
+class FillWithFreeTextAdaptedExerciseModel(BaseModel):
+    exercise: Annotated[ExerciseModel, Constant()]
+    placeholder: str
+
+class FillWithFreeTextAdaptedExercisesResource:
+    singular_name = "fill_with_free_text"
+    plural_name = "fill_with_free_texts"
+
+    Model = FillWithFreeTextAdaptedExerciseModel
+
+    default_page_size = default_page_size
+
+    class ItemCreator:
+        def __call__(self, *, exercise, placeholder):
+            if exercise.adapted is not None:
+                exercise.adapted.delete()
+            adapted = FillWithFreeTextAdaptedExercise(
+                exercise=unwrap(exercise),
+                placeholder=placeholder,
+            )
+            adapted.save()
+            exercise.save()
+            return wrap(adapted)
+
+    class ItemGetter:
+        def __call__(self, id):
+            try:
+                return wrap(FillWithFreeTextAdaptedExercise.objects.get(id=id))
+            except FillWithFreeTextAdaptedExercise.DoesNotExist:
+                return None
 
     class ItemSaver:
         @contextmanager

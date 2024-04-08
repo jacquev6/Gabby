@@ -1,8 +1,9 @@
-import datetime
-import time
 from typing import Annotated
-import json
 import argon2
+import datetime
+import functools
+import json
+import time
 
 from django.conf import settings
 from django.contrib.auth import authenticate
@@ -15,6 +16,7 @@ from pydantic import BaseModel, ConfigDict
 from starlette import status
 import django.contrib.auth
 import jwt
+
 
 User = django.contrib.auth.get_user_model()
 
@@ -32,9 +34,9 @@ class DjangoOrmWrapper:
     def __getattr__(self, name):
         attr = getattr(self._wrapped, name)
         if attr.__class__.__name__ == "RelatedManager":
-            return [DjangoOrmWrapper(item) for item in attr.all()]
+            return [wrap(item) for item in attr.all()]
         elif isinstance(attr, models.Model):
-            return DjangoOrmWrapper(attr)
+            return wrap(attr)
         else:
             return attr
 
@@ -51,7 +53,20 @@ class DjangoOrmWrapper:
                 setattr(self._wrapped, name, value)
 
 
-wrap = DjangoOrmWrapper
+@functools.cache
+def make_wrapper(type):
+    class Wrapper(DjangoOrmWrapper):
+        pass
+
+    Wrapper.__name__ = type.__name__ + "Wrapper"
+
+    return Wrapper
+
+
+def wrap(o):
+    assert o is not None
+    return make_wrapper(o.__class__)(o)
+
 
 def unwrap(wrapper):
     return None if wrapper is None else wrapper._wrapped

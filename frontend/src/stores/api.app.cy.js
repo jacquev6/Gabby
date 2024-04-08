@@ -203,3 +203,103 @@ describe('ApiStore', () => {
     expect((await api.client.getAll('exercises', {filter: {textbook: '1', textbookPage: 6}})).length).to.equal(1)
   })
 })
+
+describe('ApiStore', () => {
+  before(console.clear)
+
+  beforeEach(() => {
+    setActivePinia(createPinia())
+    cy.request('POST', 'http://fanout:8080/reset-for-tests/yes-im-sure?fixtures=test-exercises,more-test-exercises')
+  })
+
+  it('gets a non-adapted exercise', async () => {
+    const api = useApiStore()
+
+    const exercise = await api.client.getOne('exercise', '2', {include: 'adapted'})
+
+    expect(exercise.attributes.instructions).to.equal('Écris une phrase en respectant l\'ordre des classes grammaticales indiquées.')
+    expect(exercise.relationships.adapted).to.be.null
+  })
+
+  it('gets an adapted "select words" exercise', async () => {
+    const api = useApiStore()
+
+    const exercise = await api.client.getOne('exercise', '7', {include: 'adapted'})
+
+    expect(exercise.attributes.instructions).to.equal('Relève dans le texte trois\ndéterminants, un nom propre, quatre\nnoms communs et trois verbes.')
+    expect(exercise.relationships.adapted.type).to.equal('selectWords')
+    expect(exercise.relationships.adapted.id).to.equal('2')
+    expect(exercise.relationships.adapted.attributes.colors).to.equal(3)
+  })
+
+  it('gets an adapted "fill with free text" exercise', async () => {
+    const api = useApiStore()
+
+    const exercise = await api.client.getOne('exercise', '8', {include: 'adapted'})
+
+    expect(exercise.attributes.instructions).to.equal('Ajoute le suffixe –eur aux verbes.\nIndique la classe des mots fabriqués.')
+    expect(exercise.relationships.adapted.type).to.equal('fillWithFreeText')
+    expect(exercise.relationships.adapted.attributes.placeholder).to.equal('…')
+  })
+
+  it('creates an adapted exercise at once', async () => {
+    const api = useApiStore()
+
+    const response = await api.client.batch(
+      [
+        'add',
+        'exercise', 'exo',
+        {
+          'textbookPage': 7,
+          'number': '12',
+          'instructions': 'Do this',
+        },
+        {
+          'project': {type: 'project', id: '1'},
+          'textbook': {type: 'textbook', id: '1'},
+        },
+      ],
+      [
+        'add',
+        'selectWords', null,
+        {
+          'colors': 5,
+        },
+        {
+          'exercise': {type: 'exercise', lid: 'exo'},
+        },
+      ],
+    )
+
+    const exercise = response[0]
+
+    // @todo Return up-to-date objects in batch response, then remove next line
+    await api.client.getOne('exercise', response[0].id)
+
+    expect(exercise.relationships.adapted.type).to.equal('selectWords')
+    expect(exercise.relationships.adapted.attributes.colors).to.equal(5)
+  })
+
+  it('updates an adapted exercise', async () => {
+    const api = useApiStore()
+
+    const adapted = await api.client.patch('selectWords', '2', {colors: 17}, {})
+
+    expect(adapted.attributes.colors).to.equal(17)
+  })
+
+  it('changes the type of an adapted exercise', async () => {
+    const api = useApiStore()
+
+    const previous = await api.client.getOne('selectWords', '2')
+    expect(previous.relationships.exercise.id).to.equal('7')
+
+    const adapted = await api.client.post('fillWithFreeText', {placeholder: '...'}, {exercise: {type: 'exercise', id: '7'}}, {include: 'exercise'})
+
+    expect(adapted.attributes.placeholder).to.equal('...')
+    expect(adapted.relationships.exercise.attributes.instructions).to.equal('Relève dans le texte trois\ndéterminants, un nom propre, quatre\nnoms communs et trois verbes.')
+
+    await api.client.getOne('selectWords', '2')
+    expect(previous.exists).to.be.false
+  })
+})

@@ -442,7 +442,9 @@ def add_batch_route(resources, router):
 
                 for relationship in data.get("relationships", {}).values():
                     relationship = relationship["data"]
-                    if isinstance(relationship, dict):
+                    if relationship is None:
+                        pass
+                    elif isinstance(relationship, dict):
                         if "lid" in relationship:
                             relationship["id"] = lid_to_id[relationship.pop("lid")]
                     else:

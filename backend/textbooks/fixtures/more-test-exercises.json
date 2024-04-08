@@ -1,5 +1,33 @@
 [
   {
+    "model": "textbooks.adaptedexercise",
+    "pk": 1,
+    "fields": {
+      "polymorphic_ctype": 17
+    }
+  },
+  {
+    "model": "textbooks.fillwithfreetextadaptedexercise",
+    "pk": 1,
+    "fields": {
+      "placeholder": "…"
+    }
+  },
+  {
+    "model": "textbooks.adaptedexercise",
+    "pk": 2,
+    "fields": {
+      "polymorphic_ctype": 16
+    }
+  },
+  {
+    "model": "textbooks.selectwordsadaptedexercise",
+    "pk": 2,
+    "fields": {
+      "colors": 3
+    }
+  },
+  {
     "model": "textbooks.exercise",
     "pk": 7,
     "fields": {
@@ -10,7 +38,8 @@
       "instructions": "Relève dans le texte trois\ndéterminants, un nom propre, quatre\nnoms communs et trois verbes.",
       "example": "",
       "clue": "",
-      "wording": "Les Touaregs sont des Berbères, un peuple\nqui habite en Afrique du Nord depuis la\npréhistoire. Ils vivent dans le désert du Sahara\n(Algérie, Libye, Mali, Niger, Burkina Faso…). En\nété, les températures y montent à plus de 50 °C\net elles descendent en dessous de zéro durant\nles nuits d’hiver."
+      "wording": "Les Touaregs sont des Berbères, un peuple\nqui habite en Afrique du Nord depuis la\npréhistoire. Ils vivent dans le désert du Sahara\n(Algérie, Libye, Mali, Niger, Burkina Faso…). En\nété, les températures y montent à plus de 50 °C\net elles descendent en dessous de zéro durant\nles nuits d’hiver.",
+      "adapted": 2
     }
   },
   {
@@ -24,7 +53,8 @@
       "instructions": "Ajoute le suffixe –eur aux verbes.\nIndique la classe des mots fabriqués.",
       "example": "",
       "clue": "",
-      "wording": "nager ➞ … ◆ tracter ➞ … ◆ manger ➞ … ◆\ninventer ➞ … ◆ livrer ➞ …"
+      "wording": "nager ➞ … ◆ tracter ➞ … ◆ manger ➞ … ◆\ninventer ➞ … ◆ livrer ➞ …",
+      "adapted": 1
     }
   },
   {
@@ -105,36 +135,6 @@
     "fields": {
       "exercise": 8,
       "event": "{\"kind\":\"SelectedTextAddedToWording\",\"valueBefore\":\"\",\"valueAfter\":\"nager ➞ … ◆ tracter ➞ … ◆ manger ➞ … ◆\\ninventer ➞ … ◆ livrer ➞ …\"}"
-    }
-  },
-  {
-    "model": "textbooks.adaptedexercise",
-    "pk": 1,
-    "fields": {
-      "polymorphic_ctype": 16,
-      "exercise": 8
-    }
-  },
-  {
-    "model": "textbooks.adaptedexercise",
-    "pk": 2,
-    "fields": {
-      "polymorphic_ctype": 17,
-      "exercise": 7
-    }
-  },
-  {
-    "model": "textbooks.selectwordsadaptedexercise",
-    "pk": 2,
-    "fields": {
-      "colors": 3
-    }
-  },
-  {
-    "model": "textbooks.fillwithfreetextadaptedexercise",
-    "pk": 1,
-    "fields": {
-      "placeholder": "…"
     }
   }
 ]

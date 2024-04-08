@@ -421,6 +421,14 @@
       "exercise-CreateInput-Data-Relationships": {
         "additionalProperties": false,
         "properties": {
+          "adapted": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OptionalRelationship"
+              }
+            ],
+            "default": {}
+          },
           "project": {
             "$ref": "#/components/schemas/MandatoryRelationship"
           },
@@ -537,6 +545,9 @@
       "exercise-OutputItem-Relationships": {
         "additionalProperties": false,
         "properties": {
+          "adapted": {
+            "$ref": "#/components/schemas/OptionalRelationship"
+          },
           "extractionEvents": {
             "$ref": "#/components/schemas/OutputListRelationship"
           },
@@ -550,7 +561,8 @@
         "required": [
           "project",
           "textbook",
-          "extractionEvents"
+          "extractionEvents",
+          "adapted"
         ],
         "title": "exercise-OutputItem-Relationships",
         "type": "object"
@@ -658,7 +670,15 @@
       },
       "exercise-UpdateInput-Data-Relationships": {
         "additionalProperties": false,
-        "properties": {},
+        "properties": {
+          "adapted": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OptionalRelationship"
+              }
+            ]
+          }
+        },
         "title": "exercise-UpdateInput-Data-Relationships",
         "type": "object"
       },
@@ -888,6 +908,209 @@
         "additionalProperties": false,
         "properties": {},
         "title": "extractionEvent-UpdateInput-Data-Relationships",
+        "type": "object"
+      },
+      "fillWithFreeText-CreateInput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/fillWithFreeText-CreateInput-Data"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "fillWithFreeText-CreateInput",
+        "type": "object"
+      },
+      "fillWithFreeText-CreateInput-Data": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "$ref": "#/components/schemas/fillWithFreeText-CreateInput-Data-Attributes"
+          },
+          "relationships": {
+            "$ref": "#/components/schemas/fillWithFreeText-CreateInput-Data-Relationships"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "attributes",
+          "relationships"
+        ],
+        "title": "fillWithFreeText-CreateInput-Data",
+        "type": "object"
+      },
+      "fillWithFreeText-CreateInput-Data-Attributes": {
+        "additionalProperties": false,
+        "properties": {
+          "placeholder": {
+            "title": "Placeholder",
+            "type": "string"
+          }
+        },
+        "required": [
+          "placeholder"
+        ],
+        "title": "fillWithFreeText-CreateInput-Data-Attributes",
+        "type": "object"
+      },
+      "fillWithFreeText-CreateInput-Data-Relationships": {
+        "additionalProperties": false,
+        "properties": {
+          "exercise": {
+            "$ref": "#/components/schemas/MandatoryRelationship"
+          }
+        },
+        "required": [
+          "exercise"
+        ],
+        "title": "fillWithFreeText-CreateInput-Data-Relationships",
+        "type": "object"
+      },
+      "fillWithFreeText-ItemOutput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/fillWithFreeText-OutputItem"
+          },
+          "included": {
+            "items": {},
+            "title": "Included",
+            "type": "array"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "fillWithFreeText-ItemOutput",
+        "type": "object"
+      },
+      "fillWithFreeText-OutputItem": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "$ref": "#/components/schemas/fillWithFreeText-OutputItem-Attributes"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "links": {
+            "$ref": "#/components/schemas/ItemLinksModel"
+          },
+          "relationships": {
+            "$ref": "#/components/schemas/fillWithFreeText-OutputItem-Relationships"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "links",
+          "attributes",
+          "relationships"
+        ],
+        "title": "fillWithFreeText-OutputItem",
+        "type": "object"
+      },
+      "fillWithFreeText-OutputItem-Attributes": {
+        "additionalProperties": false,
+        "properties": {
+          "placeholder": {
+            "title": "Placeholder",
+            "type": "string"
+          }
+        },
+        "required": [
+          "placeholder"
+        ],
+        "title": "fillWithFreeText-OutputItem-Attributes",
+        "type": "object"
+      },
+      "fillWithFreeText-OutputItem-Relationships": {
+        "additionalProperties": false,
+        "properties": {
+          "exercise": {
+            "$ref": "#/components/schemas/MandatoryRelationship"
+          }
+        },
+        "required": [
+          "exercise"
+        ],
+        "title": "fillWithFreeText-OutputItem-Relationships",
+        "type": "object"
+      },
+      "fillWithFreeText-UpdateInput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/fillWithFreeText-UpdateInput-Data"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "fillWithFreeText-UpdateInput",
+        "type": "object"
+      },
+      "fillWithFreeText-UpdateInput-Data": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/fillWithFreeText-UpdateInput-Data-Attributes"
+              }
+            ],
+            "default": {}
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/fillWithFreeText-UpdateInput-Data-Relationships"
+              }
+            ],
+            "default": {}
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "fillWithFreeText-UpdateInput-Data",
+        "type": "object"
+      },
+      "fillWithFreeText-UpdateInput-Data-Attributes": {
+        "additionalProperties": false,
+        "properties": {
+          "placeholder": {
+            "title": "Placeholder",
+            "type": "string"
+          }
+        },
+        "title": "fillWithFreeText-UpdateInput-Data-Attributes",
+        "type": "object"
+      },
+      "fillWithFreeText-UpdateInput-Data-Relationships": {
+        "additionalProperties": false,
+        "properties": {},
+        "title": "fillWithFreeText-UpdateInput-Data-Relationships",
         "type": "object"
       },
       "pdfFile-CreateInput": {
@@ -2213,6 +2436,209 @@
         "title": "section-UpdateInput-Data-Relationships",
         "type": "object"
       },
+      "selectWords-CreateInput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/selectWords-CreateInput-Data"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "selectWords-CreateInput",
+        "type": "object"
+      },
+      "selectWords-CreateInput-Data": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "$ref": "#/components/schemas/selectWords-CreateInput-Data-Attributes"
+          },
+          "relationships": {
+            "$ref": "#/components/schemas/selectWords-CreateInput-Data-Relationships"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "attributes",
+          "relationships"
+        ],
+        "title": "selectWords-CreateInput-Data",
+        "type": "object"
+      },
+      "selectWords-CreateInput-Data-Attributes": {
+        "additionalProperties": false,
+        "properties": {
+          "colors": {
+            "title": "Colors",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "colors"
+        ],
+        "title": "selectWords-CreateInput-Data-Attributes",
+        "type": "object"
+      },
+      "selectWords-CreateInput-Data-Relationships": {
+        "additionalProperties": false,
+        "properties": {
+          "exercise": {
+            "$ref": "#/components/schemas/MandatoryRelationship"
+          }
+        },
+        "required": [
+          "exercise"
+        ],
+        "title": "selectWords-CreateInput-Data-Relationships",
+        "type": "object"
+      },
+      "selectWords-ItemOutput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/selectWords-OutputItem"
+          },
+          "included": {
+            "items": {},
+            "title": "Included",
+            "type": "array"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "selectWords-ItemOutput",
+        "type": "object"
+      },
+      "selectWords-OutputItem": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "$ref": "#/components/schemas/selectWords-OutputItem-Attributes"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "links": {
+            "$ref": "#/components/schemas/ItemLinksModel"
+          },
+          "relationships": {
+            "$ref": "#/components/schemas/selectWords-OutputItem-Relationships"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "links",
+          "attributes",
+          "relationships"
+        ],
+        "title": "selectWords-OutputItem",
+        "type": "object"
+      },
+      "selectWords-OutputItem-Attributes": {
+        "additionalProperties": false,
+        "properties": {
+          "colors": {
+            "title": "Colors",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "colors"
+        ],
+        "title": "selectWords-OutputItem-Attributes",
+        "type": "object"
+      },
+      "selectWords-OutputItem-Relationships": {
+        "additionalProperties": false,
+        "properties": {
+          "exercise": {
+            "$ref": "#/components/schemas/MandatoryRelationship"
+          }
+        },
+        "required": [
+          "exercise"
+        ],
+        "title": "selectWords-OutputItem-Relationships",
+        "type": "object"
+      },
+      "selectWords-UpdateInput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/selectWords-UpdateInput-Data"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "selectWords-UpdateInput",
+        "type": "object"
+      },
+      "selectWords-UpdateInput-Data": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/selectWords-UpdateInput-Data-Attributes"
+              }
+            ],
+            "default": {}
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/selectWords-UpdateInput-Data-Relationships"
+              }
+            ],
+            "default": {}
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "selectWords-UpdateInput-Data",
+        "type": "object"
+      },
+      "selectWords-UpdateInput-Data-Attributes": {
+        "additionalProperties": false,
+        "properties": {
+          "colors": {
+            "title": "Colors",
+            "type": "integer"
+          }
+        },
+        "title": "selectWords-UpdateInput-Data-Attributes",
+        "type": "object"
+      },
+      "selectWords-UpdateInput-Data-Relationships": {
+        "additionalProperties": false,
+        "properties": {},
+        "title": "selectWords-UpdateInput-Data-Relationships",
+        "type": "object"
+      },
       "textbook-CreateInput": {
         "additionalProperties": false,
         "properties": {
@@ -3131,6 +3557,189 @@
           }
         },
         "summary": "Update Extraction Event"
+      }
+    },
+    "/api/fillWithFreeTexts": {
+      "post": {
+        "operationId": "create_fill_with_free_text_api_fillWithFreeTexts_post",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/fillWithFreeText-CreateInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/fillWithFreeText-ItemOutput"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Fill With Free Text"
+      }
+    },
+    "/api/fillWithFreeTexts/{id}": {
+      "delete": {
+        "operationId": "delete_fill_with_free_text_api_fillWithFreeTexts__id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Fill With Free Text"
+      },
+      "get": {
+        "operationId": "get_fill_with_free_text_api_fillWithFreeTexts__id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/fillWithFreeText-ItemOutput"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Fill With Free Text"
+      },
+      "patch": {
+        "operationId": "update_fill_with_free_text_api_fillWithFreeTexts__id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/fillWithFreeText-UpdateInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/fillWithFreeText-ItemOutput"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Fill With Free Text"
       }
     },
     "/api/pdfFileNamings": {
@@ -4483,6 +5092,189 @@
           }
         },
         "summary": "Update Section"
+      }
+    },
+    "/api/selectWordss": {
+      "post": {
+        "operationId": "create_select_words_api_selectWordss_post",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/selectWords-CreateInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/selectWords-ItemOutput"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Select Words"
+      }
+    },
+    "/api/selectWordss/{id}": {
+      "delete": {
+        "operationId": "delete_select_words_api_selectWordss__id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Select Words"
+      },
+      "get": {
+        "operationId": "get_select_words_api_selectWordss__id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/selectWords-ItemOutput"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Select Words"
+      },
+      "patch": {
+        "operationId": "update_select_words_api_selectWordss__id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/selectWords-UpdateInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/selectWords-ItemOutput"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Select Words"
       }
     },
     "/api/textbooks": {

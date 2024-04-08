@@ -103,6 +103,9 @@ class Section(models.Model):
         return f"Pages {self.textbook_start_page}-{self.textbook_start_page+self.pages_count-1} of {self.textbook.short_str()} in {self.pdf_file.short_str()}"
 
 
+class AdaptedExercise(PolymorphicModel):
+    id = models.AutoField(primary_key=True)
+
 class Exercise(models.Model):
     id = models.AutoField(primary_key=True)
 
@@ -131,6 +134,8 @@ class Exercise(models.Model):
     clue = models.TextField(null=False, blank=True)
     wording = models.TextField(null=False, blank=True)
 
+    adapted = models.OneToOneField(AdaptedExercise, on_delete=models.SET_NULL, null=True, related_name="exercise")
+
     def __str__(self):
         assert((self.textbook is None) == (self.textbook_page is None))
         if self.textbook:
@@ -144,12 +149,6 @@ class ExtractionEvent(models.Model):
 
     exercise = models.ForeignKey(Exercise, on_delete=models.CASCADE, related_name="extraction_events")
     event = models.TextField(null=False, blank=False)  # Free form for the backend, defined by the frontend
-
-
-class AdaptedExercise(PolymorphicModel):
-    id = models.AutoField(primary_key=True)
-
-    exercise = models.OneToOneField(Exercise, on_delete=models.CASCADE, related_name="adapted")
 
 
 class SelectWordsAdaptedExercise(AdaptedExercise):

@@ -12,10 +12,11 @@ import django.core.management
 import jinja2
 
 from fastjsonapi import make_jsonapi_router
-from fastjsonapi.django import AuthenticationToken
+from fastjsonapi.django import AuthenticationToken, make_wrapper
 from opinion_ping.resources import PingsResource
-from textbooks.models import Project, Exercise
+from textbooks.models import Project, SelectWordsAdaptedExercise, FillWithFreeTextAdaptedExercise
 from textbooks.resources import PdfFilesResource, PdfFileNamingsResource, ProjectsResource, TextbooksResource, SectionsResource, ExercisesResource, ExtractionEventsResource
+from textbooks.resources import SelectWordsAdaptedExercisesResource, FillWithFreeTextAdaptedExercisesResource
 from textbooks.views import make_extraction_report
 
 
@@ -47,8 +48,12 @@ app.include_router(
             SectionsResource(),
             ExercisesResource(),
             ExtractionEventsResource(),
+            SelectWordsAdaptedExercisesResource(),
+            FillWithFreeTextAdaptedExercisesResource(),
         ],
         polymorphism={
+            make_wrapper(SelectWordsAdaptedExercise): "select_words",
+            make_wrapper(FillWithFreeTextAdaptedExercise): "fill_with_free_text",
         },
     ),
     prefix="/api",
@@ -68,17 +73,13 @@ def export_project(project_id: int):
     project = Project.objects.get(id=project_id)
     exercises = []
     for exercise in project.exercises.all():
-        try:
-            adapted = exercise.adapted
-        except Exercise.adapted.RelatedObjectDoesNotExist:
-            pass
-        else:
+        if exercise.adapted is not None:
             exercises.append({
                 "number": exercise.number,
                 "textbookPage": exercise.textbook_page,
                 "instructions": exercise.instructions,
                 "wording": exercise.wording,
-                "adaptation": adapted.make_adaptation_dict(),
+                "adaptation": exercise.adapted.make_adaptation_dict(),
             })
     data = json.dumps({
         "exercises": {str(k): v for k, v in enumerate(exercises)}
