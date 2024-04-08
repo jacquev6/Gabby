@@ -40,7 +40,7 @@ cd dev-env
 if $do_build
 then
   echo "$OPINION_APP_NAME dev-env: build"
-  docker compose build --builder default
+  docker compose build --builder default || docker compose build
   echo "$OPINION_APP_NAME dev-env: pull"
   docker compose pull --ignore-buildable
 fi
