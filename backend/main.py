@@ -37,16 +37,20 @@ app.add_middleware(
 )
 
 app.include_router(
-    make_jsonapi_router([
-        PingsResource(),
-        PdfFilesResource(),
-        PdfFileNamingsResource(),
-        ProjectsResource(),
-        TextbooksResource(),
-        SectionsResource(),
-        ExercisesResource(),
-        ExtractionEventsResource(),
-    ]),
+    make_jsonapi_router(
+        resources=[
+            PingsResource(),
+            PdfFilesResource(),
+            PdfFileNamingsResource(),
+            ProjectsResource(),
+            TextbooksResource(),
+            SectionsResource(),
+            ExercisesResource(),
+            ExtractionEventsResource(),
+        ],
+        polymorphism={
+        },
+    ),
     prefix="/api",
 )
 

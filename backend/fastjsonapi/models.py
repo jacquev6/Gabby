@@ -76,20 +76,27 @@ class Decider:
         return annotation in self.__resource_models
 
     def is_optional_relationship(self, annotation):
-        return annotation in self.__optional_resource_models
+        if isinstance(annotation, UnionType):
+            has_none = False
+            for arg in annotation.__args__:
+                if arg is type(None):
+                    has_none = True
+                    continue
+                if arg not in self.__resource_models:
+                    return False
+            return has_none
+        else:
+            return False
 
     def is_list_relationship(self, annotation):
         return annotation in self.__list_resource_models
 
-    def get_name(self, annotation):
-        if self.is_mandatory_relationship(annotation):
-            return self.__resource_models[annotation]
-        elif self.is_optional_relationship(annotation):
-            return self.__optional_resource_models[annotation]
-        elif self.is_list_relationship(annotation):
-            return self.__list_resource_models[annotation]
-        else:
-            assert False
+    def get_monomorphic_name(self, annotation):
+        return (
+            self.__resource_models.get(annotation)
+            or self.__optional_resource_models.get(annotation)
+            or self.__list_resource_models.get(annotation)
+        )
 
     def is_attribute(self, annotation):
         return not (

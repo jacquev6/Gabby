@@ -11,12 +11,13 @@ from .router import make_jsonapi_router
 
 class TestMixin:
     maxDiff = None
+    polymorphism = {}
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         cls.__app = FastAPI()
-        cls.__app.include_router(make_jsonapi_router(cls.resources))
+        cls.__app.include_router(make_jsonapi_router(cls.resources, cls.polymorphism))
 
         @cls.__app.post("/token")
         def login(access_token: AuthenticationToken):
@@ -99,7 +100,7 @@ class ItemsFactory:
         if item is None:
             return None
         else:
-            assert isinstance(item, cls)
+            assert isinstance(item, cls), (item, cls)
             return item
 
     def get_all(self, cls):

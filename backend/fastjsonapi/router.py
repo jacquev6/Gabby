@@ -1,5 +1,5 @@
 # from __future__ import annotations  # This doesn't work because we're annotating with local types. So this code won't work on Python 4. OK.
-from typing import Annotated
+from typing import Annotated, Type
 from urllib.parse import urlencode
 
 from django.test import TestCase
@@ -23,12 +23,16 @@ class JSONAPIResponse(JSONResponse):
     media_type = "application/vnd.api+json"
 
 
-def make_jsonapi_router(resources):
+def make_jsonapi_router(resources, polymorphism: dict[Type, str]):
     decider = Decider({
         resource.Model: humps.camelize(resource.singular_name) for resource in resources
     })
+    polymorphism = {
+        key: humps.camelize(value)
+        for (key, value) in polymorphism.items()
+    }
     resources = {
-        humps.camelize(resource.singular_name): CompiledResource(decider, resource)
+        humps.camelize(resource.singular_name): CompiledResource(decider, polymorphism, resource)
         for resource in resources
     }
 
@@ -45,7 +49,8 @@ def make_jsonapi_router(resources):
 
 
 class CompiledResource:
-    def __init__(self, decider, resource):
+    def __init__(self, decider, polymorphism, resource):
+        self.polymorphism = polymorphism
         self._resource = resource
 
         assert humps.is_snakecase(resource.singular_name)
@@ -77,15 +82,15 @@ class CompiledResource:
 
             if decider.is_mandatory_relationship(info.annotation):
                 if annotations.output:
-                    self.output_relationships[name] = (False, decider.get_name(info.annotation))
+                    self.output_relationships[name] = (False, decider.get_monomorphic_name(info.annotation))
             elif decider.is_optional_relationship(info.annotation):
                 assert info.default is None
                 if annotations.output:
-                    self.output_relationships[name] = (False, decider.get_name(info.annotation))
+                    self.output_relationships[name] = (False, decider.get_monomorphic_name(info.annotation))
             elif decider.is_list_relationship(info.annotation):
                 assert info.default == []
                 if annotations.output:
-                    self.output_relationships[name] = (True, decider.get_name(info.annotation))
+                    self.output_relationships[name] = (True, decider.get_monomorphic_name(info.annotation))
             else:
                 if annotations.output:
                     self.output_attributes.append(name)
@@ -171,6 +176,8 @@ class CompiledResource:
                 elif attr is None:
                     relationship = {"data": None}
                 else:
+                    if resource_name is None:
+                        resource_name = self.polymorphism[type(attr)]
                     relationship = {"data": {"type": resource_name, "id": attr.id}}
                 relationships[key] = relationship
             r["relationships"] = relationships
@@ -184,15 +191,19 @@ class CompiledResource:
 
         def recurse(resource, item, include):
             for (name, nested_include) in include.items():
-                (is_list, resource_name) = resource.output_relationships[name]
-                # @todo Add test showing that this variable ('nested_resource') cannot be named 'resource' (bug fixed using tests from Gabby, deserves test in fastjsonapi)
-                nested_resource = resources[resource_name]
                 attr = getattr(item, humps.decamelize(name))
+                (is_list, resource_name) = resource.output_relationships[name]
                 if is_list:
+                    # @todo Add test showing that this variable ('nested_resource') cannot be named 'resource' (bug fixed using tests from Gabby, deserves test in fastjsonapi)
+                    nested_resource = resources[resource_name]
                     for incl in attr:
                         included[(resource_name, incl.id)] = nested_resource.make_item(resources, urls=urls, item=incl)
                         recurse(nested_resource, incl, nested_include)
                 elif attr is not None:
+                    if resource_name is None:
+                        resource_name = self.polymorphism[type(attr)]
+                    # @todo Add test showing that this variable ('nested_resource') cannot be named 'resource' (bug fixed using tests from Gabby, deserves test in fastjsonapi)
+                    nested_resource = resources[resource_name]
                     # @todo Add tests exercising this branch
                     included[(resource_name, attr.id)] = nested_resource.make_item(resources, urls=urls, item=attr)
                     recurse(nested_resource, attr, nested_include)
@@ -247,6 +258,7 @@ def add_resource_routes(resources, resource, router):
                 elif value.data is None:
                     relationships[key] = None
                 else:
+                    # @todo Check type against relationship type(s)
                     relationships[key] = get_related_item[value.data.type](value.data.id)
 
             # @todo Pass parsed 'include' to allow pre-fetching

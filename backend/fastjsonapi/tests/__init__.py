@@ -6,6 +6,7 @@ from .attributes import AttributesTestCase
 from .batching import BatchingTestCase
 from .dependencies import DependenciesTestCase
 from .empty import EmptyTestCase
+from .polymorphism import OptionalRelationshipTestCase
 from .relationships import RelationshipsTestCase
 
 
