@@ -1,5 +1,4 @@
 # from __future__ import annotations  # This doesn't work because we're annotating with local types. So this code won't work on Python 4. OK.
-from types import UnionType
 from typing import Annotated
 from urllib.parse import urlencode
 
@@ -11,7 +10,7 @@ import humps
 
 from .annotations import Annotations
 from .utils import Urls
-from .models import create_model, make_create_input_model, make_filters_dependable, make_output_models, make_update_input_model
+from .models import Decider, make_create_input_model, make_filters_dependable, make_output_models, make_update_input_model
 
 
 # @todo Check consistency of "type" attributes in input 'ObjectId's
@@ -25,11 +24,11 @@ class JSONAPIResponse(JSONResponse):
 
 
 def make_jsonapi_router(resources):
-    resource_models = {
+    decider = Decider({
         resource.Model: humps.camelize(resource.singular_name) for resource in resources
-    }
+    })
     resources = {
-        humps.camelize(resource.singular_name): CompiledResource(resource_models, resource)
+        humps.camelize(resource.singular_name): CompiledResource(decider, resource)
         for resource in resources
     }
 
@@ -46,11 +45,8 @@ def make_jsonapi_router(resources):
 
 
 class CompiledResource:
-    def __init__(self, resource_models, resource):
+    def __init__(self, decider, resource):
         self._resource = resource
-
-        optional_resource_models = {model | None : name for (model, name) in resource_models.items()}
-        list_resource_models = {list[model] : name for (model, name) in resource_models.items()}
 
         assert humps.is_snakecase(resource.singular_name)
         self.singular_name = resource.singular_name
@@ -79,26 +75,25 @@ class CompiledResource:
             name = humps.camelize(name)
             annotations = Annotations(info.metadata)
 
-            if (resource_name := resource_models.get(info.annotation)) is not None:
+            if decider.is_mandatory_relationship(info.annotation):
                 if annotations.output:
-                    self.output_relationships[name] = (False, resource_name)
-            elif (resource_name := optional_resource_models.get(info.annotation)) is not None:
+                    self.output_relationships[name] = (False, decider.get_name(info.annotation))
+            elif decider.is_optional_relationship(info.annotation):
                 assert info.default is None
                 if annotations.output:
-                    self.output_relationships[name] = (False, resource_name)
-            elif (resource_name := list_resource_models.get(info.annotation)) is not None:
+                    self.output_relationships[name] = (False, decider.get_name(info.annotation))
+            elif decider.is_list_relationship(info.annotation):
                 assert info.default == []
                 if annotations.output:
-                    self.output_relationships[name] = (True, resource_name)
+                    self.output_relationships[name] = (True, decider.get_name(info.annotation))
             else:
                 if annotations.output:
                     self.output_attributes.append(name)
 
-        resource_models = set(resource_models.keys())
-        self.CreateInputModel = make_create_input_model(self.singularName, resource.Model, resource_models)
-        (self.ItemOutputModel, self.PageOutputModel) = make_output_models(self.singularName, resource.Model, resource_models)
-        self.filters = make_filters_dependable(self.singularName, resource.Model, resource_models)
-        self.UpdateInputModel = make_update_input_model(self.singularName, resource.Model, resource_models)
+        self.CreateInputModel = make_create_input_model(self.singularName, resource.Model, decider)
+        (self.ItemOutputModel, self.PageOutputModel) = make_output_models(self.singularName, resource.Model, decider)
+        self.filters = make_filters_dependable(self.singularName, resource.Model, decider)
+        self.UpdateInputModel = make_update_input_model(self.singularName, resource.Model, decider)
 
     def make_item_response(self, resources, *, urls, item, include):
         return_value = {

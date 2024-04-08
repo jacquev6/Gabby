@@ -1,5 +1,5 @@
 from types import UnionType
-from typing import Annotated, Type
+from typing import Annotated, Iterable, Type
 from fastapi import Query
 from pydantic_core import PydanticUndefined
 import humps
@@ -66,11 +66,40 @@ class UpdateInputListRelationship(BaseModel):
     data: list[ObjectId]
 
 
-def make_create_input_model(resource_name: str, model, resource_models: set[Type]):
-    assert humps.is_camelcase(resource_name)
+class Decider:
+    def __init__(self, resource_models: dict[Type, str]):
+        self.__resource_models = dict(resource_models)
+        self.__optional_resource_models = {model | None : name for (model, name) in resource_models.items()}
+        self.__list_resource_models = {list[model] : name for (model, name) in resource_models.items()}
 
-    optional_resource_models = {model | None for model in resource_models}
-    list_resource_models = {list[model] for model in resource_models}
+    def is_mandatory_relationship(self, annotation):
+        return annotation in self.__resource_models
+
+    def is_optional_relationship(self, annotation):
+        return annotation in self.__optional_resource_models
+
+    def is_list_relationship(self, annotation):
+        return annotation in self.__list_resource_models
+
+    def get_name(self, annotation):
+        if self.is_mandatory_relationship(annotation):
+            return self.__resource_models[annotation]
+        elif self.is_optional_relationship(annotation):
+            return self.__optional_resource_models[annotation]
+        elif self.is_list_relationship(annotation):
+            return self.__list_resource_models[annotation]
+        else:
+            assert False
+
+    def is_attribute(self, annotation):
+        return not (
+            self.is_mandatory_relationship(annotation)
+            or self.is_optional_relationship(annotation)
+            or self.is_list_relationship(annotation)
+        )
+
+def make_create_input_model(resource_name: str, model, decider: Decider):
+    assert humps.is_camelcase(resource_name)
 
     attributes = {}
     attributes_can_be_defaulted = True
@@ -80,20 +109,22 @@ def make_create_input_model(resource_name: str, model, resource_models: set[Type
     for (name, info) in model.model_fields.items():
         name = humps.camelize(name)
         if Annotations(info.metadata).create_input:
-            if info.annotation in resource_models:
+            if decider.is_mandatory_relationship(info.annotation):
                 assert info.default is PydanticUndefined
                 relationships_can_be_defaulted = False
                 relationships[name] = (MandatoryRelationship, ...)
-            elif info.annotation in optional_resource_models:
+            elif decider.is_optional_relationship(info.annotation):
                 assert info.default is None
                 relationships[name] = (OptionalRelationship, OptionalRelationship())
-            elif info.annotation in list_resource_models:
+            elif decider.is_list_relationship(info.annotation):
                 assert info.default == []
                 relationships[name] = (CreateInputListRelationship, CreateInputListRelationship())
-            else:
+            elif decider.is_attribute(info.annotation):
                 if info.default is PydanticUndefined:
                     attributes_can_be_defaulted = False
                 attributes[name] = (info.annotation, info.default)
+            else:
+                assert False
 
     Attributes = create_model(f"{resource_name}-CreateInput-Data-Attributes", **attributes)
 
@@ -113,11 +144,8 @@ def make_create_input_model(resource_name: str, model, resource_models: set[Type
     )
 
 
-def make_output_models(resource_name: str, model, resource_models: set[Type]):
+def make_output_models(resource_name: str, model, decider: Decider):
     assert humps.is_camelcase(resource_name)
-
-    optional_resource_models = {model | None for model in resource_models}
-    list_resource_models = {list[model] for model in resource_models}
 
     attributes = {}
     relationships = {}
@@ -126,14 +154,16 @@ def make_output_models(resource_name: str, model, resource_models: set[Type]):
         name = humps.camelize(name)
         if Annotations(info.metadata).output:
 
-            if info.annotation in resource_models:
+            if decider.is_mandatory_relationship(info.annotation):
                 relationships[name] = (MandatoryRelationship, ...)
-            elif info.annotation in optional_resource_models:
+            elif decider.is_optional_relationship(info.annotation):
                 relationships[name] = (OptionalRelationship, ...)
-            elif info.annotation in list_resource_models:
+            elif decider.is_list_relationship(info.annotation):
                 relationships[name] = (OutputListRelationship, ...)
-            else:
+            elif decider.is_attribute(info.annotation):
                 attributes[name] = (info.annotation, ...)
+            else:
+                assert False
 
     OutputItemModel = create_model(
         f"{resource_name}-OutputItem",
@@ -173,24 +203,23 @@ def make_output_models(resource_name: str, model, resource_models: set[Type]):
     return (ItemOutputModel, PageOutputModel)
 
 
-def make_filters_dependable(resource_name: str, model, resource_models: set[Type]):
+def make_filters_dependable(resource_name: str, model, decider: Decider):
     assert humps.is_camelcase(resource_name)
-
-    optional_resource_models = {model | None for model in resource_models}
-    list_resource_models = {list[model] for model in resource_models}
 
     attributes = {}
 
     for (name, info) in model.model_fields.items():
         if Annotations(info.metadata).filter:
-            if info.annotation in resource_models:
+            if decider.is_mandatory_relationship(info.annotation):
                 attributes[name] = str
-            elif info.annotation in optional_resource_models:
+            elif decider.is_optional_relationship(info.annotation):
                 attributes[name] = str
-            elif info.annotation in list_resource_models:
+            elif decider.is_list_relationship(info.annotation):
                 assert False
-            else:
+            elif decider.is_attribute(info.annotation):
                 attributes[name] = info.annotation
+            else:
+                assert False
 
     Filters = create_model(
         f"{resource_name}-Filters",
@@ -218,11 +247,8 @@ def make_filters_dependable(resource_name: str, model, resource_models: set[Type
     return filter_globals["filters"]
 
 
-def make_update_input_model(resource_name: str, model, resource_models: set[Type]):
+def make_update_input_model(resource_name: str, model, decider: Decider):
     assert humps.is_camelcase(resource_name)
-
-    optional_resource_models = {model | None for model in resource_models}
-    list_resource_models = {list[model] for model in resource_models}
 
     attributes = {}
     relationships = {}
@@ -230,16 +256,18 @@ def make_update_input_model(resource_name: str, model, resource_models: set[Type
     for (name, info) in model.model_fields.items():
         name = humps.camelize(name)
         if Annotations(info.metadata).update_input:
-            if info.annotation in resource_models:
+            if decider.is_mandatory_relationship(info.annotation):
                 relationships[name] = (MandatoryRelationship, None)
-            elif info.annotation in optional_resource_models:
+            elif decider.is_optional_relationship(info.annotation):
                 assert info.default is None
                 relationships[name] = (OptionalRelationship, None)
-            elif info.annotation in list_resource_models:
+            elif decider.is_list_relationship(info.annotation):
                 assert info.default == []
                 relationships[name] = (UpdateInputListRelationship, None)
-            else:
+            elif decider.is_attribute(info.annotation):
                 attributes[name] = (info.annotation, None)
+            else:
+                assert False
 
     Attributes = create_model(f"{resource_name}-UpdateInput-Data-Attributes", **attributes)
 
