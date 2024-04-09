@@ -7,17 +7,11 @@ import * as pdfjs from 'pdfjs-dist/build/pdf'
 
 import { i18n } from './locales'
 import RootView from './views/root-view.vue'
-import IndexNavbar from './views/index/index-navbar.vue'
 import IndexView from './views/index/index-view.vue'
-import ProjectNavbar from './views/project/project-navbar.vue'
 import ProjectView from './views/project/project-view.vue'
-import ProjectTextbookPageRootNavbar from './views/project-textbook-page/project-textbook-page-root-navbar.vue'
 import ProjectTextbookPageRootView from './views/project-textbook-page/project-textbook-page-root-view.vue'
-import ProjectTextbookPageListExercisesNavbar from './views/project-textbook-page/project-textbook-page-list-exercises-navbar.vue'
 import ProjectTextbookPageListExercisesView from './views/project-textbook-page/project-textbook-page-list-exercises-view.vue'
-import ProjectTextbookPageCreateExerciseNavbar from './views/project-textbook-page/project-textbook-page-create-exercise-navbar.vue'
 import ProjectTextbookPageCreateExerciseView from './views/project-textbook-page/project-textbook-page-create-exercise-view.vue'
-import ProjectTextbookPageEditExerciseNavbar from './views/project-textbook-page/project-textbook-page-edit-exercise-navbar.vue'
 import ProjectTextbookPageEditExerciseView from './views/project-textbook-page/project-textbook-page-edit-exercise-view.vue'
 
 
@@ -48,18 +42,12 @@ const router = createRouter({
         {
           path: '',
           name: 'index',
-          components: {
-            nav: IndexNavbar,
-            main: IndexView,
-          },
+          component: IndexView,
         },
         {
           path: 'project/:projectId',
           name: 'project',
-          components: {
-            nav: ProjectNavbar,
-            main: ProjectView,
-          },
+          component: ProjectView,
           props: (route) => (
             {
               projectId: route.params.projectId,
@@ -68,10 +56,7 @@ const router = createRouter({
         },
         {
           path: 'project/:projectId/textbook/:textbookId/page/:page',
-          components: {
-            nav: ProjectTextbookPageRootNavbar,
-            main: ProjectTextbookPageRootView,
-          },
+          component: ProjectTextbookPageRootView,
           props: (route) => (
             {
               projectId: route.params.projectId,
@@ -83,26 +68,17 @@ const router = createRouter({
             {
               path: '',
               name: 'project-textbook-page-list-exercises',
-              components: {
-                nav: ProjectTextbookPageListExercisesNavbar,
-                main: ProjectTextbookPageListExercisesView,
-              },
+              component: ProjectTextbookPageListExercisesView,
             },
             {
               path: 'new-exercise',
               name: 'project-textbook-page-create-exercise',
-              components: {
-                nav: ProjectTextbookPageCreateExerciseNavbar,
-                main: ProjectTextbookPageCreateExerciseView,
-              },
+              component: ProjectTextbookPageCreateExerciseView,
             },
             {
               path: 'exercise/:exerciseId',
               name: 'project-textbook-page-edit-exercise',
-              components: {
-                nav: ProjectTextbookPageEditExerciseNavbar,
-                main: ProjectTextbookPageEditExerciseView,
-              },
+              component: ProjectTextbookPageEditExerciseView,
               props: (route) => (
                 {
                   exerciseId: route.params.exerciseId,

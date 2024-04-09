@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { computedAsync } from '@vueuse/core'
 
 import { useApiStore } from '../../stores/api'
@@ -23,6 +23,14 @@ const project = computedAsync(
   projectLoading,
 )
 
+const projectTitle = computed(() => {
+  if (project.value?.inCache && project.value?.exists) {
+    return project.value.attributes.title
+  } else {
+    return null
+  }
+})
+
 const textbookLoading = ref(false)
 const textbook = computedAsync(
   async () => {
@@ -36,6 +44,38 @@ const textbook = computedAsync(
   null,
   textbookLoading,
 )
+
+const textbookTitle = computed(() => {
+  if (textbook.value?.inCache && textbook.value?.exists) {
+    return textbook.value.attributes.title
+  } else {
+    return null
+  }
+})
+
+const title = computed(() => {
+  if (projectTitle.value && textbookTitle.value) {
+    return ['MALIN', projectTitle.value, textbookTitle.value, `Page ${props.page}`]
+  } else {
+    return ['MALIN']
+  }
+})
+
+const breadcrumbs = computed(() => {
+  if (projectTitle.value && textbookTitle.value) {
+    return [
+      {title: projectTitle.value, to: {name: 'project', params: {projectId: props.projectId}}},
+      {title: textbookTitle.value},
+    ]
+  } else {
+    return []
+  }
+})
+
+defineExpose({
+  title,
+  breadcrumbs,
+})
 </script>
 
 <template>
@@ -47,7 +87,7 @@ const textbook = computedAsync(
       <h1>{{ $t('textbookNotFound') }}</h1>
     </template>
     <template v-else>
-      <router-view name="main" :project :textbook :page></router-view>
+      <router-view :project :textbook :page></router-view>
     </template>
   </b-busy>
 </template>

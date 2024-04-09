@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { computedAsync } from '@vueuse/core'
 import { useRouter } from 'vue-router'
 
@@ -35,6 +35,29 @@ const project = computedAsync(
 )
 
 const pdfToPreview = ref(null)
+
+const title = computed(() => {
+  if (project.value?.exists) {
+    return ['MALIN', project.value.attributes.title]
+  } else {
+    return ['MALIN']
+  }
+})
+
+const breadcrumbs = computed(() => {
+  if (project.value?.exists) {
+    return [
+      {title: project.value.attributes.title},
+    ]
+  } else {
+    return []
+  }
+})
+
+defineExpose({
+  title,
+  breadcrumbs,
+})
 </script>
 
 <template>

@@ -11,6 +11,11 @@ const router = useRouter()
 function goToProject(project) {
   router.push({name: 'project', params: {projectId: project.id}})
 }
+
+defineExpose({
+  title: ['MALIN'],
+  breadcrumbs: [],
+})
 </script>
 
 <template>
