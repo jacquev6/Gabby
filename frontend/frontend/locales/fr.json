@@ -13,6 +13,7 @@
   "noProjectsForNow": "Aucun projet pour le moment.",
 
 
+  "project": "Projet",
   "projectHeader": "Projet \"{title}\"",
   "projectNotFound": "Projet introuvable",
   "edit": "Modifier",

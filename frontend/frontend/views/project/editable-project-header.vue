@@ -14,7 +14,7 @@ const editing = ref(false)
 
 <template>
   <template v-if="editing">
-    <h1>Project</h1>
+    <h1>{{ $t('project') }}</h1>
     <project-form :project="project" v-slot="{ disabled, save }" @saved="editing = false">
       <b-button secondary @click="editing = false">{{ $t('cancel') }}</b-button>
       <b-button primary @click="save" :disabled="disabled">{{ $t('saveProject') }}</b-button>
