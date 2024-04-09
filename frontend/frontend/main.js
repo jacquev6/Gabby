@@ -34,10 +34,6 @@ const router = createRouter({
     {
       path: '/',
       component: RootView,
-      props: {
-        title: 'MALIN',
-        breadcrumbs: [],
-      },
       children: [
         {
           path: '',
