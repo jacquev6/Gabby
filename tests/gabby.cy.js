@@ -33,7 +33,7 @@ describe('Gabby', () => {
     cy.focused().type('{selectAll}6')
     cy.get('div.busy').should('not.exist')
 
-    cy.get('button').contains('Nouvel exercice').click()
+    cy.get('a:contains("Nouvel exercice")').click()
     cy.get('button:contains("Passer cette étape")').click()
     cy.get('label').contains('Numéro').next().type(5)
 
@@ -59,7 +59,7 @@ describe('Gabby', () => {
 
     cy.get('button').contains('Enregistrer').click()
     cy.get('div.busy').should('not.exist')
-    cy.get('button').contains('Annuler').click()
+    cy.get('a:contains("Annuler")').click()
     cy.get('div.busy').should('not.exist')
 
     cy.get('li').contains('Recopie les mots suivants').should('exist')
@@ -113,7 +113,7 @@ describe('Gabby', () => {
     cy.get('div.busy').should('not.exist')
     cy.screenshot('doc/textbook-page-existing-exercises', {clip: {x: 330, y: 50, width: 336, height: 300}})
 
-    cy.get('button').contains('Modifier').click()
+    cy.get('a:contains("Modifier")').first().click()
 
     cy.get('div.busy').should('not.exist')
     // https://github.com/cypress-io/cypress/issues/2681#issuecomment-442890537
@@ -124,7 +124,7 @@ describe('Gabby', () => {
     cy.get('body').invoke('css', 'scroll-behavior', 'auto')
     cy.screenshot('doc/textbook-page-modify-exercise', {clip: {x: 0, y: 50, width: 670, height: 800}})
 
-    cy.get('button:contains("Annuler")').click()
+    cy.get('a:contains("Annuler")').click()
     cy.get('div.busy').should('not.exist')
   })
 })

@@ -5,17 +5,21 @@ const whitespaceRegex = new RegExp(`[${whitespaceChar}]+`, 'u')
 const splitRegex = new RegExp(`([${wordChar}]+)|([${whitespaceChar}]+)|([^${wordChar}${whitespaceChar}])`, 'gu')
 
 export function tokenize(input) {
-  const tokens = input.match(splitRegex)
+  if (input === '') {
+    return []
+  } else {
+    const tokens = input.match(splitRegex)
 
-  console.assert(tokens.join('') === input, `Tokenization failed: ${input} !== ${tokens.join(' ')}`)
+    console.assert(tokens.join('') === input, `Tokenization failed: ${input} !== ${tokens.join(' ')}`)
 
-  return tokens.map(text => {
-    if (text.match(wordRegex)) {
-      return {kind: 'word', text}
-    } else if (text.match(whitespaceRegex)) {
-      return {kind: 'whitespace', text}
-    } else {
-      return {kind: 'punctuation', text}
-    }
-  })
+    return tokens.map(text => {
+      if (text.match(wordRegex)) {
+        return {kind: 'word', text}
+      } else if (text.match(whitespaceRegex)) {
+        return {kind: 'whitespace', text}
+      } else {
+        return {kind: 'punctuation', text}
+      }
+    })
+  }
 }

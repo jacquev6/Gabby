@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { computedAsync } from '@vueuse/core'
 
@@ -8,8 +8,9 @@ import { usePdfsStore } from '../../stores/pdfs'
 import { BBusy, BRow, BCol, BButton } from '../../components/opinion/bootstrap'
 import PdfRenderer from '../../components/pdf-renderer.vue'
 import PdfNavigationControls from '../../components/pdf-navigation-controls.vue'
+import ExerciseForm from './exercise-form-with-injection.vue'
+import TextPicker from './text-picker.vue'
 import SectionEditor from './section-editor.vue'
-import ExercisesList from './exercises-list.vue'
 import PdfNotLoaded from './pdf-not-loaded.vue'
 
 
@@ -17,6 +18,7 @@ const props = defineProps({
   projectId: {type: String, required: true},
   textbookId: {type: String, required: true},
   page: {type: Number, required: true},
+  exerciseId: {type: String, required: true},
 })
 
 const router = useRouter()
@@ -46,6 +48,15 @@ const textbook = computedAsync(
   },
   null,
   textbookLoading,
+)
+
+const exerciseLoading = ref(false)
+const exercise = computedAsync(
+  async () => {
+    return await api.client.getOne('exercise', props.exerciseId)
+  },
+  null,
+  exerciseLoading,
 )
 
 // @todo(Feature, soon) Get the number of pages from the textbook itself
@@ -103,43 +114,89 @@ const pdf = computedAsync(
 
 const pdfRenderer = ref(null)
 
-const deletingExercise = ref(false)
-const refreshCounter = ref(1)
+const updatingExercise = ref(false)
 
-const needsBoundingRectangle = ref(false)
 const currentExercise = reactive({})
 const extractionEvents = reactive([])
 
 function switchToListMode() {
-  needsBoundingRectangle.value = false
   currentExercise.id = null
   extractionEvents.splice(0)
   currentExercise.attributes = {}
-  ++refreshCounter.value
 }
 
-async function deleteExercise(exercise) {
-  deletingExercise.value = true
-  await api.client.delete('exercise', exercise.id)
-  deletingExercise.value = false
-  switchToListMode()
+function switchToEditMode(e) {
+  currentExercise.id = e.id
+  extractionEvents.splice(0)
+  currentExercise.attributes = e.attributes
+}
+
+const exerciseForm = ref(null)
+function textSelected(text, point, textItems, rectangle) {
+  extractionEvents.push({
+    kind: "TextSelectedInPdf",
+    pdf: {
+      name: section.value.relationships.pdfFile.relationships.namings[0].attributes.name,
+      sha256: section.value.relationships.pdfFile.id,
+      page: pdf.value.page.pageNumber,
+      rectangle,
+    },
+    value: text,
+    textItems,
+  })
+  exerciseForm.value?.textSelected(text, point)
+}
+
+async function updateExercise() {
+  updatingExercise.value = true
+  await api.client.patch(
+    'exercise',
+    currentExercise.id,
+    {
+      instructions: currentExercise.attributes.instructions,
+      example: currentExercise.attributes.example,
+      clue: currentExercise.attributes.clue,
+      wording: currentExercise.attributes.wording,
+    },
+    {},
+  )
+  for (const event of extractionEvents) {
+    await api.client.post(
+      'extractionEvent',
+      {event: JSON.stringify(event)},
+      {exercise: {type: 'exercise', id: currentExercise.id}},
+    )
+  }
+  router.push({name: 'project-textbook-page-list-exercises'})
+  updatingExercise.value = false
 }
 
 switchToListMode()
+watch(exercise, () => {
+  if (exercise.value) {
+    switchToEditMode(exercise.value)
+  }
+})
 
-function changePage(page) {
-  console.assert(Number.isInteger(page) && page >= 1 && page <= textbookPagesCount.value)
-  router.push({name: 'project-textbook-page-list-exercises', params: {projectId: props.projectId, textbookId: props.textbookId, page}})
-}
+const visualizationIFrame = ref(null)
+
+const visualizationUrl = computed(() => {
+  if (currentExercise.id) {
+    const data = {exercises: {a: {...currentExercise.attributes, adaptation: {type: 'selectWords', colors: 3}}}}
+    return `/adapted?data=${JSON.stringify(data)}&exerciseId=a`
+  } else {
+    return null
+  }
+})
 </script>
 
 <template>
-  <b-busy size="7rem" :busy="projectLoading || textbookLoading">
+  <b-busy size="7rem" :busy="projectLoading || textbookLoading || exerciseLoading">
     <template v-if="project?.exists">
       <template v-if="textbook?.exists">
         <b-row>
           <b-col>
-            <pdf-navigation-controls :page @update:page="changePage" :pagesCount="textbookPagesCount">
+            <pdf-navigation-controls :page :pagesCount="textbookPagesCount" disabled>
               <b-button secondary sm :disabled="!section" @click="sectionEditor.show(section.id)">&#9881;</b-button>
             </pdf-navigation-controls>
             <section-editor ref="sectionEditor" />
@@ -151,6 +208,13 @@ function changePage(page) {
                       ref="pdfRenderer"
                       :page="pdf.page"
                       class="img img-fluid"
+                    />
+                    <text-picker
+                      v-if="pdfRenderer"
+                      class="img img-fluid" style="position: absolute; top: 0; left: 0"
+                      :width="pdfRenderer.width" :height="pdfRenderer.height" :transform="pdfRenderer.transform"
+                      :textContent="pdf.textContent"
+                      @text-selected="textSelected"
                     />
                   </div>
                 </template>
@@ -166,22 +230,23 @@ function changePage(page) {
           </b-col>
           <b-col>
             <h1>{{ $t('edition') }}</h1>
-            <b-busy :busy="deletingExercise">
-              <exercises-list :textbook :page >
-                <template v-slot="{exercise}">
-                  <router-link class="btn btn-primary btn-sm" :to="{name: 'project-textbook-page-edit-exercise', params: {exerciseId: exercise.id}}">{{ $t('edit') }}</router-link>
-                  <b-button secondary sm @click="deleteExercise(exercise)">{{ $t('delete') }}</b-button>
-                </template>
-              </exercises-list>
-              <p class="d-grid">
-                <router-link class="btn btn-primary" :to="{name: 'project-textbook-page-create-exercise'}">
-                  {{ $t('create') }}
-                </router-link>
-              </p>
+            <b-busy :busy="updatingExercise">
+              <ExerciseForm
+                v-if="currentExercise.id"
+                ref="exerciseForm"
+                :fixedNumber="true"
+                v-model="currentExercise.attributes"
+                @extractionEvent="(event) => extractionEvents.push(event)"
+              />
+              <div class="mb-3">
+                <router-link class="btn btn-secondary" :to="{name: 'project-textbook-page-list-exercises'}">{{ $t('cancel') }}</router-link>
+                <b-button primary type="text" @click="updateExercise">{{ $t('save') }}</b-button>
+              </div>
             </b-busy>
           </b-col>
           <b-col>
             <h1>{{ $t('visualization') }}</h1>
+            <iframe :src="visualizationUrl" style="width: 100%; height: 100%"></iframe>
           </b-col>
         </b-row>
       </template>

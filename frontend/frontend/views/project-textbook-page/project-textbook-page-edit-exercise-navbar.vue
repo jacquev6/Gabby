@@ -8,6 +8,7 @@ import { useApiStore } from '../../stores/api'
 const props = defineProps({
   projectId: {type: String, required: true},
   textbookId: {type: String, required: true},
+  exerciseId: {type: String, required: true},
   page: {type: Number, required: true},
 })
 

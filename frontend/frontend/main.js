@@ -17,6 +17,9 @@ import ProjectTextbookPageListExercisesNavbar from './views/project-textbook-pag
 import ProjectTextbookPageListExercisesView from './views/project-textbook-page/project-textbook-page-list-exercises-view.vue'
 import ProjectTextbookPageCreateExerciseNavbar from './views/project-textbook-page/project-textbook-page-create-exercise-navbar.vue'
 import ProjectTextbookPageCreateExerciseView from './views/project-textbook-page/project-textbook-page-create-exercise-view.vue'
+import ProjectTextbookPageEditExerciseNavbar from './views/project-textbook-page/project-textbook-page-edit-exercise-navbar.vue'
+import ProjectTextbookPageEditExerciseView from './views/project-textbook-page/project-textbook-page-edit-exercise-view.vue'
+
 
 pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.js'
 
@@ -89,6 +92,14 @@ const router = createRouter({
               components: {
                 nav: ProjectTextbookPageCreateExerciseNavbar,
                 main: ProjectTextbookPageCreateExerciseView,
+              },
+            },
+            {
+              path: 'exercise/:exerciseId',
+              name: 'project-textbook-page-edit-exercise',
+              components: {
+                nav: ProjectTextbookPageEditExerciseNavbar,
+                main: ProjectTextbookPageEditExerciseView,
               },
             },
           ],

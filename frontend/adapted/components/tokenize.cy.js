@@ -2,6 +2,10 @@ import { tokenize } from './tokenize.js'
 
 
 describe('Tokenize tokenizes...', () => {
+  it('empty string', () => {
+    expect(tokenize('')).to.deep.equal([])
+  })
+
   it('simple word', () => {
     expect(tokenize('hello')).to.deep.equal([{kind: 'word', text: 'hello'}])
   })

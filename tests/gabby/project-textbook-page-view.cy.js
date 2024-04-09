@@ -54,7 +54,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
   it('adjusts textarea heights', () => {
     cy.visit('/project/1/textbook/1/page/6')
     cy.get('select').select('en')
-    cy.get('button:contains("New exercise")').click()
+    cy.get('a:contains("New exercise")').click()
     cy.get('button:contains("Passer cette étape")').click()
     cy.get('p:contains("Example")').click()
     cy.get('p:contains("Clue")').click()
@@ -106,7 +106,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
   it('enables the "Save exercise" button', () => {
     cy.visit('/project/1/textbook/1/page/6')
     cy.get('select').select('en')
-    cy.get('button:contains("New exercise")').click()
+    cy.get('a:contains("New exercise")').click()
     cy.get('button:contains("Passer cette étape")').click()
 
     cy.get('button:contains("Save then create next")').should('be.disabled')
@@ -154,7 +154,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
   it('creates a minimal exercise', () => {
     cy.visit('/project/1/textbook/1/page/6')
     cy.get('select').select('en')
-    cy.get('button:contains("New exercise")').click()
+    cy.get('a:contains("New exercise")').click()
     cy.get('button:contains("Passer cette étape")').click()
 
     cy.get('label:contains("Number")').next().type('1')
@@ -164,7 +164,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
 
     cy.get('label:contains("Number")').next().should('have.value', '2')
 
-    cy.get('button:contains("Cancel")').click()
+    cy.get('a:contains("Cancel")').click()
     cy.get('div.busy').should('not.exist')
     cy.get('li:contains("1")').should('exist')
   })
@@ -172,7 +172,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
   it('creates a full exercise', () => {
     cy.visit('/project/1/textbook/1/page/6')
     cy.get('select').select('en')
-    cy.get('button:contains("New exercise")').click()
+    cy.get('a:contains("New exercise")').click()
     cy.get('button:contains("Passer cette étape")').click()
 
     cy.get('label:contains("Number")').next().type('Défis')
@@ -188,7 +188,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
 
     cy.get('label:contains("Number")').next().should('have.value', '')
 
-    cy.get('button:contains("Cancel")').click()
+    cy.get('a:contains("Cancel")').click()
     cy.get('div.busy').should('not.exist')
     cy.get('li:contains("Défis")').should('exist')
   })
@@ -199,7 +199,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
     cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
     cy.get('div.busy').should('not.exist')
 
-    cy.get('button:contains("New exercise")').click()
+    cy.get('a:contains("New exercise")').click()
     cy.get('button:contains("Passer cette étape")').click()
 
     cy.get('label:contains("Number")').next().type('1')
@@ -895,12 +895,12 @@ describe('Gabby\'s project\'s textbook page view', () => {
     cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
     cy.get('div.busy').should('not.exist')
 
-    cy.get('li:contains("3 Complète avec : le, une, …") button:contains("Edit")').click()
+    cy.get('li:contains("3 Complète avec : le, une, …") a:contains("Edit")').click()
     cy.get('label:contains("Instructions")').next().clear().type('Ceci est la consigne')
     cy.get('button:contains("Save")').click()
     cy.get('div.busy').should('not.exist')
 
-    cy.get('li:contains("4 Écris une phrase en respe…") button:contains("Edit")').click()
+    cy.get('li:contains("4 Écris une phrase en respe…") a:contains("Edit")').click()
     cy.get('canvas[style="position: absolute; top: 0px; left: 0px;"]').as('canvas')
     cy.get('@canvas').trigger('pointermove', 5, 5)
     cy.get('@canvas').trigger('pointerdown', 150, 367, { pointerId: 1 })

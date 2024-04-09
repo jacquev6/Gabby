@@ -40,7 +40,7 @@ function style(index) {
 </script>
 
 <template>
-  <colored-paragraph :text="exercise.wording">
+  <colored-paragraph :text="exercise.wording || ''">
     <template v-slot="{ token, index }">
       <span :style="style(index)" @click="toggle(index)">{{ token.text }}</span>
     </template>

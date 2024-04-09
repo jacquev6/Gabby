@@ -17,7 +17,7 @@ const exercise = computed(() => exerciseId.value ? data.exercises[exerciseId.val
 <template>
   <template v-if="exerciseId">
     <p v-if="!initialExerciseId"><a href="#" @click.prevent="exerciseId = null">Retour</a></p>
-    <colored-paragraph :text="exercise.instructions" />
+    <colored-paragraph :text="exercise.instructions || ''" />
     <SelectWords v-if="exercise.adaptation.type === 'selectWords'" :exercise="exercise" />
   </template>
   <template v-else>
