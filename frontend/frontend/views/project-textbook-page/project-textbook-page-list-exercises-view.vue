@@ -14,8 +14,8 @@ import PdfNotLoaded from './pdf-not-loaded.vue'
 
 
 const props = defineProps({
-  projectId: {type: String, required: true},
-  textbookId: {type: String, required: true},
+  project: {type: Object, required: true},
+  textbook: {type: Object, required: true},
   page: {type: Number, required: true},
 })
 
@@ -25,40 +25,17 @@ const pdfs = usePdfsStore()
 
 const sectionEditor = ref(null)
 
-const projectLoading = ref(false)
-const project = computedAsync(
-  async () => {
-    return await api.client.getOne('project', props.projectId)
-  },
-  null,
-  projectLoading,
-)
-
-const textbookLoading = ref(false)
-const textbook = computedAsync(
-  async () => {
-    const textbook = await api.client.getOne('textbook', props.textbookId, {include: 'sections.pdfFile.namings'})
-    if (textbook.relationships.project.id === props.projectId) {
-      return textbook
-    } else {
-      return null
-    }
-  },
-  null,
-  textbookLoading,
-)
-
 // @todo(Feature, soon) Get the number of pages from the textbook itself
 const textbookPagesCount = computed(() => {
   let c = 1
-  for (const section of textbook.value?.relationships?.sections || []) {
+  for (const section of props.textbook.relationships.sections) {
     c = Math.max(c, section.attributes.textbookStartPage + section.attributes.pagesCount - 1)
   }
   return c
 })
 
 const section = computed(() => {
-  for (const section of textbook.value?.relationships?.sections || []) {
+  for (const section of props.textbook.relationships.sections) {
     if (props.page >= section.attributes.textbookStartPage && props.page < section.attributes.textbookStartPage + section.attributes.pagesCount) {
       return section
     }
@@ -129,68 +106,56 @@ switchToListMode()
 
 function changePage(page) {
   console.assert(Number.isInteger(page) && page >= 1 && page <= textbookPagesCount.value)
-  router.push({name: 'project-textbook-page-list-exercises', params: {projectId: props.projectId, textbookId: props.textbookId, page}})
+  router.push({name: 'project-textbook-page-list-exercises', params: {projectId: props.project.id, textbookId: props.textbook.id, page}})
 }
 </script>
 
 <template>
-  <b-busy size="7rem" :busy="projectLoading || textbookLoading">
-    <template v-if="project?.exists">
-      <template v-if="textbook?.exists">
-        <b-row>
-          <b-col>
-            <pdf-navigation-controls :page @update:page="changePage" :pagesCount="textbookPagesCount">
-              <b-button secondary sm :disabled="!section" @click="sectionEditor.show(section.id)">&#9881;</b-button>
-            </pdf-navigation-controls>
-            <section-editor ref="sectionEditor" />
-            <template v-if="section">
-              <b-busy size="7rem" :busy="pdfLoading">
-                <template v-if="pdf?.page">
-                  <div style="border: 1px solid black">
-                    <pdf-renderer
-                      ref="pdfRenderer"
-                      :page="pdf.page"
-                      class="img img-fluid"
-                    />
-                  </div>
-                </template>
-                <template v-else>
-                  <pdf-not-loaded :name="section.relationships.pdfFile.relationships.namings[0].attributes.name" />
-                </template>
-              </b-busy>
-            </template>
-            <template v-else>
-              <p>{{ $t('pageNoKnown') }}</p>
-              <!-- @todo Let user associate PDF to page from here -->
-            </template>
-          </b-col>
-          <b-col>
-            <h1>{{ $t('edition') }}</h1>
-            <b-busy :busy="deletingExercise">
-              <exercises-list :textbook :page >
-                <template v-slot="{exercise}">
-                  <router-link class="btn btn-primary btn-sm" :to="{name: 'project-textbook-page-edit-exercise', params: {exerciseId: exercise.id}}">{{ $t('edit') }}</router-link>
-                  <b-button secondary sm @click="deleteExercise(exercise)">{{ $t('delete') }}</b-button>
-                </template>
-              </exercises-list>
-              <p class="d-grid">
-                <router-link class="btn btn-primary" :to="{name: 'project-textbook-page-create-exercise'}">
-                  {{ $t('create') }}
-                </router-link>
-              </p>
-            </b-busy>
-          </b-col>
-          <b-col>
-            <h1>{{ $t('visualization') }}</h1>
-          </b-col>
-        </b-row>
+  <b-row>
+    <b-col>
+      <pdf-navigation-controls :page @update:page="changePage" :pagesCount="textbookPagesCount">
+        <b-button secondary sm :disabled="!section" @click="sectionEditor.show(section.id)">&#9881;</b-button>
+      </pdf-navigation-controls>
+      <section-editor ref="sectionEditor" />
+      <template v-if="section">
+        <b-busy size="7rem" :busy="pdfLoading">
+          <template v-if="pdf?.page">
+            <div style="border: 1px solid black">
+              <pdf-renderer
+                ref="pdfRenderer"
+                :page="pdf.page"
+                class="img img-fluid"
+              />
+            </div>
+          </template>
+          <template v-else>
+            <pdf-not-loaded :name="section.relationships.pdfFile.relationships.namings[0].attributes.name" />
+          </template>
+        </b-busy>
       </template>
       <template v-else>
-        <h1>{{ $t('textbookNotFound') }}</h1>
+        <p>{{ $t('pageNoKnown') }}</p>
+        <!-- @todo Let user associate PDF to page from here -->
       </template>
-    </template>
-    <template v-else>
-      <h1>{{ $t('projectNotFound') }}</h1>
-    </template>
-  </b-busy>
+    </b-col>
+    <b-col>
+      <h1>{{ $t('edition') }}</h1>
+      <b-busy :busy="deletingExercise">
+        <exercises-list :textbook :page >
+          <template v-slot="{exercise}">
+            <router-link class="btn btn-primary btn-sm" :to="{name: 'project-textbook-page-edit-exercise', params: {exerciseId: exercise.id}}">{{ $t('edit') }}</router-link>
+            <b-button secondary sm @click="deleteExercise(exercise)">{{ $t('delete') }}</b-button>
+          </template>
+        </exercises-list>
+        <p class="d-grid">
+          <router-link class="btn btn-primary" :to="{name: 'project-textbook-page-create-exercise'}">
+            {{ $t('create') }}
+          </router-link>
+        </p>
+      </b-busy>
+    </b-col>
+    <b-col>
+      <h1>{{ $t('visualization') }}</h1>
+    </b-col>
+  </b-row>
 </template>

@@ -52,12 +52,6 @@ const router = createRouter({
             nav: IndexNavbar,
             main: IndexView,
           },
-          props: {
-            NavBar: {
-              title: 'MALIN',
-              breadcrumbs: [],
-            },
-          }
         },
         {
           path: 'project/:projectId',
@@ -66,7 +60,11 @@ const router = createRouter({
             nav: ProjectNavbar,
             main: ProjectView,
           },
-          props: true,
+          props: (route) => (
+            {
+              projectId: route.params.projectId,
+            }
+          ),
         },
         {
           path: 'project/:projectId/textbook/:textbookId/page/:page',
@@ -75,7 +73,11 @@ const router = createRouter({
             main: ProjectTextbookPageRootView,
           },
           props: (route) => (
-            {...route.params, page: Number.parseInt(route.params.page, 10)}
+            {
+              projectId: route.params.projectId,
+              textbookId: route.params.textbookId,
+              page: Number.parseInt(route.params.page, 10),
+            }
           ),
           children: [
             {
@@ -101,6 +103,11 @@ const router = createRouter({
                 nav: ProjectTextbookPageEditExerciseNavbar,
                 main: ProjectTextbookPageEditExerciseView,
               },
+              props: (route) => (
+                {
+                  exerciseId: route.params.exerciseId,
+                }
+              ),
             },
           ],
         },

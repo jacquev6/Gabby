@@ -15,8 +15,8 @@ import PdfNotLoaded from './pdf-not-loaded.vue'
 
 
 const props = defineProps({
-  projectId: {type: String, required: true},
-  textbookId: {type: String, required: true},
+  project: {type: Object, required: true},
+  textbook: {type: Object, required: true},
   page: {type: Number, required: true},
 })
 
@@ -26,40 +26,17 @@ const pdfs = usePdfsStore()
 
 const sectionEditor = ref(null)
 
-const projectLoading = ref(false)
-const project = computedAsync(
-  async () => {
-    return await api.client.getOne('project', props.projectId)
-  },
-  null,
-  projectLoading,
-)
-
-const textbookLoading = ref(false)
-const textbook = computedAsync(
-  async () => {
-    const textbook = await api.client.getOne('textbook', props.textbookId, {include: 'sections.pdfFile.namings'})
-    if (textbook.relationships.project.id === props.projectId) {
-      return textbook
-    } else {
-      return null
-    }
-  },
-  null,
-  textbookLoading,
-)
-
 // @todo(Feature, soon) Get the number of pages from the textbook itself
 const textbookPagesCount = computed(() => {
   let c = 1
-  for (const section of textbook.value?.relationships?.sections || []) {
+  for (const section of props.textbook.relationships.sections) {
     c = Math.max(c, section.attributes.textbookStartPage + section.attributes.pagesCount - 1)
   }
   return c
 })
 
 const section = computed(() => {
-  for (const section of textbook.value?.relationships?.sections || []) {
+  for (const section of props.textbook.relationships.sections) {
     if (props.page >= section.attributes.textbookStartPage && props.page < section.attributes.textbookStartPage + section.attributes.pagesCount) {
       return section
     }
@@ -111,13 +88,6 @@ const refreshCounter = ref(1)
 const needsBoundingRectangle = ref(false)
 const currentExercise = reactive({})
 const extractionEvents = reactive([])
-
-const navigationDisabled = true
-
-function changePage(page) {
-  console.assert(Number.isInteger(page) && page >= 1 && page <= textbookPagesCount.value)
-  router.push({name: 'project-textbook-page-create-exercise', params: {projectId: props.projectId, textbookId: props.textbookId, page}})
-}
 
 function switchToListMode() {
   needsBoundingRectangle.value = false
@@ -189,8 +159,8 @@ async function createExercise() {
     'exercise',
     {...currentExercise.attributes, textbookPage: props.page},
     {
-      project: {type: 'project', id: props.projectId},
-      textbook: {type: 'textbook', id: props.textbookId},
+      project: {type: 'project', id: props.project.id},
+      textbook: {type: 'textbook', id: props.textbook.id},
     },
   )
   for (const event of extractionEvents) {
@@ -214,78 +184,66 @@ const visualizationUrl = computed(() => {
 </script>
 
 <template>
-  <b-busy size="7rem" :busy="projectLoading || textbookLoading">
-    <template v-if="project?.exists">
-      <template v-if="textbook?.exists">
-        <b-row>
-          <b-col>
-            <pdf-navigation-controls :page @update:page="changePage" :pagesCount="textbookPagesCount" :disabled="navigationDisabled">
-              <b-button secondary sm :disabled="!section" @click="sectionEditor.show(section.id)">&#9881;</b-button>
-            </pdf-navigation-controls>
-            <section-editor ref="sectionEditor" />
-            <template v-if="section">
-              <b-busy size="7rem" :busy="pdfLoading">
-                <template v-if="pdf?.page">
-                  <div style="border: 1px solid black">
-                    <pdf-renderer
-                      ref="pdfRenderer"
-                      :page="pdf.page"
-                      class="img img-fluid"
-                    />
-                    <text-picker
-                      v-if="pdfRenderer"
-                      class="img img-fluid" style="position: absolute; top: 0; left: 0"
-                      :width="pdfRenderer.width" :height="pdfRenderer.height" :transform="pdfRenderer.transform"
-                      :textContent="pdf.textContent"
-                      @text-selected="textSelected"
-                    />
-                  </div>
-                </template>
-                <template v-else>
-                  <pdf-not-loaded :name="section.relationships.pdfFile.relationships.namings[0].attributes.name" />
-                </template>
-              </b-busy>
-            </template>
-            <template v-else>
-              <p>{{ $t('pageNoKnown') }}</p>
-              <!-- @todo Let user associate PDF to page from here -->
-            </template>
-          </b-col>
-          <b-col>
-            <h1>{{ $t('edition') }}</h1>
-            <b-busy :busy="creatingExercise">
-              <div style="position: relative">
-                <ExerciseForm
-                  ref="exerciseForm"
-                  :fixedNumber="false"
-                  v-model="currentExercise.attributes"
-                  @extractionEvent="(event) => extractionEvents.push(event)"
-                />
-                <div v-if="needsBoundingRectangle" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8);" class="text-center">
-                  <div style="position: absolute; left: 25%; top: 25%; width: 50%; height: 50%; background-color: white">
-                    <p>Merci de commencer par dessiner un rectangle autour de l'exercice entier.</p>
-                    <b-button sm secondary @click="needsBoundingRectangle = false">Passer cette étape</b-button>
-                  </div>
-                </div>
-              </div>
-              <div class="mb-3">
-                <router-link class="btn btn-secondary" :to="{name: 'project-textbook-page-list-exercises'}">{{ $t('cancel') }}</router-link>
-                <b-button primary type="text" @click="createExercise" :disabled="currentExercise.attributes.number === ''">{{ $t('save.next') }}</b-button>
-              </div>
-            </b-busy>
-          </b-col>
-          <b-col>
-            <h1>{{ $t('visualization') }}</h1>
-            <iframe :src="visualizationUrl" style="width: 100%; height: 100%"></iframe>
-          </b-col>
-        </b-row>
+  <b-row>
+    <b-col>
+      <pdf-navigation-controls :page :pagesCount="textbookPagesCount" :disabled="true">
+        <b-button secondary sm :disabled="!section" @click="sectionEditor.show(section.id)">&#9881;</b-button>
+      </pdf-navigation-controls>
+      <section-editor ref="sectionEditor" />
+      <template v-if="section">
+        <b-busy size="7rem" :busy="pdfLoading">
+          <template v-if="pdf?.page">
+            <div style="border: 1px solid black">
+              <pdf-renderer
+                ref="pdfRenderer"
+                :page="pdf.page"
+                class="img img-fluid"
+              />
+              <text-picker
+                v-if="pdfRenderer"
+                class="img img-fluid" style="position: absolute; top: 0; left: 0"
+                :width="pdfRenderer.width" :height="pdfRenderer.height" :transform="pdfRenderer.transform"
+                :textContent="pdf.textContent"
+                @text-selected="textSelected"
+              />
+            </div>
+          </template>
+          <template v-else>
+            <pdf-not-loaded :name="section.relationships.pdfFile.relationships.namings[0].attributes.name" />
+          </template>
+        </b-busy>
       </template>
       <template v-else>
-        <h1>{{ $t('textbookNotFound') }}</h1>
+        <p>{{ $t('pageNoKnown') }}</p>
+        <!-- @todo Let user associate PDF to page from here -->
       </template>
-    </template>
-    <template v-else>
-      <h1>{{ $t('projectNotFound') }}</h1>
-    </template>
-  </b-busy>
+    </b-col>
+    <b-col>
+      <h1>{{ $t('edition') }}</h1>
+      <b-busy :busy="creatingExercise">
+        <div style="position: relative">
+          <ExerciseForm
+            ref="exerciseForm"
+            :fixedNumber="false"
+            v-model="currentExercise.attributes"
+            @extractionEvent="(event) => extractionEvents.push(event)"
+          />
+          <div v-if="needsBoundingRectangle" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8);" class="text-center">
+            <div style="position: absolute; left: 25%; top: 25%; width: 50%; height: 50%; background-color: white">
+              <p>Merci de commencer par dessiner un rectangle autour de l'exercice entier.</p>
+              <b-button sm secondary @click="needsBoundingRectangle = false">Passer cette étape</b-button>
+            </div>
+          </div>
+        </div>
+        <div class="mb-3">
+          <router-link class="btn btn-secondary" :to="{name: 'project-textbook-page-list-exercises'}">{{ $t('cancel') }}</router-link>
+          <b-button primary type="text" @click="createExercise" :disabled="currentExercise.attributes.number === ''">{{ $t('save.next') }}</b-button>
+        </div>
+      </b-busy>
+    </b-col>
+    <b-col>
+      <h1>{{ $t('visualization') }}</h1>
+      <iframe :src="visualizationUrl" style="width: 100%; height: 100%"></iframe>
+    </b-col>
+  </b-row>
 </template>
