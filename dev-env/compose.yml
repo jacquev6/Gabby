@@ -183,7 +183,7 @@ services:
     environment:
       DJANGO_SETTINGS_MODULE: opinion.settings.dev
     init: true
-    command: ["bash", "-c", "while true; do echo 'Backup DB'; ./manage.py dbbackup; sleep 30; done"]
+    command: ["bash", "-c", "while true; do echo 'Backup DB'; ./manage.py dbbackup; find /app/dev-env/db/backups -name '*.psql.bin' -mmin +10 -delete; sleep 30; done"]
     depends_on:
       pip-installer:
         condition: service_completed_successfully
