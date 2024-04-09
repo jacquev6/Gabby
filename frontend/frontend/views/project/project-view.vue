@@ -20,7 +20,7 @@ const props = defineProps({
 })
 
 function goToTextbook(textbookId) {
-  router.push({name: 'project-textbook-page', params: {projectId: props.projectId, textbookId, page: 1}})
+  router.push({name: 'project-textbook-page-list-exercises', params: {projectId: props.projectId, textbookId, page: 1}})
 }
 
 const exercisesCreated = ref(0)

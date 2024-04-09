@@ -245,7 +245,7 @@ onMounted(switchToListMode)
 
 function changePage(page) {
   console.assert(Number.isInteger(page) && page >= 1 && page <= textbookPagesCount.value)
-  router.push({name: 'project-textbook-page', params: {projectId: props.projectId, textbookId: props.textbookId, page}})
+  router.push({name: 'project-textbook-page-list-exercises', params: {projectId: props.projectId, textbookId: props.textbookId, page}})
 }
 
 const visualizationIFrame = ref(null)

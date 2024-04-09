@@ -11,9 +11,12 @@ import IndexNavbar from './views/index/index-navbar.vue'
 import IndexView from './views/index/index-view.vue'
 import ProjectNavbar from './views/project/project-navbar.vue'
 import ProjectView from './views/project/project-view.vue'
-import ProjectTextbookPageNavbar from './views/project-textbook-page/project-textbook-page-navbar.vue'
-import ProjectTextbookPageView from './views/project-textbook-page/project-textbook-page-view.vue'
-
+import ProjectTextbookPageRootNavbar from './views/project-textbook-page/project-textbook-page-root-navbar.vue'
+import ProjectTextbookPageRootView from './views/project-textbook-page/project-textbook-page-root-view.vue'
+import ProjectTextbookPageListExercisesNavbar from './views/project-textbook-page/project-textbook-page-list-exercises-navbar.vue'
+import ProjectTextbookPageListExercisesView from './views/project-textbook-page/project-textbook-page-list-exercises-view.vue'
+import ProjectTextbookPageCreateExerciseNavbar from './views/project-textbook-page/project-textbook-page-create-exercise-navbar.vue'
+import ProjectTextbookPageCreateExerciseView from './views/project-textbook-page/project-textbook-page-create-exercise-view.vue'
 
 pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.js'
 
@@ -64,14 +67,31 @@ const router = createRouter({
         },
         {
           path: 'project/:projectId/textbook/:textbookId/page/:page',
-          name: 'project-textbook-page',
           components: {
-            nav: ProjectTextbookPageNavbar,
-            main: ProjectTextbookPageView,
+            nav: ProjectTextbookPageRootNavbar,
+            main: ProjectTextbookPageRootView,
           },
           props: (route) => (
             {...route.params, page: Number.parseInt(route.params.page, 10)}
           ),
+          children: [
+            {
+              path: '',
+              name: 'project-textbook-page-list-exercises',
+              components: {
+                nav: ProjectTextbookPageListExercisesNavbar,
+                main: ProjectTextbookPageListExercisesView,
+              },
+            },
+            {
+              path: 'new-exercise',
+              name: 'project-textbook-page-create-exercise',
+              components: {
+                nav: ProjectTextbookPageCreateExerciseNavbar,
+                main: ProjectTextbookPageCreateExerciseView,
+              },
+            },
+          ],
         },
       ],
     },

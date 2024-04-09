@@ -46,11 +46,11 @@ function ellipsis(s) {
       </ul>
     </template>
     <template v-for="textbook in project.relationships.textbooks">
-      <h3><router-link :to="{name: 'project-textbook-page', params: {projectId: project.ud, textbookId: textbook.id, page: 1}}">{{ textbook.attributes.title }}</router-link><template v-if="textbook.attributes.publisher">, {{ textbook.attributes.publisher }}</template><template v-if="textbook.attributes.year"> ({{ textbook.attributes.year }})</template></h3>
+      <h3><router-link :to="{name: 'project-textbook-page-list-exercises', params: {projectId: project.ud, textbookId: textbook.id, page: 1}}">{{ textbook.attributes.title }}</router-link><template v-if="textbook.attributes.publisher">, {{ textbook.attributes.publisher }}</template><template v-if="textbook.attributes.year"> ({{ textbook.attributes.year }})</template></h3>
       <template v-if="exercisesByTextbookAndPage[textbook.id]">
         <ul v-for="[page, exercises] of Object.entries(exercisesByTextbookAndPage[textbook.id]?.pages)">
           <li>
-            <router-link :to="{name: 'project-textbook-page', params: {projectId: project.ud, textbookId: textbook.id, page}}">Page {{ page }}</router-link>
+            <router-link :to="{name: 'project-textbook-page-list-exercises', params: {projectId: project.ud, textbookId: textbook.id, page}}">Page {{ page }}</router-link>
             <ul>
               <li v-for="exercise in exercises">
               <strong>{{ exercise.attributes.number }}</strong> {{ ellipsis(exercise.attributes.instructions) }}
