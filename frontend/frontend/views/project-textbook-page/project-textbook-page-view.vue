@@ -5,7 +5,6 @@ import { computedAsync } from '@vueuse/core'
 
 import { useApiStore } from '../../stores/api'
 import { usePdfsStore } from '../../stores/pdfs'
-import Layout from '../../components/layout.vue'
 import { BBusy, BRow, BCol, BButton } from '../../components/opinion/bootstrap'
 import PdfRenderer from '../../components/pdf-renderer.vue'
 import PdfNavigationControls from '../../components/pdf-navigation-controls.vue'
@@ -50,25 +49,6 @@ const textbook = computedAsync(
   null,
   textbookLoading,
 )
-
-const breadcrumbs = computed(() => {
-  if (project.value?.exists && textbook.value?.exists) {
-    return [
-      {title: project.value.attributes.title, to: {name: 'project', params: {projectId: props.projectId}}},
-      {title: textbook.value.attributes.title},
-    ]
-  } else {
-    return []
-  }
-})
-
-const title = computed(() => {
-  if (project.value?.exists && textbook.value?.exists) {
-    return `MALIN - ${project.value?.attributes.title} - ${textbook.value?.attributes.title} - Page ${props.page}`
-  } else {
-    return 'MALIN'
-  }
-})
 
 // @todo(Feature, soon) Get the number of pages from the textbook itself
 const textbookPagesCount = computed(() => {
@@ -281,98 +261,96 @@ const visualizationUrl = computed(() => {
 </script>
 
 <template>
-  <layout :title="title" :breadcrumbs="breadcrumbs">
-    <b-busy size="7rem" :busy="projectLoading || textbookLoading">
-      <template v-if="project?.exists">
-        <template v-if="textbook?.exists">
-          <b-row>
-            <b-col>
-              <pdf-navigation-controls :page @update:page="changePage" :pagesCount="textbookPagesCount" :disabled="navigationDisabled">
-                <b-button secondary sm :disabled="!section" @click="sectionEditor.show(section.id)">&#9881;</b-button>
-              </pdf-navigation-controls>
-              <section-editor ref="sectionEditor" />
-              <template v-if="section">
-                <b-busy size="7rem" :busy="pdfLoading">
-                  <template v-if="pdf?.page">
-                    <div style="border: 1px solid black">
-                      <pdf-renderer
-                        ref="pdfRenderer"
-                        :page="pdf.page"
-                        class="img img-fluid"
-                      />
-                      <text-picker
-                        v-if="mode !== 'list'"
-                        class="img img-fluid" style="position: absolute; top: 0; left: 0"
-                        :width="pdfRenderer.width" :height="pdfRenderer.height" :transform="pdfRenderer.transform"
-                        :textContent="pdf.textContent"
-                        @text-selected="textSelected"
-                      />
-                    </div>
-                  </template>
-                  <template v-else>
-                    <pdf-not-loaded :name="section.relationships.pdfFile.relationships.namings[0].attributes.name" />
-                  </template>
-                </b-busy>
-              </template>
-              <template v-else>
-                <p>{{ $t('pageNoKnown') }}</p>
-                <!-- @todo Let user associate PDF to page from here -->
-              </template>
-            </b-col>
-            <b-col>
-              <h1>{{ $t('edition') }}</h1>
-              <b-busy :busy="modeIsLoading">
-                <template v-if="mode === 'list'">
-                  <exercises-list :textbook :page >
-                    <template v-slot="{exercise}">
-                      <b-button primary sm @click="switchToEditMode(exercise)">{{ $t('edit') }}</b-button>
-                      <b-button secondary sm @click="deleteExercise(exercise)">{{ $t('delete') }}</b-button>
-                    </template>
-                  </exercises-list>
-                  <p class="d-grid"><b-button primary @click="switchToCreateMode(false)">{{ $t('create') }}</b-button></p>
+  <b-busy size="7rem" :busy="projectLoading || textbookLoading">
+    <template v-if="project?.exists">
+      <template v-if="textbook?.exists">
+        <b-row>
+          <b-col>
+            <pdf-navigation-controls :page @update:page="changePage" :pagesCount="textbookPagesCount" :disabled="navigationDisabled">
+              <b-button secondary sm :disabled="!section" @click="sectionEditor.show(section.id)">&#9881;</b-button>
+            </pdf-navigation-controls>
+            <section-editor ref="sectionEditor" />
+            <template v-if="section">
+              <b-busy size="7rem" :busy="pdfLoading">
+                <template v-if="pdf?.page">
+                  <div style="border: 1px solid black">
+                    <pdf-renderer
+                      ref="pdfRenderer"
+                      :page="pdf.page"
+                      class="img img-fluid"
+                    />
+                    <text-picker
+                      v-if="mode !== 'list'"
+                      class="img img-fluid" style="position: absolute; top: 0; left: 0"
+                      :width="pdfRenderer.width" :height="pdfRenderer.height" :transform="pdfRenderer.transform"
+                      :textContent="pdf.textContent"
+                      @text-selected="textSelected"
+                    />
+                  </div>
                 </template>
                 <template v-else>
-                  <div style="position: relative">
-                    <ExerciseForm
-                      ref="exerciseForm"
-                      :fixedNumber="mode === 'edit'"
-                      v-model="currentExercise.attributes"
-                      @extractionEvent="(event) => extractionEvents.push(event)"
-                    />
-                    <div v-if="needsBoundingRectangle" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8);" class="text-center">
-                      <div style="position: absolute; left: 25%; top: 25%; width: 50%; height: 50%; background-color: white">
-                        <p>Merci de commencer par dessiner un rectangle autour de l'exercice entier.</p>
-                        <b-button sm secondary @click="needsBoundingRectangle = false">Passer cette étape</b-button>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="mb-3">
-                    <b-button secondary type="text" @click="switchToListMode">{{ $t('cancel') }}</b-button>
-                    <template v-if="mode === 'create'">
-                      <b-button primary type="text" @click="createExercise" :disabled="currentExercise.attributes.number === ''">{{ $t('save.next') }}</b-button>
-                    </template>
-                    <template v-else-if="mode === 'edit'">
-                      <b-button primary type="text" @click="updateExercise">{{ $t('save') }}</b-button>
-                    </template>
-                  </div>
+                  <pdf-not-loaded :name="section.relationships.pdfFile.relationships.namings[0].attributes.name" />
                 </template>
               </b-busy>
-            </b-col>
-            <b-col>
-              <h1>{{ $t('visualization') }}</h1>
-              <template v-if="mode === 'edit'">
-                <iframe ref="visualizationIFrame" :src="visualizationUrl" style="width: 100%; height: 100%"></iframe>
+            </template>
+            <template v-else>
+              <p>{{ $t('pageNoKnown') }}</p>
+              <!-- @todo Let user associate PDF to page from here -->
+            </template>
+          </b-col>
+          <b-col>
+            <h1>{{ $t('edition') }}</h1>
+            <b-busy :busy="modeIsLoading">
+              <template v-if="mode === 'list'">
+                <exercises-list :textbook :page >
+                  <template v-slot="{exercise}">
+                    <b-button primary sm @click="switchToEditMode(exercise)">{{ $t('edit') }}</b-button>
+                    <b-button secondary sm @click="deleteExercise(exercise)">{{ $t('delete') }}</b-button>
+                  </template>
+                </exercises-list>
+                <p class="d-grid"><b-button primary @click="switchToCreateMode(false)">{{ $t('create') }}</b-button></p>
               </template>
-            </b-col>
-          </b-row>
-        </template>
-        <template v-else>
-          <h1>{{ $t('textbookNotFound') }}</h1>
-        </template>
+              <template v-else>
+                <div style="position: relative">
+                  <ExerciseForm
+                    ref="exerciseForm"
+                    :fixedNumber="mode === 'edit'"
+                    v-model="currentExercise.attributes"
+                    @extractionEvent="(event) => extractionEvents.push(event)"
+                  />
+                  <div v-if="needsBoundingRectangle" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8);" class="text-center">
+                    <div style="position: absolute; left: 25%; top: 25%; width: 50%; height: 50%; background-color: white">
+                      <p>Merci de commencer par dessiner un rectangle autour de l'exercice entier.</p>
+                      <b-button sm secondary @click="needsBoundingRectangle = false">Passer cette étape</b-button>
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <b-button secondary type="text" @click="switchToListMode">{{ $t('cancel') }}</b-button>
+                  <template v-if="mode === 'create'">
+                    <b-button primary type="text" @click="createExercise" :disabled="currentExercise.attributes.number === ''">{{ $t('save.next') }}</b-button>
+                  </template>
+                  <template v-else-if="mode === 'edit'">
+                    <b-button primary type="text" @click="updateExercise">{{ $t('save') }}</b-button>
+                  </template>
+                </div>
+              </template>
+            </b-busy>
+          </b-col>
+          <b-col>
+            <h1>{{ $t('visualization') }}</h1>
+            <template v-if="mode === 'edit'">
+              <iframe ref="visualizationIFrame" :src="visualizationUrl" style="width: 100%; height: 100%"></iframe>
+            </template>
+          </b-col>
+        </b-row>
       </template>
       <template v-else>
-        <h1>{{ $t('projectNotFound') }}</h1>
+        <h1>{{ $t('textbookNotFound') }}</h1>
       </template>
-    </b-busy>
-  </layout>
+    </template>
+    <template v-else>
+      <h1>{{ $t('projectNotFound') }}</h1>
+    </template>
+  </b-busy>
 </template>
