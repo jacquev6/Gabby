@@ -2,7 +2,7 @@ describe('Gabby', () => {
   before(console.clear)
 
   after(() => {
-    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises')
+    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises,more-test-exercises')
   })
 
   it('performs extraction from scratch', () => {

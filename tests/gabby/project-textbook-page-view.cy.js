@@ -8,7 +8,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
   })
 
   after(() => {
-    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises')
+    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises,more-test-exercises')
   })
 
   it('displays an error message if the project does not exist', () => {

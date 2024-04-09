@@ -3,6 +3,10 @@ describe('Ping', () => {
     cy.request('POST', '/reset-for-tests/yes-im-sure')
   })
 
+  after(() => {
+    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises,more-test-exercises')
+  })
+
   it('accesses the route without trailing slash', () => {
     cy.visit('/ping')
     cy.contains('h1', 'Pings')
