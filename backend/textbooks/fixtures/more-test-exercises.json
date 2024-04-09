@@ -3,7 +3,10 @@
     "model": "textbooks.adaptedexercise",
     "pk": 1,
     "fields": {
-      "polymorphic_ctype": 17
+      "polymorphic_ctype": [
+        "textbooks",
+        "fillwithfreetextadaptedexercise"
+      ]
     }
   },
   {
@@ -17,7 +20,10 @@
     "model": "textbooks.adaptedexercise",
     "pk": 2,
     "fields": {
-      "polymorphic_ctype": 16
+      "polymorphic_ctype": [
+        "textbooks",
+        "selectwordsadaptedexercise"
+      ]
     }
   },
   {
