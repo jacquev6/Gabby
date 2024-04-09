@@ -5,6 +5,8 @@ import SelectWords from './components/select-words.vue'
 import ColoredParagraph from './components/colored-paragraph.vue'
 
 
+// @todo Use Vue-router in hash mode
+// Cf. https://router.vuejs.org/guide/essentials/history-mode.html#Hash-Mode
 const params = new URLSearchParams(window.location.search)
 const data = JSON.parse(params.get('data') || '{{ data }}')
 const initialExerciseId = params.get('exerciseId')
