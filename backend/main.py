@@ -82,7 +82,7 @@ def export_project(project_id: int):
                 "adaptation": exercise.adapted.make_adaptation_dict(),
             })
     data = json.dumps({
-        "exercises": {str(k): v for k, v in enumerate(exercises)}
+        "exercises": exercises,
     }).replace("\\", "\\\\").replace('"', "\\\"")
     print(data)
     return HTMLResponse(template.render(data=data))

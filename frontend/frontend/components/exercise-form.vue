@@ -236,12 +236,12 @@ async function save() {
 }
 
 const visualizationUrl = computed(() => {
-    const data = {exercises: {a: {
+    const data = {exercises: [{
       instructions: instructions.value,
       wording: wording.value,
       adaptation: {type: adaptedType.value, ...adaptedAttributes[adaptedType.value]}
-    }}}
-    return `/adapted?data=${JSON.stringify(data)}&exerciseId=a`
+    }]}
+    return `/adapted?preview&data=${JSON.stringify(data)}#/exercise/0`
   })
 
 defineExpose({
