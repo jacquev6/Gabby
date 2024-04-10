@@ -27,7 +27,7 @@ const exercisesCreated = ref(0)
 const projectLoading = ref(false)
 const project = computedAsync(
   async () => {
-    ++exercisesCreated.value  // Dependency for reactivity
+    exercisesCreated.value  // Dependency for reactivity
     return await api.client.getOne('project', props.projectId, {include: ['textbooks', 'exercises.textbook']})
   },
   null,

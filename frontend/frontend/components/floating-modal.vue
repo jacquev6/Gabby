@@ -5,8 +5,8 @@ import bootstrap from 'bootstrap/dist/js/bootstrap.bundle.min.js'
 
 
 const props = defineProps({
-  title: String,
-  reference: Object
+  title: {type: String, required: true},
+  reference: {type: Object, required: true},
 })
 
 const emit = defineEmits([

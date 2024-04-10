@@ -38,9 +38,12 @@ async function create() {
     {title: title.value, description: description.value},
     {},
   )
-  busy.value = false
+
   title.value = ''
   description.value = ''
+
+  busy.value = false
+
   emit('created', project)
 }
 
@@ -49,10 +52,15 @@ async function save() {
   await api.client.patch(
     'project',
     props.project.id,
-    {title: title.value, description: description.value},
+    {
+      title: title.value,
+      description: description.value,
+    },
     {},
   )
+
   busy.value = false
+
   emit('saved')
 }
 </script>

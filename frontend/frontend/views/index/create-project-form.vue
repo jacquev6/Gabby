@@ -5,6 +5,6 @@ import ProjectForm from '../../components/project-form.vue'
 
 <template>
   <project-form v-slot="{ disabled, create }">
-    <b-button primary :disabled="disabled" @click="create">{{ $t('createProject' )}}</b-button>
+    <b-button primary :disabled @click="create">{{ $t('createProject' )}}</b-button>
   </project-form>
 </template>
