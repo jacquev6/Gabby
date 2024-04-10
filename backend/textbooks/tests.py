@@ -2112,6 +2112,42 @@ class AdaptedExerciseApiTests(TestMixin, TransactionTestCase):
         self.assertIsInstance(exercise.adapted, FillWithFreeTextAdaptedExercise)
         self.assertEqual(exercise.adapted.placeholder, "...")
 
+    def test_dont_update_adapted(self):
+        self.exercise.adapted = SelectWordsAdaptedExercise.objects.create(colors=3)
+        self.exercise.save()
+        payload = {
+            "data": {
+                "type": "exercise",
+                "id": "1",
+                "attributes": {
+                    "instructions": "INSTRUCTIONS",
+                },
+            },
+        }
+        response = self.patch("http://server/exercises/1", payload)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
+        self.assertEqual(response.json(), {
+            "data": {
+                "type": "exercise",
+                "id": "1",
+                "links": {"self": "http://server/exercises/1"},
+                "attributes": {
+                    "textbookPage": None, "number": "Exercise",
+                    "instructions": "INSTRUCTIONS", "example": "", "clue": "", "wording": "",
+                },
+                "relationships": {
+                    "project": {"data": {"id": "1", "type": "project"}},
+                    "extractionEvents": {"data": [], "meta": {"count": 0}},
+                    "textbook": {"data": None},
+                    "adapted": {"data": {"type": "selectWords", "id": "1"}},
+                },
+            },
+        })
+
+        self.assertEqual(SelectWordsAdaptedExercise.objects.count(), 1)
+        exercise = Exercise.objects.get()
+        self.assertEqual(exercise.adapted, SelectWordsAdaptedExercise.objects.get())
+
     def test_update_adapted__none(self):
         self.exercise.adapted = SelectWordsAdaptedExercise.objects.create(colors=3)
         self.exercise.save()

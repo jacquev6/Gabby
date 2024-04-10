@@ -364,7 +364,7 @@ class ExercisesResource:
             previous_adapted = item.adapted
             yield
             item.save()
-            if previous_adapted is not None and item.adapted != previous_adapted:
+            if previous_adapted is not None and unwrap(item.adapted) != unwrap(previous_adapted):
                 previous_adapted.delete()
 
     class ItemDeleter:
