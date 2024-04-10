@@ -1,11 +1,12 @@
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, reactive, computed, watch } from 'vue'
 import { nextTick } from 'vue'
 
-import { BBusy, BLabeledInput, BLabeledTextarea, BButton } from './opinion/bootstrap'
+import { BBusy, BLabeledInput, BLabeledTextarea, BButton, BSelect } from './opinion/bootstrap'
 import TextSelectionMenu from './exercise-form-text-selection-menu.vue'
 import OptionalTextarea from './optional-textarea.vue'
 import { useApiStore } from '../stores/api'
+import adaptedForms from './adapted-forms'
 
 
 const props = defineProps({
@@ -40,6 +41,11 @@ const fields = {
   example,
   clue,
 }
+const adaptedType = ref('-')
+const adaptedAttributes = reactive({'-': {}})
+for (const kind of Object.keys(adaptedForms)) {
+  adaptedAttributes[kind] = {}
+}
 
 watch(
   [() => props.number, () => props.automaticNumber],
@@ -58,6 +64,9 @@ watch(
     wording.value = props.exercise?.attributes.wording ?? ''
     example.value = props.exercise?.attributes.example ?? ''
     clue.value = props.exercise?.attributes.clue ?? ''
+
+    adaptedType.value = props.exercise?.relationships.adapted?.type ?? '-'
+    adaptedAttributes[adaptedType.value] = props.exercise?.relationships.adapted?.attributes ?? {}
   },
   {immediate: true},
 )
@@ -97,7 +106,6 @@ function textSelected(text, point, textItems, rectangle) {
     showTextSelectionMenu.value = true
   }
 }
-
 
 const instructionsTextArea = ref(null)
 const wordingTextArea = ref(null)
@@ -146,6 +154,13 @@ async function create() {
       textbook: props.textbook,
     },
   )
+  if (adaptedType.value !== '-') {
+    await api.client.post(
+      adaptedType.value,
+      adaptedAttributes[adaptedType.value],
+      {exercise: {type: 'exercise', id: exercise.id}},
+    )
+  }
   for (const event of extractionEvents) {
     await api.client.post(
       'extractionEvent',
@@ -161,6 +176,9 @@ async function create() {
   wording.value = ''
   example.value = ''
   clue.value = ''
+
+  adaptedType.value = '-'
+  adaptedAttributes[adaptedType.value] = {}
 
   busy.value = false
 
@@ -191,6 +209,17 @@ async function save() {
     },
     {},
   )
+  if (adaptedType.value === '-') {
+    if (props.exercise.relationships.adapted !== null) {
+      await api.client.delete(props.exercise.relationships.adapted.type, props.exercise.relationships.adapted.id)
+    }
+  } else {
+    await api.client.post(
+      adaptedType.value,
+      adaptedAttributes[adaptedType.value],
+      {exercise: {type: 'exercise', id: props.exercise.id}},
+    )
+  }
   for (const event of extractionEvents) {
     await api.client.post(
       'extractionEvent',
@@ -206,16 +235,18 @@ async function save() {
   emit('saved')
 }
 
-defineExpose({
-  textSelected,
-  visualizationUrl: computed(() => {
+const visualizationUrl = computed(() => {
     const data = {exercises: {a: {
       instructions: instructions.value,
       wording: wording.value,
-      adaptation: {type: 'selectWords', colors: 3}
+      adaptation: {type: adaptedType.value, ...adaptedAttributes[adaptedType.value]}
     }}}
     return `/adapted?data=${JSON.stringify(data)}&exerciseId=a`
   })
+
+defineExpose({
+  textSelected,
+  visualizationUrl,
 })
 </script>
 
@@ -242,6 +273,20 @@ defineExpose({
       <b-labeled-textarea ref="wordingTextArea" :label="$t('exerciseWording')" v-model="wording" @change="extractionEvents.push({kind: 'WordingSetManually', value: wording})" />
       <optional-textarea ref="exampleTextArea" :label="$t('exerciseExample')" v-model="example" @change="extractionEvents.push({kind: 'ExampleSetManually', value: example})" />
       <optional-textarea ref="clueTextArea" :label="$t('exerciseClue')" v-model="clue" @change="extractionEvents.push({kind: 'ClueSetManually', value: clue})" />
+
+      <div class="mb-3">
+        <label class="form-label" for="abc">{{ $t('exerciseType') }}</label>
+          <b-select
+          id="abc"
+          v-model="adaptedType"
+          :options="['-', ...Object.keys(adaptedForms).map(kind => ({value: kind, label: $t(kind)}))]"
+        />
+      </div>
+      <component
+        v-if="adaptedType !== '-'"
+        :is="adaptedForms[adaptedType]"
+        v-model="adaptedAttributes[adaptedType]"
+      />
 
       <div v-if="needsBoundingRectangle" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8);" class="text-center">
         <div style="position: absolute; left: 25%; top: 25%; width: 50%; height: 50%; background-color: white">

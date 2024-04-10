@@ -40,6 +40,9 @@
   "existingTextbooksAndExercises": "Existing textbooks and exercises",
   "noExercisesForNow": "No exercises for now.",
   "independentExercises": "Independent exercises",
+  "exerciseType": "Type",
+  "selectWords": "Select words",
+  "fillWithFreeText": "Fill with free text",
 
 
   "textbookNotFound": "Textbook not found",

@@ -40,6 +40,9 @@
   "existingTextbooksAndExercises": "Manuels et exercices existants",
   "noExercisesForNow": "Aucun exercice pour le moment.",
   "independentExercises": "Exercices indépendants",
+  "exerciseType": "Type",
+  "selectWords": "Selection de mots",
+  "fillWithFreeText": "Remplissage par text libre",
 
 
   "textbookNotFound": "Manuel introuvable",

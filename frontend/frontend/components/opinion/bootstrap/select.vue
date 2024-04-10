@@ -27,7 +27,7 @@ function label(option) {
 
 <template>
   <select v-model="model" class="form-select">
-    <template v-for="option in options" :key="value">
+    <template v-for="option in options" :key="value(option)">
       <option :value="value(option)">{{ label(option) }}</option>
     </template>
   </select>
