@@ -63,10 +63,9 @@ app.include_router(
 def extraction_report(project_id: int):
     return make_extraction_report(project_id)
 
-env = jinja2.Environment(
+jinja2_env = jinja2.Environment(
     loader=jinja2.PackageLoader("textbooks"),
 )
-template = env.get_template("adapted/index.html")
 
 @app.get("/api/project-{project_id}.html")
 def export_project(project_id: int):
@@ -84,8 +83,7 @@ def export_project(project_id: int):
     data = json.dumps({
         "exercises": exercises,
     }).replace("\\", "\\\\").replace('"', "\\\"")
-    print(data)
-    return HTMLResponse(template.render(data=data))
+    return HTMLResponse(jinja2_env.get_template("adapted/index.html").render(data=data))
 
 @app.post("/api/token")
 def login(access_token: AuthenticationToken):
