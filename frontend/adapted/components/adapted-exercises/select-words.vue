@@ -2,7 +2,7 @@
 import { reactive, computed, watch } from 'vue'
 import chroma from 'chroma-js'
 
-import ColoredParagraph from './colored-paragraph.vue'
+import ColoredParagraph from '../colored-paragraph.vue'
 
 
 const props = defineProps({
