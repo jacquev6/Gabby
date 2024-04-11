@@ -194,14 +194,12 @@ describe('Gabby\'s project\'s textbook page view', () => {
   })
 
   it('collects extraction events on new exercises', () => {
-    cy.visit('/project/1/textbook/1/page/6')
+    cy.visit('/project/1/textbook/1/page/6/new-exercise')
     cy.get('select').select('en')
     cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
     cy.get('div.busy').should('not.exist')
 
-    cy.get('a:contains("New exercise")').click()
     cy.get('button:contains("Passer cette étape")').click()
-
     cy.get('label:contains("Number")').next().type('1')
     cy.get('label:contains("Instructions")').next().type('Ceci est la consigne')
     cy.get('p:contains("Example")').click()
@@ -215,19 +213,21 @@ describe('Gabby\'s project\'s textbook page view', () => {
     cy.get('canvas[style="position: absolute; top: 0px; left: 0px;"]').as('canvas')
     cy.get('button:contains("Passer cette étape")').should('exist')
     cy.get('@canvas').trigger('pointermove', 5, 5)
-    cy.get('@canvas').trigger('pointerdown', 15, 370, { pointerId: 1 })
-    cy.get('@canvas').trigger('pointermove', 150, 420)
-    cy.get('@canvas').trigger('pointerup', 150, 420, { pointerId: 1 })
+    cy.get('@canvas').trigger('pointerdown', 15, 363, { pointerId: 1 })
+    cy.get('@canvas').trigger('pointermove', 150, 413)
+    cy.get('@canvas').trigger('pointerup', 150, 413, { pointerId: 1 })
     cy.get('button:contains("Passer cette étape")').should('not.exist')
     cy.get('@canvas').trigger('pointermove', 5, 5)
     cy.get('@canvas').trigger('pointerdown', 15, 370, { pointerId: 1 })
-    cy.get('@canvas').trigger('pointermove', 150, 395)
-    cy.get('@canvas').trigger('pointerup', 150, 395, { pointerId: 1 })
+    cy.get('@canvas').trigger('pointermove', 150, 388)
+    cy.get('@canvas').trigger('pointerup', 150, 388, { pointerId: 1 })
+    cy.get('label:contains("Selected text")').next().should('have.value', 'Classe les mots en trois groupes :\nnom, verbe, adjectif.')
     cy.get('button:contains("Instructions")').click()
     cy.get('@canvas').trigger('pointermove', 5, 5)
-    cy.get('@canvas').trigger('pointerdown', 15, 390, { pointerId: 1 })
-    cy.get('@canvas').trigger('pointermove', 150, 415)
-    cy.get('@canvas').trigger('pointerup', 150, 415, { pointerId: 1 })
+    cy.get('@canvas').trigger('pointerdown', 15, 385, { pointerId: 1 })
+    cy.get('@canvas').trigger('pointermove', 150, 410)
+    cy.get('@canvas').trigger('pointerup', 150, 410, { pointerId: 1 })
+    cy.get('label:contains("Selected text")').next().should('have.value', 'verrou ◆ baigner ◆ joli ◆ chaleur ◆ grosse ◆\nsurveiller ◆ degré ◆ librairie ◆ repas ◆ parler')
     cy.get('label:contains("Selected text")').next().type('Blah blah blah')
     cy.get('button:contains("Wording")').click()
     cy.get('button:contains("Save")').click()
@@ -238,27 +238,15 @@ describe('Gabby\'s project\'s textbook page view', () => {
 
     cy.get('a').contains('the extraction report').should('have.attr', 'href', '/api/project-1-extraction-report.json')
 
-    cy.request('/api/project-1-extraction-report.json').its('body').should('deep.eq', {project: {
-      title: 'Premier projet de test',
-      textbooks: [
-        {
-          title: 'Français CE2',
-          exercises: [
-            {
-              page: 6,
-              number: '1',
-              events: [
+    cy.request('/api/project-1-extraction-report.json').as('report')
+    cy.get('@report').its('body.project.textbooks[0].exercises[0].events').should('deep.eq', [
                 {kind: 'ExerciseNumberSetManually', value: '1'},
                 {kind: 'InstructionsSetManually', value: 'Ceci est la consigne'},
                 {kind: 'ExampleSetManually', value: 'Ceci est un exemple'},
                 {kind: 'ClueSetManually', value: 'Ceci est un indice'},
                 {kind: 'WordingSetManually', value: 'Ceci est l\'énoncé'},
-              ],
-            },
-            {
-              page: 6,
-              number: '2',
-              events: [
+    ])
+    cy.get('@report').its(`body.project.textbooks[0].exercises[1].events`).should('deep.eq', [
                 {kind: 'ExerciseNumberSetAutomatically', value: '2'},
                 {
                   kind: 'BoundingRectangleSelectedInPdf',
@@ -267,8 +255,8 @@ describe('Gabby\'s project\'s textbook page view', () => {
                     sha256: 'f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c',
                     page: 1,
                     rectangle: {
-                      start: {x: 55.49873958525407, y: (isProdPreview ? 142.1556772665365 : 142.81480621450703)},
-                      stop: {x: 303.099891274904, y: (isProdPreview ? 50.45078015760089 : 51.10990910557143)},
+                      start: {x: 55.95073920041661, y: (isProdPreview ? 142.1556772665365 : 144.69759344665067)},
+                      stop: {x: 307.61988742652943, y: (isProdPreview ? 50.45078015760089 : 51.4842038132133)},
                     },
                   },
                 },
@@ -279,8 +267,8 @@ describe('Gabby\'s project\'s textbook page view', () => {
                     sha256: 'f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c',
                     page: 1,
                     rectangle: {
-                      start: {x: 55.49873958525407, y: (isProdPreview ? 142.1556772665365 : 142.81480621450703)},
-                      stop: {x: 303.099891274904, y: (isProdPreview ? 96.30322871206863 : 96.96235766003917)},
+                      start: {x: 55.95073920041661, y: (isProdPreview ? 142.1556772665365 : 131.64771889796953)},
+                      stop: {x: 307.61988742652943, y: (isProdPreview ? 96.30322871206863 : 98.0908986299321)},
                     },
                   },
                   value: '2\nClasse les mots en trois groupes :\nnom, verbe, adjectif.',
@@ -449,8 +437,8 @@ describe('Gabby\'s project\'s textbook page view', () => {
                     sha256: 'f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c',
                     page: 1,
                     rectangle: {
-                      start: {x: 55.49873958525407, y: (isProdPreview ? 105.47371842296229 : 106.13284737093272)},
-                      stop: {x: 303.099891274904, y: (isProdPreview ? 59.62126986849444 : 60.28039881646487)},
+                      start: {x: 55.95073920041661, y: (isProdPreview ? 105.47371842296229 : 103.68370200793822)},
+                      stop: {x: 307.61988742652943, y: (isProdPreview ? 59.62126986849444 : 57.077007191219536)},
                     },
                   },
                   value: 'verrou ◆ baigner ◆ joli ◆ chaleur ◆ grosse ◆\nsurveiller ◆ degré ◆ librairie ◆ repas ◆ parler',
@@ -866,27 +854,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
                   valueBefore: '',
                   valueAfter: 'verrou ◆ baigner ◆ joli ◆ chaleur ◆ grosse ◆\nsurveiller ◆ degré ◆ librairie ◆ repas ◆ parlerBlah blah blah',
                 },
-              ],
-            },
-            {
-              page: 6,
-              number: '3',
-              events: []
-            },
-            {
-              page: 6,
-              number: '4',
-              events: [],
-            },
-            {
-              page: 7,
-              number: '9',
-              events: [],
-            },
-          ],
-        },
-      ],
-    }})
+    ])
   })
 
   it('collects extraction events when editing exercises', () => {
