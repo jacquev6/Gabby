@@ -21,17 +21,19 @@ else
   exit 1
 fi
 
-# @todo Don't 'docker buildx use' the multi-platform builder globaly. Use the '--use' option of 'docker buildx build' instead. (To avoid changing the system's builder for every projects)
-docker buildx use gabby-multi-platform-builder 2>/dev/null || docker buildx create --name gabby-multi-platform-builder --use
+if ! docker buildx ls | grep gabby-multi-platform-builder >/dev/null
+then
+  docker buildx create --name gabby-multi-platform-builder
+fi
 
-# @todo Merge the two 'Dockerfile's into one (they have common parts and are interdependent)
-# @todo Use 'docker build --target' to choose what to build in the merged 'Dockerfile'
-# @todo Change tags from 'jacquev6/gabby-$part:$version' to 'jacquev6/gabby:$version-$part'
-
-for part in frontend backend
+for part in $(grep 'AS final-' docker/Dockerfile | sed 's/.*AS final-//')
 do
-  docker buildx build .. --file $part/Dockerfile \
+  echo $part
+  echo $part | sed 's/./-/g'
+  docker buildx build \
+    --builder gabby-multi-platform-builder \
+    .. --file docker/Dockerfile --target final-$part \
     --build-arg GABBY_VERSION=$gabby_version \
-    --tag jacquev6/gabby-$part:$gabby_version \
+    --tag jacquev6/gabby:$gabby_version-$part \
     $args
 done

@@ -1,5 +1,12 @@
 FROM node:20
 
+WORKDIR /app
+
+ADD frontend/package.json /app
+ADD frontend/package-lock.json /app
+
+RUN npm install
+
 # https://docs.docker.com/engine/reference/builder/#run---mounttypecache
 RUN set -x \
  && rm -f /etc/apt/apt.conf.d/docker-clean \
@@ -22,12 +29,3 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     xauth \
     xvfb \
  && true
-
-WORKDIR /app/frontend
-
-ADD frontend/package.json /app/frontend
-ADD frontend/package-lock.json /app/frontend
-
-RUN npm install
-
-ADD frontend /app/frontend

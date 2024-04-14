@@ -272,8 +272,8 @@ describe('Gabby\'s project\'s textbook page view', () => {
           sha256: 'f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c',
           page: 1,
           rectangle: {
-            start: {x: 55.95073920041661, y: (isProdPreview ? 142.1556772665365 : 144.69759344665067)},
-            stop: {x: 307.61988742652943, y: (isProdPreview ? 50.45078015760089 : 51.4842038132133)},
+            start: {x: 55.95073920041661, y: (isProdPreview ? 144.02762220866032 : 144.69759344665067)},
+            stop: {x: 307.61988742652943, y: (isProdPreview ? 50.81423257522306 : 51.4842038132133)},
           },
         },
       },
@@ -284,8 +284,8 @@ describe('Gabby\'s project\'s textbook page view', () => {
           sha256: 'f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c',
           page: 1,
           rectangle: {
-            start: {x: 55.95073920041661, y: (isProdPreview ? 142.1556772665365 : 131.64771889796953)},
-            stop: {x: 307.61988742652943, y: (isProdPreview ? 96.30322871206863 : 98.0908986299321)},
+            start: {x: 55.95073920041661, y: (isProdPreview ? 130.97774765997917 : 131.64771889796953)},
+            stop: {x: 307.61988742652943, y: (isProdPreview ? 97.42092739194163 : 98.0908986299321)},
           },
         },
         value: '2\nClasse les mots en trois groupes :\nnom, verbe, adjectif.',
@@ -454,8 +454,8 @@ describe('Gabby\'s project\'s textbook page view', () => {
           sha256: 'f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c',
           page: 1,
           rectangle: {
-            start: {x: 55.95073920041661, y: (isProdPreview ? 105.47371842296229 : 103.68370200793822)},
-            stop: {x: 307.61988742652943, y: (isProdPreview ? 59.62126986849444 : 57.077007191219536)},
+            start: {x: 55.95073920041661, y: (isProdPreview ? 103.01373076994787 : 103.68370200793822)},
+            stop: {x: 307.61988742652943, y: (isProdPreview ? 56.40703595322918 : 57.077007191219536)},
           },
         },
         value: 'verrou ◆ baigner ◆ joli ◆ chaleur ◆ grosse ◆\nsurveiller ◆ degré ◆ librairie ◆ repas ◆ parler',

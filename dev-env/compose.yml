@@ -137,7 +137,7 @@ services:
     working_dir: /app/backend
     environment:
       DJANGO_SETTINGS_MODULE: opinion.settings.dev
-    command: ["./manage.py", "loaddata", "test-users", "test-exercises", "more-test-exercises"]
+    command: ["./manage.py", "loaddata", "test-exercises", "more-test-exercises"]
     depends_on:
       migrator:
         condition: service_completed_successfully

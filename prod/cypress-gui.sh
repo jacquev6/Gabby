@@ -9,8 +9,8 @@ cd "$(dirname "${BASH_SOURCE[0]}")/."
 xhost +
 docker compose exec \
   --env DISPLAY \
-  preview-tester \
+  tester-shell \
     npx cypress open \
       --e2e \
       --env IS_PROD_PREVIEW=true \
-      --config baseUrl=http://preview-fanout:8090/
+      --config baseUrl=http://fanout:8090/

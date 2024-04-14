@@ -56,6 +56,7 @@ describe('Gabby has routes that', () => {
     cy.contains('h2', 'FastAPI')
   })
 
+  // @todo Re-enable Django admin in prod
   if (!isProdPreview) {
     it('can access Django admin without trailing /', () => {
       cy.visit('/api/admin')
@@ -67,6 +68,8 @@ describe('Gabby has routes that', () => {
       cy.contains('header', 'Django administration')
     })
   }
+
+  // @todo Add test for Adminer, in dev and prod
 
   it('can access Django statics', () => {
     cy.request('/api/static/admin/css/base.css').then(response => {
