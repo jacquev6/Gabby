@@ -49,8 +49,8 @@ defineExpose({
       </exercise-form>
     </b-col>
     <b-col>
-      <h1>{{ $t('visualization') }}</h1>
-      <iframe :src="exerciseForm?.visualizationUrl" style="width: 100%; height: 100%"></iframe>
+      <h1>{{ $t('adaptation') }}</h1>
+      <iframe :src="exerciseForm?.adaptationUrl" style="width: 100%; height: 100%"></iframe>
     </b-col>
   </b-row>
 </template>

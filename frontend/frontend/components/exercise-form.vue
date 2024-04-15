@@ -235,7 +235,7 @@ async function save() {
   emit('saved')
 }
 
-const visualizationUrl = computed(() => {
+const adaptationUrl = computed(() => {
     const data = {exercises: [{
       instructions: instructions.value,
       wording: wording.value,
@@ -246,7 +246,7 @@ const visualizationUrl = computed(() => {
 
 defineExpose({
   textSelected,
-  visualizationUrl,
+  adaptationUrl,
 })
 </script>
 

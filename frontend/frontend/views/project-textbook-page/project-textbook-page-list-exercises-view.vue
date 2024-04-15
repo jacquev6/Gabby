@@ -51,7 +51,7 @@ defineExpose({
       </b-busy>
     </b-col>
     <b-col>
-      <h1>{{ $t('visualization') }}</h1>
+      <h1>{{ $t('adaptation') }}</h1>
     </b-col>
   </b-row>
 </template>
