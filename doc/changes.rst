@@ -1,7 +1,7 @@
 Évolutions prévues
 ==================
 
-Voir la `roadmap à jour dans le code source <https://github.com/jacquev6/Gabby/blob/develop/roadmap.md>`__.
+Voir la `roadmap à jour dans Google Docs <https://docs.google.com/document/d/1DS8Rko0q3MCxfUUt0CijjdX41bBWy8J_3IV4rR0sOeA/edit?usp=sharing>`__.
 
 Historique des versions
 =======================
