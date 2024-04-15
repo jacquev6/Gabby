@@ -7,7 +7,6 @@ Documentation de MALIN
 
    user
    changes
-   roadmap
 
 Bienvenue dans cette documentation destinée aux utilisateurs de MALIN !
 

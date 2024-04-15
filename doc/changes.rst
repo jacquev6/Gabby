@@ -1,3 +1,8 @@
+Évolutions prévues
+==================
+
+Voir la `roadmap à jour dans le code source <https://github.com/jacquev6/Gabby/blob/develop/roadmap.md>`__.
+
 Historique des versions
 =======================
 
