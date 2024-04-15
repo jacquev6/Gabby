@@ -768,3 +768,220 @@ class AtomicAttributesTestCase(TestMixin, TestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.text)
 
         self.assertIsNone(self.factory.get(AtomicAttributesItem, "1"))
+
+
+@dataclasses.dataclass
+class CompoundAttributesItem:
+    @dataclasses.dataclass
+    class Rectangle:
+        @dataclasses.dataclass
+        class Point:
+            x: float
+            y: float
+
+        tl: Point
+        br: Point
+
+    id: str
+
+    d: dict
+    l: list
+    r: Rectangle
+
+    saved: int = 0
+
+
+class CompoundAttributesFactoryMixin:
+    def __init__(self, factory: Annotated[ItemsFactory, Depends(lambda: CompoundAttributesTestCase.factory)]):
+        self.factory = factory
+
+
+class CompoundAttributesResource:
+    singular_name = "resource"
+    plural_name = "resources"
+
+    default_page_size = 2
+
+    class Model(BaseModel):
+        class Rectangle(BaseModel):
+            class Point(BaseModel):
+                x: float
+                y: float
+
+            tl: Point
+            br: Point
+
+        d: dict
+        l: list
+        r: Rectangle
+
+    class ItemCreator(CompoundAttributesFactoryMixin):
+        def __call__(self, **kwds):
+            return self.factory.create(CompoundAttributesItem, **kwds)
+
+    class ItemGetter(CompoundAttributesFactoryMixin):
+        def __call__(self, id):
+            return self.factory.get(CompoundAttributesItem, id)
+
+    class ItemSaver:
+        @contextmanager
+        def __call__(self, item):
+            yield
+            item.saved += 1
+
+    class ItemDeleter(CompoundAttributesFactoryMixin):
+        def __call__(self, item):
+            self.factory.delete(CompoundAttributesItem, item.id)
+
+
+class CompoundAttributesTestCase(TestMixin, TestCase):
+    resources = [CompoundAttributesResource()]
+
+    def setUp(self):
+        super().setUp()
+        self.__class__.factory = ItemsFactory()
+
+    def test_create(self):
+        response = self.post("http://server/resources", {
+            "data": {
+                "type": "resource",
+                "attributes": {
+                    "d": {"a": 1},
+                    "l": [2, 3],
+                    "r": {"tl": {"x": 4, "y": 5}, "br": {"x": 6, "y": 7}},
+                },
+            },
+        })
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
+        self.assertEqual(response.json(), {
+            "data": {
+                "type": "resource",
+                "id": "1",
+                "links": {"self": "http://server/resources/1"},
+                "attributes": {
+                    "d": {"a": 1},
+                    "l": [2, 3],
+                    "r": {"tl": {"x": 4, "y": 5}, "br": {"x": 6, "y": 7}},
+                },
+            },
+        })
+
+        item = self.factory.get(CompoundAttributesItem, "1")
+        self.assertEqual(item.d, {"a": 1})
+        self.assertEqual(item.l, [2, 3])
+        self.assertEqual(item.r.tl.x, 4)
+        self.assertEqual(item.r.tl.y, 5)
+        self.assertEqual(item.r.br.x, 6)
+        self.assertEqual(item.r.br.y, 7)
+
+    def test_get_item(self):
+        self.factory.create(
+            CompoundAttributesItem,
+            d={"a": 1},
+            l=[2, 3],
+            r=CompoundAttributesItem.Rectangle(
+                tl=CompoundAttributesItem.Rectangle.Point(x=4, y=5),
+                br=CompoundAttributesItem.Rectangle.Point(x=6, y=7),
+            ),
+        )
+
+        response = self.get(f"http://server/resources/1")
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
+        self.assertEqual(response.json(), {
+            "data": {
+                "type": "resource",
+                "id": "1",
+                "links": {"self": f"http://server/resources/1"},
+                "attributes": {
+                    "d": {"a": 1},
+                    "l": [2, 3],
+                    "r": {"tl": {"x": 4, "y": 5}, "br": {"x": 6, "y": 7}},
+                },
+            },
+        })
+
+    def test_update__nothing(self):
+        self.factory.create(
+            CompoundAttributesItem,
+            d={"a": 1},
+            l=[2, 3],
+            r=CompoundAttributesItem.Rectangle(
+                tl=CompoundAttributesItem.Rectangle.Point(x=4, y=5),
+                br=CompoundAttributesItem.Rectangle.Point(x=6, y=7),
+            ),
+        )
+
+        response = self.patch(f"http://server/resources/1", {
+            "data": {
+                "type": "resource",
+                "id": "1",
+                # No "attributes", no "relationships"
+            },
+        })
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
+        self.assertEqual(response.json(), {
+            "data": {
+                "type": "resource",
+                "id": "1",
+                "links": {"self": f"http://server/resources/1"},
+                "attributes": {
+                    "d": {"a": 1},
+                    "l": [2, 3],
+                    "r": {"tl": {"x": 4, "y": 5}, "br": {"x": 6, "y": 7}},
+                },
+            },
+        })
+
+        item = self.factory.get(CompoundAttributesItem, "1")
+        self.assertEqual(item.d, {"a": 1})
+        self.assertEqual(item.l, [2, 3])
+        self.assertEqual(item.r.tl.x, 4)
+        self.assertEqual(item.r.tl.y, 5)
+        self.assertEqual(item.r.br.x, 6)
+        self.assertEqual(item.r.br.y, 7)
+        self.assertEqual(item.saved, 0)
+
+    def test_update__all(self):
+        self.factory.create(
+            CompoundAttributesItem,
+            d={"a": 1},
+            l=[2, 3],
+            r=CompoundAttributesItem.Rectangle(
+                tl=CompoundAttributesItem.Rectangle.Point(x=4, y=5),
+                br=CompoundAttributesItem.Rectangle.Point(x=6, y=7),
+            ),
+        )
+
+        response = self.patch(f"http://server/resources/1", {
+            "data": {
+                "type": "resource",
+                "id": "1",
+                "attributes": {
+                    "d": {"a": 10},
+                    "l": [20, 30],
+                    "r": {"tl": {"x": 40, "y": 50}, "br": {"x": 60, "y": 70}},
+                },
+            },
+        })
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
+        self.assertEqual(response.json(), {
+            "data": {
+                "type": "resource",
+                "id": "1",
+                "links": {"self": f"http://server/resources/1"},
+                "attributes": {
+                    "d": {"a": 10},
+                    "l": [20, 30],
+                    "r": {"tl": {"x": 40, "y": 50}, "br": {"x": 60, "y": 70}},
+                },
+            },
+        })
+
+        item = self.factory.get(CompoundAttributesItem, "1")
+        self.assertEqual(item.d, {"a": 10})
+        self.assertEqual(item.l, [20, 30])
+        self.assertEqual(item.r.tl.x, 40)
+        self.assertEqual(item.r.tl.y, 50)
+        self.assertEqual(item.r.br.x, 60)
+        self.assertEqual(item.r.br.y, 70)
+        self.assertEqual(item.saved, 1)

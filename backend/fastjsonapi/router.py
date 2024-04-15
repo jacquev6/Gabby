@@ -347,9 +347,10 @@ def add_resource_routes(resources, resource, router):
                 try:
                     with save_item(item):
                         needs_save = False
-                        for (key, value) in payload.data.attributes.model_dump(exclude_unset=True).items():
-                            setattr(item, humps.decamelize(key), value)
-                            needs_save = True
+                        for (key, value) in dict(payload.data.attributes).items():
+                            if key in payload.data.attributes.model_fields_set:
+                                setattr(item, humps.decamelize(key), value)
+                                needs_save = True
                         for (key, value) in dict(payload.data.relationships).items():
                             if key in payload.data.relationships.model_fields_set:
                                 if isinstance(value.data, list):
