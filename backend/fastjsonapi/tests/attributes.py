@@ -13,7 +13,7 @@ from ..testing import TestMixin, ItemsFactory
 
 
 @dataclasses.dataclass
-class Item:
+class AtomicAttributesItem:
     id: str
 
     plain_int: int = 42
@@ -29,12 +29,12 @@ class Item:
         return self.secret_str.upper()
 
 
-class FactoryMixin:
-    def __init__(self, factory: Annotated[ItemsFactory, Depends(lambda: AttributesTestCase.factory)]):
+class AtomicAttributesFactoryMixin:
+    def __init__(self, factory: Annotated[ItemsFactory, Depends(lambda: AtomicAttributesTestCase.factory)]):
         self.factory = factory
 
 
-class Resource:
+class AtomicAttributesResource:
     singular_name = "resource"
     plural_name = "resources"
 
@@ -48,17 +48,17 @@ class Resource:
         secret_str: Annotated[str, Secret()]
         computed_str: Annotated[str, Computed(), Filterable()]
 
-    class ItemCreator(FactoryMixin):
+    class ItemCreator(AtomicAttributesFactoryMixin):
         def __call__(self, **kwds):
-            return self.factory.create(Item, **kwds)
+            return self.factory.create(AtomicAttributesItem, **kwds)
 
-    class ItemGetter(FactoryMixin):
+    class ItemGetter(AtomicAttributesFactoryMixin):
         def __call__(self, id):
-            return self.factory.get(Item, id)
+            return self.factory.get(AtomicAttributesItem, id)
 
-    class PageGetter(FactoryMixin):
+    class PageGetter(AtomicAttributesFactoryMixin):
         def __call__(self, sort, filters, first_index, page_size):
-            items = self.factory.get_all(Item)
+            items = self.factory.get_all(AtomicAttributesItem)
             if filters.computed_str:
                 items = [item for item in items if item.computed_str == filters.computed_str]
             return (len(items), items[first_index:first_index + page_size])
@@ -69,13 +69,13 @@ class Resource:
             yield
             item.saved += 1
 
-    class ItemDeleter(FactoryMixin):
+    class ItemDeleter(AtomicAttributesFactoryMixin):
         def __call__(self, item):
-            self.factory.delete(Item, item.id)
+            self.factory.delete(AtomicAttributesItem, item.id)
 
 
-class AttributesTestCase(TestMixin, TestCase):
-    resources = [Resource()]
+class AtomicAttributesTestCase(TestMixin, TestCase):
+    resources = [AtomicAttributesResource()]
 
     def setUp(self):
         super().setUp()
@@ -124,7 +124,7 @@ class AttributesTestCase(TestMixin, TestCase):
             },
         })
 
-        item = self.factory.get(Item, "1")
+        item = self.factory.get(AtomicAttributesItem, "1")
         self.assertEqual(item.plain_int, 57)
         self.assertEqual(item.defaulted_datetime, datetime.datetime(2024, 3, 18, 15, 38, 15, tzinfo=datetime.timezone.utc))
         self.assertEqual(item.constant_str, "Constant string")
@@ -163,7 +163,7 @@ class AttributesTestCase(TestMixin, TestCase):
             },
         })
 
-        item = self.factory.get(Item, "1")
+        item = self.factory.get(AtomicAttributesItem, "1")
         self.assertEqual(item.plain_int, 42)
         self.assertEqual(item.defaulted_datetime, datetime.datetime(2024, 1, 2, 3, 4, 5, tzinfo=datetime.timezone(datetime.timedelta(hours=1))))
         self.assertEqual(item.constant_str, "Constant string")
@@ -187,7 +187,7 @@ class AttributesTestCase(TestMixin, TestCase):
         self.assertEqual(response.status_code, status.HTTP_422_UNPROCESSABLE_ENTITY, response.json())
 
     def test_get_item(self):
-        self.assertEqual(self.factory.create(Item).id, "1")
+        self.assertEqual(self.factory.create(AtomicAttributesItem).id, "1")
 
         response = self.get(f"http://server/resources/1")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
@@ -212,7 +212,7 @@ class AttributesTestCase(TestMixin, TestCase):
 
     def test_get_page__first(self):
         for i in range(5):
-            self.factory.create(Item, plain_int=i + 1)
+            self.factory.create(AtomicAttributesItem, plain_int=i + 1)
 
         response = self.get(f"http://server/resources")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
@@ -260,7 +260,7 @@ class AttributesTestCase(TestMixin, TestCase):
 
     def test_get_page__second(self):
         for i in range(5):
-            self.factory.create(Item, plain_int=i + 1)
+            self.factory.create(AtomicAttributesItem, plain_int=i + 1)
 
         response = self.get(f"http://server/resources?page[number]=2")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
@@ -308,7 +308,7 @@ class AttributesTestCase(TestMixin, TestCase):
 
     def test_get_page__third(self):
         for i in range(5):
-            self.factory.create(Item, plain_int=i + 1)
+            self.factory.create(AtomicAttributesItem, plain_int=i + 1)
 
         response = self.get(f"http://server/resources?page[number]=3")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
@@ -344,7 +344,7 @@ class AttributesTestCase(TestMixin, TestCase):
 
     def test_get_page__medium_page_size__first(self):
         for i in range(5):
-            self.factory.create(Item, plain_int=i + 1)
+            self.factory.create(AtomicAttributesItem, plain_int=i + 1)
 
         response = self.get(f"http://server/resources?page[size]=3")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
@@ -404,7 +404,7 @@ class AttributesTestCase(TestMixin, TestCase):
 
     def test_get_page__medium_page_size__second(self):
         for i in range(5):
-            self.factory.create(Item, plain_int=i + 1)
+            self.factory.create(AtomicAttributesItem, plain_int=i + 1)
 
         response = self.get(f"http://server/resources?page[number]=2&page[size]=3")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
@@ -452,7 +452,7 @@ class AttributesTestCase(TestMixin, TestCase):
 
     def test_get_page__large_page_size(self):
         for i in range(5):
-            self.factory.create(Item, plain_int=i + 1)
+            self.factory.create(AtomicAttributesItem, plain_int=i + 1)
 
         response = self.get(f"http://server/resources?page[size]=5")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
@@ -537,7 +537,7 @@ class AttributesTestCase(TestMixin, TestCase):
     def test_get_page__filtered__first(self):
         for i in range(5):
             secret_str = "Even" if i % 2 else "Odd"
-            self.factory.create(Item, plain_int=i + 1, secret_str=secret_str)
+            self.factory.create(AtomicAttributesItem, plain_int=i + 1, secret_str=secret_str)
 
         response = self.get(f"http://server/resources?filter[computedStr]=ODD")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
@@ -586,7 +586,7 @@ class AttributesTestCase(TestMixin, TestCase):
     def test_get_page__filtered__second(self):
         for i in range(5):
             secret_str = "Even" if i % 2 else "Odd"
-            self.factory.create(Item, plain_int=i + 1, secret_str=secret_str)
+            self.factory.create(AtomicAttributesItem, plain_int=i + 1, secret_str=secret_str)
 
         response = self.get(f"http://server/resources?filter[computedStr]=ODD&page[number]=2")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
@@ -623,7 +623,7 @@ class AttributesTestCase(TestMixin, TestCase):
     # @todo Add tests for sorting
 
     def test_update__nothing(self):
-        self.assertEqual(self.factory.create(Item).id, "1")
+        self.assertEqual(self.factory.create(AtomicAttributesItem).id, "1")
 
         response = self.patch(f"http://server/resources/1", {
             "data": {
@@ -648,7 +648,7 @@ class AttributesTestCase(TestMixin, TestCase):
             },
         })
 
-        item = self.factory.get(Item, "1")
+        item = self.factory.get(AtomicAttributesItem, "1")
         self.assertEqual(item.plain_int, 42)
         self.assertEqual(item.defaulted_datetime, datetime.datetime(2021, 1, 1, 1, 0, tzinfo=datetime.timezone.utc))
         self.assertEqual(item.constant_str, "Constant")
@@ -658,7 +658,7 @@ class AttributesTestCase(TestMixin, TestCase):
         self.assertEqual(item.saved, 0)
 
     def test_update__one(self):
-        self.assertEqual(self.factory.create(Item).id, "1")
+        self.assertEqual(self.factory.create(AtomicAttributesItem).id, "1")
 
         response = self.patch(f"http://server/resources/1", {
             "data": {
@@ -685,7 +685,7 @@ class AttributesTestCase(TestMixin, TestCase):
             },
         })
 
-        item = self.factory.get(Item, "1")
+        item = self.factory.get(AtomicAttributesItem, "1")
         self.assertEqual(item.plain_int, 57)
         self.assertEqual(item.defaulted_datetime, datetime.datetime(2021, 1, 1, 1, 0, tzinfo=datetime.timezone.utc))
         self.assertEqual(item.constant_str, "Constant")
@@ -695,7 +695,7 @@ class AttributesTestCase(TestMixin, TestCase):
         self.assertEqual(item.saved, 1)
 
     def test_update__all(self):
-        self.assertEqual(self.factory.create(Item).id, "1")
+        self.assertEqual(self.factory.create(AtomicAttributesItem).id, "1")
 
         response = self.patch(f"http://server/resources/1", {
             "data": {
@@ -724,7 +724,7 @@ class AttributesTestCase(TestMixin, TestCase):
             },
         })
 
-        item = self.factory.get(Item, "1")
+        item = self.factory.get(AtomicAttributesItem, "1")
         self.assertEqual(item.plain_int, 57)
         self.assertEqual(item.defaulted_datetime, datetime.datetime(2024, 1, 2, 3, 4, 5, tzinfo=datetime.timezone(datetime.timedelta(hours=1))))
         self.assertEqual(item.constant_str, "Constant")
@@ -734,7 +734,7 @@ class AttributesTestCase(TestMixin, TestCase):
         self.assertEqual(item.saved, 1)
 
     def test_update__computed(self):
-        self.assertEqual(self.factory.create(Item).id, "1")
+        self.assertEqual(self.factory.create(AtomicAttributesItem).id, "1")
 
         response = self.patch(f"http://server/resources/1", {
             "data": {
@@ -748,7 +748,7 @@ class AttributesTestCase(TestMixin, TestCase):
         self.assertEqual(response.status_code, status.HTTP_422_UNPROCESSABLE_ENTITY, response.json())
 
     def test_update__constant(self):
-        self.assertEqual(self.factory.create(Item).id, "1")
+        self.assertEqual(self.factory.create(AtomicAttributesItem).id, "1")
 
         response = self.patch(f"http://server/resources/1", {
             "data": {
@@ -762,9 +762,9 @@ class AttributesTestCase(TestMixin, TestCase):
         self.assertEqual(response.status_code, status.HTTP_422_UNPROCESSABLE_ENTITY, response.json())
 
     def test_delete(self):
-        self.assertEqual(self.factory.create(Item).id, "1")
+        self.assertEqual(self.factory.create(AtomicAttributesItem).id, "1")
 
         response = self.delete(f"http://server/resources/1")
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.text)
 
-        self.assertIsNone(self.factory.get(Item, "1"))
+        self.assertIsNone(self.factory.get(AtomicAttributesItem, "1"))

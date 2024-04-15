@@ -2,7 +2,7 @@
 # Impossible right now because opinion.config.prod is not importable without several environment variables set.
 from ..router import ParseIncludeTestCase
 from ..django import AuthenticationTestCase
-from .attributes import AttributesTestCase
+from .attributes import AtomicAttributesTestCase
 from .batching import BatchingTestCase
 from .dependencies import DependenciesTestCase
 from .empty import EmptyTestCase
