@@ -317,7 +317,7 @@ defineExpose({
 
       <div v-if="needsBoundingRectangle" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8);" class="text-center">
         <div style="position: absolute; left: 25%; top: 25%; width: 50%; height: 50%; background-color: white">
-          <p>Dessinez d'abord un rectangle autour de l'exercice entier.</p>
+          <p>{{ $t('drawBoundingRectangle') }}</p>
         </div>
       </div>
     </div>

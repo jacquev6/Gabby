@@ -56,6 +56,7 @@
   "inputFile": "Fichier d'entrée",
   "existingExercises": "Exercices existants :",
   "noExercises": "Pas encore d'exercices.",
+  "drawBoundingRectangle": "Dessinez un rectangle englobant l'exercice entier.",
   "create": "Nouvel exercice",
   "delete": "Supprimer",
   "save": "Enregistrer",
@@ -70,6 +71,9 @@
   "example": "Exemple",
   "clue": "Indice",
   "wording": "Énoncé",
+
+  "colorsCount": "Nombre de couleurs",
+  "placeholderText": "Trou à remplir",
 
   "not-yet-implemented": "Pas encore implémenté"
 }

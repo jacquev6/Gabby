@@ -180,7 +180,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
     cy.iframe().find('span:contains("smartest")').should('have.length', 1)
 
     cy.get('label:contains("Type")').next().select('selectWords')
-    cy.get('label:contains("Colors")').next().type('{selectAll}2')
+    cy.get('label:contains("Number of colors")').next().type('{selectAll}2')
 
     cy.frameLoaded({url: 'selectWords'})
     cy.iframe().find('span:contains("artificial")').last().click()
@@ -218,14 +218,14 @@ describe('Gabby\'s project\'s textbook page view', () => {
     cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
     cy.get('div.busy').should('not.exist')
 
-    cy.get('p:contains("rectangle autour de l\'exercice entier")').should('exist')
+    cy.get('p:contains("Draw a rectangle around the whole exercise.")').should('exist')
 
     cy.get('canvas[style="position: absolute; top: 0px; left: 0px;"]').last().as('canvas')
     cy.get('@canvas').trigger('pointermove', 5, 5)
     cy.get('@canvas').trigger('pointerdown', 15, 363, { pointerId: 1 })
     cy.get('@canvas').trigger('pointermove', 150, 413)
     cy.get('@canvas').trigger('pointerup', 150, 413, { pointerId: 1 })
-    cy.get('p:contains("rectangle autour de l\'exercice entier")').should('not.exist')
+    cy.get('p:contains("Draw a rectangle around the whole exercise.")').should('not.exist')
 
     cy.get('@canvas').trigger('pointermove', 5, 5)
     cy.get('@canvas').trigger('pointerdown', 15, 370, { pointerId: 1 })

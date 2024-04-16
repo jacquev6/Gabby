@@ -83,7 +83,13 @@ def export_project(project_id: int):
     data = json.dumps({
         "exercises": exercises,
     }).replace("\\", "\\\\").replace('"', "\\\"")
-    return HTMLResponse(jinja2_env.get_template("adapted/index.html").render(data=data))
+    return HTMLResponse(
+        content=jinja2_env.get_template("adapted/index.html").render(data=data),
+        headers={
+            "Content-Type": "text/html",
+            "Content-Disposition": f'attachment; filename="{project.title}.html"',
+        },
+    )
 
 @app.post("/api/token")
 def login(access_token: AuthenticationToken):

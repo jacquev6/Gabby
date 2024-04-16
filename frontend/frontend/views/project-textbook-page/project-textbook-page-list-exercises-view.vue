@@ -55,15 +55,12 @@ defineExpose({
             <b-button secondary sm @click="deleteExercise(exercise)">{{ $t('delete') }}</b-button>
           </template>
         </exercises-list>
-        <p class="d-grid">
+        <p>
           <router-link class="btn btn-primary" :to="{name: 'project-textbook-page-create-exercise'}">
             {{ $t('create') }}
           </router-link>
         </p>
       </b-busy>
-    </b-col>
-    <b-col>
-      <h1>{{ $t('adaptation') }}</h1>
     </b-col>
   </b-row>
 </template>

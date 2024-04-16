@@ -13,7 +13,7 @@ La vue d'extraction est divisée en trois colonnes :
 Ces colonnes correspondent aux deux principales étapes de l'adaptation d'exercices depuis un manuel scolaire :
 
 - la première consiste à extraire du PDF les textes et images (pas encore implémentée) des exercices, de la première à la deuxième colonne
-- la seconde, à décrire comment adapter les exercices extraits, de la deuxième colonne à la troisième (pas encore implémentée)
+- la seconde, à décrire comment adapter les exercices extraits, de la deuxième colonne à la troisième (pas encore complètement implémentée)
 
 .. image:: user/textbook-page-three-columns.png
    :alt: Screenshot
@@ -51,6 +51,12 @@ Des boutons "Modifier" et "Supprimer" sont associés aux exercices existants.
     :alt: Screenshot
     :align: center
 
+Les exercices existants sont également mis en valeur dans le pdf:
+
+.. image:: user/textbook-page-existing-exercises-in-pdf.png
+    :alt: Screenshot
+    :align: center
+
 Ajout d'un nouvel exercice
 --------------------------
 
@@ -59,6 +65,15 @@ Le bouton "Nouvel exercice" affiche un formulaire d'édition dans la deuxième c
 Les contrôles permettant de changer de PDF ou de page de la première colonne sont désactivés.
 
 Le bouton "Annuler" permet de retourner à la liste des exercices existant sans enregistrer le nouvel exercice.
+
+Il faut commencer par tracer un rectangle autour de l'exercice entier.
+
+.. image:: user/textbook-page-create-exercise-tracing-bounding-rectangle.png
+    :alt: Screenshot
+    :align: center
+
+Après cela, l'exercice est mis en valeur dans le PDF.
+Cette mise en valeur est purement indicative et ne contraint en rien les selections ultérieures.
 
 Le bouton "Enregistrer puis créer le suivant" est désactivé jusqu'à ce que le numéro de l'exercice soit renseigné.
 Ce bouton permet ensuite d'enregistrer l'exercice et de vider le formulaire pour en créer un autre.
@@ -69,7 +84,7 @@ Le numéro de l'exercice suivant est automatiquement incrémenté, mais peut êt
     :align: center
 
 Extraction du texte du PDF
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+--------------------------
 
 L'extraction du texte du PDF se fait en dessinant à la souris un rectangle autour du texte souhaité.
 Le texte trouvé à l'intérieur de ce rectangle est mis en surbrillance.
@@ -86,6 +101,22 @@ Lorsqu'on relâche le bouton de la souris, le texte est extrait et affiché dans
     :align: center
 
 On peut alors cliquer sur un des boutons de ce dialogue pour ajouter le texte dans le champ correspondant du formulaire d'édition.
+
+Adaptation de l'exercices
+-------------------------
+
+Le champ "Type" permet de choisir le type d'adaptation à appliquer à l'exercice.
+Il n'y a pour l'instant que quelques types d'adaptation disponibles, décrits ci-dessous.
+
+"Selection de mots"
+~~~~~~~~~~~~~~~~~~~
+
+Chaque mot devient "clickable" pour le surligner d'une couleurs parmi un nombre de couleurs configurable par le champ "Nombre de couleurs".
+
+"Remplissage par text libre"
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Après saisie du champ "Trou à remplir", le contenu de ce champ est remplacé dans l'énoncé par un champ de saisie texte.
 
 Modification d'un exercices existant
 ------------------------------------

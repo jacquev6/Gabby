@@ -12,5 +12,5 @@ onMounted(() => {
 </script>
 
 <template>
-  <b-labeled-input label="Colors" type="number" min="1" v-model="model.colors" />
+  <b-labeled-input :label="$t('colorsCount')" type="number" min="1" v-model="model.colors" />
 </template>

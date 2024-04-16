@@ -16,5 +16,5 @@ onMounted(() => {
 </script>
 
 <template>
-  <b-labeled-input label="Placeholder" type="text" v-model="model.placeholder" />
+  <b-labeled-input :label="$t('placeholderText')" type="text" v-model="model.placeholder" />
 </template>
