@@ -192,10 +192,6 @@ services:
 
   adminer:
     image: adminer:4
-    environment:
-      ADMINER_DEFAULT_DB_DRIVER: pgsql
-      ADMINER_DEFAULT_DB_HOST: db
-      ADMINER_DEFAULT_DB_NAME: db
 
   doc:
     image: $OPINION_APP_NAME-dev_doc

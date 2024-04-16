@@ -15,11 +15,11 @@ services:
   db:
     image: postgres:15
     environment:
-      POSTGRES_USER: gabby-prod-preview
+      POSTGRES_USER: admin
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: gabby-prod-preview
+      POSTGRES_DB: db
     healthcheck:
-      test: ["CMD", "pg_isready", "--timeout=0", "--dbname=gabby-prod-preview", "--username=gabby-prod-preview"]
+      test: ["CMD", "pg_isready", "--timeout=0", "--dbname=db", "--username=admin"]
       interval: 0.5s
 
   backend:
@@ -31,6 +31,19 @@ services:
     depends_on:
       db:
         condition: service_healthy
+  django-admin:
+    image: jacquev6/gabby:preview-backend
+    pull_policy: never
+    env_file:
+      - backend.env
+      - secrets.env
+    depends_on:
+      db:
+        condition: service_healthy
+    command: ["uvicorn", "opinion.asgi:application", "--host", "0.0.0.0", "--port", "80"]
+
+  adminer:
+    image: adminer:4
 
   # Preview-only services
   #######################
@@ -76,6 +89,8 @@ services:
     depends_on:
       - frontend
       - backend
+      - django-admin
+      - adminer
 
   tester:
     build:

@@ -964,6 +964,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
 
   it('detects when an exercise already exists', () => {
     cy.visit('/project/1/textbook/1/page/6/new-exercise')
+    cy.get('select').select('en')
     cy.get('div.busy').should('not.exist')
 
     cy.get('label:contains("Number")').next().type('2')
