@@ -61,6 +61,8 @@
   "create": "New exercise",
   "delete": "Delete",
   "save": "Save",
+  "exerciseAlreadyExists": "Exercise {number} already exists.",
+  "skipExercise": "Skip to next exercise",
   "save.next": "Save then create next",
   "doStripExerciceNumber": "Strip exercise number automatically",
 

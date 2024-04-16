@@ -60,6 +60,8 @@
   "create": "Nouvel exercice",
   "delete": "Supprimer",
   "save": "Enregistrer",
+  "exerciseAlreadyExists": "L'exercice {number} existe déjà.",
+  "skipExercise": "Passer au suivant",
   "save.next": "Enregistrer puis créer le suivant",
   "doStripExerciceNumber": "Enlever le numéro d'exercice automatiquement",
 

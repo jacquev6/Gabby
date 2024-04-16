@@ -3167,6 +3167,15 @@
               "title": "Filter[Textbookpage]",
               "type": "integer"
             }
+          },
+          {
+            "in": "query",
+            "name": "filter[number]",
+            "required": false,
+            "schema": {
+              "title": "Filter[Number]",
+              "type": "string"
+            }
           }
         ],
         "responses": {

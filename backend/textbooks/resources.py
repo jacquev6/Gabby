@@ -312,7 +312,7 @@ class ExerciseModel(BaseModel):
     textbook_page: Annotated[int | None, Filterable(), Constant()] = None
     bounding_rectangle: Rectangle | None = None
 
-    number: Annotated[str, Constant()]
+    number: Annotated[str, Constant(), Filterable()]
 
     instructions: str = ""
     wording: str = ""
@@ -379,6 +379,8 @@ class ExercisesResource:
                 exercises = [exercise for exercise in exercises if exercise.textbook_page == filters.textbook_page]
             if filters.textbook:
                 exercises = [exercise for exercise in exercises if exercise.textbook is not None and str(exercise.textbook.id) == filters.textbook]
+            if filters.number:
+                exercises = [exercise for exercise in exercises if exercise.number == filters.number]
 
             return (
                 # @todo Use proper SQL counting

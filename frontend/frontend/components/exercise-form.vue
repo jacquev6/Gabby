@@ -1,5 +1,6 @@
 <script setup>
 import { ref, reactive, computed, watch } from 'vue'
+import { computedAsync } from '@vueuse/core'
 import { nextTick } from 'vue'
 
 import { BBusy, BLabeledInput, BLabeledTextarea, BButton, BSelect } from './opinion/bootstrap'
@@ -17,7 +18,7 @@ const props = defineProps({
   pdf: {required: true},
   number: {type: String, required: true},
   automaticNumber: {type: Boolean, required: true},
-  fixedNumber: {type: Boolean, required: true},
+  editMode: {type: Boolean, required: true},
   exercise: {type: Object, required: false},
 })
 
@@ -32,7 +33,7 @@ var extractionEvents = []
 const number = ref('')
 const boundingRectangle = ref(null)
 const needsBoundingRectangle = computed(() => {
-  if (props.textbook !== null && props.pdf !== null && !props.fixedNumber) {
+  if (props.textbook !== null && props.pdf !== null && !props.editMode) {
     return boundingRectangle.value === null
   } else {
     return false
@@ -53,6 +54,30 @@ const adaptedAttributes = reactive({'-': {}})
 for (const kind of Object.keys(adaptedForms)) {
   adaptedAttributes[kind] = {}
 }
+
+const alreadyExists = computedAsync(
+  async () => {
+    if (props.editMode) {
+      return true
+    } else if (number.value === '') {
+      return false
+    } else {
+      const exercises = await api.client.getAll(
+        'exercises',
+        {
+          filter: {
+            textbook: props.textbook.id,
+            textbookPage: props.textbookPage,
+            number: number.value,
+          }
+        },
+      )
+      console.assert(exercises.length <= 1)
+      return exercises.length === 1
+    }
+  },
+  false,
+)
 
 watch(
   [() => props.number, () => props.automaticNumber],
@@ -80,7 +105,7 @@ watch(
   {immediate: true},
 )
 
-const disabled = computed(() => !number.value)
+const disabled = computed(() => (!props.editMode && alreadyExists.value) || !number.value)
 const busy = ref(false)
 
 const showTextSelectionMenu = ref(false)
@@ -144,6 +169,19 @@ function addTextTo(fieldName, text) {
     textArea.setSelectionRange(selectionBegin, selectionEnd)
   })
   extractionEvents.push({kind: `SelectedTextAddedTo${fieldName.charAt(0).toUpperCase()}${fieldName.slice(1)}`, valueBefore, valueAfter: field.value})
+}
+
+function skip() {
+  boundingRectangle.value = null
+  extractionEvents = []
+  number.value = tryIncrement(number.value)
+  instructions.value = ''
+  wording.value = ''
+  example.value = ''
+  clue.value = ''
+
+  adaptedType.value = '-'
+  adaptedAttributes[adaptedType.value] = {}
 }
 
 async function create() {
@@ -266,7 +304,7 @@ const highlightedRectangles = computed(() => {
 })
 
 defineExpose({
-  textSelected,
+  textSelected: computed(() => !props.editMode && alreadyExists.value ? null : textSelected),
   adaptationUrl,
   highlightedRectangles,
 })
@@ -293,7 +331,7 @@ defineExpose({
   </text-selection-menu>
 
   <b-busy :busy>
-    <b-labeled-input :label="$t('exerciseNumber')" v-model="number" :disabled="fixedNumber" @change="extractionEvents.push({kind: 'ExerciseNumberSetManually', value: number})" />
+    <b-labeled-input :label="$t('exerciseNumber')" v-model="number" :disabled="editMode" @change="extractionEvents.push({kind: 'ExerciseNumberSetManually', value: number})" />
     
     <div style="position: relative">
       <b-labeled-textarea ref="instructionsTextArea" :label="$t('exerciseInstructions')" v-model="instructions" @change="extractionEvents.push({kind: 'InstructionsSetManually', value: instructions})" />
@@ -315,7 +353,15 @@ defineExpose({
         v-model="adaptedAttributes[adaptedType]"
       />
 
-      <div v-if="needsBoundingRectangle" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8);" class="text-center">
+      <div v-if="!editMode && alreadyExists" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8);" class="text-center">
+        <div style="position: absolute; left: 25%; top: 25%; width: 50%; height: 50%; background-color: white">
+          <p>{{ $t('exerciseAlreadyExists', {number}) }}</p>
+          <p>
+            <b-button primary @click="skip">{{ $t('skipExercise') }}</b-button>
+          </p>
+        </div>
+      </div>
+      <div v-else-if="needsBoundingRectangle" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8);" class="text-center">
         <div style="position: absolute; left: 25%; top: 25%; width: 50%; height: 50%; background-color: white">
           <p>{{ $t('drawBoundingRectangle') }}</p>
         </div>

@@ -41,7 +41,7 @@ defineExpose({
         :pdf
         :number
         :automaticNumber
-        :fixedNumber="false"
+        :editMode="false"
         @created="created"
         v-slot="{ disabled, create }"
       >

@@ -55,7 +55,7 @@ defineExpose({
         :pdf
         :number="exercise?.attributes.number || ''"
         :automaticNumber="false"
-        :fixedNumber="true"
+        :editMode="true"
         :exercise
         @saved="saved"
         v-slot="{ disabled, save }"

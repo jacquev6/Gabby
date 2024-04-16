@@ -961,4 +961,29 @@ describe('Gabby\'s project\'s textbook page view', () => {
     cy.get('button').contains('Annuler').click()
     cy.get('h1').contains('Lien entre PDF et manuel').should('not.exist')
   })
+
+  it('detects when an exercise already exists', () => {
+    cy.visit('/project/1/textbook/1/page/6/new-exercise')
+    cy.get('div.busy').should('not.exist')
+
+    cy.get('label:contains("Number")').next().type('2')
+    cy.get('button:contains("Save")').click()
+    cy.get('div.busy').should('not.exist')
+
+    cy.get('label:contains("Number")').next().should('have.value', '3')
+    cy.get('button:contains("Save")').should('be.disabled')
+    cy.get('button:contains("Skip to next exercise")').click()
+    cy.get('label:contains("Number")').next().should('have.value', '4')
+    cy.get('button:contains("Save")').should('be.disabled')
+    cy.get('button:contains("Skip to next exercise")').click()
+    cy.get('label:contains("Number")').next().should('have.value', '5')
+    cy.get('button:contains("Save")').should('be.enabled')
+
+    cy.get('label:contains("Number")').next().type('{selectAll}3')
+    cy.get('button:contains("Save")').should('be.disabled')
+    cy.get('button:contains("Skip to next exercise")').should('be.enabled')
+    cy.get('label:contains("Number")').next().type('0')
+    cy.get('button:contains("Save")').should('be.enabled')
+    cy.get('button:contains("Skip to next exercise")').should('not.exist')
+  })
 })
