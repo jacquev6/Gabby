@@ -24,6 +24,7 @@ function created(exercise, suggestedNumber) {
 
 defineExpose({
   textSelected: computed(() => exerciseForm.value?.textSelected),
+  highlightedRectangles: computed(() => exerciseForm.value?.highlightedRectangles),
 })
 </script>
 

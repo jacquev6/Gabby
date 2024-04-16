@@ -297,15 +297,28 @@ class SectionsResource:
             item.delete()
 
 
+class Point(BaseModel):
+    x: float
+    y: float
+
+class Rectangle(BaseModel):
+    start: Point
+    stop: Point
+
 class ExerciseModel(BaseModel):
+    project: Annotated[ProjectModel, Constant()]
+
+    textbook: Annotated[TextbookModel | None, Filterable(), Constant()] = None
     textbook_page: Annotated[int | None, Filterable(), Constant()] = None
+    bounding_rectangle: Rectangle | None = None
+
     number: Annotated[str, Constant()]
+
     instructions: str = ""
+    wording: str = ""
     example: str = ""
     clue: str = ""
-    wording: str = ""
-    project: Annotated[ProjectModel, Constant()]
-    textbook: Annotated[TextbookModel | None, Filterable(), Constant()] = None
+
     extraction_events: Annotated[list[ExtractionEventModel], Computed()] = []
 
     adapted: SelectWordsAdaptedExerciseModel | FillWithFreeTextAdaptedExerciseModel | None = None
@@ -319,16 +332,32 @@ class ExercisesResource:
     default_page_size = default_page_size
 
     class ItemCreator:
-        def __call__(self, *, textbook_page, number, instructions, example, clue, wording, project, textbook, adapted):
+        def __call__(
+            self,
+            *,
+            project,
+            textbook,
+            textbook_page,
+            bounding_rectangle,
+            number,
+            instructions,
+            wording,
+            example,
+            clue,
+            adapted,
+        ):
+            if bounding_rectangle:
+                bounding_rectangle = bounding_rectangle.model_dump()
             exercise = Exercise.objects.create(
-                textbook_page=textbook_page,
-                number=number,
-                instructions=instructions,
-                example=example,
-                clue=clue,
-                wording=wording,
                 project=unwrap(project),
                 textbook=unwrap(textbook),
+                textbook_page=textbook_page,
+                bounding_rectangle=bounding_rectangle,
+                number=number,
+                instructions=instructions,
+                wording=wording,
+                example=example,
+                clue=clue,
                 adapted=unwrap(adapted),
             )
             return wrap(exercise)
@@ -362,7 +391,10 @@ class ExercisesResource:
         @contextmanager
         def __call__(self, item):
             previous_adapted = item.adapted
+            previous_bounding_rectangle = item.bounding_rectangle
             yield
+            if item.bounding_rectangle is not previous_bounding_rectangle and item.bounding_rectangle is not None:
+                item.bounding_rectangle = item.bounding_rectangle.model_dump()
             item.save()
             if previous_adapted is not None and unwrap(item.adapted) != unwrap(previous_adapted):
                 previous_adapted.delete()

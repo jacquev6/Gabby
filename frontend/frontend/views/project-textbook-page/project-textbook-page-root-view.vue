@@ -10,6 +10,7 @@ import PdfNotLoaded from './pdf-not-loaded.vue'
 import PdfRenderer from '../../components/pdf-renderer.vue'
 import SectionEditor from './section-editor.vue'
 import TextPicker from './text-picker.vue'
+import RectanglesHighlighter from './rectangles-highlighter.vue'
 
 
 const props = defineProps({
@@ -165,8 +166,14 @@ defineExpose({
                     :page="pdf.page"
                     class="img img-fluid"
                   />
+                  <rectangles-highlighter
+                    v-if="component?.highlightedRectangles && pdfRenderer?.transform"
+                    class="img img-fluid" style="position: absolute; top: 0; left: 0"
+                    :width="pdfRenderer.width" :height="pdfRenderer.height" :transform="pdfRenderer.transform"
+                    :rectangles="component.highlightedRectangles"
+                  />
                   <text-picker
-                    v-if="component?.textSelected && pdfRenderer"
+                    v-if="component?.textSelected && pdfRenderer?.transform"
                     class="img img-fluid" style="position: absolute; top: 0; left: 0"
                     :width="pdfRenderer.width" :height="pdfRenderer.height" :transform="pdfRenderer.transform"
                     :textContent="pdf.textContent"

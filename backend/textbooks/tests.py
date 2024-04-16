@@ -398,6 +398,7 @@ class TextbookApiTests(TestMixin, TransactionTestCase):
                     "links": {"self": "http://server/exercises/1"},
                     "attributes": {
                         "textbookPage": 16, "number": "11",
+                        "boundingRectangle": None,
                         "instructions": "", "example": "", "clue": "", "wording": "",
                     },
                     "relationships": {
@@ -413,6 +414,7 @@ class TextbookApiTests(TestMixin, TransactionTestCase):
                     "links": {"self": "http://server/exercises/2"},
                     "attributes": {
                         "textbookPage": 17, "number": "13",
+                        "boundingRectangle": None,
                         "instructions": "", "example": "", "clue": "", "wording": "",
                     },
                     "relationships": {
@@ -653,6 +655,7 @@ class TextbookApiTests(TestMixin, TransactionTestCase):
                     "id": "1",
                     "attributes": {
                         "textbookPage": 12, "number": "4",
+                        "boundingRectangle": None,
                         "instructions": "", "example": "", "clue": "", "wording": "",
                     },
                     "relationships": {
@@ -668,6 +671,7 @@ class TextbookApiTests(TestMixin, TransactionTestCase):
                     "id": "2",
                     "attributes": {
                         "textbookPage": 13, "number": "5",
+                        "boundingRectangle": None,
                         "instructions": "", "example": "", "clue": "", "wording": "",
                     },
                     "relationships": {
@@ -683,6 +687,7 @@ class TextbookApiTests(TestMixin, TransactionTestCase):
                     "id": "3",
                     "attributes": {
                         "textbookPage": 14, "number": "6",
+                        "boundingRectangle": None,
                         "instructions": "", "example": "", "clue": "", "wording": "",
                     },
                     "relationships": {
@@ -730,6 +735,7 @@ class TextbookApiTests(TestMixin, TransactionTestCase):
                     "id": "4",
                     "attributes": {
                         "textbookPage": 15, "number": "7",
+                        "boundingRectangle": None,
                         "instructions": "", "example": "", "clue": "", "wording": "",
                     },
                     "relationships": {
@@ -745,6 +751,7 @@ class TextbookApiTests(TestMixin, TransactionTestCase):
                     "id": "5",
                     "attributes": {
                         "textbookPage": 16, "number": "8",
+                        "boundingRectangle": None,
                         "instructions": "", "example": "", "clue": "", "wording": "",
                     },
                     "relationships": {
@@ -760,6 +767,7 @@ class TextbookApiTests(TestMixin, TransactionTestCase):
                     "id": "6",
                     "attributes": {
                         "textbookPage": 17, "number": "9",
+                        "boundingRectangle": None,
                         "instructions": "", "example": "", "clue": "", "wording": "",
                     },
                     "relationships": {
@@ -1037,6 +1045,7 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                 "links": {"self": "http://server/exercises/1"},
                 "attributes": {
                     "textbookPage": None, "number": "42",
+                    "boundingRectangle": None,
                     "instructions": "", "example": "", "clue": "", "wording": "",
                 },
                 "relationships": {
@@ -1066,6 +1075,7 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                 "type": "exercise",
                 "attributes": {
                     "textbookPage": 12, "number": "42",
+                    "boundingRectangle": None,
                 },
                 "relationships": {
                     "project": {"data": {"type": "project", "id": "1"}},
@@ -1082,6 +1092,7 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                 "links": {"self": "http://server/exercises/1"},
                 "attributes": {
                     "textbookPage": 12, "number": "42",
+                    "boundingRectangle": None,
                     "instructions": "", "example": "", "clue": "", "wording": "",
                 },
                 "relationships": {
@@ -1112,6 +1123,7 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                 "attributes": {
                     "textbookPage": 14, "number": "1",
                     "instructions": "instructions", "example": "example", "clue": "clue", "wording": "wording",
+                    "boundingRectangle": {"start": {"x": 0, "y": 1}, "stop": {"x": 2, "y": 3}},
                 },
                 "relationships": {
                     "project": {"data": {"type": "project", "id": "1"}},
@@ -1129,6 +1141,7 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                 "attributes": {
                     "textbookPage": 14, "number": "1",
                     "instructions": "instructions", "example": "example", "clue": "clue", "wording": "wording",
+                    "boundingRectangle": {"start": {"x": 0, "y": 1}, "stop": {"x": 2, "y": 3}},
                 },
                 "relationships": {
                     "project": {"data": {"type": "project", "id": "1"}},
@@ -1145,6 +1158,7 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
         self.assertEqual(exercise.project, self.project)
         self.assertEqual(exercise.textbook, self.textbook)
         self.assertEqual(exercise.textbook_page, 14)
+        self.assertEqual(exercise.bounding_rectangle, {"start": {"x": 0, "y": 1}, "stop": {"x": 2, "y": 3}})
         self.assertEqual(exercise.number, "1")
         self.assertEqual(exercise.instructions, "instructions")
         self.assertEqual(exercise.example, "example")
@@ -1171,6 +1185,7 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                 "links": {"self": "http://server/exercises/1"},
                 "attributes": {
                     "textbookPage": 16, "number": "11",
+                    "boundingRectangle": None,
                     "instructions": "instructions", "example": "example", "clue": "clue", "wording": "wording",
                 },
                 "relationships": {
@@ -1202,6 +1217,7 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                 "links": {"self": "http://server/exercises/1"},
                 "attributes": {
                     "textbookPage": 16, "number": "11",
+                    "boundingRectangle": None,
                     "instructions": "instructions", "example": "example", "clue": "clue", "wording": "wording",
                 },
                 "relationships": {
@@ -1244,6 +1260,7 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                     "links": {"self": "http://server/exercises/1"},
                     "attributes": {
                         "textbookPage": 16, "number": "11",
+                        "boundingRectangle": None,
                         "instructions": "", "example": "", "clue": "", "wording": "",
                     },
                     "relationships": {
@@ -1259,6 +1276,7 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                     "links": {"self": "http://server/exercises/2"},
                     "attributes": {
                         "textbookPage": 17, "number": "3",
+                        "boundingRectangle": None,
                         "instructions": "", "example": "", "clue": "", "wording": "",
                     },
                     "relationships": {
@@ -1288,6 +1306,7 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                     "links": {"self": "http://server/exercises/3"},
                     "attributes": {
                         "textbookPage": 17, "number": "4",
+                        "boundingRectangle": None,
                         "instructions": "", "example": "", "clue": "", "wording": "",
                     },
                     "relationships": {
@@ -1322,6 +1341,7 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                     "links": {"self": "http://server/exercises/1"},
                     "attributes": {
                         "textbookPage": 16, "number": "11",
+                        "boundingRectangle": None,
                         "instructions": "", "example": "", "clue": "", "wording": "",
                     },
                     "relationships": {
@@ -1337,6 +1357,7 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                     "links": {"self": "http://server/exercises/2"},
                     "attributes": {
                         "textbookPage": 17, "number": "3",
+                        "boundingRectangle": None,
                         "instructions": "", "example": "", "clue": "", "wording": "",
                     },
                     "relationships": {
@@ -1366,6 +1387,7 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                     "links": {"self": "http://server/exercises/3"},
                     "attributes": {
                         "textbookPage": 17, "number": "4",
+                        "boundingRectangle": None,
                         "instructions": "", "example": "", "clue": "", "wording": "",
                     },
                     "relationships": {
@@ -1400,6 +1422,7 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                     "links": {"self": "http://server/exercises/2"},
                     "attributes": {
                         "textbookPage": 17, "number": "3",
+                        "boundingRectangle": None,
                         "instructions": "", "example": "", "clue": "", "wording": "",
                     },
                     "relationships": {
@@ -1415,6 +1438,7 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                     "links": {"self": "http://server/exercises/3"},
                     "attributes": {
                         "textbookPage": 17, "number": "4",
+                        "boundingRectangle": None,
                         "instructions": "", "example": "", "clue": "", "wording": "",
                     },
                     "relationships": {
@@ -1444,6 +1468,7 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                     "links": {"self": "http://server/exercises/1"},
                     "attributes": {
                         "textbookPage": 16, "number": "11",
+                        "boundingRectangle": None,
                         "instructions": "", "example": "", "clue": "", "wording": "",
                     },
                     "relationships": {
@@ -1480,6 +1505,7 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                     "links": {"self": "http://server/exercises/1"},
                     "attributes": {
                         "textbookPage": 16, "number": "11",
+                        "boundingRectangle": None,
                         "instructions": "", "example": "", "clue": "", "wording": "",
                     },
                     "relationships": {
@@ -1495,6 +1521,7 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                     "links": {"self": "http://server/exercises/2"},
                     "attributes": {
                         "textbookPage": 17, "number": "13",
+                        "boundingRectangle": None,
                         "instructions": "", "example": "", "clue": "", "wording": "",
                     },
                     "relationships": {
@@ -1547,6 +1574,7 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                     "links": {"self": "http://server/exercises/3"},
                     "attributes": {
                         "textbookPage": 17, "number": "14",
+                        "boundingRectangle": None,
                         "instructions": "", "example": "", "clue": "", "wording": "",
                     },
                     "relationships": {
@@ -1562,6 +1590,7 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                     "links": {"self": "http://server/exercises/4"},
                     "attributes": {
                         "textbookPage": 12, "number": "4",
+                        "boundingRectangle": None,
                         "instructions": "", "example": "", "clue": "", "wording": "",
                     },
                     "relationships": {
@@ -1640,6 +1669,7 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                     "links": {"self": "http://server/exercises/1"},
                     "attributes": {
                         "textbookPage": 16, "number": "11",
+                        "boundingRectangle": None,
                         "instructions": "", "example": "", "clue": "", "wording": "",
                     },
                     "relationships": {
@@ -1655,6 +1685,7 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                     "links": {"self": "http://server/exercises/2"},
                     "attributes": {
                         "textbookPage": 17, "number": "13",
+                        "boundingRectangle": None,
                         "instructions": "", "example": "", "clue": "", "wording": "",
                     },
                     "relationships": {
@@ -1684,6 +1715,7 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                     "links": {"self": "http://server/exercises/3"},
                     "attributes": {
                         "textbookPage": 17, "number": "14",
+                        "boundingRectangle": None,
                         "instructions": "", "example": "", "clue": "", "wording": "",
                     },
                     "relationships": {
@@ -1730,6 +1762,7 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                 "id": "1",
                 "attributes": {
                     "instructions": "INSTRUCTIONS", "example": "EXAMPLE", "clue": "CLUE", "wording": "WORDING",
+                    "boundingRectangle": {"start": {"x": 10, "y": 11}, "stop": {"x": 12, "y": 13}},
                 },
             },
         }
@@ -1742,6 +1775,7 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                 "links": {"self": "http://server/exercises/1"},
                 "attributes": {
                     "textbookPage": 16, "number": "11",
+                    "boundingRectangle": {"start": {"x": 10, "y": 11}, "stop": {"x": 12, "y": 13}},
                     "instructions": "INSTRUCTIONS", "example": "EXAMPLE", "clue": "CLUE", "wording": "WORDING",
                 },
                 "relationships": {
@@ -1759,6 +1793,7 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
         self.assertEqual(exercise.project, self.project)
         self.assertEqual(exercise.textbook, self.textbook)
         self.assertEqual(exercise.textbook_page, 16)
+        self.assertEqual(exercise.bounding_rectangle, {"start": {"x": 10, "y": 11}, "stop": {"x": 12, "y": 13}})
         self.assertEqual(exercise.number, "11")
         self.assertEqual(exercise.instructions, "INSTRUCTIONS")
         self.assertEqual(exercise.example, "EXAMPLE")
@@ -1794,6 +1829,7 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
                 "links": {"self": "http://server/exercises/1"},
                 "attributes": {
                     "textbookPage": 16, "number": "11",
+                    "boundingRectangle": None,
                     "instructions": "INSTRUCTIONS", "example": "example", "clue": "clue", "wording": "wording",
                 },
                 "relationships": {
@@ -2133,6 +2169,7 @@ class AdaptedExerciseApiTests(TestMixin, TransactionTestCase):
                 "links": {"self": "http://server/exercises/1"},
                 "attributes": {
                     "textbookPage": None, "number": "Exercise",
+                    "boundingRectangle": None,
                     "instructions": "INSTRUCTIONS", "example": "", "clue": "", "wording": "",
                 },
                 "relationships": {
@@ -2170,6 +2207,7 @@ class AdaptedExerciseApiTests(TestMixin, TransactionTestCase):
                 "links": {"self": "http://server/exercises/1"},
                 "attributes": {
                     "textbookPage": None, "number": "Exercise",
+                    "boundingRectangle": None,
                     "instructions": "", "example": "", "clue": "", "wording": "",
                 },
                 "relationships": {

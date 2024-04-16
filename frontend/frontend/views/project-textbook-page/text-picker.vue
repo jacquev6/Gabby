@@ -18,7 +18,7 @@ const canvas = ref(null)
 var context = null
 var textSpacingTolerance = 0
 
-onMounted(async () => {
+onMounted(() => {
   context = canvas.value.getContext('2d')
 
   canvas.value.width = props.width

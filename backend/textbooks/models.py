@@ -106,13 +106,19 @@ class Section(models.Model):
 class AdaptedExercise(PolymorphicModel):
     id = models.AutoField(primary_key=True)
 
+
 class Exercise(models.Model):
     id = models.AutoField(primary_key=True)
 
     project = models.ForeignKey(Project, null=False, on_delete=models.CASCADE, related_name="exercises")
 
+    # @todo Review normalization:
+    # - textbook and textbook_page must be "consistently null" (cf. constraint below), so maybe they'd be better in a dedicated table?
+    # - bounding_rectangle make sense only if textbook_page falls within a section, but this is not currently enforced
+    # - we'll soon need to add rectangles for instructions, wording, etc.
     textbook = models.ForeignKey(Textbook, null=True, on_delete=models.CASCADE, related_name="exercises")
     textbook_page = models.IntegerField(null=True)
+    bounding_rectangle = models.JSONField(null=True)
 
     # Custom collation: https://dba.stackexchange.com/a/285230
     number = models.CharField(null=False, db_collation="textbooks_exercise_number")
@@ -130,9 +136,9 @@ class Exercise(models.Model):
         ]
 
     instructions = models.TextField(null=False, blank=True)
+    wording = models.TextField(null=False, blank=True)
     example = models.TextField(null=False, blank=True)
     clue = models.TextField(null=False, blank=True)
-    wording = models.TextField(null=False, blank=True)
 
     adapted = models.OneToOneField(AdaptedExercise, on_delete=models.SET_NULL, null=True, related_name="exercise")
 

@@ -13,6 +13,10 @@ describe('ApiStore', () => {
     cy.request('POST', 'http://fanout:8080/reset-for-tests/yes-im-sure?fixtures=test-exercises')
   })
 
+  after(() => {
+    cy.request('POST', 'http://fanout:8080/reset-for-tests/yes-im-sure?fixtures=test-exercises,more-test-exercises')
+  })
+
   it('gets all textbooks and sections', async () => {
     const api = useApiStore()
 
@@ -118,6 +122,7 @@ describe('ApiStore', () => {
       {
         textbookPage: 6, number: '14',
         instructions: 'Do this',
+        boundingRectangle: {start: {x: 0, y: 1}, stop: {x: 2, y: 3}},
       },
       {
         project: {type: 'project', id: '1'},
@@ -127,6 +132,7 @@ describe('ApiStore', () => {
 
     expect(newExercise.id).to.equal('7')
     expect(newExercise.attributes.instructions).to.equal('Do this')
+    expect(newExercise.attributes.boundingRectangle).to.deep.equal({start: {x: 0, y: 1}, stop: {x: 2, y: 3}})
 
     expect(api.cache.getOne('textbook', '1').inCache).to.be.false
 
@@ -209,6 +215,10 @@ describe('ApiStore', () => {
 
   beforeEach(() => {
     setActivePinia(createPinia())
+    cy.request('POST', 'http://fanout:8080/reset-for-tests/yes-im-sure?fixtures=test-exercises,more-test-exercises')
+  })
+
+  after(() => {
     cy.request('POST', 'http://fanout:8080/reset-for-tests/yes-im-sure?fixtures=test-exercises,more-test-exercises')
   })
 

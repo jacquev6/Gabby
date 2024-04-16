@@ -28,9 +28,16 @@ const emit = defineEmits([
 
 const api = useApiStore()
 
-const needsBoundingRectangle = ref(props.textbook !== null && !props.fixedNumber)
 var extractionEvents = []
 const number = ref('')
+const boundingRectangle = ref(null)
+const needsBoundingRectangle = computed(() => {
+  if (props.textbook !== null && props.pdf !== null && !props.fixedNumber) {
+    return boundingRectangle.value === null
+  } else {
+    return false
+  }
+})
 const instructions = ref('')
 const wording = ref('')
 const example = ref('')
@@ -60,6 +67,8 @@ watch(
 watch(
   () => props.exercise,
   () => {
+    boundingRectangle.value = props.exercise?.attributes.boundingRectangle ?? null
+
     instructions.value = props.exercise?.attributes.instructions ?? ''
     wording.value = props.exercise?.attributes.wording ?? ''
     example.value = props.exercise?.attributes.example ?? ''
@@ -76,6 +85,7 @@ const busy = ref(false)
 
 const showTextSelectionMenu = ref(false)
 const selectedText = ref('')
+const selectedRectangle = ref(null)
 const selectedTextReference = ref({})
 function textSelected(text, point, textItems, rectangle) {
   if (needsBoundingRectangle.value) {
@@ -88,7 +98,7 @@ function textSelected(text, point, textItems, rectangle) {
         rectangle,
       },
     })
-    needsBoundingRectangle.value = false
+    boundingRectangle.value = rectangle
   } else {
     extractionEvents.push({
       kind: "TextSelectedInPdf",
@@ -102,6 +112,7 @@ function textSelected(text, point, textItems, rectangle) {
       textItems,
     })
     selectedText.value = text
+    selectedRectangle.value = rectangle
     selectedTextReference.value = {x: point.clientX, y: point.clientY}
     showTextSelectionMenu.value = true
   }
@@ -143,6 +154,7 @@ async function create() {
     'exercise',
     {
       textbookPage: props.textbookPage,
+      boundingRectangle: boundingRectangle.value,
       number: number.value,
       instructions: instructions.value,
       wording: wording.value,
@@ -169,7 +181,7 @@ async function create() {
     )
   }
 
-  needsBoundingRectangle.value = props.textbook !== null && !props.fixedNumber
+  boundingRectangle.value = null
   extractionEvents = []
   number.value = ''
   instructions.value = ''
@@ -202,6 +214,7 @@ async function save() {
     'exercise',
     props.exercise.id,
     {
+      boundingRectangle: boundingRectangle.value,
       instructions: instructions.value,
       wording: wording.value,
       example: example.value,
@@ -236,17 +249,26 @@ async function save() {
 }
 
 const adaptationUrl = computed(() => {
-    const data = {exercises: [{
-      instructions: instructions.value,
-      wording: wording.value,
-      adaptation: {type: adaptedType.value, ...adaptedAttributes[adaptedType.value]}
-    }]}
-    return `/adapted?preview&data=${JSON.stringify(data)}#/exercise/0`
-  })
+  const data = {exercises: [{
+    instructions: instructions.value,
+    wording: wording.value,
+    adaptation: {type: adaptedType.value, ...adaptedAttributes[adaptedType.value]}
+  }]}
+  return `/adapted?preview&data=${JSON.stringify(data)}#/exercise/0`
+})
+
+const highlightedRectangles = computed(() => {
+  if (boundingRectangle.value) {
+    return [boundingRectangle.value]
+  } else {
+    return null
+  }
+})
 
 defineExpose({
   textSelected,
   adaptationUrl,
+  highlightedRectangles,
 })
 </script>
 
@@ -256,14 +278,19 @@ defineExpose({
     :number
     :text="selectedText"
     :reference="selectedTextReference"
-    :buttons="[
-      {label: $t('instructions'), handler: (text) => addTextTo('instructions', text)},
-      {label: $t('wording'), handler: (text) => addTextTo('wording', text)},
-      {label: $t('example'), handler: (text) => addTextTo('example', text)},
-      {label: $t('clue'), handler: (text) => addTextTo('clue', text)},
-    ]"
     @extractionEvent="event => extractionEvents.push(event)"
-  />
+  >
+    <template v-slot="{textToAdd, hide}">
+      <p><b-button secondary @click="boundingRectangle = selectedRectangle; hide()">{{ $t('setBoundingRect') }}</b-button></p>
+      <p>{{ $t('addTo') }}</p>
+      <p>
+        <b-button primary @click="addTextTo('instructions', textToAdd); hide()">{{ $t('instructions') }}</b-button>
+        <b-button primary @click="addTextTo('wording', textToAdd); hide()">{{ $t('wording') }}</b-button>
+        <b-button primary @click="addTextTo('example', textToAdd); hide()">{{ $t('example') }}</b-button>
+        <b-button primary @click="addTextTo('clue', textToAdd); hide()">{{ $t('clue') }}</b-button>
+      </p>
+    </template>
+  </text-selection-menu>
 
   <b-busy :busy>
     <b-labeled-input :label="$t('exerciseNumber')" v-model="number" :disabled="fixedNumber" @change="extractionEvents.push({kind: 'ExerciseNumberSetManually', value: number})" />
@@ -291,7 +318,6 @@ defineExpose({
       <div v-if="needsBoundingRectangle" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8);" class="text-center">
         <div style="position: absolute; left: 25%; top: 25%; width: 50%; height: 50%; background-color: white">
           <p>Dessinez d'abord un rectangle autour de l'exercice entier.</p>
-          <b-button sm secondary @click="needsBoundingRectangle = false">Passer cette étape</b-button>
         </div>
       </div>
     </div>

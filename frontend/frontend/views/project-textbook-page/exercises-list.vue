@@ -23,6 +23,10 @@ const exercises = computedAsync(
 function ellipsis(s) {
   return s.length > 25 ? s.slice(0, 25) + '…' : s
 }
+
+defineExpose({
+  exercises,
+})
 </script>
 
 <template>

@@ -34,12 +34,16 @@ describe('Gabby', () => {
     cy.get('div.busy').should('not.exist')
 
     cy.get('a:contains("Nouvel exercice")').click()
-    cy.get('button:contains("Passer cette étape")').click()
     cy.get('label').contains('Numéro').next().type(5)
 
-    cy.screenshot('doc/textbook-page-create-exercise', {clip: {x: 0, y: 50, width: 670, height: 750}})
-
     const canvas = cy.get('canvas[style="position: absolute; top: 0px; left: 0px;"]')
+
+    canvas.trigger('pointermove', 5, 5)
+    canvas.trigger('pointerdown', 15, 15, { pointerId: 1 })
+    canvas.trigger('pointermove', 140, 105)
+    canvas.trigger('pointerup', 140, 105, { pointerId: 1 })
+
+    cy.screenshot('doc/textbook-page-create-exercise', {clip: {x: 0, y: 50, width: 670, height: 750}})
 
     canvas.trigger('pointermove', 5, 5)
     canvas.trigger('pointerdown', 15, 15, { pointerId: 1 })

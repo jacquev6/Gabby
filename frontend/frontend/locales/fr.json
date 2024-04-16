@@ -65,6 +65,7 @@
   "selectedText": "Texte sélectionné",
   "addTo": "Ajouter à :",
 
+  "setBoundingRect": "Utiliser comme rectangle englobant",
   "instructions": "Consigne",
   "example": "Exemple",
   "clue": "Indice",

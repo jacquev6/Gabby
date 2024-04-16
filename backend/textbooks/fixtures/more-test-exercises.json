@@ -40,6 +40,16 @@
       "project": 1,
       "textbook": 1,
       "textbook_page": 7,
+      "bounding_rectangle": {
+        "stop": {
+          "x": 303.3652061363319,
+          "y": 311.45540648703854
+        },
+        "start": {
+          "x": 57.45936198048777,
+          "y": 508.54923588836755
+        }
+      },
       "number": "7",
       "instructions": "Relève dans le texte trois\ndéterminants, un nom propre, quatre\nnoms communs et trois verbes.",
       "example": "",
@@ -55,6 +65,16 @@
       "project": 1,
       "textbook": 1,
       "textbook_page": 7,
+      "bounding_rectangle": {
+        "stop": {
+          "x": 556.6390156601415,
+          "y": 462.4992757478701
+        },
+        "start": {
+          "x": 317.18014120126696,
+          "y": 538.0212103782859
+        }
+      },
       "number": "11",
       "instructions": "Ajoute le suffixe –eur aux verbes.\nIndique la classe des mots fabriqués.",
       "example": "",

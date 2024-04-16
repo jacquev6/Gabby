@@ -9,7 +9,6 @@ const props = defineProps({
   number: {type: String, required: true},
   text: {type: String, required: true},
   reference: {type: Object, required: true},
-  buttons: {type: Array, required: true},
 })
 
 const show = defineModel('show', {type: Boolean})
@@ -39,9 +38,6 @@ watch(
     <b-labeled-checkbox :label="$t('doStripExerciceNumber')" v-model="doStripExerciceNumber" :disabled="!canStripExerciceNumber" />
     <b-labeled-textarea :label="$t('selectedText')" v-model="textToAdd" @change="emit('extractionEvent', {kind: 'SelectedTextEdited', value: textToAdd})" />
 
-    <p>{{ $t('addTo') }}</p>
-    <template v-for="button in buttons">
-      <b-button primary @click="button.handler(textToAdd); show = false">{{ button.label }}</b-button> <wbr />
-    </template>
+    <slot :textToAdd :hide="() => { show = false }"></slot>
   </floating-modal>
 </template>

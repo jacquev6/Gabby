@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 
 import { useApiStore } from '../../stores/api'
@@ -27,8 +27,20 @@ function changePage(page) {
   router.push({name: 'project-textbook-page-list-exercises', params: {projectId: props.project.id, textbookId: props.textbook.id, page}})
 }
 
+const exercisesList = ref(null)
+
+const highlightedRectangles = computed(() => {
+  const rectangles = exercisesList.value?.exercises.map(exercise => exercise.attributes.boundingRectangle).filter(rectangle => rectangle !== null)
+  if (rectangles?.length > 0) {
+    return rectangles
+  } else {
+    return null
+  }
+})
+
 defineExpose({
   changePage,
+  highlightedRectangles,
 })
 </script>
 
@@ -37,7 +49,7 @@ defineExpose({
     <b-col>
       <h1>{{ $t('edition') }}</h1>
       <b-busy :busy="deletingExercise">
-        <exercises-list :textbook :page >
+        <exercises-list ref="exercisesList" :textbook :page >
           <template v-slot="{exercise}">
             <router-link class="btn btn-primary btn-sm" :to="{name: 'project-textbook-page-edit-exercise', params: {exerciseId: exercise.id}}">{{ $t('edit') }}</router-link>
             <b-button secondary sm @click="deleteExercise(exercise)">{{ $t('delete') }}</b-button>

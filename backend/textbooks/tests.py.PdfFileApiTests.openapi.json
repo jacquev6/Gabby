@@ -260,6 +260,40 @@
         "title": "Pagination",
         "type": "object"
       },
+      "Point": {
+        "properties": {
+          "x": {
+            "title": "X",
+            "type": "number"
+          },
+          "y": {
+            "title": "Y",
+            "type": "number"
+          }
+        },
+        "required": [
+          "x",
+          "y"
+        ],
+        "title": "Point",
+        "type": "object"
+      },
+      "Rectangle": {
+        "properties": {
+          "start": {
+            "$ref": "#/components/schemas/Point"
+          },
+          "stop": {
+            "$ref": "#/components/schemas/Point"
+          }
+        },
+        "required": [
+          "start",
+          "stop"
+        ],
+        "title": "Rectangle",
+        "type": "object"
+      },
       "ValidationError": {
         "properties": {
           "loc": {
@@ -331,6 +365,16 @@
       "exercise-CreateInput-Data-Attributes": {
         "additionalProperties": false,
         "properties": {
+          "boundingRectangle": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Rectangle"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "clue": {
             "default": "",
             "title": "Clue",
@@ -454,6 +498,16 @@
       "exercise-OutputItem-Attributes": {
         "additionalProperties": false,
         "properties": {
+          "boundingRectangle": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Rectangle"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "clue": {
             "title": "Clue",
             "type": "string"
@@ -488,11 +542,12 @@
         },
         "required": [
           "textbookPage",
+          "boundingRectangle",
           "number",
           "instructions",
+          "wording",
           "example",
-          "clue",
-          "wording"
+          "clue"
         ],
         "title": "exercise-OutputItem-Attributes",
         "type": "object"
@@ -603,6 +658,16 @@
       "exercise-UpdateInput-Data-Attributes": {
         "additionalProperties": false,
         "properties": {
+          "boundingRectangle": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Rectangle"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "clue": {
             "title": "Clue",
             "type": "string"
@@ -2697,20 +2762,20 @@
           },
           {
             "in": "query",
-            "name": "filter[textbookPage]",
-            "required": false,
-            "schema": {
-              "title": "Filter[Textbookpage]",
-              "type": "integer"
-            }
-          },
-          {
-            "in": "query",
             "name": "filter[textbook]",
             "required": false,
             "schema": {
               "title": "Filter[Textbook]",
               "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "filter[textbookPage]",
+            "required": false,
+            "schema": {
+              "title": "Filter[Textbookpage]",
+              "type": "integer"
             }
           }
         ],

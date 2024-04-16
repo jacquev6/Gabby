@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router'
 import { computedAsync } from '@vueuse/core'
 
 import { useApiStore } from '../../stores/api'
-import { BBusy, BRow, BCol, BButton } from '../../components/opinion/bootstrap'
+import { BRow, BCol, BButton } from '../../components/opinion/bootstrap'
 import ExerciseForm from '../../components/exercise-form.vue'
 
 
@@ -29,76 +29,16 @@ const exercise = computedAsync(
   exerciseLoading,
 )
 
-// const updatingExercise = ref(false)
-
-// const currentExercise = reactive({})
-// const extractionEvents = reactive([])
-
-// function switchToListMode() {
-//   currentExercise.id = null
-//   extractionEvents.splice(0)
-//   currentExercise.attributes = {}
-// }
-
-// function switchToEditMode(e) {
-//   currentExercise.id = e.id
-//   extractionEvents.splice(0)
-//   currentExercise.attributes = e.attributes
-// }
-
 const exerciseForm = ref(null)
-// function textSelected(text, point, textItems, rectangle) {
-//   extractionEvents.push({
-//     kind: "TextSelectedInPdf",
-//     pdf: {
-//       name: props.section.relationships.pdfFile.relationships.namings[0].attributes.name,
-//       sha256: props.section.relationships.pdfFile.id,
-//       page: props.pdf.page.pageNumber,
-//       rectangle,
-//     },
-//     value: text,
-//     textItems,
-//   })
-//   exerciseForm.value?.textSelected(text, point)
-// }
-
-// async function updateExercise() {
-//   updatingExercise.value = true
-//   await api.client.patch(
-//     'exercise',
-//     currentExercise.id,
-//     {
-//       instructions: currentExercise.attributes.instructions,
-//       example: currentExercise.attributes.example,
-//       clue: currentExercise.attributes.clue,
-//       wording: currentExercise.attributes.wording,
-//     },
-//     {},
-//   )
-//   for (const event of extractionEvents) {
-//     await api.client.post(
-//       'extractionEvent',
-//       {event: JSON.stringify(event)},
-//       {exercise: {type: 'exercise', id: currentExercise.id}},
-//     )
-//   }
-//   router.push({name: 'project-textbook-page-list-exercises'})
-//   updatingExercise.value = false
-// }
-
-// switchToListMode()
-// watch(exercise, () => {
-//   if (exercise.value) {
-//     switchToEditMode(exercise.value)
-//   }
-// })
 
 function saved() {
   router.push({name: 'project-textbook-page-list-exercises'})
 }
 
 defineExpose({
+  // @todo Allow editing the bounding rectangle
   textSelected: computed(() => exerciseForm.value?.textSelected),
+  highlightedRectangles: computed(() => exerciseForm.value?.highlightedRectangles),
 })
 </script>
 
