@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
 
 import { BRow, BCol, BButton } from '../../components/opinion/bootstrap'
 import ExerciseForm from '../../components/exercise-form.vue'
@@ -13,6 +14,8 @@ const props = defineProps({
   section: {required: true},
 })
 
+const router = useRouter()
+
 const exerciseForm = ref(null)
 
 const number = ref('')
@@ -22,7 +25,12 @@ function created(exercise, suggestedNumber) {
   automaticNumber.value = true
 }
 
+function changePage(page) {
+  router.push({name: 'project-textbook-page-create-exercise', params: {projectId: props.project.id, textbookId: props.textbook.id, page}})
+}
+
 defineExpose({
+  changePage,
   textSelected: computed(() => exerciseForm.value?.textSelected),
   highlightedRectangles: computed(() => exerciseForm.value?.highlightedRectangles),
 })
