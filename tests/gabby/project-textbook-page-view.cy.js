@@ -1007,5 +1007,5 @@ describe('Gabby\'s project\'s textbook page view', () => {
     cy.get('div.busy').should('not.exist')
     cy.url().should('eq', `${Cypress.config().baseUrl}project/1/textbook/1/page/7`)
     cy.get('li:contains("5")').should('exist')
-})
+  })
 })
