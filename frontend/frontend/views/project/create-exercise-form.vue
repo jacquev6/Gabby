@@ -32,7 +32,7 @@ function created(exercise, suggestedNextExerciseNumber) {
     :pdf="null"
     :number
     :automaticNumber
-    :fixedNumber="false"
+    :editMode="false"
     @created="created"
     v-slot="{ disabled, create }"
   >
