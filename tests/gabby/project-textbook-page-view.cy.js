@@ -54,13 +54,18 @@ describe('Gabby\'s project\'s textbook page view', () => {
   it('adjusts textarea heights', () => {
     cy.visit('/project/1/textbook/1/page/6/new-exercise')
     cy.get('select').select('en')
-    cy.get('p:contains("Example")').click()
-    cy.get('p:contains("Clue")').click()
 
-    for (const label of ['Instructions', 'Example', 'Clue', 'Wording']) {
+    for (const label of ['Instructions', 'Wording']) {
       cy.get(`label:contains("${label}")`).next().should('have.attr', 'rows', '2')
       cy.get(`label:contains("${label}")`).next().type('a\nb\nc\nd')
       cy.get(`label:contains("${label}")`).next().should('have.attr', 'rows', '5')
+    }
+
+    for (const label of ['Example', 'Clue']) {
+      cy.get(`p:contains("${label}")`).click()
+      cy.get(`label:contains("${label}")`).next().should('have.attr', 'rows', '2')
+      cy.get(`label:contains("${label}")`).next().type('a\nb\nc')
+      cy.get(`label:contains("${label}")`).next().should('have.attr', 'rows', '4')
     }
   })
 
@@ -201,6 +206,9 @@ describe('Gabby\'s project\'s textbook page view', () => {
   })
 
   it('collects extraction events on new exercises', () => {
+    cy.viewport(1000, 1000)  // Ensure no vertical scrollbar
+    // (because it interferes with pointer coordinates, making the test harder to maintain)
+
     cy.visit('/project/1/textbook/1/page/6/new-exercise')
     cy.get('select').select('en')
     cy.get('div.busy').should('not.exist')
@@ -222,21 +230,21 @@ describe('Gabby\'s project\'s textbook page view', () => {
 
     cy.get('canvas[style="position: absolute; top: 0px; left: 0px;"]').last().as('canvas')
     cy.get('@canvas').trigger('pointermove', 5, 5)
-    cy.get('@canvas').trigger('pointerdown', 15, 363, { pointerId: 1 })
-    cy.get('@canvas').trigger('pointermove', 150, 413)
-    cy.get('@canvas').trigger('pointerup', 150, 413, { pointerId: 1 })
+    cy.get('@canvas').trigger('pointerdown', 15, 368, { pointerId: 1 })
+    cy.get('@canvas').trigger('pointermove', 150, 418)
+    cy.get('@canvas').trigger('pointerup', 150, 418, { pointerId: 1 })
     cy.get('p:contains("Draw a rectangle around the whole exercise.")').should('not.exist')
 
     cy.get('@canvas').trigger('pointermove', 5, 5)
-    cy.get('@canvas').trigger('pointerdown', 15, 370, { pointerId: 1 })
-    cy.get('@canvas').trigger('pointermove', 150, 388)
-    cy.get('@canvas').trigger('pointerup', 150, 388, { pointerId: 1 })
+    cy.get('@canvas').trigger('pointerdown', 15, 375, { pointerId: 1 })
+    cy.get('@canvas').trigger('pointermove', 150, 393)
+    cy.get('@canvas').trigger('pointerup', 150, 393, { pointerId: 1 })
     cy.get('label:contains("Selected text")').next().should('have.value', 'Classe les mots en trois groupes :\nnom, verbe, adjectif.')
     cy.get('button:contains("Instructions")').click()
     cy.get('@canvas').trigger('pointermove', 5, 5)
-    cy.get('@canvas').trigger('pointerdown', 15, 385, { pointerId: 1 })
-    cy.get('@canvas').trigger('pointermove', 150, 410)
-    cy.get('@canvas').trigger('pointerup', 150, 410, { pointerId: 1 })
+    cy.get('@canvas').trigger('pointerdown', 15, 390, { pointerId: 1 })
+    cy.get('@canvas').trigger('pointermove', 150, 415)
+    cy.get('@canvas').trigger('pointerup', 150, 415, { pointerId: 1 })
     cy.get('label:contains("Selected text")').next().should('have.value', 'verrou ◆ baigner ◆ joli ◆ chaleur ◆ grosse ◆\nsurveiller ◆ degré ◆ librairie ◆ repas ◆ parler')
     cy.get('label:contains("Selected text")').next().type('Blah blah blah')
     cy.get('button:contains("Wording")').click()
@@ -265,8 +273,8 @@ describe('Gabby\'s project\'s textbook page view', () => {
           sha256: 'f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c',
           page: 1,
           rectangle: {
-            start: {x: 55.95073920041661, y: (isProdPreview ? 144.02762220866032 : 144.69759344665067)},
-            stop: {x: 307.61988742652943, y: (isProdPreview ? 50.81423257522306 : 51.4842038132133)},
+            start: {x: 55.49873958525407, y: (isProdPreview ? 145.82387315089397 : 146.48300209886452)},
+            stop: {x: 303.099891274904, y: (isProdPreview ? 54.11897604195826 : 54.778104989928806)},
           },
         },
       },
@@ -277,8 +285,8 @@ describe('Gabby\'s project\'s textbook page view', () => {
           sha256: 'f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c',
           page: 1,
           rectangle: {
-            start: {x: 55.95073920041661, y: (isProdPreview ? 130.97774765997917 : 131.64771889796953)},
-            stop: {x: 307.61988742652943, y: (isProdPreview ? 97.42092739194163 : 98.0908986299321)},
+            start: {x: 55.49873958525407, y: (isProdPreview ? 132.98518755564305 : 133.64431650361348)},
+            stop: {x: 303.099891274904, y: (isProdPreview ? 99.97142459642623 : 100.63055354439655)},
           },
         },
         value: '2\nClasse les mots en trois groupes :\nnom, verbe, adjectif.',
@@ -447,8 +455,8 @@ describe('Gabby\'s project\'s textbook page view', () => {
           sha256: 'f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c',
           page: 1,
           rectangle: {
-            start: {x: 55.95073920041661, y: (isProdPreview ? 103.01373076994787 : 103.68370200793822)},
-            stop: {x: 307.61988742652943, y: (isProdPreview ? 56.40703595322918 : 57.077007191219536)},
+            start: {x: 55.49873958525407, y: (isProdPreview ? 105.47371842296229 : 106.13284737093272)},
+            stop: {x: 303.099891274904, y: (isProdPreview ? 59.62126986849444 : 60.28039881646487)},
           },
         },
         value: 'verrou ◆ baigner ◆ joli ◆ chaleur ◆ grosse ◆\nsurveiller ◆ degré ◆ librairie ◆ repas ◆ parler',
@@ -868,6 +876,8 @@ describe('Gabby\'s project\'s textbook page view', () => {
   })
 
   it('collects extraction events when editing exercises', () => {
+    cy.viewport(1000, 1000)
+
     cy.visit('/project/1/textbook/1/page/6')
     cy.get('select').select('en')
     cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
@@ -881,9 +891,10 @@ describe('Gabby\'s project\'s textbook page view', () => {
     cy.get('li:contains("4 Écris une phrase en respe…") a:contains("Edit")').click()
     cy.get('canvas[style="position: absolute; top: 0px; left: 0px;"]').last().as('canvas')
     cy.get('@canvas').trigger('pointermove', 5, 5)
-    cy.get('@canvas').trigger('pointerdown', 150, 367, { pointerId: 1 })
-    cy.get('@canvas').trigger('pointermove', 300, 392)
-    cy.get('@canvas').trigger('pointerup', 300, 392, { pointerId: 1 })
+    cy.get('@canvas').trigger('pointerdown', 150, 372, { pointerId: 1 })
+    cy.get('@canvas').trigger('pointermove', 300, 397)
+    cy.get('@canvas').trigger('pointerup', 300, 397, { pointerId: 1 })
+    cy.get('label:contains("Selected text")').next().should('have.value', 'pronom personnel / verbe / déterminant / nom\ncommun : Je mange une pomme.')
     cy.get('button:contains("Example")').click()
     cy.get('button:contains("Save")').click()
     cy.get('div.busy').should('not.exist')
@@ -900,8 +911,8 @@ describe('Gabby\'s project\'s textbook page view', () => {
           sha256: 'f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c',
           page: 1,
           rectangle: {
-            start: {x: 307.61988742652943, y: (isProdPreview ? 136.5705510379853 : 137.24052227597565)},
-            stop: {x: 587.2522743444326, y: (isProdPreview ? 89.96385622126661 : 90.63382745925708)},
+            start: {x: 303.099891274904, y: (isProdPreview ? 138.4874813821791 : 139.14661033014954)},
+            stop: {x: 578.2122820411818, y: (isProdPreview ? 92.63503282771126 : 93.2941617756818)},
           },
         },
         value: 'pronom personnel / verbe / déterminant / nom\ncommun : Je mange une pomme.',

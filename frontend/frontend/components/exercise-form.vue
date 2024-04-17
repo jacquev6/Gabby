@@ -154,6 +154,8 @@ const textAreas = {
   clue: clueTextArea,
 }
 
+const noClueNoExample = computed(() => !exampleTextArea.value?.expanded && !clueTextArea.value?.expanded)
+
 function addTextTo(fieldName, text) {
   const field = fields[fieldName]
   const textArea = textAreas[fieldName].value
@@ -336,8 +338,14 @@ defineExpose({
     <div style="position: relative">
       <b-labeled-textarea ref="instructionsTextArea" :label="$t('exerciseInstructions')" v-model="instructions" @change="extractionEvents.push({kind: 'InstructionsSetManually', value: instructions})" />
       <b-labeled-textarea ref="wordingTextArea" :label="$t('exerciseWording')" v-model="wording" @change="extractionEvents.push({kind: 'WordingSetManually', value: wording})" />
-      <optional-textarea ref="exampleTextArea" :label="$t('exerciseExample')" v-model="example" @change="extractionEvents.push({kind: 'ExampleSetManually', value: example})" />
-      <optional-textarea ref="clueTextArea" :label="$t('exerciseClue')" v-model="clue" @change="extractionEvents.push({kind: 'ClueSetManually', value: clue})" />
+      <div :class="{row: noClueNoExample}">
+        <div :class="{col: noClueNoExample}">
+          <optional-textarea ref="exampleTextArea" :label="$t('exerciseExample')" v-model="example" @change="extractionEvents.push({kind: 'ExampleSetManually', value: example})" />
+        </div>
+        <div :class="{col: noClueNoExample}">
+          <optional-textarea ref="clueTextArea" :label="$t('exerciseClue')" v-model="clue" @change="extractionEvents.push({kind: 'ClueSetManually', value: clue})" />
+        </div>
+      </div>
 
       <div class="mb-3">
         <label class="form-label" for="abc">{{ $t('exerciseType') }}</label>
