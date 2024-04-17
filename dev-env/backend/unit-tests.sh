@@ -12,4 +12,5 @@ then
   shuffle=--shuffle
 fi
 
-docker compose exec backend python -Wa manage.py test $shuffle "$@"
+# @todo Understand why we get errors saying the DB is till in use without the '--keepdb' option
+docker compose exec backend-shell python -Wa manage.py test --keepdb $shuffle "$@"

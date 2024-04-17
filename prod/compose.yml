@@ -3,70 +3,124 @@
 name: gabby-prod-preview
 
 services:
-  preview-fanout:
-    image: nginx:latest
-    ports:
-      - 8090:8090
-    volumes:
-      - ./preview-fanout/nginx.conf:/etc/nginx/nginx.conf:ro
-    depends_on:
-      - frontend
-      - backend
+  # Actual prod services
+  ######################
 
   frontend:
-    image: jacquev6/gabby-frontend:preview
+    image: jacquev6/gabby:preview-frontend
+    pull_policy: never
 
-  backend:
-    image: jacquev6/gabby-backend:preview
-    env_file:
-      - backend.env
-      - secrets.env
-    depends_on:
-      db:
-        condition: service_healthy
-
-  preview-migrator:
-    image: jacquev6/gabby-backend:preview
-    env_file:
-      - backend.env
-      - secrets.env
-    command: ["bash", "-c", "./manage.py migrate && ./manage.py loaddata test-exercises"]
-    depends_on:
-      db:
-        condition: service_healthy
-
-  preview-tester:
-    build:
-      context: ..
-      dockerfile: prod/preview-tester/Dockerfile
-    volumes:
-      - ../tests:/app/tests
-      - ../pdf-examples:/app/pdf-examples
-      - /tmp/.X11-unix:/tmp/.X11-unix  # Allow running GUI apps in container, displaying on host
-    command: ["bash", "-c", "npx cypress run --e2e --env IS_PROD_PREVIEW=true --config baseUrl=http://preview-fanout:8090/ && echo OK; sleep infinity"]
-    depends_on:
-      preview-migrator:
-        condition: service_completed_successfully
-      preview-fanout:
-        condition: service_started
-
-  # Add a line like this in your crontab:
+  # Add a line like this in your crontab to replace the 'db-backup' service below:
   # 10 *   * * *   user  (cd /path/to/compose/env && docker compose exec backend python manage.py dbbackup)
   db:
     image: postgres:15
     environment:
-      POSTGRES_USER: gabby-prod-preview
+      POSTGRES_USER: admin
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: gabby-prod-preview
+      POSTGRES_DB: db
     healthcheck:
-      test: [
-        "CMD",
-        "pg_isready",
-        "--timeout=0",
-        "--dbname=gabby-prod-preview",
-        "--username=gabby-prod-preview",
-      ]
-      start_period: 0s
+      test: ["CMD", "pg_isready", "--timeout=0", "--dbname=db", "--username=admin"]
       interval: 0.5s
-      timeout: 1s
-      retries: 10
+
+  backend:
+    image: jacquev6/gabby:preview-backend
+    pull_policy: never
+    env_file:
+      - backend.env
+      - secrets.env
+    depends_on:
+      db:
+        condition: service_healthy
+  django-admin:
+    image: jacquev6/gabby:preview-backend
+    pull_policy: never
+    env_file:
+      - backend.env
+      - secrets.env
+    depends_on:
+      db:
+        condition: service_healthy
+    command: ["uvicorn", "opinion.asgi:application", "--host", "0.0.0.0", "--port", "80"]
+
+  adminer:
+    image: adminer:4
+
+  # Preview-only services
+  #######################
+
+  migrator:
+    image: jacquev6/gabby:preview-backend
+    pull_policy: never
+    env_file:
+      - backend.env
+      - secrets.env
+    command: ["./manage.py", "migrate"]
+    depends_on:
+      db:
+        condition: service_healthy
+  data-loader:
+    image: jacquev6/gabby:preview-backend
+    pull_policy: never
+    env_file:
+      - backend.env
+      - secrets.env
+    command: ["./manage.py", "loaddata", "test-exercises", "more-test-exercises"]
+    depends_on:
+      migrator:
+        condition: service_completed_successfully
+  db-backup:
+    image: jacquev6/gabby:preview-backend
+    pull_policy: never
+    env_file:
+      - backend.env
+      - secrets.env
+    init: true
+    command: ["bash", "-c", "while true; do echo 'Backup DB'; ./manage.py dbbackup; sleep 300; done"]
+    depends_on:
+      data-loader:
+        condition: service_completed_successfully
+
+  fanout:
+    image: nginx:latest
+    ports:
+      - 8090:8090
+    volumes:
+      - ./fanout/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - frontend
+      - backend
+      - django-admin
+      - adminer
+
+  tester:
+    build:
+      context: ..
+      dockerfile: prod/tester/Dockerfile
+    image: gabby-prod_preview-tester
+    volumes:
+      - ../frontend:/app/frontend
+      - ../tests:/app/tests
+      - ../pdf-examples:/app/pdf-examples
+    working_dir: /app/frontend
+    command: ["npx", "cypress", "run", "--e2e", "--env", "IS_PROD_PREVIEW=true", "--config", "baseUrl=http://fanout:8090/"]
+    depends_on:
+      migrator:
+        condition: service_completed_successfully
+      fanout:
+        condition: service_started
+  tester-shell:
+    image: gabby-prod_preview-tester
+    pull_policy: never
+    volumes:
+      - ../frontend:/app/frontend
+      - ../tests:/app/tests
+      - ../pdf-examples:/app/pdf-examples
+      - /tmp/.X11-unix:/tmp/.X11-unix  # Allow running GUI apps in container, displaying on host
+    working_dir: /app/frontend
+    init: true
+    command: ["sleep", "infinity"]
+    depends_on:
+      migrator:
+        condition: service_completed_successfully
+      fanout:
+        condition: service_started

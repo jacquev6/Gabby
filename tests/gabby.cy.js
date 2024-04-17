@@ -2,7 +2,7 @@ describe('Gabby', () => {
   before(console.clear)
 
   after(() => {
-    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises')
+    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises,more-test-exercises')
   })
 
   it('performs extraction from scratch', () => {
@@ -33,23 +33,28 @@ describe('Gabby', () => {
     cy.focused().type('{selectAll}6')
     cy.get('div.busy').should('not.exist')
 
-    cy.get('button').contains('Nouvel exercice').click()
-    cy.get('button:contains("Passer cette étape")').click()
+    cy.get('a:contains("Nouvel exercice")').click()
     cy.get('label').contains('Numéro').next().type(5)
-
-    cy.screenshot('doc/textbook-page-create-exercise', {clip: {x: 0, y: 50, width: 670, height: 750}})
 
     const canvas = cy.get('canvas[style="position: absolute; top: 0px; left: 0px;"]')
 
     canvas.trigger('pointermove', 5, 5)
     canvas.trigger('pointerdown', 15, 15, { pointerId: 1 })
+    canvas.trigger('pointermove', 140, 105)
+    canvas.screenshot('doc/textbook-page-create-exercise-tracing-bounding-rectangle', {clip: {x: 0, y: 0, width: 1000, height: 200}})
+    canvas.trigger('pointerup', 140, 105, { pointerId: 1 })
+
+    cy.screenshot('doc/textbook-page-create-exercise', {clip: {x: 0, y: 50, width: 670, height: 750}})
+
+    canvas.trigger('pointermove', 5, 5)
+    canvas.trigger('pointerdown', 20, 20, { pointerId: 1 })
     canvas.trigger('pointermove', 25, 25)
     canvas.trigger('pointermove', 55, 35)
     canvas.trigger('pointermove', 75, 45)
     canvas.trigger('pointermove', 95, 55)
-    canvas.trigger('pointermove', 140, 55)
+    canvas.trigger('pointermove', 135, 55)
     canvas.screenshot('doc/textbook-page-selecting-in-pdf', {clip: {x: 0, y: 0, width: 190, height: 75}})
-    canvas.trigger('pointerup', 140, 55, { pointerId: 1 })
+    canvas.trigger('pointerup', 135, 55, { pointerId: 1 })
     cy.screenshot('doc/textbook-page-selected-in-pdf', {clip: {x: 0, y: 0, width: 500, height: 660}})
     cy.get('button').contains('Consigne').click()
 
@@ -59,7 +64,7 @@ describe('Gabby', () => {
 
     cy.get('button').contains('Enregistrer').click()
     cy.get('div.busy').should('not.exist')
-    cy.get('button').contains('Annuler').click()
+    cy.get('a:contains("Annuler")').click()
     cy.get('div.busy').should('not.exist')
 
     cy.get('li').contains('Recopie les mots suivants').should('exist')
@@ -93,7 +98,7 @@ describe('Gabby', () => {
     cy.get('label:contains("ISBN")').next().type('01234567890123')
 
     cy.get('div.busy').should('not.exist')
-    cy.screenshot('doc/project-new-textbook', {clip: {x: 0, y: 180, width: 660, height: 600}})
+    cy.screenshot('doc/project-new-textbook', {clip: {x: 0, y: 220, width: 660, height: 600}})
 
     cy.get('a').contains('Page 6').click()
 
@@ -102,7 +107,6 @@ describe('Gabby', () => {
     cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
 
     cy.get('div.busy').should('not.exist')
-    cy.screenshot('doc/textbook-page-three-columns', {clip: {x: 0, y: 0, width: 1000, height: 330}})
 
     cy.get('button').contains('⚙').click()
     cy.get('.modal-content:visible').screenshot('doc/textbook-page-section-editor')
@@ -111,9 +115,10 @@ describe('Gabby', () => {
     cy.get('h1').contains('Lien entre PDF et manuel').should('not.exist')
 
     cy.get('div.busy').should('not.exist')
-    cy.screenshot('doc/textbook-page-existing-exercises', {clip: {x: 330, y: 50, width: 336, height: 300}})
+    cy.screenshot('doc/textbook-page-existing-exercises', {clip: {x: 330, y: 50, width: 500, height: 250}})
+    cy.get('canvas').last().screenshot('doc/textbook-page-existing-exercises-in-pdf', {clip: {x: 0, y: 233, width: 1000, height: 1000}})
 
-    cy.get('button').contains('Modifier').click()
+    cy.get('a:contains("Modifier")').first().click()
 
     cy.get('div.busy').should('not.exist')
     // https://github.com/cypress-io/cypress/issues/2681#issuecomment-442890537
@@ -124,7 +129,11 @@ describe('Gabby', () => {
     cy.get('body').invoke('css', 'scroll-behavior', 'auto')
     cy.screenshot('doc/textbook-page-modify-exercise', {clip: {x: 0, y: 50, width: 670, height: 800}})
 
-    cy.get('button:contains("Annuler")').click()
+    cy.get('label:contains("Type")').next().select('selectWords')
+    cy.frameLoaded({url: 'selectWords'})
+    cy.screenshot('doc/textbook-page-three-columns', {clip: {x: 0, y: 0, width: 1000, height: 330}})
+
+    cy.get('a:contains("Annuler")').click()
     cy.get('div.busy').should('not.exist')
   })
 })

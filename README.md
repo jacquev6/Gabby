@@ -26,7 +26,7 @@ With the development environment running:
 
 ## JSON:API documentation
 
-The [JSON:API](https://jsonapi.org/) is available at http://localhost:8080/api/, with a [Swagger](https://swagger.io/) UI at http://localhost:8080/api/swagger/ (and its [OpenAPI](https://www.openapis.org/) schema at http://localhost:8080/api/schema).
+The [JSON:API](https://jsonapi.org/) is available at http://localhost:8080/api/, with a [Swagger](https://swagger.io/) UI at http://localhost:8080/api/docs/ (and its [OpenAPI](https://www.openapis.org/) schema at http://localhost:8080/api/openapi.json).
 
 ## Django Admin
 
@@ -60,7 +60,7 @@ Or:
     dev-env/frontend/unit-tests.sh
     dev-env/end-to-end-tests.sh
 
-On Linux only, the Cypress GUI can be launched to run tests interactively with:
+On Linux only, the Cypress GUIs can be launched to run tests interactively with:
 
     dev-env/cypress-gui.sh
 

@@ -1,9 +1,18 @@
-djangorestframework-jsonapi[django-filter]  # Fundamental
-django-cors-headers
+# Old
+django  # Fundamental
+django-polymorphic
 psycopg2-binary  # For PostgreSQL
-PyYaml  # For Swagger
-uritemplate  # For Swagger
 django-dbbackup  # For backups
 django-storages[s3]  # For backups
 django-extensions  # For 'manage.py graph_models'
 pydotplus  # For 'manage.py graph_models'
+
+# New
+fastapi  # Fundamental
+uvicorn[standard]  # Fundamental
+httpx  # For unit testing: https://fastapi.tiangolo.com/tutorial/testing/
+pyhumps  # Convert between cases
+python-multipart  # OAuth2 authentication uses multipart
+pyjwt  # For authentication tokens
+argon2-cffi  # Password hasher
+jinja2

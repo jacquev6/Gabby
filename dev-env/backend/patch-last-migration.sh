@@ -3,15 +3,24 @@
 set -o errexit
 set -o nounset
 set -o pipefail
-cd "$(dirname "${BASH_SOURCE[0]}")/."
+cd "$(dirname "${BASH_SOURCE[0]}")"
 
 
-docker compose exec backend ./manage.py migrate textbooks zero
-rm -f ../../backend/textbooks/migrations/0002_initial.py
-mv ../../backend/textbooks/migrations/0003_initial_patch.py{,_}
-docker compose exec backend ./manage.py makemigrations textbooks
-mv ../../backend/textbooks/migrations/0003_initial_patch.py{_,}
-docker compose exec backend ./manage.py migrate textbooks
-docker compose exec backend ./manage.py loaddata test-exercises
-docker compose exec backend bash -c './manage.py shell <../dev-env/backend/startup.py'
-docker compose exec backend ./manage.py graph_models textbooks --disable-sort-fields --rankdir BT --output textbooks/models.png
+docker compose exec backend-shell ./manage.py migrate
+docker compose exec backend-shell ./manage.py migrate textbooks zero
+docker compose exec backend-shell ./manage.py migrate opinion_ping zero
+
+rm -f ../../backend/textbooks/migrations/0004_*.{py,sql}
+rm -f ../../backend/opinion_ping/migrations/0002_*.{py,sql}
+
+docker compose exec backend-shell ./manage.py makemigrations
+docker compose exec backend-shell ./manage.py migrate
+docker compose exec backend-shell ./manage.py loaddata test-users test-exercises more-test-exercises
+for app in textbooks opinion_ping
+do
+  docker compose exec backend-shell ./manage.py graph_models $app --disable-sort-fields --rankdir BT --output $app/models.png
+  # for migration in ../../backend/$app/migrations/0*.py
+  # do
+  #   docker compose exec backend-shell ./manage.py sqlmigrate $app $(basename $migration .py) >${migration%.py}.sql
+  # done
+done

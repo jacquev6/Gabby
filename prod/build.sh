@@ -21,12 +21,19 @@ else
   exit 1
 fi
 
-docker buildx use gabby-multi-platform-builder 2>/dev/null || docker buildx create --name gabby-multi-platform-builder --use
+if ! docker buildx ls | grep gabby-multi-platform-builder >/dev/null
+then
+  docker buildx create --name gabby-multi-platform-builder
+fi
 
-for part in frontend backend
+for part in $(grep 'AS final-' docker/Dockerfile | sed 's/.*AS final-//')
 do
-  docker buildx build .. --file $part/Dockerfile \
+  echo $part
+  echo $part | sed 's/./-/g'
+  docker buildx build \
+    --builder gabby-multi-platform-builder \
+    .. --file docker/Dockerfile --target final-$part \
     --build-arg GABBY_VERSION=$gabby_version \
-    --tag jacquev6/gabby-$part:$gabby_version \
+    --tag jacquev6/gabby:$gabby_version-$part \
     $args
 done

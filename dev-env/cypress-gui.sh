@@ -9,5 +9,5 @@ cd "$(dirname "${BASH_SOURCE[0]}")/."
 xhost +
 docker compose exec \
   --env DISPLAY \
-  frontend \
+  frontend-shell \
     npx cypress open

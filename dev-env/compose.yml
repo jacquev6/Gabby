@@ -1,77 +1,200 @@
 name: $OPINION_APP_NAME-dev
 
-services:
-  fanout:
-    image: nginx:latest
-    ports:
-      - 8080:8080
-    volumes:
-      - ./fanout/nginx.conf:/etc/nginx/nginx.conf:ro
-    depends_on:
-      - frontend
-      - backend
-      - adminer
+volumes:
+  frontend-node-modules:
+  frontend-cache:
+  backend-pip-packages:
 
-  frontend:
+services:
+  # @todo Run all services with a user having the same UID:GID as the host user
+  # (so that files created by the container on the host filesystem are owned by the host user)
+  frontend-shell:
+    image: $OPINION_APP_NAME-dev_frontend
     build:
       context: ..
       dockerfile: dev-env/frontend/docker/Dockerfile
     volumes:
       - ..:/app
       - frontend-node-modules:/app/frontend/node_modules
-      - frontend-cache:/root/.cache
+      - frontend-cache:/root/.cache  # For Cypress
       - /tmp/.X11-unix:/tmp/.X11-unix  # Allow running GUI apps in container, displaying on host
     working_dir: /app/frontend
     environment:
       VITE_OPINION_APP_VERSION: dev
-    command: ["bash", "-c", "npm install && npx vite --host 0.0.0.0 --port 80 --strictPort"]
-
-  backend:
-    build:
-      context: ..
-      dockerfile: dev-env/backend/docker/Dockerfile
+      GABBY_ENTRY_POINT_NAME: frontend
+    init: true
+    command: ["sleep", "infinity"]
+  npm-installer:
+    image: $OPINION_APP_NAME-dev_frontend
+    pull_policy: never
     volumes:
       - ..:/app
-    working_dir: /app/backend
+      - frontend-node-modules:/app/frontend/node_modules
+      - frontend-cache:/root/.cache
+    working_dir: /app/frontend
+    command: ["npm", "install"]
+  frontend:
+    image: $OPINION_APP_NAME-dev_frontend
+    pull_policy: never
+    volumes:
+      - ..:/app
+      - frontend-node-modules:/app/frontend/node_modules
+    working_dir: /app/frontend
     environment:
-      DJANGO_SETTINGS_MODULE: opinion.settings.dev
-    command: [
-      "bash",
-      "-c",
-      "./manage.py migrate && ./manage.py shell <../dev-env/backend/startup.py && exec ./manage.py runserver 0.0.0.0:80",
-    ]
+      VITE_OPINION_APP_VERSION: dev
+      GABBY_ENTRY_POINT_NAME: frontend
+    command: ["npx", "vite", "--host", "0.0.0.0", "--port", "80", "--strictPort"]
     depends_on:
-      db:
-        condition: service_healthy
-  adminer:
-    image: adminer:4
+      npm-installer:
+        condition: service_completed_successfully
+  adapted:
+    image: $OPINION_APP_NAME-dev_frontend
+    pull_policy: never
+    volumes:
+      - ..:/app
+      - frontend-node-modules:/app/frontend/node_modules
+    working_dir: /app/frontend
     environment:
-      ADMINER_DEFAULT_DB_DRIVER: pgsql
-      ADMINER_DEFAULT_DB_HOST: db
-      ADMINER_DEFAULT_DB_NAME: db
+      GABBY_ENTRY_POINT_NAME: adapted
+    command: ["npx", "vite", "--base=/adapted", "--host", "0.0.0.0", "--port", "80", "--strictPort"]
     depends_on:
-      db:
-        condition: service_healthy
+      npm-installer:
+        condition: service_completed_successfully
+  adapted-builder:
+    image: $OPINION_APP_NAME-dev_frontend
+    pull_policy: never
+    volumes:
+      - ..:/app
+      - frontend-node-modules:/app/frontend/node_modules
+    working_dir: /app/frontend
+    environment:
+      GABBY_ENTRY_POINT_NAME: adapted
+    command: ["npx", "vite", "build", "--watch", "--mode", "development", "--outDir", "../backend/textbooks/templates/adapted", "--emptyOutDir"]
+    depends_on:
+      npm-installer:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "test", "-f", "/app/backend/textbooks/templates/adapted/index.html"]
+      interval: 0.5s
+
   db:
     image: postgres:15
+    tmpfs:
+      # Avoid creating an anonymous Docker volume on each run (We don't persist data in the dev env)
+      - /var/lib/postgresql/data
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: password
       POSTGRES_DB: db
     healthcheck:
-      test: [
-        "CMD",
-        "pg_isready",
-        "--timeout=0",
-        "--dbname=db",
-        "--username=admin",
-      ]
-      start_period: 0s
+      test: ["CMD", "pg_isready", "--timeout=0", "--dbname=db", "--username=admin" ]
       interval: 0.5s
-      timeout: 1s
-      retries: 10
+
+  backend-shell:
+    image: $OPINION_APP_NAME-dev_backend
+    build:
+      context: ..
+      dockerfile: dev-env/backend/docker/Dockerfile
+    volumes:
+      - ..:/app
+      - backend-pip-packages:/root/.local
+    working_dir: /app/backend
+    environment:
+      DJANGO_SETTINGS_MODULE: opinion.settings.dev
+    init: true
+    command: ["sleep", "infinity"]
+  pip-installer:
+    image: $OPINION_APP_NAME-dev_backend
+    pull_policy: never
+    volumes:
+      - ..:/app
+      - backend-pip-packages:/root/.local
+    working_dir: /app/backend
+    environment:
+      DJANGO_SETTINGS_MODULE: opinion.settings.dev
+    command: ["pip", "install", "--user", "-r", "requirements.opinion.txt"]
+  migrator:
+    image: $OPINION_APP_NAME-dev_backend
+    pull_policy: never
+    volumes:
+      - ..:/app
+      - backend-pip-packages:/root/.local
+    working_dir: /app/backend
+    environment:
+      DJANGO_SETTINGS_MODULE: opinion.settings.dev
+    command: ["./manage.py", "migrate"]
+    depends_on:
+      pip-installer:
+        condition: service_completed_successfully
+      db:
+        condition: service_healthy
+  data-loader:
+    image: $OPINION_APP_NAME-dev_backend
+    pull_policy: never
+    volumes:
+      - ..:/app
+      - backend-pip-packages:/root/.local
+    working_dir: /app/backend
+    environment:
+      DJANGO_SETTINGS_MODULE: opinion.settings.dev
+    command: ["./manage.py", "loaddata", "test-exercises", "more-test-exercises"]
+    depends_on:
+      migrator:
+        condition: service_completed_successfully
+  backend:
+    image: $OPINION_APP_NAME-dev_backend
+    pull_policy: never
+    volumes:
+      - ..:/app
+      - backend-pip-packages:/root/.local
+    working_dir: /app/backend
+    environment:
+      DJANGO_SETTINGS_MODULE: opinion.settings.dev
+    command: ["uvicorn", "main:app", "--reload", "--host", "0.0.0.0", "--port", "80"]
+    depends_on:
+      pip-installer:
+        condition: service_completed_successfully
+      db:
+        condition: service_healthy
+      adapted-builder:
+        condition: service_healthy
+  django-admin:
+    image: $OPINION_APP_NAME-dev_backend
+    pull_policy: never
+    volumes:
+      - ..:/app
+      - backend-pip-packages:/root/.local
+    working_dir: /app/backend
+    environment:
+      DJANGO_SETTINGS_MODULE: opinion.settings.dev
+    command: ["./manage.py", "runserver", "0.0.0.0:80"]
+    depends_on:
+      pip-installer:
+        condition: service_completed_successfully
+      db:
+        condition: service_healthy
+  db-backup:
+    image: $OPINION_APP_NAME-dev_backend
+    pull_policy: never
+    volumes:
+      - ..:/app
+      - backend-pip-packages:/root/.local
+    working_dir: /app/backend
+    environment:
+      DJANGO_SETTINGS_MODULE: opinion.settings.dev
+    init: true
+    command: ["bash", "-c", "while true; do echo 'Backup DB'; ./manage.py dbbackup; find /app/dev-env/db/backups -name '*.psql.bin' -mmin +10 -delete; sleep 30; done"]
+    depends_on:
+      pip-installer:
+        condition: service_completed_successfully
+      data-loader:
+        condition: service_completed_successfully
+
+  adminer:
+    image: adminer:4
 
   doc:
+    image: $OPINION_APP_NAME-dev_doc
     build:
       context: ..
       dockerfile: dev-env/doc/docker/Dockerfile
@@ -80,8 +203,18 @@ services:
     working_dir: /app/doc
     environment:
       GABBY_VERSION: dev
+    init: true
     command: ["sphinx-autobuild", ".", "/tmp/doc", "--host", "0.0.0.0", "--port", "80"]
 
-volumes:
-  frontend-node-modules:
-  frontend-cache:
+  fanout:
+    image: nginx:latest
+    ports:
+      - 8080:8080
+    volumes:
+      - ./fanout/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - frontend
+      - adapted
+      - adminer
+      - backend
+      - django-admin

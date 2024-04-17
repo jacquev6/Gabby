@@ -7,8 +7,9 @@ cd "$(dirname "${BASH_SOURCE[0]}")/."
 
 
 docker compose exec \
-  frontend \
-    npx cypress run --e2e
+  frontend-shell \
+    npx cypress run \
+      --e2e "$@"
 
 if [ -f end-to-end-tests.app.sh ]
 then

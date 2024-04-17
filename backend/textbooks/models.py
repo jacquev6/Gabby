@@ -1,5 +1,6 @@
 from django.core.validators import RegexValidator
 from django.db import models
+from polymorphic.models import PolymorphicModel
 
 
 # @todo(Feature, later) Add timestamps (created_at, modified_at, etc.) and user ids (created_by, modified_by, etc.) to all models
@@ -14,6 +15,10 @@ class PdfFile(models.Model):
 
     bytes_count = models.IntegerField(null=False)
     pages_count = models.IntegerField(null=False)
+
+    @property
+    def id(self):
+        return self.sha256
 
     def __str__(self):
         if self.namings:
@@ -98,13 +103,22 @@ class Section(models.Model):
         return f"Pages {self.textbook_start_page}-{self.textbook_start_page+self.pages_count-1} of {self.textbook.short_str()} in {self.pdf_file.short_str()}"
 
 
+class AdaptedExercise(PolymorphicModel):
+    id = models.AutoField(primary_key=True)
+
+
 class Exercise(models.Model):
     id = models.AutoField(primary_key=True)
 
     project = models.ForeignKey(Project, null=False, on_delete=models.CASCADE, related_name="exercises")
 
+    # @todo Review normalization:
+    # - textbook and textbook_page must be "consistently null" (cf. constraint below), so maybe they'd be better in a dedicated table?
+    # - bounding_rectangle make sense only if textbook_page falls within a section, but this is not currently enforced
+    # - we'll soon need to add rectangles for instructions, wording, etc.
     textbook = models.ForeignKey(Textbook, null=True, on_delete=models.CASCADE, related_name="exercises")
     textbook_page = models.IntegerField(null=True)
+    bounding_rectangle = models.JSONField(null=True)
 
     # Custom collation: https://dba.stackexchange.com/a/285230
     number = models.CharField(null=False, db_collation="textbooks_exercise_number")
@@ -122,9 +136,11 @@ class Exercise(models.Model):
         ]
 
     instructions = models.TextField(null=False, blank=True)
+    wording = models.TextField(null=False, blank=True)
     example = models.TextField(null=False, blank=True)
     clue = models.TextField(null=False, blank=True)
-    wording = models.TextField(null=False, blank=True)
+
+    adapted = models.OneToOneField(AdaptedExercise, on_delete=models.SET_NULL, null=True, related_name="exercise")
 
     def __str__(self):
         assert((self.textbook is None) == (self.textbook_page is None))
@@ -139,3 +155,23 @@ class ExtractionEvent(models.Model):
 
     exercise = models.ForeignKey(Exercise, on_delete=models.CASCADE, related_name="extraction_events")
     event = models.TextField(null=False, blank=False)  # Free form for the backend, defined by the frontend
+
+
+class SelectWordsAdaptedExercise(AdaptedExercise):
+    colors = models.IntegerField(null=False)
+
+    def make_adaptation_dict(self):
+        return {
+            "type": "selectWords",
+            "colors": self.colors,
+        }
+
+
+class FillWithFreeTextAdaptedExercise(AdaptedExercise):
+    placeholder = models.CharField(null=False, blank=False, max_length=10)
+
+    def make_adaptation_dict(self):
+        return {
+            "type": "fillWithFreeText",
+            "placeholder": self.placeholder,
+        }

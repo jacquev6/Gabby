@@ -1,0 +1,83 @@
+{
+  "home": "Home",
+  "help": "Help",
+  "about": "About",
+  "french-only": "🇫🇷 French version only, sorry! 🇫🇷",
+  "close": "Close",
+
+
+  "newProject": "New project",
+  "projectTitle": "Title",
+  "projectDescription": "Description",
+  "createProject": "Create project",
+  "existingProjects": "Existing projects",
+  "noProjectsForNow": "No projects for now.",
+
+
+  "project": "Project",
+  "projectHeader": "Project \"{title}\"",
+  "projectNotFound": "Project not found",
+  "edit": "Edit",
+  "saveProject": "Save project",
+  "cancel": "Cancel",
+  "download": "Download",
+  "theExtractionReport": "the extraction report",
+  "theExportedHtml": "the exported HTML",
+  "newTextbook": "New textbook",
+  "pdfNavigationPage": "Page",
+  "pdfNavigationPageOver": "(on {count})",
+  "textbookTitle": "Title",
+  "textbookPublisher": "Publisher",
+  "textbookYear": "Year",
+  "textbookIsbn": "ISBN",
+  "createTextbook": "Create textbook",
+  "newIndependentExercise": "New independent exercise",
+  "exerciseNumber": "Number",
+  "exerciseInstructions": "Instructions",
+  "exerciseExample": "Example",
+  "exerciseClue": "Clue",
+  "exerciseWording": "Wording",
+  "createExercise": "Create exercise",
+  "existingTextbooksAndExercises": "Existing textbooks and exercises",
+  "noExercisesForNow": "No exercises for now.",
+  "independentExercises": "Independent exercises",
+  "exerciseType": "Type",
+  "selectWords": "Select words",
+  "fillWithFreeText": "Fill with free text",
+
+
+  "textbookNotFound": "Textbook not found",
+  "pdfNotLoaded": "The PDF that contains this page ({name}) has not been loaded yet. If you have a copy, you can open it.",
+  "pageNoKnown": "No known PDF contains this page.",
+
+
+  "error.pdf": "Error while loading the PDF:",
+
+  "edition": "Edition",
+  "adaptation": "Adaptation",
+  "inputFile": "Input file",
+  "existingExercises": "Existing exercises:",
+  "drawBoundingRectangle": "Draw a rectangle around the whole exercise.",
+  "noExercises": "No exercises yet.",
+  "create": "New exercise",
+  "delete": "Delete",
+  "save": "Save",
+  "exerciseAlreadyExists": "Exercise {number} already exists.",
+  "skipExercise": "Skip to next exercise",
+  "save.next": "Save then create next",
+  "doStripExerciceNumber": "Strip exercise number automatically",
+
+  "selectedText": "Selected text",
+  "addTo": "Add to:",
+
+  "setBoundingRect": "Set bounding rect",
+  "instructions": "Instructions",
+  "example": "Example",
+  "clue": "Clue",
+  "wording": "Wording",
+
+  "colorsCount": "Number of colors",
+  "placeholderText": "Placeholder to fill",
+
+  "not-yet-implemented": "Not yet implemented"
+}

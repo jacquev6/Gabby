@@ -21,8 +21,13 @@ $secrets_ok
 
 ./build.sh preview load
 
+echo "Gabby prod-preview: build"
+docker compose build --builder gabby-multi-platform-builder
+echo "Gabby prod-preview: pull"
+docker compose pull --ignore-buildable
+
 echo "Gabby prod-preview: start"
-docker compose up --build --remove-orphans --detach
+docker compose up --no-build --pull never --remove-orphans --detach
 docker compose logs --follow || true
 
 echo "Gabby prod-preview: clean-up"

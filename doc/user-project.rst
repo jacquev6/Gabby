@@ -12,6 +12,13 @@ La vue projet est constituée de plusieurs zones:
    :alt: Screenshot
    :align: center
 
+Téléchargement des exercices adaptés
+------------------------------------
+
+Un lien permet de télécharger les exercices adaptés contenus dans le projet.
+Le fichier HTML téléchargé est nommé en fonction du titre du projet.
+Il est autonome et peut être ouvert dans un navigateur web même sur un ordinateur sans connexion internet.
+
 Modification du titre et de la description
 ------------------------------------------
 

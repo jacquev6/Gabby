@@ -1,3 +1,5 @@
+const isProdPreview = Cypress.env('IS_PROD_PREVIEW')
+
 describe('Gabby has routes that', () => {
   before(console.clear)
 
@@ -44,14 +46,14 @@ describe('Gabby has routes that', () => {
     cy.contains('h1', 'Documentation de MALIN')
   })
 
-  it('can access Django API without trailing /', () => {
-    cy.visit('/api')
-    cy.contains('h1', 'Api Root')
+  it('can access API docs without trailing /', () => {
+    cy.visit('/api/docs')
+    cy.contains('h2', 'FastAPI')
   })
 
-  it('can access Django API with trailing /', () => {
-    cy.visit('/api/')
-    cy.contains('h1', 'Api Root')
+  it('can access API docs with trailing /', () => {
+    cy.visit('/api/docs/')
+    cy.contains('h2', 'FastAPI')
   })
 
   it('can access Django admin without trailing /', () => {
@@ -68,5 +70,15 @@ describe('Gabby has routes that', () => {
     cy.request('/api/static/admin/css/base.css').then(response => {
       expect(response.headers['content-type']).to.equal('text/css')
     })
+  })
+
+  it('can assess Adminer without trailing /', () => {
+    cy.visit('/api/adminer')
+    cy.contains('h1', 'Adminer')
+  })
+
+  it('can assess Adminer with trailing /', () => {
+    cy.visit('/api/adminer/')
+    cy.contains('h1', 'Adminer')
   })
 })
