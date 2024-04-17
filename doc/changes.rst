@@ -12,6 +12,29 @@ Les améliorations techniques ne figurent que dans le `log git <https://github.c
 Les titres des sections de ce document correspondent au champ ``Gabby version`` dans le "À propos".
 Les versions sont nommées selon leur date de publication, au format ``YYYYMMDD-HHMMSS`` (année, mois, jour, tiret, heure, minute, seconde).
 
+20240417-XXXXXX
+---------------
+
+- Corrections de bugs :
+
+    - Détection des exercices déjà existants, ajout d'un bouton "Passer au suivant"
+
+- Améliorations d'interface :
+
+    - Ajout d'un lien "Accueil" dans la barre de navigation
+    - Gain de place pour les champs "Indice" et "Exemple" quand les deux sont inutilisés
+    - Possibilité de changer de page dans le PDF pendant la création d'un exercice
+    - Remplacement de "Visualisation" par "Adaptation"
+    - Affichage des rectangles englobant les exercices; ils deviennent obligatoires
+
+- Déplacement de la description des évolutions prévues dans un Google Doc pour faciliter les commentaires (toujours accessible depuis l'aide)
+
+- Support initial des adaptations :
+
+    - Sélection du type d'adaptation (pour l'instant seulement parmi "Selection de mots" et "Remplissage par texte libre")
+    - Prévisualisation de l'exercice adapté
+    - Téléchargement de l'ensemble des exercices adaptés du projet, utilisable hors ligne
+
 20240314-174534
 ---------------
 
@@ -30,12 +53,12 @@ Les versions sont nommées selon leur date de publication, au format ``YYYYMMDD-
 20240221-075646
 ---------------
 
-- Correction de bugs:
+- Corrections de bugs :
 
     - Le PDF ne s'affiche plus à l'envers
     - Le champ de sélection de la page dans le PDF autorise n'importe quelle saisie
 
-- Amélioration d'interface:
+- Améliorations d'interface :
 
     - Le nom est maintenant "MALIN"
     - Le logo est celui du Cartable Fantastique

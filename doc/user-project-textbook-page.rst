@@ -113,8 +113,8 @@ Il n'y a pour l'instant que quelques types d'adaptation disponibles, décrits ci
 
 Chaque mot devient "clickable" pour le surligner d'une couleurs parmi un nombre de couleurs configurable par le champ "Nombre de couleurs".
 
-"Remplissage par text libre"
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+"Remplissage par texte libre"
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Après saisie du champ "Trou à remplir", le contenu de ce champ est remplacé dans l'énoncé par un champ de saisie texte.
 
