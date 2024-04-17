@@ -16,6 +16,7 @@
     "vue-router": "^4.2.5"
   },
   "devDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "^4.14.3",
     "@vitejs/plugin-vue": "^5.0.3",
     "cypress": "^13.6.6",
     "cypress-iframe": "^1.0.1",

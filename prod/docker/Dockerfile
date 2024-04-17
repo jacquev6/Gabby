@@ -5,6 +5,9 @@ WORKDIR /app
 ADD frontend/package.json /app
 ADD frontend/package-lock.json /app
 
+# Work around https://github.com/npm/cli/issues/4828
+RUN if [ $(uname --machine) = "aarch64" ]; then sed -i s/rollup-linux-x64-gnu/rollup-linux-arm64-gnu/g /app/package.json; fi
+
 RUN npm install
 
 
