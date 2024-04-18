@@ -33,6 +33,7 @@ services:
       - frontend-cache:/root/.cache
     working_dir: /app/frontend
     command: ["npm", "install"]
+  # @todo Add pdf-worker-copier to replace dev-env/frontend/copy-pdfjs-worker.sh
   frontend:
     image: $OPINION_APP_NAME-dev_frontend
     pull_policy: never

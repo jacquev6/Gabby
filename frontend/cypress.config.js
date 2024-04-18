@@ -22,7 +22,7 @@ module.exports = defineConfig({
     },
   },
   component: {
-    specPattern: '**/*.{cy,spec}.{js,ts,jsx,tsx}',
+    specPattern: 'src/**/*.{cy,spec}.{js,ts,jsx,tsx}',
     devServer: {
       framework: 'vue',
       bundler: 'vite',

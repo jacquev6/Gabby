@@ -15,7 +15,7 @@ function renameIndexHtml(name) {
     transformIndexHtml: {
       order: 'pre',
       async handler() {
-        return await fs.readFile(`./${name}/index.html`, 'utf8');
+        return await fs.readFile(`src/${name}/index.html`, 'utf8');
       },
     },
   }
@@ -41,7 +41,7 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
   }
 
   return {
-    publicDir: `./${entryPointName}/public`,
+    publicDir: `src/${entryPointName}/public`,
     plugins,
     // This section works around the following error when importing pdfjs-dist@4:
     //     "Top-level await is not available in the configured target environment"
