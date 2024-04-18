@@ -1,19 +1,17 @@
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue'
 import { inject } from 'vue'
 
+import { type Data } from '../types'
 import ColoredParagraph from '../components/colored-paragraph.vue'
 import adaptedExercises from '../components/adapted-exercises'
 
 
-const props = defineProps({
-  exerciseIndex: {
-    type: String,
-    required: true
-  },
-})
+const props = defineProps<{
+  exerciseIndex: string,
+}>()
 
-const data = inject('data')
+const data = inject('data') as Data
 const isPreview = inject('isPreview')
 
 const exercise = computed(() => data.exercises[props.exerciseIndex])
@@ -26,7 +24,7 @@ const exercise = computed(() => data.exercises[props.exerciseIndex])
     <p>Sélectionnez un type d'exercise.</p>
   </template>
   <template v-else-if="exercise.adaptation.type in adaptedExercises">
-    <component :is="adaptedExercises[exercise.adaptation.type]" :exercise="exercise" />
+    <component :is="adaptedExercises[exercise.adaptation.type]" :exercise="exercise as any" />
   </template>
   <template v-else>
     <p>Ce type d'exercice n'est pas encore supporté. @todo</p>

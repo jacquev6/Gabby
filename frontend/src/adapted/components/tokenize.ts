@@ -4,13 +4,17 @@ const whitespaceChar = String.raw`\s`  // Could be completed with \p{Zs}
 const whitespaceRegex = new RegExp(`[${whitespaceChar}]+`, 'u')
 const splitRegex = new RegExp(`([${wordChar}]+)|([${whitespaceChar}]+)|([^${wordChar}${whitespaceChar}])`, 'gu')
 
-export function tokenize(input) {
+// @todo Find a way to give this type to 'console.assert' globally, and use 'console.assert' itself instead of creating a local alias
+const assert: (condition: any, message?: string) => asserts condition = console.assert
+
+export function tokenize(input: string): Array<{kind: 'word' | 'whitespace' | 'punctuation', text: string}> {
   if (input === '') {
     return []
   } else {
     const tokens = input.match(splitRegex)
 
-    console.assert(tokens.join('') === input, `Tokenization failed: ${input} !== ${tokens.join(' ')}`)
+    assert(tokens !== null)
+    assert(tokens.join('') === input, `Tokenization failed: ${input} !== ${tokens.join(' ')}`)
 
     return tokens.map(text => {
       if (text.match(wordRegex)) {

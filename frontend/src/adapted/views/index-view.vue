@@ -1,8 +1,10 @@
-<script setup>
+<script setup lang="ts">
 import { inject } from 'vue'
 
+import { type Data } from '../types'
 
-const data = inject('data')
+
+const data = inject('data') as Data
 </script>
 
 <template>

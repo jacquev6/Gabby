@@ -1,21 +1,20 @@
-<script setup>
+<script setup lang="ts">
 import { ref, reactive, watch, nextTick, computed, onMounted, onBeforeUnmount } from 'vue'
 
 import { tokenize } from './tokenize'
 
 
-const props = defineProps({
-  text: {
-    type: String,
-    required: true,
-  }
-})
+const assert: (condition: any, message?: string) => asserts condition = console.assert
+
+const props = defineProps<{
+  text: string,
+}>()
 
 const tokens = computed(() => tokenize(props.text))
 
-const paragraph = ref(null)
+const paragraph = ref<HTMLElement | null>(null)
 
-const lines = reactive([])
+const lines = reactive<number[]>([])
 
 const colors = ['red', 'green', 'blue']
 
@@ -28,14 +27,14 @@ const style = computed(() => {
 })
 
 function computeLines() {
-  console.assert(paragraph.value !== null)
+  assert(paragraph.value !== null)
 
   lines.splice(0)
 
   var currentLine = -1
   var previousOffset = null
   for (let index = 0; index < tokens.value.length; index++) {
-    const offset = paragraph.value.children[index].offsetLeft
+    const offset = (paragraph.value.children[index] as HTMLElement).offsetLeft
     if (previousOffset === null || offset < previousOffset) {
       currentLine++
     }

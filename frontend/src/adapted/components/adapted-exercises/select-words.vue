@@ -1,34 +1,32 @@
-<script setup>
+<script setup lang="ts">
 import { reactive, computed, watch } from 'vue'
 import chroma from 'chroma-js'
 
 import ColoredParagraph from '../colored-paragraph.vue'
+import { type Exercise, type SelectWordsAdaptation } from '../../types'
 
 
-const props = defineProps({
-  exercise: {
-    type: Object,
-    required: true
-  },
-})
+const props = defineProps<{
+  exercise: Exercise<SelectWordsAdaptation>,
+}>()
 
 const colors = computed(() => chroma.scale('Set2').colors(props.exercise.adaptation.colors))
 
-const wordColors = reactive({})
+const wordColors = reactive<{[index: number]: number}>({})
 watch(() => props.exercise, () => {
   for (const key in wordColors) {
     delete wordColors[key]
   }
 })
 
-function toggle(index) {
+function toggle(index: number) {
   wordColors[index] = ((wordColors[index] || 0) + 1) % (colors.value.length + 1)
   if (wordColors[index] === 0) {
     delete wordColors[index]
   }
 }
 
-function style(index) {
+function style(index: number) {
   if (wordColors[index]) {
     return {
       background: colors.value[wordColors[index] - 1]

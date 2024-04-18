@@ -1,14 +1,13 @@
-<script setup>
+<script setup lang="ts">
 import { reactive, computed, watch } from 'vue'
 import chroma from 'chroma-js'
 
+import { type Exercise, type FillWithFreeTextAdaptation } from '../../types'
 
-const props = defineProps({
-  exercise: {
-    type: Object,
-    required: true
-  },
-})
+
+const props = defineProps<{
+  exercise: Exercise<FillWithFreeTextAdaptation>,
+}>()
 
 const placeholder = {}
 
