@@ -1,6 +1,6 @@
 import { setActivePinia, createPinia } from 'pinia'
 
-import { defineApiStore } from './api.js'
+import { defineApiStore } from './api'
 import TestComponent from './api.cy.vue'
 
 

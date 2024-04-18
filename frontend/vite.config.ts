@@ -1,15 +1,13 @@
 import { promises as fs } from 'fs'
 
-import { defineConfig } from 'vite'
+import { defineConfig, Plugin } from 'vite'
 import { viteSingleFile } from "vite-plugin-singlefile"
 import vue from '@vitejs/plugin-vue'
 
 
-const entryPointName = process.env.GABBY_ENTRY_POINT_NAME
+const entryPointName = process.env.GABBY_ENTRY_POINT_NAME as string
 
-// @todo Avoid adding contents of 'public' in all entry points; change 'publicDir' according to entry point
-
-function renameIndexHtml(name) {
+function renameIndexHtml(name : string) : Plugin {
   return {
     name: 'vite-plugin-rename-index-html',
     transformIndexHtml: {
@@ -37,7 +35,7 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
   if (command === 'build' && entryPointName === 'adapted') {
     // Generate a single HTML file that can be downloaded and opened offline
     // (actually used as a Jinja2 template in the FastAPI app first)
-    plugins.push(viteSingleFile())
+    plugins.push(viteSingleFile() as Plugin)
   }
 
   return {

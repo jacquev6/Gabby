@@ -1,4 +1,4 @@
-import { tokenize } from './tokenize.js'
+import { tokenize } from './tokenize'
 
 
 describe('Tokenize tokenizes...', () => {

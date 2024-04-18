@@ -1,6 +1,6 @@
 import { setActivePinia, createPinia } from 'pinia'
 
-import { defineApiStore } from './api.js'
+import { defineApiStore } from './api'
 
 
 const useApiStore = defineApiStore('api', {baseUrl: 'http://fanout:8080/api/'})

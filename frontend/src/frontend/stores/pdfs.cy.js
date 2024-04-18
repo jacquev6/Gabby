@@ -1,7 +1,7 @@
 import { setActivePinia, createPinia } from 'pinia'
 import * as pdfjs from 'pdfjs-dist/build/pdf'
 
-import { definePdfsStore, usePdfsStore } from './pdfs.js'
+import { definePdfsStore, usePdfsStore } from './pdfs'
 
 
 pdfjs.GlobalWorkerOptions.workerSrc = 'http://frontend/pdf.worker.min.js'
