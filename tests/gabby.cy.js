@@ -71,6 +71,8 @@ describe('Gabby', () => {
   })
 
   it('loads existing data', () => {
+    cy.viewport(1000, 1000)
+
     cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises')
 
     cy.visit('/')
@@ -121,13 +123,9 @@ describe('Gabby', () => {
     cy.get('a:contains("Modifier")').first().click()
 
     cy.get('div.busy').should('not.exist')
-    // https://github.com/cypress-io/cypress/issues/2681#issuecomment-442890537
-    cy.get('html').invoke('css', 'height', 'initial')
-    cy.get('body').invoke('css', 'height', 'initial')
-    // https://github.com/cypress-io/cypress/issues/2681#issuecomment-1120146874
-    cy.get('html').invoke('css', 'scroll-behavior', 'auto')
-    cy.get('body').invoke('css', 'scroll-behavior', 'auto')
-    cy.screenshot('doc/textbook-page-modify-exercise', {clip: {x: 0, y: 50, width: 670, height: 800}})
+    cy.get('label:contains("Énoncé")').next().type('{selectAll}... vide\n... vident')
+    // Image is cropped to 670px height in headless mode. I don't know why.
+    cy.screenshot('doc/textbook-page-modify-exercise', {clip: {x: 0, y: 50, width: 665, height: 1000}})
 
     cy.get('label:contains("Type")').next().select('selectWords')
     cy.frameLoaded({url: 'selectWords'})
