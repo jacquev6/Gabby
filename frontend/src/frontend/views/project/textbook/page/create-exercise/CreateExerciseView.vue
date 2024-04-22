@@ -59,8 +59,10 @@ defineExpose({
       </ExerciseForm>
     </template>
     <template #right>
-      <h1>{{ $t('adaptation') }}</h1>
-      <iframe :src="exerciseForm?.adaptationUrl" style="width: 100%; height: 100%"></iframe>
+      <div class="h-100 d-flex flex-column">
+        <h1>{{ $t('adaptation') }}</h1>
+        <iframe class="flex-fill w-100" :src="exerciseForm?.adaptationUrl"></iframe>
+      </div>
     </template>
   </TwoResizableColumns>
 </template>
