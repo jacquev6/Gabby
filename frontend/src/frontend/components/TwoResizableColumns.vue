@@ -12,16 +12,27 @@ const props = withDefaults(defineProps<{
   rightWidth: '1fr',
 })
 
-const style = computed(() => ({
+const initialStyle = computed(() => ({
   gridTemplateColumns: `${props.leftWidth} 10px ${props.rightWidth}`,
 }))
+
+const style = ref({})
+
+watch(
+  initialStyle,
+  (value) => {
+    style.value = value
+  },
+  {
+    immediate: true,
+  },
+)
 
 const gutter = ref<HTMLElement | null>(null)
 var split = null
 onMounted(() => {
   console.assert(gutter.value !== null)
   console.assert(split === null)
-  console.log('Creating SplitGrid for', gutter.value)
   split = SplitGrid({
     columnGutters: [
       {
@@ -31,6 +42,7 @@ onMounted(() => {
     ],
     columnMinSizes: [100, 0, 100],
     snapOffset: 0,
+    writeStyle: (_, __, s) => {style.value.gridTemplateColumns = s},
   });
 })
 
