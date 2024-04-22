@@ -4,16 +4,17 @@ import { useRouter } from 'vue-router'
 import { computedAsync } from '@vueuse/core'
 
 import { useApiStore } from '../../../../../stores/api'
-import { BRow, BCol, BButton } from '../../../../../components/opinion/bootstrap'
+import { BButton } from '../../../../../components/opinion/bootstrap'
 import ExerciseForm from '../../../../../components/ExerciseForm.vue'
+import TwoResizableColumns from '../../../../../components/TwoResizableColumns.vue'
 
 
 const props = defineProps({
   project: {type: Object, required: true},
   textbook: {type: Object, required: true},
-  page: {type: Number, required: true},
   pdf: {required: true},
-  section: {type: Object, required: true},
+  section: {required: true},
+  page: {type: Number, required: true},
   exerciseId: {type: String, required: true},
 })
 
@@ -43,8 +44,8 @@ defineExpose({
 </script>
 
 <template>
-  <BRow>
-    <BCol>
+  <TwoResizableColumns>
+    <template #left>
       <h1>{{ $t('edition') }}</h1>
       <ExerciseForm
         ref="exerciseForm"
@@ -63,10 +64,10 @@ defineExpose({
         <RouterLink class="btn btn-secondary" :to="{name: 'project-textbook-page-list-exercises'}">{{ $t('cancel') }}</RouterLink>
         <BButton primary :disabled @click="save">{{ $t('save') }}</BButton>
       </ExerciseForm>
-    </BCol>
-    <BCol>
+    </template>
+    <template #right>
       <h1>{{ $t('adaptation') }}</h1>
       <iframe :src="exerciseForm?.adaptationUrl" style="width: 100%; height: 100%"></iframe>
-    </BCol>
-  </BRow>
+    </template>
+  </TwoResizableColumns>
 </template>

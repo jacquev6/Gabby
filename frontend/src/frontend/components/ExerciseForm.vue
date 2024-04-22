@@ -338,12 +338,14 @@ defineExpose({
     <div style="position: relative">
       <b-labeled-textarea ref="instructionsTextArea" :label="$t('exerciseInstructions')" v-model="instructions" @change="extractionEvents.push({kind: 'InstructionsSetManually', value: instructions})" />
       <b-labeled-textarea ref="wordingTextArea" :label="$t('exerciseWording')" v-model="wording" @change="extractionEvents.push({kind: 'WordingSetManually', value: wording})" />
-      <div :class="{row: noClueNoExample}">
-        <div :class="{col: noClueNoExample}">
-          <optional-textarea ref="exampleTextArea" :label="$t('exerciseExample')" v-model="example" @change="extractionEvents.push({kind: 'ExampleSetManually', value: example})" />
-        </div>
-        <div :class="{col: noClueNoExample}">
-          <optional-textarea ref="clueTextArea" :label="$t('exerciseClue')" v-model="clue" @change="extractionEvents.push({kind: 'ClueSetManually', value: clue})" />
+      <div :class="{'container-fluid': noClueNoExample}">
+        <div :class="{row: noClueNoExample}">
+          <div :class="{col: noClueNoExample}" style="padding: 0;">
+            <optional-textarea ref="exampleTextArea" :label="$t('exerciseExample')" v-model="example" @change="extractionEvents.push({kind: 'ExampleSetManually', value: example})" />
+          </div>
+          <div :class="{col: noClueNoExample}" style="padding: 0;">
+            <optional-textarea ref="clueTextArea" :label="$t('exerciseClue')" v-model="clue" @change="extractionEvents.push({kind: 'ClueSetManually', value: clue})" />
+          </div>
         </div>
       </div>
 

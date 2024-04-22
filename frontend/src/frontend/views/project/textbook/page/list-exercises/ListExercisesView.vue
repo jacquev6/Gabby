@@ -3,13 +3,15 @@ import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 
 import { useApiStore } from '../../../../../stores/api'
-import { BBusy, BRow, BCol, BButton } from '../../../../../components/opinion/bootstrap'
+import { BBusy, BButton } from '../../../../../components/opinion/bootstrap'
 import ExercisesList from './ExercisesList.vue'
 
 
 const props = defineProps({
   project: {type: Object, required: true},
   textbook: {type: Object, required: true},
+  pdf: {required: true},
+  section: {required: true},
   page: {type: Number, required: true},
 })
 
@@ -45,22 +47,18 @@ defineExpose({
 </script>
 
 <template>
-  <BRow>
-    <BCol>
-      <h1>{{ $t('edition') }}</h1>
-      <BBusy :busy="deletingExercise">
-        <ExercisesList ref="exercisesList" :textbook :page >
-          <template v-slot="{exercise}">
-            <RouterLink class="btn btn-primary btn-sm" :to="{name: 'project-textbook-page-edit-exercise', params: {exerciseId: exercise.id}}">{{ $t('edit') }}</RouterLink>
-            <BButton secondary sm @click="deleteExercise(exercise)">{{ $t('delete') }}</BButton>
-          </template>
-        </ExercisesList>
-        <p>
-          <RouterLink class="btn btn-primary" :to="{name: 'project-textbook-page-create-exercise'}">
-            {{ $t('create') }}
-          </RouterLink>
-        </p>
-      </BBusy>
-    </BCol>
-  </BRow>
+  <h1>{{ $t('edition') }}</h1>
+  <BBusy :busy="deletingExercise">
+    <ExercisesList ref="exercisesList" :textbook :page >
+      <template v-slot="{exercise}">
+        <RouterLink class="btn btn-primary btn-sm" :to="{name: 'project-textbook-page-edit-exercise', params: {exerciseId: exercise.id}}">{{ $t('edit') }}</RouterLink>
+        <BButton secondary sm @click="deleteExercise(exercise)">{{ $t('delete') }}</BButton>
+      </template>
+    </ExercisesList>
+    <p>
+      <RouterLink class="btn btn-primary" :to="{name: 'project-textbook-page-create-exercise'}">
+        {{ $t('create') }}
+      </RouterLink>
+    </p>
+  </BBusy>
 </template>

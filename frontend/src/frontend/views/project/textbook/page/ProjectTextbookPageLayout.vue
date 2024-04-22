@@ -3,13 +3,14 @@ import { ref, computed } from 'vue'
 import { computedAsync } from '@vueuse/core'
 
 import { usePdfsStore } from '../../../../stores/pdfs'
-import { BBusy, BRow, BCol, BButton } from '../../../../components/opinion/bootstrap'
+import { BBusy, BButton } from '../../../../components/opinion/bootstrap'
 import PdfNavigationControls from '../../../../components/PdfNavigationControls.vue'
 import PdfNotLoaded from './PdfNotLoaded.vue'
 import PdfRenderer from '../../../../components/PdfRenderer.vue'
 import SectionEditor from './SectionEditor.vue'
 import TextPicker from './TextPicker.vue'
 import RectanglesHighlighter from './RectanglesHighlighter.vue'
+import TwoResizableColumns from '../../../../components/TwoResizableColumns.vue'
 
 
 const props = defineProps<{
@@ -86,8 +87,8 @@ defineExpose({
 </script>
 
 <template>
-  <BRow>
-    <BCol :w="4">
+  <TwoResizableColumns rightWidth="2fr">
+    <template #left>
       <PdfNavigationControls :page @update:page="component?.changePage" :disabled="!component?.changePage" :pagesCount="textbookPagesCount">
         <BButton secondary sm :disabled="!section" @click="sectionEditor.show(section.id)">&#9881;</BButton>
       </PdfNavigationControls>
@@ -124,11 +125,11 @@ defineExpose({
       <template v-else>
         <p>{{ $t('pageNoKnown') }}</p>
       </template>
-    </BCol>
-    <BCol>
+    </template>
+    <template #right>
       <RouterView :project :textbook :pdf :section :page v-slot="{ Component }">
         <component :is="Component" ref="component"></component>
       </RouterView>
-    </BCol>
-  </BRow>
+    </template>
+  </TwoResizableColumns>
 </template>

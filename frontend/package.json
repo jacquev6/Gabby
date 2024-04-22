@@ -11,6 +11,7 @@
     "pinia": "^2.1.7",
     "pinia-shared-state": "^0.5.1",
     "sha.js": "^2.4.11",
+    "split-grid": "^1.0.11",
     "vue": "^3.4.15",
     "vue-i18n": "^9.10.1",
     "vue-router": "^4.2.5"
