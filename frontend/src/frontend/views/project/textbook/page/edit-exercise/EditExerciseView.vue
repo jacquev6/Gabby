@@ -1,0 +1,72 @@
+<script setup>
+import { ref, reactive, computed, watch } from 'vue'
+import { useRouter } from 'vue-router'
+import { computedAsync } from '@vueuse/core'
+
+import { useApiStore } from '../../../../../stores/api'
+import { BRow, BCol, BButton } from '../../../../../components/opinion/bootstrap'
+import ExerciseForm from '../../../../../components/ExerciseForm.vue'
+
+
+const props = defineProps({
+  project: {type: Object, required: true},
+  textbook: {type: Object, required: true},
+  page: {type: Number, required: true},
+  pdf: {required: true},
+  section: {type: Object, required: true},
+  exerciseId: {type: String, required: true},
+})
+
+const router = useRouter()
+const api = useApiStore()
+
+const exerciseLoading = ref(false)
+const exercise = computedAsync(
+  async () => {
+    return await api.client.getOne('exercise', props.exerciseId, {include: 'adapted'})
+  },
+  null,
+  exerciseLoading,
+)
+
+const exerciseForm = ref(null)
+
+function saved() {
+  router.push({name: 'project-textbook-page-list-exercises'})
+}
+
+defineExpose({
+  // @todo Allow editing the bounding rectangle
+  textSelected: computed(() => exerciseForm.value?.textSelected),
+  highlightedRectangles: computed(() => exerciseForm.value?.highlightedRectangles),
+})
+</script>
+
+<template>
+  <BRow>
+    <BCol>
+      <h1>{{ $t('edition') }}</h1>
+      <ExerciseForm
+        ref="exerciseForm"
+        :project
+        :textbook
+        :textbookPage="page"
+        :section
+        :pdf
+        :number="exercise?.attributes.number || ''"
+        :automaticNumber="false"
+        :editMode="true"
+        :exercise
+        @saved="saved"
+        v-slot="{ disabled, save }"
+      >
+        <RouterLink class="btn btn-secondary" :to="{name: 'project-textbook-page-list-exercises'}">{{ $t('cancel') }}</RouterLink>
+        <BButton primary :disabled @click="save">{{ $t('save') }}</BButton>
+      </ExerciseForm>
+    </BCol>
+    <BCol>
+      <h1>{{ $t('adaptation') }}</h1>
+      <iframe :src="exerciseForm?.adaptationUrl" style="width: 100%; height: 100%"></iframe>
+    </BCol>
+  </BRow>
+</template>

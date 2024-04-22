@@ -15,7 +15,7 @@ describe('Gabby\'s project view', () => {
     cy.get('select').select('en')
 
     cy.get('h1:contains("Project not found")').should('exist')
-    cy.title().should('eq', 'MALIN')
+    cy.title().should('eq', 'MALIN - Project not found')
   })
 
   it('lands', () => {

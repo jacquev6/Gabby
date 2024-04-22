@@ -6,13 +6,15 @@ import { PiniaSharedState } from 'pinia-shared-state'
 import * as pdfjs from 'pdfjs-dist/build/pdf'
 
 import { i18n } from './locales'
-import RootView from './views/root-view.vue'
-import IndexView from './views/index/index-view.vue'
-import ProjectView from './views/project/project-view.vue'
-import ProjectTextbookPageRootView from './views/project-textbook-page/project-textbook-page-root-view.vue'
-import ProjectTextbookPageListExercisesView from './views/project-textbook-page/project-textbook-page-list-exercises-view.vue'
-import ProjectTextbookPageCreateExerciseView from './views/project-textbook-page/project-textbook-page-create-exercise-view.vue'
-import ProjectTextbookPageEditExerciseView from './views/project-textbook-page/project-textbook-page-edit-exercise-view.vue'
+import RootLayout from './views/RootLayout.vue'
+import ProjectLayout from './views/project/ProjectLayout.vue'
+import ProjectTextbookLayout from './views/project/textbook/ProjectTextbookLayout.vue'
+import ProjectTextbookPageLayout from './views/project/textbook/page/ProjectTextbookPageLayout.vue'
+import RootIndexView from './views/index/RootIndexView.vue'
+import ProjectIndexView from './views/project/index/ProjectIndexView.vue'
+import ProjectTextbookPageListExercisesView from './views/project/textbook/page/list-exercises/ListExercisesView.vue'
+import ProjectTextbookPageCreateExerciseView from './views/project/textbook/page/create-exercise/CreateExerciseView.vue'
+import ProjectTextbookPageEditExerciseView from './views/project/textbook/page/edit-exercise/EditExerciseView.vue'
 
 
 pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.js'
@@ -24,62 +26,77 @@ const router = createRouter({
     {
       path: '/ping',
       name: 'ping',
-      component: () => import('./views/ping-view.vue'),
+      component: () => import('./views/PingView.vue'),
     },
     {
       path: '/pdfs',
       name: 'pdfs',
-      component: () => import('./views/pdfs-view.vue'),
+      component: () => import('./views/PdfsView.vue'),
     },
     {
       path: '/',
-      component: RootView,
+      component: RootLayout,
       children: [
         {
           path: '',
           name: 'index',
-          component: IndexView,
+          component: RootIndexView,
         },
         {
           path: 'project/:projectId',
-          name: 'project',
-          component: ProjectView,
+          component: ProjectLayout,
           props: (route) => (
             {
               projectId: route.params.projectId,
-            }
-          ),
-        },
-        {
-          path: 'project/:projectId/textbook/:textbookId/page/:page',
-          component: ProjectTextbookPageRootView,
-          props: (route) => (
-            {
-              projectId: route.params.projectId,
-              textbookId: route.params.textbookId,
-              page: Number.parseInt(route.params.page, 10),
             }
           ),
           children: [
             {
               path: '',
-              name: 'project-textbook-page-list-exercises',
-              component: ProjectTextbookPageListExercisesView,
+              name: 'project',
+              component: ProjectIndexView,
             },
             {
-              path: 'new-exercise',
-              name: 'project-textbook-page-create-exercise',
-              component: ProjectTextbookPageCreateExerciseView,
-            },
-            {
-              path: 'exercise/:exerciseId',
-              name: 'project-textbook-page-edit-exercise',
-              component: ProjectTextbookPageEditExerciseView,
+              path: 'textbook/:textbookId',
+              component: ProjectTextbookLayout,
               props: (route) => (
                 {
-                  exerciseId: route.params.exerciseId,
+                  textbookId: route.params.textbookId,
                 }
               ),
+              children: [
+                {
+                  path: 'page/:page',
+                  component: ProjectTextbookPageLayout,
+                  props: (route) => (
+                    {
+                      page: Number.parseInt(route.params.page, 10),
+                    }
+                  ),
+                  children: [
+                    {
+                      path: '',
+                      name: 'project-textbook-page-list-exercises',
+                      component: ProjectTextbookPageListExercisesView,
+                    },
+                    {
+                      path: 'new-exercise',
+                      name: 'project-textbook-page-create-exercise',
+                      component: ProjectTextbookPageCreateExerciseView,
+                    },
+                    {
+                      path: 'exercise/:exerciseId',
+                      name: 'project-textbook-page-edit-exercise',
+                      component: ProjectTextbookPageEditExerciseView,
+                      props: (route) => (
+                        {
+                          exerciseId: route.params.exerciseId,
+                        }
+                      ),
+                    },
+                  ],
+                },
+              ],
             },
           ],
         },

@@ -1,5 +1,5 @@
-import selectWords from './select-words.vue'
-import fillWithFreeText from './fill-with-free-text.vue'
+import selectWords from './SelectWords.vue'
+import fillWithFreeText from './FillWithFreeText.vue'
 
 
 export default {

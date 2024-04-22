@@ -1,9 +1,9 @@
 import { createApp } from 'vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
 
-import Main from './main.vue'
-import IndexView from './views/index-view.vue'
-import ExerciseView from './views/exercise-view.vue'
+import RootLayout from './RootLayout.vue'
+import IndexView from './views/IndexView.vue'
+import ExerciseView from './views/ExerciseView.vue'
 
 
 const router = createRouter({
@@ -23,6 +23,6 @@ const router = createRouter({
   ],
 })
 
-createApp(Main)
+createApp(RootLayout)
   .use(router)
   .mount('#app')

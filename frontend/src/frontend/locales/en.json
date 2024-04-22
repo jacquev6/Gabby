@@ -6,6 +6,9 @@
   "close": "Close",
 
 
+  "thisIsABug": "You should not be seeing this; this is a bug. Please let Vincent Jacques know about it.",
+
+
   "newProject": "New project",
   "projectTitle": "Title",
   "projectDescription": "Description",

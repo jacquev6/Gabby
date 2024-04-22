@@ -1,14 +1,14 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
 
-import BBusy from './busy.vue'
-import BButton from './button.vue'
-import BCol from './col.vue'
-import BLabeledCheckbox from './labeled-checkbox.vue'
-import BLabeledInput from './labeled-input.vue'
-import BLabeledTextarea from './labeled-textarea.vue'
-import BModal from './modal.vue'
-import BRow from './row.vue'
-import BSelect from './select.vue'
+import BBusy from './Busy.vue'
+import BButton from './Button.vue'
+import BCol from './Col.vue'
+import BLabeledCheckbox from './LabeledCheckbox.vue'
+import BLabeledInput from './LabeledInput.vue'
+import BLabeledTextarea from './LabeledTextarea.vue'
+import BModal from './Modal.vue'
+import BRow from './Row.vue'
+import BSelect from './Select.vue'
 
 
 export {

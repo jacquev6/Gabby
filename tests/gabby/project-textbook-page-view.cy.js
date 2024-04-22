@@ -17,7 +17,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
     cy.get('select').select('en')
 
     cy.get('h1:contains("Project not found")').should('exist')
-    cy.title().should('eq', 'MALIN')
+    cy.title().should('eq', 'MALIN - Project not found')
   })
 
   it('displays an error message if the textbook does not exist', () => {
@@ -26,7 +26,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
     cy.get('select').select('en')
 
     cy.get('h1:contains("Textbook not found")').should('exist')
-    cy.title().should('eq', 'MALIN')
+    cy.title().should('eq', 'MALIN - Premier projet de test - Textbook not found')
   })
 
   it('displays an error message if the textbook does not belong to this project', () => {
@@ -35,7 +35,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
     cy.get('select').select('en')
 
     cy.get('h1:contains("Textbook not found")').should('exist')
-    cy.title().should('eq', 'MALIN')
+    cy.title().should('eq', 'MALIN - Deuxième projet de test - Textbook not found')
   })
 
   // @todo Add test where the page is a negative number

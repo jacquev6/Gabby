@@ -1,0 +1,10 @@
+<script setup>
+import { BButton } from '../../components/opinion/bootstrap'
+import ProjectForm from '../../components/ProjectForm.vue'
+</script>
+
+<template>
+  <ProjectForm v-slot="{ disabled, create }">
+    <BButton primary :disabled @click="create">{{ $t('createProject' )}}</BButton>
+  </ProjectForm>
+</template>

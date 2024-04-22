@@ -6,6 +6,9 @@
   "close": "Fermer",
 
 
+  "thisIsABug": "Vous ne devriez pas voir ça ; c'est un bug. Merci de le signaler à Vincent Jacques.",
+
+
   "newProject": "Nouveau projet",
   "projectTitle": "Titre",
   "projectDescription": "Description",
