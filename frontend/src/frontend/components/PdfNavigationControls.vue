@@ -33,7 +33,7 @@ watch(
     <b-button sm primary :disabled="disabled || pageNumber <= 1" @click="--requestedPageNumber">&lt;</b-button>
     <label>
       {{ $t('pdfNavigationPage') }}
-      <input type="number" min="1" :max="pagesCount" :disabled v-model="requestedPageNumber" @blur="requestedPageNumber = pageNumber" />
+      <input type="number" min="1" :max="pagesCount" size="4" :disabled v-model="requestedPageNumber" @blur="requestedPageNumber = pageNumber" />
       {{ $t('pdfNavigationPageOver', pagesCount) }}
     </label>
     <b-button sm primary :disabled="disabled || pageNumber >= pagesCount" @click="++requestedPageNumber">&gt;</b-button>

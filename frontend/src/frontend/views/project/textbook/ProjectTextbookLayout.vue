@@ -60,14 +60,23 @@ const breadcrumbs = computed(() => {
   }
 })
 
+const componentHandlesScrolling = computed(() => component.value?.handlesScrolling ?? false)
+
+const class_ = computed(() => ({
+  'h-100': componentHandlesScrolling.value,
+  'overflow-y-hidden': componentHandlesScrolling.value,
+  'overflow-y-auto': !componentHandlesScrolling.value,
+}))
+
 defineExpose({
   title,
   breadcrumbs,
+  handlesScrolling: componentHandlesScrolling,
 })
 </script>
 
 <template>
-  <BBusy :busy="textbookIsLoading" showWhileBusy="afterNotBusy" size="20em">
+  <BBusy :busy="textbookIsLoading" showWhileBusy="afterNotBusy" size="20em" :class="class_">
     <template v-if="textbookExists">
       <RouterView v-slot="{ Component }">
         <component

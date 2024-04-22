@@ -34,32 +34,36 @@ defineExpose({
   changePage,
   textSelected: computed(() => exerciseForm.value?.textSelected),
   highlightedRectangles: computed(() => exerciseForm.value?.highlightedRectangles),
+  handlesScrolling: true,
 })
 </script>
 
 <template>
-  <TwoResizableColumns>
+  <TwoResizableColumns class="h-100">
     <template #left>
-      <h1>{{ $t('edition') }}</h1>
-      <ExerciseForm
-        ref="exerciseForm"
-        :project
-        :textbook
-        :textbookPage="page"
-        :section
-        :pdf
-        :number
-        :automaticNumber
-        :editMode="false"
-        @created="created"
-        v-slot="{ disabled, create }"
-      >
-        <RouterLink class="btn btn-secondary" :to="{name: 'project-textbook-page-list-exercises'}">{{ $t('cancel') }}</RouterLink>
-        <BButton primary :disabled @click="create">{{ $t('save.next') }}</BButton>
-      </ExerciseForm>
+      <div class="h-100 overflow-y-auto">
+        <h1>{{ $t('edition') }}</h1>
+        <ExerciseForm
+          ref="exerciseForm"
+          :project
+          :textbook
+          :textbookPage="page"
+          :section
+          :pdf
+          :number
+          :automaticNumber
+          :editMode="false"
+
+          @created="created"
+          v-slot="{ disabled, create }"
+        >
+          <RouterLink class="btn btn-secondary" :to="{name: 'project-textbook-page-list-exercises'}">{{ $t('cancel') }}</RouterLink>
+          <BButton primary :disabled @click="create">{{ $t('save.next') }}</BButton>
+        </ExerciseForm>
+      </div>
     </template>
     <template #right>
-      <div class="h-100 d-flex flex-column">
+      <div class="h-100 overflow-hidden d-flex flex-column">
         <h1>{{ $t('adaptation') }}</h1>
         <iframe class="flex-fill w-100" :src="exerciseForm?.adaptationUrl"></iframe>
       </div>

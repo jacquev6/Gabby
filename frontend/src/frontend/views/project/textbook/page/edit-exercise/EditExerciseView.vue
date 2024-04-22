@@ -37,36 +37,38 @@ function saved() {
 }
 
 defineExpose({
-  // @todo Allow editing the bounding rectangle
   textSelected: computed(() => exerciseForm.value?.textSelected),
   highlightedRectangles: computed(() => exerciseForm.value?.highlightedRectangles),
+  handlesScrolling: true,
 })
 </script>
 
 <template>
-  <TwoResizableColumns>
+  <TwoResizableColumns class="h-100">
     <template #left>
-      <h1>{{ $t('edition') }}</h1>
-      <ExerciseForm
-        ref="exerciseForm"
-        :project
-        :textbook
-        :textbookPage="page"
-        :section
-        :pdf
-        :number="exercise?.attributes.number || ''"
-        :automaticNumber="false"
-        :editMode="true"
-        :exercise
-        @saved="saved"
-        v-slot="{ disabled, save }"
-      >
-        <RouterLink class="btn btn-secondary" :to="{name: 'project-textbook-page-list-exercises'}">{{ $t('cancel') }}</RouterLink>
-        <BButton primary :disabled @click="save">{{ $t('save') }}</BButton>
-      </ExerciseForm>
+      <div class="h-100 overflow-y-auto">
+        <h1>{{ $t('edition') }}</h1>
+        <ExerciseForm
+          ref="exerciseForm"
+          :project
+          :textbook
+          :textbookPage="page"
+          :section
+          :pdf
+          :number="exercise?.attributes.number || ''"
+          :automaticNumber="false"
+          :editMode="true"
+          :exercise
+          @saved="saved"
+          v-slot="{ disabled, save }"
+        >
+          <RouterLink class="btn btn-secondary" :to="{name: 'project-textbook-page-list-exercises'}">{{ $t('cancel') }}</RouterLink>
+          <BButton primary :disabled @click="save">{{ $t('save') }}</BButton>
+        </ExerciseForm>
+      </div>
     </template>
     <template #right>
-      <div class="h-100 d-flex flex-column">
+      <div class="h-100 overflow-x-hidden overflow-y-hidden d-flex flex-column">
         <h1>{{ $t('adaptation') }}</h1>
         <iframe class="flex-fill w-100" :src="exerciseForm?.adaptationUrl"></iframe>
       </div>

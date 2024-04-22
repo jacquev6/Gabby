@@ -80,56 +80,69 @@ const pdf = computedAsync(
   pdfLoading,
 )
 
+const componentHandlesScrolling = computed(() => component.value?.handlesScrolling ?? false)
+
+const class_ = computed(() => ({
+  'h-100': componentHandlesScrolling.value,
+  'overflow-y-hidden': componentHandlesScrolling.value,
+  'overflow-y-auto': !componentHandlesScrolling.value,
+}))
+
 defineExpose({
   title: computed(() => [`Page ${props.page}`]),
   breadcrumbs: computed(() => []),
+  handlesScrolling: true,
 })
 </script>
 
 <template>
-  <TwoResizableColumns rightWidth="2fr">
+  <TwoResizableColumns rightWidth="2fr" class="h-100 overflow-y-hidden">
     <template #left>
-      <PdfNavigationControls :page @update:page="component?.changePage" :disabled="!component?.changePage" :pagesCount="textbookPagesCount">
-        <BButton secondary sm :disabled="!section" @click="sectionEditor.show(section.id)">&#9881;</BButton>
-      </PdfNavigationControls>
-      <SectionEditor ref="sectionEditor" />
-      <template v-if="section">
-        <BBusy size="7rem" :busy="pdfLoading">
-          <template v-if="pdf?.page">
-            <div style="border: 1px solid black">
-              <PdfRenderer
-                ref="pdfRenderer"
-                :page="pdf.page"
-                class="img img-fluid"
-              />
-              <RectanglesHighlighter
-                v-if="component?.highlightedRectangles && pdfRenderer?.transform"
-                class="img img-fluid" style="position: absolute; top: 0; left: 0"
-                :width="pdfRenderer.width" :height="pdfRenderer.height" :transform="pdfRenderer.transform"
-                :rectangles="component.highlightedRectangles"
-              />
-              <TextPicker
-                v-if="component?.textSelected && pdfRenderer?.transform"
-                class="img img-fluid" style="position: absolute; top: 0; left: 0"
-                :width="pdfRenderer.width" :height="pdfRenderer.height" :transform="pdfRenderer.transform"
-                :textContent="pdf.textContent"
-                @text-selected="component.textSelected"
-              />
-            </div>
-          </template>
-          <template v-else>
-            <PdfNotLoaded :name="section.relationships.pdfFile.relationships.namings[0].attributes.name" />
-          </template>
-        </BBusy>
-      </template>
-      <template v-else>
-        <p>{{ $t('pageNoKnown') }}</p>
-      </template>
+      <div class="h-100 overflow-y-hidden d-flex flex-column">
+        <PdfNavigationControls :page @update:page="component?.changePage" :disabled="!component?.changePage" :pagesCount="textbookPagesCount">
+          <BButton secondary sm :disabled="!section" @click="sectionEditor.show(section.id)">&#9881;</BButton>
+        </PdfNavigationControls>
+        <SectionEditor ref="sectionEditor" />
+        <template v-if="section">
+          <BBusy size="7rem" :busy="pdfLoading" class="flex-fill overflow-y-auto">
+            <template v-if="pdf?.page">
+              <div style="border: 1px solid black">
+                <PdfRenderer
+                  ref="pdfRenderer"
+                  :page="pdf.page"
+                  class="img img-fluid"
+                />
+                <RectanglesHighlighter
+                  v-if="component?.highlightedRectangles && pdfRenderer?.transform"
+                  class="img img-fluid" style="position: absolute; top: 0; left: 0"
+                  :width="pdfRenderer.width" :height="pdfRenderer.height" :transform="pdfRenderer.transform"
+                  :rectangles="component.highlightedRectangles"
+                />
+                <TextPicker
+                  v-if="component?.textSelected && pdfRenderer?.transform"
+                  class="img img-fluid" style="position: absolute; top: 0; left: 0"
+                  :width="pdfRenderer.width" :height="pdfRenderer.height" :transform="pdfRenderer.transform"
+                  :textContent="pdf.textContent"
+                  @text-selected="component.textSelected"
+                />
+              </div>
+            </template>
+            <template v-else>
+              <PdfNotLoaded :name="section.relationships.pdfFile.relationships.namings[0].attributes.name" />
+            </template>
+          </BBusy>
+        </template>
+        <template v-else>
+          <p>{{ $t('pageNoKnown') }}</p>
+        </template>
+      </div>
     </template>
     <template #right>
-      <RouterView :project :textbook :pdf :section :page v-slot="{ Component }">
-        <component :is="Component" ref="component"></component>
-      </RouterView>
+      <div :class="class_">
+        <RouterView :project :textbook :pdf :section :page v-slot="{ Component }">
+          <component :is="Component" ref="component"></component>
+        </RouterView>
+      </div>
     </template>
   </TwoResizableColumns>
 </template>

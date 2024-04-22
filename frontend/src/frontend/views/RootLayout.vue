@@ -37,13 +37,23 @@ const breadcrumbs = computed(() => {
     return [home]
   }
 })
+
+const componentHandlesScrolling = computed(() => component.value?.handlesScrolling ?? false)
+
+const class_ = computed(() => ({
+  'h-100': componentHandlesScrolling.value,
+  'overflow-y-hidden': componentHandlesScrolling.value,
+  'overflow-y-auto': !componentHandlesScrolling.value,
+}))
 </script>
 
 <template>
-  <div class="container-fluid">
+  <div class="vh-100 d-flex flex-column overflow-y-hidden">
     <Navbar :title :breadcrumbs></Navbar>
-    <RouterView v-slot="{ Component }">
-      <component :is="Component" ref="component" />
-    </RouterView>
+    <div class="flex-fill container-fluid" :class="class_">
+      <RouterView v-slot="{ Component }">
+        <component :is="Component" ref="component" />
+      </RouterView>
+    </div>
   </div>
 </template>
