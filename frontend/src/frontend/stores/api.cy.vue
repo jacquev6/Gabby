@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { computedAsync } from '@vueuse/core'
 
-import Pinger from '../components/opinion/pinger.vue'
+import Pinger from '../components/opinion/Pinger.vue'
 import { BBusy, BRow, BCol } from '../components/opinion/bootstrap'
 import { useApiStore } from './api'
 
