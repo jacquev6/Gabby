@@ -895,7 +895,6 @@ class TextbookApiTests(TestMixin, TransactionTestCase):
             "loc": ["body", "data", "relationships", "project"],
             "msg": "Extra inputs are not permitted",
             "type": "extra_forbidden",
-            "url": "https://errors.pydantic.dev/2.6/v/extra_forbidden"
         }]})
 
         self.assertEqual(Textbook.objects.count(), 1)
@@ -1881,7 +1880,6 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
             "loc": ["body", "data", "relationships", "project"],
             "msg": "Extra inputs are not permitted",
             "type": "extra_forbidden",
-            "url": "https://errors.pydantic.dev/2.6/v/extra_forbidden"
         }]})
 
         self.assertEqual(Exercise.objects.count(), 1)
@@ -1924,7 +1922,6 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
             "loc": ["body", "data", "relationships", "textbook"],
             "msg": "Extra inputs are not permitted",
             "type": "extra_forbidden",
-            "url": "https://errors.pydantic.dev/2.6/v/extra_forbidden"
         }]})
 
         self.assertEqual(Exercise.objects.count(), 1)
@@ -1966,7 +1963,6 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
             "loc": ["body", "data", "attributes", "textbookPage"],
             "msg": "Extra inputs are not permitted",
             "type": "extra_forbidden",
-            "url": "https://errors.pydantic.dev/2.6/v/extra_forbidden"
         }]})
 
         self.assertEqual(Exercise.objects.count(), 1)
@@ -2008,7 +2004,6 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
             "loc": ["body", "data", "attributes", "number"],
             "msg": "Extra inputs are not permitted",
             "type": "extra_forbidden",
-            "url": "https://errors.pydantic.dev/2.6/v/extra_forbidden"
         }]})
 
         self.assertEqual(Exercise.objects.count(), 1)
