@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
@@ -8,26 +8,22 @@ import CreateTextbookForm from './CreateTextbookForm.vue'
 import CreateExerciseForm from './CreateExerciseForm.vue'
 import ExercisesList from './ExercisesList.vue'
 import PdfPreview from '../../../components/PdfPreview.vue'
+import type { Project } from '../../../types/api'
+import type { InfoDoc } from '../../../stores/pdfs'
 
 
 const router = useRouter()
 
-const props = defineProps({
-  project: {
-    type: Object,
-    required: true,
-  },
-  refreshProject: {
-    type: Function,
-    required: true,
-  },
-})
+const props = defineProps<{
+  project: Project
+  refreshProject: any/* @todo Type */
+}>()
 
-function goToTextbook(textbookId) {
-  router.push({name: 'project-textbook-page-list-exercises', params: {projectId: props.projectId, textbookId, page: 1}})
+function goToTextbook(textbookId: string) {
+  router.push({name: 'project-textbook-page-list-exercises', params: {projectId: props.project.id, textbookId, page: 1}})
 }
 
-const pdfToPreview = ref(null)
+const pdfToPreview = ref<InfoDoc | null>(null)
 
 defineExpose({
   title: [],
@@ -36,7 +32,7 @@ defineExpose({
 </script>
 
 <template>
-  <EditableProjectHeader :project="project" />
+  <EditableProjectHeader :project />
   <p>{{ $t('download') }} <a :href="`/api/project-${project.id}.html`">{{ $t('theExportedHtml') }}</a>.</p>
   <p>{{ $t('download') }} <a :href="`/api/project-${project.id}-extraction-report.json`" download>{{ $t('theExtractionReport') }}</a>.</p>
   <BRow>
@@ -52,17 +48,17 @@ defineExpose({
           />
         </BCol>
         <BCol v-if="pdfToPreview !== null" :w="6">
-          <PdfPreview :pdf="pdfToPreview.document" />
+          <PdfPreview :pdf="pdfToPreview.document as any/* @todo Understand and fix typing issue*/" />
         </BCol>
       </BRow>
     </BCol>
     <BCol v-if="pdfToPreview === null">
       <h2>{{ $t('newIndependentExercise') }}</h2>
-      <CreateExerciseForm :project="project" @created="refreshProject" />
+      <CreateExerciseForm :project @created="refreshProject" />
     </BCol>
     <BCol :w="4">
       <h2>{{ $t('existingTextbooksAndExercises') }}</h2>
-      <ExercisesList :project="project" />
+      <ExercisesList :project />
     </BCol>
   </BRow>
 </template>

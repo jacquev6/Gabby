@@ -3,7 +3,9 @@ import { createRouter, createWebHistory, RouterView } from 'vue-router'
 import { createPinia } from 'pinia'
 import { createHead } from '@unhead/vue'
 import { PiniaSharedState } from 'pinia-shared-state'
-import * as pdfjs from 'pdfjs-dist/build/pdf'
+// @ts-ignore/* Temporary untyped */
+import * as untypedPdfjs from 'pdfjs-dist/build/pdf'
+import type PdfjsType from 'pdfjs-dist/types/src/pdf'
 
 import { i18n } from './locales'
 import RootLayout from './views/RootLayout.vue'
@@ -17,6 +19,7 @@ import ProjectTextbookPageCreateExerciseView from './views/project/textbook/page
 import ProjectTextbookPageEditExerciseView from './views/project/textbook/page/edit-exercise/EditExerciseView.vue'
 
 
+const pdfjs = untypedPdfjs as typeof PdfjsType
 pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.js'
 
 
@@ -68,11 +71,12 @@ const router = createRouter({
                 {
                   path: 'page/:page',
                   component: ProjectTextbookPageLayout,
-                  props: (route) => (
-                    {
+                  props: (route) => {
+                    console.assert(typeof(route.params.page) === 'string')
+                    return {
                       page: Number.parseInt(route.params.page, 10),
                     }
-                  ),
+                  },
                   children: [
                     {
                       path: '',

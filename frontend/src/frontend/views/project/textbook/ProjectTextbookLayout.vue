@@ -5,9 +5,11 @@ import { useI18n } from 'vue-i18n'
 
 import { useApiStore } from '../../../stores/api'
 import { BBusy } from '../../../components/opinion/bootstrap'
+import type { Project, Textbook } from '../../../types/api'
+
 
 const props = defineProps<{
-  project: Object,
+  project: Project,
   refreshProject: Function,
   textbookId: string,
 }>()
@@ -16,26 +18,27 @@ const i18n = useI18n()
 
 const api = useApiStore()
 
-const component = ref<null | { title: string, breadcrumbs: [] }>(null)
+const component = ref<null | { title: string, breadcrumbs: [], handlesScrolling?: boolean }>(null)
 
 const textbookIsLoading = ref(false)
 const textbookNeedsRefresh = ref(0)
 const textbook = computedAsync(
   async () => {
     textbookNeedsRefresh.value  // Dependency for reactivity
-    return await api.client.getOne('textbook', props.textbookId, {include: 'sections.pdfFile.namings'})
+    return await api.client.getOne<Textbook>('textbook', props.textbookId, {include: 'sections.pdfFile.namings'})
   },
   null,
   textbookIsLoading,
 )
 
 // @todo Move this check (that the textbook belongs to the project) to the backend, probably by adding a *required* query parameter 'filter[project]'
-const textbookExists = computed(() => textbook.value?.exists && textbook.value.relationships.project.id === props.project.id)
+const textbookExists = computed(() => textbook.value?.exists && textbook.value.relationships && textbook.value.relationships.project.id === props.project.id)
 
 const title = computed(() => {
   if (textbookIsLoading.value) {
     return []
   } else if (textbookExists.value) {
+    console.assert(textbook.value?.attributes !== undefined)
     const componentTitle = component.value ? component.value.title : []
     return [textbook.value.attributes.title, ...componentTitle]
   } else {
@@ -47,6 +50,7 @@ const breadcrumbs = computed(() => {
   if (textbookIsLoading.value) {
     return []
   } else if (textbookExists.value) {
+    console.assert(textbook.value?.attributes !== undefined)
     const componentBreadcrumbs = component.value ? component.value.breadcrumbs : []
     return [
       {

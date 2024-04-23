@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { BLabeledInput, BButton } from '../../../../components/opinion/bootstrap'
 </script>
 

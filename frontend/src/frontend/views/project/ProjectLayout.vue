@@ -5,6 +5,8 @@ import { useI18n } from 'vue-i18n'
 
 import { useApiStore } from '../../stores/api'
 import { BBusy } from '../../components/opinion/bootstrap'
+import type { Project } from '../../types/api'
+
 
 const props = defineProps<{
   projectId: string,
@@ -14,14 +16,14 @@ const i18n = useI18n()
 
 const api = useApiStore()
 
-const component = ref<null | { title: string, breadcrumbs: [] }>(null)
+const component = ref<null | { title: string, breadcrumbs: [], handlesScrolling?: boolean }>(null)
 
 const projectIsLoading = ref(false)
 const projectNeedsRefresh = ref(0)
 const project = computedAsync(
   async () => {
     projectNeedsRefresh.value  // Dependency for reactivity
-    return await api.client.getOne('project', props.projectId, {include: ['textbooks', 'exercises.textbook']})
+    return await api.client.getOne<Project>('project', props.projectId, {include: ['textbooks', 'exercises.textbook']})
   },
   null,
   projectIsLoading,
@@ -33,6 +35,7 @@ const title = computed(() => {
   if (projectIsLoading.value) {
     return []
   } else if (projectExists.value) {
+    console.assert(project.value?.attributes !== undefined)
     const componentTitle = component.value ? component.value.title : []
     return [project.value.attributes.title, ...componentTitle]
   } else {
@@ -44,6 +47,7 @@ const breadcrumbs = computed(() => {
   if (projectIsLoading.value) {
     return []
   } else if (projectExists.value) {
+    console.assert(project.value?.attributes !== undefined)
     const componentBreadcrumbs = component.value ? component.value.breadcrumbs : []
     return [
       {

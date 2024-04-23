@@ -1,20 +1,22 @@
-<script setup>
+<script setup lang="ts">
 import { ref, watch } from 'vue'
 import { onMounted } from 'vue'
 
 
-const props = defineProps({
-  width: {type: Number, required: true},
-  height: {type: Number, required: true},
-  transform: {type: Array, required: true},
-  rectangles: {type: Array, required: true},
-})
+const props = defineProps<{
+  width: number,
+  height: number,
+  transform: number[],
+  rectangles: any/* @todo Type */[],
+}>()
 
-const canvas = ref(null)
-var context = null
+const canvas = ref<HTMLCanvasElement | null>(null)
+var context: CanvasRenderingContext2D | null = null
 
 onMounted(() => {
+  console.assert(canvas.value !== null)
   context = canvas.value.getContext('2d')
+  console.assert(context !== null)
 
   canvas.value.width = props.width
   canvas.value.height = props.height
@@ -26,6 +28,7 @@ onMounted(() => {
 watch(() => props.rectangles, draw)
 
 function draw() {
+  console.assert(canvas.value !== null)
   console.assert(context !== null)
 
   context.save()

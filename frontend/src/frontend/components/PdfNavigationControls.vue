@@ -1,42 +1,42 @@
-<script setup>
+<script setup lang="ts">
 import { ref, watch } from 'vue'
 
 import { BButton } from './opinion/bootstrap'
 
 
-const props = defineProps({
-  pagesCount: {type: Number, required: true},
-  disabled: {type: Boolean, default: false},
+const props = withDefaults(defineProps<{
+  pagesCount: number,
+  disabled: boolean,
+}>(), {
+  disabled: false,
 })
 
-const pageNumber = defineModel('page', {type: Number, default: 1})
+const pageNumber = defineModel<number>('page', {default: 1})
+const requestedPageNumber = ref('1')
 
-const requestedPageNumber = ref(1)
-watch(requestedPageNumber, (n) => {
-  const page = Number.parseInt(n, 10)
+function resetRequestedPageNumber() {
+  requestedPageNumber.value = pageNumber.value.toString()
+}
+
+watch(pageNumber, resetRequestedPageNumber, {immediate: true})
+
+watch(requestedPageNumber, () => {
+  const page = Number.parseInt(requestedPageNumber.value, 10)
   if (Number.isInteger(page) && page >= 1 && page <= props.pagesCount) {
     pageNumber.value = page
   }
 })
-
-watch(
-  pageNumber,
-  (n) => {
-    requestedPageNumber.value = n
-  },
-  {immediate: true},
-)
 </script>
 
 <template>
   <p class="text-center">
-    <b-button sm primary :disabled="disabled || pageNumber <= 1" @click="--requestedPageNumber">&lt;</b-button>
+    <BButton sm primary :disabled="disabled || pageNumber <= 1" @click="--pageNumber">&lt;</BButton>
     <label>
       {{ $t('pdfNavigationPage') }}
-      <input type="number" min="1" :max="pagesCount" size="4" :disabled v-model="requestedPageNumber" @blur="requestedPageNumber = pageNumber" />
+      <input type="number" min="1" :max="pagesCount" size="4" :disabled v-model="requestedPageNumber" @blur="resetRequestedPageNumber" />
       {{ $t('pdfNavigationPageOver', pagesCount) }}
     </label>
-    <b-button sm primary :disabled="disabled || pageNumber >= pagesCount" @click="++requestedPageNumber">&gt;</b-button>
+    <BButton sm primary :disabled="disabled || pageNumber >= pagesCount" @click="++pageNumber">&gt;</BButton>
     <slot></slot>
   </p>
 </template>

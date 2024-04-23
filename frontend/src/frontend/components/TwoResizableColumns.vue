@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import { onMounted, onBeforeUnmount } from 'vue'
-import SplitGrid from 'split-grid'
+import SplitGrid, { type SplitInstance } from 'split-grid'
 
 
 const gutterMargin = 4  // Keep in sync with <style>
@@ -21,20 +21,12 @@ const initialStyle = computed(() => ({
   gridTemplateColumns: `${props.leftWidth} ${props.gutterWidth} ${props.rightWidth}`,
 }))
 
-const style = ref({})
+const style = ref(initialStyle.value)
 
-watch(
-  initialStyle,
-  (value) => {
-    style.value = value
-  },
-  {
-    immediate: true,
-  },
-)
+watch(initialStyle, (value) => { style.value = value })
 
 const gutter = ref<HTMLElement | null>(null)
-var split = null
+var split : SplitInstance | null = null
 onMounted(() => {
   console.assert(gutter.value !== null)
   console.assert(split === null)

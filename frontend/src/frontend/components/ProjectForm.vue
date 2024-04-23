@@ -1,18 +1,19 @@
-<script setup>
+<script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 
 import { BBusy, BLabeledInput, BLabeledTextarea } from './opinion/bootstrap'
 import { useApiStore } from '../stores/api'
+import type { Project } from '../types/api'
 
 
-const props = defineProps({
-  project: {type: Object, required: false},
-})
+const props = defineProps<{
+  project?: Project,
+}>()
 
-const emit = defineEmits([
-  'created',  // (project: Object) => void
-  'saved',  // () => void
-])
+const emit = defineEmits<{
+  created: [project: Project],
+  saved: [],
+}>()
 
 const api = useApiStore()
 
@@ -22,8 +23,12 @@ const description = ref('')
 watch(
   () => props.project,
   () => {
-    title.value = props.project?.attributes.title ?? ''
-    description.value = props.project?.attributes.description ?? ''
+    if (props.project !== undefined) {
+      console.assert(props.project.attributes !== undefined)
+
+      title.value = props.project.attributes.title ?? ''
+      description.value = props.project.attributes.description ?? ''
+    }
   },
   {immediate: true},
 )
@@ -33,7 +38,7 @@ const busy = ref(false)
 
 async function create() {
   busy.value = true
-  const project = await api.client.post(
+  const project = await api.client.post<Project>(
     'project',
     {title: title.value, description: description.value},
     {},
@@ -48,6 +53,8 @@ async function create() {
 }
 
 async function save() {
+  console.assert(props.project !== undefined)
+
   busy.value = true
   await api.client.patch(
     'project',

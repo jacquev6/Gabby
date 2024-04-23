@@ -1,5 +1,5 @@
-<script setup>
-import { ref, reactive, computed, watch } from 'vue'
+<script setup lang="ts">
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { computedAsync } from '@vueuse/core'
 
@@ -8,16 +8,17 @@ import { BButton } from '../../../../../components/opinion/bootstrap'
 import ExerciseForm from '../../../../../components/ExerciseForm.vue'
 import TwoResizableColumns from '../../../../../components/TwoResizableColumns.vue'
 import ExerciseTools from '../ExerciseTools.vue'
+import type { Project, Textbook, Section, Exercise } from '../../../../../types/api'
 
 
-const props = defineProps({
-  project: {type: Object, required: true},
-  textbook: {type: Object, required: true},
-  pdf: {required: true},
-  section: {required: true},
-  page: {type: Number, required: true},
-  exerciseId: {type: String, required: true},
-})
+const props = defineProps<{
+  project: Project,
+  textbook: Textbook,
+  pdf: any/* @todo Type */,
+  section: Section,
+  page: number,
+  exerciseId: string
+}>()
 
 const router = useRouter()
 const api = useApiStore()
@@ -25,13 +26,13 @@ const api = useApiStore()
 const exerciseLoading = ref(false)
 const exercise = computedAsync(
   async () => {
-    return await api.client.getOne('exercise', props.exerciseId, {include: 'adapted'})
+    return await api.client.getOne<Exercise>('exercise', props.exerciseId, {include: 'adapted'})
   },
-  null,
+  undefined,
   exerciseLoading,
 )
 
-const exerciseForm = ref(null)
+const exerciseForm = ref<typeof ExerciseForm | null>(null)
 
 function saved() {
   router.push({name: 'project-textbook-page-list-exercises'})
@@ -56,7 +57,7 @@ defineExpose({
           :textbookPage="page"
           :section
           :pdf
-          :number="exercise?.attributes.number || ''"
+          :number="exercise?.attributes!.number || ''"
           :automaticNumber="false"
           :editMode="true"
           :exercise

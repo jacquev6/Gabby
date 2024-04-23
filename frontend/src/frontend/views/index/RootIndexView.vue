@@ -1,14 +1,15 @@
-<script setup>
+<script setup lang="ts">
 import { useRouter } from 'vue-router'
 
 import { BRow, BCol } from '../../components/opinion/bootstrap'
 import CreateProjectForm from './CreateProjectForm.vue'
 import ProjectsList from './ProjectsList.vue'
+import type { Project } from '../../types/api'
 
 
 const router = useRouter()
 
-function goToProject(project) {
+function goToProject(project: Project) {
   router.push({name: 'project', params: {projectId: project.id}})
 }
 

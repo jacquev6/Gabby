@@ -1,7 +1,6 @@
 name: $OPINION_APP_NAME-dev
 
 volumes:
-  frontend-node-modules:
   frontend-cache:
   backend-pip-packages:
 
@@ -15,7 +14,6 @@ services:
       dockerfile: dev-env/frontend/docker/Dockerfile
     volumes:
       - ..:/app
-      - frontend-node-modules:/app/frontend/node_modules
       - frontend-cache:/root/.cache  # For Cypress
       - /tmp/.X11-unix:/tmp/.X11-unix  # Allow running GUI apps in container, displaying on host
     working_dir: /app/frontend
@@ -29,7 +27,6 @@ services:
     pull_policy: never
     volumes:
       - ..:/app
-      - frontend-node-modules:/app/frontend/node_modules
       - frontend-cache:/root/.cache
     working_dir: /app/frontend
     command: ["npm", "install"]
@@ -39,7 +36,6 @@ services:
     pull_policy: never
     volumes:
       - ..:/app
-      - frontend-node-modules:/app/frontend/node_modules
     working_dir: /app/frontend
     environment:
       VITE_OPINION_APP_VERSION: dev
@@ -53,7 +49,6 @@ services:
     pull_policy: never
     volumes:
       - ..:/app
-      - frontend-node-modules:/app/frontend/node_modules
     working_dir: /app/frontend
     environment:
       GABBY_ENTRY_POINT_NAME: adapted
@@ -66,7 +61,6 @@ services:
     pull_policy: never
     volumes:
       - ..:/app
-      - frontend-node-modules:/app/frontend/node_modules
     working_dir: /app/frontend
     environment:
       GABBY_ENTRY_POINT_NAME: adapted

@@ -1,26 +1,27 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 import { computedAsync } from '@vueuse/core'
 
 import { BBusy } from '../../../../../components/opinion/bootstrap'
 import { useApiStore } from '../../../../../stores/api'
+import type { Textbook, Exercise } from '../../../../../types/api'
 
 
-const props = defineProps({
-  textbook: {type: Object, required: true},
-  page: {type: Number, required: true}
-})
+const props = defineProps<{
+  textbook: Textbook,
+  page: number,
+}>()
 
 const api = useApiStore()
 
 const busy = ref(false)
 const exercises = computedAsync(
-  async () => await api.client.getAll('exercises', {filter: {'textbook': props.textbook.id, 'textbookPage': props.page}}),
-  [],
+  async () => await api.client.getAll<Exercise>('exercises', {filter: {'textbook': props.textbook.id, 'textbookPage': props.page.toString()}}),
+  [] as Required<Exercise>[],
   busy,
 )
 
-function ellipsis(s) {
+function ellipsis(s: string) {
   return s.length > 25 ? s.slice(0, 25) + '…' : s
 }
 

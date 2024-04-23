@@ -1,15 +1,20 @@
-<script setup>
+<script setup lang="ts">
 import { ref, watch } from 'vue'
+// @ts-ignore/* @todo Use @types/bootstrap */
 import bootstrap from 'bootstrap/dist/js/bootstrap.bundle.min.js'
 
 import { BButton } from '.'
 
 
-const props = defineProps({
-  close: {type: Boolean, default: true},
-  backdrop: {type: null, default: true},  // Boolean or 'static'
-  keyboard: {type: Boolean, default: true},
+const props = withDefaults(defineProps<{
+  close?: boolean,
+  backdrop?: boolean | 'static',
+  keyboard?: boolean,
   // focus:
+}>(), {
+  close: true,
+  backdrop: true,
+  keyboard: true,
 })
 
 const inDom = ref(false)
@@ -17,24 +22,24 @@ function show() {
   inDom.value = true
 }
 
-const modalElement = ref(null)
-var modal = null
+const modalElement = ref<HTMLDivElement | null>(null)
+var modal: any/* @todo Use @types/bootstrap */ = null
 const transitioning = ref(false)
 const active = ref(false)
 watch(modalElement, (element) => {
   if (element) {
-    element.addEventListener('show.bs.modal', event => {
+    element.addEventListener('show.bs.modal', () => {
       transitioning.value = true
     })
-    element.addEventListener('shown.bs.modal', event => {
+    element.addEventListener('shown.bs.modal', () => {
       transitioning.value = false
       active.value = true
     })
-    element.addEventListener('hide.bs.modal', event => {
+    element.addEventListener('hide.bs.modal', () => {
       active.value = false
       transitioning.value = true
     })
-    element.addEventListener('hidden.bs.modal', event => {
+    element.addEventListener('hidden.bs.modal', () => {
       transitioning.value = false
       modal.dispose()
       modal = null

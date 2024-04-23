@@ -1,21 +1,12 @@
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue'
 
 
-const props = defineProps({
-  w: {
-    type: [Number],
-    default: null,
-  },
-})
+const props = defineProps<{
+  w?: number,
+}>()
 
-const class_ = computed(() => {
-  if (props.w === null) {
-    return 'col'
-  } else {
-    return `col-${props.w}`
-  }
-})
+const class_ = computed(() => props.w ? `col-${props.w}` : 'col')
 </script>
 
 <template>

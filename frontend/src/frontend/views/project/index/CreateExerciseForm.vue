@@ -1,22 +1,23 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 
 import { BButton } from '../../../components/opinion/bootstrap'
 import ExerciseForm from '../../../components/ExerciseForm.vue'
+import type { Project, Exercise } from '../../../types/api'
 
 
-const props = defineProps({
-  project: {type: Object, required: true},
-})
+defineProps<{
+  project: Project,
+}>()
 
-const emit = defineEmits([
-  'created',  // (exercise: Object) => void
-])
+const emit = defineEmits<{
+  created: [exercise: Exercise],
+}>()
 
 const number = ref('')
 const automaticNumber = ref(false)
 
-function created(exercise, suggestedNextExerciseNumber) {
+function created(exercise: Exercise, suggestedNextExerciseNumber: string) {
   number.value = suggestedNextExerciseNumber
   automaticNumber.value = true
   emit('created', exercise)

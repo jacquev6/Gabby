@@ -11,33 +11,45 @@ import SectionEditor from './SectionEditor.vue'
 import TextPicker from './TextPicker.vue'
 import RectanglesHighlighter from './RectanglesHighlighter.vue'
 import TwoResizableColumns from '../../../../components/TwoResizableColumns.vue'
+import type { Project, Textbook } from '../../../../types/api'
 
 
 const props = defineProps<{
-  project: Object,
-  refreshProject: Function,
-  textbook: Object,
-  refreshTextbook: Function,
-  page: Number,
+  project: Project,
+  refreshProject: any/* @todo Type */,
+  textbook: Textbook,
+  refreshTextbook: any/* @todo Type */,
+  page: number,
 }>()
 
 const pdfs = usePdfsStore()
 
-const component = ref(null)
-const sectionEditor = ref(null)
-const pdfRenderer = ref(null)
+const component = ref<{
+  changePage?: any/* @todo Type */,
+  highlightedRectangles?: any/* @todo Type */,
+  textSelected?: any/* @todo Type */,
+  handlesScrolling: boolean,
+} | null>(null)
+const sectionEditor = ref<typeof SectionEditor | null>(null)
+const pdfRenderer = ref<typeof PdfRenderer | null>(null)
 
 // @todo(Feature, soon) Get the number of pages from the textbook itself
 const textbookPagesCount = computed(() => {
+  console.assert(props.textbook.relationships !== undefined)
+
   let c = 1
   for (const section of props.textbook.relationships.sections) {
+    console.assert(section.attributes !== undefined)
     c = Math.max(c, section.attributes.textbookStartPage + section.attributes.pagesCount - 1)
   }
   return c
 })
 
 const section = computed(() => {
+  console.assert(props.textbook.relationships !== undefined)
+
   for (const section of props.textbook.relationships.sections) {
+    console.assert(section.attributes !== undefined)
     if (props.page >= section.attributes.textbookStartPage && props.page < section.attributes.textbookStartPage + section.attributes.pagesCount) {
       return section
     }
@@ -49,14 +61,16 @@ const pdfLoading = ref(false)
 const pdf = computedAsync(
   async () => {
     if (section.value) {
-      const pageNumber = section.value.attributes.pdfFileStartPage + props.page - section.value.attributes.textbookStartPage
-      if (pdfs.getInfo(section.value.relationships.pdfFile.id)) {
-        const document = await pdfs.getDocument(section.value.relationships.pdfFile.id)
+      const pageNumber = section.value.attributes!.pdfFileStartPage + props.page - section.value.attributes!.textbookStartPage
+      if (pdfs.getInfo(section.value.relationships!.pdfFile.id)) {
+        const document = await pdfs.getDocument(section.value.relationships!.pdfFile.id)
         // WARNING: no reactivity to dependencies accessed after this first await (https://vueuse.org/core/computedAsync/#caveats)
         const page = await document?.getPage(pageNumber)
         const textContent = []
         if (page) {
           for (const item of (await page.getTextContent()).items) {
+            console.assert('str' in item)
+
             textContent.push({
               str: item.str,
 
@@ -96,7 +110,7 @@ defineExpose({
     <template #left>
       <div class="h-100 overflow-hidden d-flex flex-column">
         <PdfNavigationControls :page @update:page="component?.changePage" :disabled="!component?.changePage" :pagesCount="textbookPagesCount">
-          <BButton secondary sm :disabled="!section" @click="sectionEditor.show(section.id)">&#9881;</BButton>
+          <BButton secondary sm :disabled="!section" @click="sectionEditor!.show(section!.id)">&#9881;</BButton>
         </PdfNavigationControls>
         <SectionEditor ref="sectionEditor" />
         <template v-if="section">
@@ -119,12 +133,12 @@ defineExpose({
                   class="img img-fluid" style="position: absolute; top: 0; left: 0"
                   :width="pdfRenderer.width" :height="pdfRenderer.height" :transform="pdfRenderer.transform"
                   :textContent="pdf.textContent"
-                  @text-selected="component.textSelected"
+                  @text-selected="component?.textSelected"
                 />
               </div>
             </template>
             <template v-else>
-              <PdfNotLoaded :name="section.relationships.pdfFile.relationships.namings[0].attributes.name" />
+              <PdfNotLoaded :name="section.relationships!.pdfFile.relationships!.namings[0].attributes!.name" />
             </template>
           </BBusy>
         </template>

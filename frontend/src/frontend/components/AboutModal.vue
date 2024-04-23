@@ -1,14 +1,14 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 
 import { BModal, BButton } from './opinion/bootstrap'
 
 
 const gabbyVersion = import.meta.env.VITE_OPINION_APP_VERSION
-const userAgent = JSON.stringify(window.navigator.userAgentData || window.navigator.userAgent)
+const userAgent = JSON.stringify((window.navigator as any/* Chromium-specific */).userAgentData || window.navigator.userAgent)
 
-const windowWidth = ref(null)
-const windowHeight = ref(null)
+const windowWidth = ref(window.innerWidth)
+const windowHeight = ref(window.innerHeight)
 function onResize() {
   windowWidth.value = window.innerWidth
   windowHeight.value = window.innerHeight
@@ -16,20 +16,20 @@ function onResize() {
 onResize()
 window.addEventListener('resize', onResize)
 
-const modal = ref(null)
+const modal = ref<typeof BModal | null>(null)
 function show() {
-  modal.value.show()
+  modal.value?.show()
 }
 
 function hide() {
-  modal.value.hide()
+  modal.value?.hide()
 }
 
 defineExpose({show, hide})
 </script>
 
 <template>
-  <b-modal ref="modal">
+  <BModal ref="modal">
     <template #header>
       <h1>{{ $t('about') }}</h1>
     </template>
@@ -69,7 +69,7 @@ Window size: {{ windowWidth }}x{{ windowHeight }}
       </div>
     </template>
     <template #footer>
-      <b-button secondary @click="hide">{{ $t('close') }}</b-button>
+      <BButton secondary @click="hide">{{ $t('close') }}</BButton>
     </template>
-  </b-modal>
+  </BModal>
 </template>

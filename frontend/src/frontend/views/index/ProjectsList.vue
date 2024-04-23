@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { useApiStore } from '../../stores/api'
 import { BBusy } from '../../components/opinion/bootstrap'
 

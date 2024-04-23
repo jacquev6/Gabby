@@ -1,26 +1,28 @@
-<script setup>
-const props = defineProps({
-  options: {
-    type: Array,
-    required: true,
-  },
-})
+<script setup lang="ts">
+interface Option {
+  value: string,
+  label: string,
+}
 
-const model = defineModel()
+defineProps<{
+  options: (string | Option)[],
+}>()
 
-function value(option) {
-  if (option.value) {
-    return option.value
-  } else {
+const model = defineModel<string>()
+
+function value(option: string | Option) {
+  if (typeof option === 'string') {
     return option
+  } else {
+    return option.value
   }
 }
 
-function label(option) {
-  if (option.label) {
-    return option.label
-  } else {
+function label(option: string | Option) {
+  if (typeof option === 'string') {
     return option
+  } else {
+    return option.label
   }
 }
 </script>

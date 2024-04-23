@@ -1,25 +1,38 @@
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
 
 
+export interface TextItem {
+  left: number,
+  right: number,
+  width: number,
+  top: number,
+  bottom: number,
+  height: number,
+  str: string,
+}
+
 // WARNING: this component doesn't handle well when its props are changed after it's mounted.
-const props = defineProps({
-  width: Number,
-  height: Number,
-  transform: Array,
-  textContent: Array,
-})
+const props = defineProps<{
+  width: number,
+  height: number,
+  transform: number[],
+  textContent: TextItem[],
+}>()
 
-const emit = defineEmits([
-  'text-selected',  // (text: string, point: {clientX: number, clientY: number}) => void
-])
+const emit = defineEmits<{
+  textSelected: [text: string, point: {clientX: number, clientY: number}, items: TextItem[], rectangle: {start: {x: number, y: number}, stop: {x: number, y: number}}],
+}>()
 
-const canvas = ref(null)
-var context = null
+const canvas = ref<HTMLCanvasElement | null>(null)
+var context: CanvasRenderingContext2D | null = null
 var textSpacingTolerance = 0
 
 onMounted(() => {
+  console.assert(canvas.value !== null)
+
   context = canvas.value.getContext('2d')
+  console.assert(context !== null)
 
   canvas.value.width = props.width
   canvas.value.height = props.height
@@ -33,15 +46,23 @@ onMounted(() => {
   // console.log('textSpacingTolerance', textSpacingTolerance)
 })
 
+interface Point {
+  x: number,
+  y: number,
+}
 
-var startPoint = null
+var startPoint: Point | null = null
 
-function pointerdown(event) {
+function pointerdown(event: any/* @todo Type */) {
+  console.assert(canvas.value !== null)
+
   startPoint = makeCanvasPoint(event)
   canvas.value.setPointerCapture(event.pointerId)
 }
 
-function pointermove(event) {
+function pointermove(event: any/* @todo Type */) {
+  console.assert(context !== null)
+
   if (startPoint !== null) {
     clearCanvas()
 
@@ -64,7 +85,9 @@ function pointermove(event) {
   }
 }
 
-function pointerup(event) {
+function pointerup(event: any/* @todo Type */) {
+  console.assert(canvas.value !== null)
+
   canvas.value.releasePointerCapture(event.pointerId)
   if (startPoint !== null) {
     clearCanvas()
@@ -102,7 +125,7 @@ function pointerup(event) {
 
     if (text !== '') {
       emit(
-        'text-selected',
+        'textSelected',
         text,
         {clientX: event.clientX, clientY: event.clientY},
         items,
@@ -114,7 +137,10 @@ function pointerup(event) {
   }
 }
 
-function makeCanvasPoint(event) {
+function makeCanvasPoint(event: any/* @todo Type */) {
+  console.assert(canvas.value !== null)
+  console.assert(context !== null)
+
   const rect = canvas.value.getBoundingClientRect()
   const scaleX = canvas.value.width / rect.width
   const scaleY = canvas.value.height / rect.height
@@ -123,7 +149,7 @@ function makeCanvasPoint(event) {
   )
 }
 
-function selectionRectangle(startPoint, endPoint) {
+function selectionRectangle(startPoint: Point, endPoint: Point) {
   const minX = Math.min(startPoint.x, endPoint.x)
   const maxX = Math.max(startPoint.x, endPoint.x)
   const minY = Math.min(startPoint.y, endPoint.y)
@@ -131,7 +157,7 @@ function selectionRectangle(startPoint, endPoint) {
 
   return {
     minX, maxX, minY, maxY,
-    contains(item) {
+    contains(item: TextItem) {
       return (
         item.left >= minX && item.right <= maxX
         && item.bottom >= minY && item.top <= maxY
@@ -141,6 +167,9 @@ function selectionRectangle(startPoint, endPoint) {
 }
 
 function clearCanvas() {
+  console.assert(canvas.value !== null)
+  console.assert(context !== null)
+
   context.save()
   context.setTransform(1, 0, 0, 1, 0, 0)
   context.clearRect(0, 0, canvas.value.width, canvas.value.height)

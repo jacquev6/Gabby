@@ -1,23 +1,23 @@
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from 'vue'
 import { nextTick } from 'vue'
 
 import { BLabeledTextarea } from './opinion/bootstrap'
 
 
-const props = defineProps({
-  label: { type: String, required: true },
-})
+defineProps<{
+  label: string,
+}>()
 
-const model = defineModel({ type: String })
+const model = defineModel<string>({required: true})
 
 const forced = ref(false)
 
-const textArea = ref(null)
+const textArea = ref<typeof BLabeledTextarea | null>(null)
 
 function force() {
   forced.value = true
-  nextTick(() => textArea.value.focus())
+  nextTick(() => textArea.value?.focus())
 }
 
 function unforce() {
@@ -28,8 +28,8 @@ const expanded = computed(() => model.value || forced.value)
 
 defineExpose({
   expanded,
-  focus: () => textArea.value.focus(),
-  setSelectionRange: (start, end) => textArea.value.setSelectionRange(start, end),
+  focus: () => textArea.value?.focus(),
+  setSelectionRange: (start: number, end: number) => textArea.value?.setSelectionRange(start, end),
 })
 </script>
 

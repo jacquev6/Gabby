@@ -6,9 +6,19 @@
     "strict": true,
     "composite": true,
     "noEmit": true,
+    "noUnusedParameters": true,
+    "noUnusedLocals": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noUncheckedIndexedAccess": false,
+    "noPropertyAccessFromIndexSignature": false,
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "lib": ["Dom", "ES2022"]
   }
 }

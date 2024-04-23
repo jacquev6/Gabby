@@ -1,15 +1,15 @@
-<script setup>
+<script setup lang="ts">
 defineOptions({
   // Disable attribute inheritance to apply all fallthrough attributes to the textarea
   // https://vuejs.org/guide/components/attrs#disabling-attribute-inheritance
   inheritAttrs: false
 })
 
-const props = defineProps({
-  label: { type: String, required: true },
-})
+defineProps<{
+  label: string,
+}>()
 
-const model = defineModel({ type: Boolean })
+const model = defineModel<boolean>({default: false})
 
 const id = `checkbox-${ Math.floor(Math.random() * 4000000000) }`
 </script>

@@ -1,13 +1,13 @@
-<script setup>
+<script setup lang="ts">
 defineOptions({
   inheritAttrs: false
 })
 
-const props = defineProps({
-  label: { type: String, required: true },
-})
+defineProps<{
+  label: string,
+}>()
 
-const model = defineModel({})
+const model = defineModel<unknown>()
 
 const id = `input-${ Math.floor(Math.random() * 4000000000) }`
 </script>

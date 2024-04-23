@@ -1,13 +1,18 @@
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import type { RouteLocationRaw } from 'vue-router'
 
 import Navbar from '../components/Navbar.vue'
 
 
 const i18n = useI18n()
 
-const component = ref(null)
+const component = ref<{
+  title?: string,
+  breadcrumbs: {title: string, to: RouteLocationRaw}[],
+  handlesScrolling?: boolean,
+} | null>(null)
 
 const title = computed(() => {
   if (component.value) {
@@ -28,7 +33,7 @@ const breadcrumbs = computed(() => {
   if (component.value) {
     if (component.value.breadcrumbs === undefined) {
       console.error('component.value.breadcrumbs is undefined')
-      return [{title: i18n.t('thisIsABug')}]
+      return [{title: i18n.t('thisIsABug'), to: ''}]
     } else {
       console.assert(component.value.breadcrumbs !== null)
       return [home, ...component.value.breadcrumbs]

@@ -4,8 +4,6 @@ import { ref, reactive, watch, nextTick, computed, onMounted, onBeforeUnmount } 
 import { tokenize } from './tokenize'
 
 
-const assert: (condition: any, message?: string) => asserts condition = console.assert
-
 const props = defineProps<{
   text: string,
 }>()
@@ -27,7 +25,7 @@ const style = computed(() => {
 })
 
 function computeLines() {
-  assert(paragraph.value !== null)
+  console.assert(paragraph.value !== null)
 
   lines.splice(0)
 

@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import Pinger from '../components/opinion/Pinger.vue'
 import LanguageSelector from '../components/opinion/LanguageSelector.vue'
 </script>

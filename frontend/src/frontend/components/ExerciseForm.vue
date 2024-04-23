@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref, reactive, computed, watch } from 'vue'
 import { computedAsync } from '@vueuse/core'
 import { nextTick } from 'vue'
@@ -8,30 +8,31 @@ import TextSelectionMenu from './ExerciseFormTextSelectionMenu.vue'
 import OptionalTextarea from './OptionalTextarea.vue'
 import { useApiStore } from '../stores/api'
 import adaptedForms from './adapted-forms'
+import type { Project, Textbook, Section, Exercise } from '../types/api'
 
 
-const props = defineProps({
-  project: {type: Object, required: true},
-  textbook: {required: true},
-  textbookPage: {required: true},
-  section: {required: true},
-  pdf: {required: true},
-  number: {type: String, required: true},
-  automaticNumber: {type: Boolean, required: true},
-  editMode: {type: Boolean, required: true},
-  exercise: {type: Object, required: false},
-})
+const props = defineProps<{
+  project: Project,
+  textbook: Textbook | null,
+  textbookPage: number | null,
+  section: Section | null,
+  pdf: {page: {pageNumber: number}} | null,
+  number: string,
+  automaticNumber: boolean,
+  editMode: boolean,
+  exercise?: Exercise,
+}>()
 
-const emit = defineEmits([
-  'created',  // (exercise: Object, suggestedNextExerciseNumber: string) => void
-  'saved',  // () => void
-])
+const emit = defineEmits<{
+  created: [exercise: Exercise, suggestedNextExerciseNumber: string],
+  saved: [],
+}>()
 
 const api = useApiStore()
 
-var extractionEvents = []
+var extractionEvents: object[] = []
 const number = ref('')
-const boundingRectangle = ref(null)
+const boundingRectangle = ref<object | null>(null)
 const needsBoundingRectangle = computed(() => {
   if (props.textbook !== null && props.pdf !== null && !props.editMode) {
     return boundingRectangle.value === null
@@ -50,7 +51,7 @@ const fields = {
   clue,
 }
 const adaptedType = ref('-')
-const adaptedAttributes = reactive({'-': {}})
+const adaptedAttributes = reactive<{[kind: string]: object}>({'-': {}})
 for (const kind of Object.keys(adaptedForms)) {
   adaptedAttributes[kind] = {}
 }
@@ -61,19 +62,23 @@ const alreadyExists = computedAsync(
       return true
     } else if (number.value === '') {
       return false
-    } else {
+    } else if (props.textbook !== null) {
+      console.assert(props.textbookPage !== null)
       const exercises = await api.client.getAll(
         'exercises',
         {
           filter: {
             textbook: props.textbook.id,
-            textbookPage: props.textbookPage,
+            textbookPage: props.textbookPage.toString(),
             number: number.value,
           }
         },
       )
       console.assert(exercises.length <= 1)
       return exercises.length === 1
+    } else {
+      // @todo Detect duplicate independent exercise
+      return false
     }
   },
   false,
@@ -92,15 +97,20 @@ watch(
 watch(
   () => props.exercise,
   () => {
-    boundingRectangle.value = props.exercise?.attributes.boundingRectangle ?? null
+    if (props.exercise !== undefined) {
+      console.assert(props.exercise.attributes !== undefined)
+      console.assert(props.exercise.relationships !== undefined)
 
-    instructions.value = props.exercise?.attributes.instructions ?? ''
-    wording.value = props.exercise?.attributes.wording ?? ''
-    example.value = props.exercise?.attributes.example ?? ''
-    clue.value = props.exercise?.attributes.clue ?? ''
+      boundingRectangle.value = props.exercise?.attributes.boundingRectangle ?? null
 
-    adaptedType.value = props.exercise?.relationships.adapted?.type ?? '-'
-    adaptedAttributes[adaptedType.value] = props.exercise?.relationships.adapted?.attributes ?? {}
+      instructions.value = props.exercise?.attributes.instructions ?? ''
+      wording.value = props.exercise?.attributes.wording ?? ''
+      example.value = props.exercise?.attributes.example ?? ''
+      clue.value = props.exercise?.attributes.clue ?? ''
+
+      adaptedType.value = props.exercise?.relationships.adapted?.type ?? '-'
+      adaptedAttributes[adaptedType.value] = props.exercise?.relationships.adapted?.attributes ?? {}
+    }
   },
   {immediate: true},
 )
@@ -110,9 +120,12 @@ const busy = ref(false)
 
 const showTextSelectionMenu = ref(false)
 const selectedText = ref('')
-const selectedRectangle = ref(null)
-const selectedTextReference = ref({})
-function textSelected(text, point, textItems, rectangle) {
+const selectedRectangle = ref<object | null>(null)
+const selectedTextReference = ref<{x: number, y: number}>({x: 0, y: 0})
+function textSelected(text: string, point: {clientX: number, clientY: number}, textItems: [], rectangle: object) {
+  console.assert(props.section?.relationships?.pdfFile.relationships?.namings[0].attributes !== undefined)
+  console.assert(props.pdf !== null)
+
   if (needsBoundingRectangle.value) {
     extractionEvents.push({
       kind: "BoundingRectangleSelectedInPdf",
@@ -143,10 +156,10 @@ function textSelected(text, point, textItems, rectangle) {
   }
 }
 
-const instructionsTextArea = ref(null)
-const wordingTextArea = ref(null)
-const exampleTextArea = ref(null)
-const clueTextArea = ref(null)
+const instructionsTextArea = ref<typeof BLabeledTextarea | null>(null)
+const wordingTextArea = ref<typeof BLabeledTextarea | null>(null)
+const exampleTextArea = ref<typeof OptionalTextarea | null>(null)
+const clueTextArea = ref<typeof OptionalTextarea | null>(null)
 const textAreas = {
   instructions: instructionsTextArea,
   wording: wordingTextArea,
@@ -156,9 +169,10 @@ const textAreas = {
 
 const noClueNoExample = computed(() => !exampleTextArea.value?.expanded && !clueTextArea.value?.expanded)
 
-function addTextTo(fieldName, text) {
+function addTextTo(fieldName: 'instructions' | 'wording' | 'example' | 'clue', text: string) {
   const field = fields[fieldName]
   const textArea = textAreas[fieldName].value
+  console.assert(textArea !== null)
   const valueBefore = field.value
   if (field.value !== '' && !field.value.endsWith('\n')) {
     field.value += '\n'
@@ -190,7 +204,7 @@ async function create() {
   busy.value = true
 
   // @todo Use a batch request
-  const exercise = await api.client.post(
+  const exercise = await api.client.post<Exercise>(
     'exercise',
     {
       textbookPage: props.textbookPage,
@@ -237,7 +251,7 @@ async function create() {
   emit('created', exercise, tryIncrement(exercise.attributes.number))
 }
 
-function tryIncrement(s) {
+function tryIncrement(s: string) {
   const n = parseInt(s)
   if (Number.isInteger(n)) {
     return (n + 1).toString()
@@ -247,6 +261,8 @@ function tryIncrement(s) {
 }
 
 async function save() {
+  console.assert(props.exercise?.relationships !== undefined)
+
   busy.value = true
 
   // @todo Use a batch request
@@ -313,7 +329,7 @@ defineExpose({
 </script>
 
 <template>
-  <text-selection-menu
+  <TextSelectionMenu
     v-model:show="showTextSelectionMenu"
     :number
     :text="selectedText"
@@ -321,37 +337,37 @@ defineExpose({
     @extractionEvent="event => extractionEvents.push(event)"
   >
     <template v-slot="{textToAdd, hide}">
-      <p><b-button secondary @click="boundingRectangle = selectedRectangle; hide()">{{ $t('setBoundingRect') }}</b-button></p>
+      <p><BButton secondary @click="boundingRectangle = selectedRectangle; hide()">{{ $t('setBoundingRect') }}</BButton></p>
       <p>{{ $t('addTo') }}</p>
       <p>
-        <b-button primary @click="addTextTo('instructions', textToAdd); hide()">{{ $t('instructions') }}</b-button>
-        <b-button primary @click="addTextTo('wording', textToAdd); hide()">{{ $t('wording') }}</b-button>
-        <b-button primary @click="addTextTo('example', textToAdd); hide()">{{ $t('example') }}</b-button>
-        <b-button primary @click="addTextTo('clue', textToAdd); hide()">{{ $t('clue') }}</b-button>
+        <BButton primary @click="addTextTo('instructions', textToAdd); hide()">{{ $t('instructions') }}</BButton>
+        <BButton primary @click="addTextTo('wording', textToAdd); hide()">{{ $t('wording') }}</BButton>
+        <BButton primary @click="addTextTo('example', textToAdd); hide()">{{ $t('example') }}</BButton>
+        <BButton primary @click="addTextTo('clue', textToAdd); hide()">{{ $t('clue') }}</BButton>
       </p>
     </template>
-  </text-selection-menu>
+  </TextSelectionMenu>
 
-  <b-busy :busy>
+  <BBusy :busy>
     <b-labeled-input :label="$t('exerciseNumber')" v-model="number" :disabled="editMode" @change="extractionEvents.push({kind: 'ExerciseNumberSetManually', value: number})" />
     
     <div style="position: relative">
-      <b-labeled-textarea ref="instructionsTextArea" :label="$t('exerciseInstructions')" v-model="instructions" @change="extractionEvents.push({kind: 'InstructionsSetManually', value: instructions})" />
-      <b-labeled-textarea ref="wordingTextArea" :label="$t('exerciseWording')" v-model="wording" @change="extractionEvents.push({kind: 'WordingSetManually', value: wording})" />
+      <BLabeledTextarea ref="instructionsTextArea" :label="$t('exerciseInstructions')" v-model="instructions" @change="extractionEvents.push({kind: 'InstructionsSetManually', value: instructions})" />
+      <BLabeledTextarea ref="wordingTextArea" :label="$t('exerciseWording')" v-model="wording" @change="extractionEvents.push({kind: 'WordingSetManually', value: wording})" />
       <div :class="{'container-fluid': noClueNoExample}">
         <div :class="{row: noClueNoExample}">
           <div :class="{col: noClueNoExample}" style="padding: 0;">
-            <optional-textarea ref="exampleTextArea" :label="$t('exerciseExample')" v-model="example" @change="extractionEvents.push({kind: 'ExampleSetManually', value: example})" />
+            <OptionalTextarea ref="exampleTextArea" :label="$t('exerciseExample')" v-model="example" @change="extractionEvents.push({kind: 'ExampleSetManually', value: example})" />
           </div>
           <div :class="{col: noClueNoExample}" style="padding: 0;">
-            <optional-textarea ref="clueTextArea" :label="$t('exerciseClue')" v-model="clue" @change="extractionEvents.push({kind: 'ClueSetManually', value: clue})" />
+            <OptionalTextarea ref="clueTextArea" :label="$t('exerciseClue')" v-model="clue" @change="extractionEvents.push({kind: 'ClueSetManually', value: clue})" />
           </div>
         </div>
       </div>
 
       <div class="mb-3">
         <label class="form-label" for="abc">{{ $t('exerciseType') }}</label>
-          <b-select
+          <BSelect
           id="abc"
           v-model="adaptedType"
           :options="['-', ...Object.keys(adaptedForms).map(kind => ({value: kind, label: $t(kind)}))]"
@@ -359,7 +375,7 @@ defineExpose({
       </div>
       <component
         v-if="adaptedType !== '-'"
-        :is="adaptedForms[adaptedType]"
+        :is="(adaptedForms as any/* Un-typeable? */)[adaptedType]"
         v-model="adaptedAttributes[adaptedType]"
       />
 
@@ -367,7 +383,7 @@ defineExpose({
         <div style="position: absolute; left: 25%; top: 25%; width: 50%; height: 50%; background-color: white">
           <p>{{ $t('exerciseAlreadyExists', {number}) }}</p>
           <p>
-            <b-button primary @click="skip">{{ $t('skipExercise') }}</b-button>
+            <BButton primary @click="skip">{{ $t('skipExercise') }}</BButton>
           </p>
         </div>
       </div>
@@ -379,5 +395,5 @@ defineExpose({
     </div>
 
     <slot :disabled :create :save></slot>
-  </b-busy>
+  </BBusy>
 </template>

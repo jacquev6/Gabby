@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 
@@ -6,28 +6,29 @@ import { BButton } from '../../../../../components/opinion/bootstrap'
 import ExerciseForm from '../../../../../components/ExerciseForm.vue'
 import TwoResizableColumns from '../../../../../components/TwoResizableColumns.vue'
 import ExerciseTools from '../ExerciseTools.vue'
+import type { Project, Textbook, Section, Exercise } from '../../../../../types/api'
 
 
-const props = defineProps({
-  project: {type: Object, required: true},
-  textbook: {type: Object, required: true},
-  pdf: {required: true},
-  section: {required: true},
-  page: {type: Number, required: true},
-})
+const props = defineProps<{
+  project: Project,
+  textbook: Textbook,
+  pdf: any/* @todo Type */,
+  section: Section,
+  page: number,
+}>()
 
 const router = useRouter()
 
-const exerciseForm = ref(null)
+const exerciseForm = ref<typeof ExerciseForm | null>(null)
 
 const number = ref('')
 const automaticNumber = ref(false)
-function created(exercise, suggestedNumber) {
+function created(_exercise: Exercise, suggestedNumber: string) {
   number.value = suggestedNumber
   automaticNumber.value = true
 }
 
-function changePage(page) {
+function changePage(page: number) {
   router.push({name: 'project-textbook-page-create-exercise', params: {projectId: props.project.id, textbookId: props.textbook.id, page}})
 }
 

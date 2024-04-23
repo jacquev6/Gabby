@@ -1,24 +1,26 @@
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from 'vue'
-import { useFloating, shift, flip } from '@floating-ui/vue'
+import { useFloating, shift, flip, type VirtualElement } from '@floating-ui/vue'
+// @ts-ignore/* @todo Use @types/bootstrap */
 import bootstrap from 'bootstrap/dist/js/bootstrap.bundle.min.js'
 
 
-const props = defineProps({
-  title: {type: String, required: true},
-  reference: {type: Object, required: true},
-})
+const props = defineProps<{
+  title: string,
+  reference: {x: number, y: number},
+}>()
 
-const emit = defineEmits([
-  'dismissed',  // () => void
-])
+const emit = defineEmits<{
+  dismissed: [],
+}>()
 
-const modal = ref(null)
+const modal = ref<HTMLDivElement | null>(null)
 const dialog = ref(null)
-const floatingReference = ref(null)
+const floatingReference = ref<VirtualElement | null>(null)
 const {floatingStyles} = useFloating(floatingReference, dialog, { placement: 'top', middleware: [flip(), shift()] })
 
 onMounted(() => {
+  console.assert(modal.value !== null)
   bootstrap.Modal.getOrCreateInstance(modal.value).show()
   modal.value.addEventListener('hidden.bs.modal', () => { emit('dismissed') })
   floatingReference.value = {

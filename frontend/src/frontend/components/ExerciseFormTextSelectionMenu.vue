@@ -1,21 +1,21 @@
-<script setup>
+<script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 
 import FloatingModal from './FloatingModal.vue'
-import { BLabeledTextarea, BLabeledCheckbox, BButton } from './opinion/bootstrap'
+import { BLabeledTextarea, BLabeledCheckbox } from './opinion/bootstrap'
 
 
-const props = defineProps({
-  number: {type: String, required: true},
-  text: {type: String, required: true},
-  reference: {type: Object, required: true},
-})
+const props = defineProps<{
+  number: string,
+  text: string,
+  reference: {x: number, y: number},
+}>()
 
-const show = defineModel('show', {type: Boolean})
+const show = defineModel<boolean>('show')
 
-const emit = defineEmits([
-  'extractionEvent'  // Object => void
-])
+const emit = defineEmits<{
+  extractionEvent: [event: object],
+}>()
 
 const canStripExerciceNumber = computed(() => props.number !== '' && props.text.startsWith(props.number))
 const doStripExerciceNumber = ref(true)

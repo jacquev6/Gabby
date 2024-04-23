@@ -1,10 +1,10 @@
-<script setup>
+<script setup lang="ts">
 import { onMounted } from 'vue'
 
 import { BLabeledInput } from '../opinion/bootstrap'
 
 
-const model = defineModel({type: Object})
+const model = defineModel<any/* @todo Type */>({required: true})
 
 onMounted(() => {
   const newModel = {

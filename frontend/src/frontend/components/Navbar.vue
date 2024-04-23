@@ -1,21 +1,22 @@
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useHead } from '@unhead/vue'
+import type { RouteLocationRaw } from 'vue-router'
 
 import AboutModal from './AboutModal.vue'
 import LanguageSelector from './opinion/LanguageSelector.vue'
 
 
-const props = defineProps({
-  title: {type: String, required: true},
-  breadcrumbs: {type: Array, required: true},
-})
+const props = defineProps<{
+  title: string,
+  breadcrumbs: {title: string, to: RouteLocationRaw}[],
+}>()
 
 useHead({
   title: computed(() => props.title)  // 'useHead' does not react to props directly,
 })
 
-const about = ref(null)
+const about = ref<typeof AboutModal | null>(null)
 </script>
 
 <template>
@@ -39,7 +40,7 @@ const about = ref(null)
       <div class="collapse navbar-collapse" id="navbar-collapse">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item"><a href="/doc/" class="nav-link">{{ $t('help') }}</a></li>
-          <li class="nav-item"><a href="#" class="nav-link" @click.prevent="about.show()">{{ $t('about') }}</a></li>
+          <li class="nav-item"><a href="#" class="nav-link" @click.prevent="about?.show()">{{ $t('about') }}</a></li>
           <li><LanguageSelector class="w-auto" /></li>
         </ul>
       </div>

@@ -1,20 +1,14 @@
-<script setup>
+<script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 
 
-const props = defineProps({
-  busy: {
-    type: Boolean,
-    required: true,
-  },
-  showWhileBusy: {
-    type: String,
-    default: 'always',
-  },
-  size: {
-    type: String,
-    default: '2rem',
-  },
+const props = withDefaults(defineProps<{
+  busy: boolean,
+  showWhileBusy?: 'always' | 'afterNotBusy' | 'never',
+  size?: string
+}>(), {
+  showWhileBusy: 'always',
+  size: '2rem',
 })
 
 const hasEverBeenNotBusy = ref(false)

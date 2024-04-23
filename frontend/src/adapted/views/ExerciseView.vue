@@ -24,7 +24,7 @@ const exercise = computed(() => data.exercises[props.exerciseIndex])
     <p>Sélectionnez un type d'exercise.</p>
   </template>
   <template v-else-if="exercise.adaptation.type in adaptedExercises">
-    <component :is="adaptedExercises[exercise.adaptation.type]" :exercise="exercise as any" />
+    <component :is="adaptedExercises[exercise.adaptation.type]" :exercise="exercise as any/* Un-typeable? */" />
   </template>
   <template v-else>
     <p>Ce type d'exercice n'est pas encore supporté. @todo</p>

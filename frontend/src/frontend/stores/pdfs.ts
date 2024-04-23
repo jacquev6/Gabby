@@ -1,14 +1,43 @@
 import { defineStore } from 'pinia'
-import * as pdfjs from 'pdfjs-dist/build/pdf'
+import {} from 'pinia-shared-state'  // For TypeScript. @todo Remove line when 'main.js' is replaced by 'main.ts'
+// @ts-ignore/* Temporary untyped */
+import * as untypedPdfjs from 'pdfjs-dist/build/pdf'
+import type PdfjsType from 'pdfjs-dist/types/src/pdf'
+import type { DocumentInitParameters, PDFDocumentProxy } from 'pdfjs-dist/types/src/display/api'
 import shajs from 'sha.js'
 
 
+const pdfjs = untypedPdfjs as typeof PdfjsType
+
 // @todo(Bug, now) Fix opening 03581037_nouvel_explorons_int_complet.pdf
 
-export function definePdfsStore(name, options) {
-  const weak_ref = options?.weak_ref ?? ((o) => new WeakRef(o))
+type Sha256 = string
 
-  async function loadDocument(name, arg) {
+interface Info {
+  sha256: Sha256,
+  name: string,
+  size: number,
+}
+
+export interface InfoDoc {
+  info: Info,
+  document: PDFDocumentProxy,
+}
+
+function make_weak_ref<T extends WeakKey>(o: T) {
+  return new WeakRef(o)
+}
+
+interface PseudoWeakRef<T extends WeakKey> {
+  deref(): T | undefined
+}
+
+declare function make_pseudo_weak_ref<T extends WeakKey>(o: T): PseudoWeakRef<T>
+
+export function definePdfsStore(name: string, options: {weak_ref?: typeof make_pseudo_weak_ref}) {
+  const weak_ref = options?.weak_ref ?? make_weak_ref
+
+  async function loadDocument(name: string, arg: DocumentInitParameters) {
     const startTime = performance.now()
     try {
       const document = await pdfjs.getDocument(arg).promise
@@ -20,7 +49,7 @@ export function definePdfsStore(name, options) {
     }
   }
 
-  function computeSha256(name, data) {
+  function computeSha256(name: string, data: Uint8Array) {
     const startTime = performance.now()
     const sha256 = shajs('sha256').update(data).digest('hex')
     console.info('Computed sha256 of', name, 'in', Math.round(performance.now() - startTime), 'ms')
@@ -31,7 +60,7 @@ export function definePdfsStore(name, options) {
   // (Requires running against localhost or an https server)
 
   const actualPersistentStore = {
-    async save(sha256, info, data) {
+    async save(sha256: Sha256, info: Info, data: Uint8Array) {
       localStorage.setItem('pdfs/info/' + sha256, JSON.stringify(info))
       const rootStorageDirectory = await navigator.storage.getDirectory()
       const directoryHandle = await rootStorageDirectory.getDirectoryHandle('pdf', {create: true})
@@ -40,9 +69,10 @@ export function definePdfsStore(name, options) {
       await writable.write(data)
       await writable.close()
     },
-    async load(sha256) {
-      const info = JSON.parse(localStorage.getItem('pdfs/info/' + sha256))
-      if (!info) return null
+    async load(sha256: Sha256) {
+      const infoData = localStorage.getItem('pdfs/info/' + sha256)
+      if (!infoData) return null
+      const info = JSON.parse(infoData)
 
       const rootStorageDirectory = await navigator.storage.getDirectory()
       const directoryHandle = await rootStorageDirectory.getDirectoryHandle('pdf', {create: true})
@@ -50,7 +80,7 @@ export function definePdfsStore(name, options) {
       try {
         fileHandle = await directoryHandle.getFileHandle(sha256, {create: false})
       } catch (e) {
-        if (e.name === 'NotFoundError') {
+        if (e instanceof DOMException && e.name === 'NotFoundError') {
           localStorage.removeItem('pdfs/info/' + sha256)
           return null
         } else {
@@ -72,7 +102,7 @@ export function definePdfsStore(name, options) {
       }
       return l
     },
-    async delete(sha256) {
+    async delete(sha256: Sha256) {
       localStorage.removeItem('pdfs/info/' + sha256)
       const rootStorageDirectory = await navigator.storage.getDirectory()
       const directoryHandle = await rootStorageDirectory.getDirectoryHandle('pdf', {create: true})
@@ -91,38 +121,33 @@ export function definePdfsStore(name, options) {
 
   return defineStore(name, {
     state: () => {
-      const _infosBySha256 = {}
+      const _infosBySha256: {[sha256: Sha256]: Info} = {}
       for (const info of persistentStore.list()) {
         _infosBySha256[info.sha256] = info
       }
       return {
         _infosBySha256,
-        _localLoadingPromiseBySha256: {},
-        _documentWeakRefsBySha256: {},
+        _localLoadingPromiseBySha256: {} as {[sha256: Sha256]: Promise<PDFDocumentProxy | null>},
+        _documentWeakRefsBySha256: {} as {[sha256: Sha256]: PseudoWeakRef<PDFDocumentProxy>},
       }
     },
     getters: {
-      known() {
-        const known = []
-        for (const info of Object.values(this._infosBySha256)) {
-          if (info) {
-            const {sha256, name, size} = info
-            known.push({sha256, name, size})
-          }
-        }
-        return known
+      known(): Info[] {
+        return Object.values(this._infosBySha256)
       },
     },
     actions: {
-      async open(source) {
-        const name = source.url ?? source.name
-        const document = await loadDocument(
-          name,
-          source.url ? {url: source.url} : {data: await source.arrayBuffer()},
-        )
+      async open(source: {url: string} | File) {
+        const {name, document} = await (async () => {
+          if ('url' in source) {
+            return {name: source.url, document: await loadDocument(source.url, {url: source.url})}
+          } else {
+            return {name: source.name, document: await loadDocument(source.name, {data: await source.arrayBuffer()})}
+          }
+        })()
         const data = await document.getData()
         const sha256 = computeSha256(name, data)
-        
+
         const info = {sha256, name, size: data.length}
         this._infosBySha256[sha256] = info
         this._documentWeakRefsBySha256[sha256] = weak_ref(document)
@@ -130,22 +155,22 @@ export function definePdfsStore(name, options) {
 
         return {info, document}
       },
-      async close(sha256) {
-        this._infosBySha256[sha256] = null
-        this._documentWeakRefsBySha256[sha256] = null
+      async close(sha256: Sha256) {
+        delete this._infosBySha256[sha256]
+        delete this._documentWeakRefsBySha256[sha256]
         await persistentStore.delete(sha256)
       },
-      getInfo(sha256) {
-        return this._infosBySha256[sha256] ?? null
+      getInfo(sha256: Sha256) {
+        return sha256 in this._infosBySha256 ? this._infosBySha256[sha256] : null
       },
-      async getDocument(sha256) {
+      async getDocument(sha256: Sha256) {
         const document = this._documentWeakRefsBySha256[sha256]?.deref()
         if (document) {
           return document
-        } else if (this._localLoadingPromiseBySha256[sha256]) {
+        } else if (sha256 in this._localLoadingPromiseBySha256) {
           return await this._localLoadingPromiseBySha256[sha256]
         } else {
-          this._localLoadingPromiseBySha256[sha256] = (async () => {
+          const promise = (async () => {
             const stored = await persistentStore.load(sha256)
             if(stored) {
               const {info: {name}, data} = stored
@@ -156,8 +181,9 @@ export function definePdfsStore(name, options) {
               return null
             }
           })()
-          const document = await this._localLoadingPromiseBySha256[sha256]
-          this._localLoadingPromiseBySha256[sha256] = null
+          this._localLoadingPromiseBySha256[sha256] = promise
+          const document = await promise
+          delete this._localLoadingPromiseBySha256[sha256]
           return document
         }
       },

@@ -1,12 +1,17 @@
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue'
 
 
-const props = defineProps({
-  sm: {type: Boolean, default: false},
-  primary: {type: Boolean, default: false},
-  secondary: {type: Boolean, default: false},
-  close: {type: Boolean, default: false},
+const props = withDefaults(defineProps<{
+  sm?: boolean,
+  primary?: boolean,
+  secondary?: boolean,
+  close?: boolean,
+}>(), {
+  sm: false,
+  primary: false,
+  secondary: false,
+  close: false,
 })
 
 const classes = computed(() => {

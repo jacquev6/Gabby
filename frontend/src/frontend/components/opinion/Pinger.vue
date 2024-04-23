@@ -1,40 +1,41 @@
-<script setup>
+<script setup lang="ts">
 import { ref, reactive } from 'vue'
 
 import { useApiStore } from '../../stores/api'
 import { BBusy, BLabeledInput, BButton } from './bootstrap'
+import { type Ping } from '../../types/api'
 
 
 const api = useApiStore()
 
-const pings = api.auto.getAll('pings')
+const pings = api.auto.getAll<Ping>('pings')
 
 const creatingPing = ref(false)
 const newPingMessage = ref('')
 async function createPing() {
   const message = newPingMessage.value !== '' ? newPingMessage.value : undefined
   creatingPing.value = true
-  await api.client.post('ping', {message}, {'next': []})
+  await api.client.post('ping', {message}, {next: []})
   creatingPing.value = false
   newPingMessage.value = ''
   pings.refresh()
 }
 
-const patchingPing = reactive({})
-async function setMessage(id) {
+const patchingPing = reactive<{[id: string]: boolean}>({})
+async function setMessage(id: string) {
   patchingPing[id] = true
   await api.client.patch('ping', id, {message: 'Hello!'}, {})
-  patchingPing[id] = undefined
+  delete patchingPing[id]
 }
-async function resetMessage(id) {
+async function resetMessage(id: string) {
   patchingPing[id] = true
   await api.client.patch('ping', id, {message: null}, {})
-  patchingPing[id] = undefined
+  delete patchingPing[id]
 }
-async function deletePing(id) {
+async function deletePing(id: string) {
   patchingPing[id] = true
-  await api.client.delete('ping', id, {})
-  patchingPing[id] = undefined
+  await api.client.delete('ping', id)
+  delete patchingPing[id]
 }
 </script>
 

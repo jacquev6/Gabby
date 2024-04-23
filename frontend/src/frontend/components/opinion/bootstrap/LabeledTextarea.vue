@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 
 defineOptions({
@@ -7,19 +7,19 @@ defineOptions({
   inheritAttrs: false
 })
 
-const props = defineProps({
-  label: { type: String, required: true },
-})
+defineProps<{
+  label: string,
+}>()
 
-const model = defineModel({ type: String })
+const model = defineModel<string>({default: ''})
 
 const id = `textarea-${ Math.floor(Math.random() * 4000000000) }`
 
-const textarea = ref(null)
+const textarea = ref<HTMLTextAreaElement | null>(null)
 
 defineExpose({
-  focus: () => textarea.value.focus(),
-  setSelectionRange: (start, end) => textarea.value.setSelectionRange(start, end),
+  focus: () => textarea.value?.focus(),
+  setSelectionRange: (start: number, end: number) => textarea.value?.setSelectionRange(start, end),
 })
 </script>
 

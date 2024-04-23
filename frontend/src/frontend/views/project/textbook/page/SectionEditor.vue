@@ -1,23 +1,24 @@
-<script setup>
-import { ref, computed } from 'vue'
+<script setup lang="ts">
+import { ref, computed, type Ref } from 'vue'
 
 import { BBusy, BLabeledInput, BButton, BRow, BCol, BModal } from '../../../../components/opinion/bootstrap'
 import { useApiStore } from '../../../../stores/api'
+import type { Section } from '../../../../types/api'
 
 
-const sectionId = ref(null)
+const sectionId = ref<string | null>(null)
 
 const labelId = `modal-${ Math.floor(Math.random() * 4000000000) }`
 
 const api = useApiStore()
 
-const pdfFileFirstPage = ref(null)
-const pdfFileLastPage = ref(null)
-const textbookFirstPage = ref(null)
+const pdfFileFirstPage = ref(0)
+const pdfFileLastPage = ref(0)
+const textbookFirstPage = ref(0)
 const textbookLastPage = computed(() => textbookFirstPage.value + pdfFileLastPage.value - pdfFileFirstPage.value)
 
 const disabled = computed(() => {
-  function isValid(n) {
+  function isValid(n: Ref<number>) {
     return Number.isInteger(n.value) && n.value >= 1
   }
   return (
@@ -29,9 +30,11 @@ const disabled = computed(() => {
   )
 })
 
-const modal = ref(null)
+const modal = ref<typeof BModal | null>(null)
 const saving = ref(false)
 async function save() {
+  console.assert(sectionId.value !== null)
+
   try {
     saving.value = true
     await api.client.patch(
@@ -49,9 +52,13 @@ async function save() {
   }
 }
 
-function show(id) {
+function show(id: string) {
+  console.assert(modal.value !== null)
+
   sectionId.value = id
-  const section = api.cache.getOne('section', id)
+  const section = api.cache.getOne<Section>('section', id)
+  console.assert(section.attributes !== undefined)
+
   pdfFileFirstPage.value = section.attributes.pdfFileStartPage
   pdfFileLastPage.value = section.attributes.pdfFileStartPage + section.attributes.pagesCount - 1
   textbookFirstPage.value = section.attributes.textbookStartPage
@@ -59,10 +66,12 @@ function show(id) {
 }
 
 function hide() {
+  console.assert(modal.value !== null)
+
   modal.value.hide()
 }
 
-const active = computed(() => modal.value.active)
+const active = computed(() => modal.value?.active)
 
 defineExpose({
   show,

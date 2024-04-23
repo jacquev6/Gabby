@@ -1,10 +1,11 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 import { computedAsync } from '@vueuse/core'
 
 import Pinger from '../components/opinion/Pinger.vue'
 import { BBusy, BRow, BCol } from '../components/opinion/bootstrap'
 import { useApiStore } from './api'
+import type { Ping } from '../types/api'
 
 
 const api = useApiStore()
@@ -12,9 +13,9 @@ const api = useApiStore()
 const loadingPings = ref(false)
 const pings = computedAsync(
   async () => {
-    return await api.client.getAll('pings')
+    return await api.client.getAll<Ping>('pings')
   },
-  [],
+  [] as Required<Ping>[],
   loadingPings,
 )
 </script>

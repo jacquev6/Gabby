@@ -1,17 +1,15 @@
-<script setup>
+<script setup lang="ts">
 import { ref, toRaw } from 'vue'
 import { computedAsync } from '@vueuse/core'
+import type { PDFDocumentProxy } from 'pdfjs-dist/types/src/display/api'
 
 import PdfNavigationControls from './PdfNavigationControls.vue'
 import PdfRenderer from './PdfRenderer.vue'
 
 
-const props = defineProps({
-  pdf: {
-    type: Object,
-    required: true,
-  },
-})
+const props = defineProps<{
+  pdf: PDFDocumentProxy,
+}>()
 
 const pageNumber = ref(1)
 
@@ -24,9 +22,9 @@ const page = computedAsync(
 </script>
 
 <template>
-  <pdf-navigation-controls :pagesCount="pdf.numPages" v-model="pageNumber" />
+  <PdfNavigationControls :pagesCount="pdf.numPages" v-model="pageNumber" :disabled="false" />
   <template v-if="page">
-    <pdf-renderer
+    <PdfRenderer
       class="img img-fluid"
       style="border: 1px solid black"
       :page="page"
