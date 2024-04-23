@@ -82,11 +82,7 @@ const pdf = computedAsync(
 
 const componentHandlesScrolling = computed(() => component.value?.handlesScrolling ?? false)
 
-const class_ = computed(() => ({
-  'h-100': componentHandlesScrolling.value,
-  'overflow-y-hidden': componentHandlesScrolling.value,
-  'overflow-y-auto': !componentHandlesScrolling.value,
-}))
+const class_ = computed(() => componentHandlesScrolling.value ? 'overflow-hidden' : 'overflow-auto')
 
 defineExpose({
   title: computed(() => [`Page ${props.page}`]),
@@ -96,15 +92,15 @@ defineExpose({
 </script>
 
 <template>
-  <TwoResizableColumns rightWidth="2fr" class="h-100 overflow-y-hidden">
+  <TwoResizableColumns rightWidth="2fr" class="h-100 overflow-hidden">
     <template #left>
-      <div class="h-100 overflow-y-hidden d-flex flex-column">
+      <div class="h-100 overflow-hidden d-flex flex-column">
         <PdfNavigationControls :page @update:page="component?.changePage" :disabled="!component?.changePage" :pagesCount="textbookPagesCount">
           <BButton secondary sm :disabled="!section" @click="sectionEditor.show(section.id)">&#9881;</BButton>
         </PdfNavigationControls>
         <SectionEditor ref="sectionEditor" />
         <template v-if="section">
-          <BBusy size="7rem" :busy="pdfLoading" class="flex-fill overflow-y-auto">
+          <BBusy size="7rem" :busy="pdfLoading" class="flex-fill overflow-auto" data-cy="pdf-container">
             <template v-if="pdf?.page">
               <div style="border: 1px solid black">
                 <PdfRenderer
@@ -138,7 +134,7 @@ defineExpose({
       </div>
     </template>
     <template #right>
-      <div :class="class_">
+      <div class="h-100" :class="class_" data-cy="right-col-1">
         <RouterView :project :textbook :pdf :section :page v-slot="{ Component }">
           <component :is="Component" ref="component"></component>
         </RouterView>

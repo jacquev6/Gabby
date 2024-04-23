@@ -56,7 +56,7 @@ defineExpose({
       </template>
     </ExercisesList>
     <p>
-      <RouterLink class="btn btn-primary" :to="{name: 'project-textbook-page-create-exercise'}">
+      <RouterLink class="btn btn-primary" :to="{name: 'project-textbook-page-create-exercise'}" data-cy="new-exercise">
         {{ $t('create') }}
       </RouterLink>
     </p>

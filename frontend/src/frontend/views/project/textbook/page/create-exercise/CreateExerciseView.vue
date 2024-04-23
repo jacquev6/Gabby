@@ -41,7 +41,7 @@ defineExpose({
 <template>
   <TwoResizableColumns class="h-100">
     <template #left>
-      <div class="h-100 overflow-y-auto">
+      <div class="h-100 overflow-auto" data-cy="left-col-2">
         <h1>{{ $t('edition') }}</h1>
         <ExerciseForm
           ref="exerciseForm"
@@ -58,14 +58,14 @@ defineExpose({
           v-slot="{ disabled, create }"
         >
           <RouterLink class="btn btn-secondary" :to="{name: 'project-textbook-page-list-exercises'}">{{ $t('cancel') }}</RouterLink>
-          <BButton primary :disabled @click="create">{{ $t('save.next') }}</BButton>
+          <BButton primary :disabled @click="create" data-cy="create-exercise">{{ $t('save.next') }}</BButton>
         </ExerciseForm>
       </div>
     </template>
     <template #right>
-      <div class="h-100 overflow-hidden d-flex flex-column">
+      <div class="h-100 overflow-hidden d-flex flex-column" data-cy="right-col-2">
         <h1>{{ $t('adaptation') }}</h1>
-        <iframe class="flex-fill w-100" :src="exerciseForm?.adaptationUrl"></iframe>
+        <iframe class="flex-fill w-100" style="min-height: 0" :src="exerciseForm?.adaptationUrl"></iframe>
       </div>
     </template>
   </TwoResizableColumns>

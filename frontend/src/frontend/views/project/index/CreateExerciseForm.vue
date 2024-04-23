@@ -36,6 +36,6 @@ function created(exercise, suggestedNextExerciseNumber) {
     @created="created"
     v-slot="{ disabled, create }"
   >
-    <BButton primary :disabled="disabled" @click="create">{{ $t('createExercise' )}}</BButton>
+    <BButton primary :disabled="disabled" @click="create" data-cy="create-exercise">{{ $t('createExercise' )}}</BButton>
   </ExerciseForm>
 </template>

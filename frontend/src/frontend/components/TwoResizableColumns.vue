@@ -56,9 +56,9 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="d-grid" :style>
-    <div class="overflow-x-hidden"><slot name="left"></slot></div>
+    <div class="overflow-hidden"><slot name="left"></slot></div>
     <div class="gutter" ref="gutter"><slot name="gutter"><div class="handle"></div></slot></div>
-    <div class="overflow-x-hidden"><slot name="right"></slot></div>
+    <div class="overflow-hidden"><slot name="right"></slot></div>
   </div>
 </template>
 

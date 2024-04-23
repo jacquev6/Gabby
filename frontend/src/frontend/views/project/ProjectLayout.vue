@@ -59,11 +59,7 @@ const breadcrumbs = computed(() => {
 
 const componentHandlesScrolling = computed(() => component.value?.handlesScrolling ?? false)
 
-const class_ = computed(() => ({
-  'h-100': componentHandlesScrolling.value,
-  'overflow-y-hidden': componentHandlesScrolling.value,
-  'overflow-y-auto': !componentHandlesScrolling.value,
-}))
+const class_ = computed(() => componentHandlesScrolling.value ? ['h-100', 'overflow-hidden'] : [])
 
 defineExpose({
   title,
