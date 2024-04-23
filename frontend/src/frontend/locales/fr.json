@@ -81,5 +81,10 @@
   "colorsCount": "Nombre de couleurs",
   "placeholderText": "Trou à remplir",
 
+  "tools": "Outils",
+  "replace": "Remplacer",
+  "replaceWith": "Par",
+  "apply": "Appliquer",
+
   "not-yet-implemented": "Pas encore implémenté"
 }

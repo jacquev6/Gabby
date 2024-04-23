@@ -3,7 +3,7 @@ describe('Gabby', () => {
 
   beforeEach(() => {
     cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises,more-test-exercises')
-    cy.viewport(800, 200)
+    cy.viewport(900, 200)
   })
 
   after(() => {
@@ -123,6 +123,14 @@ describe('Gabby', () => {
     cy.get('[data-cy="create-exercise"]').should('be.visible')
     cy.get('@container').its('scrollTop').should('be.gt', 0)
 
+    cy.get('[data-cy="gutter-2"]').should('have.length', 1).its('0').as('container')
+    cy.get('@container').then(hasVerticalScrollbarOnly)
+    cy.get('@container').its('scrollTop').should('eq', 0)
+    cy.get('[data-cy="apply-replace"]').should('not.be.visible')
+    cy.get('[data-cy="apply-replace"]').scrollIntoView()
+    cy.get('[data-cy="apply-replace"]').should('be.visible')
+    cy.get('@container').its('scrollTop').should('be.gt', 0)
+
     cy.get('label:contains("Instructions")').next().type('Hello, world!')
     cy.frameLoaded({url: 'Hello'})
     // The 'iframe' has a vertical scrollbar but I don't know how to 'expect' it
@@ -154,6 +162,14 @@ describe('Gabby', () => {
     cy.get('[data-cy="save-exercise"]').should('not.be.visible')
     cy.get('[data-cy="save-exercise"]').scrollIntoView()
     cy.get('[data-cy="save-exercise"]').should('be.visible')
+    cy.get('@container').its('scrollTop').should('be.gt', 0)
+
+    cy.get('[data-cy="gutter-2"]').should('have.length', 1).its('0').as('container')
+    cy.get('@container').then(hasVerticalScrollbarOnly)
+    cy.get('@container').its('scrollTop').should('eq', 0)
+    cy.get('[data-cy="apply-replace"]').should('not.be.visible')
+    cy.get('[data-cy="apply-replace"]').scrollIntoView()
+    cy.get('[data-cy="apply-replace"]').should('be.visible')
     cy.get('@container').its('scrollTop').should('be.gt', 0)
 
     // The 'iframe' has a vertical scrollbar but I don't know how to 'expect' it

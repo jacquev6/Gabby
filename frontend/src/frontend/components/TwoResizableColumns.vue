@@ -4,16 +4,21 @@ import { onMounted, onBeforeUnmount } from 'vue'
 import SplitGrid from 'split-grid'
 
 
+const gutterMargin = 4  // Keep in sync with <style>
+const gutterWidth = 2  // Keep in sync with <style>
+
 const props = withDefaults(defineProps<{
   leftWidth?: string,
+  gutterWidth?: string,
   rightWidth?: string,
 }>(), {
   leftWidth: '1fr',
+  gutterWidth: `${gutterMargin + gutterWidth + gutterMargin}px`,
   rightWidth: '1fr',
 })
 
 const initialStyle = computed(() => ({
-  gridTemplateColumns: `${props.leftWidth} 10px ${props.rightWidth}`,
+  gridTemplateColumns: `${props.leftWidth} ${props.gutterWidth} ${props.rightWidth}`,
 }))
 
 const style = ref({})
@@ -57,7 +62,7 @@ onBeforeUnmount(() => {
 <template>
   <div class="d-grid" :style>
     <div class="overflow-hidden"><slot name="left"></slot></div>
-    <div class="gutter" ref="gutter"><slot name="gutter"><div class="handle"></div></slot></div>
+    <div class="overflow-hidden gutter" ref="gutter"><slot name="gutter"><div class="handle"></div></slot></div>
     <div class="overflow-hidden"><slot name="right"></slot></div>
   </div>
 </template>
@@ -66,12 +71,15 @@ onBeforeUnmount(() => {
 .gutter {
   cursor: col-resize;
 }
+</style>
+
+<style>
 .gutter .handle {
   height: 100%;
   background-color: black;
   position: relative;
-  margin-left: 4px;
-  margin-right: 4px;
-  width: 2px;
+  margin-left: 4px;  /* Keep equal to gutterMargin*/
+  margin-right: 4px;  /* Keep equal to gutterMargin*/
+  min-width: 2px;  /* Keep equal to gutterWidth*/
 }
 </style>

@@ -44,7 +44,7 @@ describe('Gabby', () => {
     canvas.screenshot('doc/textbook-page-create-exercise-tracing-bounding-rectangle', {clip: {x: 0, y: 0, width: 1000, height: 200}})
     canvas.trigger('pointerup', 140, 105, { pointerId: 1 })
 
-    cy.screenshot('doc/textbook-page-create-exercise', {clip: {x: 0, y: 50, width: 670, height: 750}})
+    cy.screenshot('doc/textbook-page-create-exercise', {clip: {x: 0, y: 50, width: 575, height: 750}})
 
     canvas.trigger('pointermove', 5, 5)
     canvas.trigger('pointerdown', 20, 20, { pointerId: 1 })
@@ -125,7 +125,7 @@ describe('Gabby', () => {
     cy.get('div.busy').should('not.exist')
     cy.get('label:contains("Énoncé")').next().type('{selectAll}... vide\n... vident')
     // Image is cropped to 670px height in headless mode. I don't know why.
-    cy.screenshot('doc/textbook-page-modify-exercise', {clip: {x: 0, y: 50, width: 665, height: 1000}})
+    cy.screenshot('doc/textbook-page-modify-exercise', {clip: {x: 0, y: 50, width: 575, height: 1000}})
 
     cy.get('label:contains("Type")').next().select('selectWords')
     cy.frameLoaded({url: 'selectWords'})

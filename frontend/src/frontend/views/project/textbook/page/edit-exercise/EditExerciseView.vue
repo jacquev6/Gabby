@@ -7,6 +7,7 @@ import { useApiStore } from '../../../../../stores/api'
 import { BButton } from '../../../../../components/opinion/bootstrap'
 import ExerciseForm from '../../../../../components/ExerciseForm.vue'
 import TwoResizableColumns from '../../../../../components/TwoResizableColumns.vue'
+import ExerciseTools from '../ExerciseTools.vue'
 
 
 const props = defineProps({
@@ -44,7 +45,7 @@ defineExpose({
 </script>
 
 <template>
-  <TwoResizableColumns class="h-100">
+  <TwoResizableColumns class="h-100" gutterWidth="200px">
     <template #left>
       <div class="h-100 overflow-auto" data-cy="left-col-2">
         <h1>{{ $t('edition') }}</h1>
@@ -65,6 +66,15 @@ defineExpose({
           <RouterLink class="btn btn-secondary" :to="{name: 'project-textbook-page-list-exercises'}">{{ $t('cancel') }}</RouterLink>
           <BButton primary :disabled @click="save" data-cy="save-exercise">{{ $t('save') }}</BButton>
         </ExerciseForm>
+      </div>
+    </template>
+    <template #gutter>
+      <div class="h-100 overflow-hidden d-flex flex-row">
+        <div class="handle"></div>
+        <div class="h-100 overflow-auto flex-fill" data-cy="gutter-2">
+          <ExerciseTools />
+        </div>
+        <div class="handle"></div>
       </div>
     </template>
     <template #right>
