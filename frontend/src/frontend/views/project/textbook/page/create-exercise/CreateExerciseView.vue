@@ -41,7 +41,7 @@ defineExpose({
 </script>
 
 <template>
-  <TwoResizableColumns class="h-100" gutterWidth="200px">
+  <TwoResizableColumns :snap="100" class="h-100" gutterWidth="200px">
     <template #left>
       <div class="h-100 overflow-auto" data-cy="left-col-2">
         <h1>{{ $t('edition') }}</h1>
