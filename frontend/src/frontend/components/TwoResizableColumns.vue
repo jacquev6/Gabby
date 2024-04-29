@@ -111,15 +111,15 @@ function onDragEnd() {
 <template>
   <div class="d-grid" :style="{gridTemplateColumns}">
     <div class="overflow-hidden">
-      <div v-if="displayLeftButton">
-        <BButton secondary @click="activate">&gt;<br/>&gt;</BButton>
+      <div v-if="displayLeftButton" class="h-100">
+        <BButton secondary class="h-100 w-100" style="padding: 0" @click="activate">&gt;<br/>&gt;</BButton>
       </div>
       <div class="h-100 overflow-hidden" :class="{'d-none': displayLeftButton}"><slot name="left"></slot></div>
     </div>
     <div class="overflow-hidden gutter" :style="gutterStyle" ref="gutter"><slot name="gutter"><div class="handle"></div></slot></div>
     <div class="overflow-hidden">
-      <div v-if="displayRightButton">
-        <BButton secondary @click="activate">&lt;<br/>&lt;</BButton>
+      <div v-if="displayRightButton" class="h-100">
+        <BButton secondary class="h-100 w-100" style="padding: 0" @click="activate">&lt;<br/>&lt;</BButton>
       </div>
       <div class="h-100 overflow-hidden" :class="{'d-none': displayRightButton}"><slot name="right"></slot></div>
     </div>
