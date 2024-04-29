@@ -106,7 +106,7 @@ defineExpose({
 </script>
 
 <template>
-  <TwoResizableColumns rightWidth="2fr" :snap="100" class="h-100 overflow-hidden">
+  <TwoResizableColumns rightWidth="2fr" :snap="250" class="h-100 overflow-hidden">
     <template #left>
       <div class="h-100 overflow-hidden d-flex flex-column">
         <PdfNavigationControls :page @update:page="component?.changePage" :disabled="!component?.changePage" :pagesCount="textbookPagesCount">
