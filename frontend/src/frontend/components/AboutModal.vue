@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useWindowSize } from '@vueuse/core'
 
 import { BModal, BButton } from './opinion/bootstrap'
 
@@ -7,14 +8,7 @@ import { BModal, BButton } from './opinion/bootstrap'
 const gabbyVersion = import.meta.env.VITE_OPINION_APP_VERSION
 const userAgent = JSON.stringify((window.navigator as any/* Chromium-specific */).userAgentData || window.navigator.userAgent)
 
-const windowWidth = ref(window.innerWidth)
-const windowHeight = ref(window.innerHeight)
-function onResize() {
-  windowWidth.value = window.innerWidth
-  windowHeight.value = window.innerHeight
-}
-onResize()
-window.addEventListener('resize', onResize)
+const { width: windowWidth, height: windowHeight } = useWindowSize()
 
 const modal = ref<typeof BModal | null>(null)
 function show() {

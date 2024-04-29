@@ -99,25 +99,21 @@ function saveState() {
 
 function loadState() {
   if (fullSaveKey.value === undefined) {
-    console.log('loadState: no fullSaveKey')  //
     activate()
   } else {
     const stateString = localStorage.getItem(fullSaveKey.value)
     if (stateString === null) {
-      console.log('loadState: no saved state')  //
       activate()
     } else {
       const state: State = JSON.parse(stateString)
       gridTemplateColumns.value = state.gridTemplateColumns
       if (state.active) {
-        console.log('loadState: state loaded, activating')  //
         console.assert(!state.displayLeftButton)
         console.assert(!state.displayRightButton)
         displayLeftButton.value = false
         displayRightButton.value = false
         activate()
       } else {
-        console.log('loadState: state loaded, not activating')
         console.assert(state.displayLeftButton || state.displayRightButton)
         displayLeftButton.value = state.displayLeftButton
         displayRightButton.value = state.displayRightButton
@@ -144,14 +140,11 @@ function writeStyle(_0: unknown, _1: unknown, s: string) {
     console.assert(parts[2].endsWith('fr'))
     const leftWidth = Math.abs(Number.parseFloat(parts[0].slice(0, -2)))
     const rightWidth = Math.abs(Number.parseFloat(parts[2].slice(0, -2)))
-    // console.log(parts[0].slice(0, -2), parts[2].slice(0, -2), leftWidth, rightWidth)
 
     if (leftWidth <= 1e-6) {
-      // console.log('snap left')
       displayLeftButton.value = true
       s = `20px ${props.gutterWidth} 1fr`
     } else if (rightWidth <= 1e-6) {
-      // console.log('snap right')
       displayRightButton.value = true
       s = `1fr ${props.gutterWidth} 20px`
     }

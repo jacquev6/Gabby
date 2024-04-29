@@ -123,13 +123,13 @@ defineExpose({
                   class="img img-fluid"
                 />
                 <RectanglesHighlighter
-                  v-if="component?.highlightedRectangles && pdfRenderer?.transform"
+                  v-if="pdfRenderer?.transform && component?.highlightedRectangles"
                   class="img img-fluid" style="position: absolute; top: 0; left: 0"
                   :width="pdfRenderer.width" :height="pdfRenderer.height" :transform="pdfRenderer.transform"
                   :rectangles="component.highlightedRectangles"
                 />
                 <TextPicker
-                  v-if="component?.textSelected && pdfRenderer?.transform"
+                  v-if="pdfRenderer?.transform && component?.textSelected"
                   class="img img-fluid" style="position: absolute; top: 0; left: 0"
                   :width="pdfRenderer.width" :height="pdfRenderer.height" :transform="pdfRenderer.transform"
                   :textContent="pdf.textContent"
