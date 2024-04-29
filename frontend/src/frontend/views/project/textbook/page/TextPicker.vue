@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, computed, watch } from 'vue'
 
 
 export interface TextItem {
@@ -25,25 +25,23 @@ const emit = defineEmits<{
 }>()
 
 const canvas = ref<HTMLCanvasElement | null>(null)
-var context: CanvasRenderingContext2D | null = null
-var textSpacingTolerance = 0
-
-onMounted(() => {
-  console.assert(canvas.value !== null)
-
-  context = canvas.value.getContext('2d')
-  console.assert(context !== null)
-
-  canvas.value.width = props.width
-  canvas.value.height = props.height
-  context.setTransform(
-    props.transform[0], props.transform[1], props.transform[2], props.transform[3], props.transform[4], props.transform[5])
-
+const context = computed(() => canvas.value?.getContext('2d') ?? null)
+const textSpacingTolerance = computed(() =>
   // Somewhat arbitrary. If the tolerance is too small, then the selected text will contain too many spaces,
   // not a big deal. If the tolerance is too big, then the selected text could contain too few spaces,
   // which is a problem.
-  textSpacingTolerance = Math.min(props.width, props.height) / 1e3
+  Math.min(props.width, props.height) / 1e3
   // console.log('textSpacingTolerance', textSpacingTolerance)
+)
+
+watch([props, context], () => {
+  console.assert(canvas.value !== null)
+  console.assert(context.value !== null)
+
+  canvas.value.width = props.width
+  canvas.value.height = props.height
+
+  context.value.setTransform(props.transform[0], props.transform[1], props.transform[2], props.transform[3], props.transform[4], props.transform[5])
 })
 
 interface Point {
@@ -61,27 +59,27 @@ function pointerdown(event: any/* @todo Type */) {
 }
 
 function pointermove(event: any/* @todo Type */) {
-  console.assert(context !== null)
+  console.assert(context.value !== null)
 
   if (startPoint !== null) {
     clearCanvas()
 
     const r = selectionRectangle(startPoint, makeCanvasPoint(event))
 
-    context.save()
-    context.beginPath()
+    context.value.save()
+    context.value.beginPath()
     for (var item of props.textContent.filter(r.contains)) {
-      context.rect(item.left, item.bottom, item.width, item.height)
+      context.value.rect(item.left, item.bottom, item.width, item.height)
     }
-    context.fillStyle = 'rgba(255, 255, 0, 0.5)'
-    context.strokeStyle = 'rgba(255, 128, 0, 0.5)'
-    context.fill()
-    context.stroke()
-    context.restore()
+    context.value.fillStyle = 'rgba(255, 255, 0, 0.5)'
+    context.value.strokeStyle = 'rgba(255, 128, 0, 0.5)'
+    context.value.fill()
+    context.value.stroke()
+    context.value.restore()
 
-    context.beginPath()
-    context.rect(r.minX, r.minY, r.maxX - r.minX, r.maxY - r.minY)
-    context.stroke()
+    context.value.beginPath()
+    context.value.rect(r.minX, r.minY, r.maxX - r.minX, r.maxY - r.minY)
+    context.value.stroke()
   }
 }
 
@@ -139,12 +137,12 @@ function pointerup(event: any/* @todo Type */) {
 
 function makeCanvasPoint(event: any/* @todo Type */) {
   console.assert(canvas.value !== null)
-  console.assert(context !== null)
+  console.assert(context.value !== null)
 
   const rect = canvas.value.getBoundingClientRect()
   const scaleX = canvas.value.width / rect.width
   const scaleY = canvas.value.height / rect.height
-  return context.getTransform().inverse().transformPoint(
+  return context.value.getTransform().inverse().transformPoint(
     new DOMPoint((event.clientX - rect.left) * scaleX, (event.clientY - rect.top) * scaleY)
   )
 }
@@ -168,12 +166,12 @@ function selectionRectangle(startPoint: Point, endPoint: Point) {
 
 function clearCanvas() {
   console.assert(canvas.value !== null)
-  console.assert(context !== null)
+  console.assert(context.value !== null)
 
-  context.save()
-  context.setTransform(1, 0, 0, 1, 0, 0)
-  context.clearRect(0, 0, canvas.value.width, canvas.value.height)
-  context.restore()
+  context.value.save()
+  context.value.setTransform(1, 0, 0, 1, 0, 0)
+  context.value.clearRect(0, 0, canvas.value.width, canvas.value.height)
+  context.value.restore()
 }
 </script>
 

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
+import { useElementSize, watchDebounced } from '@vueuse/core'
 import type { PDFPageProxy, RenderTask } from 'pdfjs-dist/types/src/pdf'
 // @ts-ignore/* Temporary untyped */
 import * as untypedPdfjs from 'pdfjs-dist/build/pdf'
@@ -18,33 +19,41 @@ const props = defineProps<{
   page: PDFPageProxy,
 }>()
 
+const container = ref<HTMLDivElement | null>(null)
+const containerSize = useElementSize(container, {width: 0, height: 0})
+const containerWidth = computed(() => Math.round(containerSize.width.value))
 const canvas = ref<HTMLCanvasElement | null>(null)
-const context = computed(() => canvas.value?.getContext('2d'))
+const context = computed(() => canvas.value?.getContext('2d') ?? null)
 
 const width = ref(210)
 const height = ref(297)
-const transform = ref<number[] | null>(null)
+const transform = ref<number[]>([1, 0, 0, 1, 0, 0])
 
-var renderTask : RenderTask | null = null
+var renderTask: RenderTask | null = null
 const busy = ref(false)
-
 async function draw() {
-  console.assert(props.page)
+  console.assert(props.page !== null)
+  console.assert(canvas.value !== null)
 
-  const canvasContext = context.value
-  if (canvasContext) {
+  if(containerWidth.value > 0) {
     const startTime = performance.now()
 
     busy.value = true
     var resetOnExit = true
 
     try {
-      const viewport = props.page.getViewport({scale: 1.5})
-      height.value = viewport.height
-      width.value = viewport.width
+      const viewport = (() => {
+        const viewport = props.page.getViewport({scale: 1})
+        const scale = containerWidth.value / viewport.width
+        return props.page.getViewport({scale})
+      })()
+      height.value = Math.round(viewport.height)
+      width.value = Math.round(viewport.width)
       transform.value = viewport.transform
 
       renderTask?.cancel()
+      const canvasContext = context.value
+      console.assert(canvasContext !== null)
       // @todo(Project management, later) Disable Chromium's warning:
       // > Canvas2D: Multiple readback operations using getImageData are faster with the willReadFrequently attribute set to true.
       // Unlikely, this seems to originate from canvases internal to PDF.js, not from our canvases.
@@ -61,7 +70,7 @@ async function draw() {
           throw e
         }
       }
-      console.info('Rendered page', props.page.pageNumber, 'in', Math.round(performance.now() - startTime), 'ms')
+      console.info('Rendered page', props.page.pageNumber, 'at', width.value, 'x', height.value, 'in', Math.round(performance.now() - startTime), 'ms')
     } finally {
       if (resetOnExit) {
         renderTask = null
@@ -71,17 +80,16 @@ async function draw() {
   }
 }
 
-watch([() => props.page, context], draw, {immediate: true})
+watch(() => props.page, draw)
+watchDebounced(containerWidth, draw, {debounce: 250})
 
 defineExpose({width, height, transform})
 </script>
 
 <template>
   <BBusy size="7rem" :busy>
-    <canvas
-      ref="canvas"
-      :width :height
-      v-bind="$attrs"
-    ></canvas>
+    <div ref="container">
+      <canvas ref="canvas" :width :height v-bind="$attrs"></canvas>
+    </div>
   </BBusy>
 </template>

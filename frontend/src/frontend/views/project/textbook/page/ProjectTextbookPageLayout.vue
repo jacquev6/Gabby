@@ -120,17 +120,17 @@ defineExpose({
                 <PdfRenderer
                   ref="pdfRenderer"
                   :page="pdf.page"
-                  class="img img-fluid"
+                  class="img w-100"
                 />
                 <RectanglesHighlighter
                   v-if="pdfRenderer?.transform && component?.highlightedRectangles"
-                  class="img img-fluid" style="position: absolute; top: 0; left: 0"
+                  class="img w-100" style="position: absolute; top: 0; left: 0"
                   :width="pdfRenderer.width" :height="pdfRenderer.height" :transform="pdfRenderer.transform"
                   :rectangles="component.highlightedRectangles"
                 />
                 <TextPicker
                   v-if="pdfRenderer?.transform && component?.textSelected"
-                  class="img img-fluid" style="position: absolute; top: 0; left: 0"
+                  class="img w-100" style="position: absolute; top: 0; left: 0"
                   :width="pdfRenderer.width" :height="pdfRenderer.height" :transform="pdfRenderer.transform"
                   :textContent="pdf.textContent"
                   @text-selected="component?.textSelected"
