@@ -61,8 +61,10 @@ export function definePdfsStore(name: string, options: {weak_ref?: typeof make_p
 
   const actualPersistentStore = {
     async save(sha256: Sha256, info: Info, data: Uint8Array) {
+      // @todo Rename localStorage keys to '/pdfs-v1/' + sha256
       localStorage.setItem('pdfs/info/' + sha256, JSON.stringify(info))
       const rootStorageDirectory = await navigator.storage.getDirectory()
+      // @todo Rename directory to 'pdfs-v1'
       const directoryHandle = await rootStorageDirectory.getDirectoryHandle('pdf', {create: true})
       const fileHandle = await directoryHandle.getFileHandle(sha256, {create: true})
       const writable = await fileHandle.createWritable()

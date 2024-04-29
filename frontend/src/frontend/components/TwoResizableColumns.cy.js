@@ -395,4 +395,78 @@ describe('TwoResizableColumns', () => {
 
     cy.window().trigger('mouseup', {clientX: 145, clientY: 5})
   })
+
+  it('saves and restores active state', () => {
+    localStorage.removeItem('/cols-v1/test')
+
+    const options = {
+      props: {
+        saveKey: 'test',
+      },
+      slots,
+    }
+
+    cy.viewport(410, 200)
+    cy.mount(TwoResizableColumns, options)
+
+    cy.get('div:contains("Left")').last().as('left')
+    cy.get('div.gutter').as('gutter')
+    cy.get('div:contains("Right")').last().as('right')
+
+    cy.get('@left').should(haveWidth(200))
+
+    cy.get('@gutter').trigger('mousedown', {clientX: 205, clientY: 5})
+    cy.window().trigger('mousemove', {clientX: 105, clientY: 5})
+    cy.window().trigger('mouseup', {clientX: 105, clientY: 5})
+
+    cy.get('@left').should(haveWidth(100))
+
+    cy.mount(TwoResizableColumns, {/* No 'props.saveKey' */ slots})
+    cy.get('@left').should(haveWidth(200))
+
+    cy.mount(TwoResizableColumns, options)
+    cy.get('@left').should(haveWidth(100))
+  })
+
+  it('saves and restores collapsed state', () => {
+    localStorage.removeItem('/cols-v1/test')
+
+    const options = {
+      props: {
+        saveKey: 'test',
+        snap: 110,
+      },
+      slots,
+    }
+
+    cy.viewport(410, 200)
+    cy.mount(TwoResizableColumns, options)
+
+    cy.get('div:contains("Left")').last().as('left')
+    cy.get('div.gutter').as('gutter')
+    cy.get('div:contains("Right")').last().as('right')
+
+    cy.get('@left').should(haveWidth(200))
+
+    cy.get('@gutter').trigger('mousedown', {clientX: 205, clientY: 5})
+    cy.window().trigger('mousemove', {clientX: 105, clientY: 5})
+    cy.window().trigger('mouseup', {clientX: 105, clientY: 5})
+
+    cy.get('@left').should('not.be.visible')
+    cy.get('button:contains(">>")').should('exist')
+
+    cy.mount(TwoResizableColumns, {/* No 'props.saveKey' */ slots})
+    cy.get('@left').should(haveWidth(200))
+
+    cy.mount(TwoResizableColumns, options)
+    cy.get('@left').should('not.be.visible')
+
+    cy.get('button:contains(">>")').click()
+    cy.get('@left').should(haveWidth(200))
+
+    cy.mount(TwoResizableColumns, {/* No 'props.saveKey' */ slots})
+
+    cy.mount(TwoResizableColumns, options)
+    cy.get('@left').should(haveWidth(200))
+  })
 })

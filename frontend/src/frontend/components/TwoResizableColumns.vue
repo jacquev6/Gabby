@@ -14,6 +14,7 @@ const props = withDefaults(defineProps<{
   gutterWidth?: string,
   rightWidth?: string,
   snap?: false | number,
+  saveKey?: string,
 }>(), {
   leftWidth: '1fr',
   snap: false,
@@ -27,6 +28,8 @@ const gridTemplateColumns = ref(initialGridTemplateColumns.value)
 
 watch(initialGridTemplateColumns, (value) => { gridTemplateColumns.value = value })
 
+const fullSaveKey = computed(() => props.saveKey !== undefined ? '/cols-v1/' + props.saveKey : undefined)
+
 const gutter = ref<HTMLElement | null>(null)
 var split = ref<SplitInstance | null>(null)
 const active = computed(() => split.value !== null)
@@ -34,10 +37,6 @@ const active = computed(() => split.value !== null)
 function activate() {
   console.assert(gutter.value !== null)
   console.assert(split.value === null)
-
-  displayLeftButton.value = false
-  displayRightButton.value = false
-  gridTemplateColumns.value = initialGridTemplateColumns.value
 
   split.value = SplitGrid({
     columnGutters: [
@@ -61,13 +60,73 @@ function deactivate() {
   split.value = null
 }
 
+function reset() {
+  displayLeftButton.value = false
+  displayRightButton.value = false
+  gridTemplateColumns.value = initialGridTemplateColumns.value
+
+  if (fullSaveKey.value !== undefined) {
+    localStorage.removeItem(fullSaveKey.value)
+  }
+
+  activate()
+}
+
 function deactivateIfActive() {
   if (active.value) {
     deactivate()
   }
 }
 
-onMounted(activate)
+interface State {
+  active: boolean,
+  displayLeftButton: boolean,
+  displayRightButton: boolean,
+  gridTemplateColumns: string,
+}
+
+function saveState() {
+  if (fullSaveKey.value !== undefined) {
+    const state: State = {
+      active: active.value,
+      displayLeftButton: displayLeftButton.value,
+      displayRightButton: displayRightButton.value,
+      gridTemplateColumns: gridTemplateColumns.value,
+    }
+    localStorage.setItem(fullSaveKey.value, JSON.stringify(state))
+  }
+}
+
+function loadState() {
+  if (fullSaveKey.value === undefined) {
+    console.log('loadState: no fullSaveKey')  //
+    activate()
+  } else {
+    const stateString = localStorage.getItem(fullSaveKey.value)
+    if (stateString === null) {
+      console.log('loadState: no saved state')  //
+      activate()
+    } else {
+      const state: State = JSON.parse(stateString)
+      gridTemplateColumns.value = state.gridTemplateColumns
+      if (state.active) {
+        console.log('loadState: state loaded, activating')  //
+        console.assert(!state.displayLeftButton)
+        console.assert(!state.displayRightButton)
+        displayLeftButton.value = false
+        displayRightButton.value = false
+        activate()
+      } else {
+        console.log('loadState: state loaded, not activating')
+        console.assert(state.displayLeftButton || state.displayRightButton)
+        displayLeftButton.value = state.displayLeftButton
+        displayRightButton.value = state.displayRightButton
+      }
+    }
+  }
+}
+
+onMounted(loadState)
 onBeforeUnmount(deactivateIfActive)
 
 const gutterStyle = computed(() => active.value ? {cursor: 'col-resize'} : {})
@@ -75,8 +134,7 @@ const gutterStyle = computed(() => active.value ? {cursor: 'col-resize'} : {})
 const displayLeftButton = ref(false)
 const displayRightButton = ref(false)
 
-function writeStyle(_: unknown, __: unknown, s: string) {
-  // console.log('style:', s)
+function writeStyle(_0: unknown, _1: unknown, s: string) {
   displayLeftButton.value = false
   displayRightButton.value = false
   if (props.snap !== false) {
@@ -105,6 +163,7 @@ function onDragEnd() {
   if (displayLeftButton.value || displayRightButton.value) {
     deactivate()
   }
+  saveState()
 }
 </script>
 
@@ -112,14 +171,14 @@ function onDragEnd() {
   <div class="d-grid" :style="{gridTemplateColumns}">
     <div class="overflow-hidden">
       <div v-if="displayLeftButton" class="h-100">
-        <BButton secondary class="h-100 w-100" style="padding: 0" @click="activate">&gt;<br/>&gt;</BButton>
+        <BButton secondary class="h-100 w-100" style="padding: 0" @click="reset">&gt;<br/>&gt;</BButton>
       </div>
       <div class="h-100 overflow-hidden" :class="{'d-none': displayLeftButton}"><slot name="left"></slot></div>
     </div>
     <div class="overflow-hidden gutter" :style="gutterStyle" ref="gutter"><slot name="gutter"><div class="handle"></div></slot></div>
     <div class="overflow-hidden">
       <div v-if="displayRightButton" class="h-100">
-        <BButton secondary class="h-100 w-100" style="padding: 0" @click="activate">&lt;<br/>&lt;</BButton>
+        <BButton secondary class="h-100 w-100" style="padding: 0" @click="reset">&lt;<br/>&lt;</BButton>
       </div>
       <div class="h-100 overflow-hidden" :class="{'d-none': displayRightButton}"><slot name="right"></slot></div>
     </div>
