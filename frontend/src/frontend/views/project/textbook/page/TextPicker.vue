@@ -99,9 +99,9 @@ function pointerup(event: any/* @todo Type */) {
     for (const item of props.textContent.filter(r.contains)) {
       items.push(item)
       if (previousItem !== null) {
-        if (Math.abs(previousItem.bottom - item.bottom) > textSpacingTolerance) {
+        if (Math.abs(previousItem.bottom - item.bottom) > textSpacingTolerance.value) {
           lines.push('')
-        } else if(previousItem.right + textSpacingTolerance < item.left) {
+        } else if(previousItem.right + textSpacingTolerance.value < item.left) {
           lines[lines.length - 1] += ' '
         }
       }
