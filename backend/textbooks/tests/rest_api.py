@@ -1,12 +1,11 @@
 from django.db.utils import IntegrityError
 from django.test import TransactionTestCase
-
 from starlette import status
 
-from .models import FillWithFreeTextAdaptedExercise, SelectWordsAdaptedExercise
-from .models import PdfFile, PdfFileNaming, Project, Textbook, Exercise
-from .resources import PdfFilesResource, PdfFileNamingsResource, ProjectsResource, TextbooksResource, SectionsResource, ExercisesResource, ExtractionEventsResource
-from .resources import SelectWordsAdaptedExercisesResource, FillWithFreeTextAdaptedExercisesResource
+from ..models import FillWithFreeTextAdaptedExercise, SelectWordsAdaptedExercise
+from ..models import PdfFile, PdfFileNaming, Project, Textbook, Exercise
+from ..resources import PdfFilesResource, PdfFileNamingsResource, ProjectsResource, TextbooksResource, SectionsResource, ExercisesResource, ExtractionEventsResource
+from ..resources import SelectWordsAdaptedExercisesResource, FillWithFreeTextAdaptedExercisesResource
 from fastjsonapi.django import make_wrapper
 from fastjsonapi.testing import TestMixin
 
@@ -28,7 +27,8 @@ polymorphism = {
     make_wrapper(FillWithFreeTextAdaptedExercise): "fill_with_free_text",
 }
 
-class PdfFileApiTests(TestMixin, TransactionTestCase):
+
+class PdfFileApiTestCase(TestMixin, TransactionTestCase):
     reset_sequences = True  # Primary keys appear in API responses
 
     resources = resources
@@ -216,7 +216,7 @@ class PdfFileApiTests(TestMixin, TransactionTestCase):
         })
 
 
-class TextbookApiTests(TestMixin, TransactionTestCase):
+class TextbookApiTestCase(TestMixin, TransactionTestCase):
     reset_sequences = True
 
     resources = resources
@@ -924,7 +924,7 @@ class TextbookApiTests(TestMixin, TransactionTestCase):
         self.assertEqual(Exercise.objects.count(), 0)
 
 
-class ExerciseModelTests(TransactionTestCase):
+class ExerciseModelTestCase(TransactionTestCase):
     def setUp(self):
         self.project = Project.objects.create(title="Project")
         self.textbook = Textbook.objects.create(project=self.project, title="Textbook")
@@ -1013,7 +1013,7 @@ class ExerciseModelTests(TransactionTestCase):
         )
 
 
-class ExerciseApiTests(TestMixin, TransactionTestCase):
+class ExerciseApiTestCase(TestMixin, TransactionTestCase):
     reset_sequences = True
 
     resources = resources
@@ -2029,7 +2029,7 @@ class ExerciseApiTests(TestMixin, TransactionTestCase):
         self.assertEqual(Exercise.objects.count(), 0)
 
 
-class AdaptedExerciseModelTests(TransactionTestCase):
+class AdaptedExerciseModelTestCase(TransactionTestCase):
     def setUp(self):
         self.project = Project.objects.create(title="Project")
         self.textbook = Textbook.objects.create(project=self.project, title="Textbook")
@@ -2068,7 +2068,7 @@ class AdaptedExerciseModelTests(TransactionTestCase):
             other.save()
 
 
-class AdaptedExerciseApiTests(TestMixin, TransactionTestCase):
+class AdaptedExerciseApiTestCase(TestMixin, TransactionTestCase):
     reset_sequences = True
 
     resources = resources
