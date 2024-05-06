@@ -31,6 +31,18 @@ services:
     working_dir: /app/frontend
     command: ["npm", "install"]
   # @todo Add pdf-worker-copier to replace dev-env/frontend/copy-pdfjs-worker.sh
+  openapi-to-typescript:
+    image: $OPINION_APP_NAME-dev_frontend
+    pull_policy: never
+    volumes:
+      - ..:/app
+    working_dir: /app/frontend
+    environment:
+      SHELL: bash
+    command: ["npx", "chokidar", "../backend/openapi.json", "--initial", "--verbose", "--command", "npx openapi-typescript ../backend/openapi.json --output src/openapi.ts"]
+    depends_on:
+      npm-installer:
+        condition: service_completed_successfully
   frontend:
     image: $OPINION_APP_NAME-dev_frontend
     pull_policy: never
