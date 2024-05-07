@@ -179,7 +179,7 @@
         "title": "Paragraph",
         "type": "object"
       },
-      "PlainWord": {
+      "PlainText": {
         "additionalProperties": false,
         "properties": {
           "text": {
@@ -187,9 +187,9 @@
             "type": "string"
           },
           "type": {
-            "const": "plainWord",
+            "const": "plainText",
             "enum": [
-              "plainWord"
+              "plainText"
             ],
             "title": "Type",
             "type": "string"
@@ -199,30 +199,7 @@
           "type",
           "text"
         ],
-        "title": "PlainWord",
-        "type": "object"
-      },
-      "Punctuation": {
-        "additionalProperties": false,
-        "properties": {
-          "text": {
-            "title": "Text",
-            "type": "string"
-          },
-          "type": {
-            "const": "punctuation",
-            "enum": [
-              "punctuation"
-            ],
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "text"
-        ],
-        "title": "Punctuation",
+        "title": "PlainText",
         "type": "object"
       },
       "Section": {
@@ -242,20 +219,30 @@
         "title": "Section",
         "type": "object"
       },
-      "SelectWordsOptionsModel": {
+      "SelectThingsOptionsModel": {
         "properties": {
           "colors": {
             "title": "Colors",
             "type": "integer"
+          },
+          "punctuation": {
+            "title": "Punctuation",
+            "type": "boolean"
+          },
+          "words": {
+            "title": "Words",
+            "type": "boolean"
           }
         },
         "required": [
-          "colors"
+          "colors",
+          "words",
+          "punctuation"
         ],
-        "title": "SelectWordsOptionsModel",
+        "title": "SelectThingsOptionsModel",
         "type": "object"
       },
-      "SelectableWord": {
+      "SelectableText": {
         "additionalProperties": false,
         "properties": {
           "colors": {
@@ -267,9 +254,9 @@
             "type": "string"
           },
           "type": {
-            "const": "selectableWord",
+            "const": "selectableText",
             "enum": [
-              "selectableWord"
+              "selectableText"
             ],
             "title": "Type",
             "type": "string"
@@ -280,7 +267,7 @@
           "text",
           "colors"
         ],
-        "title": "SelectableWord",
+        "title": "SelectableText",
         "type": "object"
       },
       "Sentence": {
@@ -290,19 +277,16 @@
             "items": {
               "anyOf": [
                 {
-                  "$ref": "#/components/schemas/PlainWord"
+                  "$ref": "#/components/schemas/PlainText"
                 },
                 {
-                  "$ref": "#/components/schemas/SelectableWord"
+                  "$ref": "#/components/schemas/SelectableText"
                 },
                 {
                   "$ref": "#/components/schemas/FreeTextInput"
                 },
                 {
                   "$ref": "#/components/schemas/Whitespace"
-                },
-                {
-                  "$ref": "#/components/schemas/Punctuation"
                 }
               ]
             },
@@ -420,7 +404,7 @@
           "options": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/SelectWordsOptionsModel"
+                "$ref": "#/components/schemas/SelectThingsOptionsModel"
               },
               {
                 "$ref": "#/components/schemas/FillWithFreeTextOptionsModel"

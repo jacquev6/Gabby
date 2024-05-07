@@ -22,15 +22,17 @@
     "fields": {
       "polymorphic_ctype": [
         "textbooks",
-        "selectwordsadaptedexercise"
+        "selectthingsadaptedexercise"
       ]
     }
   },
   {
-    "model": "textbooks.selectwordsadaptedexercise",
+    "model": "textbooks.selectthingsadaptedexercise",
     "pk": 2,
     "fields": {
-      "colors": 3
+      "colors": 3,
+      "words": true,
+      "punctuation": true
     }
   },
   {

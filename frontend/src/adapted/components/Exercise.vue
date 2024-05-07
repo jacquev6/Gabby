@@ -21,13 +21,12 @@ const section = computed(() => settings.tricolorWording ? TricolorSection : Mono
   <component :is="section" :section="exercise.wording">
     <template v-slot="{ token }">
       <template v-if="false"></template>
-      <template v-else-if="token.type === 'plainWord'" :token="token">{{ token.text }}</template>
+      <template v-else-if="token.type === 'plainText'" :token="token">{{ token.text }}</template>
       <template v-else-if="token.type === 'whitespace'" :token="token"><wbr /> <wbr /></template>
-      <template v-else-if="token.type === 'punctuation'" :token="token">{{ token.text }}</template>
       <template v-else-if="token.type === 'freeTextInput'" :token="token">
         <input type="text" />
       </template>
-      <template v-else-if="token.type === 'selectableWord'">
+      <template v-else-if="token.type === 'selectableText'">
         <SelectableWord :colors="token.colors">{{ token.text }}</SelectableWord>
       </template>
       <template v-else>

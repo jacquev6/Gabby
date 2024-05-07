@@ -11,7 +11,7 @@ import django.conf
 
 from . import renderable
 from .models import PdfFile, PdfFileNaming, Project, Textbook, Section, Exercise, ExtractionEvent
-from .models import SelectWordsAdaptedExercise, FillWithFreeTextAdaptedExercise
+from .models import SelectThingsAdaptedExercise, FillWithFreeTextAdaptedExercise
 from fastjsonapi import Computed, Filterable, Constant, Secret as WriteOnly
 from fastjsonapi.django import wrap, unwrap
 
@@ -324,7 +324,7 @@ class ExerciseModel(BaseModel):
 
     extraction_events: Annotated[list[ExtractionEventModel], Computed()] = []
 
-    adapted: SelectWordsAdaptedExerciseModel | FillWithFreeTextAdaptedExerciseModel | None = None
+    adapted: SelectThingsAdaptedExerciseModel | FillWithFreeTextAdaptedExerciseModel | None = None
 
 class ExercisesResource:
     singular_name = "exercise"
@@ -459,27 +459,31 @@ class ExtractionEventsResource:
             item.delete()
 
 
-class SelectWordsOptionsModel(BaseModel):
+class SelectThingsOptionsModel(BaseModel):
     colors: int
+    words: bool
+    punctuation: bool
 
-class SelectWordsAdaptedExerciseModel(SelectWordsOptionsModel):
+class SelectThingsAdaptedExerciseModel(SelectThingsOptionsModel):
     exercise: Annotated[ExerciseModel, Constant()]
 
-class SelectWordsAdaptedExercisesResource:
-    singular_name = "select_words"
-    plural_name = "select_wordss"
+class SelectThingsAdaptedExercisesResource:
+    singular_name = "select_things"
+    plural_name = "select_thingss"
 
-    Model = SelectWordsAdaptedExerciseModel
+    Model = SelectThingsAdaptedExerciseModel
 
     default_page_size = default_page_size
 
     class ItemCreator:
-        def __call__(self, *, exercise, colors):
+        def __call__(self, *, exercise, colors, words, punctuation):
             if exercise.adapted is not None:
                 exercise.adapted.delete()
-            adapted = SelectWordsAdaptedExercise(
+            adapted = SelectThingsAdaptedExercise(
                 exercise=unwrap(exercise),
                 colors=colors,
+                words=words,
+                punctuation=punctuation,
             )
             adapted.save()
             exercise.save()
@@ -488,8 +492,8 @@ class SelectWordsAdaptedExercisesResource:
     class ItemGetter:
         def __call__(self, id):
             try:
-                return wrap(SelectWordsAdaptedExercise.objects.get(id=id))
-            except SelectWordsAdaptedExercise.DoesNotExist:
+                return wrap(SelectThingsAdaptedExercise.objects.get(id=id))
+            except SelectThingsAdaptedExercise.DoesNotExist:
                 return None
 
     class ItemSaver:
@@ -553,7 +557,7 @@ class AdaptedExerciseModel(BaseModel):
     instructions: Annotated[str, WriteOnly()]
     wording: Annotated[str, WriteOnly()]
     type: Annotated[str, WriteOnly()]
-    options: Annotated[SelectWordsOptionsModel | FillWithFreeTextOptionsModel, WriteOnly()]
+    options: Annotated[SelectThingsOptionsModel | FillWithFreeTextOptionsModel, WriteOnly()]
     adapted: Annotated[renderable.AdaptedExercise, Computed()]
 
 @dataclasses.dataclass
@@ -577,10 +581,12 @@ class AdaptedExerciseResource:
                 instructions=instructions,
                 wording=wording,
             )
-            if type == "selectWords":
-                adapted = SelectWordsAdaptedExercise(
+            if type == "selectThings":
+                adapted = SelectThingsAdaptedExercise(
                     exercise=exercise,
                     colors=options.colors,
+                    words=options.words,
+                    punctuation=options.punctuation,
                 )
             elif type == "fillWithFreeText":
                 adapted = FillWithFreeTextAdaptedExercise(

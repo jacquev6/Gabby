@@ -135,17 +135,17 @@ export interface paths {
     /** Update Section */
     patch: operations["update_section_api_sections__id__patch"];
   };
-  "/api/selectWordss": {
-    /** Create Select Words */
-    post: operations["create_select_words_api_selectWordss_post"];
+  "/api/selectThingss": {
+    /** Create Select Things */
+    post: operations["create_select_things_api_selectThingss_post"];
   };
-  "/api/selectWordss/{id}": {
-    /** Get Select Words */
-    get: operations["get_select_words_api_selectWordss__id__get"];
-    /** Delete Select Words */
-    delete: operations["delete_select_words_api_selectWordss__id__delete"];
-    /** Update Select Words */
-    patch: operations["update_select_words_api_selectWordss__id__patch"];
+  "/api/selectThingss/{id}": {
+    /** Get Select Things */
+    get: operations["get_select_things_api_selectThingss__id__get"];
+    /** Delete Select Things */
+    delete: operations["delete_select_things_api_selectThingss__id__delete"];
+    /** Update Select Things */
+    patch: operations["update_select_things_api_selectThingss__id__patch"];
   };
   "/api/textbooks": {
     /** Get Textbooks */
@@ -292,8 +292,8 @@ export interface components {
       /** Sentences */
       sentences: components["schemas"]["Sentence"][];
     };
-    /** PlainWord */
-    PlainWord: {
+    /** PlainText */
+    PlainText: {
       /** Text */
       text: string;
       /**
@@ -301,7 +301,7 @@ export interface components {
        * @constant
        * @enum {string}
        */
-      type: "plainWord";
+      type: "plainText";
     };
     /** Point */
     Point: {
@@ -309,17 +309,6 @@ export interface components {
       x: number;
       /** Y */
       y: number;
-    };
-    /** Punctuation */
-    Punctuation: {
-      /** Text */
-      text: string;
-      /**
-       * Type
-       * @constant
-       * @enum {string}
-       */
-      type: "punctuation";
     };
     /** Rectangle */
     Rectangle: {
@@ -331,13 +320,17 @@ export interface components {
       /** Paragraphs */
       paragraphs: components["schemas"]["Paragraph"][];
     };
-    /** SelectWordsOptionsModel */
-    SelectWordsOptionsModel: {
+    /** SelectThingsOptionsModel */
+    SelectThingsOptionsModel: {
       /** Colors */
       colors: number;
+      /** Punctuation */
+      punctuation: boolean;
+      /** Words */
+      words: boolean;
     };
-    /** SelectableWord */
-    SelectableWord: {
+    /** SelectableText */
+    SelectableText: {
       /** Colors */
       colors: number;
       /** Text */
@@ -347,12 +340,12 @@ export interface components {
        * @constant
        * @enum {string}
        */
-      type: "selectableWord";
+      type: "selectableText";
     };
     /** Sentence */
     Sentence: {
       /** Tokens */
-      tokens: (components["schemas"]["PlainWord"] | components["schemas"]["SelectableWord"] | components["schemas"]["FreeTextInput"] | components["schemas"]["Whitespace"] | components["schemas"]["Punctuation"])[];
+      tokens: (components["schemas"]["PlainText"] | components["schemas"]["SelectableText"] | components["schemas"]["FreeTextInput"] | components["schemas"]["Whitespace"])[];
     };
     /** UpdateInputListRelationship */
     UpdateInputListRelationship: {
@@ -401,7 +394,7 @@ export interface components {
       /** Number */
       number: string;
       /** Options */
-      options: components["schemas"]["SelectWordsOptionsModel"] | components["schemas"]["FillWithFreeTextOptionsModel"];
+      options: components["schemas"]["SelectThingsOptionsModel"] | components["schemas"]["FillWithFreeTextOptionsModel"];
       /** Textbookpage */
       textbookPage: number | null;
       /** Type */
@@ -1133,73 +1126,85 @@ export interface components {
     };
     /** section-UpdateInput-Data-Relationships */
     "section-UpdateInput-Data-Relationships": Record<string, never>;
-    /** selectWords-CreateInput */
-    "selectWords-CreateInput": {
-      data: components["schemas"]["selectWords-CreateInput-Data"];
+    /** selectThings-CreateInput */
+    "selectThings-CreateInput": {
+      data: components["schemas"]["selectThings-CreateInput-Data"];
     };
-    /** selectWords-CreateInput-Data */
-    "selectWords-CreateInput-Data": {
-      attributes: components["schemas"]["selectWords-CreateInput-Data-Attributes"];
-      relationships: components["schemas"]["selectWords-CreateInput-Data-Relationships"];
+    /** selectThings-CreateInput-Data */
+    "selectThings-CreateInput-Data": {
+      attributes: components["schemas"]["selectThings-CreateInput-Data-Attributes"];
+      relationships: components["schemas"]["selectThings-CreateInput-Data-Relationships"];
       /** Type */
       type: string;
     };
-    /** selectWords-CreateInput-Data-Attributes */
-    "selectWords-CreateInput-Data-Attributes": {
+    /** selectThings-CreateInput-Data-Attributes */
+    "selectThings-CreateInput-Data-Attributes": {
       /** Colors */
       colors: number;
+      /** Punctuation */
+      punctuation: boolean;
+      /** Words */
+      words: boolean;
     };
-    /** selectWords-CreateInput-Data-Relationships */
-    "selectWords-CreateInput-Data-Relationships": {
+    /** selectThings-CreateInput-Data-Relationships */
+    "selectThings-CreateInput-Data-Relationships": {
       exercise: components["schemas"]["MandatoryRelationship"];
     };
-    /** selectWords-ItemOutput */
-    "selectWords-ItemOutput": {
-      data: components["schemas"]["selectWords-OutputItem"];
+    /** selectThings-ItemOutput */
+    "selectThings-ItemOutput": {
+      data: components["schemas"]["selectThings-OutputItem"];
       /** Included */
       included?: unknown[];
     };
-    /** selectWords-OutputItem */
-    "selectWords-OutputItem": {
-      attributes: components["schemas"]["selectWords-OutputItem-Attributes"];
+    /** selectThings-OutputItem */
+    "selectThings-OutputItem": {
+      attributes: components["schemas"]["selectThings-OutputItem-Attributes"];
       /** Id */
       id: string;
       links: components["schemas"]["ItemLinksModel"];
-      relationships: components["schemas"]["selectWords-OutputItem-Relationships"];
+      relationships: components["schemas"]["selectThings-OutputItem-Relationships"];
       /** Type */
       type: string;
     };
-    /** selectWords-OutputItem-Attributes */
-    "selectWords-OutputItem-Attributes": {
+    /** selectThings-OutputItem-Attributes */
+    "selectThings-OutputItem-Attributes": {
       /** Colors */
       colors: number;
+      /** Punctuation */
+      punctuation: boolean;
+      /** Words */
+      words: boolean;
     };
-    /** selectWords-OutputItem-Relationships */
-    "selectWords-OutputItem-Relationships": {
+    /** selectThings-OutputItem-Relationships */
+    "selectThings-OutputItem-Relationships": {
       exercise: components["schemas"]["MandatoryRelationship"];
     };
-    /** selectWords-UpdateInput */
-    "selectWords-UpdateInput": {
-      data: components["schemas"]["selectWords-UpdateInput-Data"];
+    /** selectThings-UpdateInput */
+    "selectThings-UpdateInput": {
+      data: components["schemas"]["selectThings-UpdateInput-Data"];
     };
-    /** selectWords-UpdateInput-Data */
-    "selectWords-UpdateInput-Data": {
+    /** selectThings-UpdateInput-Data */
+    "selectThings-UpdateInput-Data": {
       /** @default {} */
-      attributes?: components["schemas"]["selectWords-UpdateInput-Data-Attributes"];
+      attributes?: components["schemas"]["selectThings-UpdateInput-Data-Attributes"];
       /** Id */
       id: string;
       /** @default {} */
-      relationships?: components["schemas"]["selectWords-UpdateInput-Data-Relationships"];
+      relationships?: components["schemas"]["selectThings-UpdateInput-Data-Relationships"];
       /** Type */
       type: string;
     };
-    /** selectWords-UpdateInput-Data-Attributes */
-    "selectWords-UpdateInput-Data-Attributes": {
+    /** selectThings-UpdateInput-Data-Attributes */
+    "selectThings-UpdateInput-Data-Attributes": {
       /** Colors */
       colors?: number;
+      /** Punctuation */
+      punctuation?: boolean;
+      /** Words */
+      words?: boolean;
     };
-    /** selectWords-UpdateInput-Data-Relationships */
-    "selectWords-UpdateInput-Data-Relationships": Record<string, never>;
+    /** selectThings-UpdateInput-Data-Relationships */
+    "selectThings-UpdateInput-Data-Relationships": Record<string, never>;
     /** textbook-CreateInput */
     "textbook-CreateInput": {
       data: components["schemas"]["textbook-CreateInput-Data"];
@@ -2424,8 +2429,8 @@ export interface operations {
       };
     };
   };
-  /** Create Select Words */
-  create_select_words_api_selectWordss_post: {
+  /** Create Select Things */
+  create_select_things_api_selectThingss_post: {
     parameters: {
       query?: {
         include?: string;
@@ -2433,14 +2438,14 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["selectWords-CreateInput"];
+        "application/json": components["schemas"]["selectThings-CreateInput"];
       };
     };
     responses: {
       /** @description Successful Response */
       201: {
         content: {
-          "application/vnd.api+json": components["schemas"]["selectWords-ItemOutput"];
+          "application/vnd.api+json": components["schemas"]["selectThings-ItemOutput"];
         };
       };
       /** @description Validation Error */
@@ -2451,8 +2456,8 @@ export interface operations {
       };
     };
   };
-  /** Get Select Words */
-  get_select_words_api_selectWordss__id__get: {
+  /** Get Select Things */
+  get_select_things_api_selectThingss__id__get: {
     parameters: {
       query?: {
         include?: string;
@@ -2465,7 +2470,7 @@ export interface operations {
       /** @description Successful Response */
       200: {
         content: {
-          "application/vnd.api+json": components["schemas"]["selectWords-ItemOutput"];
+          "application/vnd.api+json": components["schemas"]["selectThings-ItemOutput"];
         };
       };
       /** @description Validation Error */
@@ -2476,8 +2481,8 @@ export interface operations {
       };
     };
   };
-  /** Delete Select Words */
-  delete_select_words_api_selectWordss__id__delete: {
+  /** Delete Select Things */
+  delete_select_things_api_selectThingss__id__delete: {
     parameters: {
       path: {
         id: string;
@@ -2496,8 +2501,8 @@ export interface operations {
       };
     };
   };
-  /** Update Select Words */
-  update_select_words_api_selectWordss__id__patch: {
+  /** Update Select Things */
+  update_select_things_api_selectThingss__id__patch: {
     parameters: {
       query?: {
         include?: string;
@@ -2508,14 +2513,14 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["selectWords-UpdateInput"];
+        "application/json": components["schemas"]["selectThings-UpdateInput"];
       };
     };
     responses: {
       /** @description Successful Response */
       200: {
         content: {
-          "application/vnd.api+json": components["schemas"]["selectWords-ItemOutput"];
+          "application/vnd.api+json": components["schemas"]["selectThings-ItemOutput"];
         };
       };
       /** @description Validation Error */

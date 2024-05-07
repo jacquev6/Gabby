@@ -1,13 +1,13 @@
 from django.test import TestCase
 from starlette import status
 
-from ..models import Exercise, SelectWordsAdaptedExercise, FillWithFreeTextAdaptedExercise
+from ..models import Exercise, SelectThingsAdaptedExercise, FillWithFreeTextAdaptedExercise
 from ..resources import AdaptedExerciseResource
 from .. import renderable as r
 from fastjsonapi.testing import TestMixin
 
 
-class SelectWordsAdaptedExerciseBusinessTestCase(TestCase):
+class SelectThingsAdaptedExerciseBusinessTestCase(TestCase):
     def test_single_sentence(self):
         exercise = Exercise(
             number="number",
@@ -15,7 +15,7 @@ class SelectWordsAdaptedExerciseBusinessTestCase(TestCase):
             instructions="instructions",
             wording="The wording of this exercise is a single sentence.",
         )
-        adapted = SelectWordsAdaptedExercise(exercise=exercise, colors=2)
+        adapted = SelectThingsAdaptedExercise(exercise=exercise, colors=2, words=True, punctuation=False)
 
         self.assertEqual(
             adapted.make_adapted(),
@@ -26,24 +26,24 @@ class SelectWordsAdaptedExerciseBusinessTestCase(TestCase):
                 wording=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.SelectableWord(type="selectableWord", text="The", colors=2),
+                            r.SelectableText(type="selectableText", text="The", colors=2),
                             r.Whitespace(type="whitespace"),
-                            r.SelectableWord(type="selectableWord", text="wording", colors=2),
+                            r.SelectableText(type="selectableText", text="wording", colors=2),
                             r.Whitespace(type="whitespace"),
-                            r.SelectableWord(type="selectableWord", text="of", colors=2),
+                            r.SelectableText(type="selectableText", text="of", colors=2),
                             r.Whitespace(type="whitespace"),
-                            r.SelectableWord(type="selectableWord", text="this", colors=2),
+                            r.SelectableText(type="selectableText", text="this", colors=2),
                             r.Whitespace(type="whitespace"),
-                            r.SelectableWord(type="selectableWord", text="exercise", colors=2),
+                            r.SelectableText(type="selectableText", text="exercise", colors=2),
                             r.Whitespace(type="whitespace"),
-                            r.SelectableWord(type="selectableWord", text="is", colors=2),
+                            r.SelectableText(type="selectableText", text="is", colors=2),
                             r.Whitespace(type="whitespace"),
-                            r.SelectableWord(type="selectableWord", text="a", colors=2),
+                            r.SelectableText(type="selectableText", text="a", colors=2),
                             r.Whitespace(type="whitespace"),
-                            r.SelectableWord(type="selectableWord", text="single", colors=2),
+                            r.SelectableText(type="selectableText", text="single", colors=2),
                             r.Whitespace(type="whitespace"),
-                            r.SelectableWord(type="selectableWord", text="sentence", colors=2),
-                            r.Punctuation(type="punctuation", text="."),
+                            r.SelectableText(type="selectableText", text="sentence", colors=2),
+                            r.PlainText(type="plainText", text="."),
                         ]),
                     ]),
                 ]),
@@ -70,24 +70,24 @@ class FillWithFreeTextAdaptedExerciseBusinessTestCase(TestCase):
                 wording=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.PlainWord(type="plainWord", text="The"),
+                            r.PlainText(type="plainText", text="The"),
                             r.Whitespace(type="whitespace"),
-                            r.PlainWord(type="plainWord", text="wording"),
+                            r.PlainText(type="plainText", text="wording"),
                             r.Whitespace(type="whitespace"),
-                            r.PlainWord(type="plainWord", text="of"),
+                            r.PlainText(type="plainText", text="of"),
                             r.Whitespace(type="whitespace"),
-                            r.PlainWord(type="plainWord", text="this"),
-                            r.Whitespace(type="whitespace"),
-                            r.FreeTextInput(type="freeTextInput"),
-                            r.Whitespace(type="whitespace"),
-                            r.PlainWord(type="plainWord", text="is"),
-                            r.Whitespace(type="whitespace"),
-                            r.PlainWord(type="plainWord", text="a"),
+                            r.PlainText(type="plainText", text="this"),
                             r.Whitespace(type="whitespace"),
                             r.FreeTextInput(type="freeTextInput"),
                             r.Whitespace(type="whitespace"),
-                            r.PlainWord(type="plainWord", text="sentence"),
-                            r.Punctuation(type="punctuation", text="."),
+                            r.PlainText(type="plainText", text="is"),
+                            r.Whitespace(type="whitespace"),
+                            r.PlainText(type="plainText", text="a"),
+                            r.Whitespace(type="whitespace"),
+                            r.FreeTextInput(type="freeTextInput"),
+                            r.Whitespace(type="whitespace"),
+                            r.PlainText(type="plainText", text="sentence"),
+                            r.PlainText(type="plainText", text="."),
                         ]),
                     ]),
                 ]),
@@ -114,7 +114,7 @@ class FillWithFreeTextAdaptedExerciseBusinessTestCase(TestCase):
                         r.Sentence(tokens=[
                             r.FreeTextInput(type="freeTextInput"),
                             r.Whitespace(type="whitespace"),
-                            r.PlainWord(type="plainWord", text="a"),
+                            r.PlainText(type="plainText", text="a"),
                             r.Whitespace(type="whitespace"),
                             r.FreeTextInput(type="freeTextInput"),
                         ]),
@@ -127,7 +127,7 @@ class FillWithFreeTextAdaptedExerciseBusinessTestCase(TestCase):
 class AdaptedExerciseApiTestCase(TestMixin, TestCase):
     resources = [AdaptedExerciseResource]
 
-    def test_select_words(self):
+    def test_select_things(self):
         payload = {
             "data": {
                 "type": "adaptedExercise",
@@ -136,9 +136,11 @@ class AdaptedExerciseApiTestCase(TestMixin, TestCase):
                     "textbookPage": 1,
                     "instructions": "This is the instructions.",
                     "wording": "This is the wording.",
-                    "type": "selectWords",
+                    "type": "selectThings",
                     "options": {
                         "colors": 3,
+                        "words": True,
+                        "punctuation": False,
                     }
                 },
             },
@@ -150,14 +152,14 @@ class AdaptedExerciseApiTestCase(TestMixin, TestCase):
             "textbook_page": 1,  # @todo Rename to textbookPage
             "instructions": "This is the instructions.",
             "wording": {"paragraphs": [{"sentences": [{"tokens": [
-                {"type": "selectableWord", "text": "This", "colors": 3},
+                {"type": "selectableText", "text": "This", "colors": 3},
                 {"type": "whitespace"},
-                {"type": "selectableWord", "text": "is", "colors": 3},
+                {"type": "selectableText", "text": "is", "colors": 3},
                 {"type": "whitespace"},
-                {"type": "selectableWord", "text": "the", "colors": 3},
+                {"type": "selectableText", "text": "the", "colors": 3},
                 {"type": "whitespace"},
-                {"type": "selectableWord", "text": "wording", "colors": 3},
-                {"type": "punctuation", "text": "."},
+                {"type": "selectableText", "text": "wording", "colors": 3},
+                {"type": "plainText", "text": "."},
             ]}]}]},
         })
 
@@ -184,7 +186,7 @@ class AdaptedExerciseApiTestCase(TestMixin, TestCase):
             "textbook_page": 1,  # @todo Rename to textbookPage
             "instructions": "This is the instructions.",
             "wording": {"paragraphs": [{"sentences": [{"tokens": [
-                {"type": "plainWord", "text": "Fill"},
+                {"type": "plainText", "text": "Fill"},
                 {"type": "whitespace"},
                 {"type": "freeTextInput"},
             ]}]}]},

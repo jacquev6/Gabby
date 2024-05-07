@@ -1,8 +1,8 @@
-import selectWords from './SelectWords.vue'
+import selectThings from './SelectThings.vue'
 import fillWithFreeText from './FillWithFreeText.vue'
 
 
 export default {
-  selectWords,
+  selectThings,
   fillWithFreeText,
 }

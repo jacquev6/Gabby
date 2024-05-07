@@ -14,9 +14,9 @@ import jinja2
 from fastjsonapi import make_jsonapi_router
 from fastjsonapi.django import AuthenticationToken, make_wrapper
 from opinion_ping.resources import PingsResource
-from textbooks.models import Project, SelectWordsAdaptedExercise, FillWithFreeTextAdaptedExercise
+from textbooks.models import Project, SelectThingsAdaptedExercise, FillWithFreeTextAdaptedExercise
 from textbooks.resources import PdfFilesResource, PdfFileNamingsResource, ProjectsResource, TextbooksResource, SectionsResource, ExercisesResource, ExtractionEventsResource
-from textbooks.resources import SelectWordsAdaptedExercisesResource, FillWithFreeTextAdaptedExercisesResource
+from textbooks.resources import SelectThingsAdaptedExercisesResource, FillWithFreeTextAdaptedExercisesResource
 from textbooks.resources import AdaptedExerciseResource
 from textbooks.views import make_extraction_report
 
@@ -49,12 +49,12 @@ app.include_router(
             SectionsResource(),
             ExercisesResource(),
             ExtractionEventsResource(),
-            SelectWordsAdaptedExercisesResource(),
+            SelectThingsAdaptedExercisesResource(),
             FillWithFreeTextAdaptedExercisesResource(),
             AdaptedExerciseResource(),
         ],
         polymorphism={
-            make_wrapper(SelectWordsAdaptedExercise): "select_words",
+            make_wrapper(SelectThingsAdaptedExercise): "select_things",
             make_wrapper(FillWithFreeTextAdaptedExercise): "fill_with_free_text",
         },
     ),

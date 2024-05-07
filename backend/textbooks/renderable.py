@@ -7,12 +7,12 @@ class BaseModel(pydantic.BaseModel):
     model_config = pydantic.ConfigDict(extra="forbid")
 
 
-class PlainWord(BaseModel):
-    type: Literal["plainWord"]
+class PlainText(BaseModel):
+    type: Literal["plainText"]
     text: str
 
-class SelectableWord(BaseModel):
-    type: Literal["selectableWord"]
+class SelectableText(BaseModel):
+    type: Literal["selectableText"]
     text: str
     colors: int
 
@@ -24,11 +24,7 @@ class Whitespace(BaseModel):
     type: Literal["whitespace"]
     pass
 
-class Punctuation(BaseModel):
-    type: Literal["punctuation"]
-    text: str
-
-SentenceToken = PlainWord | SelectableWord | FreeTextInput | Whitespace | Punctuation
+SentenceToken = PlainText | SelectableText | FreeTextInput | Whitespace
 
 
 class Sentence(BaseModel):

@@ -159,7 +159,9 @@ class ExtractionEvent(models.Model):
     event = models.TextField(null=False, blank=False)  # Free form for the backend, defined by the frontend
 
 
-class SelectWordsAdaptedExercise(AdaptedExercise):
+class SelectThingsAdaptedExercise(AdaptedExercise):
+    punctuation = models.BooleanField(null=False)
+    words = models.BooleanField(null=False)
     colors = models.IntegerField(null=False)
 
     def make_adapted(self):
@@ -181,11 +183,17 @@ class SelectWordsAdaptedExercise(AdaptedExercise):
         # @todo Use type checking to ensure all cases are covered
         match token:
             case parsing.WordToken(text=text):
-                return renderable.SelectableWord(type="selectableWord", text=text, colors=self.colors)
+                if self.words:
+                    return renderable.SelectableText(type="selectableText", text=text, colors=self.colors)
+                else:
+                    return renderable.PlainText(type="plainText", text=text)
             case parsing.WhitespaceToken(text=text):
                 return renderable.Whitespace(type="whitespace")
             case parsing.PunctuationToken(text=text):
-                return renderable.Punctuation(type="punctuation", text=text)
+                if self.punctuation:
+                    return renderable.SelectableText(type="selectableText", text=text, colors=self.colors)
+                else:
+                    return renderable.PlainText(type="plainText", text=text)
             case _:
                 raise ValueError(f"Unknown token type: {type(token)}")
 
@@ -217,10 +225,10 @@ class FillWithFreeTextAdaptedExercise(AdaptedExercise):
         # @todo Use type checking to ensure all cases are covered
         match token:
             case parsing.WordToken(text=text):
-                return renderable.PlainWord(type="plainWord", text=text)
+                return renderable.PlainText(type="plainText", text=text)
             case parsing.WhitespaceToken(text=text):
                 return renderable.Whitespace(type="whitespace")
             case parsing.PunctuationToken(text=text):
-                return renderable.Punctuation(type="punctuation", text=text)
+                return renderable.PlainText(type="plainText", text=text)
             case _:
                 raise ValueError(f"Unknown token type: {type(token)}")

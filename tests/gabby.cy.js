@@ -127,8 +127,8 @@ describe('Gabby', () => {
     // Image is cropped to 670px height in headless mode. I don't know why.
     cy.screenshot('doc/textbook-page-modify-exercise', {clip: {x: 0, y: 50, width: 575, height: 1000}})
 
-    cy.get('label:contains("Type")').next().select('selectWords')
-    cy.frameLoaded({url: 'selectWords'})
+    cy.get('label:contains("Type")').next().select('selectThings')
+    cy.frameLoaded({url: 'selectThings'})
     cy.screenshot('doc/textbook-page-three-columns', {clip: {x: 0, y: 0, width: 1000, height: 330}})
 
     cy.get('a:contains("Annuler")').click()

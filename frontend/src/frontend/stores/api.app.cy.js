@@ -231,13 +231,13 @@ describe('ApiStore', () => {
     expect(exercise.relationships.adapted).to.be.null
   })
 
-  it('gets an adapted "select words" exercise', async () => {
+  it('gets an adapted "select things" exercise', async () => {
     const api = useApiStore()
 
     const exercise = await api.client.getOne('exercise', '7', {include: 'adapted'})
 
     expect(exercise.attributes.instructions).to.equal('Relève dans le texte trois\ndéterminants, un nom propre, quatre\nnoms communs et trois verbes.')
-    expect(exercise.relationships.adapted.type).to.equal('selectWords')
+    expect(exercise.relationships.adapted.type).to.equal('selectThings')
     expect(exercise.relationships.adapted.id).to.equal('2')
     expect(exercise.relationships.adapted.attributes.colors).to.equal(3)
   })
@@ -271,9 +271,11 @@ describe('ApiStore', () => {
       ],
       [
         'add',
-        'selectWords', null,
+        'selectThings', null,
         {
           'colors': 5,
+          'words': true,
+          'punctuation': true,
         },
         {
           'exercise': {type: 'exercise', lid: 'exo'},
@@ -286,14 +288,14 @@ describe('ApiStore', () => {
     // @todo Return up-to-date objects in batch response, then remove next line
     await api.client.getOne('exercise', response[0].id)
 
-    expect(exercise.relationships.adapted.type).to.equal('selectWords')
+    expect(exercise.relationships.adapted.type).to.equal('selectThings')
     expect(exercise.relationships.adapted.attributes.colors).to.equal(5)
   })
 
   it('updates an adapted exercise', async () => {
     const api = useApiStore()
 
-    const adapted = await api.client.patch('selectWords', '2', {colors: 17}, {})
+    const adapted = await api.client.patch('selectThings', '2', {colors: 17}, {})
 
     expect(adapted.attributes.colors).to.equal(17)
   })
@@ -301,7 +303,7 @@ describe('ApiStore', () => {
   it('changes the type of an adapted exercise', async () => {
     const api = useApiStore()
 
-    const previous = await api.client.getOne('selectWords', '2')
+    const previous = await api.client.getOne('selectThings', '2')
     expect(previous.relationships.exercise.id).to.equal('7')
 
     const adapted = await api.client.post('fillWithFreeText', {placeholder: '...'}, {exercise: {type: 'exercise', id: '7'}}, {include: 'exercise'})
@@ -309,7 +311,7 @@ describe('ApiStore', () => {
     expect(adapted.attributes.placeholder).to.equal('...')
     expect(adapted.relationships.exercise.attributes.instructions).to.equal('Relève dans le texte trois\ndéterminants, un nom propre, quatre\nnoms communs et trois verbes.')
 
-    await api.client.getOne('selectWords', '2')
+    await api.client.getOne('selectThings', '2')
     expect(previous.exists).to.be.false
   })
 })

@@ -182,7 +182,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
     cy.frameLoaded({url: 'not-adapted'})
     cy.iframe().find('p:contains("Sélectionnez un type d\'exercice.")').should('exist')
 
-    cy.get('label:contains("Type")').next().select('selectWords')
+    cy.get('label:contains("Type")').next().select('selectThings')
     cy.get('label:contains("Number of colors")').next().type('{selectAll}2')
 
     cy.frameLoaded({url: ':2'})

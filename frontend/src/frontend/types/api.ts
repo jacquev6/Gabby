@@ -4,6 +4,11 @@ import type { components  } from '../../openapi'
 
 type schemas = components["schemas"]
 
+
+export type SelectThingsOptions = schemas["SelectThingsOptionsModel"]
+export type FillWithFreeTextOptions = schemas["FillWithFreeTextOptionsModel"]
+
+
 export type Ping = Item<schemas["ping-OutputItem-Attributes"], {
   // @todo Preserve typing of relationships: make sure that 'type' is specified in the OpenAPI schema instead of being a plain string
   prev: Ping

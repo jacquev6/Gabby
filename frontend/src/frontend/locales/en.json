@@ -45,7 +45,7 @@
   "noExercisesForNow": "No exercises for now.",
   "independentExercises": "Independent exercises",
   "exerciseType": "Type",
-  "selectWords": "Select words",
+  "selectThings": "Select words",
   "fillWithFreeText": "Fill with free text",
 
 
@@ -80,6 +80,7 @@
   "wording": "Wording",
 
   "colorsCount": "Number of colors",
+  "includePunctuation": "Also select punctuation",
   "placeholderText": "Placeholder to fill",
 
   "tools": "Tools",

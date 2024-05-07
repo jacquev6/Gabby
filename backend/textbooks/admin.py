@@ -2,7 +2,7 @@ from django.contrib import admin
 from polymorphic.admin import PolymorphicParentModelAdmin, PolymorphicChildModelAdmin
 
 from .models import PdfFile, PdfFileNaming, Project, Textbook, Section, Exercise, ExtractionEvent
-from .models import AdaptedExercise, SelectWordsAdaptedExercise, FillWithFreeTextAdaptedExercise
+from .models import AdaptedExercise, SelectThingsAdaptedExercise, FillWithFreeTextAdaptedExercise
 
 
 class SectionInline(admin.TabularInline):
@@ -41,9 +41,9 @@ class ExerciseAdmin(admin.ModelAdmin):
 class AdaptedExerciseChildAdmin(PolymorphicChildModelAdmin):
     base_model = AdaptedExercise
 
-@admin.register(SelectWordsAdaptedExercise)
-class SelectWordsAdaptedExerciseAdmin(AdaptedExerciseChildAdmin):
-    base_model = SelectWordsAdaptedExercise
+@admin.register(SelectThingsAdaptedExercise)
+class SelectThingsAdaptedExerciseAdmin(AdaptedExerciseChildAdmin):
+    base_model = SelectThingsAdaptedExercise
 
 @admin.register(FillWithFreeTextAdaptedExercise)
 class FillWithFreeTextAdaptedExerciseAdmin(AdaptedExerciseChildAdmin):
@@ -52,4 +52,4 @@ class FillWithFreeTextAdaptedExerciseAdmin(AdaptedExerciseChildAdmin):
 @admin.register(AdaptedExercise)
 class AdaptedExerciseParentAdmin(PolymorphicParentModelAdmin):
     base_model = AdaptedExercise
-    child_models = (SelectWordsAdaptedExercise, FillWithFreeTextAdaptedExercise)
+    child_models = (SelectThingsAdaptedExercise, FillWithFreeTextAdaptedExercise)

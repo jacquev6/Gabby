@@ -2,10 +2,10 @@ from django.db.utils import IntegrityError
 from django.test import TransactionTestCase
 from starlette import status
 
-from ..models import FillWithFreeTextAdaptedExercise, SelectWordsAdaptedExercise
+from ..models import FillWithFreeTextAdaptedExercise, SelectThingsAdaptedExercise
 from ..models import PdfFile, PdfFileNaming, Project, Textbook, Exercise
 from ..resources import PdfFilesResource, PdfFileNamingsResource, ProjectsResource, TextbooksResource, SectionsResource, ExercisesResource, ExtractionEventsResource
-from ..resources import SelectWordsAdaptedExercisesResource, FillWithFreeTextAdaptedExercisesResource
+from ..resources import SelectThingsAdaptedExercisesResource, FillWithFreeTextAdaptedExercisesResource
 from fastjsonapi.django import make_wrapper
 from fastjsonapi.testing import TestMixin
 
@@ -18,12 +18,12 @@ resources = [
     SectionsResource(),
     ExercisesResource(),
     ExtractionEventsResource(),
-    SelectWordsAdaptedExercisesResource(),
+    SelectThingsAdaptedExercisesResource(),
     FillWithFreeTextAdaptedExercisesResource(),
 ]
 
 polymorphism = {
-    make_wrapper(SelectWordsAdaptedExercise): "select_words",
+    make_wrapper(SelectThingsAdaptedExercise): "select_things",
     make_wrapper(FillWithFreeTextAdaptedExercise): "fill_with_free_text",
 }
 
@@ -2047,17 +2047,17 @@ class AdaptedExerciseModelTestCase(TransactionTestCase):
         self.assertEqual(exercise.adapted.placeholder, "...")
         self.assertFalse(hasattr(exercise.adapted, "colors"))
 
-    def test_select_words(self):
-        self.exercise.adapted = SelectWordsAdaptedExercise.objects.create(colors=3)
+    def test_select_things(self):
+        self.exercise.adapted = SelectThingsAdaptedExercise.objects.create(colors=3, words=True, punctuation=True)
         self.exercise.save()
         exercise = Exercise.objects.get()
         self.assertIs(exercise.adapted.exercise, exercise)
-        self.assertIsInstance(exercise.adapted, SelectWordsAdaptedExercise)
+        self.assertIsInstance(exercise.adapted, SelectThingsAdaptedExercise)
         self.assertEqual(exercise.adapted.colors, 3)
         self.assertFalse(hasattr(exercise.adapted, "placeholder"))
 
     def test_share(self):
-        self.exercise.adapted = SelectWordsAdaptedExercise.objects.create(colors=3)
+        self.exercise.adapted = SelectThingsAdaptedExercise.objects.create(colors=3, words=True, punctuation=True)
         self.exercise.save()
 
         other = Exercise.objects.create(project=self.project, number="Other exercise")
@@ -2079,27 +2079,31 @@ class AdaptedExerciseApiTestCase(TestMixin, TransactionTestCase):
         self.textbook = Textbook.objects.create(project=self.project, title="The title")
         self.exercise = Exercise.objects.create(project=self.project, number="Exercise")
 
-    def test_create_select_words(self):
+    def test_create_select_things(self):
         payload = {
             "data": {
-                "type": "selectWords",
+                "type": "selectThings",
                 "attributes": {
                     "colors": 3,
+                    "words": True,
+                    "punctuation": True,
                 },
                 "relationships": {
                     "exercise": {"data": {"type": "exercise", "id": "1"}},
                 },
             },
         }
-        response = self.post("http://server/selectWordss", payload)
+        response = self.post("http://server/selectThingss", payload)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
         self.assertEqual(response.json(), {
             "data": {
-                "type": "selectWords",
+                "type": "selectThings",
                 "id": "1",
-                "links": {"self": "http://server/selectWordss/1"},
+                "links": {"self": "http://server/selectThingss/1"},
                 "attributes": {
                     "colors": 3,
+                    "words": True,
+                    "punctuation": True,
                 },
                 "relationships": {
                     "exercise": {"data": {"type": "exercise", "id": "1"}},
@@ -2108,8 +2112,10 @@ class AdaptedExerciseApiTestCase(TestMixin, TransactionTestCase):
         })
 
         exercise = Exercise.objects.get()
-        self.assertIsInstance(exercise.adapted, SelectWordsAdaptedExercise)
+        self.assertIsInstance(exercise.adapted, SelectThingsAdaptedExercise)
         self.assertEqual(exercise.adapted.colors, 3)
+        self.assertTrue(exercise.adapted.words)
+        self.assertTrue(exercise.adapted.punctuation)
 
     def test_create_fill_with_free_text(self):
         payload = {
@@ -2144,7 +2150,7 @@ class AdaptedExerciseApiTestCase(TestMixin, TransactionTestCase):
         self.assertEqual(exercise.adapted.placeholder, "...")
 
     def test_dont_update_adapted(self):
-        self.exercise.adapted = SelectWordsAdaptedExercise.objects.create(colors=3)
+        self.exercise.adapted = SelectThingsAdaptedExercise.objects.create(colors=3, words=True, punctuation=True)
         self.exercise.save()
         payload = {
             "data": {
@@ -2171,17 +2177,17 @@ class AdaptedExerciseApiTestCase(TestMixin, TransactionTestCase):
                     "project": {"data": {"id": "1", "type": "project"}},
                     "extractionEvents": {"data": [], "meta": {"count": 0}},
                     "textbook": {"data": None},
-                    "adapted": {"data": {"type": "selectWords", "id": "1"}},
+                    "adapted": {"data": {"type": "selectThings", "id": "1"}},
                 },
             },
         })
 
-        self.assertEqual(SelectWordsAdaptedExercise.objects.count(), 1)
+        self.assertEqual(SelectThingsAdaptedExercise.objects.count(), 1)
         exercise = Exercise.objects.get()
-        self.assertEqual(exercise.adapted, SelectWordsAdaptedExercise.objects.get())
+        self.assertEqual(exercise.adapted, SelectThingsAdaptedExercise.objects.get())
 
     def test_update_adapted__none(self):
-        self.exercise.adapted = SelectWordsAdaptedExercise.objects.create(colors=3)
+        self.exercise.adapted = SelectThingsAdaptedExercise.objects.create(colors=3, words=True, punctuation=True)
         self.exercise.save()
 
         payload = {
@@ -2217,10 +2223,10 @@ class AdaptedExerciseApiTestCase(TestMixin, TransactionTestCase):
         exercise = Exercise.objects.get()
         self.assertIsNone(exercise.adapted)
 
-        self.assertEqual(SelectWordsAdaptedExercise.objects.count(), 0)
+        self.assertEqual(SelectThingsAdaptedExercise.objects.count(), 0)
 
     def test_update_adapted__other_type(self):
-        self.exercise.adapted = SelectWordsAdaptedExercise.objects.create(colors=3)
+        self.exercise.adapted = SelectThingsAdaptedExercise.objects.create(colors=3, words=True, punctuation=True)
         self.exercise.save()
 
         payload = {
@@ -2254,4 +2260,4 @@ class AdaptedExerciseApiTestCase(TestMixin, TransactionTestCase):
         self.assertIsInstance(exercise.adapted, FillWithFreeTextAdaptedExercise)
         self.assertEqual(exercise.adapted.placeholder, "...")
 
-        self.assertEqual(SelectWordsAdaptedExercise.objects.count(), 0)
+        self.assertEqual(SelectThingsAdaptedExercise.objects.count(), 0)

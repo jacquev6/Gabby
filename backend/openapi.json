@@ -358,7 +358,7 @@
         "title": "Paragraph",
         "type": "object"
       },
-      "PlainWord": {
+      "PlainText": {
         "additionalProperties": false,
         "properties": {
           "text": {
@@ -366,9 +366,9 @@
             "type": "string"
           },
           "type": {
-            "const": "plainWord",
+            "const": "plainText",
             "enum": [
-              "plainWord"
+              "plainText"
             ],
             "title": "Type",
             "type": "string"
@@ -378,7 +378,7 @@
           "type",
           "text"
         ],
-        "title": "PlainWord",
+        "title": "PlainText",
         "type": "object"
       },
       "Point": {
@@ -397,29 +397,6 @@
           "y"
         ],
         "title": "Point",
-        "type": "object"
-      },
-      "Punctuation": {
-        "additionalProperties": false,
-        "properties": {
-          "text": {
-            "title": "Text",
-            "type": "string"
-          },
-          "type": {
-            "const": "punctuation",
-            "enum": [
-              "punctuation"
-            ],
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "text"
-        ],
-        "title": "Punctuation",
         "type": "object"
       },
       "Rectangle": {
@@ -455,20 +432,30 @@
         "title": "Section",
         "type": "object"
       },
-      "SelectWordsOptionsModel": {
+      "SelectThingsOptionsModel": {
         "properties": {
           "colors": {
             "title": "Colors",
             "type": "integer"
+          },
+          "punctuation": {
+            "title": "Punctuation",
+            "type": "boolean"
+          },
+          "words": {
+            "title": "Words",
+            "type": "boolean"
           }
         },
         "required": [
-          "colors"
+          "colors",
+          "words",
+          "punctuation"
         ],
-        "title": "SelectWordsOptionsModel",
+        "title": "SelectThingsOptionsModel",
         "type": "object"
       },
-      "SelectableWord": {
+      "SelectableText": {
         "additionalProperties": false,
         "properties": {
           "colors": {
@@ -480,9 +467,9 @@
             "type": "string"
           },
           "type": {
-            "const": "selectableWord",
+            "const": "selectableText",
             "enum": [
-              "selectableWord"
+              "selectableText"
             ],
             "title": "Type",
             "type": "string"
@@ -493,7 +480,7 @@
           "text",
           "colors"
         ],
-        "title": "SelectableWord",
+        "title": "SelectableText",
         "type": "object"
       },
       "Sentence": {
@@ -503,19 +490,16 @@
             "items": {
               "anyOf": [
                 {
-                  "$ref": "#/components/schemas/PlainWord"
+                  "$ref": "#/components/schemas/PlainText"
                 },
                 {
-                  "$ref": "#/components/schemas/SelectableWord"
+                  "$ref": "#/components/schemas/SelectableText"
                 },
                 {
                   "$ref": "#/components/schemas/FreeTextInput"
                 },
                 {
                   "$ref": "#/components/schemas/Whitespace"
-                },
-                {
-                  "$ref": "#/components/schemas/Punctuation"
                 }
               ]
             },
@@ -663,7 +647,7 @@
           "options": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/SelectWordsOptionsModel"
+                "$ref": "#/components/schemas/SelectThingsOptionsModel"
               },
               {
                 "$ref": "#/components/schemas/FillWithFreeTextOptionsModel"
@@ -2895,27 +2879,27 @@
         "title": "section-UpdateInput-Data-Relationships",
         "type": "object"
       },
-      "selectWords-CreateInput": {
+      "selectThings-CreateInput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/selectWords-CreateInput-Data"
+            "$ref": "#/components/schemas/selectThings-CreateInput-Data"
           }
         },
         "required": [
           "data"
         ],
-        "title": "selectWords-CreateInput",
+        "title": "selectThings-CreateInput",
         "type": "object"
       },
-      "selectWords-CreateInput-Data": {
+      "selectThings-CreateInput-Data": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "$ref": "#/components/schemas/selectWords-CreateInput-Data-Attributes"
+            "$ref": "#/components/schemas/selectThings-CreateInput-Data-Attributes"
           },
           "relationships": {
-            "$ref": "#/components/schemas/selectWords-CreateInput-Data-Relationships"
+            "$ref": "#/components/schemas/selectThings-CreateInput-Data-Relationships"
           },
           "type": {
             "title": "Type",
@@ -2927,24 +2911,34 @@
           "attributes",
           "relationships"
         ],
-        "title": "selectWords-CreateInput-Data",
+        "title": "selectThings-CreateInput-Data",
         "type": "object"
       },
-      "selectWords-CreateInput-Data-Attributes": {
+      "selectThings-CreateInput-Data-Attributes": {
         "additionalProperties": false,
         "properties": {
           "colors": {
             "title": "Colors",
             "type": "integer"
+          },
+          "punctuation": {
+            "title": "Punctuation",
+            "type": "boolean"
+          },
+          "words": {
+            "title": "Words",
+            "type": "boolean"
           }
         },
         "required": [
-          "colors"
+          "colors",
+          "words",
+          "punctuation"
         ],
-        "title": "selectWords-CreateInput-Data-Attributes",
+        "title": "selectThings-CreateInput-Data-Attributes",
         "type": "object"
       },
-      "selectWords-CreateInput-Data-Relationships": {
+      "selectThings-CreateInput-Data-Relationships": {
         "additionalProperties": false,
         "properties": {
           "exercise": {
@@ -2954,14 +2948,14 @@
         "required": [
           "exercise"
         ],
-        "title": "selectWords-CreateInput-Data-Relationships",
+        "title": "selectThings-CreateInput-Data-Relationships",
         "type": "object"
       },
-      "selectWords-ItemOutput": {
+      "selectThings-ItemOutput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/selectWords-OutputItem"
+            "$ref": "#/components/schemas/selectThings-OutputItem"
           },
           "included": {
             "items": {},
@@ -2972,14 +2966,14 @@
         "required": [
           "data"
         ],
-        "title": "selectWords-ItemOutput",
+        "title": "selectThings-ItemOutput",
         "type": "object"
       },
-      "selectWords-OutputItem": {
+      "selectThings-OutputItem": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "$ref": "#/components/schemas/selectWords-OutputItem-Attributes"
+            "$ref": "#/components/schemas/selectThings-OutputItem-Attributes"
           },
           "id": {
             "title": "Id",
@@ -2989,7 +2983,7 @@
             "$ref": "#/components/schemas/ItemLinksModel"
           },
           "relationships": {
-            "$ref": "#/components/schemas/selectWords-OutputItem-Relationships"
+            "$ref": "#/components/schemas/selectThings-OutputItem-Relationships"
           },
           "type": {
             "title": "Type",
@@ -3003,24 +2997,34 @@
           "attributes",
           "relationships"
         ],
-        "title": "selectWords-OutputItem",
+        "title": "selectThings-OutputItem",
         "type": "object"
       },
-      "selectWords-OutputItem-Attributes": {
+      "selectThings-OutputItem-Attributes": {
         "additionalProperties": false,
         "properties": {
           "colors": {
             "title": "Colors",
             "type": "integer"
+          },
+          "punctuation": {
+            "title": "Punctuation",
+            "type": "boolean"
+          },
+          "words": {
+            "title": "Words",
+            "type": "boolean"
           }
         },
         "required": [
-          "colors"
+          "colors",
+          "words",
+          "punctuation"
         ],
-        "title": "selectWords-OutputItem-Attributes",
+        "title": "selectThings-OutputItem-Attributes",
         "type": "object"
       },
-      "selectWords-OutputItem-Relationships": {
+      "selectThings-OutputItem-Relationships": {
         "additionalProperties": false,
         "properties": {
           "exercise": {
@@ -3030,29 +3034,29 @@
         "required": [
           "exercise"
         ],
-        "title": "selectWords-OutputItem-Relationships",
+        "title": "selectThings-OutputItem-Relationships",
         "type": "object"
       },
-      "selectWords-UpdateInput": {
+      "selectThings-UpdateInput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/selectWords-UpdateInput-Data"
+            "$ref": "#/components/schemas/selectThings-UpdateInput-Data"
           }
         },
         "required": [
           "data"
         ],
-        "title": "selectWords-UpdateInput",
+        "title": "selectThings-UpdateInput",
         "type": "object"
       },
-      "selectWords-UpdateInput-Data": {
+      "selectThings-UpdateInput-Data": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/selectWords-UpdateInput-Data-Attributes"
+                "$ref": "#/components/schemas/selectThings-UpdateInput-Data-Attributes"
               }
             ],
             "default": {}
@@ -3064,7 +3068,7 @@
           "relationships": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/selectWords-UpdateInput-Data-Relationships"
+                "$ref": "#/components/schemas/selectThings-UpdateInput-Data-Relationships"
               }
             ],
             "default": {}
@@ -3078,24 +3082,32 @@
           "type",
           "id"
         ],
-        "title": "selectWords-UpdateInput-Data",
+        "title": "selectThings-UpdateInput-Data",
         "type": "object"
       },
-      "selectWords-UpdateInput-Data-Attributes": {
+      "selectThings-UpdateInput-Data-Attributes": {
         "additionalProperties": false,
         "properties": {
           "colors": {
             "title": "Colors",
             "type": "integer"
+          },
+          "punctuation": {
+            "title": "Punctuation",
+            "type": "boolean"
+          },
+          "words": {
+            "title": "Words",
+            "type": "boolean"
           }
         },
-        "title": "selectWords-UpdateInput-Data-Attributes",
+        "title": "selectThings-UpdateInput-Data-Attributes",
         "type": "object"
       },
-      "selectWords-UpdateInput-Data-Relationships": {
+      "selectThings-UpdateInput-Data-Relationships": {
         "additionalProperties": false,
         "properties": {},
-        "title": "selectWords-UpdateInput-Data-Relationships",
+        "title": "selectThings-UpdateInput-Data-Relationships",
         "type": "object"
       },
       "textbook-CreateInput": {
@@ -5659,9 +5671,9 @@
         "summary": "Update Section"
       }
     },
-    "/api/selectWordss": {
+    "/api/selectThingss": {
       "post": {
-        "operationId": "create_select_words_api_selectWordss_post",
+        "operationId": "create_select_things_api_selectThingss_post",
         "parameters": [
           {
             "in": "query",
@@ -5677,7 +5689,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/selectWords-CreateInput"
+                "$ref": "#/components/schemas/selectThings-CreateInput"
               }
             }
           },
@@ -5688,7 +5700,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/selectWords-ItemOutput"
+                  "$ref": "#/components/schemas/selectThings-ItemOutput"
                 }
               }
             },
@@ -5705,12 +5717,12 @@
             "description": "Validation Error"
           }
         },
-        "summary": "Create Select Words"
+        "summary": "Create Select Things"
       }
     },
-    "/api/selectWordss/{id}": {
+    "/api/selectThingss/{id}": {
       "delete": {
-        "operationId": "delete_select_words_api_selectWordss__id__delete",
+        "operationId": "delete_select_things_api_selectThingss__id__delete",
         "parameters": [
           {
             "in": "path",
@@ -5737,10 +5749,10 @@
             "description": "Validation Error"
           }
         },
-        "summary": "Delete Select Words"
+        "summary": "Delete Select Things"
       },
       "get": {
-        "operationId": "get_select_words_api_selectWordss__id__get",
+        "operationId": "get_select_things_api_selectThingss__id__get",
         "parameters": [
           {
             "in": "path",
@@ -5766,7 +5778,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/selectWords-ItemOutput"
+                  "$ref": "#/components/schemas/selectThings-ItemOutput"
                 }
               }
             },
@@ -5783,10 +5795,10 @@
             "description": "Validation Error"
           }
         },
-        "summary": "Get Select Words"
+        "summary": "Get Select Things"
       },
       "patch": {
-        "operationId": "update_select_words_api_selectWordss__id__patch",
+        "operationId": "update_select_things_api_selectThingss__id__patch",
         "parameters": [
           {
             "in": "path",
@@ -5811,7 +5823,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/selectWords-UpdateInput"
+                "$ref": "#/components/schemas/selectThings-UpdateInput"
               }
             }
           },
@@ -5822,7 +5834,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/selectWords-ItemOutput"
+                  "$ref": "#/components/schemas/selectThings-ItemOutput"
                 }
               }
             },
@@ -5839,7 +5851,7 @@
             "description": "Validation Error"
           }
         },
-        "summary": "Update Select Words"
+        "summary": "Update Select Things"
       }
     },
     "/api/textbooks": {

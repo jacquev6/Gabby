@@ -45,7 +45,7 @@
   "noExercisesForNow": "Aucun exercice pour le moment.",
   "independentExercises": "Exercices indépendants",
   "exerciseType": "Type",
-  "selectWords": "Selection de mots",
+  "selectThings": "Selection de mots",
   "fillWithFreeText": "Remplissage par text libre",
 
 
@@ -79,6 +79,7 @@
   "wording": "Énoncé",
 
   "colorsCount": "Nombre de couleurs",
+  "includePunctuation": "Sélectionner aussi la ponctuation",
   "placeholderText": "Trou à remplir",
 
   "tools": "Outils",

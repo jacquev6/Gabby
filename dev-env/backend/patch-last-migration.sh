@@ -10,8 +10,8 @@ docker compose exec backend-shell ./manage.py migrate
 docker compose exec backend-shell ./manage.py migrate textbooks zero
 docker compose exec backend-shell ./manage.py migrate opinion_ping zero
 
-rm -f ../../backend/textbooks/migrations/0004_*.{py,sql}
-rm -f ../../backend/opinion_ping/migrations/0002_*.{py,sql}
+# rm -f ../../backend/textbooks/migrations/0005_*.{py,sql}
+# rm -f ../../backend/opinion_ping/migrations/0003_*.{py,sql}
 
 docker compose exec backend-shell ./manage.py makemigrations
 docker compose exec backend-shell ./manage.py migrate
