@@ -179,7 +179,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
     cy.get('p:contains("Clue")').click()
     cy.focused().type('The clue')
 
-    cy.frameLoaded({url: 'not-adapted'})
+    cy.frameLoaded({url: 'lectionnez'})
     cy.iframe().find('p:contains("Sélectionnez un type d\'exercice.")').should('exist')
 
     cy.get('label:contains("Type")').next().select('selectThings')

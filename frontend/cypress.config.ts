@@ -1,7 +1,7 @@
 import { defineConfig } from 'cypress'
 
 
-module.exports = defineConfig({
+export default defineConfig({
   e2e: {
     baseUrl: 'http://fanout:8080/',
     specPattern: '../tests/**/*.{cy,spec}.{js,jsx,ts,tsx}',
@@ -28,4 +28,6 @@ module.exports = defineConfig({
       bundler: 'vite',
     },
   },
+  // Allow accessing iframes with src set to a Data URL
+  chromeWebSecurity: false,
 })

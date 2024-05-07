@@ -331,10 +331,10 @@ const adaptationUrl = computedAsync(
         return `/adapted?preview&data=${JSON.stringify(data)}#/exercise/p`
       } catch (e) {
         console.error(e)
-        return `/adapted?data=null#/error`
+        return `data:text/html;charset=utf-8,${encodeURIComponent('<!DOCTYPE html><html><body><p>Erreur</p></body></html>')}`
       }
     } else {
-      return `/adapted?data=null#/not-adapted`
+      return `data:text/html;charset=utf-8,${encodeURIComponent('<!DOCTYPE html><html><body><p>Sélectionnez un type d\'exercice.</p></body></html>')}`
     }
   },
   null,
