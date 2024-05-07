@@ -258,6 +258,10 @@
       "SelectableWord": {
         "additionalProperties": false,
         "properties": {
+          "colors": {
+            "title": "Colors",
+            "type": "integer"
+          },
           "text": {
             "title": "Text",
             "type": "string"
@@ -273,7 +277,8 @@
         },
         "required": [
           "type",
-          "text"
+          "text",
+          "colors"
         ],
         "title": "SelectableWord",
         "type": "object"

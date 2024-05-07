@@ -28,7 +28,7 @@ const section = computed(() => settings.tricolorWording ? TricolorSection : Mono
         <input type="text" />
       </template>
       <template v-else-if="token.type === 'selectableWord'">
-        <SelectableWord :colors="1">{{ token.text }}</SelectableWord>
+        <SelectableWord :colors="token.colors">{{ token.text }}</SelectableWord>
       </template>
       <template v-else>
         <span>{{ ((t: never) => t)(token) }}</span>

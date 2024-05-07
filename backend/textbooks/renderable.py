@@ -14,6 +14,7 @@ class PlainWord(BaseModel):
 class SelectableWord(BaseModel):
     type: Literal["selectableWord"]
     text: str
+    colors: int
 
 class FreeTextInput(BaseModel):
     type: Literal["freeTextInput"]

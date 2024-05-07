@@ -181,7 +181,7 @@ class SelectWordsAdaptedExercise(AdaptedExercise):
         # @todo Use type checking to ensure all cases are covered
         match token:
             case parsing.WordToken(text=text):
-                return renderable.SelectableWord(type="selectableWord", text=text)
+                return renderable.SelectableWord(type="selectableWord", text=text, colors=self.colors)
             case parsing.WhitespaceToken(text=text):
                 return renderable.Whitespace(type="whitespace")
             case parsing.PunctuationToken(text=text):

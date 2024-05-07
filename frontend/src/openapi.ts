@@ -338,6 +338,8 @@ export interface components {
     };
     /** SelectableWord */
     SelectableWord: {
+      /** Colors */
+      colors: number;
       /** Text */
       text: string;
       /**
