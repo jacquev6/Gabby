@@ -1,6 +1,41 @@
 {
   "components": {
     "schemas": {
+      "AdaptedExercise": {
+        "additionalProperties": false,
+        "properties": {
+          "instructions": {
+            "title": "Instructions",
+            "type": "string"
+          },
+          "number": {
+            "title": "Number",
+            "type": "string"
+          },
+          "textbook_page": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Textbook Page"
+          },
+          "wording": {
+            "$ref": "#/components/schemas/Section"
+          }
+        },
+        "required": [
+          "number",
+          "textbook_page",
+          "instructions",
+          "wording"
+        ],
+        "title": "AdaptedExercise",
+        "type": "object"
+      },
       "Body_login_api_token_post": {
         "properties": {
           "client_id": {
@@ -82,6 +117,37 @@
           }
         },
         "title": "CreateInputListRelationship",
+        "type": "object"
+      },
+      "FillWithFreeTextOptionsModel": {
+        "properties": {
+          "placeholder": {
+            "title": "Placeholder",
+            "type": "string"
+          }
+        },
+        "required": [
+          "placeholder"
+        ],
+        "title": "FillWithFreeTextOptionsModel",
+        "type": "object"
+      },
+      "FreeTextInput": {
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "const": "freeTextInput",
+            "enum": [
+              "freeTextInput"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type"
+        ],
+        "title": "FreeTextInput",
         "type": "object"
       },
       "HTTPValidationError": {
@@ -275,6 +341,46 @@
         "title": "Pagination",
         "type": "object"
       },
+      "Paragraph": {
+        "additionalProperties": false,
+        "properties": {
+          "sentences": {
+            "items": {
+              "$ref": "#/components/schemas/Sentence"
+            },
+            "title": "Sentences",
+            "type": "array"
+          }
+        },
+        "required": [
+          "sentences"
+        ],
+        "title": "Paragraph",
+        "type": "object"
+      },
+      "PlainWord": {
+        "additionalProperties": false,
+        "properties": {
+          "text": {
+            "title": "Text",
+            "type": "string"
+          },
+          "type": {
+            "const": "plainWord",
+            "enum": [
+              "plainWord"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "text"
+        ],
+        "title": "PlainWord",
+        "type": "object"
+      },
       "Point": {
         "properties": {
           "x": {
@@ -293,6 +399,29 @@
         "title": "Point",
         "type": "object"
       },
+      "Punctuation": {
+        "additionalProperties": false,
+        "properties": {
+          "text": {
+            "title": "Text",
+            "type": "string"
+          },
+          "type": {
+            "const": "punctuation",
+            "enum": [
+              "punctuation"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "text"
+        ],
+        "title": "Punctuation",
+        "type": "object"
+      },
       "Rectangle": {
         "properties": {
           "start": {
@@ -307,6 +436,92 @@
           "stop"
         ],
         "title": "Rectangle",
+        "type": "object"
+      },
+      "Section": {
+        "additionalProperties": false,
+        "properties": {
+          "paragraphs": {
+            "items": {
+              "$ref": "#/components/schemas/Paragraph"
+            },
+            "title": "Paragraphs",
+            "type": "array"
+          }
+        },
+        "required": [
+          "paragraphs"
+        ],
+        "title": "Section",
+        "type": "object"
+      },
+      "SelectWordsOptionsModel": {
+        "properties": {
+          "colors": {
+            "title": "Colors",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "colors"
+        ],
+        "title": "SelectWordsOptionsModel",
+        "type": "object"
+      },
+      "SelectableWord": {
+        "additionalProperties": false,
+        "properties": {
+          "text": {
+            "title": "Text",
+            "type": "string"
+          },
+          "type": {
+            "const": "selectableWord",
+            "enum": [
+              "selectableWord"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "text"
+        ],
+        "title": "SelectableWord",
+        "type": "object"
+      },
+      "Sentence": {
+        "additionalProperties": false,
+        "properties": {
+          "tokens": {
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/PlainWord"
+                },
+                {
+                  "$ref": "#/components/schemas/SelectableWord"
+                },
+                {
+                  "$ref": "#/components/schemas/FreeTextInput"
+                },
+                {
+                  "$ref": "#/components/schemas/Whitespace"
+                },
+                {
+                  "$ref": "#/components/schemas/Punctuation"
+                }
+              ]
+            },
+            "title": "Tokens",
+            "type": "array"
+          }
+        },
+        "required": [
+          "tokens"
+        ],
+        "title": "Sentence",
         "type": "object"
       },
       "UpdateInputListRelationship": {
@@ -370,6 +585,180 @@
           "type"
         ],
         "title": "ValidationError",
+        "type": "object"
+      },
+      "Whitespace": {
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "const": "whitespace",
+            "enum": [
+              "whitespace"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type"
+        ],
+        "title": "Whitespace",
+        "type": "object"
+      },
+      "adaptedExercise-CreateInput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/adaptedExercise-CreateInput-Data"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "adaptedExercise-CreateInput",
+        "type": "object"
+      },
+      "adaptedExercise-CreateInput-Data": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "$ref": "#/components/schemas/adaptedExercise-CreateInput-Data-Attributes"
+          },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/adaptedExercise-CreateInput-Data-Relationships"
+              }
+            ],
+            "default": {}
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "attributes"
+        ],
+        "title": "adaptedExercise-CreateInput-Data",
+        "type": "object"
+      },
+      "adaptedExercise-CreateInput-Data-Attributes": {
+        "additionalProperties": false,
+        "properties": {
+          "instructions": {
+            "title": "Instructions",
+            "type": "string"
+          },
+          "number": {
+            "title": "Number",
+            "type": "string"
+          },
+          "options": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SelectWordsOptionsModel"
+              },
+              {
+                "$ref": "#/components/schemas/FillWithFreeTextOptionsModel"
+              }
+            ],
+            "title": "Options"
+          },
+          "textbookPage": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Textbookpage"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          },
+          "wording": {
+            "title": "Wording",
+            "type": "string"
+          }
+        },
+        "required": [
+          "number",
+          "textbookPage",
+          "instructions",
+          "wording",
+          "type",
+          "options"
+        ],
+        "title": "adaptedExercise-CreateInput-Data-Attributes",
+        "type": "object"
+      },
+      "adaptedExercise-CreateInput-Data-Relationships": {
+        "additionalProperties": false,
+        "properties": {},
+        "title": "adaptedExercise-CreateInput-Data-Relationships",
+        "type": "object"
+      },
+      "adaptedExercise-ItemOutput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/adaptedExercise-OutputItem"
+          },
+          "included": {
+            "items": {},
+            "title": "Included",
+            "type": "array"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "adaptedExercise-ItemOutput",
+        "type": "object"
+      },
+      "adaptedExercise-OutputItem": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "$ref": "#/components/schemas/adaptedExercise-OutputItem-Attributes"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "links": {
+            "$ref": "#/components/schemas/ItemLinksModel"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "links",
+          "attributes"
+        ],
+        "title": "adaptedExercise-OutputItem",
+        "type": "object"
+      },
+      "adaptedExercise-OutputItem-Attributes": {
+        "additionalProperties": false,
+        "properties": {
+          "adapted": {
+            "$ref": "#/components/schemas/AdaptedExercise"
+          }
+        },
+        "required": [
+          "adapted"
+        ],
+        "title": "adaptedExercise-OutputItem-Attributes",
         "type": "object"
       },
       "exercise-CreateInput": {
@@ -3066,6 +3455,103 @@
   },
   "openapi": "3.1.0",
   "paths": {
+    "/api/adaptedExercises": {
+      "post": {
+        "operationId": "create_adapted_exercise_api_adaptedExercises_post",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/adaptedExercise-CreateInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/adaptedExercise-ItemOutput"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Adapted Exercise"
+      }
+    },
+    "/api/adaptedExercises/{id}": {
+      "get": {
+        "operationId": "get_adapted_exercise_api_adaptedExercises__id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/adaptedExercise-ItemOutput"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Adapted Exercise"
+      }
+    },
     "/api/batch": {
       "post": {
         "operationId": "batch_api_batch_post",

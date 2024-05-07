@@ -3,7 +3,7 @@ import _ from 'lodash'
 
 
 interface GenericAttributes {
-  [key: string]: any/*Type depends on actual server API*/
+  [key: string]: any/* Type depends on actual server API. @todo Use 'unknown' instead. */
 }
 
 interface ItemId {
@@ -172,7 +172,7 @@ export function defineApiStore(name: string, options?: {baseUrl?: string}) {
         item.exists = true
         item.attributes = attributes
         item._relationships = relationships
-        for (const relationship of Object.values(relationships)) {
+        for (const relationship of Object.values(relationships ?? {})) {
           if (Array.isArray(relationship.data)) {
             for (const relation of relationship.data) {
               this.getOne(relation.type, relation.id).exists = true

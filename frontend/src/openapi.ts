@@ -5,6 +5,14 @@
 
 
 export interface paths {
+  "/api/adaptedExercises": {
+    /** Create Adapted Exercise */
+    post: operations["create_adapted_exercise_api_adaptedExercises_post"];
+  };
+  "/api/adaptedExercises/{id}": {
+    /** Get Adapted Exercise */
+    get: operations["get_adapted_exercise_api_adaptedExercises__id__get"];
+  };
   "/api/batch": {
     /** Batch */
     post: operations["batch_api_batch_post"];
@@ -167,6 +175,16 @@ export type webhooks = Record<string, never>;
 
 export interface components {
   schemas: {
+    /** AdaptedExercise */
+    AdaptedExercise: {
+      /** Instructions */
+      instructions: string;
+      /** Number */
+      number: string;
+      /** Textbook Page */
+      textbook_page: number | null;
+      wording: components["schemas"]["Section"];
+    };
     /** Body_login_api_token_post */
     Body_login_api_token_post: {
       /** Client Id */
@@ -194,6 +212,20 @@ export interface components {
        * @default []
        */
       data?: components["schemas"]["ObjectId"][];
+    };
+    /** FillWithFreeTextOptionsModel */
+    FillWithFreeTextOptionsModel: {
+      /** Placeholder */
+      placeholder: string;
+    };
+    /** FreeTextInput */
+    FreeTextInput: {
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "freeTextInput";
     };
     /** HTTPValidationError */
     HTTPValidationError: {
@@ -255,6 +287,22 @@ export interface components {
       /** Pages */
       pages: number;
     };
+    /** Paragraph */
+    Paragraph: {
+      /** Sentences */
+      sentences: components["schemas"]["Sentence"][];
+    };
+    /** PlainWord */
+    PlainWord: {
+      /** Text */
+      text: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "plainWord";
+    };
     /** Point */
     Point: {
       /** X */
@@ -262,10 +310,47 @@ export interface components {
       /** Y */
       y: number;
     };
+    /** Punctuation */
+    Punctuation: {
+      /** Text */
+      text: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "punctuation";
+    };
     /** Rectangle */
     Rectangle: {
       start: components["schemas"]["Point"];
       stop: components["schemas"]["Point"];
+    };
+    /** Section */
+    Section: {
+      /** Paragraphs */
+      paragraphs: components["schemas"]["Paragraph"][];
+    };
+    /** SelectWordsOptionsModel */
+    SelectWordsOptionsModel: {
+      /** Colors */
+      colors: number;
+    };
+    /** SelectableWord */
+    SelectableWord: {
+      /** Text */
+      text: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "selectableWord";
+    };
+    /** Sentence */
+    Sentence: {
+      /** Tokens */
+      tokens: (components["schemas"]["PlainWord"] | components["schemas"]["SelectableWord"] | components["schemas"]["FreeTextInput"] | components["schemas"]["Whitespace"] | components["schemas"]["Punctuation"])[];
     };
     /** UpdateInputListRelationship */
     UpdateInputListRelationship: {
@@ -285,6 +370,63 @@ export interface components {
       msg: string;
       /** Error Type */
       type: string;
+    };
+    /** Whitespace */
+    Whitespace: {
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "whitespace";
+    };
+    /** adaptedExercise-CreateInput */
+    "adaptedExercise-CreateInput": {
+      data: components["schemas"]["adaptedExercise-CreateInput-Data"];
+    };
+    /** adaptedExercise-CreateInput-Data */
+    "adaptedExercise-CreateInput-Data": {
+      attributes: components["schemas"]["adaptedExercise-CreateInput-Data-Attributes"];
+      /** @default {} */
+      relationships?: components["schemas"]["adaptedExercise-CreateInput-Data-Relationships"];
+      /** Type */
+      type: string;
+    };
+    /** adaptedExercise-CreateInput-Data-Attributes */
+    "adaptedExercise-CreateInput-Data-Attributes": {
+      /** Instructions */
+      instructions: string;
+      /** Number */
+      number: string;
+      /** Options */
+      options: components["schemas"]["SelectWordsOptionsModel"] | components["schemas"]["FillWithFreeTextOptionsModel"];
+      /** Textbookpage */
+      textbookPage: number | null;
+      /** Type */
+      type: string;
+      /** Wording */
+      wording: string;
+    };
+    /** adaptedExercise-CreateInput-Data-Relationships */
+    "adaptedExercise-CreateInput-Data-Relationships": Record<string, never>;
+    /** adaptedExercise-ItemOutput */
+    "adaptedExercise-ItemOutput": {
+      data: components["schemas"]["adaptedExercise-OutputItem"];
+      /** Included */
+      included?: unknown[];
+    };
+    /** adaptedExercise-OutputItem */
+    "adaptedExercise-OutputItem": {
+      attributes: components["schemas"]["adaptedExercise-OutputItem-Attributes"];
+      /** Id */
+      id: string;
+      links: components["schemas"]["ItemLinksModel"];
+      /** Type */
+      type: string;
+    };
+    /** adaptedExercise-OutputItem-Attributes */
+    "adaptedExercise-OutputItem-Attributes": {
+      adapted: components["schemas"]["AdaptedExercise"];
     };
     /** exercise-CreateInput */
     "exercise-CreateInput": {
@@ -1166,6 +1308,58 @@ export type external = Record<string, never>;
 
 export interface operations {
 
+  /** Create Adapted Exercise */
+  create_adapted_exercise_api_adaptedExercises_post: {
+    parameters: {
+      query?: {
+        include?: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["adaptedExercise-CreateInput"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        content: {
+          "application/vnd.api+json": components["schemas"]["adaptedExercise-ItemOutput"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  /** Get Adapted Exercise */
+  get_adapted_exercise_api_adaptedExercises__id__get: {
+    parameters: {
+      query?: {
+        include?: string;
+      };
+      path: {
+        id: string;
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        content: {
+          "application/vnd.api+json": components["schemas"]["adaptedExercise-ItemOutput"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
   /** Batch */
   batch_api_batch_post: {
     requestBody: {

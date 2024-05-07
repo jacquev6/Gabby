@@ -131,7 +131,9 @@ describe('Gabby', () => {
     cy.get('[data-cy="apply-replace"]').should('be.visible')
     cy.get('@container').its('scrollTop').should('be.gt', 0)
 
-    cy.get('label:contains("Instructions")').next().type('Hello, world!')
+    cy.get('label:contains("Type")').next().select('selectWords')
+    cy.get('label:contains("Wording")').next().type('This is a quite long wording to ensure a scrollbar appears.')
+    cy.get('label:contains("Instructions")').next().type('Hello')
     cy.frameLoaded({url: 'Hello'})
     // The 'iframe' has a vertical scrollbar but I don't know how to 'expect' it
     cy.get('[data-cy="right-col-2"]').its('0').should(haveNoScrollbar)

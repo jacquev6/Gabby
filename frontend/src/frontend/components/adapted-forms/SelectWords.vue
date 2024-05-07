@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
-
 import { BLabeledInput } from '../opinion/bootstrap'
 
 
-const model = defineModel<any/* @todo Type */>({required: true})
-
-onMounted(() => {
-  model.value.colors ??= 1
+const model = defineModel<{
+  colors: number,
+}>({
+  required: true,
+  default: {
+    colors: 1,
+  },
 })
 </script>
 

@@ -1,30 +1,22 @@
-export interface NullAdaptation {
-  type: '-',
+import type { components } from '../openapi'
+
+
+export interface Settings {
+  tricolorWording: boolean,
 }
 
-export interface FillWithFreeTextAdaptation {
-  type: 'fillWithFreeText',
-  placeholder: string,
-}
 
-export interface SelectWordsAdaptation {
-  type: 'selectWords',
-  colors: number,
-}
+type schemas = components['schemas']
 
-export interface Exercise<Adaptation> {
-  number: string,
-  textbookPage: number,
-  instructions: string,
-  wording: string,
-  adaptation: Adaptation,
-}
+export type Section = schemas['Section']
+
+export type Exercise = schemas['AdaptedExercise']
 
 export interface Data {
   exercises: {
-    [index: string]:
-      Exercise<NullAdaptation>
-      | Exercise<FillWithFreeTextAdaptation>
-      | Exercise<SelectWordsAdaptation>
+    [index: string]: {
+      id: string,
+      adapted: Exercise,
+    }
   },
 }

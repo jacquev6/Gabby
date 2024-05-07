@@ -50,11 +50,18 @@ const fields = {
   example,
   clue,
 }
-const adaptedType = ref('-')
-const adaptedAttributes = reactive<{[kind: string]: object}>({'-': {}})
-for (const kind of Object.keys(adaptedForms)) {
-  adaptedAttributes[kind] = {}
+
+type AdaptedType = '-' | keyof typeof adaptedForms
+const adaptedType = ref<AdaptedType>('-')
+const adaptedAttributes = reactive<{[key: string]: object}>({})
+function resetAdaptedAttributes() {
+  adaptedType.value = '-'
+  adaptedAttributes['-'] = {}
+  for (const [kind, component] of Object.entries(adaptedForms)) {
+    adaptedAttributes[kind] = Object.assign({}, component.props.modelValue.default)
+  }
 }
+resetAdaptedAttributes()
 
 const alreadyExists = computedAsync(
   async () => {
@@ -108,8 +115,8 @@ watch(
       example.value = props.exercise?.attributes.example ?? ''
       clue.value = props.exercise?.attributes.clue ?? ''
 
-      adaptedType.value = props.exercise?.relationships.adapted?.type ?? '-'
-      adaptedAttributes[adaptedType.value] = props.exercise?.relationships.adapted?.attributes ?? {}
+      adaptedType.value = (props.exercise?.relationships.adapted?.type ?? '-') as AdaptedType
+      Object.assign(adaptedAttributes[adaptedType.value], props.exercise?.relationships.adapted?.attributes)
     }
   },
   {immediate: true},
@@ -196,8 +203,7 @@ function skip() {
   example.value = ''
   clue.value = ''
 
-  adaptedType.value = '-'
-  adaptedAttributes[adaptedType.value] = {}
+  resetAdaptedAttributes()
 }
 
 async function create() {
@@ -243,8 +249,7 @@ async function create() {
   example.value = ''
   clue.value = ''
 
-  adaptedType.value = '-'
-  adaptedAttributes[adaptedType.value] = {}
+  resetAdaptedAttributes()
 
   busy.value = false
 
@@ -304,14 +309,30 @@ async function save() {
   emit('saved')
 }
 
-const adaptationUrl = computed(() => {
-  const data = {exercises: [{
-    instructions: instructions.value,
-    wording: wording.value,
-    adaptation: {type: adaptedType.value, ...adaptedAttributes[adaptedType.value]}
-  }]}
-  return `/adapted?preview&data=${JSON.stringify(data)}#/exercise/0`
-})
+const adaptationUrl = computedAsync(
+  async () => {
+    if (adaptedType.value !== '-') {
+      const attributes = {
+        number: number.value,
+        textbookPage: props.textbookPage,
+        instructions: instructions.value,
+        wording: wording.value,
+        type: adaptedType.value,
+        options: adaptedAttributes[adaptedType.value],
+      }
+      try {
+        const adapted = await api.client.post('adaptedExercise', attributes, {})
+        return `/adapted?preview&data=${JSON.stringify({exercises: [adapted.attributes]})}#/exercise/0`
+      } catch (e) {
+        console.error(e)
+        return `/adapted?data=${JSON.stringify({exercises: []})}#/error`
+      }
+    } else {
+      return `/adapted?data=${JSON.stringify({exercises: []})}#/not-adapted`
+    }
+  },
+  null,
+)
 
 const highlightedRectangles = computed(() => {
   if (boundingRectangle.value) {
@@ -375,8 +396,8 @@ defineExpose({
       </div>
       <component
         v-if="adaptedType !== '-'"
-        :is="(adaptedForms as any/* Un-typeable? */)[adaptedType]"
-        v-model="adaptedAttributes[adaptedType]"
+        :is="adaptedForms[adaptedType]"
+        v-model="adaptedAttributes[adaptedType] as any/*Untypeable?*/"
       />
 
       <div v-if="!editMode && alreadyExists" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8);" class="text-center">

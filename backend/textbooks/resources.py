@@ -1,15 +1,18 @@
 from __future__ import annotations
 from contextlib import contextmanager
+import dataclasses
 from typing import Annotated
+import uuid
 
 from django.core.exceptions import ValidationError
 from fastapi import HTTPException
 from pydantic import BaseModel
 import django.conf
 
+from . import renderable
 from .models import PdfFile, PdfFileNaming, Project, Textbook, Section, Exercise, ExtractionEvent
 from .models import SelectWordsAdaptedExercise, FillWithFreeTextAdaptedExercise
-from fastjsonapi import Computed, Filterable, Constant
+from fastjsonapi import Computed, Filterable, Constant, Secret as WriteOnly
 from fastjsonapi.django import wrap, unwrap
 
 
@@ -456,9 +459,11 @@ class ExtractionEventsResource:
             item.delete()
 
 
-class SelectWordsAdaptedExerciseModel(BaseModel):
-    exercise: Annotated[ExerciseModel, Constant()]
+class SelectWordsOptionsModel(BaseModel):
     colors: int
+
+class SelectWordsAdaptedExerciseModel(SelectWordsOptionsModel):
+    exercise: Annotated[ExerciseModel, Constant()]
 
 class SelectWordsAdaptedExercisesResource:
     singular_name = "select_words"
@@ -498,9 +503,11 @@ class SelectWordsAdaptedExercisesResource:
             item.delete()
 
 
-class FillWithFreeTextAdaptedExerciseModel(BaseModel):
-    exercise: Annotated[ExerciseModel, Constant()]
+class FillWithFreeTextOptionsModel(BaseModel):
     placeholder: str
+
+class FillWithFreeTextAdaptedExerciseModel(FillWithFreeTextOptionsModel):
+    exercise: Annotated[ExerciseModel, Constant()]
 
 class FillWithFreeTextAdaptedExercisesResource:
     singular_name = "fill_with_free_text"
@@ -538,3 +545,55 @@ class FillWithFreeTextAdaptedExercisesResource:
     class ItemDeleter:
         def __call__(self, item):
             item.delete()
+
+
+class AdaptedExerciseModel(BaseModel):
+    number: Annotated[str, WriteOnly()]
+    textbookPage: Annotated[int | None, WriteOnly()]
+    instructions: Annotated[str, WriteOnly()]
+    wording: Annotated[str, WriteOnly()]
+    type: Annotated[str, WriteOnly()]
+    options: Annotated[SelectWordsOptionsModel | FillWithFreeTextOptionsModel, WriteOnly()]
+    adapted: Annotated[renderable.AdaptedExercise, Computed()]
+
+@dataclasses.dataclass
+class AdaptedExerciseItem:
+    id: str
+    adapted: renderable.AdaptedExercise
+
+class AdaptedExerciseResource:
+    singular_name = "adapted_exercise"
+    plural_name = "adapted_exercises"
+
+    Model = AdaptedExerciseModel
+
+    default_page_size = default_page_size
+
+    class ItemCreator:
+        def __call__(self, *, number, textbook_page, instructions, wording, type, options):
+            exercise = Exercise(
+                number=number,
+                textbook_page=textbook_page,
+                instructions=instructions,
+                wording=wording,
+            )
+            if type == "selectWords":
+                adapted = SelectWordsAdaptedExercise(
+                    exercise=exercise,
+                    colors=options.colors,
+                )
+            elif type == "fillWithFreeText":
+                adapted = FillWithFreeTextAdaptedExercise(
+                    exercise=exercise,
+                    placeholder=options.placeholder,
+                )
+            else:
+                raise HTTPException(status_code=400, detail="Unknown type")
+            return AdaptedExerciseItem(
+                id=uuid.uuid4().hex,
+                adapted=adapted.make_adapted(),
+            )
+
+    class ItemGetter:
+        def __call__(self, id):
+            return None

@@ -17,6 +17,7 @@ from opinion_ping.resources import PingsResource
 from textbooks.models import Project, SelectWordsAdaptedExercise, FillWithFreeTextAdaptedExercise
 from textbooks.resources import PdfFilesResource, PdfFileNamingsResource, ProjectsResource, TextbooksResource, SectionsResource, ExercisesResource, ExtractionEventsResource
 from textbooks.resources import SelectWordsAdaptedExercisesResource, FillWithFreeTextAdaptedExercisesResource
+from textbooks.resources import AdaptedExerciseResource
 from textbooks.views import make_extraction_report
 
 
@@ -50,6 +51,7 @@ app.include_router(
             ExtractionEventsResource(),
             SelectWordsAdaptedExercisesResource(),
             FillWithFreeTextAdaptedExercisesResource(),
+            AdaptedExerciseResource(),
         ],
         polymorphism={
             make_wrapper(SelectWordsAdaptedExercise): "select_words",
@@ -73,13 +75,7 @@ def export_project(project_id: int):
     exercises = []
     for exercise in project.exercises.all():
         if exercise.adapted is not None:
-            exercises.append({
-                "number": exercise.number,
-                "textbookPage": exercise.textbook_page,
-                "instructions": exercise.instructions,
-                "wording": exercise.wording,
-                "adaptation": exercise.adapted.make_adaptation_dict(),
-            })
+            exercises.append(dict(id=exercise.id, adapted=exercise.adapted.make_adapted().model_dump()))
     data = json.dumps({
         "exercises": exercises,
     }).replace("\\", "\\\\").replace('"', "\\\"")

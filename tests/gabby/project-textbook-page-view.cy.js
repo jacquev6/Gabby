@@ -179,15 +179,13 @@ describe('Gabby\'s project\'s textbook page view', () => {
     cy.get('p:contains("Clue")').click()
     cy.focused().type('The clue')
 
-    cy.frameLoaded({url: '-'})
-    cy.iframe().find('p:contains("Do the smartest thing ever.")').should('exist')
-    cy.iframe().find('p:contains("Sélectionnez un type d\'exercise.")').should('exist')
-    cy.iframe().find('span:contains("smartest")').should('have.length', 1)
+    cy.frameLoaded({url: 'not-adapted'})
+    cy.iframe().find('p:contains("Sélectionnez un type d\'exercice.")').should('exist')
 
     cy.get('label:contains("Type")').next().select('selectWords')
     cy.get('label:contains("Number of colors")').next().type('{selectAll}2')
 
-    cy.frameLoaded({url: 'selectWords'})
+    cy.frameLoaded({url: ':2'})
     cy.iframe().find('span:contains("artificial")').last().click()
     cy.iframe().find('span:contains("artificial")').last().should('have.css', 'background-color', 'rgb(102, 194, 165)')
     cy.iframe().find('span:contains("artificial")').last().click()

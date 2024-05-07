@@ -2,6 +2,8 @@ from django.core.validators import RegexValidator
 from django.db import models
 from polymorphic.models import PolymorphicModel
 
+from . import parsing
+from . import renderable
 
 # @todo(Feature, later) Add timestamps (created_at, modified_at, etc.) and user ids (created_by, modified_by, etc.) to all models
 
@@ -160,18 +162,65 @@ class ExtractionEvent(models.Model):
 class SelectWordsAdaptedExercise(AdaptedExercise):
     colors = models.IntegerField(null=False)
 
-    def make_adaptation_dict(self):
-        return {
-            "type": "selectWords",
-            "colors": self.colors,
-        }
+    def make_adapted(self):
+        return renderable.AdaptedExercise(
+            number=self.exercise.number,
+            textbook_page=self.exercise.textbook_page,
+            instructions=self.exercise.instructions,
+            wording=renderable.Section(paragraphs=[
+                renderable.Paragraph(sentences=[
+                    renderable.Sentence(tokens=[
+                        self.__adapt_token(token)
+                        for token in parsing.tokenize_text(self.exercise.wording)
+                    ]),
+                ]),
+            ]),
+        )
+
+    def __adapt_token(self, token: parsing.TextToken):
+        # @todo Use type checking to ensure all cases are covered
+        match token:
+            case parsing.WordToken(text=text):
+                return renderable.SelectableWord(type="selectableWord", text=text)
+            case parsing.WhitespaceToken(text=text):
+                return renderable.Whitespace(type="whitespace")
+            case parsing.PunctuationToken(text=text):
+                return renderable.Punctuation(type="punctuation", text=text)
+            case _:
+                raise ValueError(f"Unknown token type: {type(token)}")
 
 
 class FillWithFreeTextAdaptedExercise(AdaptedExercise):
     placeholder = models.CharField(null=False, blank=False, max_length=10)
 
-    def make_adaptation_dict(self):
-        return {
-            "type": "fillWithFreeText",
-            "placeholder": self.placeholder,
-        }
+    def make_adapted(self):
+        parts = self.exercise.wording.split(self.placeholder)
+        tokens = []
+        for i, part in enumerate(parts):
+            for token in parsing.tokenize_text(part):
+                tokens.append(self.__adapt_token(token))
+            if i < len(parts) - 1:
+                tokens.append(renderable.FreeTextInput(type="freeTextInput"))
+
+        return renderable.AdaptedExercise(
+            number=self.exercise.number,
+            textbook_page=self.exercise.textbook_page,
+            instructions=self.exercise.instructions,
+            wording=renderable.Section(paragraphs=[
+                renderable.Paragraph(sentences=[
+                    renderable.Sentence(tokens=tokens),
+                ]),
+            ]),
+        )
+
+    def __adapt_token(self, token: parsing.TextToken):
+        # @todo Use type checking to ensure all cases are covered
+        match token:
+            case parsing.WordToken(text=text):
+                return renderable.PlainWord(type="plainWord", text=text)
+            case parsing.WhitespaceToken(text=text):
+                return renderable.Whitespace(type="whitespace")
+            case parsing.PunctuationToken(text=text):
+                return renderable.Punctuation(type="punctuation", text=text)
+            case _:
+                raise ValueError(f"Unknown token type: {type(token)}")
