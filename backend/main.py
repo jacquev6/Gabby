@@ -72,18 +72,19 @@ jinja2_env = jinja2.Environment(
 @app.get("/api/project-{project_id}.html")
 def export_project(project_id: int):
     project = Project.objects.get(id=project_id)
-    exercises = []
+    exercises = {}
     for exercise in project.exercises.all():
         if exercise.adapted is not None:
-            exercises.append(dict(id=exercise.id, adapted=exercise.adapted.make_adapted().model_dump()))
-    data = json.dumps({
-        "exercises": exercises,
-    }).replace("\\", "\\\\").replace('"', "\\\"")
+            exercises[exercise.id] = exercise.adapted.make_adapted().model_dump()
+    data = json.dumps(dict(
+        projectId=project.id,
+        exercises=exercises,
+    )).replace("\\", "\\\\").replace('"', "\\\"")
     return HTMLResponse(
         content=jinja2_env.get_template("adapted/index.html").render(data=data),
         headers={
             "Content-Type": "text/html",
-            "Content-Disposition": f'attachment; filename="{project.title}.html"',
+            # "Content-Disposition": f'attachment; filename="{project.title}.html"',
         },
     )
 

@@ -12,8 +12,8 @@ defineProps<{
 <template>
   <TricolorLines>
     <MonocolorSection :section>
-      <template v-slot="{ token }">
-        <slot :token></slot>
+      <template v-slot="{ token, tokenIndex }">
+        <slot :token :tokenIndex></slot>
       </template>
     </MonocolorSection>
   </TricolorLines>

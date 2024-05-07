@@ -7,18 +7,18 @@ import Exercise from '../components/Exercise.vue'
 
 
 const props = defineProps<{
-  exerciseIndex: string,
+  exerciseId: string,
 }>()
 
-const data = inject('data') as Data
-const isPreview = inject('isPreview') as boolean
+const data = inject<Data>('data')!
+const isPreview = inject<boolean>('isPreview')!
 
 const exercise = computed(() => {
-  return data.exercises[props.exerciseIndex]
+  return data.exercises[props.exerciseId]
 })
 </script>
 
 <template>
   <p v-if="!isPreview"><router-link :to="{name: 'index'}">Retour</router-link></p>
-  <Exercise :exercise="exercise.adapted" />
+  <Exercise :projectId="data.projectId" :exerciseId :exercise />
 </template>

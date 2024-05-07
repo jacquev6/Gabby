@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 import chroma from 'chroma-js'
 
 
@@ -7,18 +7,18 @@ const props = defineProps<{
   colors: number,
 }>()
 
+const colorIndex = defineModel<number>({default: 0})
+
 const colors = computed(() => chroma.scale('Set2').colors(props.colors))
 
-const color = ref(0)
-
 function increment() {
-  color.value = (color.value + 1) % (props.colors + 1)
+  colorIndex.value = (colorIndex.value + 1) % (props.colors + 1)
 }
 
 const style = computed(() => {
-  if (color) {
+  if (colorIndex) {
     return {
-      background: colors.value[color.value - 1]
+      background: colors.value[colorIndex.value - 1]
     }
   } else {
     return {}

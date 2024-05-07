@@ -13,10 +13,8 @@ export type Section = schemas['Section']
 export type Exercise = schemas['AdaptedExercise']
 
 export interface Data {
+  projectId: string,
   exercises: {
-    [index: string]: {
-      id: string,
-      adapted: Exercise,
-    }
+    [id: string]: Exercise,
   },
 }

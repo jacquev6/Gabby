@@ -8,7 +8,7 @@ import TextSelectionMenu from './ExerciseFormTextSelectionMenu.vue'
 import OptionalTextarea from './OptionalTextarea.vue'
 import { useApiStore } from '../stores/api'
 import adaptedForms from './adapted-forms'
-import type { Project, Textbook, Section, Exercise } from '../types/api'
+import type { Project, Textbook, Section, Exercise, AdaptedExercise } from '../types/api'
 
 
 const props = defineProps<{
@@ -321,14 +321,20 @@ const adaptationUrl = computedAsync(
         options: adaptedAttributes[adaptedType.value],
       }
       try {
-        const adapted = await api.client.post('adaptedExercise', attributes, {})
-        return `/adapted?preview&data=${JSON.stringify({exercises: [adapted.attributes]})}#/exercise/0`
+        const adapted = await api.client.post<AdaptedExercise>('adaptedExercise', attributes, {})
+        const data = {
+          projectId: 'q',
+          exercises: {
+            p: adapted.attributes.adapted,
+          },
+        }
+        return `/adapted?preview&data=${JSON.stringify(data)}#/exercise/p`
       } catch (e) {
         console.error(e)
-        return `/adapted?data=${JSON.stringify({exercises: []})}#/error`
+        return `/adapted?data=null#/error`
       }
     } else {
-      return `/adapted?data=${JSON.stringify({exercises: []})}#/not-adapted`
+      return `/adapted?data=null#/not-adapted`
     }
   },
   null,
