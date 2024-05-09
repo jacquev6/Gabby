@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { inject } from 'vue'
 
-import { type Data } from '../types'
+import { type Data } from '$adapted/types'
 
 
 const data = inject('data') as Data

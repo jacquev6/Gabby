@@ -6,9 +6,9 @@ import { nextTick } from 'vue'
 import { BBusy, BLabeledInput, BLabeledTextarea, BButton, BSelect } from './opinion/bootstrap'
 import TextSelectionMenu from './ExerciseFormTextSelectionMenu.vue'
 import OptionalTextarea from './OptionalTextarea.vue'
-import { useApiStore } from '../stores/api'
+import { useApiStore } from '$frontend/stores/api'
 import adaptedForms from './adapted-forms'
-import type { Project, Textbook, Section, Exercise, AdaptedExercise } from '../types/api'
+import type { Project, Textbook, Section, Exercise, AdaptedExercise } from '$frontend/types/api'
 
 
 const props = defineProps<{

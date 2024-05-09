@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 
-import { BBusy, BLabeledInput, BButton } from '../../../components/opinion/bootstrap'
-import { useApiStore } from '../../../stores/api'
-import { usePdfsStore, type InfoDoc } from '../../../stores/pdfs'
+import { BBusy, BLabeledInput, BButton } from '$frontend/components/opinion/bootstrap'
+import { useApiStore } from '$frontend/stores/api'
+import { usePdfsStore, type InfoDoc } from '$frontend/stores/pdfs'
 
 
 const props = defineProps<{

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-import { BButton } from '../../../components/opinion/bootstrap'
-import ExerciseForm from '../../../components/ExerciseForm.vue'
-import type { Project, Exercise } from '../../../types/api'
+import { BButton } from '$frontend/components/opinion/bootstrap'
+import ExerciseForm from '$frontend/components/ExerciseForm.vue'
+import type { Project, Exercise } from '$frontend/types/api'
 
 
 defineProps<{

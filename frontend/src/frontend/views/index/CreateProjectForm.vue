@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { BButton } from '../../components/opinion/bootstrap'
-import ProjectForm from '../../components/ProjectForm.vue'
+import { BButton } from '$frontend/components/opinion/bootstrap'
+import ProjectForm from '$frontend/components/ProjectForm.vue'
 </script>
 
 <template>

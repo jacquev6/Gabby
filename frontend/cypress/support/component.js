@@ -1,7 +1,7 @@
 import { mount } from 'cypress/vue'
 
 import './commands'
-import { i18n } from '../../src/frontend/locales'
+import { i18n } from '$frontend/locales'
 
 
 Cypress.Commands.add('mount', (component, options) => {

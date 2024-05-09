@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { BLabeledInput, BButton } from '../../../../components/opinion/bootstrap'
+import { BLabeledInput, BButton } from '$frontend/components/opinion/bootstrap'
 </script>
 
 <template>

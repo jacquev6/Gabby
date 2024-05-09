@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 
-import { useApiStore } from '../../stores/api'
+import { useApiStore } from '$frontend/stores/api'
 import { BBusy, BLabeledInput, BButton } from './bootstrap'
-import { type Ping } from '../../types/api'
+import { type Ping } from '$frontend/types/api'
 
 
 const api = useApiStore()

@@ -3,7 +3,7 @@ import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { RouteLocationRaw } from 'vue-router'
 
-import Navbar from '../components/Navbar.vue'
+import Navbar from '$frontend/components/Navbar.vue'
 
 
 const i18n = useI18n()

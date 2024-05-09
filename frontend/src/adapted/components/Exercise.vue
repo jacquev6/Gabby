@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, reactive, watch } from 'vue'
 
-import { BButton } from '../../frontend/components/opinion/bootstrap'
-import type { Settings, Exercise } from '../types'
+import { BButton } from '$frontend/components/opinion/bootstrap'
+import type { Settings, Exercise } from '$adapted/types'
 import SelectableWord from './SelectableWord.vue'
 import TricolorSection from './TricolorSection.vue'
 import MonocolorSection from './MonocolorSection.vue'

@@ -1,5 +1,5 @@
-import type { Item } from '../stores/api'
-import type { components  } from '../../openapi'
+import type { Item } from '$frontend/stores/api'
+import type { components  } from '$/openapi'
 
 
 type schemas = components["schemas"]

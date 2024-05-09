@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-import { BBusy, BLabeledInput } from '../../../../components/opinion/bootstrap'
-import { usePdfsStore } from '../../../../stores/pdfs'
+import { BBusy, BLabeledInput } from '$frontend/components/opinion/bootstrap'
+import { usePdfsStore } from '$frontend/stores/pdfs'
 
 
 defineProps<{

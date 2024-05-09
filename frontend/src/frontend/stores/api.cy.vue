@@ -2,10 +2,10 @@
 import { ref } from 'vue'
 import { computedAsync } from '@vueuse/core'
 
-import Pinger from '../components/opinion/Pinger.vue'
-import { BBusy, BRow, BCol } from '../components/opinion/bootstrap'
+import Pinger from '$frontend/components/opinion/Pinger.vue'
+import { BBusy, BRow, BCol } from '$frontend/components/opinion/bootstrap'
 import { useApiStore } from './api'
-import type { Ping } from '../types/api'
+import type { Ping } from '$frontend/types/api'
 
 
 const api = useApiStore()

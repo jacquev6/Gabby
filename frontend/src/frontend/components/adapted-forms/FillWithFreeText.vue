@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { BLabeledInput } from '../opinion/bootstrap'
-import type { FillWithFreeTextOptions } from '../../types/api'
+import type { FillWithFreeTextOptions } from '$frontend/types/api'
 
 
 const model = defineModel<{

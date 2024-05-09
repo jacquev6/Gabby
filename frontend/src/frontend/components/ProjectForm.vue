@@ -2,8 +2,8 @@
 import { ref, computed, watch } from 'vue'
 
 import { BBusy, BLabeledInput, BLabeledTextarea } from './opinion/bootstrap'
-import { useApiStore } from '../stores/api'
-import type { Project } from '../types/api'
+import { useApiStore } from '$frontend/stores/api'
+import type { Project } from '$frontend/types/api'
 
 
 const props = defineProps<{

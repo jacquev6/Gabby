@@ -2,10 +2,10 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 
-import { useApiStore } from '../../../../../stores/api'
-import { BBusy, BButton } from '../../../../../components/opinion/bootstrap'
+import { useApiStore } from '$frontend/stores/api'
+import { BBusy, BButton } from '$frontend/components/opinion/bootstrap'
 import ExercisesList from './ExercisesList.vue'
-import type { Exercise, Project, Textbook } from '../../../../../types/api'
+import type { Exercise, Project, Textbook } from '$frontend/types/api'
 
 
 const props = defineProps<{

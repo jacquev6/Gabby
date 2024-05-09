@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Exercise } from '../types'
+import type { Exercise } from '$adapted/types'
 
 
 defineProps<{

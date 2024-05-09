@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { usePdfsStore } from '../stores/pdfs'
+import { usePdfsStore } from '$frontend/stores/pdfs'
 
 
 const pdfs = usePdfsStore()

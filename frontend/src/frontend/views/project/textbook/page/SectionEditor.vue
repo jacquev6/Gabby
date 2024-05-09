@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref, computed, type Ref } from 'vue'
 
-import { BBusy, BLabeledInput, BButton, BRow, BCol, BModal } from '../../../../components/opinion/bootstrap'
-import { useApiStore } from '../../../../stores/api'
-import type { Section } from '../../../../types/api'
+import { BBusy, BLabeledInput, BButton, BRow, BCol, BModal } from '$frontend/components/opinion/bootstrap'
+import { useApiStore } from '$frontend/stores/api'
+import type { Section } from '$frontend/types/api'
 
 
 const sectionId = ref<string | null>(null)

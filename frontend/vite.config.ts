@@ -1,3 +1,4 @@
+import { fileURLToPath, URL } from 'node:url'
 import { promises as fs } from 'fs'
 
 import { defineConfig, Plugin } from 'vite'
@@ -49,5 +50,12 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
     optimizeDeps: {esbuildOptions: {target: 'esnext'}},
     esbuild: {supported: {'top-level-await': true}},
     // End of section
+    resolve: {
+      alias: {
+        '$': fileURLToPath(new URL('./src', import.meta.url)),
+        '$adapted': fileURLToPath(new URL('./src/adapted', import.meta.url)),
+        '$frontend': fileURLToPath(new URL('./src/frontend', import.meta.url)),
+      }
+    }
   }
 })

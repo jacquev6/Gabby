@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useApiStore } from '../../stores/api'
-import { BBusy } from '../../components/opinion/bootstrap'
+import { useApiStore } from '$frontend/stores/api'
+import { BBusy } from '$frontend/components/opinion/bootstrap'
 
 
 const api = useApiStore()
