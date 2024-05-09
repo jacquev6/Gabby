@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
+import { onMounted } from 'vue'
 import { useElementSize, watchDebounced } from '@vueuse/core'
 import type { PDFPageProxy, RenderTask } from 'pdfjs-dist/types/src/pdf'
 // @ts-ignore/* Temporary untyped */
@@ -80,8 +81,12 @@ async function draw() {
   }
 }
 
-watch(() => props.page, draw)
-watchDebounced(containerWidth, draw, {debounce: 250})
+onMounted(() => {
+  // @todo Triple-check if we are double-drawing the same thing
+  draw()
+  watch(() => props.page, draw)
+  watchDebounced(containerWidth, draw, {debounce: 250})
+})
 
 defineExpose({width, height, transform})
 </script>
