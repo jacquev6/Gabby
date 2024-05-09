@@ -28,6 +28,4 @@ export default defineConfig({
       bundler: 'vite',
     },
   },
-  // Allow accessing iframes with src set to a Data URL
-  chromeWebSecurity: false,
 })

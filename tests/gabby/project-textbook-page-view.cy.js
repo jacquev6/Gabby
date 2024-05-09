@@ -179,19 +179,17 @@ describe('Gabby\'s project\'s textbook page view', () => {
     cy.get('p:contains("Clue")').click()
     cy.focused().type('The clue')
 
-    cy.frameLoaded({url: 'lectionnez'})
-    cy.iframe().find('p:contains("Sélectionnez un type d\'exercice.")').should('exist')
+    cy.get('p:contains("Select exercise type")').should('exist')
 
     cy.get('label:contains("Type")').next().select('selectThings')
     cy.get('label:contains("Number of colors")').next().type('{selectAll}2')
 
-    cy.frameLoaded({url: ':2'})
-    cy.iframe().find('span:contains("artificial")').last().click()
-    cy.iframe().find('span:contains("artificial")').last().should('have.css', 'background-color', 'rgb(102, 194, 165)')
-    cy.iframe().find('span:contains("artificial")').last().click()
-    cy.iframe().find('span:contains("artificial")').last().should('have.css', 'background-color', 'rgb(179, 179, 179)')
-    cy.iframe().find('span:contains("artificial")').last().click()
-    cy.iframe().find('span:contains("artificial")').last().should('have.css', 'background-color', 'rgba(0, 0, 0, 0)')
+    cy.get('span:contains("artificial")').last().click()
+    cy.get('span:contains("artificial")').last().should('have.css', 'background-color', 'rgb(102, 194, 165)')
+    cy.get('span:contains("artificial")').last().click()
+    cy.get('span:contains("artificial")').last().should('have.css', 'background-color', 'rgb(179, 179, 179)')
+    cy.get('span:contains("artificial")').last().click()
+    cy.get('span:contains("artificial")').last().should('have.css', 'background-color', 'rgba(0, 0, 0, 0)')
 
     cy.get('button:contains("Save")').click()
     cy.get('div.busy').should('not.exist')

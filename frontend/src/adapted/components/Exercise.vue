@@ -8,28 +8,20 @@ import TricolorSection from './TricolorSection.vue'
 import MonocolorSection from './MonocolorSection.vue'
 
 
-const props = withDefaults(
-  defineProps<{
-    projectId: string,
-    exerciseId: string,
-    exercise: Exercise,
-    settings?: Settings,
-    isPreview?: boolean,
-  }>(),
-  {
-    settings: {
-      tricolorWording: true,
-    },
-    isPreview: false,
-  },
-)
+const props = defineProps<{
+  projectId: string,
+  exerciseId: string,
+  exercise: Exercise,
+  settings: Settings,
+  isPreview: boolean,
+}>()
 
 const section = computed(() => props.settings.tricolorWording ? TricolorSection : MonocolorSection)
 
 // @todo Make this key depend on when the exercise (or its adaptation ) was last modified
 const storageKey = computed(() => `exerciseAnswers/project-${props.projectId}/exercise-${props.exerciseId}`)
 
-const models = reactive<{[index: string]: any}>({})
+const models = reactive<{[index: string]: any/* @todo Type */}>({})
 function reinitModels() {
   Object.keys(models).forEach((key: string) => delete models[key]);
 }
@@ -80,5 +72,13 @@ watch(
       </template>
     </template>
   </component>
-  <p><BButton secondary sm @click="reinitModels" :disabled="Object.keys(models).length === 0">Effacer les réponses</BButton></p>
+  <p><BButton
+    data-cy="erase-responses"
+    secondary sm
+    @click="reinitModels"
+    :disabled="Object.keys(models).length === 0"
+  >
+    <!-- @todo Use internationalization -->
+    Effacer les réponses
+  </BButton></p>
 </template>

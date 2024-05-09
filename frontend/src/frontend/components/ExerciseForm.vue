@@ -309,6 +309,7 @@ async function save() {
   emit('saved')
 }
 
+const adaptedDataLoading = ref(false)
 const adaptedData = computedAsync(
   async () => {
     if (adaptedType.value === '-') {
@@ -332,6 +333,7 @@ const adaptedData = computedAsync(
     }
   },
   null,
+  adaptedDataLoading,
 )
 
 const highlightedRectangles = computed(() => {
@@ -386,19 +388,21 @@ defineExpose({
         </div>
       </div>
 
-      <div class="mb-3">
-        <label class="form-label" for="abc">{{ $t('exerciseType') }}</label>
-          <BSelect
-          id="abc"
-          v-model="adaptedType"
-          :options="['-', ...Object.keys(adaptedForms).map(kind => ({value: kind, label: $t(kind)}))]"
+      <BBusy :busy="adaptedDataLoading">
+        <div class="mb-3">
+          <label class="form-label" for="abc">{{ $t('exerciseType') }}</label>
+            <BSelect
+            id="abc"
+            v-model="adaptedType"
+            :options="['-', ...Object.keys(adaptedForms).map(kind => ({value: kind, label: $t(kind)}))]"
+          />
+        </div>
+        <component
+          v-if="adaptedType !== '-'"
+          :is="adaptedForms[adaptedType]"
+          v-model="adaptedAttributes[adaptedType] as any/*Untypeable?*/"
         />
-      </div>
-      <component
-        v-if="adaptedType !== '-'"
-        :is="adaptedForms[adaptedType]"
-        v-model="adaptedAttributes[adaptedType] as any/*Untypeable?*/"
-      />
+      </BBusy>
 
       <div v-if="!editMode && alreadyExists" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8);" class="text-center">
         <div style="position: absolute; left: 25%; top: 25%; width: 50%; height: 50%; background-color: white">

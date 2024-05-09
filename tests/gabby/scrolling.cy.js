@@ -3,7 +3,7 @@ describe('Gabby', () => {
 
   beforeEach(() => {
     cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises,more-test-exercises')
-    cy.viewport(900, 200)
+    cy.viewport(1200, 200)
   })
 
   after(() => {
@@ -134,16 +134,19 @@ describe('Gabby', () => {
     cy.get('label:contains("Type")').next().select('selectThings')
     cy.get('label:contains("Wording")').next().type('This is a quite long wording to ensure a scrollbar appears.')
     cy.get('label:contains("Instructions")').next().type('Hello')
-    cy.frameLoaded({url: 'Hello'})
-    // The 'iframe' has a vertical scrollbar but I don't know how to 'expect' it
-    cy.get('[data-cy="right-col-2"]').its('0').should(haveNoScrollbar)
+
+    cy.get('[data-cy="right-col-2"]').should('have.length', 1).its('0').as('container')
+    cy.get('@container').should(haveVerticalScrollbarOnly)
+    cy.get('@container').its('scrollTop').should('eq', 0)
+    cy.get('[data-cy="erase-responses"]').should('not.be.visible')
+    cy.get('[data-cy="erase-responses"]').scrollIntoView()
+    cy.get('[data-cy="erase-responses"]').should('be.visible')
+    cy.get('@container').its('scrollTop').should('be.gt', 0)
   })
 
   it('scrolls on exercise edition view', () => {
     cy.visit('/project/1/textbook/1/page/7/exercise/7')
     cy.get('.busy').should('not.exist')
-
-    cy.frameLoaded({url: 'propre'})
 
     cy.get('html').its('0').should(haveNoScrollbar)
     cy.get('body').its('0').should(haveNoScrollbar)
@@ -174,7 +177,12 @@ describe('Gabby', () => {
     cy.get('[data-cy="apply-replace"]').should('be.visible')
     cy.get('@container').its('scrollTop').should('be.gt', 0)
 
-    // The 'iframe' has a vertical scrollbar but I don't know how to 'expect' it
-    cy.get('[data-cy="right-col-2"]').its('0').should(haveNoScrollbar)
+    cy.get('[data-cy="right-col-2"]').should('have.length', 1).its('0').as('container')
+    cy.get('@container').should(haveVerticalScrollbarOnly)
+    cy.get('@container').its('scrollTop').should('eq', 0)
+    cy.get('[data-cy="erase-responses"]').should('not.be.visible')
+    cy.get('[data-cy="erase-responses"]').scrollIntoView()
+    cy.get('[data-cy="erase-responses"]').should('be.visible')
+    cy.get('@container').its('scrollTop').should('be.gt', 0)
   })
 })

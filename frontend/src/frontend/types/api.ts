@@ -45,3 +45,6 @@ export type Exercise = Item<schemas["exercise-OutputItem-Attributes"], {
   textbook: Textbook | null
   adapted: Adapted | null
 }>
+
+export type AdaptedExercise = Item<schemas["adaptedExercise-OutputItem-Attributes"], {
+}>
