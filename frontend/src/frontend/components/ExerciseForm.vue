@@ -390,7 +390,7 @@ defineExpose({
 
       <BBusy :busy="adaptedDataLoading">
         <div class="mb-3">
-          <label class="form-label" for="abc">{{ $t('exerciseType') }}</label>
+          <label class="form-label" for="abc">{{ $t('adaptationType') }}</label>
             <BSelect
             id="abc"
             v-model="adaptedType"
