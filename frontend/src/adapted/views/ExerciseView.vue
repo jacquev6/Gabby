@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import { inject } from 'vue'
 
-import { type Data } from '../types'
+import type { Data, Settings } from '../types'
 import Exercise from '../components/Exercise.vue'
 
 
@@ -11,6 +11,7 @@ const props = defineProps<{
 }>()
 
 const data = inject<Data>('data')!
+const settings = inject<Settings>('settings')!
 const isPreview = inject<boolean>('isPreview')!
 
 const exercise = computed(() => {
@@ -20,5 +21,5 @@ const exercise = computed(() => {
 
 <template>
   <p v-if="!isPreview"><router-link :to="{name: 'index'}">Retour</router-link></p>
-  <Exercise :projectId="data.projectId" :exerciseId :exercise />
+  <Exercise :projectId="data.projectId" :exerciseId :exercise :settings :isPreview />
 </template>

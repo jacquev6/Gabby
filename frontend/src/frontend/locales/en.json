@@ -78,6 +78,7 @@
   "example": "Example",
   "clue": "Clue",
   "wording": "Wording",
+  "selectExerciseType": "Select exercise type",
 
   "colorsCount": "Number of colors",
   "includePunctuation": "Also select punctuation",

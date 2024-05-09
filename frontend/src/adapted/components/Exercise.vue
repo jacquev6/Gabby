@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed, reactive, watch } from 'vue'
-import { inject } from 'vue'
 
 import { BButton } from '../../frontend/components/opinion/bootstrap'
 import type { Settings, Exercise } from '../types'
@@ -9,16 +8,23 @@ import TricolorSection from './TricolorSection.vue'
 import MonocolorSection from './MonocolorSection.vue'
 
 
-const props = defineProps<{
-  projectId: string,
-  exerciseId: string,
-  exercise: Exercise,
-}>()
+const props = withDefaults(
+  defineProps<{
+    projectId: string,
+    exerciseId: string,
+    exercise: Exercise,
+    settings?: Settings,
+    isPreview?: boolean,
+  }>(),
+  {
+    settings: {
+      tricolorWording: true,
+    },
+    isPreview: false,
+  },
+)
 
-const settings = inject('settings') as Settings
-const isPreview = inject('isPreview') as boolean
-
-const section = computed(() => settings.tricolorWording ? TricolorSection : MonocolorSection)
+const section = computed(() => props.settings.tricolorWording ? TricolorSection : MonocolorSection)
 
 // @todo Make this key depend on when the exercise (or its adaptation ) was last modified
 const storageKey = computed(() => `exerciseAnswers/project-${props.projectId}/exercise-${props.exerciseId}`)
@@ -30,7 +36,7 @@ function reinitModels() {
 watch(
   models,
   () => {
-    if (!isPreview) {
+    if (!props.isPreview) {
       localStorage.setItem(storageKey.value, JSON.stringify(models))
       console.log('Saved models to', storageKey.value)
     }
@@ -40,7 +46,7 @@ watch(
 watch(
   storageKey,
   () => {
-    if (!isPreview) {
+    if (!props.isPreview) {
       const storedModels = localStorage.getItem(storageKey.value)
       if (storedModels) {
         const parsedStoredModels = JSON.parse(storedModels)

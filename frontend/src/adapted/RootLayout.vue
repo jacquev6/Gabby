@@ -18,13 +18,7 @@ provide('settings', settings)
 </script>
 
 <template>
-  <RouterView />
+  <div class="container-fluid">
+    <RouterView />
+  </div>
 </template>
-
-<style>
-* {
-  font-family: sans-serif;
-  font-size: 20px;
-  line-height: 30px;
-}
-</style>

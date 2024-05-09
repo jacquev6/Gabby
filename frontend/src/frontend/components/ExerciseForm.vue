@@ -309,9 +309,11 @@ async function save() {
   emit('saved')
 }
 
-const adaptationUrl = computedAsync(
+const adaptedData = computedAsync(
   async () => {
-    if (adaptedType.value !== '-') {
+    if (adaptedType.value === '-') {
+      return null
+    } else {
       const attributes = {
         number: number.value,
         textbookPage: props.textbookPage,
@@ -322,19 +324,11 @@ const adaptationUrl = computedAsync(
       }
       try {
         const adapted = await api.client.post<AdaptedExercise>('adaptedExercise', attributes, {})
-        const data = {
-          projectId: 'q',
-          exercises: {
-            p: adapted.attributes.adapted,
-          },
-        }
-        return `/adapted?preview&data=${JSON.stringify(data)}#/exercise/p`
+        return adapted.attributes.adapted
       } catch (e) {
         console.error(e)
-        return `data:text/html;charset=utf-8,${encodeURIComponent('<!DOCTYPE html><html><body><p>Erreur</p></body></html>')}`
+        return null
       }
-    } else {
-      return `data:text/html;charset=utf-8,${encodeURIComponent('<!DOCTYPE html><html><body><p>Sélectionnez un type d\'exercice.</p></body></html>')}`
     }
   },
   null,
@@ -350,7 +344,7 @@ const highlightedRectangles = computed(() => {
 
 defineExpose({
   textSelected: computed(() => !props.editMode && alreadyExists.value ? null : textSelected),
-  adaptationUrl,
+  adaptedData,
   highlightedRectangles,
 })
 </script>

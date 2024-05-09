@@ -7,6 +7,7 @@ import ExerciseForm from '../../../../../components/ExerciseForm.vue'
 import TwoResizableColumns from '../../../../../components/TwoResizableColumns.vue'
 import ExerciseTools from '../ExerciseTools.vue'
 import type { Project, Textbook, Section, Exercise } from '../../../../../types/api'
+import AdaptedExercise from '../../../../../../adapted/components/Exercise.vue'
 
 
 const props = defineProps<{
@@ -74,9 +75,17 @@ defineExpose({
       </div>
     </template>
     <template #right>
-      <div class="h-100 overflow-hidden d-flex flex-column" data-cy="right-col-2">
+      <div class="h-100 overflow-auto" data-cy="right-col-2">
         <h1>{{ $t('adaptation') }}</h1>
-        <iframe class="flex-fill w-100" style="min-height: 0" :src="exerciseForm?.adaptationUrl"></iframe>
+        <AdaptedExercise
+          v-if="exerciseForm?.adaptedData"
+          :projectId="props.project.id"
+          exerciseId="unused @todo Compute storageKey in an independent composable, and let AdaptedExercise load and save iif the key is not null"
+          :exercise="exerciseForm?.adaptedData"
+          :settings="{tricolorWording: true}"
+          :isPreview="true"
+        />
+        <p v-else>{{ $t('selectExerciseType') }}</p>
       </div>
     </template>
   </TwoResizableColumns>
