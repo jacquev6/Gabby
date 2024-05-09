@@ -84,7 +84,7 @@ def export_project(project_id: int):
         content=jinja2_env.get_template("adapted/index.html").render(data=data),
         headers={
             "Content-Type": "text/html",
-            # "Content-Disposition": f'attachment; filename="{project.title}.html"',
+            "Content-Disposition": f'attachment; filename="{project.title}.html"',
         },
     )
 
