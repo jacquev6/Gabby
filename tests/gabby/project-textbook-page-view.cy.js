@@ -179,9 +179,9 @@ describe('Gabby\'s project\'s textbook page view', () => {
     cy.get('p:contains("Clue")').click()
     cy.focused().type('The clue')
 
-    cy.get('p:contains("Select exercise type")').should('exist')
+    cy.get('p:contains("Select adaptation type")').should('exist')
 
-    cy.get('label:contains("Type")').next().select('selectThings')
+    cy.get('label:contains("Adaptation type")').next().select('selectThingsAdaptation')
     cy.get('label:contains("Number of colors")').next().type('{selectAll}2')
 
     cy.get('span:contains("artificial")').last().click()

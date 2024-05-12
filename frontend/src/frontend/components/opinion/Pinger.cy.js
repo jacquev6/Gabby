@@ -1,6 +1,6 @@
 import { setActivePinia, createPinia } from 'pinia'
 
-import { defineApiStore } from '../../stores/api'
+import { defineApiStore } from '$frontend/stores/api'
 import Pinger from './Pinger.vue'
 
 

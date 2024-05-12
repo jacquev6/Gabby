@@ -2,16 +2,16 @@
 import { ref, computed } from 'vue'
 import { computedAsync } from '@vueuse/core'
 
-import { usePdfsStore } from '../../../../stores/pdfs'
-import { BBusy, BButton } from '../../../../components/opinion/bootstrap'
-import PdfNavigationControls from '../../../../components/PdfNavigationControls.vue'
+import { usePdfsStore } from '$frontend/stores/pdfs'
+import { BBusy, BButton } from '$frontend/components/opinion/bootstrap'
+import PdfNavigationControls from '$frontend/components/PdfNavigationControls.vue'
 import PdfNotLoaded from './PdfNotLoaded.vue'
-import PdfRenderer from '../../../../components/PdfRenderer.vue'
+import PdfRenderer from '$frontend/components/PdfRenderer.vue'
 import SectionEditor from './SectionEditor.vue'
 import TextPicker from './TextPicker.vue'
 import RectanglesHighlighter from './RectanglesHighlighter.vue'
-import TwoResizableColumns from '../../../../components/TwoResizableColumns.vue'
-import type { Project, Textbook } from '../../../../types/api'
+import TwoResizableColumns from '$frontend/components/TwoResizableColumns.vue'
+import type { Project, Textbook } from '$frontend/types/api'
 
 
 const props = defineProps<{

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Section } from '../types'
+import type { Section } from '$adapted/types'
 import TricolorLines from './TricolorLines.vue'
 import MonocolorSection from './MonocolorSection.vue'
 

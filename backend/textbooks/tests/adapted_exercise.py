@@ -1,7 +1,7 @@
 from django.test import TestCase
 from starlette import status
 
-from ..models import Exercise, SelectThingsAdaptedExercise, FillWithFreeTextAdaptedExercise
+from ..models import Exercise, SelectThingsAdaptation, FillWithFreeTextAdaptation
 from ..resources import AdaptedExerciseResource
 from .. import renderable as r
 from fastjsonapi.testing import TestMixin
@@ -15,10 +15,10 @@ class SelectThingsAdaptedExerciseBusinessTestCase(TestCase):
             instructions="instructions",
             wording="The wording of this exercise is a single sentence.",
         )
-        adapted = SelectThingsAdaptedExercise(exercise=exercise, colors=2, words=True, punctuation=False)
+        adaptation = SelectThingsAdaptation(exercise=exercise, colors=2, words=True, punctuation=False)
 
         self.assertEqual(
-            adapted.make_adapted(),
+            adaptation.make_adapted(),
             r.AdaptedExercise(
                 number="number",
                 textbook_page=None,
@@ -51,7 +51,7 @@ class SelectThingsAdaptedExerciseBusinessTestCase(TestCase):
         )
 
 
-class FillWithFreeTextAdaptedExerciseBusinessTestCase(TestCase):
+class FillWithFreeTextAdaptationBusinessTestCase(TestCase):
     def test_single_sentence(self):
         exercise = Exercise(
             number="number",
@@ -59,10 +59,10 @@ class FillWithFreeTextAdaptedExerciseBusinessTestCase(TestCase):
             instructions="instructions",
             wording="The wording of this ... is a ... sentence.",
         )
-        adapted = FillWithFreeTextAdaptedExercise(exercise=exercise, placeholder="...")
+        adaptation = FillWithFreeTextAdaptation(exercise=exercise, placeholder="...")
 
         self.assertEqual(
-            adapted.make_adapted(),
+            adaptation.make_adapted(),
             r.AdaptedExercise(
                 number="number",
                 textbook_page=42,
@@ -101,7 +101,7 @@ class FillWithFreeTextAdaptedExerciseBusinessTestCase(TestCase):
             instructions="instructions",
             wording="@ a @",
         )
-        adapted = FillWithFreeTextAdaptedExercise(exercise=exercise, placeholder="@")
+        adapted = FillWithFreeTextAdaptation(exercise=exercise, placeholder="@")
 
         self.assertEqual(
             adapted.make_adapted(),
@@ -136,12 +136,12 @@ class AdaptedExerciseApiTestCase(TestMixin, TestCase):
                     "textbookPage": 1,
                     "instructions": "This is the instructions.",
                     "wording": "This is the wording.",
-                    "type": "selectThings",
-                    "options": {
+                    "type": "selectThingsAdaptation",
+                    "adaptationOptions": {
                         "colors": 3,
                         "words": True,
                         "punctuation": False,
-                    }
+                    },
                 },
             },
         }
@@ -172,10 +172,10 @@ class AdaptedExerciseApiTestCase(TestMixin, TestCase):
                     "textbookPage": 1,
                     "instructions": "This is the instructions.",
                     "wording": "Fill @",
-                    "type": "fillWithFreeText",
-                    "options": {
+                    "type": "fillWithFreeTextAdaptation",
+                    "adaptationOptions": {
                         "placeholder": "@",
-                    }
+                    },
                 },
             },
         }

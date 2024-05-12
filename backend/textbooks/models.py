@@ -105,7 +105,7 @@ class Section(models.Model):
         return f"Pages {self.textbook_start_page}-{self.textbook_start_page+self.pages_count-1} of {self.textbook.short_str()} in {self.pdf_file.short_str()}"
 
 
-class AdaptedExercise(PolymorphicModel):
+class Adaptation(PolymorphicModel):
     id = models.AutoField(primary_key=True)
 
 
@@ -142,7 +142,7 @@ class Exercise(models.Model):
     example = models.TextField(null=False, blank=True)
     clue = models.TextField(null=False, blank=True)
 
-    adapted = models.OneToOneField(AdaptedExercise, on_delete=models.SET_NULL, null=True, related_name="exercise")
+    adaptation = models.OneToOneField(Adaptation, on_delete=models.SET_NULL, null=True, related_name="exercise")
 
     def __str__(self):
         assert((self.textbook is None) == (self.textbook_page is None))
@@ -159,7 +159,7 @@ class ExtractionEvent(models.Model):
     event = models.TextField(null=False, blank=False)  # Free form for the backend, defined by the frontend
 
 
-class SelectThingsAdaptedExercise(AdaptedExercise):
+class SelectThingsAdaptation(Adaptation):
     punctuation = models.BooleanField(null=False)
     words = models.BooleanField(null=False)
     colors = models.IntegerField(null=False)
@@ -198,7 +198,7 @@ class SelectThingsAdaptedExercise(AdaptedExercise):
                 raise ValueError(f"Unknown token type: {type(token)}")
 
 
-class FillWithFreeTextAdaptedExercise(AdaptedExercise):
+class FillWithFreeTextAdaptation(Adaptation):
     placeholder = models.CharField(null=False, blank=False, max_length=10)
 
     def make_adapted(self):

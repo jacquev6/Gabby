@@ -44,9 +44,9 @@
   "existingTextbooksAndExercises": "Existing textbooks and exercises",
   "noExercisesForNow": "No exercises for now.",
   "independentExercises": "Independent exercises",
-  "exerciseType": "Type",
-  "selectThings": "Select words",
-  "fillWithFreeText": "Fill with free text",
+  "adaptationType": "Adaptation type",
+  "selectThingsAdaptation": "Select words",
+  "fillWithFreeTextAdaptation": "Fill with free text",
 
 
   "textbookNotFound": "Textbook not found",
@@ -78,7 +78,7 @@
   "example": "Example",
   "clue": "Clue",
   "wording": "Wording",
-  "selectExerciseType": "Select exercise type",
+  "selectExerciseType": "Select adaptation type",
 
   "colorsCount": "Number of colors",
   "includePunctuation": "Also select punctuation",

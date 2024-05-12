@@ -44,9 +44,9 @@
   "existingTextbooksAndExercises": "Manuels et exercices existants",
   "noExercisesForNow": "Aucun exercice pour le moment.",
   "independentExercises": "Exercices indépendants",
-  "exerciseType": "Type",
-  "selectThings": "Selection de mots",
-  "fillWithFreeText": "Remplissage par text libre",
+  "adaptationType": "Type d'adaptation",
+  "selectThingsAdaptation": "Selection de mots",
+  "fillWithFreeTextAdaptation": "Remplissage par text libre",
 
 
   "textbookNotFound": "Manuel introuvable",
@@ -77,7 +77,7 @@
   "example": "Exemple",
   "clue": "Indice",
   "wording": "Énoncé",
-  "selectExerciseType": "Sélectionner le type d'exercice",
+  "selectExerciseType": "Sélectionner le type d'adaptation",
 
   "colorsCount": "Nombre de couleurs",
   "includePunctuation": "Sélectionner aussi la ponctuation",

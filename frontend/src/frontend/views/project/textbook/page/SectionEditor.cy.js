@@ -2,7 +2,7 @@ import { setActivePinia, createPinia } from 'pinia'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap'
 
-import { defineApiStore } from '../../../../stores/api'
+import { defineApiStore } from '$frontend/stores/api'
 import SectionEditor from './SectionEditor.vue'
 
 

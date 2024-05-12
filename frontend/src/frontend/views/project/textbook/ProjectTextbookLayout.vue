@@ -3,9 +3,9 @@ import { ref, computed } from 'vue'
 import { computedAsync } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
 
-import { useApiStore } from '../../../stores/api'
-import { BBusy } from '../../../components/opinion/bootstrap'
-import type { Project, Textbook } from '../../../types/api'
+import { useApiStore } from '$frontend/stores/api'
+import { BBusy } from '$frontend/components/opinion/bootstrap'
+import type { Project, Textbook } from '$frontend/types/api'
 
 
 const props = defineProps<{

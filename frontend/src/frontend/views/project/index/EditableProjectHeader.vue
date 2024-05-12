@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-import ProjectForm from '../../../components/ProjectForm.vue'
-import { BButton } from '../../../components/opinion/bootstrap'
-import type { Project } from '../../../types/api'
+import ProjectForm from '$frontend/components/ProjectForm.vue'
+import { BButton } from '$frontend/components/opinion/bootstrap'
+import type { Project } from '$frontend/types/api'
 
 
 defineProps<{

@@ -2,12 +2,12 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 
-import { BButton } from '../../../../../components/opinion/bootstrap'
-import ExerciseForm from '../../../../../components/ExerciseForm.vue'
-import TwoResizableColumns from '../../../../../components/TwoResizableColumns.vue'
+import { BButton } from '$frontend/components/opinion/bootstrap'
+import ExerciseForm from '$frontend/components/ExerciseForm.vue'
+import TwoResizableColumns from '$frontend/components/TwoResizableColumns.vue'
 import ExerciseTools from '../ExerciseTools.vue'
-import type { Project, Textbook, Section, Exercise } from '../../../../../types/api'
-import AdaptedExercise from '../../../../../../adapted/components/Exercise.vue'
+import type { Project, Textbook, Section, Exercise } from '$frontend/types/api'
+import AdaptedExercise from '$adapted/components/Exercise.vue'
 
 
 const props = defineProps<{

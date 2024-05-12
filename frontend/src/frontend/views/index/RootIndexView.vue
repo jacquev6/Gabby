@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 
-import { BRow, BCol } from '../../components/opinion/bootstrap'
+import { BRow, BCol } from '$frontend/components/opinion/bootstrap'
 import CreateProjectForm from './CreateProjectForm.vue'
 import ProjectsList from './ProjectsList.vue'
-import type { Project } from '../../types/api'
+import type { Project } from '$frontend/types/api'
 
 
 const router = useRouter()

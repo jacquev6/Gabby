@@ -2,14 +2,14 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
-import { BRow, BCol } from '../../../components/opinion/bootstrap'
+import { BRow, BCol } from '$frontend/components/opinion/bootstrap'
 import EditableProjectHeader from './EditableProjectHeader.vue'
 import CreateTextbookForm from './CreateTextbookForm.vue'
 import CreateExerciseForm from './CreateExerciseForm.vue'
 import ExercisesList from './ExercisesList.vue'
-import PdfPreview from '../../../components/PdfPreview.vue'
-import type { Project } from '../../../types/api'
-import type { InfoDoc } from '../../../stores/pdfs'
+import PdfPreview from '$frontend/components/PdfPreview.vue'
+import type { Project } from '$frontend/types/api'
+import type { InfoDoc } from '$frontend/stores/pdfs'
 
 
 const router = useRouter()

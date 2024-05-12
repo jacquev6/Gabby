@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-import type { Project, Exercise } from '../../../types/api'
+import type { Project, Exercise } from '$frontend/types/api'
 
 
 const props = defineProps<{

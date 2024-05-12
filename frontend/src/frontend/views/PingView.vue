@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import Pinger from '../components/opinion/Pinger.vue'
-import LanguageSelector from '../components/opinion/LanguageSelector.vue'
+import Pinger from '$frontend/components/opinion/Pinger.vue'
+import LanguageSelector from '$frontend/components/opinion/LanguageSelector.vue'
 </script>
 
 <template>

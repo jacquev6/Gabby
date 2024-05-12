@@ -2,8 +2,8 @@
 import { computed } from 'vue'
 import { inject } from 'vue'
 
-import type { Data, Settings } from '../types'
-import Exercise from '../components/Exercise.vue'
+import type { Data, Settings } from '$adapted/types'
+import Exercise from '$adapted/components/Exercise.vue'
 
 
 const props = defineProps<{
