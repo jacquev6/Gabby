@@ -45,8 +45,8 @@
   "noExercisesForNow": "Aucun exercice pour le moment.",
   "independentExercises": "Exercices indépendants",
   "adaptationType": "Type d'adaptation",
-  "selectThings": "Selection de mots",
-  "fillWithFreeText": "Remplissage par text libre",
+  "selectThingsAdaptation": "Selection de mots",
+  "fillWithFreeTextAdaptation": "Remplissage par text libre",
 
 
   "textbookNotFound": "Manuel introuvable",

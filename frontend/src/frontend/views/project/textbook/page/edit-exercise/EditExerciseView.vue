@@ -27,7 +27,7 @@ const api = useApiStore()
 const exerciseLoading = ref(false)
 const exercise = computedAsync(
   async () => {
-    return await api.client.getOne<Exercise>('exercise', props.exerciseId, {include: 'adapted'})
+    return await api.client.getOne<Exercise>('exercise', props.exerciseId, {include: 'adaptation'})
   },
   undefined,
   exerciseLoading,

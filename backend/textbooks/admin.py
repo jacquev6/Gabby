@@ -2,7 +2,7 @@ from django.contrib import admin
 from polymorphic.admin import PolymorphicParentModelAdmin, PolymorphicChildModelAdmin
 
 from .models import PdfFile, PdfFileNaming, Project, Textbook, Section, Exercise, ExtractionEvent
-from .models import AdaptedExercise, SelectThingsAdaptedExercise, FillWithFreeTextAdaptedExercise
+from .models import Adaptation, SelectThingsAdaptation, FillWithFreeTextAdaptation
 
 
 class SectionInline(admin.TabularInline):
@@ -38,18 +38,18 @@ class ExerciseAdmin(admin.ModelAdmin):
 
 
 
-class AdaptedExerciseChildAdmin(PolymorphicChildModelAdmin):
-    base_model = AdaptedExercise
+class AdaptationChildAdmin(PolymorphicChildModelAdmin):
+    base_model = Adaptation
 
-@admin.register(SelectThingsAdaptedExercise)
-class SelectThingsAdaptedExerciseAdmin(AdaptedExerciseChildAdmin):
-    base_model = SelectThingsAdaptedExercise
+@admin.register(SelectThingsAdaptation)
+class SelectThingsAdaptationAdmin(AdaptationChildAdmin):
+    base_model = SelectThingsAdaptation
 
-@admin.register(FillWithFreeTextAdaptedExercise)
-class FillWithFreeTextAdaptedExerciseAdmin(AdaptedExerciseChildAdmin):
-    base_model = FillWithFreeTextAdaptedExercise
+@admin.register(FillWithFreeTextAdaptation)
+class FillWithFreeTextAdaptationAdmin(AdaptationChildAdmin):
+    base_model = FillWithFreeTextAdaptation
 
-@admin.register(AdaptedExercise)
-class AdaptedExerciseParentAdmin(PolymorphicParentModelAdmin):
-    base_model = AdaptedExercise
-    child_models = (SelectThingsAdaptedExercise, FillWithFreeTextAdaptedExercise)
+@admin.register(Adaptation)
+class AdaptationParentAdmin(PolymorphicParentModelAdmin):
+    base_model = Adaptation
+    child_models = (SelectThingsAdaptation, FillWithFreeTextAdaptation)

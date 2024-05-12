@@ -11,7 +11,7 @@ import django.conf
 
 from . import renderable
 from .models import PdfFile, PdfFileNaming, Project, Textbook, Section, Exercise, ExtractionEvent
-from .models import SelectThingsAdaptedExercise, FillWithFreeTextAdaptedExercise
+from .models import SelectThingsAdaptation, FillWithFreeTextAdaptation
 from fastjsonapi import Computed, Filterable, Constant, Secret as WriteOnly
 from fastjsonapi.django import wrap, unwrap
 
@@ -324,7 +324,7 @@ class ExerciseModel(BaseModel):
 
     extraction_events: Annotated[list[ExtractionEventModel], Computed()] = []
 
-    adapted: SelectThingsAdaptedExerciseModel | FillWithFreeTextAdaptedExerciseModel | None = None
+    adaptation: SelectThingsAdaptationModel | FillWithFreeTextAdaptationModel | None = None
 
 class ExercisesResource:
     singular_name = "exercise"
@@ -347,7 +347,7 @@ class ExercisesResource:
             wording,
             example,
             clue,
-            adapted,
+            adaptation,
         ):
             if bounding_rectangle:
                 bounding_rectangle = bounding_rectangle.model_dump()
@@ -361,7 +361,7 @@ class ExercisesResource:
                 wording=wording,
                 example=example,
                 clue=clue,
-                adapted=unwrap(adapted),
+                adaptation=unwrap(adaptation),
             )
             return wrap(exercise)
 
@@ -395,14 +395,14 @@ class ExercisesResource:
     class ItemSaver:
         @contextmanager
         def __call__(self, item):
-            previous_adapted = item.adapted
+            previous_adaptation = item.adaptation
             previous_bounding_rectangle = item.bounding_rectangle
             yield
             if item.bounding_rectangle is not previous_bounding_rectangle and item.bounding_rectangle is not None:
                 item.bounding_rectangle = item.bounding_rectangle.model_dump()
             item.save()
-            if previous_adapted is not None and unwrap(item.adapted) != unwrap(previous_adapted):
-                previous_adapted.delete()
+            if previous_adaptation is not None and unwrap(item.adaptation) != unwrap(previous_adaptation):
+                previous_adaptation.delete()
 
     class ItemDeleter:
         def __call__(self, item):
@@ -459,41 +459,41 @@ class ExtractionEventsResource:
             item.delete()
 
 
-class SelectThingsOptionsModel(BaseModel):
+class SelectThingsAdaptationOptionsModel(BaseModel):
     colors: int
     words: bool
     punctuation: bool
 
-class SelectThingsAdaptedExerciseModel(SelectThingsOptionsModel):
+class SelectThingsAdaptationModel(SelectThingsAdaptationOptionsModel):
     exercise: Annotated[ExerciseModel, Constant()]
 
-class SelectThingsAdaptedExercisesResource:
-    singular_name = "select_things"
-    plural_name = "select_thingss"
+class SelectThingsAdaptationsResource:
+    singular_name = "select_things_adaptation"
+    plural_name = "select_things_adaptations"
 
-    Model = SelectThingsAdaptedExerciseModel
+    Model = SelectThingsAdaptationModel
 
     default_page_size = default_page_size
 
     class ItemCreator:
         def __call__(self, *, exercise, colors, words, punctuation):
-            if exercise.adapted is not None:
-                exercise.adapted.delete()
-            adapted = SelectThingsAdaptedExercise(
+            if exercise.adaptation is not None:
+                exercise.adaptation.delete()
+            adaptation = SelectThingsAdaptation(
                 exercise=unwrap(exercise),
                 colors=colors,
                 words=words,
                 punctuation=punctuation,
             )
-            adapted.save()
+            adaptation.save()
             exercise.save()
-            return wrap(adapted)
+            return wrap(adaptation)
 
     class ItemGetter:
         def __call__(self, id):
             try:
-                return wrap(SelectThingsAdaptedExercise.objects.get(id=id))
-            except SelectThingsAdaptedExercise.DoesNotExist:
+                return wrap(SelectThingsAdaptation.objects.get(id=id))
+            except SelectThingsAdaptation.DoesNotExist:
                 return None
 
     class ItemSaver:
@@ -507,37 +507,37 @@ class SelectThingsAdaptedExercisesResource:
             item.delete()
 
 
-class FillWithFreeTextOptionsModel(BaseModel):
+class FillWithFreeTextAdaptationOptionsModel(BaseModel):
     placeholder: str
 
-class FillWithFreeTextAdaptedExerciseModel(FillWithFreeTextOptionsModel):
+class FillWithFreeTextAdaptationModel(FillWithFreeTextAdaptationOptionsModel):
     exercise: Annotated[ExerciseModel, Constant()]
 
-class FillWithFreeTextAdaptedExercisesResource:
-    singular_name = "fill_with_free_text"
-    plural_name = "fill_with_free_texts"
+class FillWithFreeTextAdaptationsResource:
+    singular_name = "fill_with_free_text_adaptation"
+    plural_name = "fill_with_free_text_adaptations"
 
-    Model = FillWithFreeTextAdaptedExerciseModel
+    Model = FillWithFreeTextAdaptationModel
 
     default_page_size = default_page_size
 
     class ItemCreator:
         def __call__(self, *, exercise, placeholder):
-            if exercise.adapted is not None:
-                exercise.adapted.delete()
-            adapted = FillWithFreeTextAdaptedExercise(
+            if exercise.adaptation is not None:
+                exercise.adaptation.delete()
+            adaptation = FillWithFreeTextAdaptation(
                 exercise=unwrap(exercise),
                 placeholder=placeholder,
             )
-            adapted.save()
+            adaptation.save()
             exercise.save()
-            return wrap(adapted)
+            return wrap(adaptation)
 
     class ItemGetter:
         def __call__(self, id):
             try:
-                return wrap(FillWithFreeTextAdaptedExercise.objects.get(id=id))
-            except FillWithFreeTextAdaptedExercise.DoesNotExist:
+                return wrap(FillWithFreeTextAdaptation.objects.get(id=id))
+            except FillWithFreeTextAdaptation.DoesNotExist:
                 return None
 
     class ItemSaver:
@@ -557,7 +557,7 @@ class AdaptedExerciseModel(BaseModel):
     instructions: Annotated[str, WriteOnly()]
     wording: Annotated[str, WriteOnly()]
     type: Annotated[str, WriteOnly()]
-    options: Annotated[SelectThingsOptionsModel | FillWithFreeTextOptionsModel, WriteOnly()]
+    adaptation_options: Annotated[SelectThingsAdaptationOptionsModel | FillWithFreeTextAdaptationOptionsModel, WriteOnly()]
     adapted: Annotated[renderable.AdaptedExercise, Computed()]
 
 @dataclasses.dataclass
@@ -574,24 +574,22 @@ class AdaptedExerciseResource:
     default_page_size = default_page_size
 
     class ItemCreator:
-        def __call__(self, *, number, textbook_page, instructions, wording, type, options):
+        def __call__(self, *, number, textbook_page, instructions, wording, type, adaptation_options):
             exercise = Exercise(
                 number=number,
                 textbook_page=textbook_page,
                 instructions=instructions,
                 wording=wording,
             )
-            if type == "selectThings":
-                adapted = SelectThingsAdaptedExercise(
+            if type == "selectThingsAdaptation":
+                adapted = SelectThingsAdaptation(
                     exercise=exercise,
-                    colors=options.colors,
-                    words=options.words,
-                    punctuation=options.punctuation,
+                    **adaptation_options.model_dump(),
                 )
-            elif type == "fillWithFreeText":
-                adapted = FillWithFreeTextAdaptedExercise(
+            elif type == "fillWithFreeTextAdaptation":
+                adapted = FillWithFreeTextAdaptation(
                     exercise=exercise,
-                    placeholder=options.placeholder,
+                    **adaptation_options.model_dump(),
                 )
             else:
                 raise HTTPException(status_code=400, detail="Unknown type")

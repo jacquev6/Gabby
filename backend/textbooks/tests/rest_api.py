@@ -2,10 +2,10 @@ from django.db.utils import IntegrityError
 from django.test import TransactionTestCase
 from starlette import status
 
-from ..models import FillWithFreeTextAdaptedExercise, SelectThingsAdaptedExercise
+from ..models import FillWithFreeTextAdaptation, SelectThingsAdaptation
 from ..models import PdfFile, PdfFileNaming, Project, Textbook, Exercise
 from ..resources import PdfFilesResource, PdfFileNamingsResource, ProjectsResource, TextbooksResource, SectionsResource, ExercisesResource, ExtractionEventsResource
-from ..resources import SelectThingsAdaptedExercisesResource, FillWithFreeTextAdaptedExercisesResource
+from ..resources import SelectThingsAdaptationsResource, FillWithFreeTextAdaptationsResource
 from fastjsonapi.django import make_wrapper
 from fastjsonapi.testing import TestMixin
 
@@ -18,13 +18,13 @@ resources = [
     SectionsResource(),
     ExercisesResource(),
     ExtractionEventsResource(),
-    SelectThingsAdaptedExercisesResource(),
-    FillWithFreeTextAdaptedExercisesResource(),
+    SelectThingsAdaptationsResource(),
+    FillWithFreeTextAdaptationsResource(),
 ]
 
 polymorphism = {
-    make_wrapper(SelectThingsAdaptedExercise): "select_things",
-    make_wrapper(FillWithFreeTextAdaptedExercise): "fill_with_free_text",
+    make_wrapper(SelectThingsAdaptation): "select_things_adaptation",
+    make_wrapper(FillWithFreeTextAdaptation): "fill_with_free_text_adaptation",
 }
 
 
@@ -405,7 +405,7 @@ class TextbookApiTestCase(TestMixin, TransactionTestCase):
                         "project": {"data": {"type": "project", "id": "1"}},
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "1"}},
-                        "adapted": {"data": None},
+                        "adaptation": {"data": None},
                     },
                 },
                 {
@@ -421,7 +421,7 @@ class TextbookApiTestCase(TestMixin, TransactionTestCase):
                         "project": {"data": {"type": "project", "id": "1"}},
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "1"}},
-                        "adapted": {"data": None},
+                        "adaptation": {"data": None},
                     },
                 },
             ],
@@ -662,7 +662,7 @@ class TextbookApiTestCase(TestMixin, TransactionTestCase):
                         "project": {"data": {"type": "project", "id": "1"}},
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"id": "1", "type": "textbook"}},
-                        "adapted": {"data": None},
+                        "adaptation": {"data": None},
                     },
                     "links": {"self": "http://server/exercises/1"},
                 },
@@ -678,7 +678,7 @@ class TextbookApiTestCase(TestMixin, TransactionTestCase):
                         "project": {"data": {"type": "project", "id": "1"}},
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"id": "1", "type": "textbook"}},
-                        "adapted": {"data": None},
+                        "adaptation": {"data": None},
                     },
                     "links": {"self": "http://server/exercises/2"},
                 },
@@ -694,7 +694,7 @@ class TextbookApiTestCase(TestMixin, TransactionTestCase):
                         "project": {"data": {"type": "project", "id": "1"}},
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"id": "2", "type": "textbook"}},
-                        "adapted": {"data": None},
+                        "adaptation": {"data": None},
                     },
                     "links": {"self": "http://server/exercises/3"},
                 },
@@ -742,7 +742,7 @@ class TextbookApiTestCase(TestMixin, TransactionTestCase):
                         "project": {"data": {"type": "project", "id": "1"}},
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"id": "3", "type": "textbook"}},
-                        "adapted": {"data": None},
+                        "adaptation": {"data": None},
                     },
                     "links": {"self": "http://server/exercises/4"},
                 },
@@ -758,7 +758,7 @@ class TextbookApiTestCase(TestMixin, TransactionTestCase):
                         "project": {"data": {"type": "project", "id": "1"}},
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"id": "3", "type": "textbook"}},
-                        "adapted": {"data": None},
+                        "adaptation": {"data": None},
                     },
                     "links": {"self": "http://server/exercises/5"},
                 },
@@ -774,7 +774,7 @@ class TextbookApiTestCase(TestMixin, TransactionTestCase):
                         "project": {"data": {"type": "project", "id": "1"}},
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"id": "3", "type": "textbook"}},
-                        "adapted": {"data": None},
+                        "adaptation": {"data": None},
                     },
                     "links": {"self": "http://server/exercises/6"},
                 },
@@ -1051,7 +1051,7 @@ class ExerciseApiTestCase(TestMixin, TransactionTestCase):
                     "project": {"data": {"type": "project", "id": "1"}},
                     "extractionEvents": {"data": [], "meta": {"count": 0}},
                     "textbook": {"data": None},
-                    "adapted": {"data": None},
+                    "adaptation": {"data": None},
                 },
             },
         })
@@ -1098,7 +1098,7 @@ class ExerciseApiTestCase(TestMixin, TransactionTestCase):
                     "project": {"data": {"type": "project", "id": "1"}},
                     "extractionEvents": {"data": [], "meta": {"count": 0}},
                     "textbook": {"data": {"type": "textbook", "id": "1"}},
-                    "adapted": {"data": None},
+                    "adaptation": {"data": None},
                 },
             },
         })
@@ -1146,7 +1146,7 @@ class ExerciseApiTestCase(TestMixin, TransactionTestCase):
                     "project": {"data": {"type": "project", "id": "1"}},
                     "extractionEvents": {"data": [], "meta": {"count": 0}},
                     "textbook": {"data": {"type": "textbook", "id": "1"}},
-                    "adapted": {"data": None},
+                    "adaptation": {"data": None},
                 },
             },
         })
@@ -1191,7 +1191,7 @@ class ExerciseApiTestCase(TestMixin, TransactionTestCase):
                     "project": {"data": {"id": "1", "type": "project"}},
                     "extractionEvents": {"data": [], "meta": {"count": 0}},
                     "textbook": {"data": {"type": "textbook", "id": "1"}},
-                    "adapted": {"data": None},
+                    "adaptation": {"data": None},
                 },
             },
         })
@@ -1223,7 +1223,7 @@ class ExerciseApiTestCase(TestMixin, TransactionTestCase):
                     "project": {"data": {"id": "1", "type": "project"}},
                     "extractionEvents": {"data": [], "meta": {"count": 0}},
                     "textbook": {"data": {"type": "textbook", "id": "1"}},
-                    "adapted": {"data": None},
+                    "adaptation": {"data": None},
                 },
             },
             "included": [
@@ -1266,7 +1266,7 @@ class ExerciseApiTestCase(TestMixin, TransactionTestCase):
                         "project": {"data": {"id": "1", "type": "project"}},
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "1"}},
-                        "adapted": {"data": None},
+                        "adaptation": {"data": None},
                     },
                 },
                 {
@@ -1282,7 +1282,7 @@ class ExerciseApiTestCase(TestMixin, TransactionTestCase):
                         "project": {"data": {"id": "1", "type": "project"}},
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "1"}},
-                        "adapted": {"data": None},
+                        "adaptation": {"data": None},
                     },
                 },
             ],
@@ -1312,7 +1312,7 @@ class ExerciseApiTestCase(TestMixin, TransactionTestCase):
                         "project": {"data": {"id": "1", "type": "project"}},
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "1"}},
-                        "adapted": {"data": None},
+                        "adaptation": {"data": None},
                     },
                 },
             ],
@@ -1347,7 +1347,7 @@ class ExerciseApiTestCase(TestMixin, TransactionTestCase):
                         "project": {"data": {"id": "1", "type": "project"}},
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "1"}},
-                        "adapted": {"data": None},
+                        "adaptation": {"data": None},
                     },
                 },
                 {
@@ -1363,7 +1363,7 @@ class ExerciseApiTestCase(TestMixin, TransactionTestCase):
                         "project": {"data": {"id": "1", "type": "project"}},
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "1"}},
-                        "adapted": {"data": None},
+                        "adaptation": {"data": None},
                     },
                 },
             ],
@@ -1393,7 +1393,7 @@ class ExerciseApiTestCase(TestMixin, TransactionTestCase):
                         "project": {"data": {"id": "1", "type": "project"}},
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "1"}},
-                        "adapted": {"data": None},
+                        "adaptation": {"data": None},
                     },
                 },
             ],
@@ -1428,7 +1428,7 @@ class ExerciseApiTestCase(TestMixin, TransactionTestCase):
                         "project": {"data": {"id": "1", "type": "project"}},
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "1"}},
-                        "adapted": {"data": None},
+                        "adaptation": {"data": None},
                     },
                 },
                 {
@@ -1444,7 +1444,7 @@ class ExerciseApiTestCase(TestMixin, TransactionTestCase):
                         "project": {"data": {"id": "1", "type": "project"}},
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "1"}},
-                        "adapted": {"data": None},
+                        "adaptation": {"data": None},
                     },
                 },
             ],
@@ -1474,7 +1474,7 @@ class ExerciseApiTestCase(TestMixin, TransactionTestCase):
                         "project": {"data": {"id": "1", "type": "project"}},
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "1"}},
-                        "adapted": {"data": None},
+                        "adaptation": {"data": None},
                     },
                 },
             ],
@@ -1511,7 +1511,7 @@ class ExerciseApiTestCase(TestMixin, TransactionTestCase):
                         "project": {"data": {"id": "1", "type": "project"}},
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "1"}},
-                        "adapted": {"data": None},
+                        "adaptation": {"data": None},
                     },
                 },
                 {
@@ -1527,7 +1527,7 @@ class ExerciseApiTestCase(TestMixin, TransactionTestCase):
                         "project": {"data": {"id": "1", "type": "project"}},
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "1"}},
-                        "adapted": {"data": None},
+                        "adaptation": {"data": None},
                     },
                 },
             ],
@@ -1580,7 +1580,7 @@ class ExerciseApiTestCase(TestMixin, TransactionTestCase):
                         "project": {"data": {"id": "1", "type": "project"}},
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "1"}},
-                        "adapted": {"data": None},
+                        "adaptation": {"data": None},
                     },
                 },
                 {
@@ -1596,7 +1596,7 @@ class ExerciseApiTestCase(TestMixin, TransactionTestCase):
                         "project": {"data": {"id": "1", "type": "project"}},
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "2"}},
-                        "adapted": {"data": None},
+                        "adaptation": {"data": None},
                     },
                 },
             ],
@@ -1675,7 +1675,7 @@ class ExerciseApiTestCase(TestMixin, TransactionTestCase):
                         "project": {"data": {"id": "1", "type": "project"}},
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "1"}},
-                        "adapted": {"data": None},
+                        "adaptation": {"data": None},
                     },
                 },
                 {
@@ -1691,7 +1691,7 @@ class ExerciseApiTestCase(TestMixin, TransactionTestCase):
                         "project": {"data": {"id": "1", "type": "project"}},
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "1"}},
-                        "adapted": {"data": None},
+                        "adaptation": {"data": None},
                     },
                 },
             ],
@@ -1721,7 +1721,7 @@ class ExerciseApiTestCase(TestMixin, TransactionTestCase):
                         "project": {"data": {"id": "1", "type": "project"}},
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "1"}},
-                        "adapted": {"data": None},
+                        "adaptation": {"data": None},
                     },
                 },
             ],
@@ -1781,7 +1781,7 @@ class ExerciseApiTestCase(TestMixin, TransactionTestCase):
                     "project": {"data": {"id": "1", "type": "project"}},
                     "extractionEvents": {"data": [], "meta": {"count": 0}},
                     "textbook": {"data": {"type": "textbook", "id": "1"}},
-                    "adapted": {"data": None},
+                    "adaptation": {"data": None},
                 },
             },
         })
@@ -1835,7 +1835,7 @@ class ExerciseApiTestCase(TestMixin, TransactionTestCase):
                     "project": {"data": {"id": "1", "type": "project"}},
                     "extractionEvents": {"data": [], "meta": {"count": 0}},
                     "textbook": {"data": {"type": "textbook", "id": "1"}},
-                    "adapted": {"data": None},
+                    "adaptation": {"data": None},
                 },
             },
         })
@@ -2029,46 +2029,46 @@ class ExerciseApiTestCase(TestMixin, TransactionTestCase):
         self.assertEqual(Exercise.objects.count(), 0)
 
 
-class AdaptedExerciseModelTestCase(TransactionTestCase):
+class AdaptationModelTestCase(TransactionTestCase):
     def setUp(self):
         self.project = Project.objects.create(title="Project")
         self.textbook = Textbook.objects.create(project=self.project, title="Textbook")
         self.exercise = Exercise.objects.create(project=self.project, number="Exercise")
 
     def test_none_on_creation(self):
-        self.assertIsNone(self.exercise.adapted)
+        self.assertIsNone(self.exercise.adaptation)
 
-    def test_fill_with_free_text(self):
-        self.exercise.adapted = FillWithFreeTextAdaptedExercise.objects.create(placeholder="...")
+    def test_fill_with_free_text_adaptation(self):
+        self.exercise.adaptation = FillWithFreeTextAdaptation.objects.create(placeholder="...")
         self.exercise.save()
         exercise = Exercise.objects.get()
-        self.assertIs(exercise.adapted.exercise, exercise)
-        self.assertIsInstance(exercise.adapted, FillWithFreeTextAdaptedExercise)
-        self.assertEqual(exercise.adapted.placeholder, "...")
-        self.assertFalse(hasattr(exercise.adapted, "colors"))
+        self.assertIs(exercise.adaptation.exercise, exercise)
+        self.assertIsInstance(exercise.adaptation, FillWithFreeTextAdaptation)
+        self.assertEqual(exercise.adaptation.placeholder, "...")
+        self.assertFalse(hasattr(exercise.adaptation, "colors"))
 
-    def test_select_things(self):
-        self.exercise.adapted = SelectThingsAdaptedExercise.objects.create(colors=3, words=True, punctuation=True)
+    def test_select_things_adaptation(self):
+        self.exercise.adaptation = SelectThingsAdaptation.objects.create(colors=3, words=True, punctuation=True)
         self.exercise.save()
         exercise = Exercise.objects.get()
-        self.assertIs(exercise.adapted.exercise, exercise)
-        self.assertIsInstance(exercise.adapted, SelectThingsAdaptedExercise)
-        self.assertEqual(exercise.adapted.colors, 3)
-        self.assertFalse(hasattr(exercise.adapted, "placeholder"))
+        self.assertIs(exercise.adaptation.exercise, exercise)
+        self.assertIsInstance(exercise.adaptation, SelectThingsAdaptation)
+        self.assertEqual(exercise.adaptation.colors, 3)
+        self.assertFalse(hasattr(exercise.adaptation, "placeholder"))
 
     def test_share(self):
-        self.exercise.adapted = SelectThingsAdaptedExercise.objects.create(colors=3, words=True, punctuation=True)
+        self.exercise.adaptation = SelectThingsAdaptation.objects.create(colors=3, words=True, punctuation=True)
         self.exercise.save()
 
         other = Exercise.objects.create(project=self.project, number="Other exercise")
 
-        other.adapted = self.exercise.adapted
+        other.adaptation = self.exercise.adaptation
 
         with self.assertRaises(IntegrityError):
             other.save()
 
 
-class AdaptedExerciseApiTestCase(TestMixin, TransactionTestCase):
+class AdaptationApiTestCase(TestMixin, TransactionTestCase):
     reset_sequences = True
 
     resources = resources
@@ -2079,10 +2079,10 @@ class AdaptedExerciseApiTestCase(TestMixin, TransactionTestCase):
         self.textbook = Textbook.objects.create(project=self.project, title="The title")
         self.exercise = Exercise.objects.create(project=self.project, number="Exercise")
 
-    def test_create_select_things(self):
+    def test_create_select_things_adaptation(self):
         payload = {
             "data": {
-                "type": "selectThings",
+                "type": "selectThingsAdaptation",
                 "attributes": {
                     "colors": 3,
                     "words": True,
@@ -2093,13 +2093,13 @@ class AdaptedExerciseApiTestCase(TestMixin, TransactionTestCase):
                 },
             },
         }
-        response = self.post("http://server/selectThingss", payload)
+        response = self.post("http://server/selectThingsAdaptations", payload)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
         self.assertEqual(response.json(), {
             "data": {
-                "type": "selectThings",
+                "type": "selectThingsAdaptation",
                 "id": "1",
-                "links": {"self": "http://server/selectThingss/1"},
+                "links": {"self": "http://server/selectThingsAdaptations/1"},
                 "attributes": {
                     "colors": 3,
                     "words": True,
@@ -2112,15 +2112,15 @@ class AdaptedExerciseApiTestCase(TestMixin, TransactionTestCase):
         })
 
         exercise = Exercise.objects.get()
-        self.assertIsInstance(exercise.adapted, SelectThingsAdaptedExercise)
-        self.assertEqual(exercise.adapted.colors, 3)
-        self.assertTrue(exercise.adapted.words)
-        self.assertTrue(exercise.adapted.punctuation)
+        self.assertIsInstance(exercise.adaptation, SelectThingsAdaptation)
+        self.assertEqual(exercise.adaptation.colors, 3)
+        self.assertTrue(exercise.adaptation.words)
+        self.assertTrue(exercise.adaptation.punctuation)
 
-    def test_create_fill_with_free_text(self):
+    def test_create_fill_with_free_text_adaptation(self):
         payload = {
             "data": {
-                "type": "fillWithFreeText",
+                "type": "fillWithFreeTextAdaptation",
                 "attributes": {
                     "placeholder": "...",
                 },
@@ -2129,13 +2129,13 @@ class AdaptedExerciseApiTestCase(TestMixin, TransactionTestCase):
                 },
             },
         }
-        response = self.post("http://server/fillWithFreeTexts", payload)
+        response = self.post("http://server/fillWithFreeTextAdaptations", payload)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
         self.assertEqual(response.json(), {
             "data": {
-                "type": "fillWithFreeText",
+                "type": "fillWithFreeTextAdaptation",
                 "id": "1",
-                "links": {"self": "http://server/fillWithFreeTexts/1"},
+                "links": {"self": "http://server/fillWithFreeTextAdaptations/1"},
                 "attributes": {
                     "placeholder": "...",
                 },
@@ -2146,11 +2146,11 @@ class AdaptedExerciseApiTestCase(TestMixin, TransactionTestCase):
         })
 
         exercise = Exercise.objects.get()
-        self.assertIsInstance(exercise.adapted, FillWithFreeTextAdaptedExercise)
-        self.assertEqual(exercise.adapted.placeholder, "...")
+        self.assertIsInstance(exercise.adaptation, FillWithFreeTextAdaptation)
+        self.assertEqual(exercise.adaptation.placeholder, "...")
 
-    def test_dont_update_adapted(self):
-        self.exercise.adapted = SelectThingsAdaptedExercise.objects.create(colors=3, words=True, punctuation=True)
+    def test_dont_update_adaptation(self):
+        self.exercise.adaptation = SelectThingsAdaptation.objects.create(colors=3, words=True, punctuation=True)
         self.exercise.save()
         payload = {
             "data": {
@@ -2177,17 +2177,17 @@ class AdaptedExerciseApiTestCase(TestMixin, TransactionTestCase):
                     "project": {"data": {"id": "1", "type": "project"}},
                     "extractionEvents": {"data": [], "meta": {"count": 0}},
                     "textbook": {"data": None},
-                    "adapted": {"data": {"type": "selectThings", "id": "1"}},
+                    "adaptation": {"data": {"type": "selectThingsAdaptation", "id": "1"}},
                 },
             },
         })
 
-        self.assertEqual(SelectThingsAdaptedExercise.objects.count(), 1)
+        self.assertEqual(SelectThingsAdaptation.objects.count(), 1)
         exercise = Exercise.objects.get()
-        self.assertEqual(exercise.adapted, SelectThingsAdaptedExercise.objects.get())
+        self.assertEqual(exercise.adaptation, SelectThingsAdaptation.objects.get())
 
-    def test_update_adapted__none(self):
-        self.exercise.adapted = SelectThingsAdaptedExercise.objects.create(colors=3, words=True, punctuation=True)
+    def test_update_adaptation__none(self):
+        self.exercise.adaptation = SelectThingsAdaptation.objects.create(colors=3, words=True, punctuation=True)
         self.exercise.save()
 
         payload = {
@@ -2195,7 +2195,7 @@ class AdaptedExerciseApiTestCase(TestMixin, TransactionTestCase):
                 "type": "exercise",
                 "id": "1",
                 "relationships": {
-                    "adapted": {"data": None},
+                    "adaptation": {"data": None},
                 },
             },
         }
@@ -2215,23 +2215,23 @@ class AdaptedExerciseApiTestCase(TestMixin, TransactionTestCase):
                     "project": {"data": {"id": "1", "type": "project"}},
                     "extractionEvents": {"data": [], "meta": {"count": 0}},
                     "textbook": {"data": None},
-                    "adapted": {"data": None},
+                    "adaptation": {"data": None},
                 },
             },
         })
 
         exercise = Exercise.objects.get()
-        self.assertIsNone(exercise.adapted)
+        self.assertIsNone(exercise.adaptation)
 
-        self.assertEqual(SelectThingsAdaptedExercise.objects.count(), 0)
+        self.assertEqual(SelectThingsAdaptation.objects.count(), 0)
 
-    def test_update_adapted__other_type(self):
-        self.exercise.adapted = SelectThingsAdaptedExercise.objects.create(colors=3, words=True, punctuation=True)
+    def test_update_adaptation__other_type(self):
+        self.exercise.adaptation = SelectThingsAdaptation.objects.create(colors=3, words=True, punctuation=True)
         self.exercise.save()
 
         payload = {
             "data": {
-                "type": "fillWithFreeText",
+                "type": "fillWithFreeTextAdaptation",
                 "attributes": {
                     "placeholder": "...",
                 },
@@ -2240,13 +2240,13 @@ class AdaptedExerciseApiTestCase(TestMixin, TransactionTestCase):
                 },
             },
         }
-        response = self.post("http://server/fillWithFreeTexts", payload)
+        response = self.post("http://server/fillWithFreeTextAdaptations", payload)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
         self.assertEqual(response.json(), {
             "data": {
-                "type": "fillWithFreeText",
+                "type": "fillWithFreeTextAdaptation",
                 "id": "2",
-                "links": {"self": "http://server/fillWithFreeTexts/2"},
+                "links": {"self": "http://server/fillWithFreeTextAdaptations/2"},
                 "attributes": {
                     "placeholder": "...",
                 },
@@ -2257,7 +2257,7 @@ class AdaptedExerciseApiTestCase(TestMixin, TransactionTestCase):
         })
 
         exercise = Exercise.objects.get()
-        self.assertIsInstance(exercise.adapted, FillWithFreeTextAdaptedExercise)
-        self.assertEqual(exercise.adapted.placeholder, "...")
+        self.assertIsInstance(exercise.adaptation, FillWithFreeTextAdaptation)
+        self.assertEqual(exercise.adaptation.placeholder, "...")
 
-        self.assertEqual(SelectThingsAdaptedExercise.objects.count(), 0)
+        self.assertEqual(SelectThingsAdaptation.objects.count(), 0)

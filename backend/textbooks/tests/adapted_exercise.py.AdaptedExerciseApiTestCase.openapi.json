@@ -104,7 +104,7 @@
         "title": "Body_login_token_post",
         "type": "object"
       },
-      "FillWithFreeTextOptionsModel": {
+      "FillWithFreeTextAdaptationOptionsModel": {
         "properties": {
           "placeholder": {
             "title": "Placeholder",
@@ -114,7 +114,7 @@
         "required": [
           "placeholder"
         ],
-        "title": "FillWithFreeTextOptionsModel",
+        "title": "FillWithFreeTextAdaptationOptionsModel",
         "type": "object"
       },
       "FreeTextInput": {
@@ -219,7 +219,7 @@
         "title": "Section",
         "type": "object"
       },
-      "SelectThingsOptionsModel": {
+      "SelectThingsAdaptationOptionsModel": {
         "properties": {
           "colors": {
             "title": "Colors",
@@ -239,7 +239,7 @@
           "words",
           "punctuation"
         ],
-        "title": "SelectThingsOptionsModel",
+        "title": "SelectThingsAdaptationOptionsModel",
         "type": "object"
       },
       "SelectableText": {
@@ -393,6 +393,17 @@
       "adaptedExercise-CreateInput-Data-Attributes": {
         "additionalProperties": false,
         "properties": {
+          "adaptationOptions": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SelectThingsAdaptationOptionsModel"
+              },
+              {
+                "$ref": "#/components/schemas/FillWithFreeTextAdaptationOptionsModel"
+              }
+            ],
+            "title": "Adaptationoptions"
+          },
           "instructions": {
             "title": "Instructions",
             "type": "string"
@@ -400,17 +411,6 @@
           "number": {
             "title": "Number",
             "type": "string"
-          },
-          "options": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/SelectThingsOptionsModel"
-              },
-              {
-                "$ref": "#/components/schemas/FillWithFreeTextOptionsModel"
-              }
-            ],
-            "title": "Options"
           },
           "textbookPage": {
             "anyOf": [
@@ -438,7 +438,7 @@
           "instructions",
           "wording",
           "type",
-          "options"
+          "adaptationOptions"
         ],
         "title": "adaptedExercise-CreateInput-Data-Attributes",
         "type": "object"

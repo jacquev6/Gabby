@@ -7,7 +7,7 @@ import { BBusy, BLabeledInput, BLabeledTextarea, BButton, BSelect } from './opin
 import TextSelectionMenu from './ExerciseFormTextSelectionMenu.vue'
 import OptionalTextarea from './OptionalTextarea.vue'
 import { useApiStore } from '$frontend/stores/api'
-import adaptedForms from './adapted-forms'
+import adaptationOptionsForms from './adaptation-options-forms'
 import type { Project, Textbook, Section, Exercise, AdaptedExercise } from '$frontend/types/api'
 
 
@@ -51,17 +51,17 @@ const fields = {
   clue,
 }
 
-type AdaptedType = '-' | keyof typeof adaptedForms
-const adaptedType = ref<AdaptedType>('-')
-const adaptedAttributes = reactive<{[key: string]: object}>({})
-function resetAdaptedAttributes() {
-  adaptedType.value = '-'
-  adaptedAttributes['-'] = {}
-  for (const [kind, component] of Object.entries(adaptedForms)) {
-    adaptedAttributes[kind] = Object.assign({}, component.props.modelValue.default)
+type AdaptationType = '-' | keyof typeof adaptationOptionsForms
+const adaptationType = ref<AdaptationType>('-')
+const adaptationOptions = reactive<{[key: string]: object}>({})
+function resetAdaptationOptions() {
+  adaptationType.value = '-'
+  adaptationOptions['-'] = {}
+  for (const [kind, component] of Object.entries(adaptationOptionsForms)) {
+    adaptationOptions[kind] = Object.assign({}, component.props.modelValue.default)
   }
 }
-resetAdaptedAttributes()
+resetAdaptationOptions()
 
 const alreadyExists = computedAsync(
   async () => {
@@ -108,15 +108,19 @@ watch(
       console.assert(props.exercise.attributes !== undefined)
       console.assert(props.exercise.relationships !== undefined)
 
-      boundingRectangle.value = props.exercise?.attributes.boundingRectangle ?? null
+      boundingRectangle.value = props.exercise.attributes.boundingRectangle ?? null
 
-      instructions.value = props.exercise?.attributes.instructions ?? ''
-      wording.value = props.exercise?.attributes.wording ?? ''
-      example.value = props.exercise?.attributes.example ?? ''
-      clue.value = props.exercise?.attributes.clue ?? ''
+      instructions.value = props.exercise.attributes.instructions ?? ''
+      wording.value = props.exercise.attributes.wording ?? ''
+      example.value = props.exercise.attributes.example ?? ''
+      clue.value = props.exercise.attributes.clue ?? ''
 
-      adaptedType.value = (props.exercise?.relationships.adapted?.type ?? '-') as AdaptedType
-      Object.assign(adaptedAttributes[adaptedType.value], props.exercise?.relationships.adapted?.attributes)
+      if (props.exercise.relationships.adaptation === null) {
+        adaptationType.value = '-'
+      } else {
+        adaptationType.value = props.exercise.relationships.adaptation.type as AdaptationType
+        Object.assign(adaptationOptions[adaptationType.value], props.exercise.relationships.adaptation.attributes)
+      }
     }
   },
   {immediate: true},
@@ -203,7 +207,7 @@ function skip() {
   example.value = ''
   clue.value = ''
 
-  resetAdaptedAttributes()
+  resetAdaptationOptions()
 }
 
 async function create() {
@@ -226,10 +230,10 @@ async function create() {
       textbook: props.textbook,
     },
   )
-  if (adaptedType.value !== '-') {
+  if (adaptationType.value !== '-') {
     await api.client.post(
-      adaptedType.value,
-      adaptedAttributes[adaptedType.value],
+      adaptationType.value,
+      adaptationOptions[adaptationType.value],
       {exercise: {type: 'exercise', id: exercise.id}},
     )
   }
@@ -249,7 +253,7 @@ async function create() {
   example.value = ''
   clue.value = ''
 
-  resetAdaptedAttributes()
+  resetAdaptationOptions()
 
   busy.value = false
 
@@ -283,14 +287,14 @@ async function save() {
     },
     {},
   )
-  if (adaptedType.value === '-') {
-    if (props.exercise.relationships.adapted !== null) {
-      await api.client.delete(props.exercise.relationships.adapted.type, props.exercise.relationships.adapted.id)
+  if (adaptationType.value === '-') {
+    if (props.exercise.relationships.adaptation !== null) {
+      await api.client.delete(props.exercise.relationships.adaptation.type, props.exercise.relationships.adaptation.id)
     }
   } else {
     await api.client.post(
-      adaptedType.value,
-      adaptedAttributes[adaptedType.value],
+      adaptationType.value,
+      adaptationOptions[adaptationType.value],
       {exercise: {type: 'exercise', id: props.exercise.id}},
     )
   }
@@ -312,7 +316,7 @@ async function save() {
 const adaptedDataLoading = ref(false)
 const adaptedData = computedAsync(
   async () => {
-    if (adaptedType.value === '-') {
+    if (adaptationType.value === '-') {
       return null
     } else {
       const attributes = {
@@ -320,8 +324,8 @@ const adaptedData = computedAsync(
         textbookPage: props.textbookPage,
         instructions: instructions.value,
         wording: wording.value,
-        type: adaptedType.value,
-        options: adaptedAttributes[adaptedType.value],
+        type: adaptationType.value,
+        adaptationOptions: adaptationOptions[adaptationType.value],
       }
       try {
         const adapted = await api.client.post<AdaptedExercise>('adaptedExercise', attributes, {})
@@ -393,14 +397,14 @@ defineExpose({
           <label class="form-label" for="abc">{{ $t('adaptationType') }}</label>
             <BSelect
             id="abc"
-            v-model="adaptedType"
-            :options="['-', ...Object.keys(adaptedForms).map(kind => ({value: kind, label: $t(kind)}))]"
+            v-model="adaptationType"
+            :options="['-', ...Object.keys(adaptationOptionsForms).map(kind => ({value: kind, label: $t(kind)}))]"
           />
         </div>
         <component
-          v-if="adaptedType !== '-'"
-          :is="adaptedForms[adaptedType]"
-          v-model="adaptedAttributes[adaptedType] as any/*Untypeable?*/"
+          v-if="adaptationType !== '-'"
+          :is="adaptationOptionsForms[adaptationType]"
+          v-model="adaptationOptions[adaptationType] as any/*Untypeable?*/"
         />
       </BBusy>
 

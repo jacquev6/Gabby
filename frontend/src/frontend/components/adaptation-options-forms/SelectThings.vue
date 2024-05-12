@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { BLabeledInput, BLabeledCheckbox } from '../opinion/bootstrap'
-import type { SelectThingsOptions } from '$frontend/types/api'
+import type { SelectThingsAdaptationOptions } from '$frontend/types/api'
 
 
-const model = defineModel<SelectThingsOptions>({
+const model = defineModel<SelectThingsAdaptationOptions>({
   required: true,
-  default: ((): SelectThingsOptions => ({
+  default: ((): SelectThingsAdaptationOptions => ({
     colors: 1,
     words: true,
     punctuation: true,

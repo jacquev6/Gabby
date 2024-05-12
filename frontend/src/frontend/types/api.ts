@@ -5,8 +5,8 @@ import type { components  } from '$/openapi'
 type schemas = components["schemas"]
 
 
-export type SelectThingsOptions = schemas["SelectThingsOptionsModel"]
-export type FillWithFreeTextOptions = schemas["FillWithFreeTextOptionsModel"]
+export type SelectThingsAdaptationOptions = schemas["SelectThingsAdaptationOptionsModel"]
+export type FillWithFreeTextAdaptationOptions = schemas["FillWithFreeTextAdaptationOptionsModel"]
 
 
 export type Ping = Item<schemas["ping-OutputItem-Attributes"], {
@@ -36,14 +36,14 @@ export type Section = Item<schemas["section-OutputItem-Attributes"], {
   pdfFile: PdfFile
 }>
 
-export type Adapted = Item<{
+export type Adaptation = Item<{
 }, {
 }>
 
 export type Exercise = Item<schemas["exercise-OutputItem-Attributes"], {
   project: Project
   textbook: Textbook | null
-  adapted: Adapted | null
+  adaptation: Adaptation | null
 }>
 
 export type AdaptedExercise = Item<schemas["adaptedExercise-OutputItem-Attributes"], {
