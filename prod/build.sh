@@ -31,6 +31,7 @@ do
   echo $part
   echo $part | sed 's/./-/g'
   docker buildx build \
+    --pull \
     --builder gabby-multi-platform-builder \
     .. --file docker/Dockerfile --target final-$part \
     --build-arg GABBY_VERSION=$gabby_version \

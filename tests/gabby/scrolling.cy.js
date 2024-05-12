@@ -41,6 +41,7 @@ describe('Gabby', () => {
   it('scrolls on index view', () => {
     cy.visit('/')
     cy.get('.busy').should('not.exist')
+    cy.get('select').first().select('en')
 
     cy.get('html').its('0').should(haveNoScrollbar)
     cy.get('body').its('0').should(haveNoScrollbar)
@@ -59,6 +60,7 @@ describe('Gabby', () => {
   it('scrolls on project view', () => {
     cy.visit('/project/1')
     cy.get('.busy').should('not.exist')
+    cy.get('select').first().select('en')
 
     cy.get('html').its('0').should(haveNoScrollbar)
     cy.get('body').its('0').should(haveNoScrollbar)
@@ -77,6 +79,7 @@ describe('Gabby', () => {
   it('scrolls on exercises list view', () => {
     cy.visit('/project/1/textbook/1/page/7')
     cy.get('.busy').should('not.exist')
+    cy.get('select').first().select('en')
 
     cy.get('html').its('0').should(haveNoScrollbar)
     cy.get('body').its('0').should(haveNoScrollbar)
@@ -101,6 +104,7 @@ describe('Gabby', () => {
   it('scrolls on exercise creation view', () => {
     cy.visit('/project/1/textbook/1/page/7/new-exercise')
     cy.get('.busy').should('not.exist')
+    cy.get('select').first().select('en')
 
     cy.get('html').its('0').should(haveNoScrollbar)
     cy.get('body').its('0').should(haveNoScrollbar)
@@ -147,6 +151,7 @@ describe('Gabby', () => {
   it('scrolls on exercise edition view', () => {
     cy.visit('/project/1/textbook/1/page/7/exercise/7')
     cy.get('.busy').should('not.exist')
+    cy.get('select').first().select('en')
 
     cy.get('html').its('0').should(haveNoScrollbar)
     cy.get('body').its('0').should(haveNoScrollbar)

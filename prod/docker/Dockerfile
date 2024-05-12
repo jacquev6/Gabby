@@ -14,7 +14,7 @@ RUN npm install
 FROM frontend-dependencies AS fontend-builder
 
 ADD frontend /app
-RUN cp node_modules/pdfjs-dist/build/pdf.worker.min.mjs frontend/public/pdf.worker.min.js
+RUN cp node_modules/pdfjs-dist/build/pdf.worker.min.mjs src/frontend/public/pdf.worker.min.js
 
 ARG GABBY_VERSION
 ENV VITE_OPINION_APP_VERSION=$GABBY_VERSION

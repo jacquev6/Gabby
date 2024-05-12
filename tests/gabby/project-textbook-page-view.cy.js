@@ -276,8 +276,8 @@ describe('Gabby\'s project\'s textbook page view', () => {
           sha256: 'f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c',
           page: 1,
           rectangle: {
-            start: {x: 56.17797669910249, y: (isProdPreview ? 145.82387315089397 : 144.86278585218258)},
-            stop: {x: 304.6065481276739, y: (isProdPreview ? 54.11897604195826 : 53.242793023875265)},
+            start: {x: 56.193438336980655, y: (isProdPreview ? 145.60912431995314 : 144.47975360367366)},
+            stop: {x: 304.7582704906808, y: (isProdPreview ? 53.937276910729224 : 52.80790619444963)},
           },
         },
       },
@@ -288,8 +288,8 @@ describe('Gabby\'s project\'s textbook page view', () => {
           sha256: 'f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c',
           page: 1,
           rectangle: {
-            start: {x: 56.17797669910249, y: (isProdPreview ? 132.98518755564305 : 132.52932527914118)},
-            stop: {x: 304.6065481276739, y: (isProdPreview ? 99.97142459642623 : 99.05278943802887)},
+            start: {x: 56.193438336980655, y: (isProdPreview ? 133.26868332255765 : 132.13931260627817)},
+            stop: {x: 304.7582704906808, y: (isProdPreview ? 99.77320061534124 : 98.64382989906164)},
           },
         },
         value: '2\nClasse les mots en trois groupes :\nnom, verbe, adjectif.',
@@ -458,8 +458,8 @@ describe('Gabby\'s project\'s textbook page view', () => {
           sha256: 'f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c',
           page: 1,
           rectangle: {
-            start: {x: 56.17797669910249, y: (isProdPreview ? 105.47371842296229 : 106.10048119405246)},
-            stop: {x: 304.6065481276739, y: (isProdPreview ? 59.62126986849444 : 60.29048477989886)},
+            start: {x: 56.193438336980655, y: (isProdPreview ? 105.06196104279638 : 105.69551046900199)},
+            stop: {x: 304.7582704906808, y: (isProdPreview ? 59.22603733818437 : 59.859586764389974)},
           },
         },
         value: 'verrou ◆ baigner ◆ joli ◆ chaleur ◆ grosse ◆\nsurveiller ◆ degré ◆ librairie ◆ repas ◆ parler',
@@ -914,8 +914,8 @@ describe('Gabby\'s project\'s textbook page view', () => {
           sha256: 'f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c',
           page: 1,
           rectangle: {
-            start: {x: 304.6065481276739, y: (isProdPreview ? 138.4874813821791 : 137.815094096159)},
-            stop: {x: 579.4636909848167, y: (isProdPreview ? 92.63503282771126 : 92.00509768200516)},
+            start: {x: 304.7582704906808, y: (isProdPreview ? 138.5574437500128 : 137.42807303373343)},
+            stop: {x: 579.7661698947745, y: (isProdPreview ? 92.7215200454009 : 91.59214932912141)},
           },
         },
         value: 'pronom personnel / verbe / déterminant / nom\ncommun : Je mange une pomme.',
