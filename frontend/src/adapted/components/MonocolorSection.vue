@@ -17,3 +17,9 @@ defineProps<{
     </template>
   </p>
 </template>
+
+<style scoped>
+p {
+  line-height: 2.5em;
+}
+</style>
