@@ -350,7 +350,7 @@ const highlightedRectangles = computed(() => {
 
 defineExpose({
   textSelected: computed(() => !props.editMode && alreadyExists.value ? null : textSelected),
-  adaptedData,
+  adaptedData, adaptedDataLoading,
   highlightedRectangles,
 })
 </script>

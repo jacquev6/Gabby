@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router'
 import { computedAsync } from '@vueuse/core'
 
 import { useApiStore } from '$frontend/stores/api'
-import { BButton } from '$frontend/components/opinion/bootstrap'
+import { BButton, BBusy } from '$frontend/components/opinion/bootstrap'
 import ExerciseForm from '$frontend/components/ExerciseForm.vue'
 import TwoResizableColumns from '$frontend/components/TwoResizableColumns.vue'
 import ExerciseTools from '../ExerciseTools.vue'
@@ -82,14 +82,15 @@ defineExpose({
     <template #right>
       <div class="h-100 overflow-auto" data-cy="right-col-2">
         <h1>{{ $t('adaptation') }}</h1>
-        <AdaptedExercise
-          v-if="exerciseForm?.adaptedData"
-          :projectId="props.project.id"
-          :exerciseId="props.exerciseId"
-          :exercise="exerciseForm?.adaptedData"
-          :settings="{tricolorWording: true}"
-          :isPreview="true"
-        />
+        <BBusy v-if="exerciseForm?.adaptedData" :busy="exerciseForm?.adaptedDataLoading">
+          <AdaptedExercise
+            :projectId="props.project.id"
+            :exerciseId="props.exerciseId"
+            :exercise="exerciseForm?.adaptedData"
+            :settings="{tricolorWording: true}"
+            :isPreview="true"
+          />
+        </BBusy>
         <p v-else>{{ $t('selectExerciseType') }}</p>
       </div>
     </template>

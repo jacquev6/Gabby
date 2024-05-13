@@ -26,6 +26,7 @@ const models = reactive<{[index: string]: any/* @todo Type */}>({})
 function reinitModels() {
   Object.keys(models).forEach((key: string) => delete models[key]);
 }
+watch(() => props.exercise, reinitModels, {deep: true})
 watch(
   models,
   () => {

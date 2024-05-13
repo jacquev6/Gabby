@@ -1022,4 +1022,32 @@ describe('Gabby\'s project\'s textbook page view', () => {
     cy.url().should('eq', `${Cypress.config().baseUrl}project/1/textbook/1/page/7`)
     cy.get('li:contains("5")').should('exist')
   })
+
+  it('resets responses when changing adaptation type', () => {
+    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises,more-test-exercises')
+    cy.viewport(1000, 1100)
+
+    cy.visit('/project/1/textbook/1/page/7/exercise/8')
+    cy.get('label:contains("Number")').next().should('have.value', '11')
+    cy.get('div.busy').should('not.exist')
+
+    // Selection using '.eq' is fragile but I'm in a hurry. Sorry, future me.
+    cy.get('input').eq(6).type('Abcd')
+
+    cy.get('label:contains("Adaptation type")').next().select('selectThingsAdaptation')
+    cy.get('div.busy').should('not.exist')
+
+    cy.get('span:contains("…")').eq(1).click()
+    cy.get('span:contains("…")').eq(1).should('have.css', 'background-color', 'rgb(199, 177, 139)')
+
+    cy.get('label:contains("Adaptation type")').next().select('fillWithFreeTextAdaptation')
+    cy.get('div.busy').should('not.exist')
+
+    cy.get('input').eq(6).should('have.value', '')
+
+    cy.get('label:contains("Adaptation type")').next().select('selectThingsAdaptation')
+    cy.get('div.busy').should('not.exist')
+
+    cy.get('span:contains("…")').eq(1).should('have.css', 'background-color', 'rgba(0, 0, 0, 0)')
+  })
 })
