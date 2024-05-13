@@ -7,7 +7,7 @@ import { PiniaSharedState } from 'pinia-shared-state'
 import * as untypedPdfjs from 'pdfjs-dist/build/pdf'
 import type PdfjsType from 'pdfjs-dist/types/src/pdf'
 
-import { i18n } from './locales'
+import { i18n } from '$/locales'
 import RootLayout from './views/RootLayout.vue'
 import ProjectLayout from './views/project/ProjectLayout.vue'
 import ProjectTextbookLayout from './views/project/textbook/ProjectTextbookLayout.vue'

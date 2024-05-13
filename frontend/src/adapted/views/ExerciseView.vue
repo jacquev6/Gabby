@@ -20,6 +20,6 @@ const exercise = computed(() => {
 </script>
 
 <template>
-  <p v-if="!isPreview"><router-link :to="{name: 'index'}">Retour</router-link></p>
+  <p v-if="!isPreview"><router-link :to="{name: 'index'}">{{ $t('back') }}</router-link></p>
   <Exercise :projectId="data.projectId" :exerciseId :exercise :settings :isPreview />
 </template>

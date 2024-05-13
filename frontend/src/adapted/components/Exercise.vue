@@ -101,7 +101,6 @@ watch(
     @click="reinitModels"
     :disabled="Object.keys(models).length === 0"
   >
-    <!-- @todo Use internationalization -->
-    Effacer les réponses
+    {{ $t('eraseAnswers') }}
   </BButton></p>
 </template>
