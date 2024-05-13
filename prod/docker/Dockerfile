@@ -94,7 +94,6 @@ RUN rm /etc/nginx/conf.d/default.conf
 RUN rm /usr/share/nginx/html/*.html
 ADD prod/docker/frontend.conf /etc/nginx/conf.d/frontend.conf
 COPY --from=fontend-builder /app/dist /usr/share/nginx/html/frontend
-COPY --from=adapted-builder /app/dist /usr/share/nginx/html/adapted
 COPY --from=backend-builder /app/api/static /usr/share/nginx/html/api/static
 COPY --from=doc-builder /app/build /usr/share/nginx/html/doc
 
