@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
 
+import { i18n } from '$frontend/locales'
 import ExerciseView from './views/ExerciseView.vue'
 import IndexView from './views/IndexView.vue'
 import RootLayout from './RootLayout.vue'
@@ -24,5 +25,6 @@ const router = createRouter({
 })
 
 createApp(RootLayout)
+  .use(i18n)
   .use(router)
   .mount('#app')

@@ -15,4 +15,3 @@ pyhumps  # Convert between cases
 python-multipart  # OAuth2 authentication uses multipart
 pyjwt  # For authentication tokens
 argon2-cffi  # Password hasher
-jinja2

@@ -27,6 +27,7 @@ RUN npx vite build
 FROM frontend-dependencies AS adapted-builder
 
 ADD frontend /app
+ENV VITE_OPINION_APP_DEFAULT_LOCALE=fr
 ENV GABBY_ENTRY_POINT_NAME=adapted
 
 RUN npx vite build

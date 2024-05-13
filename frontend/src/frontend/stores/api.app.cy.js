@@ -222,7 +222,7 @@ describe('ApiStore', () => {
     cy.request('POST', 'http://fanout:8080/reset-for-tests/yes-im-sure?fixtures=test-exercises,more-test-exercises')
   })
 
-  it('gets a non-adapted exercise', async () => {
+  it('gets an exercise without an adaptation', async () => {
     const api = useApiStore()
 
     const exercise = await api.client.getOne('exercise', '2', {include: 'adaptation'})
@@ -231,18 +231,18 @@ describe('ApiStore', () => {
     expect(exercise.relationships.adaptation).to.be.null
   })
 
-  it('gets an adapted "select things" exercise', async () => {
+  it('gets an exercise with "select things" adaptation', async () => {
     const api = useApiStore()
 
     const exercise = await api.client.getOne('exercise', '7', {include: 'adaptation'})
 
-    expect(exercise.attributes.instructions).to.equal('Relève dans le texte trois\ndéterminants, un nom propre, quatre\nnoms communs et trois verbes.')
+    expect(exercise.attributes.instructions).to.equal('Relève dans le texte trois\n{sel1:déterminants}, un {sel2:nom propre}, quatre\n{sel3:noms communs} et trois {sel4:verbes}.')
     expect(exercise.relationships.adaptation.type).to.equal('selectThingsAdaptation')
     expect(exercise.relationships.adaptation.id).to.equal('2')
-    expect(exercise.relationships.adaptation.attributes.colors).to.equal(3)
+    expect(exercise.relationships.adaptation.attributes.colors).to.equal(4)
   })
 
-  it('gets an adapted "fill with free text" exercise', async () => {
+  it('gets an exercise with "fill with free text" adaptation', async () => {
     const api = useApiStore()
 
     const exercise = await api.client.getOne('exercise', '8', {include: 'adaptation'})
@@ -252,7 +252,7 @@ describe('ApiStore', () => {
     expect(exercise.relationships.adaptation.attributes.placeholder).to.equal('…')
   })
 
-  it('creates an adapted exercise at once', async () => {
+  it('creates an exercise and its adaptation at once', async () => {
     const api = useApiStore()
 
     const response = await api.client.batch(
@@ -292,7 +292,7 @@ describe('ApiStore', () => {
     expect(exercise.relationships.adaptation.attributes.colors).to.equal(5)
   })
 
-  it('updates an adapted exercise', async () => {
+  it('updates an adaptation', async () => {
     const api = useApiStore()
 
     const adapted = await api.client.patch('selectThingsAdaptation', '2', {colors: 17}, {})
@@ -300,7 +300,7 @@ describe('ApiStore', () => {
     expect(adapted.attributes.colors).to.equal(17)
   })
 
-  it('changes the type of an adapted exercise', async () => {
+  it('changes the type of an adaptation', async () => {
     const api = useApiStore()
 
     const previous = await api.client.getOne('selectThingsAdaptation', '2')
@@ -309,7 +309,7 @@ describe('ApiStore', () => {
     const adapted = await api.client.post('fillWithFreeTextAdaptation', {placeholder: '...'}, {exercise: {type: 'exercise', id: '7'}}, {include: 'exercise'})
 
     expect(adapted.attributes.placeholder).to.equal('...')
-    expect(adapted.relationships.exercise.attributes.instructions).to.equal('Relève dans le texte trois\ndéterminants, un nom propre, quatre\nnoms communs et trois verbes.')
+    expect(adapted.relationships.exercise.attributes.instructions).to.equal('Relève dans le texte trois\n{sel1:déterminants}, un {sel2:nom propre}, quatre\n{sel3:noms communs} et trois {sel4:verbes}.')
 
     await api.client.getOne('selectThingsAdaptation', '2')
     expect(previous.exists).to.be.false

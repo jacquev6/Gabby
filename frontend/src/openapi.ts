@@ -177,8 +177,7 @@ export interface components {
   schemas: {
     /** AdaptedExercise */
     AdaptedExercise: {
-      /** Instructions */
-      instructions: string;
+      instructions: components["schemas"]["Section"];
       /** Number */
       number: string;
       /** Textbook Page */
@@ -342,10 +341,38 @@ export interface components {
        */
       type: "selectableText";
     };
+    /** SelectedClicks */
+    SelectedClicks: {
+      /** Color */
+      color: number;
+      /** Colors */
+      colors: number;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "selectedClicks";
+    };
+    /** SelectedText */
+    SelectedText: {
+      /** Color */
+      color: number;
+      /** Colors */
+      colors: number;
+      /** Text */
+      text: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "selectedText";
+    };
     /** Sentence */
     Sentence: {
       /** Tokens */
-      tokens: (components["schemas"]["PlainText"] | components["schemas"]["SelectableText"] | components["schemas"]["FreeTextInput"] | components["schemas"]["Whitespace"])[];
+      tokens: (components["schemas"]["PlainText"] | components["schemas"]["SelectableText"] | components["schemas"]["SelectedText"] | components["schemas"]["SelectedClicks"] | components["schemas"]["FreeTextInput"] | components["schemas"]["Whitespace"])[];
     };
     /** UpdateInputListRelationship */
     UpdateInputListRelationship: {

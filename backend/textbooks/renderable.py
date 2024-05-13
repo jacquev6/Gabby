@@ -16,6 +16,17 @@ class SelectableText(BaseModel):
     text: str
     colors: int
 
+class SelectedText(BaseModel):
+    type: Literal["selectedText"]
+    text: str
+    color: int
+    colors: int
+
+class SelectedClicks(BaseModel):
+    type: Literal["selectedClicks"]
+    color: int
+    colors: int
+
 class FreeTextInput(BaseModel):
     type: Literal["freeTextInput"]
     pass
@@ -24,7 +35,7 @@ class Whitespace(BaseModel):
     type: Literal["whitespace"]
     pass
 
-SentenceToken = PlainText | SelectableText | FreeTextInput | Whitespace
+SentenceToken = PlainText | SelectableText | SelectedText | SelectedClicks | FreeTextInput | Whitespace
 
 
 class Sentence(BaseModel):
@@ -42,5 +53,5 @@ class Section(BaseModel):
 class AdaptedExercise(BaseModel):
     number: str
     textbook_page: int | None
-    instructions: str
+    instructions: Section
     wording: Section

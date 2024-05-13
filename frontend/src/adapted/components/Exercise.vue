@@ -3,7 +3,8 @@ import { computed, reactive, watch } from 'vue'
 
 import { BButton } from '$frontend/components/opinion/bootstrap'
 import type { Settings, Exercise } from '$adapted/types'
-import SelectableWord from './SelectableWord.vue'
+import SelectableText from './SelectableText.vue'
+import SelectedText from './SelectedText.vue'
 import TricolorSection from './TricolorSection.vue'
 import MonocolorSection from './MonocolorSection.vue'
 
@@ -55,23 +56,44 @@ watch(
 </script>
 
 <template>
-  <p>{{ exercise.instructions }}</p>
-  <component :is="section" :section="exercise.wording">
-    <template v-slot="{ token, tokenIndex }">
+  <MonocolorSection :section="exercise.instructions">
+    <template v-slot="{ token }">
       <template v-if="false"></template>
-      <template v-else-if="token.type === 'plainText'" :token="token">{{ token.text }}</template>
-      <template v-else-if="token.type === 'whitespace'" :token="token"><wbr /> <wbr /></template>
-      <template v-else-if="token.type === 'freeTextInput'" :token="token">
-        <input type="text" v-model="models[tokenIndex]" />
+      <template v-else-if="token.type === 'plainText'">{{ token.text }}</template>
+      <template v-else-if="token.type === 'whitespace'"><wbr /> <wbr /></template>
+      <template v-else-if="token.type === 'freeTextInput'"><input type="text" /></template>
+      <template v-else-if="token.type === 'selectableText'">{{ token.text }}</template>
+      <template v-else-if="token.type === 'selectedText'">
+        <SelectedText :colors="token.colors" :color="token.color">{{ token.text }}</SelectedText>
       </template>
-      <template v-else-if="token.type === 'selectableText'">
-        <SelectableWord :colors="token.colors" v-model="models[tokenIndex]">{{ token.text }}</SelectableWord>
+      <template v-else-if="token.type === 'selectedClicks'">
+        <SelectedText :colors="token.colors" :color="token.color">{{ token.color }} {{ $t('nClicks', token.color) }}</SelectedText>
       </template>
       <template v-else>
         <span>{{ ((t: never) => t)(token) }}</span>
       </template>
     </template>
+  </MonocolorSection>
+  <hr />
+  <component :is="section" :section="exercise.wording">
+    <template v-slot="{ token, tokenIndex }">
+      <template v-if="false"></template>
+      <template v-else-if="token.type === 'plainText'">{{ token.text }}</template>
+      <template v-else-if="token.type === 'whitespace'"><wbr /> <wbr /></template>
+      <template v-else-if="token.type === 'freeTextInput'">
+        <input type="text" v-model="models[tokenIndex]" />
+      </template>
+      <template v-else-if="token.type === 'selectableText'">
+        <SelectableText :colors="token.colors" v-model="models[tokenIndex]">{{ token.text }}</SelectableText>
+      </template>
+      <template v-else-if="token.type === 'selectedText'">{{ token.text }}</template>
+      <template v-else-if="token.type === 'selectedClicks'">{{ token.color }} {{ $t('nClicks', token.color) }}</template>
+      <template v-else>
+        <span>{{ ((t: never) => t)(token) }}</span>
+      </template>
+    </template>
   </component>
+  <hr />
   <p><BButton
     data-cy="erase-responses"
     secondary sm

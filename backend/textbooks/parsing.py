@@ -5,33 +5,40 @@ from django.test import TestCase
 
 
 @dataclasses.dataclass
-class WordToken:
+class TagToken:
+    tag: str
     text: str
 
+@dataclasses.dataclass
+class WordToken:
+    text: str
 
 @dataclasses.dataclass
 class WhitespaceToken:
     text: str
 
-
 @dataclasses.dataclass
 class PunctuationToken:
     text: str
 
-TextToken = WordToken | WhitespaceToken | PunctuationToken
+TextToken = TagToken | WordToken | WhitespaceToken | PunctuationToken
 
 
-tokenize_text_regex = re.compile(r"(\w+)|(\s+)|(.)")
+tokenize_text_regex = re.compile(r"(?:{([a-z0-9]+):([^}]+)})|(\w+)|(\s+)|(.)")
 
 def tokenize_text(s: str) -> list[TextToken]:
     ret = []
     for m in tokenize_text_regex.finditer(s):
         if m.group(1):
-            ret.append(WordToken(m.group(1)))
-        elif m.group(2):
-            ret.append(WhitespaceToken(m.group(2)))
+            assert m.group(2)
+            ret.append(TagToken(m.group(1), m.group(2)))
+        elif m.group(3):
+            ret.append(WordToken(m.group(3)))
+        elif m.group(4):
+            ret.append(WhitespaceToken(m.group(4)))
         else:
-            ret.append(PunctuationToken(m.group(0)))
+            assert m.group(5)
+            ret.append(PunctuationToken(m.group(5)))
     return ret
 
 
@@ -76,3 +83,6 @@ class TokenizeTextTestCase(TestCase):
                 PunctuationToken("."),
             ],
         )
+
+    def test_tag(self):
+        self.make_test("{foo:hello}", [TagToken("foo", "hello")])

@@ -168,18 +168,61 @@ class SelectThingsAdaptation(Adaptation):
         return renderable.AdaptedExercise(
             number=self.exercise.number,
             textbook_page=self.exercise.textbook_page,
-            instructions=self.exercise.instructions,
-            wording=renderable.Section(paragraphs=[
-                renderable.Paragraph(sentences=[
-                    renderable.Sentence(tokens=[
-                        self.__adapt_token(token)
-                        for token in parsing.tokenize_text(self.exercise.wording)
-                    ]),
-                ]),
-            ]),
+            instructions=self.__make_adapted_instructions(),
+            wording=self.__make_adapted_wording(),
         )
 
-    def __adapt_token(self, token: parsing.TextToken):
+    def __make_adapted_instructions(self):
+        paragraphs = [
+            renderable.Paragraph(sentences=[
+                renderable.Sentence(tokens=[
+                    self.__adapt_instructions_token(token)
+                    for token in parsing.tokenize_text(self.exercise.instructions)
+                ]),
+            ])
+        ]
+        if self.colors > 1:
+            tokens = []
+            for i in range(self.colors):
+                if i != 0:
+                    tokens.append(renderable.Whitespace(type="whitespace"))
+                tokens.append(renderable.SelectedClicks(type="selectedClicks", color=i + 1, colors=self.colors))
+            paragraphs.append(renderable.Paragraph(sentences=[renderable.Sentence(tokens=tokens)]))
+        return renderable.Section(paragraphs=paragraphs)
+
+    def __adapt_instructions_token(self, token: parsing.TextToken):
+        # @todo Use type checking to ensure all cases are covered
+        match token:
+            case parsing.WordToken(text=text):
+                return renderable.PlainText(type="plainText", text=text)
+            case parsing.WhitespaceToken(text=text):
+                return renderable.Whitespace(type="whitespace")
+            case parsing.PunctuationToken(text=text):
+                return renderable.PlainText(type="plainText", text=text)
+            case parsing.TagToken(tag=tag, text=text):
+                if self.colors > 1 and tag.startswith("sel"):
+                    try:
+                        color = int(tag[3:])
+                    except ValueError:
+                        pass
+                    else:
+                        if 1 <= color <= self.colors:
+                            return renderable.SelectedText(type="selectedText", text=text, color=color, colors=self.colors)
+                return renderable.PlainText(type="plainText", text=f"{{{tag}:{text}}}")
+            case _:
+                raise ValueError(f"Unknown token type: {type(token)}")
+
+    def __make_adapted_wording(self):
+        return renderable.Section(paragraphs=[
+            renderable.Paragraph(sentences=[
+                renderable.Sentence(tokens=[
+                    self.__adapt_wording_token(token)
+                    for token in parsing.tokenize_text(self.exercise.wording)
+                ]),
+            ]),
+        ])
+
+    def __adapt_wording_token(self, token: parsing.TextToken):
         # @todo Use type checking to ensure all cases are covered
         match token:
             case parsing.WordToken(text=text):
@@ -202,26 +245,50 @@ class FillWithFreeTextAdaptation(Adaptation):
     placeholder = models.CharField(null=False, blank=False, max_length=10)
 
     def make_adapted(self):
-        parts = self.exercise.wording.split(self.placeholder)
-        tokens = []
-        for i, part in enumerate(parts):
-            for token in parsing.tokenize_text(part):
-                tokens.append(self.__adapt_token(token))
-            if i < len(parts) - 1:
-                tokens.append(renderable.FreeTextInput(type="freeTextInput"))
-
         return renderable.AdaptedExercise(
             number=self.exercise.number,
             textbook_page=self.exercise.textbook_page,
-            instructions=self.exercise.instructions,
-            wording=renderable.Section(paragraphs=[
-                renderable.Paragraph(sentences=[
-                    renderable.Sentence(tokens=tokens),
-                ]),
-            ]),
+            instructions=self.__make_adapted_instructions(),
+            wording=self.__make_adapted_wording(),
         )
 
-    def __adapt_token(self, token: parsing.TextToken):
+    def __make_adapted_instructions(self):
+        paragraph = renderable.Paragraph(sentences=[
+            renderable.Sentence(tokens=[
+                self.__adapt_instructions_token(token)
+                for token in parsing.tokenize_text(self.exercise.instructions)
+            ]),
+        ])
+        return renderable.Section(paragraphs=[paragraph])
+
+    def __adapt_instructions_token(self, token: parsing.TextToken):
+        # @todo Use type checking to ensure all cases are covered
+        match token:
+            case parsing.WordToken(text=text):
+                return renderable.PlainText(type="plainText", text=text)
+            case parsing.WhitespaceToken(text=text):
+                return renderable.Whitespace(type="whitespace")
+            case parsing.PunctuationToken(text=text):
+                return renderable.PlainText(type="plainText", text=text)
+            case _:
+                raise ValueError(f"Unknown token type: {type(token)}")
+
+    def __make_adapted_wording(self):
+        parts = self.exercise.wording.split(self.placeholder)  # @todo Move this to the parsing module
+        tokens = []
+        for i, part in enumerate(parts):
+            for token in parsing.tokenize_text(part):
+                tokens.append(self.__adapt_wording_token(token))
+            if i < len(parts) - 1:
+                tokens.append(renderable.FreeTextInput(type="freeTextInput"))
+
+        return renderable.Section(paragraphs=[
+            renderable.Paragraph(sentences=[
+                renderable.Sentence(tokens=tokens),
+            ]),
+        ])
+
+    def __adapt_wording_token(self, token: parsing.TextToken):
         # @todo Use type checking to ensure all cases are covered
         match token:
             case parsing.WordToken(text=text):

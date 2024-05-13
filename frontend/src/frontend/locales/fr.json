@@ -81,6 +81,7 @@
 
   "colorsCount": "Nombre de couleurs",
   "includePunctuation": "Sélectionner aussi la ponctuation",
+  "useSel1ToSelN": "Utilisez ces balises dans la consigne pour formatter du texte comme s'il était sélectionné :",
   "placeholderText": "Trou à remplir",
 
   "tools": "Outils",
@@ -88,5 +89,7 @@
   "replaceWith": "Par",
   "apply": "Appliquer",
 
-  "not-yet-implemented": "Pas encore implémenté"
+  "not-yet-implemented": "Pas encore implémenté",
+
+  "nClicks": "clic | clics"
 }

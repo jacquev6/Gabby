@@ -9,7 +9,6 @@ from fastapi.responses import HTMLResponse
 import django.conf
 import django.contrib.auth
 import django.core.management
-import jinja2
 
 from fastjsonapi import make_jsonapi_router
 from fastjsonapi.django import AuthenticationToken, make_wrapper
@@ -65,10 +64,6 @@ app.include_router(
 def extraction_report(project_id: int):
     return make_extraction_report(project_id)
 
-jinja2_env = jinja2.Environment(
-    loader=jinja2.PackageLoader("textbooks"),
-)
-
 @app.get("/api/project-{project_id}.html")
 def export_project(project_id: int):
     project = Project.objects.get(id=project_id)
@@ -80,8 +75,10 @@ def export_project(project_id: int):
         projectId=project.id,
         exercises=exercises,
     )).replace("\\", "\\\\").replace('"', "\\\"")
+    with open("textbooks/templates/adapted/index.html") as f:
+        template = f.read()
     return HTMLResponse(
-        content=jinja2_env.get_template("adapted/index.html").render(data=data),
+        content=template.replace("{{ data }}", data),
         headers={
             "Content-Type": "text/html",
             "Content-Disposition": f'attachment; filename="{project.title}.html"',

@@ -22,7 +22,20 @@ class SelectThingsAdaptedExerciseBusinessTestCase(TestCase):
             r.AdaptedExercise(
                 number="number",
                 textbook_page=None,
-                instructions="instructions",
+                instructions=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(type="plainText", text="instructions"),
+                        ]),
+                    ]),
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.SelectedClicks(type="selectedClicks", color=1, colors=2),
+                            r.Whitespace(type="whitespace"),
+                            r.SelectedClicks(type="selectedClicks", color=2, colors=2),
+                        ]),
+                    ]),
+                ]),
                 wording=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
@@ -50,6 +63,83 @@ class SelectThingsAdaptedExerciseBusinessTestCase(TestCase):
             ),
         )
 
+    def test_sel_tags(self):
+        exercise = Exercise(
+            number="number",
+            textbook_page=None,
+            instructions="{sel1:abc} {sel2:def} {sel3:ghi} {sel4:jkl}",
+            wording="wording",
+        )
+        adaptation = SelectThingsAdaptation(exercise=exercise, colors=3, words=True, punctuation=False)
+
+        self.assertEqual(
+            adaptation.make_adapted(),
+            r.AdaptedExercise(
+                number="number",
+                textbook_page=None,
+                instructions=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.SelectedText(type="selectedText", text="abc", color=1, colors=3),
+                            r.Whitespace(type="whitespace"),
+                            r.SelectedText(type="selectedText", text="def", color=2, colors=3),
+                            r.Whitespace(type="whitespace"),
+                            r.SelectedText(type="selectedText", text="ghi", color=3, colors=3),
+                            r.Whitespace(type="whitespace"),
+                            r.PlainText(type="plainText", text="{sel4:jkl}"),
+                        ]),
+                    ]),
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.SelectedClicks(type="selectedClicks", color=1, colors=3),
+                            r.Whitespace(type="whitespace"),
+                            r.SelectedClicks(type="selectedClicks", color=2, colors=3),
+                            r.Whitespace(type="whitespace"),
+                            r.SelectedClicks(type="selectedClicks", color=3, colors=3),
+                        ]),
+                    ]),
+                ]),
+                wording=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.SelectableText(type="selectableText", text="wording", colors=3),
+                        ]),
+                    ]),
+                ]),
+            ),
+        )
+
+    def test_single_color(self):
+        exercise = Exercise(
+            number="number",
+            textbook_page=None,
+            instructions="{sel1:abc}",
+            wording="wording",
+        )
+        adaptation = SelectThingsAdaptation(exercise=exercise, colors=1, words=True, punctuation=False)
+
+        self.assertEqual(
+            adaptation.make_adapted(),
+            r.AdaptedExercise(
+                number="number",
+                textbook_page=None,
+                instructions=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(type="plainText", text="{sel1:abc}"),
+                        ]),
+                    ]),
+                ]),
+                wording=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.SelectableText(type="selectableText", text="wording", colors=1),
+                        ]),
+                    ]),
+                ]),
+            ),
+        )
+
 
 class FillWithFreeTextAdaptationBusinessTestCase(TestCase):
     def test_single_sentence(self):
@@ -66,7 +156,13 @@ class FillWithFreeTextAdaptationBusinessTestCase(TestCase):
             r.AdaptedExercise(
                 number="number",
                 textbook_page=42,
-                instructions="instructions",
+                instructions=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(type="plainText", text="instructions"),
+                        ]),
+                    ]),
+                ]),
                 wording=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
@@ -108,7 +204,13 @@ class FillWithFreeTextAdaptationBusinessTestCase(TestCase):
             r.AdaptedExercise(
                 number="number",
                 textbook_page=None,
-                instructions="instructions",
+                instructions=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(type="plainText", text="instructions"),
+                        ]),
+                    ]),
+                ]),
                 wording=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
@@ -150,7 +252,25 @@ class AdaptedExerciseApiTestCase(TestMixin, TestCase):
         self.assertEqual(response.json()["data"]["attributes"]["adapted"], {
             "number": "A.1",
             "textbook_page": 1,  # @todo Rename to textbookPage
-            "instructions": "This is the instructions.",
+            "instructions": {"paragraphs": [
+                {"sentences": [{"tokens": [
+                    {"type": "plainText", "text": "This"},
+                    {"type": "whitespace"},
+                    {"type": "plainText", "text": "is"},
+                    {"type": "whitespace"},
+                    {"type": "plainText", "text": "the"},
+                    {"type": "whitespace"},
+                    {"type": "plainText", "text": "instructions"},
+                    {"type": "plainText", "text": "."},
+                ]}]},
+                {"sentences": [{"tokens": [
+                    {"type": "selectedClicks", "color": 1, "colors": 3},
+                    {"type": "whitespace"},
+                    {"type": "selectedClicks", "color": 2, "colors": 3},
+                    {"type": "whitespace"},
+                    {"type": "selectedClicks", "color": 3, "colors": 3},
+                ]}]},
+            ]},
             "wording": {"paragraphs": [{"sentences": [{"tokens": [
                 {"type": "selectableText", "text": "This", "colors": 3},
                 {"type": "whitespace"},
@@ -184,7 +304,16 @@ class AdaptedExerciseApiTestCase(TestMixin, TestCase):
         self.assertEqual(response.json()["data"]["attributes"]["adapted"], {
             "number": "A.1",
             "textbook_page": 1,  # @todo Rename to textbookPage
-            "instructions": "This is the instructions.",
+            "instructions": {"paragraphs": [{"sentences": [{"tokens": [
+                {"type": "plainText", "text": "This"},
+                {"type": "whitespace"},
+                {"type": "plainText", "text": "is"},
+                {"type": "whitespace"},
+                {"type": "plainText", "text": "the"},
+                {"type": "whitespace"},
+                {"type": "plainText", "text": "instructions"},
+                {"type": "plainText", "text": "."},
+            ]}]}]},
             "wording": {"paragraphs": [{"sentences": [{"tokens": [
                 {"type": "plainText", "text": "Fill"},
                 {"type": "whitespace"},

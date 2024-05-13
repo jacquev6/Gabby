@@ -82,6 +82,7 @@
 
   "colorsCount": "Number of colors",
   "includePunctuation": "Also select punctuation",
+  "useSel1ToSelN": "Use these tags in instructions to format text as if selected:",
   "placeholderText": "Placeholder to fill",
 
   "tools": "Tools",
@@ -89,5 +90,7 @@
   "replaceWith": "With",
   "apply": "Apply",
 
-  "not-yet-implemented": "Not yet implemented"
+  "not-yet-implemented": "Not yet implemented",
+
+  "nClicks": "click | clicks"
 }
