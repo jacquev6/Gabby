@@ -9,13 +9,15 @@ import TricolorSection from './TricolorSection.vue'
 import MonocolorSection from './MonocolorSection.vue'
 
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   projectId: string,
   exerciseId: string,
   exercise: Exercise,
   settings: Settings,
-  isPreview: boolean,
-}>()
+  isPreview?: boolean,
+}>(), {
+  isPreview: false,
+})
 
 const section = computed(() => props.settings.tricolorWording ? TricolorSection : MonocolorSection)
 
