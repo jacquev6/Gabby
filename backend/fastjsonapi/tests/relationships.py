@@ -1,5 +1,4 @@
 from contextlib import contextmanager
-import dataclasses
 from typing import Annotated
 
 from django.test import TestCase

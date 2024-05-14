@@ -46,7 +46,7 @@ const router = createRouter({
           component: RootIndexView,
         },
         {
-          path: 'project/:projectId',
+          path: 'project-:projectId',
           component: ProjectLayout,
           props: (route) => (
             {
@@ -60,7 +60,7 @@ const router = createRouter({
               component: ProjectIndexView,
             },
             {
-              path: 'textbook/:textbookId',
+              path: 'textbook-:textbookId',
               component: ProjectTextbookLayout,
               props: (route) => (
                 {
@@ -69,7 +69,7 @@ const router = createRouter({
               ),
               children: [
                 {
-                  path: 'page/:page',
+                  path: 'page-:page',
                   component: ProjectTextbookPageLayout,
                   props: (route) => {
                     console.assert(typeof(route.params.page) === 'string')
@@ -89,7 +89,7 @@ const router = createRouter({
                       component: ProjectTextbookPageCreateExerciseView,
                     },
                     {
-                      path: 'exercise/:exerciseId',
+                      path: 'exercise-:exerciseId',
                       name: 'project-textbook-page-edit-exercise',
                       component: ProjectTextbookPageEditExerciseView,
                       props: (route) => (

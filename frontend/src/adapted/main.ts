@@ -16,7 +16,7 @@ const router = createRouter({
       component: IndexView,
     },
     {
-      path: '/exercise/:exerciseId',
+      path: '/exercise-:exerciseId',
       name: 'exercise',
       component: ExerciseView,
       props: true,

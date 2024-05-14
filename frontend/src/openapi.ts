@@ -2162,7 +2162,7 @@ export interface operations {
   extraction_report_api_project__project_id__extraction_report_json_get: {
     parameters: {
       path: {
-        project_id: number;
+        project_id: string;
       };
     };
     responses: {
@@ -2184,7 +2184,7 @@ export interface operations {
   export_project_api_project__project_id__html_get: {
     parameters: {
       path: {
-        project_id: number;
+        project_id: string;
       };
     };
     responses: {

@@ -17,8 +17,8 @@ describe('SectionEditor', () => {
 
     cy.viewport(1000, 500)
 
-    cy.mount(SectionEditor, {props: {underTest: true, sectionId: '1'}}).as('editor')
-    cy.get('@editor').then(({component}) => component.show('1'))
+    cy.mount(SectionEditor).as('editor')
+    cy.get('@editor').then(({component}) => component.show('eyjahd'))
     cy.get('@editor').its('component.active').should('be.true')
   })
 
@@ -70,7 +70,7 @@ describe('SectionEditor', () => {
     cy.get('label').contains('Fin dans le PDF').next().type('{selectAll}15')
     cy.get('label').contains('Début dans le manuel').next().type('{selectAll}20')
 
-    cy.wrap(useApiStore()).then((api) => api.client.getOne('section', '1')).as('section')
+    cy.wrap(useApiStore()).then((api) => api.client.getOne('section', 'eyjahd')).as('section')
     cy.get('@section').its('attributes.pdfFileStartPage').should('eq', 1)
     cy.get('@section').its('attributes.textbookStartPage').should('eq', 6)
     cy.get('@section').its('attributes.pagesCount').should('eq', 2)
@@ -78,7 +78,7 @@ describe('SectionEditor', () => {
     cy.get('button').contains('Enregistrer').click()
     cy.get('@editor').its('component.active').should('be.false')
 
-    cy.wrap(useApiStore()).then((api) => api.client.getOne('section', '1')).as('section')
+    cy.wrap(useApiStore()).then((api) => api.client.getOne('section', 'eyjahd')).as('section')
     cy.get('@section').its('attributes.pdfFileStartPage').should('eq', 10)
     cy.get('@section').its('attributes.textbookStartPage').should('eq', 20)
     cy.get('@section').its('attributes.pagesCount').should('eq', 6)
@@ -89,7 +89,7 @@ describe('SectionEditor', () => {
     cy.get('label').contains('Fin dans le PDF').next().type('{selectAll}15')
     cy.get('label').contains('Début dans le manuel').next().type('{selectAll}20')
 
-    cy.wrap(useApiStore()).then((api) => api.client.getOne('section', '1')).as('section')
+    cy.wrap(useApiStore()).then((api) => api.client.getOne('section', 'eyjahd')).as('section')
     cy.get('@section').its('attributes.pdfFileStartPage').should('eq', 1)
     cy.get('@section').its('attributes.textbookStartPage').should('eq', 6)
     cy.get('@section').its('attributes.pagesCount').should('eq', 2)
@@ -97,7 +97,7 @@ describe('SectionEditor', () => {
     cy.get('button').contains('Annuler').click()
     cy.get('@editor').its('component.active').should('be.false')
 
-    cy.wrap(useApiStore()).then((api) => api.client.getOne('section', '1')).as('section')
+    cy.wrap(useApiStore()).then((api) => api.client.getOne('section', 'eyjahd')).as('section')
     cy.get('@section').its('attributes.pdfFileStartPage').should('eq', 1)
     cy.get('@section').its('attributes.textbookStartPage').should('eq', 6)
     cy.get('@section').its('attributes.pagesCount').should('eq', 2)

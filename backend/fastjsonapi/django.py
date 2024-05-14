@@ -21,15 +21,11 @@ import jwt
 User = django.contrib.auth.get_user_model()
 
 
-class DjangoOrmWrapper:
+class OrmWrapper:
     __slots__ = ["_wrapped"]
 
     def __init__(self, wrapped):
         self._wrapped = wrapped
-
-    @property
-    def id(self):
-        return str(self._wrapped.id)
 
     def __getattr__(self, name):
         attr = getattr(self._wrapped, name)
@@ -47,25 +43,36 @@ class DjangoOrmWrapper:
             attr = getattr(self._wrapped, name)
             if attr.__class__.__name__ == "RelatedManager":
                 attr.set([unwrap(v) for v in value])
-            elif isinstance(value, DjangoOrmWrapper):
+            elif isinstance(value, OrmWrapper):
                 setattr(self._wrapped, name, unwrap(value))
             else:
                 setattr(self._wrapped, name, value)
 
 
-@functools.cache
-def make_wrapper(type):
-    class Wrapper(DjangoOrmWrapper):
+class OrmWrapperWithStrIds(OrmWrapper):
+    @property
+    def id(self):
+        return str(self._wrapped.id)
+
+
+_wrappers = {}
+
+def set_wrapper(type, base_wrapper):
+    class Wrapper(base_wrapper):
         pass
 
     Wrapper.__name__ = type.__name__ + "Wrapper"
 
-    return Wrapper
+    _wrappers[type] = Wrapper
+
+
+def get_wrapper(type):
+    return _wrappers[type]
 
 
 def wrap(o):
     assert o is not None
-    return make_wrapper(o.__class__)(o)
+    return get_wrapper(o.__class__)(o)
 
 
 def unwrap(wrapper):
@@ -94,6 +101,8 @@ class UserResource:
                 return wrap(User.objects.get(id=id))
             except User.DoesNotExist:
                 return None
+
+set_wrapper(User, OrmWrapperWithStrIds)
 
 
 def make_authentication_token(

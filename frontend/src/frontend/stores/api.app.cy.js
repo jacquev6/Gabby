@@ -20,20 +20,20 @@ describe('ApiStore', () => {
   it('gets all textbooks and sections', async () => {
     const api = useApiStore()
 
-    expect(api.cache.getOne('textbook', '1').inCache).to.be.false
+    expect(api.cache.getOne('textbook', 'klxufv').inCache).to.be.false
 
     const textbooks = await api.client.getAll('textbooks')
     expect(textbooks.length).to.equal(1)
     expect(textbooks[0].attributes.title).to.equal('Français CE2')
 
     expect(api.cache.getOne('textbook', '0').inCache).to.be.false
-    expect(api.cache.getOne('textbook', '1').attributes.title).to.equal('Français CE2')
-    expect(api.cache.getOne('textbook', '1').relationships.sections[0].inCache).to.be.false
+    expect(api.cache.getOne('textbook', 'klxufv').attributes.title).to.equal('Français CE2')
+    expect(api.cache.getOne('textbook', 'klxufv').relationships.sections[0].inCache).to.be.false
 
     await api.client.getAll('sections')
 
     expect(
-      api.cache.getOne('textbook', '1').relationships.
+      api.cache.getOne('textbook', 'klxufv').relationships.
         sections[0].attributes.textbookStartPage
     ).to.equal(6)
   })
@@ -41,13 +41,13 @@ describe('ApiStore', () => {
   it('gets one textbook and its sections', async () => {
     const api = useApiStore()
 
-    expect(api.cache.getOne('textbook', '1').inCache).to.be.false
+    expect(api.cache.getOne('textbook', 'klxufv').inCache).to.be.false
 
-    const textbook = await api.client.getOne('textbook', '1', {include: 'sections'})
+    const textbook = await api.client.getOne('textbook', 'klxufv', {include: 'sections'})
     expect(textbook.attributes.title).to.equal('Français CE2')
 
-    expect(api.cache.getOne('textbook', '1').attributes.title).to.equal('Français CE2')
-    expect(api.cache.getOne('textbook', '1').relationships.sections[0].attributes.textbookStartPage).to.equal(6)
+    expect(api.cache.getOne('textbook', 'klxufv').attributes.title).to.equal('Français CE2')
+    expect(api.cache.getOne('textbook', 'klxufv').relationships.sections[0].attributes.textbookStartPage).to.equal(6)
   })
 
   it('keeps single included', async () => {
@@ -56,7 +56,7 @@ describe('ApiStore', () => {
     await api.client.getAll('textbooks', {include: 'sections'})
 
     expect(
-      api.cache.getOne('textbook', '1').relationships.
+      api.cache.getOne('textbook', 'klxufv').relationships.
         sections[0].attributes.textbookStartPage
     ).to.equal(6)
   })
@@ -67,7 +67,7 @@ describe('ApiStore', () => {
     await api.client.getAll('textbooks', {include: 'sections.pdfFile.namings'})
 
     expect(
-      api.cache.getOne('textbook', '1')
+      api.cache.getOne('textbook', 'klxufv')
         .relationships.sections[0]
         .relationships.pdfFile
         .relationships.namings[0]
@@ -81,12 +81,12 @@ describe('ApiStore', () => {
     await api.client.getAll('sections', {include: ['textbook', 'pdfFile.namings']})
 
     expect(
-      api.cache.getOne('section', '1')
+      api.cache.getOne('section', 'eyjahd')
         .relationships.textbook
         .attributes.title
     ).to.equal('Français CE2')
     expect(
-      api.cache.getOne('section', '1')
+      api.cache.getOne('section', 'eyjahd')
         .relationships.pdfFile
         .relationships.namings[0]
         .attributes.name
@@ -105,17 +105,17 @@ describe('ApiStore', () => {
     const api = useApiStore()
 
     expect((await api.client.getAll('exercises')).length).to.equal(6)
-    expect((await api.client.getAll('exercises', {filter: {textbook: '1'}})).length).to.equal(3)
-    expect((await api.client.getAll('exercises', {filter: {textbook: '1', textbookPage: 6}})).length).to.equal(2)
-    expect((await api.client.getAll('exercises', {filter: {textbook: '1', textbookPage: 7}})).length).to.equal(1)
+    expect((await api.client.getAll('exercises', {filter: {textbook: 'klxufv'}})).length).to.equal(3)
+    expect((await api.client.getAll('exercises', {filter: {textbook: 'klxufv', textbookPage: 6}})).length).to.equal(2)
+    expect((await api.client.getAll('exercises', {filter: {textbook: 'klxufv', textbookPage: 7}})).length).to.equal(1)
   })
 
   it('creates a new exercise', async () => {
     const api = useApiStore()
 
-    expect((await api.client.getAll('exercises', {filter: {textbook: '1', textbookPage: 6}})).length).to.equal(2)
+    expect((await api.client.getAll('exercises', {filter: {textbook: 'klxufv', textbookPage: 6}})).length).to.equal(2)
 
-    expect(api.cache.getOne('textbook', '1').inCache).to.be.false
+    expect(api.cache.getOne('textbook', 'klxufv').inCache).to.be.false
 
     const newExercise = await api.client.post(
       'exercise',
@@ -125,26 +125,26 @@ describe('ApiStore', () => {
         boundingRectangle: {start: {x: 0, y: 1}, stop: {x: 2, y: 3}},
       },
       {
-        project: {type: 'project', id: '1'},
-        textbook: {type: 'textbook', id: '1'},
+        project: {type: 'project', id: 'xkopqm'},
+        textbook: {type: 'textbook', id: 'klxufv'},
       },
     )
 
-    expect(newExercise.id).to.equal('7')
+    expect(newExercise.id).to.equal('vodhqn')
     expect(newExercise.attributes.instructions).to.equal('Do this')
     expect(newExercise.attributes.boundingRectangle).to.deep.equal({start: {x: 0, y: 1}, stop: {x: 2, y: 3}})
 
-    expect(api.cache.getOne('textbook', '1').inCache).to.be.false
+    expect(api.cache.getOne('textbook', 'klxufv').inCache).to.be.false
 
-    expect((await api.client.getAll('exercises', {filter: {textbook: '1', textbookPage: 6}})).length).to.equal(3)
+    expect((await api.client.getAll('exercises', {filter: {textbook: 'klxufv', textbookPage: 6}})).length).to.equal(3)
   })
 
   it('creates a new exercise and retrieves its textbook', async () => {
     const api = useApiStore()
 
-    expect((await api.client.getAll('exercises', {filter: {textbook: '1', textbookPage: 6}})).length).to.equal(2)
+    expect((await api.client.getAll('exercises', {filter: {textbook: 'klxufv', textbookPage: 6}})).length).to.equal(2)
 
-    expect(api.cache.getOne('textbook', '1').inCache).to.be.false
+    expect(api.cache.getOne('textbook', 'klxufv').inCache).to.be.false
 
     const newExercise = await api.client.post(
       'exercise',
@@ -153,60 +153,60 @@ describe('ApiStore', () => {
         instructions: 'Do that',
       },
       {
-        project: {type: 'project', id: '1'},
-        textbook: {type: 'textbook', id: '1'},
+        project: {type: 'project', id: 'xkopqm'},
+        textbook: {type: 'textbook', id: 'klxufv'},
       },
       {
         include: 'textbook'
       },
     )
 
-    expect(newExercise.id).to.equal('7')
+    expect(newExercise.id).to.equal('vodhqn')
     expect(newExercise.attributes.instructions).to.equal('Do that')
 
-    expect(api.cache.getOne('textbook', '1').attributes.title).to.equal('Français CE2')
+    expect(api.cache.getOne('textbook', 'klxufv').attributes.title).to.equal('Français CE2')
 
-    expect((await api.client.getAll('exercises', {filter: {textbook: '1', textbookPage: 6}})).length).to.equal(3)
+    expect((await api.client.getAll('exercises', {filter: {textbook: 'klxufv', textbookPage: 6}})).length).to.equal(3)
   })
 
   it('updates an exercise', async () => {
     const api = useApiStore()
 
-    const updatedExercise = await api.client.patch('exercise', '1', {instructions: 'Do that'}, {})
+    const updatedExercise = await api.client.patch('exercise', 'wbqloc', {instructions: 'Do that'}, {})
 
     expect(updatedExercise.attributes.instructions).to.equal('Do that')
-    expect(api.cache.getOne('exercise', '1').attributes.instructions).to.equal('Do that')
+    expect(api.cache.getOne('exercise', 'wbqloc').attributes.instructions).to.equal('Do that')
   })
 
   it('updates an exercise and retrieves its textbook', async () => {
     const api = useApiStore()
 
-    expect(api.cache.getOne('textbook', '1').inCache).to.be.false
+    expect(api.cache.getOne('textbook', 'klxufv').inCache).to.be.false
 
     const updatedExercise = await api.client.patch(
       'exercise',
-      '1',
+      'wbqloc',
       {instructions: 'Do that'},
       {},
       {include: 'textbook'},
     )
 
     expect(updatedExercise.attributes.instructions).to.equal('Do that')
-    expect(api.cache.getOne('exercise', '1').attributes.instructions).to.equal('Do that')
+    expect(api.cache.getOne('exercise', 'wbqloc').attributes.instructions).to.equal('Do that')
 
-    expect(api.cache.getOne('textbook', '1').attributes.title).to.equal('Français CE2')
+    expect(api.cache.getOne('textbook', 'klxufv').attributes.title).to.equal('Français CE2')
   })
 
   it('deletes an exercise', async () => {
     const api = useApiStore()
 
-    expect(api.cache.getOne('exercise', '1').inCache).to.be.false
+    expect(api.cache.getOne('exercise', 'wbqloc').inCache).to.be.false
 
-    await api.client.delete('exercise', '1')
+    await api.client.delete('exercise', 'wbqloc')
 
-    expect(api.cache.getOne('exercise', '1').inCache).to.be.true
-    expect(api.cache.getOne('exercise', '1').exists).to.be.false
-    expect((await api.client.getAll('exercises', {filter: {textbook: '1', textbookPage: 6}})).length).to.equal(1)
+    expect(api.cache.getOne('exercise', 'wbqloc').inCache).to.be.true
+    expect(api.cache.getOne('exercise', 'wbqloc').exists).to.be.false
+    expect((await api.client.getAll('exercises', {filter: {textbook: 'klxufv', textbookPage: 6}})).length).to.equal(1)
   })
 })
 
@@ -225,7 +225,7 @@ describe('ApiStore', () => {
   it('gets an exercise without an adaptation', async () => {
     const api = useApiStore()
 
-    const exercise = await api.client.getOne('exercise', '2', {include: 'adaptation'})
+    const exercise = await api.client.getOne('exercise', 'bylced', {include: 'adaptation'})
 
     expect(exercise.attributes.instructions).to.equal('Écris une phrase en respectant l\'ordre des classes grammaticales indiquées.')
     expect(exercise.relationships.adaptation).to.be.null
@@ -234,18 +234,18 @@ describe('ApiStore', () => {
   it('gets an exercise with "select things" adaptation', async () => {
     const api = useApiStore()
 
-    const exercise = await api.client.getOne('exercise', '7', {include: 'adaptation'})
+    const exercise = await api.client.getOne('exercise', 'vodhqn', {include: 'adaptation'})
 
     expect(exercise.attributes.instructions).to.equal('Relève dans le texte trois\n{sel1:déterminants}, un {sel2:nom propre}, quatre\n{sel3:noms communs} et trois {sel4:verbes}.')
     expect(exercise.relationships.adaptation.type).to.equal('selectThingsAdaptation')
-    expect(exercise.relationships.adaptation.id).to.equal('2')
+    expect(exercise.relationships.adaptation.id).to.equal('fojjim')
     expect(exercise.relationships.adaptation.attributes.colors).to.equal(4)
   })
 
   it('gets an exercise with "fill with free text" adaptation', async () => {
     const api = useApiStore()
 
-    const exercise = await api.client.getOne('exercise', '8', {include: 'adaptation'})
+    const exercise = await api.client.getOne('exercise', 'dymwin', {include: 'adaptation'})
 
     expect(exercise.attributes.instructions).to.equal('Ajoute le suffixe –eur aux verbes.\nIndique la classe des mots fabriqués.')
     expect(exercise.relationships.adaptation.type).to.equal('fillWithFreeTextAdaptation')
@@ -265,8 +265,8 @@ describe('ApiStore', () => {
           'instructions': 'Do this',
         },
         {
-          'project': {type: 'project', id: '1'},
-          'textbook': {type: 'textbook', id: '1'},
+          'project': {type: 'project', id: 'xkopqm'},
+          'textbook': {type: 'textbook', id: 'klxufv'},
         },
       ],
       [
@@ -295,7 +295,7 @@ describe('ApiStore', () => {
   it('updates an adaptation', async () => {
     const api = useApiStore()
 
-    const adapted = await api.client.patch('selectThingsAdaptation', '2', {colors: 17}, {})
+    const adapted = await api.client.patch('selectThingsAdaptation', 'fojjim', {colors: 17}, {})
 
     expect(adapted.attributes.colors).to.equal(17)
   })
@@ -303,15 +303,15 @@ describe('ApiStore', () => {
   it('changes the type of an adaptation', async () => {
     const api = useApiStore()
 
-    const previous = await api.client.getOne('selectThingsAdaptation', '2')
-    expect(previous.relationships.exercise.id).to.equal('7')
+    const previous = await api.client.getOne('selectThingsAdaptation', 'fojjim')
+    expect(previous.relationships.exercise.id).to.equal('vodhqn')
 
-    const adapted = await api.client.post('fillWithFreeTextAdaptation', {placeholder: '...'}, {exercise: {type: 'exercise', id: '7'}}, {include: 'exercise'})
+    const adapted = await api.client.post('fillWithFreeTextAdaptation', {placeholder: '...'}, {exercise: {type: 'exercise', id: 'vodhqn'}}, {include: 'exercise'})
 
     expect(adapted.attributes.placeholder).to.equal('...')
     expect(adapted.relationships.exercise.attributes.instructions).to.equal('Relève dans le texte trois\n{sel1:déterminants}, un {sel2:nom propre}, quatre\n{sel3:noms communs} et trois {sel4:verbes}.')
 
-    await api.client.getOne('selectThingsAdaptation', '2')
+    await api.client.getOne('selectThingsAdaptation', 'fojjim')
     expect(previous.exists).to.be.false
   })
 })

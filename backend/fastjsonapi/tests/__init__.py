@@ -1,7 +1,7 @@
 # @todo Run tests from *all* Python files, not just 'test*.py'. Then remove these imports.
 # Impossible right now because opinion.config.prod is not importable without several environment variables set.
-from ..router import ParseIncludeTestCase
 from ..django import AuthenticationTestCase
+from ..router import ParseIncludeTestCase
 from .attributes import AtomicAttributesTestCase
 from .batching import BatchingTestCase
 from .dependencies import DependenciesTestCase

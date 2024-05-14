@@ -5175,7 +5175,7 @@
             "required": true,
             "schema": {
               "title": "Project Id",
-              "type": "integer"
+              "type": "string"
             }
           }
         ],
@@ -5212,7 +5212,7 @@
             "required": true,
             "schema": {
               "title": "Project Id",
-              "type": "integer"
+              "type": "string"
             }
           }
         ],

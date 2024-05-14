@@ -1,22 +1,51 @@
 from __future__ import annotations
 from contextlib import contextmanager
-import dataclasses
+from random import Random
 from typing import Annotated
+import dataclasses
 import uuid
 
 from django.core.exceptions import ValidationError
 from fastapi import HTTPException
 from pydantic import BaseModel
+from sqids import Sqids
 import django.conf
 
 from . import renderable
 from .models import PdfFile, PdfFileNaming, Project, Textbook, Section, Exercise, ExtractionEvent
 from .models import SelectThingsAdaptation, FillWithFreeTextAdaptation
 from fastjsonapi import Computed, Filterable, Constant, Secret as WriteOnly
-from fastjsonapi.django import wrap, unwrap
+from fastjsonapi.django import set_wrapper as set_django_wrapper, wrap, unwrap
+from fastjsonapi.django import OrmWrapper as DjangoOrmWrapper, OrmWrapperWithStrIds as DjangoOrmWrapperWithStrIds
 
 
 default_page_size = django.conf.settings.REST_FRAMEWORK["PAGE_SIZE"]
+
+
+def make_sqids(name):
+    random = Random(name)
+    alphabet = list("abcdefghijklmnopqrstuvwxyz")
+    random.shuffle(alphabet)
+    sqids = Sqids(min_length=6, alphabet="".join(alphabet))
+    # print(f"IDs of the first few {name}s:", " ".join(sqids.encode([i]) for i in range(1, 10)), flush=True)
+    return sqids
+# IDs of the first few pdf_file_namings: tnahml wmyxrm yogtxq oexfhs bnqavf rhjojh pdbrtv uqodzk jgtoux
+# IDs of the first few projects: xkopqm fryrbl ztmcex dillfm oqwpdb pbiqru handbn whkaxt tlfeqv
+# IDs of the first few textbooks: klxufv ojsbmy pkdksv alyral ixpuoz zsrfro deanft cpnkwb skhjfi
+# IDs of the first few sections: eyjahd mknkny ajzqny fimocq nsbbfq rkqvdw qwozki tdchbv uygrig
+# IDs of the first few exercises: wbqloc bylced jkrudc ufefwu orxbzq ahbwey vodhqn dymwin xnyegk
+# IDs of the first few extraction_events: stzemo mkgilf dskyis yotcht axwgxv jusflx gyvtgb omqipm fqjjte
+# IDs of the first few select_things_adaptations: ugrfkh fojjim oxzozr ehmtgu sftpwh bonnut dhxeyk jewvat gjhfvp
+# IDs of the first few fill_with_free_text_adaptations: ljpupg vahdwa udaorb zqltqi ylstuq dlymea rzmwsn fczoca xiqxfv
+
+
+def django_orm_wrapper_with_sqids(sqids):
+    class Wrapper(DjangoOrmWrapper):
+        @property
+        def id(self):
+            return sqids.encode([self._wrapped.id])
+
+    return Wrapper
 
 
 class PdfFileModel(BaseModel):
@@ -78,6 +107,8 @@ class PdfFilesResource:
         def __call__(self, item):
             item.delete()
 
+set_django_wrapper(PdfFile, DjangoOrmWrapperWithStrIds)
+
 
 class PdfFileNamingModel(BaseModel):
     name: Annotated[str, Constant()]
@@ -91,6 +122,8 @@ class PdfFileNamingsResource:
 
     default_page_size = default_page_size
 
+    sqids = make_sqids(singular_name)
+
     class ItemCreator:
         def __call__(self, *, name, pdf_file):
             (naming, created) = PdfFileNaming.objects.get_or_create(
@@ -102,7 +135,7 @@ class PdfFileNamingsResource:
     class ItemGetter:
         def __call__(self, id):
             try:
-                return wrap(PdfFileNaming.objects.get(id=id))
+                return wrap(PdfFileNaming.objects.get(id=PdfFileNamingsResource.sqids.decode(id)[0]))
             except PdfFileNaming.DoesNotExist:
                 return None
 
@@ -128,6 +161,8 @@ class PdfFileNamingsResource:
         def __call__(self, item):
             item.delete()
 
+set_django_wrapper(PdfFileNaming, django_orm_wrapper_with_sqids(PdfFileNamingsResource.sqids))
+
 
 class ProjectModel(BaseModel):
     title: str
@@ -143,6 +178,8 @@ class ProjectsResource:
 
     default_page_size = default_page_size
 
+    sqids = make_sqids(singular_name)
+
     class ItemCreator:
         def __call__(self, *, title, description):
             project = Project.objects.create(
@@ -154,7 +191,7 @@ class ProjectsResource:
     class ItemGetter:
         def __call__(self, id):
             try:
-                return wrap(Project.objects.get(id=id))
+                return wrap(Project.objects.get(id=ProjectsResource.sqids.decode(id)[0]))
             except Project.DoesNotExist:
                 return None
 
@@ -180,6 +217,8 @@ class ProjectsResource:
         def __call__(self, item):
             item.delete()
 
+set_django_wrapper(Project, django_orm_wrapper_with_sqids(ProjectsResource.sqids))
+
 
 class TextbookModel(BaseModel):
     title: str
@@ -197,6 +236,8 @@ class TextbooksResource:
     Model = TextbookModel
 
     default_page_size = default_page_size
+
+    sqids = make_sqids(singular_name)
 
     class ItemCreator:
         def __call__(self, *, title, publisher, year, isbn, project):
@@ -217,7 +258,7 @@ class TextbooksResource:
     class ItemGetter:
         def __call__(self, id):
             try:
-                return wrap(Textbook.objects.get(id=id))
+                return wrap(Textbook.objects.get(id=TextbooksResource.sqids.decode(id)[0]))
             except Textbook.DoesNotExist:
                 return None
 
@@ -243,6 +284,8 @@ class TextbooksResource:
         def __call__(self, item):
             item.delete()
 
+set_django_wrapper(Textbook, django_orm_wrapper_with_sqids(TextbooksResource.sqids))
+
 
 class SectionModel(BaseModel):
     textbook_start_page: int
@@ -259,6 +302,8 @@ class SectionsResource:
 
     default_page_size = default_page_size
 
+    sqids = make_sqids(singular_name)
+
     class ItemCreator:
         def __call__(self, *, textbook_start_page, pdf_file_start_page, pages_count, textbook, pdf_file):
             section = Section.objects.create(
@@ -273,7 +318,7 @@ class SectionsResource:
     class ItemGetter:
         def __call__(self, id):
             try:
-                return wrap(Section.objects.get(id=id))
+                return wrap(Section.objects.get(id=SectionsResource.sqids.decode(id)[0]))
             except Section.DoesNotExist:
                 return None
 
@@ -298,6 +343,8 @@ class SectionsResource:
     class ItemDeleter:
         def __call__(self, item):
             item.delete()
+
+set_django_wrapper(Section, django_orm_wrapper_with_sqids(SectionsResource.sqids))
 
 
 class Point(BaseModel):
@@ -334,6 +381,8 @@ class ExercisesResource:
 
     default_page_size = default_page_size
 
+    sqids = make_sqids(singular_name)
+
     class ItemCreator:
         def __call__(
             self,
@@ -368,14 +417,14 @@ class ExercisesResource:
     class ItemGetter:
         def __call__(self, id):
             try:
-                return wrap(Exercise.objects.get(id=id))
+                return wrap(Exercise.objects.get(id=ExercisesResource.sqids.decode(id)[0]))
             except Exercise.DoesNotExist:
                 return None
 
     class PageGetter:
         def __call__(self, sort, filters, first_index, page_size):
             sort = sort or ["textbook", "textbook_page", "number"]
-            exercises = Exercise.objects.order_by(*sort)
+            exercises = [wrap(exercise) for exercise in Exercise.objects.order_by(*sort)]
 
             # @todo Use proper SQL filtering
             if filters.textbook_page:
@@ -389,7 +438,7 @@ class ExercisesResource:
                 # @todo Use proper SQL counting
                 len(exercises),
                 # @todo Use proper SQL limits
-                [wrap(exercise) for exercise in exercises[first_index:first_index + page_size]],
+                [exercise for exercise in exercises[first_index:first_index + page_size]],
             )
 
     class ItemSaver:
@@ -408,6 +457,8 @@ class ExercisesResource:
         def __call__(self, item):
             item.delete()
 
+set_django_wrapper(Exercise, django_orm_wrapper_with_sqids(ExercisesResource.sqids))
+
 
 class ExtractionEventModel(BaseModel):
     event: Annotated[str, Constant()]
@@ -421,6 +472,8 @@ class ExtractionEventsResource:
 
     default_page_size = default_page_size
 
+    sqids = make_sqids(singular_name)
+
     class ItemCreator:
         def __call__(self, *, event, exercise):
             e = ExtractionEvent.objects.create(
@@ -432,7 +485,7 @@ class ExtractionEventsResource:
     class ItemGetter:
         def __call__(self, id):
             try:
-                return wrap(ExtractionEvent.objects.get(id=id))
+                return wrap(ExtractionEvent.objects.get(id=ExtractionEventsResource.sqids.decode(id)[0]))
             except ExtractionEvent.DoesNotExist:
                 return None
 
@@ -458,6 +511,8 @@ class ExtractionEventsResource:
         def __call__(self, item):
             item.delete()
 
+set_django_wrapper(ExtractionEvent, django_orm_wrapper_with_sqids(ExtractionEventsResource.sqids))
+
 
 class SelectThingsAdaptationOptionsModel(BaseModel):
     colors: int
@@ -474,6 +529,8 @@ class SelectThingsAdaptationsResource:
     Model = SelectThingsAdaptationModel
 
     default_page_size = default_page_size
+
+    sqids = make_sqids(singular_name)
 
     class ItemCreator:
         def __call__(self, *, exercise, colors, words, punctuation):
@@ -492,7 +549,7 @@ class SelectThingsAdaptationsResource:
     class ItemGetter:
         def __call__(self, id):
             try:
-                return wrap(SelectThingsAdaptation.objects.get(id=id))
+                return wrap(SelectThingsAdaptation.objects.get(id=SelectThingsAdaptationsResource.sqids.decode(id)[0]))
             except SelectThingsAdaptation.DoesNotExist:
                 return None
 
@@ -505,6 +562,8 @@ class SelectThingsAdaptationsResource:
     class ItemDeleter:
         def __call__(self, item):
             item.delete()
+
+set_django_wrapper(SelectThingsAdaptation, django_orm_wrapper_with_sqids(SelectThingsAdaptationsResource.sqids))
 
 
 class FillWithFreeTextAdaptationOptionsModel(BaseModel):
@@ -521,6 +580,8 @@ class FillWithFreeTextAdaptationsResource:
 
     default_page_size = default_page_size
 
+    sqids = make_sqids(singular_name)
+
     class ItemCreator:
         def __call__(self, *, exercise, placeholder):
             if exercise.adaptation is not None:
@@ -536,7 +597,7 @@ class FillWithFreeTextAdaptationsResource:
     class ItemGetter:
         def __call__(self, id):
             try:
-                return wrap(FillWithFreeTextAdaptation.objects.get(id=id))
+                return wrap(FillWithFreeTextAdaptation.objects.get(id=FillWithFreeTextAdaptationsResource.sqids.decode(id)[0]))
             except FillWithFreeTextAdaptation.DoesNotExist:
                 return None
 
@@ -549,6 +610,8 @@ class FillWithFreeTextAdaptationsResource:
     class ItemDeleter:
         def __call__(self, item):
             item.delete()
+
+set_django_wrapper(FillWithFreeTextAdaptation, django_orm_wrapper_with_sqids(FillWithFreeTextAdaptationsResource.sqids))
 
 
 class AdaptedExerciseModel(BaseModel):

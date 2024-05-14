@@ -58,7 +58,7 @@ describe('Gabby', () => {
   })
 
   it('scrolls on project view', () => {
-    cy.visit('/project/1')
+    cy.visit('/project-xkopqm')
     cy.get('.busy').should('not.exist')
     cy.get('select').first().select('en')
 
@@ -77,7 +77,7 @@ describe('Gabby', () => {
   })
 
   it('scrolls on exercises list view', () => {
-    cy.visit('/project/1/textbook/1/page/7')
+    cy.visit('/project-xkopqm/textbook-klxufv/page-7')
     cy.get('.busy').should('not.exist')
     cy.get('select').first().select('en')
 
@@ -102,7 +102,7 @@ describe('Gabby', () => {
   })
 
   it('scrolls on exercise creation view', () => {
-    cy.visit('/project/1/textbook/1/page/7/new-exercise')
+    cy.visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
     cy.get('.busy').should('not.exist')
     cy.get('select').first().select('en')
 
@@ -149,7 +149,7 @@ describe('Gabby', () => {
   })
 
   it('scrolls on exercise edition view', () => {
-    cy.visit('/project/1/textbook/1/page/7/exercise/7')
+    cy.visit('/project-xkopqm/textbook-klxufv/page-7/exercise-vodhqn')
     cy.get('.busy').should('not.exist')
     cy.get('select').first().select('en')
 
