@@ -1,18 +1,69 @@
 <script setup lang="ts">
+import { ref, computed, watch } from 'vue'
+import { watchPausable } from '@vueuse/core'
+
 import { BLabeledInput, BButton } from '$frontend/components/opinion/bootstrap'
+import type ExerciseForm from '$/frontend/components/ExerciseForm.vue'
+
+
+const props = defineProps<{
+  exerciseForm: typeof ExerciseForm,
+}>()
+
+const search = ref('')
+const searchHasBeenModified = ref(false)
+const { pause: pauseSearchWatch, resume: resumeSearchWatch } = watchPausable(
+  search,
+  (s) => (searchHasBeenModified.value = s !== ''),
+  {flush: 'sync'},
+)
+watch(() => props.exerciseForm.selected, (selected) => {
+  if (selected !== '' && !searchHasBeenModified.value) {
+    pauseSearchWatch()
+    search.value = selected
+    resumeSearchWatch()
+  }
+})
+
+const replace = ref('')
+
+const escapes = [
+  {
+    name: 'lineEnd',
+    escape: '{line-end}',
+    replacement: '\n',
+  }
+]
+
+function unescape(ss: string) {
+  let s = ss
+  for (const {escape, replacement} of escapes) {
+    s = s.replaceAll(escape, replacement)
+  }
+  return s
+}
+
+const searchValue = computed(() => unescape(search.value))
+const replaceValue = computed(() => unescape(replace.value))
+
+function applyReplace() {
+  props.exerciseForm.replace(searchValue.value, replaceValue.value)
+  search.value = ''
+  searchHasBeenModified.value = false
+  replace.value = ''
+}
 </script>
 
 <template>
   <h1>{{ $t('tools') }}</h1>
   <hr/>
-  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin feugiat ante id iaculis malesuada. Cras viverra est vel purus luctus congue. Phasellus magna massa, placerat eget facilisis sed, mattis sit amet sapien.</p>
-  <hr/>
-  <p>Sed metus purus, dapibus ut hendrerit a, tempus non risus. Quisque congue nisl sit amet erat placerat, quis pulvinar neque pulvinar. Proin eu rutrum ipsum. Fusce risus sapien, pharetra imperdiet metus at, elementum tincidunt odio.</p>
-  <hr/>
   <div @mousedown="e => e.stopPropagation()" @touchstart="e => e.stopPropagation()" style="cursor: initial;">
-    <BLabeledInput :label="$t('replace')"/>
-    <BLabeledInput :label="$t('replaceWith')"/>
-    <p><BButton primary data-cy="apply-replace">{{ $t('apply') }}</BButton></p>
+    <BLabeledInput :label="$t('replace')" v-model="search" list="escapes"/>
+    <BLabeledInput :label="$t('replaceWith')" v-model="replace" list="escapes"/>
+    <datalist id="escapes">
+      <option v-for="{name, escape} in escapes" :value="escape">{{ escape }} ({{ $t(name) }})</option>
+    </datalist>
+    <p><BButton primary data-cy="apply-replace" @click="applyReplace" :disabled="searchValue === ''">{{ $t('apply') }}</BButton></p>
   </div>
   <hr/>
 </template>

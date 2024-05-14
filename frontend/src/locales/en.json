@@ -88,6 +88,7 @@
   "tools": "Tools",
   "replace": "Replace",
   "replaceWith": "With",
+  "lineEnd": "Line end",
   "apply": "Apply",
 
   "not-yet-implemented": "Not yet implemented",

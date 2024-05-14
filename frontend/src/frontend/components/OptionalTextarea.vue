@@ -30,6 +30,7 @@ defineExpose({
   expanded,
   focus: () => textArea.value?.focus(),
   setSelectionRange: (start: number, end: number) => textArea.value?.setSelectionRange(start, end),
+  textarea: textArea.value?.textarea,
 })
 </script>
 

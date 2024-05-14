@@ -69,7 +69,7 @@ defineExpose({
       <div class="h-100 overflow-hidden d-flex flex-row">
         <div class="handle"></div>
         <div class="h-100 overflow-auto flex-fill" data-cy="gutter-2">
-          <ExerciseTools />
+          <ExerciseTools v-if="exerciseForm" :exerciseForm />
         </div>
         <div class="handle"></div>
       </div>

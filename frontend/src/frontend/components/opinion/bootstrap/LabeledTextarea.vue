@@ -20,6 +20,7 @@ const textarea = ref<HTMLTextAreaElement | null>(null)
 defineExpose({
   focus: () => textarea.value?.focus(),
   setSelectionRange: (start: number, end: number) => textarea.value?.setSelectionRange(start, end),
+  textarea,
 })
 </script>
 

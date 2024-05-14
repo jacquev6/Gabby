@@ -348,10 +348,28 @@ const highlightedRectangles = computed(() => {
   }
 })
 
+const selected = ref('nothing')
+
+function updateSelected(fieldName: 'instructions' | 'wording' | 'example' | 'clue') {
+  const textArea = textAreas[fieldName].value?.textarea
+  if (textArea) {
+    selected.value = textArea.value.substring(textArea.selectionStart, textArea.selectionEnd)
+  }
+}
+
+function replace(searchValue: string, replaceValue: string) {
+  for (const field of Object.values(fields)) {
+    field.value = field.value.replaceAll(searchValue, replaceValue)
+  }
+}
+
 defineExpose({
   textSelected: computed(() => !props.editMode && alreadyExists.value ? null : textSelected),
   adaptedData, adaptedDataLoading,
   highlightedRectangles,
+  // Tools
+  selected,
+  replace,
 })
 </script>
 
@@ -379,15 +397,39 @@ defineExpose({
     <b-labeled-input :label="$t('exerciseNumber')" v-model="number" :disabled="editMode" @change="extractionEvents.push({kind: 'ExerciseNumberSetManually', value: number})" />
     
     <div style="position: relative">
-      <BLabeledTextarea ref="instructionsTextArea" :label="$t('exerciseInstructions')" v-model="instructions" @change="extractionEvents.push({kind: 'InstructionsSetManually', value: instructions})" />
-      <BLabeledTextarea ref="wordingTextArea" :label="$t('exerciseWording')" v-model="wording" @change="extractionEvents.push({kind: 'WordingSetManually', value: wording})" />
+      <BLabeledTextarea
+        ref="instructionsTextArea"
+        :label="$t('exerciseInstructions')"
+        v-model="instructions"
+        @select="updateSelected('instructions')"
+        @change="extractionEvents.push({kind: 'InstructionsSetManually', value: instructions})"
+      />
+      <BLabeledTextarea
+        ref="wordingTextArea"
+        :label="$t('exerciseWording')"
+        v-model="wording"
+        @select="updateSelected('wording')"
+        @change="extractionEvents.push({kind: 'WordingSetManually', value: wording})"
+      />
       <div :class="{'container-fluid': noClueNoExample}">
         <div :class="{row: noClueNoExample}">
           <div :class="{col: noClueNoExample}" style="padding: 0;">
-            <OptionalTextarea ref="exampleTextArea" :label="$t('exerciseExample')" v-model="example" @change="extractionEvents.push({kind: 'ExampleSetManually', value: example})" />
+            <OptionalTextarea
+              ref="exampleTextArea"
+              :label="$t('exerciseExample')"
+              v-model="example"
+              @select="updateSelected('example')"
+              @change="extractionEvents.push({kind: 'ExampleSetManually', value: example})"
+            />
           </div>
           <div :class="{col: noClueNoExample}" style="padding: 0;">
-            <OptionalTextarea ref="clueTextArea" :label="$t('exerciseClue')" v-model="clue" @change="extractionEvents.push({kind: 'ClueSetManually', value: clue})" />
+            <OptionalTextarea
+              ref="clueTextArea"
+              :label="$t('exerciseClue')"
+              v-model="clue"
+              @select="updateSelected('clue')"
+              @change="extractionEvents.push({kind: 'ClueSetManually', value: clue})"
+            />
           </div>
         </div>
       </div>
