@@ -1,5 +1,5 @@
 import LanguageSelector from './LanguageSelector.vue'
-import { i18n } from '$frontend/locales'
+import { i18n } from '$/locales'
 
 
 describe('LanguageSelector', () => {

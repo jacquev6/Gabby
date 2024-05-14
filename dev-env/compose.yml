@@ -18,7 +18,6 @@ services:
       - /tmp/.X11-unix:/tmp/.X11-unix  # Allow running GUI apps in container, displaying on host
     working_dir: /app/frontend
     environment:
-      VITE_OPINION_APP_DEFAULT_LOCALE: fr
       VITE_OPINION_APP_VERSION: dev
       GABBY_ENTRY_POINT_NAME: frontend
     init: true
@@ -51,7 +50,6 @@ services:
       - ..:/app
     working_dir: /app/frontend
     environment:
-      VITE_OPINION_APP_DEFAULT_LOCALE: fr
       VITE_OPINION_APP_VERSION: dev
       GABBY_ENTRY_POINT_NAME: frontend
     command: ["npx", "vite", "--host", "0.0.0.0", "--port", "80", "--strictPort"]
@@ -65,7 +63,6 @@ services:
       - ..:/app
     working_dir: /app/frontend
     environment:
-      VITE_OPINION_APP_DEFAULT_LOCALE: fr
       GABBY_ENTRY_POINT_NAME: adapted
     command: ["npx", "vite", "build", "--watch", "--mode", "development", "--outDir", "../backend/textbooks/templates/adapted", "--emptyOutDir"]
     depends_on:
