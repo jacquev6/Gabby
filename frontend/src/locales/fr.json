@@ -46,7 +46,8 @@
   "independentExercises": "Exercices indépendants",
   "adaptationType": "Type d'adaptation",
   "selectThingsAdaptation": "Selection de mots",
-  "fillWithFreeTextAdaptation": "Remplissage par text libre",
+  "fillWithFreeTextAdaptation": "Remplissage par texte libre",
+  "multipleChoicesAdaptation": "Choix multiples",
 
 
   "textbookNotFound": "Manuel introuvable",
@@ -81,7 +82,8 @@
 
   "colorsCount": "Nombre de couleurs",
   "includePunctuation": "Sélectionner aussi la ponctuation",
-  "useSel1ToSelN": "Utilisez ces balises dans la consigne pour formatter du texte comme s'il était sélectionné :",
+  "useSel1ToSelN": "Utilisez {first} à {last} dans la consigne pour formatter du texte comme s'il était sélectionné.",
+  "useChoice": "Utilisez {choice} dans la consigne pour indiquer un choix possible.",
   "placeholderText": "Trou à remplir",
 
   "tools": "Outils",

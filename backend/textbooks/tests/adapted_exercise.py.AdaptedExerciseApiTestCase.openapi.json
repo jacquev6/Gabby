@@ -161,6 +161,45 @@
         "title": "ItemLinksModel",
         "type": "object"
       },
+      "MultipleChoicesAdaptationOptionsModel": {
+        "properties": {
+          "placeholder": {
+            "title": "Placeholder",
+            "type": "string"
+          }
+        },
+        "required": [
+          "placeholder"
+        ],
+        "title": "MultipleChoicesAdaptationOptionsModel",
+        "type": "object"
+      },
+      "MultipleChoicesInput": {
+        "additionalProperties": false,
+        "properties": {
+          "choices": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Choices",
+            "type": "array"
+          },
+          "type": {
+            "const": "multipleChoicesInput",
+            "enum": [
+              "multipleChoicesInput"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "choices"
+        ],
+        "title": "MultipleChoicesInput",
+        "type": "object"
+      },
       "Paragraph": {
         "additionalProperties": false,
         "properties": {
@@ -352,6 +391,9 @@
                   "$ref": "#/components/schemas/FreeTextInput"
                 },
                 {
+                  "$ref": "#/components/schemas/MultipleChoicesInput"
+                },
+                {
                   "$ref": "#/components/schemas/Whitespace"
                 }
               ]
@@ -466,6 +508,9 @@
               },
               {
                 "$ref": "#/components/schemas/FillWithFreeTextAdaptationOptionsModel"
+              },
+              {
+                "$ref": "#/components/schemas/MultipleChoicesAdaptationOptionsModel"
               }
             ],
             "title": "Adaptationoptions"

@@ -203,6 +203,45 @@
         "title": "Meta",
         "type": "object"
       },
+      "MultipleChoicesAdaptationOptionsModel": {
+        "properties": {
+          "placeholder": {
+            "title": "Placeholder",
+            "type": "string"
+          }
+        },
+        "required": [
+          "placeholder"
+        ],
+        "title": "MultipleChoicesAdaptationOptionsModel",
+        "type": "object"
+      },
+      "MultipleChoicesInput": {
+        "additionalProperties": false,
+        "properties": {
+          "choices": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Choices",
+            "type": "array"
+          },
+          "type": {
+            "const": "multipleChoicesInput",
+            "enum": [
+              "multipleChoicesInput"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "choices"
+        ],
+        "title": "MultipleChoicesInput",
+        "type": "object"
+      },
       "ObjectId": {
         "additionalProperties": false,
         "properties": {
@@ -565,6 +604,9 @@
                   "$ref": "#/components/schemas/FreeTextInput"
                 },
                 {
+                  "$ref": "#/components/schemas/MultipleChoicesInput"
+                },
+                {
                   "$ref": "#/components/schemas/Whitespace"
                 }
               ]
@@ -709,6 +751,9 @@
               },
               {
                 "$ref": "#/components/schemas/FillWithFreeTextAdaptationOptionsModel"
+              },
+              {
+                "$ref": "#/components/schemas/MultipleChoicesAdaptationOptionsModel"
               }
             ],
             "title": "Adaptationoptions"
@@ -1620,6 +1665,209 @@
         "additionalProperties": false,
         "properties": {},
         "title": "fillWithFreeTextAdaptation-UpdateInput-Data-Relationships",
+        "type": "object"
+      },
+      "multipleChoicesAdaptation-CreateInput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/multipleChoicesAdaptation-CreateInput-Data"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "multipleChoicesAdaptation-CreateInput",
+        "type": "object"
+      },
+      "multipleChoicesAdaptation-CreateInput-Data": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "$ref": "#/components/schemas/multipleChoicesAdaptation-CreateInput-Data-Attributes"
+          },
+          "relationships": {
+            "$ref": "#/components/schemas/multipleChoicesAdaptation-CreateInput-Data-Relationships"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "attributes",
+          "relationships"
+        ],
+        "title": "multipleChoicesAdaptation-CreateInput-Data",
+        "type": "object"
+      },
+      "multipleChoicesAdaptation-CreateInput-Data-Attributes": {
+        "additionalProperties": false,
+        "properties": {
+          "placeholder": {
+            "title": "Placeholder",
+            "type": "string"
+          }
+        },
+        "required": [
+          "placeholder"
+        ],
+        "title": "multipleChoicesAdaptation-CreateInput-Data-Attributes",
+        "type": "object"
+      },
+      "multipleChoicesAdaptation-CreateInput-Data-Relationships": {
+        "additionalProperties": false,
+        "properties": {
+          "exercise": {
+            "$ref": "#/components/schemas/MandatoryRelationship"
+          }
+        },
+        "required": [
+          "exercise"
+        ],
+        "title": "multipleChoicesAdaptation-CreateInput-Data-Relationships",
+        "type": "object"
+      },
+      "multipleChoicesAdaptation-ItemOutput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/multipleChoicesAdaptation-OutputItem"
+          },
+          "included": {
+            "items": {},
+            "title": "Included",
+            "type": "array"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "multipleChoicesAdaptation-ItemOutput",
+        "type": "object"
+      },
+      "multipleChoicesAdaptation-OutputItem": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "$ref": "#/components/schemas/multipleChoicesAdaptation-OutputItem-Attributes"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "links": {
+            "$ref": "#/components/schemas/ItemLinksModel"
+          },
+          "relationships": {
+            "$ref": "#/components/schemas/multipleChoicesAdaptation-OutputItem-Relationships"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "links",
+          "attributes",
+          "relationships"
+        ],
+        "title": "multipleChoicesAdaptation-OutputItem",
+        "type": "object"
+      },
+      "multipleChoicesAdaptation-OutputItem-Attributes": {
+        "additionalProperties": false,
+        "properties": {
+          "placeholder": {
+            "title": "Placeholder",
+            "type": "string"
+          }
+        },
+        "required": [
+          "placeholder"
+        ],
+        "title": "multipleChoicesAdaptation-OutputItem-Attributes",
+        "type": "object"
+      },
+      "multipleChoicesAdaptation-OutputItem-Relationships": {
+        "additionalProperties": false,
+        "properties": {
+          "exercise": {
+            "$ref": "#/components/schemas/MandatoryRelationship"
+          }
+        },
+        "required": [
+          "exercise"
+        ],
+        "title": "multipleChoicesAdaptation-OutputItem-Relationships",
+        "type": "object"
+      },
+      "multipleChoicesAdaptation-UpdateInput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/multipleChoicesAdaptation-UpdateInput-Data"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "multipleChoicesAdaptation-UpdateInput",
+        "type": "object"
+      },
+      "multipleChoicesAdaptation-UpdateInput-Data": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/multipleChoicesAdaptation-UpdateInput-Data-Attributes"
+              }
+            ],
+            "default": {}
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/multipleChoicesAdaptation-UpdateInput-Data-Relationships"
+              }
+            ],
+            "default": {}
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "multipleChoicesAdaptation-UpdateInput-Data",
+        "type": "object"
+      },
+      "multipleChoicesAdaptation-UpdateInput-Data-Attributes": {
+        "additionalProperties": false,
+        "properties": {
+          "placeholder": {
+            "title": "Placeholder",
+            "type": "string"
+          }
+        },
+        "title": "multipleChoicesAdaptation-UpdateInput-Data-Attributes",
+        "type": "object"
+      },
+      "multipleChoicesAdaptation-UpdateInput-Data-Relationships": {
+        "additionalProperties": false,
+        "properties": {},
+        "title": "multipleChoicesAdaptation-UpdateInput-Data-Relationships",
         "type": "object"
       },
       "pdfFile-CreateInput": {
@@ -4383,6 +4631,189 @@
           }
         },
         "summary": "Update Fill With Free Text Adaptation"
+      }
+    },
+    "/api/multipleChoicesAdaptations": {
+      "post": {
+        "operationId": "create_multiple_choices_adaptation_api_multipleChoicesAdaptations_post",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/multipleChoicesAdaptation-CreateInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/multipleChoicesAdaptation-ItemOutput"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Multiple Choices Adaptation"
+      }
+    },
+    "/api/multipleChoicesAdaptations/{id}": {
+      "delete": {
+        "operationId": "delete_multiple_choices_adaptation_api_multipleChoicesAdaptations__id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Multiple Choices Adaptation"
+      },
+      "get": {
+        "operationId": "get_multiple_choices_adaptation_api_multipleChoicesAdaptations__id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/multipleChoicesAdaptation-ItemOutput"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Multiple Choices Adaptation"
+      },
+      "patch": {
+        "operationId": "update_multiple_choices_adaptation_api_multipleChoicesAdaptations__id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/multipleChoicesAdaptation-UpdateInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/multipleChoicesAdaptation-ItemOutput"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Multiple Choices Adaptation"
       }
     },
     "/api/pdfFileNamings": {

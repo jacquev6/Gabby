@@ -1,7 +1,7 @@
 from django.test import TestCase
 from starlette import status
 
-from ..models import Exercise, SelectThingsAdaptation, FillWithFreeTextAdaptation
+from ..models import Exercise, SelectThingsAdaptation, FillWithFreeTextAdaptation, MultipleChoicesAdaptation
 from ..resources import AdaptedExerciseResource
 from .. import renderable as r
 from fastjsonapi.testing import TestMixin
@@ -540,6 +540,52 @@ class FillWithFreeTextAdaptationBusinessTestCase(TestCase):
         )
 
 
+class MultipleChoicesAdaptationBusinessTestCase(TestCase):
+    def test_simple(self):
+        exercise = Exercise(
+            number="number",
+            textbook_page=42,
+            instructions="Choose {choice|a} or {choice|b}.",
+            wording="A ... B ...",
+        )
+        adaptation = MultipleChoicesAdaptation(exercise=exercise, placeholder="...")
+
+        self.assertEqual(
+            adaptation.make_adapted(),
+            r.AdaptedExercise(
+                number="number",
+                textbook_page=42,
+                instructions=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(type="plainText", text="Choose"),
+                            r.Whitespace(type="whitespace"),
+                            r.PlainText(type="plainText", text="a"),
+                            r.Whitespace(type="whitespace"),
+                            r.PlainText(type="plainText", text="or"),
+                            r.Whitespace(type="whitespace"),
+                            r.PlainText(type="plainText", text="b"),
+                            r.PlainText(type="plainText", text="."),
+                        ]),
+                    ]),
+                ]),
+                wording=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(type="plainText", text="A"),
+                            r.Whitespace(type="whitespace"),
+                            r.MultipleChoicesInput(type="multipleChoicesInput", choices=["a", "b"]),
+                            r.Whitespace(type="whitespace"),
+                            r.PlainText(type="plainText", text="B"),
+                            r.Whitespace(type="whitespace"),
+                            r.MultipleChoicesInput(type="multipleChoicesInput", choices=["a", "b"]),
+                        ]),
+                    ]),
+                ]),
+            ),
+        )
+
+
 class AdaptedExerciseApiTestCase(TestMixin, TestCase):
     resources = [AdaptedExerciseResource]
 
@@ -633,4 +679,46 @@ class AdaptedExerciseApiTestCase(TestMixin, TestCase):
                 {"type": "whitespace"},
                 {"type": "freeTextInput"},
             ]}]}]},
+        })
+
+    def test_multiple_choices(self):
+        payload = {
+            "data": {
+                "type": "adaptedExercise",
+                "attributes": {
+                    "number": "A.1",
+                    "textbookPage": 1,
+                    "instructions": "{choice|a} or {choice|b}",
+                    "wording": "A @\n\nB @",
+                    "type": "multipleChoicesAdaptation",
+                    "adaptationOptions": {
+                        "placeholder": "@",
+                    },
+                },
+            },
+        }
+        response = self.post("http://server/adaptedExercises", payload)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
+        self.assertEqual(response.json()["data"]["attributes"]["adapted"], {
+            "number": "A.1",
+            "textbook_page": 1,  # @todo Rename to textbookPage
+            "instructions": {"paragraphs": [{"sentences": [{"tokens": [
+                {"type": "plainText", "text": "a"},
+                {"type": "whitespace"},
+                {"type": "plainText", "text": "or"},
+                {"type": "whitespace"},
+                {"type": "plainText", "text": "b"},
+            ]}]}]},
+            "wording": {"paragraphs": [
+                {"sentences": [{"tokens": [
+                    {"type": "plainText", "text": "A"},
+                    {"type": "whitespace"},
+                    {"type": "multipleChoicesInput", "choices": ["a", "b"]},
+                ]}]},
+                {"sentences": [{"tokens": [
+                    {"type": "plainText", "text": "B"},
+                    {"type": "whitespace"},
+                    {"type": "multipleChoicesInput", "choices": ["a", "b"]},
+                ]}]},
+            ]},
         })

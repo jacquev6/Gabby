@@ -72,6 +72,11 @@ watch(
       <template v-else-if="token.type === 'selectedClicks'">
         <SelectedText :colors="token.colors" :color="token.color">{{ token.color }} {{ $t('nClicks', token.color) }}</SelectedText>
       </template>
+      <template v-else-if="token.type === 'multipleChoicesInput'">
+        <select>
+          <option v-for="choice in token.choices" :value="choice">{{ choice }}</option>
+        </select>
+      </template>
       <template v-else>
         <span>{{ ((t: never) => t)(token) }}</span>
       </template>
@@ -91,6 +96,11 @@ watch(
       </template>
       <template v-else-if="token.type === 'selectedText'">{{ token.text }}</template>
       <template v-else-if="token.type === 'selectedClicks'">{{ token.color }} {{ $t('nClicks', token.color) }}</template>
+      <template v-else-if="token.type === 'multipleChoicesInput'">
+        <select v-model="models[tokenIndex]">
+          <option v-for="choice in token.choices" :value="choice">{{ choice }}</option>
+        </select>
+      </template>
       <template v-else>
         <span>{{ ((t: never) => t)(token) }}</span>
       </template>

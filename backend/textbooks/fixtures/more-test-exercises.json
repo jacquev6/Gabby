@@ -86,6 +86,48 @@
     }
   },
   {
+    "model": "textbooks.adaptation",
+    "pk": 3,
+    "fields": {
+      "polymorphic_ctype": [
+        "textbooks",
+        "multiplechoicesadaptation"
+      ]
+    }
+  },
+  {
+    "model": "textbooks.multiplechoicesadaptation",
+    "pk": 3,
+    "fields": {
+      "placeholder": "@"
+    }
+  },
+  {
+    "model": "textbooks.exercise",
+    "pk": 9,
+    "fields": {
+      "project": 1,
+      "textbook": 1,
+      "textbook_page": 7,
+      "bounding_rectangle": {
+        "start": {
+          "x": 60,
+          "y": 180
+        },
+        "stop": {
+          "x": 250,
+          "y": 320
+        }
+      },
+      "number": "8",
+      "instructions": "Réponds par {choice|vrai} ou {choice|faux}.",
+      "example": "",
+      "clue": "",
+      "wording": "a. coccinelle est un adjectif. @\n\nb. bûche est un verbe. @\n\nc. cette est un déterminant. @\n\nd. dentier est un verbe. @\n\ne. respirer est un verbe. @\n\nf. aspiration est un nom. @",
+      "adaptation": 3
+    }
+  },
+  {
     "model": "textbooks.extractionevent",
     "pk": 1,
     "fields": {

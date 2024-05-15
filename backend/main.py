@@ -13,9 +13,9 @@ import django.core.management
 from fastjsonapi import make_jsonapi_router
 from fastjsonapi.django import AuthenticationToken, get_wrapper as get_django_wrapper
 from opinion_ping.resources import PingsResource
-from textbooks.models import Project, SelectThingsAdaptation, FillWithFreeTextAdaptation
+from textbooks.models import Project, SelectThingsAdaptation, FillWithFreeTextAdaptation, MultipleChoicesAdaptation
 from textbooks.resources import PdfFilesResource, PdfFileNamingsResource, ProjectsResource, TextbooksResource, SectionsResource, ExercisesResource, ExtractionEventsResource
-from textbooks.resources import SelectThingsAdaptationsResource, FillWithFreeTextAdaptationsResource
+from textbooks.resources import SelectThingsAdaptationsResource, FillWithFreeTextAdaptationsResource, MultipleChoicesAdaptationsResource
 from textbooks.resources import AdaptedExerciseResource
 from textbooks.views import make_extraction_report
 
@@ -50,11 +50,13 @@ app.include_router(
             ExtractionEventsResource(),
             SelectThingsAdaptationsResource(),
             FillWithFreeTextAdaptationsResource(),
+            MultipleChoicesAdaptationsResource(),
             AdaptedExerciseResource(),
         ],
         polymorphism={
             get_django_wrapper(SelectThingsAdaptation): "select_things_adaptation",
             get_django_wrapper(FillWithFreeTextAdaptation): "fill_with_free_text_adaptation",
+            get_django_wrapper(MultipleChoicesAdaptation): "multiple_choices_adaptation",
         },
     ),
     prefix="/api",

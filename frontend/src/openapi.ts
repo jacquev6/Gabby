@@ -57,6 +57,18 @@ export interface paths {
     /** Update Fill With Free Text Adaptation */
     patch: operations["update_fill_with_free_text_adaptation_api_fillWithFreeTextAdaptations__id__patch"];
   };
+  "/api/multipleChoicesAdaptations": {
+    /** Create Multiple Choices Adaptation */
+    post: operations["create_multiple_choices_adaptation_api_multipleChoicesAdaptations_post"];
+  };
+  "/api/multipleChoicesAdaptations/{id}": {
+    /** Get Multiple Choices Adaptation */
+    get: operations["get_multiple_choices_adaptation_api_multipleChoicesAdaptations__id__get"];
+    /** Delete Multiple Choices Adaptation */
+    delete: operations["delete_multiple_choices_adaptation_api_multipleChoicesAdaptations__id__delete"];
+    /** Update Multiple Choices Adaptation */
+    patch: operations["update_multiple_choices_adaptation_api_multipleChoicesAdaptations__id__patch"];
+  };
   "/api/pdfFileNamings": {
     /** Get Pdf File Namings */
     get: operations["get_pdf_file_namings_api_pdfFileNamings_get"];
@@ -245,6 +257,22 @@ export interface components {
       /** Count */
       count: number;
     };
+    /** MultipleChoicesAdaptationOptionsModel */
+    MultipleChoicesAdaptationOptionsModel: {
+      /** Placeholder */
+      placeholder: string;
+    };
+    /** MultipleChoicesInput */
+    MultipleChoicesInput: {
+      /** Choices */
+      choices: string[];
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "multipleChoicesInput";
+    };
     /** ObjectId */
     ObjectId: {
       /** Id */
@@ -372,7 +400,7 @@ export interface components {
     /** Sentence */
     Sentence: {
       /** Tokens */
-      tokens: (components["schemas"]["PlainText"] | components["schemas"]["SelectableText"] | components["schemas"]["SelectedText"] | components["schemas"]["SelectedClicks"] | components["schemas"]["FreeTextInput"] | components["schemas"]["Whitespace"])[];
+      tokens: (components["schemas"]["PlainText"] | components["schemas"]["SelectableText"] | components["schemas"]["SelectedText"] | components["schemas"]["SelectedClicks"] | components["schemas"]["FreeTextInput"] | components["schemas"]["MultipleChoicesInput"] | components["schemas"]["Whitespace"])[];
     };
     /** UpdateInputListRelationship */
     UpdateInputListRelationship: {
@@ -417,7 +445,7 @@ export interface components {
     /** adaptedExercise-CreateInput-Data-Attributes */
     "adaptedExercise-CreateInput-Data-Attributes": {
       /** Adaptationoptions */
-      adaptationOptions: components["schemas"]["SelectThingsAdaptationOptionsModel"] | components["schemas"]["FillWithFreeTextAdaptationOptionsModel"];
+      adaptationOptions: components["schemas"]["SelectThingsAdaptationOptionsModel"] | components["schemas"]["FillWithFreeTextAdaptationOptionsModel"] | components["schemas"]["MultipleChoicesAdaptationOptionsModel"];
       /** Instructions */
       instructions: string;
       /** Number */
@@ -716,6 +744,73 @@ export interface components {
     };
     /** fillWithFreeTextAdaptation-UpdateInput-Data-Relationships */
     "fillWithFreeTextAdaptation-UpdateInput-Data-Relationships": Record<string, never>;
+    /** multipleChoicesAdaptation-CreateInput */
+    "multipleChoicesAdaptation-CreateInput": {
+      data: components["schemas"]["multipleChoicesAdaptation-CreateInput-Data"];
+    };
+    /** multipleChoicesAdaptation-CreateInput-Data */
+    "multipleChoicesAdaptation-CreateInput-Data": {
+      attributes: components["schemas"]["multipleChoicesAdaptation-CreateInput-Data-Attributes"];
+      relationships: components["schemas"]["multipleChoicesAdaptation-CreateInput-Data-Relationships"];
+      /** Type */
+      type: string;
+    };
+    /** multipleChoicesAdaptation-CreateInput-Data-Attributes */
+    "multipleChoicesAdaptation-CreateInput-Data-Attributes": {
+      /** Placeholder */
+      placeholder: string;
+    };
+    /** multipleChoicesAdaptation-CreateInput-Data-Relationships */
+    "multipleChoicesAdaptation-CreateInput-Data-Relationships": {
+      exercise: components["schemas"]["MandatoryRelationship"];
+    };
+    /** multipleChoicesAdaptation-ItemOutput */
+    "multipleChoicesAdaptation-ItemOutput": {
+      data: components["schemas"]["multipleChoicesAdaptation-OutputItem"];
+      /** Included */
+      included?: unknown[];
+    };
+    /** multipleChoicesAdaptation-OutputItem */
+    "multipleChoicesAdaptation-OutputItem": {
+      attributes: components["schemas"]["multipleChoicesAdaptation-OutputItem-Attributes"];
+      /** Id */
+      id: string;
+      links: components["schemas"]["ItemLinksModel"];
+      relationships: components["schemas"]["multipleChoicesAdaptation-OutputItem-Relationships"];
+      /** Type */
+      type: string;
+    };
+    /** multipleChoicesAdaptation-OutputItem-Attributes */
+    "multipleChoicesAdaptation-OutputItem-Attributes": {
+      /** Placeholder */
+      placeholder: string;
+    };
+    /** multipleChoicesAdaptation-OutputItem-Relationships */
+    "multipleChoicesAdaptation-OutputItem-Relationships": {
+      exercise: components["schemas"]["MandatoryRelationship"];
+    };
+    /** multipleChoicesAdaptation-UpdateInput */
+    "multipleChoicesAdaptation-UpdateInput": {
+      data: components["schemas"]["multipleChoicesAdaptation-UpdateInput-Data"];
+    };
+    /** multipleChoicesAdaptation-UpdateInput-Data */
+    "multipleChoicesAdaptation-UpdateInput-Data": {
+      /** @default {} */
+      attributes?: components["schemas"]["multipleChoicesAdaptation-UpdateInput-Data-Attributes"];
+      /** Id */
+      id: string;
+      /** @default {} */
+      relationships?: components["schemas"]["multipleChoicesAdaptation-UpdateInput-Data-Relationships"];
+      /** Type */
+      type: string;
+    };
+    /** multipleChoicesAdaptation-UpdateInput-Data-Attributes */
+    "multipleChoicesAdaptation-UpdateInput-Data-Attributes": {
+      /** Placeholder */
+      placeholder?: string;
+    };
+    /** multipleChoicesAdaptation-UpdateInput-Data-Relationships */
+    "multipleChoicesAdaptation-UpdateInput-Data-Relationships": Record<string, never>;
     /** pdfFile-CreateInput */
     "pdfFile-CreateInput": {
       data: components["schemas"]["pdfFile-CreateInput-Data"];
@@ -1765,6 +1860,108 @@ export interface operations {
       200: {
         content: {
           "application/vnd.api+json": components["schemas"]["fillWithFreeTextAdaptation-ItemOutput"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  /** Create Multiple Choices Adaptation */
+  create_multiple_choices_adaptation_api_multipleChoicesAdaptations_post: {
+    parameters: {
+      query?: {
+        include?: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["multipleChoicesAdaptation-CreateInput"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        content: {
+          "application/vnd.api+json": components["schemas"]["multipleChoicesAdaptation-ItemOutput"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  /** Get Multiple Choices Adaptation */
+  get_multiple_choices_adaptation_api_multipleChoicesAdaptations__id__get: {
+    parameters: {
+      query?: {
+        include?: string;
+      };
+      path: {
+        id: string;
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        content: {
+          "application/vnd.api+json": components["schemas"]["multipleChoicesAdaptation-ItemOutput"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  /** Delete Multiple Choices Adaptation */
+  delete_multiple_choices_adaptation_api_multipleChoicesAdaptations__id__delete: {
+    parameters: {
+      path: {
+        id: string;
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      204: {
+        content: never;
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  /** Update Multiple Choices Adaptation */
+  update_multiple_choices_adaptation_api_multipleChoicesAdaptations__id__patch: {
+    parameters: {
+      query?: {
+        include?: string;
+      };
+      path: {
+        id: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["multipleChoicesAdaptation-UpdateInput"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        content: {
+          "application/vnd.api+json": components["schemas"]["multipleChoicesAdaptation-ItemOutput"];
         };
       };
       /** @description Validation Error */

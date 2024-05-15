@@ -31,11 +31,15 @@ class FreeTextInput(BaseModel):
     type: Literal["freeTextInput"]
     pass
 
+class MultipleChoicesInput(BaseModel):
+    type: Literal["multipleChoicesInput"]
+    choices: list[str]
+
 class Whitespace(BaseModel):
     type: Literal["whitespace"]
     pass
 
-SentenceToken = PlainText | SelectableText | SelectedText | SelectedClicks | FreeTextInput | Whitespace
+SentenceToken = PlainText | SelectableText | SelectedText | SelectedClicks | FreeTextInput | MultipleChoicesInput | Whitespace
 
 
 class Sentence(BaseModel):
