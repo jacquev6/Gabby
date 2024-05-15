@@ -134,6 +134,7 @@ class Exercise(models.Model):
     number = models.CharField(null=False, db_collation="textbooks_exercise_number")
 
     class Meta:
+        ordering = ("textbook", "textbook_page", "number")
         constraints = [
             models.UniqueConstraint(
                 "textbook", "textbook_page", "number",

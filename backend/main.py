@@ -69,10 +69,10 @@ def extraction_report(project_id: str):
 @app.get("/api/project-{project_id}.html")
 def export_project(project_id: str):
     project = Project.objects.get(id=ProjectsResource.sqids.decode(project_id)[0])
-    exercises = {}
+    exercises = []
     for exercise in project.exercises.all():
         if exercise.adaptation is not None:
-            exercises[exercise.id] = exercise.adaptation.make_adapted().model_dump()
+            exercises.append(exercise.adaptation.make_adapted().model_dump())
     data = json.dumps(dict(
         projectId=project.id,
         exercises=exercises,
