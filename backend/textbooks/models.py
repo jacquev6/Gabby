@@ -208,7 +208,7 @@ class SelectThingsAdaptation(Adaptation):
                     else:
                         if 1 <= color <= self.colors:
                             return renderable.SelectedText(type="selectedText", text=text, color=color, colors=self.colors)
-                return renderable.PlainText(type="plainText", text=f"{{{tag}:{text}}}")
+                return renderable.PlainText(type="plainText", text=f"{{{tag}|{text}}}")
             case _:
                 raise ValueError(f"Unknown token type: {type(token)}")
 

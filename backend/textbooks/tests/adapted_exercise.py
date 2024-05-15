@@ -67,7 +67,7 @@ class SelectThingsAdaptedExerciseBusinessTestCase(TestCase):
         exercise = Exercise(
             number="number",
             textbook_page=None,
-            instructions="{sel1:abc} {sel2:def} {sel3:ghi} {sel4:jkl}",
+            instructions="{sel1|abc} {sel2|def} {sel3|ghi} {sel4|jkl}",
             wording="wording",
         )
         adaptation = SelectThingsAdaptation(exercise=exercise, colors=3, words=True, punctuation=False)
@@ -86,7 +86,7 @@ class SelectThingsAdaptedExerciseBusinessTestCase(TestCase):
                             r.Whitespace(type="whitespace"),
                             r.SelectedText(type="selectedText", text="ghi", color=3, colors=3),
                             r.Whitespace(type="whitespace"),
-                            r.PlainText(type="plainText", text="{sel4:jkl}"),
+                            r.PlainText(type="plainText", text="{sel4|jkl}"),
                         ]),
                     ]),
                     r.Paragraph(sentences=[
@@ -113,7 +113,7 @@ class SelectThingsAdaptedExerciseBusinessTestCase(TestCase):
         exercise = Exercise(
             number="number",
             textbook_page=None,
-            instructions="{sel1:abc}",
+            instructions="{sel1|abc}",
             wording="wording",
         )
         adaptation = SelectThingsAdaptation(exercise=exercise, colors=1, words=True, punctuation=False)
@@ -126,7 +126,7 @@ class SelectThingsAdaptedExerciseBusinessTestCase(TestCase):
                 instructions=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.PlainText(type="plainText", text="{sel1:abc}"),
+                            r.PlainText(type="plainText", text="{sel1|abc}"),
                         ]),
                     ]),
                 ]),

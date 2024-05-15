@@ -53,7 +53,7 @@
         }
       },
       "number": "7",
-      "instructions": "Relève dans le texte trois\n{sel1:déterminants}, un {sel2:nom propre}, quatre\n{sel3:noms communs} et trois {sel4:verbes}.",
+      "instructions": "Relève dans le texte trois\n{sel1|déterminants}, un {sel2|nom propre}, quatre\n{sel3|noms communs} et trois {sel4|verbes}.",
       "example": "",
       "clue": "",
       "wording": "Les Touaregs sont des Berbères, un peuple\nqui habite en Afrique du Nord depuis la\npréhistoire. Ils vivent dans le désert du Sahara\n(Algérie, Libye, Mali, Niger, Burkina Faso…). En\nété, les températures y montent à plus de 50 °C\net elles descendent en dessous de zéro durant\nles nuits d’hiver.",

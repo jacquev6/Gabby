@@ -236,7 +236,7 @@ describe('ApiStore', () => {
 
     const exercise = await api.client.getOne('exercise', 'vodhqn', {include: 'adaptation'})
 
-    expect(exercise.attributes.instructions).to.equal('Relève dans le texte trois\n{sel1:déterminants}, un {sel2:nom propre}, quatre\n{sel3:noms communs} et trois {sel4:verbes}.')
+    expect(exercise.attributes.instructions).to.equal('Relève dans le texte trois\n{sel1|déterminants}, un {sel2|nom propre}, quatre\n{sel3|noms communs} et trois {sel4|verbes}.')
     expect(exercise.relationships.adaptation.type).to.equal('selectThingsAdaptation')
     expect(exercise.relationships.adaptation.id).to.equal('fojjim')
     expect(exercise.relationships.adaptation.attributes.colors).to.equal(4)
@@ -309,7 +309,7 @@ describe('ApiStore', () => {
     const adapted = await api.client.post('fillWithFreeTextAdaptation', {placeholder: '...'}, {exercise: {type: 'exercise', id: 'vodhqn'}}, {include: 'exercise'})
 
     expect(adapted.attributes.placeholder).to.equal('...')
-    expect(adapted.relationships.exercise.attributes.instructions).to.equal('Relève dans le texte trois\n{sel1:déterminants}, un {sel2:nom propre}, quatre\n{sel3:noms communs} et trois {sel4:verbes}.')
+    expect(adapted.relationships.exercise.attributes.instructions).to.equal('Relève dans le texte trois\n{sel1|déterminants}, un {sel2|nom propre}, quatre\n{sel3|noms communs} et trois {sel4|verbes}.')
 
     await api.client.getOne('selectThingsAdaptation', 'fojjim')
     expect(previous.exists).to.be.false

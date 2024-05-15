@@ -24,7 +24,7 @@ class PunctuationToken:
 TextToken = TagToken | WordToken | WhitespaceToken | PunctuationToken
 
 
-tokenize_text_regex = re.compile(r"(?:{([a-z0-9]+):([^}]+)})|(\w+)|(\s+)|(.)")
+tokenize_text_regex = re.compile(r"(?:{([a-z0-9]+)\|([^}]+)})|(\w+)|(\s+)|(.)")
 
 def tokenize_text(s: str) -> list[TextToken]:
     ret = []
@@ -85,4 +85,4 @@ class TokenizeTextTestCase(TestCase):
         )
 
     def test_tag(self):
-        self.make_test("{foo:hello}", [TagToken("foo", "hello")])
+        self.make_test("{foo|hello}", [TagToken("foo", "hello")])
