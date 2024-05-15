@@ -8,10 +8,10 @@ defineProps<{
 </script>
 
 <template>
-  <p v-for="paragraph in section.paragraphs">
-    <template v-for="sentence in paragraph.sentences">
+  <p v-for="(paragraph, paragraphIndex) in section.paragraphs">
+    <template v-for="(sentence, sentenceIndex) in paragraph.sentences">
       <template v-for="(token, tokenIndex) in sentence.tokens">
-        <span><slot :token :tokenIndex></slot></span>
+        <span><slot :token :tokenIndex="`${paragraphIndex}-${sentenceIndex}-${tokenIndex}`"></slot></span>
       </template>
       <span> </span>
     </template>
