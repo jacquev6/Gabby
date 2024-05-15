@@ -86,6 +86,8 @@
   "placeholderText": "Placeholder to fill",
 
   "tools": "Tools",
+  "undo": "Undo",
+  "redo": "Redo",
   "replace": "Replace",
   "replaceWith": "with",
   "replaceWhere": "in",

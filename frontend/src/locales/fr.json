@@ -85,6 +85,8 @@
   "placeholderText": "Trou à remplir",
 
   "tools": "Outils",
+  "undo": "Annuler",
+  "redo": "Refaire",
   "replace": "Remplacer",
   "replaceWith": "par",
   "replaceWhere": "dans",

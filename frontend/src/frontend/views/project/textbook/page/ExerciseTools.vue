@@ -72,6 +72,11 @@ function applyReplace() {
   <h1>{{ $t('tools') }}</h1>
   <hr/>
   <div @mousedown="e => e.stopPropagation()" @touchstart="e => e.stopPropagation()" style="cursor: initial;">
+    <BButton primary sm @click="exerciseForm.undo" :disabled="!exerciseForm.canUndo">{{ $t('undo') }}</BButton>
+    <BButton primary sm @click="exerciseForm.redo" :disabled="!exerciseForm.canRedo">{{ $t('redo') }}</BButton>
+  </div>
+  <hr/>
+  <div @mousedown="e => e.stopPropagation()" @touchstart="e => e.stopPropagation()" style="cursor: initial;">
     <BLabeledInput :label="$t('replace')" v-model="search" list="escapes"/>
     <BLabeledInput :label="$t('replaceWith')" v-model="replace" list="escapes"/>
     <datalist id="escapes">

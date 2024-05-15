@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, reactive, computed, watch } from 'vue'
-import { computedAsync } from '@vueuse/core'
+import { ref, computed, watch } from 'vue'
+import { computedAsync, useDebouncedRefHistory } from '@vueuse/core'
 import { nextTick } from 'vue'
 
 import { BBusy, BLabeledInput, BLabeledTextarea, BButton, BSelect } from './opinion/bootstrap'
@@ -31,44 +31,61 @@ const emit = defineEmits<{
 const api = useApiStore()
 
 var extractionEvents: object[] = []
-const number = ref('')
-const boundingRectangle = ref<object | null>(null)
+
+type AdaptationType = '-' | keyof typeof adaptationOptionsForms
+
+interface State {
+  number: string,
+  boundingRectangle: object | null,
+  instructions: string,
+  wording: string,
+  example: string,
+  clue: string,
+  adaptationType: AdaptationType,
+  adaptationOptions: {[key: string]: object},
+}
+
+const state = ref<State>({
+  number: '',
+  boundingRectangle: null,
+  instructions: '',
+  wording: '',
+  example: '',
+  clue: '',
+  adaptationType: '-',
+  adaptationOptions: {},
+})
 const needsBoundingRectangle = computed(() => {
   if (props.textbook !== null && props.pdf !== null && !props.editMode) {
-    return boundingRectangle.value === null
+    return state.value.boundingRectangle === null
   } else {
     return false
   }
 })
-const instructions = ref('')
-const wording = ref('')
-const example = ref('')
-const clue = ref('')
-const fields = {
-  instructions,
-  wording,
-  example,
-  clue,
-}
-type FieldName = keyof typeof fields
+type FieldName = 'instructions' | 'wording' | 'example' | 'clue'
+const fieldNamesForReplace: FieldName[] = ['instructions', 'wording', 'example', 'clue']
 
-type AdaptationType = '-' | keyof typeof adaptationOptionsForms
-const adaptationType = ref<AdaptationType>('-')
-const adaptationOptions = reactive<{[key: string]: object}>({})
+// const adaptationType = ref<AdaptationType>('-')
+// const adaptationOptions = reactive<{[key: string]: object}>({})
 function resetAdaptationOptions() {
-  adaptationType.value = '-'
-  adaptationOptions['-'] = {}
+  state.value.adaptationType = '-'
+  state.value.adaptationOptions['-'] = {}
   for (const [kind, component] of Object.entries(adaptationOptionsForms)) {
-    adaptationOptions[kind] = Object.assign({}, component.props.modelValue.default)
+    state.value.adaptationOptions[kind] = Object.assign({}, component.props.modelValue.default)
   }
 }
 resetAdaptationOptions()
+
+// @todo Make sure 'history.canUndo' remains false when loading an exercise
+// @todo Make sure 'history.canUndo' goes back to false when saving an exercise
+// @todo Make sure 'history.canUndo' goes back to false when skipping an exercise
+const history = useDebouncedRefHistory(state, {deep: true, debounce: 1000})
 
 const alreadyExists = computedAsync(
   async () => {
     if (props.editMode) {
       return true
-    } else if (number.value === '') {
+    } else if (state.value.number === '') {
       return false
     } else if (props.textbook !== null) {
       console.assert(props.textbookPage !== null)
@@ -78,7 +95,7 @@ const alreadyExists = computedAsync(
           filter: {
             textbook: props.textbook.id,
             textbookPage: props.textbookPage.toString(),
-            number: number.value,
+            number: state.value.number,
           }
         },
       )
@@ -95,9 +112,9 @@ const alreadyExists = computedAsync(
 watch(
   [() => props.number, () => props.automaticNumber],
   () => {
-    number.value = props.number
+    state.value.number = props.number
     if (props.automaticNumber) {
-      extractionEvents.push({kind: 'ExerciseNumberSetAutomatically', value: number.value})
+      extractionEvents.push({kind: 'ExerciseNumberSetAutomatically', value: state.value.number})
     }
   },
   {immediate: true},
@@ -109,25 +126,25 @@ watch(
       console.assert(props.exercise.attributes !== undefined)
       console.assert(props.exercise.relationships !== undefined)
 
-      boundingRectangle.value = props.exercise.attributes.boundingRectangle ?? null
+      state.value.boundingRectangle = props.exercise.attributes.boundingRectangle ?? null
 
-      instructions.value = props.exercise.attributes.instructions ?? ''
-      wording.value = props.exercise.attributes.wording ?? ''
-      example.value = props.exercise.attributes.example ?? ''
-      clue.value = props.exercise.attributes.clue ?? ''
+      state.value.instructions = props.exercise.attributes.instructions ?? ''
+      state.value.wording = props.exercise.attributes.wording ?? ''
+      state.value.example = props.exercise.attributes.example ?? ''
+      state.value.clue = props.exercise.attributes.clue ?? ''
 
       if (props.exercise.relationships.adaptation === null) {
-        adaptationType.value = '-'
+        state.value.adaptationType = '-'
       } else {
-        adaptationType.value = props.exercise.relationships.adaptation.type as AdaptationType
-        Object.assign(adaptationOptions[adaptationType.value], props.exercise.relationships.adaptation.attributes)
+        state.value.adaptationType = props.exercise.relationships.adaptation.type as AdaptationType
+        Object.assign(state.value.adaptationOptions[state.value.adaptationType], props.exercise.relationships.adaptation.attributes)
       }
     }
   },
   {immediate: true},
 )
 
-const disabled = computed(() => (!props.editMode && alreadyExists.value) || !number.value)
+const disabled = computed(() => (!props.editMode && alreadyExists.value) || !state.value.number)
 const busy = ref(false)
 
 const showTextSelectionMenu = ref(false)
@@ -148,7 +165,7 @@ function textSelected(text: string, point: {clientX: number, clientY: number}, t
         rectangle,
       },
     })
-    boundingRectangle.value = rectangle
+    state.value.boundingRectangle = rectangle
   } else {
     extractionEvents.push({
       kind: "TextSelectedInPdf",
@@ -182,33 +199,34 @@ const textAreas = {
 const noClueNoExample = computed(() => !exampleTextArea.value?.expanded && !clueTextArea.value?.expanded)
 
 function addTextTo(fieldName: FieldName, text: string) {
-  const field = fields[fieldName]
   const textArea = textAreas[fieldName].value
   console.assert(textArea !== null)
-  const valueBefore = field.value
-  if (field.value !== '' && !field.value.endsWith('\n')) {
-    field.value += '\n'
+  const valueBefore = state.value[fieldName]
+  if (state.value[fieldName] !== '' && !state.value[fieldName].endsWith('\n')) {
+    state.value[fieldName] += '\n'
   }
-  const selectionBegin = field.value.length
+  const selectionBegin = state.value[fieldName].length
   const selectionEnd = selectionBegin + text.length
-  field.value += text
+  state.value[fieldName] += text  // @todo Double-check this is reactive (assigning to a member of a ref)
   nextTick(() => {
     textArea.focus()
     textArea.setSelectionRange(selectionBegin, selectionEnd)
   })
-  extractionEvents.push({kind: `SelectedTextAddedTo${fieldName.charAt(0).toUpperCase()}${fieldName.slice(1)}`, valueBefore, valueAfter: field.value})
+  extractionEvents.push({kind: `SelectedTextAddedTo${fieldName.charAt(0).toUpperCase()}${fieldName.slice(1)}`, valueBefore, valueAfter: state.value[fieldName]})
 }
 
 function skip() {
-  boundingRectangle.value = null
+  state.value.boundingRectangle = null
   extractionEvents = []
-  number.value = tryIncrement(number.value)
-  instructions.value = ''
-  wording.value = ''
-  example.value = ''
-  clue.value = ''
+  state.value.number = tryIncrement(state.value.number)
+  state.value.instructions = ''
+  state.value.wording = ''
+  state.value.example = ''
+  state.value.clue = ''
 
   resetAdaptationOptions()
+
+  history.clear()
 }
 
 async function create() {
@@ -219,22 +237,22 @@ async function create() {
     'exercise',
     {
       textbookPage: props.textbookPage,
-      boundingRectangle: boundingRectangle.value,
-      number: number.value,
-      instructions: instructions.value,
-      wording: wording.value,
-      example: example.value,
-      clue: clue.value,
+      boundingRectangle: state.value.boundingRectangle,
+      number: state.value.number,
+      instructions: state.value.instructions,
+      wording: state.value.wording,
+      example: state.value.example,
+      clue: state.value.clue,
     },
     {
       project: props.project,
       textbook: props.textbook,
     },
   )
-  if (adaptationType.value !== '-') {
+  if (state.value.adaptationType !== '-') {
     await api.client.post(
-      adaptationType.value,
-      adaptationOptions[adaptationType.value],
+      state.value.adaptationType,
+      state.value.adaptationOptions[state.value.adaptationType],
       {exercise: {type: 'exercise', id: exercise.id}},
     )
   }
@@ -246,15 +264,17 @@ async function create() {
     )
   }
 
-  boundingRectangle.value = null
+  state.value.boundingRectangle = null
   extractionEvents = []
-  number.value = ''
-  instructions.value = ''
-  wording.value = ''
-  example.value = ''
-  clue.value = ''
+  state.value.number = ''
+  state.value.instructions = ''
+  state.value.wording = ''
+  state.value.example = ''
+  state.value.clue = ''
 
   resetAdaptationOptions()
+
+  history.clear()
 
   busy.value = false
 
@@ -280,22 +300,22 @@ async function save() {
     'exercise',
     props.exercise.id,
     {
-      boundingRectangle: boundingRectangle.value,
-      instructions: instructions.value,
-      wording: wording.value,
-      example: example.value,
-      clue: clue.value,
+      boundingRectangle: state.value.boundingRectangle,
+      instructions: state.value.instructions,
+      wording: state.value.wording,
+      example: state.value.example,
+      clue: state.value.clue,
     },
     {},
   )
-  if (adaptationType.value === '-') {
+  if (state.value.adaptationType === '-') {
     if (props.exercise.relationships.adaptation !== null) {
       await api.client.delete(props.exercise.relationships.adaptation.type, props.exercise.relationships.adaptation.id)
     }
   } else {
     await api.client.post(
-      adaptationType.value,
-      adaptationOptions[adaptationType.value],
+      state.value.adaptationType,
+      state.value.adaptationOptions[state.value.adaptationType],
       {exercise: {type: 'exercise', id: props.exercise.id}},
     )
   }
@@ -317,16 +337,16 @@ async function save() {
 const adaptedDataLoading = ref(false)
 const adaptedData = computedAsync(
   async () => {
-    if (adaptationType.value === '-') {
+    if (state.value.adaptationType === '-') {
       return null
     } else {
       const attributes = {
-        number: number.value,
+        number: state.value.number,
         textbookPage: props.textbookPage,
-        instructions: instructions.value,
-        wording: wording.value,
-        type: adaptationType.value,
-        adaptationOptions: adaptationOptions[adaptationType.value],
+        instructions: state.value.instructions,
+        wording: state.value.wording,
+        type: state.value.adaptationType,
+        adaptationOptions: state.value.adaptationOptions[state.value.adaptationType],
       }
       try {
         const adapted = await api.client.post<AdaptedExercise>('adaptedExercise', attributes, {})
@@ -342,8 +362,8 @@ const adaptedData = computedAsync(
 )
 
 const highlightedRectangles = computed(() => {
-  if (boundingRectangle.value) {
-    return [boundingRectangle.value]
+  if (state.value.boundingRectangle) {
+    return [state.value.boundingRectangle]
   } else {
     return null
   }
@@ -361,13 +381,12 @@ function updateSelected(fieldName: FieldName) {
 function replace(fieldName: FieldName | null, searchValue: string, replaceValue: string) {
   let fieldNames: FieldName[]
   if (fieldName === null) {
-    fieldNames = Object.keys(fields) as FieldName[]
+    fieldNames = fieldNamesForReplace
   } else {
     fieldNames = [fieldName]
   }
   for (const fieldName of fieldNames) {
-    const field = fields[fieldName]
-    field.value = field.value.replaceAll(searchValue, replaceValue)
+    state.value[fieldName] = state.value[fieldName].replaceAll(searchValue, replaceValue)
   }
 }
 
@@ -378,20 +397,21 @@ defineExpose({
   // Tools
   selected,
   replace,
-  fieldNamesForReplace: Object.keys(fields),
+  fieldNamesForReplace,
+  undo: history.undo, redo: history.redo, canUndo: history.canUndo, canRedo: history.canRedo,
 })
 </script>
 
 <template>
   <TextSelectionMenu
     v-model:show="showTextSelectionMenu"
-    :number
+    :number="state.number"
     :text="selectedText"
     :reference="selectedTextReference"
     @extractionEvent="event => extractionEvents.push(event)"
   >
     <template v-slot="{textToAdd, hide}">
-      <p><BButton secondary @click="boundingRectangle = selectedRectangle; hide()">{{ $t('setBoundingRect') }}</BButton></p>
+      <p><BButton secondary @click="state.boundingRectangle = selectedRectangle; hide()">{{ $t('setBoundingRect') }}</BButton></p>
       <p>{{ $t('addTo') }}</p>
       <p>
         <BButton primary @click="addTextTo('instructions', textToAdd); hide()">{{ $t('instructions') }}</BButton>
@@ -403,22 +423,22 @@ defineExpose({
   </TextSelectionMenu>
 
   <BBusy :busy>
-    <b-labeled-input :label="$t('exerciseNumber')" v-model="number" :disabled="editMode" @change="extractionEvents.push({kind: 'ExerciseNumberSetManually', value: number})" />
+    <b-labeled-input :label="$t('exerciseNumber')" v-model="state.number" :disabled="editMode" @change="extractionEvents.push({kind: 'ExerciseNumberSetManually', value: state.number})" />
     
     <div style="position: relative">
       <BLabeledTextarea
         ref="instructionsTextArea"
         :label="$t('exerciseInstructions')"
-        v-model="instructions"
+        v-model="state.instructions"
         @select="updateSelected('instructions')"
-        @change="extractionEvents.push({kind: 'InstructionsSetManually', value: instructions})"
+        @change="extractionEvents.push({kind: 'InstructionsSetManually', value: state.instructions})"
       />
       <BLabeledTextarea
         ref="wordingTextArea"
         :label="$t('exerciseWording')"
-        v-model="wording"
+        v-model="state.wording"
         @select="updateSelected('wording')"
-        @change="extractionEvents.push({kind: 'WordingSetManually', value: wording})"
+        @change="extractionEvents.push({kind: 'WordingSetManually', value: state.wording})"
       />
       <div :class="{'container-fluid': noClueNoExample}">
         <div :class="{row: noClueNoExample}">
@@ -426,18 +446,18 @@ defineExpose({
             <OptionalTextarea
               ref="exampleTextArea"
               :label="$t('exerciseExample')"
-              v-model="example"
+              v-model="state.example"
               @select="updateSelected('example')"
-              @change="extractionEvents.push({kind: 'ExampleSetManually', value: example})"
+              @change="extractionEvents.push({kind: 'ExampleSetManually', value: state.example})"
             />
           </div>
           <div :class="{col: noClueNoExample}" style="padding: 0;">
             <OptionalTextarea
               ref="clueTextArea"
               :label="$t('exerciseClue')"
-              v-model="clue"
+              v-model="state.clue"
               @select="updateSelected('clue')"
-              @change="extractionEvents.push({kind: 'ClueSetManually', value: clue})"
+              @change="extractionEvents.push({kind: 'ClueSetManually', value: state.clue})"
             />
           </div>
         </div>
@@ -448,20 +468,20 @@ defineExpose({
           <label class="form-label" for="abc">{{ $t('adaptationType') }}</label>
             <BSelect
             id="abc"
-            v-model="adaptationType"
+            v-model="state.adaptationType"
             :options="['-', ...Object.keys(adaptationOptionsForms).map(kind => ({value: kind, label: $t(kind)}))]"
           />
         </div>
         <component
-          v-if="adaptationType !== '-'"
-          :is="adaptationOptionsForms[adaptationType]"
-          v-model="adaptationOptions[adaptationType] as any/*Untypeable?*/"
+          v-if="state.adaptationType !== '-'"
+          :is="adaptationOptionsForms[state.adaptationType]"
+          v-model="state.adaptationOptions[state.adaptationType] as any/*Untypeable?*/"
         />
       </BBusy>
 
       <div v-if="!editMode && alreadyExists" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8);" class="text-center">
         <div style="position: absolute; left: 25%; top: 25%; width: 50%; height: 50%; background-color: white">
-          <p>{{ $t('exerciseAlreadyExists', {number}) }}</p>
+          <p>{{ $t('exerciseAlreadyExists', {number: state.number}) }}</p>
           <p>
             <BButton primary @click="skip">{{ $t('skipExercise') }}</BButton>
           </p>

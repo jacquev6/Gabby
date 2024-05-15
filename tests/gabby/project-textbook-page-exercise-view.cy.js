@@ -132,4 +132,30 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
     select('@wording', 0, 5)
     cy.get('label:contains("Replace")').next().should('have.value', 'nager')
   })
+
+  it('has undo/redo', () => {
+    cy.visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
+
+    cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
+    cy.get('div.busy').should('not.exist')
+
+    cy.get('button:contains("Undo")').as('undo')
+    cy.get('button:contains("Redo")').as('redo')
+    cy.get('@undo').should('be.disabled')
+    cy.get('@redo').should('be.disabled')
+
+    cy.get('label:contains("Number")').next().type('6')
+    cy.get('@undo').should('be.enabled')
+    cy.get('@redo').should('be.disabled')
+    cy.get('@undo').click()
+    cy.get('label:contains("Number")').next().should('have.value', '')
+    cy.get('@undo').should('be.disabled')
+    cy.get('@redo').should('be.enabled')
+    cy.get('@redo').click()
+    cy.get('label:contains("Number")').next().should('have.value', '6')
+    cy.get('@undo').should('be.enabled')
+    cy.get('@redo').should('be.disabled')
+
+    // @todo Extend this test to show undo/redo works on all fields (incl. bounding rectangle, adaptation type, etc.)
+  })
 })
