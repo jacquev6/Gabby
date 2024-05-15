@@ -50,6 +50,7 @@ const fields = {
   example,
   clue,
 }
+type FieldName = keyof typeof fields
 
 type AdaptationType = '-' | keyof typeof adaptationOptionsForms
 const adaptationType = ref<AdaptationType>('-')
@@ -180,7 +181,7 @@ const textAreas = {
 
 const noClueNoExample = computed(() => !exampleTextArea.value?.expanded && !clueTextArea.value?.expanded)
 
-function addTextTo(fieldName: 'instructions' | 'wording' | 'example' | 'clue', text: string) {
+function addTextTo(fieldName: FieldName, text: string) {
   const field = fields[fieldName]
   const textArea = textAreas[fieldName].value
   console.assert(textArea !== null)
@@ -348,17 +349,24 @@ const highlightedRectangles = computed(() => {
   }
 })
 
-const selected = ref('nothing')
+const selected = ref([null, ''])
 
-function updateSelected(fieldName: 'instructions' | 'wording' | 'example' | 'clue') {
+function updateSelected(fieldName: FieldName) {
   const textArea = textAreas[fieldName].value?.textarea
   if (textArea) {
-    selected.value = textArea.value.substring(textArea.selectionStart, textArea.selectionEnd)
+    selected.value = [fieldName, textArea.value.substring(textArea.selectionStart, textArea.selectionEnd)]
   }
 }
 
-function replace(searchValue: string, replaceValue: string) {
-  for (const field of Object.values(fields)) {
+function replace(fieldName: FieldName | null, searchValue: string, replaceValue: string) {
+  let fieldNames: FieldName[]
+  if (fieldName === null) {
+    fieldNames = Object.keys(fields) as FieldName[]
+  } else {
+    fieldNames = [fieldName]
+  }
+  for (const fieldName of fieldNames) {
+    const field = fields[fieldName]
     field.value = field.value.replaceAll(searchValue, replaceValue)
   }
 }
@@ -370,6 +378,7 @@ defineExpose({
   // Tools
   selected,
   replace,
+  fieldNamesForReplace: Object.keys(fields),
 })
 </script>
 

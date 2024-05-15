@@ -5,6 +5,7 @@ import BButton from './Button.vue'
 import BCol from './Col.vue'
 import BLabeledCheckbox from './LabeledCheckbox.vue'
 import BLabeledInput from './LabeledInput.vue'
+import BLabeledSelect from './LabeledSelect.vue'
 import BLabeledTextarea from './LabeledTextarea.vue'
 import BModal from './Modal.vue'
 import BRow from './Row.vue'
@@ -17,6 +18,7 @@ export {
   BCol,
   BLabeledCheckbox,
   BLabeledInput,
+  BLabeledSelect,
   BLabeledTextarea,
   BModal,
   BRow,
