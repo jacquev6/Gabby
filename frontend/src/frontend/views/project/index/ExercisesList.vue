@@ -64,8 +64,11 @@ function ellipsis(s: string) {
             <RouterLink :to="{name: 'project-textbook-page-list-exercises', params: {projectId: project.id, textbookId: textbook.id, page}}">Page {{ page }}</RouterLink>
             <ul>
               <li v-for="exercise in exercises">
-              <strong>{{ exercise.attributes!.number }}</strong> {{ ellipsis(exercise.attributes!.instructions) }}
-            </li>
+                <RouterLink :to="{name: 'project-textbook-page-edit-exercise', params: {projectId: project.id, textbookId: textbook.id, page, exerciseId: exercise.id}}">
+                  <strong>{{ exercise.attributes!.number }}</strong>
+                </RouterLink>
+                {{ ellipsis(exercise.attributes!.instructions) }}
+              </li>
             </ul>
           </li>
         </ul>
