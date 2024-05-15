@@ -14,31 +14,37 @@ class WordToken:
     text: str
 
 @dataclasses.dataclass
-class WhitespaceToken:
+class ParagraphEndToken:
+    pass
+
+@dataclasses.dataclass
+class HorizontalWhitespaceToken:
     text: str
 
 @dataclasses.dataclass
 class PunctuationToken:
     text: str
 
-TextToken = TagToken | WordToken | WhitespaceToken | PunctuationToken
+TextToken = TagToken | WordToken | ParagraphEndToken | HorizontalWhitespaceToken | PunctuationToken
 
 
-tokenize_text_regex = re.compile(r"(?:{([a-z0-9]+)\|([^}]+)})|(\w+)|(\s+)|(.)")
+tokenize_text_regex = re.compile(r"(?:{(?P<tag>[a-z0-9]+)\|(?P<tag_val>[^}]+)})|(?P<word>\w+)|(?P<paragraph_end>\n\n+)|(?P<space>\s+)|(?P<char>.)")
 
 def tokenize_text(s: str) -> list[TextToken]:
     ret = []
     for m in tokenize_text_regex.finditer(s):
-        if m.group(1):
-            assert m.group(2)
-            ret.append(TagToken(m.group(1), m.group(2)))
-        elif m.group(3):
-            ret.append(WordToken(m.group(3)))
-        elif m.group(4):
-            ret.append(WhitespaceToken(m.group(4)))
+        if m.group("tag"):
+            assert m.group("tag_val")
+            ret.append(TagToken(m.group("tag"), m.group("tag_val")))
+        elif m.group("word"):
+            ret.append(WordToken(m.group("word")))
+        elif m.group("paragraph_end"):
+            ret.append(ParagraphEndToken())
+        elif m.group("space"):
+            ret.append(HorizontalWhitespaceToken(m.group("space")))
         else:
-            assert m.group(5)
-            ret.append(PunctuationToken(m.group(5)))
+            assert m.group("char")
+            ret.append(PunctuationToken(m.group("char")))
     return ret
 
 
@@ -62,7 +68,7 @@ class TokenizeTextTestCase(TestCase):
         self.make_test("120", [WordToken("120")])
 
     def test_whitespace(self):
-        self.make_test("  \t\n\t  ", [WhitespaceToken("  \t\n\t  ")])
+        self.make_test("  \t\n\t  ", [HorizontalWhitespaceToken("  \t\n\t  ")])
 
     def test_punctuation(self):
         self.make_test("!", [PunctuationToken("!")])
@@ -72,9 +78,9 @@ class TokenizeTextTestCase(TestCase):
             "Un martien ?!(vert).",
             [
                 WordToken("Un"),
-                WhitespaceToken(" "),
+                HorizontalWhitespaceToken(" "),
                 WordToken("martien"),
-                WhitespaceToken(" "),
+                HorizontalWhitespaceToken(" "),
                 PunctuationToken("?"),
                 PunctuationToken("!"),
                 PunctuationToken("("),
@@ -86,3 +92,9 @@ class TokenizeTextTestCase(TestCase):
 
     def test_tag(self):
         self.make_test("{foo|hello}", [TagToken("foo", "hello")])
+
+    def test_paragraph_end(self):
+        self.make_test("\n\n", [ParagraphEndToken()])
+
+    def test_paragraph_end__extra(self):
+        self.make_test("\n\n\n\n\n", [ParagraphEndToken()])

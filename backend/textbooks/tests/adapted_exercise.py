@@ -140,6 +140,158 @@ class SelectThingsAdaptedExerciseBusinessTestCase(TestCase):
             ),
         )
 
+    def test_multiple_lines_in_instructions(self):
+        exercise = Exercise(
+            number="number",
+            textbook_page=42,
+            instructions="instructions\nare\n\non\n\nmultiple\nlines",
+            wording="wording",
+        )
+        adaptation = SelectThingsAdaptation(exercise=exercise, colors=1, words=True, punctuation=False)
+
+        self.assertEqual(
+            adaptation.make_adapted(),
+            r.AdaptedExercise(
+                number="number",
+                textbook_page=42,
+                instructions=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(type="plainText", text="instructions"),
+                            r.Whitespace(type="whitespace"),
+                            r.PlainText(type="plainText", text="are"),
+                        ]),
+                    ]),
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(type="plainText", text="on"),
+                        ]),
+                    ]),
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(type="plainText", text="multiple"),
+                            r.Whitespace(type="whitespace"),
+                            r.PlainText(type="plainText", text="lines"),
+                        ]),
+                    ]),
+                ]),
+                wording=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.SelectableText(type="selectableText", text="wording", colors=1),
+                        ]),
+                    ]),
+                ]),
+            ),
+        )
+
+    def test_multiple_lines_in_wording(self):
+        exercise = Exercise(
+            number="number",
+            textbook_page=42,
+            instructions="instructions",
+            wording="wording\nis\n\non\n\nmultiple\nlines",
+        )
+        adaptation = SelectThingsAdaptation(exercise=exercise, colors=1, words=True, punctuation=False)
+
+        self.assertEqual(
+            adaptation.make_adapted(),
+            r.AdaptedExercise(
+                number="number",
+                textbook_page=42,
+                instructions=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(type="plainText", text="instructions"),
+                        ]),
+                    ]),
+                ]),
+                wording=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.SelectableText(type="selectableText", text="wording", colors=1),
+                            r.Whitespace(type="whitespace"),
+                            r.SelectableText(type="selectableText", text="is", colors=1),
+                        ]),
+                    ]),
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.SelectableText(type="selectableText", text="on", colors=1),
+                        ]),
+                    ]),
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.SelectableText(type="selectableText", text="multiple", colors=1),
+                            r.Whitespace(type="whitespace"),
+                            r.SelectableText(type="selectableText", text="lines", colors=1),
+                        ]),
+                    ]),
+                ]),
+            ),
+        )
+
+    def test_unknown_tags(self):
+        exercise = Exercise(
+            number="number",
+            textbook_page=42,
+            instructions="{tag|abc}",
+            wording="{tag|def}",
+        )
+        adaptation = SelectThingsAdaptation(exercise=exercise, colors=1, words=True, punctuation=False)
+
+        self.assertEqual(
+            adaptation.make_adapted(),
+            r.AdaptedExercise(
+                number="number",
+                textbook_page=42,
+                instructions=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(type="plainText", text="{tag|abc}"),
+                        ]),
+                    ]),
+                ]),
+                wording=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(type="plainText", text="{tag|def}"),
+                        ]),
+                    ]),
+                ]),
+            ),
+        )
+
+    def test_strip_whitespace(self):
+        exercise = Exercise(
+            number="number",
+            textbook_page=42,
+            instructions="   abc   ",
+            wording="   def   ",
+        )
+        adaptation = SelectThingsAdaptation(exercise=exercise, colors=1, words=True, punctuation=False)
+
+        self.assertEqual(
+            adaptation.make_adapted(),
+            r.AdaptedExercise(
+                number="number",
+                textbook_page=42,
+                instructions=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(type="plainText", text="abc"),
+                        ]),
+                    ]),
+                ]),
+                wording=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.SelectableText(type="selectableText", text="def", colors=1),
+                        ]),
+                    ]),
+                ]),
+            ),
+        )
+
 
 class FillWithFreeTextAdaptationBusinessTestCase(TestCase):
     def test_single_sentence(self):
@@ -219,6 +371,168 @@ class FillWithFreeTextAdaptationBusinessTestCase(TestCase):
                             r.PlainText(type="plainText", text="a"),
                             r.Whitespace(type="whitespace"),
                             r.FreeTextInput(type="freeTextInput"),
+                        ]),
+                    ]),
+                ]),
+            ),
+        )
+
+    def test_multiple_lines_in_instructions(self):
+        exercise = Exercise(
+            number="number",
+            textbook_page=42,
+            instructions="instructions\nare\n\non\n\nmultiple\nlines",
+            wording="wording",
+        )
+        adaptation = FillWithFreeTextAdaptation(exercise=exercise, placeholder="...")
+
+        self.assertEqual(
+            adaptation.make_adapted(),
+            r.AdaptedExercise(
+                number="number",
+                textbook_page=42,
+                instructions=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(type="plainText", text="instructions"),
+                            r.Whitespace(type="whitespace"),
+                            r.PlainText(type="plainText", text="are"),
+                        ]),
+                    ]),
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(type="plainText", text="on"),
+                        ]),
+                    ]),
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(type="plainText", text="multiple"),
+                            r.Whitespace(type="whitespace"),
+                            r.PlainText(type="plainText", text="lines"),
+                        ]),
+                    ]),
+                ]),
+                wording=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(type="plainText", text="wording"),
+                        ]),
+                    ]),
+                ]),
+            ),
+        )
+
+    def test_multiple_lines_in_wording(self):
+        exercise = Exercise(
+            number="number",
+            textbook_page=42,
+            instructions="instructions",
+            wording="foo\ntoto : ...\n\nbar : ...\n\nbaz : ...",
+        )
+        adaptation = FillWithFreeTextAdaptation(exercise=exercise, placeholder="...")
+
+        self.assertEqual(
+            adaptation.make_adapted(),
+            r.AdaptedExercise(
+                number="number",
+                textbook_page=42,
+                instructions=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(type="plainText", text="instructions"),
+                        ]),
+                    ]),
+                ]),
+                wording=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(type="plainText", text="foo"),
+                            r.Whitespace(type="whitespace"),
+                            r.PlainText(type="plainText", text="toto"),
+                            r.Whitespace(type="whitespace"),
+                            r.PlainText(type="plainText", text=":"),
+                            r.Whitespace(type="whitespace"),
+                            r.FreeTextInput(type="freeTextInput"),
+                        ]),
+                    ]),
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(type="plainText", text="bar"),
+                            r.Whitespace(type="whitespace"),
+                            r.PlainText(type="plainText", text=":"),
+                            r.Whitespace(type="whitespace"),
+                            r.FreeTextInput(type="freeTextInput"),
+                        ]),
+                    ]),
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(type="plainText", text="baz"),
+                            r.Whitespace(type="whitespace"),
+                            r.PlainText(type="plainText", text=":"),
+                            r.Whitespace(type="whitespace"),
+                            r.FreeTextInput(type="freeTextInput"),
+                        ]),
+                    ]),
+                ]),
+            ),
+        )
+
+    def test_unknown_tags(self):
+        exercise = Exercise(
+            number="number",
+            textbook_page=42,
+            instructions="{tag|abc}",
+            wording="{tag|def}",
+        )
+        adaptation = FillWithFreeTextAdaptation(exercise=exercise, placeholder="...")
+
+        self.assertEqual(
+            adaptation.make_adapted(),
+            r.AdaptedExercise(
+                number="number",
+                textbook_page=42,
+                instructions=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(type="plainText", text="{tag|abc}"),
+                        ]),
+                    ]),
+                ]),
+                wording=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(type="plainText", text="{tag|def}"),
+                        ]),
+                    ]),
+                ]),
+            ),
+        )
+
+    def test_strip_whitespace(self):
+        exercise = Exercise(
+            number="number",
+            textbook_page=42,
+            instructions="   abc   ",
+            wording="   def   ",
+        )
+        adaptation = FillWithFreeTextAdaptation(exercise=exercise, placeholder="...")
+
+        self.assertEqual(
+            adaptation.make_adapted(),
+            r.AdaptedExercise(
+                number="number",
+                textbook_page=42,
+                instructions=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(type="plainText", text="abc"),
+                        ]),
+                    ]),
+                ]),
+                wording=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(type="plainText", text="def"),
                         ]),
                     ]),
                 ]),
