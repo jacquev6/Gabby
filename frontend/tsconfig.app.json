@@ -1,0 +1,26 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "include": ["env.d.ts", "src/**/*.ts", "src/**/*.vue"],
+  "exclude": [],
+  "compilerOptions": {
+    "strict": true,
+    "composite": true,
+    "noEmit": true,
+    "noUnusedParameters": true,
+    "noUnusedLocals": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noUncheckedIndexedAccess": false,
+    "noPropertyAccessFromIndexSignature": false,
+    "baseUrl": ".",
+    "paths": {
+      "$/*": ["./src/*"],
+      "$adapted/*": ["./src/adapted/*"],
+      "$frontend/*": ["./src/frontend/*"]
+    },
+    "lib": ["Dom", "ES2022"]
+  }
+}

@@ -6,6 +6,10 @@ set -o pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/."
 
 
+# @todo Provide backend/type-check.sh
 backend/unit-tests.sh
-frontend/unit-tests.sh
-./end-to-end-tests.sh
+
+frontend/type-check.sh
+frontend/unit-tests.sh --no-console
+
+./end-to-end-tests.sh --no-console

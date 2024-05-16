@@ -9,14 +9,14 @@ from fastapi.responses import HTMLResponse
 import django.conf
 import django.contrib.auth
 import django.core.management
-import jinja2
 
 from fastjsonapi import make_jsonapi_router
-from fastjsonapi.django import AuthenticationToken, make_wrapper
+from fastjsonapi.django import AuthenticationToken, get_wrapper as get_django_wrapper
 from opinion_ping.resources import PingsResource
-from textbooks.models import Project, SelectWordsAdaptedExercise, FillWithFreeTextAdaptedExercise
+from textbooks.models import Project, SelectThingsAdaptation, FillWithFreeTextAdaptation, MultipleChoicesAdaptation
 from textbooks.resources import PdfFilesResource, PdfFileNamingsResource, ProjectsResource, TextbooksResource, SectionsResource, ExercisesResource, ExtractionEventsResource
-from textbooks.resources import SelectWordsAdaptedExercisesResource, FillWithFreeTextAdaptedExercisesResource
+from textbooks.resources import SelectThingsAdaptationsResource, FillWithFreeTextAdaptationsResource, MultipleChoicesAdaptationsResource
+from textbooks.resources import AdaptedExerciseResource
 from textbooks.views import make_extraction_report
 
 
@@ -48,43 +48,39 @@ app.include_router(
             SectionsResource(),
             ExercisesResource(),
             ExtractionEventsResource(),
-            SelectWordsAdaptedExercisesResource(),
-            FillWithFreeTextAdaptedExercisesResource(),
+            SelectThingsAdaptationsResource(),
+            FillWithFreeTextAdaptationsResource(),
+            MultipleChoicesAdaptationsResource(),
+            AdaptedExerciseResource(),
         ],
         polymorphism={
-            make_wrapper(SelectWordsAdaptedExercise): "select_words",
-            make_wrapper(FillWithFreeTextAdaptedExercise): "fill_with_free_text",
+            get_django_wrapper(SelectThingsAdaptation): "select_things_adaptation",
+            get_django_wrapper(FillWithFreeTextAdaptation): "fill_with_free_text_adaptation",
+            get_django_wrapper(MultipleChoicesAdaptation): "multiple_choices_adaptation",
         },
     ),
     prefix="/api",
 )
 
 @app.get("/api/project-{project_id}-extraction-report.json")
-def extraction_report(project_id: int):
-    return make_extraction_report(project_id)
-
-jinja2_env = jinja2.Environment(
-    loader=jinja2.PackageLoader("textbooks"),
-)
+def extraction_report(project_id: str):
+    return make_extraction_report(ProjectsResource.sqids.decode(project_id)[0])
 
 @app.get("/api/project-{project_id}.html")
-def export_project(project_id: int):
-    project = Project.objects.get(id=project_id)
+def export_project(project_id: str):
+    project = Project.objects.get(id=ProjectsResource.sqids.decode(project_id)[0])
     exercises = []
     for exercise in project.exercises.all():
-        if exercise.adapted is not None:
-            exercises.append({
-                "number": exercise.number,
-                "textbookPage": exercise.textbook_page,
-                "instructions": exercise.instructions,
-                "wording": exercise.wording,
-                "adaptation": exercise.adapted.make_adaptation_dict(),
-            })
-    data = json.dumps({
-        "exercises": exercises,
-    }).replace("\\", "\\\\").replace('"', "\\\"")
+        if exercise.adaptation is not None:
+            exercises.append(exercise.adaptation.make_adapted().model_dump())
+    data = json.dumps(dict(
+        projectId=project.id,
+        exercises=exercises,
+    )).replace("\\", "\\\\").replace('"', "\\\"")
+    with open("textbooks/templates/adapted/index.html") as f:
+        template = f.read()
     return HTMLResponse(
-        content=jinja2_env.get_template("adapted/index.html").render(data=data),
+        content=template.replace("{{ data }}", data),
         headers={
             "Content-Type": "text/html",
             "Content-Disposition": f'attachment; filename="{project.title}.html"',

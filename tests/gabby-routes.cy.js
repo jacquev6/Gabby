@@ -12,7 +12,7 @@ describe('Gabby has routes that', () => {
   it('can access a Vue Router view without trailing /', () => {
     cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises')
 
-    cy.visit('/project/1/textbook/1/page/6')
+    cy.visit('/project-xkopqm/textbook-klxufv/page-6')
     cy.get('select').select('en')
     cy.contains('h1', 'Edition')
   })
@@ -20,7 +20,7 @@ describe('Gabby has routes that', () => {
   it('can access a Vue Router view with trailing /', () => {
     cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises')
 
-    cy.visit('/project/1/textbook/1/page/6/')
+    cy.visit('/project-xkopqm/textbook-klxufv/page-6/')
     cy.get('select').select('en')
     cy.contains('h1', 'Edition')
   })

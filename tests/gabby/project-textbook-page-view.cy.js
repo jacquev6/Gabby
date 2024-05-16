@@ -12,30 +12,30 @@ describe('Gabby\'s project\'s textbook page view', () => {
   })
 
   it('displays an error message if the project does not exist', () => {
-    cy.visit('/project/0/textbook/1/page/6')
+    cy.visit('/project-nope/textbook-klxufv/page-6')
     cy.get('div.busy').should('not.exist')
     cy.get('select').select('en')
 
     cy.get('h1:contains("Project not found")').should('exist')
-    cy.title().should('eq', 'MALIN')
+    cy.title().should('eq', 'MALIN - Project not found')
   })
 
   it('displays an error message if the textbook does not exist', () => {
-    cy.visit('/project/1/textbook/0/page/6')
+    cy.visit('/project-xkopqm/textbook-nope/page-6')
     cy.get('div.busy').should('not.exist')
     cy.get('select').select('en')
 
     cy.get('h1:contains("Textbook not found")').should('exist')
-    cy.title().should('eq', 'MALIN')
+    cy.title().should('eq', 'MALIN - Premier projet de test - Textbook not found')
   })
 
   it('displays an error message if the textbook does not belong to this project', () => {
-    cy.visit('/project/2/textbook/1/page/6')
+    cy.visit('/project-fryrbl/textbook-klxufv/page-6')
     cy.get('div.busy').should('not.exist')
     cy.get('select').select('en')
 
     cy.get('h1:contains("Textbook not found")').should('exist')
-    cy.title().should('eq', 'MALIN')
+    cy.title().should('eq', 'MALIN - Deuxième projet de test - Textbook not found')
   })
 
   // @todo Add test where the page is a negative number
@@ -43,7 +43,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
   // @todo Add test where the page is not a number
 
   it('lands', () => {
-    cy.visit('/project/1/textbook/1/page/6')
+    cy.visit('/project-xkopqm/textbook-klxufv/page-6')
     cy.get('select').select('en')
 
     cy.title().should('eq', 'MALIN - Premier projet de test - Français CE2 - Page 6')
@@ -52,7 +52,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
   })
 
   it('adjusts textarea heights', () => {
-    cy.visit('/project/1/textbook/1/page/6/new-exercise')
+    cy.visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise')
     cy.get('select').select('en')
 
     for (const label of ['Instructions', 'Wording']) {
@@ -70,14 +70,14 @@ describe('Gabby\'s project\'s textbook page view', () => {
   })
 
   it('navigates the textbook', () => {
-    cy.visit('/project/1/textbook/1/page/6')
+    cy.visit('/project-xkopqm/textbook-klxufv/page-6')
     cy.get('select').select('en')
     cy.get('p:contains("Page"):contains("(on 7)") input').should('have.value', '6')
     cy.get('p:contains("The PDF that contains this page (test.pdf) has not been loaded yet.")').should('exist')
 
     cy.get('p:contains("Page"):contains("(on 7)") :contains(">")').click()
     cy.get('p:contains("Page"):contains("(on 7)") input').should('have.value', '7')
-    cy.url().should('eq', `${Cypress.config().baseUrl}project/1/textbook/1/page/7`)
+    cy.url().should('eq', `${Cypress.config().baseUrl}project-xkopqm/textbook-klxufv/page-7`)
     cy.get('p:contains("Page"):contains("(on 7)") :contains(">")').should('be.disabled')
     cy.get('p:contains("The PDF that contains this page (test.pdf) has not been loaded yet.")').should('exist')
 
@@ -86,28 +86,28 @@ describe('Gabby\'s project\'s textbook page view', () => {
 
     cy.get('p:contains("Page"):contains("(on 7)") :contains("<")').click()
     cy.get('p:contains("Page"):contains("(on 7)") input').should('have.value', '5')
-    cy.url().should('eq', `${Cypress.config().baseUrl}project/1/textbook/1/page/5`)
+    cy.url().should('eq', `${Cypress.config().baseUrl}project-xkopqm/textbook-klxufv/page-5`)
     cy.get('p:contains("No known PDF contains this page.")').should('exist')
     cy.get('p:contains("The PDF that contains this page (test.pdf) has not been loaded yet.")').should('not.exist')
 
     cy.get('p:contains("Page"):contains("(on 7)") input').clear().type('1')
-    cy.url().should('eq', `${Cypress.config().baseUrl}project/1/textbook/1/page/1`)
+    cy.url().should('eq', `${Cypress.config().baseUrl}project-xkopqm/textbook-klxufv/page-1`)
     cy.get('p:contains("Page"):contains("(on 7)") :contains("<")').should('be.disabled')
     cy.get('p:contains("No known PDF contains this page.")').should('exist')
 
     cy.get('p:contains("Page"):contains("(on 7)") input').clear().type('100').blur()
     cy.get('div.busy').should('not.exist')
     cy.get('p:contains("Page"):contains("(on 7)") input').should('have.value', '1')
-    cy.url().should('eq', `${Cypress.config().baseUrl}project/1/textbook/1/page/1`)
+    cy.url().should('eq', `${Cypress.config().baseUrl}project-xkopqm/textbook-klxufv/page-1`)
 
     cy.get('p:contains("Page"):contains("(on 7)") input').clear().type('200').blur()
     cy.get('div.busy').should('not.exist')
     cy.get('p:contains("Page"):contains("(on 7)") input').should('have.value', '2')
-    cy.url().should('eq', `${Cypress.config().baseUrl}project/1/textbook/1/page/2`)
+    cy.url().should('eq', `${Cypress.config().baseUrl}project-xkopqm/textbook-klxufv/page-2`)
   })
 
   it('enables the "Save exercise" button', () => {
-    cy.visit('/project/1/textbook/1/page/6/new-exercise')
+    cy.visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise')
     cy.get('select').select('en')
 
     cy.get('button:contains("Save then create next")').should('be.disabled')
@@ -123,13 +123,13 @@ describe('Gabby\'s project\'s textbook page view', () => {
   })
 
   it('lists existing exercises', () => {
-    cy.visit('/project/1/textbook/1/page/7')
+    cy.visit('/project-xkopqm/textbook-klxufv/page-7')
     cy.get('select').select('en')
     cy.get('button:contains("Delete")').click()
     cy.get('div.busy').should('not.exist')
     cy.get('p:contains("No exercises yet.")').should('exist')
 
-    cy.visit('/project/1/textbook/1/page/7')
+    cy.visit('/project-xkopqm/textbook-klxufv/page-7')
     cy.get('div.busy').should('not.exist')
     cy.get('select').select('en')
     cy.get('p:contains("No exercises yet.")').should('exist')
@@ -141,7 +141,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
   })
 
   it('loads a PDF', () => {
-    cy.visit('/project/1/textbook/1/page/6')
+    cy.visit('/project-xkopqm/textbook-klxufv/page-6')
     cy.get('select').select('en')
     cy.get('div.busy').should('not.exist')
     cy.get('p:contains("The PDF that contains this page (test.pdf) has not been loaded yet.")').should('exist')
@@ -153,7 +153,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
   })
 
   it('creates a minimal exercise', () => {
-    cy.visit('/project/1/textbook/1/page/6/new-exercise')
+    cy.visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise')
     cy.get('select').select('en')
 
     cy.get('label:contains("Number")').next().type('1')
@@ -168,7 +168,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
   })
 
   it('creates a full exercise', () => {
-    cy.visit('/project/1/textbook/1/page/6/new-exercise')
+    cy.visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise')
     cy.get('select').select('en')
 
     cy.get('label:contains("Number")').next().type('Défis')
@@ -179,21 +179,17 @@ describe('Gabby\'s project\'s textbook page view', () => {
     cy.get('p:contains("Clue")').click()
     cy.focused().type('The clue')
 
-    cy.frameLoaded({url: '-'})
-    cy.iframe().find('p:contains("Do the smartest thing ever.")').should('exist')
-    cy.iframe().find('p:contains("Sélectionnez un type d\'exercise.")').should('exist')
-    cy.iframe().find('span:contains("smartest")').should('have.length', 1)
+    cy.get('p:contains("Select adaptation type")').should('exist')
 
-    cy.get('label:contains("Type")').next().select('selectWords')
+    cy.get('label:contains("Adaptation type")').next().select('selectThingsAdaptation')
     cy.get('label:contains("Number of colors")').next().type('{selectAll}2')
 
-    cy.frameLoaded({url: 'selectWords'})
-    cy.iframe().find('span:contains("artificial")').last().click()
-    cy.iframe().find('span:contains("artificial")').last().should('have.css', 'background-color', 'rgb(102, 194, 165)')
-    cy.iframe().find('span:contains("artificial")').last().click()
-    cy.iframe().find('span:contains("artificial")').last().should('have.css', 'background-color', 'rgb(179, 179, 179)')
-    cy.iframe().find('span:contains("artificial")').last().click()
-    cy.iframe().find('span:contains("artificial")').last().should('have.css', 'background-color', 'rgba(0, 0, 0, 0)')
+    cy.get('span:contains("artificial")').last().click()
+    cy.get('span:contains("artificial")').last().should('have.css', 'background-color', 'rgb(102, 194, 165)')
+    cy.get('span:contains("artificial")').last().click()
+    cy.get('span:contains("artificial")').last().should('have.css', 'background-color', 'rgb(179, 179, 179)')
+    cy.get('span:contains("artificial")').last().click()
+    cy.get('span:contains("artificial")').last().should('have.css', 'background-color', 'rgba(0, 0, 0, 0)')
 
     cy.get('button:contains("Save")').click()
     cy.get('div.busy').should('not.exist')
@@ -205,11 +201,18 @@ describe('Gabby\'s project\'s textbook page view', () => {
     cy.get('li:contains("Défis")').should('exist')
   })
 
+  const prevWidth = 309
+  const prevHeight = 436
+  const newWidth = 322
+  const newHeight = 454
+  const xRatio = newWidth / prevWidth
+  const yRatio = newHeight / prevHeight
+
   it('collects extraction events on new exercises', () => {
     cy.viewport(1000, 1000)  // Ensure no vertical scrollbar
     // (because it interferes with pointer coordinates, making the test harder to maintain)
 
-    cy.visit('/project/1/textbook/1/page/6/new-exercise')
+    cy.visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise')
     cy.get('select').select('en')
     cy.get('div.busy').should('not.exist')
 
@@ -230,33 +233,33 @@ describe('Gabby\'s project\'s textbook page view', () => {
 
     cy.get('canvas[style="position: absolute; top: 0px; left: 0px;"]').last().as('canvas')
     cy.get('@canvas').trigger('pointermove', 5, 5)
-    cy.get('@canvas').trigger('pointerdown', 15, 368, { pointerId: 1 })
-    cy.get('@canvas').trigger('pointermove', 150, 418)
-    cy.get('@canvas').trigger('pointerup', 150, 418, { pointerId: 1 })
+    cy.get('@canvas').trigger('pointerdown', 15 * xRatio, 368 * yRatio, { pointerId: 1 })
+    cy.get('@canvas').trigger('pointermove', 150 * xRatio, 418 * yRatio)
+    cy.get('@canvas').trigger('pointerup', 150 * xRatio, 418 * yRatio, { pointerId: 1 })
     cy.get('p:contains("Draw a rectangle around the whole exercise.")').should('not.exist')
 
-    cy.get('@canvas').trigger('pointermove', 5, 5)
-    cy.get('@canvas').trigger('pointerdown', 15, 375, { pointerId: 1 })
-    cy.get('@canvas').trigger('pointermove', 150, 393)
-    cy.get('@canvas').trigger('pointerup', 150, 393, { pointerId: 1 })
+    cy.get('@canvas').trigger('pointermove', 5 * xRatio, 5 * yRatio)
+    cy.get('@canvas').trigger('pointerdown', 15 * xRatio, 375 * yRatio, { pointerId: 1 })
+    cy.get('@canvas').trigger('pointermove', 150 * xRatio, 393 * yRatio)
+    cy.get('@canvas').trigger('pointerup', 150 * xRatio, 393 * yRatio, { pointerId: 1 })
     cy.get('label:contains("Selected text")').next().should('have.value', 'Classe les mots en trois groupes :\nnom, verbe, adjectif.')
     cy.get('button:contains("Instructions")').click()
-    cy.get('@canvas').trigger('pointermove', 5, 5)
-    cy.get('@canvas').trigger('pointerdown', 15, 390, { pointerId: 1 })
-    cy.get('@canvas').trigger('pointermove', 150, 415)
-    cy.get('@canvas').trigger('pointerup', 150, 415, { pointerId: 1 })
+    cy.get('@canvas').trigger('pointermove', 5 * xRatio, 5 * yRatio)
+    cy.get('@canvas').trigger('pointerdown', 15 * xRatio, 390 * yRatio, { pointerId: 1 })
+    cy.get('@canvas').trigger('pointermove', 150 * xRatio, 415 * yRatio)
+    cy.get('@canvas').trigger('pointerup', 150 * xRatio, 415 * yRatio, { pointerId: 1 })
     cy.get('label:contains("Selected text")').next().should('have.value', 'verrou ◆ baigner ◆ joli ◆ chaleur ◆ grosse ◆\nsurveiller ◆ degré ◆ librairie ◆ repas ◆ parler')
     cy.get('label:contains("Selected text")').next().type('Blah blah blah')
     cy.get('button:contains("Wording")').click()
     cy.get('button:contains("Save")').click()
     cy.get('div.busy').should('not.exist')
 
-    cy.visit('/project/1')
+    cy.visit('/project-xkopqm')
     cy.get('select').select('en')
 
-    cy.get('a').contains('the extraction report').should('have.attr', 'href', '/api/project-1-extraction-report.json')
+    cy.get('a').contains('the extraction report').should('have.attr', 'href', '/api/project-xkopqm-extraction-report.json')
 
-    cy.request('/api/project-1-extraction-report.json').as('report')
+    cy.request('/api/project-xkopqm-extraction-report.json').as('report')
     cy.get('@report').its('body.project.textbooks[0].exercises[0].events').should('deep.eq', [
       {kind: 'ExerciseNumberSetManually', value: '1'},
       {kind: 'InstructionsSetManually', value: 'Ceci est la consigne'},
@@ -273,8 +276,8 @@ describe('Gabby\'s project\'s textbook page view', () => {
           sha256: 'f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c',
           page: 1,
           rectangle: {
-            start: {x: 55.49873958525407, y: (isProdPreview ? 145.82387315089397 : 146.48300209886452)},
-            stop: {x: 303.099891274904, y: (isProdPreview ? 54.11897604195826 : 54.778104989928806)},
+            start: {x: 56.193438336980655, y: (isProdPreview ? 145.60912431995314 : 144.47975360367366)},
+            stop: {x: 304.7582704906808, y: (isProdPreview ? 53.937276910729224 : 52.80790619444963)},
           },
         },
       },
@@ -285,8 +288,8 @@ describe('Gabby\'s project\'s textbook page view', () => {
           sha256: 'f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c',
           page: 1,
           rectangle: {
-            start: {x: 55.49873958525407, y: (isProdPreview ? 132.98518755564305 : 133.64431650361348)},
-            stop: {x: 303.099891274904, y: (isProdPreview ? 99.97142459642623 : 100.63055354439655)},
+            start: {x: 56.193438336980655, y: (isProdPreview ? 133.26868332255765 : 132.13931260627817)},
+            stop: {x: 304.7582704906808, y: (isProdPreview ? 99.77320061534124 : 98.64382989906164)},
           },
         },
         value: '2\nClasse les mots en trois groupes :\nnom, verbe, adjectif.',
@@ -455,8 +458,8 @@ describe('Gabby\'s project\'s textbook page view', () => {
           sha256: 'f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c',
           page: 1,
           rectangle: {
-            start: {x: 55.49873958525407, y: (isProdPreview ? 105.47371842296229 : 106.13284737093272)},
-            stop: {x: 303.099891274904, y: (isProdPreview ? 59.62126986849444 : 60.28039881646487)},
+            start: {x: 56.193438336980655, y: (isProdPreview ? 105.06196104279638 : 105.69551046900199)},
+            stop: {x: 304.7582704906808, y: (isProdPreview ? 59.22603733818437 : 59.859586764389974)},
           },
         },
         value: 'verrou ◆ baigner ◆ joli ◆ chaleur ◆ grosse ◆\nsurveiller ◆ degré ◆ librairie ◆ repas ◆ parler',
@@ -878,7 +881,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
   it('collects extraction events when editing exercises', () => {
     cy.viewport(1000, 1000)
 
-    cy.visit('/project/1/textbook/1/page/6')
+    cy.visit('/project-xkopqm/textbook-klxufv/page-6')
     cy.get('select').select('en')
     cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
     cy.get('div.busy').should('not.exist')
@@ -891,15 +894,15 @@ describe('Gabby\'s project\'s textbook page view', () => {
     cy.get('li:contains("4 Écris une phrase en respe…") a:contains("Edit")').click()
     cy.get('canvas[style="position: absolute; top: 0px; left: 0px;"]').last().as('canvas')
     cy.get('@canvas').trigger('pointermove', 5, 5)
-    cy.get('@canvas').trigger('pointerdown', 150, 372, { pointerId: 1 })
-    cy.get('@canvas').trigger('pointermove', 300, 397)
-    cy.get('@canvas').trigger('pointerup', 300, 397, { pointerId: 1 })
+    cy.get('@canvas').trigger('pointerdown', 150 * xRatio, 372 * yRatio, { pointerId: 1 })
+    cy.get('@canvas').trigger('pointermove', 300 * xRatio, 397 * yRatio)
+    cy.get('@canvas').trigger('pointerup', 300 * xRatio, 397 * yRatio, { pointerId: 1 })
     cy.get('label:contains("Selected text")').next().should('have.value', 'pronom personnel / verbe / déterminant / nom\ncommun : Je mange une pomme.')
     cy.get('button:contains("Example")').click()
     cy.get('button:contains("Save")').click()
     cy.get('div.busy').should('not.exist')
 
-    cy.request('/api/project-1-extraction-report.json').as('report')
+    cy.request('/api/project-xkopqm-extraction-report.json').as('report')
     cy.get('@report').its('body.project.textbooks[0].exercises[0].events').should('deep.eq', [
       {'kind': 'InstructionsSetManually', 'value': 'Ceci est la consigne'},
     ])
@@ -911,8 +914,8 @@ describe('Gabby\'s project\'s textbook page view', () => {
           sha256: 'f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c',
           page: 1,
           rectangle: {
-            start: {x: 303.099891274904, y: (isProdPreview ? 138.4874813821791 : 139.14661033014954)},
-            stop: {x: 578.2122820411818, y: (isProdPreview ? 92.63503282771126 : 93.2941617756818)},
+            start: {x: 304.7582704906808, y: (isProdPreview ? 138.5574437500128 : 137.42807303373343)},
+            stop: {x: 579.7661698947745, y: (isProdPreview ? 92.7215200454009 : 91.59214932912141)},
           },
         },
         value: 'pronom personnel / verbe / déterminant / nom\ncommun : Je mange une pomme.',
@@ -960,7 +963,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
   // @todo Add test showing we can delete and recreate an exercise (hunt possible bug in deletion)
 
   it('shows and hides the section editor dialog', () => {
-    cy.visit('/project/1/textbook/1/page/6')
+    cy.visit('/project-xkopqm/textbook-klxufv/page-6')
     cy.get('select').select('fr')
     cy.get('div.busy').should('not.exist')
 
@@ -974,7 +977,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
   })
 
   it('detects when an exercise already exists', () => {
-    cy.visit('/project/1/textbook/1/page/6/new-exercise')
+    cy.visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise')
     cy.get('select').select('en')
     cy.get('div.busy').should('not.exist')
 
@@ -1000,7 +1003,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
   })
 
   it('allows navigating the PDF when creating an exercise', () => {
-    cy.visit('/project/1/textbook/1/page/6/new-exercise')
+    cy.visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise')
     cy.get('select').select('en')
     cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
     cy.get('div.busy').should('not.exist')
@@ -1008,7 +1011,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
     cy.get('label:contains("Number")').next().type('5')
 
     cy.get('p:contains("Page"):contains("(on 7)") :contains(">")').click()
-    cy.url().should('eq', `${Cypress.config().baseUrl}project/1/textbook/1/page/7/new-exercise`)
+    cy.url().should('eq', `${Cypress.config().baseUrl}project-xkopqm/textbook-klxufv/page-7/new-exercise`)
     cy.get('label:contains("Number")').next().should('have.value', '5')
 
     cy.get('button:contains("Save")').click()
@@ -1016,7 +1019,36 @@ describe('Gabby\'s project\'s textbook page view', () => {
     cy.get('a:contains("Cancel")').click()
 
     cy.get('div.busy').should('not.exist')
-    cy.url().should('eq', `${Cypress.config().baseUrl}project/1/textbook/1/page/7`)
+    cy.url().should('eq', `${Cypress.config().baseUrl}project-xkopqm/textbook-klxufv/page-7`)
     cy.get('li:contains("5")').should('exist')
+  })
+
+  it('resets responses when changing adaptation type', () => {
+    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises,more-test-exercises')
+    cy.viewport(1000, 1100)
+
+    cy.visit('/project-xkopqm/textbook-klxufv/page-7/exercise-dymwin')
+    cy.get('select').select('en')
+    cy.get('label:contains("Number")').next().should('have.value', '11')
+    cy.get('div.busy').should('not.exist')
+
+    // Selection using '.eq' is fragile but I'm in a hurry. Sorry, future me.
+    cy.get('input').eq(6).type('Abcd')
+
+    cy.get('label:contains("Adaptation type")').next().select('selectThingsAdaptation')
+    cy.get('div.busy').should('not.exist')
+
+    cy.get('span:contains("…")').eq(1).click()
+    cy.get('span:contains("…")').eq(1).should('have.css', 'background-color', 'rgb(199, 177, 139)')
+
+    cy.get('label:contains("Adaptation type")').next().select('fillWithFreeTextAdaptation')
+    cy.get('div.busy').should('not.exist')
+
+    cy.get('input').eq(6).should('have.value', '')
+
+    cy.get('label:contains("Adaptation type")').next().select('selectThingsAdaptation')
+    cy.get('div.busy').should('not.exist')
+
+    cy.get('span:contains("…")').eq(1).should('have.css', 'background-color', 'rgba(0, 0, 0, 0)')
   })
 })

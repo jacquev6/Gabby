@@ -2,7 +2,7 @@ Documentation de MALIN
 ======================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :hidden:
 
    user

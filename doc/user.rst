@@ -6,6 +6,7 @@ Cette documentation destinée aux utilisateurs présente les différentes vues d
 .. toctree::
    :maxdepth: 1
 
-   user-index
-   user-project
-   user-project-textbook-page
+   user/index
+   user/project
+   user/project-textbook-page
+   user/project-textbook-page-exercise

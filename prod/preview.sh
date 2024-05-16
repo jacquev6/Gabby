@@ -22,7 +22,7 @@ $secrets_ok
 ./build.sh preview load
 
 echo "Gabby prod-preview: build"
-docker compose build --builder gabby-multi-platform-builder
+docker compose build
 echo "Gabby prod-preview: pull"
 docker compose pull --ignore-buildable
 

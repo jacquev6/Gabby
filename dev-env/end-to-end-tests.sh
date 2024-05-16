@@ -6,12 +6,27 @@ set -o pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/."
 
 
+console_options="--env ELECTRON_ENABLE_LOGGING=1"
+while [ $# -gt 0 ]
+do
+  case "$1" in
+    --no-console)
+      console_options=""
+      shift
+      ;;
+    *)
+      break
+      ;;
+  esac
+done
+
 docker compose exec \
+  $console_options \
   frontend-shell \
     npx cypress run \
       --e2e "$@"
 
-if [ -f end-to-end-tests.app.sh ]
-then
-  ./end-to-end-tests.app.sh
-fi
+find ../doc/user -name '*.png' -delete
+find ../tests/screenshots/gabby.cy.js -name '*.png' | while read line; do
+  cp $line ../doc/user/${line#../tests/screenshots/gabby.cy.js/}
+done

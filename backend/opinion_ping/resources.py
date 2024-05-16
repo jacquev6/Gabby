@@ -1,12 +1,12 @@
 from contextlib import contextmanager
 
-import django.conf
-import django.contrib.auth
 from fastapi import HTTPException
 from starlette import status
+import django.conf
+import django.contrib.auth
 
 from .models import Ping, PingModel
-from fastjsonapi.django import OptionalAuthenticatedUser, wrap, unwrap
+from fastjsonapi.django import OptionalAuthenticatedUser, set_wrapper, wrap, unwrap, OrmWrapperWithStrIds
 
 
 default_page_size = django.conf.settings.REST_FRAMEWORK["PAGE_SIZE"]
@@ -84,3 +84,5 @@ class PingsResource:
                 if self.__authenticated_user != created_by:
                     raise HTTPException(status.HTTP_403_FORBIDDEN, "You are not the creator of this ping")
             item.delete()
+
+set_wrapper(Ping, OrmWrapperWithStrIds)

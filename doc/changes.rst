@@ -12,15 +12,53 @@ Les améliorations techniques ne figurent que dans le `log git <https://github.c
 Les titres des sections de ce document correspondent au champ ``Gabby version`` dans le "À propos".
 Les versions sont nommées selon leur date de publication, au format ``YYYYMMDD-HHMMSS`` (année, mois, jour, tiret, heure, minute, seconde).
 
+20240516-XXXXXX
+---------------
+
+- Corrections de bugs :
+    - Affichage des exercices dans l'ordre correct sur la vue projet et dans le HTML téléchargeable
+
+- Améliorations d'interface :
+    - Possibilité de changer la largeur des colonnes de la vue d'extraction :
+        - Possibilité de les cacher entièrement
+        - Positions conservées entre les utilisations
+        - Barre de défilement verticale dans chaque colonne
+        - Amélioration de l'efficacité du changement de taille de l'affichage du PDF
+
+    - Désambiguïsation de vocabulaire entre "adapté" et "adaptation" : le formulaire d'édition permet de choisir un type d'**adaptation** et ses options, pour produire un exercice **adapté**. L'adaptation est un processus, dont l'exercice adapté est le résultat.
+
+    - Amélioration du délai de mise à jour de la pre-visualisation de l'exercice adapté
+
+    - Ajout de liens directs vers les exercices dans la vue projet
+
+- Fonctionnalités d'édition :
+    - Ajout des outils "Annuler"/"Refaire" et "Remplacer"
+
+    - Choix d'une convention pour les fins de lignes et de paragraphes
+
+- Support des adaptations :
+    - "Sélection de mots"
+        - Ajout d'une option "Sélectionner aussi la ponctuation"
+        - Possibilité d'afficher du texte coloré (comme s'il était sélectionné) dans la consigne
+        - Affichage systématique des couleurs disponibles à la fin de la consigne
+
+    - Support initial des adaptations "Choix multiples" (uniquement avec les choix dans la consigne)
+
+- Affichage des exercices adaptés :
+    - Augmentation de l'interligne dans les exercices adaptés
+
+    - Affichage de la consigne en noir, et de l'énoncé en lignes de couleurs alternées
+
+    - Sauvegarde des réponses de l'élève dans le HTML téléchargeable
+        - Avec un bouton "Effacer les réponses" pour les réinitialiser
+
 20240417-092715
 ---------------
 
 - Corrections de bugs :
-
     - Détection des exercices déjà existants, ajout d'un bouton "Passer au suivant"
 
 - Améliorations d'interface :
-
     - Ajout d'un lien "Accueil" dans la barre de navigation
     - Gain de place pour les champs "Indice" et "Exemple" quand les deux sont inutilisés
     - Possibilité de changer de page dans le PDF pendant la création d'un exercice
@@ -30,7 +68,6 @@ Les versions sont nommées selon leur date de publication, au format ``YYYYMMDD-
 - Déplacement de la description des évolutions prévues dans un Google Doc pour faciliter les commentaires (toujours accessible depuis l'aide)
 
 - Support initial des adaptations :
-
     - Sélection du type d'adaptation (pour l'instant seulement parmi "Selection de mots" et "Remplissage par texte libre")
     - Prévisualisation de l'exercice adapté
     - Téléchargement de l'ensemble des exercices adaptés du projet, utilisable hors ligne
@@ -54,12 +91,10 @@ Les versions sont nommées selon leur date de publication, au format ``YYYYMMDD-
 ---------------
 
 - Corrections de bugs :
-
     - Le PDF ne s'affiche plus à l'envers
     - Le champ de sélection de la page dans le PDF autorise n'importe quelle saisie
 
 - Améliorations d'interface :
-
     - Le nom est maintenant "MALIN"
     - Le logo est celui du Cartable Fantastique
     - Le "À propos" n'est plus affiché systématiquement

@@ -1,36 +1,38 @@
 [
   {
-    "model": "textbooks.adaptedexercise",
+    "model": "textbooks.adaptation",
     "pk": 1,
     "fields": {
       "polymorphic_ctype": [
         "textbooks",
-        "fillwithfreetextadaptedexercise"
+        "fillwithfreetextadaptation"
       ]
     }
   },
   {
-    "model": "textbooks.fillwithfreetextadaptedexercise",
+    "model": "textbooks.fillwithfreetextadaptation",
     "pk": 1,
     "fields": {
       "placeholder": "…"
     }
   },
   {
-    "model": "textbooks.adaptedexercise",
+    "model": "textbooks.adaptation",
     "pk": 2,
     "fields": {
       "polymorphic_ctype": [
         "textbooks",
-        "selectwordsadaptedexercise"
+        "selectthingsadaptation"
       ]
     }
   },
   {
-    "model": "textbooks.selectwordsadaptedexercise",
+    "model": "textbooks.selectthingsadaptation",
     "pk": 2,
     "fields": {
-      "colors": 3
+      "colors": 4,
+      "words": true,
+      "punctuation": true
     }
   },
   {
@@ -51,11 +53,11 @@
         }
       },
       "number": "7",
-      "instructions": "Relève dans le texte trois\ndéterminants, un nom propre, quatre\nnoms communs et trois verbes.",
+      "instructions": "Relève dans le texte trois\n{sel1|déterminants}, un {sel2|nom propre}, quatre\n{sel3|noms communs} et trois {sel4|verbes}.",
       "example": "",
       "clue": "",
       "wording": "Les Touaregs sont des Berbères, un peuple\nqui habite en Afrique du Nord depuis la\npréhistoire. Ils vivent dans le désert du Sahara\n(Algérie, Libye, Mali, Niger, Burkina Faso…). En\nété, les températures y montent à plus de 50 °C\net elles descendent en dessous de zéro durant\nles nuits d’hiver.",
-      "adapted": 2
+      "adaptation": 2
     }
   },
   {
@@ -80,7 +82,49 @@
       "example": "",
       "clue": "",
       "wording": "nager ➞ … ◆ tracter ➞ … ◆ manger ➞ … ◆\ninventer ➞ … ◆ livrer ➞ …",
-      "adapted": 1
+      "adaptation": 1
+    }
+  },
+  {
+    "model": "textbooks.adaptation",
+    "pk": 3,
+    "fields": {
+      "polymorphic_ctype": [
+        "textbooks",
+        "multiplechoicesadaptation"
+      ]
+    }
+  },
+  {
+    "model": "textbooks.multiplechoicesadaptation",
+    "pk": 3,
+    "fields": {
+      "placeholder": "@"
+    }
+  },
+  {
+    "model": "textbooks.exercise",
+    "pk": 9,
+    "fields": {
+      "project": 1,
+      "textbook": 1,
+      "textbook_page": 7,
+      "bounding_rectangle": {
+        "start": {
+          "x": 60,
+          "y": 180
+        },
+        "stop": {
+          "x": 250,
+          "y": 320
+        }
+      },
+      "number": "8",
+      "instructions": "Réponds par {choice|vrai} ou {choice|faux}.",
+      "example": "",
+      "clue": "",
+      "wording": "a. coccinelle est un adjectif. @\n\nb. bûche est un verbe. @\n\nc. cette est un déterminant. @\n\nd. dentier est un verbe. @\n\ne. respirer est un verbe. @\n\nf. aspiration est un nom. @",
+      "adaptation": 3
     }
   },
   {

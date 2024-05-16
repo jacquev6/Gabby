@@ -1,26 +1,36 @@
 {
   "dependencies": {
-    "@floating-ui/vue": "^1.0.4",
+    "@floating-ui/vue": "^1.0.6",
     "@popperjs/core": "^2.11.8",
-    "@unhead/vue": "^1.8.16",
+    "@unhead/vue": "^1.9.10",
     "@vueuse/core": "^10.9.0",
     "bootstrap": "^5.3.3",
     "chroma-js": "^2.4.2",
     "lodash": "^4.17.21",
-    "pdfjs-dist": "^4.0.379",
+    "pdfjs-dist": "^4.2.67",
     "pinia": "^2.1.7",
     "pinia-shared-state": "^0.5.1",
     "sha.js": "^2.4.11",
+    "split-grid": "^1.0.11",
     "vue": "^3.4.15",
-    "vue-i18n": "^9.10.1",
-    "vue-router": "^4.2.5"
+    "vue-i18n": "^9.13.1",
+    "vue-router": "^4.3.2"
   },
   "devDependencies": {
     "@rollup/rollup-linux-x64-gnu": "^4.14.3",
-    "@vitejs/plugin-vue": "^5.0.3",
-    "cypress": "^13.6.6",
-    "cypress-iframe": "^1.0.1",
-    "vite": "^5.0.11",
-    "vite-plugin-singlefile": "^2.0.1"
+    "@tsconfig/node18": "^18.2.4",
+    "@types/chroma-js": "^2.4.4",
+    "@types/lodash": "^4.17.1",
+    "@types/node": "^20.12.12",
+    "@types/sha.js": "^2.4.4",
+    "@vitejs/plugin-vue": "^5.0.4",
+    "@vue/tsconfig": "^0.5.1",
+    "chokidar-cli": "^3.0.0",
+    "cypress": "^13.9.0",
+    "openapi-typescript": "^6.7.5",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.11",
+    "vite-plugin-singlefile": "^2.0.1",
+    "vue-tsc": "^2.0.19"
   }
 }

@@ -160,7 +160,6 @@ def make_output_models(resource_name: str, model, decider: Decider):
     for (name, info) in model.model_fields.items():
         name = humps.camelize(name)
         if Annotations(info.metadata).output:
-
             if decider.is_mandatory_relationship(info.annotation):
                 relationships[name] = (MandatoryRelationship, ...)
             elif decider.is_optional_relationship(info.annotation):

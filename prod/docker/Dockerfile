@@ -1,4 +1,4 @@
-FROM node:20 AS frontend-dependencies
+FROM node:22 AS frontend-dependencies
 
 WORKDIR /app
 
@@ -14,7 +14,7 @@ RUN npm install
 FROM frontend-dependencies AS fontend-builder
 
 ADD frontend /app
-RUN cp node_modules/pdfjs-dist/build/pdf.worker.min.mjs frontend/public/pdf.worker.min.js
+RUN cat src/promise-with-resolvers-polyfill.js node_modules/pdfjs-dist/build/pdf.worker.min.mjs >src/frontend/public/pdf.worker.min.js
 
 ARG GABBY_VERSION
 ENV VITE_OPINION_APP_VERSION=$GABBY_VERSION
@@ -27,6 +27,7 @@ RUN npx vite build
 FROM frontend-dependencies AS adapted-builder
 
 ADD frontend /app
+ENV VITE_OPINION_APP_DEFAULT_LOCALE=fr
 ENV GABBY_ENTRY_POINT_NAME=adapted
 
 RUN npx vite build
@@ -47,10 +48,6 @@ WORKDIR /app
 ADD backend/requirements.opinion.txt /app
 
 RUN pip install -r requirements.opinion.txt
-
-ADD backend/requirements.app.txt /app
-
-RUN pip install -r requirements.app.txt
 
 
 FROM backend-dependencies AS backend-builder
@@ -93,7 +90,6 @@ RUN rm /etc/nginx/conf.d/default.conf
 RUN rm /usr/share/nginx/html/*.html
 ADD prod/docker/frontend.conf /etc/nginx/conf.d/frontend.conf
 COPY --from=fontend-builder /app/dist /usr/share/nginx/html/frontend
-COPY --from=adapted-builder /app/dist /usr/share/nginx/html/adapted
 COPY --from=backend-builder /app/api/static /usr/share/nginx/html/api/static
 COPY --from=doc-builder /app/build /usr/share/nginx/html/doc
 

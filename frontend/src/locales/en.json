@@ -1,0 +1,112 @@
+{
+  "home": "Home",
+  "help": "Help",
+  "about": "About",
+  "french-only": "🇫🇷 French version only, sorry! 🇫🇷",
+  "close": "Close",
+
+
+  "thisIsABug": "You should not be seeing this; this is a bug. Please let Vincent Jacques know about it.",
+
+
+  "newProject": "New project",
+  "projectTitle": "Title",
+  "projectDescription": "Description",
+  "createProject": "Create project",
+  "existingProjects": "Existing projects",
+  "noProjectsForNow": "No projects for now.",
+
+
+  "project": "Project",
+  "projectHeader": "Project \"{title}\"",
+  "projectNotFound": "Project not found",
+  "edit": "Edit",
+  "saveProject": "Save project",
+  "cancel": "Cancel",
+  "download": "Download",
+  "theExtractionReport": "the extraction report",
+  "theExportedHtml": "the exported HTML",
+  "newTextbook": "New textbook",
+  "pdfNavigationPage": "Page",
+  "pdfNavigationPageOver": "(on {count})",
+  "textbookTitle": "Title",
+  "textbookPublisher": "Publisher",
+  "textbookYear": "Year",
+  "textbookIsbn": "ISBN",
+  "createTextbook": "Create textbook",
+  "newIndependentExercise": "New independent exercise",
+  "exerciseNumber": "Number",
+  "exerciseInstructions": "Instructions",
+  "exerciseExample": "Example",
+  "exerciseClue": "Clue",
+  "exerciseWording": "Wording",
+  "createExercise": "Create exercise",
+  "existingTextbooksAndExercises": "Existing textbooks and exercises",
+  "noExercisesForNow": "No exercises for now.",
+  "independentExercises": "Independent exercises",
+  "adaptationType": "Adaptation type",
+  "selectThingsAdaptation": "Select words",
+  "fillWithFreeTextAdaptation": "Fill with free text",
+  "multipleChoicesAdaptation": "Multiple choices",
+
+
+  "textbookNotFound": "Textbook not found",
+  "pdfNotLoaded": "The PDF that contains this page ({name}) has not been loaded yet. If you have a copy, you can open it.",
+  "pageNoKnown": "No known PDF contains this page.",
+
+
+  "error.pdf": "Error while loading the PDF:",
+
+  "edition": "Edition",
+  "adaptation": "Adapted exercice",
+  "inputFile": "Input file",
+  "existingExercises": "Existing exercises:",
+  "drawBoundingRectangle": "Draw a rectangle around the whole exercise.",
+  "noExercises": "No exercises yet.",
+  "create": "New exercise",
+  "delete": "Delete",
+  "save": "Save",
+  "exerciseAlreadyExists": "Exercise {number} already exists.",
+  "skipExercise": "Skip to next exercise",
+  "save.next": "Save then create next",
+  "doStripExerciceNumber": "Strip exercise number automatically",
+
+  "selectedText": "Selected text",
+  "addTo": "Add to:",
+
+  "setBoundingRect": "Set bounding rect",
+  "instructions": "Instructions",
+  "example": "Example",
+  "clue": "Clue",
+  "wording": "Wording",
+  "selectExerciseType": "Select adaptation type",
+
+  "colorsCount": "Number of colors",
+  "includePunctuation": "Also select punctuation",
+  "useSel1ToSelN": "Use {first} to {last} in instructions to format text as if selected.",
+  "useChoice": "Use {choice} in instructions to indicate a possible choice.",
+  "placeholderText": "Placeholder to fill",
+
+  "tools": "Tools",
+  "undo": "Undo",
+  "redo": "Redo",
+  "replace": "Replace",
+  "replaceWith": "with",
+  "replaceWhere": "in",
+  "replaceIn": {
+    "everywhere": "all fields",
+    "instructions": "the instructions",
+    "wording": "the wording",
+    "example": "the example",
+    "clue": "the clue"
+  },
+  "lineEnd": "Line end",
+  "paragraphEnd": "Paragraph end",
+  "apply": "Apply",
+
+  "not-yet-implemented": "Not yet implemented",
+
+  "back": "Back",
+  "eraseAnswers": "Erase answers",
+  "nClicks": "click | clicks"
+}

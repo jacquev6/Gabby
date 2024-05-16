@@ -57,10 +57,11 @@ With the development environment running:
 Or:
 
     dev-env/backend/unit-tests.sh
+    dev-env/frontend/type-check.sh
     dev-env/frontend/unit-tests.sh
     dev-env/end-to-end-tests.sh
 
-On Linux only, the Cypress GUIs can be launched to run tests interactively with:
+On Linux only, the Cypress GUI can be launched to run tests interactively with:
 
     dev-env/cypress-gui.sh
 

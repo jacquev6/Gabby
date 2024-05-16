@@ -1,6 +1,40 @@
 {
   "components": {
     "schemas": {
+      "AdaptedExercise": {
+        "additionalProperties": false,
+        "properties": {
+          "instructions": {
+            "$ref": "#/components/schemas/Section"
+          },
+          "number": {
+            "title": "Number",
+            "type": "string"
+          },
+          "textbook_page": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Textbook Page"
+          },
+          "wording": {
+            "$ref": "#/components/schemas/Section"
+          }
+        },
+        "required": [
+          "number",
+          "textbook_page",
+          "instructions",
+          "wording"
+        ],
+        "title": "AdaptedExercise",
+        "type": "object"
+      },
       "Body_login_api_token_post": {
         "properties": {
           "client_id": {
@@ -84,6 +118,37 @@
         "title": "CreateInputListRelationship",
         "type": "object"
       },
+      "FillWithFreeTextAdaptationOptionsModel": {
+        "properties": {
+          "placeholder": {
+            "title": "Placeholder",
+            "type": "string"
+          }
+        },
+        "required": [
+          "placeholder"
+        ],
+        "title": "FillWithFreeTextAdaptationOptionsModel",
+        "type": "object"
+      },
+      "FreeTextInput": {
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "const": "freeTextInput",
+            "enum": [
+              "freeTextInput"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type"
+        ],
+        "title": "FreeTextInput",
+        "type": "object"
+      },
       "HTTPValidationError": {
         "properties": {
           "detail": {
@@ -136,6 +201,45 @@
           "count"
         ],
         "title": "Meta",
+        "type": "object"
+      },
+      "MultipleChoicesAdaptationOptionsModel": {
+        "properties": {
+          "placeholder": {
+            "title": "Placeholder",
+            "type": "string"
+          }
+        },
+        "required": [
+          "placeholder"
+        ],
+        "title": "MultipleChoicesAdaptationOptionsModel",
+        "type": "object"
+      },
+      "MultipleChoicesInput": {
+        "additionalProperties": false,
+        "properties": {
+          "choices": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Choices",
+            "type": "array"
+          },
+          "type": {
+            "const": "multipleChoicesInput",
+            "enum": [
+              "multipleChoicesInput"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "choices"
+        ],
+        "title": "MultipleChoicesInput",
         "type": "object"
       },
       "ObjectId": {
@@ -275,6 +379,46 @@
         "title": "Pagination",
         "type": "object"
       },
+      "Paragraph": {
+        "additionalProperties": false,
+        "properties": {
+          "sentences": {
+            "items": {
+              "$ref": "#/components/schemas/Sentence"
+            },
+            "title": "Sentences",
+            "type": "array"
+          }
+        },
+        "required": [
+          "sentences"
+        ],
+        "title": "Paragraph",
+        "type": "object"
+      },
+      "PlainText": {
+        "additionalProperties": false,
+        "properties": {
+          "text": {
+            "title": "Text",
+            "type": "string"
+          },
+          "type": {
+            "const": "plainText",
+            "enum": [
+              "plainText"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "text"
+        ],
+        "title": "PlainText",
+        "type": "object"
+      },
       "Point": {
         "properties": {
           "x": {
@@ -307,6 +451,174 @@
           "stop"
         ],
         "title": "Rectangle",
+        "type": "object"
+      },
+      "Section": {
+        "additionalProperties": false,
+        "properties": {
+          "paragraphs": {
+            "items": {
+              "$ref": "#/components/schemas/Paragraph"
+            },
+            "title": "Paragraphs",
+            "type": "array"
+          }
+        },
+        "required": [
+          "paragraphs"
+        ],
+        "title": "Section",
+        "type": "object"
+      },
+      "SelectThingsAdaptationOptionsModel": {
+        "properties": {
+          "colors": {
+            "title": "Colors",
+            "type": "integer"
+          },
+          "punctuation": {
+            "title": "Punctuation",
+            "type": "boolean"
+          },
+          "words": {
+            "title": "Words",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "colors",
+          "words",
+          "punctuation"
+        ],
+        "title": "SelectThingsAdaptationOptionsModel",
+        "type": "object"
+      },
+      "SelectableText": {
+        "additionalProperties": false,
+        "properties": {
+          "colors": {
+            "title": "Colors",
+            "type": "integer"
+          },
+          "text": {
+            "title": "Text",
+            "type": "string"
+          },
+          "type": {
+            "const": "selectableText",
+            "enum": [
+              "selectableText"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "text",
+          "colors"
+        ],
+        "title": "SelectableText",
+        "type": "object"
+      },
+      "SelectedClicks": {
+        "additionalProperties": false,
+        "properties": {
+          "color": {
+            "title": "Color",
+            "type": "integer"
+          },
+          "colors": {
+            "title": "Colors",
+            "type": "integer"
+          },
+          "type": {
+            "const": "selectedClicks",
+            "enum": [
+              "selectedClicks"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "color",
+          "colors"
+        ],
+        "title": "SelectedClicks",
+        "type": "object"
+      },
+      "SelectedText": {
+        "additionalProperties": false,
+        "properties": {
+          "color": {
+            "title": "Color",
+            "type": "integer"
+          },
+          "colors": {
+            "title": "Colors",
+            "type": "integer"
+          },
+          "text": {
+            "title": "Text",
+            "type": "string"
+          },
+          "type": {
+            "const": "selectedText",
+            "enum": [
+              "selectedText"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "text",
+          "color",
+          "colors"
+        ],
+        "title": "SelectedText",
+        "type": "object"
+      },
+      "Sentence": {
+        "additionalProperties": false,
+        "properties": {
+          "tokens": {
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/PlainText"
+                },
+                {
+                  "$ref": "#/components/schemas/SelectableText"
+                },
+                {
+                  "$ref": "#/components/schemas/SelectedText"
+                },
+                {
+                  "$ref": "#/components/schemas/SelectedClicks"
+                },
+                {
+                  "$ref": "#/components/schemas/FreeTextInput"
+                },
+                {
+                  "$ref": "#/components/schemas/MultipleChoicesInput"
+                },
+                {
+                  "$ref": "#/components/schemas/Whitespace"
+                }
+              ]
+            },
+            "title": "Tokens",
+            "type": "array"
+          }
+        },
+        "required": [
+          "tokens"
+        ],
+        "title": "Sentence",
         "type": "object"
       },
       "UpdateInputListRelationship": {
@@ -370,6 +682,183 @@
           "type"
         ],
         "title": "ValidationError",
+        "type": "object"
+      },
+      "Whitespace": {
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "const": "whitespace",
+            "enum": [
+              "whitespace"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type"
+        ],
+        "title": "Whitespace",
+        "type": "object"
+      },
+      "adaptedExercise-CreateInput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/adaptedExercise-CreateInput-Data"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "adaptedExercise-CreateInput",
+        "type": "object"
+      },
+      "adaptedExercise-CreateInput-Data": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "$ref": "#/components/schemas/adaptedExercise-CreateInput-Data-Attributes"
+          },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/adaptedExercise-CreateInput-Data-Relationships"
+              }
+            ],
+            "default": {}
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "attributes"
+        ],
+        "title": "adaptedExercise-CreateInput-Data",
+        "type": "object"
+      },
+      "adaptedExercise-CreateInput-Data-Attributes": {
+        "additionalProperties": false,
+        "properties": {
+          "adaptationOptions": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SelectThingsAdaptationOptionsModel"
+              },
+              {
+                "$ref": "#/components/schemas/FillWithFreeTextAdaptationOptionsModel"
+              },
+              {
+                "$ref": "#/components/schemas/MultipleChoicesAdaptationOptionsModel"
+              }
+            ],
+            "title": "Adaptationoptions"
+          },
+          "instructions": {
+            "title": "Instructions",
+            "type": "string"
+          },
+          "number": {
+            "title": "Number",
+            "type": "string"
+          },
+          "textbookPage": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Textbookpage"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          },
+          "wording": {
+            "title": "Wording",
+            "type": "string"
+          }
+        },
+        "required": [
+          "number",
+          "textbookPage",
+          "instructions",
+          "wording",
+          "type",
+          "adaptationOptions"
+        ],
+        "title": "adaptedExercise-CreateInput-Data-Attributes",
+        "type": "object"
+      },
+      "adaptedExercise-CreateInput-Data-Relationships": {
+        "additionalProperties": false,
+        "properties": {},
+        "title": "adaptedExercise-CreateInput-Data-Relationships",
+        "type": "object"
+      },
+      "adaptedExercise-ItemOutput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/adaptedExercise-OutputItem"
+          },
+          "included": {
+            "items": {},
+            "title": "Included",
+            "type": "array"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "adaptedExercise-ItemOutput",
+        "type": "object"
+      },
+      "adaptedExercise-OutputItem": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "$ref": "#/components/schemas/adaptedExercise-OutputItem-Attributes"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "links": {
+            "$ref": "#/components/schemas/ItemLinksModel"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "links",
+          "attributes"
+        ],
+        "title": "adaptedExercise-OutputItem",
+        "type": "object"
+      },
+      "adaptedExercise-OutputItem-Attributes": {
+        "additionalProperties": false,
+        "properties": {
+          "adapted": {
+            "$ref": "#/components/schemas/AdaptedExercise"
+          }
+        },
+        "required": [
+          "adapted"
+        ],
+        "title": "adaptedExercise-OutputItem-Attributes",
         "type": "object"
       },
       "exercise-CreateInput": {
@@ -465,7 +954,7 @@
       "exercise-CreateInput-Data-Relationships": {
         "additionalProperties": false,
         "properties": {
-          "adapted": {
+          "adaptation": {
             "allOf": [
               {
                 "$ref": "#/components/schemas/OptionalRelationship"
@@ -600,7 +1089,7 @@
       "exercise-OutputItem-Relationships": {
         "additionalProperties": false,
         "properties": {
-          "adapted": {
+          "adaptation": {
             "$ref": "#/components/schemas/OptionalRelationship"
           },
           "extractionEvents": {
@@ -617,7 +1106,7 @@
           "project",
           "textbook",
           "extractionEvents",
-          "adapted"
+          "adaptation"
         ],
         "title": "exercise-OutputItem-Relationships",
         "type": "object"
@@ -736,7 +1225,7 @@
       "exercise-UpdateInput-Data-Relationships": {
         "additionalProperties": false,
         "properties": {
-          "adapted": {
+          "adaptation": {
             "allOf": [
               {
                 "$ref": "#/components/schemas/OptionalRelationship"
@@ -975,27 +1464,27 @@
         "title": "extractionEvent-UpdateInput-Data-Relationships",
         "type": "object"
       },
-      "fillWithFreeText-CreateInput": {
+      "fillWithFreeTextAdaptation-CreateInput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/fillWithFreeText-CreateInput-Data"
+            "$ref": "#/components/schemas/fillWithFreeTextAdaptation-CreateInput-Data"
           }
         },
         "required": [
           "data"
         ],
-        "title": "fillWithFreeText-CreateInput",
+        "title": "fillWithFreeTextAdaptation-CreateInput",
         "type": "object"
       },
-      "fillWithFreeText-CreateInput-Data": {
+      "fillWithFreeTextAdaptation-CreateInput-Data": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "$ref": "#/components/schemas/fillWithFreeText-CreateInput-Data-Attributes"
+            "$ref": "#/components/schemas/fillWithFreeTextAdaptation-CreateInput-Data-Attributes"
           },
           "relationships": {
-            "$ref": "#/components/schemas/fillWithFreeText-CreateInput-Data-Relationships"
+            "$ref": "#/components/schemas/fillWithFreeTextAdaptation-CreateInput-Data-Relationships"
           },
           "type": {
             "title": "Type",
@@ -1007,10 +1496,10 @@
           "attributes",
           "relationships"
         ],
-        "title": "fillWithFreeText-CreateInput-Data",
+        "title": "fillWithFreeTextAdaptation-CreateInput-Data",
         "type": "object"
       },
-      "fillWithFreeText-CreateInput-Data-Attributes": {
+      "fillWithFreeTextAdaptation-CreateInput-Data-Attributes": {
         "additionalProperties": false,
         "properties": {
           "placeholder": {
@@ -1021,10 +1510,10 @@
         "required": [
           "placeholder"
         ],
-        "title": "fillWithFreeText-CreateInput-Data-Attributes",
+        "title": "fillWithFreeTextAdaptation-CreateInput-Data-Attributes",
         "type": "object"
       },
-      "fillWithFreeText-CreateInput-Data-Relationships": {
+      "fillWithFreeTextAdaptation-CreateInput-Data-Relationships": {
         "additionalProperties": false,
         "properties": {
           "exercise": {
@@ -1034,14 +1523,14 @@
         "required": [
           "exercise"
         ],
-        "title": "fillWithFreeText-CreateInput-Data-Relationships",
+        "title": "fillWithFreeTextAdaptation-CreateInput-Data-Relationships",
         "type": "object"
       },
-      "fillWithFreeText-ItemOutput": {
+      "fillWithFreeTextAdaptation-ItemOutput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/fillWithFreeText-OutputItem"
+            "$ref": "#/components/schemas/fillWithFreeTextAdaptation-OutputItem"
           },
           "included": {
             "items": {},
@@ -1052,14 +1541,14 @@
         "required": [
           "data"
         ],
-        "title": "fillWithFreeText-ItemOutput",
+        "title": "fillWithFreeTextAdaptation-ItemOutput",
         "type": "object"
       },
-      "fillWithFreeText-OutputItem": {
+      "fillWithFreeTextAdaptation-OutputItem": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "$ref": "#/components/schemas/fillWithFreeText-OutputItem-Attributes"
+            "$ref": "#/components/schemas/fillWithFreeTextAdaptation-OutputItem-Attributes"
           },
           "id": {
             "title": "Id",
@@ -1069,7 +1558,7 @@
             "$ref": "#/components/schemas/ItemLinksModel"
           },
           "relationships": {
-            "$ref": "#/components/schemas/fillWithFreeText-OutputItem-Relationships"
+            "$ref": "#/components/schemas/fillWithFreeTextAdaptation-OutputItem-Relationships"
           },
           "type": {
             "title": "Type",
@@ -1083,10 +1572,10 @@
           "attributes",
           "relationships"
         ],
-        "title": "fillWithFreeText-OutputItem",
+        "title": "fillWithFreeTextAdaptation-OutputItem",
         "type": "object"
       },
-      "fillWithFreeText-OutputItem-Attributes": {
+      "fillWithFreeTextAdaptation-OutputItem-Attributes": {
         "additionalProperties": false,
         "properties": {
           "placeholder": {
@@ -1097,10 +1586,10 @@
         "required": [
           "placeholder"
         ],
-        "title": "fillWithFreeText-OutputItem-Attributes",
+        "title": "fillWithFreeTextAdaptation-OutputItem-Attributes",
         "type": "object"
       },
-      "fillWithFreeText-OutputItem-Relationships": {
+      "fillWithFreeTextAdaptation-OutputItem-Relationships": {
         "additionalProperties": false,
         "properties": {
           "exercise": {
@@ -1110,29 +1599,29 @@
         "required": [
           "exercise"
         ],
-        "title": "fillWithFreeText-OutputItem-Relationships",
+        "title": "fillWithFreeTextAdaptation-OutputItem-Relationships",
         "type": "object"
       },
-      "fillWithFreeText-UpdateInput": {
+      "fillWithFreeTextAdaptation-UpdateInput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/fillWithFreeText-UpdateInput-Data"
+            "$ref": "#/components/schemas/fillWithFreeTextAdaptation-UpdateInput-Data"
           }
         },
         "required": [
           "data"
         ],
-        "title": "fillWithFreeText-UpdateInput",
+        "title": "fillWithFreeTextAdaptation-UpdateInput",
         "type": "object"
       },
-      "fillWithFreeText-UpdateInput-Data": {
+      "fillWithFreeTextAdaptation-UpdateInput-Data": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/fillWithFreeText-UpdateInput-Data-Attributes"
+                "$ref": "#/components/schemas/fillWithFreeTextAdaptation-UpdateInput-Data-Attributes"
               }
             ],
             "default": {}
@@ -1144,7 +1633,7 @@
           "relationships": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/fillWithFreeText-UpdateInput-Data-Relationships"
+                "$ref": "#/components/schemas/fillWithFreeTextAdaptation-UpdateInput-Data-Relationships"
               }
             ],
             "default": {}
@@ -1158,10 +1647,10 @@
           "type",
           "id"
         ],
-        "title": "fillWithFreeText-UpdateInput-Data",
+        "title": "fillWithFreeTextAdaptation-UpdateInput-Data",
         "type": "object"
       },
-      "fillWithFreeText-UpdateInput-Data-Attributes": {
+      "fillWithFreeTextAdaptation-UpdateInput-Data-Attributes": {
         "additionalProperties": false,
         "properties": {
           "placeholder": {
@@ -1169,13 +1658,216 @@
             "type": "string"
           }
         },
-        "title": "fillWithFreeText-UpdateInput-Data-Attributes",
+        "title": "fillWithFreeTextAdaptation-UpdateInput-Data-Attributes",
         "type": "object"
       },
-      "fillWithFreeText-UpdateInput-Data-Relationships": {
+      "fillWithFreeTextAdaptation-UpdateInput-Data-Relationships": {
         "additionalProperties": false,
         "properties": {},
-        "title": "fillWithFreeText-UpdateInput-Data-Relationships",
+        "title": "fillWithFreeTextAdaptation-UpdateInput-Data-Relationships",
+        "type": "object"
+      },
+      "multipleChoicesAdaptation-CreateInput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/multipleChoicesAdaptation-CreateInput-Data"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "multipleChoicesAdaptation-CreateInput",
+        "type": "object"
+      },
+      "multipleChoicesAdaptation-CreateInput-Data": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "$ref": "#/components/schemas/multipleChoicesAdaptation-CreateInput-Data-Attributes"
+          },
+          "relationships": {
+            "$ref": "#/components/schemas/multipleChoicesAdaptation-CreateInput-Data-Relationships"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "attributes",
+          "relationships"
+        ],
+        "title": "multipleChoicesAdaptation-CreateInput-Data",
+        "type": "object"
+      },
+      "multipleChoicesAdaptation-CreateInput-Data-Attributes": {
+        "additionalProperties": false,
+        "properties": {
+          "placeholder": {
+            "title": "Placeholder",
+            "type": "string"
+          }
+        },
+        "required": [
+          "placeholder"
+        ],
+        "title": "multipleChoicesAdaptation-CreateInput-Data-Attributes",
+        "type": "object"
+      },
+      "multipleChoicesAdaptation-CreateInput-Data-Relationships": {
+        "additionalProperties": false,
+        "properties": {
+          "exercise": {
+            "$ref": "#/components/schemas/MandatoryRelationship"
+          }
+        },
+        "required": [
+          "exercise"
+        ],
+        "title": "multipleChoicesAdaptation-CreateInput-Data-Relationships",
+        "type": "object"
+      },
+      "multipleChoicesAdaptation-ItemOutput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/multipleChoicesAdaptation-OutputItem"
+          },
+          "included": {
+            "items": {},
+            "title": "Included",
+            "type": "array"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "multipleChoicesAdaptation-ItemOutput",
+        "type": "object"
+      },
+      "multipleChoicesAdaptation-OutputItem": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "$ref": "#/components/schemas/multipleChoicesAdaptation-OutputItem-Attributes"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "links": {
+            "$ref": "#/components/schemas/ItemLinksModel"
+          },
+          "relationships": {
+            "$ref": "#/components/schemas/multipleChoicesAdaptation-OutputItem-Relationships"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "links",
+          "attributes",
+          "relationships"
+        ],
+        "title": "multipleChoicesAdaptation-OutputItem",
+        "type": "object"
+      },
+      "multipleChoicesAdaptation-OutputItem-Attributes": {
+        "additionalProperties": false,
+        "properties": {
+          "placeholder": {
+            "title": "Placeholder",
+            "type": "string"
+          }
+        },
+        "required": [
+          "placeholder"
+        ],
+        "title": "multipleChoicesAdaptation-OutputItem-Attributes",
+        "type": "object"
+      },
+      "multipleChoicesAdaptation-OutputItem-Relationships": {
+        "additionalProperties": false,
+        "properties": {
+          "exercise": {
+            "$ref": "#/components/schemas/MandatoryRelationship"
+          }
+        },
+        "required": [
+          "exercise"
+        ],
+        "title": "multipleChoicesAdaptation-OutputItem-Relationships",
+        "type": "object"
+      },
+      "multipleChoicesAdaptation-UpdateInput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/multipleChoicesAdaptation-UpdateInput-Data"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "multipleChoicesAdaptation-UpdateInput",
+        "type": "object"
+      },
+      "multipleChoicesAdaptation-UpdateInput-Data": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/multipleChoicesAdaptation-UpdateInput-Data-Attributes"
+              }
+            ],
+            "default": {}
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/multipleChoicesAdaptation-UpdateInput-Data-Relationships"
+              }
+            ],
+            "default": {}
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "multipleChoicesAdaptation-UpdateInput-Data",
+        "type": "object"
+      },
+      "multipleChoicesAdaptation-UpdateInput-Data-Attributes": {
+        "additionalProperties": false,
+        "properties": {
+          "placeholder": {
+            "title": "Placeholder",
+            "type": "string"
+          }
+        },
+        "title": "multipleChoicesAdaptation-UpdateInput-Data-Attributes",
+        "type": "object"
+      },
+      "multipleChoicesAdaptation-UpdateInput-Data-Relationships": {
+        "additionalProperties": false,
+        "properties": {},
+        "title": "multipleChoicesAdaptation-UpdateInput-Data-Relationships",
         "type": "object"
       },
       "pdfFile-CreateInput": {
@@ -2501,27 +3193,27 @@
         "title": "section-UpdateInput-Data-Relationships",
         "type": "object"
       },
-      "selectWords-CreateInput": {
+      "selectThingsAdaptation-CreateInput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/selectWords-CreateInput-Data"
+            "$ref": "#/components/schemas/selectThingsAdaptation-CreateInput-Data"
           }
         },
         "required": [
           "data"
         ],
-        "title": "selectWords-CreateInput",
+        "title": "selectThingsAdaptation-CreateInput",
         "type": "object"
       },
-      "selectWords-CreateInput-Data": {
+      "selectThingsAdaptation-CreateInput-Data": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "$ref": "#/components/schemas/selectWords-CreateInput-Data-Attributes"
+            "$ref": "#/components/schemas/selectThingsAdaptation-CreateInput-Data-Attributes"
           },
           "relationships": {
-            "$ref": "#/components/schemas/selectWords-CreateInput-Data-Relationships"
+            "$ref": "#/components/schemas/selectThingsAdaptation-CreateInput-Data-Relationships"
           },
           "type": {
             "title": "Type",
@@ -2533,24 +3225,34 @@
           "attributes",
           "relationships"
         ],
-        "title": "selectWords-CreateInput-Data",
+        "title": "selectThingsAdaptation-CreateInput-Data",
         "type": "object"
       },
-      "selectWords-CreateInput-Data-Attributes": {
+      "selectThingsAdaptation-CreateInput-Data-Attributes": {
         "additionalProperties": false,
         "properties": {
           "colors": {
             "title": "Colors",
             "type": "integer"
+          },
+          "punctuation": {
+            "title": "Punctuation",
+            "type": "boolean"
+          },
+          "words": {
+            "title": "Words",
+            "type": "boolean"
           }
         },
         "required": [
-          "colors"
+          "colors",
+          "words",
+          "punctuation"
         ],
-        "title": "selectWords-CreateInput-Data-Attributes",
+        "title": "selectThingsAdaptation-CreateInput-Data-Attributes",
         "type": "object"
       },
-      "selectWords-CreateInput-Data-Relationships": {
+      "selectThingsAdaptation-CreateInput-Data-Relationships": {
         "additionalProperties": false,
         "properties": {
           "exercise": {
@@ -2560,14 +3262,14 @@
         "required": [
           "exercise"
         ],
-        "title": "selectWords-CreateInput-Data-Relationships",
+        "title": "selectThingsAdaptation-CreateInput-Data-Relationships",
         "type": "object"
       },
-      "selectWords-ItemOutput": {
+      "selectThingsAdaptation-ItemOutput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/selectWords-OutputItem"
+            "$ref": "#/components/schemas/selectThingsAdaptation-OutputItem"
           },
           "included": {
             "items": {},
@@ -2578,14 +3280,14 @@
         "required": [
           "data"
         ],
-        "title": "selectWords-ItemOutput",
+        "title": "selectThingsAdaptation-ItemOutput",
         "type": "object"
       },
-      "selectWords-OutputItem": {
+      "selectThingsAdaptation-OutputItem": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "$ref": "#/components/schemas/selectWords-OutputItem-Attributes"
+            "$ref": "#/components/schemas/selectThingsAdaptation-OutputItem-Attributes"
           },
           "id": {
             "title": "Id",
@@ -2595,7 +3297,7 @@
             "$ref": "#/components/schemas/ItemLinksModel"
           },
           "relationships": {
-            "$ref": "#/components/schemas/selectWords-OutputItem-Relationships"
+            "$ref": "#/components/schemas/selectThingsAdaptation-OutputItem-Relationships"
           },
           "type": {
             "title": "Type",
@@ -2609,24 +3311,34 @@
           "attributes",
           "relationships"
         ],
-        "title": "selectWords-OutputItem",
+        "title": "selectThingsAdaptation-OutputItem",
         "type": "object"
       },
-      "selectWords-OutputItem-Attributes": {
+      "selectThingsAdaptation-OutputItem-Attributes": {
         "additionalProperties": false,
         "properties": {
           "colors": {
             "title": "Colors",
             "type": "integer"
+          },
+          "punctuation": {
+            "title": "Punctuation",
+            "type": "boolean"
+          },
+          "words": {
+            "title": "Words",
+            "type": "boolean"
           }
         },
         "required": [
-          "colors"
+          "colors",
+          "words",
+          "punctuation"
         ],
-        "title": "selectWords-OutputItem-Attributes",
+        "title": "selectThingsAdaptation-OutputItem-Attributes",
         "type": "object"
       },
-      "selectWords-OutputItem-Relationships": {
+      "selectThingsAdaptation-OutputItem-Relationships": {
         "additionalProperties": false,
         "properties": {
           "exercise": {
@@ -2636,29 +3348,29 @@
         "required": [
           "exercise"
         ],
-        "title": "selectWords-OutputItem-Relationships",
+        "title": "selectThingsAdaptation-OutputItem-Relationships",
         "type": "object"
       },
-      "selectWords-UpdateInput": {
+      "selectThingsAdaptation-UpdateInput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/selectWords-UpdateInput-Data"
+            "$ref": "#/components/schemas/selectThingsAdaptation-UpdateInput-Data"
           }
         },
         "required": [
           "data"
         ],
-        "title": "selectWords-UpdateInput",
+        "title": "selectThingsAdaptation-UpdateInput",
         "type": "object"
       },
-      "selectWords-UpdateInput-Data": {
+      "selectThingsAdaptation-UpdateInput-Data": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/selectWords-UpdateInput-Data-Attributes"
+                "$ref": "#/components/schemas/selectThingsAdaptation-UpdateInput-Data-Attributes"
               }
             ],
             "default": {}
@@ -2670,7 +3382,7 @@
           "relationships": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/selectWords-UpdateInput-Data-Relationships"
+                "$ref": "#/components/schemas/selectThingsAdaptation-UpdateInput-Data-Relationships"
               }
             ],
             "default": {}
@@ -2684,24 +3396,32 @@
           "type",
           "id"
         ],
-        "title": "selectWords-UpdateInput-Data",
+        "title": "selectThingsAdaptation-UpdateInput-Data",
         "type": "object"
       },
-      "selectWords-UpdateInput-Data-Attributes": {
+      "selectThingsAdaptation-UpdateInput-Data-Attributes": {
         "additionalProperties": false,
         "properties": {
           "colors": {
             "title": "Colors",
             "type": "integer"
+          },
+          "punctuation": {
+            "title": "Punctuation",
+            "type": "boolean"
+          },
+          "words": {
+            "title": "Words",
+            "type": "boolean"
           }
         },
-        "title": "selectWords-UpdateInput-Data-Attributes",
+        "title": "selectThingsAdaptation-UpdateInput-Data-Attributes",
         "type": "object"
       },
-      "selectWords-UpdateInput-Data-Relationships": {
+      "selectThingsAdaptation-UpdateInput-Data-Relationships": {
         "additionalProperties": false,
         "properties": {},
-        "title": "selectWords-UpdateInput-Data-Relationships",
+        "title": "selectThingsAdaptation-UpdateInput-Data-Relationships",
         "type": "object"
       },
       "textbook-CreateInput": {
@@ -3066,6 +3786,103 @@
   },
   "openapi": "3.1.0",
   "paths": {
+    "/api/adaptedExercises": {
+      "post": {
+        "operationId": "create_adapted_exercise_api_adaptedExercises_post",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/adaptedExercise-CreateInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/adaptedExercise-ItemOutput"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Adapted Exercise"
+      }
+    },
+    "/api/adaptedExercises/{id}": {
+      "get": {
+        "operationId": "get_adapted_exercise_api_adaptedExercises__id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/adaptedExercise-ItemOutput"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Adapted Exercise"
+      }
+    },
     "/api/batch": {
       "post": {
         "operationId": "batch_api_batch_post",
@@ -3633,9 +4450,9 @@
         "summary": "Update Extraction Event"
       }
     },
-    "/api/fillWithFreeTexts": {
+    "/api/fillWithFreeTextAdaptations": {
       "post": {
-        "operationId": "create_fill_with_free_text_api_fillWithFreeTexts_post",
+        "operationId": "create_fill_with_free_text_adaptation_api_fillWithFreeTextAdaptations_post",
         "parameters": [
           {
             "in": "query",
@@ -3651,7 +4468,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/fillWithFreeText-CreateInput"
+                "$ref": "#/components/schemas/fillWithFreeTextAdaptation-CreateInput"
               }
             }
           },
@@ -3662,7 +4479,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/fillWithFreeText-ItemOutput"
+                  "$ref": "#/components/schemas/fillWithFreeTextAdaptation-ItemOutput"
                 }
               }
             },
@@ -3679,12 +4496,12 @@
             "description": "Validation Error"
           }
         },
-        "summary": "Create Fill With Free Text"
+        "summary": "Create Fill With Free Text Adaptation"
       }
     },
-    "/api/fillWithFreeTexts/{id}": {
+    "/api/fillWithFreeTextAdaptations/{id}": {
       "delete": {
-        "operationId": "delete_fill_with_free_text_api_fillWithFreeTexts__id__delete",
+        "operationId": "delete_fill_with_free_text_adaptation_api_fillWithFreeTextAdaptations__id__delete",
         "parameters": [
           {
             "in": "path",
@@ -3711,10 +4528,10 @@
             "description": "Validation Error"
           }
         },
-        "summary": "Delete Fill With Free Text"
+        "summary": "Delete Fill With Free Text Adaptation"
       },
       "get": {
-        "operationId": "get_fill_with_free_text_api_fillWithFreeTexts__id__get",
+        "operationId": "get_fill_with_free_text_adaptation_api_fillWithFreeTextAdaptations__id__get",
         "parameters": [
           {
             "in": "path",
@@ -3740,7 +4557,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/fillWithFreeText-ItemOutput"
+                  "$ref": "#/components/schemas/fillWithFreeTextAdaptation-ItemOutput"
                 }
               }
             },
@@ -3757,10 +4574,10 @@
             "description": "Validation Error"
           }
         },
-        "summary": "Get Fill With Free Text"
+        "summary": "Get Fill With Free Text Adaptation"
       },
       "patch": {
-        "operationId": "update_fill_with_free_text_api_fillWithFreeTexts__id__patch",
+        "operationId": "update_fill_with_free_text_adaptation_api_fillWithFreeTextAdaptations__id__patch",
         "parameters": [
           {
             "in": "path",
@@ -3785,7 +4602,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/fillWithFreeText-UpdateInput"
+                "$ref": "#/components/schemas/fillWithFreeTextAdaptation-UpdateInput"
               }
             }
           },
@@ -3796,7 +4613,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/fillWithFreeText-ItemOutput"
+                  "$ref": "#/components/schemas/fillWithFreeTextAdaptation-ItemOutput"
                 }
               }
             },
@@ -3813,7 +4630,190 @@
             "description": "Validation Error"
           }
         },
-        "summary": "Update Fill With Free Text"
+        "summary": "Update Fill With Free Text Adaptation"
+      }
+    },
+    "/api/multipleChoicesAdaptations": {
+      "post": {
+        "operationId": "create_multiple_choices_adaptation_api_multipleChoicesAdaptations_post",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/multipleChoicesAdaptation-CreateInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/multipleChoicesAdaptation-ItemOutput"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Multiple Choices Adaptation"
+      }
+    },
+    "/api/multipleChoicesAdaptations/{id}": {
+      "delete": {
+        "operationId": "delete_multiple_choices_adaptation_api_multipleChoicesAdaptations__id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Multiple Choices Adaptation"
+      },
+      "get": {
+        "operationId": "get_multiple_choices_adaptation_api_multipleChoicesAdaptations__id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/multipleChoicesAdaptation-ItemOutput"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Multiple Choices Adaptation"
+      },
+      "patch": {
+        "operationId": "update_multiple_choices_adaptation_api_multipleChoicesAdaptations__id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/multipleChoicesAdaptation-UpdateInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/multipleChoicesAdaptation-ItemOutput"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Multiple Choices Adaptation"
       }
     },
     "/api/pdfFileNamings": {
@@ -4606,7 +5606,7 @@
             "required": true,
             "schema": {
               "title": "Project Id",
-              "type": "integer"
+              "type": "string"
             }
           }
         ],
@@ -4643,7 +5643,7 @@
             "required": true,
             "schema": {
               "title": "Project Id",
-              "type": "integer"
+              "type": "string"
             }
           }
         ],
@@ -5168,9 +6168,9 @@
         "summary": "Update Section"
       }
     },
-    "/api/selectWordss": {
+    "/api/selectThingsAdaptations": {
       "post": {
-        "operationId": "create_select_words_api_selectWordss_post",
+        "operationId": "create_select_things_adaptation_api_selectThingsAdaptations_post",
         "parameters": [
           {
             "in": "query",
@@ -5186,7 +6186,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/selectWords-CreateInput"
+                "$ref": "#/components/schemas/selectThingsAdaptation-CreateInput"
               }
             }
           },
@@ -5197,7 +6197,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/selectWords-ItemOutput"
+                  "$ref": "#/components/schemas/selectThingsAdaptation-ItemOutput"
                 }
               }
             },
@@ -5214,12 +6214,12 @@
             "description": "Validation Error"
           }
         },
-        "summary": "Create Select Words"
+        "summary": "Create Select Things Adaptation"
       }
     },
-    "/api/selectWordss/{id}": {
+    "/api/selectThingsAdaptations/{id}": {
       "delete": {
-        "operationId": "delete_select_words_api_selectWordss__id__delete",
+        "operationId": "delete_select_things_adaptation_api_selectThingsAdaptations__id__delete",
         "parameters": [
           {
             "in": "path",
@@ -5246,10 +6246,10 @@
             "description": "Validation Error"
           }
         },
-        "summary": "Delete Select Words"
+        "summary": "Delete Select Things Adaptation"
       },
       "get": {
-        "operationId": "get_select_words_api_selectWordss__id__get",
+        "operationId": "get_select_things_adaptation_api_selectThingsAdaptations__id__get",
         "parameters": [
           {
             "in": "path",
@@ -5275,7 +6275,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/selectWords-ItemOutput"
+                  "$ref": "#/components/schemas/selectThingsAdaptation-ItemOutput"
                 }
               }
             },
@@ -5292,10 +6292,10 @@
             "description": "Validation Error"
           }
         },
-        "summary": "Get Select Words"
+        "summary": "Get Select Things Adaptation"
       },
       "patch": {
-        "operationId": "update_select_words_api_selectWordss__id__patch",
+        "operationId": "update_select_things_adaptation_api_selectThingsAdaptations__id__patch",
         "parameters": [
           {
             "in": "path",
@@ -5320,7 +6320,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/selectWords-UpdateInput"
+                "$ref": "#/components/schemas/selectThingsAdaptation-UpdateInput"
               }
             }
           },
@@ -5331,7 +6331,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/selectWords-ItemOutput"
+                  "$ref": "#/components/schemas/selectThingsAdaptation-ItemOutput"
                 }
               }
             },
@@ -5348,7 +6348,7 @@
             "description": "Validation Error"
           }
         },
-        "summary": "Update Select Words"
+        "summary": "Update Select Things Adaptation"
       }
     },
     "/api/textbooks": {

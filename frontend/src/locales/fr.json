@@ -1,0 +1,111 @@
+{
+  "home": "Accueil",
+  "help": "Aide",
+  "about": "À propos",
+  "french-only": "",
+  "close": "Fermer",
+
+
+  "thisIsABug": "Vous ne devriez pas voir ça ; c'est un bug. Merci de le signaler à Vincent Jacques.",
+
+
+  "newProject": "Nouveau projet",
+  "projectTitle": "Titre",
+  "projectDescription": "Description",
+  "createProject": "Créer le projet",
+  "existingProjects": "Projets existants",
+  "noProjectsForNow": "Aucun projet pour le moment.",
+
+
+  "project": "Projet",
+  "projectHeader": "Projet \"{title}\"",
+  "projectNotFound": "Projet introuvable",
+  "edit": "Modifier",
+  "saveProject": "Enregistrer le project",
+  "cancel": "Annuler",
+  "download": "Télécharger",
+  "theExtractionReport": "le rapport d'extraction",
+  "theExportedHtml": "le HTML exporté",
+  "newTextbook": "Nouveau manuel",
+  "pdfNavigationPage": "Page",
+  "pdfNavigationPageOver": "(sur {count})",
+  "textbookTitle": "Titre",
+  "textbookPublisher": "Éditeur",
+  "textbookYear": "Année",
+  "textbookIsbn": "ISBN",
+  "createTextbook": "Créer le manuel",
+  "newIndependentExercise": "Nouvel exercice indépendant",
+  "exerciseNumber": "Numéro",
+  "exerciseInstructions": "Consigne",
+  "exerciseExample": "Exemple",
+  "exerciseClue": "Indice",
+  "exerciseWording": "Énoncé",
+  "createExercise": "Créer l'exercice",
+  "existingTextbooksAndExercises": "Manuels et exercices existants",
+  "noExercisesForNow": "Aucun exercice pour le moment.",
+  "independentExercises": "Exercices indépendants",
+  "adaptationType": "Type d'adaptation",
+  "selectThingsAdaptation": "Selection de mots",
+  "fillWithFreeTextAdaptation": "Remplissage par texte libre",
+  "multipleChoicesAdaptation": "Choix multiples",
+
+
+  "textbookNotFound": "Manuel introuvable",
+  "pdfNotLoaded": "Le PDF contenant cette page ({name}) n'a pas encore été ouvert. Si vous en disposez d'une copie, vous pouvez l'ouvrir ci-dessous.",
+  "pageNoKnown": "Aucun PDF enregistré ne contient cette page.",
+
+  "error.pdf": "Erreur pendant le chargement du PDF :",
+
+  "edition": "Édition",
+  "adaptation": "Exercice adapté",
+  "inputFile": "Fichier d'entrée",
+  "existingExercises": "Exercices existants :",
+  "noExercises": "Pas encore d'exercices.",
+  "drawBoundingRectangle": "Dessinez un rectangle englobant l'exercice entier.",
+  "create": "Nouvel exercice",
+  "delete": "Supprimer",
+  "save": "Enregistrer",
+  "exerciseAlreadyExists": "L'exercice {number} existe déjà.",
+  "skipExercise": "Passer au suivant",
+  "save.next": "Enregistrer puis créer le suivant",
+  "doStripExerciceNumber": "Enlever le numéro d'exercice automatiquement",
+
+  "selectedText": "Texte sélectionné",
+  "addTo": "Ajouter à :",
+
+  "setBoundingRect": "Utiliser comme rectangle englobant",
+  "instructions": "Consigne",
+  "example": "Exemple",
+  "clue": "Indice",
+  "wording": "Énoncé",
+  "selectExerciseType": "Sélectionner le type d'adaptation",
+
+  "colorsCount": "Nombre de couleurs",
+  "includePunctuation": "Sélectionner aussi la ponctuation",
+  "useSel1ToSelN": "Utilisez {first} à {last} dans la consigne pour formatter du texte comme s'il était sélectionné.",
+  "useChoice": "Utilisez {choice} dans la consigne pour indiquer un choix possible.",
+  "placeholderText": "Trou à remplir",
+
+  "tools": "Outils",
+  "undo": "Annuler",
+  "redo": "Refaire",
+  "replace": "Remplacer",
+  "replaceWith": "par",
+  "replaceWhere": "dans",
+  "replaceIn": {
+    "everywhere": "tous les champs",
+    "instructions": "la consigne",
+    "wording": "l'énoncé",
+    "example": "l'exemple",
+    "clue": "l'indice"
+  },
+  "lineEnd": "Fin de ligne",
+  "paragraphEnd": "Fin de paragraphe",
+  "apply": "Appliquer",
+
+  "not-yet-implemented": "Pas encore implémenté",
+
+  "back": "Retour",
+  "eraseAnswers": "Effacer les réponses",
+  "nClicks": "clic | clics"
+}
