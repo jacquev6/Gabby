@@ -8,7 +8,7 @@ La vue projet est constituée de plusieurs zones:
 - une colonne permettant de créer un exercice indépendant dans le projet
 - une colonne listant les manuels et exercices existant dans le projet
 
-.. image:: user/project.png
+.. image:: project/project.png
    :alt: Screenshot
    :align: center
 
@@ -24,6 +24,10 @@ Modification du titre et de la description
 
 Le bouton "Modifier" à coté du titre affiche un formulaire permettant de modifier le titre et la description du projet.
 
+.. image:: project/edit.png
+   :alt: Screenshot
+   :align: center
+
 Ajout d'un manuel
 -----------------
 
@@ -33,11 +37,11 @@ Le formulaire d'ajout de manuel reste donc accessible même si le projet contien
 Après avoir ouvert un PDF, vous pouvez en parcourir les pages.
 Tous les champs du formulaire sont optionnels sauf le PDF et le titre.
 
-.. image:: user/project-new-textbook.png
+.. image:: project/new-textbook.png
    :alt: Screenshot
    :align: center
 
-Une fois le manuel créé, la :doc:`vue d'extraction <user-project-textbook-page>` est affichée.
+Une fois le manuel créé, la :doc:`vue d'extraction <project-textbook-page>` est affichée.
 
 Extraction depuis un manuel existant
 ------------------------------------

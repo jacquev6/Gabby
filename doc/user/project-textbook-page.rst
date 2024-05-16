@@ -15,7 +15,7 @@ Ces colonnes correspondent aux deux principales étapes de l'adaptation d'exerci
 - la première consiste à extraire du PDF les textes et images (pas encore implémentée) des exercices, de la première à la deuxième colonne
 - la seconde, à décrire comment adapter les exercices extraits, de la deuxième colonne à la troisième (pas encore complètement implémentée)
 
-.. image:: user/textbook-page-three-columns.png
+.. image:: project-textbook-page/three-columns.png
    :alt: Screenshot
    :align: center
 
@@ -24,7 +24,7 @@ Décalage des pages entre PDF et manuel
 
 Un bouton en forme d'engrenage à proximité des boutons de navigation dans le PDF permet de régler cet éventuel décalage.
 
-.. image:: user/textbook-page-section-editor.png
+.. image:: project-textbook-page/section-editor.png
    :alt: Screenshot
    :align: center
 
@@ -36,7 +36,7 @@ Si un PDF n'a jamais été chargé dans le navigateur utilisé, un formulaire pe
 Note: les PDFs ouverts sont stockés dans le navigateur pour limiter le besoin de les recharger à chaque visite.
 Ils ne sont *jamais* envoyés sur le serveur.
 
-.. image:: user/textbook-page-pdf-not-loaded.png
+.. image:: project-textbook-page/pdf-not-loaded.png
    :alt: Screenshot
    :align: center
 
@@ -47,13 +47,13 @@ Après avoir navigué jusqu'à une page d'un PDF, la liste des exercices déjà 
 Le bouton "Nouvel exercice" en bas de cette liste permet d'ajouter un exercices.
 Des boutons "Modifier" et "Supprimer" sont associés aux exercices existants.
 
-.. image:: user/textbook-page-existing-exercises.png
+.. image:: project-textbook-page/existing-exercises.png
     :alt: Screenshot
     :align: center
 
 Les exercices existants sont également mis en valeur dans le pdf:
 
-.. image:: user/textbook-page-existing-exercises-in-pdf.png
+.. image:: project-textbook-page/existing-exercises-in-pdf.png
     :alt: Screenshot
     :align: center
 
@@ -68,7 +68,7 @@ Le bouton "Annuler" permet de retourner à la liste des exercices existant sans 
 
 Il faut commencer par tracer un rectangle autour de l'exercice entier.
 
-.. image:: user/textbook-page-create-exercise-tracing-bounding-rectangle.png
+.. image:: project-textbook-page/create-exercise-tracing-bounding-rectangle.png
     :alt: Screenshot
     :align: center
 
@@ -79,7 +79,7 @@ Le bouton "Enregistrer puis créer le suivant" est désactivé jusqu'à ce que l
 Ce bouton permet ensuite d'enregistrer l'exercice et de vider le formulaire pour en créer un autre.
 Le numéro de l'exercice suivant est automatiquement incrémenté, mais peut être modifié.
 
-.. image:: user/textbook-page-create-exercise.png
+.. image:: project-textbook-page/create-exercise.png
     :alt: Screenshot
     :align: center
 
@@ -89,14 +89,14 @@ Extraction du texte du PDF
 L'extraction du texte du PDF se fait en dessinant à la souris un rectangle autour du texte souhaité.
 Le texte trouvé à l'intérieur de ce rectangle est mis en surbrillance.
 
-.. image:: user/textbook-page-selecting-in-pdf.png
+.. image:: project-textbook-page/selecting-in-pdf.png
     :alt: Screenshot
     :align: center
 
 Lorsqu'on relâche le bouton de la souris, le texte est extrait et affiché dans une boite de dialogue,
 à proximité immédiate du pointeur pour limiter les déplacements de souris.
 
-.. image:: user/textbook-page-selected-in-pdf.png
+.. image:: project-textbook-page/selected-in-pdf.png
     :alt: Screenshot
     :align: center
 
@@ -130,6 +130,6 @@ Le bouton "Annuler" permet de retourner à la liste des exercices existant sans 
 
 Le bouton "Enregistrer" permet de sauvegarder les modifications apportées à l'exercice et de retourner à la liste des exercices existant.
 
-.. image:: user/textbook-page-modify-exercise.png
+.. image:: project-textbook-page/modify-exercise.png
     :alt: Screenshot
     :align: center

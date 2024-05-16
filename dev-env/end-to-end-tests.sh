@@ -26,7 +26,7 @@ docker compose exec \
     npx cypress run \
       --e2e "$@"
 
-if [ -f end-to-end-tests.app.sh ]
-then
-  ./end-to-end-tests.app.sh
-fi
+find ../doc/user -name '*.png' -delete
+find ../tests/screenshots/gabby.cy.js -name '*.png' | while read line; do
+  cp $line ../doc/user/${line#../tests/screenshots/gabby.cy.js/}
+done
