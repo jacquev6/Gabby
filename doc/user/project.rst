@@ -41,12 +41,13 @@ Tous les champs du formulaire sont optionnels sauf le PDF et le titre.
    :alt: Screenshot
    :align: center
 
-Une fois le manuel créé, la :doc:`vue d'extraction <project-textbook-page>` est affichée.
+Une fois le manuel créé, la :doc:`vue d'extraction (Manuel) <project-textbook-page>` est affichée.
 
 Extraction depuis un manuel existant
 ------------------------------------
 
-Les liens dans la colonne de droite mènent également à la vue d'extraction.
+Les liens dans la colonne de droite mènent également à les vues d'extraction
+(:doc:`Manuel <project-textbook-page>` ou :doc:`Exercice <project-textbook-page-exercise>` selon les liens).
 
 Ajout d'un exercice indépendant
 -------------------------------

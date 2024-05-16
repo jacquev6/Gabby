@@ -9,3 +9,4 @@ Cette documentation destinée aux utilisateurs présente les différentes vues d
    user/index
    user/project
    user/project-textbook-page
+   user/project-textbook-page-exercise
