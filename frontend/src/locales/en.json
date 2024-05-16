@@ -58,7 +58,7 @@
   "error.pdf": "Error while loading the PDF:",
 
   "edition": "Edition",
-  "adaptation": "Adaptation",
+  "adaptation": "Adapted exercice",
   "inputFile": "Input file",
   "existingExercises": "Existing exercises:",
   "drawBoundingRectangle": "Draw a rectangle around the whole exercise.",
