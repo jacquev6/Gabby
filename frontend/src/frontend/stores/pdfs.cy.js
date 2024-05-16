@@ -2,9 +2,11 @@ import { setActivePinia, createPinia } from 'pinia'
 import * as pdfjs from 'pdfjs-dist/build/pdf'
 
 import { definePdfsStore, usePdfsStore } from './pdfs'
+import '$/promise-with-resolvers-polyfill.js'
 
 
 pdfjs.GlobalWorkerOptions.workerSrc = 'http://frontend/pdf.worker.min.js'
+
 
 describe('PdfsStore', () => {
   before(console.clear)

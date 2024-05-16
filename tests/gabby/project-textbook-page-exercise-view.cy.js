@@ -1,6 +1,7 @@
 describe('Gabby\'s project\'s textbook page exercise view', () => {
   it('replaces all in given fields', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
+    cy.get('select').select('en')
 
     cy.get('label:contains("Instructions")').next().type('Instructions!')
     cy.get('label:contains("Wording")').next().type('Wording!')
@@ -61,6 +62,7 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
 
   it('replaces line and paragraph ends', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-7/exercise-dymwin')
+    cy.get('select').select('en')
 
     cy.get('label:contains("Wording")').next().should('have.value', 'nager ➞ … ◆ tracter ➞ … ◆ manger ➞ … ◆\ninventer ➞ … ◆ livrer ➞ …')
 
@@ -93,6 +95,7 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
 
   it('gets its selection from the form', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-7/exercise-dymwin')
+    cy.get('select').select('en')
 
     function select(selector, start, end) {
       cy.get(selector)
@@ -135,6 +138,7 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
 
   it('has undo/redo', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
+    cy.get('select').select('en')
 
     cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
     cy.get('div.busy').should('not.exist')

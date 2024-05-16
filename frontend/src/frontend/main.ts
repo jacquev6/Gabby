@@ -17,6 +17,7 @@ import ProjectIndexView from './views/project/index/ProjectIndexView.vue'
 import ProjectTextbookPageListExercisesView from './views/project/textbook/page/list-exercises/ListExercisesView.vue'
 import ProjectTextbookPageCreateExerciseView from './views/project/textbook/page/create-exercise/CreateExerciseView.vue'
 import ProjectTextbookPageEditExerciseView from './views/project/textbook/page/edit-exercise/EditExerciseView.vue'
+import '$/promise-with-resolvers-polyfill.js'
 
 
 const pdfjs = untypedPdfjs as typeof PdfjsType

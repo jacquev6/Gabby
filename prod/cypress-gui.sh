@@ -1,14 +1,21 @@
 #!/bin/bash
 
 set -o errexit
-set -o nounset
 set -o pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/."
 
 
-xhost +
+if [ -z $DISPLAY ]
+then
+  DISPLAY=:0 xhost +
+  display_option="--env DISPLAY=host.docker.internal:0"
+else
+  xhost +
+  display_option="--env DISPLAY"
+fi
+
 docker compose exec \
-  --env DISPLAY \
+  $display_option \
   tester-shell \
     npx cypress open \
       --e2e \

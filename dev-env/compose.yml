@@ -30,7 +30,16 @@ services:
       - frontend-cache:/root/.cache
     working_dir: /app/frontend
     command: ["npm", "install"]
-  # @todo Add pdf-worker-copier to replace dev-env/frontend/copy-pdfjs-worker.sh
+  pdf-worker-copier:
+    image: $OPINION_APP_NAME-dev_frontend
+    pull_policy: never
+    volumes:
+      - ..:/app
+    working_dir: /app/frontend
+    command: ["bash", "-c", "cat src/promise-with-resolvers-polyfill.js node_modules/pdfjs-dist/build/pdf.worker.min.mjs) >src/frontend/public/pdf.worker.min.js"]
+    depends_on:
+      npm-installer:
+        condition: service_completed_successfully
   openapi-to-typescript:
     image: $OPINION_APP_NAME-dev_frontend
     pull_policy: never
