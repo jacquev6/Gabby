@@ -1,4 +1,14 @@
 describe('Gabby\'s project\'s textbook page exercise view', () => {
+  before(console.clear)
+
+  beforeEach(() => {
+    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises,more-test-exercises')
+  })
+
+  after(() => {
+    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises,more-test-exercises')
+  })
+
   it('replaces all in given fields', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
     cy.get('select').select('en')
