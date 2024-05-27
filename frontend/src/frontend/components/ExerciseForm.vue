@@ -76,10 +76,14 @@ function resetAdaptationOptions() {
 }
 resetAdaptationOptions()
 
-// @todo Make sure 'history.canUndo' remains false when loading an exercise
-// @todo Make sure 'history.canUndo' goes back to false when saving an exercise
-// @todo Make sure 'history.canUndo' goes back to false when skipping an exercise
+// @todo Consider using 'useThrottledRefHistory' instead of 'useDebouncedRefHistory'
 const history = useDebouncedRefHistory(state, {deep: true, debounce: 1000})
+function clearHistory(reset: () => void) {
+  // @todo Prevent the creation of a history state even if a change was done during the previous 1000ms
+  // Currently, the change is buffered for 1000ms, so an history commit can be created after this function returns
+  history.batch(reset)
+  history.clear()
+}
 
 const alreadyExists = computedAsync(
   async () => {
@@ -112,7 +116,10 @@ const alreadyExists = computedAsync(
 watch(
   [() => props.number, () => props.automaticNumber],
   () => {
-    state.value.number = props.number
+    clearHistory(() => {
+      state.value.number = props.number
+    })
+
     if (props.automaticNumber) {
       extractionEvents.push({kind: 'ExerciseNumberSetAutomatically', value: state.value.number})
     }
@@ -126,19 +133,21 @@ watch(
       console.assert(props.exercise.attributes !== undefined)
       console.assert(props.exercise.relationships !== undefined)
 
-      state.value.boundingRectangle = props.exercise.attributes.boundingRectangle ?? null
+      clearHistory(() => {
+        state.value.boundingRectangle = props.exercise.attributes.boundingRectangle ?? null
 
-      state.value.instructions = props.exercise.attributes.instructions ?? ''
-      state.value.wording = props.exercise.attributes.wording ?? ''
-      state.value.example = props.exercise.attributes.example ?? ''
-      state.value.clue = props.exercise.attributes.clue ?? ''
+        state.value.instructions = props.exercise.attributes.instructions ?? ''
+        state.value.wording = props.exercise.attributes.wording ?? ''
+        state.value.example = props.exercise.attributes.example ?? ''
+        state.value.clue = props.exercise.attributes.clue ?? ''
 
-      if (props.exercise.relationships.adaptation === null) {
-        state.value.adaptationType = '-'
-      } else {
-        state.value.adaptationType = props.exercise.relationships.adaptation.type as AdaptationType
-        Object.assign(state.value.adaptationOptions[state.value.adaptationType], props.exercise.relationships.adaptation.attributes)
-      }
+        if (props.exercise.relationships.adaptation === null) {
+          state.value.adaptationType = '-'
+        } else {
+          state.value.adaptationType = props.exercise.relationships.adaptation.type as AdaptationType
+          Object.assign(state.value.adaptationOptions[state.value.adaptationType], props.exercise.relationships.adaptation.attributes)
+        }
+      })
     }
   },
   {immediate: true},
@@ -218,17 +227,17 @@ function addTextTo(fieldName: FieldName, text: string) {
 }
 
 function skip() {
-  state.value.boundingRectangle = null
-  extractionEvents = []
-  state.value.number = tryIncrement(state.value.number)
-  state.value.instructions = ''
-  state.value.wording = ''
-  state.value.example = ''
-  state.value.clue = ''
+  clearHistory(() => {
+    state.value.boundingRectangle = null
+    extractionEvents = []
+    state.value.number = tryIncrement(state.value.number)
+    state.value.instructions = ''
+    state.value.wording = ''
+    state.value.example = ''
+    state.value.clue = ''
 
-  resetAdaptationOptions()
-
-  history.clear()
+    resetAdaptationOptions()
+  })
 }
 
 async function create() {
@@ -266,17 +275,17 @@ async function create() {
     )
   }
 
-  state.value.boundingRectangle = null
-  extractionEvents = []
-  state.value.number = ''
-  state.value.instructions = ''
-  state.value.wording = ''
-  state.value.example = ''
-  state.value.clue = ''
+  clearHistory(() => {
+    state.value.boundingRectangle = null
+    extractionEvents = []
+    state.value.number = ''
+    state.value.instructions = ''
+    state.value.wording = ''
+    state.value.example = ''
+    state.value.clue = ''
 
-  resetAdaptationOptions()
-
-  history.clear()
+    resetAdaptationOptions()
+  })
 
   busy.value = false
 
