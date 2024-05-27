@@ -198,6 +198,7 @@ const textAreas = {
 
 const noClueNoExample = computed(() => !exampleTextArea.value?.expanded && !clueTextArea.value?.expanded)
 
+const settingSelectionRange = ref(false)
 function addTextTo(fieldName: FieldName, text: string) {
   const textArea = textAreas[fieldName].value
   console.assert(textArea !== null)
@@ -210,6 +211,7 @@ function addTextTo(fieldName: FieldName, text: string) {
   state.value[fieldName] += text  // @todo Double-check this is reactive (assigning to a member of a ref)
   nextTick(() => {
     textArea.focus()
+    settingSelectionRange.value = true  // Avoid changing 'selected' when selection doesn't originate from the user
     textArea.setSelectionRange(selectionBegin, selectionEnd)
   })
   extractionEvents.push({kind: `SelectedTextAddedTo${fieldName.charAt(0).toUpperCase()}${fieldName.slice(1)}`, valueBefore, valueAfter: state.value[fieldName]})
@@ -374,7 +376,10 @@ const selected = ref([null, ''])
 function updateSelected(fieldName: FieldName) {
   const textArea = textAreas[fieldName].value?.textarea
   if (textArea) {
-    selected.value = [fieldName, textArea.value.substring(textArea.selectionStart, textArea.selectionEnd)]
+    if (!settingSelectionRange.value) {
+      selected.value = [fieldName, textArea.value.substring(textArea.selectionStart, textArea.selectionEnd)]
+    }
+    settingSelectionRange.value = false
   }
 }
 

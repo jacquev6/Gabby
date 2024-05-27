@@ -103,7 +103,7 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
     cy.get('label:contains("Wording")').next().should('have.value', 'nager ➞ ...#tracter ➞ ...#manger ➞ ...#inventer ➞ ...#livrer ➞ …')
   })
 
-  it('gets its selection from the form', () => {
+  it('gets its "replace all" selection from the form', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-7/exercise-dymwin')
     cy.get('select').select('en')
 
@@ -144,6 +144,34 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
     cy.get('label:contains("Replace")').next().type('{selectall}{backspace}')
     select('@wording', 0, 5)
     cy.get('label:contains("Replace")').next().should('have.value', 'nager')
+  })
+
+  it('selects new text in field but keeps its "replace all" selection unchanged when selecting text from the PDF', () => {
+    cy.visit('/project-xkopqm/textbook-klxufv/page-7/exercise-dymwin')
+    cy.get('select').select('en')
+
+    cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
+    cy.get('div.busy').should('not.exist')
+
+    cy.get('label:contains("Wording")').next().type('{selectall}{backspace}blah blah')
+
+    cy.get('label:contains("Replace")').next().type('{selectall}{backspace}')
+    cy.get('label:contains("Wording")').next().its('0.selectionStart').should('eq', 9)
+    cy.get('label:contains("Wording")').next().its('0.selectionEnd').should('eq', 9)
+
+    cy.get('canvas[style="position: absolute; top: 0px; left: 0px;"]').last().as('canvas')
+    cy.get('@canvas').trigger('pointermove', 5, 5)
+    cy.get('@canvas').trigger('pointerdown', 165, 175, { pointerId: 1 })
+    cy.get('@canvas').trigger('pointermove', 300, 202)
+    cy.get('@canvas').trigger('pointerup', 300, 202, { pointerId: 1 })
+    cy.get('label:contains("Selected text")').next().should('have.value', 'nager ➞ … ◆ tracter ➞ … ◆ manger ➞ … ◆\ninventer ➞ … ◆ livrer ➞ …')
+    cy.get('button:contains("Wording")').click()
+
+    cy.get('label:contains("Wording")').next().should('have.value', 'blah blah\nnager ➞ … ◆ tracter ➞ … ◆ manger ➞ … ◆\ninventer ➞ … ◆ livrer ➞ …')
+    cy.get('label:contains("Wording")').next().its('0.selectionStart').should('eq', 10)
+    cy.get('label:contains("Wording")').next().its('0.selectionEnd').should('eq', 74)
+
+    cy.get('label:contains("Replace")').next().should('have.value', '')
   })
 
   it('has undo/redo', () => {
