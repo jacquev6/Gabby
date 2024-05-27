@@ -30,14 +30,14 @@ watch(
 </script>
 
 <template>
-  <floating-modal
+  <FloatingModal
     v-if="show" @dismissed="show = false"
     :title="$t('selectedText')"
     :reference
   >
-    <b-labeled-checkbox :label="$t('doStripExerciceNumber')" v-model="doStripExerciceNumber" :disabled="!canStripExerciceNumber" />
-    <b-labeled-textarea :label="$t('selectedText')" v-model="textToAdd" @change="emit('extractionEvent', {kind: 'SelectedTextEdited', value: textToAdd})" />
+    <BLabeledCheckbox :label="$t('doStripExerciceNumber')" v-model="doStripExerciceNumber" :disabled="!canStripExerciceNumber" />
+    <BLabeledTextarea :label="$t('selectedText')" v-model="textToAdd" @change="emit('extractionEvent', {kind: 'SelectedTextEdited', value: textToAdd})" />
 
     <slot :textToAdd :hide="() => { show = false }"></slot>
-  </floating-modal>
+  </FloatingModal>
 </template>
