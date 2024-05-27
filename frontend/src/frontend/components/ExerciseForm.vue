@@ -65,8 +65,6 @@ const needsBoundingRectangle = computed(() => {
 type FieldName = 'instructions' | 'wording' | 'example' | 'clue'
 const fieldNamesForReplace: FieldName[] = ['instructions', 'wording', 'example', 'clue']
 
-// const adaptationType = ref<AdaptationType>('-')
-// const adaptationOptions = reactive<{[key: string]: object}>({})
 function resetAdaptationOptions() {
   state.value.adaptationType = '-'
   state.value.adaptationOptions['-'] = {}
@@ -437,7 +435,7 @@ defineExpose({
   </TextSelectionMenu>
 
   <BBusy :busy>
-    <b-labeled-input :label="$t('exerciseNumber')" v-model="state.number" :disabled="editMode" @change="extractionEvents.push({kind: 'ExerciseNumberSetManually', value: state.number})" />
+    <BLabeledInput :label="$t('exerciseNumber')" v-model="state.number" :disabled="editMode" @change="extractionEvents.push({kind: 'ExerciseNumberSetManually', value: state.number})" />
     
     <div style="position: relative">
       <BLabeledTextarea
