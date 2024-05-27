@@ -3,12 +3,12 @@ import { ref, computed, watch } from 'vue'
 import { computedAsync, useDebouncedRefHistory } from '@vueuse/core'
 import { nextTick } from 'vue'
 
-import { BBusy, BLabeledInput, BLabeledTextarea, BButton, BSelect } from './opinion/bootstrap'
+import { BBusy, BLabeledInput, BLabeledTextarea, BLabeledCheckbox, BButton, BSelect } from './opinion/bootstrap'
 import TextSelectionMenu from './ExerciseFormTextSelectionMenu.vue'
 import OptionalTextarea from './OptionalTextarea.vue'
 import { useApiStore } from '$frontend/stores/api'
-import adaptationOptionsForms from './adaptation-options-forms'
 import type { Project, Textbook, Section, Exercise, AdaptedExercise } from '$frontend/types/api'
+import type { SelectThingsAdaptationOptions, FillWithFreeTextAdaptationOptions, MultipleChoicesAdaptationOptions } from '$frontend/types/api'
 
 
 const props = defineProps<{
@@ -32,7 +32,8 @@ const api = useApiStore()
 
 var extractionEvents: object[] = []
 
-type AdaptationType = '-' | keyof typeof adaptationOptionsForms
+type AdaptationType = '-' | 'selectThingsAdaptation' | 'fillWithFreeTextAdaptation' | 'multipleChoicesAdaptation'
+const adaptationTypes: AdaptationType[] = ['selectThingsAdaptation', 'fillWithFreeTextAdaptation', 'multipleChoicesAdaptation']
 
 interface State {
   number: string,
@@ -42,7 +43,9 @@ interface State {
   example: string,
   clue: string,
   adaptationType: AdaptationType,
-  adaptationOptions: {[key: string]: object},
+  selectThingsAdaptationOptions: SelectThingsAdaptationOptions,
+  fillWithFreeTextAdaptationOptions: FillWithFreeTextAdaptationOptions,
+  multipleChoicesAdaptationOptions: MultipleChoicesAdaptationOptions,
 }
 
 const state = ref<State>({
@@ -53,7 +56,17 @@ const state = ref<State>({
   example: '',
   clue: '',
   adaptationType: '-',
-  adaptationOptions: {},
+  selectThingsAdaptationOptions: {
+    colors: 1,
+    words: true,
+    punctuation: true,
+  },
+  fillWithFreeTextAdaptationOptions: {
+    placeholder: '...',
+  },
+  multipleChoicesAdaptationOptions: {
+    placeholder: '...',
+  },
 })
 const needsBoundingRectangle = computed(() => {
   if (props.textbook !== null && props.pdf !== null && !props.editMode) {
@@ -67,9 +80,16 @@ const fieldNamesForReplace: FieldName[] = ['instructions', 'wording', 'example',
 
 function resetAdaptationOptions() {
   state.value.adaptationType = '-'
-  state.value.adaptationOptions['-'] = {}
-  for (const [kind, component] of Object.entries(adaptationOptionsForms)) {
-    state.value.adaptationOptions[kind] = Object.assign({}, component.props.modelValue.default)
+  state.value.selectThingsAdaptationOptions = {
+    colors: 1,
+    words: true,
+    punctuation: true,
+  }
+  state.value.fillWithFreeTextAdaptationOptions = {
+    placeholder: '...',
+  }
+  state.value.multipleChoicesAdaptationOptions = {
+    placeholder: '...',
   }
 }
 resetAdaptationOptions()
@@ -128,10 +148,11 @@ watch(
   () => props.exercise,
   () => {
     if (props.exercise !== undefined) {
-      console.assert(props.exercise.attributes !== undefined)
-      console.assert(props.exercise.relationships !== undefined)
-
       clearHistory(() => {
+        console.assert(props.exercise !== undefined)
+        console.assert(props.exercise.attributes !== undefined)
+        console.assert(props.exercise.relationships !== undefined)
+
         state.value.boundingRectangle = props.exercise.attributes.boundingRectangle ?? null
 
         state.value.instructions = props.exercise.attributes.instructions ?? ''
@@ -143,7 +164,20 @@ watch(
           state.value.adaptationType = '-'
         } else {
           state.value.adaptationType = props.exercise.relationships.adaptation.type as AdaptationType
-          Object.assign(state.value.adaptationOptions[state.value.adaptationType], props.exercise.relationships.adaptation.attributes)
+          console.assert(state.value.adaptationType !== '-')
+          switch (state.value.adaptationType) {
+            case 'selectThingsAdaptation':
+              Object.assign(state.value.selectThingsAdaptationOptions, props.exercise.relationships.adaptation.attributes)
+              break
+            case 'fillWithFreeTextAdaptation':
+              Object.assign(state.value.fillWithFreeTextAdaptationOptions, props.exercise.relationships.adaptation.attributes)
+              break
+            case 'multipleChoicesAdaptation':
+              Object.assign(state.value.multipleChoicesAdaptationOptions, props.exercise.relationships.adaptation.attributes)
+              break
+            default:
+              ((_1: never) => console.assert(false))(state.value.adaptationType)
+          }
         }
       })
     }
@@ -238,6 +272,22 @@ function skip() {
   })
 }
 
+const adaptationOptions = computed(() => {
+  switch (state.value.adaptationType) {
+    case '-':
+      return null
+    case 'selectThingsAdaptation':
+      return state.value.selectThingsAdaptationOptions
+    case 'fillWithFreeTextAdaptation':
+      return state.value.fillWithFreeTextAdaptationOptions
+    case 'multipleChoicesAdaptation':
+      return state.value.multipleChoicesAdaptationOptions
+    default:
+      ((_1: never) => console.assert(false))(state.value.adaptationType)
+      return null
+  }
+})
+
 async function create() {
   busy.value = true
 
@@ -259,9 +309,10 @@ async function create() {
     },
   )
   if (state.value.adaptationType !== '-') {
+    console.assert(adaptationOptions.value !== null)
     await api.client.post(
       state.value.adaptationType,
-      state.value.adaptationOptions[state.value.adaptationType],
+      adaptationOptions.value,
       {exercise: {type: 'exercise', id: exercise.id}},
     )
   }
@@ -322,9 +373,10 @@ async function save() {
       await api.client.delete(props.exercise.relationships.adaptation.type, props.exercise.relationships.adaptation.id)
     }
   } else {
+    console.assert(adaptationOptions.value !== null)
     await api.client.post(
       state.value.adaptationType,
-      state.value.adaptationOptions[state.value.adaptationType],
+      adaptationOptions.value,
       {exercise: {type: 'exercise', id: props.exercise.id}},
     )
   }
@@ -355,7 +407,7 @@ const adaptedData = computedAsync(
         instructions: state.value.instructions,
         wording: state.value.wording,
         type: state.value.adaptationType,
-        adaptationOptions: state.value.adaptationOptions[state.value.adaptationType],
+        adaptationOptions: adaptationOptions.value,
       }
       try {
         const adapted = await api.client.post<AdaptedExercise>('adaptedExercise', attributes, {})
@@ -481,14 +533,41 @@ defineExpose({
             <BSelect
             id="abc"
             v-model="state.adaptationType"
-            :options="['-', ...Object.keys(adaptationOptionsForms).map(kind => ({value: kind, label: $t(kind)}))]"
+            :options="['-', ...adaptationTypes.map(kind => ({value: kind, label: $t(kind)}))]"
           />
         </div>
-        <component
-          v-if="state.adaptationType !== '-'"
-          :is="adaptationOptionsForms[state.adaptationType]"
-          v-model="state.adaptationOptions[state.adaptationType] as any/*Untypeable?*/"
-        />
+        <template v-if="state.adaptationType === '-'">
+        </template>
+        <template v-else-if="state.adaptationType === 'fillWithFreeTextAdaptation'">
+          <BLabeledInput :label="$t('placeholderText')" type="text" v-model="state.fillWithFreeTextAdaptationOptions.placeholder" />
+        </template>
+        <template v-else-if="state.adaptationType === 'selectThingsAdaptation'">
+          <BLabeledInput :label="$t('colorsCount')" type="number" min="1" v-model="state.selectThingsAdaptationOptions.colors" />
+          <p class="alert alert-secondary" v-if="state.selectThingsAdaptationOptions.colors > 1">
+            <i18n-t keypath="useSel1ToSelN">
+              <template v-slot:first>
+                <code>{sel1|<em>text</em>}</code>
+              </template>
+              <template v-slot:last>
+                <code>{sel{{ state.selectThingsAdaptationOptions.colors }}|<em>text</em>}</code>
+              </template>
+            </i18n-t>
+          </p>
+          <BLabeledCheckbox :label="$t('includePunctuation')" v-model="state.selectThingsAdaptationOptions.punctuation" />
+        </template>
+        <template v-else-if="state.adaptationType === 'multipleChoicesAdaptation'">
+          <p class="alert alert-secondary">
+            <i18n-t keypath="useChoice">
+              <template v-slot:choice>
+                <code>{choice|<em>text</em>}</code>
+              </template>
+            </i18n-t>
+          </p>
+          <BLabeledInput :label="$t('placeholderText')" type="text" v-model="state.multipleChoicesAdaptationOptions.placeholder" />
+        </template>
+        <template v-else>
+          <span>{{ ((t: never) => t)(state.adaptationType) }}</span>
+        </template>
       </BBusy>
 
       <div v-if="!editMode && alreadyExists" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8);" class="text-center">
