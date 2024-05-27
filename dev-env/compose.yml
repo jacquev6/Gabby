@@ -116,7 +116,7 @@ services:
     working_dir: /app/backend
     environment:
       DJANGO_SETTINGS_MODULE: opinion.settings.dev
-    command: ["pip", "install", "--user", "-r", "requirements.opinion.txt"]
+    command: ["pip", "install", "--user", "-r", "requirements.txt"]
   migrator:
     image: $OPINION_APP_NAME-dev_backend
     pull_policy: never
