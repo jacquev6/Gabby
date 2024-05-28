@@ -131,24 +131,6 @@
         "title": "FillWithFreeTextAdaptationOptionsModel",
         "type": "object"
       },
-      "FreeTextInput": {
-        "additionalProperties": false,
-        "properties": {
-          "type": {
-            "const": "freeTextInput",
-            "enum": [
-              "freeTextInput"
-            ],
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type"
-        ],
-        "title": "FreeTextInput",
-        "type": "object"
-      },
       "HTTPValidationError": {
         "properties": {
           "detail": {
@@ -214,32 +196,6 @@
           "placeholder"
         ],
         "title": "MultipleChoicesAdaptationOptionsModel",
-        "type": "object"
-      },
-      "MultipleChoicesInput": {
-        "additionalProperties": false,
-        "properties": {
-          "choices": {
-            "items": {
-              "type": "string"
-            },
-            "title": "Choices",
-            "type": "array"
-          },
-          "type": {
-            "const": "multipleChoicesInput",
-            "enum": [
-              "multipleChoicesInput"
-            ],
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "choices"
-        ],
-        "title": "MultipleChoicesInput",
         "type": "object"
       },
       "ObjectId": {
@@ -396,29 +352,6 @@
         "title": "Paragraph",
         "type": "object"
       },
-      "PlainText": {
-        "additionalProperties": false,
-        "properties": {
-          "text": {
-            "title": "Text",
-            "type": "string"
-          },
-          "type": {
-            "const": "plainText",
-            "enum": [
-              "plainText"
-            ],
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "text"
-        ],
-        "title": "PlainText",
-        "type": "object"
-      },
       "Point": {
         "properties": {
           "x": {
@@ -493,95 +426,6 @@
         "title": "SelectThingsAdaptationOptionsModel",
         "type": "object"
       },
-      "SelectableText": {
-        "additionalProperties": false,
-        "properties": {
-          "colors": {
-            "title": "Colors",
-            "type": "integer"
-          },
-          "text": {
-            "title": "Text",
-            "type": "string"
-          },
-          "type": {
-            "const": "selectableText",
-            "enum": [
-              "selectableText"
-            ],
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "text",
-          "colors"
-        ],
-        "title": "SelectableText",
-        "type": "object"
-      },
-      "SelectedClicks": {
-        "additionalProperties": false,
-        "properties": {
-          "color": {
-            "title": "Color",
-            "type": "integer"
-          },
-          "colors": {
-            "title": "Colors",
-            "type": "integer"
-          },
-          "type": {
-            "const": "selectedClicks",
-            "enum": [
-              "selectedClicks"
-            ],
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "color",
-          "colors"
-        ],
-        "title": "SelectedClicks",
-        "type": "object"
-      },
-      "SelectedText": {
-        "additionalProperties": false,
-        "properties": {
-          "color": {
-            "title": "Color",
-            "type": "integer"
-          },
-          "colors": {
-            "title": "Colors",
-            "type": "integer"
-          },
-          "text": {
-            "title": "Text",
-            "type": "string"
-          },
-          "type": {
-            "const": "selectedText",
-            "enum": [
-              "selectedText"
-            ],
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "text",
-          "color",
-          "colors"
-        ],
-        "title": "SelectedText",
-        "type": "object"
-      },
       "Sentence": {
         "additionalProperties": false,
         "properties": {
@@ -589,25 +433,25 @@
             "items": {
               "anyOf": [
                 {
-                  "$ref": "#/components/schemas/PlainText"
+                  "$ref": "#/components/schemas/_PlainText"
                 },
                 {
-                  "$ref": "#/components/schemas/SelectableText"
+                  "$ref": "#/components/schemas/_SelectableText"
                 },
                 {
-                  "$ref": "#/components/schemas/SelectedText"
+                  "$ref": "#/components/schemas/_SelectedText"
                 },
                 {
-                  "$ref": "#/components/schemas/SelectedClicks"
+                  "$ref": "#/components/schemas/_SelectedClicks"
                 },
                 {
-                  "$ref": "#/components/schemas/FreeTextInput"
+                  "$ref": "#/components/schemas/_FreeTextInput"
                 },
                 {
-                  "$ref": "#/components/schemas/MultipleChoicesInput"
+                  "$ref": "#/components/schemas/_MultipleChoicesInput"
                 },
                 {
-                  "$ref": "#/components/schemas/Whitespace"
+                  "$ref": "#/components/schemas/_Whitespace"
                 }
               ]
             },
@@ -684,7 +528,163 @@
         "title": "ValidationError",
         "type": "object"
       },
-      "Whitespace": {
+      "_FreeTextInput": {
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "const": "freeTextInput",
+            "enum": [
+              "freeTextInput"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type"
+        ],
+        "title": "_FreeTextInput",
+        "type": "object"
+      },
+      "_MultipleChoicesInput": {
+        "additionalProperties": false,
+        "properties": {
+          "choices": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Choices",
+            "type": "array"
+          },
+          "type": {
+            "const": "multipleChoicesInput",
+            "enum": [
+              "multipleChoicesInput"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "choices"
+        ],
+        "title": "_MultipleChoicesInput",
+        "type": "object"
+      },
+      "_PlainText": {
+        "additionalProperties": false,
+        "properties": {
+          "text": {
+            "title": "Text",
+            "type": "string"
+          },
+          "type": {
+            "const": "plainText",
+            "enum": [
+              "plainText"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "text"
+        ],
+        "title": "_PlainText",
+        "type": "object"
+      },
+      "_SelectableText": {
+        "additionalProperties": false,
+        "properties": {
+          "colors": {
+            "title": "Colors",
+            "type": "integer"
+          },
+          "text": {
+            "title": "Text",
+            "type": "string"
+          },
+          "type": {
+            "const": "selectableText",
+            "enum": [
+              "selectableText"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "text",
+          "colors"
+        ],
+        "title": "_SelectableText",
+        "type": "object"
+      },
+      "_SelectedClicks": {
+        "additionalProperties": false,
+        "properties": {
+          "color": {
+            "title": "Color",
+            "type": "integer"
+          },
+          "colors": {
+            "title": "Colors",
+            "type": "integer"
+          },
+          "type": {
+            "const": "selectedClicks",
+            "enum": [
+              "selectedClicks"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "color",
+          "colors"
+        ],
+        "title": "_SelectedClicks",
+        "type": "object"
+      },
+      "_SelectedText": {
+        "additionalProperties": false,
+        "properties": {
+          "color": {
+            "title": "Color",
+            "type": "integer"
+          },
+          "colors": {
+            "title": "Colors",
+            "type": "integer"
+          },
+          "text": {
+            "title": "Text",
+            "type": "string"
+          },
+          "type": {
+            "const": "selectedText",
+            "enum": [
+              "selectedText"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "text",
+          "color",
+          "colors"
+        ],
+        "title": "_SelectedText",
+        "type": "object"
+      },
+      "_Whitespace": {
         "additionalProperties": false,
         "properties": {
           "type": {
@@ -699,7 +699,7 @@
         "required": [
           "type"
         ],
-        "title": "Whitespace",
+        "title": "_Whitespace",
         "type": "object"
       },
       "adaptedExercise-CreateInput": {

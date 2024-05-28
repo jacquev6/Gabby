@@ -229,15 +229,6 @@ export interface components {
       /** Placeholder */
       placeholder: string;
     };
-    /** FreeTextInput */
-    FreeTextInput: {
-      /**
-       * Type
-       * @constant
-       * @enum {string}
-       */
-      type: "freeTextInput";
-    };
     /** HTTPValidationError */
     HTTPValidationError: {
       /** Detail */
@@ -261,17 +252,6 @@ export interface components {
     MultipleChoicesAdaptationOptionsModel: {
       /** Placeholder */
       placeholder: string;
-    };
-    /** MultipleChoicesInput */
-    MultipleChoicesInput: {
-      /** Choices */
-      choices: string[];
-      /**
-       * Type
-       * @constant
-       * @enum {string}
-       */
-      type: "multipleChoicesInput";
     };
     /** ObjectId */
     ObjectId: {
@@ -319,17 +299,6 @@ export interface components {
       /** Sentences */
       sentences: components["schemas"]["Sentence"][];
     };
-    /** PlainText */
-    PlainText: {
-      /** Text */
-      text: string;
-      /**
-       * Type
-       * @constant
-       * @enum {string}
-       */
-      type: "plainText";
-    };
     /** Point */
     Point: {
       /** X */
@@ -356,51 +325,10 @@ export interface components {
       /** Words */
       words: boolean;
     };
-    /** SelectableText */
-    SelectableText: {
-      /** Colors */
-      colors: number;
-      /** Text */
-      text: string;
-      /**
-       * Type
-       * @constant
-       * @enum {string}
-       */
-      type: "selectableText";
-    };
-    /** SelectedClicks */
-    SelectedClicks: {
-      /** Color */
-      color: number;
-      /** Colors */
-      colors: number;
-      /**
-       * Type
-       * @constant
-       * @enum {string}
-       */
-      type: "selectedClicks";
-    };
-    /** SelectedText */
-    SelectedText: {
-      /** Color */
-      color: number;
-      /** Colors */
-      colors: number;
-      /** Text */
-      text: string;
-      /**
-       * Type
-       * @constant
-       * @enum {string}
-       */
-      type: "selectedText";
-    };
     /** Sentence */
     Sentence: {
       /** Tokens */
-      tokens: (components["schemas"]["PlainText"] | components["schemas"]["SelectableText"] | components["schemas"]["SelectedText"] | components["schemas"]["SelectedClicks"] | components["schemas"]["FreeTextInput"] | components["schemas"]["MultipleChoicesInput"] | components["schemas"]["Whitespace"])[];
+      tokens: (components["schemas"]["_PlainText"] | components["schemas"]["_SelectableText"] | components["schemas"]["_SelectedText"] | components["schemas"]["_SelectedClicks"] | components["schemas"]["_FreeTextInput"] | components["schemas"]["_MultipleChoicesInput"] | components["schemas"]["_Whitespace"])[];
     };
     /** UpdateInputListRelationship */
     UpdateInputListRelationship: {
@@ -421,8 +349,80 @@ export interface components {
       /** Error Type */
       type: string;
     };
-    /** Whitespace */
-    Whitespace: {
+    /** _FreeTextInput */
+    _FreeTextInput: {
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "freeTextInput";
+    };
+    /** _MultipleChoicesInput */
+    _MultipleChoicesInput: {
+      /** Choices */
+      choices: string[];
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "multipleChoicesInput";
+    };
+    /** _PlainText */
+    _PlainText: {
+      /** Text */
+      text: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "plainText";
+    };
+    /** _SelectableText */
+    _SelectableText: {
+      /** Colors */
+      colors: number;
+      /** Text */
+      text: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "selectableText";
+    };
+    /** _SelectedClicks */
+    _SelectedClicks: {
+      /** Color */
+      color: number;
+      /** Colors */
+      colors: number;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "selectedClicks";
+    };
+    /** _SelectedText */
+    _SelectedText: {
+      /** Color */
+      color: number;
+      /** Colors */
+      colors: number;
+      /** Text */
+      text: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "selectedText";
+    };
+    /** _Whitespace */
+    _Whitespace: {
       /**
        * Type
        * @constant

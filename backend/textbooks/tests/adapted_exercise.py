@@ -7,7 +7,12 @@ from .. import renderable as r
 from fastjsonapi.testing import TestMixin
 
 
-class SelectThingsAdaptedExerciseBusinessTestCase(TestCase):
+class AdaptationTestCase(TestCase):
+    def do_test(self, adaptation, expected):
+        self.assertEqual(adaptation.make_adapted(), expected)
+
+
+class SelectThingsAdaptationTestCase(AdaptationTestCase):
     def test_single_sentence(self):
         exercise = Exercise(
             number="number",
@@ -17,46 +22,46 @@ class SelectThingsAdaptedExerciseBusinessTestCase(TestCase):
         )
         adaptation = SelectThingsAdaptation(exercise=exercise, colors=2, words=True, punctuation=False)
 
-        self.assertEqual(
-            adaptation.make_adapted(),
+        self.do_test(
+            adaptation,
             r.AdaptedExercise(
                 number="number",
                 textbook_page=None,
                 instructions=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.PlainText(type="plainText", text="instructions"),
+                            r.PlainText(text="instructions"),
                         ]),
                     ]),
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.SelectedClicks(type="selectedClicks", color=1, colors=2),
-                            r.Whitespace(type="whitespace"),
-                            r.SelectedClicks(type="selectedClicks", color=2, colors=2),
+                            r.SelectedClicks(color=1, colors=2),
+                            r.Whitespace(),
+                            r.SelectedClicks(color=2, colors=2),
                         ]),
                     ]),
                 ]),
                 wording=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.SelectableText(type="selectableText", text="The", colors=2),
-                            r.Whitespace(type="whitespace"),
-                            r.SelectableText(type="selectableText", text="wording", colors=2),
-                            r.Whitespace(type="whitespace"),
-                            r.SelectableText(type="selectableText", text="of", colors=2),
-                            r.Whitespace(type="whitespace"),
-                            r.SelectableText(type="selectableText", text="this", colors=2),
-                            r.Whitespace(type="whitespace"),
-                            r.SelectableText(type="selectableText", text="exercise", colors=2),
-                            r.Whitespace(type="whitespace"),
-                            r.SelectableText(type="selectableText", text="is", colors=2),
-                            r.Whitespace(type="whitespace"),
-                            r.SelectableText(type="selectableText", text="a", colors=2),
-                            r.Whitespace(type="whitespace"),
-                            r.SelectableText(type="selectableText", text="single", colors=2),
-                            r.Whitespace(type="whitespace"),
-                            r.SelectableText(type="selectableText", text="sentence", colors=2),
-                            r.PlainText(type="plainText", text="."),
+                            r.SelectableText(text="The", colors=2),
+                            r.Whitespace(),
+                            r.SelectableText(text="wording", colors=2),
+                            r.Whitespace(),
+                            r.SelectableText(text="of", colors=2),
+                            r.Whitespace(),
+                            r.SelectableText(text="this", colors=2),
+                            r.Whitespace(),
+                            r.SelectableText(text="exercise", colors=2),
+                            r.Whitespace(),
+                            r.SelectableText(text="is", colors=2),
+                            r.Whitespace(),
+                            r.SelectableText(text="a", colors=2),
+                            r.Whitespace(),
+                            r.SelectableText(text="single", colors=2),
+                            r.Whitespace(),
+                            r.SelectableText(text="sentence", colors=2),
+                            r.PlainText(text="."),
                         ]),
                     ]),
                 ]),
@@ -72,37 +77,37 @@ class SelectThingsAdaptedExerciseBusinessTestCase(TestCase):
         )
         adaptation = SelectThingsAdaptation(exercise=exercise, colors=3, words=True, punctuation=False)
 
-        self.assertEqual(
-            adaptation.make_adapted(),
+        self.do_test(
+            adaptation,
             r.AdaptedExercise(
                 number="number",
                 textbook_page=None,
                 instructions=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.SelectedText(type="selectedText", text="abc", color=1, colors=3),
-                            r.Whitespace(type="whitespace"),
-                            r.SelectedText(type="selectedText", text="def", color=2, colors=3),
-                            r.Whitespace(type="whitespace"),
-                            r.SelectedText(type="selectedText", text="ghi", color=3, colors=3),
-                            r.Whitespace(type="whitespace"),
-                            r.PlainText(type="plainText", text="{sel4|jkl}"),
+                            r.SelectedText(text="abc", color=1, colors=3),
+                            r.Whitespace(),
+                            r.SelectedText(text="def", color=2, colors=3),
+                            r.Whitespace(),
+                            r.SelectedText(text="ghi", color=3, colors=3),
+                            r.Whitespace(),
+                            r.PlainText(text="{sel4|jkl}"),
                         ]),
                     ]),
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.SelectedClicks(type="selectedClicks", color=1, colors=3),
-                            r.Whitespace(type="whitespace"),
-                            r.SelectedClicks(type="selectedClicks", color=2, colors=3),
-                            r.Whitespace(type="whitespace"),
-                            r.SelectedClicks(type="selectedClicks", color=3, colors=3),
+                            r.SelectedClicks(color=1, colors=3),
+                            r.Whitespace(),
+                            r.SelectedClicks(color=2, colors=3),
+                            r.Whitespace(),
+                            r.SelectedClicks(color=3, colors=3),
                         ]),
                     ]),
                 ]),
                 wording=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.SelectableText(type="selectableText", text="wording", colors=3),
+                            r.SelectableText(text="wording", colors=3),
                         ]),
                     ]),
                 ]),
@@ -118,22 +123,22 @@ class SelectThingsAdaptedExerciseBusinessTestCase(TestCase):
         )
         adaptation = SelectThingsAdaptation(exercise=exercise, colors=1, words=True, punctuation=False)
 
-        self.assertEqual(
-            adaptation.make_adapted(),
+        self.do_test(
+            adaptation,
             r.AdaptedExercise(
                 number="number",
                 textbook_page=None,
                 instructions=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.PlainText(type="plainText", text="{sel1|abc}"),
+                            r.PlainText(text="{sel1|abc}"),
                         ]),
                     ]),
                 ]),
                 wording=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.SelectableText(type="selectableText", text="wording", colors=1),
+                            r.SelectableText(text="wording", colors=1),
                         ]),
                     ]),
                 ]),
@@ -149,36 +154,36 @@ class SelectThingsAdaptedExerciseBusinessTestCase(TestCase):
         )
         adaptation = SelectThingsAdaptation(exercise=exercise, colors=1, words=True, punctuation=False)
 
-        self.assertEqual(
-            adaptation.make_adapted(),
+        self.do_test(
+            adaptation,
             r.AdaptedExercise(
                 number="number",
                 textbook_page=42,
                 instructions=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.PlainText(type="plainText", text="instructions"),
-                            r.Whitespace(type="whitespace"),
-                            r.PlainText(type="plainText", text="are"),
+                            r.PlainText(text="instructions"),
+                            r.Whitespace(),
+                            r.PlainText(text="are"),
                         ]),
                     ]),
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.PlainText(type="plainText", text="on"),
+                            r.PlainText(text="on"),
                         ]),
                     ]),
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.PlainText(type="plainText", text="multiple"),
-                            r.Whitespace(type="whitespace"),
-                            r.PlainText(type="plainText", text="lines"),
+                            r.PlainText(text="multiple"),
+                            r.Whitespace(),
+                            r.PlainText(text="lines"),
                         ]),
                     ]),
                 ]),
                 wording=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.SelectableText(type="selectableText", text="wording", colors=1),
+                            r.SelectableText(text="wording", colors=1),
                         ]),
                     ]),
                 ]),
@@ -194,36 +199,36 @@ class SelectThingsAdaptedExerciseBusinessTestCase(TestCase):
         )
         adaptation = SelectThingsAdaptation(exercise=exercise, colors=1, words=True, punctuation=False)
 
-        self.assertEqual(
-            adaptation.make_adapted(),
+        self.do_test(
+            adaptation,
             r.AdaptedExercise(
                 number="number",
                 textbook_page=42,
                 instructions=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.PlainText(type="plainText", text="instructions"),
+                            r.PlainText(text="instructions"),
                         ]),
                     ]),
                 ]),
                 wording=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.SelectableText(type="selectableText", text="wording", colors=1),
-                            r.Whitespace(type="whitespace"),
-                            r.SelectableText(type="selectableText", text="is", colors=1),
+                            r.SelectableText(text="wording", colors=1),
+                            r.Whitespace(),
+                            r.SelectableText(text="is", colors=1),
                         ]),
                     ]),
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.SelectableText(type="selectableText", text="on", colors=1),
+                            r.SelectableText(text="on", colors=1),
                         ]),
                     ]),
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.SelectableText(type="selectableText", text="multiple", colors=1),
-                            r.Whitespace(type="whitespace"),
-                            r.SelectableText(type="selectableText", text="lines", colors=1),
+                            r.SelectableText(text="multiple", colors=1),
+                            r.Whitespace(),
+                            r.SelectableText(text="lines", colors=1),
                         ]),
                     ]),
                 ]),
@@ -239,22 +244,22 @@ class SelectThingsAdaptedExerciseBusinessTestCase(TestCase):
         )
         adaptation = SelectThingsAdaptation(exercise=exercise, colors=1, words=True, punctuation=False)
 
-        self.assertEqual(
-            adaptation.make_adapted(),
+        self.do_test(
+            adaptation,
             r.AdaptedExercise(
                 number="number",
                 textbook_page=42,
                 instructions=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.PlainText(type="plainText", text="{tag|abc}"),
+                            r.PlainText(text="{tag|abc}"),
                         ]),
                     ]),
                 ]),
                 wording=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.PlainText(type="plainText", text="{tag|def}"),
+                            r.PlainText(text="{tag|def}"),
                         ]),
                     ]),
                 ]),
@@ -270,22 +275,22 @@ class SelectThingsAdaptedExerciseBusinessTestCase(TestCase):
         )
         adaptation = SelectThingsAdaptation(exercise=exercise, colors=1, words=True, punctuation=False)
 
-        self.assertEqual(
-            adaptation.make_adapted(),
+        self.do_test(
+            adaptation,
             r.AdaptedExercise(
                 number="number",
                 textbook_page=42,
                 instructions=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.PlainText(type="plainText", text="abc"),
+                            r.PlainText(text="abc"),
                         ]),
                     ]),
                 ]),
                 wording=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.SelectableText(type="selectableText", text="def", colors=1),
+                            r.SelectableText(text="def", colors=1),
                         ]),
                     ]),
                 ]),
@@ -293,7 +298,7 @@ class SelectThingsAdaptedExerciseBusinessTestCase(TestCase):
         )
 
 
-class FillWithFreeTextAdaptationBusinessTestCase(TestCase):
+class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
     def test_single_sentence(self):
         exercise = Exercise(
             number="number",
@@ -303,39 +308,39 @@ class FillWithFreeTextAdaptationBusinessTestCase(TestCase):
         )
         adaptation = FillWithFreeTextAdaptation(exercise=exercise, placeholder="...")
 
-        self.assertEqual(
-            adaptation.make_adapted(),
+        self.do_test(
+            adaptation,
             r.AdaptedExercise(
                 number="number",
                 textbook_page=42,
                 instructions=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.PlainText(type="plainText", text="instructions"),
+                            r.PlainText(text="instructions"),
                         ]),
                     ]),
                 ]),
                 wording=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.PlainText(type="plainText", text="The"),
-                            r.Whitespace(type="whitespace"),
-                            r.PlainText(type="plainText", text="wording"),
-                            r.Whitespace(type="whitespace"),
-                            r.PlainText(type="plainText", text="of"),
-                            r.Whitespace(type="whitespace"),
-                            r.PlainText(type="plainText", text="this"),
-                            r.Whitespace(type="whitespace"),
-                            r.FreeTextInput(type="freeTextInput"),
-                            r.Whitespace(type="whitespace"),
-                            r.PlainText(type="plainText", text="is"),
-                            r.Whitespace(type="whitespace"),
-                            r.PlainText(type="plainText", text="a"),
-                            r.Whitespace(type="whitespace"),
-                            r.FreeTextInput(type="freeTextInput"),
-                            r.Whitespace(type="whitespace"),
-                            r.PlainText(type="plainText", text="sentence"),
-                            r.PlainText(type="plainText", text="."),
+                            r.PlainText(text="The"),
+                            r.Whitespace(),
+                            r.PlainText(text="wording"),
+                            r.Whitespace(),
+                            r.PlainText(text="of"),
+                            r.Whitespace(),
+                            r.PlainText(text="this"),
+                            r.Whitespace(),
+                            r.FreeTextInput(),
+                            r.Whitespace(),
+                            r.PlainText(text="is"),
+                            r.Whitespace(),
+                            r.PlainText(text="a"),
+                            r.Whitespace(),
+                            r.FreeTextInput(),
+                            r.Whitespace(),
+                            r.PlainText(text="sentence"),
+                            r.PlainText(text="."),
                         ]),
                     ]),
                 ]),
@@ -359,18 +364,18 @@ class FillWithFreeTextAdaptationBusinessTestCase(TestCase):
                 instructions=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.PlainText(type="plainText", text="instructions"),
+                            r.PlainText(text="instructions"),
                         ]),
                     ]),
                 ]),
                 wording=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.FreeTextInput(type="freeTextInput"),
-                            r.Whitespace(type="whitespace"),
-                            r.PlainText(type="plainText", text="a"),
-                            r.Whitespace(type="whitespace"),
-                            r.FreeTextInput(type="freeTextInput"),
+                            r.FreeTextInput(),
+                            r.Whitespace(),
+                            r.PlainText(text="a"),
+                            r.Whitespace(),
+                            r.FreeTextInput(),
                         ]),
                     ]),
                 ]),
@@ -386,36 +391,36 @@ class FillWithFreeTextAdaptationBusinessTestCase(TestCase):
         )
         adaptation = FillWithFreeTextAdaptation(exercise=exercise, placeholder="...")
 
-        self.assertEqual(
-            adaptation.make_adapted(),
+        self.do_test(
+            adaptation,
             r.AdaptedExercise(
                 number="number",
                 textbook_page=42,
                 instructions=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.PlainText(type="plainText", text="instructions"),
-                            r.Whitespace(type="whitespace"),
-                            r.PlainText(type="plainText", text="are"),
+                            r.PlainText(text="instructions"),
+                            r.Whitespace(),
+                            r.PlainText(text="are"),
                         ]),
                     ]),
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.PlainText(type="plainText", text="on"),
+                            r.PlainText(text="on"),
                         ]),
                     ]),
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.PlainText(type="plainText", text="multiple"),
-                            r.Whitespace(type="whitespace"),
-                            r.PlainText(type="plainText", text="lines"),
+                            r.PlainText(text="multiple"),
+                            r.Whitespace(),
+                            r.PlainText(text="lines"),
                         ]),
                     ]),
                 ]),
                 wording=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.PlainText(type="plainText", text="wording"),
+                            r.PlainText(text="wording"),
                         ]),
                     ]),
                 ]),
@@ -431,46 +436,46 @@ class FillWithFreeTextAdaptationBusinessTestCase(TestCase):
         )
         adaptation = FillWithFreeTextAdaptation(exercise=exercise, placeholder="...")
 
-        self.assertEqual(
-            adaptation.make_adapted(),
+        self.do_test(
+            adaptation,
             r.AdaptedExercise(
                 number="number",
                 textbook_page=42,
                 instructions=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.PlainText(type="plainText", text="instructions"),
+                            r.PlainText(text="instructions"),
                         ]),
                     ]),
                 ]),
                 wording=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.PlainText(type="plainText", text="foo"),
-                            r.Whitespace(type="whitespace"),
-                            r.PlainText(type="plainText", text="toto"),
-                            r.Whitespace(type="whitespace"),
-                            r.PlainText(type="plainText", text=":"),
-                            r.Whitespace(type="whitespace"),
-                            r.FreeTextInput(type="freeTextInput"),
+                            r.PlainText(text="foo"),
+                            r.Whitespace(),
+                            r.PlainText(text="toto"),
+                            r.Whitespace(),
+                            r.PlainText(text=":"),
+                            r.Whitespace(),
+                            r.FreeTextInput(),
                         ]),
                     ]),
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.PlainText(type="plainText", text="bar"),
-                            r.Whitespace(type="whitespace"),
-                            r.PlainText(type="plainText", text=":"),
-                            r.Whitespace(type="whitespace"),
-                            r.FreeTextInput(type="freeTextInput"),
+                            r.PlainText(text="bar"),
+                            r.Whitespace(),
+                            r.PlainText(text=":"),
+                            r.Whitespace(),
+                            r.FreeTextInput(),
                         ]),
                     ]),
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.PlainText(type="plainText", text="baz"),
-                            r.Whitespace(type="whitespace"),
-                            r.PlainText(type="plainText", text=":"),
-                            r.Whitespace(type="whitespace"),
-                            r.FreeTextInput(type="freeTextInput"),
+                            r.PlainText(text="baz"),
+                            r.Whitespace(),
+                            r.PlainText(text=":"),
+                            r.Whitespace(),
+                            r.FreeTextInput(),
                         ]),
                     ]),
                 ]),
@@ -486,22 +491,22 @@ class FillWithFreeTextAdaptationBusinessTestCase(TestCase):
         )
         adaptation = FillWithFreeTextAdaptation(exercise=exercise, placeholder="...")
 
-        self.assertEqual(
-            adaptation.make_adapted(),
+        self.do_test(
+            adaptation,
             r.AdaptedExercise(
                 number="number",
                 textbook_page=42,
                 instructions=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.PlainText(type="plainText", text="{tag|abc}"),
+                            r.PlainText(text="{tag|abc}"),
                         ]),
                     ]),
                 ]),
                 wording=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.PlainText(type="plainText", text="{tag|def}"),
+                            r.PlainText(text="{tag|def}"),
                         ]),
                     ]),
                 ]),
@@ -517,22 +522,22 @@ class FillWithFreeTextAdaptationBusinessTestCase(TestCase):
         )
         adaptation = FillWithFreeTextAdaptation(exercise=exercise, placeholder="...")
 
-        self.assertEqual(
-            adaptation.make_adapted(),
+        self.do_test(
+            adaptation,
             r.AdaptedExercise(
                 number="number",
                 textbook_page=42,
                 instructions=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.PlainText(type="plainText", text="abc"),
+                            r.PlainText(text="abc"),
                         ]),
                     ]),
                 ]),
                 wording=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.PlainText(type="plainText", text="def"),
+                            r.PlainText(text="def"),
                         ]),
                     ]),
                 ]),
@@ -540,7 +545,7 @@ class FillWithFreeTextAdaptationBusinessTestCase(TestCase):
         )
 
 
-class MultipleChoicesAdaptationBusinessTestCase(TestCase):
+class MultipleChoicesAdaptationTestCase(AdaptationTestCase):
     def test_simple(self):
         exercise = Exercise(
             number="number",
@@ -550,35 +555,35 @@ class MultipleChoicesAdaptationBusinessTestCase(TestCase):
         )
         adaptation = MultipleChoicesAdaptation(exercise=exercise, placeholder="...")
 
-        self.assertEqual(
-            adaptation.make_adapted(),
+        self.do_test(
+            adaptation,
             r.AdaptedExercise(
                 number="number",
                 textbook_page=42,
                 instructions=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.PlainText(type="plainText", text="Choose"),
-                            r.Whitespace(type="whitespace"),
-                            r.PlainText(type="plainText", text="a"),
-                            r.Whitespace(type="whitespace"),
-                            r.PlainText(type="plainText", text="or"),
-                            r.Whitespace(type="whitespace"),
-                            r.PlainText(type="plainText", text="b"),
-                            r.PlainText(type="plainText", text="."),
+                            r.PlainText(text="Choose"),
+                            r.Whitespace(),
+                            r.PlainText(text="a"),
+                            r.Whitespace(),
+                            r.PlainText(text="or"),
+                            r.Whitespace(),
+                            r.PlainText(text="b"),
+                            r.PlainText(text="."),
                         ]),
                     ]),
                 ]),
                 wording=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.PlainText(type="plainText", text="A"),
-                            r.Whitespace(type="whitespace"),
-                            r.MultipleChoicesInput(type="multipleChoicesInput", choices=["a", "b"]),
-                            r.Whitespace(type="whitespace"),
-                            r.PlainText(type="plainText", text="B"),
-                            r.Whitespace(type="whitespace"),
-                            r.MultipleChoicesInput(type="multipleChoicesInput", choices=["a", "b"]),
+                            r.PlainText(text="A"),
+                            r.Whitespace(),
+                            r.MultipleChoicesInput(choices=["a", "b"]),
+                            r.Whitespace(),
+                            r.PlainText(text="B"),
+                            r.Whitespace(),
+                            r.MultipleChoicesInput(choices=["a", "b"]),
                         ]),
                     ]),
                 ]),

@@ -180,11 +180,11 @@ class SelectThingsAdaptation(Adaptation):
         for token in parsing.tokenize_text(self.exercise.instructions):
             match token:
                 case parsing.WordToken(text=text):
-                    paragraphs[-1].append(renderable.PlainText(type="plainText", text=text))
+                    paragraphs[-1].append(renderable.PlainText(text=text))
                 case parsing.HorizontalWhitespaceToken(text=text):
-                    paragraphs[-1].append(renderable.Whitespace(type="whitespace"))
+                    paragraphs[-1].append(renderable.Whitespace())
                 case parsing.PunctuationToken(text=text):
-                    paragraphs[-1].append(renderable.PlainText(type="plainText", text=text))
+                    paragraphs[-1].append(renderable.PlainText(text=text))
                 case parsing.ParagraphEndToken():
                     paragraphs.append([])
                 case parsing.TagToken(tag=tag, text=text):
@@ -195,9 +195,9 @@ class SelectThingsAdaptation(Adaptation):
                             pass
                         else:
                             if 1 <= color <= self.colors:
-                                paragraphs[-1].append(renderable.SelectedText(type="selectedText", text=text, color=color, colors=self.colors))
+                                paragraphs[-1].append(renderable.SelectedText(text=text, color=color, colors=self.colors))
                                 continue
-                    paragraphs[-1].append(renderable.PlainText(type="plainText", text=f"{{{tag}|{text}}}"))
+                    paragraphs[-1].append(renderable.PlainText(text=f"{{{tag}|{text}}}"))
                 case _:
                     raise ValueError(f"Unknown token type: {type(token)}")
 
@@ -205,8 +205,8 @@ class SelectThingsAdaptation(Adaptation):
             paragraphs.append([])
             for i in range(self.colors):
                 if i != 0:
-                    paragraphs[-1].append(renderable.Whitespace(type="whitespace"))
-                paragraphs[-1].append(renderable.SelectedClicks(type="selectedClicks", color=i + 1, colors=self.colors))
+                    paragraphs[-1].append(renderable.Whitespace())
+                paragraphs[-1].append(renderable.SelectedClicks(color=i + 1, colors=self.colors))
 
         return make_section(paragraphs)
 
@@ -217,20 +217,20 @@ class SelectThingsAdaptation(Adaptation):
             match token:
                 case parsing.WordToken(text=text):
                     if self.words:
-                        paragraphs[-1].append(renderable.SelectableText(type="selectableText", text=text, colors=self.colors))
+                        paragraphs[-1].append(renderable.SelectableText(text=text, colors=self.colors))
                     else:
-                        paragraphs[-1].append(renderable.PlainText(type="plainText", text=text))
+                        paragraphs[-1].append(renderable.PlainText(text=text))
                 case parsing.HorizontalWhitespaceToken(text=text):
-                    paragraphs[-1].append(renderable.Whitespace(type="whitespace"))
+                    paragraphs[-1].append(renderable.Whitespace())
                 case parsing.PunctuationToken(text=text):
                     if self.punctuation:
-                        paragraphs[-1].append(renderable.SelectableText(type="selectableText", text=text, colors=self.colors))
+                        paragraphs[-1].append(renderable.SelectableText(text=text, colors=self.colors))
                     else:
-                        paragraphs[-1].append(renderable.PlainText(type="plainText", text=text))
+                        paragraphs[-1].append(renderable.PlainText(text=text))
                 case parsing.ParagraphEndToken():
                     paragraphs.append([])
                 case parsing.TagToken(tag=tag, text=text):
-                    paragraphs[-1].append(renderable.PlainText(type="plainText", text=f"{{{tag}|{text}}}"))
+                    paragraphs[-1].append(renderable.PlainText(text=f"{{{tag}|{text}}}"))
                 case _:
                     raise ValueError(f"Unknown token type: {type(token)}")
 
@@ -246,15 +246,15 @@ class FillWithFreeTextAdaptation(Adaptation):
         for token in parsing.tokenize_text(self.exercise.instructions):
             match token:
                 case parsing.WordToken(text=text):
-                    paragraphs[-1].append(renderable.PlainText(type="plainText", text=text))
+                    paragraphs[-1].append(renderable.PlainText(text=text))
                 case parsing.HorizontalWhitespaceToken(text=text):
-                    paragraphs[-1].append(renderable.Whitespace(type="whitespace"))
+                    paragraphs[-1].append(renderable.Whitespace())
                 case parsing.PunctuationToken(text=text):
-                    paragraphs[-1].append(renderable.PlainText(type="plainText", text=text))
+                    paragraphs[-1].append(renderable.PlainText(text=text))
                 case parsing.ParagraphEndToken():
                     paragraphs.append([])
                 case parsing.TagToken(tag=tag, text=text):
-                    paragraphs[-1].append(renderable.PlainText(type="plainText", text=f"{{{tag}|{text}}}"))
+                    paragraphs[-1].append(renderable.PlainText(text=f"{{{tag}|{text}}}"))
                 case _:
                     raise ValueError(f"Unknown token type: {type(token)}")
 
@@ -268,19 +268,19 @@ class FillWithFreeTextAdaptation(Adaptation):
             for token in parsing.tokenize_text(part):
                 match token:
                     case parsing.WordToken(text=text):
-                        paragraphs[-1].append(renderable.PlainText(type="plainText", text=text))
+                        paragraphs[-1].append(renderable.PlainText(text=text))
                     case parsing.HorizontalWhitespaceToken(text=text):
-                        paragraphs[-1].append(renderable.Whitespace(type="whitespace"))
+                        paragraphs[-1].append(renderable.Whitespace())
                     case parsing.PunctuationToken(text=text):
-                        paragraphs[-1].append(renderable.PlainText(type="plainText", text=text))
+                        paragraphs[-1].append(renderable.PlainText(text=text))
                     case parsing.ParagraphEndToken():
                         paragraphs.append([])
                     case parsing.TagToken(tag=tag, text=text):
-                        paragraphs[-1].append(renderable.PlainText(type="plainText", text=f"{{{tag}|{text}}}"))
+                        paragraphs[-1].append(renderable.PlainText(text=f"{{{tag}|{text}}}"))
                     case _:
                         raise ValueError(f"Unknown token type: {type(token)}")
             if i < len(parts) - 1:
-                paragraphs[-1].append(renderable.FreeTextInput(type="freeTextInput"))
+                paragraphs[-1].append(renderable.FreeTextInput())
 
         return make_section(paragraphs)
 
@@ -294,18 +294,18 @@ class MultipleChoicesAdaptation(Adaptation):
         for token in parsing.tokenize_text(self.exercise.instructions):
             match token:
                 case parsing.WordToken(text=text):
-                    paragraphs[-1].append(renderable.PlainText(type="plainText", text=text))
+                    paragraphs[-1].append(renderable.PlainText(text=text))
                 case parsing.HorizontalWhitespaceToken(text=text):
-                    paragraphs[-1].append(renderable.Whitespace(type="whitespace"))
+                    paragraphs[-1].append(renderable.Whitespace())
                 case parsing.PunctuationToken(text=text):
-                    paragraphs[-1].append(renderable.PlainText(type="plainText", text=text))
+                    paragraphs[-1].append(renderable.PlainText(text=text))
                 case parsing.ParagraphEndToken():
                     paragraphs.append([])
                 case parsing.TagToken(tag=tag, text=text):
                     if tag == "choice":
-                        paragraphs[-1].append(renderable.PlainText(type="plainText", text=text))
+                        paragraphs[-1].append(renderable.PlainText(text=text))
                         continue
-                    paragraphs[-1].append(renderable.PlainText(type="plainText", text=f"{{{tag}|{text}}}"))
+                    paragraphs[-1].append(renderable.PlainText(text=f"{{{tag}|{text}}}"))
                 case _:
                     raise ValueError(f"Unknown token type: {type(token)}")
 
@@ -327,19 +327,19 @@ class MultipleChoicesAdaptation(Adaptation):
             for token in parsing.tokenize_text(part):
                 match token:
                     case parsing.WordToken(text=text):
-                        paragraphs[-1].append(renderable.PlainText(type="plainText", text=text))
+                        paragraphs[-1].append(renderable.PlainText(text=text))
                     case parsing.HorizontalWhitespaceToken(text=text):
-                        paragraphs[-1].append(renderable.Whitespace(type="whitespace"))
+                        paragraphs[-1].append(renderable.Whitespace())
                     case parsing.PunctuationToken(text=text):
-                        paragraphs[-1].append(renderable.PlainText(type="plainText", text=text))
+                        paragraphs[-1].append(renderable.PlainText(text=text))
                     case parsing.ParagraphEndToken():
                         paragraphs.append([])
                     case parsing.TagToken(tag=tag, text=text):
-                        paragraphs[-1].append(renderable.PlainText(type="plainText", text=f"{{{tag}|{text}}}"))
+                        paragraphs[-1].append(renderable.PlainText(text=f"{{{tag}|{text}}}"))
                     case _:
                         raise ValueError(f"Unknown token type: {type(token)}")
             if i < len(parts) - 1:
-                paragraphs[-1].append(renderable.MultipleChoicesInput(type="multipleChoicesInput", choices=choices))
+                paragraphs[-1].append(renderable.MultipleChoicesInput(choices=choices))
 
         return make_section(paragraphs)
 
