@@ -5,6 +5,7 @@ from polymorphic.models import PolymorphicModel
 from . import parsing
 from . import renderable
 
+
 # @todo(Feature, later) Add timestamps (created_at, modified_at, etc.) and user ids (created_by, modified_by, etc.) to all models
 
 class PdfFile(models.Model):
@@ -196,223 +197,93 @@ class SelectThingsAdaptation(Adaptation):
     colors = models.IntegerField(null=False)
 
     def make_adapted_instructions(self):
-        # @todo Find a way to factorize all these loops matching tokens to construct paragraphs (not obvious because they have subtle differences despite being globally similar)
-        paragraphs = [[]]
-
-        for token in parsing.tokenize_text(self.exercise.instructions):
-            match token:
-                case parsing.WordToken(text=text):
-                    paragraphs[-1].append(renderable.PlainText(text=text))
-                case parsing.HorizontalWhitespaceToken(text=text):
-                    paragraphs[-1].append(renderable.Whitespace())
-                case parsing.PunctuationToken(text=text):
-                    paragraphs[-1].append(renderable.PlainText(text=text))
-                case parsing.ParagraphEndToken():
-                    paragraphs.append([])
-                case parsing.TagToken(tag=tag, text=text):
-                    if self.colors > 1 and tag.startswith("sel"):
-                        try:
-                            color = int(tag[3:])
-                        except ValueError:
-                            pass
-                        else:
-                            if 1 <= color <= self.colors:
-                                paragraphs[-1].append(renderable.SelectedText(text=text, color=color, colors=self.colors))
-                                continue
-                    paragraphs[-1] += [
-                        renderable.PlainText(text="{"),
-                        renderable.PlainText(text=tag),
-                        renderable.PlainText(text="|"),
-                        renderable.PlainText(text=text),
-                        renderable.PlainText(text="}"),
-                    ]
-                case _:
-                    raise ValueError(f"Unknown token type: {type(token)}")
-
         if self.colors > 1:
-            paragraphs.append([])
-            for i in range(self.colors):
-                if i != 0:
-                    paragraphs[-1].append(renderable.Whitespace())
-                paragraphs[-1].append(renderable.SelectedClicks(color=i + 1, colors=self.colors))
+            colors = range(1, self.colors + 1)
+            parse = parsing.SectionParser(
+                {f"sel{color}": r""" "|" STR """ for color in colors},
+                type(
+                    "InstructionsTransformer",
+                    (parsing.SectionTransformer,),
+                    {
+                        f"sel{color}_tag": (lambda c: staticmethod(lambda args: renderable.SelectedText(text=args[0], color=c, colors=self.colors)))(color)
+                        for color in colors
+                    },
+                )(),
+            )
+            section = parse(self.exercise.instructions)
+            tokens = []
+            for color in colors:
+                if color != 1:
+                    tokens.append(renderable.Whitespace())
+                tokens.append(renderable.SelectedClicks(color=color, colors=self.colors))
+            section.paragraphs.append(renderable.Paragraph(sentences=[renderable.Sentence(tokens=tokens)]))
 
-        return make_section(paragraphs)
+            return section
+        else:
+            return parsing.parse_plain_section(self.exercise.instructions)
+
+    class WordingTransformer(parsing.SectionTransformer):
+        def __init__(self, words, punctuation, colors):
+            self.select_words = words
+            self.select_punctuation = punctuation
+            self.colors = colors
+
+        def word(self, args):
+            if self.select_words:
+                return renderable.SelectableText(text=args[0], colors=self.colors)
+            else:
+                return renderable.PlainText(text=args[0])
+
+        def punctuation(self, args):
+            if self.select_punctuation:
+                return renderable.SelectableText(text=args[0], colors=self.colors)
+            else:
+                return renderable.PlainText(text=args[0])
 
     def make_adapted_wording(self):
-        paragraphs = [[]]
-
-        for token in parsing.tokenize_text(self.exercise.wording):
-            match token:
-                case parsing.WordToken(text=text):
-                    if self.words:
-                        paragraphs[-1].append(renderable.SelectableText(text=text, colors=self.colors))
-                    else:
-                        paragraphs[-1].append(renderable.PlainText(text=text))
-                case parsing.HorizontalWhitespaceToken(text=text):
-                    paragraphs[-1].append(renderable.Whitespace())
-                case parsing.PunctuationToken(text=text):
-                    if self.punctuation:
-                        paragraphs[-1].append(renderable.SelectableText(text=text, colors=self.colors))
-                    else:
-                        paragraphs[-1].append(renderable.PlainText(text=text))
-                case parsing.ParagraphEndToken():
-                    paragraphs.append([])
-                case parsing.TagToken(tag=tag, text=text):
-                    paragraphs[-1] += [
-                        renderable.PlainText(text="{"),
-                        renderable.PlainText(text=tag),
-                        renderable.PlainText(text="|"),
-                        renderable.PlainText(text=text),
-                        renderable.PlainText(text="}"),
-                    ]
-                case _:
-                    raise ValueError(f"Unknown token type: {type(token)}")
-
-        return make_section(paragraphs)
+        parse = parsing.SectionParser({}, self.WordingTransformer(self.words, self.punctuation, self.colors))
+        return parse(self.exercise.wording)
 
 
 class FillWithFreeTextAdaptation(Adaptation):
     placeholder = models.CharField(null=False, blank=False, max_length=10)
 
     def make_adapted_instructions(self):
-        paragraphs = [[]]
+        return parsing.parse_plain_section(self.exercise.instructions)
 
-        for token in parsing.tokenize_text(self.exercise.instructions):
-            match token:
-                case parsing.WordToken(text=text):
-                    paragraphs[-1].append(renderable.PlainText(text=text))
-                case parsing.HorizontalWhitespaceToken(text=text):
-                    paragraphs[-1].append(renderable.Whitespace())
-                case parsing.PunctuationToken(text=text):
-                    paragraphs[-1].append(renderable.PlainText(text=text))
-                case parsing.ParagraphEndToken():
-                    paragraphs.append([])
-                case parsing.TagToken(tag=tag, text=text):
-                    paragraphs[-1] += [
-                        renderable.PlainText(text="{"),
-                        renderable.PlainText(text=tag),
-                        renderable.PlainText(text="|"),
-                        renderable.PlainText(text=text),
-                        renderable.PlainText(text="}"),
-                    ]
-                case _:
-                    raise ValueError(f"Unknown token type: {type(token)}")
-
-        return make_section(paragraphs)
+    class WordingTransformer(parsing.SectionTransformer):
+        def placeholder_tag(self, args):
+            return renderable.FreeTextInput()
 
     def make_adapted_wording(self):
-        parts = self.exercise.wording.split(self.placeholder)  # @todo Move this to the parsing module
-
-        paragraphs = [[]]
-        for i, part in enumerate(parts):
-            for token in parsing.tokenize_text(part):
-                match token:
-                    case parsing.WordToken(text=text):
-                        paragraphs[-1].append(renderable.PlainText(text=text))
-                    case parsing.HorizontalWhitespaceToken(text=text):
-                        paragraphs[-1].append(renderable.Whitespace())
-                    case parsing.PunctuationToken(text=text):
-                        paragraphs[-1].append(renderable.PlainText(text=text))
-                    case parsing.ParagraphEndToken():
-                        paragraphs.append([])
-                    case parsing.TagToken(tag=tag, text=text):
-                        paragraphs[-1] += [
-                            renderable.PlainText(text="{"),
-                            renderable.PlainText(text=tag),
-                            renderable.PlainText(text="|"),
-                            renderable.PlainText(text=text),
-                            renderable.PlainText(text="}"),
-                        ]
-                    case _:
-                        raise ValueError(f"Unknown token type: {type(token)}")
-            if i < len(parts) - 1:
-                paragraphs[-1].append(renderable.FreeTextInput())
-
-        return make_section(paragraphs)
+        parse = parsing.SectionParser({"placeholder": ""}, self.WordingTransformer())
+        return parse(self.exercise.wording.replace(self.placeholder, "{placeholder}"))
 
 
 class MultipleChoicesAdaptation(Adaptation):
     placeholder = models.CharField(null=False, blank=False, max_length=10)
 
+    class InstructionsTransformer(parsing.SectionTransformer):
+        def __init__(self):
+            self.choices = []
+
+        def choice_tag(self, args):
+            self.choices.append(args[0])
+            return renderable.PlainText(text=args[0])
+
     def make_adapted_instructions(self):
-        paragraphs = [[]]
+        parse = parsing.SectionParser({"choice": r""" "|" STR """}, self.InstructionsTransformer())
+        return parse(self.exercise.instructions)
 
-        for token in parsing.tokenize_text(self.exercise.instructions):
-            match token:
-                case parsing.WordToken(text=text):
-                    paragraphs[-1].append(renderable.PlainText(text=text))
-                case parsing.HorizontalWhitespaceToken(text=text):
-                    paragraphs[-1].append(renderable.Whitespace())
-                case parsing.PunctuationToken(text=text):
-                    paragraphs[-1].append(renderable.PlainText(text=text))
-                case parsing.ParagraphEndToken():
-                    paragraphs.append([])
-                case parsing.TagToken(tag=tag, text=text):
-                    if tag == "choice":
-                        paragraphs[-1].append(renderable.PlainText(text=text))
-                        continue
-                    paragraphs[-1] += [
-                        renderable.PlainText(text="{"),
-                        renderable.PlainText(text=tag),
-                        renderable.PlainText(text="|"),
-                        renderable.PlainText(text=text),
-                        renderable.PlainText(text="}"),
-                    ]
-                case _:
-                    raise ValueError(f"Unknown token type: {type(token)}")
+    class WordingTransformer(parsing.SectionTransformer):
+        def __init__(self, choices):
+            self.choices = choices
 
-        return make_section(paragraphs)
+        def placeholder_tag(self, args):
+            return renderable.MultipleChoicesInput(choices=self.choices)
 
     def make_adapted_wording(self):
-        choices = []
-        for token in parsing.tokenize_text(self.exercise.instructions):
-            match token:
-                case parsing.TagToken(tag="choice", text=text):
-                    choices.append(text)
-                case _:
-                    pass
-
-        parts = self.exercise.wording.split(self.placeholder)  # @todo Move this to the parsing module
-
-        paragraphs = [[]]
-        for i, part in enumerate(parts):
-            for token in parsing.tokenize_text(part):
-                match token:
-                    case parsing.WordToken(text=text):
-                        paragraphs[-1].append(renderable.PlainText(text=text))
-                    case parsing.HorizontalWhitespaceToken(text=text):
-                        paragraphs[-1].append(renderable.Whitespace())
-                    case parsing.PunctuationToken(text=text):
-                        paragraphs[-1].append(renderable.PlainText(text=text))
-                    case parsing.ParagraphEndToken():
-                        paragraphs.append([])
-                    case parsing.TagToken(tag=tag, text=text):
-                        paragraphs[-1] += [
-                            renderable.PlainText(text="{"),
-                            renderable.PlainText(text=tag),
-                            renderable.PlainText(text="|"),
-                            renderable.PlainText(text=text),
-                            renderable.PlainText(text="}"),
-                        ]
-                    case _:
-                        raise ValueError(f"Unknown token type: {type(token)}")
-            if i < len(parts) - 1:
-                paragraphs[-1].append(renderable.MultipleChoicesInput(choices=choices))
-
-        return make_section(paragraphs)
-
-
-def make_section(paragraphs):
-    return renderable.Section(paragraphs=[
-        renderable.Paragraph(sentences=[
-            make_sentence(tokens),
-        ])
-        for tokens in paragraphs
-    ])
-
-def make_sentence(tokens):
-    while len(tokens) > 0 and tokens[0].type == "whitespace":
-        tokens.pop(0)
-    while len(tokens) > 0 and tokens[-1].type == "whitespace":
-        tokens.pop()
-    return renderable.Sentence(tokens=tokens)
+        choices_gatherer = self.InstructionsTransformer()
+        parsing.SectionParser({"choice": r""" "|" STR """}, choices_gatherer)(self.exercise.instructions)
+        parse = parsing.SectionParser({"placeholder": ""}, self.WordingTransformer(choices_gatherer.choices))
+        return parse(self.exercise.wording.replace(self.placeholder, "{placeholder}"))

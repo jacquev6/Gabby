@@ -2,6 +2,8 @@ from typing import Literal
 
 import pydantic
 
+from . import parsing
+
 
 class BaseModel(pydantic.BaseModel):
     model_config = pydantic.ConfigDict(extra="forbid")
@@ -107,7 +109,9 @@ class Section(BaseModel):
     paragraphs: list[Paragraph]
 
     def to_generic(self):
-        return "\n\n".join(p.to_generic() for p in self.paragraphs)
+        generic = "\n\n".join(p.to_generic() for p in self.paragraphs)
+        assert parsing.parse_generic_section(generic) == self
+        return generic
 
 
 class AdaptedExercise(BaseModel):

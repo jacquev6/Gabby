@@ -273,9 +273,9 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
                             r.PlainText(text="{"),
-                            r.PlainText(text="tag"),
+                            r.SelectableText(text="tag", colors=1),
                             r.PlainText(text="|"),
-                            r.PlainText(text="def"),
+                            r.SelectableText(text="def", colors=1),
                             r.PlainText(text="}"),
                         ]),
                     ]),

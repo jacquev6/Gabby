@@ -1,6 +1,4 @@
-import dataclasses
-import re
-import textwrap
+import functools
 
 import lark
 
@@ -9,71 +7,53 @@ from django.test import TestCase
 from . import renderable
 
 
-class GenericSectionParser:
-    grammar = textwrap.dedent(r"""\
-        paragraph: sentence  # @todo Split paragraph in several sentences
+# Might be premature optimization, but we'll have a reasonable number of distinct grammars,
+# and current architecture implies recompiling them often without this memo.
+@functools.cache
+def memoize_parser(grammar, start):
+    return lark.Lark(grammar, start=start)
 
-        sentence: (_tag | word | punctuation | whitespace)+
 
-        _tag: selectable_text_tag | selected_text_tag | selected_clicks_tag | multiple_choices_input_tag | free_text_input_tag
+class SectionTransformer(lark.Transformer):
+    def paragraph(self, sentences):
+        return renderable.Paragraph(sentences=sentences)
 
-        selectable_text_tag: "{" "selectable-text" "|" INT "|" /[^}]+/ "}"
+    def sentence(self, args):
+        return renderable.Sentence(tokens=args)
 
-        selected_text_tag: "{" "selected-text" "|" INT "|" INT "|" /[^}]+/ "}"
+    def word(self, args):
+        return renderable.PlainText(text=args[0])
 
-        selected_clicks_tag: "{" "selected-clicks" "|" INT "|" INT "}"
+    def whitespace(self, args):
+        return renderable.Whitespace()
 
-        multiple_choices_input_tag: "{" "multiple-choices-input" ("|" /[^}|]+/)+ "}"
+    def punctuation(self, args):
+        return renderable.PlainText(text=args[0])
 
-        free_text_input_tag: "{" "free-text-input" "}"
+    def INT(self, arg):
+        return int(arg.value)
 
-        # Keep these three regular expressions mutually exclusive
-        word: /[\w]+/
-        whitespace: /[ \t]+/
-        punctuation: /[^\w \t]/
+class SectionParser:
+    def __init__(self, tags, transformer):
+        grammar = (
+            r"""\
+                paragraph: sentence  # @todo Split paragraph in several sentences
 
-        %import common.CR
-        %import common.LF
-        %import common.INT
-    """)
+                sentence: (_tag | word | punctuation | whitespace)+
 
-    class Transformer(lark.Transformer):
-        def paragraph(self, sentences):
-            return renderable.Paragraph(sentences=sentences)
+                # Keep these three regular expressions mutually exclusive
+                word: /[\w]+/
+                whitespace: /[ \t]+/
+                punctuation: /[^\w \t]/
 
-        def sentence(self, args):
-            return renderable.Sentence(tokens=args)
-
-        def selectable_text_tag(self, args):
-            return renderable.SelectableText(colors=args[0], text=args[1].value)
-
-        def selected_text_tag(self, args):
-            return renderable.SelectedText(color=args[0], colors=args[1], text=args[2].value)
-
-        def selected_clicks_tag(self, args):
-            return renderable.SelectedClicks(color=args[0], colors=args[1])
-
-        def multiple_choices_input_tag(self, args):
-            return renderable.MultipleChoicesInput(choices=[arg.value for arg in args])
-
-        def free_text_input_tag(self, args):
-            return renderable.FreeTextInput()
-
-        def word(self, args):
-            return renderable.PlainText(text=args[0])
-
-        def whitespace(self, args):
-            return renderable.Whitespace()
-
-        def punctuation(self, args):
-            return renderable.PlainText(text=args[0])
-
-        def INT(self, arg):
-            return int(arg.value)
-
-    def __init__(self):
-        self.parser = lark.Lark(self.grammar, start="paragraph")
-        self.transformer = self.Transformer()
+                STR: /[^}|]+/
+                INT: /[0-9]+/
+            """
+            + f"_tag: {' | '.join(f"{tag}_tag" for tag in tags.keys())}\n"
+            + "\n".join(f'{tag}_tag: "{{" "{tag.replace("_", "-")}" {definition} "}}"' for (tag, definition) in tags.items())
+        )
+        self.parser = memoize_parser(grammar, start="paragraph")
+        self.transformer = transformer
 
     def __call__(self, section: str) -> renderable.Section:
         paragraphs = []
@@ -105,7 +85,40 @@ class GenericSectionParser:
         return renderable.Section(paragraphs=paragraphs)
 
 
-parse_generic_section = GenericSectionParser()
+parse_plain_section = SectionParser({}, SectionTransformer())
+
+
+class GenericSectionTransformer(SectionTransformer):
+    def selectable_text_tag(self, args):
+        colors, text = args
+        return renderable.SelectableText(colors=colors, text=text)
+
+    def selected_text_tag(self, args):
+        color, colors, text = args
+        return renderable.SelectedText(color=color, colors=colors, text=text)
+
+    def selected_clicks_tag(self, args):
+        color, colors = args
+        return renderable.SelectedClicks(color=color, colors=colors)
+
+    def multiple_choices_input_tag(self, args):
+        choices = args
+        return renderable.MultipleChoicesInput(choices=[choice.value for choice in choices])
+
+    def free_text_input_tag(self, args):
+        return renderable.FreeTextInput()
+
+
+parse_generic_section = SectionParser(
+    {
+        "selectable_text": r""" "|" INT "|" STR """,
+        "selected_text": r""" "|" INT "|" INT "|" STR """,
+        "selected_clicks": r""" "|" INT "|" INT """,
+        "multiple_choices_input": r""" ("|" STR)+ """,
+        "free_text_input": "",
+    },
+    GenericSectionTransformer(),
+)
 
 
 class ParseGenericSectionTestCase(TestCase):
@@ -242,99 +255,3 @@ class ParseGenericSectionTestCase(TestCase):
                 renderable.PlainText(text="."),
             ])])]),
         )
-
-
-@dataclasses.dataclass
-class TagToken:
-    tag: str
-    text: str
-
-@dataclasses.dataclass
-class WordToken:
-    text: str
-
-@dataclasses.dataclass
-class ParagraphEndToken:
-    pass
-
-@dataclasses.dataclass
-class HorizontalWhitespaceToken:
-    text: str
-
-@dataclasses.dataclass
-class PunctuationToken:
-    text: str
-
-TextToken = TagToken | WordToken | ParagraphEndToken | HorizontalWhitespaceToken | PunctuationToken
-
-
-tokenize_text_regex = re.compile(r"(?:{(?P<tag>[a-z0-9]+)\|(?P<tag_val>[^}]+)})|(?P<word>\w+)|(?P<paragraph_end>\n\n+)|(?P<space>\s+)|(?P<char>.)")
-
-def tokenize_text(s: str) -> list[TextToken]:
-    ret = []
-    for m in tokenize_text_regex.finditer(s):
-        if m.group("tag"):
-            assert m.group("tag_val")
-            ret.append(TagToken(m.group("tag"), m.group("tag_val")))
-        elif m.group("word"):
-            ret.append(WordToken(m.group("word")))
-        elif m.group("paragraph_end"):
-            ret.append(ParagraphEndToken())
-        elif m.group("space"):
-            ret.append(HorizontalWhitespaceToken(m.group("space")))
-        else:
-            assert m.group("char")
-            ret.append(PunctuationToken(m.group("char")))
-    return ret
-
-
-class TokenizeTextTestCase(TestCase):
-    def make_test(self, input, expected):
-        self.assertEqual(tokenize_text(input), expected)
-
-    def test_empty_string(self):
-        self.make_test("", [])
-
-    def test_simple_word(self):
-        self.make_test("hello", [WordToken("hello")])
-
-    def test_accentuated_word(self):
-        self.make_test("àéïîöôù", [WordToken("àéïîöôù")])
-
-    def test_german_word(self):
-        self.make_test("Straße", [WordToken("Straße")])
-
-    def test_numbers_as_word(self):
-        self.make_test("120", [WordToken("120")])
-
-    def test_whitespace(self):
-        self.make_test("  \t\n\t  ", [HorizontalWhitespaceToken("  \t\n\t  ")])
-
-    def test_punctuation(self):
-        self.make_test("!", [PunctuationToken("!")])
-
-    def test_successive_punctuation(self):
-        self.make_test(
-            "Un martien ?!(vert).",
-            [
-                WordToken("Un"),
-                HorizontalWhitespaceToken(" "),
-                WordToken("martien"),
-                HorizontalWhitespaceToken(" "),
-                PunctuationToken("?"),
-                PunctuationToken("!"),
-                PunctuationToken("("),
-                WordToken("vert"),
-                PunctuationToken(")"),
-                PunctuationToken("."),
-            ],
-        )
-
-    def test_tag(self):
-        self.make_test("{foo|hello}", [TagToken("foo", "hello")])
-
-    def test_paragraph_end(self):
-        self.make_test("\n\n", [ParagraphEndToken()])
-
-    def test_paragraph_end__extra(self):
-        self.make_test("\n\n\n\n\n", [ParagraphEndToken()])
