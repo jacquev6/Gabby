@@ -9,7 +9,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
 docker compose exec backend-shell ./manage.py migrate textbooks zero
 docker compose exec backend-shell ./manage.py migrate opinion_ping zero
 
-rm -f ../../backend/textbooks/migrations/0006_*.{py,sql}
+rm -f ../../backend/textbooks/migrations/0007_*.{py,sql}
 rm -f ../../backend/opinion_ping/migrations/0003_*.{py,sql}
 
 docker compose exec backend-shell ./manage.py makemigrations

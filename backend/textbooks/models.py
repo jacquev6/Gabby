@@ -116,6 +116,28 @@ class Adaptation(PolymorphicModel):
             wording=self.make_adapted_wording(),
         )
 
+    def to_generic_adaptation(self):
+        return GenericAdaptation(
+            exercise=Exercise(
+                project=None,
+                textbook=self.exercise.textbook,
+                textbook_page=self.exercise.textbook_page,
+                number=self.exercise.number,
+                instructions=self.make_adapted_instructions().to_generic(),
+                wording=self.make_adapted_wording().to_generic(),
+            ),
+        )
+
+
+class GenericAdaptation(Adaptation):
+    generic = models.TextField(null=False)
+
+    def make_adapted_instructions(self):
+        return parsing.parse_generic_section(self.exercise.instructions)
+
+    def make_adapted_wording(self):
+        return parsing.parse_generic_section(self.exercise.wording)
+
 
 class Exercise(models.Model):
     id = models.AutoField(primary_key=True)
