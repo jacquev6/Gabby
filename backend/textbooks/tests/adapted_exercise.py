@@ -91,7 +91,11 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                             r.Whitespace(),
                             r.SelectedText(text="ghi", color=3, colors=3),
                             r.Whitespace(),
-                            r.PlainText(text="{sel4|jkl}"),
+                            r.PlainText(text="{"),
+                            r.PlainText(text="sel4"),
+                            r.PlainText(text="|"),
+                            r.PlainText(text="jkl"),
+                            r.PlainText(text="}"),
                         ]),
                     ]),
                     r.Paragraph(sentences=[
@@ -131,7 +135,11 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 instructions=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.PlainText(text="{sel1|abc}"),
+                            r.PlainText(text="{"),
+                            r.PlainText(text="sel1"),
+                            r.PlainText(text="|"),
+                            r.PlainText(text="abc"),
+                            r.PlainText(text="}"),
                         ]),
                     ]),
                 ]),
@@ -252,14 +260,22 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 instructions=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.PlainText(text="{tag|abc}"),
+                            r.PlainText(text="{"),
+                            r.PlainText(text="tag"),
+                            r.PlainText(text="|"),
+                            r.PlainText(text="abc"),
+                            r.PlainText(text="}"),
                         ]),
                     ]),
                 ]),
                 wording=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.PlainText(text="{tag|def}"),
+                            r.PlainText(text="{"),
+                            r.PlainText(text="tag"),
+                            r.PlainText(text="|"),
+                            r.PlainText(text="def"),
+                            r.PlainText(text="}"),
                         ]),
                     ]),
                 ]),
@@ -499,14 +515,22 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 instructions=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.PlainText(text="{tag|abc}"),
+                            r.PlainText(text="{"),
+                            r.PlainText(text="tag"),
+                            r.PlainText(text="|"),
+                            r.PlainText(text="abc"),
+                            r.PlainText(text="}"),
                         ]),
                     ]),
                 ]),
                 wording=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.PlainText(text="{tag|def}"),
+                            r.PlainText(text="{"),
+                            r.PlainText(text="tag"),
+                            r.PlainText(text="|"),
+                            r.PlainText(text="def"),
+                            r.PlainText(text="}"),
                         ]),
                     ]),
                 ]),

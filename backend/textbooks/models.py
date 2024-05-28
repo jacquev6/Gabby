@@ -197,7 +197,13 @@ class SelectThingsAdaptation(Adaptation):
                             if 1 <= color <= self.colors:
                                 paragraphs[-1].append(renderable.SelectedText(text=text, color=color, colors=self.colors))
                                 continue
-                    paragraphs[-1].append(renderable.PlainText(text=f"{{{tag}|{text}}}"))
+                    paragraphs[-1] += [
+                        renderable.PlainText(text="{"),
+                        renderable.PlainText(text=tag),
+                        renderable.PlainText(text="|"),
+                        renderable.PlainText(text=text),
+                        renderable.PlainText(text="}"),
+                    ]
                 case _:
                     raise ValueError(f"Unknown token type: {type(token)}")
 
@@ -230,7 +236,13 @@ class SelectThingsAdaptation(Adaptation):
                 case parsing.ParagraphEndToken():
                     paragraphs.append([])
                 case parsing.TagToken(tag=tag, text=text):
-                    paragraphs[-1].append(renderable.PlainText(text=f"{{{tag}|{text}}}"))
+                    paragraphs[-1] += [
+                        renderable.PlainText(text="{"),
+                        renderable.PlainText(text=tag),
+                        renderable.PlainText(text="|"),
+                        renderable.PlainText(text=text),
+                        renderable.PlainText(text="}"),
+                    ]
                 case _:
                     raise ValueError(f"Unknown token type: {type(token)}")
 
@@ -254,7 +266,13 @@ class FillWithFreeTextAdaptation(Adaptation):
                 case parsing.ParagraphEndToken():
                     paragraphs.append([])
                 case parsing.TagToken(tag=tag, text=text):
-                    paragraphs[-1].append(renderable.PlainText(text=f"{{{tag}|{text}}}"))
+                    paragraphs[-1] += [
+                        renderable.PlainText(text="{"),
+                        renderable.PlainText(text=tag),
+                        renderable.PlainText(text="|"),
+                        renderable.PlainText(text=text),
+                        renderable.PlainText(text="}"),
+                    ]
                 case _:
                     raise ValueError(f"Unknown token type: {type(token)}")
 
@@ -276,7 +294,13 @@ class FillWithFreeTextAdaptation(Adaptation):
                     case parsing.ParagraphEndToken():
                         paragraphs.append([])
                     case parsing.TagToken(tag=tag, text=text):
-                        paragraphs[-1].append(renderable.PlainText(text=f"{{{tag}|{text}}}"))
+                        paragraphs[-1] += [
+                            renderable.PlainText(text="{"),
+                            renderable.PlainText(text=tag),
+                            renderable.PlainText(text="|"),
+                            renderable.PlainText(text=text),
+                            renderable.PlainText(text="}"),
+                        ]
                     case _:
                         raise ValueError(f"Unknown token type: {type(token)}")
             if i < len(parts) - 1:
@@ -305,7 +329,13 @@ class MultipleChoicesAdaptation(Adaptation):
                     if tag == "choice":
                         paragraphs[-1].append(renderable.PlainText(text=text))
                         continue
-                    paragraphs[-1].append(renderable.PlainText(text=f"{{{tag}|{text}}}"))
+                    paragraphs[-1] += [
+                        renderable.PlainText(text="{"),
+                        renderable.PlainText(text=tag),
+                        renderable.PlainText(text="|"),
+                        renderable.PlainText(text=text),
+                        renderable.PlainText(text="}"),
+                    ]
                 case _:
                     raise ValueError(f"Unknown token type: {type(token)}")
 
@@ -335,7 +365,13 @@ class MultipleChoicesAdaptation(Adaptation):
                     case parsing.ParagraphEndToken():
                         paragraphs.append([])
                     case parsing.TagToken(tag=tag, text=text):
-                        paragraphs[-1].append(renderable.PlainText(text=f"{{{tag}|{text}}}"))
+                        paragraphs[-1] += [
+                            renderable.PlainText(text="{"),
+                            renderable.PlainText(text=tag),
+                            renderable.PlainText(text="|"),
+                            renderable.PlainText(text=text),
+                            renderable.PlainText(text="}"),
+                        ]
                     case _:
                         raise ValueError(f"Unknown token type: {type(token)}")
             if i < len(parts) - 1:
