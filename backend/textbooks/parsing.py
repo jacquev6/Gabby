@@ -77,7 +77,8 @@ class GenericSectionParser:
 
     def __call__(self, section: str) -> renderable.Section:
         paragraphs = []
-        for p in section.split("\n\n"):
+        # This string manipulation (split, strip splitlines, join) before parsing is fragile, but it works for now.
+        for p in section.strip().split("\n\n"):
             p = " ".join(p.splitlines())
             try:
                 tree = self.parser.parse(p)
@@ -114,7 +115,7 @@ class ParseGenericSectionTestCase(TestCase):
 
     def test_single_paragraph_of_a_single_sentence_of_plain_words(self):
         self.do_test(
-            "This is a\tsingle  \n  sentence.",
+            "\n\n  \t   This is a\tsingle  \n  sentence.\n\n\n  \n\t\n",
             renderable.Section(paragraphs=[renderable.Paragraph(sentences=[renderable.Sentence(tokens=[
                 renderable.PlainText(text="This"),
                 renderable.Whitespace(),
