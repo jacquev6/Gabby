@@ -374,7 +374,7 @@ class ExerciseModel(BaseModel):
     adaptation: (
         SelectThingsAdaptationModel
         | FillWithFreeTextAdaptationModel
-        # | MultipleChoicesAdaptationModel
+        | MultipleChoicesAdaptationModel
         | None
     ) = None
 
