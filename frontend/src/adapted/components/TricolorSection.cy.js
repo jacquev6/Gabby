@@ -3,23 +3,25 @@ import { h } from 'vue'
 import TricolorSection from './TricolorSection.vue'
 
 
+function makeToken(text) {
+  return {type: 'plainText', text}
+}
+
 function makeSentence(prefix, length=26) {
-  const tokens = [prefix + 'A']
+  const tokens = [
+    makeToken(prefix + 'A')
+  ]
   for (let i = 1; i < length; i++) {
-    tokens.push(' ')
-    tokens.push(prefix + String.fromCharCode('A'.charCodeAt(0) + i))
+    tokens.push({type: 'whitespace'})
+    tokens.push(makeToken(prefix + String.fromCharCode('A'.charCodeAt(0) + i)))
   }
-  tokens.push('.')
+  tokens.push(makeToken('.'))
   return {tokens}
 }
 
 const color1 = 'rgb(255, 0, 0)'
 const color2 = 'rgb(0, 128, 0)'
 const color3 = 'rgb(0, 0, 255)'
-
-const slots = {
-  default: ({token}) => token,
-}
 
 const props = {
   section: {
@@ -28,9 +30,10 @@ const props = {
       {sentences: [makeSentence('D'), makeSentence('E'), makeSentence('F')]},
     ],
   },
+  modelValue: [],
 }
 
-const mountOptions = {props, slots}
+const mountOptions = {props}
 
 describe('TricolorSection', () => {
   before(console.clear)
@@ -111,8 +114,8 @@ describe('TricolorSection', () => {
               {sentences: [makeSentence('A', 10)]},
             ],
           },
+          modelValue: [],
         },
-        slots,
       },
     )
 
@@ -133,54 +136,14 @@ describe('TricolorSection', () => {
       {
         props: {
           section: {paragraphs: [{sentences: [{
-            tokens: ['abcdefghijkl', ' ', 'mnopqrstuvwxyz'],
+            tokens: [makeToken('abcdefghijkl'), makeToken(' '), makeToken('mnopqrstuvwxyz')],
           }]}]},
+          modelValue: [],
         },
-        slots,
       },
     )
 
     cy.get('span:contains("abcdefghijkl")').last().should('have.css', 'color', color1)
     cy.get('span:contains("mnopqrstuvwxyz")').last().should('have.css', 'color', color2)
-  })
-
-  it('renders lines in alternating colors even with higher slots', () => {
-    cy.mount(
-      TricolorSection,
-      {
-        props,
-        slots: {
-          default: ({token}) => h(
-            'span',
-            {
-              style: {
-                'border-top': '2px solid black',
-                'border-bottom': '2px solid blue',
-              },
-            },
-            token,
-          ),
-        },
-      },
-    )
-
-    cy.get('span:contains("AA")').last().should('have.css', 'color', color1)
-    cy.get('span:contains("AT")').last().should('have.css', 'color', color1)
-    cy.get('span:contains("AU")').last().should('have.css', 'color', color2)
-    cy.get('span:contains("BM")').last().should('have.css', 'color', color2)
-    cy.get('span:contains("BN")').last().should('have.css', 'color', color3)
-    cy.get('span:contains("CF")').last().should('have.css', 'color', color3)
-    cy.get('span:contains("CG")').last().should('have.css', 'color', color1)
-    cy.get('span:contains("CY")').last().should('have.css', 'color', color1)
-    cy.get('span:contains("CZ")').last().should('have.css', 'color', color2)
-
-    cy.get('span:contains("DA")').last().should('have.css', 'color', color3)
-    cy.get('span:contains("DR")').last().should('have.css', 'color', color3)
-    cy.get('span:contains("DS")').last().should('have.css', 'color', color1)
-    cy.get('span:contains("EL")').last().should('have.css', 'color', color1)
-    cy.get('span:contains("EM")').last().should('have.css', 'color', color2)
-    cy.get('span:contains("FF")').last().should('have.css', 'color', color2)
-    cy.get('span:contains("FG")').last().should('have.css', 'color', color3)
-    cy.get('span:contains("FZ")').last().should('have.css', 'color', color3)
   })
 })

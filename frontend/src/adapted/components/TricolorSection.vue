@@ -7,11 +7,17 @@ import MonocolorSection from './MonocolorSection.vue'
 defineProps<{
   section: Section,
 }>()
+
+const models = defineModel<{
+  [index: string]: any/* @todo Type */
+}>({
+  required: true,
+})
 </script>
 
 <template>
   <TricolorLines>
-    <MonocolorSection :section>
+    <MonocolorSection :section v-model="models">
       <template v-slot="{ token, tokenIndex }">
         <slot :token :tokenIndex></slot>
       </template>
