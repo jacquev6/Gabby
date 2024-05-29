@@ -36,10 +36,13 @@ class SectionTransformer(lark.Transformer):
     def INT(self, arg):
         return int(arg.value)
 
+
 class SectionParser:
     def __init__(self, tags, transformer):
         grammar = (
             r"""\
+                section: paragraph ("\n\n" paragraph)*
+
                 paragraph: sentence  # @todo Split paragraph in several sentences
 
                 sentence: (_tag | word | punctuation | whitespace)+
@@ -47,7 +50,7 @@ class SectionParser:
                 # Keep these three regular expressions mutually exclusive
                 word: /[\w]+/
                 whitespace: /[ \t]+/
-                punctuation: /[^\w \t]/
+                punctuation: /[^\w \t\n]/
 
                 STR: /[^}|]+/
                 INT: /[0-9]+/
@@ -55,37 +58,39 @@ class SectionParser:
             + f"_tag: {' | '.join(f"{tag}_tag" for tag in tags.keys())}\n"
             + "\n".join(f'{tag}_tag: "{{" "{tag.replace("_", "-")}" {definition} "}}"' for (tag, definition) in tags.items())
         )
-        self.parser = memoize_parser(grammar, start="paragraph")
+        self.parser = memoize_parser(grammar, start="section")
         self.transformer = transformer
 
     def __call__(self, section: str):
-        paragraphs = []
-        # This string manipulation (split, strip splitlines, join) before parsing is fragile, but it works for now.
-        for p in section.strip().split("\n\n"):
-            p = " ".join(p.splitlines())
-            try:
-                tree = self.parser.parse(p)
-            except lark.exceptions.LarkError as e:
-                print("= PARSING ERROR IN ===========")
-                print(p)
-                print("= ERROR ======================")
-                print(e)
-                print("==============================")
-                raise
-            try:
-                transformed = self.transformer.transform(tree)
-                paragraphs.append(transformed)
-            except lark.exceptions.LarkError as e:
-                print("= TRANSFORM ERROR IN =========")
-                print(p)
-                print("= PARSED AS ==================")
-                print(tree.pretty(), end="")
-                print("= ERROR ======================")
-                print(e)
-                print("==============================")
-                raise
+        # This string manipulation before parsing is fragile but works for now.
+        normalized = "\n\n".join(
+            p.replace("\n", " ")
+            for p in section.strip().replace("\r\n", "\n").replace("\r", "\n").split("\n\n")
+        )
 
-        return self.transformer.section(paragraphs)
+        try:
+            parsed = self.parser.parse(normalized)
+        except lark.exceptions.LarkError as e:
+            print("= PARSING ERROR IN ===========")
+            print(normalized)
+            print("= ERROR ======================")
+            print(e)
+            print("==============================")
+            raise
+
+        try:
+            transformed = self.transformer.transform(parsed)
+        except lark.exceptions.LarkError as e:
+            print("= TRANSFORM ERROR IN =========")
+            print(normalized)
+            print("= PARSED AS ==================")
+            print(parsed.pretty(), end="")
+            print("= ERROR ======================")
+            print(e)
+            print("==============================")
+            raise
+
+        return transformed
 
 
 def parse_section(tags, transformer, section):
@@ -152,7 +157,7 @@ class ParseGenericSectionTestCase(TestCase):
 
     def test_several_paragraphs_of_one_sentence_each(self):
         self.do_test(
-            "This is\ta\nparagraph.\n\nThis is\nanother\nparagraph!",
+            "This\ris\ta\nparagraph.\n\nThis is\nanother\nparagraph!\r\n\r\nThird\r\nparagraph.\r\r4th paragraph.",
             renderable.Section(paragraphs=[
                 renderable.Paragraph(sentences=[renderable.Sentence(tokens=[
                     renderable.PlainText(text="This"),
@@ -173,6 +178,18 @@ class ParseGenericSectionTestCase(TestCase):
                     renderable.Whitespace(),
                     renderable.PlainText(text="paragraph"),
                     renderable.PlainText(text="!"),
+                ])]),
+                renderable.Paragraph(sentences=[renderable.Sentence(tokens=[
+                    renderable.PlainText(text="Third"),
+                    renderable.Whitespace(),
+                    renderable.PlainText(text="paragraph"),
+                    renderable.PlainText(text="."),
+                ])]),
+                renderable.Paragraph(sentences=[renderable.Sentence(tokens=[
+                    renderable.PlainText(text="4th"),
+                    renderable.Whitespace(),
+                    renderable.PlainText(text="paragraph"),
+                    renderable.PlainText(text="."),
                 ])]),
             ]),
         )
