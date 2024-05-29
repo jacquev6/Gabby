@@ -68,29 +68,7 @@ class SectionParser:
             for p in section.strip().replace("\r\n", "\n").replace("\r", "\n").split("\n\n")
         )
 
-        try:
-            parsed = self.parser.parse(normalized)
-        except lark.exceptions.LarkError as e:
-            print("= PARSING ERROR IN ===========")
-            print(normalized)
-            print("= ERROR ======================")
-            print(e)
-            print("==============================")
-            raise
-
-        try:
-            transformed = self.transformer.transform(parsed)
-        except lark.exceptions.LarkError as e:
-            print("= TRANSFORM ERROR IN =========")
-            print(normalized)
-            print("= PARSED AS ==================")
-            print(parsed.pretty(), end="")
-            print("= ERROR ======================")
-            print(e)
-            print("==============================")
-            raise
-
-        return transformed
+        return self.transformer.transform(self.parser.parse(normalized))
 
 
 def parse_section(tags, transformer, section):
