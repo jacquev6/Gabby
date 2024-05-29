@@ -82,16 +82,17 @@ defineExpose({
     <template #right>
       <div class="h-100 overflow-auto" data-cy="right-col-2">
         <h1>{{ $t('adaptation') }}</h1>
-        <BBusy v-if="exerciseForm?.adaptedData" :busy="exerciseForm?.adaptedDataLoading">
+        <BBusy :busy="!exerciseForm || exerciseForm.adaptedDataLoading">
           <AdaptedExercise
+            v-if="exerciseForm?.adaptedData"
             :projectId="props.project.id"
             :exerciseId="props.exerciseId"
-            :exercise="exerciseForm?.adaptedData"
+            :exercise="exerciseForm.adaptedData"
             :settings="{tricolorWording: true}"
             :isPreview="true"
           />
+          <p v-else>{{ $t('selectExerciseType') }}</p>
         </BBusy>
-        <p v-else>{{ $t('selectExerciseType') }}</p>
       </div>
     </template>
   </TwoResizableColumns>

@@ -538,57 +538,55 @@ defineExpose({
         </div>
       </div>
 
-      <BBusy :busy="adaptedDataLoading">
-        <div class="mb-3">
-          <label class="form-label" for="abc">{{ $t('adaptationType') }}</label>
-            <BSelect
-            id="abc"
-            v-model="state.adaptationType"
-            :options="['-', ...adaptationTypes.map(kind => ({value: kind, label: $t(kind)}))]"
-          />
-        </div>
-        <template v-if="state.adaptationType === '-'">
-        </template>
-        <template v-else-if="state.adaptationType === 'fillWithFreeTextAdaptation'">
-          <BLabeledInput :label="$t('placeholderText')" type="text" v-model="state.fillWithFreeTextAdaptationOptions.placeholder" />
-        </template>
-        <template v-else-if="state.adaptationType === 'selectThingsAdaptation'">
-          <BLabeledInput :label="$t('colorsCount')" type="number" min="1" v-model="state.selectThingsAdaptationOptions.colors" />
-          <p class="alert alert-secondary" v-if="state.selectThingsAdaptationOptions.colors > 1">
-            <i18n-t keypath="useSel1ToSelN">
-              <template v-slot:first>
-                <code>{sel1|<em>text</em>}</code>
-              </template>
-              <template v-slot:last>
-                <code>{sel{{ state.selectThingsAdaptationOptions.colors }}|<em>text</em>}</code>
-              </template>
-            </i18n-t>
-          </p>
-          <BLabeledCheckbox :label="$t('includePunctuation')" v-model="state.selectThingsAdaptationOptions.punctuation" />
-        </template>
-        <template v-else-if="state.adaptationType === 'multipleChoicesInInstructionsAdaptation'">
-          <p class="alert alert-secondary">
-            <i18n-t keypath="useChoice">
-              <template v-slot:choice>
-                <code>{choice|<em>text</em>}</code>
-              </template>
-            </i18n-t>
-          </p>
-          <BLabeledInput :label="$t('placeholderText')" type="text" v-model="state.multipleChoicesInInstructionsAdaptationOptions.placeholder" />
-        </template>
-        <template v-else-if="state.adaptationType === 'multipleChoicesInWordingAdaptation'">
-          <p class="alert alert-secondary">
-            <i18n-t keypath="useChoices">
-              <template v-slot:choices>
-                <code>{choices|<em>text</em>|<em>text</em>|<em>...</em>}</code>
-              </template>
-            </i18n-t>
-          </p>
-        </template>
-        <template v-else>
-          <span>{{ ((t: never) => t)(state.adaptationType) }}</span>
-        </template>
-      </BBusy>
+      <div class="mb-3">
+        <label class="form-label" for="abc">{{ $t('adaptationType') }}</label>
+          <BSelect
+          id="abc"
+          v-model="state.adaptationType"
+          :options="['-', ...adaptationTypes.map(kind => ({value: kind, label: $t(kind)}))]"
+        />
+      </div>
+      <template v-if="state.adaptationType === '-'">
+      </template>
+      <template v-else-if="state.adaptationType === 'fillWithFreeTextAdaptation'">
+        <BLabeledInput :label="$t('placeholderText')" type="text" v-model="state.fillWithFreeTextAdaptationOptions.placeholder" />
+      </template>
+      <template v-else-if="state.adaptationType === 'selectThingsAdaptation'">
+        <BLabeledInput :label="$t('colorsCount')" type="number" min="1" v-model="state.selectThingsAdaptationOptions.colors" />
+        <p class="alert alert-secondary" v-if="state.selectThingsAdaptationOptions.colors > 1">
+          <i18n-t keypath="useSel1ToSelN">
+            <template v-slot:first>
+              <code>{sel1|<em>text</em>}</code>
+            </template>
+            <template v-slot:last>
+              <code>{sel{{ state.selectThingsAdaptationOptions.colors }}|<em>text</em>}</code>
+            </template>
+          </i18n-t>
+        </p>
+        <BLabeledCheckbox :label="$t('includePunctuation')" v-model="state.selectThingsAdaptationOptions.punctuation" />
+      </template>
+      <template v-else-if="state.adaptationType === 'multipleChoicesInInstructionsAdaptation'">
+        <p class="alert alert-secondary">
+          <i18n-t keypath="useChoice">
+            <template v-slot:choice>
+              <code>{choice|<em>text</em>}</code>
+            </template>
+          </i18n-t>
+        </p>
+        <BLabeledInput :label="$t('placeholderText')" type="text" v-model="state.multipleChoicesInInstructionsAdaptationOptions.placeholder" />
+      </template>
+      <template v-else-if="state.adaptationType === 'multipleChoicesInWordingAdaptation'">
+        <p class="alert alert-secondary">
+          <i18n-t keypath="useChoices">
+            <template v-slot:choices>
+              <code>{choices|<em>text</em>|<em>text</em>|<em>...</em>}</code>
+            </template>
+          </i18n-t>
+        </p>
+      </template>
+      <template v-else>
+        <span>{{ ((t: never) => t)(state.adaptationType) }}</span>
+      </template>
 
       <div v-if="!editMode && alreadyExists" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8);" class="text-center">
         <div style="position: absolute; left: 25%; top: 25%; width: 50%; height: 50%; background-color: white">

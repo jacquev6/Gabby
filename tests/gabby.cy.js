@@ -135,8 +135,8 @@ describe('Gabby', () => {
     cy.screenshot('project-textbook-page-exercise/tools', {clip: {x: 560, y: 0, width: 210, height: 500}})
 
     cy.get('label:contains("Type d\'adaptation")').next().select('selectThingsAdaptation')
+    cy.get('div.busy').should('exist')  // This may fail (race condition) but is required because the 'div.busy' is not displayed quickly enough.
     cy.get('div.busy').should('not.exist')
-    cy.wait(1000)  // @todo Add a 'BBusy' when updating adapted exercise, then remove this 'wait'
     cy.screenshot('project-textbook-page-exercise/project-textbook-page-exercise', {clip: {x: 0, y: 0, width: 1000, height: 330}})
   })
 })
