@@ -1,3 +1,4 @@
+import itertools
 from django.core.validators import RegexValidator
 from django.db import models
 from polymorphic.models import PolymorphicModel
@@ -199,18 +200,14 @@ class SelectThingsAdaptation(Adaptation):
     def make_adapted_instructions(self):
         if self.colors > 1:
             colors = range(1, self.colors + 1)
-            parse = parsing.SectionParser(
+            section = parsing.parse_section(
                 {f"sel{color}": r""" "|" STR """ for color in colors},
-                type(
-                    "InstructionsTransformer",
-                    (parsing.SectionTransformer,),
-                    {
-                        f"sel{color}_tag": (lambda c: staticmethod(lambda args: renderable.SelectedText(text=args[0], color=c, colors=self.colors)))(color)
-                        for color in colors
-                    },
-                )(),
+                type("InstructionsAdapter", (parsing.SectionTransformer,), {
+                    f"sel{color}_tag": (lambda c: staticmethod(lambda args: renderable.SelectedText(text=args[0], color=c, colors=self.colors)))(color)
+                    for color in colors
+                })(),
+                self.exercise.instructions,
             )
-            section = parse(self.exercise.instructions)
             tokens = []
             for color in colors:
                 if color != 1:
@@ -222,7 +219,7 @@ class SelectThingsAdaptation(Adaptation):
         else:
             return parsing.parse_plain_section(self.exercise.instructions)
 
-    class WordingTransformer(parsing.SectionTransformer):
+    class WordingAdapter(parsing.SectionTransformer):
         def __init__(self, words, punctuation, colors):
             self.select_words = words
             self.select_punctuation = punctuation
@@ -241,8 +238,11 @@ class SelectThingsAdaptation(Adaptation):
                 return renderable.PlainText(text=args[0])
 
     def make_adapted_wording(self):
-        parse = parsing.SectionParser({}, self.WordingTransformer(self.words, self.punctuation, self.colors))
-        return parse(self.exercise.wording)
+        return parsing.parse_section(
+            {},
+            self.WordingAdapter(self.words, self.punctuation, self.colors),
+            self.exercise.wording,
+        )
 
 
 class FillWithFreeTextAdaptation(Adaptation):
@@ -251,19 +251,20 @@ class FillWithFreeTextAdaptation(Adaptation):
     def make_adapted_instructions(self):
         return parsing.parse_plain_section(self.exercise.instructions)
 
-    class WordingTransformer(parsing.SectionTransformer):
+    class WordingAdapter(parsing.SectionTransformer):
         def placeholder_tag(self, args):
             return renderable.FreeTextInput()
 
+    adapt_wording = parsing.SectionParser({"placeholder": ""}, WordingAdapter())
+
     def make_adapted_wording(self):
-        parse = parsing.SectionParser({"placeholder": ""}, self.WordingTransformer())
-        return parse(self.exercise.wording.replace(self.placeholder, "{placeholder}"))
+        return self.adapt_wording(self.exercise.wording.replace(self.placeholder, "{placeholder}"))
 
 
 class MultipleChoicesAdaptation(Adaptation):
     placeholder = models.CharField(null=False, blank=False, max_length=10)
 
-    class InstructionsTransformer(parsing.SectionTransformer):
+    class InstructionsAdapter(parsing.SectionTransformer):
         def __init__(self):
             self.choices = []
 
@@ -271,11 +272,36 @@ class MultipleChoicesAdaptation(Adaptation):
             self.choices.append(args[0])
             return renderable.PlainText(text=args[0])
 
-    def make_adapted_instructions(self):
-        parse = parsing.SectionParser({"choice": r""" "|" STR """}, self.InstructionsTransformer())
-        return parse(self.exercise.instructions)
+    adapt_instructions = parsing.SectionParser({"choice": r""" "|" STR """}, InstructionsAdapter())
 
-    class WordingTransformer(parsing.SectionTransformer):
+    def make_adapted_instructions(self):
+        return self.adapt_instructions(self.exercise.instructions)
+
+    class ChoicesGatherer(parsing.SectionTransformer):
+        def section(self, choices):
+            return list(itertools.chain.from_iterable(choices))
+
+        def paragraph(self, choices):
+            return list(itertools.chain.from_iterable(choices))
+
+        def sentence(self, choices):
+            return list(itertools.chain.from_iterable(choices))
+
+        def word(self, args):
+            return []
+
+        def whitespace(self, args):
+            return []
+
+        def punctuation(self, args):
+            return []
+
+        def choice_tag(self, args):
+            return [args[0].value]
+
+    gather_choices = parsing.SectionParser({"choice": r""" "|" STR """}, ChoicesGatherer())
+
+    class WordingAdapter(parsing.SectionTransformer):
         def __init__(self, choices):
             self.choices = choices
 
@@ -283,7 +309,9 @@ class MultipleChoicesAdaptation(Adaptation):
             return renderable.MultipleChoicesInput(choices=self.choices)
 
     def make_adapted_wording(self):
-        choices_gatherer = self.InstructionsTransformer()
-        parsing.SectionParser({"choice": r""" "|" STR """}, choices_gatherer)(self.exercise.instructions)
-        parse = parsing.SectionParser({"placeholder": ""}, self.WordingTransformer(choices_gatherer.choices))
-        return parse(self.exercise.wording.replace(self.placeholder, "{placeholder}"))
+        choices = self.gather_choices(self.exercise.instructions)
+        return parsing.parse_section(
+            {"placeholder": ""},
+            self.WordingAdapter(choices),
+            self.exercise.wording.replace(self.placeholder, "{placeholder}")
+        )

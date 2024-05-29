@@ -15,6 +15,9 @@ def memoize_parser(grammar, start):
 
 
 class SectionTransformer(lark.Transformer):
+    def section(self, paragraphs):
+        return renderable.Section(paragraphs=paragraphs)
+
     def paragraph(self, sentences):
         return renderable.Paragraph(sentences=sentences)
 
@@ -55,7 +58,7 @@ class SectionParser:
         self.parser = memoize_parser(grammar, start="paragraph")
         self.transformer = transformer
 
-    def __call__(self, section: str) -> renderable.Section:
+    def __call__(self, section: str):
         paragraphs = []
         # This string manipulation (split, strip splitlines, join) before parsing is fragile, but it works for now.
         for p in section.strip().split("\n\n"):
@@ -82,7 +85,11 @@ class SectionParser:
                 print("==============================")
                 raise
 
-        return renderable.Section(paragraphs=paragraphs)
+        return self.transformer.section(paragraphs)
+
+
+def parse_section(tags, transformer, section):
+    return SectionParser(tags, transformer)(section)
 
 
 parse_plain_section = SectionParser({}, SectionTransformer())
