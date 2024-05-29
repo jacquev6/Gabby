@@ -156,6 +156,11 @@
         "title": "MultipleChoicesInInstructionsAdaptationOptionsModel",
         "type": "object"
       },
+      "MultipleChoicesInWordingAdaptationOptionsModel": {
+        "properties": {},
+        "title": "MultipleChoicesInWordingAdaptationOptionsModel",
+        "type": "object"
+      },
       "Paragraph": {
         "additionalProperties": false,
         "properties": {
@@ -511,6 +516,9 @@
               },
               {
                 "$ref": "#/components/schemas/MultipleChoicesInInstructionsAdaptationOptionsModel"
+              },
+              {
+                "$ref": "#/components/schemas/MultipleChoicesInWordingAdaptationOptionsModel"
               }
             ],
             "title": "Adaptationoptions"

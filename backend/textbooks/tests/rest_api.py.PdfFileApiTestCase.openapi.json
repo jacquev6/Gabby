@@ -1336,6 +1336,182 @@
         "title": "multipleChoicesInInstructionsAdaptation-UpdateInput-Data-Relationships",
         "type": "object"
       },
+      "multipleChoicesInWordingAdaptation-CreateInput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/multipleChoicesInWordingAdaptation-CreateInput-Data"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "multipleChoicesInWordingAdaptation-CreateInput",
+        "type": "object"
+      },
+      "multipleChoicesInWordingAdaptation-CreateInput-Data": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/multipleChoicesInWordingAdaptation-CreateInput-Data-Attributes"
+              }
+            ],
+            "default": {}
+          },
+          "relationships": {
+            "$ref": "#/components/schemas/multipleChoicesInWordingAdaptation-CreateInput-Data-Relationships"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "relationships"
+        ],
+        "title": "multipleChoicesInWordingAdaptation-CreateInput-Data",
+        "type": "object"
+      },
+      "multipleChoicesInWordingAdaptation-CreateInput-Data-Attributes": {
+        "additionalProperties": false,
+        "properties": {},
+        "title": "multipleChoicesInWordingAdaptation-CreateInput-Data-Attributes",
+        "type": "object"
+      },
+      "multipleChoicesInWordingAdaptation-CreateInput-Data-Relationships": {
+        "additionalProperties": false,
+        "properties": {
+          "exercise": {
+            "$ref": "#/components/schemas/MandatoryRelationship"
+          }
+        },
+        "required": [
+          "exercise"
+        ],
+        "title": "multipleChoicesInWordingAdaptation-CreateInput-Data-Relationships",
+        "type": "object"
+      },
+      "multipleChoicesInWordingAdaptation-ItemOutput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/multipleChoicesInWordingAdaptation-OutputItem"
+          },
+          "included": {
+            "items": {},
+            "title": "Included",
+            "type": "array"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "multipleChoicesInWordingAdaptation-ItemOutput",
+        "type": "object"
+      },
+      "multipleChoicesInWordingAdaptation-OutputItem": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "links": {
+            "$ref": "#/components/schemas/ItemLinksModel"
+          },
+          "relationships": {
+            "$ref": "#/components/schemas/multipleChoicesInWordingAdaptation-OutputItem-Relationships"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "links",
+          "relationships"
+        ],
+        "title": "multipleChoicesInWordingAdaptation-OutputItem",
+        "type": "object"
+      },
+      "multipleChoicesInWordingAdaptation-OutputItem-Relationships": {
+        "additionalProperties": false,
+        "properties": {
+          "exercise": {
+            "$ref": "#/components/schemas/MandatoryRelationship"
+          }
+        },
+        "required": [
+          "exercise"
+        ],
+        "title": "multipleChoicesInWordingAdaptation-OutputItem-Relationships",
+        "type": "object"
+      },
+      "multipleChoicesInWordingAdaptation-UpdateInput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/multipleChoicesInWordingAdaptation-UpdateInput-Data"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "multipleChoicesInWordingAdaptation-UpdateInput",
+        "type": "object"
+      },
+      "multipleChoicesInWordingAdaptation-UpdateInput-Data": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/multipleChoicesInWordingAdaptation-UpdateInput-Data-Attributes"
+              }
+            ],
+            "default": {}
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/multipleChoicesInWordingAdaptation-UpdateInput-Data-Relationships"
+              }
+            ],
+            "default": {}
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "multipleChoicesInWordingAdaptation-UpdateInput-Data",
+        "type": "object"
+      },
+      "multipleChoicesInWordingAdaptation-UpdateInput-Data-Attributes": {
+        "additionalProperties": false,
+        "properties": {},
+        "title": "multipleChoicesInWordingAdaptation-UpdateInput-Data-Attributes",
+        "type": "object"
+      },
+      "multipleChoicesInWordingAdaptation-UpdateInput-Data-Relationships": {
+        "additionalProperties": false,
+        "properties": {},
+        "title": "multipleChoicesInWordingAdaptation-UpdateInput-Data-Relationships",
+        "type": "object"
+      },
       "pdfFile-CreateInput": {
         "additionalProperties": false,
         "properties": {
@@ -3838,6 +4014,189 @@
           }
         },
         "summary": "Update Multiple Choices In Instructions Adaptation"
+      }
+    },
+    "/multipleChoicesInWordingAdaptations": {
+      "post": {
+        "operationId": "create_multiple_choices_in_wording_adaptation_multipleChoicesInWordingAdaptations_post",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/multipleChoicesInWordingAdaptation-CreateInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/multipleChoicesInWordingAdaptation-ItemOutput"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Multiple Choices In Wording Adaptation"
+      }
+    },
+    "/multipleChoicesInWordingAdaptations/{id}": {
+      "delete": {
+        "operationId": "delete_multiple_choices_in_wording_adaptation_multipleChoicesInWordingAdaptations__id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Multiple Choices In Wording Adaptation"
+      },
+      "get": {
+        "operationId": "get_multiple_choices_in_wording_adaptation_multipleChoicesInWordingAdaptations__id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/multipleChoicesInWordingAdaptation-ItemOutput"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Multiple Choices In Wording Adaptation"
+      },
+      "patch": {
+        "operationId": "update_multiple_choices_in_wording_adaptation_multipleChoicesInWordingAdaptations__id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/multipleChoicesInWordingAdaptation-UpdateInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/multipleChoicesInWordingAdaptation-ItemOutput"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Multiple Choices In Wording Adaptation"
       }
     },
     "/pdfFileNamings": {

@@ -13,7 +13,7 @@ import django.conf
 
 from . import renderable
 from .models import PdfFile, PdfFileNaming, Project, Textbook, Section, Exercise, ExtractionEvent
-from .models import SelectThingsAdaptation, FillWithFreeTextAdaptation, MultipleChoicesInInstructionsAdaptation
+from .models import SelectThingsAdaptation, FillWithFreeTextAdaptation, MultipleChoicesInInstructionsAdaptation, MultipleChoicesInWordingAdaptation
 from fastjsonapi import Computed, Filterable, Constant, Secret as WriteOnly
 from fastjsonapi.django import set_wrapper as set_django_wrapper, wrap, unwrap
 from fastjsonapi.django import OrmWrapper as DjangoOrmWrapper, OrmWrapperWithStrIds as DjangoOrmWrapperWithStrIds
@@ -375,6 +375,7 @@ class ExerciseModel(BaseModel):
         SelectThingsAdaptationModel
         | FillWithFreeTextAdaptationModel
         | MultipleChoicesInInstructionsAdaptationModel
+        | MultipleChoicesInWordingAdaptationModel
         | None
     ) = None
 
@@ -667,6 +668,53 @@ class MultipleChoicesInInstructionsAdaptationsResource:
 set_django_wrapper(MultipleChoicesInInstructionsAdaptation, django_orm_wrapper_with_sqids(MultipleChoicesInInstructionsAdaptationsResource.sqids))
 
 
+class MultipleChoicesInWordingAdaptationOptionsModel(BaseModel):
+    pass
+
+class MultipleChoicesInWordingAdaptationModel(MultipleChoicesInWordingAdaptationOptionsModel):
+    exercise: Annotated[ExerciseModel, Constant()]
+
+class MultipleChoicesInWordingAdaptationsResource:
+    singular_name = "multiple_choices_in_wording_adaptation"
+    plural_name = "multiple_choices_in_wording_adaptations"
+
+    Model = MultipleChoicesInWordingAdaptationModel
+
+    default_page_size = default_page_size
+
+    sqids = make_sqids(singular_name)
+
+    class ItemCreator:
+        def __call__(self, *, exercise):
+            if exercise.adaptation is not None:
+                exercise.adaptation.delete()
+            adaptation = MultipleChoicesInWordingAdaptation(
+                exercise=unwrap(exercise),
+            )
+            adaptation.save()
+            exercise.save()
+            return wrap(adaptation)
+
+    class ItemGetter:
+        def __call__(self, id):
+            try:
+                return wrap(MultipleChoicesInWordingAdaptation.objects.get(id=MultipleChoicesInWordingAdaptationsResource.sqids.decode(id)[0]))
+            except MultipleChoicesInWordingAdaptation.DoesNotExist:
+                return None
+
+    class ItemSaver:
+        @contextmanager
+        def __call__(self, item):
+            yield
+            item.save()
+
+    class ItemDeleter:
+        def __call__(self, item):
+            item.delete()
+
+set_django_wrapper(MultipleChoicesInWordingAdaptation, django_orm_wrapper_with_sqids(MultipleChoicesInWordingAdaptationsResource.sqids))
+
+
 class AdaptedExerciseModel(BaseModel):
     number: Annotated[str, WriteOnly()]
     textbookPage: Annotated[int | None, WriteOnly()]
@@ -678,6 +726,7 @@ class AdaptedExerciseModel(BaseModel):
             SelectThingsAdaptationOptionsModel
             | FillWithFreeTextAdaptationOptionsModel
             | MultipleChoicesInInstructionsAdaptationOptionsModel
+            | MultipleChoicesInWordingAdaptationOptionsModel
         ),
         WriteOnly(),
     ]
@@ -716,6 +765,11 @@ class AdaptedExerciseResource:
                 )
             elif type == "multipleChoicesInInstructionsAdaptation":
                 adapted = MultipleChoicesInInstructionsAdaptation(
+                    exercise=exercise,
+                    **adaptation_options.model_dump(),
+                )
+            elif type == "multipleChoicesInWordingAdaptation":
+                adapted = MultipleChoicesInWordingAdaptation(
                     exercise=exercise,
                     **adaptation_options.model_dump(),
                 )

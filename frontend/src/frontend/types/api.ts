@@ -8,6 +8,7 @@ type schemas = components["schemas"]
 export type SelectThingsAdaptationOptions = schemas["SelectThingsAdaptationOptionsModel"]
 export type FillWithFreeTextAdaptationOptions = schemas["FillWithFreeTextAdaptationOptionsModel"]
 export type MultipleChoicesInInstructionsAdaptationOptions = schemas["MultipleChoicesInInstructionsAdaptationOptionsModel"]
+export type MultipleChoicesInWordingAdaptationOptions = schemas["MultipleChoicesInWordingAdaptationOptionsModel"]
 
 
 export type Ping = Item<schemas["ping-OutputItem-Attributes"], {

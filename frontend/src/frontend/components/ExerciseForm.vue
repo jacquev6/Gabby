@@ -8,7 +8,7 @@ import TextSelectionMenu from './ExerciseFormTextSelectionMenu.vue'
 import OptionalTextarea from './OptionalTextarea.vue'
 import { useApiStore } from '$frontend/stores/api'
 import type { Project, Textbook, Section, Exercise, AdaptedExercise } from '$frontend/types/api'
-import type { SelectThingsAdaptationOptions, FillWithFreeTextAdaptationOptions, MultipleChoicesInInstructionsAdaptationOptions } from '$frontend/types/api'
+import type { SelectThingsAdaptationOptions, FillWithFreeTextAdaptationOptions, MultipleChoicesInInstructionsAdaptationOptions, MultipleChoicesInWordingAdaptationOptions } from '$frontend/types/api'
 
 
 const props = defineProps<{
@@ -32,8 +32,9 @@ const api = useApiStore()
 
 var extractionEvents: object[] = []
 
-type AdaptationType = '-' | 'selectThingsAdaptation' | 'fillWithFreeTextAdaptation' | 'multipleChoicesInInstructionsAdaptation'
-const adaptationTypes: AdaptationType[] = ['selectThingsAdaptation', 'fillWithFreeTextAdaptation', 'multipleChoicesInInstructionsAdaptation']
+// @todo Automate updating this type when a new adaptation type is added
+type AdaptationType = '-' | 'selectThingsAdaptation' | 'fillWithFreeTextAdaptation' | 'multipleChoicesInInstructionsAdaptation' | 'multipleChoicesInWordingAdaptation'
+const adaptationTypes: AdaptationType[] = ['selectThingsAdaptation', 'fillWithFreeTextAdaptation', 'multipleChoicesInInstructionsAdaptation', 'multipleChoicesInWordingAdaptation']
 
 interface State {
   number: string,
@@ -46,6 +47,7 @@ interface State {
   selectThingsAdaptationOptions: SelectThingsAdaptationOptions,
   fillWithFreeTextAdaptationOptions: FillWithFreeTextAdaptationOptions,
   multipleChoicesInInstructionsAdaptationOptions: MultipleChoicesInInstructionsAdaptationOptions,
+  multipleChoicesInWordingAdaptationOptions: MultipleChoicesInWordingAdaptationOptions,
 }
 
 const state = ref<State>({
@@ -66,6 +68,8 @@ const state = ref<State>({
   },
   multipleChoicesInInstructionsAdaptationOptions: {
     placeholder: '...',
+  },
+  multipleChoicesInWordingAdaptationOptions: {
   },
 })
 const needsBoundingRectangle = computed(() => {
@@ -90,6 +94,8 @@ function resetAdaptationOptions() {
   }
   state.value.multipleChoicesInInstructionsAdaptationOptions = {
     placeholder: '...',
+  }
+  state.value.multipleChoicesInWordingAdaptationOptions = {
   }
 }
 resetAdaptationOptions()
@@ -174,6 +180,9 @@ watch(
               break
             case 'multipleChoicesInInstructionsAdaptation':
               Object.assign(state.value.multipleChoicesInInstructionsAdaptationOptions, props.exercise.relationships.adaptation.attributes)
+              break
+            case 'multipleChoicesInWordingAdaptation':
+              Object.assign(state.value.multipleChoicesInWordingAdaptationOptions, props.exercise.relationships.adaptation.attributes)
               break
             default:
               ((_1: never) => console.assert(false))(state.value.adaptationType)
@@ -282,6 +291,8 @@ const adaptationOptions = computed(() => {
       return state.value.fillWithFreeTextAdaptationOptions
     case 'multipleChoicesInInstructionsAdaptation':
       return state.value.multipleChoicesInInstructionsAdaptationOptions
+    case 'multipleChoicesInWordingAdaptation':
+      return state.value.multipleChoicesInWordingAdaptationOptions
     default:
       ((_1: never) => console.assert(false))(state.value.adaptationType)
       return null
@@ -564,6 +575,15 @@ defineExpose({
             </i18n-t>
           </p>
           <BLabeledInput :label="$t('placeholderText')" type="text" v-model="state.multipleChoicesInInstructionsAdaptationOptions.placeholder" />
+        </template>
+        <template v-else-if="state.adaptationType === 'multipleChoicesInWordingAdaptation'">
+          <p class="alert alert-secondary">
+            <i18n-t keypath="useChoices">
+              <template v-slot:choices>
+                <code>{choices|<em>text</em>|<em>text</em>|<em>...</em>}</code>
+              </template>
+            </i18n-t>
+          </p>
         </template>
         <template v-else>
           <span>{{ ((t: never) => t)(state.adaptationType) }}</span>

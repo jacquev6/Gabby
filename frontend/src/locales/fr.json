@@ -48,6 +48,7 @@
   "selectThingsAdaptation": "Selection de mots",
   "fillWithFreeTextAdaptation": "Remplissage par texte libre",
   "multipleChoicesInInstructionsAdaptation": "Choix multiples (dans la consigne)",
+  "multipleChoicesInWordingAdaptation": "Choix multiples (dans l'énoncé)",
 
 
   "textbookNotFound": "Manuel introuvable",
@@ -84,6 +85,7 @@
   "includePunctuation": "Sélectionner aussi la ponctuation",
   "useSel1ToSelN": "Utilisez {first} à {last} dans la consigne pour formatter du texte comme s'il était sélectionné.",
   "useChoice": "Utilisez {choice} dans la consigne pour indiquer un choix possible.",
+  "useChoices": "Utilisez {choices} dans l'énoncé pour indiquer choix à faire.",
   "placeholderText": "Trou à remplir",
 
   "tools": "Outils",

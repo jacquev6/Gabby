@@ -69,6 +69,18 @@ export interface paths {
     /** Update Multiple Choices In Instructions Adaptation */
     patch: operations["update_multiple_choices_in_instructions_adaptation_api_multipleChoicesInInstructionsAdaptations__id__patch"];
   };
+  "/api/multipleChoicesInWordingAdaptations": {
+    /** Create Multiple Choices In Wording Adaptation */
+    post: operations["create_multiple_choices_in_wording_adaptation_api_multipleChoicesInWordingAdaptations_post"];
+  };
+  "/api/multipleChoicesInWordingAdaptations/{id}": {
+    /** Get Multiple Choices In Wording Adaptation */
+    get: operations["get_multiple_choices_in_wording_adaptation_api_multipleChoicesInWordingAdaptations__id__get"];
+    /** Delete Multiple Choices In Wording Adaptation */
+    delete: operations["delete_multiple_choices_in_wording_adaptation_api_multipleChoicesInWordingAdaptations__id__delete"];
+    /** Update Multiple Choices In Wording Adaptation */
+    patch: operations["update_multiple_choices_in_wording_adaptation_api_multipleChoicesInWordingAdaptations__id__patch"];
+  };
   "/api/pdfFileNamings": {
     /** Get Pdf File Namings */
     get: operations["get_pdf_file_namings_api_pdfFileNamings_get"];
@@ -253,6 +265,8 @@ export interface components {
       /** Placeholder */
       placeholder: string;
     };
+    /** MultipleChoicesInWordingAdaptationOptionsModel */
+    MultipleChoicesInWordingAdaptationOptionsModel: Record<string, never>;
     /** ObjectId */
     ObjectId: {
       /** Id */
@@ -445,7 +459,7 @@ export interface components {
     /** adaptedExercise-CreateInput-Data-Attributes */
     "adaptedExercise-CreateInput-Data-Attributes": {
       /** Adaptationoptions */
-      adaptationOptions: components["schemas"]["SelectThingsAdaptationOptionsModel"] | components["schemas"]["FillWithFreeTextAdaptationOptionsModel"] | components["schemas"]["MultipleChoicesInInstructionsAdaptationOptionsModel"];
+      adaptationOptions: components["schemas"]["SelectThingsAdaptationOptionsModel"] | components["schemas"]["FillWithFreeTextAdaptationOptionsModel"] | components["schemas"]["MultipleChoicesInInstructionsAdaptationOptionsModel"] | components["schemas"]["MultipleChoicesInWordingAdaptationOptionsModel"];
       /** Instructions */
       instructions: string;
       /** Number */
@@ -811,6 +825,62 @@ export interface components {
     };
     /** multipleChoicesInInstructionsAdaptation-UpdateInput-Data-Relationships */
     "multipleChoicesInInstructionsAdaptation-UpdateInput-Data-Relationships": Record<string, never>;
+    /** multipleChoicesInWordingAdaptation-CreateInput */
+    "multipleChoicesInWordingAdaptation-CreateInput": {
+      data: components["schemas"]["multipleChoicesInWordingAdaptation-CreateInput-Data"];
+    };
+    /** multipleChoicesInWordingAdaptation-CreateInput-Data */
+    "multipleChoicesInWordingAdaptation-CreateInput-Data": {
+      /** @default {} */
+      attributes?: components["schemas"]["multipleChoicesInWordingAdaptation-CreateInput-Data-Attributes"];
+      relationships: components["schemas"]["multipleChoicesInWordingAdaptation-CreateInput-Data-Relationships"];
+      /** Type */
+      type: string;
+    };
+    /** multipleChoicesInWordingAdaptation-CreateInput-Data-Attributes */
+    "multipleChoicesInWordingAdaptation-CreateInput-Data-Attributes": Record<string, never>;
+    /** multipleChoicesInWordingAdaptation-CreateInput-Data-Relationships */
+    "multipleChoicesInWordingAdaptation-CreateInput-Data-Relationships": {
+      exercise: components["schemas"]["MandatoryRelationship"];
+    };
+    /** multipleChoicesInWordingAdaptation-ItemOutput */
+    "multipleChoicesInWordingAdaptation-ItemOutput": {
+      data: components["schemas"]["multipleChoicesInWordingAdaptation-OutputItem"];
+      /** Included */
+      included?: unknown[];
+    };
+    /** multipleChoicesInWordingAdaptation-OutputItem */
+    "multipleChoicesInWordingAdaptation-OutputItem": {
+      /** Id */
+      id: string;
+      links: components["schemas"]["ItemLinksModel"];
+      relationships: components["schemas"]["multipleChoicesInWordingAdaptation-OutputItem-Relationships"];
+      /** Type */
+      type: string;
+    };
+    /** multipleChoicesInWordingAdaptation-OutputItem-Relationships */
+    "multipleChoicesInWordingAdaptation-OutputItem-Relationships": {
+      exercise: components["schemas"]["MandatoryRelationship"];
+    };
+    /** multipleChoicesInWordingAdaptation-UpdateInput */
+    "multipleChoicesInWordingAdaptation-UpdateInput": {
+      data: components["schemas"]["multipleChoicesInWordingAdaptation-UpdateInput-Data"];
+    };
+    /** multipleChoicesInWordingAdaptation-UpdateInput-Data */
+    "multipleChoicesInWordingAdaptation-UpdateInput-Data": {
+      /** @default {} */
+      attributes?: components["schemas"]["multipleChoicesInWordingAdaptation-UpdateInput-Data-Attributes"];
+      /** Id */
+      id: string;
+      /** @default {} */
+      relationships?: components["schemas"]["multipleChoicesInWordingAdaptation-UpdateInput-Data-Relationships"];
+      /** Type */
+      type: string;
+    };
+    /** multipleChoicesInWordingAdaptation-UpdateInput-Data-Attributes */
+    "multipleChoicesInWordingAdaptation-UpdateInput-Data-Attributes": Record<string, never>;
+    /** multipleChoicesInWordingAdaptation-UpdateInput-Data-Relationships */
+    "multipleChoicesInWordingAdaptation-UpdateInput-Data-Relationships": Record<string, never>;
     /** pdfFile-CreateInput */
     "pdfFile-CreateInput": {
       data: components["schemas"]["pdfFile-CreateInput-Data"];
@@ -1962,6 +2032,108 @@ export interface operations {
       200: {
         content: {
           "application/vnd.api+json": components["schemas"]["multipleChoicesInInstructionsAdaptation-ItemOutput"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  /** Create Multiple Choices In Wording Adaptation */
+  create_multiple_choices_in_wording_adaptation_api_multipleChoicesInWordingAdaptations_post: {
+    parameters: {
+      query?: {
+        include?: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["multipleChoicesInWordingAdaptation-CreateInput"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        content: {
+          "application/vnd.api+json": components["schemas"]["multipleChoicesInWordingAdaptation-ItemOutput"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  /** Get Multiple Choices In Wording Adaptation */
+  get_multiple_choices_in_wording_adaptation_api_multipleChoicesInWordingAdaptations__id__get: {
+    parameters: {
+      query?: {
+        include?: string;
+      };
+      path: {
+        id: string;
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        content: {
+          "application/vnd.api+json": components["schemas"]["multipleChoicesInWordingAdaptation-ItemOutput"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  /** Delete Multiple Choices In Wording Adaptation */
+  delete_multiple_choices_in_wording_adaptation_api_multipleChoicesInWordingAdaptations__id__delete: {
+    parameters: {
+      path: {
+        id: string;
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      204: {
+        content: never;
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  /** Update Multiple Choices In Wording Adaptation */
+  update_multiple_choices_in_wording_adaptation_api_multipleChoicesInWordingAdaptations__id__patch: {
+    parameters: {
+      query?: {
+        include?: string;
+      };
+      path: {
+        id: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["multipleChoicesInWordingAdaptation-UpdateInput"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        content: {
+          "application/vnd.api+json": components["schemas"]["multipleChoicesInWordingAdaptation-ItemOutput"];
         };
       };
       /** @description Validation Error */

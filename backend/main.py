@@ -13,9 +13,9 @@ import django.core.management
 from fastjsonapi import make_jsonapi_router
 from fastjsonapi.django import AuthenticationToken, get_wrapper as get_django_wrapper
 from opinion_ping.resources import PingsResource
-from textbooks.models import Project, SelectThingsAdaptation, FillWithFreeTextAdaptation, MultipleChoicesInInstructionsAdaptation
+from textbooks.models import Project, SelectThingsAdaptation, FillWithFreeTextAdaptation, MultipleChoicesInInstructionsAdaptation, MultipleChoicesInWordingAdaptation
 from textbooks.resources import PdfFilesResource, PdfFileNamingsResource, ProjectsResource, TextbooksResource, SectionsResource, ExercisesResource, ExtractionEventsResource
-from textbooks.resources import SelectThingsAdaptationsResource, FillWithFreeTextAdaptationsResource, MultipleChoicesInInstructionsAdaptationsResource
+from textbooks.resources import SelectThingsAdaptationsResource, FillWithFreeTextAdaptationsResource, MultipleChoicesInInstructionsAdaptationsResource, MultipleChoicesInWordingAdaptationsResource
 from textbooks.resources import AdaptedExerciseResource
 from textbooks.views import make_extraction_report
 
@@ -51,12 +51,14 @@ app.include_router(
             SelectThingsAdaptationsResource(),
             FillWithFreeTextAdaptationsResource(),
             MultipleChoicesInInstructionsAdaptationsResource(),
+            MultipleChoicesInWordingAdaptationsResource(),
             AdaptedExerciseResource(),
         ],
         polymorphism={
             get_django_wrapper(SelectThingsAdaptation): "select_things_adaptation",
             get_django_wrapper(FillWithFreeTextAdaptation): "fill_with_free_text_adaptation",
             get_django_wrapper(MultipleChoicesInInstructionsAdaptation): "multiple_choices_in_instructions_adaptation",
+            get_django_wrapper(MultipleChoicesInWordingAdaptation): "multiple_choices_in_wording_adaptation",
         },
     ),
     prefix="/api",

@@ -1,7 +1,7 @@
 from django.test import TestCase
 from starlette import status
 
-from ..models import Exercise, SelectThingsAdaptation, FillWithFreeTextAdaptation, MultipleChoicesInInstructionsAdaptation
+from ..models import Exercise, SelectThingsAdaptation, FillWithFreeTextAdaptation, MultipleChoicesInInstructionsAdaptation, MultipleChoicesInWordingAdaptation
 from ..resources import AdaptedExerciseResource
 from .. import renderable as r
 from fastjsonapi.testing import TestMixin
@@ -609,6 +609,49 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                             r.PlainText(text="B"),
                             r.Whitespace(),
                             r.MultipleChoicesInput(choices=["a", "b"]),
+                        ]),
+                    ]),
+                ]),
+            ),
+        )
+
+
+class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
+    def test_simple(self):
+        exercise = Exercise(
+            number="number",
+            textbook_page=42,
+            instructions="Choose wisely.",
+            wording="A {choices|a|b|c} B {choices|d|e}.",
+        )
+        adaptation = MultipleChoicesInWordingAdaptation(exercise=exercise)
+
+        self.do_test(
+            adaptation,
+            r.AdaptedExercise(
+                number="number",
+                textbook_page=42,
+                instructions=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(text="Choose"),
+                            r.Whitespace(),
+                            r.PlainText(text="wisely"),
+                            r.PlainText(text="."),
+                        ]),
+                    ]),
+                ]),
+                wording=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(text="A"),
+                            r.Whitespace(),
+                            r.MultipleChoicesInput(choices=["a", "b", "c"]),
+                            r.Whitespace(),
+                            r.PlainText(text="B"),
+                            r.Whitespace(),
+                            r.MultipleChoicesInput(choices=["d", "e"]),
+                            r.PlainText(text="."),
                         ]),
                     ]),
                 ]),

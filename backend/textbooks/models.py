@@ -315,3 +315,17 @@ class MultipleChoicesInInstructionsAdaptation(Adaptation):
             self.WordingAdapter(choices),
             self.exercise.wording.replace(self.placeholder, "{placeholder}")
         )
+
+
+class MultipleChoicesInWordingAdaptation(Adaptation):
+    def make_adapted_instructions(self):
+        return parsing.parse_plain_section(self.exercise.instructions)
+
+    class WordingAdapter(parsing.SectionTransformer):
+        def choices_tag(self, args):
+            return renderable.MultipleChoicesInput(choices=[arg.value for arg in args])
+
+    adapt_wording = parsing.SectionParser({"choices": r""" ("|" STR)+ """}, WordingAdapter())
+
+    def make_adapted_wording(self):
+        return self.adapt_wording(self.exercise.wording)

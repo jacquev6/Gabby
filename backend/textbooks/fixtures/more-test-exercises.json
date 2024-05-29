@@ -206,5 +206,45 @@
       "exercise": 8,
       "event": "{\"kind\":\"SelectedTextAddedToWording\",\"valueBefore\":\"\",\"valueAfter\":\"nager ➞ … ◆ tracter ➞ … ◆ manger ➞ … ◆\\ninventer ➞ … ◆ livrer ➞ …\"}"
     }
+  },
+  {
+    "model": "textbooks.adaptation",
+    "pk": 4,
+    "fields": {
+      "polymorphic_ctype": [
+        "textbooks",
+        "multiplechoicesinwordingadaptation"
+      ]
+    }
+  },
+  {
+    "model": "textbooks.multiplechoicesinwordingadaptation",
+    "pk": 4,
+    "fields": {}
+  },
+  {
+    "model": "textbooks.exercise",
+    "pk": 1,
+    "fields": {
+      "project": 1,
+      "textbook": 1,
+      "textbook_page": 6,
+      "bounding_rectangle": {
+        "stop": {
+          "x": 563.0859853571111,
+          "y": 165.01653324025676
+        },
+        "start": {
+          "x": 321.7851195562453,
+          "y": 298.5614176476993
+        }
+      },
+      "number": "3",
+      "instructions": "Complète avec : le, une, un, des, tu, elles, ils.\r\nPuis, souligne les verbes.",
+      "example": "",
+      "clue": "Il peut y avoir plusieurs solutions.",
+      "wording": "{choices|le|une|un|des|tu|elles|ils} vide\r\n\r\n{choices|le|une|un|des|tu|elles|ils} vident\r\n\r\n{choices|le|une|un|des|tu|elles|ils} dépenses\r\n\r\n{choices|le|une|un|des|tu|elles|ils} dépensent\r\n\r\n{choices|le|une|un|des|tu|elles|ils} savon\r\n\r\n{choices|le|une|un|des|tu|elles|ils} savons\r\n\r\n{choices|le|une|un|des|tu|elles|ils} commande",
+      "adaptation": 4
+    }
   }
 ]
