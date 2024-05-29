@@ -47,7 +47,7 @@
   "adaptationType": "Adaptation type",
   "selectThingsAdaptation": "Select words",
   "fillWithFreeTextAdaptation": "Fill with free text",
-  "multipleChoicesAdaptation": "Multiple choices",
+  "multipleChoicesInInstructionsAdaptation": "Multiple choices (in instructions)",
 
 
   "textbookNotFound": "Textbook not found",

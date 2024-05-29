@@ -261,7 +261,7 @@ class FillWithFreeTextAdaptation(Adaptation):
         return self.adapt_wording(self.exercise.wording.replace(self.placeholder, "{placeholder}"))
 
 
-class MultipleChoicesAdaptation(Adaptation):
+class MultipleChoicesInInstructionsAdaptation(Adaptation):
     placeholder = models.CharField(null=False, blank=False, max_length=10)
 
     class InstructionsAdapter(parsing.SectionTransformer):

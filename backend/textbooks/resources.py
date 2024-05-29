@@ -13,7 +13,7 @@ import django.conf
 
 from . import renderable
 from .models import PdfFile, PdfFileNaming, Project, Textbook, Section, Exercise, ExtractionEvent
-from .models import SelectThingsAdaptation, FillWithFreeTextAdaptation, MultipleChoicesAdaptation
+from .models import SelectThingsAdaptation, FillWithFreeTextAdaptation, MultipleChoicesInInstructionsAdaptation
 from fastjsonapi import Computed, Filterable, Constant, Secret as WriteOnly
 from fastjsonapi.django import set_wrapper as set_django_wrapper, wrap, unwrap
 from fastjsonapi.django import OrmWrapper as DjangoOrmWrapper, OrmWrapperWithStrIds as DjangoOrmWrapperWithStrIds
@@ -374,7 +374,7 @@ class ExerciseModel(BaseModel):
     adaptation: (
         SelectThingsAdaptationModel
         | FillWithFreeTextAdaptationModel
-        | MultipleChoicesAdaptationModel
+        | MultipleChoicesInInstructionsAdaptationModel
         | None
     ) = None
 
@@ -619,17 +619,17 @@ class FillWithFreeTextAdaptationsResource:
 set_django_wrapper(FillWithFreeTextAdaptation, django_orm_wrapper_with_sqids(FillWithFreeTextAdaptationsResource.sqids))
 
 
-class MultipleChoicesAdaptationOptionsModel(BaseModel):
+class MultipleChoicesInInstructionsAdaptationOptionsModel(BaseModel):
     placeholder: str
 
-class MultipleChoicesAdaptationModel(MultipleChoicesAdaptationOptionsModel):
+class MultipleChoicesInInstructionsAdaptationModel(MultipleChoicesInInstructionsAdaptationOptionsModel):
     exercise: Annotated[ExerciseModel, Constant()]
 
-class MultipleChoicesAdaptationsResource:
-    singular_name = "multiple_choices_adaptation"
-    plural_name = "multiple_choices_adaptations"
+class MultipleChoicesInInstructionsAdaptationsResource:
+    singular_name = "multiple_choices_in_instructions_adaptation"
+    plural_name = "multiple_choices_in_instructions_adaptations"
 
-    Model = MultipleChoicesAdaptationModel
+    Model = MultipleChoicesInInstructionsAdaptationModel
 
     default_page_size = default_page_size
 
@@ -639,7 +639,7 @@ class MultipleChoicesAdaptationsResource:
         def __call__(self, *, exercise, placeholder):
             if exercise.adaptation is not None:
                 exercise.adaptation.delete()
-            adaptation = MultipleChoicesAdaptation(
+            adaptation = MultipleChoicesInInstructionsAdaptation(
                 exercise=unwrap(exercise),
                 placeholder=placeholder,
             )
@@ -650,8 +650,8 @@ class MultipleChoicesAdaptationsResource:
     class ItemGetter:
         def __call__(self, id):
             try:
-                return wrap(MultipleChoicesAdaptation.objects.get(id=MultipleChoicesAdaptationsResource.sqids.decode(id)[0]))
-            except MultipleChoicesAdaptation.DoesNotExist:
+                return wrap(MultipleChoicesInInstructionsAdaptation.objects.get(id=MultipleChoicesInInstructionsAdaptationsResource.sqids.decode(id)[0]))
+            except MultipleChoicesInInstructionsAdaptation.DoesNotExist:
                 return None
 
     class ItemSaver:
@@ -664,7 +664,7 @@ class MultipleChoicesAdaptationsResource:
         def __call__(self, item):
             item.delete()
 
-set_django_wrapper(MultipleChoicesAdaptation, django_orm_wrapper_with_sqids(MultipleChoicesAdaptationsResource.sqids))
+set_django_wrapper(MultipleChoicesInInstructionsAdaptation, django_orm_wrapper_with_sqids(MultipleChoicesInInstructionsAdaptationsResource.sqids))
 
 
 class AdaptedExerciseModel(BaseModel):
@@ -677,7 +677,7 @@ class AdaptedExerciseModel(BaseModel):
         (
             SelectThingsAdaptationOptionsModel
             | FillWithFreeTextAdaptationOptionsModel
-            | MultipleChoicesAdaptationOptionsModel
+            | MultipleChoicesInInstructionsAdaptationOptionsModel
         ),
         WriteOnly(),
     ]
@@ -714,8 +714,8 @@ class AdaptedExerciseResource:
                     exercise=exercise,
                     **adaptation_options.model_dump(),
                 )
-            elif type == "multipleChoicesAdaptation":
-                adapted = MultipleChoicesAdaptation(
+            elif type == "multipleChoicesInInstructionsAdaptation":
+                adapted = MultipleChoicesInInstructionsAdaptation(
                     exercise=exercise,
                     **adaptation_options.model_dump(),
                 )

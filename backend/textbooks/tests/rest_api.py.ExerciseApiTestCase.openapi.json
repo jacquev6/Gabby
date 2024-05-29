@@ -1133,27 +1133,27 @@
         "title": "fillWithFreeTextAdaptation-UpdateInput-Data-Relationships",
         "type": "object"
       },
-      "multipleChoicesAdaptation-CreateInput": {
+      "multipleChoicesInInstructionsAdaptation-CreateInput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/multipleChoicesAdaptation-CreateInput-Data"
+            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation-CreateInput-Data"
           }
         },
         "required": [
           "data"
         ],
-        "title": "multipleChoicesAdaptation-CreateInput",
+        "title": "multipleChoicesInInstructionsAdaptation-CreateInput",
         "type": "object"
       },
-      "multipleChoicesAdaptation-CreateInput-Data": {
+      "multipleChoicesInInstructionsAdaptation-CreateInput-Data": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "$ref": "#/components/schemas/multipleChoicesAdaptation-CreateInput-Data-Attributes"
+            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation-CreateInput-Data-Attributes"
           },
           "relationships": {
-            "$ref": "#/components/schemas/multipleChoicesAdaptation-CreateInput-Data-Relationships"
+            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation-CreateInput-Data-Relationships"
           },
           "type": {
             "title": "Type",
@@ -1165,10 +1165,10 @@
           "attributes",
           "relationships"
         ],
-        "title": "multipleChoicesAdaptation-CreateInput-Data",
+        "title": "multipleChoicesInInstructionsAdaptation-CreateInput-Data",
         "type": "object"
       },
-      "multipleChoicesAdaptation-CreateInput-Data-Attributes": {
+      "multipleChoicesInInstructionsAdaptation-CreateInput-Data-Attributes": {
         "additionalProperties": false,
         "properties": {
           "placeholder": {
@@ -1179,10 +1179,10 @@
         "required": [
           "placeholder"
         ],
-        "title": "multipleChoicesAdaptation-CreateInput-Data-Attributes",
+        "title": "multipleChoicesInInstructionsAdaptation-CreateInput-Data-Attributes",
         "type": "object"
       },
-      "multipleChoicesAdaptation-CreateInput-Data-Relationships": {
+      "multipleChoicesInInstructionsAdaptation-CreateInput-Data-Relationships": {
         "additionalProperties": false,
         "properties": {
           "exercise": {
@@ -1192,14 +1192,14 @@
         "required": [
           "exercise"
         ],
-        "title": "multipleChoicesAdaptation-CreateInput-Data-Relationships",
+        "title": "multipleChoicesInInstructionsAdaptation-CreateInput-Data-Relationships",
         "type": "object"
       },
-      "multipleChoicesAdaptation-ItemOutput": {
+      "multipleChoicesInInstructionsAdaptation-ItemOutput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/multipleChoicesAdaptation-OutputItem"
+            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation-OutputItem"
           },
           "included": {
             "items": {},
@@ -1210,14 +1210,14 @@
         "required": [
           "data"
         ],
-        "title": "multipleChoicesAdaptation-ItemOutput",
+        "title": "multipleChoicesInInstructionsAdaptation-ItemOutput",
         "type": "object"
       },
-      "multipleChoicesAdaptation-OutputItem": {
+      "multipleChoicesInInstructionsAdaptation-OutputItem": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "$ref": "#/components/schemas/multipleChoicesAdaptation-OutputItem-Attributes"
+            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation-OutputItem-Attributes"
           },
           "id": {
             "title": "Id",
@@ -1227,7 +1227,7 @@
             "$ref": "#/components/schemas/ItemLinksModel"
           },
           "relationships": {
-            "$ref": "#/components/schemas/multipleChoicesAdaptation-OutputItem-Relationships"
+            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation-OutputItem-Relationships"
           },
           "type": {
             "title": "Type",
@@ -1241,10 +1241,10 @@
           "attributes",
           "relationships"
         ],
-        "title": "multipleChoicesAdaptation-OutputItem",
+        "title": "multipleChoicesInInstructionsAdaptation-OutputItem",
         "type": "object"
       },
-      "multipleChoicesAdaptation-OutputItem-Attributes": {
+      "multipleChoicesInInstructionsAdaptation-OutputItem-Attributes": {
         "additionalProperties": false,
         "properties": {
           "placeholder": {
@@ -1255,10 +1255,10 @@
         "required": [
           "placeholder"
         ],
-        "title": "multipleChoicesAdaptation-OutputItem-Attributes",
+        "title": "multipleChoicesInInstructionsAdaptation-OutputItem-Attributes",
         "type": "object"
       },
-      "multipleChoicesAdaptation-OutputItem-Relationships": {
+      "multipleChoicesInInstructionsAdaptation-OutputItem-Relationships": {
         "additionalProperties": false,
         "properties": {
           "exercise": {
@@ -1268,29 +1268,29 @@
         "required": [
           "exercise"
         ],
-        "title": "multipleChoicesAdaptation-OutputItem-Relationships",
+        "title": "multipleChoicesInInstructionsAdaptation-OutputItem-Relationships",
         "type": "object"
       },
-      "multipleChoicesAdaptation-UpdateInput": {
+      "multipleChoicesInInstructionsAdaptation-UpdateInput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/multipleChoicesAdaptation-UpdateInput-Data"
+            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation-UpdateInput-Data"
           }
         },
         "required": [
           "data"
         ],
-        "title": "multipleChoicesAdaptation-UpdateInput",
+        "title": "multipleChoicesInInstructionsAdaptation-UpdateInput",
         "type": "object"
       },
-      "multipleChoicesAdaptation-UpdateInput-Data": {
+      "multipleChoicesInInstructionsAdaptation-UpdateInput-Data": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/multipleChoicesAdaptation-UpdateInput-Data-Attributes"
+                "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation-UpdateInput-Data-Attributes"
               }
             ],
             "default": {}
@@ -1302,7 +1302,7 @@
           "relationships": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/multipleChoicesAdaptation-UpdateInput-Data-Relationships"
+                "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation-UpdateInput-Data-Relationships"
               }
             ],
             "default": {}
@@ -1316,10 +1316,10 @@
           "type",
           "id"
         ],
-        "title": "multipleChoicesAdaptation-UpdateInput-Data",
+        "title": "multipleChoicesInInstructionsAdaptation-UpdateInput-Data",
         "type": "object"
       },
-      "multipleChoicesAdaptation-UpdateInput-Data-Attributes": {
+      "multipleChoicesInInstructionsAdaptation-UpdateInput-Data-Attributes": {
         "additionalProperties": false,
         "properties": {
           "placeholder": {
@@ -1327,13 +1327,13 @@
             "type": "string"
           }
         },
-        "title": "multipleChoicesAdaptation-UpdateInput-Data-Attributes",
+        "title": "multipleChoicesInInstructionsAdaptation-UpdateInput-Data-Attributes",
         "type": "object"
       },
-      "multipleChoicesAdaptation-UpdateInput-Data-Relationships": {
+      "multipleChoicesInInstructionsAdaptation-UpdateInput-Data-Relationships": {
         "additionalProperties": false,
         "properties": {},
-        "title": "multipleChoicesAdaptation-UpdateInput-Data-Relationships",
+        "title": "multipleChoicesInInstructionsAdaptation-UpdateInput-Data-Relationships",
         "type": "object"
       },
       "pdfFile-CreateInput": {
@@ -3657,9 +3657,9 @@
         "summary": "Update Fill With Free Text Adaptation"
       }
     },
-    "/multipleChoicesAdaptations": {
+    "/multipleChoicesInInstructionsAdaptations": {
       "post": {
-        "operationId": "create_multiple_choices_adaptation_multipleChoicesAdaptations_post",
+        "operationId": "create_multiple_choices_in_instructions_adaptation_multipleChoicesInInstructionsAdaptations_post",
         "parameters": [
           {
             "in": "query",
@@ -3675,7 +3675,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/multipleChoicesAdaptation-CreateInput"
+                "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation-CreateInput"
               }
             }
           },
@@ -3686,7 +3686,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/multipleChoicesAdaptation-ItemOutput"
+                  "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation-ItemOutput"
                 }
               }
             },
@@ -3703,12 +3703,12 @@
             "description": "Validation Error"
           }
         },
-        "summary": "Create Multiple Choices Adaptation"
+        "summary": "Create Multiple Choices In Instructions Adaptation"
       }
     },
-    "/multipleChoicesAdaptations/{id}": {
+    "/multipleChoicesInInstructionsAdaptations/{id}": {
       "delete": {
-        "operationId": "delete_multiple_choices_adaptation_multipleChoicesAdaptations__id__delete",
+        "operationId": "delete_multiple_choices_in_instructions_adaptation_multipleChoicesInInstructionsAdaptations__id__delete",
         "parameters": [
           {
             "in": "path",
@@ -3735,10 +3735,10 @@
             "description": "Validation Error"
           }
         },
-        "summary": "Delete Multiple Choices Adaptation"
+        "summary": "Delete Multiple Choices In Instructions Adaptation"
       },
       "get": {
-        "operationId": "get_multiple_choices_adaptation_multipleChoicesAdaptations__id__get",
+        "operationId": "get_multiple_choices_in_instructions_adaptation_multipleChoicesInInstructionsAdaptations__id__get",
         "parameters": [
           {
             "in": "path",
@@ -3764,7 +3764,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/multipleChoicesAdaptation-ItemOutput"
+                  "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation-ItemOutput"
                 }
               }
             },
@@ -3781,10 +3781,10 @@
             "description": "Validation Error"
           }
         },
-        "summary": "Get Multiple Choices Adaptation"
+        "summary": "Get Multiple Choices In Instructions Adaptation"
       },
       "patch": {
-        "operationId": "update_multiple_choices_adaptation_multipleChoicesAdaptations__id__patch",
+        "operationId": "update_multiple_choices_in_instructions_adaptation_multipleChoicesInInstructionsAdaptations__id__patch",
         "parameters": [
           {
             "in": "path",
@@ -3809,7 +3809,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/multipleChoicesAdaptation-UpdateInput"
+                "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation-UpdateInput"
               }
             }
           },
@@ -3820,7 +3820,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/multipleChoicesAdaptation-ItemOutput"
+                  "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation-ItemOutput"
                 }
               }
             },
@@ -3837,7 +3837,7 @@
             "description": "Validation Error"
           }
         },
-        "summary": "Update Multiple Choices Adaptation"
+        "summary": "Update Multiple Choices In Instructions Adaptation"
       }
     },
     "/pdfFileNamings": {

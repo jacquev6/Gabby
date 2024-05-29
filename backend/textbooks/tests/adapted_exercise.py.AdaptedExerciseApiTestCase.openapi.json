@@ -143,7 +143,7 @@
         "title": "ItemLinksModel",
         "type": "object"
       },
-      "MultipleChoicesAdaptationOptionsModel": {
+      "MultipleChoicesInInstructionsAdaptationOptionsModel": {
         "properties": {
           "placeholder": {
             "title": "Placeholder",
@@ -153,7 +153,7 @@
         "required": [
           "placeholder"
         ],
-        "title": "MultipleChoicesAdaptationOptionsModel",
+        "title": "MultipleChoicesInInstructionsAdaptationOptionsModel",
         "type": "object"
       },
       "Paragraph": {
@@ -510,7 +510,7 @@
                 "$ref": "#/components/schemas/FillWithFreeTextAdaptationOptionsModel"
               },
               {
-                "$ref": "#/components/schemas/MultipleChoicesAdaptationOptionsModel"
+                "$ref": "#/components/schemas/MultipleChoicesInInstructionsAdaptationOptionsModel"
               }
             ],
             "title": "Adaptationoptions"

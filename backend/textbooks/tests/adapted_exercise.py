@@ -1,7 +1,7 @@
 from django.test import TestCase
 from starlette import status
 
-from ..models import Exercise, SelectThingsAdaptation, FillWithFreeTextAdaptation, MultipleChoicesAdaptation
+from ..models import Exercise, SelectThingsAdaptation, FillWithFreeTextAdaptation, MultipleChoicesInInstructionsAdaptation
 from ..resources import AdaptedExerciseResource
 from .. import renderable as r
 from fastjsonapi.testing import TestMixin
@@ -570,7 +570,7 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
         )
 
 
-class MultipleChoicesAdaptationTestCase(AdaptationTestCase):
+class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
     def test_simple(self):
         exercise = Exercise(
             number="number",
@@ -578,7 +578,7 @@ class MultipleChoicesAdaptationTestCase(AdaptationTestCase):
             instructions="Choose {choice|a} or {choice|b}.",
             wording="A ... B ...",
         )
-        adaptation = MultipleChoicesAdaptation(exercise=exercise, placeholder="...")
+        adaptation = MultipleChoicesInInstructionsAdaptation(exercise=exercise, placeholder="...")
 
         self.do_test(
             adaptation,
@@ -711,7 +711,7 @@ class AdaptedExerciseApiTestCase(TestMixin, TestCase):
             ]}]}]},
         })
 
-    def test_multiple_choices(self):
+    def test_multiple_choices_in_instructions(self):
         payload = {
             "data": {
                 "type": "adaptedExercise",
@@ -720,7 +720,7 @@ class AdaptedExerciseApiTestCase(TestMixin, TestCase):
                     "textbookPage": 1,
                     "instructions": "{choice|a} or {choice|b}",
                     "wording": "A @\n\nB @",
-                    "type": "multipleChoicesAdaptation",
+                    "type": "multipleChoicesInInstructionsAdaptation",
                     "adaptationOptions": {
                         "placeholder": "@",
                     },

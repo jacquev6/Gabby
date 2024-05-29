@@ -91,12 +91,12 @@
     "fields": {
       "polymorphic_ctype": [
         "textbooks",
-        "multiplechoicesadaptation"
+        "multiplechoicesininstructionsadaptation"
       ]
     }
   },
   {
-    "model": "textbooks.multiplechoicesadaptation",
+    "model": "textbooks.multiplechoicesininstructionsadaptation",
     "pk": 3,
     "fields": {
       "placeholder": "@"

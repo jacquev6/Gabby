@@ -47,7 +47,7 @@
   "adaptationType": "Type d'adaptation",
   "selectThingsAdaptation": "Selection de mots",
   "fillWithFreeTextAdaptation": "Remplissage par texte libre",
-  "multipleChoicesAdaptation": "Choix multiples",
+  "multipleChoicesInInstructionsAdaptation": "Choix multiples (dans la consigne)",
 
 
   "textbookNotFound": "Manuel introuvable",

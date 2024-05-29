@@ -8,7 +8,7 @@ import TextSelectionMenu from './ExerciseFormTextSelectionMenu.vue'
 import OptionalTextarea from './OptionalTextarea.vue'
 import { useApiStore } from '$frontend/stores/api'
 import type { Project, Textbook, Section, Exercise, AdaptedExercise } from '$frontend/types/api'
-import type { SelectThingsAdaptationOptions, FillWithFreeTextAdaptationOptions, MultipleChoicesAdaptationOptions } from '$frontend/types/api'
+import type { SelectThingsAdaptationOptions, FillWithFreeTextAdaptationOptions, MultipleChoicesInInstructionsAdaptationOptions } from '$frontend/types/api'
 
 
 const props = defineProps<{
@@ -32,8 +32,8 @@ const api = useApiStore()
 
 var extractionEvents: object[] = []
 
-type AdaptationType = '-' | 'selectThingsAdaptation' | 'fillWithFreeTextAdaptation' | 'multipleChoicesAdaptation'
-const adaptationTypes: AdaptationType[] = ['selectThingsAdaptation', 'fillWithFreeTextAdaptation', 'multipleChoicesAdaptation']
+type AdaptationType = '-' | 'selectThingsAdaptation' | 'fillWithFreeTextAdaptation' | 'multipleChoicesInInstructionsAdaptation'
+const adaptationTypes: AdaptationType[] = ['selectThingsAdaptation', 'fillWithFreeTextAdaptation', 'multipleChoicesInInstructionsAdaptation']
 
 interface State {
   number: string,
@@ -45,7 +45,7 @@ interface State {
   adaptationType: AdaptationType,
   selectThingsAdaptationOptions: SelectThingsAdaptationOptions,
   fillWithFreeTextAdaptationOptions: FillWithFreeTextAdaptationOptions,
-  multipleChoicesAdaptationOptions: MultipleChoicesAdaptationOptions,
+  multipleChoicesInInstructionsAdaptationOptions: MultipleChoicesInInstructionsAdaptationOptions,
 }
 
 const state = ref<State>({
@@ -64,7 +64,7 @@ const state = ref<State>({
   fillWithFreeTextAdaptationOptions: {
     placeholder: '...',
   },
-  multipleChoicesAdaptationOptions: {
+  multipleChoicesInInstructionsAdaptationOptions: {
     placeholder: '...',
   },
 })
@@ -88,7 +88,7 @@ function resetAdaptationOptions() {
   state.value.fillWithFreeTextAdaptationOptions = {
     placeholder: '...',
   }
-  state.value.multipleChoicesAdaptationOptions = {
+  state.value.multipleChoicesInInstructionsAdaptationOptions = {
     placeholder: '...',
   }
 }
@@ -172,8 +172,8 @@ watch(
             case 'fillWithFreeTextAdaptation':
               Object.assign(state.value.fillWithFreeTextAdaptationOptions, props.exercise.relationships.adaptation.attributes)
               break
-            case 'multipleChoicesAdaptation':
-              Object.assign(state.value.multipleChoicesAdaptationOptions, props.exercise.relationships.adaptation.attributes)
+            case 'multipleChoicesInInstructionsAdaptation':
+              Object.assign(state.value.multipleChoicesInInstructionsAdaptationOptions, props.exercise.relationships.adaptation.attributes)
               break
             default:
               ((_1: never) => console.assert(false))(state.value.adaptationType)
@@ -280,8 +280,8 @@ const adaptationOptions = computed(() => {
       return state.value.selectThingsAdaptationOptions
     case 'fillWithFreeTextAdaptation':
       return state.value.fillWithFreeTextAdaptationOptions
-    case 'multipleChoicesAdaptation':
-      return state.value.multipleChoicesAdaptationOptions
+    case 'multipleChoicesInInstructionsAdaptation':
+      return state.value.multipleChoicesInInstructionsAdaptationOptions
     default:
       ((_1: never) => console.assert(false))(state.value.adaptationType)
       return null
@@ -555,7 +555,7 @@ defineExpose({
           </p>
           <BLabeledCheckbox :label="$t('includePunctuation')" v-model="state.selectThingsAdaptationOptions.punctuation" />
         </template>
-        <template v-else-if="state.adaptationType === 'multipleChoicesAdaptation'">
+        <template v-else-if="state.adaptationType === 'multipleChoicesInInstructionsAdaptation'">
           <p class="alert alert-secondary">
             <i18n-t keypath="useChoice">
               <template v-slot:choice>
@@ -563,7 +563,7 @@ defineExpose({
               </template>
             </i18n-t>
           </p>
-          <BLabeledInput :label="$t('placeholderText')" type="text" v-model="state.multipleChoicesAdaptationOptions.placeholder" />
+          <BLabeledInput :label="$t('placeholderText')" type="text" v-model="state.multipleChoicesInInstructionsAdaptationOptions.placeholder" />
         </template>
         <template v-else>
           <span>{{ ((t: never) => t)(state.adaptationType) }}</span>

@@ -2,10 +2,10 @@ from django.db.utils import IntegrityError
 from django.test import TransactionTestCase
 from starlette import status
 
-from ..models import FillWithFreeTextAdaptation, SelectThingsAdaptation, MultipleChoicesAdaptation
+from ..models import FillWithFreeTextAdaptation, SelectThingsAdaptation, MultipleChoicesInInstructionsAdaptation
 from ..models import PdfFile, PdfFileNaming, Project, Textbook, Exercise
 from ..resources import PdfFilesResource, PdfFileNamingsResource, ProjectsResource, TextbooksResource, SectionsResource, ExercisesResource, ExtractionEventsResource
-from ..resources import SelectThingsAdaptationsResource, FillWithFreeTextAdaptationsResource, MultipleChoicesAdaptationsResource
+from ..resources import SelectThingsAdaptationsResource, FillWithFreeTextAdaptationsResource, MultipleChoicesInInstructionsAdaptationsResource
 from fastjsonapi.django import get_wrapper as get_django_wrapper
 from fastjsonapi.testing import TestMixin
 
@@ -20,13 +20,13 @@ resources = [
     ExtractionEventsResource(),
     SelectThingsAdaptationsResource(),
     FillWithFreeTextAdaptationsResource(),
-    MultipleChoicesAdaptationsResource(),
+    MultipleChoicesInInstructionsAdaptationsResource(),
 ]
 
 polymorphism = {
     get_django_wrapper(SelectThingsAdaptation): "select_things_adaptation",
     get_django_wrapper(FillWithFreeTextAdaptation): "fill_with_free_text_adaptation",
-    get_django_wrapper(MultipleChoicesAdaptation): "multiple_choices_adaptation",
+    get_django_wrapper(MultipleChoicesInInstructionsAdaptation): "multiple_choices_in_instructions_adaptation",
 }
 
 
