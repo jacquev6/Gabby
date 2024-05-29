@@ -417,6 +417,8 @@ const adaptedData = computedAsync(
         textbookPage: props.textbookPage,
         instructions: state.value.instructions,
         wording: state.value.wording,
+        example: state.value.example,
+        clue: state.value.clue,
         type: state.value.adaptationType,
         adaptationOptions: adaptationOptions.value,
       }

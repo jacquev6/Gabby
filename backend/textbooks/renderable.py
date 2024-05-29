@@ -119,3 +119,5 @@ class AdaptedExercise(BaseModel):
     textbook_page: int | None
     instructions: Section
     wording: Section
+    example: Section | None
+    clue: Section | None

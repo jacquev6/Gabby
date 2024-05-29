@@ -84,7 +84,7 @@
 
   "colorsCount": "Number of colors",
   "includePunctuation": "Also select punctuation",
-  "useSel1ToSelN": "Use {first} to {last} in instructions to format text as if selected.",
+  "useSel1ToSelN": "Use {first} to {last} in instructions, example or clue to format text as if selected.",
   "useChoice": "Use {choice} in instructions to indicate a possible choice.",
   "useChoices": "Use {choices} in wording to indicate a choice to make.",
   "placeholderText": "Placeholder to fill",

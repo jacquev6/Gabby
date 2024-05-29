@@ -62,13 +62,19 @@ class SectionParser:
         self.transformer = transformer
 
     def __call__(self, section: str):
-        # This string manipulation before parsing is fragile but works for now.
-        normalized = "\n\n".join(
-            p.replace("\n", " ")
-            for p in section.strip().replace("\r\n", "\n").replace("\r", "\n").split("\n\n")
-        )
+        if section == "":
+            return None
+        else:
+            # This string manipulation before parsing is fragile but works for now.
+            normalized = "\n\n".join(
+                p.replace("\n", " ")
+                for p in section.strip().replace("\r\n", "\n").replace("\r", "\n").split("\n\n")
+            )
 
-        return self.transformer.transform(self.parser.parse(normalized))
+            try:
+                return self.transformer.transform(self.parser.parse(normalized))
+            except lark.exceptions.ParseError as e:
+                raise ValueError(f"Error parsing section {normalized}: {e}")
 
 
 def parse_section(tags, transformer, section):
@@ -114,7 +120,11 @@ parse_generic_section = SectionParser(
 class ParseGenericSectionTestCase(TestCase):
     def do_test(self, input, expected):
         self.assertEqual(parse_generic_section(input), expected)
-        self.assertEqual(parse_generic_section(expected.to_generic()), expected)
+        if expected is not None:
+            self.assertEqual(parse_generic_section(expected.to_generic()), expected)
+
+    def test_empty(self):
+        self.do_test("", None)
 
     def test_single_paragraph_of_a_single_sentence_of_plain_words(self):
         self.do_test(

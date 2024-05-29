@@ -24,9 +24,13 @@ const storageKey = computed(() => `exerciseAnswers/project-${props.projectId}/ex
 const models = reactive<{
   wording: {[index: string]: any/* @todo Type */},
   instructions: {[index: string]: any/* @todo Type */},
+  example: {[index: string]: any/* @todo Type */},
+  clue: {[index: string]: any/* @todo Type */},
 }>({
   wording: {},
   instructions: {},
+  example: {},
+  clue: {},
 })
 function reinitModels() {
   for (const m of Object.values(models)) {
@@ -70,6 +74,8 @@ provide('adaptedExerciseTeleportPoint', `#${id}`)
 <template>
   <div :id="id" style="position: relative">
     <MonocolorSection :section="exercise.instructions" v-model="models.instructions" />
+    <MonocolorSection v-if="exercise.example !== null" :section="exercise.example" v-model="models.example" />
+    <MonocolorSection v-if="exercise.clue !== null" :section="exercise.clue" v-model="models.clue" />
     <hr />
     <TricolorSection v-if="settings.tricolorWording" :section="exercise.wording" v-model="models.wording" />
     <MonocolorSection v-else :section="exercise.wording" v-model="models.wording" />

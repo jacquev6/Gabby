@@ -720,6 +720,8 @@ class AdaptedExerciseModel(BaseModel):
     textbookPage: Annotated[int | None, WriteOnly()]
     instructions: Annotated[str, WriteOnly()]
     wording: Annotated[str, WriteOnly()]
+    example: Annotated[str, WriteOnly()]
+    clue: Annotated[str, WriteOnly()]
     type: Annotated[str, WriteOnly()]
     adaptation_options: Annotated[
         (
@@ -746,12 +748,14 @@ class AdaptedExerciseResource:
     default_page_size = default_page_size
 
     class ItemCreator:
-        def __call__(self, *, number, textbook_page, instructions, wording, type, adaptation_options):
+        def __call__(self, *, number, textbook_page, instructions, wording, example, clue, type, adaptation_options):
             exercise = Exercise(
                 number=number,
                 textbook_page=textbook_page,
                 instructions=instructions,
                 wording=wording,
+                example=example,
+                clue=clue,
             )
             if type == "selectThingsAdaptation":
                 adapted = SelectThingsAdaptation(

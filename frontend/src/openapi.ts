@@ -201,6 +201,8 @@ export interface components {
   schemas: {
     /** AdaptedExercise */
     AdaptedExercise: {
+      clue: components["schemas"]["Section"] | null;
+      example: components["schemas"]["Section"] | null;
       instructions: components["schemas"]["Section"];
       /** Number */
       number: string;
@@ -460,6 +462,10 @@ export interface components {
     "adaptedExercise-CreateInput-Data-Attributes": {
       /** Adaptationoptions */
       adaptationOptions: components["schemas"]["SelectThingsAdaptationOptionsModel"] | components["schemas"]["FillWithFreeTextAdaptationOptionsModel"] | components["schemas"]["MultipleChoicesInInstructionsAdaptationOptionsModel"] | components["schemas"]["MultipleChoicesInWordingAdaptationOptionsModel"];
+      /** Clue */
+      clue: string;
+      /** Example */
+      example: string;
       /** Instructions */
       instructions: string;
       /** Number */

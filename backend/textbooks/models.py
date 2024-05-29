@@ -116,6 +116,8 @@ class Adaptation(PolymorphicModel):
             textbook_page=self.exercise.textbook_page,
             instructions=self.make_adapted_instructions(),
             wording=self.make_adapted_wording(),
+            example=self.make_adapted_example(),
+            clue=self.make_adapted_clue(),
         )
 
     def to_generic_adaptation(self):
@@ -127,6 +129,8 @@ class Adaptation(PolymorphicModel):
                 number=self.exercise.number,
                 instructions=self.make_adapted_instructions().to_generic(),
                 wording=self.make_adapted_wording().to_generic(),
+                example=example.to_generic() if (example := self.make_adapted_example()) else "",
+                clue=clue.to_generic() if (clue := self.make_adapted_clue()) else "",
             ),
         )
 
@@ -139,6 +143,12 @@ class GenericAdaptation(Adaptation):
 
     def make_adapted_wording(self):
         return parsing.parse_generic_section(self.exercise.wording)
+
+    def make_adapted_example(self):
+        return parsing.parse_generic_section(self.exercise.example)
+
+    def make_adapted_clue(self):
+        return parsing.parse_generic_section(self.exercise.clue)
 
 
 class Exercise(models.Model):
@@ -197,27 +207,35 @@ class SelectThingsAdaptation(Adaptation):
     words = models.BooleanField(null=False)
     colors = models.IntegerField(null=False)
 
-    def make_adapted_instructions(self):
+    @property
+    def color_indexes(self):
+        return range(1, self.colors + 1)
+
+    def adapt_instructions(self, section):
         if self.colors > 1:
-            colors = range(1, self.colors + 1)
-            section = parsing.parse_section(
-                {f"sel{color}": r""" "|" STR """ for color in colors},
+            return parsing.parse_section(
+                {f"sel{color_index}": r""" "|" STR """ for color_index in self.color_indexes},
                 type("InstructionsAdapter", (parsing.SectionTransformer,), {
-                    f"sel{color}_tag": (lambda c: staticmethod(lambda args: renderable.SelectedText(text=args[0], color=c, colors=self.colors)))(color)
-                    for color in colors
+                    f"sel{color_index}_tag": (lambda color: staticmethod(lambda args: renderable.SelectedText(text=args[0], color=color, colors=self.colors)))(color_index)
+                    for color_index in self.color_indexes
                 })(),
-                self.exercise.instructions,
+                section,
             )
+        else:
+            return parsing.parse_plain_section(section)
+
+    def make_adapted_instructions(self):
+        section = self.adapt_instructions(self.exercise.instructions)
+
+        if self.colors > 1:
             tokens = []
-            for color in colors:
+            for color in self.color_indexes:
                 if color != 1:
                     tokens.append(renderable.Whitespace())
                 tokens.append(renderable.SelectedClicks(color=color, colors=self.colors))
             section.paragraphs.append(renderable.Paragraph(sentences=[renderable.Sentence(tokens=tokens)]))
 
-            return section
-        else:
-            return parsing.parse_plain_section(self.exercise.instructions)
+        return section
 
     class WordingAdapter(parsing.SectionTransformer):
         def __init__(self, words, punctuation, colors):
@@ -244,6 +262,12 @@ class SelectThingsAdaptation(Adaptation):
             self.exercise.wording,
         )
 
+    def make_adapted_example(self):
+        return self.adapt_instructions(self.exercise.example)
+
+    def make_adapted_clue(self):
+        return self.adapt_instructions(self.exercise.clue)
+
 
 class FillWithFreeTextAdaptation(Adaptation):
     placeholder = models.CharField(null=False, blank=False, max_length=10)
@@ -259,6 +283,12 @@ class FillWithFreeTextAdaptation(Adaptation):
 
     def make_adapted_wording(self):
         return self.adapt_wording(self.exercise.wording.replace(self.placeholder, "{placeholder}"))
+
+    def make_adapted_example(self):
+        return parsing.parse_plain_section(self.exercise.example)
+
+    def make_adapted_clue(self):
+        return parsing.parse_plain_section(self.exercise.clue)
 
 
 class MultipleChoicesInInstructionsAdaptation(Adaptation):
@@ -316,6 +346,12 @@ class MultipleChoicesInInstructionsAdaptation(Adaptation):
             self.exercise.wording.replace(self.placeholder, "{placeholder}")
         )
 
+    def make_adapted_example(self):
+        return parsing.parse_plain_section(self.exercise.example)
+
+    def make_adapted_clue(self):
+        return parsing.parse_plain_section(self.exercise.clue)
+
 
 class MultipleChoicesInWordingAdaptation(Adaptation):
     def make_adapted_instructions(self):
@@ -329,3 +365,9 @@ class MultipleChoicesInWordingAdaptation(Adaptation):
 
     def make_adapted_wording(self):
         return self.adapt_wording(self.exercise.wording)
+
+    def make_adapted_example(self):
+        return parsing.parse_plain_section(self.exercise.example)
+
+    def make_adapted_clue(self):
+        return parsing.parse_plain_section(self.exercise.clue)

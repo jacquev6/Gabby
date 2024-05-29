@@ -4,6 +4,26 @@
       "AdaptedExercise": {
         "additionalProperties": false,
         "properties": {
+          "clue": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Section"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "example": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Section"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "instructions": {
             "$ref": "#/components/schemas/Section"
           },
@@ -30,7 +50,9 @@
           "number",
           "textbook_page",
           "instructions",
-          "wording"
+          "wording",
+          "example",
+          "clue"
         ],
         "title": "AdaptedExercise",
         "type": "object"
@@ -523,6 +545,14 @@
             ],
             "title": "Adaptationoptions"
           },
+          "clue": {
+            "title": "Clue",
+            "type": "string"
+          },
+          "example": {
+            "title": "Example",
+            "type": "string"
+          },
           "instructions": {
             "title": "Instructions",
             "type": "string"
@@ -556,6 +586,8 @@
           "textbookPage",
           "instructions",
           "wording",
+          "example",
+          "clue",
           "type",
           "adaptationOptions"
         ],
