@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Section } from '$adapted/types'
+import MultipleChoicesInput from './MultipleChoicesInput.vue'
 import SelectableText from './SelectableText.vue'
 import SelectedText from './SelectedText.vue'
 
@@ -36,9 +37,7 @@ const models = defineModel<{
               <SelectedText :colors="token.colors" :color="token.color">{{ token.color }} {{ $t('nClicks', token.color) }}</SelectedText>
             </template>
             <template v-else-if="token.type === 'multipleChoicesInput'">
-              <select v-model="models[modelKey]">
-                <option v-for="choice in token.choices" :value="choice">{{ choice }}</option>
-              </select>
+              <MultipleChoicesInput :choices="token.choices" v-model="models[modelKey]" />
             </template>
             <template v-else>
               <span>{{ $t('thisIsABug') }} {{ ((t: never) => t)(token) }}</span>

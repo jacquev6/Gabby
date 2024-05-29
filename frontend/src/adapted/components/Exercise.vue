@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, reactive, watch } from 'vue'
+import { provide } from 'vue'
 
 import { BButton } from '$frontend/components/opinion/bootstrap'
 import type { Settings, Exercise } from '$adapted/types'
@@ -60,20 +61,26 @@ watch(
   },
   {immediate: true},
 )
+
+const id = `adaptedExercise-${ Math.floor(Math.random() * 4000000000) }`
+
+provide('adaptedExerciseTeleportPoint', `#${id}`)
 </script>
 
 <template>
-  <MonocolorSection :section="exercise.instructions" v-model="models.instructions" />
-  <hr />
-  <TricolorSection v-if="settings.tricolorWording" :section="exercise.wording" v-model="models.wording" />
-  <MonocolorSection v-else :section="exercise.wording" v-model="models.wording" />
-  <hr />
-  <p><BButton
-    data-cy="erase-responses"
-    secondary sm
-    @click="reinitModels"
-    :disabled="Object.keys(models).length === 0"
-  >
-    {{ $t('eraseAnswers') }}
-  </BButton></p>
+  <div :id="id" style="position: relative">
+    <MonocolorSection :section="exercise.instructions" v-model="models.instructions" />
+    <hr />
+    <TricolorSection v-if="settings.tricolorWording" :section="exercise.wording" v-model="models.wording" />
+    <MonocolorSection v-else :section="exercise.wording" v-model="models.wording" />
+    <hr />
+    <p><BButton
+      data-cy="erase-responses"
+      secondary sm
+      @click="reinitModels"
+      :disabled="Object.keys(models).length === 0"
+    >
+      {{ $t('eraseAnswers') }}
+    </BButton></p>
+  </div>
 </template>
