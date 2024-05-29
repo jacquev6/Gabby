@@ -136,9 +136,7 @@ describe('Gabby', () => {
 
     cy.get('label:contains("Type d\'adaptation")').next().select('selectThingsAdaptation')
     cy.get('div.busy').should('not.exist')
+    cy.wait(1000)  // @todo Add a 'BBusy' when updating adapted exercise, then remove this 'wait'
     cy.screenshot('project-textbook-page-exercise/project-textbook-page-exercise', {clip: {x: 0, y: 0, width: 1000, height: 330}})
-
-    cy.get('a:contains("Annuler")').click()
-    cy.get('div.busy').should('not.exist')
   })
 })
