@@ -5,6 +5,7 @@ import type { Data } from './types'
 const data = JSON.parse('{{ data }}') as Data
 const settings = {
   tricolorWording: true,
+  wordingParagraphsPerPagelet: 3,
 }
 </script>
 

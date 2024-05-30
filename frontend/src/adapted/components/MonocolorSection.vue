@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import type { Section } from '$adapted/types'
+import type { Paragraph } from '$adapted/types'
 import MultipleChoicesInput from './MultipleChoicesInput.vue'
 import SelectableText from './SelectableText.vue'
 import SelectedText from './SelectedText.vue'
 
 
 defineProps<{
-  section: Section,
+  paragraphs: Paragraph[],
+  paragraphIndexOffset: number,
 }>()
 
 const models = defineModel<{
@@ -17,10 +18,10 @@ const models = defineModel<{
 </script>
 
 <template>
-  <p v-for="(paragraph, paragraphIndex) in section.paragraphs">
+  <p v-for="(paragraph, paragraphIndex) in paragraphs">
     <template v-for="(sentence, sentenceIndex) in paragraph.sentences">
       <template v-for="(token, tokenIndex) in sentence.tokens">
-        <template v-for="modelKey in [`${paragraphIndex}-${sentenceIndex}-${tokenIndex}`]">
+        <template v-for="modelKey in [`${paragraphIndex + paragraphIndexOffset}-${sentenceIndex}-${tokenIndex}`]">
           <span>
             <template v-if="token.type === 'plainText'">{{ token.text }}</template>
             <template v-else-if="token.type === 'whitespace'"><wbr /> <wbr /></template>

@@ -16,10 +16,16 @@ const router = createRouter({
       component: IndexView,
     },
     {
-      path: '/exercise-:exerciseId',
+      path: '/exercise-:exerciseId/:pageletIndex',
       name: 'exercise',
       component: ExerciseView,
-      props: true,
+      props: (route) => {
+        console.assert(typeof(route.params.pageletIndex) === 'string')
+        return {
+          exerciseId: route.params.exerciseId,
+          pageletIndex: Number.parseInt(route.params.pageletIndex, 10),
+        }
+      },
     },
   ],
 })

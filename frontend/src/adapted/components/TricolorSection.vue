@@ -1,14 +1,15 @@
 <script setup lang="ts">
-import type { Section } from '$adapted/types'
+import type { Paragraph } from '$adapted/types'
 import TricolorLines from './TricolorLines.vue'
 import MonocolorSection from './MonocolorSection.vue'
 
 
 defineProps<{
-  section: Section,
+  paragraphs: Paragraph[],
+  paragraphIndexOffset: number,
 }>()
 
-const models = defineModel<{
+const model = defineModel<{
   [index: string]: any/* @todo Type */
 }>({
   required: true,
@@ -17,7 +18,7 @@ const models = defineModel<{
 
 <template>
   <TricolorLines>
-    <MonocolorSection :section v-model="models">
+    <MonocolorSection :paragraphs :paragraphIndexOffset v-model="model">
       <template v-slot="{ token, tokenIndex }">
         <slot :token :tokenIndex></slot>
       </template>

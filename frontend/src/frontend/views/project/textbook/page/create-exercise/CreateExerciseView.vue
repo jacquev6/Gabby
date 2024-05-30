@@ -7,7 +7,7 @@ import ExerciseForm from '$frontend/components/ExerciseForm.vue'
 import TwoResizableColumns from '$frontend/components/TwoResizableColumns.vue'
 import ExerciseTools from '../ExerciseTools.vue'
 import type { Project, Textbook, Section, Exercise } from '$frontend/types/api'
-import AdaptedExercise from '$adapted/components/Exercise.vue'
+import AdaptedExercise from '../AdaptedExercise.vue'
 
 
 const props = defineProps<{
@@ -82,8 +82,6 @@ defineExpose({
           :projectId="props.project.id"
           exerciseId="unused @todo Compute storageKey in an independent composable, and let AdaptedExercise load and save iif the key is not null"
           :exercise="exerciseForm?.adaptedData"
-          :settings="{tricolorWording: true}"
-          :isPreview="true"
         />
         <p v-else>{{ $t('selectExerciseType') }}</p>
       </div>

@@ -24,12 +24,11 @@ const color2 = 'rgb(0, 128, 0)'
 const color3 = 'rgb(0, 0, 255)'
 
 const props = {
-  section: {
-    paragraphs: [
-      {sentences: [makeSentence('A'), makeSentence('B'), makeSentence('C')]},
-      {sentences: [makeSentence('D'), makeSentence('E'), makeSentence('F')]},
-    ],
-  },
+  paragraphs: [
+    {sentences: [makeSentence('A'), makeSentence('B'), makeSentence('C')]},
+    {sentences: [makeSentence('D'), makeSentence('E'), makeSentence('F')]},
+  ],
+  paragraphIndexOffset: 0,
   modelValue: [],
 }
 
@@ -78,7 +77,7 @@ describe('TricolorSection', () => {
   it('reacts to text changes', () => {
     cy.mount(TricolorSection, mountOptions)
 
-    cy.vue().then((w) => w.setProps({section: {paragraphs: [{sentences: [
+    cy.vue().then((w) => w.setProps({paragraphs: [{sentences: [
       makeSentence('A', 10),
       makeSentence('B', 10),
       makeSentence('C', 10),
@@ -87,7 +86,7 @@ describe('TricolorSection', () => {
       makeSentence('F', 10),
       makeSentence('G', 10),
       makeSentence('H', 10),
-    ]}]}}))
+    ]}]}))
 
     cy.get('span:contains("AA")').last().should('have.css', 'color', color1)
     cy.get('span:contains("BJ")').last().should('have.css', 'color', color1)
@@ -109,11 +108,10 @@ describe('TricolorSection', () => {
       TricolorSection,
       {
         props: {
-          section: {
-            paragraphs: [
-              {sentences: [makeSentence('A', 10)]},
-            ],
-          },
+          paragraphs: [
+            {sentences: [makeSentence('A', 10)]},
+          ],
+          paragraphIndexOffset: 0,
           modelValue: [],
         },
       },
@@ -135,9 +133,10 @@ describe('TricolorSection', () => {
       TricolorSection,
       {
         props: {
-          section: {paragraphs: [{sentences: [{
+          paragraphs: [{sentences: [{
             tokens: [makeToken('abcdefghijkl'), makeToken(' '), makeToken('mnopqrstuvwxyz')],
-          }]}]},
+          }]}],
+          paragraphIndexOffset: 0,
           modelValue: [],
         },
       },

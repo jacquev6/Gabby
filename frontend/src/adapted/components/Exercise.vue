@@ -2,7 +2,6 @@
 import { computed, reactive, watch } from 'vue'
 import { provide } from 'vue'
 
-import { BButton } from '$frontend/components/opinion/bootstrap'
 import type { Settings, Exercise } from '$adapted/types'
 import TricolorSection from './TricolorSection.vue'
 import MonocolorSection from './MonocolorSection.vue'
@@ -13,9 +12,13 @@ const props = withDefaults(defineProps<{
   exerciseId: string,
   exercise: Exercise,
   settings: Settings,
+  firstWordingParagraph?: number | null,
+  lastWordingParagraph?: number | null,
   isPreview?: boolean,
 }>(), {
   isPreview: false,
+  firstWordingParagraph: null,
+  lastWordingParagraph: null,
 })
 
 // @todo Make this key depend on when the exercise (or its adaptation ) was last modified
@@ -69,24 +72,40 @@ watch(
 const id = `adaptedExercise-${ Math.floor(Math.random() * 4000000000) }`
 
 provide('adaptedExerciseTeleportPoint', `#${id}`)
+
+const wordingParagraphs = computed(() => {
+  if (props.firstWordingParagraph === null || props.lastWordingParagraph === null) {
+    return props.exercise.wording.paragraphs
+  } else {
+    return props.exercise.wording.paragraphs.slice(
+      props.firstWordingParagraph,
+      props.lastWordingParagraph,
+    )}
+})
+
+const wordingParagraphIndexOffset = computed(() => {
+  if (props.firstWordingParagraph === null) {
+    return 0
+  } else {
+    return props.firstWordingParagraph
+  }
+})
+
+defineExpose({
+  reinitModels,
+  disabledReinitModels: computed(() => Object.keys(models.wording).length === 0),
+})
 </script>
 
 <template>
   <div :id="id" style="position: relative">
-    <MonocolorSection :section="exercise.instructions" v-model="models.instructions" />
-    <MonocolorSection v-if="exercise.example !== null" :section="exercise.example" v-model="models.example" />
-    <MonocolorSection v-if="exercise.clue !== null" :section="exercise.clue" v-model="models.clue" />
+    <MonocolorSection :paragraphs="exercise.instructions.paragraphs" :paragraphIndexOffset="0" v-model="models.instructions" />
+    <MonocolorSection v-if="exercise.example !== null" :paragraphs="exercise.example.paragraphs" :paragraphIndexOffset="0" v-model="models.example" />
+    <MonocolorSection v-if="exercise.clue !== null" :paragraphs="exercise.clue.paragraphs" :paragraphIndexOffset="0" v-model="models.clue" />
     <hr />
-    <TricolorSection v-if="settings.tricolorWording" :section="exercise.wording" v-model="models.wording" />
-    <MonocolorSection v-else :section="exercise.wording" v-model="models.wording" />
+    <!-- @todo Fix models: they are shared on all pagelets -->
+    <TricolorSection v-if="settings.tricolorWording" :paragraphs="wordingParagraphs" :paragraphIndexOffset="wordingParagraphIndexOffset" v-model="models.wording" />
+    <MonocolorSection v-else :paragraphs="wordingParagraphs" :paragraphIndexOffset="wordingParagraphIndexOffset" v-model="models.wording" />
     <hr />
-    <p><BButton
-      data-cy="erase-responses"
-      secondary sm
-      @click="reinitModels"
-      :disabled="Object.keys(models.wording).length === 0"
-    >
-      {{ $t('eraseAnswers') }}
-    </BButton></p>
   </div>
 </template>

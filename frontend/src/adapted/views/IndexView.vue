@@ -11,7 +11,7 @@ defineProps<{
 <template>
   <ul>
     <li v-for="(exercise, exerciseId) in data.exercises">
-      <RouterLink :to="{name: 'exercise', params: {exerciseId}}">{{ exercise.number }} page {{ exercise.textbook_page }}</RouterLink>
+      <RouterLink :to="{name: 'exercise', params: {exerciseId, pageletIndex: 0}}">{{ exercise.number }} page {{ exercise.textbook_page }}</RouterLink>
     </li>
   </ul>
 </template>
