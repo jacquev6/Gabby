@@ -46,8 +46,8 @@ const { floatingStyles } = useFloating(
   <Teleport v-if="showChoices" :to="teleportTo">
     <div class="backdrop" @click="showChoices = false"></div>
     <div ref="floating" class="choices" :style="floatingStyles">
-      <template v-for="choice in choices" :key="choice">
-        <!-- Comment used as whitespace to fight Vue's tendency to eat up spaces -->
+      <template v-for="choice, choiceIndex in choices" :key="choice">
+        <wbr v-if="choiceIndex !== 0" />
         <span class="choice" @click="set(choice)">
           {{ choice }}
         </span>
