@@ -67,8 +67,9 @@ class SectionParser:
         else:
             # This string manipulation before parsing is fragile but works for now.
             normalized = "\n\n".join(
-                p.replace("\n", " ")
+                p.strip().replace("\n", " ")
                 for p in section.strip().replace("\r\n", "\n").replace("\r", "\n").split("\n\n")
+                if p != ""
             )
 
             try:
@@ -180,6 +181,43 @@ class ParseGenericSectionTestCase(TestCase):
                 ])]),
                 renderable.Paragraph(sentences=[renderable.Sentence(tokens=[
                     renderable.PlainText(text="4th"),
+                    renderable.Whitespace(),
+                    renderable.PlainText(text="paragraph"),
+                    renderable.PlainText(text="."),
+                ])]),
+            ]),
+        )
+
+    def test_paragraphs_separated_by_more_than_two_newlines(self):
+        self.do_test(
+            "First paragraph.\n\n\nSecond paragraph.\n\n\n\nThird paragraph.\n\n\n\n\n\n\n\n\nFourth paragraph.\n\n\n\n\n\n\n\n\n\n\n\nFifth paragraph.",
+            renderable.Section(paragraphs=[
+                renderable.Paragraph(sentences=[renderable.Sentence(tokens=[
+                    renderable.PlainText(text="First"),
+                    renderable.Whitespace(),
+                    renderable.PlainText(text="paragraph"),
+                    renderable.PlainText(text="."),
+                ])]),
+                renderable.Paragraph(sentences=[renderable.Sentence(tokens=[
+                    renderable.PlainText(text="Second"),
+                    renderable.Whitespace(),
+                    renderable.PlainText(text="paragraph"),
+                    renderable.PlainText(text="."),
+                ])]),
+                renderable.Paragraph(sentences=[renderable.Sentence(tokens=[
+                    renderable.PlainText(text="Third"),
+                    renderable.Whitespace(),
+                    renderable.PlainText(text="paragraph"),
+                    renderable.PlainText(text="."),
+                ])]),
+                renderable.Paragraph(sentences=[renderable.Sentence(tokens=[
+                    renderable.PlainText(text="Fourth"),
+                    renderable.Whitespace(),
+                    renderable.PlainText(text="paragraph"),
+                    renderable.PlainText(text="."),
+                ])]),
+                renderable.Paragraph(sentences=[renderable.Sentence(tokens=[
+                    renderable.PlainText(text="Fifth"),
                     renderable.Whitespace(),
                     renderable.PlainText(text="paragraph"),
                     renderable.PlainText(text="."),
