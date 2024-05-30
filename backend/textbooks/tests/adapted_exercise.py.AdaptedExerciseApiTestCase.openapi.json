@@ -250,6 +250,9 @@
                   "$ref": "#/components/schemas/_PlainText"
                 },
                 {
+                  "$ref": "#/components/schemas/_BoxedText"
+                },
+                {
                   "$ref": "#/components/schemas/_SelectableText"
                 },
                 {
@@ -310,6 +313,29 @@
           "type"
         ],
         "title": "ValidationError",
+        "type": "object"
+      },
+      "_BoxedText": {
+        "additionalProperties": false,
+        "properties": {
+          "text": {
+            "title": "Text",
+            "type": "string"
+          },
+          "type": {
+            "const": "boxedText",
+            "enum": [
+              "boxedText"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "text"
+        ],
+        "title": "_BoxedText",
         "type": "object"
       },
       "_FreeTextInput": {

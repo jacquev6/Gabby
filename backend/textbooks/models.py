@@ -300,7 +300,7 @@ class MultipleChoicesInInstructionsAdaptation(Adaptation):
 
         def choice_tag(self, args):
             self.choices.append(args[0])
-            return renderable.PlainText(text=args[0])
+            return renderable.BoxedText(text=args[0])
 
     adapt_instructions = parsing.SectionParser({"choice": r""" "|" STR """}, InstructionsAdapter())
 

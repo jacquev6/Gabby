@@ -815,11 +815,11 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                         r.Sentence(tokens=[
                             r.PlainText(text="Choose"),
                             r.Whitespace(),
-                            r.PlainText(text="a"),
+                            r.BoxedText(text="a"),
                             r.Whitespace(),
                             r.PlainText(text="or"),
                             r.Whitespace(),
-                            r.PlainText(text="b"),
+                            r.BoxedText(text="b"),
                             r.PlainText(text="."),
                         ]),
                     ]),
@@ -863,11 +863,11 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                         r.Sentence(tokens=[
                             r.PlainText(text="Choose"),
                             r.Whitespace(),
-                            r.PlainText(text="a"),
+                            r.BoxedText(text="a"),
                             r.Whitespace(),
                             r.PlainText(text="or"),
                             r.Whitespace(),
-                            r.PlainText(text="b"),
+                            r.BoxedText(text="b"),
                             r.PlainText(text="."),
                         ]),
                     ]),
@@ -1180,11 +1180,11 @@ class AdaptedExerciseApiTestCase(TestMixin, TestCase):
             "number": "A.1",
             "textbook_page": 1,  # @todo Rename to textbookPage
             "instructions": {"paragraphs": [{"sentences": [{"tokens": [
-                {"type": "plainText", "text": "a"},
+                {"type": "boxedText", "text": "a"},
                 {"type": "whitespace"},
                 {"type": "plainText", "text": "or"},
                 {"type": "whitespace"},
-                {"type": "plainText", "text": "b"},
+                {"type": "boxedText", "text": "b"},
             ]}]}]},
             "wording": {"paragraphs": [
                 {"sentences": [{"tokens": [

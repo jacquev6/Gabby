@@ -24,6 +24,7 @@ const models = defineModel<{
           <span>
             <template v-if="token.type === 'plainText'">{{ token.text }}</template>
             <template v-else-if="token.type === 'whitespace'"><wbr /> <wbr /></template>
+            <template v-else-if="token.type === 'boxedText'"><span class="boxed">{{ token.text }}</span></template>
             <template v-else-if="token.type === 'freeTextInput'">
               <input type="text" v-model="models[modelKey]" />
             </template>
@@ -53,5 +54,11 @@ const models = defineModel<{
 <style scoped>
 p {
   line-height: 2.5em;
+}
+
+span.boxed {
+  margin: 0;
+  padding: 0 0.4em;
+  border: 2px solid black;
 }
 </style>

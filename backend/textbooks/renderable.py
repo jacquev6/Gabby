@@ -20,6 +20,17 @@ def PlainText(text: str):
     return _PlainText(type="plainText", text=text)
 
 
+class _BoxedText(BaseModel):
+    type: Literal["boxedText"]
+    text: str
+
+    def to_generic(self):
+        return f"{{boxed-text|{self.text}}}"
+
+def BoxedText(text: str):
+    return _BoxedText(type="boxedText", text=text)
+
+
 class _SelectableText(BaseModel):
     type: Literal["selectableText"]
     text: str
@@ -88,7 +99,7 @@ def Whitespace():
     return _Whitespace(type="whitespace")
 
 
-SentenceToken = _PlainText | _SelectableText | _SelectedText | _SelectedClicks | _FreeTextInput | _MultipleChoicesInput | _Whitespace
+SentenceToken = _PlainText | _BoxedText | _SelectableText | _SelectedText | _SelectedClicks | _FreeTextInput | _MultipleChoicesInput | _Whitespace
 
 
 class Sentence(BaseModel):

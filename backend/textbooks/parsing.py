@@ -85,6 +85,10 @@ parse_plain_section = SectionParser({}, SectionTransformer())
 
 
 class GenericSectionTransformer(SectionTransformer):
+    def boxed_text_tag(self, args):
+        text, = args
+        return renderable.BoxedText(text=text)
+
     def selectable_text_tag(self, args):
         colors, text = args
         return renderable.SelectableText(colors=colors, text=text)
@@ -107,6 +111,7 @@ class GenericSectionTransformer(SectionTransformer):
 
 parse_generic_section = SectionParser(
     {
+        "boxed_text": r""" "|" STR """,
         "selectable_text": r""" "|" INT "|" STR """,
         "selected_text": r""" "|" INT "|" INT "|" STR """,
         "selected_clicks": r""" "|" INT "|" INT """,
