@@ -1,15 +1,16 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 
+import type { Exercise } from '$adapted/types'
 import { BButton } from '$frontend/components/opinion/bootstrap'
-import Exercise from '$adapted/components/Exercise.vue'
+import ExerciseComponent from '$adapted/components/Exercise.vue'
 import { useExercisePagelets } from '$/adapted/composables/exercisePagelets'
 
 
 const props = defineProps<{
   projectId: string,
   exerciseId: string,
-  exercise: any,
+  exercise: Exercise,
 }>()
 
 const settings = {
@@ -31,11 +32,11 @@ watch(pageletsCount, () => {
   }
 })
 
-const exerciseComponent = ref<InstanceType<typeof Exercise> | null>(null)
+const exerciseComponent = ref<InstanceType<typeof ExerciseComponent> | null>(null)
 </script>
 
 <template>
-  <Exercise
+  <ExerciseComponent
     ref="exerciseComponent"
     :projectId="props.projectId"
     :exerciseId="props.exerciseId"
