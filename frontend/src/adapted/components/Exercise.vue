@@ -84,7 +84,7 @@ provide('adaptedExerciseTeleportPoint', `#${id}`)
       data-cy="erase-responses"
       secondary sm
       @click="reinitModels"
-      :disabled="Object.keys(models).length === 0"
+      :disabled="Object.keys(models.wording).length === 0"
     >
       {{ $t('eraseAnswers') }}
     </BButton></p>
