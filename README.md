@@ -28,17 +28,9 @@ With the development environment running:
 
 The [JSON:API](https://jsonapi.org/) is available at http://localhost:8080/api/, with a [Swagger](https://swagger.io/) UI at http://localhost:8080/api/docs/ (and its [OpenAPI](https://www.openapis.org/) schema at http://localhost:8080/api/openapi.json).
 
-## Django Admin
-
-The Django Admin is available at http://localhost:8080/api/admin/ with the following credentials:
-
-- Username: `admin`
-- Password: `password`
-
 ## Adminer
 
 [Adminer](https://www.adminer.org/) is a DB management tool similar to phpMyAdmin.
-You'll probably need it less often than the Django Admin.
 
 In the development environment, it is available at http://localhost:8080/api/adminer/ with the following credentials:
 

@@ -162,21 +162,6 @@ services:
         condition: service_healthy
       adapted-builder:
         condition: service_healthy
-  django-admin:
-    image: $OPINION_APP_NAME-dev_backend
-    pull_policy: never
-    volumes:
-      - ..:/app
-      - backend-pip-packages:/root/.local
-    working_dir: /app/backend
-    environment:
-      DJANGO_SETTINGS_MODULE: opinion.settings.dev
-    command: ["./manage.py", "runserver", "0.0.0.0:80"]
-    depends_on:
-      pip-installer:
-        condition: service_completed_successfully
-      db:
-        condition: service_healthy
   db-backup:
     image: $OPINION_APP_NAME-dev_backend
     pull_policy: never
@@ -220,4 +205,3 @@ services:
       - frontend
       - adminer
       - backend
-      - django-admin

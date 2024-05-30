@@ -4,7 +4,6 @@ import pathlib
 BASE_DIR = pathlib.Path(__file__).resolve().parent.parent.parent
 
 INSTALLED_APPS = [
-    "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
