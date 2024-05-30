@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
-import { watchPausable } from '@vueuse/core'
+import { watchPausable, useMagicKeys } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
 
 import { BLabeledInput, BLabeledSelect, BButton } from '$frontend/components/opinion/bootstrap'
@@ -12,6 +12,18 @@ const props = defineProps<{
 }>()
 
 const i18n = useI18n()
+
+const { Ctrl_Z, Ctrl_Y } = useMagicKeys()
+watch(Ctrl_Z, (v) => {
+  if (v && props.exerciseForm.canUndo) {
+    props.exerciseForm.undo()
+  }
+})
+watch(Ctrl_Y, (v) => {
+  if (v && props.exerciseForm.canRedo) {
+    props.exerciseForm.redo()
+  }
+})
 
 const search = ref('')
 const searchHasBeenModified = ref(false)
@@ -72,8 +84,8 @@ function applyReplace() {
   <h1>{{ $t('tools') }}</h1>
   <hr/>
   <div @mousedown="e => e.stopPropagation()" @touchstart="e => e.stopPropagation()" style="cursor: initial;">
-    <BButton primary sm @click="exerciseForm.undo" :disabled="!exerciseForm.canUndo">{{ $t('undo') }}</BButton>
-    <BButton primary sm @click="exerciseForm.redo" :disabled="!exerciseForm.canRedo">{{ $t('redo') }}</BButton>
+    <BButton primary sm @click="exerciseForm.undo" :disabled="!exerciseForm.canUndo" title="Ctrl+Z">{{ $t('undo') }}</BButton>
+    <BButton primary sm @click="exerciseForm.redo" :disabled="!exerciseForm.canRedo" title="Ctrl+Y">{{ $t('redo') }}</BButton>
   </div>
   <hr/>
   <div @mousedown="e => e.stopPropagation()" @touchstart="e => e.stopPropagation()" style="cursor: initial;">
