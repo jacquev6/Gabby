@@ -45,9 +45,9 @@ RUN set -x \
 
 WORKDIR /app
 
-ADD backend/requirements.opinion.txt /app
+ADD backend/requirements.txt /app
 
-RUN pip install -r requirements.opinion.txt
+RUN pip install -r requirements.txt
 
 
 FROM backend-dependencies AS backend-builder
