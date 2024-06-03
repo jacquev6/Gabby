@@ -549,7 +549,72 @@ describe('ApiStore', () => {
     cy.expect(got).to.equal(before)
   })
 
-  it('updates one ping', async () => {
+  it('updates ping attributes', async () => {
+    const api = useApiStore()
+
+    const before = api.cache.getOne('ping', '1')
+    cy.expect(before.type).to.equal('ping')
+    cy.expect(before.id).to.equal('1')
+    cy.expect(before.inCache).to.be.false
+    cy.expect(before.exists).to.be.undefined
+    cy.expect(before.attributes).to.be.undefined
+    cy.expect(before.relationships).to.be.undefined
+
+    const patched = await api.client.patch('ping', '1', {message: 'HELLO 1'}, {})
+    const after = api.cache.getOne('ping', '1')
+
+    for(const ping of [before, patched, after]) {
+      cy.expect(ping.type).to.equal('ping')
+      cy.expect(ping.id).to.equal('1')
+      cy.expect(ping.inCache).to.be.true
+      cy.expect(ping.exists).to.be.true
+      cy.expect(ping.attributes.message).to.equal('HELLO 1')
+      cy.expect(ping.relationships.prev).to.be.null
+      cy.expect(ping.relationships.next.length).to.equal(0)
+    }
+
+    cy.expect(after).to.equal(before)
+    cy.expect(patched).to.equal(before)
+  })
+
+  it('updates ping relationships', async () => {
+    const api = useApiStore()
+
+    const before = api.cache.getOne('ping', '1')
+    cy.expect(before.type).to.equal('ping')
+    cy.expect(before.id).to.equal('1')
+    cy.expect(before.inCache).to.be.false
+    cy.expect(before.exists).to.be.undefined
+    cy.expect(before.attributes).to.be.undefined
+    cy.expect(before.relationships).to.be.undefined
+
+    const patched = await api.client.patch('ping', '1', {}, {'prev': {type: 'ping', id: '2'}, 'next': [{type: 'ping', id: '3'}]})
+    const after = api.cache.getOne('ping', '1')
+
+    for(const ping of [before, patched, after]) {
+      cy.expect(ping.type).to.equal('ping')
+      cy.expect(ping.id).to.equal('1')
+      cy.expect(ping.inCache).to.be.true
+      cy.expect(ping.exists).to.be.true
+      cy.expect(ping.attributes.message).to.equal('Hello 1')
+      cy.expect(ping.relationships.prev.type).to.equal('ping')
+      cy.expect(ping.relationships.prev.id).to.equal('2')
+      cy.expect(ping.relationships.prev.inCache).to.be.false
+      cy.expect(ping.relationships.prev.exists).to.be.true
+      cy.expect(ping.relationships.prev.attributes).to.be.undefined
+      cy.expect(ping.relationships.next.length).to.equal(1)
+      cy.expect(ping.relationships.next[0].type).to.equal('ping')
+      cy.expect(ping.relationships.next[0].id).to.equal('3')
+      cy.expect(ping.relationships.next[0].inCache).to.be.false
+      cy.expect(ping.relationships.next[0].exists).to.be.true
+      cy.expect(ping.relationships.next[0].attributes).to.be.undefined
+    }
+
+    cy.expect(after).to.equal(before)
+    cy.expect(patched).to.equal(before)
+  })
+
+  it('updates ping to circular relationship', async () => {
     const api = useApiStore()
 
     const before = api.cache.getOne('ping', '1')
@@ -569,17 +634,17 @@ describe('ApiStore', () => {
       cy.expect(ping.inCache).to.be.true
       cy.expect(ping.exists).to.be.true
       cy.expect(ping.attributes.message).to.equal('HELLO 1')
-      cy.expect(ping.relationships.prev.type).equal('ping')
-      cy.expect(ping.relationships.prev.id).equal('1')
+      cy.expect(ping.relationships.prev.type).to.equal('ping')
+      cy.expect(ping.relationships.prev.id).to.equal('1')
       cy.expect(ping.relationships.prev.inCache).to.be.true
       cy.expect(ping.relationships.prev.exists).to.be.true
-      cy.expect(ping.relationships.prev.attributes.message).equal('HELLO 1')
+      cy.expect(ping.relationships.prev.attributes.message).to.equal('HELLO 1')
       cy.expect(ping.relationships.next.length).to.equal(1)
-      cy.expect(ping.relationships.next[0].type).equal('ping')
-      cy.expect(ping.relationships.next[0].id).equal('1')
+      cy.expect(ping.relationships.next[0].type).to.equal('ping')
+      cy.expect(ping.relationships.next[0].id).to.equal('1')
       cy.expect(ping.relationships.next[0].inCache).to.be.true
       cy.expect(ping.relationships.next[0].exists).to.be.true
-      cy.expect(ping.relationships.next[0].attributes.message).equal('HELLO 1')
+      cy.expect(ping.relationships.next[0].attributes.message).to.equal('HELLO 1')
     }
 
     cy.expect(after).to.equal(before)
