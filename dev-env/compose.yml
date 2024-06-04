@@ -114,6 +114,17 @@ services:
       - backend-pip-packages:/root/.local
     working_dir: /app/backend
     command: ["pip", "install", "--user", "-r", "requirements.txt"]
+  sqlalchemy-data-model-visualizer-patcher:
+    image: gabby-dev_backend
+    pull_policy: never
+    volumes:
+      - ..:/app
+      - backend-pip-packages:/root/.local
+    working_dir: /app/backend
+    command: ["sed", "-i", "s/dot.render(output_file, view=True)/dot.render(output_file, view=False)/", "/root/.local/lib/python3.12/site-packages/sqlalchemy_data_model_visualizer.py"]
+    depends_on:
+      pip-installer:
+        condition: service_completed_successfully
   django-migrator:
     image: gabby-dev_backend
     pull_policy: never

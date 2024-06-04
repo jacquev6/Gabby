@@ -21,3 +21,4 @@ docker compose exec --workdir /app/backend/gabby backend-shell alembic upgrade h
 docker compose exec backend-shell ./manage.py loaddata test-exercises more-test-exercises
 
 docker compose exec backend-shell ./manage.py graph_models textbooks --disable-sort-fields --rankdir BT --output textbooks/models.png
+docker compose exec backend-shell python -m gabby graph-models

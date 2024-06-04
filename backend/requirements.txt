@@ -20,5 +20,6 @@ pyjwt  # For authentication tokens
 python-multipart  # OAuth2 authentication uses multipart
 sqids  # Opaque IDs
 sqlalchemy  # Database ORM
+sqlalchemy-data-model-visualizer  # Draw database schema
 sqlalchemy-utils  # Database utilities
 uvicorn[standard]  # ASGI server
