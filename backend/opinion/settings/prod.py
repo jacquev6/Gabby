@@ -42,16 +42,5 @@ REST_FRAMEWORK["PAGE_SIZE"] = 20
 EXPOSE_RESET_FOR_TESTS_URL = os.environ.get("GABBY_EXPOSE_RESET_FOR_TESTS_URL") == "yes-i-m-sure--it-s-not-really-prod"
 
 
-# https://django-dbbackup.readthedocs.io/en/master/configuration.html
-
 # @todo(Project management, soon) Make sure I'm notified by e-mail on 500s
 # @todo(Project management, soon) Make sure I'm notified by e-mail on exceptions during backup
-
-DBBACKUP_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
-DBBACKUP_STORAGE_OPTIONS = {
-    "access_key": os.environ["GABBY_BACKUP_ACCESS_KEY"],
-    "secret_key": os.environ["GABBY_BACKUP_SECRET_KEY"],
-    "bucket_name": os.environ["GABBY_BACKUP_BUCKET_NAME"],
-    "default_acl": "private",
-    "location": os.environ["GABBY_BACKUP_LOCATION"],
-}

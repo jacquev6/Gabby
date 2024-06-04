@@ -80,4 +80,4 @@ ADD backend /app
 COPY --from=adapted-builder /app/dist/index.html /app/textbooks/templates/adapted.html
 
 ENV DJANGO_SETTINGS_MODULE=opinion.settings.prod
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]
+CMD ["uvicorn", "gabby.asgi:app", "--host", "0.0.0.0", "--port", "80"]

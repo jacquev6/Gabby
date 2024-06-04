@@ -192,7 +192,7 @@ services:
     working_dir: /app/backend
     env_file: backend/env
     init: true
-    command: ["bash", "-c", "while true; do echo 'Backup DB'; ./manage.py dbbackup; find /app/dev-env/db/backups -name '*.psql.bin' -mmin +10 -delete; sleep 30; done"]
+    command: ["bash", "-c", "while true; do python -m gabby backup-database; find /app/dev-env/db/backups -name 'gabby-backup-*.tar.gz' -mmin +10 -delete; sleep 30; done"]
     depends_on:
       pip-installer:
         condition: service_completed_successfully

@@ -18,28 +18,19 @@ class TestCase(unittest.TestCase):
     maxDiff = None
 
 
-DATABASE_URL = settings.DATABASE_URL + "-test"
-
-try:
-    sqlalchemy_utils.functions.drop_database(DATABASE_URL)
-except sql.exc.ProgrammingError:
-    pass
-
-try:
-    sqlalchemy_utils.functions.create_database(DATABASE_URL)
-except sql.exc.ProgrammingError:
-    pass
-
-
 class TransactionTestCase(TestCase):
+    DATABASE_URL = settings.DATABASE_URL + "-test"
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.database_engine = create_engine(DATABASE_URL)
+        sqlalchemy_utils.functions.create_database(cls.DATABASE_URL)
+        cls.database_engine = create_engine(cls.DATABASE_URL)
 
     @classmethod
     def tearDownClass(cls):
         cls.database_engine.dispose()
+        sqlalchemy_utils.functions.drop_database(cls.DATABASE_URL)
         super().tearDownClass()
 
     def setUp(self):

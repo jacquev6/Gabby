@@ -7,7 +7,6 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django_extensions",
     "polymorphic",
-    "dbbackup",
     "textbooks",
 ]
 
@@ -105,7 +104,3 @@ REST_FRAMEWORK = {
     ),
     "TEST_REQUEST_DEFAULT_FORMAT": "vnd.api+json",
 }
-
-DBBACKUP_DATE_FORMAT = "%Y%m%d-%H%M%S"
-DBBACKUP_FILENAME_TEMPLATE = "{datetime}.{extension}"
-DBBACKUP_MEDIA_FILENAME_TEMPLATE = "{datetime}.{extension}"

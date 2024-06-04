@@ -1,5 +1,6 @@
 GABBY_DATABASE_URL=postgresql+psycopg2://admin:password@db/db
 GABBY_SECRET_KEY=not-so-secret
+GABBY_DATABASE_BACKUPS_URL=file:///app/dev-env/db/backups
 
 GABBY_DEBUG=true
 GABBY_EXPOSE_RESET_FOR_TESTS_URL=true

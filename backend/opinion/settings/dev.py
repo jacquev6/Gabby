@@ -18,6 +18,3 @@ DATABASES = {
 }
 
 EXPOSE_RESET_FOR_TESTS_URL = True
-
-DBBACKUP_STORAGE = "django.core.files.storage.FileSystemStorage"
-DBBACKUP_STORAGE_OPTIONS = {"location": "/app/dev-env/db/backups/"}
