@@ -37,6 +37,11 @@ fi
 
 gabby_version=$(date +%Y%m%d-%H%M%S)
 
+migrations=backend/gabby/migrations/versions
+find $migrations -name '*_dev.py' \
+| sed "s#$migrations/\(.*\)_dev\.py#\mv $migrations/\1_dev.py $migrations/\1_$gabby_version.py#" \
+| sh
+
 echo "Edit the changelog for version $gabby_version and press enter to continue, Ctrl+C to abort."
 read
 git add .

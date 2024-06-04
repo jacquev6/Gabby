@@ -20,10 +20,15 @@ class TestCase(unittest.TestCase):
 
 DATABASE_URL = settings.DATABASE_URL + "-test"
 
-if sqlalchemy_utils.functions.database_exists(DATABASE_URL):
+try:
     sqlalchemy_utils.functions.drop_database(DATABASE_URL)
+except sql.exc.ProgrammingError:
+    pass
 
-sqlalchemy_utils.functions.create_database(DATABASE_URL)
+try:
+    sqlalchemy_utils.functions.create_database(DATABASE_URL)
+except sql.exc.ProgrammingError:
+    pass
 
 
 class TransactionTestCase(TestCase):

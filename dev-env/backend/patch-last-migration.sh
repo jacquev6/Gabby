@@ -7,17 +7,17 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
 
 
 docker compose exec backend-shell ./manage.py migrate textbooks zero
+docker compose exec --workdir /app/backend/gabby backend-shell alembic downgrade head-1
 
-rm -f ../../backend/textbooks/migrations/0007_*.{py,sql}
+rm -f ../../backend/textbooks/migrations/0007_*.py
+rm -f ../../backend/gabby/migrations/versions/*_dev.py
 
 docker compose exec backend-shell ./manage.py makemigrations
+docker compose exec --workdir /app/backend/gabby backend-shell alembic revision --autogenerate -m dev
+
 docker compose exec backend-shell ./manage.py migrate
+docker compose exec --workdir /app/backend/gabby backend-shell alembic upgrade head
+
 docker compose exec backend-shell ./manage.py loaddata test-exercises more-test-exercises
-for app in textbooks
-do
-  docker compose exec backend-shell ./manage.py graph_models $app --disable-sort-fields --rankdir BT --output $app/models.png
-  # for migration in ../../backend/$app/migrations/0*.py
-  # do
-  #   docker compose exec backend-shell ./manage.py sqlmigrate $app $(basename $migration .py) >${migration%.py}.sql
-  # done
-done
+
+docker compose exec backend-shell ./manage.py graph_models textbooks --disable-sort-fields --rankdir BT --output textbooks/models.png

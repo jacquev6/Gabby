@@ -10,6 +10,7 @@ pydotplus  # For 'manage.py graph_models'
 # New
 alembic  # Database migrations
 argon2-cffi  # Password hasher
+black  # Code formatter, used by Alembic
 click  # Command-line parsing
 fastapi  # API framework
 httpx  # For unit testing: https://fastapi.tiangolo.com/tutorial/testing/

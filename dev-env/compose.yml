@@ -134,9 +134,9 @@ services:
     volumes:
       - ..:/app
       - backend-pip-packages:/root/.local
-    working_dir: /app/backend
+    working_dir: /app/backend/gabby
     env_file: backend/env
-    command: ["python", "-m", "gabby", "migrate"]
+    command: ["alembic", "upgrade", "head"]
     depends_on:
       pip-installer:
         condition: service_completed_successfully
