@@ -1,0 +1,12 @@
+GABBY_DATABASE_URL=postgresql+psycopg2://admin:password@db/db
+GABBY_SECRET_KEY=not-so-secret
+
+GABBY_DEBUG=true
+GABBY_EXPOSE_RESET_FOR_TESTS_URL=true
+
+GABBY_GENERIC_DEFAULT_API_PAGE_SIZE=2
+
+
+# @todo Remove below this line
+
+DJANGO_SETTINGS_MODULE=opinion.settings.dev

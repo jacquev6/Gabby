@@ -4,15 +4,10 @@ import pathlib
 BASE_DIR = pathlib.Path(__file__).resolve().parent.parent.parent
 
 INSTALLED_APPS = [
-    "django.contrib.auth",
     "django.contrib.contenttypes",
-    "django.contrib.sessions",
-    "django.contrib.messages",
-    "django.contrib.staticfiles",
     "django_extensions",
     "polymorphic",
     "dbbackup",
-    "opinion_ping",
     "textbooks",
 ]
 

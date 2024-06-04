@@ -1,4 +1,4 @@
-from django.db import models
+from sqlalchemy.orm import DeclarativeBase, collections
 
 
 class OrmWrapper:
@@ -9,10 +9,10 @@ class OrmWrapper:
 
     def __getattr__(self, name):
         attr = getattr(self._wrapped, name)
-        if attr.__class__.__name__ == "RelatedManager":
-            return [wrap(item) for item in attr.all()]
-        elif isinstance(attr, models.Model):
+        if isinstance(attr, DeclarativeBase):
             return wrap(attr)
+        elif isinstance(attr, collections.InstrumentedList):
+            return [wrap(item) for item in attr]
         else:
             return attr
 
@@ -21,8 +21,8 @@ class OrmWrapper:
             super().__setattr__(name, value)
         else:
             attr = getattr(self._wrapped, name)
-            if attr.__class__.__name__ == "RelatedManager":
-                attr.set([unwrap(v) for v in value])
+            if isinstance(attr, collections.InstrumentedList):
+                setattr(self._wrapped, name, [unwrap(item) for item in value])
             elif isinstance(value, OrmWrapper):
                 setattr(self._wrapped, name, unwrap(value))
             else:
@@ -51,8 +51,10 @@ def get_wrapper(type):
 
 
 def wrap(o):
-    assert o is not None
-    return get_wrapper(o.__class__)(o)
+    if o is None:
+        return None
+    else:
+        return get_wrapper(o.__class__)(o)
 
 
 def unwrap(wrapper):

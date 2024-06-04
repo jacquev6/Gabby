@@ -8,12 +8,16 @@ django-extensions  # For 'manage.py graph_models'
 pydotplus  # For 'manage.py graph_models'
 
 # New
-fastapi  # Fundamental
-uvicorn[standard]  # Fundamental
-httpx  # For unit testing: https://fastapi.tiangolo.com/tutorial/testing/
-pyhumps  # Convert between cases
-python-multipart  # OAuth2 authentication uses multipart
-pyjwt  # For authentication tokens
+alembic  # Database migrations
 argon2-cffi  # Password hasher
+click  # Command-line parsing
+fastapi  # API framework
+httpx  # For unit testing: https://fastapi.tiangolo.com/tutorial/testing/
+lark  # Text parsing (for exercise adaptation)
+pyhumps  # Convert between cases
+pyjwt  # For authentication tokens
+python-multipart  # OAuth2 authentication uses multipart
 sqids  # Opaque IDs
-lark
+sqlalchemy  # Database ORM
+sqlalchemy-utils  # Database utilities
+uvicorn[standard]  # ASGI server

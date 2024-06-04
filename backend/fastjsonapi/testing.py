@@ -5,7 +5,6 @@ import inspect
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from .django import AuthenticationToken
 from .router import make_jsonapi_router
 
 
@@ -19,24 +18,12 @@ class TestMixin:
         cls.__app = FastAPI()
         cls.__app.include_router(make_jsonapi_router(cls.resources, cls.polymorphism))
 
-        @cls.__app.post("/token")
-        def login(access_token: AuthenticationToken):
-            return {
-                "access_token": access_token,
-                "token_type": "bearer",
-            }
-
         cls.__schema_file_path = f"{inspect.getfile(cls)}.{cls.__name__}.openapi.json"
         cls.__client = TestClient(cls.__app)
 
     def setUp(self):
         super().setUp()
         self.__client.headers.pop("Authorization", None)
-
-    def login(self, username, password):
-        response = self.__client.post("http://server/token", data={"username": username, "password": password})
-        self.assertEqual(response.status_code, 200, response.json())
-        self.__client.headers["Authorization"] = f"Bearer {response.json()["access_token"]}"
 
     def get(self, url):
         return self.__client.get(url, headers={"Content-Type": "application/vnd.api+json"})

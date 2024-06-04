@@ -3,31 +3,32 @@ import json
 import django
 django.setup()  # Required before importing any module that uses the Django ORM
 
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
-import django.conf
-import django.contrib.auth
-import django.core.management
 
 from fastjsonapi import make_jsonapi_router
-from fastjsonapi.django import AuthenticationToken, get_wrapper as get_django_wrapper
-from opinion_ping.resources import PingsResource
+from fastjsonapi.django import get_wrapper as get_django_wrapper
 from textbooks.models import Project, SelectThingsAdaptation, FillWithFreeTextAdaptation, MultipleChoicesInInstructionsAdaptation, MultipleChoicesInWordingAdaptation
 from textbooks.resources import PdfFilesResource, PdfFileNamingsResource, ProjectsResource, TextbooksResource, SectionsResource, ExercisesResource, ExtractionEventsResource
 from textbooks.resources import SelectThingsAdaptationsResource, FillWithFreeTextAdaptationsResource, MultipleChoicesInInstructionsAdaptationsResource, MultipleChoicesInWordingAdaptationsResource
 from textbooks.resources import AdaptedExerciseResource
 from textbooks.views import make_extraction_report
 
+from . import settings
+from . import database_utils
+from .pings import PingsResource, create_test_pings
+from .users import authentication_token_dependable
 
-User = django.contrib.auth.get_user_model()
 
 app = FastAPI(
     # We want '/reset-...' to be at the root, so can't use root_path="/api", so we have to specify these individually:
     openapi_url="/api/openapi.json",
     docs_url="/api/docs",
     redoc_url="/api/redoc",
+    database_engine=database_utils.create_engine(settings.DATABASE_URL),
 )
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -36,6 +37,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 app.include_router(
     make_jsonapi_router(
@@ -90,25 +92,38 @@ def export_project(project_id: str):
     )
 
 @app.post("/api/token")
-def login(access_token: AuthenticationToken):
+def login(access_token: str = Depends(authentication_token_dependable)):
     return {
         "access_token": access_token,
         "token_type": "bearer",
     }
 
 # Test-only URL. Not in 'api/...' to avoid accidentally exposing it.
-if django.conf.settings.EXPOSE_RESET_FOR_TESTS_URL:
+if settings.EXPOSE_RESET_FOR_TESTS_URL:
     @app.post("/reset-for-tests/yes-im-sure")
-    def reset_for_tests(fixtures: str = None):
+    def reset_for_tests(
+        request: Request,
+        fixtures: str = None,
+    ):
         django.core.management.call_command("flush", interactive=False)
         django.core.management.call_command("migrate", interactive=False)
-        django.core.management.call_command("loaddata", "test-users")
+        database_utils.drop_tables(request.app.extra["database_engine"])
+        database_utils.create_tables(request.app.extra["database_engine"])
         if fixtures is not None:
-            for fixture in fixtures.split(","):
-                django.core.management.call_command("loaddata", fixture)
+            available_fixtures = {
+                "test-pings": create_test_pings,
+            }
+            with database_utils.Session(request.app.extra["database_engine"]) as session:
+                for fixture in fixtures.split(","):
+                    if fixture in available_fixtures:
+                        available_fixtures[fixture](session)
+                    else:
+                        django.core.management.call_command("loaddata", fixture)
+                session.commit()
         return {}
 
-if django.conf.settings.DEBUG:
+
+if settings.DEBUG:
     with open("openapi.json", "w") as file:
         json.dump(app.openapi(), file, indent=2, sort_keys=True)
         file.write("\n")
