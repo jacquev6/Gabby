@@ -5,24 +5,10 @@
         "additionalProperties": false,
         "properties": {
           "clue": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/Section"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "$ref": "#/components/schemas/Section"
           },
           "example": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/Section"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "$ref": "#/components/schemas/Section"
           },
           "instructions": {
             "$ref": "#/components/schemas/Section"

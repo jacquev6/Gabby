@@ -201,8 +201,8 @@ export interface components {
   schemas: {
     /** AdaptedExercise */
     AdaptedExercise: {
-      clue: components["schemas"]["Section"] | null;
-      example: components["schemas"]["Section"] | null;
+      clue: components["schemas"]["Section"];
+      example: components["schemas"]["Section"];
       instructions: components["schemas"]["Section"];
       /** Number */
       number: string;

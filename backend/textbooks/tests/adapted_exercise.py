@@ -66,8 +66,8 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                         ]),
                     ]),
                 ]),
-                example=None,
-                clue=None,
+                example=r.Section(paragraphs=[]),
+                clue=r.Section(paragraphs=[]),
             ),
         )
 
@@ -118,8 +118,8 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                         ]),
                     ]),
                 ]),
-                example=None,
-                clue=None,
+                example=r.Section(paragraphs=[]),
+                clue=r.Section(paragraphs=[]),
             ),
         )
 
@@ -155,8 +155,8 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                         ]),
                     ]),
                 ]),
-                example=None,
-                clue=None,
+                example=r.Section(paragraphs=[]),
+                clue=r.Section(paragraphs=[]),
             ),
         )
 
@@ -202,8 +202,8 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                         ]),
                     ]),
                 ]),
-                example=None,
-                clue=None,
+                example=r.Section(paragraphs=[]),
+                clue=r.Section(paragraphs=[]),
             ),
         )
 
@@ -249,8 +249,8 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                         ]),
                     ]),
                 ]),
-                example=None,
-                clue=None,
+                example=r.Section(paragraphs=[]),
+                clue=r.Section(paragraphs=[]),
             ),
         )
 
@@ -290,8 +290,8 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                         ]),
                     ]),
                 ]),
-                example=None,
-                clue=None,
+                example=r.Section(paragraphs=[]),
+                clue=r.Section(paragraphs=[]),
             ),
         )
 
@@ -323,8 +323,8 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                         ]),
                     ]),
                 ]),
-                example=None,
-                clue=None,
+                example=r.Section(paragraphs=[]),
+                clue=r.Section(paragraphs=[]),
             ),
         )
 
@@ -500,8 +500,8 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                         ]),
                     ]),
                 ]),
-                example=None,
-                clue=None,
+                example=r.Section(paragraphs=[]),
+                clue=r.Section(paragraphs=[]),
             ),
         )
 
@@ -537,8 +537,8 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                         ]),
                     ]),
                 ]),
-                example=None,
-                clue=None,
+                example=r.Section(paragraphs=[]),
+                clue=r.Section(paragraphs=[]),
             ),
         )
 
@@ -584,8 +584,8 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                         ]),
                     ]),
                 ]),
-                example=None,
-                clue=None,
+                example=r.Section(paragraphs=[]),
+                clue=r.Section(paragraphs=[]),
             ),
         )
 
@@ -641,8 +641,8 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                         ]),
                     ]),
                 ]),
-                example=None,
-                clue=None,
+                example=r.Section(paragraphs=[]),
+                clue=r.Section(paragraphs=[]),
             ),
         )
 
@@ -682,8 +682,8 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                         ]),
                     ]),
                 ]),
-                example=None,
-                clue=None,
+                example=r.Section(paragraphs=[]),
+                clue=r.Section(paragraphs=[]),
             ),
         )
 
@@ -715,8 +715,8 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                         ]),
                     ]),
                 ]),
-                example=None,
-                clue=None,
+                example=r.Section(paragraphs=[]),
+                clue=r.Section(paragraphs=[]),
             ),
         )
 
@@ -837,8 +837,8 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                         ]),
                     ]),
                 ]),
-                example=None,
-                clue=None,
+                example=r.Section(paragraphs=[]),
+                clue=r.Section(paragraphs=[]),
             ),
         )
 
@@ -968,8 +968,8 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                         ]),
                     ]),
                 ]),
-                example=None,
-                clue=None,
+                example=r.Section(paragraphs=[]),
+                clue=r.Section(paragraphs=[]),
             ),
         )
 
@@ -1034,8 +1034,8 @@ class AdaptedExerciseApiTestCase(TestMixin, TestCase):
                 {"type": "selectableText", "text": "wording", "colors": 3},
                 {"type": "plainText", "text": "."},
             ]}]}]},
-            "example": None,
-            "clue": None,
+            "example": {"paragraphs": []},
+            "clue": {"paragraphs": []},
         })
 
     def test_select_things_with_example_and_clue(self):
@@ -1152,8 +1152,8 @@ class AdaptedExerciseApiTestCase(TestMixin, TestCase):
                 {"type": "whitespace"},
                 {"type": "freeTextInput"},
             ]}]}]},
-            "example": None,
-            "clue": None,
+            "example": {"paragraphs": []},
+            "clue": {"paragraphs": []},
         })
 
     def test_multiple_choices_in_instructions(self):
@@ -1198,6 +1198,6 @@ class AdaptedExerciseApiTestCase(TestMixin, TestCase):
                     {"type": "multipleChoicesInput", "choices": ["a", "b"]},
                 ]}]},
             ]},
-            "example": None,
-            "clue": None,
+            "example": {"paragraphs": []},
+            "clue": {"paragraphs": []},
         })

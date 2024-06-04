@@ -100,8 +100,8 @@ defineExpose({
 <template>
   <div :id="id" style="position: relative">
     <MonocolorSection :paragraphs="exercise.instructions.paragraphs" :paragraphIndexOffset="0" v-model="models.instructions" />
-    <MonocolorSection v-if="exercise.example !== null" :paragraphs="exercise.example.paragraphs" :paragraphIndexOffset="0" v-model="models.example" />
-    <MonocolorSection v-if="exercise.clue !== null" :paragraphs="exercise.clue.paragraphs" :paragraphIndexOffset="0" v-model="models.clue" />
+    <MonocolorSection :paragraphs="exercise.example.paragraphs" :paragraphIndexOffset="0" v-model="models.example" />
+    <MonocolorSection :paragraphs="exercise.clue.paragraphs" :paragraphIndexOffset="0" v-model="models.clue" />
     <hr />
     <!-- @todo Fix models: they are shared on all pagelets -->
     <TricolorSection v-if="settings.tricolorWording" :paragraphs="wordingParagraphs" :paragraphIndexOffset="wordingParagraphIndexOffset" v-model="models.wording" />

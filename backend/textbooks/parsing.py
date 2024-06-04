@@ -63,7 +63,7 @@ class SectionParser:
 
     def __call__(self, section: str):
         if section == "":
-            return None
+            return self.transformer.section([])
         else:
             # This string manipulation before parsing is fragile but works for now.
             normalized = "\n\n".join(
@@ -130,7 +130,7 @@ class ParseGenericSectionTestCase(TestCase):
             self.assertEqual(parse_generic_section(expected.to_generic()), expected)
 
     def test_empty(self):
-        self.do_test("", None)
+        self.do_test("", renderable.Section(paragraphs=[]))
 
     def test_single_paragraph_of_a_single_sentence_of_plain_words(self):
         self.do_test(
