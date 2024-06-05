@@ -10,3 +10,6 @@ class Project(OrmBase):
 
     title: orm.Mapped[str]
     description: orm.Mapped[str]
+
+    textbooks: orm.Mapped[list["Textbook"]] = orm.relationship(back_populates="project")
+    exercises: orm.Mapped[list["Exercise"]] = orm.relationship(back_populates="project")

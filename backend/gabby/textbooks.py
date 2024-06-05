@@ -13,12 +13,15 @@ class Textbook(OrmBase):
     id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
 
     project_id: orm.Mapped[int] = orm.mapped_column(sql.ForeignKey(Project.id))
-    project: orm.Mapped[Project] = orm.relationship()
+    project: orm.Mapped[Project] = orm.relationship(back_populates="textbooks")
 
     title: orm.Mapped[str | None]
     publisher: orm.Mapped[str | None]
     year: orm.Mapped[int | None]
     isbn: orm.Mapped[str | None]
+
+    sections: orm.Mapped[list["Section"]] = orm.relationship(back_populates="textbook")
+    exercises: orm.Mapped[list["Exercise"]] = orm.relationship(back_populates="textbook")
 
 
 class Section(OrmBase):
@@ -27,9 +30,9 @@ class Section(OrmBase):
     id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
 
     textbook_id: orm.Mapped[int] = orm.mapped_column(sql.ForeignKey(Textbook.id))
-    textbook: orm.Mapped[Textbook] = orm.relationship()
+    textbook: orm.Mapped[Textbook] = orm.relationship(back_populates="sections")
     pdf_file_sha256: orm.Mapped[str] = orm.mapped_column(sql.ForeignKey(PdfFile.sha256))
-    pdf_file: orm.Mapped[PdfFile] = orm.relationship()
+    pdf_file: orm.Mapped[PdfFile] = orm.relationship(back_populates="sections")
 
     textbook_start_page: orm.Mapped[int]
     pdf_file_start_page: orm.Mapped[int]

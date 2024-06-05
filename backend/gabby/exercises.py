@@ -17,6 +17,8 @@ class Adaptation(OrmBase):
     id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
     kind: orm.Mapped[str] = orm.mapped_column(sql.String(16))
 
+    exercise: orm.Mapped["Exercise"] = orm.relationship(back_populates="adaptation")
+
 
 class Exercise(OrmBase):
     __tablename__ = "exercises"
@@ -24,10 +26,10 @@ class Exercise(OrmBase):
     id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
 
     project_id: orm.Mapped[int] = orm.mapped_column(sql.ForeignKey(Project.id))
-    project: orm.Mapped[Project] = orm.relationship()
+    project: orm.Mapped[Project] = orm.relationship(back_populates="exercises")
 
     textbook_id: orm.Mapped[int | None] = orm.mapped_column(sql.ForeignKey(Textbook.id))
-    textbook: orm.Mapped[Textbook | None] = orm.relationship()
+    textbook: orm.Mapped[Textbook | None] = orm.relationship(back_populates="exercises")
     textbook_page: orm.Mapped[int | None]
     bounding_rectangle: orm.Mapped[dict | None] = orm.mapped_column(sql.JSON)
 
@@ -38,8 +40,9 @@ class Exercise(OrmBase):
     clue: orm.Mapped[str]
 
     adaptation_id: orm.Mapped[int | None] = orm.mapped_column(sql.ForeignKey(Adaptation.id))
-    adaptation: orm.Mapped[Adaptation | None] = orm.relationship()
+    adaptation: orm.Mapped[Adaptation | None] = orm.relationship(back_populates="exercise")
 
+    extraction_events: orm.Mapped[list["ExtractionEvent"]] = orm.relationship(back_populates="exercise")
 
 class ExtractionEvent(OrmBase):
     __tablename__ = "extraction_events"
@@ -47,7 +50,7 @@ class ExtractionEvent(OrmBase):
     id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
 
     exercise_id: orm.Mapped[int] = orm.mapped_column(sql.ForeignKey(Exercise.id))
-    exercise: orm.Mapped[Exercise] = orm.relationship()
+    exercise: orm.Mapped[Exercise] = orm.relationship(back_populates="extraction_events")
 
     event: orm.Mapped[str]
 
