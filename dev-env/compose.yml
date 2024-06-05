@@ -125,21 +125,7 @@ services:
     depends_on:
       pip-installer:
         condition: service_completed_successfully
-  django-migrator:
-    image: gabby-dev_backend
-    pull_policy: never
-    volumes:
-      - ..:/app
-      - backend-pip-packages:/root/.local
-    working_dir: /app/backend
-    env_file: backend/env
-    command: ["./manage.py", "migrate"]
-    depends_on:
-      pip-installer:
-        condition: service_completed_successfully
-      db:
-        condition: service_healthy
-  alembic-migrator:
+  migrator:
     image: gabby-dev_backend
     pull_policy: never
     volumes:
@@ -153,20 +139,6 @@ services:
         condition: service_completed_successfully
       db:
         condition: service_healthy
-  data-loader:
-    image: gabby-dev_backend
-    pull_policy: never
-    volumes:
-      - ..:/app
-      - backend-pip-packages:/root/.local
-    working_dir: /app/backend
-    env_file: backend/env
-    command: ["./manage.py", "loaddata", "test-exercises", "more-test-exercises"]
-    depends_on:
-      django-migrator:
-        condition: service_completed_successfully
-      alembic-migrator:
-        condition: service_completed_successfully
   backend:
     image: gabby-dev_backend
     pull_policy: never
@@ -195,8 +167,6 @@ services:
     command: ["bash", "-c", "while true; do python -m gabby backup-database; find /app/dev-env/db/backups -name 'gabby-backup-*.tar.gz' -mmin +10 -delete; sleep 30; done"]
     depends_on:
       pip-installer:
-        condition: service_completed_successfully
-      data-loader:
         condition: service_completed_successfully
 
   adminer:

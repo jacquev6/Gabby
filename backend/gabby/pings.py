@@ -16,20 +16,15 @@ from . import settings
 from . import testing
 from .database_utils import OrmBase, Session, session_dependable
 from .users import User, UserModel, UsersResource, optional_authenticated_user_dependable
+from .users.mixins import CreatedUpdatedByAtMixin
 
 
-class Ping(OrmBase):
+class Ping(OrmBase, CreatedUpdatedByAtMixin):
     __tablename__ = "pings"
 
     id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
 
     message: orm.Mapped[str | None] = orm.mapped_column()
-    created_at: orm.Mapped[datetime.datetime] = orm.mapped_column(sql.DateTime(timezone=True), server_default=sql.func.now())
-    created_by_id: orm.Mapped[int | None] = orm.mapped_column(sql.ForeignKey("users.id"))
-    created_by: orm.Mapped[User | None] = orm.relationship(foreign_keys=[created_by_id])
-    updated_at: orm.Mapped[datetime.datetime] = orm.mapped_column(sql.DateTime(timezone=True), server_default=sql.func.now(), onupdate=sql.func.now())
-    updated_by_id: orm.Mapped[int | None] = orm.mapped_column(sql.ForeignKey("users.id"))
-    updated_by: orm.Mapped[User | None] = orm.relationship(foreign_keys=[updated_by_id])
 
     prev_id: orm.Mapped[int | None] = orm.mapped_column(sql.ForeignKey("pings.id"))
     prev: orm.Mapped[Ping | None] = orm.relationship(back_populates="next", remote_side=[id], post_update=True)

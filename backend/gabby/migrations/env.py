@@ -3,7 +3,7 @@ from logging.config import fileConfig
 from alembic import context
 
 from gabby import database_utils, settings
-from gabby import users, pings  # Not used in this file but required to populate the metadata
+from gabby import all_models  # To populate the metadata
 
 
 if context.config.config_file_name is not None:
