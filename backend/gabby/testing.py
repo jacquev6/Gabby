@@ -85,8 +85,6 @@ class ApiTestCase(TransactionTestCase):
             cls.__schema_file_path = f"{inspect.getfile(cls)}.{cls.__name__}.openapi.json"
             cls.api_client = TestClient(cls.api_app)
 
-            cls.test_schema = cls._test_schema
-
     def tearDown(self):
         if hasattr(self, "resources"):
             self.logout()
@@ -112,19 +110,19 @@ class ApiTestCase(TransactionTestCase):
     def delete(self, url):
         return self.api_client.delete(url, headers={"Content-Type": "application/vnd.api+json"})
 
-    def _test_schema(self):
-        try:
-            with open(self.__schema_file_path) as file:
-                expected = json.load(file)
-        except FileNotFoundError:
-            expected = {}
+    def test_schema(self):
+        if hasattr(self, "resources"):
+            try:
+                with open(self.__schema_file_path) as file:
+                    expected = json.load(file)
+            except FileNotFoundError:
+                expected = {}
 
-        actual = self.api_app.openapi()
-        # @todo Remove all 'application/json' from schema; use only 'application/vnd.api+json'
+            actual = self.api_app.openapi()
 
-        try:
-            self.assertEqual(actual, expected)
-        finally:
-            with open(self.__schema_file_path, "w") as file:
-                json.dump(actual, file, indent=2, sort_keys=True)
-                file.write("\n")
+            try:
+                self.assertEqual(actual, expected)
+            finally:
+                with open(self.__schema_file_path, "w") as file:
+                    json.dump(actual, file, indent=2, sort_keys=True)
+                    file.write("\n")

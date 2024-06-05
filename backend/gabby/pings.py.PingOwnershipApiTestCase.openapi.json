@@ -648,6 +648,9 @@
       "user-OutputItem": {
         "additionalProperties": false,
         "properties": {
+          "attributes": {
+            "$ref": "#/components/schemas/user-OutputItem-Attributes"
+          },
           "id": {
             "title": "Id",
             "type": "string"
@@ -663,9 +666,24 @@
         "required": [
           "type",
           "id",
-          "links"
+          "links",
+          "attributes"
         ],
         "title": "user-OutputItem",
+        "type": "object"
+      },
+      "user-OutputItem-Attributes": {
+        "additionalProperties": false,
+        "properties": {
+          "username": {
+            "title": "Username",
+            "type": "string"
+          }
+        },
+        "required": [
+          "username"
+        ],
+        "title": "user-OutputItem-Attributes",
         "type": "object"
       }
     },

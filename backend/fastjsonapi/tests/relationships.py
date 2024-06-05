@@ -1,11 +1,10 @@
 from contextlib import contextmanager
 from typing import Annotated
 
-from django.test import TestCase
 from fastapi import Depends
 from starlette import status
 
-from ..testing import TestMixin, ItemsFactory
+from ..testing import ApiTestCase, ItemsFactory
 from .relationships_models import TopModel, LeftModel, RightModel, TopItem, LeftItem, RightItem
 
 
@@ -78,9 +77,10 @@ class RightResource:
             return self.factory.get(RightItem, id)
 
 
-class RelationshipsTestCase(TestMixin, TestCase):
-    # @todo Shuffle the resources to test their order doesn't matter. Use Django's shuffle seed
+class RelationshipsTestCase(ApiTestCase):
+    # @todo Shuffle the resources to test their order doesn't matter
     resources = [TopResource(), LeftResource(), RightResource()]
+    polymorphism = {}
 
     def setUp(self):
         super().setUp()
