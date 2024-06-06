@@ -24,6 +24,7 @@ class TransactionTestCase(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        # @todo Measure time taken to create and drop database repeatedly. Maybe create DB and table just once and truncate all tables after each test?
         sqlalchemy_utils.functions.create_database(cls.DATABASE_URL)
         cls.database_engine = create_engine(cls.DATABASE_URL)
 
