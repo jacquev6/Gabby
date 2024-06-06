@@ -25,8 +25,8 @@ def main():
 
 @main.command()
 def graph_models():
-    sqlalchemy_data_model_visualizer.generate_data_model_diagram(orm_models.all_models, "gabby/models", add_labels=True)
-    os.unlink("gabby/models")
+    sqlalchemy_data_model_visualizer.generate_data_model_diagram(orm_models.all_models, "gabby/orm_models", add_labels=True)
+    os.unlink("gabby/orm_models")
 
 
 parsed_database_url = urlparse(settings.DATABASE_URL)
