@@ -13,7 +13,7 @@ from fastjsonapi.annotations import Computed, Filterable
 
 from . import settings
 from . import testing
-from .database_utils import OrmBase, SessionDependent, make_item_getter, make_page_getter
+from .database_utils import OrmBase, make_item_getter, make_page_getter
 from .users import User, UserModel, UsersResource, OptionalAuthenticatedUserDependent
 from .users.mixins import CreatedUpdatedByAtMixin
 from .wrapping import set_wrapper, OrmWrapperWithStrIds, wrap, unwrap
@@ -92,15 +92,6 @@ class PingsResource:
 
 
 set_wrapper(Ping, OrmWrapperWithStrIds)
-
-
-def create_test_pings(session):
-    session.add(Ping(message="Hello 1"))
-    session.add(ping2 := Ping(message="Hello 2"))
-    session.add(ping3 := Ping(message="Hello 3", prev=ping2))
-    session.add(Ping(message="Hello 4", prev=ping3))
-    session.add(ping5 := Ping(message="Hello 5", prev=ping3))
-    session.add(Ping(message="Hello 6", prev=ping5))
 
 
 class PingsApiTestCase(testing.ApiTestCase):

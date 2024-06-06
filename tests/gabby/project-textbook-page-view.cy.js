@@ -8,7 +8,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
   })
 
   after(() => {
-    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises,more-test-exercises')
+    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=more-test-exercises')
   })
 
   it('displays an error message if the project does not exist', () => {
@@ -1024,7 +1024,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
   })
 
   it('resets responses when changing adaptation type', () => {
-    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises,more-test-exercises')
+    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=more-test-exercises')
     cy.viewport(1000, 1100)
 
     cy.visit('/project-xkopqm/textbook-klxufv/page-7/exercise-dymwin')

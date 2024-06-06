@@ -7,7 +7,7 @@ from fastjsonapi import make_jsonapi_router
 
 from . import database_utils
 from . import settings
-from .pings import create_test_pings
+from .fixtures import available_fixtures
 from .users import authentication_token_dependable
 from . import api_resources
 
@@ -77,9 +77,6 @@ if settings.EXPOSE_RESET_FOR_TESTS_URL:
         database_utils.drop_tables(request.app.extra["database_engine"])
         database_utils.create_tables(request.app.extra["database_engine"])
         if fixtures is not None:
-            available_fixtures = {
-                "test-pings": create_test_pings,
-            }
             with database_utils.Session(request.app.extra["database_engine"]) as session:
                 for fixture in fixtures.split(","):
                     available_fixtures[fixture](session)

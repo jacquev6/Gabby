@@ -12,9 +12,10 @@ import boto3
 import click
 import sqlalchemy_data_model_visualizer
 
-from . import settings
 from . import database_utils
 from . import orm_models
+from . import settings
+from .fixtures import available_fixtures
 
 
 @click.group()
@@ -208,6 +209,19 @@ def import_django_data(input_file):
                 instances_by_model.setdefault(model, {})[pk] = instance
         exercises_by_adaptation.pop(None)
         assert exercises_by_adaptation == {}, exercises_by_adaptation
+        session.commit()
+
+
+@main.command()
+@click.argument("fixtures", nargs=-1)
+def load_fixtures(fixtures):
+    database_engine = database_utils.create_engine(settings.DATABASE_URL)
+    database_utils.drop_tables(database_engine)
+    database_utils.create_tables(database_engine)
+
+    with orm.Session(database_engine) as session:
+        for fixture in fixtures:
+            available_fixtures[fixture](session)
         session.commit()
 
 
