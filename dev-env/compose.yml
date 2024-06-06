@@ -73,12 +73,12 @@ services:
     working_dir: /app/frontend
     environment:
       GABBY_ENTRY_POINT_NAME: adapted
-    command: ["npx", "vite", "build", "--watch", "--mode", "development", "--outDir", "../backend/textbooks/templates/adapted", "--emptyOutDir"]
+    command: ["npx", "vite", "build", "--watch", "--mode", "development", "--outDir", "../backend/gabby/templates/adapted", "--emptyOutDir"]
     depends_on:
       npm-installer:
         condition: service_completed_successfully
     healthcheck:
-      test: ["CMD", "test", "-f", "/app/backend/textbooks/templates/adapted/index.html"]
+      test: ["CMD", "test", "-f", "/app/backend/gabby/templates/adapted/index.html"]
       interval: 0.5s
 
   db:

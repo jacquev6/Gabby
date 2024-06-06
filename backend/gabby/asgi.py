@@ -2,12 +2,14 @@ import json
 
 from fastapi import Depends, FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
 
 from fastjsonapi import make_jsonapi_router
 
 from . import database_utils
 from . import settings
 from .fixtures import available_fixtures
+from .projects import Project, ProjectsResource
 from .users import authentication_token_dependable
 from . import api_resources
 
@@ -39,21 +41,44 @@ app.include_router(
 )
 
 @app.get("/api/project-{project_id}-extraction-report.json")
-def extraction_report(project_id: str):
-    return make_extraction_report(ProjectsResource.sqids.decode(project_id)[0])
+def extraction_report(project_id: str, session: database_utils.Session = Depends(database_utils.session_dependable)):
+    project = session.get(Project, ProjectsResource.sqids.decode(project_id)[0])
+    return {
+        "project": {
+            "title": project.title,
+            "textbooks": [
+                {
+                    "title": textbook.title,
+                    "exercises": [
+                        {
+                            "page": exercise.textbook_page,
+                            "number": exercise.number,
+                            "events": [
+                                json.loads(event.event)
+                                for event in exercise.extraction_events
+                            ],
+                        }
+                        # @todo Sort in DB to respect the custom collation
+                        for exercise in sorted(textbook.exercises, key=lambda e: (e.textbook_page, e.number))
+                    ],
+                }
+                for textbook in project.textbooks
+            ],
+        },
+    }
 
 @app.get("/api/project-{project_id}.html")
-def export_project(project_id: str):
-    project = Project.objects.get(id=ProjectsResource.sqids.decode(project_id)[0])
+def export_project(project_id: str, session: database_utils.Session = Depends(database_utils.session_dependable)):
+    project = session.get(Project, ProjectsResource.sqids.decode(project_id)[0])
     exercises = []
-    for exercise in project.exercises.all():
+    for exercise in project.exercises:
         if exercise.adaptation is not None:
             exercises.append(exercise.adaptation.make_adapted().model_dump())
     data = json.dumps(dict(
         projectId=project.id,
         exercises=exercises,
     )).replace("\\", "\\\\").replace('"', "\\\"")
-    with open("textbooks/templates/adapted/index.html") as f:
+    with open("gabby/templates/adapted/index.html") as f:
         template = f.read()
     return HTMLResponse(
         content=template.replace("{{ data }}", data),
