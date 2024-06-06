@@ -126,7 +126,7 @@
         "title": "CreateInputListRelationship",
         "type": "object"
       },
-      "FillWithFreeTextAdaptationOptionsModel": {
+      "FillWithFreeTextAdaptationOptions": {
         "properties": {
           "placeholder": {
             "title": "Placeholder",
@@ -136,7 +136,7 @@
         "required": [
           "placeholder"
         ],
-        "title": "FillWithFreeTextAdaptationOptionsModel",
+        "title": "FillWithFreeTextAdaptationOptions",
         "type": "object"
       },
       "HTTPValidationError": {
@@ -152,7 +152,7 @@
         "title": "HTTPValidationError",
         "type": "object"
       },
-      "ItemLinksModel": {
+      "ItemLinks": {
         "additionalProperties": false,
         "properties": {
           "self": {
@@ -163,7 +163,7 @@
         "required": [
           "self"
         ],
-        "title": "ItemLinksModel",
+        "title": "ItemLinks",
         "type": "object"
       },
       "MandatoryRelationship": {
@@ -193,7 +193,7 @@
         "title": "Meta",
         "type": "object"
       },
-      "MultipleChoicesInInstructionsAdaptationOptionsModel": {
+      "MultipleChoicesInInstructionsAdaptationOptions": {
         "properties": {
           "placeholder": {
             "title": "Placeholder",
@@ -203,12 +203,12 @@
         "required": [
           "placeholder"
         ],
-        "title": "MultipleChoicesInInstructionsAdaptationOptionsModel",
+        "title": "MultipleChoicesInInstructionsAdaptationOptions",
         "type": "object"
       },
-      "MultipleChoicesInWordingAdaptationOptionsModel": {
+      "MultipleChoicesInWordingAdaptationOptions": {
         "properties": {},
-        "title": "MultipleChoicesInWordingAdaptationOptionsModel",
+        "title": "MultipleChoicesInWordingAdaptationOptions",
         "type": "object"
       },
       "ObjectId": {
@@ -268,7 +268,7 @@
         "title": "OutputListRelationship",
         "type": "object"
       },
-      "PageLinksModel": {
+      "PageLinks": {
         "additionalProperties": false,
         "properties": {
           "first": {
@@ -308,10 +308,10 @@
           "next",
           "prev"
         ],
-        "title": "PageLinksModel",
+        "title": "PageLinks",
         "type": "object"
       },
-      "PageMetaModel": {
+      "PageMeta": {
         "additionalProperties": false,
         "properties": {
           "pagination": {
@@ -321,7 +321,7 @@
         "required": [
           "pagination"
         ],
-        "title": "PageMetaModel",
+        "title": "PageMeta",
         "type": "object"
       },
       "Pagination": {
@@ -416,7 +416,7 @@
         "title": "Section",
         "type": "object"
       },
-      "SelectThingsAdaptationOptionsModel": {
+      "SelectThingsAdaptationOptions": {
         "properties": {
           "colors": {
             "title": "Colors",
@@ -436,7 +436,7 @@
           "words",
           "punctuation"
         ],
-        "title": "SelectThingsAdaptationOptionsModel",
+        "title": "SelectThingsAdaptationOptions",
         "type": "object"
       },
       "Sentence": {
@@ -498,7 +498,7 @@
         "title": "UpdateInputListRelationship",
         "type": "object"
       },
-      "UserModel": {
+      "User": {
         "properties": {
           "username": {
             "title": "Username",
@@ -508,7 +508,7 @@
         "required": [
           "username"
         ],
-        "title": "UserModel",
+        "title": "User",
         "type": "object"
       },
       "ValidationError": {
@@ -741,29 +741,29 @@
         "title": "_Whitespace",
         "type": "object"
       },
-      "adaptedExercise-CreateInput": {
+      "adaptedExerciseCreateInput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/adaptedExercise-CreateInput-Data"
+            "$ref": "#/components/schemas/adaptedExerciseCreateInputData"
           }
         },
         "required": [
           "data"
         ],
-        "title": "adaptedExercise-CreateInput",
+        "title": "adaptedExerciseCreateInput",
         "type": "object"
       },
-      "adaptedExercise-CreateInput-Data": {
+      "adaptedExerciseCreateInputData": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "$ref": "#/components/schemas/adaptedExercise-CreateInput-Data-Attributes"
+            "$ref": "#/components/schemas/adaptedExerciseCreateInputDataAttributes"
           },
           "relationships": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/adaptedExercise-CreateInput-Data-Relationships"
+                "$ref": "#/components/schemas/adaptedExerciseCreateInputDataRelationships"
               }
             ],
             "default": {}
@@ -777,25 +777,25 @@
           "type",
           "attributes"
         ],
-        "title": "adaptedExercise-CreateInput-Data",
+        "title": "adaptedExerciseCreateInputData",
         "type": "object"
       },
-      "adaptedExercise-CreateInput-Data-Attributes": {
+      "adaptedExerciseCreateInputDataAttributes": {
         "additionalProperties": false,
         "properties": {
           "adaptationOptions": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/SelectThingsAdaptationOptionsModel"
+                "$ref": "#/components/schemas/SelectThingsAdaptationOptions"
               },
               {
-                "$ref": "#/components/schemas/FillWithFreeTextAdaptationOptionsModel"
+                "$ref": "#/components/schemas/FillWithFreeTextAdaptationOptions"
               },
               {
-                "$ref": "#/components/schemas/MultipleChoicesInInstructionsAdaptationOptionsModel"
+                "$ref": "#/components/schemas/MultipleChoicesInInstructionsAdaptationOptions"
               },
               {
-                "$ref": "#/components/schemas/MultipleChoicesInWordingAdaptationOptionsModel"
+                "$ref": "#/components/schemas/MultipleChoicesInWordingAdaptationOptions"
               }
             ],
             "title": "Adaptationoptions"
@@ -846,20 +846,20 @@
           "type",
           "adaptationOptions"
         ],
-        "title": "adaptedExercise-CreateInput-Data-Attributes",
+        "title": "adaptedExerciseCreateInputDataAttributes",
         "type": "object"
       },
-      "adaptedExercise-CreateInput-Data-Relationships": {
+      "adaptedExerciseCreateInputDataRelationships": {
         "additionalProperties": false,
         "properties": {},
-        "title": "adaptedExercise-CreateInput-Data-Relationships",
+        "title": "adaptedExerciseCreateInputDataRelationships",
         "type": "object"
       },
-      "adaptedExercise-ItemOutput": {
+      "adaptedExerciseItemOutput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/adaptedExercise-OutputItem"
+            "$ref": "#/components/schemas/adaptedExerciseOutputItem"
           },
           "included": {
             "items": {},
@@ -870,21 +870,21 @@
         "required": [
           "data"
         ],
-        "title": "adaptedExercise-ItemOutput",
+        "title": "adaptedExerciseItemOutput",
         "type": "object"
       },
-      "adaptedExercise-OutputItem": {
+      "adaptedExerciseOutputItem": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "$ref": "#/components/schemas/adaptedExercise-OutputItem-Attributes"
+            "$ref": "#/components/schemas/adaptedExerciseOutputItemAttributes"
           },
           "id": {
             "title": "Id",
             "type": "string"
           },
           "links": {
-            "$ref": "#/components/schemas/ItemLinksModel"
+            "$ref": "#/components/schemas/ItemLinks"
           },
           "type": {
             "title": "Type",
@@ -897,10 +897,10 @@
           "links",
           "attributes"
         ],
-        "title": "adaptedExercise-OutputItem",
+        "title": "adaptedExerciseOutputItem",
         "type": "object"
       },
-      "adaptedExercise-OutputItem-Attributes": {
+      "adaptedExerciseOutputItemAttributes": {
         "additionalProperties": false,
         "properties": {
           "adapted": {
@@ -910,30 +910,30 @@
         "required": [
           "adapted"
         ],
-        "title": "adaptedExercise-OutputItem-Attributes",
+        "title": "adaptedExerciseOutputItemAttributes",
         "type": "object"
       },
-      "exercise-CreateInput": {
+      "exerciseCreateInput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/exercise-CreateInput-Data"
+            "$ref": "#/components/schemas/exerciseCreateInputData"
           }
         },
         "required": [
           "data"
         ],
-        "title": "exercise-CreateInput",
+        "title": "exerciseCreateInput",
         "type": "object"
       },
-      "exercise-CreateInput-Data": {
+      "exerciseCreateInputData": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "$ref": "#/components/schemas/exercise-CreateInput-Data-Attributes"
+            "$ref": "#/components/schemas/exerciseCreateInputDataAttributes"
           },
           "relationships": {
-            "$ref": "#/components/schemas/exercise-CreateInput-Data-Relationships"
+            "$ref": "#/components/schemas/exerciseCreateInputDataRelationships"
           },
           "type": {
             "title": "Type",
@@ -945,10 +945,10 @@
           "attributes",
           "relationships"
         ],
-        "title": "exercise-CreateInput-Data",
+        "title": "exerciseCreateInputData",
         "type": "object"
       },
-      "exercise-CreateInput-Data-Attributes": {
+      "exerciseCreateInputDataAttributes": {
         "additionalProperties": false,
         "properties": {
           "boundingRectangle": {
@@ -1000,10 +1000,10 @@
         "required": [
           "number"
         ],
-        "title": "exercise-CreateInput-Data-Attributes",
+        "title": "exerciseCreateInputDataAttributes",
         "type": "object"
       },
-      "exercise-CreateInput-Data-Relationships": {
+      "exerciseCreateInputDataRelationships": {
         "additionalProperties": false,
         "properties": {
           "adaptation": {
@@ -1029,14 +1029,14 @@
         "required": [
           "project"
         ],
-        "title": "exercise-CreateInput-Data-Relationships",
+        "title": "exerciseCreateInputDataRelationships",
         "type": "object"
       },
-      "exercise-ItemOutput": {
+      "exerciseItemOutput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/exercise-OutputItem"
+            "$ref": "#/components/schemas/exerciseOutputItem"
           },
           "included": {
             "items": {},
@@ -1047,24 +1047,24 @@
         "required": [
           "data"
         ],
-        "title": "exercise-ItemOutput",
+        "title": "exerciseItemOutput",
         "type": "object"
       },
-      "exercise-OutputItem": {
+      "exerciseOutputItem": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "$ref": "#/components/schemas/exercise-OutputItem-Attributes"
+            "$ref": "#/components/schemas/exerciseOutputItemAttributes"
           },
           "id": {
             "title": "Id",
             "type": "string"
           },
           "links": {
-            "$ref": "#/components/schemas/ItemLinksModel"
+            "$ref": "#/components/schemas/ItemLinks"
           },
           "relationships": {
-            "$ref": "#/components/schemas/exercise-OutputItem-Relationships"
+            "$ref": "#/components/schemas/exerciseOutputItemRelationships"
           },
           "type": {
             "title": "Type",
@@ -1078,10 +1078,10 @@
           "attributes",
           "relationships"
         ],
-        "title": "exercise-OutputItem",
+        "title": "exerciseOutputItem",
         "type": "object"
       },
-      "exercise-OutputItem-Attributes": {
+      "exerciseOutputItemAttributes": {
         "additionalProperties": false,
         "properties": {
           "boundingRectangle": {
@@ -1135,10 +1135,10 @@
           "example",
           "clue"
         ],
-        "title": "exercise-OutputItem-Attributes",
+        "title": "exerciseOutputItemAttributes",
         "type": "object"
       },
-      "exercise-OutputItem-Relationships": {
+      "exerciseOutputItemRelationships": {
         "additionalProperties": false,
         "properties": {
           "adaptation": {
@@ -1160,15 +1160,15 @@
           "extractionEvents",
           "adaptation"
         ],
-        "title": "exercise-OutputItem-Relationships",
+        "title": "exerciseOutputItemRelationships",
         "type": "object"
       },
-      "exercise-PageOutput": {
+      "exercisePageOutput": {
         "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
-              "$ref": "#/components/schemas/exercise-OutputItem"
+              "$ref": "#/components/schemas/exerciseOutputItem"
             },
             "title": "Data",
             "type": "array"
@@ -1179,10 +1179,10 @@
             "type": "array"
           },
           "links": {
-            "$ref": "#/components/schemas/PageLinksModel"
+            "$ref": "#/components/schemas/PageLinks"
           },
           "meta": {
-            "$ref": "#/components/schemas/PageMetaModel"
+            "$ref": "#/components/schemas/PageMeta"
           }
         },
         "required": [
@@ -1190,29 +1190,29 @@
           "meta",
           "links"
         ],
-        "title": "exercise-PageOutput",
+        "title": "exercisePageOutput",
         "type": "object"
       },
-      "exercise-UpdateInput": {
+      "exerciseUpdateInput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/exercise-UpdateInput-Data"
+            "$ref": "#/components/schemas/exerciseUpdateInputData"
           }
         },
         "required": [
           "data"
         ],
-        "title": "exercise-UpdateInput",
+        "title": "exerciseUpdateInput",
         "type": "object"
       },
-      "exercise-UpdateInput-Data": {
+      "exerciseUpdateInputData": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/exercise-UpdateInput-Data-Attributes"
+                "$ref": "#/components/schemas/exerciseUpdateInputDataAttributes"
               }
             ],
             "default": {}
@@ -1224,7 +1224,7 @@
           "relationships": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/exercise-UpdateInput-Data-Relationships"
+                "$ref": "#/components/schemas/exerciseUpdateInputDataRelationships"
               }
             ],
             "default": {}
@@ -1238,10 +1238,10 @@
           "type",
           "id"
         ],
-        "title": "exercise-UpdateInput-Data",
+        "title": "exerciseUpdateInputData",
         "type": "object"
       },
-      "exercise-UpdateInput-Data-Attributes": {
+      "exerciseUpdateInputDataAttributes": {
         "additionalProperties": false,
         "properties": {
           "boundingRectangle": {
@@ -1271,10 +1271,10 @@
             "type": "string"
           }
         },
-        "title": "exercise-UpdateInput-Data-Attributes",
+        "title": "exerciseUpdateInputDataAttributes",
         "type": "object"
       },
-      "exercise-UpdateInput-Data-Relationships": {
+      "exerciseUpdateInputDataRelationships": {
         "additionalProperties": false,
         "properties": {
           "adaptation": {
@@ -1285,30 +1285,30 @@
             ]
           }
         },
-        "title": "exercise-UpdateInput-Data-Relationships",
+        "title": "exerciseUpdateInputDataRelationships",
         "type": "object"
       },
-      "extractionEvent-CreateInput": {
+      "extractionEventCreateInput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/extractionEvent-CreateInput-Data"
+            "$ref": "#/components/schemas/extractionEventCreateInputData"
           }
         },
         "required": [
           "data"
         ],
-        "title": "extractionEvent-CreateInput",
+        "title": "extractionEventCreateInput",
         "type": "object"
       },
-      "extractionEvent-CreateInput-Data": {
+      "extractionEventCreateInputData": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "$ref": "#/components/schemas/extractionEvent-CreateInput-Data-Attributes"
+            "$ref": "#/components/schemas/extractionEventCreateInputDataAttributes"
           },
           "relationships": {
-            "$ref": "#/components/schemas/extractionEvent-CreateInput-Data-Relationships"
+            "$ref": "#/components/schemas/extractionEventCreateInputDataRelationships"
           },
           "type": {
             "title": "Type",
@@ -1320,10 +1320,10 @@
           "attributes",
           "relationships"
         ],
-        "title": "extractionEvent-CreateInput-Data",
+        "title": "extractionEventCreateInputData",
         "type": "object"
       },
-      "extractionEvent-CreateInput-Data-Attributes": {
+      "extractionEventCreateInputDataAttributes": {
         "additionalProperties": false,
         "properties": {
           "event": {
@@ -1334,10 +1334,10 @@
         "required": [
           "event"
         ],
-        "title": "extractionEvent-CreateInput-Data-Attributes",
+        "title": "extractionEventCreateInputDataAttributes",
         "type": "object"
       },
-      "extractionEvent-CreateInput-Data-Relationships": {
+      "extractionEventCreateInputDataRelationships": {
         "additionalProperties": false,
         "properties": {
           "exercise": {
@@ -1347,14 +1347,14 @@
         "required": [
           "exercise"
         ],
-        "title": "extractionEvent-CreateInput-Data-Relationships",
+        "title": "extractionEventCreateInputDataRelationships",
         "type": "object"
       },
-      "extractionEvent-ItemOutput": {
+      "extractionEventItemOutput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/extractionEvent-OutputItem"
+            "$ref": "#/components/schemas/extractionEventOutputItem"
           },
           "included": {
             "items": {},
@@ -1365,24 +1365,24 @@
         "required": [
           "data"
         ],
-        "title": "extractionEvent-ItemOutput",
+        "title": "extractionEventItemOutput",
         "type": "object"
       },
-      "extractionEvent-OutputItem": {
+      "extractionEventOutputItem": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "$ref": "#/components/schemas/extractionEvent-OutputItem-Attributes"
+            "$ref": "#/components/schemas/extractionEventOutputItemAttributes"
           },
           "id": {
             "title": "Id",
             "type": "string"
           },
           "links": {
-            "$ref": "#/components/schemas/ItemLinksModel"
+            "$ref": "#/components/schemas/ItemLinks"
           },
           "relationships": {
-            "$ref": "#/components/schemas/extractionEvent-OutputItem-Relationships"
+            "$ref": "#/components/schemas/extractionEventOutputItemRelationships"
           },
           "type": {
             "title": "Type",
@@ -1396,10 +1396,10 @@
           "attributes",
           "relationships"
         ],
-        "title": "extractionEvent-OutputItem",
+        "title": "extractionEventOutputItem",
         "type": "object"
       },
-      "extractionEvent-OutputItem-Attributes": {
+      "extractionEventOutputItemAttributes": {
         "additionalProperties": false,
         "properties": {
           "event": {
@@ -1410,10 +1410,10 @@
         "required": [
           "event"
         ],
-        "title": "extractionEvent-OutputItem-Attributes",
+        "title": "extractionEventOutputItemAttributes",
         "type": "object"
       },
-      "extractionEvent-OutputItem-Relationships": {
+      "extractionEventOutputItemRelationships": {
         "additionalProperties": false,
         "properties": {
           "exercise": {
@@ -1423,15 +1423,15 @@
         "required": [
           "exercise"
         ],
-        "title": "extractionEvent-OutputItem-Relationships",
+        "title": "extractionEventOutputItemRelationships",
         "type": "object"
       },
-      "extractionEvent-PageOutput": {
+      "extractionEventPageOutput": {
         "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
-              "$ref": "#/components/schemas/extractionEvent-OutputItem"
+              "$ref": "#/components/schemas/extractionEventOutputItem"
             },
             "title": "Data",
             "type": "array"
@@ -1442,10 +1442,10 @@
             "type": "array"
           },
           "links": {
-            "$ref": "#/components/schemas/PageLinksModel"
+            "$ref": "#/components/schemas/PageLinks"
           },
           "meta": {
-            "$ref": "#/components/schemas/PageMetaModel"
+            "$ref": "#/components/schemas/PageMeta"
           }
         },
         "required": [
@@ -1453,29 +1453,29 @@
           "meta",
           "links"
         ],
-        "title": "extractionEvent-PageOutput",
+        "title": "extractionEventPageOutput",
         "type": "object"
       },
-      "extractionEvent-UpdateInput": {
+      "extractionEventUpdateInput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/extractionEvent-UpdateInput-Data"
+            "$ref": "#/components/schemas/extractionEventUpdateInputData"
           }
         },
         "required": [
           "data"
         ],
-        "title": "extractionEvent-UpdateInput",
+        "title": "extractionEventUpdateInput",
         "type": "object"
       },
-      "extractionEvent-UpdateInput-Data": {
+      "extractionEventUpdateInputData": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/extractionEvent-UpdateInput-Data-Attributes"
+                "$ref": "#/components/schemas/extractionEventUpdateInputDataAttributes"
               }
             ],
             "default": {}
@@ -1487,7 +1487,7 @@
           "relationships": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/extractionEvent-UpdateInput-Data-Relationships"
+                "$ref": "#/components/schemas/extractionEventUpdateInputDataRelationships"
               }
             ],
             "default": {}
@@ -1501,42 +1501,42 @@
           "type",
           "id"
         ],
-        "title": "extractionEvent-UpdateInput-Data",
+        "title": "extractionEventUpdateInputData",
         "type": "object"
       },
-      "extractionEvent-UpdateInput-Data-Attributes": {
+      "extractionEventUpdateInputDataAttributes": {
         "additionalProperties": false,
         "properties": {},
-        "title": "extractionEvent-UpdateInput-Data-Attributes",
+        "title": "extractionEventUpdateInputDataAttributes",
         "type": "object"
       },
-      "extractionEvent-UpdateInput-Data-Relationships": {
+      "extractionEventUpdateInputDataRelationships": {
         "additionalProperties": false,
         "properties": {},
-        "title": "extractionEvent-UpdateInput-Data-Relationships",
+        "title": "extractionEventUpdateInputDataRelationships",
         "type": "object"
       },
-      "fillWithFreeTextAdaptation-CreateInput": {
+      "fillWithFreeTextAdaptationCreateInput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/fillWithFreeTextAdaptation-CreateInput-Data"
+            "$ref": "#/components/schemas/fillWithFreeTextAdaptationCreateInputData"
           }
         },
         "required": [
           "data"
         ],
-        "title": "fillWithFreeTextAdaptation-CreateInput",
+        "title": "fillWithFreeTextAdaptationCreateInput",
         "type": "object"
       },
-      "fillWithFreeTextAdaptation-CreateInput-Data": {
+      "fillWithFreeTextAdaptationCreateInputData": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "$ref": "#/components/schemas/fillWithFreeTextAdaptation-CreateInput-Data-Attributes"
+            "$ref": "#/components/schemas/fillWithFreeTextAdaptationCreateInputDataAttributes"
           },
           "relationships": {
-            "$ref": "#/components/schemas/fillWithFreeTextAdaptation-CreateInput-Data-Relationships"
+            "$ref": "#/components/schemas/fillWithFreeTextAdaptationCreateInputDataRelationships"
           },
           "type": {
             "title": "Type",
@@ -1548,10 +1548,10 @@
           "attributes",
           "relationships"
         ],
-        "title": "fillWithFreeTextAdaptation-CreateInput-Data",
+        "title": "fillWithFreeTextAdaptationCreateInputData",
         "type": "object"
       },
-      "fillWithFreeTextAdaptation-CreateInput-Data-Attributes": {
+      "fillWithFreeTextAdaptationCreateInputDataAttributes": {
         "additionalProperties": false,
         "properties": {
           "placeholder": {
@@ -1562,10 +1562,10 @@
         "required": [
           "placeholder"
         ],
-        "title": "fillWithFreeTextAdaptation-CreateInput-Data-Attributes",
+        "title": "fillWithFreeTextAdaptationCreateInputDataAttributes",
         "type": "object"
       },
-      "fillWithFreeTextAdaptation-CreateInput-Data-Relationships": {
+      "fillWithFreeTextAdaptationCreateInputDataRelationships": {
         "additionalProperties": false,
         "properties": {
           "exercise": {
@@ -1575,14 +1575,14 @@
         "required": [
           "exercise"
         ],
-        "title": "fillWithFreeTextAdaptation-CreateInput-Data-Relationships",
+        "title": "fillWithFreeTextAdaptationCreateInputDataRelationships",
         "type": "object"
       },
-      "fillWithFreeTextAdaptation-ItemOutput": {
+      "fillWithFreeTextAdaptationItemOutput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/fillWithFreeTextAdaptation-OutputItem"
+            "$ref": "#/components/schemas/fillWithFreeTextAdaptationOutputItem"
           },
           "included": {
             "items": {},
@@ -1593,24 +1593,24 @@
         "required": [
           "data"
         ],
-        "title": "fillWithFreeTextAdaptation-ItemOutput",
+        "title": "fillWithFreeTextAdaptationItemOutput",
         "type": "object"
       },
-      "fillWithFreeTextAdaptation-OutputItem": {
+      "fillWithFreeTextAdaptationOutputItem": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "$ref": "#/components/schemas/fillWithFreeTextAdaptation-OutputItem-Attributes"
+            "$ref": "#/components/schemas/fillWithFreeTextAdaptationOutputItemAttributes"
           },
           "id": {
             "title": "Id",
             "type": "string"
           },
           "links": {
-            "$ref": "#/components/schemas/ItemLinksModel"
+            "$ref": "#/components/schemas/ItemLinks"
           },
           "relationships": {
-            "$ref": "#/components/schemas/fillWithFreeTextAdaptation-OutputItem-Relationships"
+            "$ref": "#/components/schemas/fillWithFreeTextAdaptationOutputItemRelationships"
           },
           "type": {
             "title": "Type",
@@ -1624,10 +1624,10 @@
           "attributes",
           "relationships"
         ],
-        "title": "fillWithFreeTextAdaptation-OutputItem",
+        "title": "fillWithFreeTextAdaptationOutputItem",
         "type": "object"
       },
-      "fillWithFreeTextAdaptation-OutputItem-Attributes": {
+      "fillWithFreeTextAdaptationOutputItemAttributes": {
         "additionalProperties": false,
         "properties": {
           "placeholder": {
@@ -1638,10 +1638,10 @@
         "required": [
           "placeholder"
         ],
-        "title": "fillWithFreeTextAdaptation-OutputItem-Attributes",
+        "title": "fillWithFreeTextAdaptationOutputItemAttributes",
         "type": "object"
       },
-      "fillWithFreeTextAdaptation-OutputItem-Relationships": {
+      "fillWithFreeTextAdaptationOutputItemRelationships": {
         "additionalProperties": false,
         "properties": {
           "exercise": {
@@ -1651,29 +1651,29 @@
         "required": [
           "exercise"
         ],
-        "title": "fillWithFreeTextAdaptation-OutputItem-Relationships",
+        "title": "fillWithFreeTextAdaptationOutputItemRelationships",
         "type": "object"
       },
-      "fillWithFreeTextAdaptation-UpdateInput": {
+      "fillWithFreeTextAdaptationUpdateInput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/fillWithFreeTextAdaptation-UpdateInput-Data"
+            "$ref": "#/components/schemas/fillWithFreeTextAdaptationUpdateInputData"
           }
         },
         "required": [
           "data"
         ],
-        "title": "fillWithFreeTextAdaptation-UpdateInput",
+        "title": "fillWithFreeTextAdaptationUpdateInput",
         "type": "object"
       },
-      "fillWithFreeTextAdaptation-UpdateInput-Data": {
+      "fillWithFreeTextAdaptationUpdateInputData": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/fillWithFreeTextAdaptation-UpdateInput-Data-Attributes"
+                "$ref": "#/components/schemas/fillWithFreeTextAdaptationUpdateInputDataAttributes"
               }
             ],
             "default": {}
@@ -1685,7 +1685,7 @@
           "relationships": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/fillWithFreeTextAdaptation-UpdateInput-Data-Relationships"
+                "$ref": "#/components/schemas/fillWithFreeTextAdaptationUpdateInputDataRelationships"
               }
             ],
             "default": {}
@@ -1699,10 +1699,10 @@
           "type",
           "id"
         ],
-        "title": "fillWithFreeTextAdaptation-UpdateInput-Data",
+        "title": "fillWithFreeTextAdaptationUpdateInputData",
         "type": "object"
       },
-      "fillWithFreeTextAdaptation-UpdateInput-Data-Attributes": {
+      "fillWithFreeTextAdaptationUpdateInputDataAttributes": {
         "additionalProperties": false,
         "properties": {
           "placeholder": {
@@ -1710,36 +1710,36 @@
             "type": "string"
           }
         },
-        "title": "fillWithFreeTextAdaptation-UpdateInput-Data-Attributes",
+        "title": "fillWithFreeTextAdaptationUpdateInputDataAttributes",
         "type": "object"
       },
-      "fillWithFreeTextAdaptation-UpdateInput-Data-Relationships": {
+      "fillWithFreeTextAdaptationUpdateInputDataRelationships": {
         "additionalProperties": false,
         "properties": {},
-        "title": "fillWithFreeTextAdaptation-UpdateInput-Data-Relationships",
+        "title": "fillWithFreeTextAdaptationUpdateInputDataRelationships",
         "type": "object"
       },
-      "multipleChoicesInInstructionsAdaptation-CreateInput": {
+      "multipleChoicesInInstructionsAdaptationCreateInput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation-CreateInput-Data"
+            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptationCreateInputData"
           }
         },
         "required": [
           "data"
         ],
-        "title": "multipleChoicesInInstructionsAdaptation-CreateInput",
+        "title": "multipleChoicesInInstructionsAdaptationCreateInput",
         "type": "object"
       },
-      "multipleChoicesInInstructionsAdaptation-CreateInput-Data": {
+      "multipleChoicesInInstructionsAdaptationCreateInputData": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation-CreateInput-Data-Attributes"
+            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptationCreateInputDataAttributes"
           },
           "relationships": {
-            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation-CreateInput-Data-Relationships"
+            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptationCreateInputDataRelationships"
           },
           "type": {
             "title": "Type",
@@ -1751,10 +1751,10 @@
           "attributes",
           "relationships"
         ],
-        "title": "multipleChoicesInInstructionsAdaptation-CreateInput-Data",
+        "title": "multipleChoicesInInstructionsAdaptationCreateInputData",
         "type": "object"
       },
-      "multipleChoicesInInstructionsAdaptation-CreateInput-Data-Attributes": {
+      "multipleChoicesInInstructionsAdaptationCreateInputDataAttributes": {
         "additionalProperties": false,
         "properties": {
           "placeholder": {
@@ -1765,10 +1765,10 @@
         "required": [
           "placeholder"
         ],
-        "title": "multipleChoicesInInstructionsAdaptation-CreateInput-Data-Attributes",
+        "title": "multipleChoicesInInstructionsAdaptationCreateInputDataAttributes",
         "type": "object"
       },
-      "multipleChoicesInInstructionsAdaptation-CreateInput-Data-Relationships": {
+      "multipleChoicesInInstructionsAdaptationCreateInputDataRelationships": {
         "additionalProperties": false,
         "properties": {
           "exercise": {
@@ -1778,14 +1778,14 @@
         "required": [
           "exercise"
         ],
-        "title": "multipleChoicesInInstructionsAdaptation-CreateInput-Data-Relationships",
+        "title": "multipleChoicesInInstructionsAdaptationCreateInputDataRelationships",
         "type": "object"
       },
-      "multipleChoicesInInstructionsAdaptation-ItemOutput": {
+      "multipleChoicesInInstructionsAdaptationItemOutput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation-OutputItem"
+            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptationOutputItem"
           },
           "included": {
             "items": {},
@@ -1796,24 +1796,24 @@
         "required": [
           "data"
         ],
-        "title": "multipleChoicesInInstructionsAdaptation-ItemOutput",
+        "title": "multipleChoicesInInstructionsAdaptationItemOutput",
         "type": "object"
       },
-      "multipleChoicesInInstructionsAdaptation-OutputItem": {
+      "multipleChoicesInInstructionsAdaptationOutputItem": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation-OutputItem-Attributes"
+            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptationOutputItemAttributes"
           },
           "id": {
             "title": "Id",
             "type": "string"
           },
           "links": {
-            "$ref": "#/components/schemas/ItemLinksModel"
+            "$ref": "#/components/schemas/ItemLinks"
           },
           "relationships": {
-            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation-OutputItem-Relationships"
+            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptationOutputItemRelationships"
           },
           "type": {
             "title": "Type",
@@ -1827,10 +1827,10 @@
           "attributes",
           "relationships"
         ],
-        "title": "multipleChoicesInInstructionsAdaptation-OutputItem",
+        "title": "multipleChoicesInInstructionsAdaptationOutputItem",
         "type": "object"
       },
-      "multipleChoicesInInstructionsAdaptation-OutputItem-Attributes": {
+      "multipleChoicesInInstructionsAdaptationOutputItemAttributes": {
         "additionalProperties": false,
         "properties": {
           "placeholder": {
@@ -1841,10 +1841,10 @@
         "required": [
           "placeholder"
         ],
-        "title": "multipleChoicesInInstructionsAdaptation-OutputItem-Attributes",
+        "title": "multipleChoicesInInstructionsAdaptationOutputItemAttributes",
         "type": "object"
       },
-      "multipleChoicesInInstructionsAdaptation-OutputItem-Relationships": {
+      "multipleChoicesInInstructionsAdaptationOutputItemRelationships": {
         "additionalProperties": false,
         "properties": {
           "exercise": {
@@ -1854,29 +1854,29 @@
         "required": [
           "exercise"
         ],
-        "title": "multipleChoicesInInstructionsAdaptation-OutputItem-Relationships",
+        "title": "multipleChoicesInInstructionsAdaptationOutputItemRelationships",
         "type": "object"
       },
-      "multipleChoicesInInstructionsAdaptation-UpdateInput": {
+      "multipleChoicesInInstructionsAdaptationUpdateInput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation-UpdateInput-Data"
+            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptationUpdateInputData"
           }
         },
         "required": [
           "data"
         ],
-        "title": "multipleChoicesInInstructionsAdaptation-UpdateInput",
+        "title": "multipleChoicesInInstructionsAdaptationUpdateInput",
         "type": "object"
       },
-      "multipleChoicesInInstructionsAdaptation-UpdateInput-Data": {
+      "multipleChoicesInInstructionsAdaptationUpdateInputData": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation-UpdateInput-Data-Attributes"
+                "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptationUpdateInputDataAttributes"
               }
             ],
             "default": {}
@@ -1888,7 +1888,7 @@
           "relationships": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation-UpdateInput-Data-Relationships"
+                "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptationUpdateInputDataRelationships"
               }
             ],
             "default": {}
@@ -1902,10 +1902,10 @@
           "type",
           "id"
         ],
-        "title": "multipleChoicesInInstructionsAdaptation-UpdateInput-Data",
+        "title": "multipleChoicesInInstructionsAdaptationUpdateInputData",
         "type": "object"
       },
-      "multipleChoicesInInstructionsAdaptation-UpdateInput-Data-Attributes": {
+      "multipleChoicesInInstructionsAdaptationUpdateInputDataAttributes": {
         "additionalProperties": false,
         "properties": {
           "placeholder": {
@@ -1913,41 +1913,41 @@
             "type": "string"
           }
         },
-        "title": "multipleChoicesInInstructionsAdaptation-UpdateInput-Data-Attributes",
+        "title": "multipleChoicesInInstructionsAdaptationUpdateInputDataAttributes",
         "type": "object"
       },
-      "multipleChoicesInInstructionsAdaptation-UpdateInput-Data-Relationships": {
+      "multipleChoicesInInstructionsAdaptationUpdateInputDataRelationships": {
         "additionalProperties": false,
         "properties": {},
-        "title": "multipleChoicesInInstructionsAdaptation-UpdateInput-Data-Relationships",
+        "title": "multipleChoicesInInstructionsAdaptationUpdateInputDataRelationships",
         "type": "object"
       },
-      "multipleChoicesInWordingAdaptation-CreateInput": {
+      "multipleChoicesInWordingAdaptationCreateInput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/multipleChoicesInWordingAdaptation-CreateInput-Data"
+            "$ref": "#/components/schemas/multipleChoicesInWordingAdaptationCreateInputData"
           }
         },
         "required": [
           "data"
         ],
-        "title": "multipleChoicesInWordingAdaptation-CreateInput",
+        "title": "multipleChoicesInWordingAdaptationCreateInput",
         "type": "object"
       },
-      "multipleChoicesInWordingAdaptation-CreateInput-Data": {
+      "multipleChoicesInWordingAdaptationCreateInputData": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/multipleChoicesInWordingAdaptation-CreateInput-Data-Attributes"
+                "$ref": "#/components/schemas/multipleChoicesInWordingAdaptationCreateInputDataAttributes"
               }
             ],
             "default": {}
           },
           "relationships": {
-            "$ref": "#/components/schemas/multipleChoicesInWordingAdaptation-CreateInput-Data-Relationships"
+            "$ref": "#/components/schemas/multipleChoicesInWordingAdaptationCreateInputDataRelationships"
           },
           "type": {
             "title": "Type",
@@ -1958,16 +1958,16 @@
           "type",
           "relationships"
         ],
-        "title": "multipleChoicesInWordingAdaptation-CreateInput-Data",
+        "title": "multipleChoicesInWordingAdaptationCreateInputData",
         "type": "object"
       },
-      "multipleChoicesInWordingAdaptation-CreateInput-Data-Attributes": {
+      "multipleChoicesInWordingAdaptationCreateInputDataAttributes": {
         "additionalProperties": false,
         "properties": {},
-        "title": "multipleChoicesInWordingAdaptation-CreateInput-Data-Attributes",
+        "title": "multipleChoicesInWordingAdaptationCreateInputDataAttributes",
         "type": "object"
       },
-      "multipleChoicesInWordingAdaptation-CreateInput-Data-Relationships": {
+      "multipleChoicesInWordingAdaptationCreateInputDataRelationships": {
         "additionalProperties": false,
         "properties": {
           "exercise": {
@@ -1977,14 +1977,14 @@
         "required": [
           "exercise"
         ],
-        "title": "multipleChoicesInWordingAdaptation-CreateInput-Data-Relationships",
+        "title": "multipleChoicesInWordingAdaptationCreateInputDataRelationships",
         "type": "object"
       },
-      "multipleChoicesInWordingAdaptation-ItemOutput": {
+      "multipleChoicesInWordingAdaptationItemOutput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/multipleChoicesInWordingAdaptation-OutputItem"
+            "$ref": "#/components/schemas/multipleChoicesInWordingAdaptationOutputItem"
           },
           "included": {
             "items": {},
@@ -1995,10 +1995,10 @@
         "required": [
           "data"
         ],
-        "title": "multipleChoicesInWordingAdaptation-ItemOutput",
+        "title": "multipleChoicesInWordingAdaptationItemOutput",
         "type": "object"
       },
-      "multipleChoicesInWordingAdaptation-OutputItem": {
+      "multipleChoicesInWordingAdaptationOutputItem": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -2006,10 +2006,10 @@
             "type": "string"
           },
           "links": {
-            "$ref": "#/components/schemas/ItemLinksModel"
+            "$ref": "#/components/schemas/ItemLinks"
           },
           "relationships": {
-            "$ref": "#/components/schemas/multipleChoicesInWordingAdaptation-OutputItem-Relationships"
+            "$ref": "#/components/schemas/multipleChoicesInWordingAdaptationOutputItemRelationships"
           },
           "type": {
             "title": "Type",
@@ -2022,10 +2022,10 @@
           "links",
           "relationships"
         ],
-        "title": "multipleChoicesInWordingAdaptation-OutputItem",
+        "title": "multipleChoicesInWordingAdaptationOutputItem",
         "type": "object"
       },
-      "multipleChoicesInWordingAdaptation-OutputItem-Relationships": {
+      "multipleChoicesInWordingAdaptationOutputItemRelationships": {
         "additionalProperties": false,
         "properties": {
           "exercise": {
@@ -2035,29 +2035,29 @@
         "required": [
           "exercise"
         ],
-        "title": "multipleChoicesInWordingAdaptation-OutputItem-Relationships",
+        "title": "multipleChoicesInWordingAdaptationOutputItemRelationships",
         "type": "object"
       },
-      "multipleChoicesInWordingAdaptation-UpdateInput": {
+      "multipleChoicesInWordingAdaptationUpdateInput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/multipleChoicesInWordingAdaptation-UpdateInput-Data"
+            "$ref": "#/components/schemas/multipleChoicesInWordingAdaptationUpdateInputData"
           }
         },
         "required": [
           "data"
         ],
-        "title": "multipleChoicesInWordingAdaptation-UpdateInput",
+        "title": "multipleChoicesInWordingAdaptationUpdateInput",
         "type": "object"
       },
-      "multipleChoicesInWordingAdaptation-UpdateInput-Data": {
+      "multipleChoicesInWordingAdaptationUpdateInputData": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/multipleChoicesInWordingAdaptation-UpdateInput-Data-Attributes"
+                "$ref": "#/components/schemas/multipleChoicesInWordingAdaptationUpdateInputDataAttributes"
               }
             ],
             "default": {}
@@ -2069,7 +2069,7 @@
           "relationships": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/multipleChoicesInWordingAdaptation-UpdateInput-Data-Relationships"
+                "$ref": "#/components/schemas/multipleChoicesInWordingAdaptationUpdateInputDataRelationships"
               }
             ],
             "default": {}
@@ -2083,44 +2083,44 @@
           "type",
           "id"
         ],
-        "title": "multipleChoicesInWordingAdaptation-UpdateInput-Data",
+        "title": "multipleChoicesInWordingAdaptationUpdateInputData",
         "type": "object"
       },
-      "multipleChoicesInWordingAdaptation-UpdateInput-Data-Attributes": {
+      "multipleChoicesInWordingAdaptationUpdateInputDataAttributes": {
         "additionalProperties": false,
         "properties": {},
-        "title": "multipleChoicesInWordingAdaptation-UpdateInput-Data-Attributes",
+        "title": "multipleChoicesInWordingAdaptationUpdateInputDataAttributes",
         "type": "object"
       },
-      "multipleChoicesInWordingAdaptation-UpdateInput-Data-Relationships": {
+      "multipleChoicesInWordingAdaptationUpdateInputDataRelationships": {
         "additionalProperties": false,
         "properties": {},
-        "title": "multipleChoicesInWordingAdaptation-UpdateInput-Data-Relationships",
+        "title": "multipleChoicesInWordingAdaptationUpdateInputDataRelationships",
         "type": "object"
       },
-      "pdfFile-CreateInput": {
+      "pdfFileCreateInput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/pdfFile-CreateInput-Data"
+            "$ref": "#/components/schemas/pdfFileCreateInputData"
           }
         },
         "required": [
           "data"
         ],
-        "title": "pdfFile-CreateInput",
+        "title": "pdfFileCreateInput",
         "type": "object"
       },
-      "pdfFile-CreateInput-Data": {
+      "pdfFileCreateInputData": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "$ref": "#/components/schemas/pdfFile-CreateInput-Data-Attributes"
+            "$ref": "#/components/schemas/pdfFileCreateInputDataAttributes"
           },
           "relationships": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/pdfFile-CreateInput-Data-Relationships"
+                "$ref": "#/components/schemas/pdfFileCreateInputDataRelationships"
               }
             ],
             "default": {}
@@ -2134,10 +2134,10 @@
           "type",
           "attributes"
         ],
-        "title": "pdfFile-CreateInput-Data",
+        "title": "pdfFileCreateInputData",
         "type": "object"
       },
-      "pdfFile-CreateInput-Data-Attributes": {
+      "pdfFileCreateInputDataAttributes": {
         "additionalProperties": false,
         "properties": {
           "bytesCount": {
@@ -2158,20 +2158,20 @@
           "bytesCount",
           "pagesCount"
         ],
-        "title": "pdfFile-CreateInput-Data-Attributes",
+        "title": "pdfFileCreateInputDataAttributes",
         "type": "object"
       },
-      "pdfFile-CreateInput-Data-Relationships": {
+      "pdfFileCreateInputDataRelationships": {
         "additionalProperties": false,
         "properties": {},
-        "title": "pdfFile-CreateInput-Data-Relationships",
+        "title": "pdfFileCreateInputDataRelationships",
         "type": "object"
       },
-      "pdfFile-ItemOutput": {
+      "pdfFileItemOutput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/pdfFile-OutputItem"
+            "$ref": "#/components/schemas/pdfFileOutputItem"
           },
           "included": {
             "items": {},
@@ -2182,24 +2182,104 @@
         "required": [
           "data"
         ],
-        "title": "pdfFile-ItemOutput",
+        "title": "pdfFileItemOutput",
         "type": "object"
       },
-      "pdfFile-OutputItem": {
+      "pdfFileNamingCreateInput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/pdfFileNamingCreateInputData"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "pdfFileNamingCreateInput",
+        "type": "object"
+      },
+      "pdfFileNamingCreateInputData": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "$ref": "#/components/schemas/pdfFile-OutputItem-Attributes"
+            "$ref": "#/components/schemas/pdfFileNamingCreateInputDataAttributes"
+          },
+          "relationships": {
+            "$ref": "#/components/schemas/pdfFileNamingCreateInputDataRelationships"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "attributes",
+          "relationships"
+        ],
+        "title": "pdfFileNamingCreateInputData",
+        "type": "object"
+      },
+      "pdfFileNamingCreateInputDataAttributes": {
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "title": "pdfFileNamingCreateInputDataAttributes",
+        "type": "object"
+      },
+      "pdfFileNamingCreateInputDataRelationships": {
+        "additionalProperties": false,
+        "properties": {
+          "pdfFile": {
+            "$ref": "#/components/schemas/MandatoryRelationship"
+          }
+        },
+        "required": [
+          "pdfFile"
+        ],
+        "title": "pdfFileNamingCreateInputDataRelationships",
+        "type": "object"
+      },
+      "pdfFileNamingItemOutput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/pdfFileNamingOutputItem"
+          },
+          "included": {
+            "items": {},
+            "title": "Included",
+            "type": "array"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "pdfFileNamingItemOutput",
+        "type": "object"
+      },
+      "pdfFileNamingOutputItem": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "$ref": "#/components/schemas/pdfFileNamingOutputItemAttributes"
           },
           "id": {
             "title": "Id",
             "type": "string"
           },
           "links": {
-            "$ref": "#/components/schemas/ItemLinksModel"
+            "$ref": "#/components/schemas/ItemLinks"
           },
           "relationships": {
-            "$ref": "#/components/schemas/pdfFile-OutputItem-Relationships"
+            "$ref": "#/components/schemas/pdfFileNamingOutputItemRelationships"
           },
           "type": {
             "title": "Type",
@@ -2213,10 +2293,158 @@
           "attributes",
           "relationships"
         ],
-        "title": "pdfFile-OutputItem",
+        "title": "pdfFileNamingOutputItem",
         "type": "object"
       },
-      "pdfFile-OutputItem-Attributes": {
+      "pdfFileNamingOutputItemAttributes": {
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "title": "pdfFileNamingOutputItemAttributes",
+        "type": "object"
+      },
+      "pdfFileNamingOutputItemRelationships": {
+        "additionalProperties": false,
+        "properties": {
+          "pdfFile": {
+            "$ref": "#/components/schemas/MandatoryRelationship"
+          }
+        },
+        "required": [
+          "pdfFile"
+        ],
+        "title": "pdfFileNamingOutputItemRelationships",
+        "type": "object"
+      },
+      "pdfFileNamingPageOutput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/pdfFileNamingOutputItem"
+            },
+            "title": "Data",
+            "type": "array"
+          },
+          "included": {
+            "items": {},
+            "title": "Included",
+            "type": "array"
+          },
+          "links": {
+            "$ref": "#/components/schemas/PageLinks"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/PageMeta"
+          }
+        },
+        "required": [
+          "data",
+          "meta",
+          "links"
+        ],
+        "title": "pdfFileNamingPageOutput",
+        "type": "object"
+      },
+      "pdfFileNamingUpdateInput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/pdfFileNamingUpdateInputData"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "pdfFileNamingUpdateInput",
+        "type": "object"
+      },
+      "pdfFileNamingUpdateInputData": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/pdfFileNamingUpdateInputDataAttributes"
+              }
+            ],
+            "default": {}
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/pdfFileNamingUpdateInputDataRelationships"
+              }
+            ],
+            "default": {}
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "pdfFileNamingUpdateInputData",
+        "type": "object"
+      },
+      "pdfFileNamingUpdateInputDataAttributes": {
+        "additionalProperties": false,
+        "properties": {},
+        "title": "pdfFileNamingUpdateInputDataAttributes",
+        "type": "object"
+      },
+      "pdfFileNamingUpdateInputDataRelationships": {
+        "additionalProperties": false,
+        "properties": {},
+        "title": "pdfFileNamingUpdateInputDataRelationships",
+        "type": "object"
+      },
+      "pdfFileOutputItem": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "$ref": "#/components/schemas/pdfFileOutputItemAttributes"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "links": {
+            "$ref": "#/components/schemas/ItemLinks"
+          },
+          "relationships": {
+            "$ref": "#/components/schemas/pdfFileOutputItemRelationships"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "links",
+          "attributes",
+          "relationships"
+        ],
+        "title": "pdfFileOutputItem",
+        "type": "object"
+      },
+      "pdfFileOutputItemAttributes": {
         "additionalProperties": false,
         "properties": {
           "bytesCount": {
@@ -2237,10 +2465,10 @@
           "bytesCount",
           "pagesCount"
         ],
-        "title": "pdfFile-OutputItem-Attributes",
+        "title": "pdfFileOutputItemAttributes",
         "type": "object"
       },
-      "pdfFile-OutputItem-Relationships": {
+      "pdfFileOutputItemRelationships": {
         "additionalProperties": false,
         "properties": {
           "namings": {
@@ -2254,15 +2482,15 @@
           "namings",
           "sections"
         ],
-        "title": "pdfFile-OutputItem-Relationships",
+        "title": "pdfFileOutputItemRelationships",
         "type": "object"
       },
-      "pdfFile-PageOutput": {
+      "pdfFilePageOutput": {
         "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
-              "$ref": "#/components/schemas/pdfFile-OutputItem"
+              "$ref": "#/components/schemas/pdfFileOutputItem"
             },
             "title": "Data",
             "type": "array"
@@ -2273,10 +2501,10 @@
             "type": "array"
           },
           "links": {
-            "$ref": "#/components/schemas/PageLinksModel"
+            "$ref": "#/components/schemas/PageLinks"
           },
           "meta": {
-            "$ref": "#/components/schemas/PageMetaModel"
+            "$ref": "#/components/schemas/PageMeta"
           }
         },
         "required": [
@@ -2284,29 +2512,29 @@
           "meta",
           "links"
         ],
-        "title": "pdfFile-PageOutput",
+        "title": "pdfFilePageOutput",
         "type": "object"
       },
-      "pdfFile-UpdateInput": {
+      "pdfFileUpdateInput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/pdfFile-UpdateInput-Data"
+            "$ref": "#/components/schemas/pdfFileUpdateInputData"
           }
         },
         "required": [
           "data"
         ],
-        "title": "pdfFile-UpdateInput",
+        "title": "pdfFileUpdateInput",
         "type": "object"
       },
-      "pdfFile-UpdateInput-Data": {
+      "pdfFileUpdateInputData": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/pdfFile-UpdateInput-Data-Attributes"
+                "$ref": "#/components/schemas/pdfFileUpdateInputDataAttributes"
               }
             ],
             "default": {}
@@ -2318,7 +2546,7 @@
           "relationships": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/pdfFile-UpdateInput-Data-Relationships"
+                "$ref": "#/components/schemas/pdfFileUpdateInputDataRelationships"
               }
             ],
             "default": {}
@@ -2332,269 +2560,41 @@
           "type",
           "id"
         ],
-        "title": "pdfFile-UpdateInput-Data",
+        "title": "pdfFileUpdateInputData",
         "type": "object"
       },
-      "pdfFile-UpdateInput-Data-Attributes": {
+      "pdfFileUpdateInputDataAttributes": {
         "additionalProperties": false,
         "properties": {},
-        "title": "pdfFile-UpdateInput-Data-Attributes",
+        "title": "pdfFileUpdateInputDataAttributes",
         "type": "object"
       },
-      "pdfFile-UpdateInput-Data-Relationships": {
+      "pdfFileUpdateInputDataRelationships": {
         "additionalProperties": false,
         "properties": {},
-        "title": "pdfFile-UpdateInput-Data-Relationships",
+        "title": "pdfFileUpdateInputDataRelationships",
         "type": "object"
       },
-      "pdfFileNaming-CreateInput": {
+      "pingCreateInput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/pdfFileNaming-CreateInput-Data"
+            "$ref": "#/components/schemas/pingCreateInputData"
           }
         },
         "required": [
           "data"
         ],
-        "title": "pdfFileNaming-CreateInput",
+        "title": "pingCreateInput",
         "type": "object"
       },
-      "pdfFileNaming-CreateInput-Data": {
-        "additionalProperties": false,
-        "properties": {
-          "attributes": {
-            "$ref": "#/components/schemas/pdfFileNaming-CreateInput-Data-Attributes"
-          },
-          "relationships": {
-            "$ref": "#/components/schemas/pdfFileNaming-CreateInput-Data-Relationships"
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "attributes",
-          "relationships"
-        ],
-        "title": "pdfFileNaming-CreateInput-Data",
-        "type": "object"
-      },
-      "pdfFileNaming-CreateInput-Data-Attributes": {
-        "additionalProperties": false,
-        "properties": {
-          "name": {
-            "title": "Name",
-            "type": "string"
-          }
-        },
-        "required": [
-          "name"
-        ],
-        "title": "pdfFileNaming-CreateInput-Data-Attributes",
-        "type": "object"
-      },
-      "pdfFileNaming-CreateInput-Data-Relationships": {
-        "additionalProperties": false,
-        "properties": {
-          "pdfFile": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
-          }
-        },
-        "required": [
-          "pdfFile"
-        ],
-        "title": "pdfFileNaming-CreateInput-Data-Relationships",
-        "type": "object"
-      },
-      "pdfFileNaming-ItemOutput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/pdfFileNaming-OutputItem"
-          },
-          "included": {
-            "items": {},
-            "title": "Included",
-            "type": "array"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "pdfFileNaming-ItemOutput",
-        "type": "object"
-      },
-      "pdfFileNaming-OutputItem": {
-        "additionalProperties": false,
-        "properties": {
-          "attributes": {
-            "$ref": "#/components/schemas/pdfFileNaming-OutputItem-Attributes"
-          },
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "links": {
-            "$ref": "#/components/schemas/ItemLinksModel"
-          },
-          "relationships": {
-            "$ref": "#/components/schemas/pdfFileNaming-OutputItem-Relationships"
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "id",
-          "links",
-          "attributes",
-          "relationships"
-        ],
-        "title": "pdfFileNaming-OutputItem",
-        "type": "object"
-      },
-      "pdfFileNaming-OutputItem-Attributes": {
-        "additionalProperties": false,
-        "properties": {
-          "name": {
-            "title": "Name",
-            "type": "string"
-          }
-        },
-        "required": [
-          "name"
-        ],
-        "title": "pdfFileNaming-OutputItem-Attributes",
-        "type": "object"
-      },
-      "pdfFileNaming-OutputItem-Relationships": {
-        "additionalProperties": false,
-        "properties": {
-          "pdfFile": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
-          }
-        },
-        "required": [
-          "pdfFile"
-        ],
-        "title": "pdfFileNaming-OutputItem-Relationships",
-        "type": "object"
-      },
-      "pdfFileNaming-PageOutput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "items": {
-              "$ref": "#/components/schemas/pdfFileNaming-OutputItem"
-            },
-            "title": "Data",
-            "type": "array"
-          },
-          "included": {
-            "items": {},
-            "title": "Included",
-            "type": "array"
-          },
-          "links": {
-            "$ref": "#/components/schemas/PageLinksModel"
-          },
-          "meta": {
-            "$ref": "#/components/schemas/PageMetaModel"
-          }
-        },
-        "required": [
-          "data",
-          "meta",
-          "links"
-        ],
-        "title": "pdfFileNaming-PageOutput",
-        "type": "object"
-      },
-      "pdfFileNaming-UpdateInput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/pdfFileNaming-UpdateInput-Data"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "pdfFileNaming-UpdateInput",
-        "type": "object"
-      },
-      "pdfFileNaming-UpdateInput-Data": {
+      "pingCreateInputData": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/pdfFileNaming-UpdateInput-Data-Attributes"
-              }
-            ],
-            "default": {}
-          },
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/pdfFileNaming-UpdateInput-Data-Relationships"
-              }
-            ],
-            "default": {}
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "id"
-        ],
-        "title": "pdfFileNaming-UpdateInput-Data",
-        "type": "object"
-      },
-      "pdfFileNaming-UpdateInput-Data-Attributes": {
-        "additionalProperties": false,
-        "properties": {},
-        "title": "pdfFileNaming-UpdateInput-Data-Attributes",
-        "type": "object"
-      },
-      "pdfFileNaming-UpdateInput-Data-Relationships": {
-        "additionalProperties": false,
-        "properties": {},
-        "title": "pdfFileNaming-UpdateInput-Data-Relationships",
-        "type": "object"
-      },
-      "ping-CreateInput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/ping-CreateInput-Data"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "ping-CreateInput",
-        "type": "object"
-      },
-      "ping-CreateInput-Data": {
-        "additionalProperties": false,
-        "properties": {
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ping-CreateInput-Data-Attributes"
+                "$ref": "#/components/schemas/pingCreateInputDataAttributes"
               }
             ],
             "default": {}
@@ -2602,7 +2602,7 @@
           "relationships": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ping-CreateInput-Data-Relationships"
+                "$ref": "#/components/schemas/pingCreateInputDataRelationships"
               }
             ],
             "default": {
@@ -2620,10 +2620,10 @@
         "required": [
           "type"
         ],
-        "title": "ping-CreateInput-Data",
+        "title": "pingCreateInputData",
         "type": "object"
       },
-      "ping-CreateInput-Data-Attributes": {
+      "pingCreateInputDataAttributes": {
         "additionalProperties": false,
         "properties": {
           "message": {
@@ -2638,10 +2638,10 @@
             "title": "Message"
           }
         },
-        "title": "ping-CreateInput-Data-Attributes",
+        "title": "pingCreateInputDataAttributes",
         "type": "object"
       },
-      "ping-CreateInput-Data-Relationships": {
+      "pingCreateInputDataRelationships": {
         "additionalProperties": false,
         "properties": {
           "next": {
@@ -2663,14 +2663,14 @@
             "default": {}
           }
         },
-        "title": "ping-CreateInput-Data-Relationships",
+        "title": "pingCreateInputDataRelationships",
         "type": "object"
       },
-      "ping-ItemOutput": {
+      "pingItemOutput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/ping-OutputItem"
+            "$ref": "#/components/schemas/pingOutputItem"
           },
           "included": {
             "items": {},
@@ -2681,24 +2681,24 @@
         "required": [
           "data"
         ],
-        "title": "ping-ItemOutput",
+        "title": "pingItemOutput",
         "type": "object"
       },
-      "ping-OutputItem": {
+      "pingOutputItem": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "$ref": "#/components/schemas/ping-OutputItem-Attributes"
+            "$ref": "#/components/schemas/pingOutputItemAttributes"
           },
           "id": {
             "title": "Id",
             "type": "string"
           },
           "links": {
-            "$ref": "#/components/schemas/ItemLinksModel"
+            "$ref": "#/components/schemas/ItemLinks"
           },
           "relationships": {
-            "$ref": "#/components/schemas/ping-OutputItem-Relationships"
+            "$ref": "#/components/schemas/pingOutputItemRelationships"
           },
           "type": {
             "title": "Type",
@@ -2712,10 +2712,10 @@
           "attributes",
           "relationships"
         ],
-        "title": "ping-OutputItem",
+        "title": "pingOutputItem",
         "type": "object"
       },
-      "ping-OutputItem-Attributes": {
+      "pingOutputItemAttributes": {
         "additionalProperties": false,
         "properties": {
           "createdAt": {
@@ -2726,7 +2726,7 @@
           "createdBy": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/UserModel"
+                "$ref": "#/components/schemas/User"
               },
               {
                 "type": "null"
@@ -2752,7 +2752,7 @@
           "updatedBy": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/UserModel"
+                "$ref": "#/components/schemas/User"
               },
               {
                 "type": "null"
@@ -2767,10 +2767,10 @@
           "updatedAt",
           "updatedBy"
         ],
-        "title": "ping-OutputItem-Attributes",
+        "title": "pingOutputItemAttributes",
         "type": "object"
       },
-      "ping-OutputItem-Relationships": {
+      "pingOutputItemRelationships": {
         "additionalProperties": false,
         "properties": {
           "next": {
@@ -2784,15 +2784,15 @@
           "prev",
           "next"
         ],
-        "title": "ping-OutputItem-Relationships",
+        "title": "pingOutputItemRelationships",
         "type": "object"
       },
-      "ping-PageOutput": {
+      "pingPageOutput": {
         "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
-              "$ref": "#/components/schemas/ping-OutputItem"
+              "$ref": "#/components/schemas/pingOutputItem"
             },
             "title": "Data",
             "type": "array"
@@ -2803,10 +2803,10 @@
             "type": "array"
           },
           "links": {
-            "$ref": "#/components/schemas/PageLinksModel"
+            "$ref": "#/components/schemas/PageLinks"
           },
           "meta": {
-            "$ref": "#/components/schemas/PageMetaModel"
+            "$ref": "#/components/schemas/PageMeta"
           }
         },
         "required": [
@@ -2814,29 +2814,29 @@
           "meta",
           "links"
         ],
-        "title": "ping-PageOutput",
+        "title": "pingPageOutput",
         "type": "object"
       },
-      "ping-UpdateInput": {
+      "pingUpdateInput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/ping-UpdateInput-Data"
+            "$ref": "#/components/schemas/pingUpdateInputData"
           }
         },
         "required": [
           "data"
         ],
-        "title": "ping-UpdateInput",
+        "title": "pingUpdateInput",
         "type": "object"
       },
-      "ping-UpdateInput-Data": {
+      "pingUpdateInputData": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ping-UpdateInput-Data-Attributes"
+                "$ref": "#/components/schemas/pingUpdateInputDataAttributes"
               }
             ],
             "default": {}
@@ -2848,7 +2848,7 @@
           "relationships": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ping-UpdateInput-Data-Relationships"
+                "$ref": "#/components/schemas/pingUpdateInputDataRelationships"
               }
             ],
             "default": {}
@@ -2862,10 +2862,10 @@
           "type",
           "id"
         ],
-        "title": "ping-UpdateInput-Data",
+        "title": "pingUpdateInputData",
         "type": "object"
       },
-      "ping-UpdateInput-Data-Attributes": {
+      "pingUpdateInputDataAttributes": {
         "additionalProperties": false,
         "properties": {
           "message": {
@@ -2880,10 +2880,10 @@
             "title": "Message"
           }
         },
-        "title": "ping-UpdateInput-Data-Attributes",
+        "title": "pingUpdateInputDataAttributes",
         "type": "object"
       },
-      "ping-UpdateInput-Data-Relationships": {
+      "pingUpdateInputDataRelationships": {
         "additionalProperties": false,
         "properties": {
           "next": {
@@ -2901,32 +2901,32 @@
             ]
           }
         },
-        "title": "ping-UpdateInput-Data-Relationships",
+        "title": "pingUpdateInputDataRelationships",
         "type": "object"
       },
-      "project-CreateInput": {
+      "projectCreateInput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/project-CreateInput-Data"
+            "$ref": "#/components/schemas/projectCreateInputData"
           }
         },
         "required": [
           "data"
         ],
-        "title": "project-CreateInput",
+        "title": "projectCreateInput",
         "type": "object"
       },
-      "project-CreateInput-Data": {
+      "projectCreateInputData": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "$ref": "#/components/schemas/project-CreateInput-Data-Attributes"
+            "$ref": "#/components/schemas/projectCreateInputDataAttributes"
           },
           "relationships": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/project-CreateInput-Data-Relationships"
+                "$ref": "#/components/schemas/projectCreateInputDataRelationships"
               }
             ],
             "default": {}
@@ -2940,10 +2940,10 @@
           "type",
           "attributes"
         ],
-        "title": "project-CreateInput-Data",
+        "title": "projectCreateInputData",
         "type": "object"
       },
-      "project-CreateInput-Data-Attributes": {
+      "projectCreateInputDataAttributes": {
         "additionalProperties": false,
         "properties": {
           "description": {
@@ -2959,20 +2959,20 @@
         "required": [
           "title"
         ],
-        "title": "project-CreateInput-Data-Attributes",
+        "title": "projectCreateInputDataAttributes",
         "type": "object"
       },
-      "project-CreateInput-Data-Relationships": {
+      "projectCreateInputDataRelationships": {
         "additionalProperties": false,
         "properties": {},
-        "title": "project-CreateInput-Data-Relationships",
+        "title": "projectCreateInputDataRelationships",
         "type": "object"
       },
-      "project-ItemOutput": {
+      "projectItemOutput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/project-OutputItem"
+            "$ref": "#/components/schemas/projectOutputItem"
           },
           "included": {
             "items": {},
@@ -2983,24 +2983,24 @@
         "required": [
           "data"
         ],
-        "title": "project-ItemOutput",
+        "title": "projectItemOutput",
         "type": "object"
       },
-      "project-OutputItem": {
+      "projectOutputItem": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "$ref": "#/components/schemas/project-OutputItem-Attributes"
+            "$ref": "#/components/schemas/projectOutputItemAttributes"
           },
           "id": {
             "title": "Id",
             "type": "string"
           },
           "links": {
-            "$ref": "#/components/schemas/ItemLinksModel"
+            "$ref": "#/components/schemas/ItemLinks"
           },
           "relationships": {
-            "$ref": "#/components/schemas/project-OutputItem-Relationships"
+            "$ref": "#/components/schemas/projectOutputItemRelationships"
           },
           "type": {
             "title": "Type",
@@ -3014,10 +3014,10 @@
           "attributes",
           "relationships"
         ],
-        "title": "project-OutputItem",
+        "title": "projectOutputItem",
         "type": "object"
       },
-      "project-OutputItem-Attributes": {
+      "projectOutputItemAttributes": {
         "additionalProperties": false,
         "properties": {
           "description": {
@@ -3033,10 +3033,10 @@
           "title",
           "description"
         ],
-        "title": "project-OutputItem-Attributes",
+        "title": "projectOutputItemAttributes",
         "type": "object"
       },
-      "project-OutputItem-Relationships": {
+      "projectOutputItemRelationships": {
         "additionalProperties": false,
         "properties": {
           "exercises": {
@@ -3050,15 +3050,15 @@
           "textbooks",
           "exercises"
         ],
-        "title": "project-OutputItem-Relationships",
+        "title": "projectOutputItemRelationships",
         "type": "object"
       },
-      "project-PageOutput": {
+      "projectPageOutput": {
         "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
-              "$ref": "#/components/schemas/project-OutputItem"
+              "$ref": "#/components/schemas/projectOutputItem"
             },
             "title": "Data",
             "type": "array"
@@ -3069,10 +3069,10 @@
             "type": "array"
           },
           "links": {
-            "$ref": "#/components/schemas/PageLinksModel"
+            "$ref": "#/components/schemas/PageLinks"
           },
           "meta": {
-            "$ref": "#/components/schemas/PageMetaModel"
+            "$ref": "#/components/schemas/PageMeta"
           }
         },
         "required": [
@@ -3080,29 +3080,29 @@
           "meta",
           "links"
         ],
-        "title": "project-PageOutput",
+        "title": "projectPageOutput",
         "type": "object"
       },
-      "project-UpdateInput": {
+      "projectUpdateInput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/project-UpdateInput-Data"
+            "$ref": "#/components/schemas/projectUpdateInputData"
           }
         },
         "required": [
           "data"
         ],
-        "title": "project-UpdateInput",
+        "title": "projectUpdateInput",
         "type": "object"
       },
-      "project-UpdateInput-Data": {
+      "projectUpdateInputData": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/project-UpdateInput-Data-Attributes"
+                "$ref": "#/components/schemas/projectUpdateInputDataAttributes"
               }
             ],
             "default": {}
@@ -3114,7 +3114,7 @@
           "relationships": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/project-UpdateInput-Data-Relationships"
+                "$ref": "#/components/schemas/projectUpdateInputDataRelationships"
               }
             ],
             "default": {}
@@ -3128,10 +3128,10 @@
           "type",
           "id"
         ],
-        "title": "project-UpdateInput-Data",
+        "title": "projectUpdateInputData",
         "type": "object"
       },
-      "project-UpdateInput-Data-Attributes": {
+      "projectUpdateInputDataAttributes": {
         "additionalProperties": false,
         "properties": {
           "description": {
@@ -3143,36 +3143,36 @@
             "type": "string"
           }
         },
-        "title": "project-UpdateInput-Data-Attributes",
+        "title": "projectUpdateInputDataAttributes",
         "type": "object"
       },
-      "project-UpdateInput-Data-Relationships": {
+      "projectUpdateInputDataRelationships": {
         "additionalProperties": false,
         "properties": {},
-        "title": "project-UpdateInput-Data-Relationships",
+        "title": "projectUpdateInputDataRelationships",
         "type": "object"
       },
-      "section-CreateInput": {
+      "sectionCreateInput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/section-CreateInput-Data"
+            "$ref": "#/components/schemas/sectionCreateInputData"
           }
         },
         "required": [
           "data"
         ],
-        "title": "section-CreateInput",
+        "title": "sectionCreateInput",
         "type": "object"
       },
-      "section-CreateInput-Data": {
+      "sectionCreateInputData": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "$ref": "#/components/schemas/section-CreateInput-Data-Attributes"
+            "$ref": "#/components/schemas/sectionCreateInputDataAttributes"
           },
           "relationships": {
-            "$ref": "#/components/schemas/section-CreateInput-Data-Relationships"
+            "$ref": "#/components/schemas/sectionCreateInputDataRelationships"
           },
           "type": {
             "title": "Type",
@@ -3184,10 +3184,10 @@
           "attributes",
           "relationships"
         ],
-        "title": "section-CreateInput-Data",
+        "title": "sectionCreateInputData",
         "type": "object"
       },
-      "section-CreateInput-Data-Attributes": {
+      "sectionCreateInputDataAttributes": {
         "additionalProperties": false,
         "properties": {
           "pagesCount": {
@@ -3208,10 +3208,10 @@
           "pdfFileStartPage",
           "pagesCount"
         ],
-        "title": "section-CreateInput-Data-Attributes",
+        "title": "sectionCreateInputDataAttributes",
         "type": "object"
       },
-      "section-CreateInput-Data-Relationships": {
+      "sectionCreateInputDataRelationships": {
         "additionalProperties": false,
         "properties": {
           "pdfFile": {
@@ -3225,14 +3225,14 @@
           "textbook",
           "pdfFile"
         ],
-        "title": "section-CreateInput-Data-Relationships",
+        "title": "sectionCreateInputDataRelationships",
         "type": "object"
       },
-      "section-ItemOutput": {
+      "sectionItemOutput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/section-OutputItem"
+            "$ref": "#/components/schemas/sectionOutputItem"
           },
           "included": {
             "items": {},
@@ -3243,24 +3243,24 @@
         "required": [
           "data"
         ],
-        "title": "section-ItemOutput",
+        "title": "sectionItemOutput",
         "type": "object"
       },
-      "section-OutputItem": {
+      "sectionOutputItem": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "$ref": "#/components/schemas/section-OutputItem-Attributes"
+            "$ref": "#/components/schemas/sectionOutputItemAttributes"
           },
           "id": {
             "title": "Id",
             "type": "string"
           },
           "links": {
-            "$ref": "#/components/schemas/ItemLinksModel"
+            "$ref": "#/components/schemas/ItemLinks"
           },
           "relationships": {
-            "$ref": "#/components/schemas/section-OutputItem-Relationships"
+            "$ref": "#/components/schemas/sectionOutputItemRelationships"
           },
           "type": {
             "title": "Type",
@@ -3274,10 +3274,10 @@
           "attributes",
           "relationships"
         ],
-        "title": "section-OutputItem",
+        "title": "sectionOutputItem",
         "type": "object"
       },
-      "section-OutputItem-Attributes": {
+      "sectionOutputItemAttributes": {
         "additionalProperties": false,
         "properties": {
           "pagesCount": {
@@ -3298,10 +3298,10 @@
           "pdfFileStartPage",
           "pagesCount"
         ],
-        "title": "section-OutputItem-Attributes",
+        "title": "sectionOutputItemAttributes",
         "type": "object"
       },
-      "section-OutputItem-Relationships": {
+      "sectionOutputItemRelationships": {
         "additionalProperties": false,
         "properties": {
           "pdfFile": {
@@ -3315,15 +3315,15 @@
           "textbook",
           "pdfFile"
         ],
-        "title": "section-OutputItem-Relationships",
+        "title": "sectionOutputItemRelationships",
         "type": "object"
       },
-      "section-PageOutput": {
+      "sectionPageOutput": {
         "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
-              "$ref": "#/components/schemas/section-OutputItem"
+              "$ref": "#/components/schemas/sectionOutputItem"
             },
             "title": "Data",
             "type": "array"
@@ -3334,10 +3334,10 @@
             "type": "array"
           },
           "links": {
-            "$ref": "#/components/schemas/PageLinksModel"
+            "$ref": "#/components/schemas/PageLinks"
           },
           "meta": {
-            "$ref": "#/components/schemas/PageMetaModel"
+            "$ref": "#/components/schemas/PageMeta"
           }
         },
         "required": [
@@ -3345,29 +3345,29 @@
           "meta",
           "links"
         ],
-        "title": "section-PageOutput",
+        "title": "sectionPageOutput",
         "type": "object"
       },
-      "section-UpdateInput": {
+      "sectionUpdateInput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/section-UpdateInput-Data"
+            "$ref": "#/components/schemas/sectionUpdateInputData"
           }
         },
         "required": [
           "data"
         ],
-        "title": "section-UpdateInput",
+        "title": "sectionUpdateInput",
         "type": "object"
       },
-      "section-UpdateInput-Data": {
+      "sectionUpdateInputData": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/section-UpdateInput-Data-Attributes"
+                "$ref": "#/components/schemas/sectionUpdateInputDataAttributes"
               }
             ],
             "default": {}
@@ -3379,7 +3379,7 @@
           "relationships": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/section-UpdateInput-Data-Relationships"
+                "$ref": "#/components/schemas/sectionUpdateInputDataRelationships"
               }
             ],
             "default": {}
@@ -3393,10 +3393,10 @@
           "type",
           "id"
         ],
-        "title": "section-UpdateInput-Data",
+        "title": "sectionUpdateInputData",
         "type": "object"
       },
-      "section-UpdateInput-Data-Attributes": {
+      "sectionUpdateInputDataAttributes": {
         "additionalProperties": false,
         "properties": {
           "pagesCount": {
@@ -3412,36 +3412,36 @@
             "type": "integer"
           }
         },
-        "title": "section-UpdateInput-Data-Attributes",
+        "title": "sectionUpdateInputDataAttributes",
         "type": "object"
       },
-      "section-UpdateInput-Data-Relationships": {
+      "sectionUpdateInputDataRelationships": {
         "additionalProperties": false,
         "properties": {},
-        "title": "section-UpdateInput-Data-Relationships",
+        "title": "sectionUpdateInputDataRelationships",
         "type": "object"
       },
-      "selectThingsAdaptation-CreateInput": {
+      "selectThingsAdaptationCreateInput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/selectThingsAdaptation-CreateInput-Data"
+            "$ref": "#/components/schemas/selectThingsAdaptationCreateInputData"
           }
         },
         "required": [
           "data"
         ],
-        "title": "selectThingsAdaptation-CreateInput",
+        "title": "selectThingsAdaptationCreateInput",
         "type": "object"
       },
-      "selectThingsAdaptation-CreateInput-Data": {
+      "selectThingsAdaptationCreateInputData": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "$ref": "#/components/schemas/selectThingsAdaptation-CreateInput-Data-Attributes"
+            "$ref": "#/components/schemas/selectThingsAdaptationCreateInputDataAttributes"
           },
           "relationships": {
-            "$ref": "#/components/schemas/selectThingsAdaptation-CreateInput-Data-Relationships"
+            "$ref": "#/components/schemas/selectThingsAdaptationCreateInputDataRelationships"
           },
           "type": {
             "title": "Type",
@@ -3453,10 +3453,10 @@
           "attributes",
           "relationships"
         ],
-        "title": "selectThingsAdaptation-CreateInput-Data",
+        "title": "selectThingsAdaptationCreateInputData",
         "type": "object"
       },
-      "selectThingsAdaptation-CreateInput-Data-Attributes": {
+      "selectThingsAdaptationCreateInputDataAttributes": {
         "additionalProperties": false,
         "properties": {
           "colors": {
@@ -3477,10 +3477,10 @@
           "words",
           "punctuation"
         ],
-        "title": "selectThingsAdaptation-CreateInput-Data-Attributes",
+        "title": "selectThingsAdaptationCreateInputDataAttributes",
         "type": "object"
       },
-      "selectThingsAdaptation-CreateInput-Data-Relationships": {
+      "selectThingsAdaptationCreateInputDataRelationships": {
         "additionalProperties": false,
         "properties": {
           "exercise": {
@@ -3490,14 +3490,14 @@
         "required": [
           "exercise"
         ],
-        "title": "selectThingsAdaptation-CreateInput-Data-Relationships",
+        "title": "selectThingsAdaptationCreateInputDataRelationships",
         "type": "object"
       },
-      "selectThingsAdaptation-ItemOutput": {
+      "selectThingsAdaptationItemOutput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/selectThingsAdaptation-OutputItem"
+            "$ref": "#/components/schemas/selectThingsAdaptationOutputItem"
           },
           "included": {
             "items": {},
@@ -3508,24 +3508,24 @@
         "required": [
           "data"
         ],
-        "title": "selectThingsAdaptation-ItemOutput",
+        "title": "selectThingsAdaptationItemOutput",
         "type": "object"
       },
-      "selectThingsAdaptation-OutputItem": {
+      "selectThingsAdaptationOutputItem": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "$ref": "#/components/schemas/selectThingsAdaptation-OutputItem-Attributes"
+            "$ref": "#/components/schemas/selectThingsAdaptationOutputItemAttributes"
           },
           "id": {
             "title": "Id",
             "type": "string"
           },
           "links": {
-            "$ref": "#/components/schemas/ItemLinksModel"
+            "$ref": "#/components/schemas/ItemLinks"
           },
           "relationships": {
-            "$ref": "#/components/schemas/selectThingsAdaptation-OutputItem-Relationships"
+            "$ref": "#/components/schemas/selectThingsAdaptationOutputItemRelationships"
           },
           "type": {
             "title": "Type",
@@ -3539,10 +3539,10 @@
           "attributes",
           "relationships"
         ],
-        "title": "selectThingsAdaptation-OutputItem",
+        "title": "selectThingsAdaptationOutputItem",
         "type": "object"
       },
-      "selectThingsAdaptation-OutputItem-Attributes": {
+      "selectThingsAdaptationOutputItemAttributes": {
         "additionalProperties": false,
         "properties": {
           "colors": {
@@ -3563,10 +3563,10 @@
           "words",
           "punctuation"
         ],
-        "title": "selectThingsAdaptation-OutputItem-Attributes",
+        "title": "selectThingsAdaptationOutputItemAttributes",
         "type": "object"
       },
-      "selectThingsAdaptation-OutputItem-Relationships": {
+      "selectThingsAdaptationOutputItemRelationships": {
         "additionalProperties": false,
         "properties": {
           "exercise": {
@@ -3576,29 +3576,29 @@
         "required": [
           "exercise"
         ],
-        "title": "selectThingsAdaptation-OutputItem-Relationships",
+        "title": "selectThingsAdaptationOutputItemRelationships",
         "type": "object"
       },
-      "selectThingsAdaptation-UpdateInput": {
+      "selectThingsAdaptationUpdateInput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/selectThingsAdaptation-UpdateInput-Data"
+            "$ref": "#/components/schemas/selectThingsAdaptationUpdateInputData"
           }
         },
         "required": [
           "data"
         ],
-        "title": "selectThingsAdaptation-UpdateInput",
+        "title": "selectThingsAdaptationUpdateInput",
         "type": "object"
       },
-      "selectThingsAdaptation-UpdateInput-Data": {
+      "selectThingsAdaptationUpdateInputData": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/selectThingsAdaptation-UpdateInput-Data-Attributes"
+                "$ref": "#/components/schemas/selectThingsAdaptationUpdateInputDataAttributes"
               }
             ],
             "default": {}
@@ -3610,7 +3610,7 @@
           "relationships": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/selectThingsAdaptation-UpdateInput-Data-Relationships"
+                "$ref": "#/components/schemas/selectThingsAdaptationUpdateInputDataRelationships"
               }
             ],
             "default": {}
@@ -3624,10 +3624,10 @@
           "type",
           "id"
         ],
-        "title": "selectThingsAdaptation-UpdateInput-Data",
+        "title": "selectThingsAdaptationUpdateInputData",
         "type": "object"
       },
-      "selectThingsAdaptation-UpdateInput-Data-Attributes": {
+      "selectThingsAdaptationUpdateInputDataAttributes": {
         "additionalProperties": false,
         "properties": {
           "colors": {
@@ -3643,36 +3643,36 @@
             "type": "boolean"
           }
         },
-        "title": "selectThingsAdaptation-UpdateInput-Data-Attributes",
+        "title": "selectThingsAdaptationUpdateInputDataAttributes",
         "type": "object"
       },
-      "selectThingsAdaptation-UpdateInput-Data-Relationships": {
+      "selectThingsAdaptationUpdateInputDataRelationships": {
         "additionalProperties": false,
         "properties": {},
-        "title": "selectThingsAdaptation-UpdateInput-Data-Relationships",
+        "title": "selectThingsAdaptationUpdateInputDataRelationships",
         "type": "object"
       },
-      "textbook-CreateInput": {
+      "textbookCreateInput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/textbook-CreateInput-Data"
+            "$ref": "#/components/schemas/textbookCreateInputData"
           }
         },
         "required": [
           "data"
         ],
-        "title": "textbook-CreateInput",
+        "title": "textbookCreateInput",
         "type": "object"
       },
-      "textbook-CreateInput-Data": {
+      "textbookCreateInputData": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "$ref": "#/components/schemas/textbook-CreateInput-Data-Attributes"
+            "$ref": "#/components/schemas/textbookCreateInputDataAttributes"
           },
           "relationships": {
-            "$ref": "#/components/schemas/textbook-CreateInput-Data-Relationships"
+            "$ref": "#/components/schemas/textbookCreateInputDataRelationships"
           },
           "type": {
             "title": "Type",
@@ -3684,10 +3684,10 @@
           "attributes",
           "relationships"
         ],
-        "title": "textbook-CreateInput-Data",
+        "title": "textbookCreateInputData",
         "type": "object"
       },
-      "textbook-CreateInput-Data-Attributes": {
+      "textbookCreateInputDataAttributes": {
         "additionalProperties": false,
         "properties": {
           "isbn": {
@@ -3731,10 +3731,10 @@
         "required": [
           "title"
         ],
-        "title": "textbook-CreateInput-Data-Attributes",
+        "title": "textbookCreateInputDataAttributes",
         "type": "object"
       },
-      "textbook-CreateInput-Data-Relationships": {
+      "textbookCreateInputDataRelationships": {
         "additionalProperties": false,
         "properties": {
           "project": {
@@ -3744,14 +3744,14 @@
         "required": [
           "project"
         ],
-        "title": "textbook-CreateInput-Data-Relationships",
+        "title": "textbookCreateInputDataRelationships",
         "type": "object"
       },
-      "textbook-ItemOutput": {
+      "textbookItemOutput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/textbook-OutputItem"
+            "$ref": "#/components/schemas/textbookOutputItem"
           },
           "included": {
             "items": {},
@@ -3762,24 +3762,24 @@
         "required": [
           "data"
         ],
-        "title": "textbook-ItemOutput",
+        "title": "textbookItemOutput",
         "type": "object"
       },
-      "textbook-OutputItem": {
+      "textbookOutputItem": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "$ref": "#/components/schemas/textbook-OutputItem-Attributes"
+            "$ref": "#/components/schemas/textbookOutputItemAttributes"
           },
           "id": {
             "title": "Id",
             "type": "string"
           },
           "links": {
-            "$ref": "#/components/schemas/ItemLinksModel"
+            "$ref": "#/components/schemas/ItemLinks"
           },
           "relationships": {
-            "$ref": "#/components/schemas/textbook-OutputItem-Relationships"
+            "$ref": "#/components/schemas/textbookOutputItemRelationships"
           },
           "type": {
             "title": "Type",
@@ -3793,10 +3793,10 @@
           "attributes",
           "relationships"
         ],
-        "title": "textbook-OutputItem",
+        "title": "textbookOutputItem",
         "type": "object"
       },
-      "textbook-OutputItem-Attributes": {
+      "textbookOutputItemAttributes": {
         "additionalProperties": false,
         "properties": {
           "isbn": {
@@ -3843,10 +3843,10 @@
           "year",
           "isbn"
         ],
-        "title": "textbook-OutputItem-Attributes",
+        "title": "textbookOutputItemAttributes",
         "type": "object"
       },
-      "textbook-OutputItem-Relationships": {
+      "textbookOutputItemRelationships": {
         "additionalProperties": false,
         "properties": {
           "exercises": {
@@ -3864,15 +3864,15 @@
           "exercises",
           "sections"
         ],
-        "title": "textbook-OutputItem-Relationships",
+        "title": "textbookOutputItemRelationships",
         "type": "object"
       },
-      "textbook-PageOutput": {
+      "textbookPageOutput": {
         "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
-              "$ref": "#/components/schemas/textbook-OutputItem"
+              "$ref": "#/components/schemas/textbookOutputItem"
             },
             "title": "Data",
             "type": "array"
@@ -3883,10 +3883,10 @@
             "type": "array"
           },
           "links": {
-            "$ref": "#/components/schemas/PageLinksModel"
+            "$ref": "#/components/schemas/PageLinks"
           },
           "meta": {
-            "$ref": "#/components/schemas/PageMetaModel"
+            "$ref": "#/components/schemas/PageMeta"
           }
         },
         "required": [
@@ -3894,29 +3894,29 @@
           "meta",
           "links"
         ],
-        "title": "textbook-PageOutput",
+        "title": "textbookPageOutput",
         "type": "object"
       },
-      "textbook-UpdateInput": {
+      "textbookUpdateInput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/textbook-UpdateInput-Data"
+            "$ref": "#/components/schemas/textbookUpdateInputData"
           }
         },
         "required": [
           "data"
         ],
-        "title": "textbook-UpdateInput",
+        "title": "textbookUpdateInput",
         "type": "object"
       },
-      "textbook-UpdateInput-Data": {
+      "textbookUpdateInputData": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/textbook-UpdateInput-Data-Attributes"
+                "$ref": "#/components/schemas/textbookUpdateInputDataAttributes"
               }
             ],
             "default": {}
@@ -3928,7 +3928,7 @@
           "relationships": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/textbook-UpdateInput-Data-Relationships"
+                "$ref": "#/components/schemas/textbookUpdateInputDataRelationships"
               }
             ],
             "default": {}
@@ -3942,10 +3942,10 @@
           "type",
           "id"
         ],
-        "title": "textbook-UpdateInput-Data",
+        "title": "textbookUpdateInputData",
         "type": "object"
       },
-      "textbook-UpdateInput-Data-Attributes": {
+      "textbookUpdateInputDataAttributes": {
         "additionalProperties": false,
         "properties": {
           "isbn": {
@@ -3986,13 +3986,13 @@
             "title": "Year"
           }
         },
-        "title": "textbook-UpdateInput-Data-Attributes",
+        "title": "textbookUpdateInputDataAttributes",
         "type": "object"
       },
-      "textbook-UpdateInput-Data-Relationships": {
+      "textbookUpdateInputDataRelationships": {
         "additionalProperties": false,
         "properties": {},
-        "title": "textbook-UpdateInput-Data-Relationships",
+        "title": "textbookUpdateInputDataRelationships",
         "type": "object"
       }
     },
@@ -4032,7 +4032,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/adaptedExercise-CreateInput"
+                "$ref": "#/components/schemas/adaptedExerciseCreateInput"
               }
             }
           },
@@ -4043,7 +4043,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/adaptedExercise-ItemOutput"
+                  "$ref": "#/components/schemas/adaptedExerciseItemOutput"
                 }
               }
             },
@@ -4091,7 +4091,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/adaptedExercise-ItemOutput"
+                  "$ref": "#/components/schemas/adaptedExerciseItemOutput"
                 }
               }
             },
@@ -4228,7 +4228,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/exercise-PageOutput"
+                  "$ref": "#/components/schemas/exercisePageOutput"
                 }
               }
             },
@@ -4264,7 +4264,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/exercise-CreateInput"
+                "$ref": "#/components/schemas/exerciseCreateInput"
               }
             }
           },
@@ -4275,7 +4275,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/exercise-ItemOutput"
+                  "$ref": "#/components/schemas/exerciseItemOutput"
                 }
               }
             },
@@ -4353,7 +4353,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/exercise-ItemOutput"
+                  "$ref": "#/components/schemas/exerciseItemOutput"
                 }
               }
             },
@@ -4398,7 +4398,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/exercise-UpdateInput"
+                "$ref": "#/components/schemas/exerciseUpdateInput"
               }
             }
           },
@@ -4409,7 +4409,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/exercise-ItemOutput"
+                  "$ref": "#/components/schemas/exerciseItemOutput"
                 }
               }
             },
@@ -4477,7 +4477,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/extractionEvent-PageOutput"
+                  "$ref": "#/components/schemas/extractionEventPageOutput"
                 }
               }
             },
@@ -4513,7 +4513,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/extractionEvent-CreateInput"
+                "$ref": "#/components/schemas/extractionEventCreateInput"
               }
             }
           },
@@ -4524,7 +4524,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/extractionEvent-ItemOutput"
+                  "$ref": "#/components/schemas/extractionEventItemOutput"
                 }
               }
             },
@@ -4602,7 +4602,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/extractionEvent-ItemOutput"
+                  "$ref": "#/components/schemas/extractionEventItemOutput"
                 }
               }
             },
@@ -4647,7 +4647,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/extractionEvent-UpdateInput"
+                "$ref": "#/components/schemas/extractionEventUpdateInput"
               }
             }
           },
@@ -4658,7 +4658,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/extractionEvent-ItemOutput"
+                  "$ref": "#/components/schemas/extractionEventItemOutput"
                 }
               }
             },
@@ -4696,7 +4696,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/fillWithFreeTextAdaptation-CreateInput"
+                "$ref": "#/components/schemas/fillWithFreeTextAdaptationCreateInput"
               }
             }
           },
@@ -4707,7 +4707,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/fillWithFreeTextAdaptation-ItemOutput"
+                  "$ref": "#/components/schemas/fillWithFreeTextAdaptationItemOutput"
                 }
               }
             },
@@ -4785,7 +4785,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/fillWithFreeTextAdaptation-ItemOutput"
+                  "$ref": "#/components/schemas/fillWithFreeTextAdaptationItemOutput"
                 }
               }
             },
@@ -4830,7 +4830,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/fillWithFreeTextAdaptation-UpdateInput"
+                "$ref": "#/components/schemas/fillWithFreeTextAdaptationUpdateInput"
               }
             }
           },
@@ -4841,7 +4841,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/fillWithFreeTextAdaptation-ItemOutput"
+                  "$ref": "#/components/schemas/fillWithFreeTextAdaptationItemOutput"
                 }
               }
             },
@@ -4879,7 +4879,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation-CreateInput"
+                "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptationCreateInput"
               }
             }
           },
@@ -4890,7 +4890,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation-ItemOutput"
+                  "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptationItemOutput"
                 }
               }
             },
@@ -4968,7 +4968,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation-ItemOutput"
+                  "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptationItemOutput"
                 }
               }
             },
@@ -5013,7 +5013,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation-UpdateInput"
+                "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptationUpdateInput"
               }
             }
           },
@@ -5024,7 +5024,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation-ItemOutput"
+                  "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptationItemOutput"
                 }
               }
             },
@@ -5062,7 +5062,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/multipleChoicesInWordingAdaptation-CreateInput"
+                "$ref": "#/components/schemas/multipleChoicesInWordingAdaptationCreateInput"
               }
             }
           },
@@ -5073,7 +5073,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/multipleChoicesInWordingAdaptation-ItemOutput"
+                  "$ref": "#/components/schemas/multipleChoicesInWordingAdaptationItemOutput"
                 }
               }
             },
@@ -5151,7 +5151,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/multipleChoicesInWordingAdaptation-ItemOutput"
+                  "$ref": "#/components/schemas/multipleChoicesInWordingAdaptationItemOutput"
                 }
               }
             },
@@ -5196,7 +5196,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/multipleChoicesInWordingAdaptation-UpdateInput"
+                "$ref": "#/components/schemas/multipleChoicesInWordingAdaptationUpdateInput"
               }
             }
           },
@@ -5207,7 +5207,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/multipleChoicesInWordingAdaptation-ItemOutput"
+                  "$ref": "#/components/schemas/multipleChoicesInWordingAdaptationItemOutput"
                 }
               }
             },
@@ -5275,7 +5275,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/pdfFileNaming-PageOutput"
+                  "$ref": "#/components/schemas/pdfFileNamingPageOutput"
                 }
               }
             },
@@ -5311,7 +5311,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/pdfFileNaming-CreateInput"
+                "$ref": "#/components/schemas/pdfFileNamingCreateInput"
               }
             }
           },
@@ -5322,7 +5322,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/pdfFileNaming-ItemOutput"
+                  "$ref": "#/components/schemas/pdfFileNamingItemOutput"
                 }
               }
             },
@@ -5400,7 +5400,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/pdfFileNaming-ItemOutput"
+                  "$ref": "#/components/schemas/pdfFileNamingItemOutput"
                 }
               }
             },
@@ -5445,7 +5445,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/pdfFileNaming-UpdateInput"
+                "$ref": "#/components/schemas/pdfFileNamingUpdateInput"
               }
             }
           },
@@ -5456,7 +5456,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/pdfFileNaming-ItemOutput"
+                  "$ref": "#/components/schemas/pdfFileNamingItemOutput"
                 }
               }
             },
@@ -5524,7 +5524,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/pdfFile-PageOutput"
+                  "$ref": "#/components/schemas/pdfFilePageOutput"
                 }
               }
             },
@@ -5560,7 +5560,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/pdfFile-CreateInput"
+                "$ref": "#/components/schemas/pdfFileCreateInput"
               }
             }
           },
@@ -5571,7 +5571,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/pdfFile-ItemOutput"
+                  "$ref": "#/components/schemas/pdfFileItemOutput"
                 }
               }
             },
@@ -5649,7 +5649,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/pdfFile-ItemOutput"
+                  "$ref": "#/components/schemas/pdfFileItemOutput"
                 }
               }
             },
@@ -5694,7 +5694,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/pdfFile-UpdateInput"
+                "$ref": "#/components/schemas/pdfFileUpdateInput"
               }
             }
           },
@@ -5705,7 +5705,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/pdfFile-ItemOutput"
+                  "$ref": "#/components/schemas/pdfFileItemOutput"
                 }
               }
             },
@@ -5791,7 +5791,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ping-PageOutput"
+                  "$ref": "#/components/schemas/pingPageOutput"
                 }
               }
             },
@@ -5827,7 +5827,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ping-CreateInput"
+                "$ref": "#/components/schemas/pingCreateInput"
               }
             }
           },
@@ -5838,7 +5838,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ping-ItemOutput"
+                  "$ref": "#/components/schemas/pingItemOutput"
                 }
               }
             },
@@ -5926,7 +5926,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ping-ItemOutput"
+                  "$ref": "#/components/schemas/pingItemOutput"
                 }
               }
             },
@@ -5971,7 +5971,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ping-UpdateInput"
+                "$ref": "#/components/schemas/pingUpdateInput"
               }
             }
           },
@@ -5982,7 +5982,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ping-ItemOutput"
+                  "$ref": "#/components/schemas/pingItemOutput"
                 }
               }
             },
@@ -6055,7 +6055,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/project-PageOutput"
+                  "$ref": "#/components/schemas/projectPageOutput"
                 }
               }
             },
@@ -6091,7 +6091,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/project-CreateInput"
+                "$ref": "#/components/schemas/projectCreateInput"
               }
             }
           },
@@ -6102,7 +6102,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/project-ItemOutput"
+                  "$ref": "#/components/schemas/projectItemOutput"
                 }
               }
             },
@@ -6180,7 +6180,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/project-ItemOutput"
+                  "$ref": "#/components/schemas/projectItemOutput"
                 }
               }
             },
@@ -6225,7 +6225,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/project-UpdateInput"
+                "$ref": "#/components/schemas/projectUpdateInput"
               }
             }
           },
@@ -6236,7 +6236,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/project-ItemOutput"
+                  "$ref": "#/components/schemas/projectItemOutput"
                 }
               }
             },
@@ -6304,7 +6304,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/section-PageOutput"
+                  "$ref": "#/components/schemas/sectionPageOutput"
                 }
               }
             },
@@ -6340,7 +6340,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/section-CreateInput"
+                "$ref": "#/components/schemas/sectionCreateInput"
               }
             }
           },
@@ -6351,7 +6351,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/section-ItemOutput"
+                  "$ref": "#/components/schemas/sectionItemOutput"
                 }
               }
             },
@@ -6429,7 +6429,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/section-ItemOutput"
+                  "$ref": "#/components/schemas/sectionItemOutput"
                 }
               }
             },
@@ -6474,7 +6474,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/section-UpdateInput"
+                "$ref": "#/components/schemas/sectionUpdateInput"
               }
             }
           },
@@ -6485,7 +6485,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/section-ItemOutput"
+                  "$ref": "#/components/schemas/sectionItemOutput"
                 }
               }
             },
@@ -6523,7 +6523,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/selectThingsAdaptation-CreateInput"
+                "$ref": "#/components/schemas/selectThingsAdaptationCreateInput"
               }
             }
           },
@@ -6534,7 +6534,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/selectThingsAdaptation-ItemOutput"
+                  "$ref": "#/components/schemas/selectThingsAdaptationItemOutput"
                 }
               }
             },
@@ -6612,7 +6612,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/selectThingsAdaptation-ItemOutput"
+                  "$ref": "#/components/schemas/selectThingsAdaptationItemOutput"
                 }
               }
             },
@@ -6657,7 +6657,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/selectThingsAdaptation-UpdateInput"
+                "$ref": "#/components/schemas/selectThingsAdaptationUpdateInput"
               }
             }
           },
@@ -6668,7 +6668,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/selectThingsAdaptation-ItemOutput"
+                  "$ref": "#/components/schemas/selectThingsAdaptationItemOutput"
                 }
               }
             },
@@ -6736,7 +6736,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/textbook-PageOutput"
+                  "$ref": "#/components/schemas/textbookPageOutput"
                 }
               }
             },
@@ -6772,7 +6772,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/textbook-CreateInput"
+                "$ref": "#/components/schemas/textbookCreateInput"
               }
             }
           },
@@ -6783,7 +6783,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/textbook-ItemOutput"
+                  "$ref": "#/components/schemas/textbookItemOutput"
                 }
               }
             },
@@ -6861,7 +6861,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/textbook-ItemOutput"
+                  "$ref": "#/components/schemas/textbookItemOutput"
                 }
               }
             },
@@ -6906,7 +6906,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/textbook-UpdateInput"
+                "$ref": "#/components/schemas/textbookUpdateInput"
               }
             }
           },
@@ -6917,7 +6917,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/textbook-ItemOutput"
+                  "$ref": "#/components/schemas/textbookItemOutput"
                 }
               }
             },

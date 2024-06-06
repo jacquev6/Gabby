@@ -11,6 +11,7 @@ import argon2
 import jwt
 import sqlalchemy as sql
 
+from .. import api_models
 from .. import settings
 from ..database_utils import OrmBase, Session, make_item_getter, session_dependable
 from ..wrapping import set_wrapper, OrmWrapperWithStrIds
@@ -45,15 +46,11 @@ class User(OrmBase):
             return True
 
 
-class UserModel(BaseModel):
-    username: str
-
-
 class UsersResource:
     singular_name = "user"
     plural_name = "users"
 
-    Model = UserModel
+    Model = api_models.User
 
     default_page_size = settings.GENERIC_DEFAULT_API_PAGE_SIZE
 

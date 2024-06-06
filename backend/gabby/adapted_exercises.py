@@ -4,13 +4,13 @@ import uuid
 from fastapi import HTTPException
 from starlette import status
 
+from . import api_models
 from . import renderable
 from . import settings
 from .adaptations.fill_with_free_text import FillWithFreeTextAdaptation
 from .adaptations.multiple_choices_in_instructions import MultipleChoicesInInstructionsAdaptation
 from .adaptations.multiple_choices_in_wording import MultipleChoicesInWordingAdaptation
 from .adaptations.select_things import SelectThingsAdaptation
-from .api_models import AdaptedExerciseModel
 from .exercises import Exercise
 from .testing import ApiTestCase
 
@@ -25,7 +25,7 @@ class AdaptedExercisesResource:
     singular_name = "adapted_exercise"
     plural_name = "adapted_exercises"
 
-    Model = AdaptedExerciseModel
+    Model = api_models.AdaptedExercise
 
     default_page_size = settings.GENERIC_DEFAULT_API_PAGE_SIZE
 

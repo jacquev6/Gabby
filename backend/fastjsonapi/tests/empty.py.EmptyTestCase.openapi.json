@@ -14,7 +14,7 @@
         "title": "HTTPValidationError",
         "type": "object"
       },
-      "ItemLinksModel": {
+      "ItemLinks": {
         "additionalProperties": false,
         "properties": {
           "self": {
@@ -25,7 +25,7 @@
         "required": [
           "self"
         ],
-        "title": "ItemLinksModel",
+        "title": "ItemLinks",
         "type": "object"
       },
       "ValidationError": {
@@ -61,26 +61,26 @@
         "title": "ValidationError",
         "type": "object"
       },
-      "emptyResource-CreateInput": {
+      "emptyResourceCreateInput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/emptyResource-CreateInput-Data"
+            "$ref": "#/components/schemas/emptyResourceCreateInputData"
           }
         },
         "required": [
           "data"
         ],
-        "title": "emptyResource-CreateInput",
+        "title": "emptyResourceCreateInput",
         "type": "object"
       },
-      "emptyResource-CreateInput-Data": {
+      "emptyResourceCreateInputData": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/emptyResource-CreateInput-Data-Attributes"
+                "$ref": "#/components/schemas/emptyResourceCreateInputDataAttributes"
               }
             ],
             "default": {}
@@ -88,7 +88,7 @@
           "relationships": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/emptyResource-CreateInput-Data-Relationships"
+                "$ref": "#/components/schemas/emptyResourceCreateInputDataRelationships"
               }
             ],
             "default": {}
@@ -101,26 +101,26 @@
         "required": [
           "type"
         ],
-        "title": "emptyResource-CreateInput-Data",
+        "title": "emptyResourceCreateInputData",
         "type": "object"
       },
-      "emptyResource-CreateInput-Data-Attributes": {
+      "emptyResourceCreateInputDataAttributes": {
         "additionalProperties": false,
         "properties": {},
-        "title": "emptyResource-CreateInput-Data-Attributes",
+        "title": "emptyResourceCreateInputDataAttributes",
         "type": "object"
       },
-      "emptyResource-CreateInput-Data-Relationships": {
+      "emptyResourceCreateInputDataRelationships": {
         "additionalProperties": false,
         "properties": {},
-        "title": "emptyResource-CreateInput-Data-Relationships",
+        "title": "emptyResourceCreateInputDataRelationships",
         "type": "object"
       },
-      "emptyResource-ItemOutput": {
+      "emptyResourceItemOutput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/emptyResource-OutputItem"
+            "$ref": "#/components/schemas/emptyResourceOutputItem"
           },
           "included": {
             "items": {},
@@ -131,10 +131,10 @@
         "required": [
           "data"
         ],
-        "title": "emptyResource-ItemOutput",
+        "title": "emptyResourceItemOutput",
         "type": "object"
       },
-      "emptyResource-OutputItem": {
+      "emptyResourceOutputItem": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -142,7 +142,7 @@
             "type": "string"
           },
           "links": {
-            "$ref": "#/components/schemas/ItemLinksModel"
+            "$ref": "#/components/schemas/ItemLinks"
           },
           "type": {
             "title": "Type",
@@ -154,7 +154,7 @@
           "id",
           "links"
         ],
-        "title": "emptyResource-OutputItem",
+        "title": "emptyResourceOutputItem",
         "type": "object"
       }
     }
@@ -220,7 +220,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/emptyResource-CreateInput"
+                "$ref": "#/components/schemas/emptyResourceCreateInput"
               }
             }
           },
@@ -231,7 +231,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/emptyResource-ItemOutput"
+                  "$ref": "#/components/schemas/emptyResourceItemOutput"
                 }
               }
             },
@@ -279,7 +279,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/emptyResource-ItemOutput"
+                  "$ref": "#/components/schemas/emptyResourceItemOutput"
                 }
               }
             },

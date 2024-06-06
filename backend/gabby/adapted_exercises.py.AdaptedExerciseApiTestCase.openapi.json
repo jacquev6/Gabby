@@ -111,7 +111,7 @@
         "title": "Body_login_token_post",
         "type": "object"
       },
-      "FillWithFreeTextAdaptationOptionsModel": {
+      "FillWithFreeTextAdaptationOptions": {
         "properties": {
           "placeholder": {
             "title": "Placeholder",
@@ -121,7 +121,7 @@
         "required": [
           "placeholder"
         ],
-        "title": "FillWithFreeTextAdaptationOptionsModel",
+        "title": "FillWithFreeTextAdaptationOptions",
         "type": "object"
       },
       "HTTPValidationError": {
@@ -137,7 +137,7 @@
         "title": "HTTPValidationError",
         "type": "object"
       },
-      "ItemLinksModel": {
+      "ItemLinks": {
         "additionalProperties": false,
         "properties": {
           "self": {
@@ -148,10 +148,10 @@
         "required": [
           "self"
         ],
-        "title": "ItemLinksModel",
+        "title": "ItemLinks",
         "type": "object"
       },
-      "MultipleChoicesInInstructionsAdaptationOptionsModel": {
+      "MultipleChoicesInInstructionsAdaptationOptions": {
         "properties": {
           "placeholder": {
             "title": "Placeholder",
@@ -161,12 +161,12 @@
         "required": [
           "placeholder"
         ],
-        "title": "MultipleChoicesInInstructionsAdaptationOptionsModel",
+        "title": "MultipleChoicesInInstructionsAdaptationOptions",
         "type": "object"
       },
-      "MultipleChoicesInWordingAdaptationOptionsModel": {
+      "MultipleChoicesInWordingAdaptationOptions": {
         "properties": {},
-        "title": "MultipleChoicesInWordingAdaptationOptionsModel",
+        "title": "MultipleChoicesInWordingAdaptationOptions",
         "type": "object"
       },
       "Paragraph": {
@@ -203,7 +203,7 @@
         "title": "Section",
         "type": "object"
       },
-      "SelectThingsAdaptationOptionsModel": {
+      "SelectThingsAdaptationOptions": {
         "properties": {
           "colors": {
             "title": "Colors",
@@ -223,7 +223,7 @@
           "words",
           "punctuation"
         ],
-        "title": "SelectThingsAdaptationOptionsModel",
+        "title": "SelectThingsAdaptationOptions",
         "type": "object"
       },
       "Sentence": {
@@ -498,29 +498,29 @@
         "title": "_Whitespace",
         "type": "object"
       },
-      "adaptedExercise-CreateInput": {
+      "adaptedExerciseCreateInput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/adaptedExercise-CreateInput-Data"
+            "$ref": "#/components/schemas/adaptedExerciseCreateInputData"
           }
         },
         "required": [
           "data"
         ],
-        "title": "adaptedExercise-CreateInput",
+        "title": "adaptedExerciseCreateInput",
         "type": "object"
       },
-      "adaptedExercise-CreateInput-Data": {
+      "adaptedExerciseCreateInputData": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "$ref": "#/components/schemas/adaptedExercise-CreateInput-Data-Attributes"
+            "$ref": "#/components/schemas/adaptedExerciseCreateInputDataAttributes"
           },
           "relationships": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/adaptedExercise-CreateInput-Data-Relationships"
+                "$ref": "#/components/schemas/adaptedExerciseCreateInputDataRelationships"
               }
             ],
             "default": {}
@@ -534,25 +534,25 @@
           "type",
           "attributes"
         ],
-        "title": "adaptedExercise-CreateInput-Data",
+        "title": "adaptedExerciseCreateInputData",
         "type": "object"
       },
-      "adaptedExercise-CreateInput-Data-Attributes": {
+      "adaptedExerciseCreateInputDataAttributes": {
         "additionalProperties": false,
         "properties": {
           "adaptationOptions": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/SelectThingsAdaptationOptionsModel"
+                "$ref": "#/components/schemas/SelectThingsAdaptationOptions"
               },
               {
-                "$ref": "#/components/schemas/FillWithFreeTextAdaptationOptionsModel"
+                "$ref": "#/components/schemas/FillWithFreeTextAdaptationOptions"
               },
               {
-                "$ref": "#/components/schemas/MultipleChoicesInInstructionsAdaptationOptionsModel"
+                "$ref": "#/components/schemas/MultipleChoicesInInstructionsAdaptationOptions"
               },
               {
-                "$ref": "#/components/schemas/MultipleChoicesInWordingAdaptationOptionsModel"
+                "$ref": "#/components/schemas/MultipleChoicesInWordingAdaptationOptions"
               }
             ],
             "title": "Adaptationoptions"
@@ -603,20 +603,20 @@
           "type",
           "adaptationOptions"
         ],
-        "title": "adaptedExercise-CreateInput-Data-Attributes",
+        "title": "adaptedExerciseCreateInputDataAttributes",
         "type": "object"
       },
-      "adaptedExercise-CreateInput-Data-Relationships": {
+      "adaptedExerciseCreateInputDataRelationships": {
         "additionalProperties": false,
         "properties": {},
-        "title": "adaptedExercise-CreateInput-Data-Relationships",
+        "title": "adaptedExerciseCreateInputDataRelationships",
         "type": "object"
       },
-      "adaptedExercise-ItemOutput": {
+      "adaptedExerciseItemOutput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/adaptedExercise-OutputItem"
+            "$ref": "#/components/schemas/adaptedExerciseOutputItem"
           },
           "included": {
             "items": {},
@@ -627,21 +627,21 @@
         "required": [
           "data"
         ],
-        "title": "adaptedExercise-ItemOutput",
+        "title": "adaptedExerciseItemOutput",
         "type": "object"
       },
-      "adaptedExercise-OutputItem": {
+      "adaptedExerciseOutputItem": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "$ref": "#/components/schemas/adaptedExercise-OutputItem-Attributes"
+            "$ref": "#/components/schemas/adaptedExerciseOutputItemAttributes"
           },
           "id": {
             "title": "Id",
             "type": "string"
           },
           "links": {
-            "$ref": "#/components/schemas/ItemLinksModel"
+            "$ref": "#/components/schemas/ItemLinks"
           },
           "type": {
             "title": "Type",
@@ -654,10 +654,10 @@
           "links",
           "attributes"
         ],
-        "title": "adaptedExercise-OutputItem",
+        "title": "adaptedExerciseOutputItem",
         "type": "object"
       },
-      "adaptedExercise-OutputItem-Attributes": {
+      "adaptedExerciseOutputItemAttributes": {
         "additionalProperties": false,
         "properties": {
           "adapted": {
@@ -667,7 +667,7 @@
         "required": [
           "adapted"
         ],
-        "title": "adaptedExercise-OutputItem-Attributes",
+        "title": "adaptedExerciseOutputItemAttributes",
         "type": "object"
       }
     }
@@ -696,7 +696,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/adaptedExercise-CreateInput"
+                "$ref": "#/components/schemas/adaptedExerciseCreateInput"
               }
             }
           },
@@ -707,7 +707,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/adaptedExercise-ItemOutput"
+                  "$ref": "#/components/schemas/adaptedExerciseItemOutput"
                 }
               }
             },
@@ -755,7 +755,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/adaptedExercise-ItemOutput"
+                  "$ref": "#/components/schemas/adaptedExerciseItemOutput"
                 }
               }
             },

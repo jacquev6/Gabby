@@ -14,7 +14,7 @@
         "title": "HTTPValidationError",
         "type": "object"
       },
-      "ItemLinksModel": {
+      "ItemLinks": {
         "additionalProperties": false,
         "properties": {
           "self": {
@@ -25,10 +25,10 @@
         "required": [
           "self"
         ],
-        "title": "ItemLinksModel",
+        "title": "ItemLinks",
         "type": "object"
       },
-      "PageLinksModel": {
+      "PageLinks": {
         "additionalProperties": false,
         "properties": {
           "first": {
@@ -68,10 +68,10 @@
           "next",
           "prev"
         ],
-        "title": "PageLinksModel",
+        "title": "PageLinks",
         "type": "object"
       },
-      "PageMetaModel": {
+      "PageMeta": {
         "additionalProperties": false,
         "properties": {
           "pagination": {
@@ -81,7 +81,7 @@
         "required": [
           "pagination"
         ],
-        "title": "PageMetaModel",
+        "title": "PageMeta",
         "type": "object"
       },
       "Pagination": {
@@ -141,29 +141,29 @@
         "title": "ValidationError",
         "type": "object"
       },
-      "resource-CreateInput": {
+      "resourceCreateInput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/resource-CreateInput-Data"
+            "$ref": "#/components/schemas/resourceCreateInputData"
           }
         },
         "required": [
           "data"
         ],
-        "title": "resource-CreateInput",
+        "title": "resourceCreateInput",
         "type": "object"
       },
-      "resource-CreateInput-Data": {
+      "resourceCreateInputData": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "$ref": "#/components/schemas/resource-CreateInput-Data-Attributes"
+            "$ref": "#/components/schemas/resourceCreateInputDataAttributes"
           },
           "relationships": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/resource-CreateInput-Data-Relationships"
+                "$ref": "#/components/schemas/resourceCreateInputDataRelationships"
               }
             ],
             "default": {}
@@ -177,10 +177,10 @@
           "type",
           "attributes"
         ],
-        "title": "resource-CreateInput-Data",
+        "title": "resourceCreateInputData",
         "type": "object"
       },
-      "resource-CreateInput-Data-Attributes": {
+      "resourceCreateInputDataAttributes": {
         "additionalProperties": false,
         "properties": {
           "constantStr": {
@@ -212,20 +212,20 @@
           "constantStr",
           "secretStr"
         ],
-        "title": "resource-CreateInput-Data-Attributes",
+        "title": "resourceCreateInputDataAttributes",
         "type": "object"
       },
-      "resource-CreateInput-Data-Relationships": {
+      "resourceCreateInputDataRelationships": {
         "additionalProperties": false,
         "properties": {},
-        "title": "resource-CreateInput-Data-Relationships",
+        "title": "resourceCreateInputDataRelationships",
         "type": "object"
       },
-      "resource-ItemOutput": {
+      "resourceItemOutput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/resource-OutputItem"
+            "$ref": "#/components/schemas/resourceOutputItem"
           },
           "included": {
             "items": {},
@@ -236,21 +236,21 @@
         "required": [
           "data"
         ],
-        "title": "resource-ItemOutput",
+        "title": "resourceItemOutput",
         "type": "object"
       },
-      "resource-OutputItem": {
+      "resourceOutputItem": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "$ref": "#/components/schemas/resource-OutputItem-Attributes"
+            "$ref": "#/components/schemas/resourceOutputItemAttributes"
           },
           "id": {
             "title": "Id",
             "type": "string"
           },
           "links": {
-            "$ref": "#/components/schemas/ItemLinksModel"
+            "$ref": "#/components/schemas/ItemLinks"
           },
           "type": {
             "title": "Type",
@@ -263,10 +263,10 @@
           "links",
           "attributes"
         ],
-        "title": "resource-OutputItem",
+        "title": "resourceOutputItem",
         "type": "object"
       },
-      "resource-OutputItem-Attributes": {
+      "resourceOutputItemAttributes": {
         "additionalProperties": false,
         "properties": {
           "computedStr": {
@@ -298,15 +298,15 @@
           "defaultedConstantFloat",
           "computedStr"
         ],
-        "title": "resource-OutputItem-Attributes",
+        "title": "resourceOutputItemAttributes",
         "type": "object"
       },
-      "resource-PageOutput": {
+      "resourcePageOutput": {
         "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
-              "$ref": "#/components/schemas/resource-OutputItem"
+              "$ref": "#/components/schemas/resourceOutputItem"
             },
             "title": "Data",
             "type": "array"
@@ -317,10 +317,10 @@
             "type": "array"
           },
           "links": {
-            "$ref": "#/components/schemas/PageLinksModel"
+            "$ref": "#/components/schemas/PageLinks"
           },
           "meta": {
-            "$ref": "#/components/schemas/PageMetaModel"
+            "$ref": "#/components/schemas/PageMeta"
           }
         },
         "required": [
@@ -328,29 +328,29 @@
           "meta",
           "links"
         ],
-        "title": "resource-PageOutput",
+        "title": "resourcePageOutput",
         "type": "object"
       },
-      "resource-UpdateInput": {
+      "resourceUpdateInput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/resource-UpdateInput-Data"
+            "$ref": "#/components/schemas/resourceUpdateInputData"
           }
         },
         "required": [
           "data"
         ],
-        "title": "resource-UpdateInput",
+        "title": "resourceUpdateInput",
         "type": "object"
       },
-      "resource-UpdateInput-Data": {
+      "resourceUpdateInputData": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/resource-UpdateInput-Data-Attributes"
+                "$ref": "#/components/schemas/resourceUpdateInputDataAttributes"
               }
             ],
             "default": {}
@@ -362,7 +362,7 @@
           "relationships": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/resource-UpdateInput-Data-Relationships"
+                "$ref": "#/components/schemas/resourceUpdateInputDataRelationships"
               }
             ],
             "default": {}
@@ -376,10 +376,10 @@
           "type",
           "id"
         ],
-        "title": "resource-UpdateInput-Data",
+        "title": "resourceUpdateInputData",
         "type": "object"
       },
-      "resource-UpdateInput-Data-Attributes": {
+      "resourceUpdateInputDataAttributes": {
         "additionalProperties": false,
         "properties": {
           "defaultedDatetime": {
@@ -396,13 +396,13 @@
             "type": "string"
           }
         },
-        "title": "resource-UpdateInput-Data-Attributes",
+        "title": "resourceUpdateInputDataAttributes",
         "type": "object"
       },
-      "resource-UpdateInput-Data-Relationships": {
+      "resourceUpdateInputDataRelationships": {
         "additionalProperties": false,
         "properties": {},
-        "title": "resource-UpdateInput-Data-Relationships",
+        "title": "resourceUpdateInputDataRelationships",
         "type": "object"
       }
     }
@@ -507,7 +507,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/resource-PageOutput"
+                  "$ref": "#/components/schemas/resourcePageOutput"
                 }
               }
             },
@@ -543,7 +543,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/resource-CreateInput"
+                "$ref": "#/components/schemas/resourceCreateInput"
               }
             }
           },
@@ -554,7 +554,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/resource-ItemOutput"
+                  "$ref": "#/components/schemas/resourceItemOutput"
                 }
               }
             },
@@ -632,7 +632,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/resource-ItemOutput"
+                  "$ref": "#/components/schemas/resourceItemOutput"
                 }
               }
             },
@@ -677,7 +677,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/resource-UpdateInput"
+                "$ref": "#/components/schemas/resourceUpdateInput"
               }
             }
           },
@@ -688,7 +688,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/resource-ItemOutput"
+                  "$ref": "#/components/schemas/resourceItemOutput"
                 }
               }
             },

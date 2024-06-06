@@ -2,7 +2,7 @@ from typing import Literal
 
 import pydantic
 
-from . import parsing
+from . import settings
 
 
 class BaseModel(pydantic.BaseModel):
@@ -121,7 +121,9 @@ class Section(BaseModel):
 
     def to_generic(self):
         generic = "\n\n".join(p.to_generic() for p in self.paragraphs)
-        assert parsing.parse_generic_section(generic) == self
+        if settings.DEBUG:
+            from . import parsing
+            assert parsing.parse_generic_section(generic) == self
         return generic
 
 

@@ -1,20 +1,17 @@
 from __future__ import annotations
 from contextlib import contextmanager
-from typing import Annotated
 import datetime
 
 from fastapi import HTTPException
-from pydantic import BaseModel
 from sqlalchemy import orm
 from starlette import status
 import sqlalchemy as sql
 
-from fastjsonapi.annotations import Computed, Filterable
-
+from . import api_models
 from . import settings
 from . import testing
 from .database_utils import OrmBase, make_item_getter, make_page_getter
-from .users import User, UserModel, UsersResource, OptionalAuthenticatedUserDependent
+from .users import User, UsersResource, OptionalAuthenticatedUserDependent
 from .users.mixins import CreatedUpdatedByAtMixin
 from .wrapping import set_wrapper, OrmWrapperWithStrIds, wrap, unwrap
 
@@ -31,21 +28,11 @@ class Ping(OrmBase, CreatedUpdatedByAtMixin):
     next: orm.Mapped[list[Ping]] = orm.relationship(back_populates="prev")
 
 
-class PingModel(BaseModel):
-    message: Annotated[str | None, Filterable()] = None
-    created_at: Annotated[datetime.datetime, Computed()]
-    created_by: Annotated[UserModel | None, Computed()] = None
-    updated_at: Annotated[datetime.datetime, Computed()]
-    updated_by: Annotated[UserModel | None, Computed()] = None
-    prev: Annotated[PingModel | None, Filterable()] = None
-    next: list[PingModel] = []
-
-
 class PingsResource:
     singular_name = "ping"
     plural_name = "pings"
 
-    Model = PingModel
+    Model = api_models.Ping
 
     default_page_size = settings.GENERIC_DEFAULT_API_PAGE_SIZE
 

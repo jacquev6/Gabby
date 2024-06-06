@@ -1,65 +1,78 @@
 from __future__ import annotations
 from typing import Annotated
+import datetime
 
-from pydantic import BaseModel
+from pydantic import BaseModel as Base
 
 from fastjsonapi import Constant, Computed, Filterable, Secret as WriteOnly
 
 from . import renderable
 
 
-# @todo Remove 'Model' suffix from every model name
+class User(Base):
+    username: str
 
-class PdfFileModel(BaseModel):
+
+class Ping(Base):
+    message: Annotated[str | None, Filterable()] = None
+    created_at: Annotated[datetime.datetime, Computed()]
+    created_by: Annotated[User | None, Computed()] = None
+    updated_at: Annotated[datetime.datetime, Computed()]
+    updated_by: Annotated[User | None, Computed()] = None
+    prev: Annotated[Ping | None, Filterable()] = None
+    next: list[Ping] = []
+
+
+class PdfFile(Base):
     sha256: Annotated[str, Constant()]
     bytes_count: Annotated[int, Constant()]
     pages_count: Annotated[int, Constant()]
-    namings: Annotated[list[PdfFileNamingModel], Computed()] = []
-    sections: Annotated[list[SectionModel], Computed()] = []
+    namings: Annotated[list[PdfFileNaming], Computed()] = []
+    sections: Annotated[list[Section], Computed()] = []
 
 
-class PdfFileNamingModel(BaseModel):
+class PdfFileNaming(Base):
     name: Annotated[str, Constant()]
-    pdf_file: Annotated[PdfFileModel, Constant()]
+    pdf_file: Annotated[PdfFile, Constant()]
 
 
-class ProjectModel(BaseModel):
+class Project(Base):
     title: str
     description: str = ""
-    textbooks: Annotated[list[TextbookModel], Computed()] = []
-    exercises: Annotated[list[ExerciseModel], Computed()] = []
+    textbooks: Annotated[list[Textbook], Computed()] = []
+    exercises: Annotated[list[Exercise], Computed()] = []
 
 
-class TextbookModel(BaseModel):
+class Textbook(Base):
     title: str
     publisher: str | None = None
     year: int | None = None
     isbn: str | None = None
-    project: Annotated[ProjectModel, Constant()]
-    exercises: Annotated[list[ExerciseModel], Computed()] = []
-    sections: Annotated[list[SectionModel], Computed()] = []
+    project: Annotated[Project, Constant()]
+    exercises: Annotated[list[Exercise], Computed()] = []
+    sections: Annotated[list[Section], Computed()] = []
 
 
-class SectionModel(BaseModel):
+class Section(Base):
     textbook_start_page: int
     pdf_file_start_page: int
     pages_count: int
-    textbook: Annotated[TextbookModel, Constant()]
-    pdf_file: Annotated[PdfFileModel, Constant()]
+    textbook: Annotated[Textbook, Constant()]
+    pdf_file: Annotated[PdfFile, Constant()]
 
 
-class Point(BaseModel):
+class Point(Base):
     x: float
     y: float
 
-class Rectangle(BaseModel):
+class Rectangle(Base):
     start: Point
     stop: Point
 
-class ExerciseModel(BaseModel):
-    project: Annotated[ProjectModel, Constant()]
+class Exercise(Base):
+    project: Annotated[Project, Constant()]
 
-    textbook: Annotated[TextbookModel | None, Filterable(), Constant()] = None
+    textbook: Annotated[Textbook | None, Filterable(), Constant()] = None
     textbook_page: Annotated[int | None, Filterable(), Constant()] = None
     bounding_rectangle: Rectangle | None = None
 
@@ -70,53 +83,53 @@ class ExerciseModel(BaseModel):
     example: str = ""
     clue: str = ""
 
-    extraction_events: Annotated[list[ExtractionEventModel], Computed()] = []
+    extraction_events: Annotated[list[ExtractionEvent], Computed()] = []
 
     adaptation: (
-        SelectThingsAdaptationModel
-        | FillWithFreeTextAdaptationModel
-        | MultipleChoicesInInstructionsAdaptationModel
-        | MultipleChoicesInWordingAdaptationModel
+        SelectThingsAdaptation
+        | FillWithFreeTextAdaptation
+        | MultipleChoicesInInstructionsAdaptation
+        | MultipleChoicesInWordingAdaptation
         | None
     ) = None
 
 
-class ExtractionEventModel(BaseModel):
+class ExtractionEvent(Base):
     event: Annotated[str, Constant()]
-    exercise: Annotated[ExerciseModel, Constant()]
+    exercise: Annotated[Exercise, Constant()]
 
 
-class SelectThingsAdaptationOptionsModel(BaseModel):
+class SelectThingsAdaptationOptions(Base):
     colors: int
     words: bool
     punctuation: bool
 
-class SelectThingsAdaptationModel(SelectThingsAdaptationOptionsModel):
-    exercise: Annotated[ExerciseModel, Constant()]
+class SelectThingsAdaptation(SelectThingsAdaptationOptions):
+    exercise: Annotated[Exercise, Constant()]
 
 
-class FillWithFreeTextAdaptationOptionsModel(BaseModel):
+class FillWithFreeTextAdaptationOptions(Base):
     placeholder: str
 
-class FillWithFreeTextAdaptationModel(FillWithFreeTextAdaptationOptionsModel):
-    exercise: Annotated[ExerciseModel, Constant()]
+class FillWithFreeTextAdaptation(FillWithFreeTextAdaptationOptions):
+    exercise: Annotated[Exercise, Constant()]
 
 
-class MultipleChoicesInInstructionsAdaptationOptionsModel(BaseModel):
+class MultipleChoicesInInstructionsAdaptationOptions(Base):
     placeholder: str
 
-class MultipleChoicesInInstructionsAdaptationModel(MultipleChoicesInInstructionsAdaptationOptionsModel):
-    exercise: Annotated[ExerciseModel, Constant()]
+class MultipleChoicesInInstructionsAdaptation(MultipleChoicesInInstructionsAdaptationOptions):
+    exercise: Annotated[Exercise, Constant()]
 
 
-class MultipleChoicesInWordingAdaptationOptionsModel(BaseModel):
+class MultipleChoicesInWordingAdaptationOptions(Base):
     pass
 
-class MultipleChoicesInWordingAdaptationModel(MultipleChoicesInWordingAdaptationOptionsModel):
-    exercise: Annotated[ExerciseModel, Constant()]
+class MultipleChoicesInWordingAdaptation(MultipleChoicesInWordingAdaptationOptions):
+    exercise: Annotated[Exercise, Constant()]
 
 
-class AdaptedExerciseModel(BaseModel):
+class AdaptedExercise(Base):
     number: Annotated[str, WriteOnly()]
     textbookPage: Annotated[int | None, WriteOnly()]
     instructions: Annotated[str, WriteOnly()]
@@ -126,10 +139,10 @@ class AdaptedExerciseModel(BaseModel):
     type: Annotated[str, WriteOnly()]
     adaptation_options: Annotated[
         (
-            SelectThingsAdaptationOptionsModel
-            | FillWithFreeTextAdaptationOptionsModel
-            | MultipleChoicesInInstructionsAdaptationOptionsModel
-            | MultipleChoicesInWordingAdaptationOptionsModel
+            SelectThingsAdaptationOptions
+            | FillWithFreeTextAdaptationOptions
+            | MultipleChoicesInInstructionsAdaptationOptions
+            | MultipleChoicesInWordingAdaptationOptions
         ),
         WriteOnly(),
     ]

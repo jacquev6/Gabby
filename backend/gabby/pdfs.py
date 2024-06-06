@@ -4,8 +4,8 @@ from fastapi import HTTPException
 from sqlalchemy import orm
 import sqlalchemy as sql
 
+from . import api_models
 from . import settings
-from .api_models import PdfFileModel, PdfFileNamingModel
 from .database_utils import OrmBase, SessionDependent, make_item_creator, make_item_deleter, make_item_getter, make_item_saver, make_page_getter
 from .wrapping import wrap, set_wrapper, OrmWrapper, make_sqids, orm_wrapper_with_sqids
 
@@ -29,7 +29,7 @@ class PdfFilesResource:
     singular_name = "pdf_file"
     plural_name = "pdf_files"
 
-    Model = PdfFileModel
+    Model = api_models.PdfFile
 
     default_page_size = settings.GENERIC_DEFAULT_API_PAGE_SIZE
 
@@ -81,7 +81,7 @@ class PdfFileNamingsResource:
     singular_name = "pdf_file_naming"
     plural_name = "pdf_file_namings"
 
-    Model = PdfFileNamingModel
+    Model = api_models.PdfFileNaming
 
     default_page_size = settings.GENERIC_DEFAULT_API_PAGE_SIZE
 

@@ -1,11 +1,11 @@
 from sqlalchemy import orm
 import sqlalchemy as sql
 
+from .. import api_models
 from .. import parsing
 from .. import renderable
 from .. import renderable as r
 from .. import settings
-from ..api_models import SelectThingsAdaptationModel
 from ..database_utils import  make_item_creator, make_item_deleter, make_item_getter, make_item_saver
 from ..exercises import Adaptation, Exercise
 from ..testing import AdaptationTestCase
@@ -546,7 +546,7 @@ class SelectThingsAdaptationsResource:
     singular_name = "select_things_adaptation"
     plural_name = "select_things_adaptations"
 
-    Model = SelectThingsAdaptationModel
+    Model = api_models.SelectThingsAdaptation
 
     default_page_size = settings.GENERIC_DEFAULT_API_PAGE_SIZE
 

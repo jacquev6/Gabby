@@ -97,7 +97,7 @@
         "title": "HTTPValidationError",
         "type": "object"
       },
-      "ItemLinksModel": {
+      "ItemLinks": {
         "additionalProperties": false,
         "properties": {
           "self": {
@@ -108,7 +108,7 @@
         "required": [
           "self"
         ],
-        "title": "ItemLinksModel",
+        "title": "ItemLinks",
         "type": "object"
       },
       "Meta": {
@@ -182,7 +182,7 @@
         "title": "OutputListRelationship",
         "type": "object"
       },
-      "PageLinksModel": {
+      "PageLinks": {
         "additionalProperties": false,
         "properties": {
           "first": {
@@ -222,10 +222,10 @@
           "next",
           "prev"
         ],
-        "title": "PageLinksModel",
+        "title": "PageLinks",
         "type": "object"
       },
-      "PageMetaModel": {
+      "PageMeta": {
         "additionalProperties": false,
         "properties": {
           "pagination": {
@@ -235,7 +235,7 @@
         "required": [
           "pagination"
         ],
-        "title": "PageMetaModel",
+        "title": "PageMeta",
         "type": "object"
       },
       "Pagination": {
@@ -312,26 +312,26 @@
         "title": "ValidationError",
         "type": "object"
       },
-      "ping-CreateInput": {
+      "pingCreateInput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/ping-CreateInput-Data"
+            "$ref": "#/components/schemas/pingCreateInputData"
           }
         },
         "required": [
           "data"
         ],
-        "title": "ping-CreateInput",
+        "title": "pingCreateInput",
         "type": "object"
       },
-      "ping-CreateInput-Data": {
+      "pingCreateInputData": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ping-CreateInput-Data-Attributes"
+                "$ref": "#/components/schemas/pingCreateInputDataAttributes"
               }
             ],
             "default": {}
@@ -339,7 +339,7 @@
           "relationships": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ping-CreateInput-Data-Relationships"
+                "$ref": "#/components/schemas/pingCreateInputDataRelationships"
               }
             ],
             "default": {
@@ -357,10 +357,10 @@
         "required": [
           "type"
         ],
-        "title": "ping-CreateInput-Data",
+        "title": "pingCreateInputData",
         "type": "object"
       },
-      "ping-CreateInput-Data-Attributes": {
+      "pingCreateInputDataAttributes": {
         "additionalProperties": false,
         "properties": {
           "message": {
@@ -375,10 +375,10 @@
             "title": "Message"
           }
         },
-        "title": "ping-CreateInput-Data-Attributes",
+        "title": "pingCreateInputDataAttributes",
         "type": "object"
       },
-      "ping-CreateInput-Data-Relationships": {
+      "pingCreateInputDataRelationships": {
         "additionalProperties": false,
         "properties": {
           "next": {
@@ -400,14 +400,14 @@
             "default": {}
           }
         },
-        "title": "ping-CreateInput-Data-Relationships",
+        "title": "pingCreateInputDataRelationships",
         "type": "object"
       },
-      "ping-ItemOutput": {
+      "pingItemOutput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/ping-OutputItem"
+            "$ref": "#/components/schemas/pingOutputItem"
           },
           "included": {
             "items": {},
@@ -418,24 +418,24 @@
         "required": [
           "data"
         ],
-        "title": "ping-ItemOutput",
+        "title": "pingItemOutput",
         "type": "object"
       },
-      "ping-OutputItem": {
+      "pingOutputItem": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "$ref": "#/components/schemas/ping-OutputItem-Attributes"
+            "$ref": "#/components/schemas/pingOutputItemAttributes"
           },
           "id": {
             "title": "Id",
             "type": "string"
           },
           "links": {
-            "$ref": "#/components/schemas/ItemLinksModel"
+            "$ref": "#/components/schemas/ItemLinks"
           },
           "relationships": {
-            "$ref": "#/components/schemas/ping-OutputItem-Relationships"
+            "$ref": "#/components/schemas/pingOutputItemRelationships"
           },
           "type": {
             "title": "Type",
@@ -449,10 +449,10 @@
           "attributes",
           "relationships"
         ],
-        "title": "ping-OutputItem",
+        "title": "pingOutputItem",
         "type": "object"
       },
-      "ping-OutputItem-Attributes": {
+      "pingOutputItemAttributes": {
         "additionalProperties": false,
         "properties": {
           "createdAt": {
@@ -482,10 +482,10 @@
           "createdAt",
           "updatedAt"
         ],
-        "title": "ping-OutputItem-Attributes",
+        "title": "pingOutputItemAttributes",
         "type": "object"
       },
-      "ping-OutputItem-Relationships": {
+      "pingOutputItemRelationships": {
         "additionalProperties": false,
         "properties": {
           "createdBy": {
@@ -507,15 +507,15 @@
           "prev",
           "next"
         ],
-        "title": "ping-OutputItem-Relationships",
+        "title": "pingOutputItemRelationships",
         "type": "object"
       },
-      "ping-PageOutput": {
+      "pingPageOutput": {
         "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
-              "$ref": "#/components/schemas/ping-OutputItem"
+              "$ref": "#/components/schemas/pingOutputItem"
             },
             "title": "Data",
             "type": "array"
@@ -526,10 +526,10 @@
             "type": "array"
           },
           "links": {
-            "$ref": "#/components/schemas/PageLinksModel"
+            "$ref": "#/components/schemas/PageLinks"
           },
           "meta": {
-            "$ref": "#/components/schemas/PageMetaModel"
+            "$ref": "#/components/schemas/PageMeta"
           }
         },
         "required": [
@@ -537,29 +537,29 @@
           "meta",
           "links"
         ],
-        "title": "ping-PageOutput",
+        "title": "pingPageOutput",
         "type": "object"
       },
-      "ping-UpdateInput": {
+      "pingUpdateInput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/ping-UpdateInput-Data"
+            "$ref": "#/components/schemas/pingUpdateInputData"
           }
         },
         "required": [
           "data"
         ],
-        "title": "ping-UpdateInput",
+        "title": "pingUpdateInput",
         "type": "object"
       },
-      "ping-UpdateInput-Data": {
+      "pingUpdateInputData": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ping-UpdateInput-Data-Attributes"
+                "$ref": "#/components/schemas/pingUpdateInputDataAttributes"
               }
             ],
             "default": {}
@@ -571,7 +571,7 @@
           "relationships": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/ping-UpdateInput-Data-Relationships"
+                "$ref": "#/components/schemas/pingUpdateInputDataRelationships"
               }
             ],
             "default": {}
@@ -585,10 +585,10 @@
           "type",
           "id"
         ],
-        "title": "ping-UpdateInput-Data",
+        "title": "pingUpdateInputData",
         "type": "object"
       },
-      "ping-UpdateInput-Data-Attributes": {
+      "pingUpdateInputDataAttributes": {
         "additionalProperties": false,
         "properties": {
           "message": {
@@ -603,10 +603,10 @@
             "title": "Message"
           }
         },
-        "title": "ping-UpdateInput-Data-Attributes",
+        "title": "pingUpdateInputDataAttributes",
         "type": "object"
       },
-      "ping-UpdateInput-Data-Relationships": {
+      "pingUpdateInputDataRelationships": {
         "additionalProperties": false,
         "properties": {
           "next": {
@@ -624,14 +624,14 @@
             ]
           }
         },
-        "title": "ping-UpdateInput-Data-Relationships",
+        "title": "pingUpdateInputDataRelationships",
         "type": "object"
       },
-      "user-ItemOutput": {
+      "userItemOutput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/user-OutputItem"
+            "$ref": "#/components/schemas/userOutputItem"
           },
           "included": {
             "items": {},
@@ -642,21 +642,21 @@
         "required": [
           "data"
         ],
-        "title": "user-ItemOutput",
+        "title": "userItemOutput",
         "type": "object"
       },
-      "user-OutputItem": {
+      "userOutputItem": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "$ref": "#/components/schemas/user-OutputItem-Attributes"
+            "$ref": "#/components/schemas/userOutputItemAttributes"
           },
           "id": {
             "title": "Id",
             "type": "string"
           },
           "links": {
-            "$ref": "#/components/schemas/ItemLinksModel"
+            "$ref": "#/components/schemas/ItemLinks"
           },
           "type": {
             "title": "Type",
@@ -669,10 +669,10 @@
           "links",
           "attributes"
         ],
-        "title": "user-OutputItem",
+        "title": "userOutputItem",
         "type": "object"
       },
-      "user-OutputItem-Attributes": {
+      "userOutputItemAttributes": {
         "additionalProperties": false,
         "properties": {
           "username": {
@@ -683,7 +683,7 @@
         "required": [
           "username"
         ],
-        "title": "user-OutputItem-Attributes",
+        "title": "userOutputItemAttributes",
         "type": "object"
       }
     },
@@ -813,7 +813,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ping-PageOutput"
+                  "$ref": "#/components/schemas/pingPageOutput"
                 }
               }
             },
@@ -849,7 +849,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ping-CreateInput"
+                "$ref": "#/components/schemas/pingCreateInput"
               }
             }
           },
@@ -860,7 +860,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ping-ItemOutput"
+                  "$ref": "#/components/schemas/pingItemOutput"
                 }
               }
             },
@@ -948,7 +948,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ping-ItemOutput"
+                  "$ref": "#/components/schemas/pingItemOutput"
                 }
               }
             },
@@ -993,7 +993,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ping-UpdateInput"
+                "$ref": "#/components/schemas/pingUpdateInput"
               }
             }
           },
@@ -1004,7 +1004,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ping-ItemOutput"
+                  "$ref": "#/components/schemas/pingItemOutput"
                 }
               }
             },
@@ -1093,7 +1093,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/user-ItemOutput"
+                  "$ref": "#/components/schemas/userItemOutput"
                 }
               }
             },

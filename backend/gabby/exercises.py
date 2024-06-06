@@ -3,10 +3,10 @@ from contextlib import contextmanager
 from sqlalchemy import orm
 import sqlalchemy as sql
 
+from . import api_models
 from . import parsing
 from . import renderable
 from . import settings
-from .api_models import ExerciseModel, ExtractionEventModel
 from .database_utils import OrmBase, SessionDependent, make_item_creator, make_item_deleter, make_item_getter, make_item_saver, make_page_getter
 from .projects import Project
 from .testing import TransactionTestCase
@@ -218,7 +218,7 @@ class ExercisesResource:
     singular_name = "exercise"
     plural_name = "exercises"
 
-    Model = ExerciseModel
+    Model = api_models.Exercise
 
     default_page_size = settings.GENERIC_DEFAULT_API_PAGE_SIZE
 
@@ -276,7 +276,7 @@ class ExtractionEventsResource:
     singular_name = "extraction_event"
     plural_name = "extraction_events"
 
-    Model = ExtractionEventModel
+    Model = api_models.ExtractionEvent
 
     default_page_size = settings.GENERIC_DEFAULT_API_PAGE_SIZE
 

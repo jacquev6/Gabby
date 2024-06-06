@@ -1,12 +1,11 @@
 from contextlib import contextmanager
 
-from fastapi import HTTPException
 from sqlalchemy import orm
 import sqlalchemy as sql
 
+from . import api_models
 from . import settings
-from .api_models import TextbookModel, SectionModel
-from .database_utils import OrmBase, SessionDependent, make_item_creator, make_item_deleter, make_item_getter, make_item_saver, make_page_getter
+from .database_utils import OrmBase, make_item_creator, make_item_deleter, make_item_getter, make_item_saver, make_page_getter
 from .pdfs import PdfFile
 from .projects import Project
 from .wrapping import wrap, unwrap, set_wrapper, make_sqids, orm_wrapper_with_sqids
@@ -37,7 +36,7 @@ class TextbooksResource:
     singular_name = "textbook"
     plural_name = "textbooks"
 
-    Model = TextbookModel
+    Model = api_models.Textbook
 
     default_page_size = settings.GENERIC_DEFAULT_API_PAGE_SIZE
 
@@ -76,7 +75,7 @@ class SectionsResource:
     singular_name = "section"
     plural_name = "sections"
 
-    Model = SectionModel
+    Model = api_models.Section
 
     default_page_size = settings.GENERIC_DEFAULT_API_PAGE_SIZE
 

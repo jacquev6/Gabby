@@ -1,8 +1,8 @@
 from sqlalchemy import orm
 
+from . import api_models
 from . import settings
-from .api_models import ProjectModel
-from .database_utils import OrmBase, SessionDependent, make_item_creator, make_item_deleter, make_item_getter, make_item_saver, make_page_getter
+from .database_utils import OrmBase, make_item_creator, make_item_deleter, make_item_getter, make_item_saver, make_page_getter
 from .wrapping import wrap, set_wrapper, make_sqids, orm_wrapper_with_sqids
 
 
@@ -22,7 +22,7 @@ class ProjectsResource:
     singular_name = "project"
     plural_name = "projects"
 
-    Model = ProjectModel
+    Model = api_models.Project
 
     default_page_size = settings.GENERIC_DEFAULT_API_PAGE_SIZE
 

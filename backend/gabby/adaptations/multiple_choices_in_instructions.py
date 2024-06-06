@@ -2,11 +2,11 @@ import itertools
 from sqlalchemy import orm
 import sqlalchemy as sql
 
+from .. import api_models
 from .. import parsing
 from .. import renderable
 from .. import renderable as r
 from .. import settings
-from ..api_models import MultipleChoicesInInstructionsAdaptationModel
 from ..database_utils import make_item_creator, make_item_deleter, make_item_getter, make_item_saver
 from ..exercises import Adaptation
 from ..exercises import Adaptation, Exercise
@@ -224,7 +224,7 @@ class MultipleChoicesInInstructionsAdaptationsResource:
     singular_name = "multiple_choices_in_instructions_adaptation"
     plural_name = "multiple_choices_in_instructions_adaptations"
 
-    Model = MultipleChoicesInInstructionsAdaptationModel
+    Model = api_models.MultipleChoicesInInstructionsAdaptation
 
     default_page_size = settings.GENERIC_DEFAULT_API_PAGE_SIZE
 

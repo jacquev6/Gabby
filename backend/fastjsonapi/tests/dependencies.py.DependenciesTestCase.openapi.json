@@ -14,7 +14,7 @@
         "title": "HTTPValidationError",
         "type": "object"
       },
-      "ItemLinksModel": {
+      "ItemLinks": {
         "additionalProperties": false,
         "properties": {
           "self": {
@@ -25,7 +25,7 @@
         "required": [
           "self"
         ],
-        "title": "ItemLinksModel",
+        "title": "ItemLinks",
         "type": "object"
       },
       "ValidationError": {
@@ -61,11 +61,11 @@
         "title": "ValidationError",
         "type": "object"
       },
-      "resource-ItemOutput": {
+      "resourceItemOutput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/resource-OutputItem"
+            "$ref": "#/components/schemas/resourceOutputItem"
           },
           "included": {
             "items": {},
@@ -76,21 +76,21 @@
         "required": [
           "data"
         ],
-        "title": "resource-ItemOutput",
+        "title": "resourceItemOutput",
         "type": "object"
       },
-      "resource-OutputItem": {
+      "resourceOutputItem": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "$ref": "#/components/schemas/resource-OutputItem-Attributes"
+            "$ref": "#/components/schemas/resourceOutputItemAttributes"
           },
           "id": {
             "title": "Id",
             "type": "string"
           },
           "links": {
-            "$ref": "#/components/schemas/ItemLinksModel"
+            "$ref": "#/components/schemas/ItemLinks"
           },
           "type": {
             "title": "Type",
@@ -103,10 +103,10 @@
           "links",
           "attributes"
         ],
-        "title": "resource-OutputItem",
+        "title": "resourceOutputItem",
         "type": "object"
       },
-      "resource-OutputItem-Attributes": {
+      "resourceOutputItemAttributes": {
         "additionalProperties": false,
         "properties": {
           "foo": {
@@ -136,7 +136,7 @@
           "foo",
           "host"
         ],
-        "title": "resource-OutputItem-Attributes",
+        "title": "resourceOutputItemAttributes",
         "type": "object"
       }
     }
@@ -278,7 +278,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/resource-ItemOutput"
+                  "$ref": "#/components/schemas/resourceItemOutput"
                 }
               }
             },
