@@ -6,7 +6,7 @@ describe('Gabby\'s project view', () => {
   })
 
   after(() => {
-    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises,more-test-exercises')
+    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=more-test-exercises')
   })
 
   it('displays an error message if the project does not exist', () => {

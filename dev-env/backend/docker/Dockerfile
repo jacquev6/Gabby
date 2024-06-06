@@ -10,7 +10,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     set -x \
  && apt-get update \
  && DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends \
-    graphviz `# For 'manage.py graph_models'` \
+    graphviz `# For 'python -m gabby graph-models'` \
     jq \
     postgresql-client `# For DB backup` \
  && true

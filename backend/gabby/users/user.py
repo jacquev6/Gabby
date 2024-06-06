@@ -11,10 +11,9 @@ import argon2
 import jwt
 import sqlalchemy as sql
 
-from fastjsonapi.sqlalchemy import set_wrapper, OrmWrapperWithStrIds, wrap
-
 from .. import settings
-from ..database_utils import OrmBase, Session, session_dependable
+from ..database_utils import OrmBase, Session, make_item_getter, session_dependable
+from ..wrapping import set_wrapper, OrmWrapperWithStrIds
 
 
 # Tests for this code are in an other file ('.tests') to break a circular dependency with '..testing'
@@ -58,12 +57,7 @@ class UsersResource:
 
     default_page_size = settings.GENERIC_DEFAULT_API_PAGE_SIZE
 
-    class ItemGetter:
-        def __init__(self, session: Session = Depends(session_dependable)) -> None:
-            self.__session = session
-
-        def __call__(self, id):
-            return wrap(self.__session.get(User, id))
+    ItemGetter = make_item_getter(User)
 
 
 set_wrapper(User, OrmWrapperWithStrIds)
@@ -139,3 +133,23 @@ def mandatory_authenticated_user_dependable(
         raise HTTPException(status_code=401, detail="Invalid or expired token")
     else:
         return user
+
+
+class OptionalAuthenticatedUserDependent:
+    def __init__(
+        self,
+        session: Session = Depends(session_dependable),
+        authenticated_user: User | None = Depends(optional_authenticated_user_dependable),
+    ):
+        self.session = session
+        self.authenticated_user = authenticated_user
+
+
+class MandatoryAuthenticatedUserDependent:
+    def __init__(
+        self,
+        session: Session = Depends(session_dependable),
+        authenticated_user: User = Depends(mandatory_authenticated_user_dependable),
+    ):
+        self.session = session
+        self.authenticated_user = authenticated_user

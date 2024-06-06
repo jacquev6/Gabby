@@ -1,10 +1,9 @@
 from contextlib import contextmanager
 from typing import Annotated
 
-from django.test import TestCase
 from fastapi import Depends
 
-from ..testing import ItemsFactory, TestMixin
+from ..testing import ItemsFactory, ApiTestCase
 from .batching_models import Item, Model as BatchingModel
 
 
@@ -54,8 +53,9 @@ class Resource:
             self.factory.delete(Item, item.id)
 
 
-class BatchingTestCase(TestMixin, TestCase):
+class BatchingTestCase(ApiTestCase):
     resources = [Resource()]
+    polymorphism = {}
 
     def setUp(self):
         super().setUp()
@@ -299,7 +299,7 @@ class BatchingTestCase(TestMixin, TestCase):
 
     # @todo Add test showing an error if a same lid is associated to several created resources
 
-    # def test_dependent_adds__refering_to_object_to_be_created(self):
+    # def _test_dependent_adds__referring_to_object_to_be_created(self):
     #     response = self.post("http://server/batch", {"atomic:operations": [
     #         {
     #             "op": "add",

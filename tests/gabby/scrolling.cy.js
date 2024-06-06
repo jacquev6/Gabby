@@ -2,12 +2,12 @@ describe('Gabby', () => {
   before(console.clear)
 
   beforeEach(() => {
-    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises,more-test-exercises')
+    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=more-test-exercises')
     cy.viewport(1200, 200)
   })
 
   after(() => {
-    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises,more-test-exercises')
+    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=more-test-exercises')
   })
 
   function haveVerticalScrollbar(el) {

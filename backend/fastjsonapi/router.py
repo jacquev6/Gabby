@@ -1,8 +1,8 @@
 # from __future__ import annotations  # This doesn't work because we're annotating with local types. So this code won't work on Python 4. OK.
 from typing import Annotated, Type
 from urllib.parse import urlencode
+import unittest
 
-from django.test import TestCase
 from fastapi import APIRouter, Depends, HTTPException, Query, Response
 from fastapi.responses import JSONResponse
 from starlette import status
@@ -502,7 +502,7 @@ def parse_include(include):
         return return_value
 
 
-class ParseIncludeTestCase(TestCase):
+class ParseIncludeTestCase(unittest.TestCase):
     def test_none(self):
         self.assertEqual(parse_include(None), None)
 

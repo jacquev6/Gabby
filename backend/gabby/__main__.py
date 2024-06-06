@@ -1,3 +1,4 @@
+import json
 from urllib.parse import urlparse
 import datetime
 import io
@@ -6,13 +7,15 @@ import subprocess
 import sys
 import tarfile
 
+from sqlalchemy import orm
 import boto3
 import click
 import sqlalchemy_data_model_visualizer
 
+from . import database_utils
+from . import orm_models
 from . import settings
-from .pings import Ping
-from .users import User
+from .fixtures import available_fixtures
 
 
 @click.group()
@@ -22,11 +25,7 @@ def main():
 
 @main.command()
 def graph_models():
-    models = [
-        Ping,
-        User,
-    ]
-    sqlalchemy_data_model_visualizer.generate_data_model_diagram(models, "gabby/models", add_labels=True)
+    sqlalchemy_data_model_visualizer.generate_data_model_diagram(orm_models.all_models, "gabby/models", add_labels=True)
     os.unlink("gabby/models")
 
 
@@ -79,6 +78,151 @@ def backup_database():
         raise NotImplementedError(f"Unsupported database backup URL scheme: {parsed_database_backups_url.scheme}")
 
     print(f"Backed up database {settings.DATABASE_URL} to {settings.DATABASE_BACKUPS_URL}/{archive_name}", file=sys.stderr)
+
+
+@main.command(help="Import data from a Django './manage.py dumpdata textbooks' JSON file")
+@click.argument("input_file", type=click.File("r"))
+def import_django_data(input_file):
+    database_engine = database_utils.create_engine(settings.DATABASE_URL)
+    database_utils.drop_tables(database_engine)
+    database_utils.create_tables(database_engine)
+
+    last_pk_by_model = {}
+    def assert_pk(model, pk):
+        assert isinstance(pk, int)
+        last_pk_by_model.setdefault(model, 0)
+        assert pk > last_pk_by_model[model]  # Not always 'last_pk_by_model[model] + 1'
+        last_pk_by_model[model] = pk
+
+    data = json.load(input_file)
+
+    instances_by_model = {}
+    exercises_by_adaptation = {}
+
+    with orm.Session(database_engine) as session:
+        for instance_data in data:
+            assert instance_data.keys() == {"model", "pk", "fields"}
+            model = instance_data["model"]
+            pk = instance_data["pk"]
+            fields = instance_data["fields"]
+            instance = None
+            match model:
+                case "textbooks.pdffile":
+                    assert isinstance(pk, str)
+                    assert len(pk) == 64
+                    assert fields.keys() == {"bytes_count", "pages_count"}, fields
+                    instance = orm_models.PdfFile(
+                        sha256=pk,
+                        bytes_count=fields.pop("bytes_count"),
+                        pages_count=fields.pop("pages_count"),
+                    )
+                case "textbooks.pdffilenaming":
+                    assert_pk(model, pk)
+                    assert fields.keys() == {"pdf_file", "name"}, fields
+                    instance = orm_models.PdfFileNaming(
+                        pdf_file=instances_by_model["textbooks.pdffile"][fields.pop("pdf_file")],
+                        name=fields.pop("name"),
+                    )
+                case "textbooks.project":
+                    assert_pk(model, pk)
+                    assert fields.keys() == {"title", "description"}, fields
+                    instance = orm_models.Project(
+                        title=fields.pop("title"),
+                        description=fields.pop("description"),
+                    )
+                case "textbooks.textbook":
+                    assert_pk(model, pk)
+                    assert fields.keys() == {"project", "title", "publisher", "year", "isbn"}, fields
+                    instance = orm_models.Textbook(
+                        project=instances_by_model["textbooks.project"][fields.pop("project")],
+                        title=fields.pop("title"),
+                        publisher=fields.pop("publisher"),
+                        year=fields.pop("year"),
+                        isbn=fields.pop("isbn"),
+                    )
+                case "textbooks.section":
+                    assert_pk(model, pk)
+                    assert fields.keys() == {"textbook", "pdf_file", "textbook_start_page", "pdf_file_start_page", "pages_count"}, fields
+                    instance = orm_models.Section(
+                        textbook=instances_by_model["textbooks.textbook"][fields.pop("textbook")],
+                        pdf_file=instances_by_model["textbooks.pdffile"][fields.pop("pdf_file")],
+                        textbook_start_page=fields.pop("textbook_start_page"),
+                        pdf_file_start_page=fields.pop("pdf_file_start_page"),
+                        pages_count=fields.pop("pages_count"),
+                    )
+                case "textbooks.adaptation":
+                    assert_pk(model, pk)
+                    assert fields.keys() == {"polymorphic_ctype"}, fields
+                case "textbooks.exercise":
+                    assert_pk(model, pk)
+                    assert fields.keys() == {"project", "textbook", "textbook_page", "bounding_rectangle", "number", "instructions", "wording", "example", "clue", "adaptation"}, fields
+                    instance = orm_models.Exercise(
+                        project=instances_by_model["textbooks.project"][fields.pop("project")],
+                        textbook=None if (textbook := fields.pop("textbook")) is None else instances_by_model["textbooks.textbook"][textbook],
+                        textbook_page=fields.pop("textbook_page"),
+                        bounding_rectangle=fields.pop("bounding_rectangle"),
+                        number=fields.pop("number"),
+                        instructions=fields.pop("instructions"),
+                        wording=fields.pop("wording"),
+                        example=fields.pop("example"),
+                        clue=fields.pop("clue"),
+                        adaptation=None,
+                    )
+                    exercises_by_adaptation[fields.pop("adaptation")] = instance
+                case "textbooks.extractionevent":
+                    assert_pk(model, pk)
+                    assert fields.keys() == {"exercise", "event"}, fields
+                    instance = orm_models.ExtractionEvent(
+                        exercise=instances_by_model["textbooks.exercise"][fields.pop("exercise")],
+                        event=fields.pop("event"),
+                    )
+                case "textbooks.selectthingsadaptation":
+                    assert_pk(model, pk)
+                    assert fields.keys() == {"punctuation", "words", "colors"}, fields
+                    instance = orm_models.SelectThingsAdaptation(
+                        punctuation=fields.pop("punctuation"),
+                        words=fields.pop("words"),
+                        colors=fields.pop("colors"),
+                    )
+                    exercises_by_adaptation.pop(pk).adaptation = instance
+                case "textbooks.fillwithfreetextadaptation":
+                    assert_pk(model, pk)
+                    assert fields.keys() == {"placeholder"}, fields
+                    instance = orm_models.FillWithFreeTextAdaptation(
+                        placeholder=fields.pop("placeholder"),
+                    )
+                    exercises_by_adaptation.pop(pk).adaptation = instance
+                case "textbooks.multiplechoicesadaptation":
+                    assert_pk(model, pk)
+                    assert fields.keys() == {"placeholder"}, fields
+                    instance = orm_models.MultipleChoicesInInstructionsAdaptation(
+                        placeholder=fields.pop("placeholder"),
+                    )
+                    exercises_by_adaptation.pop(pk).adaptation = instance
+                case _:
+                    assert False, model
+            if instance is None:
+                assert model == "textbooks.adaptation", model
+            else:
+                assert fields == {}, fields
+                session.add(instance)
+                instances_by_model.setdefault(model, {})[pk] = instance
+        exercises_by_adaptation.pop(None)
+        assert exercises_by_adaptation == {}, exercises_by_adaptation
+        session.commit()
+
+
+@main.command()
+@click.argument("fixtures", nargs=-1)
+def load_fixtures(fixtures):
+    database_engine = database_utils.create_engine(settings.DATABASE_URL)
+    database_utils.drop_tables(database_engine)
+    database_utils.create_tables(database_engine)
+
+    with orm.Session(database_engine) as session:
+        for fixture in fixtures:
+            available_fixtures[fixture](session)
+        session.commit()
 
 
 if __name__ == "__main__":

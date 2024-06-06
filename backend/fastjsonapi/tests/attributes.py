@@ -3,13 +3,12 @@ from typing import Annotated
 import dataclasses
 import datetime
 
-from django.test import TestCase
 from fastapi import Depends
 from pydantic import BaseModel
 from starlette import status
 
 from ..annotations import Computed, Constant, Filterable, Secret
-from ..testing import TestMixin, ItemsFactory
+from ..testing import ApiTestCase, ItemsFactory
 
 
 @dataclasses.dataclass
@@ -74,8 +73,9 @@ class AtomicAttributesResource:
             self.factory.delete(AtomicAttributesItem, item.id)
 
 
-class AtomicAttributesTestCase(TestMixin, TestCase):
+class AtomicAttributesTestCase(ApiTestCase):
     resources = [AtomicAttributesResource()]
+    polymorphism = {}
 
     def setUp(self):
         super().setUp()
@@ -834,8 +834,9 @@ class CompoundAttributesResource:
             self.factory.delete(CompoundAttributesItem, item.id)
 
 
-class CompoundAttributesTestCase(TestMixin, TestCase):
+class CompoundAttributesTestCase(ApiTestCase):
     resources = [CompoundAttributesResource()]
+    polymorphism = {}
 
     def setUp(self):
         super().setUp()

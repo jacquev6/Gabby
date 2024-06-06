@@ -36,33 +36,33 @@ class TransactionTestCase(TestCase):
     def setUp(self):
         super().setUp()
         create_tables(self.database_engine)
-        self.__session = Session(self.database_engine)
+        self.session = Session(self.database_engine)
         self.__created = []
 
     def tearDown(self):
-        self.__session.close()
+        self.session.close()
         drop_tables(self.database_engine)
         super().tearDown()
 
     def create_model(self, model, *args, **kwds):
         instance = model(*args, **kwds)
-        self.__session.add(instance)
-        self.__session.commit()
+        self.session.add(instance)
+        self.session.commit()
         self.__created.append(instance)
         for i in self.__created:
-            self.__session.refresh(i)
+            self.session.refresh(i)
         return instance
 
     def delete_model(self, model, id):
-        self.__session.execute(sql.delete(model).where(model.id == id))
-        self.__session.commit()
+        self.session.execute(sql.delete(model).where(model.id == id))
+        self.session.commit()
 
     def count_models(self, model):
-        return self.__session.query(model).count()
+        return self.session.query(model).count()
 
     def get_model(self, model, id):
-        instance = self.__session.get(model, id)
-        self.__session.refresh(instance)
+        instance = self.session.get(model, id)
+        self.session.refresh(instance)
         return instance
 
 
@@ -84,8 +84,6 @@ class ApiTestCase(TransactionTestCase):
 
             cls.__schema_file_path = f"{inspect.getfile(cls)}.{cls.__name__}.openapi.json"
             cls.api_client = TestClient(cls.api_app)
-
-            cls.test_schema = cls._test_schema
 
     def tearDown(self):
         if hasattr(self, "resources"):
@@ -112,19 +110,25 @@ class ApiTestCase(TransactionTestCase):
     def delete(self, url):
         return self.api_client.delete(url, headers={"Content-Type": "application/vnd.api+json"})
 
-    def _test_schema(self):
-        try:
-            with open(self.__schema_file_path) as file:
-                expected = json.load(file)
-        except FileNotFoundError:
-            expected = {}
+    def test_schema(self):
+        if hasattr(self, "resources"):
+            try:
+                with open(self.__schema_file_path) as file:
+                    expected = json.load(file)
+            except FileNotFoundError:
+                expected = {}
 
-        actual = self.api_app.openapi()
-        # @todo Remove all 'application/json' from schema; use only 'application/vnd.api+json'
+            actual = self.api_app.openapi()
 
-        try:
-            self.assertEqual(actual, expected)
-        finally:
-            with open(self.__schema_file_path, "w") as file:
-                json.dump(actual, file, indent=2, sort_keys=True)
-                file.write("\n")
+            try:
+                self.assertEqual(actual, expected)
+            finally:
+                with open(self.__schema_file_path, "w") as file:
+                    json.dump(actual, file, indent=2, sort_keys=True)
+                    file.write("\n")
+
+
+class AdaptationTestCase(TestCase):
+    def do_test(self, adaptation, expected):
+        self.assertEqual(adaptation.make_adapted(), expected)
+        self.assertEqual(adaptation.to_generic_adaptation().make_adapted(), expected)

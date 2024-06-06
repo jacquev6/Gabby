@@ -1,12 +1,11 @@
 from typing import Annotated
 import dataclasses
 
-from django.test import TestCase
 from fastapi import Header
 from pydantic import BaseModel
 from starlette import status
 
-from ..testing import TestMixin
+from ..testing import ApiTestCase
 
 
 class Model(BaseModel):
@@ -47,8 +46,9 @@ class Resource:
             )
 
 
-class DependenciesTestCase(TestMixin, TestCase):
+class DependenciesTestCase(ApiTestCase):
     resources = [Resource()]
+    polymorphism = {}
 
     def test_get_item__no_foo(self):
         response = self.get("http://server/resources/1")
