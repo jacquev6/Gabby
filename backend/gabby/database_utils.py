@@ -22,10 +22,12 @@ def create_engine(url):
     )
 
 
+# @todo Remove. In must cases a flush should be enough.
 def drop_tables(engine):
     OrmBase.metadata.drop_all(engine)
 
 
+# @todo Remove. We should always use the Alembic migrations.
 def create_tables(engine):
     OrmBase.metadata.create_all(engine)
 
@@ -61,6 +63,7 @@ def make_item_creator(model, *, preprocess=lambda **kwargs: kwargs):
             item = model(**kwargs)
             self.session.add(item)
             try:
+                # @todo Could we session.flush instead of .commit? It would make batches atomic again.
                 self.session.commit()
             except sql.exc.IntegrityError as e:
                 raise HTTPException(status_code=400, detail=e.orig.diag.constraint_name)
