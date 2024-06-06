@@ -87,7 +87,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
         )
 
     def test_example_and_clue(self):
-        pass  # @todo Implement
+        pass  # @todo Implement this test
 
 
 class MultipleChoicesInWordingAdaptationsResource:
