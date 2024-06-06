@@ -58,8 +58,7 @@ def make_item_creator(model, *, preprocess=lambda **kwargs: kwargs):
             item = model(**kwargs)
             self.session.add(item)
             try:
-                # @todo Could we session.flush instead of .commit? It would make batches atomic again.
-                self.session.commit()
+                self.session.flush()
             except sql.exc.IntegrityError as e:
                 raise HTTPException(status_code=400, detail=e.orig.diag.constraint_name)
             return wrap(item)

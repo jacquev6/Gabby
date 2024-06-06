@@ -46,7 +46,7 @@ class PingsResource:
                 next=[unwrap(next_item) for next_item in next],
             )
             self.session.add(ping)
-            self.session.commit()
+            self.session.flush()
             return wrap(ping)
 
     ItemGetter = make_item_getter(Ping)

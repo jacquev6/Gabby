@@ -39,7 +39,7 @@ class PdfFilesResource:
             self.session.add(pdf_file)
 
             try:
-                self.session.commit()
+                self.session.flush()
             except sql.exc.IntegrityError as e:
                 if e.orig.diag.constraint_name == "pdf_files_pkey":
                     self.session.rollback()

@@ -98,11 +98,8 @@ def login(access_token: str = Depends(authentication_token_dependable)):
 # Test-only URL. Not in 'api/...' to avoid accidentally exposing it.
 if settings.EXPOSE_RESET_FOR_TESTS_URL:
     @app.post("/reset-for-tests/yes-im-sure")
-    def reset_for_tests(request: Request, fixtures: str = None):
-        if fixtures is not None:
-            with database_utils.Session(request.app.extra["database_engine"]) as session:
-                load_fixtures(session, fixtures.split(","))
-                session.commit()
+    def reset_for_tests(fixtures: str = None, session: database_utils.Session = Depends(database_utils.session_dependable)):
+        load_fixtures(session, [] if fixtures is None else fixtures.split(","))
         return {}
 
 
