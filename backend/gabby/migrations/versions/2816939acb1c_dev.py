@@ -19,7 +19,9 @@ def upgrade():
     op.create_table(
         "pdf_files",
         sa.Column("sha256", sa.String(), nullable=False),
+        sa.Column("bytes_count", sa.Integer(), nullable=False),
         sa.Column("pages_count", sa.Integer(), nullable=False),
+        sa.CheckConstraint("regexp_like(sha256, '^[0-9a-f]{64}$')", name="check_sha256_format"),
         sa.PrimaryKeyConstraint("sha256"),
     )
     op.create_table(
@@ -128,6 +130,7 @@ def upgrade():
         sa.Column("publisher", sa.String(), nullable=True),
         sa.Column("year", sa.Integer(), nullable=True),
         sa.Column("isbn", sa.String(), nullable=True),
+        sa.CheckConstraint("regexp_like(isbn, '^[0-9]+$')", name="check_isbn_format"),
         sa.ForeignKeyConstraint(
             ["project_id"],
             ["projects.id"],
@@ -147,6 +150,9 @@ def upgrade():
         sa.Column("example", sa.String(), nullable=False),
         sa.Column("clue", sa.String(), nullable=False),
         sa.Column("adaptation_id", sa.Integer(), nullable=True),
+        sa.CheckConstraint(
+            "(textbook_id IS NULL) = (textbook_page IS NULL)", name="textbook_id_textbook_page_consistently_null"
+        ),
         sa.ForeignKeyConstraint(
             ["adaptation_id"],
             ["adaptations.id"],
@@ -160,6 +166,8 @@ def upgrade():
             ["textbooks.id"],
         ),
         sa.PrimaryKeyConstraint("id"),
+        sa.UniqueConstraint("adaptation_id"),
+        sa.UniqueConstraint("textbook_id", "textbook_page", "number"),
     )
     op.create_table(
         "sections",

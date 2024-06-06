@@ -1,6 +1,144 @@
 {
   "components": {
     "schemas": {
+      "AdaptedExercise": {
+        "additionalProperties": false,
+        "properties": {
+          "clue": {
+            "$ref": "#/components/schemas/Section"
+          },
+          "example": {
+            "$ref": "#/components/schemas/Section"
+          },
+          "instructions": {
+            "$ref": "#/components/schemas/Section"
+          },
+          "number": {
+            "title": "Number",
+            "type": "string"
+          },
+          "textbook_page": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Textbook Page"
+          },
+          "wording": {
+            "$ref": "#/components/schemas/Section"
+          }
+        },
+        "required": [
+          "number",
+          "textbook_page",
+          "instructions",
+          "wording",
+          "example",
+          "clue"
+        ],
+        "title": "AdaptedExercise",
+        "type": "object"
+      },
+      "Body_login_token_post": {
+        "properties": {
+          "client_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Client Id"
+          },
+          "client_secret": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Client Secret"
+          },
+          "grant_type": {
+            "anyOf": [
+              {
+                "pattern": "password",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Grant Type"
+          },
+          "options": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Options"
+          },
+          "password": {
+            "title": "Password",
+            "type": "string"
+          },
+          "scope": {
+            "default": "",
+            "title": "Scope",
+            "type": "string"
+          },
+          "username": {
+            "title": "Username",
+            "type": "string"
+          }
+        },
+        "required": [
+          "username",
+          "password"
+        ],
+        "title": "Body_login_token_post",
+        "type": "object"
+      },
+      "CreateInputListRelationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/ObjectId"
+            },
+            "title": "Data",
+            "type": "array"
+          }
+        },
+        "title": "CreateInputListRelationship",
+        "type": "object"
+      },
+      "FillWithFreeTextAdaptationOptionsModel": {
+        "properties": {
+          "placeholder": {
+            "title": "Placeholder",
+            "type": "string"
+          }
+        },
+        "required": [
+          "placeholder"
+        ],
+        "title": "FillWithFreeTextAdaptationOptionsModel",
+        "type": "object"
+      },
       "HTTPValidationError": {
         "properties": {
           "detail": {
@@ -53,6 +191,24 @@
           "count"
         ],
         "title": "Meta",
+        "type": "object"
+      },
+      "MultipleChoicesInInstructionsAdaptationOptionsModel": {
+        "properties": {
+          "placeholder": {
+            "title": "Placeholder",
+            "type": "string"
+          }
+        },
+        "required": [
+          "placeholder"
+        ],
+        "title": "MultipleChoicesInInstructionsAdaptationOptionsModel",
+        "type": "object"
+      },
+      "MultipleChoicesInWordingAdaptationOptionsModel": {
+        "properties": {},
+        "title": "MultipleChoicesInWordingAdaptationOptionsModel",
         "type": "object"
       },
       "ObjectId": {
@@ -192,6 +348,23 @@
         "title": "Pagination",
         "type": "object"
       },
+      "Paragraph": {
+        "additionalProperties": false,
+        "properties": {
+          "sentences": {
+            "items": {
+              "$ref": "#/components/schemas/Sentence"
+            },
+            "title": "Sentences",
+            "type": "array"
+          }
+        },
+        "required": [
+          "sentences"
+        ],
+        "title": "Paragraph",
+        "type": "object"
+      },
       "Point": {
         "properties": {
           "x": {
@@ -226,6 +399,118 @@
         "title": "Rectangle",
         "type": "object"
       },
+      "Section": {
+        "additionalProperties": false,
+        "properties": {
+          "paragraphs": {
+            "items": {
+              "$ref": "#/components/schemas/Paragraph"
+            },
+            "title": "Paragraphs",
+            "type": "array"
+          }
+        },
+        "required": [
+          "paragraphs"
+        ],
+        "title": "Section",
+        "type": "object"
+      },
+      "SelectThingsAdaptationOptionsModel": {
+        "properties": {
+          "colors": {
+            "title": "Colors",
+            "type": "integer"
+          },
+          "punctuation": {
+            "title": "Punctuation",
+            "type": "boolean"
+          },
+          "words": {
+            "title": "Words",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "colors",
+          "words",
+          "punctuation"
+        ],
+        "title": "SelectThingsAdaptationOptionsModel",
+        "type": "object"
+      },
+      "Sentence": {
+        "additionalProperties": false,
+        "properties": {
+          "tokens": {
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/_PlainText"
+                },
+                {
+                  "$ref": "#/components/schemas/_BoxedText"
+                },
+                {
+                  "$ref": "#/components/schemas/_SelectableText"
+                },
+                {
+                  "$ref": "#/components/schemas/_SelectedText"
+                },
+                {
+                  "$ref": "#/components/schemas/_SelectedClicks"
+                },
+                {
+                  "$ref": "#/components/schemas/_FreeTextInput"
+                },
+                {
+                  "$ref": "#/components/schemas/_MultipleChoicesInput"
+                },
+                {
+                  "$ref": "#/components/schemas/_Whitespace"
+                }
+              ]
+            },
+            "title": "Tokens",
+            "type": "array"
+          }
+        },
+        "required": [
+          "tokens"
+        ],
+        "title": "Sentence",
+        "type": "object"
+      },
+      "UpdateInputListRelationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/ObjectId"
+            },
+            "title": "Data",
+            "type": "array"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "UpdateInputListRelationship",
+        "type": "object"
+      },
+      "UserModel": {
+        "properties": {
+          "username": {
+            "title": "Username",
+            "type": "string"
+          }
+        },
+        "required": [
+          "username"
+        ],
+        "title": "UserModel",
+        "type": "object"
+      },
       "ValidationError": {
         "properties": {
           "loc": {
@@ -257,6 +542,375 @@
           "type"
         ],
         "title": "ValidationError",
+        "type": "object"
+      },
+      "_BoxedText": {
+        "additionalProperties": false,
+        "properties": {
+          "text": {
+            "title": "Text",
+            "type": "string"
+          },
+          "type": {
+            "const": "boxedText",
+            "enum": [
+              "boxedText"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "text"
+        ],
+        "title": "_BoxedText",
+        "type": "object"
+      },
+      "_FreeTextInput": {
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "const": "freeTextInput",
+            "enum": [
+              "freeTextInput"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type"
+        ],
+        "title": "_FreeTextInput",
+        "type": "object"
+      },
+      "_MultipleChoicesInput": {
+        "additionalProperties": false,
+        "properties": {
+          "choices": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Choices",
+            "type": "array"
+          },
+          "type": {
+            "const": "multipleChoicesInput",
+            "enum": [
+              "multipleChoicesInput"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "choices"
+        ],
+        "title": "_MultipleChoicesInput",
+        "type": "object"
+      },
+      "_PlainText": {
+        "additionalProperties": false,
+        "properties": {
+          "text": {
+            "title": "Text",
+            "type": "string"
+          },
+          "type": {
+            "const": "plainText",
+            "enum": [
+              "plainText"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "text"
+        ],
+        "title": "_PlainText",
+        "type": "object"
+      },
+      "_SelectableText": {
+        "additionalProperties": false,
+        "properties": {
+          "colors": {
+            "title": "Colors",
+            "type": "integer"
+          },
+          "text": {
+            "title": "Text",
+            "type": "string"
+          },
+          "type": {
+            "const": "selectableText",
+            "enum": [
+              "selectableText"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "text",
+          "colors"
+        ],
+        "title": "_SelectableText",
+        "type": "object"
+      },
+      "_SelectedClicks": {
+        "additionalProperties": false,
+        "properties": {
+          "color": {
+            "title": "Color",
+            "type": "integer"
+          },
+          "colors": {
+            "title": "Colors",
+            "type": "integer"
+          },
+          "type": {
+            "const": "selectedClicks",
+            "enum": [
+              "selectedClicks"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "color",
+          "colors"
+        ],
+        "title": "_SelectedClicks",
+        "type": "object"
+      },
+      "_SelectedText": {
+        "additionalProperties": false,
+        "properties": {
+          "color": {
+            "title": "Color",
+            "type": "integer"
+          },
+          "colors": {
+            "title": "Colors",
+            "type": "integer"
+          },
+          "text": {
+            "title": "Text",
+            "type": "string"
+          },
+          "type": {
+            "const": "selectedText",
+            "enum": [
+              "selectedText"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "text",
+          "color",
+          "colors"
+        ],
+        "title": "_SelectedText",
+        "type": "object"
+      },
+      "_Whitespace": {
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "const": "whitespace",
+            "enum": [
+              "whitespace"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type"
+        ],
+        "title": "_Whitespace",
+        "type": "object"
+      },
+      "adaptedExercise-CreateInput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/adaptedExercise-CreateInput-Data"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "adaptedExercise-CreateInput",
+        "type": "object"
+      },
+      "adaptedExercise-CreateInput-Data": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "$ref": "#/components/schemas/adaptedExercise-CreateInput-Data-Attributes"
+          },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/adaptedExercise-CreateInput-Data-Relationships"
+              }
+            ],
+            "default": {}
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "attributes"
+        ],
+        "title": "adaptedExercise-CreateInput-Data",
+        "type": "object"
+      },
+      "adaptedExercise-CreateInput-Data-Attributes": {
+        "additionalProperties": false,
+        "properties": {
+          "adaptationOptions": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SelectThingsAdaptationOptionsModel"
+              },
+              {
+                "$ref": "#/components/schemas/FillWithFreeTextAdaptationOptionsModel"
+              },
+              {
+                "$ref": "#/components/schemas/MultipleChoicesInInstructionsAdaptationOptionsModel"
+              },
+              {
+                "$ref": "#/components/schemas/MultipleChoicesInWordingAdaptationOptionsModel"
+              }
+            ],
+            "title": "Adaptationoptions"
+          },
+          "clue": {
+            "title": "Clue",
+            "type": "string"
+          },
+          "example": {
+            "title": "Example",
+            "type": "string"
+          },
+          "instructions": {
+            "title": "Instructions",
+            "type": "string"
+          },
+          "number": {
+            "title": "Number",
+            "type": "string"
+          },
+          "textbookPage": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Textbookpage"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          },
+          "wording": {
+            "title": "Wording",
+            "type": "string"
+          }
+        },
+        "required": [
+          "number",
+          "textbookPage",
+          "instructions",
+          "wording",
+          "example",
+          "clue",
+          "type",
+          "adaptationOptions"
+        ],
+        "title": "adaptedExercise-CreateInput-Data-Attributes",
+        "type": "object"
+      },
+      "adaptedExercise-CreateInput-Data-Relationships": {
+        "additionalProperties": false,
+        "properties": {},
+        "title": "adaptedExercise-CreateInput-Data-Relationships",
+        "type": "object"
+      },
+      "adaptedExercise-ItemOutput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/adaptedExercise-OutputItem"
+          },
+          "included": {
+            "items": {},
+            "title": "Included",
+            "type": "array"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "adaptedExercise-ItemOutput",
+        "type": "object"
+      },
+      "adaptedExercise-OutputItem": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "$ref": "#/components/schemas/adaptedExercise-OutputItem-Attributes"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "links": {
+            "$ref": "#/components/schemas/ItemLinksModel"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "links",
+          "attributes"
+        ],
+        "title": "adaptedExercise-OutputItem",
+        "type": "object"
+      },
+      "adaptedExercise-OutputItem-Attributes": {
+        "additionalProperties": false,
+        "properties": {
+          "adapted": {
+            "$ref": "#/components/schemas/AdaptedExercise"
+          }
+        },
+        "required": [
+          "adapted"
+        ],
+        "title": "adaptedExercise-OutputItem-Attributes",
         "type": "object"
       },
       "exercise-CreateInput": {
@@ -1921,6 +2575,335 @@
         "title": "pdfFileNaming-UpdateInput-Data-Relationships",
         "type": "object"
       },
+      "ping-CreateInput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/ping-CreateInput-Data"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "ping-CreateInput",
+        "type": "object"
+      },
+      "ping-CreateInput-Data": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ping-CreateInput-Data-Attributes"
+              }
+            ],
+            "default": {}
+          },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ping-CreateInput-Data-Relationships"
+              }
+            ],
+            "default": {
+              "next": {
+                "data": []
+              },
+              "prev": {}
+            }
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type"
+        ],
+        "title": "ping-CreateInput-Data",
+        "type": "object"
+      },
+      "ping-CreateInput-Data-Attributes": {
+        "additionalProperties": false,
+        "properties": {
+          "message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Message"
+          }
+        },
+        "title": "ping-CreateInput-Data-Attributes",
+        "type": "object"
+      },
+      "ping-CreateInput-Data-Relationships": {
+        "additionalProperties": false,
+        "properties": {
+          "next": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CreateInputListRelationship"
+              }
+            ],
+            "default": {
+              "data": []
+            }
+          },
+          "prev": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OptionalRelationship"
+              }
+            ],
+            "default": {}
+          }
+        },
+        "title": "ping-CreateInput-Data-Relationships",
+        "type": "object"
+      },
+      "ping-ItemOutput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/ping-OutputItem"
+          },
+          "included": {
+            "items": {},
+            "title": "Included",
+            "type": "array"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "ping-ItemOutput",
+        "type": "object"
+      },
+      "ping-OutputItem": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "$ref": "#/components/schemas/ping-OutputItem-Attributes"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "links": {
+            "$ref": "#/components/schemas/ItemLinksModel"
+          },
+          "relationships": {
+            "$ref": "#/components/schemas/ping-OutputItem-Relationships"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "links",
+          "attributes",
+          "relationships"
+        ],
+        "title": "ping-OutputItem",
+        "type": "object"
+      },
+      "ping-OutputItem-Attributes": {
+        "additionalProperties": false,
+        "properties": {
+          "createdAt": {
+            "format": "date-time",
+            "title": "Createdat",
+            "type": "string"
+          },
+          "createdBy": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/UserModel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Message"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "title": "Updatedat",
+            "type": "string"
+          },
+          "updatedBy": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/UserModel"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "message",
+          "createdAt",
+          "createdBy",
+          "updatedAt",
+          "updatedBy"
+        ],
+        "title": "ping-OutputItem-Attributes",
+        "type": "object"
+      },
+      "ping-OutputItem-Relationships": {
+        "additionalProperties": false,
+        "properties": {
+          "next": {
+            "$ref": "#/components/schemas/OutputListRelationship"
+          },
+          "prev": {
+            "$ref": "#/components/schemas/OptionalRelationship"
+          }
+        },
+        "required": [
+          "prev",
+          "next"
+        ],
+        "title": "ping-OutputItem-Relationships",
+        "type": "object"
+      },
+      "ping-PageOutput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/ping-OutputItem"
+            },
+            "title": "Data",
+            "type": "array"
+          },
+          "included": {
+            "items": {},
+            "title": "Included",
+            "type": "array"
+          },
+          "links": {
+            "$ref": "#/components/schemas/PageLinksModel"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/PageMetaModel"
+          }
+        },
+        "required": [
+          "data",
+          "meta",
+          "links"
+        ],
+        "title": "ping-PageOutput",
+        "type": "object"
+      },
+      "ping-UpdateInput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/ping-UpdateInput-Data"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "ping-UpdateInput",
+        "type": "object"
+      },
+      "ping-UpdateInput-Data": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ping-UpdateInput-Data-Attributes"
+              }
+            ],
+            "default": {}
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ping-UpdateInput-Data-Relationships"
+              }
+            ],
+            "default": {}
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "ping-UpdateInput-Data",
+        "type": "object"
+      },
+      "ping-UpdateInput-Data-Attributes": {
+        "additionalProperties": false,
+        "properties": {
+          "message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Message"
+          }
+        },
+        "title": "ping-UpdateInput-Data-Attributes",
+        "type": "object"
+      },
+      "ping-UpdateInput-Data-Relationships": {
+        "additionalProperties": false,
+        "properties": {
+          "next": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UpdateInputListRelationship"
+              }
+            ]
+          },
+          "prev": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/OptionalRelationship"
+              }
+            ]
+          }
+        },
+        "title": "ping-UpdateInput-Data-Relationships",
+        "type": "object"
+      },
       "project-CreateInput": {
         "additionalProperties": false,
         "properties": {
@@ -3012,6 +3995,17 @@
         "title": "textbook-UpdateInput-Data-Relationships",
         "type": "object"
       }
+    },
+    "securitySchemes": {
+      "OAuth2PasswordBearer": {
+        "flows": {
+          "password": {
+            "scopes": {},
+            "tokenUrl": "token"
+          }
+        },
+        "type": "oauth2"
+      }
     }
   },
   "info": {
@@ -3020,6 +4014,103 @@
   },
   "openapi": "3.1.0",
   "paths": {
+    "/adaptedExercises": {
+      "post": {
+        "operationId": "create_adapted_exercise_adaptedExercises_post",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/adaptedExercise-CreateInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/adaptedExercise-ItemOutput"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Adapted Exercise"
+      }
+    },
+    "/adaptedExercises/{id}": {
+      "get": {
+        "operationId": "get_adapted_exercise_adaptedExercises__id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/adaptedExercise-ItemOutput"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Adapted Exercise"
+      }
+    },
     "/batch": {
       "post": {
         "operationId": "batch_batch_post",
@@ -3054,6 +4145,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Batch"
       }
     },
@@ -4629,6 +5725,288 @@
         "summary": "Update Pdf File"
       }
     },
+    "/pings": {
+      "get": {
+        "operationId": "get_pings_pings_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page[size]",
+            "required": false,
+            "schema": {
+              "default": 2,
+              "title": "Page[Size]",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page[number]",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "title": "Page[Number]",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "required": false,
+            "schema": {
+              "title": "Sort",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "filter[message]",
+            "required": false,
+            "schema": {
+              "title": "Filter[Message]",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "filter[prev]",
+            "required": false,
+            "schema": {
+              "title": "Filter[Prev]",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ping-PageOutput"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Pings"
+      },
+      "post": {
+        "operationId": "create_ping_pings_post",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ping-CreateInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ping-ItemOutput"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "summary": "Create Ping"
+      }
+    },
+    "/pings/{id}": {
+      "delete": {
+        "operationId": "delete_ping_pings__id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "summary": "Delete Ping"
+      },
+      "get": {
+        "operationId": "get_ping_pings__id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ping-ItemOutput"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Ping"
+      },
+      "patch": {
+        "operationId": "update_ping_pings__id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ping-UpdateInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ping-ItemOutput"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "summary": "Update Ping"
+      }
+    },
     "/projects": {
       "get": {
         "operationId": "get_projects_projects_get",
@@ -5557,6 +6935,42 @@
           }
         },
         "summary": "Update Textbook"
+      }
+    },
+    "/token": {
+      "post": {
+        "operationId": "login_token_post",
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_login_token_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Login"
       }
     }
   }

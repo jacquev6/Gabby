@@ -2,7 +2,7 @@ import functools
 
 import lark
 
-from django.test import TestCase
+from .testing import TestCase
 
 from . import renderable
 

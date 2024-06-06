@@ -1,5 +1,8 @@
-from .exercises import Adaptation, Exercise, ExtractionEvent
-from .exercises import GenericAdaptation, SelectThingsAdaptation, FillWithFreeTextAdaptation, MultipleChoicesInInstructionsAdaptation, MultipleChoicesInWordingAdaptation
+from .adaptations.fill_with_free_text import FillWithFreeTextAdaptation
+from .adaptations.multiple_choices_in_instructions import MultipleChoicesInInstructionsAdaptation
+from .adaptations.multiple_choices_in_wording import MultipleChoicesInWordingAdaptation
+from .adaptations.select_things import SelectThingsAdaptation
+from .exercises import Adaptation, GenericAdaptation, Exercise, ExtractionEvent
 from .pdfs import PdfFile, PdfFileNaming
 from .pings import Ping
 from .projects import Project
@@ -7,7 +10,7 @@ from .textbooks import Section, Textbook
 from .users import User
 
 
-models = [
+all_models = [
     Adaptation,
     Exercise,
     ExtractionEvent,

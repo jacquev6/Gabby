@@ -3,20 +3,20 @@ from contextlib import contextmanager
 from typing import Annotated
 import datetime
 
-from fastapi import Depends, HTTPException
+from fastapi import HTTPException
 from pydantic import BaseModel
 from sqlalchemy import orm
 from starlette import status
 import sqlalchemy as sql
 
 from fastjsonapi.annotations import Computed, Filterable
-from fastjsonapi.sqlalchemy import set_wrapper, OrmWrapperWithStrIds, wrap, unwrap
 
 from . import settings
 from . import testing
-from .database_utils import OrmBase, Session, session_dependable
-from .users import User, UserModel, UsersResource, optional_authenticated_user_dependable
+from .database_utils import OrmBase, SessionDependent, make_item_getter, make_page_getter
+from .users import User, UserModel, UsersResource, OptionalAuthenticatedUserDependent
 from .users.mixins import CreatedUpdatedByAtMixin
+from .wrapping import set_wrapper, OrmWrapperWithStrIds, wrap, unwrap
 
 
 class Ping(OrmBase, CreatedUpdatedByAtMixin):
@@ -49,85 +49,46 @@ class PingsResource:
 
     default_page_size = settings.GENERIC_DEFAULT_API_PAGE_SIZE
 
-    class ItemCreator:
-        def __init__(
-            self,
-            session: Session = Depends(session_dependable),
-            authenticated_user: User | None = Depends(optional_authenticated_user_dependable),
-        ):
-            self.__session = session
-            self.__authenticated_user = authenticated_user
-
+    class ItemCreator(OptionalAuthenticatedUserDependent):
         def __call__(self, *, message, prev, next):
             ping = Ping(
                 message=message,
-                created_by=self.__authenticated_user,
-                updated_by=self.__authenticated_user,
+                created_by=self.authenticated_user,
+                updated_by=self.authenticated_user,
                 prev=unwrap(prev),
                 next=[unwrap(next_item) for next_item in next],
             )
-            self.__session.add(ping)
-            self.__session.commit()
+            self.session.add(ping)
+            self.session.commit()
             return wrap(ping)
 
-    class ItemGetter:
-        def __init__(self, session: Session = Depends(session_dependable)):
-            self.__session = session
+    ItemGetter = make_item_getter(Ping)
 
-        def __call__(self, id):
-            return wrap(self.__session.get(Ping, id))
+    PageGetter = make_page_getter(
+        Ping,
+        filter_functions={
+            "message": lambda q, message: q.where(Ping.message == message),
+            "prev": lambda q, prev: q.where(Ping.prev_id == prev),
+        },
+    )
 
-    class PageGetter:
-        def __init__(self, session: Session = Depends(session_dependable)):
-            self.__session = session
-
-        def __call__(self, sort, filters, first_index, page_size):
-            def add_filters(q):
-                if filters.message:
-                    q = q.where(Ping.message == filters.message)
-                if filters.prev:
-                    q = q.where(Ping.prev_id == filters.prev)
-                return q
-
-            count = self.__session.scalar(add_filters(sql.select(sql.func.count(Ping.id))))
-            pings = [
-                wrap(ping)
-                for (ping,) in self.__session.execute(
-                    add_filters(sql.select(Ping))
-                        .offset(first_index)
-                        .limit(page_size)
-                )
-            ]
-            return (count, pings)
-
-    class ItemSaver:
-        def __init__(self, authenticated_user: User | None = Depends(optional_authenticated_user_dependable)):
-            self.__authenticated_user = authenticated_user
-
+    class ItemSaver(OptionalAuthenticatedUserDependent):
         @contextmanager
         def __call__(self, item):
             created_by = unwrap(item.created_by)
             if created_by is not None:
-                if self.__authenticated_user != created_by:
+                if self.authenticated_user != created_by:
                     raise HTTPException(status.HTTP_403_FORBIDDEN, "You are not the creator of this ping")
             yield
-            item.updated_by = self.__authenticated_user
+            item.updated_by = self.authenticated_user
 
-    class ItemDeleter:
-        def __init__(
-            self,
-            session: Session = Depends(session_dependable),
-            authenticated_user: User | None = Depends(optional_authenticated_user_dependable),
-        ):
-            self.__session = session
-            self.__authenticated_user = authenticated_user
-
+    class ItemDeleter(OptionalAuthenticatedUserDependent):
         def __call__(self, item):
             created_by = unwrap(item.created_by)
             if created_by is not None:
-                if self.__authenticated_user != created_by:
+                if self.authenticated_user != created_by:
                     raise HTTPException(status.HTTP_403_FORBIDDEN, "You are not the creator of this ping")
-            self.__session.delete(unwrap(item))
+            self.session.delete(unwrap(item))
 
 
 set_wrapper(Ping, OrmWrapperWithStrIds)

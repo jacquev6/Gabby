@@ -14,7 +14,7 @@ import sqlalchemy_data_model_visualizer
 
 from . import settings
 from . import database_utils
-from . import all_models
+from . import orm_models
 
 
 @click.group()
@@ -24,7 +24,7 @@ def main():
 
 @main.command()
 def graph_models():
-    sqlalchemy_data_model_visualizer.generate_data_model_diagram(all_models.models, "gabby/models", add_labels=True)
+    sqlalchemy_data_model_visualizer.generate_data_model_diagram(orm_models.all_models, "gabby/models", add_labels=True)
     os.unlink("gabby/models")
 
 
@@ -110,29 +110,29 @@ def import_django_data(input_file):
                     assert isinstance(pk, str)
                     assert len(pk) == 64
                     assert fields.keys() == {"bytes_count", "pages_count"}, fields
-                    instance = all_models.PdfFile(
+                    instance = orm_models.PdfFile(
                         sha256=pk,
+                        bytes_count=fields.pop("bytes_count"),
                         pages_count=fields.pop("pages_count"),
                     )
-                    fields.pop("bytes_count")  # Was set to zero and unused => abandoned
                 case "textbooks.pdffilenaming":
                     assert_pk(model, pk)
                     assert fields.keys() == {"pdf_file", "name"}, fields
-                    instance = all_models.PdfFileNaming(
+                    instance = orm_models.PdfFileNaming(
                         pdf_file=instances_by_model["textbooks.pdffile"][fields.pop("pdf_file")],
                         name=fields.pop("name"),
                     )
                 case "textbooks.project":
                     assert_pk(model, pk)
                     assert fields.keys() == {"title", "description"}, fields
-                    instance = all_models.Project(
+                    instance = orm_models.Project(
                         title=fields.pop("title"),
                         description=fields.pop("description"),
                     )
                 case "textbooks.textbook":
                     assert_pk(model, pk)
                     assert fields.keys() == {"project", "title", "publisher", "year", "isbn"}, fields
-                    instance = all_models.Textbook(
+                    instance = orm_models.Textbook(
                         project=instances_by_model["textbooks.project"][fields.pop("project")],
                         title=fields.pop("title"),
                         publisher=fields.pop("publisher"),
@@ -142,7 +142,7 @@ def import_django_data(input_file):
                 case "textbooks.section":
                     assert_pk(model, pk)
                     assert fields.keys() == {"textbook", "pdf_file", "textbook_start_page", "pdf_file_start_page", "pages_count"}, fields
-                    instance = all_models.Section(
+                    instance = orm_models.Section(
                         textbook=instances_by_model["textbooks.textbook"][fields.pop("textbook")],
                         pdf_file=instances_by_model["textbooks.pdffile"][fields.pop("pdf_file")],
                         textbook_start_page=fields.pop("textbook_start_page"),
@@ -155,7 +155,7 @@ def import_django_data(input_file):
                 case "textbooks.exercise":
                     assert_pk(model, pk)
                     assert fields.keys() == {"project", "textbook", "textbook_page", "bounding_rectangle", "number", "instructions", "wording", "example", "clue", "adaptation"}, fields
-                    instance = all_models.Exercise(
+                    instance = orm_models.Exercise(
                         project=instances_by_model["textbooks.project"][fields.pop("project")],
                         textbook=None if (textbook := fields.pop("textbook")) is None else instances_by_model["textbooks.textbook"][textbook],
                         textbook_page=fields.pop("textbook_page"),
@@ -171,14 +171,14 @@ def import_django_data(input_file):
                 case "textbooks.extractionevent":
                     assert_pk(model, pk)
                     assert fields.keys() == {"exercise", "event"}, fields
-                    instance = all_models.ExtractionEvent(
+                    instance = orm_models.ExtractionEvent(
                         exercise=instances_by_model["textbooks.exercise"][fields.pop("exercise")],
                         event=fields.pop("event"),
                     )
                 case "textbooks.selectthingsadaptation":
                     assert_pk(model, pk)
                     assert fields.keys() == {"punctuation", "words", "colors"}, fields
-                    instance = all_models.SelectThingsAdaptation(
+                    instance = orm_models.SelectThingsAdaptation(
                         punctuation=fields.pop("punctuation"),
                         words=fields.pop("words"),
                         colors=fields.pop("colors"),
@@ -187,14 +187,14 @@ def import_django_data(input_file):
                 case "textbooks.fillwithfreetextadaptation":
                     assert_pk(model, pk)
                     assert fields.keys() == {"placeholder"}, fields
-                    instance = all_models.FillWithFreeTextAdaptation(
+                    instance = orm_models.FillWithFreeTextAdaptation(
                         placeholder=fields.pop("placeholder"),
                     )
                     exercises_by_adaptation.pop(pk).adaptation = instance
                 case "textbooks.multiplechoicesadaptation":
                     assert_pk(model, pk)
                     assert fields.keys() == {"placeholder"}, fields
-                    instance = all_models.MultipleChoicesInInstructionsAdaptation(
+                    instance = orm_models.MultipleChoicesInInstructionsAdaptation(
                         placeholder=fields.pop("placeholder"),
                     )
                     exercises_by_adaptation.pop(pk).adaptation = instance

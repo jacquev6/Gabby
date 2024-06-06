@@ -1,24 +1,15 @@
 import json
 
-import django
-django.setup()  # Required before importing any module that uses the Django ORM
-
 from fastapi import Depends, FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse
 
 from fastjsonapi import make_jsonapi_router
-from fastjsonapi.django import get_wrapper as get_django_wrapper
-from textbooks.models import Project, SelectThingsAdaptation, FillWithFreeTextAdaptation, MultipleChoicesInInstructionsAdaptation, MultipleChoicesInWordingAdaptation
-from textbooks.resources import PdfFilesResource, PdfFileNamingsResource, ProjectsResource, TextbooksResource, SectionsResource, ExercisesResource, ExtractionEventsResource
-from textbooks.resources import SelectThingsAdaptationsResource, FillWithFreeTextAdaptationsResource, MultipleChoicesInInstructionsAdaptationsResource, MultipleChoicesInWordingAdaptationsResource
-from textbooks.resources import AdaptedExerciseResource
-from textbooks.views import make_extraction_report
 
-from . import settings
 from . import database_utils
-from .pings import PingsResource, create_test_pings
+from . import settings
+from .pings import create_test_pings
 from .users import authentication_token_dependable
+from . import api_resources
 
 
 app = FastAPI(
@@ -41,27 +32,8 @@ app.add_middleware(
 
 app.include_router(
     make_jsonapi_router(
-        resources=[
-            PingsResource(),
-            PdfFilesResource(),
-            PdfFileNamingsResource(),
-            ProjectsResource(),
-            TextbooksResource(),
-            SectionsResource(),
-            ExercisesResource(),
-            ExtractionEventsResource(),
-            SelectThingsAdaptationsResource(),
-            FillWithFreeTextAdaptationsResource(),
-            MultipleChoicesInInstructionsAdaptationsResource(),
-            MultipleChoicesInWordingAdaptationsResource(),
-            AdaptedExerciseResource(),
-        ],
-        polymorphism={
-            get_django_wrapper(SelectThingsAdaptation): "select_things_adaptation",
-            get_django_wrapper(FillWithFreeTextAdaptation): "fill_with_free_text_adaptation",
-            get_django_wrapper(MultipleChoicesInInstructionsAdaptation): "multiple_choices_in_instructions_adaptation",
-            get_django_wrapper(MultipleChoicesInWordingAdaptation): "multiple_choices_in_wording_adaptation",
-        },
+        resources=api_resources.resources,
+        polymorphism=api_resources.polymorphism,
     ),
     prefix="/api",
 )
@@ -101,12 +73,7 @@ def login(access_token: str = Depends(authentication_token_dependable)):
 # Test-only URL. Not in 'api/...' to avoid accidentally exposing it.
 if settings.EXPOSE_RESET_FOR_TESTS_URL:
     @app.post("/reset-for-tests/yes-im-sure")
-    def reset_for_tests(
-        request: Request,
-        fixtures: str = None,
-    ):
-        django.core.management.call_command("flush", interactive=False)
-        django.core.management.call_command("migrate", interactive=False)
+    def reset_for_tests(request: Request, fixtures: str = None):
         database_utils.drop_tables(request.app.extra["database_engine"])
         database_utils.create_tables(request.app.extra["database_engine"])
         if fixtures is not None:
@@ -115,10 +82,7 @@ if settings.EXPOSE_RESET_FOR_TESTS_URL:
             }
             with database_utils.Session(request.app.extra["database_engine"]) as session:
                 for fixture in fixtures.split(","):
-                    if fixture in available_fixtures:
-                        available_fixtures[fixture](session)
-                    else:
-                        django.core.management.call_command("loaddata", fixture)
+                    available_fixtures[fixture](session)
                 session.commit()
         return {}
 

@@ -44,20 +44,10 @@ services:
     env_file:
       - backend.env
       - secrets.env
-    command: ["./manage.py", "migrate"]
+    command: ["alembic", "upgrade", "head"]
     depends_on:
       db:
         condition: service_healthy
-  data-loader:
-    image: jacquev6/gabby:preview-backend
-    pull_policy: never
-    env_file:
-      - backend.env
-      - secrets.env
-    command: ["./manage.py", "loaddata", "test-exercises", "more-test-exercises"]
-    depends_on:
-      migrator:
-        condition: service_completed_successfully
   db-backup:
     image: jacquev6/gabby:preview-backend
     pull_policy: never
