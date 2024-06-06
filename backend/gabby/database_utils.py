@@ -22,14 +22,9 @@ def create_engine(url):
     )
 
 
-# @todo Remove. In must cases a flush should be enough.
-def drop_tables(engine):
-    OrmBase.metadata.drop_all(engine)
-
-
-# @todo Remove. We should always use the Alembic migrations.
-def create_tables(engine):
-    OrmBase.metadata.create_all(engine)
+def truncate_all_tables(session):
+    for table in reversed(OrmBase.metadata.sorted_tables):
+        session.execute(table.delete())
 
 
 def session_dependable(request: Request):

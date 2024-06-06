@@ -1,5 +1,6 @@
 import datetime
 
+from . import database_utils
 from .orm_models import Exercise, ExtractionEvent, FillWithFreeTextAdaptation, MultipleChoicesInInstructionsAdaptation, MultipleChoicesInWordingAdaptation, PdfFile, PdfFileNaming, Ping, Project, Section, SelectThingsAdaptation, Textbook
 
 
@@ -69,3 +70,8 @@ available_fixtures = {
     "test-exercises": create_test_exercises_fixture,
     "more-test-exercises": create_more_test_exercises_fixture,
 }
+
+def load(session, fixtures):
+    database_utils.truncate_all_tables(session)
+    for fixture in fixtures:
+        available_fixtures[fixture](session)

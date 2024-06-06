@@ -8,7 +8,7 @@ from fastjsonapi import make_jsonapi_router
 
 from . import database_utils
 from . import settings
-from .fixtures import available_fixtures
+from .fixtures import load as load_fixtures
 from .projects import Project, ProjectsResource
 from .users import authentication_token_dependable
 from . import api_resources
@@ -99,12 +99,9 @@ def login(access_token: str = Depends(authentication_token_dependable)):
 if settings.EXPOSE_RESET_FOR_TESTS_URL:
     @app.post("/reset-for-tests/yes-im-sure")
     def reset_for_tests(request: Request, fixtures: str = None):
-        database_utils.drop_tables(request.app.extra["database_engine"])
-        database_utils.create_tables(request.app.extra["database_engine"])
         if fixtures is not None:
             with database_utils.Session(request.app.extra["database_engine"]) as session:
-                for fixture in fixtures.split(","):
-                    available_fixtures[fixture](session)
+                load_fixtures(session, fixtures.split(","))
                 session.commit()
         return {}
 

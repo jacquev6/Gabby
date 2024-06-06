@@ -15,7 +15,7 @@ import sqlalchemy_data_model_visualizer
 from . import database_utils
 from . import orm_models
 from . import settings
-from .fixtures import available_fixtures
+from .fixtures import load as load_fixtures
 
 
 @click.group()
@@ -84,8 +84,6 @@ def backup_database():
 @click.argument("input_file", type=click.File("r"))
 def import_django_data(input_file):
     database_engine = database_utils.create_engine(settings.DATABASE_URL)
-    database_utils.drop_tables(database_engine)
-    database_utils.create_tables(database_engine)
 
     last_pk_by_model = {}
     def assert_pk(model, pk):
@@ -100,6 +98,7 @@ def import_django_data(input_file):
     exercises_by_adaptation = {}
 
     with orm.Session(database_engine) as session:
+        database_utils.truncate_all_tables(session)
         for instance_data in data:
             assert instance_data.keys() == {"model", "pk", "fields"}
             model = instance_data["model"]
@@ -212,16 +211,12 @@ def import_django_data(input_file):
         session.commit()
 
 
-@main.command()
+@main.command(name="load-fixtures")
 @click.argument("fixtures", nargs=-1)
-def load_fixtures(fixtures):
+def load_fixtures_(fixtures):
     database_engine = database_utils.create_engine(settings.DATABASE_URL)
-    database_utils.drop_tables(database_engine)
-    database_utils.create_tables(database_engine)
-
     with orm.Session(database_engine) as session:
-        for fixture in fixtures:
-            available_fixtures[fixture](session)
+        load_fixtures(session, fixtures)
         session.commit()
 
 

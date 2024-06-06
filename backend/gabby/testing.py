@@ -10,7 +10,7 @@ import sqlalchemy_utils.functions
 from fastjsonapi import make_jsonapi_router
 
 from . import settings
-from .database_utils import create_engine, create_tables, drop_tables, Session
+from .database_utils import create_engine, OrmBase, Session
 from .users import authentication_token_dependable
 
 
@@ -35,13 +35,13 @@ class TransactionTestCase(TestCase):
 
     def setUp(self):
         super().setUp()
-        create_tables(self.database_engine)
+        OrmBase.metadata.create_all(self.database_engine)
         self.session = Session(self.database_engine)
         self.__created = []
 
     def tearDown(self):
         self.session.close()
-        drop_tables(self.database_engine)
+        OrmBase.metadata.drop_all(self.database_engine)
         super().tearDown()
 
     def create_model(self, model, *args, **kwds):
