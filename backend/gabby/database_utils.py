@@ -25,6 +25,8 @@ def create_engine(url):
 def truncate_all_tables(session):
     for table in reversed(OrmBase.metadata.sorted_tables):
         session.execute(table.delete())
+        if table.name not in ["pdf_files", "adaptations__st", "adaptations__g", "adaptations__fwft", "adaptations__mcii", "adaptations__mciw"]:
+            session.execute(sql.text(f"ALTER SEQUENCE {table.name}_id_seq RESTART WITH 1"))
 
 
 def session_dependable(request: Request):
