@@ -10,7 +10,7 @@ import sqlalchemy_utils.functions
 from fastjsonapi import make_jsonapi_router
 
 from . import settings
-from .database_utils import create_engine, OrmBase, Session
+from .database_utils import create_engine, OrmBase, Session, SessionMaker
 from .users import authentication_token_dependable
 
 
@@ -73,7 +73,7 @@ class ApiTestCase(TransactionTestCase):
         super().setUpClass()
 
         if hasattr(cls, "resources"):
-            cls.api_app = FastAPI(database_engine=cls.database_engine)
+            cls.api_app = FastAPI(make_session=SessionMaker(cls.database_engine))
             cls.api_app.include_router(make_jsonapi_router(cls.resources, cls.polymorphism))
 
             @cls.api_app.post("/token")
