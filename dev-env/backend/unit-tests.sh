@@ -16,4 +16,4 @@ expected=$(expr $defined + $imported + $inherited)
 
 echo "Expecting to run $expected tests"
 
-docker compose exec backend-shell python -m unittest discover --pattern '*.py' "$@"
+docker compose exec --env GABBY_UNITTESTING=true backend-shell python -m unittest discover --pattern '*.py' "$@"
