@@ -24,24 +24,27 @@ class TransactionTestCase(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.database_engine = create_engine(TEST_DATABASE_URL)
+        cls.__database_engine = create_engine(TEST_DATABASE_URL)
 
     @classmethod
     def tearDownClass(cls):
-        cls.database_engine.dispose()
+        cls.__database_engine.dispose()
         super().tearDownClass()
 
     class SessionWrapper:
-        def __init__(self, session):
+        def __init__(self, test_class, session):
+            self.__test_class = test_class
             self.__session = session
 
         def flush(self):
             self.__session.flush()
 
         def commit(self):
+            self.__test_class.actual_commits_count += 1
             self.__session.commit()
 
         def rollback(self):
+            self.__test_class.actual_rollbacks_count += 1
             self.__session.rollback()
 
         def __enter__(self):
@@ -67,16 +70,28 @@ class TransactionTestCase(TestCase):
 
     def setUp(self):
         super().setUp()
-        self.__class__.__session = Session(self.database_engine)
-        truncate_all_tables(self.__class__.session)
+        self.__class__.__session = Session(self.__database_engine)
+        truncate_all_tables(self.__class__.__session)
         self.__class__.__session.commit()
+        self.expect_commits_rollbacks(0, 0)
+        self.__class__.actual_commits_count = 0
+        self.__class__.actual_rollbacks_count = 0
 
     @classmethod
-    @property
-    def session(cls):
-        return cls.SessionWrapper(cls.__session)
+    def make_session(cls):
+        return cls.SessionWrapper(cls, cls.__session)
+
+    def expect_commit(self):
+        self.__expected_commits_rollbacks_count = (1, 0)
+
+    def expect_rollback(self):
+        self.__expected_commits_rollbacks_count = (0, 1)
+
+    def expect_commits_rollbacks(self, commits, rollbacks):
+        self.__expected_commits_rollbacks_count = (commits, rollbacks)
 
     def tearDown(self):
+        self.assertEqual((self.actual_commits_count, self.actual_rollbacks_count), self.__expected_commits_rollbacks_count)
         self.__session.close()
         super().tearDown()
 
@@ -88,7 +103,6 @@ class TransactionTestCase(TestCase):
 
     def delete_model(self, model, id):
         self.__session.execute(sql.delete(model).where(model.id == id))
-        self.__session.commit()
 
     def count_models(self, model):
         return self.__session.query(model).count()
@@ -105,7 +119,7 @@ class ApiTestCase(TransactionTestCase):
         super().setUpClass()
 
         if hasattr(cls, "resources"):
-            cls.api_app = FastAPI(make_session=lambda: cls.session)
+            cls.api_app = FastAPI(make_session=cls.make_session)
             cls.api_app.include_router(make_jsonapi_router(cls.resources, cls.polymorphism))
 
             @cls.api_app.post("/token")
@@ -117,6 +131,10 @@ class ApiTestCase(TransactionTestCase):
 
             cls.__schema_file_path = f"{inspect.getfile(cls)}.{cls.__name__}.openapi.json"
             cls.api_client = TestClient(cls.api_app)
+
+    def setUp(self):
+        super().setUp()
+        self.expect_commit()
 
     def tearDown(self):
         if hasattr(self, "resources"):
@@ -144,6 +162,8 @@ class ApiTestCase(TransactionTestCase):
         return self.api_client.delete(url, headers={"Content-Type": "application/vnd.api+json"})
 
     def test_schema(self):
+        self.expect_commits_rollbacks(0, 0)
+
         if hasattr(self, "resources"):
             try:
                 with open(self.__schema_file_path) as file:
