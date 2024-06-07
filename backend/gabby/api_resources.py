@@ -2175,3 +2175,89 @@ class AdaptationApiTestCase(ApiTestCase):
         self.assertEqual(exercise.adaptation.placeholder, "...")
 
         self.assertEqual(self.count_models(SelectThingsAdaptation), 0)
+
+
+class BatchingApiTestCase(ApiTestCase):
+    resources = resources
+    polymorphism = polymorphism
+
+    def test_empty_batch(self):
+        response = self.post("http://server/batch", {"atomic:operations": []})
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
+        self.assertEqual(response.json(), {"atomic:results": []})
+
+    def test_create_one_projects(self):
+        payload = {
+            "atomic:operations": [
+                {
+                    "op": "add",
+                    "data": {
+                        "type": "project",
+                        "attributes": {
+                            "title": "The project",
+                            "description": "Description",
+                        },
+                    },
+                },
+            ],
+        }
+        response = self.post("http://server/batch", payload)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
+        self.assertEqual(
+            response.json(),
+            {
+                "atomic:results": [
+                    {
+                        "data": {
+                            "type": "project",
+                            "id": "xkopqm",
+                            "attributes": {"description": "Description", "title": "The project"},
+                            "links": {"self": "http://server/projects/xkopqm"},
+                            "relationships": {
+                                "exercises": {"data": [], "meta": {"count": 0}},
+                                "textbooks": {"data": [], "meta": {"count": 0}},
+                            },
+                        },
+                    },
+                ],
+            },
+        )
+
+    def test_create_many_projects(self):
+        payload = {
+            "atomic:operations": [
+                {
+                    "op": "add",
+                    "data": {
+                        "type": "project",
+                        "attributes": {
+                            "title": f"The project {i}",
+                            "description": f"Description {i}",
+                        },
+                    },
+                }
+                for i in range(1, 10)
+            ],
+        }
+        response = self.post("http://server/batch", payload)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
+        self.assertEqual(
+            response.json(),
+            {
+                "atomic:results": [
+                    {
+                        "data": {
+                            "type": "project",
+                            "id": ProjectsResource.sqids.encode([i]),
+                            "attributes": {"description": f"Description {i}", "title": f"The project {i}"},
+                            "links": {"self": f"http://server/projects/{ProjectsResource.sqids.encode([i])}"},
+                            "relationships": {
+                                "exercises": {"data": [], "meta": {"count": 0}},
+                                "textbooks": {"data": [], "meta": {"count": 0}},
+                            },
+                        },
+                    }
+                    for i in range(1, 10)
+                ],
+            },
+        )
