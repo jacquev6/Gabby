@@ -251,10 +251,14 @@ class PingsApiTestCase(testing.ApiTestCase):
         })
 
     def test_get_one__nonexisting(self):
+        self.expect_rollback()
+
         response = self.get("http://server/pings/0")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.json())
 
     def test_get_all(self):
+        self.expect_commits_rollbacks(2, 0)
+
         ping1 = self.create_model(Ping)
         ping2 = self.create_model(Ping, prev=ping1)
         ping3 = self.create_model(Ping)
@@ -800,6 +804,8 @@ class PingOwnershipApiTestCase(testing.ApiTestCase):
         self.assertEqual(ping.updated_by, None)
 
     def test_create__authenticated(self):
+        self.expect_commits_rollbacks(2, 0)
+
         self.create_model(User, username="alice", clear_text_password="alice's password")
         self.login("alice", "alice's password")
 
@@ -846,6 +852,8 @@ class PingOwnershipApiTestCase(testing.ApiTestCase):
         self.assertGreater(ping.updated_at, before_update)
 
     def test_update__unauthenticated_error(self):
+        self.expect_rollback()
+
         user = self.create_model(User, username="alice", clear_text_password="alice's password")
         ping = self.create_model(Ping, message="Hello", created_by=user, updated_by=user)
         before_update = ping.updated_at
@@ -868,6 +876,8 @@ class PingOwnershipApiTestCase(testing.ApiTestCase):
         self.assertEqual(ping.updated_at, before_update)
 
     def test_update__authenticated_on_not_owned(self):
+        self.expect_commits_rollbacks(2, 0)
+
         self.create_model(User, username="alice", clear_text_password="alice's password")
         ping = self.create_model(Ping, message="Hello")
         before_update = ping.updated_at
@@ -892,6 +902,8 @@ class PingOwnershipApiTestCase(testing.ApiTestCase):
         self.assertGreater(ping.updated_at, before_update)
 
     def test_update__authenticated_on_own(self):
+        self.expect_commits_rollbacks(2, 0)
+
         user = self.create_model(User, username="alice", clear_text_password="alice's password")
         ping = self.create_model(Ping, message="Hello", created_by=user, updated_by=user)
         before_update = ping.updated_at
@@ -916,6 +928,8 @@ class PingOwnershipApiTestCase(testing.ApiTestCase):
         self.assertGreater(ping.updated_at, before_update)
 
     def test_update__authenticated_on_someone_elses(self):
+        self.expect_commits_rollbacks(1, 1)
+
         alice = self.create_model(User, username="alice", clear_text_password="alice's password")
         bob = self.create_model(User, username="bob", clear_text_password="bob's password")
         ping = self.create_model(Ping, message="Hello", created_by=alice, updated_by=alice)
@@ -950,6 +964,8 @@ class PingOwnershipApiTestCase(testing.ApiTestCase):
         self.assertEqual(self.count_models(Ping), 0)
 
     def test_delete__unauthenticated_error(self):
+        self.expect_rollback()
+
         user = self.create_model(User, username="alice", clear_text_password="alice's password")
         self.create_model(Ping, message="Hello", created_by=user, updated_by=user)
 
@@ -959,6 +975,8 @@ class PingOwnershipApiTestCase(testing.ApiTestCase):
         self.assertEqual(self.count_models(Ping), 1)
 
     def test_delete__authenticated_on_not_owned(self):
+        self.expect_commits_rollbacks(2, 0)
+
         self.create_model(User, username="alice", clear_text_password="alice's password")
         ping = self.create_model(Ping, message="Hello")
         before_update = ping.updated_at
@@ -971,6 +989,8 @@ class PingOwnershipApiTestCase(testing.ApiTestCase):
         self.assertEqual(self.count_models(Ping), 0)
 
     def test_delete__authenticated_on_own(self):
+        self.expect_commits_rollbacks(2, 0)
+
         user = self.create_model(User, username="alice", clear_text_password="alice's password")
         self.create_model(Ping, message="Hello", created_by=user, updated_by=user)
 
@@ -982,6 +1002,8 @@ class PingOwnershipApiTestCase(testing.ApiTestCase):
         self.assertEqual(self.count_models(Ping), 0)
 
     def test_delete__authenticated_on_someone_elses(self):
+        self.expect_commits_rollbacks(1, 1)
+
         alice = self.create_model(User, username="alice", clear_text_password="alice's password")
         self.create_model(User, username="bob", clear_text_password="bob's password")
         self.create_model(Ping, message="Hello", created_by=alice, updated_by=alice)

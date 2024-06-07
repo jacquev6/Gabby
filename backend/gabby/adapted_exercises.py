@@ -75,6 +75,10 @@ class AdaptedExerciseApiTestCase(ApiTestCase):
     resources = [AdaptedExercisesResource]
     polymorphism = {}
 
+    def setUp(self):
+        super().setUp()
+        self.expect_commits_rollbacks(0, 0)
+
     def test_select_things(self):
         payload = {
             "data": {

@@ -19,7 +19,7 @@ app = FastAPI(
     openapi_url="/api/openapi.json",
     docs_url="/api/docs",
     redoc_url="/api/redoc",
-    database_engine=database_utils.create_engine(settings.DATABASE_URL),
+    make_session=database_utils.SessionMaker(database_utils.create_engine(settings.DATABASE_URL)),
 )
 
 

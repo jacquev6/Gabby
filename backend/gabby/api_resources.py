@@ -78,6 +78,8 @@ class PdfFileApiTestCase(ApiTestCase):
         self.assertEqual(pdf_file.pages_count, 42)
 
     def test_create_twice(self):
+        self.expect_commits_rollbacks(2, 1)
+
         payload = {
             "data": {
                 "type": "pdfFile",
@@ -114,6 +116,8 @@ class PdfFileApiTestCase(ApiTestCase):
         self.assertEqual(pdf_file.pages_count, 42)
 
     def test_create__short_sha256(self):
+        self.expect_rollback()
+
         payload = {
             "data": {
                 "type": "pdfFile",
@@ -130,6 +134,8 @@ class PdfFileApiTestCase(ApiTestCase):
         self.assertEqual(self.count_models(PdfFile), 0)
 
     def test_create__bad_sha256(self):
+        self.expect_rollback()
+
         payload = {
             "data": {
                 "type": "pdfFile",
@@ -319,6 +325,8 @@ class TextbookApiTestCase(ApiTestCase):
         self.assertEqual(textbook.isbn, "9783161484100")
 
     def test_create__bad_isbn(self):
+        self.expect_rollback()
+
         payload = {
             "data": {
                 "type": "textbook",
@@ -436,6 +444,8 @@ class TextbookApiTestCase(ApiTestCase):
         })
 
     def test_list__sorted_by_title(self):
+        self.expect_commits_rollbacks(2, 0)
+
         textbook = self.create_model(Textbook, project=self.project, title="The title", publisher="The publisher", year=2023, isbn="9783161484100")
         self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=12, number="4", instructions="", wording="", example="", clue="")
         self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=13, number="5", instructions="", wording="", example="", clue="")
@@ -530,6 +540,8 @@ class TextbookApiTestCase(ApiTestCase):
         })
 
     def test_list__sorted_by_publisher(self):
+        self.expect_commits_rollbacks(2, 0)
+
         textbook = self.create_model(Textbook, project=self.project, title="The title", publisher="Yet another publisher", year=2023, isbn="9783161484100")
         self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=12, number="4", instructions="", wording="", example="", clue="")
         self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=13, number="5", instructions="", wording="", example="", clue="")
@@ -624,6 +636,8 @@ class TextbookApiTestCase(ApiTestCase):
         })
 
     def test_list__include_exercises(self):
+        self.expect_commits_rollbacks(2, 0)
+
         textbook = self.create_model(Textbook, project=self.project, title="The title", publisher="The publisher", year=2023, isbn="9783161484100")
         self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=12, number="4", instructions="", wording="", example="", clue="")
         self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=13, number="5", instructions="", wording="", example="", clue="")
@@ -1187,6 +1201,8 @@ class ExerciseApiTestCase(ApiTestCase):
         })
 
     def test_list__sorted_by_default(self):
+        self.expect_commits_rollbacks(2, 0)
+
         self.create_model(Exercise, project=self.textbook.project, textbook=self.textbook, textbook_page=16, number="11", instructions="", wording="", example="", clue="")
         self.create_model(Exercise, project=self.textbook.project, textbook=self.textbook, textbook_page=17, number="3", instructions="", wording="", example="", clue="")
         self.create_model(Exercise, project=self.textbook.project, textbook=self.textbook, textbook_page=17, number="4", instructions="", wording="", example="", clue="")
@@ -1268,6 +1284,8 @@ class ExerciseApiTestCase(ApiTestCase):
         })
 
     def test_list__sorted_naturally(self):
+        self.expect_commits_rollbacks(2, 0)
+
         self.create_model(Exercise, project=self.textbook.project, textbook=self.textbook, textbook_page=16, number="11", instructions="", wording="", example="", clue="")
         self.create_model(Exercise, project=self.textbook.project, textbook=self.textbook, textbook_page=17, number="3", instructions="", wording="", example="", clue="")
         self.create_model(Exercise, project=self.textbook.project, textbook=self.textbook, textbook_page=17, number="4", instructions="", wording="", example="", clue="")
@@ -1431,6 +1449,8 @@ class ExerciseApiTestCase(ApiTestCase):
     #     })
 
     def test_list__include_textbook(self):
+        self.expect_commits_rollbacks(2, 0)
+
         self.create_model(Exercise, project=self.textbook.project, textbook=self.textbook, textbook_page=16, number="11", instructions="", wording="", example="", clue="")
         self.create_model(Exercise, project=self.textbook.project, textbook=self.textbook, textbook_page=17, number="13", instructions="", wording="", example="", clue="")
         self.create_model(Exercise, project=self.textbook.project, textbook=self.textbook, textbook_page=17, number="14", instructions="", wording="", example="", clue="")
@@ -1595,6 +1615,8 @@ class ExerciseApiTestCase(ApiTestCase):
         })
 
     def test_list__filter_by_textbook(self):
+        self.expect_commits_rollbacks(2, 0)
+
         self.create_model(Exercise, project=self.textbook.project, textbook=self.textbook, textbook_page=16, number="11", instructions="", wording="", example="", clue="")
         self.create_model(Exercise, project=self.textbook.project, textbook=self.textbook, textbook_page=17, number="13", instructions="", wording="", example="", clue="")
         self.create_model(Exercise, project=self.textbook.project, textbook=self.textbook, textbook_page=17, number="14", instructions="", wording="", example="", clue="")
@@ -2064,7 +2086,6 @@ class AdaptationApiTestCase(ApiTestCase):
 
     def test_dont_update_adaptation(self):
         self.exercise.adaptation = self.create_model(SelectThingsAdaptation, colors=3, words=True, punctuation=True)
-        self.session.commit()
 
         payload = {
             "data": {
@@ -2102,7 +2123,6 @@ class AdaptationApiTestCase(ApiTestCase):
 
     def test_update_adaptation__none(self):
         self.exercise.adaptation = self.create_model(SelectThingsAdaptation, colors=3, words=True, punctuation=True)
-        self.session.commit()
 
         payload = {
             "data": {
@@ -2141,7 +2161,6 @@ class AdaptationApiTestCase(ApiTestCase):
 
     def test_update_adaptation__other_type(self):
         self.exercise.adaptation = self.create_model(SelectThingsAdaptation, colors=3, words=True, punctuation=True)
-        self.session.commit()
 
         payload = {
             "data": {

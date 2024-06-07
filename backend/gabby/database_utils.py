@@ -29,8 +29,16 @@ def truncate_all_tables(session):
             session.execute(sql.text(f"ALTER SEQUENCE {table.name}_id_seq RESTART WITH 1"))
 
 
+class SessionMaker:
+    def __init__(self, engine):
+        self.__engine = engine
+
+    def __call__(self):
+        return orm.Session(self.__engine)
+
+
 def session_dependable(request: Request):
-    with orm.Session(request.app.extra["database_engine"]) as session:
+    with request.app.extra["make_session"]() as session:
         try:
             yield session
         except:
