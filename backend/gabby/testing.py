@@ -118,7 +118,7 @@ class ApiTestCase(TransactionTestCase):
     def setUpClass(cls):
         super().setUpClass()
 
-        if hasattr(cls, "resources"):
+        if cls is not ApiTestCase:
             cls.api_app = FastAPI(make_session=cls.make_session)
             cls.api_app.include_router(make_jsonapi_router(cls.resources, cls.polymorphism))
 
@@ -137,7 +137,7 @@ class ApiTestCase(TransactionTestCase):
         self.expect_commit()
 
     def tearDown(self):
-        if hasattr(self, "resources"):
+        if self.__class__ is not ApiTestCase:
             self.logout()
         super().tearDown()
 
@@ -164,7 +164,7 @@ class ApiTestCase(TransactionTestCase):
     def test_schema(self):
         self.expect_commits_rollbacks(0, 0)
 
-        if hasattr(self, "resources"):
+        if self.__class__ is not ApiTestCase:
             try:
                 with open(self.__schema_file_path) as file:
                     expected = json.load(file)
