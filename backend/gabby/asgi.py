@@ -10,6 +10,7 @@ from . import database_utils
 from . import settings
 from .fixtures import load as load_fixtures
 from .projects import Project, ProjectsResource
+from .exercises import Exercise
 from .users import authentication_token_dependable
 from . import api_resources
 
@@ -58,8 +59,7 @@ def extraction_report(project_id: str, session: database_utils.Session = Depends
                                 for event in exercise.extraction_events
                             ],
                         }
-                        # @todo Sort in DB to respect the custom collation
-                        for exercise in sorted(textbook.exercises, key=lambda e: (e.textbook_page, e.number))
+                        for exercise in session.query(Exercise).filter_by(project=project, textbook=textbook).order_by(Exercise.textbook_page, Exercise.number)
                     ],
                 }
                 for textbook in project.textbooks

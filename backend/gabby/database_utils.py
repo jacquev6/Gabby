@@ -11,6 +11,11 @@ Engine = sqlalchemy.Engine
 Session = orm.Session
 
 
+# Custom collation: https://dba.stackexchange.com/a/285230
+sql_create_exercise_number_collation = sql.text("CREATE COLLATION exercise_number (provider = icu, locale = 'en-u-kn-true')")
+sql_drop_exercise_number_collation = sql.text("DROP COLLATION exercise_number")
+
+
 class OrmBase(orm.DeclarativeBase):
     pass
 

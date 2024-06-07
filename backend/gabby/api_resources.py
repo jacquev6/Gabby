@@ -1366,87 +1366,88 @@ class ExerciseApiTestCase(ApiTestCase):
             "meta": {"pagination": {"count": 3, "page": 2, "pages": 2}},
         })
 
-    # @todo Restore custom collation for Exercise.number, then restore this test
-    # def test_list__sorted_weirdly(self):
-    #     self.create_model(Exercise, project=self.textbook.project, textbook=self.textbook, textbook_page=16, number="11", instructions="", wording="", example="", clue="")
-    #     self.create_model(Exercise, project=self.textbook.project, textbook=self.textbook, textbook_page=17, number="3", instructions="", wording="", example="", clue="")
-    #     self.create_model(Exercise, project=self.textbook.project, textbook=self.textbook, textbook_page=17, number="4", instructions="", wording="", example="", clue="")
+    def test_list__sorted_weirdly(self):
+        self.expect_commits_rollbacks(2, 0)
 
-    #     response = self.get("http://server/exercises?sort=number")
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
-    #     self.assertEqual(response.json(), {
-    #         "data": [
-    #             {
-    #                 "type": "exercise",
-    #                 "id": "bylced",
-    #                 "links": {"self": "http://server/exercises/bylced"},
-    #                 "attributes": {
-    #                     "textbookPage": 17, "number": "3",
-    #                     "boundingRectangle": None,
-    #                     "instructions": "", "example": "", "clue": "", "wording": "",
-    #                 },
-    #                 "relationships": {
-    #                     "project": {"data": {"type": "project", "id": "xkopqm"}},
-    #                     "extractionEvents": {"data": [], "meta": {"count": 0}},
-    #                     "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
-    #                     "adaptation": {"data": None},
-    #                 },
-    #             },
-    #             {
-    #                 "type": "exercise",
-    #                 "id": "jkrudc",
-    #                 "links": {"self": "http://server/exercises/jkrudc"},
-    #                 "attributes": {
-    #                     "textbookPage": 17, "number": "4",
-    #                     "boundingRectangle": None,
-    #                     "instructions": "", "example": "", "clue": "", "wording": "",
-    #                 },
-    #                 "relationships": {
-    #                     "project": {"data": {"type": "project", "id": "xkopqm"}},
-    #                     "extractionEvents": {"data": [], "meta": {"count": 0}},
-    #                     "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
-    #                     "adaptation": {"data": None},
-    #                 },
-    #             },
-    #         ],
-    #         "links": {
-    #             "first": "http://server/exercises?page%5Bnumber%5D=1&sort=number",
-    #             "last": "http://server/exercises?page%5Bnumber%5D=2&sort=number",
-    #             "next": "http://server/exercises?page%5Bnumber%5D=2&sort=number",
-    #             "prev": None,
-    #         },
-    #         "meta": {"pagination": {"count": 3, "page": 1, "pages": 2}},
-    #     })
+        self.create_model(Exercise, project=self.textbook.project, textbook=self.textbook, textbook_page=16, number="11", instructions="", wording="", example="", clue="")
+        self.create_model(Exercise, project=self.textbook.project, textbook=self.textbook, textbook_page=17, number="3", instructions="", wording="", example="", clue="")
+        self.create_model(Exercise, project=self.textbook.project, textbook=self.textbook, textbook_page=17, number="4", instructions="", wording="", example="", clue="")
 
-    #     response = self.get("http://server/exercises?page[number]=2&sort=number")
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
-    #     self.assertEqual(response.json(), {
-    #         "data": [
-    #             {
-    #                 "type": "exercise",
-    #                 "id": "wbqloc",
-    #                 "links": {"self": "http://server/exercises/wbqloc"},
-    #                 "attributes": {
-    #                     "textbookPage": 16, "number": "11",
-    #                     "boundingRectangle": None,
-    #                     "instructions": "", "example": "", "clue": "", "wording": "",
-    #                 },
-    #                 "relationships": {
-    #                     "project": {"data": {"type": "project", "id": "xkopqm"}},
-    #                     "extractionEvents": {"data": [], "meta": {"count": 0}},
-    #                     "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
-    #                     "adaptation": {"data": None},
-    #                 },
-    #             },
-    #         ],
-    #         "links": {
-    #             "first": "http://server/exercises?page%5Bnumber%5D=1&sort=number",
-    #             "last": "http://server/exercises?page%5Bnumber%5D=2&sort=number",
-    #             "next": None,
-    #             "prev": "http://server/exercises?page%5Bnumber%5D=1&sort=number",
-    #         },
-    #         "meta": {"pagination": {"count": 3, "page": 2, "pages": 2}},
-    #     })
+        response = self.get("http://server/exercises?sort=number")
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
+        self.assertEqual(response.json(), {
+            "data": [
+                {
+                    "type": "exercise",
+                    "id": "bylced",
+                    "links": {"self": "http://server/exercises/bylced"},
+                    "attributes": {
+                        "textbookPage": 17, "number": "3",
+                        "boundingRectangle": None,
+                        "instructions": "", "example": "", "clue": "", "wording": "",
+                    },
+                    "relationships": {
+                        "project": {"data": {"type": "project", "id": "xkopqm"}},
+                        "extractionEvents": {"data": [], "meta": {"count": 0}},
+                        "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
+                        "adaptation": {"data": None},
+                    },
+                },
+                {
+                    "type": "exercise",
+                    "id": "jkrudc",
+                    "links": {"self": "http://server/exercises/jkrudc"},
+                    "attributes": {
+                        "textbookPage": 17, "number": "4",
+                        "boundingRectangle": None,
+                        "instructions": "", "example": "", "clue": "", "wording": "",
+                    },
+                    "relationships": {
+                        "project": {"data": {"type": "project", "id": "xkopqm"}},
+                        "extractionEvents": {"data": [], "meta": {"count": 0}},
+                        "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
+                        "adaptation": {"data": None},
+                    },
+                },
+            ],
+            "links": {
+                "first": "http://server/exercises?page%5Bnumber%5D=1&sort=number",
+                "last": "http://server/exercises?page%5Bnumber%5D=2&sort=number",
+                "next": "http://server/exercises?page%5Bnumber%5D=2&sort=number",
+                "prev": None,
+            },
+            "meta": {"pagination": {"count": 3, "page": 1, "pages": 2}},
+        })
+
+        response = self.get("http://server/exercises?page[number]=2&sort=number")
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
+        self.assertEqual(response.json(), {
+            "data": [
+                {
+                    "type": "exercise",
+                    "id": "wbqloc",
+                    "links": {"self": "http://server/exercises/wbqloc"},
+                    "attributes": {
+                        "textbookPage": 16, "number": "11",
+                        "boundingRectangle": None,
+                        "instructions": "", "example": "", "clue": "", "wording": "",
+                    },
+                    "relationships": {
+                        "project": {"data": {"type": "project", "id": "xkopqm"}},
+                        "extractionEvents": {"data": [], "meta": {"count": 0}},
+                        "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
+                        "adaptation": {"data": None},
+                    },
+                },
+            ],
+            "links": {
+                "first": "http://server/exercises?page%5Bnumber%5D=1&sort=number",
+                "last": "http://server/exercises?page%5Bnumber%5D=2&sort=number",
+                "next": None,
+                "prev": "http://server/exercises?page%5Bnumber%5D=1&sort=number",
+            },
+            "meta": {"pagination": {"count": 3, "page": 2, "pages": 2}},
+        })
 
     def test_list__include_textbook(self):
         self.expect_commits_rollbacks(2, 0)

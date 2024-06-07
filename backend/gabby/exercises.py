@@ -90,7 +90,8 @@ class Exercise(OrmBase):
     textbook_page: orm.Mapped[int | None]
     bounding_rectangle: orm.Mapped[dict | None] = orm.mapped_column(sql.JSON)
 
-    number: orm.Mapped[str]  # @todo Custom collation: https://dba.stackexchange.com/a/285230
+    # Custom collation: https://dba.stackexchange.com/a/285230
+    number: orm.Mapped[str] = orm.mapped_column(sql.String(None, collation="exercise_number"))
     instructions: orm.Mapped[str]
     wording: orm.Mapped[str]
     example: orm.Mapped[str]
@@ -172,30 +173,32 @@ class ExerciseTestCase(TransactionTestCase):
         self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=1, number="Alice", instructions="", wording="", example="", clue="")
         self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=1, number="03", instructions="", wording="", example="", clue="")
         self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=1, number="2", instructions="", wording="", example="", clue="")
-    #     self.assertEqual(
-    #         [
-    #             (bool(exercise.textbook), exercise.textbook_page, exercise.number)
-    #             for exercise in Exercise.objects.order_by("textbook_page", "number")
-    #         ],
-    #         [
-    #             (True, 1, "1"),
-    #             (True, 1, "2"),
-    #             (True, 1, "03"),
-    #             (True, 1, "10"),
-    #             (True, 1, "Alice"),
-    #             (True, 1, "Bob"),
-    #             (True, 5, "2"),
-    #             (True, 5, "5.a"),
-    #             (True, 5, "5.b"),
-    #             (True, 5, "12"),
-    #             (True, 5, "A1"),
-    #             (True, 5, "A12"),
-    #             (False, None, "4"),
-    #             (False, None, "Other text"),
-    #             (False, None, "Some other text"),
-    #             (False, None, "Some text"),
-    #         ],
-    #     )
+
+        with self.make_session() as session:
+            self.assertEqual(
+                [
+                    (exercise.textbook_id is not None, exercise.textbook_page, exercise.number)
+                    for (exercise,) in session.execute(sql.select(Exercise).order_by(Exercise.textbook_page, Exercise.number))
+                ],
+                [
+                    (True, 1, "1"),
+                    (True, 1, "2"),
+                    (True, 1, "03"),
+                    (True, 1, "10"),
+                    (True, 1, "Alice"),
+                    (True, 1, "Bob"),
+                    (True, 5, "2"),
+                    (True, 5, "5.a"),
+                    (True, 5, "5.b"),
+                    (True, 5, "12"),
+                    (True, 5, "A1"),
+                    (True, 5, "A12"),
+                    (False, None, "4"),
+                    (False, None, "Other text"),
+                    (False, None, "Some other text"),
+                    (False, None, "Some text"),
+                ],
+            )
 
 #     def test_share_adaptation(self):
 #         project = self.create_model(Project, title="Project", description="")
