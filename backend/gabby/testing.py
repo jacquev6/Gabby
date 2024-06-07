@@ -1,3 +1,4 @@
+import datetime
 import inspect
 import json
 import unittest
@@ -17,7 +18,7 @@ class TestCase(unittest.TestCase):
     maxDiff = None
 
 
-TEST_DATABASE_URL = settings.DATABASE_URL + "-test"
+TEST_DATABASE_URL = f"{settings.DATABASE_URL}-test-{datetime.datetime.now().strftime('%Y%m%d-%H%M%S')}"
 
 
 class TransactionTestCase(TestCase):
