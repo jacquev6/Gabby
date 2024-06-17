@@ -205,6 +205,7 @@ def import_django_data(input_file):
             else:
                 assert fields == {}, fields
                 session.add(instance)
+                session.flush()
                 instances_by_model.setdefault(model, {})[pk] = instance
         exercises_by_adaptation.pop(None)
         assert exercises_by_adaptation == {}, exercises_by_adaptation

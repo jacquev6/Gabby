@@ -63,6 +63,9 @@ class TransactionTestCase(TestCase):
         def get(self, *args, **kwds):
             return self.__session.get(*args, **kwds)
 
+        def refresh(self, *args, **kwds):
+            return self.__session.refresh(*args, **kwds)
+
         def add(self, *args, **kwds):
             return self.__session.add(*args, **kwds)
 

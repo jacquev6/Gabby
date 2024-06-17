@@ -139,6 +139,7 @@ def upgrade():
             ["projects.id"],
         ),
         sa.PrimaryKeyConstraint("id"),
+        sa.UniqueConstraint("id", "project_id"),
     )
     op.create_table(
         "exercises",
@@ -161,12 +162,12 @@ def upgrade():
             ["adaptations.id"],
         ),
         sa.ForeignKeyConstraint(
-            ["project_id"],
-            ["projects.id"],
+            ["project_id", "textbook_id"],
+            ["textbooks.project_id", "textbooks.id"],
         ),
         sa.ForeignKeyConstraint(
-            ["textbook_id"],
-            ["textbooks.id"],
+            ["project_id"],
+            ["projects.id"],
         ),
         sa.PrimaryKeyConstraint("id"),
         sa.UniqueConstraint("adaptation_id"),

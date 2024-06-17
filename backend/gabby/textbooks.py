@@ -16,6 +16,7 @@ class Textbook(OrmBase):
 
     __table_args__ = (
         sql.CheckConstraint("regexp_like(isbn, '^[0-9]+$')", name="check_isbn_format"),
+        sql.UniqueConstraint("id", "project_id"),  # Redondant ('id' is unique by itself), but required for the foreign key in 'Exercise'
     )
 
     id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
@@ -29,7 +30,7 @@ class Textbook(OrmBase):
     isbn: orm.Mapped[str | None]
 
     sections: orm.Mapped[list["Section"]] = orm.relationship(back_populates="textbook")
-    exercises: orm.Mapped[list["Exercise"]] = orm.relationship(back_populates="textbook", cascade="all, delete-orphan")
+    exercises: orm.Mapped[list["Exercise"]] = orm.relationship(back_populates="textbook", cascade="all, delete-orphan", overlaps="exercises")
 
 
 class TextbooksResource:

@@ -78,15 +78,16 @@ class Exercise(OrmBase):
     __table_args__ = (
         sql.UniqueConstraint("textbook_id", "textbook_page", "number"),
         sql.CheckConstraint("(textbook_id IS NULL) = (textbook_page IS NULL)", name="textbook_id_textbook_page_consistently_null"),
+        sql.ForeignKeyConstraint(["project_id", "textbook_id"], ["textbooks.project_id", "textbooks.id"]),
     )
 
     id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
 
     project_id: orm.Mapped[int] = orm.mapped_column(sql.ForeignKey(Project.id))
-    project: orm.Mapped[Project] = orm.relationship(back_populates="exercises")
+    project: orm.Mapped[Project] = orm.relationship(back_populates="exercises", overlaps="exercises")
 
-    textbook_id: orm.Mapped[int | None] = orm.mapped_column(sql.ForeignKey(Textbook.id))
-    textbook: orm.Mapped[Textbook | None] = orm.relationship(back_populates="exercises")
+    textbook_id: orm.Mapped[int | None]
+    textbook: orm.Mapped[Textbook | None] = orm.relationship(back_populates="exercises", overlaps="exercises,project")
     textbook_page: orm.Mapped[int | None]
     bounding_rectangle: orm.Mapped[dict | None] = orm.mapped_column(sql.JSON)
 
@@ -103,7 +104,6 @@ class Exercise(OrmBase):
     extraction_events: orm.Mapped[list["ExtractionEvent"]] = orm.relationship(back_populates="exercise")
 
 
-# @todo Enable all tests in this class
 class ExerciseTestCase(TransactionTestCase):
     def setUp(self):
         super().setUp()
@@ -145,16 +145,57 @@ class ExerciseTestCase(TransactionTestCase):
         self.assertEqual(cm.exception.orig.diag.constraint_name, "textbook_id_textbook_page_consistently_null")
 
     def test_create_without_project(self):
-        with self.assertRaises(sql.exc.IntegrityError) as cm:
-            self.create_model(Exercise, project=None, textbook=self.textbook, textbook_page=5, number="5", instructions="", wording="", example="", clue="")
+        with self.make_session() as session:
+            with self.assertRaises(sql.exc.IntegrityError) as cm:
+                session.execute(sql.insert(Exercise).values(
+                    project_id=None,
+                    textbook_id=self.textbook.id,
+                    textbook_page=5,
+                    number="5",
+                    instructions="",
+                    wording="",
+                    example="",
+                    clue="",
+                ))
         self.assertEqual(cm.exception.orig.diag.column_name, "project_id")
 
-    # def test_create_with_inconsistent_project(self):
-    #     other_project = self.create_model(Project, title="Other project")
-    #     # Implemented using a "fat" foreign key added outside Django's ORM, in 'migrations/0003_initial_patch.py'
-    #     with self.assertRaises(sql.exc.IntegrityError) as cm:
-    #         self.create_model(Exercise, project=other_project, textbook=self.textbook, textbook_page=5, number="5", instructions="", wording="", example="", clue="")
-    #     self.assertEqual(cm.exception.orig.diag.constraint_name, "")
+    def test_create_without_project__fixed_by_orm(self):
+        exercise = self.create_model(Exercise, project=None, textbook=self.textbook, textbook_page=5, number="5", instructions="", wording="", example="", clue="")
+        self.assertEqual(exercise.project, self.project)
+
+    def test_create_with_inconsistent_project(self):
+        other_project = self.create_model(Project, title="Other project", description="")
+        with self.make_session() as session:
+            with self.assertRaises(sql.exc.IntegrityError) as cm:
+                session.execute(sql.insert(Exercise).values(
+                    project_id=other_project.id,
+                    textbook_id=self.textbook.id,
+                    textbook_page=5,
+                    number="5",
+                    instructions="",
+                    wording="",
+                    example="",
+                    clue="",
+                ))
+        self.assertEqual(cm.exception.orig.diag.constraint_name, "exercises_project_id_textbook_id_fkey")
+
+    def test_create_with_inconsistent_project__fixed_by_orm(self):
+        other_project = self.create_model(Project, title="Other project", description="")
+        exercise = self.create_model(Exercise, project=other_project, textbook=self.textbook, textbook_page=5, number="5", instructions="", wording="", example="", clue="")
+        self.assertEqual(exercise.project, self.project)
+
+    def test_create_without_textbook__broken_by_orm(self):
+        with self.make_session() as session:
+            session.add(project1 := Project(title='Premier projet de test', description="Ce projet contient des exercices d'un seul manuel."))
+            session.add(project2 := Project(title='Deuxième projet de test', description='Ce projet contient des exercices originaux.'))
+            session.flush()
+            session.add(Textbook(project=project1, title='Français CE2', publisher='Slabeuf', year=2021, isbn='1234567890123'))
+            # session.flush()  # This flush would avoid the IntegrityError
+            # The exercise is created with 'project=None', probably because of the ORM warning silenced by the 'overlaps=' arguments in the relationships
+            session.add(exercise4 := Exercise(project=project2, textbook=None, textbook_page=None, number='L1', instructions='Faire des choses intelligentes.', example='', clue='', wording=''))
+            with self.assertRaises(sql.exc.IntegrityError) as cm:
+                session.flush()
+        self.assertEqual(cm.exception.orig.diag.column_name, "project_id")
 
     def test_ordering(self):
         self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=5, number="5.b", instructions="", wording="", example="", clue="")
@@ -200,21 +241,44 @@ class ExerciseTestCase(TransactionTestCase):
                 ],
             )
 
-#     def test_share_adaptation(self):
-#         project = self.create_model(Project, title="Project", description="")
-#         exercise_1 = self.create_model(Exercise, project=project, number="Exercise 1", instructions="", wording="", example="", clue="")
-#         exercise_2 = self.create_model(Exercise, project=project, number="Exercise 2", instructions="", wording="", example="", clue="")
-#         adaptation = self.create_model(GenericAdaptation)
+    def test_share_adaptation(self):
+        project = self.create_model(Project, title="Project", description="")
+        adaptation = self.create_model(GenericAdaptation)
+        exercise_1 = self.create_model(Exercise, project=project, number="Exercise 1", instructions="", wording="", example="", clue="", adaptation=adaptation)
+        exercise_2 = self.create_model(Exercise, project=project, number="Exercise 2", instructions="", wording="", example="", clue="")
 
-#         exercise_1.adaptation = adaptation
-#         self.session.commit()
+        with self.make_session() as session:
+            with self.assertRaises(sql.exc.IntegrityError) as cm:
+                session.execute(sql.update(Exercise).where(Exercise.id == exercise_2.id).values(adaptation_id=adaptation.id))
+        self.assertEqual(cm.exception.orig.diag.constraint_name, "exercises_adaptation_id_key")
 
-#         exercise_2.adaptation = adaptation
-#         with self.assertRaises(sql.exc.IntegrityError) as cm:
-#             self.session.commit()
-#         self.assertEqual(cm.exception.orig.diag.constraint_name, "")
+    def test_share_adaptation__fixed_by_orm(self):
+        with self.make_session() as session:
+            session.add(project := Project(title="Project", description=""))
+            session.add(adaptation := GenericAdaptation())
+            session.flush()
+            session.add(exercise_1 := Exercise(project=project, number="Exercise 1", instructions="", wording="", example="", clue="", adaptation=adaptation))
+            session.flush()
+            session.add(exercise_2 := Exercise(project=project, number="Exercise 2", instructions="", wording="", example="", clue="", adaptation=adaptation))
+            session.flush()
 
-#         # self.assertIs(exercise_1.adaptation, exercise_2.adaptation)
+            self.assertIs(exercise_1.adaptation, exercise_2.adaptation)
+
+            session.refresh(exercise_1)
+
+            self.assertIsNone(exercise_1.adaptation)
+
+    def test_share_adaptation__not_fixed_by_orm(self):
+        with self.make_session() as session:
+            session.add(project := Project(title="Project", description=""))
+            session.add(adaptation := GenericAdaptation())
+            session.flush()
+            session.add(Exercise(project=project, number="Exercise 1", instructions="", wording="", example="", clue="", adaptation=adaptation))
+            session.add(Exercise(project=project, number="Exercise 2", instructions="", wording="", example="", clue="", adaptation=adaptation))
+
+            with self.assertRaises(sql.exc.IntegrityError) as cm:
+                session.flush()
+        self.assertEqual(cm.exception.orig.diag.constraint_name, "exercises_adaptation_id_key")
 
 
 class ExercisesResource:
