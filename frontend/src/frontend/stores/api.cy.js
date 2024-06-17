@@ -876,7 +876,7 @@ describe('ApiStore', () => {
     cy.expect(api.auth.expiresSoon.value).to.be.true
   })
 
-  it.only('stores authentication token in local storage', async () => {
+  it('stores authentication token in local storage', async () => {
     const api1 = useApiStore()
 
     cy.expect(await api1.auth.login('admin', 'password')).to.be.true

@@ -1,14 +1,26 @@
+function login() {
+  cy.get('select').last().select('en')
+  cy.get('h1:contains("Please log in")').should('exist')
+  cy.get('[name=username]').type('admin')  // This often leaves the field with just the few characters, e.g. 'adm'. I can't figure out why; probably some race condition.
+  cy.get('[name=password]').type('password')
+  cy.get('[name=username]').type('{selectall}admin')  // This is a workaround for the above issue.
+  cy.get('[name=username]').should('have.value', 'admin')
+  cy.get('button:contains("Log in")').click()
+  cy.get('h1:contains("Please log in")').should('not.exist')
+}
+
 describe('Gabby', () => {
   before(console.clear)
 
   after(() => {
-    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=more-test-exercises')
+    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=admin-user,more-test-exercises')
   })
 
   it('performs extraction from scratch', () => {
-    cy.request('POST', '/reset-for-tests/yes-im-sure')
+    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=admin-user')
 
     cy.visit('/')
+    login()
     cy.get('select').select('fr')
     cy.get('select').blur()
     cy.get('div.busy').should('not.exist')
@@ -74,9 +86,10 @@ describe('Gabby', () => {
   it('loads existing data', () => {
     cy.viewport(1000, 1000)
 
-    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises')
+    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=admin-user,test-exercises')
 
     cy.visit('/')
+    login()
     cy.get('select').select('fr')
     cy.get('select').blur()
     cy.get('div.busy').should('not.exist')

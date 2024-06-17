@@ -1,20 +1,31 @@
 const isProdPreview = Cypress.env('IS_PROD_PREVIEW')
 
+function login() {
+  cy.get('select').last().select('en')
+  cy.get('h1:contains("Please log in")').should('exist')
+  cy.get('[name=username]').type('admin')  // This often leaves the field with just the few characters, e.g. 'adm'. I can't figure out why; probably some race condition.
+  cy.get('[name=password]').type('password')
+  cy.get('[name=username]').type('{selectall}admin')  // This is a workaround for the above issue.
+  cy.get('[name=username]').should('have.value', 'admin')
+  cy.get('button:contains("Log in")').click()
+  cy.get('h1:contains("Please log in")').should('not.exist')
+}
+
 describe('Gabby\'s project\'s textbook page view', () => {
   before(console.clear)
 
   beforeEach(() => {
-    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises')
+    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=admin-user,test-exercises')
   })
 
   after(() => {
-    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=more-test-exercises')
+    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=admin-user,more-test-exercises')
   })
 
   it('displays an error message if the project does not exist', () => {
     cy.visit('/project-nope/textbook-klxufv/page-6')
+    login()
     cy.get('div.busy').should('not.exist')
-    cy.get('select').select('en')
 
     cy.get('h1:contains("Project not found")').should('exist')
     cy.title().should('eq', 'MALIN - Project not found')
@@ -22,8 +33,8 @@ describe('Gabby\'s project\'s textbook page view', () => {
 
   it('displays an error message if the textbook does not exist', () => {
     cy.visit('/project-xkopqm/textbook-nope/page-6')
+    login()
     cy.get('div.busy').should('not.exist')
-    cy.get('select').select('en')
 
     cy.get('h1:contains("Textbook not found")').should('exist')
     cy.title().should('eq', 'MALIN - Premier projet de test - Textbook not found')
@@ -31,8 +42,8 @@ describe('Gabby\'s project\'s textbook page view', () => {
 
   it('displays an error message if the textbook does not belong to this project', () => {
     cy.visit('/project-fryrbl/textbook-klxufv/page-6')
+    login()
     cy.get('div.busy').should('not.exist')
-    cy.get('select').select('en')
 
     cy.get('h1:contains("Textbook not found")').should('exist')
     cy.title().should('eq', 'MALIN - Deuxième projet de test - Textbook not found')
@@ -44,7 +55,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
 
   it('lands', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-6')
-    cy.get('select').select('en')
+    login()
 
     cy.title().should('eq', 'MALIN - Premier projet de test - Français CE2 - Page 6')
     cy.get('.navbar').should('contain', 'Premier projet de test')
@@ -53,7 +64,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
 
   it('adjusts textarea heights', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise')
-    cy.get('select').select('en')
+    login()
 
     for (const label of ['Instructions', 'Wording']) {
       cy.get(`label:contains("${label}")`).next().should('have.attr', 'rows', '2')
@@ -71,7 +82,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
 
   it('navigates the textbook', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-6')
-    cy.get('select').select('en')
+    login()
     cy.get('p:contains("Page"):contains("(on 7)") input').should('have.value', '6')
     cy.get('p:contains("The PDF that contains this page (test.pdf) has not been loaded yet.")').should('exist')
 
@@ -108,7 +119,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
 
   it('enables the "Save exercise" button', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise')
-    cy.get('select').select('en')
+    login()
 
     cy.get('button:contains("Save then create next")').should('be.disabled')
 
@@ -124,7 +135,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
 
   it('lists existing exercises', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-7')
-    cy.get('select').select('en')
+    login()
     cy.get('button:contains("Delete")').click()
     cy.get('div.busy').should('not.exist')
     cy.get('p:contains("No exercises yet.")').should('exist')
@@ -142,7 +153,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
 
   it('loads a PDF', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-6')
-    cy.get('select').select('en')
+    login()
     cy.get('div.busy').should('not.exist')
     cy.get('p:contains("The PDF that contains this page (test.pdf) has not been loaded yet.")').should('exist')
 
@@ -154,7 +165,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
 
   it('creates a minimal exercise', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise')
-    cy.get('select').select('en')
+    login()
 
     cy.get('label:contains("Number")').next().type('1')
     cy.get('button:contains("Save")').click()
@@ -169,7 +180,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
 
   it('creates a full exercise', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise')
-    cy.get('select').select('en')
+    login()
 
     cy.get('label:contains("Number")').next().type('Défis')
     cy.get('label:contains("Instructions")').next().type('Do the smartest thing ever.')
@@ -213,7 +224,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
     // (because it interferes with pointer coordinates, making the test harder to maintain)
 
     cy.visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise')
-    cy.get('select').select('en')
+    login()
     cy.get('div.busy').should('not.exist')
 
     cy.get('label:contains("Number")').next().type('1')
@@ -882,7 +893,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
     cy.viewport(1000, 1000)
 
     cy.visit('/project-xkopqm/textbook-klxufv/page-6')
-    cy.get('select').select('en')
+    login()
     cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
     cy.get('div.busy').should('not.exist')
 
@@ -964,6 +975,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
 
   it('shows and hides the section editor dialog', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-6')
+    login()
     cy.get('select').select('fr')
     cy.get('div.busy').should('not.exist')
 
@@ -978,7 +990,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
 
   it('detects when an exercise already exists', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise')
-    cy.get('select').select('en')
+    login()
     cy.get('div.busy').should('not.exist')
 
     cy.get('label:contains("Number")').next().type('2')
@@ -1004,7 +1016,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
 
   it('allows navigating the PDF when creating an exercise', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise')
-    cy.get('select').select('en')
+    login()
     cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
     cy.get('div.busy').should('not.exist')
 
@@ -1024,11 +1036,11 @@ describe('Gabby\'s project\'s textbook page view', () => {
   })
 
   it('resets responses when changing adaptation type', () => {
-    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=more-test-exercises')
+    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=admin-user,more-test-exercises')
     cy.viewport(1000, 1100)
 
     cy.visit('/project-xkopqm/textbook-klxufv/page-7/exercise-dymwin')
-    cy.get('select').select('en')
+    login()
     cy.get('label:contains("Number")').next().should('have.value', '11')
     cy.get('div.busy').should('not.exist')
 
