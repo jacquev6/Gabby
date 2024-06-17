@@ -6,6 +6,12 @@
   "close": "Close",
 
 
+  "pleaseLogin": "Please log in",
+  "loginButton": "Log in",
+  "emailAddress": "e-mail address",
+  "password": "Password",
+
+
   "thisIsABug": "You should not be seeing this; this is a bug. Please let Vincent Jacques know about it.",
 
 

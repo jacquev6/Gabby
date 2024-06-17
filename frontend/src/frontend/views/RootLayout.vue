@@ -3,9 +3,12 @@ import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { RouteLocationRaw } from 'vue-router'
 
+import LoginModal from '$frontend/components/LoginModal.vue'
 import Navbar from '$frontend/components/Navbar.vue'
+import { useApiStore } from '../stores/api'
 
 
+const api = useApiStore()
 const i18n = useI18n()
 
 const component = ref<{
@@ -51,10 +54,13 @@ const class_ = computed(() => componentHandlesScrolling.value ? 'overflow-hidden
 <template>
   <div class="vh-100 d-flex flex-column overflow-hidden">
     <Navbar :title :breadcrumbs></Navbar>
-    <div class="h-100 flex-fill container-fluid" data-cy="root-container" :class="class_">
-      <RouterView v-slot="{ Component }">
-        <component :is="Component" ref="component" />
-      </RouterView>
-    </div>
+    <LoginModal />
+    <template v-if="api.auth.is_authenticated()">
+      <div class="h-100 flex-fill container-fluid" data-cy="root-container" :class="class_">
+        <RouterView v-slot="{ Component }">
+          <component :is="Component" ref="component" />
+        </RouterView>
+      </div>
+    </template>
   </div>
 </template>

@@ -6,6 +6,12 @@
   "close": "Fermer",
 
 
+  "pleaseLogin": "Veuillez vous connecter",
+  "loginButton": "Se connecter",
+  "emailAddress": "Adresse e-mail",
+  "password": "Mot de passse",
+
+
   "thisIsABug": "Vous ne devriez pas voir ça ; c'est un bug. Merci de le signaler à Vincent Jacques.",
 
 
