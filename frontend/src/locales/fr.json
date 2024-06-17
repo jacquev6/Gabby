@@ -9,7 +9,8 @@
   "pleaseLogin": "Veuillez vous connecter",
   "loginButton": "Se connecter",
   "emailAddress": "Adresse e-mail",
-  "password": "Mot de passse",
+  "password": "Mot de passe",
+  "logoutButton": "Déconnexion",
 
 
   "thisIsABug": "Vous ne devriez pas voir ça ; c'est un bug. Merci de le signaler à Vincent Jacques.",
