@@ -302,7 +302,7 @@ const adaptationOptions = computed(() => {
 async function create() {
   busy.value = true
 
-  const operations = [
+  const operations: any/* @todo Type */[] = [
     [
       'add', 'exercise', 'ex',
       {
@@ -336,7 +336,7 @@ async function create() {
     ])
   }
 
-  const results = await api.client.batch(...operations)
+  const results = await (api.client.batch as any/* @todo Type */)(...operations)
   const exercise = results[0]
 
   clearHistory(() => {
@@ -404,7 +404,7 @@ async function save() {
     ])
   }
 
-  await api.client.batch(...operations)
+  await (api.client.batch as any/* @todo Type */)(...operations)
 
   extractionEvents = []
 
