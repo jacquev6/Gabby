@@ -1,7 +1,7 @@
 import datetime
 
 from . import database_utils
-from .orm_models import Exercise, ExtractionEvent, FillWithFreeTextAdaptation, MultipleChoicesInInstructionsAdaptation, MultipleChoicesInWordingAdaptation, PdfFile, PdfFileNaming, Ping, Project, Section, SelectThingsAdaptation, Textbook
+from .orm_models import Exercise, ExtractionEvent, FillWithFreeTextAdaptation, MultipleChoicesInInstructionsAdaptation, MultipleChoicesInWordingAdaptation, PdfFile, PdfFileNaming, Ping, Project, Section, SelectThingsAdaptation, Textbook, User
 
 
 def add(session, class_, **kwds):
@@ -9,6 +9,10 @@ def add(session, class_, **kwds):
     session.add(item)
     session.flush()
     return item
+
+
+def create_admin_user_fixture(session):
+    user1 = add(session, User, username="admin", clear_text_password="password")
 
 
 def create_test_pings_fixture(session):
@@ -72,6 +76,7 @@ def create_more_test_exercises_fixture(session):
 
 
 available_fixtures = {
+    "admin-user": create_admin_user_fixture,
     "test-pings": create_test_pings_fixture,
     "empty-project": create_empty_project_fixture,
     "test-exercises": create_test_exercises_fixture,

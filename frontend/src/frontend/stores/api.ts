@@ -85,6 +85,7 @@ export function defineApiStore(name: string, options?: {baseUrl?: string}) {
       _items: {} as {[type: string]: {[id: string]: ItemInCache}},
       _lists: {} as {[url: Url]: ItemListInCache},
       _baseUrl: (options && options.baseUrl) || '/api/',
+      _authorizationHeader: null as string | null,
     }),
     getters: {},
     actions: {
@@ -224,7 +225,11 @@ export function defineApiStore(name: string, options?: {baseUrl?: string}) {
       },
       async _request(method: 'POST' | 'GET' | 'PATCH' | 'DELETE', url: Url, json_body?: object) {
         const body = json_body ? JSON.stringify(json_body) : null
-        const raw_response = await fetch(url, {method, headers: {'Content-Type': 'application/vnd.api+json'}, body})
+        const headers = {'Content-Type': 'application/vnd.api+json'}
+        if (this._authorizationHeader) {
+          headers['Authorization'] = this._authorizationHeader
+        }
+        const raw_response = await fetch(url, {method, headers, body})
         const json_response = raw_response.headers.get('Content-Type') == 'application/vnd.api+json' ? await raw_response.json() : null
         if (raw_response.ok) {
           if (json_response) {
@@ -260,6 +265,32 @@ export function defineApiStore(name: string, options?: {baseUrl?: string}) {
 
   return function() {
     const cache = useCache()
+
+    const auth = {
+      is_authenticated() {
+        return cache._authorizationHeader !== null
+      },
+      async login(username: string, password: string) {
+        const body = new FormData()
+        body.append('username', username)
+        body.append('password', password)
+        const response = await fetch(cache._makeUrl('token'), {method: 'POST', body})
+        if (response.ok) {
+          const json_response = await response.json()
+          cache._authorizationHeader = 'Bearer ' + json_response.access_token
+          return true
+        } else {
+          this.logout()
+          return false
+        }
+      },
+      logout() {
+        cache._authorizationHeader = null
+        // Clear cache to avoid accessing data got while logged-in
+        cache._items = {}
+        cache._lists = {}
+      },
+    }
 
     const client = {
       async getAll<ItemType extends GenericItem=GenericItem>(path: string, options?: Options) {
@@ -346,7 +377,7 @@ export function defineApiStore(name: string, options?: {baseUrl?: string}) {
       // @todo api.auto.getOne
     }
 
-    return {cache, client, auto}
+    return {auth, cache, client, auto}
   }
 }
 

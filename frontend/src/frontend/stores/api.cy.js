@@ -15,7 +15,7 @@ describe('ApiStore', () => {
   before(console.clear)
 
   beforeEach(() => {
-    cy.request('POST', 'http://fanout:8080/reset-for-tests/yes-im-sure?fixtures=test-pings')
+    cy.request('POST', 'http://fanout:8080/reset-for-tests/yes-im-sure?fixtures=admin-user,test-pings')
 
     cy.viewport(1300, 600)
 
@@ -793,6 +793,55 @@ describe('ApiStore', () => {
   // @todo Implement: remove the ping from the relationship list (lazily in 'get relationships', not proactively)
   // it('deletes one ping that was in a relationship', async () => {
   // })
+
+  it('logs in and out', async () => {
+    const api = useApiStore()
+
+    const logged_out_1 = await api.client.post('ping', {}, {})
+    cy.expect(logged_out_1.relationships.createdBy).to.be.null
+
+    cy.expect(api.auth.is_authenticated()).to.be.false
+
+    cy.expect(await api.auth.login('admin', 'password')).to.be.true
+
+    cy.expect(api.auth.is_authenticated()).to.be.true
+
+    const logged_in = await api.client.post('ping', {}, {})
+    cy.expect(logged_in.relationships.createdBy.type).to.equal('user')
+    cy.expect(logged_in.relationships.createdBy.id).to.equal('1')
+    cy.expect(logged_in.relationships.createdBy.inCache).to.be.false
+
+    api.auth.logout()
+
+    cy.expect(api.auth.is_authenticated()).to.be.false
+
+    const logged_out_2 = await api.client.post('ping', {}, {})
+    cy.expect(logged_out_2.relationships.createdBy).to.be.null
+  })
+
+  it('fails to login', async () => {
+    const api = useApiStore()
+
+    cy.expect(await api.auth.login('admin', 'not-the-password')).to.be.false
+    cy.expect(api.auth.is_authenticated()).to.be.false
+
+    cy.expect(await api.auth.login('not-the-admin', 'password')).to.be.false
+    cy.expect(api.auth.is_authenticated()).to.be.false
+  })
+
+  it('clears cache on logout', async () => {
+    const api = useApiStore()
+
+    api.auth.login('admin', 'password')
+
+    await api.client.getOne('ping', '1')
+
+    cy.expect(api.cache.getOne('ping', '1').inCache).to.be.true
+
+    api.auth.logout()
+
+    cy.expect(api.cache.getOne('ping', '1').inCache).to.be.false
+  })
 
   it('reacts to ping message edition', () => {
     cy.mount(TestComponent)
