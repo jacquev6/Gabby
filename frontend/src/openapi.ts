@@ -189,6 +189,10 @@ export interface paths {
     /** Login */
     post: operations["login_api_token_post"];
   };
+  "/api/users/{id}": {
+    /** Get User */
+    get: operations["get_user_api_users__id__get"];
+  };
   "/reset-for-tests/yes-im-sure": {
     /** Reset For Tests */
     post: operations["reset_for_tests_reset_for_tests_yes_im_sure_post"];
@@ -350,11 +354,6 @@ export interface components {
     UpdateInputListRelationship: {
       /** Data */
       data: components["schemas"]["ObjectId"][];
-    };
-    /** User */
-    User: {
-      /** Username */
-      username: string;
     };
     /** ValidationError */
     ValidationError: {
@@ -1111,7 +1110,6 @@ export interface components {
        * Format: date-time
        */
       createdAt: string;
-      createdBy: components["schemas"]["User"] | null;
       /** Message */
       message: string | null;
       /**
@@ -1119,12 +1117,13 @@ export interface components {
        * Format: date-time
        */
       updatedAt: string;
-      updatedBy: components["schemas"]["User"] | null;
     };
     /** pingOutputItemRelationships */
     pingOutputItemRelationships: {
+      createdBy: components["schemas"]["OptionalRelationship"];
       next: components["schemas"]["OutputListRelationship"];
       prev: components["schemas"]["OptionalRelationship"];
+      updatedBy: components["schemas"]["OptionalRelationship"];
     };
     /** pingPageOutput */
     pingPageOutput: {
@@ -1510,6 +1509,26 @@ export interface components {
     };
     /** textbookUpdateInputDataRelationships */
     textbookUpdateInputDataRelationships: Record<string, never>;
+    /** userItemOutput */
+    userItemOutput: {
+      data: components["schemas"]["userOutputItem"];
+      /** Included */
+      included?: unknown[];
+    };
+    /** userOutputItem */
+    userOutputItem: {
+      attributes: components["schemas"]["userOutputItemAttributes"];
+      /** Id */
+      id: string;
+      links: components["schemas"]["ItemLinks"];
+      /** Type */
+      type: string;
+    };
+    /** userOutputItemAttributes */
+    userOutputItemAttributes: {
+      /** Username */
+      username: string;
+    };
   };
   responses: never;
   parameters: never;
@@ -3083,6 +3102,31 @@ export interface operations {
       200: {
         content: {
           "application/json": unknown;
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  /** Get User */
+  get_user_api_users__id__get: {
+    parameters: {
+      query?: {
+        include?: string;
+      };
+      path: {
+        id: string;
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        content: {
+          "application/vnd.api+json": components["schemas"]["userItemOutput"];
         };
       };
       /** @description Validation Error */

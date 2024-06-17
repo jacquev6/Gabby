@@ -11,10 +11,12 @@ from .pings import PingsResource
 from .projects import Project, ProjectsResource
 from .testing import ApiTestCase
 from .textbooks import Textbook, TextbooksResource, SectionsResource
+from .users import UsersResource
 from .wrapping import get_wrapper
 
 
 resources = [
+    UsersResource(),
     PingsResource(),
     PdfFilesResource(),
     PdfFileNamingsResource(),

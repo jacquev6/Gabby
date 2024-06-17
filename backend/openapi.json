@@ -498,19 +498,6 @@
         "title": "UpdateInputListRelationship",
         "type": "object"
       },
-      "User": {
-        "properties": {
-          "username": {
-            "title": "Username",
-            "type": "string"
-          }
-        },
-        "required": [
-          "username"
-        ],
-        "title": "User",
-        "type": "object"
-      },
       "ValidationError": {
         "properties": {
           "loc": {
@@ -2723,16 +2710,6 @@
             "title": "Createdat",
             "type": "string"
           },
-          "createdBy": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/User"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
           "message": {
             "anyOf": [
               {
@@ -2748,24 +2725,12 @@
             "format": "date-time",
             "title": "Updatedat",
             "type": "string"
-          },
-          "updatedBy": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/User"
-              },
-              {
-                "type": "null"
-              }
-            ]
           }
         },
         "required": [
           "message",
           "createdAt",
-          "createdBy",
-          "updatedAt",
-          "updatedBy"
+          "updatedAt"
         ],
         "title": "pingOutputItemAttributes",
         "type": "object"
@@ -2773,14 +2738,22 @@
       "pingOutputItemRelationships": {
         "additionalProperties": false,
         "properties": {
+          "createdBy": {
+            "$ref": "#/components/schemas/OptionalRelationship"
+          },
           "next": {
             "$ref": "#/components/schemas/OutputListRelationship"
           },
           "prev": {
             "$ref": "#/components/schemas/OptionalRelationship"
+          },
+          "updatedBy": {
+            "$ref": "#/components/schemas/OptionalRelationship"
           }
         },
         "required": [
+          "createdBy",
+          "updatedBy",
           "prev",
           "next"
         ],
@@ -3993,6 +3966,65 @@
         "additionalProperties": false,
         "properties": {},
         "title": "textbookUpdateInputDataRelationships",
+        "type": "object"
+      },
+      "userItemOutput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/userOutputItem"
+          },
+          "included": {
+            "items": {},
+            "title": "Included",
+            "type": "array"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "userItemOutput",
+        "type": "object"
+      },
+      "userOutputItem": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "$ref": "#/components/schemas/userOutputItemAttributes"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "links": {
+            "$ref": "#/components/schemas/ItemLinks"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "links",
+          "attributes"
+        ],
+        "title": "userOutputItem",
+        "type": "object"
+      },
+      "userOutputItemAttributes": {
+        "additionalProperties": false,
+        "properties": {
+          "username": {
+            "title": "Username",
+            "type": "string"
+          }
+        },
+        "required": [
+          "username"
+        ],
+        "title": "userOutputItemAttributes",
         "type": "object"
       }
     },
@@ -7045,6 +7077,54 @@
           }
         },
         "summary": "Login"
+      }
+    },
+    "/api/users/{id}": {
+      "get": {
+        "operationId": "get_user_api_users__id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/userItemOutput"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get User"
       }
     },
     "/reset-for-tests/yes-im-sure": {
