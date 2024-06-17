@@ -16,7 +16,7 @@ def create_model(*args, **kwds):
     return pydantic.create_model(*args, **kwds, __base__=BaseModel)
 
 
-class PageMetaModel(BaseModel):
+class PageMeta(BaseModel):
     class Pagination(BaseModel):
         count: int
         page: int
@@ -25,7 +25,7 @@ class PageMetaModel(BaseModel):
     pagination: Pagination
 
 
-class PageLinksModel(BaseModel):
+class PageLinks(BaseModel):
     # @todo Consider adding 'self'
     first: str
     last: str
@@ -33,7 +33,7 @@ class PageLinksModel(BaseModel):
     prev: str | None
 
 
-class ItemLinksModel(BaseModel):
+class ItemLinks(BaseModel):
     self: str
 
 
@@ -133,15 +133,15 @@ def make_create_input_model(resource_name: str, model, decider: Decider):
             else:
                 assert False
 
-    Attributes = create_model(f"{resource_name}-CreateInput-Data-Attributes", **attributes)
+    Attributes = create_model(f"{resource_name}CreateInputDataAttributes", **attributes)
 
-    Relationships = create_model(f"{resource_name}-CreateInput-Data-Relationships", **relationships)
+    Relationships = create_model(f"{resource_name}CreateInputDataRelationships", **relationships)
 
     return create_model(
-        f"{resource_name}-CreateInput",
+        f"{resource_name}CreateInput",
         data=(
             create_model(
-                f"{resource_name}-CreateInput-Data",
+                f"{resource_name}CreateInputData",
                 type=(str, ...),
                 attributes=(Attributes, Attributes() if attributes_can_be_defaulted else ...),
                 relationships=(Relationships, Relationships() if relationships_can_be_defaulted else ...),
@@ -171,42 +171,42 @@ def make_output_models(resource_name: str, model, decider: Decider):
             else:
                 assert False
 
-    OutputItemModel = create_model(
-        f"{resource_name}-OutputItem",
+    OutputItem = create_model(
+        f"{resource_name}OutputItem",
         type=(str, ...),
         id=(str, ...),
-        links=(ItemLinksModel, ...),
+        links=(ItemLinks, ...),
         **(dict(attributes=(
             create_model(
-                f"{resource_name}-OutputItem-Attributes",
+                f"{resource_name}OutputItemAttributes",
                 **attributes,
             ),
             ...
         )) if attributes else {}),
         **(dict(relationships=(
             create_model(
-                f"{resource_name}-OutputItem-Relationships",
+                f"{resource_name}OutputItemRelationships",
                 **relationships,
             ),
             ...
         )) if relationships else {}),
     )
 
-    ItemOutputModel = create_model(
-        f"{resource_name}-ItemOutput",
-        data=(OutputItemModel, ...),
+    ItemOutput = create_model(
+        f"{resource_name}ItemOutput",
+        data=(OutputItem, ...),
         included=(list, None),
     )
 
-    PageOutputModel = create_model(
-        f"{resource_name}-PageOutput",
-        data=(list[OutputItemModel], ...),
-        meta=(PageMetaModel, ...),
-        links=(PageLinksModel, ...),
+    PageOutput = create_model(
+        f"{resource_name}PageOutput",
+        data=(list[OutputItem], ...),
+        meta=(PageMeta, ...),
+        links=(PageLinks, ...),
         included=(list, None),
     )
 
-    return (ItemOutputModel, PageOutputModel)
+    return (ItemOutput, PageOutput)
 
 
 def make_filters_dependable(resource_name: str, model, decider: Decider):
@@ -228,7 +228,7 @@ def make_filters_dependable(resource_name: str, model, decider: Decider):
                 assert False
 
     Filters = create_model(
-        f"{resource_name}-Filters",
+        f"{resource_name}Filters",
         **{
             key: (value | None, ...)
             for (key, value) in attributes.items()
@@ -275,15 +275,15 @@ def make_update_input_model(resource_name: str, model, decider: Decider):
             else:
                 assert False
 
-    Attributes = create_model(f"{resource_name}-UpdateInput-Data-Attributes", **attributes)
+    Attributes = create_model(f"{resource_name}UpdateInputDataAttributes", **attributes)
 
-    Relationships = create_model(f"{resource_name}-UpdateInput-Data-Relationships", **relationships)
+    Relationships = create_model(f"{resource_name}UpdateInputDataRelationships", **relationships)
 
     return create_model(
-        f"{resource_name}-UpdateInput",
+        f"{resource_name}UpdateInput",
         data=(
             create_model(
-                f"{resource_name}-UpdateInput-Data",
+                f"{resource_name}UpdateInputData",
                 type=(str, ...),
                 id=(str, ...),
                 attributes=(Attributes, Attributes()),

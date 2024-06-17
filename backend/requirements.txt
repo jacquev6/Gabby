@@ -1,19 +1,17 @@
-# Old
-django  # Fundamental
-django-polymorphic
-psycopg2-binary  # For PostgreSQL
-django-dbbackup  # For backups
-django-storages[s3]  # For backups
-django-extensions  # For 'manage.py graph_models'
-pydotplus  # For 'manage.py graph_models'
-
-# New
-fastapi  # Fundamental
-uvicorn[standard]  # Fundamental
-httpx  # For unit testing: https://fastapi.tiangolo.com/tutorial/testing/
-pyhumps  # Convert between cases
-python-multipart  # OAuth2 authentication uses multipart
-pyjwt  # For authentication tokens
+alembic  # Database migrations
 argon2-cffi  # Password hasher
+black  # Code formatter, used by Alembic
+boto3  # AWS, used e.g. for database backups to S3
+click  # Command-line parsing
+fastapi  # API framework
+httpx  # For unit testing: https://fastapi.tiangolo.com/tutorial/testing/
+lark  # Text parsing (for exercise adaptation)
+psycopg2-binary  # For PostgreSQL
+pyhumps  # Convert between cases
+pyjwt  # For authentication tokens
+python-multipart  # OAuth2 authentication uses multipart
 sqids  # Opaque IDs
-lark
+sqlalchemy  # Database ORM
+sqlalchemy-data-model-visualizer  # Draw database schema
+sqlalchemy-utils  # Database utilities
+uvicorn[standard]  # ASGI server

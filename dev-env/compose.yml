@@ -1,4 +1,4 @@
-name: $OPINION_APP_NAME-dev
+name: gabby-dev
 
 volumes:
   frontend-cache:
@@ -8,7 +8,7 @@ services:
   # @todo Run all services with a user having the same UID:GID as the host user
   # (so that files created by the container on the host filesystem are owned by the host user)
   frontend-shell:
-    image: $OPINION_APP_NAME-dev_frontend
+    image: gabby-dev_frontend
     build:
       context: ..
       dockerfile: dev-env/frontend/docker/Dockerfile
@@ -23,7 +23,7 @@ services:
     init: true
     command: ["sleep", "infinity"]
   npm-installer:
-    image: $OPINION_APP_NAME-dev_frontend
+    image: gabby-dev_frontend
     pull_policy: never
     volumes:
       - ..:/app
@@ -31,7 +31,7 @@ services:
     working_dir: /app/frontend
     command: ["npm", "install"]
   pdf-worker-copier:
-    image: $OPINION_APP_NAME-dev_frontend
+    image: gabby-dev_frontend
     pull_policy: never
     volumes:
       - ..:/app
@@ -41,7 +41,7 @@ services:
       npm-installer:
         condition: service_completed_successfully
   openapi-to-typescript:
-    image: $OPINION_APP_NAME-dev_frontend
+    image: gabby-dev_frontend
     pull_policy: never
     volumes:
       - ..:/app
@@ -53,7 +53,7 @@ services:
       npm-installer:
         condition: service_completed_successfully
   frontend:
-    image: $OPINION_APP_NAME-dev_frontend
+    image: gabby-dev_frontend
     pull_policy: never
     volumes:
       - ..:/app
@@ -66,19 +66,19 @@ services:
       npm-installer:
         condition: service_completed_successfully
   adapted-builder:
-    image: $OPINION_APP_NAME-dev_frontend
+    image: gabby-dev_frontend
     pull_policy: never
     volumes:
       - ..:/app
     working_dir: /app/frontend
     environment:
       GABBY_ENTRY_POINT_NAME: adapted
-    command: ["npx", "vite", "build", "--watch", "--mode", "development", "--outDir", "../backend/textbooks/templates/adapted", "--emptyOutDir"]
+    command: ["npx", "vite", "build", "--watch", "--mode", "development", "--outDir", "../backend/gabby/templates/adapted", "--emptyOutDir"]
     depends_on:
       npm-installer:
         condition: service_completed_successfully
     healthcheck:
-      test: ["CMD", "test", "-f", "/app/backend/textbooks/templates/adapted/index.html"]
+      test: ["CMD", "test", "-f", "/app/backend/gabby/templates/adapted/index.html"]
       interval: 0.5s
 
   db:
@@ -95,7 +95,7 @@ services:
       interval: 0.5s
 
   backend-shell:
-    image: $OPINION_APP_NAME-dev_backend
+    image: gabby-dev_backend
     build:
       context: ..
       dockerfile: dev-env/backend/docker/Dockerfile
@@ -103,58 +103,63 @@ services:
       - ..:/app
       - backend-pip-packages:/root/.local
     working_dir: /app/backend
-    environment:
-      DJANGO_SETTINGS_MODULE: opinion.settings.dev
+    env_file: backend/env
     init: true
     command: ["sleep", "infinity"]
   pip-installer:
-    image: $OPINION_APP_NAME-dev_backend
+    image: gabby-dev_backend
     pull_policy: never
     volumes:
       - ..:/app
       - backend-pip-packages:/root/.local
     working_dir: /app/backend
-    environment:
-      DJANGO_SETTINGS_MODULE: opinion.settings.dev
     command: ["pip", "install", "--user", "-r", "requirements.txt"]
-  migrator:
-    image: $OPINION_APP_NAME-dev_backend
+  sqlalchemy-data-model-visualizer-patcher:
+    image: gabby-dev_backend
     pull_policy: never
     volumes:
       - ..:/app
       - backend-pip-packages:/root/.local
     working_dir: /app/backend
-    environment:
-      DJANGO_SETTINGS_MODULE: opinion.settings.dev
-    command: ["./manage.py", "migrate"]
+    command: ["sed", "-i", "s/dot.render(output_file, view=True)/dot.render(output_file, view=False)/", "/root/.local/lib/python3.12/site-packages/sqlalchemy_data_model_visualizer.py"]
+    depends_on:
+      pip-installer:
+        condition: service_completed_successfully
+  migrator:
+    image: gabby-dev_backend
+    pull_policy: never
+    volumes:
+      - ..:/app
+      - backend-pip-packages:/root/.local
+    working_dir: /app/backend/gabby
+    env_file: backend/env
+    command: ["alembic", "upgrade", "head"]
     depends_on:
       pip-installer:
         condition: service_completed_successfully
       db:
         condition: service_healthy
   data-loader:
-    image: $OPINION_APP_NAME-dev_backend
+    image: gabby-dev_backend
     pull_policy: never
     volumes:
       - ..:/app
       - backend-pip-packages:/root/.local
     working_dir: /app/backend
-    environment:
-      DJANGO_SETTINGS_MODULE: opinion.settings.dev
-    command: ["./manage.py", "loaddata", "test-exercises", "more-test-exercises"]
+    env_file: backend/env
+    command: ["python", "-m", "gabby", "load-fixtures", "more-test-exercises"]
     depends_on:
       migrator:
         condition: service_completed_successfully
   backend:
-    image: $OPINION_APP_NAME-dev_backend
+    image: gabby-dev_backend
     pull_policy: never
     volumes:
       - ..:/app
       - backend-pip-packages:/root/.local
     working_dir: /app/backend
-    environment:
-      DJANGO_SETTINGS_MODULE: opinion.settings.dev
-    command: ["uvicorn", "main:app", "--reload", "--host", "0.0.0.0", "--port", "80"]
+    env_file: backend/env
+    command: ["uvicorn", "gabby.asgi:app", "--reload", "--host", "0.0.0.0", "--port", "80"]
     depends_on:
       pip-installer:
         condition: service_completed_successfully
@@ -162,32 +167,16 @@ services:
         condition: service_healthy
       adapted-builder:
         condition: service_healthy
-  django-admin:
-    image: $OPINION_APP_NAME-dev_backend
-    pull_policy: never
-    volumes:
-      - ..:/app
-      - backend-pip-packages:/root/.local
-    working_dir: /app/backend
-    environment:
-      DJANGO_SETTINGS_MODULE: opinion.settings.dev
-    command: ["./manage.py", "runserver", "0.0.0.0:80"]
-    depends_on:
-      pip-installer:
-        condition: service_completed_successfully
-      db:
-        condition: service_healthy
   db-backup:
-    image: $OPINION_APP_NAME-dev_backend
+    image: gabby-dev_backend
     pull_policy: never
     volumes:
       - ..:/app
       - backend-pip-packages:/root/.local
     working_dir: /app/backend
-    environment:
-      DJANGO_SETTINGS_MODULE: opinion.settings.dev
+    env_file: backend/env
     init: true
-    command: ["bash", "-c", "while true; do echo 'Backup DB'; ./manage.py dbbackup; find /app/dev-env/db/backups -name '*.psql.bin' -mmin +10 -delete; sleep 30; done"]
+    command: ["bash", "-c", "while true; do python -m gabby backup-database; find /app/dev-env/db/backups -name 'gabby-backup-*.tar.gz' -mmin +10 -delete; sleep 30; done"]
     depends_on:
       pip-installer:
         condition: service_completed_successfully
@@ -198,7 +187,7 @@ services:
     image: adminer:4
 
   doc:
-    image: $OPINION_APP_NAME-dev_doc
+    image: gabby-dev_doc
     build:
       context: ..
       dockerfile: dev-env/doc/docker/Dockerfile
@@ -220,4 +209,3 @@ services:
       - frontend
       - adminer
       - backend
-      - django-admin

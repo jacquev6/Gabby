@@ -56,22 +56,6 @@ describe('Gabby has routes that', () => {
     cy.contains('h2', 'FastAPI')
   })
 
-  it('can access Django admin without trailing /', () => {
-    cy.visit('/api/admin')
-    cy.contains('header', 'Django administration')
-  })
-
-  it('can access Django admin with trailing /', () => {
-    cy.visit('/api/admin/')
-    cy.contains('header', 'Django administration')
-  })
-
-  it('can access Django statics', () => {
-    cy.request('/api/static/admin/css/base.css').then(response => {
-      expect(response.headers['content-type']).to.equal('text/css')
-    })
-  })
-
   it('can assess Adminer without trailing /', () => {
     cy.visit('/api/adminer')
     cy.contains('h1', 'Adminer')

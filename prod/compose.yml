@@ -11,7 +11,7 @@ services:
     pull_policy: never
 
   # Add a line like this in your crontab to replace the 'db-backup' service below:
-  # 10 *   * * *   user  (cd /path/to/compose/env && docker compose exec backend python manage.py dbbackup)
+  # 10 *   * * *   user  (cd /path/to/compose/env && docker compose exec backend python -m gabby backup-database)
   db:
     image: postgres:15
     environment:
@@ -31,16 +31,6 @@ services:
     depends_on:
       db:
         condition: service_healthy
-  django-admin:
-    image: jacquev6/gabby:preview-backend
-    pull_policy: never
-    env_file:
-      - backend.env
-      - secrets.env
-    depends_on:
-      db:
-        condition: service_healthy
-    command: ["uvicorn", "opinion.asgi:application", "--host", "0.0.0.0", "--port", "80"]
 
   adminer:
     image: adminer:4
@@ -54,7 +44,7 @@ services:
     env_file:
       - backend.env
       - secrets.env
-    command: ["./manage.py", "migrate"]
+    command: ["alembic", "upgrade", "head"]
     depends_on:
       db:
         condition: service_healthy
@@ -64,7 +54,7 @@ services:
     env_file:
       - backend.env
       - secrets.env
-    command: ["./manage.py", "loaddata", "test-exercises", "more-test-exercises"]
+    command: ["python", "-m", "gabby", "load-fixtures", "more-test-exercises"]
     depends_on:
       migrator:
         condition: service_completed_successfully
@@ -75,7 +65,7 @@ services:
       - backend.env
       - secrets.env
     init: true
-    command: ["bash", "-c", "while true; do echo 'Backup DB'; ./manage.py dbbackup; sleep 300; done"]
+    command: ["bash", "-c", "while true; do python -m gabby backup-database; sleep 300; done"]
     depends_on:
       data-loader:
         condition: service_completed_successfully
@@ -89,7 +79,6 @@ services:
     depends_on:
       - frontend
       - backend
-      - django-admin
       - adminer
 
   tester:

@@ -238,8 +238,8 @@ export interface components {
        */
       data?: components["schemas"]["ObjectId"][];
     };
-    /** FillWithFreeTextAdaptationOptionsModel */
-    FillWithFreeTextAdaptationOptionsModel: {
+    /** FillWithFreeTextAdaptationOptions */
+    FillWithFreeTextAdaptationOptions: {
       /** Placeholder */
       placeholder: string;
     };
@@ -248,8 +248,8 @@ export interface components {
       /** Detail */
       detail?: components["schemas"]["ValidationError"][];
     };
-    /** ItemLinksModel */
-    ItemLinksModel: {
+    /** ItemLinks */
+    ItemLinks: {
       /** Self */
       self: string;
     };
@@ -262,13 +262,13 @@ export interface components {
       /** Count */
       count: number;
     };
-    /** MultipleChoicesInInstructionsAdaptationOptionsModel */
-    MultipleChoicesInInstructionsAdaptationOptionsModel: {
+    /** MultipleChoicesInInstructionsAdaptationOptions */
+    MultipleChoicesInInstructionsAdaptationOptions: {
       /** Placeholder */
       placeholder: string;
     };
-    /** MultipleChoicesInWordingAdaptationOptionsModel */
-    MultipleChoicesInWordingAdaptationOptionsModel: Record<string, never>;
+    /** MultipleChoicesInWordingAdaptationOptions */
+    MultipleChoicesInWordingAdaptationOptions: Record<string, never>;
     /** ObjectId */
     ObjectId: {
       /** Id */
@@ -286,8 +286,8 @@ export interface components {
       data: components["schemas"]["ObjectId"][];
       meta: components["schemas"]["Meta"];
     };
-    /** PageLinksModel */
-    PageLinksModel: {
+    /** PageLinks */
+    PageLinks: {
       /** First */
       first: string;
       /** Last */
@@ -297,8 +297,8 @@ export interface components {
       /** Prev */
       prev: string | null;
     };
-    /** PageMetaModel */
-    PageMetaModel: {
+    /** PageMeta */
+    PageMeta: {
       pagination: components["schemas"]["Pagination"];
     };
     /** Pagination */
@@ -332,8 +332,8 @@ export interface components {
       /** Paragraphs */
       paragraphs: components["schemas"]["Paragraph"][];
     };
-    /** SelectThingsAdaptationOptionsModel */
-    SelectThingsAdaptationOptionsModel: {
+    /** SelectThingsAdaptationOptions */
+    SelectThingsAdaptationOptions: {
       /** Colors */
       colors: number;
       /** Punctuation */
@@ -351,8 +351,8 @@ export interface components {
       /** Data */
       data: components["schemas"]["ObjectId"][];
     };
-    /** UserModel */
-    UserModel: {
+    /** User */
+    User: {
       /** Username */
       username: string;
     };
@@ -457,22 +457,22 @@ export interface components {
        */
       type: "whitespace";
     };
-    /** adaptedExercise-CreateInput */
-    "adaptedExercise-CreateInput": {
-      data: components["schemas"]["adaptedExercise-CreateInput-Data"];
+    /** adaptedExerciseCreateInput */
+    adaptedExerciseCreateInput: {
+      data: components["schemas"]["adaptedExerciseCreateInputData"];
     };
-    /** adaptedExercise-CreateInput-Data */
-    "adaptedExercise-CreateInput-Data": {
-      attributes: components["schemas"]["adaptedExercise-CreateInput-Data-Attributes"];
+    /** adaptedExerciseCreateInputData */
+    adaptedExerciseCreateInputData: {
+      attributes: components["schemas"]["adaptedExerciseCreateInputDataAttributes"];
       /** @default {} */
-      relationships?: components["schemas"]["adaptedExercise-CreateInput-Data-Relationships"];
+      relationships?: components["schemas"]["adaptedExerciseCreateInputDataRelationships"];
       /** Type */
       type: string;
     };
-    /** adaptedExercise-CreateInput-Data-Attributes */
-    "adaptedExercise-CreateInput-Data-Attributes": {
+    /** adaptedExerciseCreateInputDataAttributes */
+    adaptedExerciseCreateInputDataAttributes: {
       /** Adaptationoptions */
-      adaptationOptions: components["schemas"]["SelectThingsAdaptationOptionsModel"] | components["schemas"]["FillWithFreeTextAdaptationOptionsModel"] | components["schemas"]["MultipleChoicesInInstructionsAdaptationOptionsModel"] | components["schemas"]["MultipleChoicesInWordingAdaptationOptionsModel"];
+      adaptationOptions: components["schemas"]["SelectThingsAdaptationOptions"] | components["schemas"]["FillWithFreeTextAdaptationOptions"] | components["schemas"]["MultipleChoicesInInstructionsAdaptationOptions"] | components["schemas"]["MultipleChoicesInWordingAdaptationOptions"];
       /** Clue */
       clue: string;
       /** Example */
@@ -488,40 +488,40 @@ export interface components {
       /** Wording */
       wording: string;
     };
-    /** adaptedExercise-CreateInput-Data-Relationships */
-    "adaptedExercise-CreateInput-Data-Relationships": Record<string, never>;
-    /** adaptedExercise-ItemOutput */
-    "adaptedExercise-ItemOutput": {
-      data: components["schemas"]["adaptedExercise-OutputItem"];
+    /** adaptedExerciseCreateInputDataRelationships */
+    adaptedExerciseCreateInputDataRelationships: Record<string, never>;
+    /** adaptedExerciseItemOutput */
+    adaptedExerciseItemOutput: {
+      data: components["schemas"]["adaptedExerciseOutputItem"];
       /** Included */
       included?: unknown[];
     };
-    /** adaptedExercise-OutputItem */
-    "adaptedExercise-OutputItem": {
-      attributes: components["schemas"]["adaptedExercise-OutputItem-Attributes"];
+    /** adaptedExerciseOutputItem */
+    adaptedExerciseOutputItem: {
+      attributes: components["schemas"]["adaptedExerciseOutputItemAttributes"];
       /** Id */
       id: string;
-      links: components["schemas"]["ItemLinksModel"];
+      links: components["schemas"]["ItemLinks"];
       /** Type */
       type: string;
     };
-    /** adaptedExercise-OutputItem-Attributes */
-    "adaptedExercise-OutputItem-Attributes": {
+    /** adaptedExerciseOutputItemAttributes */
+    adaptedExerciseOutputItemAttributes: {
       adapted: components["schemas"]["AdaptedExercise"];
     };
-    /** exercise-CreateInput */
-    "exercise-CreateInput": {
-      data: components["schemas"]["exercise-CreateInput-Data"];
+    /** exerciseCreateInput */
+    exerciseCreateInput: {
+      data: components["schemas"]["exerciseCreateInputData"];
     };
-    /** exercise-CreateInput-Data */
-    "exercise-CreateInput-Data": {
-      attributes: components["schemas"]["exercise-CreateInput-Data-Attributes"];
-      relationships: components["schemas"]["exercise-CreateInput-Data-Relationships"];
+    /** exerciseCreateInputData */
+    exerciseCreateInputData: {
+      attributes: components["schemas"]["exerciseCreateInputDataAttributes"];
+      relationships: components["schemas"]["exerciseCreateInputDataRelationships"];
       /** Type */
       type: string;
     };
-    /** exercise-CreateInput-Data-Attributes */
-    "exercise-CreateInput-Data-Attributes": {
+    /** exerciseCreateInputDataAttributes */
+    exerciseCreateInputDataAttributes: {
       boundingRectangle?: components["schemas"]["Rectangle"] | null;
       /**
        * Clue
@@ -548,32 +548,32 @@ export interface components {
        */
       wording?: string;
     };
-    /** exercise-CreateInput-Data-Relationships */
-    "exercise-CreateInput-Data-Relationships": {
+    /** exerciseCreateInputDataRelationships */
+    exerciseCreateInputDataRelationships: {
       /** @default {} */
       adaptation?: components["schemas"]["OptionalRelationship"];
       project: components["schemas"]["MandatoryRelationship"];
       /** @default {} */
       textbook?: components["schemas"]["OptionalRelationship"];
     };
-    /** exercise-ItemOutput */
-    "exercise-ItemOutput": {
-      data: components["schemas"]["exercise-OutputItem"];
+    /** exerciseItemOutput */
+    exerciseItemOutput: {
+      data: components["schemas"]["exerciseOutputItem"];
       /** Included */
       included?: unknown[];
     };
-    /** exercise-OutputItem */
-    "exercise-OutputItem": {
-      attributes: components["schemas"]["exercise-OutputItem-Attributes"];
+    /** exerciseOutputItem */
+    exerciseOutputItem: {
+      attributes: components["schemas"]["exerciseOutputItemAttributes"];
       /** Id */
       id: string;
-      links: components["schemas"]["ItemLinksModel"];
-      relationships: components["schemas"]["exercise-OutputItem-Relationships"];
+      links: components["schemas"]["ItemLinks"];
+      relationships: components["schemas"]["exerciseOutputItemRelationships"];
       /** Type */
       type: string;
     };
-    /** exercise-OutputItem-Attributes */
-    "exercise-OutputItem-Attributes": {
+    /** exerciseOutputItemAttributes */
+    exerciseOutputItemAttributes: {
       boundingRectangle: components["schemas"]["Rectangle"] | null;
       /** Clue */
       clue: string;
@@ -588,39 +588,39 @@ export interface components {
       /** Wording */
       wording: string;
     };
-    /** exercise-OutputItem-Relationships */
-    "exercise-OutputItem-Relationships": {
+    /** exerciseOutputItemRelationships */
+    exerciseOutputItemRelationships: {
       adaptation: components["schemas"]["OptionalRelationship"];
       extractionEvents: components["schemas"]["OutputListRelationship"];
       project: components["schemas"]["MandatoryRelationship"];
       textbook: components["schemas"]["OptionalRelationship"];
     };
-    /** exercise-PageOutput */
-    "exercise-PageOutput": {
+    /** exercisePageOutput */
+    exercisePageOutput: {
       /** Data */
-      data: components["schemas"]["exercise-OutputItem"][];
+      data: components["schemas"]["exerciseOutputItem"][];
       /** Included */
       included?: unknown[];
-      links: components["schemas"]["PageLinksModel"];
-      meta: components["schemas"]["PageMetaModel"];
+      links: components["schemas"]["PageLinks"];
+      meta: components["schemas"]["PageMeta"];
     };
-    /** exercise-UpdateInput */
-    "exercise-UpdateInput": {
-      data: components["schemas"]["exercise-UpdateInput-Data"];
+    /** exerciseUpdateInput */
+    exerciseUpdateInput: {
+      data: components["schemas"]["exerciseUpdateInputData"];
     };
-    /** exercise-UpdateInput-Data */
-    "exercise-UpdateInput-Data": {
+    /** exerciseUpdateInputData */
+    exerciseUpdateInputData: {
       /** @default {} */
-      attributes?: components["schemas"]["exercise-UpdateInput-Data-Attributes"];
+      attributes?: components["schemas"]["exerciseUpdateInputDataAttributes"];
       /** Id */
       id: string;
       /** @default {} */
-      relationships?: components["schemas"]["exercise-UpdateInput-Data-Relationships"];
+      relationships?: components["schemas"]["exerciseUpdateInputDataRelationships"];
       /** Type */
       type: string;
     };
-    /** exercise-UpdateInput-Data-Attributes */
-    "exercise-UpdateInput-Data-Attributes": {
+    /** exerciseUpdateInputDataAttributes */
+    exerciseUpdateInputDataAttributes: {
       boundingRectangle?: components["schemas"]["Rectangle"] | null;
       /** Clue */
       clue?: string;
@@ -631,287 +631,287 @@ export interface components {
       /** Wording */
       wording?: string;
     };
-    /** exercise-UpdateInput-Data-Relationships */
-    "exercise-UpdateInput-Data-Relationships": {
+    /** exerciseUpdateInputDataRelationships */
+    exerciseUpdateInputDataRelationships: {
       adaptation?: components["schemas"]["OptionalRelationship"];
     };
-    /** extractionEvent-CreateInput */
-    "extractionEvent-CreateInput": {
-      data: components["schemas"]["extractionEvent-CreateInput-Data"];
+    /** extractionEventCreateInput */
+    extractionEventCreateInput: {
+      data: components["schemas"]["extractionEventCreateInputData"];
     };
-    /** extractionEvent-CreateInput-Data */
-    "extractionEvent-CreateInput-Data": {
-      attributes: components["schemas"]["extractionEvent-CreateInput-Data-Attributes"];
-      relationships: components["schemas"]["extractionEvent-CreateInput-Data-Relationships"];
+    /** extractionEventCreateInputData */
+    extractionEventCreateInputData: {
+      attributes: components["schemas"]["extractionEventCreateInputDataAttributes"];
+      relationships: components["schemas"]["extractionEventCreateInputDataRelationships"];
       /** Type */
       type: string;
     };
-    /** extractionEvent-CreateInput-Data-Attributes */
-    "extractionEvent-CreateInput-Data-Attributes": {
+    /** extractionEventCreateInputDataAttributes */
+    extractionEventCreateInputDataAttributes: {
       /** Event */
       event: string;
     };
-    /** extractionEvent-CreateInput-Data-Relationships */
-    "extractionEvent-CreateInput-Data-Relationships": {
+    /** extractionEventCreateInputDataRelationships */
+    extractionEventCreateInputDataRelationships: {
       exercise: components["schemas"]["MandatoryRelationship"];
     };
-    /** extractionEvent-ItemOutput */
-    "extractionEvent-ItemOutput": {
-      data: components["schemas"]["extractionEvent-OutputItem"];
+    /** extractionEventItemOutput */
+    extractionEventItemOutput: {
+      data: components["schemas"]["extractionEventOutputItem"];
       /** Included */
       included?: unknown[];
     };
-    /** extractionEvent-OutputItem */
-    "extractionEvent-OutputItem": {
-      attributes: components["schemas"]["extractionEvent-OutputItem-Attributes"];
+    /** extractionEventOutputItem */
+    extractionEventOutputItem: {
+      attributes: components["schemas"]["extractionEventOutputItemAttributes"];
       /** Id */
       id: string;
-      links: components["schemas"]["ItemLinksModel"];
-      relationships: components["schemas"]["extractionEvent-OutputItem-Relationships"];
+      links: components["schemas"]["ItemLinks"];
+      relationships: components["schemas"]["extractionEventOutputItemRelationships"];
       /** Type */
       type: string;
     };
-    /** extractionEvent-OutputItem-Attributes */
-    "extractionEvent-OutputItem-Attributes": {
+    /** extractionEventOutputItemAttributes */
+    extractionEventOutputItemAttributes: {
       /** Event */
       event: string;
     };
-    /** extractionEvent-OutputItem-Relationships */
-    "extractionEvent-OutputItem-Relationships": {
+    /** extractionEventOutputItemRelationships */
+    extractionEventOutputItemRelationships: {
       exercise: components["schemas"]["MandatoryRelationship"];
     };
-    /** extractionEvent-PageOutput */
-    "extractionEvent-PageOutput": {
+    /** extractionEventPageOutput */
+    extractionEventPageOutput: {
       /** Data */
-      data: components["schemas"]["extractionEvent-OutputItem"][];
+      data: components["schemas"]["extractionEventOutputItem"][];
       /** Included */
       included?: unknown[];
-      links: components["schemas"]["PageLinksModel"];
-      meta: components["schemas"]["PageMetaModel"];
+      links: components["schemas"]["PageLinks"];
+      meta: components["schemas"]["PageMeta"];
     };
-    /** extractionEvent-UpdateInput */
-    "extractionEvent-UpdateInput": {
-      data: components["schemas"]["extractionEvent-UpdateInput-Data"];
+    /** extractionEventUpdateInput */
+    extractionEventUpdateInput: {
+      data: components["schemas"]["extractionEventUpdateInputData"];
     };
-    /** extractionEvent-UpdateInput-Data */
-    "extractionEvent-UpdateInput-Data": {
+    /** extractionEventUpdateInputData */
+    extractionEventUpdateInputData: {
       /** @default {} */
-      attributes?: components["schemas"]["extractionEvent-UpdateInput-Data-Attributes"];
+      attributes?: components["schemas"]["extractionEventUpdateInputDataAttributes"];
       /** Id */
       id: string;
       /** @default {} */
-      relationships?: components["schemas"]["extractionEvent-UpdateInput-Data-Relationships"];
+      relationships?: components["schemas"]["extractionEventUpdateInputDataRelationships"];
       /** Type */
       type: string;
     };
-    /** extractionEvent-UpdateInput-Data-Attributes */
-    "extractionEvent-UpdateInput-Data-Attributes": Record<string, never>;
-    /** extractionEvent-UpdateInput-Data-Relationships */
-    "extractionEvent-UpdateInput-Data-Relationships": Record<string, never>;
-    /** fillWithFreeTextAdaptation-CreateInput */
-    "fillWithFreeTextAdaptation-CreateInput": {
-      data: components["schemas"]["fillWithFreeTextAdaptation-CreateInput-Data"];
+    /** extractionEventUpdateInputDataAttributes */
+    extractionEventUpdateInputDataAttributes: Record<string, never>;
+    /** extractionEventUpdateInputDataRelationships */
+    extractionEventUpdateInputDataRelationships: Record<string, never>;
+    /** fillWithFreeTextAdaptationCreateInput */
+    fillWithFreeTextAdaptationCreateInput: {
+      data: components["schemas"]["fillWithFreeTextAdaptationCreateInputData"];
     };
-    /** fillWithFreeTextAdaptation-CreateInput-Data */
-    "fillWithFreeTextAdaptation-CreateInput-Data": {
-      attributes: components["schemas"]["fillWithFreeTextAdaptation-CreateInput-Data-Attributes"];
-      relationships: components["schemas"]["fillWithFreeTextAdaptation-CreateInput-Data-Relationships"];
+    /** fillWithFreeTextAdaptationCreateInputData */
+    fillWithFreeTextAdaptationCreateInputData: {
+      attributes: components["schemas"]["fillWithFreeTextAdaptationCreateInputDataAttributes"];
+      relationships: components["schemas"]["fillWithFreeTextAdaptationCreateInputDataRelationships"];
       /** Type */
       type: string;
     };
-    /** fillWithFreeTextAdaptation-CreateInput-Data-Attributes */
-    "fillWithFreeTextAdaptation-CreateInput-Data-Attributes": {
+    /** fillWithFreeTextAdaptationCreateInputDataAttributes */
+    fillWithFreeTextAdaptationCreateInputDataAttributes: {
       /** Placeholder */
       placeholder: string;
     };
-    /** fillWithFreeTextAdaptation-CreateInput-Data-Relationships */
-    "fillWithFreeTextAdaptation-CreateInput-Data-Relationships": {
+    /** fillWithFreeTextAdaptationCreateInputDataRelationships */
+    fillWithFreeTextAdaptationCreateInputDataRelationships: {
       exercise: components["schemas"]["MandatoryRelationship"];
     };
-    /** fillWithFreeTextAdaptation-ItemOutput */
-    "fillWithFreeTextAdaptation-ItemOutput": {
-      data: components["schemas"]["fillWithFreeTextAdaptation-OutputItem"];
+    /** fillWithFreeTextAdaptationItemOutput */
+    fillWithFreeTextAdaptationItemOutput: {
+      data: components["schemas"]["fillWithFreeTextAdaptationOutputItem"];
       /** Included */
       included?: unknown[];
     };
-    /** fillWithFreeTextAdaptation-OutputItem */
-    "fillWithFreeTextAdaptation-OutputItem": {
-      attributes: components["schemas"]["fillWithFreeTextAdaptation-OutputItem-Attributes"];
+    /** fillWithFreeTextAdaptationOutputItem */
+    fillWithFreeTextAdaptationOutputItem: {
+      attributes: components["schemas"]["fillWithFreeTextAdaptationOutputItemAttributes"];
       /** Id */
       id: string;
-      links: components["schemas"]["ItemLinksModel"];
-      relationships: components["schemas"]["fillWithFreeTextAdaptation-OutputItem-Relationships"];
+      links: components["schemas"]["ItemLinks"];
+      relationships: components["schemas"]["fillWithFreeTextAdaptationOutputItemRelationships"];
       /** Type */
       type: string;
     };
-    /** fillWithFreeTextAdaptation-OutputItem-Attributes */
-    "fillWithFreeTextAdaptation-OutputItem-Attributes": {
+    /** fillWithFreeTextAdaptationOutputItemAttributes */
+    fillWithFreeTextAdaptationOutputItemAttributes: {
       /** Placeholder */
       placeholder: string;
     };
-    /** fillWithFreeTextAdaptation-OutputItem-Relationships */
-    "fillWithFreeTextAdaptation-OutputItem-Relationships": {
+    /** fillWithFreeTextAdaptationOutputItemRelationships */
+    fillWithFreeTextAdaptationOutputItemRelationships: {
       exercise: components["schemas"]["MandatoryRelationship"];
     };
-    /** fillWithFreeTextAdaptation-UpdateInput */
-    "fillWithFreeTextAdaptation-UpdateInput": {
-      data: components["schemas"]["fillWithFreeTextAdaptation-UpdateInput-Data"];
+    /** fillWithFreeTextAdaptationUpdateInput */
+    fillWithFreeTextAdaptationUpdateInput: {
+      data: components["schemas"]["fillWithFreeTextAdaptationUpdateInputData"];
     };
-    /** fillWithFreeTextAdaptation-UpdateInput-Data */
-    "fillWithFreeTextAdaptation-UpdateInput-Data": {
+    /** fillWithFreeTextAdaptationUpdateInputData */
+    fillWithFreeTextAdaptationUpdateInputData: {
       /** @default {} */
-      attributes?: components["schemas"]["fillWithFreeTextAdaptation-UpdateInput-Data-Attributes"];
+      attributes?: components["schemas"]["fillWithFreeTextAdaptationUpdateInputDataAttributes"];
       /** Id */
       id: string;
       /** @default {} */
-      relationships?: components["schemas"]["fillWithFreeTextAdaptation-UpdateInput-Data-Relationships"];
+      relationships?: components["schemas"]["fillWithFreeTextAdaptationUpdateInputDataRelationships"];
       /** Type */
       type: string;
     };
-    /** fillWithFreeTextAdaptation-UpdateInput-Data-Attributes */
-    "fillWithFreeTextAdaptation-UpdateInput-Data-Attributes": {
+    /** fillWithFreeTextAdaptationUpdateInputDataAttributes */
+    fillWithFreeTextAdaptationUpdateInputDataAttributes: {
       /** Placeholder */
       placeholder?: string;
     };
-    /** fillWithFreeTextAdaptation-UpdateInput-Data-Relationships */
-    "fillWithFreeTextAdaptation-UpdateInput-Data-Relationships": Record<string, never>;
-    /** multipleChoicesInInstructionsAdaptation-CreateInput */
-    "multipleChoicesInInstructionsAdaptation-CreateInput": {
-      data: components["schemas"]["multipleChoicesInInstructionsAdaptation-CreateInput-Data"];
+    /** fillWithFreeTextAdaptationUpdateInputDataRelationships */
+    fillWithFreeTextAdaptationUpdateInputDataRelationships: Record<string, never>;
+    /** multipleChoicesInInstructionsAdaptationCreateInput */
+    multipleChoicesInInstructionsAdaptationCreateInput: {
+      data: components["schemas"]["multipleChoicesInInstructionsAdaptationCreateInputData"];
     };
-    /** multipleChoicesInInstructionsAdaptation-CreateInput-Data */
-    "multipleChoicesInInstructionsAdaptation-CreateInput-Data": {
-      attributes: components["schemas"]["multipleChoicesInInstructionsAdaptation-CreateInput-Data-Attributes"];
-      relationships: components["schemas"]["multipleChoicesInInstructionsAdaptation-CreateInput-Data-Relationships"];
+    /** multipleChoicesInInstructionsAdaptationCreateInputData */
+    multipleChoicesInInstructionsAdaptationCreateInputData: {
+      attributes: components["schemas"]["multipleChoicesInInstructionsAdaptationCreateInputDataAttributes"];
+      relationships: components["schemas"]["multipleChoicesInInstructionsAdaptationCreateInputDataRelationships"];
       /** Type */
       type: string;
     };
-    /** multipleChoicesInInstructionsAdaptation-CreateInput-Data-Attributes */
-    "multipleChoicesInInstructionsAdaptation-CreateInput-Data-Attributes": {
+    /** multipleChoicesInInstructionsAdaptationCreateInputDataAttributes */
+    multipleChoicesInInstructionsAdaptationCreateInputDataAttributes: {
       /** Placeholder */
       placeholder: string;
     };
-    /** multipleChoicesInInstructionsAdaptation-CreateInput-Data-Relationships */
-    "multipleChoicesInInstructionsAdaptation-CreateInput-Data-Relationships": {
+    /** multipleChoicesInInstructionsAdaptationCreateInputDataRelationships */
+    multipleChoicesInInstructionsAdaptationCreateInputDataRelationships: {
       exercise: components["schemas"]["MandatoryRelationship"];
     };
-    /** multipleChoicesInInstructionsAdaptation-ItemOutput */
-    "multipleChoicesInInstructionsAdaptation-ItemOutput": {
-      data: components["schemas"]["multipleChoicesInInstructionsAdaptation-OutputItem"];
+    /** multipleChoicesInInstructionsAdaptationItemOutput */
+    multipleChoicesInInstructionsAdaptationItemOutput: {
+      data: components["schemas"]["multipleChoicesInInstructionsAdaptationOutputItem"];
       /** Included */
       included?: unknown[];
     };
-    /** multipleChoicesInInstructionsAdaptation-OutputItem */
-    "multipleChoicesInInstructionsAdaptation-OutputItem": {
-      attributes: components["schemas"]["multipleChoicesInInstructionsAdaptation-OutputItem-Attributes"];
+    /** multipleChoicesInInstructionsAdaptationOutputItem */
+    multipleChoicesInInstructionsAdaptationOutputItem: {
+      attributes: components["schemas"]["multipleChoicesInInstructionsAdaptationOutputItemAttributes"];
       /** Id */
       id: string;
-      links: components["schemas"]["ItemLinksModel"];
-      relationships: components["schemas"]["multipleChoicesInInstructionsAdaptation-OutputItem-Relationships"];
+      links: components["schemas"]["ItemLinks"];
+      relationships: components["schemas"]["multipleChoicesInInstructionsAdaptationOutputItemRelationships"];
       /** Type */
       type: string;
     };
-    /** multipleChoicesInInstructionsAdaptation-OutputItem-Attributes */
-    "multipleChoicesInInstructionsAdaptation-OutputItem-Attributes": {
+    /** multipleChoicesInInstructionsAdaptationOutputItemAttributes */
+    multipleChoicesInInstructionsAdaptationOutputItemAttributes: {
       /** Placeholder */
       placeholder: string;
     };
-    /** multipleChoicesInInstructionsAdaptation-OutputItem-Relationships */
-    "multipleChoicesInInstructionsAdaptation-OutputItem-Relationships": {
+    /** multipleChoicesInInstructionsAdaptationOutputItemRelationships */
+    multipleChoicesInInstructionsAdaptationOutputItemRelationships: {
       exercise: components["schemas"]["MandatoryRelationship"];
     };
-    /** multipleChoicesInInstructionsAdaptation-UpdateInput */
-    "multipleChoicesInInstructionsAdaptation-UpdateInput": {
-      data: components["schemas"]["multipleChoicesInInstructionsAdaptation-UpdateInput-Data"];
+    /** multipleChoicesInInstructionsAdaptationUpdateInput */
+    multipleChoicesInInstructionsAdaptationUpdateInput: {
+      data: components["schemas"]["multipleChoicesInInstructionsAdaptationUpdateInputData"];
     };
-    /** multipleChoicesInInstructionsAdaptation-UpdateInput-Data */
-    "multipleChoicesInInstructionsAdaptation-UpdateInput-Data": {
+    /** multipleChoicesInInstructionsAdaptationUpdateInputData */
+    multipleChoicesInInstructionsAdaptationUpdateInputData: {
       /** @default {} */
-      attributes?: components["schemas"]["multipleChoicesInInstructionsAdaptation-UpdateInput-Data-Attributes"];
+      attributes?: components["schemas"]["multipleChoicesInInstructionsAdaptationUpdateInputDataAttributes"];
       /** Id */
       id: string;
       /** @default {} */
-      relationships?: components["schemas"]["multipleChoicesInInstructionsAdaptation-UpdateInput-Data-Relationships"];
+      relationships?: components["schemas"]["multipleChoicesInInstructionsAdaptationUpdateInputDataRelationships"];
       /** Type */
       type: string;
     };
-    /** multipleChoicesInInstructionsAdaptation-UpdateInput-Data-Attributes */
-    "multipleChoicesInInstructionsAdaptation-UpdateInput-Data-Attributes": {
+    /** multipleChoicesInInstructionsAdaptationUpdateInputDataAttributes */
+    multipleChoicesInInstructionsAdaptationUpdateInputDataAttributes: {
       /** Placeholder */
       placeholder?: string;
     };
-    /** multipleChoicesInInstructionsAdaptation-UpdateInput-Data-Relationships */
-    "multipleChoicesInInstructionsAdaptation-UpdateInput-Data-Relationships": Record<string, never>;
-    /** multipleChoicesInWordingAdaptation-CreateInput */
-    "multipleChoicesInWordingAdaptation-CreateInput": {
-      data: components["schemas"]["multipleChoicesInWordingAdaptation-CreateInput-Data"];
+    /** multipleChoicesInInstructionsAdaptationUpdateInputDataRelationships */
+    multipleChoicesInInstructionsAdaptationUpdateInputDataRelationships: Record<string, never>;
+    /** multipleChoicesInWordingAdaptationCreateInput */
+    multipleChoicesInWordingAdaptationCreateInput: {
+      data: components["schemas"]["multipleChoicesInWordingAdaptationCreateInputData"];
     };
-    /** multipleChoicesInWordingAdaptation-CreateInput-Data */
-    "multipleChoicesInWordingAdaptation-CreateInput-Data": {
+    /** multipleChoicesInWordingAdaptationCreateInputData */
+    multipleChoicesInWordingAdaptationCreateInputData: {
       /** @default {} */
-      attributes?: components["schemas"]["multipleChoicesInWordingAdaptation-CreateInput-Data-Attributes"];
-      relationships: components["schemas"]["multipleChoicesInWordingAdaptation-CreateInput-Data-Relationships"];
+      attributes?: components["schemas"]["multipleChoicesInWordingAdaptationCreateInputDataAttributes"];
+      relationships: components["schemas"]["multipleChoicesInWordingAdaptationCreateInputDataRelationships"];
       /** Type */
       type: string;
     };
-    /** multipleChoicesInWordingAdaptation-CreateInput-Data-Attributes */
-    "multipleChoicesInWordingAdaptation-CreateInput-Data-Attributes": Record<string, never>;
-    /** multipleChoicesInWordingAdaptation-CreateInput-Data-Relationships */
-    "multipleChoicesInWordingAdaptation-CreateInput-Data-Relationships": {
+    /** multipleChoicesInWordingAdaptationCreateInputDataAttributes */
+    multipleChoicesInWordingAdaptationCreateInputDataAttributes: Record<string, never>;
+    /** multipleChoicesInWordingAdaptationCreateInputDataRelationships */
+    multipleChoicesInWordingAdaptationCreateInputDataRelationships: {
       exercise: components["schemas"]["MandatoryRelationship"];
     };
-    /** multipleChoicesInWordingAdaptation-ItemOutput */
-    "multipleChoicesInWordingAdaptation-ItemOutput": {
-      data: components["schemas"]["multipleChoicesInWordingAdaptation-OutputItem"];
+    /** multipleChoicesInWordingAdaptationItemOutput */
+    multipleChoicesInWordingAdaptationItemOutput: {
+      data: components["schemas"]["multipleChoicesInWordingAdaptationOutputItem"];
       /** Included */
       included?: unknown[];
     };
-    /** multipleChoicesInWordingAdaptation-OutputItem */
-    "multipleChoicesInWordingAdaptation-OutputItem": {
+    /** multipleChoicesInWordingAdaptationOutputItem */
+    multipleChoicesInWordingAdaptationOutputItem: {
       /** Id */
       id: string;
-      links: components["schemas"]["ItemLinksModel"];
-      relationships: components["schemas"]["multipleChoicesInWordingAdaptation-OutputItem-Relationships"];
+      links: components["schemas"]["ItemLinks"];
+      relationships: components["schemas"]["multipleChoicesInWordingAdaptationOutputItemRelationships"];
       /** Type */
       type: string;
     };
-    /** multipleChoicesInWordingAdaptation-OutputItem-Relationships */
-    "multipleChoicesInWordingAdaptation-OutputItem-Relationships": {
+    /** multipleChoicesInWordingAdaptationOutputItemRelationships */
+    multipleChoicesInWordingAdaptationOutputItemRelationships: {
       exercise: components["schemas"]["MandatoryRelationship"];
     };
-    /** multipleChoicesInWordingAdaptation-UpdateInput */
-    "multipleChoicesInWordingAdaptation-UpdateInput": {
-      data: components["schemas"]["multipleChoicesInWordingAdaptation-UpdateInput-Data"];
+    /** multipleChoicesInWordingAdaptationUpdateInput */
+    multipleChoicesInWordingAdaptationUpdateInput: {
+      data: components["schemas"]["multipleChoicesInWordingAdaptationUpdateInputData"];
     };
-    /** multipleChoicesInWordingAdaptation-UpdateInput-Data */
-    "multipleChoicesInWordingAdaptation-UpdateInput-Data": {
+    /** multipleChoicesInWordingAdaptationUpdateInputData */
+    multipleChoicesInWordingAdaptationUpdateInputData: {
       /** @default {} */
-      attributes?: components["schemas"]["multipleChoicesInWordingAdaptation-UpdateInput-Data-Attributes"];
+      attributes?: components["schemas"]["multipleChoicesInWordingAdaptationUpdateInputDataAttributes"];
       /** Id */
       id: string;
       /** @default {} */
-      relationships?: components["schemas"]["multipleChoicesInWordingAdaptation-UpdateInput-Data-Relationships"];
+      relationships?: components["schemas"]["multipleChoicesInWordingAdaptationUpdateInputDataRelationships"];
       /** Type */
       type: string;
     };
-    /** multipleChoicesInWordingAdaptation-UpdateInput-Data-Attributes */
-    "multipleChoicesInWordingAdaptation-UpdateInput-Data-Attributes": Record<string, never>;
-    /** multipleChoicesInWordingAdaptation-UpdateInput-Data-Relationships */
-    "multipleChoicesInWordingAdaptation-UpdateInput-Data-Relationships": Record<string, never>;
-    /** pdfFile-CreateInput */
-    "pdfFile-CreateInput": {
-      data: components["schemas"]["pdfFile-CreateInput-Data"];
+    /** multipleChoicesInWordingAdaptationUpdateInputDataAttributes */
+    multipleChoicesInWordingAdaptationUpdateInputDataAttributes: Record<string, never>;
+    /** multipleChoicesInWordingAdaptationUpdateInputDataRelationships */
+    multipleChoicesInWordingAdaptationUpdateInputDataRelationships: Record<string, never>;
+    /** pdfFileCreateInput */
+    pdfFileCreateInput: {
+      data: components["schemas"]["pdfFileCreateInputData"];
     };
-    /** pdfFile-CreateInput-Data */
-    "pdfFile-CreateInput-Data": {
-      attributes: components["schemas"]["pdfFile-CreateInput-Data-Attributes"];
+    /** pdfFileCreateInputData */
+    pdfFileCreateInputData: {
+      attributes: components["schemas"]["pdfFileCreateInputDataAttributes"];
       /** @default {} */
-      relationships?: components["schemas"]["pdfFile-CreateInput-Data-Relationships"];
+      relationships?: components["schemas"]["pdfFileCreateInputDataRelationships"];
       /** Type */
       type: string;
     };
-    /** pdfFile-CreateInput-Data-Attributes */
-    "pdfFile-CreateInput-Data-Attributes": {
+    /** pdfFileCreateInputDataAttributes */
+    pdfFileCreateInputDataAttributes: {
       /** Bytescount */
       bytesCount: number;
       /** Pagescount */
@@ -919,26 +919,99 @@ export interface components {
       /** Sha256 */
       sha256: string;
     };
-    /** pdfFile-CreateInput-Data-Relationships */
-    "pdfFile-CreateInput-Data-Relationships": Record<string, never>;
-    /** pdfFile-ItemOutput */
-    "pdfFile-ItemOutput": {
-      data: components["schemas"]["pdfFile-OutputItem"];
+    /** pdfFileCreateInputDataRelationships */
+    pdfFileCreateInputDataRelationships: Record<string, never>;
+    /** pdfFileItemOutput */
+    pdfFileItemOutput: {
+      data: components["schemas"]["pdfFileOutputItem"];
       /** Included */
       included?: unknown[];
     };
-    /** pdfFile-OutputItem */
-    "pdfFile-OutputItem": {
-      attributes: components["schemas"]["pdfFile-OutputItem-Attributes"];
-      /** Id */
-      id: string;
-      links: components["schemas"]["ItemLinksModel"];
-      relationships: components["schemas"]["pdfFile-OutputItem-Relationships"];
+    /** pdfFileNamingCreateInput */
+    pdfFileNamingCreateInput: {
+      data: components["schemas"]["pdfFileNamingCreateInputData"];
+    };
+    /** pdfFileNamingCreateInputData */
+    pdfFileNamingCreateInputData: {
+      attributes: components["schemas"]["pdfFileNamingCreateInputDataAttributes"];
+      relationships: components["schemas"]["pdfFileNamingCreateInputDataRelationships"];
       /** Type */
       type: string;
     };
-    /** pdfFile-OutputItem-Attributes */
-    "pdfFile-OutputItem-Attributes": {
+    /** pdfFileNamingCreateInputDataAttributes */
+    pdfFileNamingCreateInputDataAttributes: {
+      /** Name */
+      name: string;
+    };
+    /** pdfFileNamingCreateInputDataRelationships */
+    pdfFileNamingCreateInputDataRelationships: {
+      pdfFile: components["schemas"]["MandatoryRelationship"];
+    };
+    /** pdfFileNamingItemOutput */
+    pdfFileNamingItemOutput: {
+      data: components["schemas"]["pdfFileNamingOutputItem"];
+      /** Included */
+      included?: unknown[];
+    };
+    /** pdfFileNamingOutputItem */
+    pdfFileNamingOutputItem: {
+      attributes: components["schemas"]["pdfFileNamingOutputItemAttributes"];
+      /** Id */
+      id: string;
+      links: components["schemas"]["ItemLinks"];
+      relationships: components["schemas"]["pdfFileNamingOutputItemRelationships"];
+      /** Type */
+      type: string;
+    };
+    /** pdfFileNamingOutputItemAttributes */
+    pdfFileNamingOutputItemAttributes: {
+      /** Name */
+      name: string;
+    };
+    /** pdfFileNamingOutputItemRelationships */
+    pdfFileNamingOutputItemRelationships: {
+      pdfFile: components["schemas"]["MandatoryRelationship"];
+    };
+    /** pdfFileNamingPageOutput */
+    pdfFileNamingPageOutput: {
+      /** Data */
+      data: components["schemas"]["pdfFileNamingOutputItem"][];
+      /** Included */
+      included?: unknown[];
+      links: components["schemas"]["PageLinks"];
+      meta: components["schemas"]["PageMeta"];
+    };
+    /** pdfFileNamingUpdateInput */
+    pdfFileNamingUpdateInput: {
+      data: components["schemas"]["pdfFileNamingUpdateInputData"];
+    };
+    /** pdfFileNamingUpdateInputData */
+    pdfFileNamingUpdateInputData: {
+      /** @default {} */
+      attributes?: components["schemas"]["pdfFileNamingUpdateInputDataAttributes"];
+      /** Id */
+      id: string;
+      /** @default {} */
+      relationships?: components["schemas"]["pdfFileNamingUpdateInputDataRelationships"];
+      /** Type */
+      type: string;
+    };
+    /** pdfFileNamingUpdateInputDataAttributes */
+    pdfFileNamingUpdateInputDataAttributes: Record<string, never>;
+    /** pdfFileNamingUpdateInputDataRelationships */
+    pdfFileNamingUpdateInputDataRelationships: Record<string, never>;
+    /** pdfFileOutputItem */
+    pdfFileOutputItem: {
+      attributes: components["schemas"]["pdfFileOutputItemAttributes"];
+      /** Id */
+      id: string;
+      links: components["schemas"]["ItemLinks"];
+      relationships: components["schemas"]["pdfFileOutputItemRelationships"];
+      /** Type */
+      type: string;
+    };
+    /** pdfFileOutputItemAttributes */
+    pdfFileOutputItemAttributes: {
       /** Bytescount */
       bytesCount: number;
       /** Pagescount */
@@ -946,120 +1019,47 @@ export interface components {
       /** Sha256 */
       sha256: string;
     };
-    /** pdfFile-OutputItem-Relationships */
-    "pdfFile-OutputItem-Relationships": {
+    /** pdfFileOutputItemRelationships */
+    pdfFileOutputItemRelationships: {
       namings: components["schemas"]["OutputListRelationship"];
       sections: components["schemas"]["OutputListRelationship"];
     };
-    /** pdfFile-PageOutput */
-    "pdfFile-PageOutput": {
+    /** pdfFilePageOutput */
+    pdfFilePageOutput: {
       /** Data */
-      data: components["schemas"]["pdfFile-OutputItem"][];
+      data: components["schemas"]["pdfFileOutputItem"][];
       /** Included */
       included?: unknown[];
-      links: components["schemas"]["PageLinksModel"];
-      meta: components["schemas"]["PageMetaModel"];
+      links: components["schemas"]["PageLinks"];
+      meta: components["schemas"]["PageMeta"];
     };
-    /** pdfFile-UpdateInput */
-    "pdfFile-UpdateInput": {
-      data: components["schemas"]["pdfFile-UpdateInput-Data"];
+    /** pdfFileUpdateInput */
+    pdfFileUpdateInput: {
+      data: components["schemas"]["pdfFileUpdateInputData"];
     };
-    /** pdfFile-UpdateInput-Data */
-    "pdfFile-UpdateInput-Data": {
+    /** pdfFileUpdateInputData */
+    pdfFileUpdateInputData: {
       /** @default {} */
-      attributes?: components["schemas"]["pdfFile-UpdateInput-Data-Attributes"];
+      attributes?: components["schemas"]["pdfFileUpdateInputDataAttributes"];
       /** Id */
       id: string;
       /** @default {} */
-      relationships?: components["schemas"]["pdfFile-UpdateInput-Data-Relationships"];
+      relationships?: components["schemas"]["pdfFileUpdateInputDataRelationships"];
       /** Type */
       type: string;
     };
-    /** pdfFile-UpdateInput-Data-Attributes */
-    "pdfFile-UpdateInput-Data-Attributes": Record<string, never>;
-    /** pdfFile-UpdateInput-Data-Relationships */
-    "pdfFile-UpdateInput-Data-Relationships": Record<string, never>;
-    /** pdfFileNaming-CreateInput */
-    "pdfFileNaming-CreateInput": {
-      data: components["schemas"]["pdfFileNaming-CreateInput-Data"];
+    /** pdfFileUpdateInputDataAttributes */
+    pdfFileUpdateInputDataAttributes: Record<string, never>;
+    /** pdfFileUpdateInputDataRelationships */
+    pdfFileUpdateInputDataRelationships: Record<string, never>;
+    /** pingCreateInput */
+    pingCreateInput: {
+      data: components["schemas"]["pingCreateInputData"];
     };
-    /** pdfFileNaming-CreateInput-Data */
-    "pdfFileNaming-CreateInput-Data": {
-      attributes: components["schemas"]["pdfFileNaming-CreateInput-Data-Attributes"];
-      relationships: components["schemas"]["pdfFileNaming-CreateInput-Data-Relationships"];
-      /** Type */
-      type: string;
-    };
-    /** pdfFileNaming-CreateInput-Data-Attributes */
-    "pdfFileNaming-CreateInput-Data-Attributes": {
-      /** Name */
-      name: string;
-    };
-    /** pdfFileNaming-CreateInput-Data-Relationships */
-    "pdfFileNaming-CreateInput-Data-Relationships": {
-      pdfFile: components["schemas"]["MandatoryRelationship"];
-    };
-    /** pdfFileNaming-ItemOutput */
-    "pdfFileNaming-ItemOutput": {
-      data: components["schemas"]["pdfFileNaming-OutputItem"];
-      /** Included */
-      included?: unknown[];
-    };
-    /** pdfFileNaming-OutputItem */
-    "pdfFileNaming-OutputItem": {
-      attributes: components["schemas"]["pdfFileNaming-OutputItem-Attributes"];
-      /** Id */
-      id: string;
-      links: components["schemas"]["ItemLinksModel"];
-      relationships: components["schemas"]["pdfFileNaming-OutputItem-Relationships"];
-      /** Type */
-      type: string;
-    };
-    /** pdfFileNaming-OutputItem-Attributes */
-    "pdfFileNaming-OutputItem-Attributes": {
-      /** Name */
-      name: string;
-    };
-    /** pdfFileNaming-OutputItem-Relationships */
-    "pdfFileNaming-OutputItem-Relationships": {
-      pdfFile: components["schemas"]["MandatoryRelationship"];
-    };
-    /** pdfFileNaming-PageOutput */
-    "pdfFileNaming-PageOutput": {
-      /** Data */
-      data: components["schemas"]["pdfFileNaming-OutputItem"][];
-      /** Included */
-      included?: unknown[];
-      links: components["schemas"]["PageLinksModel"];
-      meta: components["schemas"]["PageMetaModel"];
-    };
-    /** pdfFileNaming-UpdateInput */
-    "pdfFileNaming-UpdateInput": {
-      data: components["schemas"]["pdfFileNaming-UpdateInput-Data"];
-    };
-    /** pdfFileNaming-UpdateInput-Data */
-    "pdfFileNaming-UpdateInput-Data": {
+    /** pingCreateInputData */
+    pingCreateInputData: {
       /** @default {} */
-      attributes?: components["schemas"]["pdfFileNaming-UpdateInput-Data-Attributes"];
-      /** Id */
-      id: string;
-      /** @default {} */
-      relationships?: components["schemas"]["pdfFileNaming-UpdateInput-Data-Relationships"];
-      /** Type */
-      type: string;
-    };
-    /** pdfFileNaming-UpdateInput-Data-Attributes */
-    "pdfFileNaming-UpdateInput-Data-Attributes": Record<string, never>;
-    /** pdfFileNaming-UpdateInput-Data-Relationships */
-    "pdfFileNaming-UpdateInput-Data-Relationships": Record<string, never>;
-    /** ping-CreateInput */
-    "ping-CreateInput": {
-      data: components["schemas"]["ping-CreateInput-Data"];
-    };
-    /** ping-CreateInput-Data */
-    "ping-CreateInput-Data": {
-      /** @default {} */
-      attributes?: components["schemas"]["ping-CreateInput-Data-Attributes"];
+      attributes?: components["schemas"]["pingCreateInputDataAttributes"];
       /**
        * @default {
        *   "next": {
@@ -1068,17 +1068,17 @@ export interface components {
        *   "prev": {}
        * }
        */
-      relationships?: components["schemas"]["ping-CreateInput-Data-Relationships"];
+      relationships?: components["schemas"]["pingCreateInputDataRelationships"];
       /** Type */
       type: string;
     };
-    /** ping-CreateInput-Data-Attributes */
-    "ping-CreateInput-Data-Attributes": {
+    /** pingCreateInputDataAttributes */
+    pingCreateInputDataAttributes: {
       /** Message */
       message?: string | null;
     };
-    /** ping-CreateInput-Data-Relationships */
-    "ping-CreateInput-Data-Relationships": {
+    /** pingCreateInputDataRelationships */
+    pingCreateInputDataRelationships: {
       /**
        * @default {
        *   "data": []
@@ -1088,30 +1088,30 @@ export interface components {
       /** @default {} */
       prev?: components["schemas"]["OptionalRelationship"];
     };
-    /** ping-ItemOutput */
-    "ping-ItemOutput": {
-      data: components["schemas"]["ping-OutputItem"];
+    /** pingItemOutput */
+    pingItemOutput: {
+      data: components["schemas"]["pingOutputItem"];
       /** Included */
       included?: unknown[];
     };
-    /** ping-OutputItem */
-    "ping-OutputItem": {
-      attributes: components["schemas"]["ping-OutputItem-Attributes"];
+    /** pingOutputItem */
+    pingOutputItem: {
+      attributes: components["schemas"]["pingOutputItemAttributes"];
       /** Id */
       id: string;
-      links: components["schemas"]["ItemLinksModel"];
-      relationships: components["schemas"]["ping-OutputItem-Relationships"];
+      links: components["schemas"]["ItemLinks"];
+      relationships: components["schemas"]["pingOutputItemRelationships"];
       /** Type */
       type: string;
     };
-    /** ping-OutputItem-Attributes */
-    "ping-OutputItem-Attributes": {
+    /** pingOutputItemAttributes */
+    pingOutputItemAttributes: {
       /**
        * Createdat
        * Format: date-time
        */
       createdAt: string;
-      createdBy: components["schemas"]["UserModel"] | null;
+      createdBy: components["schemas"]["User"] | null;
       /** Message */
       message: string | null;
       /**
@@ -1119,61 +1119,61 @@ export interface components {
        * Format: date-time
        */
       updatedAt: string;
-      updatedBy: components["schemas"]["UserModel"] | null;
+      updatedBy: components["schemas"]["User"] | null;
     };
-    /** ping-OutputItem-Relationships */
-    "ping-OutputItem-Relationships": {
+    /** pingOutputItemRelationships */
+    pingOutputItemRelationships: {
       next: components["schemas"]["OutputListRelationship"];
       prev: components["schemas"]["OptionalRelationship"];
     };
-    /** ping-PageOutput */
-    "ping-PageOutput": {
+    /** pingPageOutput */
+    pingPageOutput: {
       /** Data */
-      data: components["schemas"]["ping-OutputItem"][];
+      data: components["schemas"]["pingOutputItem"][];
       /** Included */
       included?: unknown[];
-      links: components["schemas"]["PageLinksModel"];
-      meta: components["schemas"]["PageMetaModel"];
+      links: components["schemas"]["PageLinks"];
+      meta: components["schemas"]["PageMeta"];
     };
-    /** ping-UpdateInput */
-    "ping-UpdateInput": {
-      data: components["schemas"]["ping-UpdateInput-Data"];
+    /** pingUpdateInput */
+    pingUpdateInput: {
+      data: components["schemas"]["pingUpdateInputData"];
     };
-    /** ping-UpdateInput-Data */
-    "ping-UpdateInput-Data": {
+    /** pingUpdateInputData */
+    pingUpdateInputData: {
       /** @default {} */
-      attributes?: components["schemas"]["ping-UpdateInput-Data-Attributes"];
+      attributes?: components["schemas"]["pingUpdateInputDataAttributes"];
       /** Id */
       id: string;
       /** @default {} */
-      relationships?: components["schemas"]["ping-UpdateInput-Data-Relationships"];
+      relationships?: components["schemas"]["pingUpdateInputDataRelationships"];
       /** Type */
       type: string;
     };
-    /** ping-UpdateInput-Data-Attributes */
-    "ping-UpdateInput-Data-Attributes": {
+    /** pingUpdateInputDataAttributes */
+    pingUpdateInputDataAttributes: {
       /** Message */
       message?: string | null;
     };
-    /** ping-UpdateInput-Data-Relationships */
-    "ping-UpdateInput-Data-Relationships": {
+    /** pingUpdateInputDataRelationships */
+    pingUpdateInputDataRelationships: {
       next?: components["schemas"]["UpdateInputListRelationship"];
       prev?: components["schemas"]["OptionalRelationship"];
     };
-    /** project-CreateInput */
-    "project-CreateInput": {
-      data: components["schemas"]["project-CreateInput-Data"];
+    /** projectCreateInput */
+    projectCreateInput: {
+      data: components["schemas"]["projectCreateInputData"];
     };
-    /** project-CreateInput-Data */
-    "project-CreateInput-Data": {
-      attributes: components["schemas"]["project-CreateInput-Data-Attributes"];
+    /** projectCreateInputData */
+    projectCreateInputData: {
+      attributes: components["schemas"]["projectCreateInputDataAttributes"];
       /** @default {} */
-      relationships?: components["schemas"]["project-CreateInput-Data-Relationships"];
+      relationships?: components["schemas"]["projectCreateInputDataRelationships"];
       /** Type */
       type: string;
     };
-    /** project-CreateInput-Data-Attributes */
-    "project-CreateInput-Data-Attributes": {
+    /** projectCreateInputDataAttributes */
+    projectCreateInputDataAttributes: {
       /**
        * Description
        * @default
@@ -1182,82 +1182,82 @@ export interface components {
       /** Title */
       title: string;
     };
-    /** project-CreateInput-Data-Relationships */
-    "project-CreateInput-Data-Relationships": Record<string, never>;
-    /** project-ItemOutput */
-    "project-ItemOutput": {
-      data: components["schemas"]["project-OutputItem"];
+    /** projectCreateInputDataRelationships */
+    projectCreateInputDataRelationships: Record<string, never>;
+    /** projectItemOutput */
+    projectItemOutput: {
+      data: components["schemas"]["projectOutputItem"];
       /** Included */
       included?: unknown[];
     };
-    /** project-OutputItem */
-    "project-OutputItem": {
-      attributes: components["schemas"]["project-OutputItem-Attributes"];
+    /** projectOutputItem */
+    projectOutputItem: {
+      attributes: components["schemas"]["projectOutputItemAttributes"];
       /** Id */
       id: string;
-      links: components["schemas"]["ItemLinksModel"];
-      relationships: components["schemas"]["project-OutputItem-Relationships"];
+      links: components["schemas"]["ItemLinks"];
+      relationships: components["schemas"]["projectOutputItemRelationships"];
       /** Type */
       type: string;
     };
-    /** project-OutputItem-Attributes */
-    "project-OutputItem-Attributes": {
+    /** projectOutputItemAttributes */
+    projectOutputItemAttributes: {
       /** Description */
       description: string;
       /** Title */
       title: string;
     };
-    /** project-OutputItem-Relationships */
-    "project-OutputItem-Relationships": {
+    /** projectOutputItemRelationships */
+    projectOutputItemRelationships: {
       exercises: components["schemas"]["OutputListRelationship"];
       textbooks: components["schemas"]["OutputListRelationship"];
     };
-    /** project-PageOutput */
-    "project-PageOutput": {
+    /** projectPageOutput */
+    projectPageOutput: {
       /** Data */
-      data: components["schemas"]["project-OutputItem"][];
+      data: components["schemas"]["projectOutputItem"][];
       /** Included */
       included?: unknown[];
-      links: components["schemas"]["PageLinksModel"];
-      meta: components["schemas"]["PageMetaModel"];
+      links: components["schemas"]["PageLinks"];
+      meta: components["schemas"]["PageMeta"];
     };
-    /** project-UpdateInput */
-    "project-UpdateInput": {
-      data: components["schemas"]["project-UpdateInput-Data"];
+    /** projectUpdateInput */
+    projectUpdateInput: {
+      data: components["schemas"]["projectUpdateInputData"];
     };
-    /** project-UpdateInput-Data */
-    "project-UpdateInput-Data": {
+    /** projectUpdateInputData */
+    projectUpdateInputData: {
       /** @default {} */
-      attributes?: components["schemas"]["project-UpdateInput-Data-Attributes"];
+      attributes?: components["schemas"]["projectUpdateInputDataAttributes"];
       /** Id */
       id: string;
       /** @default {} */
-      relationships?: components["schemas"]["project-UpdateInput-Data-Relationships"];
+      relationships?: components["schemas"]["projectUpdateInputDataRelationships"];
       /** Type */
       type: string;
     };
-    /** project-UpdateInput-Data-Attributes */
-    "project-UpdateInput-Data-Attributes": {
+    /** projectUpdateInputDataAttributes */
+    projectUpdateInputDataAttributes: {
       /** Description */
       description?: string;
       /** Title */
       title?: string;
     };
-    /** project-UpdateInput-Data-Relationships */
-    "project-UpdateInput-Data-Relationships": Record<string, never>;
-    /** section-CreateInput */
-    "section-CreateInput": {
-      data: components["schemas"]["section-CreateInput-Data"];
+    /** projectUpdateInputDataRelationships */
+    projectUpdateInputDataRelationships: Record<string, never>;
+    /** sectionCreateInput */
+    sectionCreateInput: {
+      data: components["schemas"]["sectionCreateInputData"];
     };
-    /** section-CreateInput-Data */
-    "section-CreateInput-Data": {
-      attributes: components["schemas"]["section-CreateInput-Data-Attributes"];
-      relationships: components["schemas"]["section-CreateInput-Data-Relationships"];
+    /** sectionCreateInputData */
+    sectionCreateInputData: {
+      attributes: components["schemas"]["sectionCreateInputDataAttributes"];
+      relationships: components["schemas"]["sectionCreateInputDataRelationships"];
       /** Type */
       type: string;
     };
-    /** section-CreateInput-Data-Attributes */
-    "section-CreateInput-Data-Attributes": {
+    /** sectionCreateInputDataAttributes */
+    sectionCreateInputDataAttributes: {
       /** Pagescount */
       pagesCount: number;
       /** Pdffilestartpage */
@@ -1265,29 +1265,29 @@ export interface components {
       /** Textbookstartpage */
       textbookStartPage: number;
     };
-    /** section-CreateInput-Data-Relationships */
-    "section-CreateInput-Data-Relationships": {
+    /** sectionCreateInputDataRelationships */
+    sectionCreateInputDataRelationships: {
       pdfFile: components["schemas"]["MandatoryRelationship"];
       textbook: components["schemas"]["MandatoryRelationship"];
     };
-    /** section-ItemOutput */
-    "section-ItemOutput": {
-      data: components["schemas"]["section-OutputItem"];
+    /** sectionItemOutput */
+    sectionItemOutput: {
+      data: components["schemas"]["sectionOutputItem"];
       /** Included */
       included?: unknown[];
     };
-    /** section-OutputItem */
-    "section-OutputItem": {
-      attributes: components["schemas"]["section-OutputItem-Attributes"];
+    /** sectionOutputItem */
+    sectionOutputItem: {
+      attributes: components["schemas"]["sectionOutputItemAttributes"];
       /** Id */
       id: string;
-      links: components["schemas"]["ItemLinksModel"];
-      relationships: components["schemas"]["section-OutputItem-Relationships"];
+      links: components["schemas"]["ItemLinks"];
+      relationships: components["schemas"]["sectionOutputItemRelationships"];
       /** Type */
       type: string;
     };
-    /** section-OutputItem-Attributes */
-    "section-OutputItem-Attributes": {
+    /** sectionOutputItemAttributes */
+    sectionOutputItemAttributes: {
       /** Pagescount */
       pagesCount: number;
       /** Pdffilestartpage */
@@ -1295,37 +1295,37 @@ export interface components {
       /** Textbookstartpage */
       textbookStartPage: number;
     };
-    /** section-OutputItem-Relationships */
-    "section-OutputItem-Relationships": {
+    /** sectionOutputItemRelationships */
+    sectionOutputItemRelationships: {
       pdfFile: components["schemas"]["MandatoryRelationship"];
       textbook: components["schemas"]["MandatoryRelationship"];
     };
-    /** section-PageOutput */
-    "section-PageOutput": {
+    /** sectionPageOutput */
+    sectionPageOutput: {
       /** Data */
-      data: components["schemas"]["section-OutputItem"][];
+      data: components["schemas"]["sectionOutputItem"][];
       /** Included */
       included?: unknown[];
-      links: components["schemas"]["PageLinksModel"];
-      meta: components["schemas"]["PageMetaModel"];
+      links: components["schemas"]["PageLinks"];
+      meta: components["schemas"]["PageMeta"];
     };
-    /** section-UpdateInput */
-    "section-UpdateInput": {
-      data: components["schemas"]["section-UpdateInput-Data"];
+    /** sectionUpdateInput */
+    sectionUpdateInput: {
+      data: components["schemas"]["sectionUpdateInputData"];
     };
-    /** section-UpdateInput-Data */
-    "section-UpdateInput-Data": {
+    /** sectionUpdateInputData */
+    sectionUpdateInputData: {
       /** @default {} */
-      attributes?: components["schemas"]["section-UpdateInput-Data-Attributes"];
+      attributes?: components["schemas"]["sectionUpdateInputDataAttributes"];
       /** Id */
       id: string;
       /** @default {} */
-      relationships?: components["schemas"]["section-UpdateInput-Data-Relationships"];
+      relationships?: components["schemas"]["sectionUpdateInputDataRelationships"];
       /** Type */
       type: string;
     };
-    /** section-UpdateInput-Data-Attributes */
-    "section-UpdateInput-Data-Attributes": {
+    /** sectionUpdateInputDataAttributes */
+    sectionUpdateInputDataAttributes: {
       /** Pagescount */
       pagesCount?: number;
       /** Pdffilestartpage */
@@ -1333,21 +1333,21 @@ export interface components {
       /** Textbookstartpage */
       textbookStartPage?: number;
     };
-    /** section-UpdateInput-Data-Relationships */
-    "section-UpdateInput-Data-Relationships": Record<string, never>;
-    /** selectThingsAdaptation-CreateInput */
-    "selectThingsAdaptation-CreateInput": {
-      data: components["schemas"]["selectThingsAdaptation-CreateInput-Data"];
+    /** sectionUpdateInputDataRelationships */
+    sectionUpdateInputDataRelationships: Record<string, never>;
+    /** selectThingsAdaptationCreateInput */
+    selectThingsAdaptationCreateInput: {
+      data: components["schemas"]["selectThingsAdaptationCreateInputData"];
     };
-    /** selectThingsAdaptation-CreateInput-Data */
-    "selectThingsAdaptation-CreateInput-Data": {
-      attributes: components["schemas"]["selectThingsAdaptation-CreateInput-Data-Attributes"];
-      relationships: components["schemas"]["selectThingsAdaptation-CreateInput-Data-Relationships"];
+    /** selectThingsAdaptationCreateInputData */
+    selectThingsAdaptationCreateInputData: {
+      attributes: components["schemas"]["selectThingsAdaptationCreateInputDataAttributes"];
+      relationships: components["schemas"]["selectThingsAdaptationCreateInputDataRelationships"];
       /** Type */
       type: string;
     };
-    /** selectThingsAdaptation-CreateInput-Data-Attributes */
-    "selectThingsAdaptation-CreateInput-Data-Attributes": {
+    /** selectThingsAdaptationCreateInputDataAttributes */
+    selectThingsAdaptationCreateInputDataAttributes: {
       /** Colors */
       colors: number;
       /** Punctuation */
@@ -1355,28 +1355,28 @@ export interface components {
       /** Words */
       words: boolean;
     };
-    /** selectThingsAdaptation-CreateInput-Data-Relationships */
-    "selectThingsAdaptation-CreateInput-Data-Relationships": {
+    /** selectThingsAdaptationCreateInputDataRelationships */
+    selectThingsAdaptationCreateInputDataRelationships: {
       exercise: components["schemas"]["MandatoryRelationship"];
     };
-    /** selectThingsAdaptation-ItemOutput */
-    "selectThingsAdaptation-ItemOutput": {
-      data: components["schemas"]["selectThingsAdaptation-OutputItem"];
+    /** selectThingsAdaptationItemOutput */
+    selectThingsAdaptationItemOutput: {
+      data: components["schemas"]["selectThingsAdaptationOutputItem"];
       /** Included */
       included?: unknown[];
     };
-    /** selectThingsAdaptation-OutputItem */
-    "selectThingsAdaptation-OutputItem": {
-      attributes: components["schemas"]["selectThingsAdaptation-OutputItem-Attributes"];
+    /** selectThingsAdaptationOutputItem */
+    selectThingsAdaptationOutputItem: {
+      attributes: components["schemas"]["selectThingsAdaptationOutputItemAttributes"];
       /** Id */
       id: string;
-      links: components["schemas"]["ItemLinksModel"];
-      relationships: components["schemas"]["selectThingsAdaptation-OutputItem-Relationships"];
+      links: components["schemas"]["ItemLinks"];
+      relationships: components["schemas"]["selectThingsAdaptationOutputItemRelationships"];
       /** Type */
       type: string;
     };
-    /** selectThingsAdaptation-OutputItem-Attributes */
-    "selectThingsAdaptation-OutputItem-Attributes": {
+    /** selectThingsAdaptationOutputItemAttributes */
+    selectThingsAdaptationOutputItemAttributes: {
       /** Colors */
       colors: number;
       /** Punctuation */
@@ -1384,27 +1384,27 @@ export interface components {
       /** Words */
       words: boolean;
     };
-    /** selectThingsAdaptation-OutputItem-Relationships */
-    "selectThingsAdaptation-OutputItem-Relationships": {
+    /** selectThingsAdaptationOutputItemRelationships */
+    selectThingsAdaptationOutputItemRelationships: {
       exercise: components["schemas"]["MandatoryRelationship"];
     };
-    /** selectThingsAdaptation-UpdateInput */
-    "selectThingsAdaptation-UpdateInput": {
-      data: components["schemas"]["selectThingsAdaptation-UpdateInput-Data"];
+    /** selectThingsAdaptationUpdateInput */
+    selectThingsAdaptationUpdateInput: {
+      data: components["schemas"]["selectThingsAdaptationUpdateInputData"];
     };
-    /** selectThingsAdaptation-UpdateInput-Data */
-    "selectThingsAdaptation-UpdateInput-Data": {
+    /** selectThingsAdaptationUpdateInputData */
+    selectThingsAdaptationUpdateInputData: {
       /** @default {} */
-      attributes?: components["schemas"]["selectThingsAdaptation-UpdateInput-Data-Attributes"];
+      attributes?: components["schemas"]["selectThingsAdaptationUpdateInputDataAttributes"];
       /** Id */
       id: string;
       /** @default {} */
-      relationships?: components["schemas"]["selectThingsAdaptation-UpdateInput-Data-Relationships"];
+      relationships?: components["schemas"]["selectThingsAdaptationUpdateInputDataRelationships"];
       /** Type */
       type: string;
     };
-    /** selectThingsAdaptation-UpdateInput-Data-Attributes */
-    "selectThingsAdaptation-UpdateInput-Data-Attributes": {
+    /** selectThingsAdaptationUpdateInputDataAttributes */
+    selectThingsAdaptationUpdateInputDataAttributes: {
       /** Colors */
       colors?: number;
       /** Punctuation */
@@ -1412,21 +1412,21 @@ export interface components {
       /** Words */
       words?: boolean;
     };
-    /** selectThingsAdaptation-UpdateInput-Data-Relationships */
-    "selectThingsAdaptation-UpdateInput-Data-Relationships": Record<string, never>;
-    /** textbook-CreateInput */
-    "textbook-CreateInput": {
-      data: components["schemas"]["textbook-CreateInput-Data"];
+    /** selectThingsAdaptationUpdateInputDataRelationships */
+    selectThingsAdaptationUpdateInputDataRelationships: Record<string, never>;
+    /** textbookCreateInput */
+    textbookCreateInput: {
+      data: components["schemas"]["textbookCreateInputData"];
     };
-    /** textbook-CreateInput-Data */
-    "textbook-CreateInput-Data": {
-      attributes: components["schemas"]["textbook-CreateInput-Data-Attributes"];
-      relationships: components["schemas"]["textbook-CreateInput-Data-Relationships"];
+    /** textbookCreateInputData */
+    textbookCreateInputData: {
+      attributes: components["schemas"]["textbookCreateInputDataAttributes"];
+      relationships: components["schemas"]["textbookCreateInputDataRelationships"];
       /** Type */
       type: string;
     };
-    /** textbook-CreateInput-Data-Attributes */
-    "textbook-CreateInput-Data-Attributes": {
+    /** textbookCreateInputDataAttributes */
+    textbookCreateInputDataAttributes: {
       /** Isbn */
       isbn?: string | null;
       /** Publisher */
@@ -1436,28 +1436,28 @@ export interface components {
       /** Year */
       year?: number | null;
     };
-    /** textbook-CreateInput-Data-Relationships */
-    "textbook-CreateInput-Data-Relationships": {
+    /** textbookCreateInputDataRelationships */
+    textbookCreateInputDataRelationships: {
       project: components["schemas"]["MandatoryRelationship"];
     };
-    /** textbook-ItemOutput */
-    "textbook-ItemOutput": {
-      data: components["schemas"]["textbook-OutputItem"];
+    /** textbookItemOutput */
+    textbookItemOutput: {
+      data: components["schemas"]["textbookOutputItem"];
       /** Included */
       included?: unknown[];
     };
-    /** textbook-OutputItem */
-    "textbook-OutputItem": {
-      attributes: components["schemas"]["textbook-OutputItem-Attributes"];
+    /** textbookOutputItem */
+    textbookOutputItem: {
+      attributes: components["schemas"]["textbookOutputItemAttributes"];
       /** Id */
       id: string;
-      links: components["schemas"]["ItemLinksModel"];
-      relationships: components["schemas"]["textbook-OutputItem-Relationships"];
+      links: components["schemas"]["ItemLinks"];
+      relationships: components["schemas"]["textbookOutputItemRelationships"];
       /** Type */
       type: string;
     };
-    /** textbook-OutputItem-Attributes */
-    "textbook-OutputItem-Attributes": {
+    /** textbookOutputItemAttributes */
+    textbookOutputItemAttributes: {
       /** Isbn */
       isbn: string | null;
       /** Publisher */
@@ -1467,38 +1467,38 @@ export interface components {
       /** Year */
       year: number | null;
     };
-    /** textbook-OutputItem-Relationships */
-    "textbook-OutputItem-Relationships": {
+    /** textbookOutputItemRelationships */
+    textbookOutputItemRelationships: {
       exercises: components["schemas"]["OutputListRelationship"];
       project: components["schemas"]["MandatoryRelationship"];
       sections: components["schemas"]["OutputListRelationship"];
     };
-    /** textbook-PageOutput */
-    "textbook-PageOutput": {
+    /** textbookPageOutput */
+    textbookPageOutput: {
       /** Data */
-      data: components["schemas"]["textbook-OutputItem"][];
+      data: components["schemas"]["textbookOutputItem"][];
       /** Included */
       included?: unknown[];
-      links: components["schemas"]["PageLinksModel"];
-      meta: components["schemas"]["PageMetaModel"];
+      links: components["schemas"]["PageLinks"];
+      meta: components["schemas"]["PageMeta"];
     };
-    /** textbook-UpdateInput */
-    "textbook-UpdateInput": {
-      data: components["schemas"]["textbook-UpdateInput-Data"];
+    /** textbookUpdateInput */
+    textbookUpdateInput: {
+      data: components["schemas"]["textbookUpdateInputData"];
     };
-    /** textbook-UpdateInput-Data */
-    "textbook-UpdateInput-Data": {
+    /** textbookUpdateInputData */
+    textbookUpdateInputData: {
       /** @default {} */
-      attributes?: components["schemas"]["textbook-UpdateInput-Data-Attributes"];
+      attributes?: components["schemas"]["textbookUpdateInputDataAttributes"];
       /** Id */
       id: string;
       /** @default {} */
-      relationships?: components["schemas"]["textbook-UpdateInput-Data-Relationships"];
+      relationships?: components["schemas"]["textbookUpdateInputDataRelationships"];
       /** Type */
       type: string;
     };
-    /** textbook-UpdateInput-Data-Attributes */
-    "textbook-UpdateInput-Data-Attributes": {
+    /** textbookUpdateInputDataAttributes */
+    textbookUpdateInputDataAttributes: {
       /** Isbn */
       isbn?: string | null;
       /** Publisher */
@@ -1508,8 +1508,8 @@ export interface components {
       /** Year */
       year?: number | null;
     };
-    /** textbook-UpdateInput-Data-Relationships */
-    "textbook-UpdateInput-Data-Relationships": Record<string, never>;
+    /** textbookUpdateInputDataRelationships */
+    textbookUpdateInputDataRelationships: Record<string, never>;
   };
   responses: never;
   parameters: never;
@@ -1533,14 +1533,14 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["adaptedExercise-CreateInput"];
+        "application/json": components["schemas"]["adaptedExerciseCreateInput"];
       };
     };
     responses: {
       /** @description Successful Response */
       201: {
         content: {
-          "application/vnd.api+json": components["schemas"]["adaptedExercise-ItemOutput"];
+          "application/vnd.api+json": components["schemas"]["adaptedExerciseItemOutput"];
         };
       };
       /** @description Validation Error */
@@ -1565,7 +1565,7 @@ export interface operations {
       /** @description Successful Response */
       200: {
         content: {
-          "application/vnd.api+json": components["schemas"]["adaptedExercise-ItemOutput"];
+          "application/vnd.api+json": components["schemas"]["adaptedExerciseItemOutput"];
         };
       };
       /** @description Validation Error */
@@ -1615,7 +1615,7 @@ export interface operations {
       /** @description Successful Response */
       200: {
         content: {
-          "application/vnd.api+json": components["schemas"]["exercise-PageOutput"];
+          "application/vnd.api+json": components["schemas"]["exercisePageOutput"];
         };
       };
       /** @description Validation Error */
@@ -1635,14 +1635,14 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["exercise-CreateInput"];
+        "application/json": components["schemas"]["exerciseCreateInput"];
       };
     };
     responses: {
       /** @description Successful Response */
       201: {
         content: {
-          "application/vnd.api+json": components["schemas"]["exercise-ItemOutput"];
+          "application/vnd.api+json": components["schemas"]["exerciseItemOutput"];
         };
       };
       /** @description Validation Error */
@@ -1667,7 +1667,7 @@ export interface operations {
       /** @description Successful Response */
       200: {
         content: {
-          "application/vnd.api+json": components["schemas"]["exercise-ItemOutput"];
+          "application/vnd.api+json": components["schemas"]["exerciseItemOutput"];
         };
       };
       /** @description Validation Error */
@@ -1710,14 +1710,14 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["exercise-UpdateInput"];
+        "application/json": components["schemas"]["exerciseUpdateInput"];
       };
     };
     responses: {
       /** @description Successful Response */
       200: {
         content: {
-          "application/vnd.api+json": components["schemas"]["exercise-ItemOutput"];
+          "application/vnd.api+json": components["schemas"]["exerciseItemOutput"];
         };
       };
       /** @description Validation Error */
@@ -1742,7 +1742,7 @@ export interface operations {
       /** @description Successful Response */
       200: {
         content: {
-          "application/vnd.api+json": components["schemas"]["extractionEvent-PageOutput"];
+          "application/vnd.api+json": components["schemas"]["extractionEventPageOutput"];
         };
       };
       /** @description Validation Error */
@@ -1762,14 +1762,14 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["extractionEvent-CreateInput"];
+        "application/json": components["schemas"]["extractionEventCreateInput"];
       };
     };
     responses: {
       /** @description Successful Response */
       201: {
         content: {
-          "application/vnd.api+json": components["schemas"]["extractionEvent-ItemOutput"];
+          "application/vnd.api+json": components["schemas"]["extractionEventItemOutput"];
         };
       };
       /** @description Validation Error */
@@ -1794,7 +1794,7 @@ export interface operations {
       /** @description Successful Response */
       200: {
         content: {
-          "application/vnd.api+json": components["schemas"]["extractionEvent-ItemOutput"];
+          "application/vnd.api+json": components["schemas"]["extractionEventItemOutput"];
         };
       };
       /** @description Validation Error */
@@ -1837,14 +1837,14 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["extractionEvent-UpdateInput"];
+        "application/json": components["schemas"]["extractionEventUpdateInput"];
       };
     };
     responses: {
       /** @description Successful Response */
       200: {
         content: {
-          "application/vnd.api+json": components["schemas"]["extractionEvent-ItemOutput"];
+          "application/vnd.api+json": components["schemas"]["extractionEventItemOutput"];
         };
       };
       /** @description Validation Error */
@@ -1864,14 +1864,14 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["fillWithFreeTextAdaptation-CreateInput"];
+        "application/json": components["schemas"]["fillWithFreeTextAdaptationCreateInput"];
       };
     };
     responses: {
       /** @description Successful Response */
       201: {
         content: {
-          "application/vnd.api+json": components["schemas"]["fillWithFreeTextAdaptation-ItemOutput"];
+          "application/vnd.api+json": components["schemas"]["fillWithFreeTextAdaptationItemOutput"];
         };
       };
       /** @description Validation Error */
@@ -1896,7 +1896,7 @@ export interface operations {
       /** @description Successful Response */
       200: {
         content: {
-          "application/vnd.api+json": components["schemas"]["fillWithFreeTextAdaptation-ItemOutput"];
+          "application/vnd.api+json": components["schemas"]["fillWithFreeTextAdaptationItemOutput"];
         };
       };
       /** @description Validation Error */
@@ -1939,14 +1939,14 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["fillWithFreeTextAdaptation-UpdateInput"];
+        "application/json": components["schemas"]["fillWithFreeTextAdaptationUpdateInput"];
       };
     };
     responses: {
       /** @description Successful Response */
       200: {
         content: {
-          "application/vnd.api+json": components["schemas"]["fillWithFreeTextAdaptation-ItemOutput"];
+          "application/vnd.api+json": components["schemas"]["fillWithFreeTextAdaptationItemOutput"];
         };
       };
       /** @description Validation Error */
@@ -1966,14 +1966,14 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["multipleChoicesInInstructionsAdaptation-CreateInput"];
+        "application/json": components["schemas"]["multipleChoicesInInstructionsAdaptationCreateInput"];
       };
     };
     responses: {
       /** @description Successful Response */
       201: {
         content: {
-          "application/vnd.api+json": components["schemas"]["multipleChoicesInInstructionsAdaptation-ItemOutput"];
+          "application/vnd.api+json": components["schemas"]["multipleChoicesInInstructionsAdaptationItemOutput"];
         };
       };
       /** @description Validation Error */
@@ -1998,7 +1998,7 @@ export interface operations {
       /** @description Successful Response */
       200: {
         content: {
-          "application/vnd.api+json": components["schemas"]["multipleChoicesInInstructionsAdaptation-ItemOutput"];
+          "application/vnd.api+json": components["schemas"]["multipleChoicesInInstructionsAdaptationItemOutput"];
         };
       };
       /** @description Validation Error */
@@ -2041,14 +2041,14 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["multipleChoicesInInstructionsAdaptation-UpdateInput"];
+        "application/json": components["schemas"]["multipleChoicesInInstructionsAdaptationUpdateInput"];
       };
     };
     responses: {
       /** @description Successful Response */
       200: {
         content: {
-          "application/vnd.api+json": components["schemas"]["multipleChoicesInInstructionsAdaptation-ItemOutput"];
+          "application/vnd.api+json": components["schemas"]["multipleChoicesInInstructionsAdaptationItemOutput"];
         };
       };
       /** @description Validation Error */
@@ -2068,14 +2068,14 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["multipleChoicesInWordingAdaptation-CreateInput"];
+        "application/json": components["schemas"]["multipleChoicesInWordingAdaptationCreateInput"];
       };
     };
     responses: {
       /** @description Successful Response */
       201: {
         content: {
-          "application/vnd.api+json": components["schemas"]["multipleChoicesInWordingAdaptation-ItemOutput"];
+          "application/vnd.api+json": components["schemas"]["multipleChoicesInWordingAdaptationItemOutput"];
         };
       };
       /** @description Validation Error */
@@ -2100,7 +2100,7 @@ export interface operations {
       /** @description Successful Response */
       200: {
         content: {
-          "application/vnd.api+json": components["schemas"]["multipleChoicesInWordingAdaptation-ItemOutput"];
+          "application/vnd.api+json": components["schemas"]["multipleChoicesInWordingAdaptationItemOutput"];
         };
       };
       /** @description Validation Error */
@@ -2143,14 +2143,14 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["multipleChoicesInWordingAdaptation-UpdateInput"];
+        "application/json": components["schemas"]["multipleChoicesInWordingAdaptationUpdateInput"];
       };
     };
     responses: {
       /** @description Successful Response */
       200: {
         content: {
-          "application/vnd.api+json": components["schemas"]["multipleChoicesInWordingAdaptation-ItemOutput"];
+          "application/vnd.api+json": components["schemas"]["multipleChoicesInWordingAdaptationItemOutput"];
         };
       };
       /** @description Validation Error */
@@ -2175,7 +2175,7 @@ export interface operations {
       /** @description Successful Response */
       200: {
         content: {
-          "application/vnd.api+json": components["schemas"]["pdfFileNaming-PageOutput"];
+          "application/vnd.api+json": components["schemas"]["pdfFileNamingPageOutput"];
         };
       };
       /** @description Validation Error */
@@ -2195,14 +2195,14 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["pdfFileNaming-CreateInput"];
+        "application/json": components["schemas"]["pdfFileNamingCreateInput"];
       };
     };
     responses: {
       /** @description Successful Response */
       201: {
         content: {
-          "application/vnd.api+json": components["schemas"]["pdfFileNaming-ItemOutput"];
+          "application/vnd.api+json": components["schemas"]["pdfFileNamingItemOutput"];
         };
       };
       /** @description Validation Error */
@@ -2227,7 +2227,7 @@ export interface operations {
       /** @description Successful Response */
       200: {
         content: {
-          "application/vnd.api+json": components["schemas"]["pdfFileNaming-ItemOutput"];
+          "application/vnd.api+json": components["schemas"]["pdfFileNamingItemOutput"];
         };
       };
       /** @description Validation Error */
@@ -2270,14 +2270,14 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["pdfFileNaming-UpdateInput"];
+        "application/json": components["schemas"]["pdfFileNamingUpdateInput"];
       };
     };
     responses: {
       /** @description Successful Response */
       200: {
         content: {
-          "application/vnd.api+json": components["schemas"]["pdfFileNaming-ItemOutput"];
+          "application/vnd.api+json": components["schemas"]["pdfFileNamingItemOutput"];
         };
       };
       /** @description Validation Error */
@@ -2302,7 +2302,7 @@ export interface operations {
       /** @description Successful Response */
       200: {
         content: {
-          "application/vnd.api+json": components["schemas"]["pdfFile-PageOutput"];
+          "application/vnd.api+json": components["schemas"]["pdfFilePageOutput"];
         };
       };
       /** @description Validation Error */
@@ -2322,14 +2322,14 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["pdfFile-CreateInput"];
+        "application/json": components["schemas"]["pdfFileCreateInput"];
       };
     };
     responses: {
       /** @description Successful Response */
       201: {
         content: {
-          "application/vnd.api+json": components["schemas"]["pdfFile-ItemOutput"];
+          "application/vnd.api+json": components["schemas"]["pdfFileItemOutput"];
         };
       };
       /** @description Validation Error */
@@ -2354,7 +2354,7 @@ export interface operations {
       /** @description Successful Response */
       200: {
         content: {
-          "application/vnd.api+json": components["schemas"]["pdfFile-ItemOutput"];
+          "application/vnd.api+json": components["schemas"]["pdfFileItemOutput"];
         };
       };
       /** @description Validation Error */
@@ -2397,14 +2397,14 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["pdfFile-UpdateInput"];
+        "application/json": components["schemas"]["pdfFileUpdateInput"];
       };
     };
     responses: {
       /** @description Successful Response */
       200: {
         content: {
-          "application/vnd.api+json": components["schemas"]["pdfFile-ItemOutput"];
+          "application/vnd.api+json": components["schemas"]["pdfFileItemOutput"];
         };
       };
       /** @description Validation Error */
@@ -2431,7 +2431,7 @@ export interface operations {
       /** @description Successful Response */
       200: {
         content: {
-          "application/vnd.api+json": components["schemas"]["ping-PageOutput"];
+          "application/vnd.api+json": components["schemas"]["pingPageOutput"];
         };
       };
       /** @description Validation Error */
@@ -2451,14 +2451,14 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["ping-CreateInput"];
+        "application/json": components["schemas"]["pingCreateInput"];
       };
     };
     responses: {
       /** @description Successful Response */
       201: {
         content: {
-          "application/vnd.api+json": components["schemas"]["ping-ItemOutput"];
+          "application/vnd.api+json": components["schemas"]["pingItemOutput"];
         };
       };
       /** @description Validation Error */
@@ -2483,7 +2483,7 @@ export interface operations {
       /** @description Successful Response */
       200: {
         content: {
-          "application/vnd.api+json": components["schemas"]["ping-ItemOutput"];
+          "application/vnd.api+json": components["schemas"]["pingItemOutput"];
         };
       };
       /** @description Validation Error */
@@ -2526,14 +2526,14 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["ping-UpdateInput"];
+        "application/json": components["schemas"]["pingUpdateInput"];
       };
     };
     responses: {
       /** @description Successful Response */
       200: {
         content: {
-          "application/vnd.api+json": components["schemas"]["ping-ItemOutput"];
+          "application/vnd.api+json": components["schemas"]["pingItemOutput"];
         };
       };
       /** @description Validation Error */
@@ -2602,7 +2602,7 @@ export interface operations {
       /** @description Successful Response */
       200: {
         content: {
-          "application/vnd.api+json": components["schemas"]["project-PageOutput"];
+          "application/vnd.api+json": components["schemas"]["projectPageOutput"];
         };
       };
       /** @description Validation Error */
@@ -2622,14 +2622,14 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["project-CreateInput"];
+        "application/json": components["schemas"]["projectCreateInput"];
       };
     };
     responses: {
       /** @description Successful Response */
       201: {
         content: {
-          "application/vnd.api+json": components["schemas"]["project-ItemOutput"];
+          "application/vnd.api+json": components["schemas"]["projectItemOutput"];
         };
       };
       /** @description Validation Error */
@@ -2654,7 +2654,7 @@ export interface operations {
       /** @description Successful Response */
       200: {
         content: {
-          "application/vnd.api+json": components["schemas"]["project-ItemOutput"];
+          "application/vnd.api+json": components["schemas"]["projectItemOutput"];
         };
       };
       /** @description Validation Error */
@@ -2697,14 +2697,14 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["project-UpdateInput"];
+        "application/json": components["schemas"]["projectUpdateInput"];
       };
     };
     responses: {
       /** @description Successful Response */
       200: {
         content: {
-          "application/vnd.api+json": components["schemas"]["project-ItemOutput"];
+          "application/vnd.api+json": components["schemas"]["projectItemOutput"];
         };
       };
       /** @description Validation Error */
@@ -2729,7 +2729,7 @@ export interface operations {
       /** @description Successful Response */
       200: {
         content: {
-          "application/vnd.api+json": components["schemas"]["section-PageOutput"];
+          "application/vnd.api+json": components["schemas"]["sectionPageOutput"];
         };
       };
       /** @description Validation Error */
@@ -2749,14 +2749,14 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["section-CreateInput"];
+        "application/json": components["schemas"]["sectionCreateInput"];
       };
     };
     responses: {
       /** @description Successful Response */
       201: {
         content: {
-          "application/vnd.api+json": components["schemas"]["section-ItemOutput"];
+          "application/vnd.api+json": components["schemas"]["sectionItemOutput"];
         };
       };
       /** @description Validation Error */
@@ -2781,7 +2781,7 @@ export interface operations {
       /** @description Successful Response */
       200: {
         content: {
-          "application/vnd.api+json": components["schemas"]["section-ItemOutput"];
+          "application/vnd.api+json": components["schemas"]["sectionItemOutput"];
         };
       };
       /** @description Validation Error */
@@ -2824,14 +2824,14 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["section-UpdateInput"];
+        "application/json": components["schemas"]["sectionUpdateInput"];
       };
     };
     responses: {
       /** @description Successful Response */
       200: {
         content: {
-          "application/vnd.api+json": components["schemas"]["section-ItemOutput"];
+          "application/vnd.api+json": components["schemas"]["sectionItemOutput"];
         };
       };
       /** @description Validation Error */
@@ -2851,14 +2851,14 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["selectThingsAdaptation-CreateInput"];
+        "application/json": components["schemas"]["selectThingsAdaptationCreateInput"];
       };
     };
     responses: {
       /** @description Successful Response */
       201: {
         content: {
-          "application/vnd.api+json": components["schemas"]["selectThingsAdaptation-ItemOutput"];
+          "application/vnd.api+json": components["schemas"]["selectThingsAdaptationItemOutput"];
         };
       };
       /** @description Validation Error */
@@ -2883,7 +2883,7 @@ export interface operations {
       /** @description Successful Response */
       200: {
         content: {
-          "application/vnd.api+json": components["schemas"]["selectThingsAdaptation-ItemOutput"];
+          "application/vnd.api+json": components["schemas"]["selectThingsAdaptationItemOutput"];
         };
       };
       /** @description Validation Error */
@@ -2926,14 +2926,14 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["selectThingsAdaptation-UpdateInput"];
+        "application/json": components["schemas"]["selectThingsAdaptationUpdateInput"];
       };
     };
     responses: {
       /** @description Successful Response */
       200: {
         content: {
-          "application/vnd.api+json": components["schemas"]["selectThingsAdaptation-ItemOutput"];
+          "application/vnd.api+json": components["schemas"]["selectThingsAdaptationItemOutput"];
         };
       };
       /** @description Validation Error */
@@ -2958,7 +2958,7 @@ export interface operations {
       /** @description Successful Response */
       200: {
         content: {
-          "application/vnd.api+json": components["schemas"]["textbook-PageOutput"];
+          "application/vnd.api+json": components["schemas"]["textbookPageOutput"];
         };
       };
       /** @description Validation Error */
@@ -2978,14 +2978,14 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["textbook-CreateInput"];
+        "application/json": components["schemas"]["textbookCreateInput"];
       };
     };
     responses: {
       /** @description Successful Response */
       201: {
         content: {
-          "application/vnd.api+json": components["schemas"]["textbook-ItemOutput"];
+          "application/vnd.api+json": components["schemas"]["textbookItemOutput"];
         };
       };
       /** @description Validation Error */
@@ -3010,7 +3010,7 @@ export interface operations {
       /** @description Successful Response */
       200: {
         content: {
-          "application/vnd.api+json": components["schemas"]["textbook-ItemOutput"];
+          "application/vnd.api+json": components["schemas"]["textbookItemOutput"];
         };
       };
       /** @description Validation Error */
@@ -3053,14 +3053,14 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["textbook-UpdateInput"];
+        "application/json": components["schemas"]["textbookUpdateInput"];
       };
     };
     responses: {
       /** @description Successful Response */
       200: {
         content: {
-          "application/vnd.api+json": components["schemas"]["textbook-ItemOutput"];
+          "application/vnd.api+json": components["schemas"]["textbookItemOutput"];
         };
       };
       /** @description Validation Error */

@@ -1,74 +1,6 @@
 {
   "components": {
     "schemas": {
-      "Body_login_token_post": {
-        "properties": {
-          "client_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Client Id"
-          },
-          "client_secret": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Client Secret"
-          },
-          "grant_type": {
-            "anyOf": [
-              {
-                "pattern": "password",
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Grant Type"
-          },
-          "options": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Options"
-          },
-          "password": {
-            "title": "Password",
-            "type": "string"
-          },
-          "scope": {
-            "default": "",
-            "title": "Scope",
-            "type": "string"
-          },
-          "username": {
-            "title": "Username",
-            "type": "string"
-          }
-        },
-        "required": [
-          "username",
-          "password"
-        ],
-        "title": "Body_login_token_post",
-        "type": "object"
-      },
       "CreateInputListRelationship": {
         "additionalProperties": false,
         "properties": {
@@ -97,7 +29,7 @@
         "title": "HTTPValidationError",
         "type": "object"
       },
-      "ItemLinksModel": {
+      "ItemLinks": {
         "additionalProperties": false,
         "properties": {
           "self": {
@@ -108,7 +40,7 @@
         "required": [
           "self"
         ],
-        "title": "ItemLinksModel",
+        "title": "ItemLinks",
         "type": "object"
       },
       "MandatoryRelationship": {
@@ -195,7 +127,7 @@
         "title": "OutputListRelationship",
         "type": "object"
       },
-      "PageLinksModel": {
+      "PageLinks": {
         "additionalProperties": false,
         "properties": {
           "first": {
@@ -235,10 +167,10 @@
           "next",
           "prev"
         ],
-        "title": "PageLinksModel",
+        "title": "PageLinks",
         "type": "object"
       },
-      "PageMetaModel": {
+      "PageMeta": {
         "additionalProperties": false,
         "properties": {
           "pagination": {
@@ -248,7 +180,7 @@
         "required": [
           "pagination"
         ],
-        "title": "PageMetaModel",
+        "title": "PageMeta",
         "type": "object"
       },
       "Pagination": {
@@ -325,32 +257,32 @@
         "title": "ValidationError",
         "type": "object"
       },
-      "left-CreateInput": {
+      "leftCreateInput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/left-CreateInput-Data"
+            "$ref": "#/components/schemas/leftCreateInputData"
           }
         },
         "required": [
           "data"
         ],
-        "title": "left-CreateInput",
+        "title": "leftCreateInput",
         "type": "object"
       },
-      "left-CreateInput-Data": {
+      "leftCreateInputData": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/left-CreateInput-Data-Attributes"
+                "$ref": "#/components/schemas/leftCreateInputDataAttributes"
               }
             ],
             "default": {}
           },
           "relationships": {
-            "$ref": "#/components/schemas/left-CreateInput-Data-Relationships"
+            "$ref": "#/components/schemas/leftCreateInputDataRelationships"
           },
           "type": {
             "title": "Type",
@@ -361,16 +293,16 @@
           "type",
           "relationships"
         ],
-        "title": "left-CreateInput-Data",
+        "title": "leftCreateInputData",
         "type": "object"
       },
-      "left-CreateInput-Data-Attributes": {
+      "leftCreateInputDataAttributes": {
         "additionalProperties": false,
         "properties": {},
-        "title": "left-CreateInput-Data-Attributes",
+        "title": "leftCreateInputDataAttributes",
         "type": "object"
       },
-      "left-CreateInput-Data-Relationships": {
+      "leftCreateInputDataRelationships": {
         "additionalProperties": false,
         "properties": {
           "rightOrNone": {
@@ -388,14 +320,14 @@
         "required": [
           "top"
         ],
-        "title": "left-CreateInput-Data-Relationships",
+        "title": "leftCreateInputDataRelationships",
         "type": "object"
       },
-      "left-ItemOutput": {
+      "leftItemOutput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/left-OutputItem"
+            "$ref": "#/components/schemas/leftOutputItem"
           },
           "included": {
             "items": {},
@@ -406,10 +338,10 @@
         "required": [
           "data"
         ],
-        "title": "left-ItemOutput",
+        "title": "leftItemOutput",
         "type": "object"
       },
-      "left-OutputItem": {
+      "leftOutputItem": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -417,10 +349,10 @@
             "type": "string"
           },
           "links": {
-            "$ref": "#/components/schemas/ItemLinksModel"
+            "$ref": "#/components/schemas/ItemLinks"
           },
           "relationships": {
-            "$ref": "#/components/schemas/left-OutputItem-Relationships"
+            "$ref": "#/components/schemas/leftOutputItemRelationships"
           },
           "type": {
             "title": "Type",
@@ -433,10 +365,10 @@
           "links",
           "relationships"
         ],
-        "title": "left-OutputItem",
+        "title": "leftOutputItem",
         "type": "object"
       },
-      "left-OutputItem-Relationships": {
+      "leftOutputItemRelationships": {
         "additionalProperties": false,
         "properties": {
           "rightOrNone": {
@@ -450,29 +382,29 @@
           "top",
           "rightOrNone"
         ],
-        "title": "left-OutputItem-Relationships",
+        "title": "leftOutputItemRelationships",
         "type": "object"
       },
-      "left-UpdateInput": {
+      "leftUpdateInput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/left-UpdateInput-Data"
+            "$ref": "#/components/schemas/leftUpdateInputData"
           }
         },
         "required": [
           "data"
         ],
-        "title": "left-UpdateInput",
+        "title": "leftUpdateInput",
         "type": "object"
       },
-      "left-UpdateInput-Data": {
+      "leftUpdateInputData": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/left-UpdateInput-Data-Attributes"
+                "$ref": "#/components/schemas/leftUpdateInputDataAttributes"
               }
             ],
             "default": {}
@@ -484,7 +416,7 @@
           "relationships": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/left-UpdateInput-Data-Relationships"
+                "$ref": "#/components/schemas/leftUpdateInputDataRelationships"
               }
             ],
             "default": {}
@@ -498,16 +430,16 @@
           "type",
           "id"
         ],
-        "title": "left-UpdateInput-Data",
+        "title": "leftUpdateInputData",
         "type": "object"
       },
-      "left-UpdateInput-Data-Attributes": {
+      "leftUpdateInputDataAttributes": {
         "additionalProperties": false,
         "properties": {},
-        "title": "left-UpdateInput-Data-Attributes",
+        "title": "leftUpdateInputDataAttributes",
         "type": "object"
       },
-      "left-UpdateInput-Data-Relationships": {
+      "leftUpdateInputDataRelationships": {
         "additionalProperties": false,
         "properties": {
           "rightOrNone": {
@@ -525,14 +457,14 @@
             ]
           }
         },
-        "title": "left-UpdateInput-Data-Relationships",
+        "title": "leftUpdateInputDataRelationships",
         "type": "object"
       },
-      "right-ItemOutput": {
+      "rightItemOutput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/right-OutputItem"
+            "$ref": "#/components/schemas/rightOutputItem"
           },
           "included": {
             "items": {},
@@ -543,10 +475,10 @@
         "required": [
           "data"
         ],
-        "title": "right-ItemOutput",
+        "title": "rightItemOutput",
         "type": "object"
       },
-      "right-OutputItem": {
+      "rightOutputItem": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -554,10 +486,10 @@
             "type": "string"
           },
           "links": {
-            "$ref": "#/components/schemas/ItemLinksModel"
+            "$ref": "#/components/schemas/ItemLinks"
           },
           "relationships": {
-            "$ref": "#/components/schemas/right-OutputItem-Relationships"
+            "$ref": "#/components/schemas/rightOutputItemRelationships"
           },
           "type": {
             "title": "Type",
@@ -570,10 +502,10 @@
           "links",
           "relationships"
         ],
-        "title": "right-OutputItem",
+        "title": "rightOutputItem",
         "type": "object"
       },
-      "right-OutputItem-Relationships": {
+      "rightOutputItemRelationships": {
         "additionalProperties": false,
         "properties": {
           "leftOrNone": {
@@ -587,29 +519,29 @@
           "top",
           "leftOrNone"
         ],
-        "title": "right-OutputItem-Relationships",
+        "title": "rightOutputItemRelationships",
         "type": "object"
       },
-      "top-CreateInput": {
+      "topCreateInput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/top-CreateInput-Data"
+            "$ref": "#/components/schemas/topCreateInputData"
           }
         },
         "required": [
           "data"
         ],
-        "title": "top-CreateInput",
+        "title": "topCreateInput",
         "type": "object"
       },
-      "top-CreateInput-Data": {
+      "topCreateInputData": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/top-CreateInput-Data-Attributes"
+                "$ref": "#/components/schemas/topCreateInputDataAttributes"
               }
             ],
             "default": {}
@@ -617,7 +549,7 @@
           "relationships": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/top-CreateInput-Data-Relationships"
+                "$ref": "#/components/schemas/topCreateInputDataRelationships"
               }
             ],
             "default": {
@@ -637,16 +569,16 @@
         "required": [
           "type"
         ],
-        "title": "top-CreateInput-Data",
+        "title": "topCreateInputData",
         "type": "object"
       },
-      "top-CreateInput-Data-Attributes": {
+      "topCreateInputDataAttributes": {
         "additionalProperties": false,
         "properties": {},
-        "title": "top-CreateInput-Data-Attributes",
+        "title": "topCreateInputDataAttributes",
         "type": "object"
       },
-      "top-CreateInput-Data-Relationships": {
+      "topCreateInputDataRelationships": {
         "additionalProperties": false,
         "properties": {
           "lefts": {
@@ -670,14 +602,14 @@
             }
           }
         },
-        "title": "top-CreateInput-Data-Relationships",
+        "title": "topCreateInputDataRelationships",
         "type": "object"
       },
-      "top-ItemOutput": {
+      "topItemOutput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/top-OutputItem"
+            "$ref": "#/components/schemas/topOutputItem"
           },
           "included": {
             "items": {},
@@ -688,10 +620,10 @@
         "required": [
           "data"
         ],
-        "title": "top-ItemOutput",
+        "title": "topItemOutput",
         "type": "object"
       },
-      "top-OutputItem": {
+      "topOutputItem": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -699,10 +631,10 @@
             "type": "string"
           },
           "links": {
-            "$ref": "#/components/schemas/ItemLinksModel"
+            "$ref": "#/components/schemas/ItemLinks"
           },
           "relationships": {
-            "$ref": "#/components/schemas/top-OutputItem-Relationships"
+            "$ref": "#/components/schemas/topOutputItemRelationships"
           },
           "type": {
             "title": "Type",
@@ -715,10 +647,10 @@
           "links",
           "relationships"
         ],
-        "title": "top-OutputItem",
+        "title": "topOutputItem",
         "type": "object"
       },
-      "top-OutputItem-Relationships": {
+      "topOutputItemRelationships": {
         "additionalProperties": false,
         "properties": {
           "lefts": {
@@ -732,15 +664,15 @@
           "lefts",
           "rights"
         ],
-        "title": "top-OutputItem-Relationships",
+        "title": "topOutputItemRelationships",
         "type": "object"
       },
-      "top-PageOutput": {
+      "topPageOutput": {
         "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
-              "$ref": "#/components/schemas/top-OutputItem"
+              "$ref": "#/components/schemas/topOutputItem"
             },
             "title": "Data",
             "type": "array"
@@ -751,10 +683,10 @@
             "type": "array"
           },
           "links": {
-            "$ref": "#/components/schemas/PageLinksModel"
+            "$ref": "#/components/schemas/PageLinks"
           },
           "meta": {
-            "$ref": "#/components/schemas/PageMetaModel"
+            "$ref": "#/components/schemas/PageMeta"
           }
         },
         "required": [
@@ -762,29 +694,29 @@
           "meta",
           "links"
         ],
-        "title": "top-PageOutput",
+        "title": "topPageOutput",
         "type": "object"
       },
-      "top-UpdateInput": {
+      "topUpdateInput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/top-UpdateInput-Data"
+            "$ref": "#/components/schemas/topUpdateInputData"
           }
         },
         "required": [
           "data"
         ],
-        "title": "top-UpdateInput",
+        "title": "topUpdateInput",
         "type": "object"
       },
-      "top-UpdateInput-Data": {
+      "topUpdateInputData": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/top-UpdateInput-Data-Attributes"
+                "$ref": "#/components/schemas/topUpdateInputDataAttributes"
               }
             ],
             "default": {}
@@ -796,7 +728,7 @@
           "relationships": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/top-UpdateInput-Data-Relationships"
+                "$ref": "#/components/schemas/topUpdateInputDataRelationships"
               }
             ],
             "default": {}
@@ -810,16 +742,16 @@
           "type",
           "id"
         ],
-        "title": "top-UpdateInput-Data",
+        "title": "topUpdateInputData",
         "type": "object"
       },
-      "top-UpdateInput-Data-Attributes": {
+      "topUpdateInputDataAttributes": {
         "additionalProperties": false,
         "properties": {},
-        "title": "top-UpdateInput-Data-Attributes",
+        "title": "topUpdateInputDataAttributes",
         "type": "object"
       },
-      "top-UpdateInput-Data-Relationships": {
+      "topUpdateInputDataRelationships": {
         "additionalProperties": false,
         "properties": {
           "lefts": {
@@ -837,7 +769,7 @@
             ]
           }
         },
-        "title": "top-UpdateInput-Data-Relationships",
+        "title": "topUpdateInputDataRelationships",
         "type": "object"
       }
     }
@@ -903,7 +835,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/left-CreateInput"
+                "$ref": "#/components/schemas/leftCreateInput"
               }
             }
           },
@@ -914,7 +846,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/left-ItemOutput"
+                  "$ref": "#/components/schemas/leftItemOutput"
                 }
               }
             },
@@ -962,7 +894,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/left-ItemOutput"
+                  "$ref": "#/components/schemas/leftItemOutput"
                 }
               }
             },
@@ -1007,7 +939,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/left-UpdateInput"
+                "$ref": "#/components/schemas/leftUpdateInput"
               }
             }
           },
@@ -1018,7 +950,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/left-ItemOutput"
+                  "$ref": "#/components/schemas/leftItemOutput"
                 }
               }
             },
@@ -1066,7 +998,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/right-ItemOutput"
+                  "$ref": "#/components/schemas/rightItemOutput"
                 }
               }
             },
@@ -1084,42 +1016,6 @@
           }
         },
         "summary": "Get Right"
-      }
-    },
-    "/token": {
-      "post": {
-        "operationId": "login_token_post",
-        "requestBody": {
-          "content": {
-            "application/x-www-form-urlencoded": {
-              "schema": {
-                "$ref": "#/components/schemas/Body_login_token_post"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Login"
       }
     },
     "/tops": {
@@ -1170,7 +1066,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/top-PageOutput"
+                  "$ref": "#/components/schemas/topPageOutput"
                 }
               }
             },
@@ -1206,7 +1102,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/top-CreateInput"
+                "$ref": "#/components/schemas/topCreateInput"
               }
             }
           },
@@ -1217,7 +1113,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/top-ItemOutput"
+                  "$ref": "#/components/schemas/topItemOutput"
                 }
               }
             },
@@ -1265,7 +1161,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/top-ItemOutput"
+                  "$ref": "#/components/schemas/topItemOutput"
                 }
               }
             },
@@ -1310,7 +1206,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/top-UpdateInput"
+                "$ref": "#/components/schemas/topUpdateInput"
               }
             }
           },
@@ -1321,7 +1217,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/top-ItemOutput"
+                  "$ref": "#/components/schemas/topItemOutput"
                 }
               }
             },

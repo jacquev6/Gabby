@@ -1,74 +1,6 @@
 {
   "components": {
     "schemas": {
-      "Body_login_token_post": {
-        "properties": {
-          "client_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Client Id"
-          },
-          "client_secret": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Client Secret"
-          },
-          "grant_type": {
-            "anyOf": [
-              {
-                "pattern": "password",
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Grant Type"
-          },
-          "options": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Options"
-          },
-          "password": {
-            "title": "Password",
-            "type": "string"
-          },
-          "scope": {
-            "default": "",
-            "title": "Scope",
-            "type": "string"
-          },
-          "username": {
-            "title": "Username",
-            "type": "string"
-          }
-        },
-        "required": [
-          "username",
-          "password"
-        ],
-        "title": "Body_login_token_post",
-        "type": "object"
-      },
       "HTTPValidationError": {
         "properties": {
           "detail": {
@@ -82,7 +14,7 @@
         "title": "HTTPValidationError",
         "type": "object"
       },
-      "ItemLinksModel": {
+      "ItemLinks": {
         "additionalProperties": false,
         "properties": {
           "self": {
@@ -93,7 +25,7 @@
         "required": [
           "self"
         ],
-        "title": "ItemLinksModel",
+        "title": "ItemLinks",
         "type": "object"
       },
       "ValidationError": {
@@ -129,11 +61,11 @@
         "title": "ValidationError",
         "type": "object"
       },
-      "resource-ItemOutput": {
+      "resourceItemOutput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/resource-OutputItem"
+            "$ref": "#/components/schemas/resourceOutputItem"
           },
           "included": {
             "items": {},
@@ -144,21 +76,21 @@
         "required": [
           "data"
         ],
-        "title": "resource-ItemOutput",
+        "title": "resourceItemOutput",
         "type": "object"
       },
-      "resource-OutputItem": {
+      "resourceOutputItem": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "$ref": "#/components/schemas/resource-OutputItem-Attributes"
+            "$ref": "#/components/schemas/resourceOutputItemAttributes"
           },
           "id": {
             "title": "Id",
             "type": "string"
           },
           "links": {
-            "$ref": "#/components/schemas/ItemLinksModel"
+            "$ref": "#/components/schemas/ItemLinks"
           },
           "type": {
             "title": "Type",
@@ -171,10 +103,10 @@
           "links",
           "attributes"
         ],
-        "title": "resource-OutputItem",
+        "title": "resourceOutputItem",
         "type": "object"
       },
-      "resource-OutputItem-Attributes": {
+      "resourceOutputItemAttributes": {
         "additionalProperties": false,
         "properties": {
           "foo": {
@@ -204,7 +136,7 @@
           "foo",
           "host"
         ],
-        "title": "resource-OutputItem-Attributes",
+        "title": "resourceOutputItemAttributes",
         "type": "object"
       }
     }
@@ -346,7 +278,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/resource-ItemOutput"
+                  "$ref": "#/components/schemas/resourceItemOutput"
                 }
               }
             },
@@ -364,42 +296,6 @@
           }
         },
         "summary": "Get Resource"
-      }
-    },
-    "/token": {
-      "post": {
-        "operationId": "login_token_post",
-        "requestBody": {
-          "content": {
-            "application/x-www-form-urlencoded": {
-              "schema": {
-                "$ref": "#/components/schemas/Body_login_token_post"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Login"
       }
     }
   }

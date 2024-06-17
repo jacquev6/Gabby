@@ -6,11 +6,14 @@ set -o pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/."
 
 
-shuffle=""
-if [ $# -eq 0 ]
-then
-  shuffle=--shuffle
-fi
+defined=$(git grep -e '^    def test' -- ../../backend | wc -l)
 
-# @todo Understand why we get errors saying the DB is till in use without the '--keepdb' option
-docker compose exec backend-shell python -Wa manage.py test --keepdb $shuffle "$@"
+imported=$(git grep -e 'from .* import .*ApiTestCase' -- ../../backend | wc -l)
+
+inherited=$(git grep -e 'class .*TestCase(.*ApiTestCase)' -- ../../backend | wc -l)
+
+expected=$(expr $defined + $imported + $inherited)
+
+echo "Expecting to run $expected tests"
+
+docker compose exec --env GABBY_UNITTESTING=true backend-shell python -m unittest discover --pattern '*.py' "$@"
