@@ -49,7 +49,7 @@ async function login() {
       <BLabeledInput :label="$t('password')" name="password" type="password" v-model="password" />
     </template>
     <template #footer>
-      <BButton primary @click="login" :disabled="login === '' || password === ''">{{ $t('loginButton') }}</BButton>
+      <BButton primary @click="login" :disabled="username === '' || password === ''">{{ $t('loginButton') }}</BButton>
     </template>
   </BModal>
 </template>
