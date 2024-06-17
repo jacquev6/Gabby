@@ -302,38 +302,42 @@ const adaptationOptions = computed(() => {
 async function create() {
   busy.value = true
 
-  // @todo Use a batch request
-  const exercise = await api.client.post<Exercise>(
-    'exercise',
-    {
-      textbookPage: props.textbookPage,
-      boundingRectangle: state.value.boundingRectangle,
-      number: state.value.number,
-      instructions: state.value.instructions,
-      wording: state.value.wording,
-      example: state.value.example,
-      clue: state.value.clue,
-    },
-    {
-      project: props.project,
-      textbook: props.textbook,
-    },
-  )
+  const operations = [
+    [
+      'add', 'exercise', 'ex',
+      {
+        textbookPage: props.textbookPage,
+        boundingRectangle: state.value.boundingRectangle,
+        number: state.value.number,
+        instructions: state.value.instructions,
+        wording: state.value.wording,
+        example: state.value.example,
+        clue: state.value.clue,
+      },
+      {
+        project: props.project,
+        textbook: props.textbook,
+      },
+    ],
+  ]
   if (state.value.adaptationType !== '-') {
     console.assert(adaptationOptions.value !== null)
-    await api.client.post(
-      state.value.adaptationType,
+    operations.push([
+      'add', state.value.adaptationType, null,
       adaptationOptions.value,
-      {exercise: {type: 'exercise', id: exercise.id}},
-    )
+      {exercise: {type: 'exercise', lid: 'ex'}},
+    ])
   }
   for (const event of extractionEvents) {
-    await api.client.post(
-      'extractionEvent',
+    operations.push([
+      'add', 'extractionEvent', null,
       {event: JSON.stringify(event)},
-      {exercise: {type: 'exercise', id: exercise.id}},
-    )
+      {exercise: {type: 'exercise', lid: 'ex'}},
+    ])
   }
+
+  const results = await api.client.batch(...operations)
+  const exercise = results[0]
 
   clearHistory(() => {
     state.value.boundingRectangle = null
@@ -366,7 +370,7 @@ async function save() {
 
   busy.value = true
 
-  // @todo Use a batch request
+  // @todo Use a *single* batch request (when batch requests support 'update' and 'delete' operations)
   await api.client.patch(
     'exercise',
     props.exercise.id,
@@ -391,13 +395,16 @@ async function save() {
       {exercise: {type: 'exercise', id: props.exercise.id}},
     )
   }
+  const operations = []
   for (const event of extractionEvents) {
-    await api.client.post(
-      'extractionEvent',
+    operations.push([
+      'add', 'extractionEvent', null,
       {event: JSON.stringify(event)},
       {exercise: {type: 'exercise', id: props.exercise.id}},
-    )
+    ])
   }
+
+  await api.client.batch(...operations)
 
   extractionEvents = []
 
@@ -501,7 +508,7 @@ defineExpose({
 
   <BBusy :busy>
     <BLabeledInput :label="$t('exerciseNumber')" v-model="state.number" :disabled="editMode" @change="extractionEvents.push({kind: 'ExerciseNumberSetManually', value: state.number})" />
-    
+
     <div style="position: relative">
       <BLabeledTextarea
         ref="instructionsTextArea"
