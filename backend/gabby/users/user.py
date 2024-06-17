@@ -128,7 +128,7 @@ def mandatory_authenticated_user_dependable(
     user: User | None = Depends(optional_authenticated_user_dependable),
 ):
     if user is None:
-        raise HTTPException(status_code=401, detail="Invalid or expired token")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid or expired token")
     else:
         return user
 
