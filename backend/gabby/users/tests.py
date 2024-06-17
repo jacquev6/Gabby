@@ -72,7 +72,14 @@ class AuthenticationApiTestCase(testing.ApiTestCase):
         self.expect_rollback()
 
         response = self.api_client.post("http://server/token", data={"username": "john", "password": "not-the-password"})
-        self.assertEqual(response.status_code, 400, response.json())
+        self.assertEqual(response.status_code, 403, response.json())
+        self.assertEqual(response.json(), {"detail": "Incorrect username or password"})
+
+    def test_unexisting_user(self):
+        self.expect_rollback()
+
+        response = self.api_client.post("http://server/token", data={"username": "bob", "password": "password"})
+        self.assertEqual(response.status_code, 403, response.json())
         self.assertEqual(response.json(), {"detail": "Incorrect username or password"})
 
     def test_password_flow(self):

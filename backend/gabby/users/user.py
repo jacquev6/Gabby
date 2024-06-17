@@ -32,8 +32,9 @@ class User(OrmBase):
 
     __password_hasher = argon2.PasswordHasher()
 
-    def hash_password(self, clear_text_password):
-        return self.__password_hasher.hash(clear_text_password)
+    @classmethod
+    def hash_password(cls, clear_text_password):
+        return cls.__password_hasher.hash(clear_text_password)
 
     def check_password(self, clear_text_password):
         try:
@@ -64,7 +65,7 @@ def authenticate(session, *, username, clear_text_password):
     user = session.execute(sql.select(User).filter(User.username == username)).scalar()
     if user is None:
         # Do one round of hashing to mitigate timing attacks
-        User().check_password(clear_text_password)
+        User.hash_password(clear_text_password)
         return None
     else:
         if user.check_password(clear_text_password):
@@ -80,7 +81,7 @@ def authentication_token_dependable(
 ):
     user = authenticate(session, username=credentials.username, clear_text_password=credentials.password)
     if user is None:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Incorrect username or password")
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Incorrect username or password")
 
     default_validity = datetime.timedelta(hours=1)
     class Options(BaseModel):
