@@ -876,6 +876,19 @@ describe('ApiStore', () => {
     cy.expect(api.auth.expiresSoon.value).to.be.true
   })
 
+  it.only('stores authentication token in local storage', async () => {
+    const api1 = useApiStore()
+
+    cy.expect(await api1.auth.login('admin', 'password')).to.be.true
+    cy.expect(api1.auth.isAuthenticated.value).to.be.true
+
+    setActivePinia(createPinia())
+
+    const api2 = useApiStore()
+    cy.expect(api2.cache).to.not.equal(api1.cache)
+    cy.expect(api2.auth.isAuthenticated.value).to.be.true
+  })
+
   it('reacts to ping message edition', () => {
     cy.mount(TestComponent)
 

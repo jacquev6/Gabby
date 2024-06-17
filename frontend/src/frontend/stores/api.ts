@@ -273,7 +273,9 @@ export function defineApiStore(name: string, options?: {baseUrl?: string}) {
 
     const expiresSoon = ref(false)
     let expiresSoonTimeout: ReturnType<typeof setTimeout> | null = null
+    const defaultExpiresSoonMargin = 15 * 60 * 1000
     let logoutTimeout: ReturnType<typeof setTimeout> | null = null
+    const defaultLogoutMargin = 5 * 60 * 1000
 
     const auth = {
       isAuthenticated: computed(() => cache._authentication !== null),
@@ -283,8 +285,8 @@ export function defineApiStore(name: string, options?: {baseUrl?: string}) {
         password: string,
         options = {
           validity: null as null | string,
-          expiresSoonMargin: 15 * 60 * 1000,
-          logoutMargin: 5 * 60 * 1000,
+          expiresSoonMargin: defaultExpiresSoonMargin,
+          logoutMargin: defaultLogoutMargin,
         },
       ) {
         const body = new FormData()
@@ -296,33 +298,40 @@ export function defineApiStore(name: string, options?: {baseUrl?: string}) {
         const response = await fetch(cache._makeUrl('token'), {method: 'POST', body})
         if (response.ok) {
           const json_response = await response.json()
-          const validUntil = new Date(json_response.valid_until)
-          const validFor = (validUntil.getTime() - Date.now())
-          cache._authentication = {
-            header: 'Bearer ' + json_response.access_token,
-            validUntil,
-          }
-          expiresSoon.value = false
-          if (expiresSoonTimeout !== null) {
-            clearTimeout(expiresSoonTimeout)
-          }
-          expiresSoonTimeout = setTimeout(() => { expiresSoon.value = true }, validFor - options.expiresSoonMargin)
-          if (logoutTimeout !== null) {
-            clearTimeout(logoutTimeout)
-          }
-          logoutTimeout = setTimeout(() => { this.logout() }, validFor - options.logoutMargin)
+          this._setAuth(json_response.access_token, new Date(json_response.valid_until), options.expiresSoonMargin, options.logoutMargin)
           return true
         } else {
           this.logout()
           return false
         }
       },
+      _setAuth(accessToken: string, validUntil: Date, expiresSoonMargin: number, logoutMargin: number) {
+        cache._authentication = {header: 'Bearer ' + accessToken, validUntil}
+        localStorage.setItem('auth-v1', JSON.stringify({accessToken, validUntil}))
+        expiresSoon.value = false
+        if (expiresSoonTimeout !== null) {
+          clearTimeout(expiresSoonTimeout)
+        }
+        if (logoutTimeout !== null) {
+          clearTimeout(logoutTimeout)
+        }
+        const validFor = (validUntil.getTime() - Date.now())
+        expiresSoonTimeout = setTimeout(() => { expiresSoon.value = true }, validFor - expiresSoonMargin)
+        logoutTimeout = setTimeout(() => { this.logout() }, validFor - logoutMargin)
+      },
       logout() {
         cache._authentication = null
+        localStorage.removeItem('auth-v1')
         // Clear cache to avoid accessing data got while logged-in
         cache._items = {}
         cache._lists = {}
       },
+    }
+
+    const stored = localStorage.getItem('auth-v1')
+    if (stored !== null) {
+      const {accessToken, validUntil} = JSON.parse(stored)
+      auth._setAuth(accessToken, new Date(validUntil), defaultExpiresSoonMargin, defaultLogoutMargin)
     }
 
     const client = {
