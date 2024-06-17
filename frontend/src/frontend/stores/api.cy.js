@@ -801,8 +801,8 @@ describe('ApiStore', () => {
   it('logs in and out', async () => {
     const api = useApiStore()
 
-    const logged_out_1 = await api.client.post('ping', {}, {})
-    cy.expect(logged_out_1.relationships.createdBy).to.be.null
+    const loggedOut1 = await api.client.post('ping', {}, {})
+    cy.expect(loggedOut1.relationships.createdBy).to.be.null
 
     cy.expect(api.auth.isAuthenticated.value).to.be.false
 
@@ -810,17 +810,17 @@ describe('ApiStore', () => {
 
     cy.expect(api.auth.isAuthenticated.value).to.be.true
 
-    const logged_in = await api.client.post('ping', {}, {})
-    cy.expect(logged_in.relationships.createdBy.type).to.equal('user')
-    cy.expect(logged_in.relationships.createdBy.id).to.equal('1')
-    cy.expect(logged_in.relationships.createdBy.inCache).to.be.false
+    const loggedIn = await api.client.post('ping', {}, {})
+    cy.expect(loggedIn.relationships.createdBy.type).to.equal('user')
+    cy.expect(loggedIn.relationships.createdBy.id).to.equal('1')
+    cy.expect(loggedIn.relationships.createdBy.inCache).to.be.false
 
     api.auth.logout()
 
     cy.expect(api.auth.isAuthenticated.value).to.be.false
 
-    const logged_out_2 = await api.client.post('ping', {}, {})
-    cy.expect(logged_out_2.relationships.createdBy).to.be.null
+    const loggedOut2 = await api.client.post('ping', {}, {})
+    cy.expect(loggedOut2.relationships.createdBy).to.be.null
   })
 
   it('fails to login', async () => {
