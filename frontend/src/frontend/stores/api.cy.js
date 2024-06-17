@@ -335,7 +335,7 @@ describe('ApiStore', () => {
     cy.expect(before.attributes).to.be.undefined
     cy.expect(before.relationships).to.be.undefined
 
-    const posted = await api.client.post('ping', {}, {next: []})
+    const posted = await api.client.post('ping', {}, {})
     const after = api.cache.getOne('ping', '7')
     const got = await api.client.getOne('ping', '7')
 
