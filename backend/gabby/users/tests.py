@@ -142,7 +142,7 @@ class AuthenticationApiTestCase(testing.ApiTestCase):
 
         before = datetime.datetime.now(tz=datetime.timezone.utc)
         # Request a token with 5h validity
-        response = self.api_client.post("http://server/token", data={"username": "john", "password": "password", "options": '{"validity": "PT5H"}'})
+        response = self.api_client.post("http://server/token", data={"username": "john", "password": "password", "options": '{"validity": "PT24H"}'})
         after = datetime.datetime.now(tz=datetime.timezone.utc)
         self.assertEqual(response.status_code, 200, response.json())
         token = response.json()["access_token"]
@@ -150,8 +150,8 @@ class AuthenticationApiTestCase(testing.ApiTestCase):
         # Validity is still 1h
         token = jwt.decode(token, options={"verify_signature": False})
         valid_until = datetime.datetime.fromisoformat(token["validUntil"])
-        self.assertLessEqual(before + datetime.timedelta(hours=1), valid_until)
-        self.assertLessEqual(valid_until, after + datetime.timedelta(hours=1))
+        self.assertLessEqual(before + datetime.timedelta(hours=20), valid_until)
+        self.assertLessEqual(valid_until, after + datetime.timedelta(hours=20))
 
         self.assertEqual(token, {
             "username": "john",

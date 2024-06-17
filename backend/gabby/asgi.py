@@ -11,7 +11,7 @@ from . import settings
 from .fixtures import load as load_fixtures
 from .projects import Project, ProjectsResource
 from .exercises import Exercise
-from .users import authentication_token_dependable
+from .users import authentication_dependable
 from . import api_resources
 
 
@@ -89,11 +89,9 @@ def export_project(project_id: str, session: database_utils.Session = Depends(da
     )
 
 @app.post("/api/token")
-def login(access_token: str = Depends(authentication_token_dependable)):
-    return {
-        "access_token": access_token,
-        "token_type": "bearer",
-    }
+def login(authentication: dict = Depends(authentication_dependable)):
+    return authentication
+
 
 # Test-only URL. Not in 'api/...' to avoid accidentally exposing it.
 if settings.EXPOSE_RESET_FOR_TESTS_URL:

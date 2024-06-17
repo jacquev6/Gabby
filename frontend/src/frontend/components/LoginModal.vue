@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { onMounted } from 'vue'
+import { ref, watch } from 'vue'
 
 import { BModal, BButton, BRow, BCol, BLabeledInput } from './opinion/bootstrap'
 import LanguageSelector from './opinion/LanguageSelector.vue'
@@ -11,12 +10,14 @@ const api = useApiStore()
 
 const modal = ref<typeof BModal | null>(null)
 
-onMounted(() => {
-  console.assert(modal.value !== null)
-  if (!api.auth.is_authenticated()) {
-    modal.value.show()
-  }
-})
+watch(
+  [modal, api.auth.isAuthenticated, api.auth.expiresSoon],
+  () => {
+    if (modal.value !== null && (!api.auth.isAuthenticated.value || api.auth.expiresSoon.value)) {
+      modal.value.show()
+    }
+  },
+)
 
 const username = ref('')
 const password = ref('')

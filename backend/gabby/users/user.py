@@ -74,7 +74,7 @@ def authenticate(session, *, username, clear_text_password):
             return None
 
 
-def authentication_token_dependable(
+def authentication_dependable(
     credentials: Annotated[OAuth2PasswordRequestForm, Depends()],
     options: Annotated[str | None, Form()] = None,
     session: Session = Depends(session_dependable),
@@ -83,7 +83,7 @@ def authentication_token_dependable(
     if user is None:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Incorrect username or password")
 
-    default_validity = datetime.timedelta(hours=1)
+    default_validity = datetime.timedelta(hours=20)  # Require login every morning, and token expires during the night
     class Options(BaseModel):
         model_config = ConfigDict(extra="forbid")
 
@@ -91,11 +91,16 @@ def authentication_token_dependable(
 
     options = Options(**({} if options is None else json.loads(options)))
     options.validity = min(options.validity, default_validity)
+    valid_until = datetime.datetime.now(tz=datetime.timezone.utc) + options.validity
     token = {
         "username": user.username,
-        "validUntil": (datetime.datetime.now(tz=datetime.timezone.utc) + options.validity).isoformat(),
+        "validUntil": valid_until.isoformat(),
     }
-    return jwt.encode(token, settings.SECRET_KEY, algorithm="HS256")
+    return {
+        "access_token": jwt.encode(token, settings.SECRET_KEY, algorithm="HS256"),
+        "valid_until": valid_until,
+        "token_type": "bearer",
+    }
 
 
 def optional_authenticated_user_dependable(

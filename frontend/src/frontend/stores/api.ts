@@ -1,3 +1,5 @@
+import { computed, ref } from 'vue'
+
 import { defineStore } from 'pinia'
 import _ from 'lodash'
 
@@ -85,7 +87,10 @@ export function defineApiStore(name: string, options?: {baseUrl?: string}) {
       _items: {} as {[type: string]: {[id: string]: ItemInCache}},
       _lists: {} as {[url: Url]: ItemListInCache},
       _baseUrl: (options && options.baseUrl) || '/api/',
-      _authorizationHeader: null as string | null,
+      _authentication: null as null | {
+        header: string,
+        validUntil: Date | null,
+      }
     }),
     getters: {},
     actions: {
@@ -225,9 +230,9 @@ export function defineApiStore(name: string, options?: {baseUrl?: string}) {
       },
       async _request(method: 'POST' | 'GET' | 'PATCH' | 'DELETE', url: Url, json_body?: object) {
         const body = json_body ? JSON.stringify(json_body) : null
-        const headers = {'Content-Type': 'application/vnd.api+json'}
-        if (this._authorizationHeader) {
-          headers['Authorization'] = this._authorizationHeader
+        const headers: {[name: string]: string} = {'Content-Type': 'application/vnd.api+json'}
+        if (this._authentication !== null) {
+          headers['Authorization'] = this._authentication.header
         }
         const raw_response = await fetch(url, {method, headers, body})
         const json_response = raw_response.headers.get('Content-Type') == 'application/vnd.api+json' ? await raw_response.json() : null
@@ -266,18 +271,46 @@ export function defineApiStore(name: string, options?: {baseUrl?: string}) {
   return function() {
     const cache = useCache()
 
+    const expiresSoon = ref(false)
+    let expiresSoonTimeout: ReturnType<typeof setTimeout> | null = null
+    let logoutTimeout: ReturnType<typeof setTimeout> | null = null
+
     const auth = {
-      is_authenticated() {
-        return cache._authorizationHeader !== null
-      },
-      async login(username: string, password: string) {
+      isAuthenticated: computed(() => cache._authentication !== null),
+      expiresSoon,
+      async login(
+        username: string,
+        password: string,
+        options = {
+          validity: null as null | string,
+          expiresSoonMargin: 15 * 60 * 1000,
+          logoutMargin: 5 * 60 * 1000,
+        },
+      ) {
         const body = new FormData()
         body.append('username', username)
         body.append('password', password)
+        if (options.validity !== null) {
+          body.append('options', JSON.stringify({validity: options.validity}))
+        }
         const response = await fetch(cache._makeUrl('token'), {method: 'POST', body})
         if (response.ok) {
           const json_response = await response.json()
-          cache._authorizationHeader = 'Bearer ' + json_response.access_token
+          const validUntil = new Date(json_response.valid_until)
+          const validFor = (validUntil.getTime() - Date.now())
+          cache._authentication = {
+            header: 'Bearer ' + json_response.access_token,
+            validUntil,
+          }
+          expiresSoon.value = false
+          if (expiresSoonTimeout !== null) {
+            clearTimeout(expiresSoonTimeout)
+          }
+          expiresSoonTimeout = setTimeout(() => { expiresSoon.value = true }, validFor - options.expiresSoonMargin)
+          if (logoutTimeout !== null) {
+            clearTimeout(logoutTimeout)
+          }
+          logoutTimeout = setTimeout(() => { this.logout() }, validFor - options.logoutMargin)
           return true
         } else {
           this.logout()
@@ -285,7 +318,7 @@ export function defineApiStore(name: string, options?: {baseUrl?: string}) {
         }
       },
       logout() {
-        cache._authorizationHeader = null
+        cache._authentication = null
         // Clear cache to avoid accessing data got while logged-in
         cache._items = {}
         cache._lists = {}

@@ -55,7 +55,7 @@ const class_ = computed(() => componentHandlesScrolling.value ? 'overflow-hidden
   <div class="vh-100 d-flex flex-column overflow-hidden">
     <Navbar :title :breadcrumbs></Navbar>
     <LoginModal />
-    <template v-if="api.auth.is_authenticated()">
+    <template v-if="api.auth.isAuthenticated.value">
       <div class="h-100 flex-fill container-fluid" data-cy="root-container" :class="class_">
         <RouterView v-slot="{ Component }">
           <component :is="Component" ref="component" />
