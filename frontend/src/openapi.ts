@@ -192,6 +192,8 @@ export interface paths {
   "/api/users/{id}": {
     /** Get User */
     get: operations["get_user_api_users__id__get"];
+    /** Update User */
+    patch: operations["update_user_api_users__id__patch"];
   };
   "/reset-for-tests/yes-im-sure": {
     /** Reset For Tests */
@@ -1527,8 +1529,32 @@ export interface components {
     /** userOutputItemAttributes */
     userOutputItemAttributes: {
       /** Username */
-      username: string;
+      username: string | null;
     };
+    /** userUpdateInput */
+    userUpdateInput: {
+      data: components["schemas"]["userUpdateInputData"];
+    };
+    /** userUpdateInputData */
+    userUpdateInputData: {
+      /** @default {} */
+      attributes?: components["schemas"]["userUpdateInputDataAttributes"];
+      /** Id */
+      id: string;
+      /** @default {} */
+      relationships?: components["schemas"]["userUpdateInputDataRelationships"];
+      /** Type */
+      type: string;
+    };
+    /** userUpdateInputDataAttributes */
+    userUpdateInputDataAttributes: {
+      /** Cleartextpassword */
+      clearTextPassword?: string;
+      /** Username */
+      username?: string | null;
+    };
+    /** userUpdateInputDataRelationships */
+    userUpdateInputDataRelationships: Record<string, never>;
   };
   responses: never;
   parameters: never;
@@ -3120,6 +3146,36 @@ export interface operations {
       };
       path: {
         id: string;
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        content: {
+          "application/vnd.api+json": components["schemas"]["userItemOutput"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  /** Update User */
+  update_user_api_users__id__patch: {
+    parameters: {
+      query?: {
+        include?: string;
+      };
+      path: {
+        id: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["userUpdateInput"];
       };
     };
     responses: {

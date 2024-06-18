@@ -5,7 +5,7 @@ import argon2
 from fastapi import Depends
 import jwt
 
-from .user import User, UserEmailAddress, optional_authenticated_user_dependable, mandatory_authenticated_user_dependable
+from .user import User, UserEmailAddress, UsersResource, optional_authenticated_user_dependable, mandatory_authenticated_user_dependable
 from .. import testing
 
 
@@ -211,3 +211,214 @@ class AuthenticationApiTestCase(testing.ApiTestCase):
 
         response = self.api_client.get("http://server/mandatory-authenticated", headers={"Authorization": f"Bearer {tempered_token}"})
         self.assertEqual(response.status_code, 401, response.json())
+
+
+class UsersApiTestCase(testing.ApiTestCase):
+    resources = [UsersResource]
+    polymorphism = {}
+
+    def setUp(self):
+        super().setUp()
+        self.create_model(
+            UserEmailAddress,
+            user=self.create_model(User, username="john", clear_text_password="password"),
+            address="john@example.com",
+        )
+        self.create_model(
+            UserEmailAddress,
+            user=self.create_model(User, username=None, clear_text_password="anonymous"),
+            address="anonymous@example.com",
+        )
+
+    def test_get_named_by_id(self):
+        response = self.get("http://server/users/fvirvd")
+        self.assertEqual(response.status_code, 200, response.json())
+        self.assertEqual(response.json(), {
+            "data": {
+                "type": "user",
+                "id": "fvirvd",
+                "links": {
+                    "self": "http://server/users/fvirvd",
+                },
+                "attributes": {
+                    "username": "john",
+                },
+            },
+        })
+
+    def test_get_anonymous_by_id(self):
+        response = self.get("http://server/users/ckylfa")
+        self.assertEqual(response.status_code, 200, response.json())
+        self.assertEqual(response.json(), {
+            "data": {
+                "type": "user",
+                "id": "ckylfa",
+                "links": {
+                    "self": "http://server/users/ckylfa",
+                },
+                "attributes": {
+                    "username": None,
+                },
+            },
+        })
+
+    def test_get_named_by_current(self):
+        self.expect_commits_rollbacks(2, 0)
+
+        self.login("john", "password")
+        response = self.get("http://server/users/current")
+        self.assertEqual(response.status_code, 200, response.json())
+        self.assertEqual(response.json(), {
+            "data": {
+                "type": "user",
+                "id": "fvirvd",
+                "links": {
+                    "self": "http://server/users/fvirvd",
+                },
+                "attributes": {
+                    "username": "john",
+                },
+            },
+        })
+
+    def test_get_anonymous_by_current(self):
+        self.expect_commits_rollbacks(2, 0)
+
+        self.login("anonymous@example.com", "anonymous")
+        response = self.get("http://server/users/current")
+        self.assertEqual(response.status_code, 200, response.json())
+        self.assertEqual(response.json(), {
+            "data": {
+                "type": "user",
+                "id": "ckylfa",
+                "links": {
+                    "self": "http://server/users/ckylfa",
+                },
+                "attributes": {
+                    "username": None,
+                },
+            },
+        })
+
+    def test_patch_current(self):
+        self.expect_commits_rollbacks(2, 0)
+
+        self.login("anonymous@example.com", "anonymous")
+
+        payload = {
+            "data": {
+                "type": "user",
+                "id": "current",
+                "attributes": {
+                    "username": "jane",
+                },
+            },
+        }
+        response = self.patch("http://server/users/current", payload)
+        self.assertEqual(response.status_code, 200, response.json())
+        self.assertEqual(response.json(), {
+            "data": {
+                "type": "user",
+                "id": "ckylfa",
+                "links": {
+                    "self": "http://server/users/ckylfa",
+                },
+                "attributes": {
+                    "username": "jane",
+                },
+            },
+        })
+
+    def test_patch_current__password(self):
+        self.expect_commits_rollbacks(3, 0)
+
+        self.login("anonymous@example.com", "anonymous")
+
+        payload = {
+            "data": {
+                "type": "user",
+                "id": "current",
+                "attributes": {
+                    "clearTextPassword": "new-password",
+                },
+            },
+        }
+        response = self.patch("http://server/users/current", payload)
+        self.assertEqual(response.status_code, 200, response.json())
+        self.assertEqual(response.json(), {
+            "data": {
+                "type": "user",
+                "id": "ckylfa",
+                "links": {
+                    "self": "http://server/users/ckylfa",
+                },
+                "attributes": {
+                    "username": None,
+                },
+            },
+        })
+
+        self.login("anonymous@example.com", "new-password")
+
+    def test_patch_current__unauthenticated(self):
+        self.expect_rollback()
+
+        payload = {
+            "data": {
+                "type": "user",
+                "id": "current",
+                "attributes": {
+                    "username": "jane",
+                },
+            },
+        }
+        response = self.patch("http://server/users/current", payload)
+        self.assertEqual(response.status_code, 401, response.json())
+        self.assertEqual(response.json(), {"detail": "Invalid or expired token"})
+
+    def test_patch_by_id__self(self):
+        self.expect_commits_rollbacks(2, 0)
+
+        self.login("anonymous@example.com", "anonymous")
+
+        payload = {
+            "data": {
+                "type": "user",
+                "id": "current",
+                "attributes": {
+                    "username": "jane",
+                },
+            },
+        }
+        response = self.patch("http://server/users/ckylfa", payload)
+        self.assertEqual(response.status_code, 200, response.json())
+        self.assertEqual(response.json(), {
+            "data": {
+                "type": "user",
+                "id": "ckylfa",
+                "links": {
+                    "self": "http://server/users/ckylfa",
+                },
+                "attributes": {
+                    "username": "jane",
+                },
+            },
+        })
+
+    def test_patch_by_id__someone_else(self):
+        self.expect_commits_rollbacks(1, 1)
+
+        self.login("anonymous@example.com", "anonymous")
+
+        payload = {
+            "data": {
+                "type": "user",
+                "id": "current",
+                "attributes": {
+                    "username": "jane",
+                },
+            },
+        }
+        response = self.patch("http://server/users/fvirvd", payload)
+        self.assertEqual(response.status_code, 403, response.json())
+        self.assertEqual(response.json(), {'detail': 'You can only edit your own user'})

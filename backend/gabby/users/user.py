@@ -1,3 +1,4 @@
+from contextlib import contextmanager
 from typing import Annotated
 import datetime
 import json
@@ -14,10 +15,18 @@ import sqlalchemy as sql
 from .. import api_models
 from .. import settings
 from ..database_utils import OrmBase, Session, make_item_getter, session_dependable
-from ..wrapping import set_wrapper, OrmWrapperWithStrIds
+from ..wrapping import make_sqids, set_wrapper, orm_wrapper_with_sqids, unwrap, wrap
 
 
 # Tests for this code are in an other file ('.tests') to break a circular dependency with '..testing'
+
+# https://stackoverflow.com/a/17576095/905845
+class WriteOnlyProperty(object):
+    def __init__(self, func):
+        self.func = func
+
+    def __set__(self, obj, value):
+        return self.func(obj, value)
 
 
 class User(OrmBase):
@@ -36,6 +45,10 @@ class User(OrmBase):
 
     def __init__(self, *, clear_text_password, **kwds):
         super().__init__(hashed_password=self.hash_password(clear_text_password), **kwds)
+
+    @WriteOnlyProperty
+    def clear_text_password(self, value):
+        self.hashed_password = self.hash_password(value)
 
     __password_hasher = argon2.PasswordHasher()
 
@@ -61,20 +74,6 @@ class UserEmailAddress(OrmBase):
     user_id: orm.Mapped[int] = orm.mapped_column(sql.ForeignKey("users.id", ondelete="CASCADE"))
     user: orm.Mapped[User] = orm.relationship("User", back_populates="email_addresses")
     address: orm.Mapped[str] = orm.mapped_column(unique=True)
-
-
-class UsersResource:
-    singular_name = "user"
-    plural_name = "users"
-
-    Model = api_models.User
-
-    default_page_size = settings.GENERIC_DEFAULT_API_PAGE_SIZE
-
-    ItemGetter = make_item_getter(User)
-
-
-set_wrapper(User, OrmWrapperWithStrIds)
 
 
 def authenticate(session, *, username, clear_text_password):
@@ -175,3 +174,43 @@ class MandatoryAuthenticatedUserDependent:
     ):
         self.session = session
         self.authenticated_user = authenticated_user
+
+
+class UsersResource:
+    singular_name = "user"
+    plural_name = "users"
+
+    Model = api_models.User
+
+    default_page_size = settings.GENERIC_DEFAULT_API_PAGE_SIZE
+
+    sqids = make_sqids(singular_name)
+
+    ItemGetter = make_item_getter(User)
+
+    class ItemGetter:
+        def __init__(self, session: Session = Depends(session_dependable), logged_in_user: User = Depends(optional_authenticated_user_dependable)):
+            self.__session = session
+            self.__logged_in_user = logged_in_user
+
+        def __call__(self, id):
+            if id == "current":
+                user = self.__logged_in_user
+            else:
+                user = self.__session.get(User, UsersResource.sqids.decode(id)[0])
+            return wrap(user)
+
+    class ItemSaver:
+        def __init__(self, session: Session = Depends(session_dependable), logged_in_user: User = Depends(mandatory_authenticated_user_dependable)):
+            self.__session = session
+            self.__logged_in_user = logged_in_user
+
+        @contextmanager
+        def __call__(self, user):
+            user = unwrap(user)
+            if user != self.__logged_in_user:
+                raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="You can only edit your own user")
+            yield
+
+
+set_wrapper(User, orm_wrapper_with_sqids(UsersResource.sqids))

@@ -4,13 +4,14 @@ import datetime
 
 from pydantic import BaseModel as Base
 
-from fastjsonapi import Constant, Computed, Filterable, Secret as WriteOnly
+from fastjsonapi import Constant, Computed, Filterable, Secret, Secret as WriteOnly
 
 from . import renderable
 
 
 class User(Base):
-    username: str
+    username: str | None
+    clear_text_password: Annotated[str, Secret()]
 
 
 class Ping(Base):
