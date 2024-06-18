@@ -24,8 +24,15 @@ class User(OrmBase):
     __tablename__ = "users"
 
     id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
-    username: orm.Mapped[str] = orm.mapped_column()
+    username: orm.Mapped[str | None] = orm.mapped_column()
     hashed_password: orm.Mapped[str] = orm.mapped_column()
+
+    email_addresses: orm.Mapped[list['UserEmailAddress']] = orm.relationship("UserEmailAddress", back_populates="user")
+
+    __table_args__ = (
+        # NEVER allow '@' in usernames, to avoid confusion with email addresses
+        sql.CheckConstraint("regexp_like(username, '^[-_A-Za-z0-9]+$')", name="check_username"),
+    )
 
     def __init__(self, *, clear_text_password, **kwds):
         super().__init__(hashed_password=self.hash_password(clear_text_password), **kwds)
@@ -47,6 +54,15 @@ class User(OrmBase):
             return True
 
 
+class UserEmailAddress(OrmBase):
+    __tablename__ = "user_email_addresses"
+
+    id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
+    user_id: orm.Mapped[int] = orm.mapped_column(sql.ForeignKey("users.id", ondelete="CASCADE"))
+    user: orm.Mapped[User] = orm.relationship("User", back_populates="email_addresses")
+    address: orm.Mapped[str] = orm.mapped_column(unique=True)
+
+
 class UsersResource:
     singular_name = "user"
     plural_name = "users"
@@ -62,7 +78,10 @@ set_wrapper(User, OrmWrapperWithStrIds)
 
 
 def authenticate(session, *, username, clear_text_password):
-    user = session.execute(sql.select(User).filter(User.username == username)).scalar()
+    if "@" in username:
+        user = session.execute(sql.select(User).join(UserEmailAddress).filter(UserEmailAddress.address == username)).scalar()
+    else:
+        user = session.execute(sql.select(User).filter(User.username == username)).scalar()
     if user is None:
         # Do one round of hashing to mitigate timing attacks
         User.hash_password(clear_text_password)

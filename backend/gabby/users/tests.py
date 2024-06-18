@@ -5,7 +5,7 @@ import argon2
 from fastapi import Depends
 import jwt
 
-from .user import User, optional_authenticated_user_dependable, mandatory_authenticated_user_dependable
+from .user import User, UserEmailAddress, optional_authenticated_user_dependable, mandatory_authenticated_user_dependable
 from .. import testing
 
 
@@ -55,7 +55,16 @@ class AuthenticationApiTestCase(testing.ApiTestCase):
 
     def setUp(self):
         super().setUp()
-        self.create_model(User, username="john", clear_text_password="password")
+        self.create_model(
+            UserEmailAddress,
+            user=self.create_model(User, username="john", clear_text_password="password"),
+            address="john@example.com",
+        )
+        self.create_model(
+            UserEmailAddress,
+            user=self.create_model(User, username=None, clear_text_password="anonymous"),
+            address="anonymous@example.com",
+        )
 
     def test_unauthenticated__ok_on_optional(self):
         response = self.api_client.get("http://server/optional-authenticated")
@@ -75,14 +84,14 @@ class AuthenticationApiTestCase(testing.ApiTestCase):
         self.assertEqual(response.status_code, 403, response.json())
         self.assertEqual(response.json(), {"detail": "Incorrect username or password"})
 
-    def test_unexisting_user(self):
+    def test_non_existing_user(self):
         self.expect_rollback()
 
         response = self.api_client.post("http://server/token", data={"username": "bob", "password": "password"})
         self.assertEqual(response.status_code, 403, response.json())
         self.assertEqual(response.json(), {"detail": "Incorrect username or password"})
 
-    def test_password_flow(self):
+    def test_password_flow_using_username(self):
         self.expect_commits_rollbacks(3, 0)
 
         response = self.api_client.post("http://server/token", data={"username": "john", "password": "password"})
@@ -96,6 +105,34 @@ class AuthenticationApiTestCase(testing.ApiTestCase):
         response = self.api_client.get("http://server/mandatory-authenticated", headers={"Authorization": f"Bearer {token}"})
         self.assertEqual(response.status_code, 200, response.json())
         self.assertEqual(response.json(), {"username": "john"})
+
+    def test_password_flow_using_email_address_for_named_user(self):
+        self.expect_commits_rollbacks(2, 0)
+
+        response = self.api_client.post("http://server/token", data={"username": "john@example.com", "password": "password"})
+        self.assertEqual(response.status_code, 200, response.json())
+        token = response.json()["access_token"]
+
+        response = self.api_client.get("http://server/mandatory-authenticated", headers={"Authorization": f"Bearer {token}"})
+        self.assertEqual(response.status_code, 200, response.json())
+        self.assertEqual(response.json(), {"username": "john"})
+
+    def test_password_flow_using_email_address_for_anonymous_user(self):
+        self.expect_commits_rollbacks(2, 0)
+
+        response = self.api_client.post("http://server/token", data={"username": "anonymous@example.com", "password": "anonymous"})
+        self.assertEqual(response.status_code, 200, response.json())
+        token = response.json()["access_token"]
+
+        response = self.api_client.get("http://server/mandatory-authenticated", headers={"Authorization": f"Bearer {token}"})
+        self.assertEqual(response.status_code, 200, response.json())
+        self.assertEqual(response.json(), {"username": None})
+
+    def test_password_flow_using_email_address_for_non_existing_user(self):
+        self.expect_commits_rollbacks(0, 1)
+
+        response = self.api_client.post("http://server/token", data={"username": "nope@example.com", "password": "password"})
+        self.assertEqual(response.status_code, 403, response.json())
 
     def test_token_expiration(self):
         self.expect_commits_rollbacks(4, 1)

@@ -37,8 +37,9 @@ def upgrade():
     op.create_table(
         "users",
         sa.Column("id", sa.Integer(), nullable=False),
-        sa.Column("username", sa.String(), nullable=False),
+        sa.Column("username", sa.String(), nullable=True),
         sa.Column("hashed_password", sa.String(), nullable=False),
+        sa.CheckConstraint("regexp_like(username, '^[-_A-Za-z0-9]+$')", name="check_username"),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_table(
@@ -142,6 +143,15 @@ def upgrade():
         sa.UniqueConstraint("id", "project_id"),
     )
     op.create_table(
+        "user_email_addresses",
+        sa.Column("id", sa.Integer(), nullable=False),
+        sa.Column("user_id", sa.Integer(), nullable=False),
+        sa.Column("address", sa.String(), nullable=False),
+        sa.ForeignKeyConstraint(["user_id"], ["users.id"], ondelete="CASCADE"),
+        sa.PrimaryKeyConstraint("id"),
+        sa.UniqueConstraint("address"),
+    )
+    op.create_table(
         "exercises",
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("project_id", sa.Integer(), nullable=False),
@@ -210,6 +220,7 @@ def downgrade():
     op.drop_table("extraction_events")
     op.drop_table("sections")
     op.drop_table("exercises")
+    op.drop_table("user_email_addresses")
     op.drop_table("textbooks")
     op.drop_table("pings")
     op.drop_table("pdf_file_namings")

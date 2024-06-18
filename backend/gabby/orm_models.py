@@ -7,7 +7,7 @@ from .pdfs import PdfFile, PdfFileNaming
 from .pings import Ping
 from .projects import Project
 from .textbooks import Section, Textbook
-from .users import User
+from .users import User, UserEmailAddress
 
 
 all_models = [
@@ -26,4 +26,5 @@ all_models = [
     SelectThingsAdaptation,
     Textbook,
     User,
+    UserEmailAddress,
 ]

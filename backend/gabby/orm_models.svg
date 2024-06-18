@@ -753,7 +753,45 @@
 <polygon fill="#1e88e5" stroke="#1e88e5" points="1405.98,-938.38 1400.77,-929.15 1399.09,-939.62 1405.98,-938.38"/>
 </a>
 </g>
-<text text-anchor="middle" x="1437.5" y="-1026" font-family="Roboto" font-size="10.00">updated_by</text>
+<text text-anchor="middle" x="1438.5" y="-1026" font-family="Roboto" font-size="10.00">updated_by</text>
+</g>
+<!-- UserEmailAddress -->
+<g id="node16" class="node">
+<title>UserEmailAddress</title>
+<g id="a_node16"><a xlink:href="http://UserEmailAddress_details.html" xlink:title="&lt;TABLE&gt;">
+<polygon fill="#3f51b5" stroke="transparent" points="1306.5,-699 1306.5,-718 1477.5,-718 1477.5,-699 1306.5,-699"/>
+<polygon fill="none" stroke="black" points="1306.5,-699 1306.5,-718 1477.5,-718 1477.5,-699 1306.5,-699"/>
+<text text-anchor="start" x="1337.5" y="-705.4" font-family="Roboto" font-size="12.00" fill="white">UserEmailAddress</text>
+<polygon fill="#bbdefb" stroke="transparent" points="1306.5,-680 1306.5,-699 1359.5,-699 1359.5,-680 1306.5,-680"/>
+<polygon fill="none" stroke="black" points="1306.5,-680 1306.5,-699 1359.5,-699 1359.5,-680 1306.5,-680"/>
+<text text-anchor="start" x="1327.5" y="-686.4" font-family="Roboto" font-size="12.00">id</text>
+<polygon fill="#bbdefb" stroke="transparent" points="1359.5,-680 1359.5,-699 1477.5,-699 1477.5,-680 1359.5,-680"/>
+<polygon fill="none" stroke="black" points="1359.5,-680 1359.5,-699 1477.5,-699 1477.5,-680 1359.5,-680"/>
+<text text-anchor="start" x="1378" y="-686.4" font-family="Roboto" font-size="12.00">INTEGER (PK)</text>
+<polygon fill="#bbdefb" stroke="transparent" points="1306.5,-661 1306.5,-680 1359.5,-680 1359.5,-661 1306.5,-661"/>
+<polygon fill="none" stroke="black" points="1306.5,-661 1306.5,-680 1359.5,-680 1359.5,-661 1306.5,-661"/>
+<text text-anchor="start" x="1311.5" y="-667.4" font-family="Roboto" font-size="12.00">user_id</text>
+<polygon fill="#bbdefb" stroke="transparent" points="1359.5,-661 1359.5,-680 1477.5,-680 1477.5,-661 1359.5,-661"/>
+<polygon fill="none" stroke="black" points="1359.5,-661 1359.5,-680 1477.5,-680 1477.5,-661 1359.5,-661"/>
+<text text-anchor="start" x="1385.5" y="-667.4" font-family="Roboto" font-size="12.00">INTEGER ()</text>
+<polygon fill="#bbdefb" stroke="transparent" points="1306.5,-642 1306.5,-661 1359.5,-661 1359.5,-642 1306.5,-642"/>
+<polygon fill="none" stroke="black" points="1306.5,-642 1306.5,-661 1359.5,-661 1359.5,-642 1306.5,-642"/>
+<text text-anchor="start" x="1309.5" y="-648.4" font-family="Roboto" font-size="12.00">address</text>
+<polygon fill="#bbdefb" stroke="transparent" points="1359.5,-642 1359.5,-661 1477.5,-661 1477.5,-642 1359.5,-642"/>
+<polygon fill="none" stroke="black" points="1359.5,-642 1359.5,-661 1477.5,-661 1477.5,-642 1359.5,-642"/>
+<text text-anchor="start" x="1362.5" y="-648.4" font-family="Roboto" font-size="12.00">VARCHAR (Unique)</text>
+</a>
+</g>
+</g>
+<!-- User&#45;&gt;UserEmailAddress -->
+<g id="edge26" class="edge">
+<title>User&#45;&gt;UserEmailAddress</title>
+<g id="a_edge26"><a xlink:title="Relation between User and UserEmailAddress">
+<path fill="none" stroke="#1e88e5" stroke-dasharray="5,2" d="M1360.95,-844.94C1342.99,-815.6 1326.19,-775.24 1339.5,-740 1340.68,-736.87 1342.11,-733.8 1343.74,-730.81"/>
+<polygon fill="#1e88e5" stroke="#1e88e5" points="1346.86,-732.42 1349.12,-722.07 1340.9,-728.74 1346.86,-732.42"/>
+</a>
+</g>
+<text text-anchor="middle" x="1381" y="-743" font-family="Roboto" font-size="10.00">email_addresses</text>
 </g>
 <!-- SelectThingsAdaptation -->
 <g id="node15" class="node">
@@ -810,6 +848,16 @@
 </a>
 </g>
 <text text-anchor="middle" x="1045" y="-1026" font-family="Roboto" font-size="10.00">exercise</text>
+</g>
+<!-- UserEmailAddress&#45;&gt;User -->
+<g id="edge27" class="edge">
+<title>UserEmailAddress&#45;&gt;User</title>
+<g id="a_edge27"><a xlink:title="Relation between UserEmailAddress and User">
+<path fill="none" stroke="#1e88e5" stroke-dasharray="5,2" d="M1416.29,-722.23C1418.84,-728.03 1421.03,-734.05 1422.5,-740 1430.27,-771.51 1423.02,-807.13 1413.59,-835.3"/>
+<polygon fill="#1e88e5" stroke="#1e88e5" points="1410.21,-834.34 1410.18,-844.93 1416.81,-836.67 1410.21,-834.34"/>
+</a>
+</g>
+<text text-anchor="middle" x="1435.5" y="-743" font-family="Roboto" font-size="10.00">user</text>
 </g>
 </g>
 </svg>
