@@ -302,6 +302,7 @@ def add_resource_routes(resources, resource, router):
                 include=parse_include(include),
             )
 
+    # @todo Actually support resources without an ItemGetter (useful e.g. in Gabby for 'RecoveryEmailRequest' and 'AdaptedExercise')
     if resource.ItemGetter:
         @router.get(
             f"/{resource.pluralName}""/{id}",
