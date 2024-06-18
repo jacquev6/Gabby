@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 
-import { BModal, BButton, BRow, BCol, BLabeledInput } from './opinion/bootstrap'
+import { BBusy, BModal, BButton, BRow, BCol, BLabeledInput } from './opinion/bootstrap'
 import LanguageSelector from './opinion/LanguageSelector.vue'
 import { useApiStore } from '../stores/api'
 
@@ -22,9 +22,17 @@ watch(
 const username = ref('')
 const password = ref('')
 
+const busy = ref(false)
+const failed = ref(false)
+
 async function login() {
   console.assert(modal.value !== null)
-  if (await api.auth.login(username.value, password.value)) {
+  busy.value = true
+  const success = await api.auth.login(username.value, password.value)
+  busy.value = false
+  password.value = ''
+  failed.value = !success
+  if (success) {
     modal.value.hide()
   }
 }
@@ -45,10 +53,13 @@ async function login() {
       </div>
     </template>
     <template #body>
-      <BLabeledInput :label="$t('emailAddress')" name="username" v-model="username" />
-      <BLabeledInput :label="$t('password')" name="password" type="password" v-model="password" />
+      <BBusy :busy>
+        <BLabeledInput :label="$t('emailAddress')" name="username" v-model="username" />
+        <BLabeledInput :label="$t('password')" name="password" type="password" v-model="password" />
+      </BBusy>
     </template>
     <template #footer>
+      <p v-if="failed" class="text-danger">{{ $t('loginFailed') }}</p>
       <BButton primary @click="login" :disabled="username === '' || password === ''">{{ $t('loginButton') }}</BButton>
     </template>
   </BModal>

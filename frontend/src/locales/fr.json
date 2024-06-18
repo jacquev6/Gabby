@@ -11,6 +11,7 @@
   "emailAddress": "Adresse e-mail",
   "password": "Mot de passe",
   "logoutButton": "Déconnexion",
+  "loginFailed": "Connexion échouée. Merci de vérifiez vos identifiants.",
 
 
   "thisIsABug": "Vous ne devriez pas voir ça ; c'est un bug. Merci de le signaler à Vincent Jacques.",
