@@ -1566,13 +1566,29 @@ export interface components {
       /** Id */
       id: string;
       links: components["schemas"]["ItemLinks"];
+      relationships: components["schemas"]["userOutputItemRelationships"];
       /** Type */
       type: string;
     };
     /** userOutputItemAttributes */
     userOutputItemAttributes: {
+      /**
+       * Createdat
+       * Format: date-time
+       */
+      createdAt: string;
+      /**
+       * Updatedat
+       * Format: date-time
+       */
+      updatedAt: string;
       /** Username */
       username: string | null;
+    };
+    /** userOutputItemRelationships */
+    userOutputItemRelationships: {
+      createdBy: components["schemas"]["OptionalRelationship"];
+      updatedBy: components["schemas"]["OptionalRelationship"];
     };
     /** userUpdateInput */
     userUpdateInput: {

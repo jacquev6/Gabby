@@ -269,16 +269,14 @@ class UsersApiTestCase(testing.ApiTestCase):
 
     def setUp(self):
         super().setUp()
-        self.create_model(
-            UserEmailAddress,
-            user=self.create_model(User, username="john", clear_text_password="password"),
-            address="john@example.com",
-        )
-        self.create_model(
-            UserEmailAddress,
-            user=self.create_model(User, username=None, clear_text_password="anonymous"),
-            address="anonymous@example.com",
-        )
+        self.john = self.create_model(User, username="john", clear_text_password="password")
+        self.create_model(UserEmailAddress, user=self.john, address="john@example.com")
+        self.john_created_at = self.john.created_at.isoformat().replace("+00:00", "Z")
+        self.john_updated_at = self.john.updated_at.isoformat().replace("+00:00", "Z")
+        self.anonymous = self.create_model(User, username=None, clear_text_password="anonymous")
+        self.create_model(UserEmailAddress, user=self.anonymous, address="anonymous@example.com")
+        self.anonymous_created_at = self.anonymous.created_at.isoformat().replace("+00:00", "Z")
+        self.anonymous_updated_at = self.anonymous.updated_at.isoformat().replace("+00:00", "Z")
 
     def test_get_named_by_id(self):
         response = self.get("http://server/users/fvirvd")
@@ -292,6 +290,12 @@ class UsersApiTestCase(testing.ApiTestCase):
                 },
                 "attributes": {
                     "username": "john",
+                    "createdAt": self.john_created_at,
+                    "updatedAt": self.john_updated_at,
+                },
+                "relationships": {
+                    "createdBy": {"data": None},
+                    "updatedBy": {"data": None},
                 },
             },
         })
@@ -308,6 +312,12 @@ class UsersApiTestCase(testing.ApiTestCase):
                 },
                 "attributes": {
                     "username": None,
+                    "createdAt": self.anonymous_created_at,
+                    "updatedAt": self.anonymous_updated_at,
+                },
+                "relationships": {
+                    "createdBy": {"data": None},
+                    "updatedBy": {"data": None},
                 },
             },
         })
@@ -327,6 +337,12 @@ class UsersApiTestCase(testing.ApiTestCase):
                 },
                 "attributes": {
                     "username": "john",
+                    "createdAt": self.john_created_at,
+                    "updatedAt": self.john_updated_at,
+                },
+                "relationships": {
+                    "createdBy": {"data": None},
+                    "updatedBy": {"data": None},
                 },
             },
         })
@@ -346,11 +362,17 @@ class UsersApiTestCase(testing.ApiTestCase):
                 },
                 "attributes": {
                     "username": None,
+                    "createdAt": self.anonymous_created_at,
+                    "updatedAt": self.anonymous_updated_at,
+                },
+                "relationships": {
+                    "createdBy": {"data": None},
+                    "updatedBy": {"data": None},
                 },
             },
         })
 
-    def test_patch_current(self):
+    def test_patch_current__username(self):
         self.expect_commits_rollbacks(2, 0)
 
         self.login("anonymous@example.com", "anonymous")
@@ -366,6 +388,8 @@ class UsersApiTestCase(testing.ApiTestCase):
         }
         response = self.patch("http://server/users/current", payload)
         self.assertEqual(response.status_code, 200, response.json())
+        updated_at = response.json()["data"]["attributes"]["updatedAt"]
+        self.assertGreater(datetime.datetime.fromisoformat(updated_at), datetime.datetime.fromisoformat(self.anonymous_created_at))
         self.assertEqual(response.json(), {
             "data": {
                 "type": "user",
@@ -375,6 +399,12 @@ class UsersApiTestCase(testing.ApiTestCase):
                 },
                 "attributes": {
                     "username": "jane",
+                    "createdAt": self.anonymous_created_at,
+                    "updatedAt": updated_at
+                },
+                "relationships": {
+                    "createdBy": {"data": None},
+                    "updatedBy": {"data": {"type": "user", "id": "ckylfa"}},
                 },
             },
         })
@@ -395,6 +425,8 @@ class UsersApiTestCase(testing.ApiTestCase):
         }
         response = self.patch("http://server/users/current", payload)
         self.assertEqual(response.status_code, 200, response.json())
+        updated_at = response.json()["data"]["attributes"]["updatedAt"]
+        self.assertGreater(datetime.datetime.fromisoformat(updated_at), datetime.datetime.fromisoformat(self.anonymous_created_at))
         self.assertEqual(response.json(), {
             "data": {
                 "type": "user",
@@ -404,6 +436,12 @@ class UsersApiTestCase(testing.ApiTestCase):
                 },
                 "attributes": {
                     "username": None,
+                    "createdAt": self.anonymous_created_at,
+                    "updatedAt": updated_at
+                },
+                "relationships": {
+                    "createdBy": {"data": None},
+                    "updatedBy": {"data": {"type": "user", "id": "ckylfa"}},
                 },
             },
         })
@@ -442,6 +480,8 @@ class UsersApiTestCase(testing.ApiTestCase):
         }
         response = self.patch("http://server/users/ckylfa", payload)
         self.assertEqual(response.status_code, 200, response.json())
+        updated_at = response.json()["data"]["attributes"]["updatedAt"]
+        self.assertGreater(datetime.datetime.fromisoformat(updated_at), datetime.datetime.fromisoformat(self.anonymous_created_at))
         self.assertEqual(response.json(), {
             "data": {
                 "type": "user",
@@ -451,6 +491,12 @@ class UsersApiTestCase(testing.ApiTestCase):
                 },
                 "attributes": {
                     "username": "jane",
+                    "createdAt": self.anonymous_created_at,
+                    "updatedAt": updated_at
+                },
+                "relationships": {
+                    "createdBy": {"data": None},
+                    "updatedBy": {"data": {"type": "user", "id": "ckylfa"}},
                 },
             },
         })

@@ -1,3 +1,4 @@
+from __future__ import annotations
 from contextlib import contextmanager
 from typing import Annotated
 import datetime
@@ -33,10 +34,19 @@ class User(OrmBase):
     __tablename__ = "users"
 
     id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
+
+    # Can't use 'CreatedUpdatedByAtMixin' because of circular dependency
+    created_at: orm.Mapped[datetime.datetime] = orm.mapped_column(sql.DateTime(timezone=True), server_default=sql.func.now())
+    created_by_id: orm.Mapped[int | None] = orm.mapped_column(sql.ForeignKey("users.id"))
+    created_by: orm.Mapped[User | None] = orm.relationship(foreign_keys=[created_by_id], remote_side=[id], post_update=True)
+    updated_at: orm.Mapped[datetime.datetime] = orm.mapped_column(sql.DateTime(timezone=True), server_default=sql.func.now(), onupdate=sql.func.now())
+    updated_by_id: orm.Mapped[int | None] = orm.mapped_column(sql.ForeignKey("users.id"))
+    updated_by: orm.Mapped[User | None] = orm.relationship(foreign_keys=[updated_by_id], remote_side=[id], post_update=True)
+
     username: orm.Mapped[str | None] = orm.mapped_column()
     hashed_password: orm.Mapped[str | None] = orm.mapped_column()
 
-    email_addresses: orm.Mapped[list['UserEmailAddress']] = orm.relationship("UserEmailAddress", back_populates="user")
+    email_addresses: orm.Mapped[list[UserEmailAddress]] = orm.relationship("UserEmailAddress", back_populates="user")
 
     __table_args__ = (
         # NEVER allow '@' in usernames, to avoid confusion with email addresses
@@ -222,6 +232,8 @@ class UsersResource:
             if user != self.__logged_in_user:
                 raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="You can only edit your own user")
             yield
+            user.updated_by = self.__logged_in_user
+            self.__session.flush()
 
 
 set_wrapper(User, orm_wrapper_with_sqids(UsersResource.sqids))

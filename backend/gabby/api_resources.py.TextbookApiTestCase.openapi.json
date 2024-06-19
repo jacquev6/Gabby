@@ -2728,9 +2728,9 @@
           }
         },
         "required": [
-          "message",
+          "updatedAt",
           "createdAt",
-          "updatedAt"
+          "message"
         ],
         "title": "pingOutputItemAttributes",
         "type": "object"
@@ -2752,8 +2752,8 @@
           }
         },
         "required": [
-          "createdBy",
           "updatedBy",
+          "createdBy",
           "prev",
           "next"
         ],
@@ -4104,6 +4104,9 @@
           "links": {
             "$ref": "#/components/schemas/ItemLinks"
           },
+          "relationships": {
+            "$ref": "#/components/schemas/userOutputItemRelationships"
+          },
           "type": {
             "title": "Type",
             "type": "string"
@@ -4113,7 +4116,8 @@
           "type",
           "id",
           "links",
-          "attributes"
+          "attributes",
+          "relationships"
         ],
         "title": "userOutputItem",
         "type": "object"
@@ -4121,6 +4125,16 @@
       "userOutputItemAttributes": {
         "additionalProperties": false,
         "properties": {
+          "createdAt": {
+            "format": "date-time",
+            "title": "Createdat",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "title": "Updatedat",
+            "type": "string"
+          },
           "username": {
             "anyOf": [
               {
@@ -4134,9 +4148,28 @@
           }
         },
         "required": [
+          "updatedAt",
+          "createdAt",
           "username"
         ],
         "title": "userOutputItemAttributes",
+        "type": "object"
+      },
+      "userOutputItemRelationships": {
+        "additionalProperties": false,
+        "properties": {
+          "createdBy": {
+            "$ref": "#/components/schemas/OptionalRelationship"
+          },
+          "updatedBy": {
+            "$ref": "#/components/schemas/OptionalRelationship"
+          }
+        },
+        "required": [
+          "updatedBy",
+          "createdBy"
+        ],
+        "title": "userOutputItemRelationships",
         "type": "object"
       },
       "userUpdateInput": {

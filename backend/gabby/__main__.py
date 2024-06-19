@@ -100,8 +100,13 @@ def import_django_data(input_file):
     with orm.Session(database_engine) as session:
         database_utils.truncate_all_tables(session)
 
-        import_user = orm_models.User(username="import", clear_text_password=None)
+        import_user = orm_models.User(username="import")
         session.add(import_user)
+        session.flush()
+
+        vincent = orm_models.User(username="jacquev6", created_by=import_user, updated_by=import_user)
+        session.add(vincent)
+        session.add(orm_models.UserEmailAddress(user=vincent, address="vincent@vincent-jacques.net"))
         session.flush()
 
         for instance_data in data:

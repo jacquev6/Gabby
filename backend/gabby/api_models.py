@@ -9,7 +9,19 @@ from fastjsonapi import Constant, Computed, Filterable, Secret, Secret as WriteO
 from . import renderable
 
 
-class User(Base):
+class CreatedByAtMixin:
+    created_at: Annotated[datetime.datetime, Computed()]
+    created_by: Annotated[User | None, Computed()] = None
+
+class UpdatedByAtMixin:
+    updated_at: Annotated[datetime.datetime, Computed()]
+    updated_by: Annotated[User | None, Computed()] = None
+
+class CreatedUpdatedByAtMixin(CreatedByAtMixin, UpdatedByAtMixin):
+    pass
+
+
+class User(Base, CreatedUpdatedByAtMixin):
     username: str | None
     clear_text_password: Annotated[str, Secret()]
 
@@ -19,12 +31,8 @@ class RecoveryEmailRequest(Base):
     language: Annotated[str, WriteOnly()]
 
 
-class Ping(Base):
+class Ping(Base, CreatedUpdatedByAtMixin):
     message: Annotated[str | None, Filterable()] = None
-    created_at: Annotated[datetime.datetime, Computed()]
-    created_by: Annotated[User | None, Computed()] = None
-    updated_at: Annotated[datetime.datetime, Computed()]
-    updated_by: Annotated[User | None, Computed()] = None
     prev: Annotated[Ping | None, Filterable()] = None
     next: list[Ping] = []
 

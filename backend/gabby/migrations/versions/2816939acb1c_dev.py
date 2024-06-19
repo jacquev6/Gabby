@@ -37,9 +37,21 @@ def upgrade():
     op.create_table(
         "users",
         sa.Column("id", sa.Integer(), nullable=False),
+        sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.text("now()"), nullable=False),
+        sa.Column("created_by_id", sa.Integer(), nullable=True),
+        sa.Column("updated_at", sa.DateTime(timezone=True), server_default=sa.text("now()"), nullable=False),
+        sa.Column("updated_by_id", sa.Integer(), nullable=True),
         sa.Column("username", sa.String(), nullable=True),
         sa.Column("hashed_password", sa.String(), nullable=True),
         sa.CheckConstraint("regexp_like(username, '^[-_A-Za-z0-9]+$')", name="check_username"),
+        sa.ForeignKeyConstraint(
+            ["created_by_id"],
+            ["users.id"],
+        ),
+        sa.ForeignKeyConstraint(
+            ["updated_by_id"],
+            ["users.id"],
+        ),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_table(
