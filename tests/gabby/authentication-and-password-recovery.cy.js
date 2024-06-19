@@ -73,6 +73,8 @@ describe('Gabby\'s authentication system', () => {
     cy.get('h1:contains("Lost password")').should('exist')
 
     cy.get('[name=username]').type('jacquev6+gabby-dev-alice@gmail.com', {delay: 0})
+    cy.get('[name=username]').type('{selectAll}jacquev6+gabby-dev-alice@gmail.com', {delay: 0})
+    cy.get('[name=username]').should('have.value', 'jacquev6+gabby-dev-alice@gmail.com')
 
     cy.intercept('POST', '/api/recoveryEmailRequests?', {
       statusCode: 201,
