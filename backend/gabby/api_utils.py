@@ -72,16 +72,16 @@ def make_page_getter(
             sort = sort or default_sort
 
             count = self.session.scalar(add_filters(sql.select(sql.func.count(model.id)), filters))
-            textbooks = [
-                wrap(textbook)
-                for (textbook,) in self.session.execute(
+            items = [
+                wrap(item)
+                for (item,) in self.session.execute(
                     add_filters(sql.select(model), filters)
                         .order_by(*sort)
                         .offset(first_index)
                         .limit(page_size)
                 )
             ]
-            return (count, textbooks)
+            return (count, items)
 
     return PageGetter
 
