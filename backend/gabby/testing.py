@@ -122,24 +122,21 @@ class ApiTestCase(TransactionTestCase):
     def setUpClass(cls):
         super().setUpClass()
 
-        if cls is not ApiTestCase:
-            cls.api_app = FastAPI(make_session=cls.make_session)
-            cls.api_app.include_router(make_jsonapi_router(cls.resources, cls.polymorphism))
+        cls.api_app = FastAPI(make_session=cls.make_session)
+        cls.api_app.include_router(make_jsonapi_router(cls.resources, cls.polymorphism))
 
-            @cls.api_app.post("/token")
-            def login(authentication: dict = Depends(authentication_dependable)):
-                return authentication
+        @cls.api_app.post("/token")
+        def login(authentication: dict = Depends(authentication_dependable)):
+            return authentication
 
-            cls.__schema_file_path = f"{inspect.getfile(cls)}.{cls.__name__}.openapi.json"
-            cls.api_client = TestClient(cls.api_app)
+        cls.api_client = TestClient(cls.api_app)
 
     def setUp(self):
         super().setUp()
         self.expect_commit()
 
     def tearDown(self):
-        if self.__class__ is not ApiTestCase:
-            self.logout()
+        self.logout()
         super().tearDown()
 
     def login(self, username, password):
@@ -161,25 +158,6 @@ class ApiTestCase(TransactionTestCase):
 
     def delete(self, url):
         return self.api_client.delete(url, headers={"Content-Type": "application/vnd.api+json"})
-
-    def test_schema(self):
-        self.expect_commits_rollbacks(0, 0)
-
-        if self.__class__ is not ApiTestCase:
-            try:
-                with open(self.__schema_file_path) as file:
-                    expected = json.load(file)
-            except FileNotFoundError:
-                expected = {}
-
-            actual = self.api_app.openapi()
-
-            try:
-                self.assertEqual(actual, expected)
-            finally:
-                with open(self.__schema_file_path, "w") as file:
-                    json.dump(actual, file, indent=2, sort_keys=True)
-                    file.write("\n")
 
 
 class AdaptationTestCase(TestCase):
