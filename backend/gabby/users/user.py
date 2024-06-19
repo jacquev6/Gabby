@@ -111,7 +111,7 @@ def authentication_dependable(
     options.validity = min(options.validity, default_validity)
     valid_until = datetime.datetime.now(tz=datetime.timezone.utc) + options.validity
     token = {
-        "username": user.username,
+        "userId": user.id,
         "validUntil": valid_until.isoformat(),
     }
     return {
@@ -136,7 +136,7 @@ def optional_authenticated_user_dependable(
             return None
         else:
             if datetime.datetime.now(tz=datetime.timezone.utc) < datetime.datetime.fromisoformat(token["validUntil"]):
-                user = session.execute(sql.select(User).filter(User.username == token["username"])).scalar()
+                user = session.get(User, token["userId"])
                 if user is None:
                     # User not found despite having a valid token: user was deleted => silently unauthenticated
                     return None

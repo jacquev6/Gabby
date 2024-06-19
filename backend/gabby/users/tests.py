@@ -47,11 +47,11 @@ class AuthenticationApiTestCase(testing.ApiTestCase):
             if user is None:
                 return None
             else:
-                return {"username": user.username}
+                return {"id": user.id, "username": user.username}
 
         @cls.api_app.get("/mandatory-authenticated")
         def get(user: User = Depends(mandatory_authenticated_user_dependable)):
-            return {"username": user.username}
+            return {"id": user.id, "username": user.username}
 
     def setUp(self):
         super().setUp()
@@ -62,8 +62,13 @@ class AuthenticationApiTestCase(testing.ApiTestCase):
         )
         self.create_model(
             UserEmailAddress,
-            user=self.create_model(User, username=None, clear_text_password="anonymous"),
-            address="anonymous@example.com",
+            user=self.create_model(User, username=None, clear_text_password="anonymous-1"),
+            address="anonymous-1@example.com",
+        )
+        self.create_model(
+            UserEmailAddress,
+            user=self.create_model(User, username=None, clear_text_password="anonymous-2"),
+            address="anonymous-2@example.com",
         )
 
     def test_unauthenticated__ok_on_optional(self):
@@ -100,11 +105,11 @@ class AuthenticationApiTestCase(testing.ApiTestCase):
 
         response = self.api_client.get("http://server/optional-authenticated", headers={"Authorization": f"Bearer {token}"})
         self.assertEqual(response.status_code, 200, response.json())
-        self.assertEqual(response.json(), {"username": "john"})
+        self.assertEqual(response.json(), {"id": 1, "username": "john"})
 
         response = self.api_client.get("http://server/mandatory-authenticated", headers={"Authorization": f"Bearer {token}"})
         self.assertEqual(response.status_code, 200, response.json())
-        self.assertEqual(response.json(), {"username": "john"})
+        self.assertEqual(response.json(), {"id": 1, "username": "john"})
 
     def test_password_flow_using_email_address_for_named_user(self):
         self.expect_commits_rollbacks(2, 0)
@@ -115,18 +120,29 @@ class AuthenticationApiTestCase(testing.ApiTestCase):
 
         response = self.api_client.get("http://server/mandatory-authenticated", headers={"Authorization": f"Bearer {token}"})
         self.assertEqual(response.status_code, 200, response.json())
-        self.assertEqual(response.json(), {"username": "john"})
+        self.assertEqual(response.json(), {"id": 1, "username": "john"})
 
-    def test_password_flow_using_email_address_for_anonymous_user(self):
+    def test_password_flow_using_email_address_for_anonymous_1_user(self):
         self.expect_commits_rollbacks(2, 0)
 
-        response = self.api_client.post("http://server/token", data={"username": "anonymous@example.com", "password": "anonymous"})
+        response = self.api_client.post("http://server/token", data={"username": "anonymous-1@example.com", "password": "anonymous-1"})
         self.assertEqual(response.status_code, 200, response.json())
         token = response.json()["access_token"]
 
         response = self.api_client.get("http://server/mandatory-authenticated", headers={"Authorization": f"Bearer {token}"})
         self.assertEqual(response.status_code, 200, response.json())
-        self.assertEqual(response.json(), {"username": None})
+        self.assertEqual(response.json(), {"id": 2, "username": None})
+
+    def test_password_flow_using_email_address_for_anonymous_2_user(self):
+        self.expect_commits_rollbacks(2, 0)
+
+        response = self.api_client.post("http://server/token", data={"username": "anonymous-2@example.com", "password": "anonymous-2"})
+        self.assertEqual(response.status_code, 200, response.json())
+        token = response.json()["access_token"]
+
+        response = self.api_client.get("http://server/mandatory-authenticated", headers={"Authorization": f"Bearer {token}"})
+        self.assertEqual(response.status_code, 200, response.json())
+        self.assertEqual(response.json(), {"id": 3, "username": None})
 
     def test_password_flow_using_email_address_for_non_existing_user(self):
         self.expect_commits_rollbacks(0, 1)
@@ -143,11 +159,11 @@ class AuthenticationApiTestCase(testing.ApiTestCase):
 
         response = self.api_client.get("http://server/optional-authenticated", headers={"Authorization": f"Bearer {token}"})
         self.assertEqual(response.status_code, 200, response.json())
-        self.assertEqual(response.json(), {"username": "john"})
+        self.assertEqual(response.json(), {"id": 1, "username": "john"})
 
         response = self.api_client.get("http://server/mandatory-authenticated", headers={"Authorization": f"Bearer {token}"})
         self.assertEqual(response.status_code, 200, response.json())
-        self.assertEqual(response.json(), {"username": "john"})
+        self.assertEqual(response.json(), {"id": 1, "username": "john"})
 
         time.sleep(1)
 
@@ -191,13 +207,13 @@ class AuthenticationApiTestCase(testing.ApiTestCase):
         self.assertLessEqual(valid_until, after + datetime.timedelta(hours=20))
 
         self.assertEqual(token, {
-            "username": "john",
+            "userId": 1,
             "validUntil": valid_until.isoformat(),
         })
         # Try to set 'validUntil' in the token
         tempered_token = jwt.encode(
             {
-                "username": "john",
+                "userId": 1,
                 "validUntil": (valid_until + datetime.timedelta(hours=24)).isoformat(),
             },
             "not-the-secret",
