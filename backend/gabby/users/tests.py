@@ -13,6 +13,7 @@ class AuthenticationTestCase(testing.TransactionTestCase):
     def setUp(self):
         super().setUp()
         self.create_model(User, username="john", clear_text_password="password")
+        self.create_model(User, username="no-password", clear_text_password=None)
         self.expect_commits_rollbacks(0, 0)
 
     def test_check_password__wrong(self):
@@ -20,6 +21,9 @@ class AuthenticationTestCase(testing.TransactionTestCase):
 
     def test_check_password__right(self):
         self.assertTrue(self.get_model(User, 1).check_password("password"))
+
+    def test_check_password__no_password(self):
+        self.assertFalse(self.get_model(User, 2).check_password("whatever"))
 
     def test_hashed_password(self):
         self.assertTrue(self.get_model(User, 1).hashed_password.startswith("$argon2id$v=19$m=65536,t=3,p=4$"))

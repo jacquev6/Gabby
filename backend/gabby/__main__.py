@@ -99,6 +99,11 @@ def import_django_data(input_file):
 
     with orm.Session(database_engine) as session:
         database_utils.truncate_all_tables(session)
+
+        import_user = orm_models.User(username="import", clear_text_password=None)
+        session.add(import_user)
+        session.flush()
+
         for instance_data in data:
             assert instance_data.keys() == {"model", "pk", "fields"}
             model = instance_data["model"]

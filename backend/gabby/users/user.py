@@ -34,7 +34,7 @@ class User(OrmBase):
 
     id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
     username: orm.Mapped[str | None] = orm.mapped_column()
-    hashed_password: orm.Mapped[str] = orm.mapped_column()
+    hashed_password: orm.Mapped[str | None] = orm.mapped_column()
 
     email_addresses: orm.Mapped[list['UserEmailAddress']] = orm.relationship("UserEmailAddress", back_populates="user")
 
@@ -43,7 +43,7 @@ class User(OrmBase):
         sql.CheckConstraint("regexp_like(username, '^[-_A-Za-z0-9]+$')", name="check_username"),
     )
 
-    def __init__(self, *, clear_text_password, **kwds):
+    def __init__(self, *, clear_text_password=None, **kwds):
         super().__init__(hashed_password=self.hash_password(clear_text_password), **kwds)
 
     @WriteOnlyProperty
@@ -54,17 +54,23 @@ class User(OrmBase):
 
     @classmethod
     def hash_password(cls, clear_text_password):
-        return cls.__password_hasher.hash(clear_text_password)
+        if clear_text_password is None:
+            return None
+        else:
+            return cls.__password_hasher.hash(clear_text_password)
 
     def check_password(self, clear_text_password):
-        try:
-            self.__password_hasher.verify(self.hashed_password, clear_text_password)
-        except argon2.exceptions.VerifyMismatchError:
+        if self.hashed_password is None:
             return False
         else:
-            if self.__password_hasher.check_needs_rehash(self.hashed_password):
-                self.hashed_password = self.hash_password(clear_text_password)
-            return True
+            try:
+                self.__password_hasher.verify(self.hashed_password, clear_text_password)
+            except argon2.exceptions.VerifyMismatchError:
+                return False
+            else:
+                if self.__password_hasher.check_needs_rehash(self.hashed_password):
+                    self.hashed_password = self.hash_password(clear_text_password)
+                return True
 
 
 class UserEmailAddress(OrmBase):

@@ -38,7 +38,7 @@ def upgrade():
         "users",
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("username", sa.String(), nullable=True),
-        sa.Column("hashed_password", sa.String(), nullable=False),
+        sa.Column("hashed_password", sa.String(), nullable=True),
         sa.CheckConstraint("regexp_like(username, '^[-_A-Za-z0-9]+$')", name="check_username"),
         sa.PrimaryKeyConstraint("id"),
     )
