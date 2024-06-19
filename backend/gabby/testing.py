@@ -11,7 +11,7 @@ from fastjsonapi import make_jsonapi_router
 
 from . import settings
 from .database_utils import create_engine, Session, truncate_all_tables
-from .users import authentication_dependable
+from .users import User, authentication_dependable
 
 
 class TestCase(unittest.TestCase):
@@ -88,6 +88,10 @@ class TransactionTestCase(TestCase):
     def expect_commit(self):
         self.__expected_commits_rollbacks_count = (1, 0)
 
+    def expect_one_more_commit(self):
+        (commits, rollbacks) = self.__expected_commits_rollbacks_count
+        self.__expected_commits_rollbacks_count = (commits + 1, rollbacks)
+
     def expect_rollback(self):
         self.__expected_commits_rollbacks_count = (0, 1)
 
@@ -158,6 +162,25 @@ class ApiTestCase(TransactionTestCase):
 
     def delete(self, url):
         return self.api_client.delete(url, headers={"Content-Type": "application/vnd.api+json"})
+
+
+class LoggedInApiTestCase(ApiTestCase):
+    def setUp(self):
+        super().setUp()
+        self.__user_for_create = super().create_model(User, username="creator")
+        super().create_model(User, username="updater", clear_text_password="password")
+        self.login("updater", "password")
+
+    def create_model(self, model, *args, **kwds):
+        if hasattr(model, "created_by"):
+            kwds["created_by"] = self.__user_for_create
+        if hasattr(model, "updated_by"):
+            kwds["updated_by"] = self.__user_for_create
+        return super().create_model(model, *args, **kwds)
+
+    def tearDown(self):
+        self.expect_one_more_commit()
+        super().tearDown()
 
 
 class AdaptationTestCase(TestCase):

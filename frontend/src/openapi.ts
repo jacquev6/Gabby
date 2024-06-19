@@ -586,6 +586,11 @@ export interface components {
       boundingRectangle: components["schemas"]["Rectangle"] | null;
       /** Clue */
       clue: string;
+      /**
+       * Createdat
+       * Format: date-time
+       */
+      createdAt: string;
       /** Example */
       example: string;
       /** Instructions */
@@ -594,15 +599,22 @@ export interface components {
       number: string;
       /** Textbookpage */
       textbookPage: number | null;
+      /**
+       * Updatedat
+       * Format: date-time
+       */
+      updatedAt: string;
       /** Wording */
       wording: string;
     };
     /** exerciseOutputItemRelationships */
     exerciseOutputItemRelationships: {
       adaptation: components["schemas"]["OptionalRelationship"];
+      createdBy: components["schemas"]["OptionalRelationship"];
       extractionEvents: components["schemas"]["OutputListRelationship"];
       project: components["schemas"]["MandatoryRelationship"];
       textbook: components["schemas"]["OptionalRelationship"];
+      updatedBy: components["schemas"]["OptionalRelationship"];
     };
     /** exercisePageOutput */
     exercisePageOutput: {
@@ -682,12 +694,24 @@ export interface components {
     };
     /** extractionEventOutputItemAttributes */
     extractionEventOutputItemAttributes: {
+      /**
+       * Createdat
+       * Format: date-time
+       */
+      createdAt: string;
       /** Event */
       event: string;
+      /**
+       * Updatedat
+       * Format: date-time
+       */
+      updatedAt: string;
     };
     /** extractionEventOutputItemRelationships */
     extractionEventOutputItemRelationships: {
+      createdBy: components["schemas"]["OptionalRelationship"];
       exercise: components["schemas"]["MandatoryRelationship"];
+      updatedBy: components["schemas"]["OptionalRelationship"];
     };
     /** extractionEventPageOutput */
     extractionEventPageOutput: {
@@ -755,12 +779,24 @@ export interface components {
     };
     /** fillWithFreeTextAdaptationOutputItemAttributes */
     fillWithFreeTextAdaptationOutputItemAttributes: {
+      /**
+       * Createdat
+       * Format: date-time
+       */
+      createdAt: string;
       /** Placeholder */
       placeholder: string;
+      /**
+       * Updatedat
+       * Format: date-time
+       */
+      updatedAt: string;
     };
     /** fillWithFreeTextAdaptationOutputItemRelationships */
     fillWithFreeTextAdaptationOutputItemRelationships: {
+      createdBy: components["schemas"]["OptionalRelationship"];
       exercise: components["schemas"]["MandatoryRelationship"];
+      updatedBy: components["schemas"]["OptionalRelationship"];
     };
     /** fillWithFreeTextAdaptationUpdateInput */
     fillWithFreeTextAdaptationUpdateInput: {
@@ -822,12 +858,24 @@ export interface components {
     };
     /** multipleChoicesInInstructionsAdaptationOutputItemAttributes */
     multipleChoicesInInstructionsAdaptationOutputItemAttributes: {
+      /**
+       * Createdat
+       * Format: date-time
+       */
+      createdAt: string;
       /** Placeholder */
       placeholder: string;
+      /**
+       * Updatedat
+       * Format: date-time
+       */
+      updatedAt: string;
     };
     /** multipleChoicesInInstructionsAdaptationOutputItemRelationships */
     multipleChoicesInInstructionsAdaptationOutputItemRelationships: {
+      createdBy: components["schemas"]["OptionalRelationship"];
       exercise: components["schemas"]["MandatoryRelationship"];
+      updatedBy: components["schemas"]["OptionalRelationship"];
     };
     /** multipleChoicesInInstructionsAdaptationUpdateInput */
     multipleChoicesInInstructionsAdaptationUpdateInput: {
@@ -877,6 +925,7 @@ export interface components {
     };
     /** multipleChoicesInWordingAdaptationOutputItem */
     multipleChoicesInWordingAdaptationOutputItem: {
+      attributes: components["schemas"]["multipleChoicesInWordingAdaptationOutputItemAttributes"];
       /** Id */
       id: string;
       links: components["schemas"]["ItemLinks"];
@@ -884,9 +933,24 @@ export interface components {
       /** Type */
       type: string;
     };
+    /** multipleChoicesInWordingAdaptationOutputItemAttributes */
+    multipleChoicesInWordingAdaptationOutputItemAttributes: {
+      /**
+       * Createdat
+       * Format: date-time
+       */
+      createdAt: string;
+      /**
+       * Updatedat
+       * Format: date-time
+       */
+      updatedAt: string;
+    };
     /** multipleChoicesInWordingAdaptationOutputItemRelationships */
     multipleChoicesInWordingAdaptationOutputItemRelationships: {
+      createdBy: components["schemas"]["OptionalRelationship"];
       exercise: components["schemas"]["MandatoryRelationship"];
+      updatedBy: components["schemas"]["OptionalRelationship"];
     };
     /** multipleChoicesInWordingAdaptationUpdateInput */
     multipleChoicesInWordingAdaptationUpdateInput: {
@@ -974,11 +1038,17 @@ export interface components {
     };
     /** pdfFileNamingOutputItemAttributes */
     pdfFileNamingOutputItemAttributes: {
+      /**
+       * Createdat
+       * Format: date-time
+       */
+      createdAt: string;
       /** Name */
       name: string;
     };
     /** pdfFileNamingOutputItemRelationships */
     pdfFileNamingOutputItemRelationships: {
+      createdBy: components["schemas"]["OptionalRelationship"];
       pdfFile: components["schemas"]["MandatoryRelationship"];
     };
     /** pdfFileNamingPageOutput */
@@ -1023,6 +1093,11 @@ export interface components {
     pdfFileOutputItemAttributes: {
       /** Bytescount */
       bytesCount: number;
+      /**
+       * Createdat
+       * Format: date-time
+       */
+      createdAt: string;
       /** Pagescount */
       pagesCount: number;
       /** Sha256 */
@@ -1030,6 +1105,7 @@ export interface components {
     };
     /** pdfFileOutputItemRelationships */
     pdfFileOutputItemRelationships: {
+      createdBy: components["schemas"]["OptionalRelationship"];
       namings: components["schemas"]["OutputListRelationship"];
       sections: components["schemas"]["OutputListRelationship"];
     };
@@ -1211,15 +1287,27 @@ export interface components {
     };
     /** projectOutputItemAttributes */
     projectOutputItemAttributes: {
+      /**
+       * Createdat
+       * Format: date-time
+       */
+      createdAt: string;
       /** Description */
       description: string;
       /** Title */
       title: string;
+      /**
+       * Updatedat
+       * Format: date-time
+       */
+      updatedAt: string;
     };
     /** projectOutputItemRelationships */
     projectOutputItemRelationships: {
+      createdBy: components["schemas"]["OptionalRelationship"];
       exercises: components["schemas"]["OutputListRelationship"];
       textbooks: components["schemas"]["OutputListRelationship"];
+      updatedBy: components["schemas"]["OptionalRelationship"];
     };
     /** projectPageOutput */
     projectPageOutput: {
@@ -1332,17 +1420,29 @@ export interface components {
     };
     /** sectionOutputItemAttributes */
     sectionOutputItemAttributes: {
+      /**
+       * Createdat
+       * Format: date-time
+       */
+      createdAt: string;
       /** Pagescount */
       pagesCount: number;
       /** Pdffilestartpage */
       pdfFileStartPage: number;
       /** Textbookstartpage */
       textbookStartPage: number;
+      /**
+       * Updatedat
+       * Format: date-time
+       */
+      updatedAt: string;
     };
     /** sectionOutputItemRelationships */
     sectionOutputItemRelationships: {
+      createdBy: components["schemas"]["OptionalRelationship"];
       pdfFile: components["schemas"]["MandatoryRelationship"];
       textbook: components["schemas"]["MandatoryRelationship"];
+      updatedBy: components["schemas"]["OptionalRelationship"];
     };
     /** sectionPageOutput */
     sectionPageOutput: {
@@ -1423,14 +1523,26 @@ export interface components {
     selectThingsAdaptationOutputItemAttributes: {
       /** Colors */
       colors: number;
+      /**
+       * Createdat
+       * Format: date-time
+       */
+      createdAt: string;
       /** Punctuation */
       punctuation: boolean;
+      /**
+       * Updatedat
+       * Format: date-time
+       */
+      updatedAt: string;
       /** Words */
       words: boolean;
     };
     /** selectThingsAdaptationOutputItemRelationships */
     selectThingsAdaptationOutputItemRelationships: {
+      createdBy: components["schemas"]["OptionalRelationship"];
       exercise: components["schemas"]["MandatoryRelationship"];
+      updatedBy: components["schemas"]["OptionalRelationship"];
     };
     /** selectThingsAdaptationUpdateInput */
     selectThingsAdaptationUpdateInput: {
@@ -1502,20 +1614,32 @@ export interface components {
     };
     /** textbookOutputItemAttributes */
     textbookOutputItemAttributes: {
+      /**
+       * Createdat
+       * Format: date-time
+       */
+      createdAt: string;
       /** Isbn */
       isbn: string | null;
       /** Publisher */
       publisher: string | null;
       /** Title */
       title: string;
+      /**
+       * Updatedat
+       * Format: date-time
+       */
+      updatedAt: string;
       /** Year */
       year: number | null;
     };
     /** textbookOutputItemRelationships */
     textbookOutputItemRelationships: {
+      createdBy: components["schemas"]["OptionalRelationship"];
       exercises: components["schemas"]["OutputListRelationship"];
       project: components["schemas"]["MandatoryRelationship"];
       sections: components["schemas"]["OutputListRelationship"];
+      updatedBy: components["schemas"]["OptionalRelationship"];
     };
     /** textbookPageOutput */
     textbookPageOutput: {

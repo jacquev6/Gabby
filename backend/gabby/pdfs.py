@@ -6,11 +6,13 @@ import sqlalchemy as sql
 
 from . import api_models
 from . import settings
-from .database_utils import OrmBase, SessionDependent, make_item_creator, make_item_deleter, make_item_getter, make_item_saver, make_page_getter
+from .database_utils import OrmBase
+from .api_utils import SessionAndUserDependent, make_item_creator, make_item_deleter, make_item_getter, make_item_saver, make_page_getter
+from .users.mixins import CreatedByAtMixin
 from .wrapping import wrap, set_wrapper, OrmWrapper, make_sqids, orm_wrapper_with_sqids
 
 
-class PdfFile(OrmBase):
+class PdfFile(OrmBase, CreatedByAtMixin):
     __tablename__ = "pdf_files"
 
     __table_args__ = (
@@ -33,9 +35,10 @@ class PdfFilesResource:
 
     default_page_size = settings.GENERIC_DEFAULT_API_PAGE_SIZE
 
-    class ItemCreator(SessionDependent):
+    class ItemCreator(SessionAndUserDependent):
         def __call__(self, *, sha256, bytes_count, pages_count):
             pdf_file = PdfFile(sha256=sha256, bytes_count=bytes_count, pages_count=pages_count)
+            pdf_file.created_by = self.logged_in_user
             self.session.add(pdf_file)
 
             try:
@@ -67,7 +70,7 @@ class PdfFileWrapper(OrmWrapper):
 set_wrapper(PdfFile, PdfFileWrapper)
 
 
-class PdfFileNaming(OrmBase):
+class PdfFileNaming(OrmBase, CreatedByAtMixin):
     __tablename__ = "pdf_file_namings"
 
     id: orm.Mapped[int] = orm.mapped_column(primary_key=True)

@@ -37,6 +37,18 @@ def upgrade():
         "adaptations",
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("kind", sa.String(length=16), nullable=False),
+        sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.text("now()"), nullable=False),
+        sa.Column("created_by_id", sa.Integer(), nullable=True),
+        sa.Column("updated_at", sa.DateTime(timezone=True), server_default=sa.text("now()"), nullable=False),
+        sa.Column("updated_by_id", sa.Integer(), nullable=True),
+        sa.ForeignKeyConstraint(
+            ["created_by_id"],
+            ["users.id"],
+        ),
+        sa.ForeignKeyConstraint(
+            ["updated_by_id"],
+            ["users.id"],
+        ),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_table(
@@ -44,7 +56,13 @@ def upgrade():
         sa.Column("sha256", sa.String(), nullable=False),
         sa.Column("bytes_count", sa.Integer(), nullable=False),
         sa.Column("pages_count", sa.Integer(), nullable=False),
+        sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.text("now()"), nullable=False),
+        sa.Column("created_by_id", sa.Integer(), nullable=True),
         sa.CheckConstraint("regexp_like(sha256, '^[0-9a-f]{64}$')", name="check_sha256_format"),
+        sa.ForeignKeyConstraint(
+            ["created_by_id"],
+            ["users.id"],
+        ),
         sa.PrimaryKeyConstraint("sha256"),
     )
     op.create_table(
@@ -75,6 +93,18 @@ def upgrade():
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("title", sa.String(), nullable=False),
         sa.Column("description", sa.String(), nullable=False),
+        sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.text("now()"), nullable=False),
+        sa.Column("created_by_id", sa.Integer(), nullable=True),
+        sa.Column("updated_at", sa.DateTime(timezone=True), server_default=sa.text("now()"), nullable=False),
+        sa.Column("updated_by_id", sa.Integer(), nullable=True),
+        sa.ForeignKeyConstraint(
+            ["created_by_id"],
+            ["users.id"],
+        ),
+        sa.ForeignKeyConstraint(
+            ["updated_by_id"],
+            ["users.id"],
+        ),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_table(
@@ -141,6 +171,12 @@ def upgrade():
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("pdf_file_sha256", sa.String(), nullable=False),
         sa.Column("name", sa.String(), nullable=False),
+        sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.text("now()"), nullable=False),
+        sa.Column("created_by_id", sa.Integer(), nullable=True),
+        sa.ForeignKeyConstraint(
+            ["created_by_id"],
+            ["users.id"],
+        ),
         sa.ForeignKeyConstraint(
             ["pdf_file_sha256"],
             ["pdf_files.sha256"],
@@ -155,10 +191,22 @@ def upgrade():
         sa.Column("publisher", sa.String(), nullable=True),
         sa.Column("year", sa.Integer(), nullable=True),
         sa.Column("isbn", sa.String(), nullable=True),
+        sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.text("now()"), nullable=False),
+        sa.Column("created_by_id", sa.Integer(), nullable=True),
+        sa.Column("updated_at", sa.DateTime(timezone=True), server_default=sa.text("now()"), nullable=False),
+        sa.Column("updated_by_id", sa.Integer(), nullable=True),
         sa.CheckConstraint("regexp_like(isbn, '^[0-9]+$')", name="check_isbn_format"),
+        sa.ForeignKeyConstraint(
+            ["created_by_id"],
+            ["users.id"],
+        ),
         sa.ForeignKeyConstraint(
             ["project_id"],
             ["projects.id"],
+        ),
+        sa.ForeignKeyConstraint(
+            ["updated_by_id"],
+            ["users.id"],
         ),
         sa.PrimaryKeyConstraint("id"),
         sa.UniqueConstraint("id", "project_id"),
@@ -176,6 +224,10 @@ def upgrade():
         sa.Column("example", sa.String(), nullable=False),
         sa.Column("clue", sa.String(), nullable=False),
         sa.Column("adaptation_id", sa.Integer(), nullable=True),
+        sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.text("now()"), nullable=False),
+        sa.Column("created_by_id", sa.Integer(), nullable=True),
+        sa.Column("updated_at", sa.DateTime(timezone=True), server_default=sa.text("now()"), nullable=False),
+        sa.Column("updated_by_id", sa.Integer(), nullable=True),
         sa.CheckConstraint(
             "(textbook_id IS NULL) = (textbook_page IS NULL)", name="textbook_id_textbook_page_consistently_null"
         ),
@@ -184,12 +236,20 @@ def upgrade():
             ["adaptations.id"],
         ),
         sa.ForeignKeyConstraint(
+            ["created_by_id"],
+            ["users.id"],
+        ),
+        sa.ForeignKeyConstraint(
             ["project_id", "textbook_id"],
             ["textbooks.project_id", "textbooks.id"],
         ),
         sa.ForeignKeyConstraint(
             ["project_id"],
             ["projects.id"],
+        ),
+        sa.ForeignKeyConstraint(
+            ["updated_by_id"],
+            ["users.id"],
         ),
         sa.PrimaryKeyConstraint("id"),
         sa.UniqueConstraint("adaptation_id"),
@@ -203,6 +263,14 @@ def upgrade():
         sa.Column("textbook_start_page", sa.Integer(), nullable=False),
         sa.Column("pdf_file_start_page", sa.Integer(), nullable=False),
         sa.Column("pages_count", sa.Integer(), nullable=False),
+        sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.text("now()"), nullable=False),
+        sa.Column("created_by_id", sa.Integer(), nullable=True),
+        sa.Column("updated_at", sa.DateTime(timezone=True), server_default=sa.text("now()"), nullable=False),
+        sa.Column("updated_by_id", sa.Integer(), nullable=True),
+        sa.ForeignKeyConstraint(
+            ["created_by_id"],
+            ["users.id"],
+        ),
         sa.ForeignKeyConstraint(
             ["pdf_file_sha256"],
             ["pdf_files.sha256"],
@@ -211,6 +279,10 @@ def upgrade():
             ["textbook_id"],
             ["textbooks.id"],
         ),
+        sa.ForeignKeyConstraint(
+            ["updated_by_id"],
+            ["users.id"],
+        ),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_table(
@@ -218,9 +290,21 @@ def upgrade():
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("exercise_id", sa.Integer(), nullable=False),
         sa.Column("event", sa.String(), nullable=False),
+        sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.text("now()"), nullable=False),
+        sa.Column("created_by_id", sa.Integer(), nullable=True),
+        sa.Column("updated_at", sa.DateTime(timezone=True), server_default=sa.text("now()"), nullable=False),
+        sa.Column("updated_by_id", sa.Integer(), nullable=True),
+        sa.ForeignKeyConstraint(
+            ["created_by_id"],
+            ["users.id"],
+        ),
         sa.ForeignKeyConstraint(
             ["exercise_id"],
             ["exercises.id"],
+        ),
+        sa.ForeignKeyConstraint(
+            ["updated_by_id"],
+            ["users.id"],
         ),
         sa.PrimaryKeyConstraint("id"),
     )

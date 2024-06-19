@@ -7,14 +7,16 @@ from . import api_models
 from . import parsing
 from . import renderable
 from . import settings
-from .database_utils import OrmBase, SessionDependent, make_item_creator, make_item_deleter, make_item_getter, make_item_saver, make_page_getter
+from .database_utils import OrmBase
+from .api_utils import SessionAndUserDependent, make_item_creator, make_item_deleter, make_item_getter, make_item_saver, make_page_getter
 from .projects import Project
 from .testing import TransactionTestCase
 from .textbooks import Textbook, TextbooksResource
+from .users.mixins import CreatedUpdatedByAtMixin
 from .wrapping import wrap, unwrap, set_wrapper, make_sqids, orm_wrapper_with_sqids
 
 
-class Adaptation(OrmBase):
+class Adaptation(OrmBase, CreatedUpdatedByAtMixin):
     __tablename__ = "adaptations"
 
     __mapper_args__ = {
@@ -72,7 +74,7 @@ class GenericAdaptation(Adaptation):
         return parsing.parse_generic_section(self.exercise.clue)
 
 
-class Exercise(OrmBase):
+class Exercise(OrmBase, CreatedUpdatedByAtMixin):
     __tablename__ = "exercises"
 
     __table_args__ = (
@@ -311,7 +313,7 @@ class ExercisesResource:
         },
     )
 
-    class ItemSaver(SessionDependent):
+    class ItemSaver(SessionAndUserDependent):
         @contextmanager
         def __call__(self, item):
             previous_adaptation = item.adaptation
@@ -321,6 +323,7 @@ class ExercisesResource:
                 item.bounding_rectangle = item.bounding_rectangle.model_dump()
             if previous_adaptation is not None and unwrap(item.adaptation) != unwrap(previous_adaptation):
                 self.session.delete(previous_adaptation)
+            item.updated_by = self.logged_in_user
 
     ItemDeleter = make_item_deleter()
 
@@ -328,7 +331,7 @@ class ExercisesResource:
 set_wrapper(Exercise, orm_wrapper_with_sqids(ExercisesResource.sqids))
 
 
-class ExtractionEvent(OrmBase):
+class ExtractionEvent(OrmBase, CreatedUpdatedByAtMixin):
     __tablename__ = "extraction_events"
 
     id: orm.Mapped[int] = orm.mapped_column(primary_key=True)

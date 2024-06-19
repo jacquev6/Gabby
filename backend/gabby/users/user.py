@@ -15,7 +15,7 @@ import sqlalchemy as sql
 
 from .. import api_models
 from .. import settings
-from ..database_utils import OrmBase, Session, make_item_getter, session_dependable
+from ..database_utils import OrmBase, Session, session_dependable
 from ..wrapping import make_sqids, set_wrapper, orm_wrapper_with_sqids, unwrap, wrap
 
 
@@ -206,8 +206,6 @@ class UsersResource:
     default_page_size = settings.GENERIC_DEFAULT_API_PAGE_SIZE
 
     sqids = make_sqids(singular_name)
-
-    ItemGetter = make_item_getter(User)
 
     class ItemGetter:
         def __init__(self, session: Session = Depends(session_dependable), logged_in_user: User = Depends(optional_authenticated_user_dependable)):

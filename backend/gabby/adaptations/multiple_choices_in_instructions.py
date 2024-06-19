@@ -7,7 +7,7 @@ from .. import parsing
 from .. import renderable
 from .. import renderable as r
 from .. import settings
-from ..database_utils import make_item_creator, make_item_deleter, make_item_getter, make_item_saver
+from ..api_utils import make_item_creator, make_item_deleter, make_item_getter, make_item_saver
 from ..exercises import Adaptation
 from ..exercises import Adaptation, Exercise
 from ..testing import AdaptationTestCase

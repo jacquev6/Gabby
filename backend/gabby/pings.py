@@ -10,7 +10,8 @@ import sqlalchemy as sql
 from . import api_models
 from . import settings
 from . import testing
-from .database_utils import OrmBase, make_item_getter, make_page_getter
+from .database_utils import OrmBase, SessionDependent
+from .api_utils import make_item_getter, make_page_getter
 from .users import User, UsersResource, OptionalAuthenticatedUserDependent
 from .users.mixins import CreatedUpdatedByAtMixin
 from .wrapping import set_wrapper, OrmWrapperWithStrIds, wrap, unwrap
@@ -57,6 +58,7 @@ class PingsResource:
             "message": lambda q, message: q.where(Ping.message == message),
             "prev": lambda q, prev: q.where(Ping.prev_id == prev),
         },
+        base=SessionDependent,
     )
 
     class ItemSaver(OptionalAuthenticatedUserDependent):

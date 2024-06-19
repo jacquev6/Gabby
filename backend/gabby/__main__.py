@@ -214,6 +214,8 @@ def import_django_data(input_file):
                 assert model == "textbooks.adaptation", model
             else:
                 assert fields == {}, fields
+                instance.created_by = import_user
+                instance.updated_by = import_user
                 session.add(instance)
                 session.flush()
                 instances_by_model.setdefault(model, {})[pk] = instance

@@ -5,13 +5,15 @@ import sqlalchemy as sql
 
 from . import api_models
 from . import settings
-from .database_utils import OrmBase, make_item_creator, make_item_deleter, make_item_getter, make_item_saver, make_page_getter
+from .database_utils import OrmBase
+from .api_utils import make_item_creator, make_item_deleter, make_item_getter, make_item_saver, make_page_getter
 from .pdfs import PdfFile
 from .projects import Project
+from .users.mixins import CreatedUpdatedByAtMixin
 from .wrapping import wrap, unwrap, set_wrapper, make_sqids, orm_wrapper_with_sqids
 
 
-class Textbook(OrmBase):
+class Textbook(OrmBase, CreatedUpdatedByAtMixin):
     __tablename__ = "textbooks"
 
     __table_args__ = (
@@ -57,7 +59,7 @@ class TextbooksResource:
 set_wrapper(Textbook, orm_wrapper_with_sqids(TextbooksResource.sqids))
 
 
-class Section(OrmBase):
+class Section(OrmBase, CreatedUpdatedByAtMixin):
     __tablename__ = "sections"
 
     id: orm.Mapped[int] = orm.mapped_column(primary_key=True)

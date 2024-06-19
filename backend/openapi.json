@@ -1085,6 +1085,11 @@
             "title": "Clue",
             "type": "string"
           },
+          "createdAt": {
+            "format": "date-time",
+            "title": "Createdat",
+            "type": "string"
+          },
           "example": {
             "title": "Example",
             "type": "string"
@@ -1108,12 +1113,19 @@
             ],
             "title": "Textbookpage"
           },
+          "updatedAt": {
+            "format": "date-time",
+            "title": "Updatedat",
+            "type": "string"
+          },
           "wording": {
             "title": "Wording",
             "type": "string"
           }
         },
         "required": [
+          "updatedAt",
+          "createdAt",
           "textbookPage",
           "boundingRectangle",
           "number",
@@ -1131,6 +1143,9 @@
           "adaptation": {
             "$ref": "#/components/schemas/OptionalRelationship"
           },
+          "createdBy": {
+            "$ref": "#/components/schemas/OptionalRelationship"
+          },
           "extractionEvents": {
             "$ref": "#/components/schemas/OutputListRelationship"
           },
@@ -1139,9 +1154,14 @@
           },
           "textbook": {
             "$ref": "#/components/schemas/OptionalRelationship"
+          },
+          "updatedBy": {
+            "$ref": "#/components/schemas/OptionalRelationship"
           }
         },
         "required": [
+          "updatedBy",
+          "createdBy",
           "project",
           "textbook",
           "extractionEvents",
@@ -1389,12 +1409,24 @@
       "extractionEventOutputItemAttributes": {
         "additionalProperties": false,
         "properties": {
+          "createdAt": {
+            "format": "date-time",
+            "title": "Createdat",
+            "type": "string"
+          },
           "event": {
             "title": "Event",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "title": "Updatedat",
             "type": "string"
           }
         },
         "required": [
+          "updatedAt",
+          "createdAt",
           "event"
         ],
         "title": "extractionEventOutputItemAttributes",
@@ -1403,11 +1435,19 @@
       "extractionEventOutputItemRelationships": {
         "additionalProperties": false,
         "properties": {
+          "createdBy": {
+            "$ref": "#/components/schemas/OptionalRelationship"
+          },
           "exercise": {
             "$ref": "#/components/schemas/MandatoryRelationship"
+          },
+          "updatedBy": {
+            "$ref": "#/components/schemas/OptionalRelationship"
           }
         },
         "required": [
+          "updatedBy",
+          "createdBy",
           "exercise"
         ],
         "title": "extractionEventOutputItemRelationships",
@@ -1617,12 +1657,24 @@
       "fillWithFreeTextAdaptationOutputItemAttributes": {
         "additionalProperties": false,
         "properties": {
+          "createdAt": {
+            "format": "date-time",
+            "title": "Createdat",
+            "type": "string"
+          },
           "placeholder": {
             "title": "Placeholder",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "title": "Updatedat",
             "type": "string"
           }
         },
         "required": [
+          "updatedAt",
+          "createdAt",
           "placeholder"
         ],
         "title": "fillWithFreeTextAdaptationOutputItemAttributes",
@@ -1631,11 +1683,19 @@
       "fillWithFreeTextAdaptationOutputItemRelationships": {
         "additionalProperties": false,
         "properties": {
+          "createdBy": {
+            "$ref": "#/components/schemas/OptionalRelationship"
+          },
           "exercise": {
             "$ref": "#/components/schemas/MandatoryRelationship"
+          },
+          "updatedBy": {
+            "$ref": "#/components/schemas/OptionalRelationship"
           }
         },
         "required": [
+          "updatedBy",
+          "createdBy",
           "exercise"
         ],
         "title": "fillWithFreeTextAdaptationOutputItemRelationships",
@@ -1820,12 +1880,24 @@
       "multipleChoicesInInstructionsAdaptationOutputItemAttributes": {
         "additionalProperties": false,
         "properties": {
+          "createdAt": {
+            "format": "date-time",
+            "title": "Createdat",
+            "type": "string"
+          },
           "placeholder": {
             "title": "Placeholder",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "title": "Updatedat",
             "type": "string"
           }
         },
         "required": [
+          "updatedAt",
+          "createdAt",
           "placeholder"
         ],
         "title": "multipleChoicesInInstructionsAdaptationOutputItemAttributes",
@@ -1834,11 +1906,19 @@
       "multipleChoicesInInstructionsAdaptationOutputItemRelationships": {
         "additionalProperties": false,
         "properties": {
+          "createdBy": {
+            "$ref": "#/components/schemas/OptionalRelationship"
+          },
           "exercise": {
             "$ref": "#/components/schemas/MandatoryRelationship"
+          },
+          "updatedBy": {
+            "$ref": "#/components/schemas/OptionalRelationship"
           }
         },
         "required": [
+          "updatedBy",
+          "createdBy",
           "exercise"
         ],
         "title": "multipleChoicesInInstructionsAdaptationOutputItemRelationships",
@@ -1988,6 +2068,9 @@
       "multipleChoicesInWordingAdaptationOutputItem": {
         "additionalProperties": false,
         "properties": {
+          "attributes": {
+            "$ref": "#/components/schemas/multipleChoicesInWordingAdaptationOutputItemAttributes"
+          },
           "id": {
             "title": "Id",
             "type": "string"
@@ -2007,19 +2090,49 @@
           "type",
           "id",
           "links",
+          "attributes",
           "relationships"
         ],
         "title": "multipleChoicesInWordingAdaptationOutputItem",
         "type": "object"
       },
-      "multipleChoicesInWordingAdaptationOutputItemRelationships": {
+      "multipleChoicesInWordingAdaptationOutputItemAttributes": {
         "additionalProperties": false,
         "properties": {
-          "exercise": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+          "createdAt": {
+            "format": "date-time",
+            "title": "Createdat",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "title": "Updatedat",
+            "type": "string"
           }
         },
         "required": [
+          "updatedAt",
+          "createdAt"
+        ],
+        "title": "multipleChoicesInWordingAdaptationOutputItemAttributes",
+        "type": "object"
+      },
+      "multipleChoicesInWordingAdaptationOutputItemRelationships": {
+        "additionalProperties": false,
+        "properties": {
+          "createdBy": {
+            "$ref": "#/components/schemas/OptionalRelationship"
+          },
+          "exercise": {
+            "$ref": "#/components/schemas/MandatoryRelationship"
+          },
+          "updatedBy": {
+            "$ref": "#/components/schemas/OptionalRelationship"
+          }
+        },
+        "required": [
+          "updatedBy",
+          "createdBy",
           "exercise"
         ],
         "title": "multipleChoicesInWordingAdaptationOutputItemRelationships",
@@ -2286,12 +2399,18 @@
       "pdfFileNamingOutputItemAttributes": {
         "additionalProperties": false,
         "properties": {
+          "createdAt": {
+            "format": "date-time",
+            "title": "Createdat",
+            "type": "string"
+          },
           "name": {
             "title": "Name",
             "type": "string"
           }
         },
         "required": [
+          "createdAt",
           "name"
         ],
         "title": "pdfFileNamingOutputItemAttributes",
@@ -2300,11 +2419,15 @@
       "pdfFileNamingOutputItemRelationships": {
         "additionalProperties": false,
         "properties": {
+          "createdBy": {
+            "$ref": "#/components/schemas/OptionalRelationship"
+          },
           "pdfFile": {
             "$ref": "#/components/schemas/MandatoryRelationship"
           }
         },
         "required": [
+          "createdBy",
           "pdfFile"
         ],
         "title": "pdfFileNamingOutputItemRelationships",
@@ -2438,6 +2561,11 @@
             "title": "Bytescount",
             "type": "integer"
           },
+          "createdAt": {
+            "format": "date-time",
+            "title": "Createdat",
+            "type": "string"
+          },
           "pagesCount": {
             "title": "Pagescount",
             "type": "integer"
@@ -2448,6 +2576,7 @@
           }
         },
         "required": [
+          "createdAt",
           "sha256",
           "bytesCount",
           "pagesCount"
@@ -2458,6 +2587,9 @@
       "pdfFileOutputItemRelationships": {
         "additionalProperties": false,
         "properties": {
+          "createdBy": {
+            "$ref": "#/components/schemas/OptionalRelationship"
+          },
           "namings": {
             "$ref": "#/components/schemas/OutputListRelationship"
           },
@@ -2466,6 +2598,7 @@
           }
         },
         "required": [
+          "createdBy",
           "namings",
           "sections"
         ],
@@ -2993,6 +3126,11 @@
       "projectOutputItemAttributes": {
         "additionalProperties": false,
         "properties": {
+          "createdAt": {
+            "format": "date-time",
+            "title": "Createdat",
+            "type": "string"
+          },
           "description": {
             "title": "Description",
             "type": "string"
@@ -3000,9 +3138,16 @@
           "title": {
             "title": "Title",
             "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "title": "Updatedat",
+            "type": "string"
           }
         },
         "required": [
+          "updatedAt",
+          "createdAt",
           "title",
           "description"
         ],
@@ -3012,14 +3157,22 @@
       "projectOutputItemRelationships": {
         "additionalProperties": false,
         "properties": {
+          "createdBy": {
+            "$ref": "#/components/schemas/OptionalRelationship"
+          },
           "exercises": {
             "$ref": "#/components/schemas/OutputListRelationship"
           },
           "textbooks": {
             "$ref": "#/components/schemas/OutputListRelationship"
+          },
+          "updatedBy": {
+            "$ref": "#/components/schemas/OptionalRelationship"
           }
         },
         "required": [
+          "updatedBy",
+          "createdBy",
           "textbooks",
           "exercises"
         ],
@@ -3358,6 +3511,11 @@
       "sectionOutputItemAttributes": {
         "additionalProperties": false,
         "properties": {
+          "createdAt": {
+            "format": "date-time",
+            "title": "Createdat",
+            "type": "string"
+          },
           "pagesCount": {
             "title": "Pagescount",
             "type": "integer"
@@ -3369,9 +3527,16 @@
           "textbookStartPage": {
             "title": "Textbookstartpage",
             "type": "integer"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "title": "Updatedat",
+            "type": "string"
           }
         },
         "required": [
+          "updatedAt",
+          "createdAt",
           "textbookStartPage",
           "pdfFileStartPage",
           "pagesCount"
@@ -3382,14 +3547,22 @@
       "sectionOutputItemRelationships": {
         "additionalProperties": false,
         "properties": {
+          "createdBy": {
+            "$ref": "#/components/schemas/OptionalRelationship"
+          },
           "pdfFile": {
             "$ref": "#/components/schemas/MandatoryRelationship"
           },
           "textbook": {
             "$ref": "#/components/schemas/MandatoryRelationship"
+          },
+          "updatedBy": {
+            "$ref": "#/components/schemas/OptionalRelationship"
           }
         },
         "required": [
+          "updatedBy",
+          "createdBy",
           "textbook",
           "pdfFile"
         ],
@@ -3627,9 +3800,19 @@
             "title": "Colors",
             "type": "integer"
           },
+          "createdAt": {
+            "format": "date-time",
+            "title": "Createdat",
+            "type": "string"
+          },
           "punctuation": {
             "title": "Punctuation",
             "type": "boolean"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "title": "Updatedat",
+            "type": "string"
           },
           "words": {
             "title": "Words",
@@ -3637,6 +3820,8 @@
           }
         },
         "required": [
+          "updatedAt",
+          "createdAt",
           "colors",
           "words",
           "punctuation"
@@ -3647,11 +3832,19 @@
       "selectThingsAdaptationOutputItemRelationships": {
         "additionalProperties": false,
         "properties": {
+          "createdBy": {
+            "$ref": "#/components/schemas/OptionalRelationship"
+          },
           "exercise": {
             "$ref": "#/components/schemas/MandatoryRelationship"
+          },
+          "updatedBy": {
+            "$ref": "#/components/schemas/OptionalRelationship"
           }
         },
         "required": [
+          "updatedBy",
+          "createdBy",
           "exercise"
         ],
         "title": "selectThingsAdaptationOutputItemRelationships",
@@ -3877,6 +4070,11 @@
       "textbookOutputItemAttributes": {
         "additionalProperties": false,
         "properties": {
+          "createdAt": {
+            "format": "date-time",
+            "title": "Createdat",
+            "type": "string"
+          },
           "isbn": {
             "anyOf": [
               {
@@ -3903,6 +4101,11 @@
             "title": "Title",
             "type": "string"
           },
+          "updatedAt": {
+            "format": "date-time",
+            "title": "Updatedat",
+            "type": "string"
+          },
           "year": {
             "anyOf": [
               {
@@ -3916,6 +4119,8 @@
           }
         },
         "required": [
+          "updatedAt",
+          "createdAt",
           "title",
           "publisher",
           "year",
@@ -3927,6 +4132,9 @@
       "textbookOutputItemRelationships": {
         "additionalProperties": false,
         "properties": {
+          "createdBy": {
+            "$ref": "#/components/schemas/OptionalRelationship"
+          },
           "exercises": {
             "$ref": "#/components/schemas/OutputListRelationship"
           },
@@ -3935,9 +4143,14 @@
           },
           "sections": {
             "$ref": "#/components/schemas/OutputListRelationship"
+          },
+          "updatedBy": {
+            "$ref": "#/components/schemas/OptionalRelationship"
           }
         },
         "required": [
+          "updatedBy",
+          "createdBy",
           "project",
           "exercises",
           "sections"
@@ -4503,6 +4716,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Get Exercises"
       },
       "post": {
@@ -4587,6 +4805,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Delete Exercise"
       },
       "get": {
@@ -4633,6 +4856,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Get Exercise"
       },
       "patch": {
@@ -4762,6 +4990,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Get Extraction Events"
       },
       "post": {
@@ -4846,6 +5079,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Delete Extraction Event"
       },
       "get": {
@@ -4892,6 +5130,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Get Extraction Event"
       },
       "patch": {
@@ -5039,6 +5282,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Delete Fill With Free Text Adaptation"
       },
       "get": {
@@ -5085,6 +5333,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Get Fill With Free Text Adaptation"
       },
       "patch": {
@@ -5232,6 +5485,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Delete Multiple Choices In Instructions Adaptation"
       },
       "get": {
@@ -5278,6 +5536,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Get Multiple Choices In Instructions Adaptation"
       },
       "patch": {
@@ -5425,6 +5688,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Delete Multiple Choices In Wording Adaptation"
       },
       "get": {
@@ -5471,6 +5739,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Get Multiple Choices In Wording Adaptation"
       },
       "patch": {
@@ -5600,6 +5873,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Get Pdf File Namings"
       },
       "post": {
@@ -5684,6 +5962,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Delete Pdf File Naming"
       },
       "get": {
@@ -5730,6 +6013,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Get Pdf File Naming"
       },
       "patch": {
@@ -5859,6 +6147,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Get Pdf Files"
       },
       "post": {
@@ -5943,6 +6236,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Delete Pdf File"
       },
       "get": {
@@ -5989,6 +6287,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Get Pdf File"
       },
       "patch": {
@@ -6271,6 +6574,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Get Ping"
       },
       "patch": {
@@ -6474,6 +6782,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Get Projects"
       },
       "post": {
@@ -6558,6 +6871,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Delete Project"
       },
       "get": {
@@ -6604,6 +6922,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Get Project"
       },
       "patch": {
@@ -6835,6 +7158,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Get Sections"
       },
       "post": {
@@ -6919,6 +7247,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Delete Section"
       },
       "get": {
@@ -6965,6 +7298,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Get Section"
       },
       "patch": {
@@ -7112,6 +7450,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Delete Select Things Adaptation"
       },
       "get": {
@@ -7158,6 +7501,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Get Select Things Adaptation"
       },
       "patch": {
@@ -7287,6 +7635,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Get Textbooks"
       },
       "post": {
@@ -7371,6 +7724,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Delete Textbook"
       },
       "get": {
@@ -7417,6 +7775,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Get Textbook"
       },
       "patch": {
