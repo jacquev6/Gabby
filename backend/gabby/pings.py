@@ -820,11 +820,11 @@ class PingOwnershipApiTestCase(testing.ApiTestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
         self.assertEqual(
             response.json()["data"]["relationships"]["createdBy"],
-            {"data": {"type": "user", "id": "1"}},
+            {"data": {"type": "user", "id": "fvirvd"}},
         )
         self.assertEqual(
             response.json()["data"]["relationships"]["updatedBy"],
-            {"data": {"type": "user", "id": "1"}},
+            {"data": {"type": "user", "id": "fvirvd"}},
         )
 
         self.assertEqual(self.get_model(Ping, 1).created_by, self.get_model(User, 1))

@@ -498,19 +498,6 @@
         "title": "UpdateInputListRelationship",
         "type": "object"
       },
-      "User": {
-        "properties": {
-          "username": {
-            "title": "Username",
-            "type": "string"
-          }
-        },
-        "required": [
-          "username"
-        ],
-        "title": "User",
-        "type": "object"
-      },
       "ValidationError": {
         "properties": {
           "loc": {
@@ -2723,16 +2710,6 @@
             "title": "Createdat",
             "type": "string"
           },
-          "createdBy": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/User"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
           "message": {
             "anyOf": [
               {
@@ -2748,24 +2725,12 @@
             "format": "date-time",
             "title": "Updatedat",
             "type": "string"
-          },
-          "updatedBy": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/User"
-              },
-              {
-                "type": "null"
-              }
-            ]
           }
         },
         "required": [
           "message",
           "createdAt",
-          "createdBy",
-          "updatedAt",
-          "updatedBy"
+          "updatedAt"
         ],
         "title": "pingOutputItemAttributes",
         "type": "object"
@@ -2773,14 +2738,22 @@
       "pingOutputItemRelationships": {
         "additionalProperties": false,
         "properties": {
+          "createdBy": {
+            "$ref": "#/components/schemas/OptionalRelationship"
+          },
           "next": {
             "$ref": "#/components/schemas/OutputListRelationship"
           },
           "prev": {
             "$ref": "#/components/schemas/OptionalRelationship"
+          },
+          "updatedBy": {
+            "$ref": "#/components/schemas/OptionalRelationship"
           }
         },
         "required": [
+          "createdBy",
+          "updatedBy",
           "prev",
           "next"
         ],
@@ -3150,6 +3123,111 @@
         "additionalProperties": false,
         "properties": {},
         "title": "projectUpdateInputDataRelationships",
+        "type": "object"
+      },
+      "recoveryEmailRequestCreateInput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/recoveryEmailRequestCreateInputData"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "recoveryEmailRequestCreateInput",
+        "type": "object"
+      },
+      "recoveryEmailRequestCreateInputData": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "$ref": "#/components/schemas/recoveryEmailRequestCreateInputDataAttributes"
+          },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/recoveryEmailRequestCreateInputDataRelationships"
+              }
+            ],
+            "default": {}
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "attributes"
+        ],
+        "title": "recoveryEmailRequestCreateInputData",
+        "type": "object"
+      },
+      "recoveryEmailRequestCreateInputDataAttributes": {
+        "additionalProperties": false,
+        "properties": {
+          "address": {
+            "title": "Address",
+            "type": "string"
+          },
+          "language": {
+            "title": "Language",
+            "type": "string"
+          }
+        },
+        "required": [
+          "address",
+          "language"
+        ],
+        "title": "recoveryEmailRequestCreateInputDataAttributes",
+        "type": "object"
+      },
+      "recoveryEmailRequestCreateInputDataRelationships": {
+        "additionalProperties": false,
+        "properties": {},
+        "title": "recoveryEmailRequestCreateInputDataRelationships",
+        "type": "object"
+      },
+      "recoveryEmailRequestItemOutput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/recoveryEmailRequestOutputItem"
+          },
+          "included": {
+            "items": {},
+            "title": "Included",
+            "type": "array"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "recoveryEmailRequestItemOutput",
+        "type": "object"
+      },
+      "recoveryEmailRequestOutputItem": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "links": {
+            "$ref": "#/components/schemas/ItemLinks"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "links"
+        ],
+        "title": "recoveryEmailRequestOutputItem",
         "type": "object"
       },
       "sectionCreateInput": {
@@ -3994,6 +4072,148 @@
         "properties": {},
         "title": "textbookUpdateInputDataRelationships",
         "type": "object"
+      },
+      "userItemOutput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/userOutputItem"
+          },
+          "included": {
+            "items": {},
+            "title": "Included",
+            "type": "array"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "userItemOutput",
+        "type": "object"
+      },
+      "userOutputItem": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "$ref": "#/components/schemas/userOutputItemAttributes"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "links": {
+            "$ref": "#/components/schemas/ItemLinks"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "links",
+          "attributes"
+        ],
+        "title": "userOutputItem",
+        "type": "object"
+      },
+      "userOutputItemAttributes": {
+        "additionalProperties": false,
+        "properties": {
+          "username": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Username"
+          }
+        },
+        "required": [
+          "username"
+        ],
+        "title": "userOutputItemAttributes",
+        "type": "object"
+      },
+      "userUpdateInput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/userUpdateInputData"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "userUpdateInput",
+        "type": "object"
+      },
+      "userUpdateInputData": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/userUpdateInputDataAttributes"
+              }
+            ],
+            "default": {}
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/userUpdateInputDataRelationships"
+              }
+            ],
+            "default": {}
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "userUpdateInputData",
+        "type": "object"
+      },
+      "userUpdateInputDataAttributes": {
+        "additionalProperties": false,
+        "properties": {
+          "clearTextPassword": {
+            "title": "Cleartextpassword",
+            "type": "string"
+          },
+          "username": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Username"
+          }
+        },
+        "title": "userUpdateInputDataAttributes",
+        "type": "object"
+      },
+      "userUpdateInputDataRelationships": {
+        "additionalProperties": false,
+        "properties": {},
+        "title": "userUpdateInputDataRelationships",
+        "type": "object"
       }
     },
     "securitySchemes": {
@@ -4060,6 +4280,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Create Adapted Exercise"
       }
     },
@@ -4292,6 +4517,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Create Exercise"
       }
     },
@@ -4426,6 +4656,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Update Exercise"
       }
     },
@@ -4541,6 +4776,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Create Extraction Event"
       }
     },
@@ -4675,6 +4915,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Update Extraction Event"
       }
     },
@@ -4724,6 +4969,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Create Fill With Free Text Adaptation"
       }
     },
@@ -4858,6 +5108,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Update Fill With Free Text Adaptation"
       }
     },
@@ -4907,6 +5162,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Create Multiple Choices In Instructions Adaptation"
       }
     },
@@ -5041,6 +5301,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Update Multiple Choices In Instructions Adaptation"
       }
     },
@@ -5090,6 +5355,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Create Multiple Choices In Wording Adaptation"
       }
     },
@@ -5224,6 +5494,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Update Multiple Choices In Wording Adaptation"
       }
     },
@@ -5339,6 +5614,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Create Pdf File Naming"
       }
     },
@@ -5473,6 +5753,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Update Pdf File Naming"
       }
     },
@@ -5588,6 +5873,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Create Pdf File"
       }
     },
@@ -5722,6 +6012,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Update Pdf File"
       }
     },
@@ -6193,6 +6488,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Create Project"
       }
     },
@@ -6327,7 +6627,114 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Update Project"
+      }
+    },
+    "/api/recoveryEmailRequests": {
+      "post": {
+        "operationId": "create_recovery_email_request_api_recoveryEmailRequests_post",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/recoveryEmailRequestCreateInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/recoveryEmailRequestItemOutput"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "summary": "Create Recovery Email Request"
+      }
+    },
+    "/api/recoveryEmailRequests/{id}": {
+      "get": {
+        "operationId": "get_recovery_email_request_api_recoveryEmailRequests__id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/recoveryEmailRequestItemOutput"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Recovery Email Request"
       }
     },
     "/api/sections": {
@@ -6442,6 +6849,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Create Section"
       }
     },
@@ -6576,6 +6988,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Update Section"
       }
     },
@@ -6625,6 +7042,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Create Select Things Adaptation"
       }
     },
@@ -6759,6 +7181,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Update Select Things Adaptation"
       }
     },
@@ -6874,6 +7301,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Create Textbook"
       }
     },
@@ -7008,6 +7440,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Update Textbook"
       }
     },
@@ -7045,6 +7482,120 @@
           }
         },
         "summary": "Login"
+      }
+    },
+    "/api/users/{id}": {
+      "get": {
+        "operationId": "get_user_api_users__id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/userItemOutput"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "summary": "Get User"
+      },
+      "patch": {
+        "operationId": "update_user_api_users__id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/userUpdateInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/userItemOutput"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "summary": "Update User"
       }
     },
     "/reset-for-tests/yes-im-sure": {

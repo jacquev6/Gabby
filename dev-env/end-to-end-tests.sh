@@ -20,6 +20,11 @@ do
   esac
 done
 
+if (cd ..; git grep 'it\.only' -- tests)
+then
+  false
+fi
+
 docker compose exec \
   $console_options \
   frontend-shell \

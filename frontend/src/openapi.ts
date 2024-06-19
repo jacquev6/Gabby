@@ -145,6 +145,14 @@ export interface paths {
     /** Update Project */
     patch: operations["update_project_api_projects__id__patch"];
   };
+  "/api/recoveryEmailRequests": {
+    /** Create Recovery Email Request */
+    post: operations["create_recovery_email_request_api_recoveryEmailRequests_post"];
+  };
+  "/api/recoveryEmailRequests/{id}": {
+    /** Get Recovery Email Request */
+    get: operations["get_recovery_email_request_api_recoveryEmailRequests__id__get"];
+  };
   "/api/sections": {
     /** Get Sections */
     get: operations["get_sections_api_sections_get"];
@@ -188,6 +196,12 @@ export interface paths {
   "/api/token": {
     /** Login */
     post: operations["login_api_token_post"];
+  };
+  "/api/users/{id}": {
+    /** Get User */
+    get: operations["get_user_api_users__id__get"];
+    /** Update User */
+    patch: operations["update_user_api_users__id__patch"];
   };
   "/reset-for-tests/yes-im-sure": {
     /** Reset For Tests */
@@ -350,11 +364,6 @@ export interface components {
     UpdateInputListRelationship: {
       /** Data */
       data: components["schemas"]["ObjectId"][];
-    };
-    /** User */
-    User: {
-      /** Username */
-      username: string;
     };
     /** ValidationError */
     ValidationError: {
@@ -1111,7 +1120,6 @@ export interface components {
        * Format: date-time
        */
       createdAt: string;
-      createdBy: components["schemas"]["User"] | null;
       /** Message */
       message: string | null;
       /**
@@ -1119,12 +1127,13 @@ export interface components {
        * Format: date-time
        */
       updatedAt: string;
-      updatedBy: components["schemas"]["User"] | null;
     };
     /** pingOutputItemRelationships */
     pingOutputItemRelationships: {
+      createdBy: components["schemas"]["OptionalRelationship"];
       next: components["schemas"]["OutputListRelationship"];
       prev: components["schemas"]["OptionalRelationship"];
+      updatedBy: components["schemas"]["OptionalRelationship"];
     };
     /** pingPageOutput */
     pingPageOutput: {
@@ -1245,6 +1254,41 @@ export interface components {
     };
     /** projectUpdateInputDataRelationships */
     projectUpdateInputDataRelationships: Record<string, never>;
+    /** recoveryEmailRequestCreateInput */
+    recoveryEmailRequestCreateInput: {
+      data: components["schemas"]["recoveryEmailRequestCreateInputData"];
+    };
+    /** recoveryEmailRequestCreateInputData */
+    recoveryEmailRequestCreateInputData: {
+      attributes: components["schemas"]["recoveryEmailRequestCreateInputDataAttributes"];
+      /** @default {} */
+      relationships?: components["schemas"]["recoveryEmailRequestCreateInputDataRelationships"];
+      /** Type */
+      type: string;
+    };
+    /** recoveryEmailRequestCreateInputDataAttributes */
+    recoveryEmailRequestCreateInputDataAttributes: {
+      /** Address */
+      address: string;
+      /** Language */
+      language: string;
+    };
+    /** recoveryEmailRequestCreateInputDataRelationships */
+    recoveryEmailRequestCreateInputDataRelationships: Record<string, never>;
+    /** recoveryEmailRequestItemOutput */
+    recoveryEmailRequestItemOutput: {
+      data: components["schemas"]["recoveryEmailRequestOutputItem"];
+      /** Included */
+      included?: unknown[];
+    };
+    /** recoveryEmailRequestOutputItem */
+    recoveryEmailRequestOutputItem: {
+      /** Id */
+      id: string;
+      links: components["schemas"]["ItemLinks"];
+      /** Type */
+      type: string;
+    };
     /** sectionCreateInput */
     sectionCreateInput: {
       data: components["schemas"]["sectionCreateInputData"];
@@ -1510,6 +1554,50 @@ export interface components {
     };
     /** textbookUpdateInputDataRelationships */
     textbookUpdateInputDataRelationships: Record<string, never>;
+    /** userItemOutput */
+    userItemOutput: {
+      data: components["schemas"]["userOutputItem"];
+      /** Included */
+      included?: unknown[];
+    };
+    /** userOutputItem */
+    userOutputItem: {
+      attributes: components["schemas"]["userOutputItemAttributes"];
+      /** Id */
+      id: string;
+      links: components["schemas"]["ItemLinks"];
+      /** Type */
+      type: string;
+    };
+    /** userOutputItemAttributes */
+    userOutputItemAttributes: {
+      /** Username */
+      username: string | null;
+    };
+    /** userUpdateInput */
+    userUpdateInput: {
+      data: components["schemas"]["userUpdateInputData"];
+    };
+    /** userUpdateInputData */
+    userUpdateInputData: {
+      /** @default {} */
+      attributes?: components["schemas"]["userUpdateInputDataAttributes"];
+      /** Id */
+      id: string;
+      /** @default {} */
+      relationships?: components["schemas"]["userUpdateInputDataRelationships"];
+      /** Type */
+      type: string;
+    };
+    /** userUpdateInputDataAttributes */
+    userUpdateInputDataAttributes: {
+      /** Cleartextpassword */
+      clearTextPassword?: string;
+      /** Username */
+      username?: string | null;
+    };
+    /** userUpdateInputDataRelationships */
+    userUpdateInputDataRelationships: Record<string, never>;
   };
   responses: never;
   parameters: never;
@@ -2715,6 +2803,58 @@ export interface operations {
       };
     };
   };
+  /** Create Recovery Email Request */
+  create_recovery_email_request_api_recoveryEmailRequests_post: {
+    parameters: {
+      query?: {
+        include?: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["recoveryEmailRequestCreateInput"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        content: {
+          "application/vnd.api+json": components["schemas"]["recoveryEmailRequestItemOutput"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  /** Get Recovery Email Request */
+  get_recovery_email_request_api_recoveryEmailRequests__id__get: {
+    parameters: {
+      query?: {
+        include?: string;
+      };
+      path: {
+        id: string;
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        content: {
+          "application/vnd.api+json": components["schemas"]["recoveryEmailRequestItemOutput"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
   /** Get Sections */
   get_sections_api_sections_get: {
     parameters: {
@@ -3083,6 +3223,61 @@ export interface operations {
       200: {
         content: {
           "application/json": unknown;
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  /** Get User */
+  get_user_api_users__id__get: {
+    parameters: {
+      query?: {
+        include?: string;
+      };
+      path: {
+        id: string;
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        content: {
+          "application/vnd.api+json": components["schemas"]["userItemOutput"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  /** Update User */
+  update_user_api_users__id__patch: {
+    parameters: {
+      query?: {
+        include?: string;
+      };
+      path: {
+        id: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["userUpdateInput"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        content: {
+          "application/vnd.api+json": components["schemas"]["userItemOutput"];
         };
       };
       /** @description Validation Error */

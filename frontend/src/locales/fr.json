@@ -6,6 +6,25 @@
   "close": "Fermer",
 
 
+  "pleaseLogin": "Veuillez vous connecter",
+  "loginButton": "Se connecter",
+  "emailAddress": "Adresse e-mail",
+  "password": "Mot de passe",
+  "logoutButton": "Déconnexion",
+  "loginFailed": "Connexion échouée. Merci de vérifiez vos identifiants.",
+  "lostPasswordQuestion": "Mot de passe perdu ?",
+  "lostPasswordTitle": "Mot de passe perdu",
+  "lostPasswordEmailAddress": "Envoyer un e-mail de récupération à cette adresse",
+  "sendRecoveryMail": "Envoyer",
+  "backFromLostPassword": "Retour",
+  "recoveryMailSubmitted": "e-mail de récupération demandé. Consultez votre boîte de réception.",
+  "resetPasswordTitle": "Réinitialisation du mot de passe",
+  "newPasswordField": "Nouveau mot de passe",
+  "confirmNewPasswordField": "Nouveau mot de passe (confirmation)",
+  "passwordsAreDifferent": "Les mots de passe ne correspondent pas.",
+  "resetPasswordButton": "Réinitialiser le mot de passe",
+
+
   "thisIsABug": "Vous ne devriez pas voir ça ; c'est un bug. Merci de le signaler à Vincent Jacques.",
 
 

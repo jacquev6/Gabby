@@ -1,3 +1,5 @@
+GABBY_ROOT_URL=http://localhost:8080
+
 GABBY_DATABASE_URL=postgresql+psycopg2://admin:password@db/db
 GABBY_SECRET_KEY=not-so-secret
 GABBY_DATABASE_BACKUPS_URL=file:///app/dev-env/db/backups
@@ -6,3 +8,5 @@ GABBY_DEBUG=true
 GABBY_EXPOSE_RESET_FOR_TESTS_URL=true
 
 GABBY_GENERIC_DEFAULT_API_PAGE_SIZE=2
+
+GABBY_MAIL_SENDER="Vincent Jacques <vincent@vincent-jacques.net>"

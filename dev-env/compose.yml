@@ -103,7 +103,9 @@ services:
       - ..:/app
       - backend-pip-packages:/root/.local
     working_dir: /app/backend
-    env_file: backend/env
+    env_file:
+      - backend/env
+      - secrets.env
     init: true
     command: ["sleep", "infinity"]
   pip-installer:
@@ -132,7 +134,9 @@ services:
       - ..:/app
       - backend-pip-packages:/root/.local
     working_dir: /app/backend/gabby
-    env_file: backend/env
+    env_file:
+      - backend/env
+      - secrets.env
     command: ["alembic", "upgrade", "head"]
     depends_on:
       pip-installer:
@@ -146,8 +150,10 @@ services:
       - ..:/app
       - backend-pip-packages:/root/.local
     working_dir: /app/backend
-    env_file: backend/env
-    command: ["python", "-m", "gabby", "load-fixtures", "more-test-exercises"]
+    env_file:
+      - backend/env
+      - secrets.env
+    command: ["python", "-m", "gabby", "load-fixtures", "admin-user", "more-test-exercises"]
     depends_on:
       migrator:
         condition: service_completed_successfully
@@ -158,7 +164,9 @@ services:
       - ..:/app
       - backend-pip-packages:/root/.local
     working_dir: /app/backend
-    env_file: backend/env
+    env_file:
+      - backend/env
+      - secrets.env
     command: ["uvicorn", "gabby.asgi:app", "--reload", "--host", "0.0.0.0", "--port", "80"]
     depends_on:
       pip-installer:
@@ -174,7 +182,9 @@ services:
       - ..:/app
       - backend-pip-packages:/root/.local
     working_dir: /app/backend
-    env_file: backend/env
+    env_file:
+      - backend/env
+      - secrets.env
     init: true
     command: ["bash", "-c", "while true; do python -m gabby backup-database; find /app/dev-env/db/backups -name 'gabby-backup-*.tar.gz' -mmin +10 -delete; sleep 30; done"]
     depends_on:

@@ -15,12 +15,16 @@ describe('ApiStore', () => {
   before(console.clear)
 
   beforeEach(() => {
-    cy.request('POST', 'http://fanout:8080/reset-for-tests/yes-im-sure?fixtures=test-pings')
+    cy.request('POST', 'http://fanout:8080/reset-for-tests/yes-im-sure?fixtures=admin-user,test-pings')
 
     cy.viewport(1300, 600)
 
     setActivePinia(createPinia())
     useApiStore()
+  })
+
+  after(() => {
+    cy.request('POST', 'http://fanout:8080/reset-for-tests/yes-im-sure?fixtures=admin-user,more-test-exercises')
   })
 
   it('gets all pings', async () => {
@@ -335,7 +339,7 @@ describe('ApiStore', () => {
     cy.expect(before.attributes).to.be.undefined
     cy.expect(before.relationships).to.be.undefined
 
-    const posted = await api.client.post('ping', {}, {next: []})
+    const posted = await api.client.post('ping', {}, {})
     const after = api.cache.getOne('ping', '7')
     const got = await api.client.getOne('ping', '7')
 
@@ -793,6 +797,97 @@ describe('ApiStore', () => {
   // @todo Implement: remove the ping from the relationship list (lazily in 'get relationships', not proactively)
   // it('deletes one ping that was in a relationship', async () => {
   // })
+
+  it('logs in and out', async () => {
+    const api = useApiStore()
+
+    const loggedOut1 = await api.client.post('ping', {}, {})
+    cy.expect(loggedOut1.relationships.createdBy).to.be.null
+
+    cy.expect(api.auth.isAuthenticated.value).to.be.false
+
+    cy.expect(await api.auth.login('admin', 'password')).to.be.true
+
+    cy.expect(api.auth.isAuthenticated.value).to.be.true
+
+    const loggedIn = await api.client.post('ping', {}, {})
+    cy.expect(loggedIn.relationships.createdBy.type).to.equal('user')
+    cy.expect(loggedIn.relationships.createdBy.id).to.equal('fvirvd')
+    cy.expect(loggedIn.relationships.createdBy.inCache).to.be.false
+
+    api.auth.logout()
+
+    cy.expect(api.auth.isAuthenticated.value).to.be.false
+
+    const loggedOut2 = await api.client.post('ping', {}, {})
+    cy.expect(loggedOut2.relationships.createdBy).to.be.null
+  })
+
+  it('fails to login', async () => {
+    const api = useApiStore()
+
+    cy.expect(await api.auth.login('admin', 'not-the-password')).to.be.false
+    cy.expect(api.auth.isAuthenticated.value).to.be.false
+
+    cy.expect(await api.auth.login('not-the-admin', 'password')).to.be.false
+    cy.expect(api.auth.isAuthenticated.value).to.be.false
+  })
+
+  it('clears cache on logout', async () => {
+    const api = useApiStore()
+
+    api.auth.login('admin', 'password')
+
+    await api.client.getOne('ping', '1')
+
+    cy.expect(api.cache.getOne('ping', '1').inCache).to.be.true
+
+    api.auth.logout()
+
+    cy.expect(api.cache.getOne('ping', '1').inCache).to.be.false
+  })
+
+  it('anticipates token expiration', async () => {
+    const api = useApiStore()
+
+    cy.expect(await api.auth.login('admin', 'password', {validity: "PT2S", expiresSoonMargin: 1000, logoutMargin: 500})).to.be.true
+
+    cy.expect(api.auth.isAuthenticated.value).to.be.true
+    cy.expect(api.auth.expiresSoon.value).to.be.false
+
+    await new Promise(resolve => setTimeout(resolve, 1100))
+
+    cy.expect(api.auth.isAuthenticated.value).to.be.true
+    cy.expect(api.auth.expiresSoon.value).to.be.true
+
+    cy.expect(await api.auth.login('admin', 'password', {validity: "PT2S", expiresSoonMargin: 1000, logoutMargin: 500})).to.be.true
+
+    cy.expect(api.auth.isAuthenticated.value).to.be.true
+    cy.expect(api.auth.expiresSoon.value).to.be.false
+
+    await new Promise(resolve => setTimeout(resolve, 1100))
+
+    cy.expect(api.auth.isAuthenticated.value).to.be.true
+    cy.expect(api.auth.expiresSoon.value).to.be.true
+
+    await new Promise(resolve => setTimeout(resolve, 500))
+
+    cy.expect(api.auth.isAuthenticated.value).to.be.false
+    cy.expect(api.auth.expiresSoon.value).to.be.true
+  })
+
+  it('stores authentication token in local storage', async () => {
+    const api1 = useApiStore()
+
+    cy.expect(await api1.auth.login('admin', 'password')).to.be.true
+    cy.expect(api1.auth.isAuthenticated.value).to.be.true
+
+    setActivePinia(createPinia())
+
+    const api2 = useApiStore()
+    cy.expect(api2.cache).to.not.equal(api1.cache)
+    cy.expect(api2.auth.isAuthenticated.value).to.be.true
+  })
 
   it('reacts to ping message edition', () => {
     cy.mount(TestComponent)
