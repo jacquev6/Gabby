@@ -8,6 +8,7 @@ import * as untypedPdfjs from 'pdfjs-dist/build/pdf'
 import type PdfjsType from 'pdfjs-dist/types/src/pdf'
 
 import { i18n } from '$/locales'
+import ResetPasswordView from './views/ResetPasswordView.vue'
 import RootLayout from './views/RootLayout.vue'
 import ProjectLayout from './views/project/ProjectLayout.vue'
 import ProjectTextbookLayout from './views/project/textbook/ProjectTextbookLayout.vue'
@@ -36,6 +37,12 @@ const router = createRouter({
       path: '/pdfs',
       name: 'pdfs',
       component: () => import('./views/PdfsView.vue'),
+    },
+    {
+      path: '/reset-password/:emailAddress/:token',
+      name: 'reset-password',
+      component: ResetPasswordView,
+      props: true,
     },
     {
       path: '/',

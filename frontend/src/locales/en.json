@@ -12,6 +12,17 @@
   "password": "Password",
   "logoutButton": "Log out",
   "loginFailed": "Login failed. Please check your credentials.",
+  "lostPasswordQuestion": "Lost password?",
+  "lostPasswordTitle": "Lost password",
+  "lostPasswordEmailAddress": "Send a recovery e-mail to this address",
+  "sendRecoveryMail": "Send",
+  "backFromLostPassword": "Back",
+  "recoveryMailSubmitted": "Recovery e-mail submitted. Please check your inbox.",
+  "resetPasswordTitle": "Reset password",
+  "newPasswordField": "New password",
+  "confirmNewPasswordField": "New password (confirm)",
+  "passwordsAreDifferent": "Passwords are different.",
+  "resetPasswordButton": "Reset password",
 
 
   "thisIsABug": "You should not be seeing this; this is a bug. Please let Vincent Jacques know about it.",

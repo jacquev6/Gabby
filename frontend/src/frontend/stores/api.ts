@@ -319,6 +319,9 @@ export function defineApiStore(name: string, options?: {baseUrl?: string}) {
         expiresSoonTimeout = setTimeout(() => { expiresSoon.value = true }, validFor - expiresSoonMargin)
         logoutTimeout = setTimeout(() => { this.logout() }, validFor - logoutMargin)
       },
+      setToken(accessToken: string) {
+        cache._authentication = {header: 'Bearer ' + accessToken, validUntil: new Date(0)}
+      },
       logout() {
         cache._authentication = null
         localStorage.removeItem('auth-v1')
