@@ -178,13 +178,13 @@ class AuthenticationApiTestCase(testing.ApiTestCase):
         self.expect_commits_rollbacks(2, 1)
 
         before = datetime.datetime.now(tz=datetime.timezone.utc)
-        # Request a token with 5h validity
+        # Request a token with longer-than-default validity
         response = self.api_client.post("http://server/token", data={"username": "john", "password": "password", "options": '{"validity": "PT24H"}'})
         after = datetime.datetime.now(tz=datetime.timezone.utc)
         self.assertEqual(response.status_code, 200, response.json())
         token = response.json()["access_token"]
 
-        # Validity is still 1h
+        # Validity is still the default one
         token = jwt.decode(token, options={"verify_signature": False})
         valid_until = datetime.datetime.fromisoformat(token["validUntil"])
         self.assertLessEqual(before + datetime.timedelta(hours=20), valid_until)
