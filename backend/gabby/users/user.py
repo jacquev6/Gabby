@@ -92,6 +92,15 @@ def authenticate(session, *, username, clear_text_password):
             return None
 
 
+def make_access_token(user: User, validity: datetime.timedelta):
+    valid_until = datetime.datetime.now(tz=datetime.timezone.utc) + validity
+    token = {
+        "userId": user.id,
+        "validUntil": valid_until.isoformat(),
+    }
+    return (jwt.encode(token, settings.SECRET_KEY, algorithm="HS256"), valid_until)
+
+
 def authentication_dependable(
     credentials: Annotated[OAuth2PasswordRequestForm, Depends()],
     options: Annotated[str | None, Form()] = None,
@@ -109,13 +118,9 @@ def authentication_dependable(
 
     options = Options(**({} if options is None else json.loads(options)))
     options.validity = min(options.validity, default_validity)
-    valid_until = datetime.datetime.now(tz=datetime.timezone.utc) + options.validity
-    token = {
-        "userId": user.id,
-        "validUntil": valid_until.isoformat(),
-    }
+    (access_token, valid_until) = make_access_token(user, options.validity)
     return {
-        "access_token": jwt.encode(token, settings.SECRET_KEY, algorithm="HS256"),
+        "access_token": access_token,
         "valid_until": valid_until,
         "token_type": "bearer",
     }

@@ -14,6 +14,11 @@ class User(Base):
     clear_text_password: Annotated[str, Secret()]
 
 
+class RecoveryEmailRequest(Base):
+    address: Annotated[str, WriteOnly()]
+    language: Annotated[str, WriteOnly()]
+
+
 class Ping(Base):
     message: Annotated[str | None, Filterable()] = None
     created_at: Annotated[datetime.datetime, Computed()]

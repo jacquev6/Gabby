@@ -12,11 +12,13 @@ from .projects import Project, ProjectsResource
 from .testing import ApiTestCase
 from .textbooks import Textbook, TextbooksResource, SectionsResource
 from .users import UsersResource
+from .users.recovery import RecoveryEmailRequestsResource
 from .wrapping import get_wrapper
 
 
 resources = [
     UsersResource(),
+    RecoveryEmailRequestsResource(),
     PingsResource(),
     PdfFilesResource(),
     PdfFileNamingsResource(),

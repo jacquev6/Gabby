@@ -3125,6 +3125,111 @@
         "title": "projectUpdateInputDataRelationships",
         "type": "object"
       },
+      "recoveryEmailRequestCreateInput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/recoveryEmailRequestCreateInputData"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "recoveryEmailRequestCreateInput",
+        "type": "object"
+      },
+      "recoveryEmailRequestCreateInputData": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "$ref": "#/components/schemas/recoveryEmailRequestCreateInputDataAttributes"
+          },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/recoveryEmailRequestCreateInputDataRelationships"
+              }
+            ],
+            "default": {}
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "attributes"
+        ],
+        "title": "recoveryEmailRequestCreateInputData",
+        "type": "object"
+      },
+      "recoveryEmailRequestCreateInputDataAttributes": {
+        "additionalProperties": false,
+        "properties": {
+          "address": {
+            "title": "Address",
+            "type": "string"
+          },
+          "language": {
+            "title": "Language",
+            "type": "string"
+          }
+        },
+        "required": [
+          "address",
+          "language"
+        ],
+        "title": "recoveryEmailRequestCreateInputDataAttributes",
+        "type": "object"
+      },
+      "recoveryEmailRequestCreateInputDataRelationships": {
+        "additionalProperties": false,
+        "properties": {},
+        "title": "recoveryEmailRequestCreateInputDataRelationships",
+        "type": "object"
+      },
+      "recoveryEmailRequestItemOutput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/recoveryEmailRequestOutputItem"
+          },
+          "included": {
+            "items": {},
+            "title": "Included",
+            "type": "array"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "recoveryEmailRequestItemOutput",
+        "type": "object"
+      },
+      "recoveryEmailRequestOutputItem": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "links": {
+            "$ref": "#/components/schemas/ItemLinks"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "links"
+        ],
+        "title": "recoveryEmailRequestOutputItem",
+        "type": "object"
+      },
       "sectionCreateInput": {
         "additionalProperties": false,
         "properties": {
@@ -6454,6 +6559,108 @@
           }
         ],
         "summary": "Update Project"
+      }
+    },
+    "/recoveryEmailRequests": {
+      "post": {
+        "operationId": "create_recovery_email_request_recoveryEmailRequests_post",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/recoveryEmailRequestCreateInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/recoveryEmailRequestItemOutput"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "summary": "Create Recovery Email Request"
+      }
+    },
+    "/recoveryEmailRequests/{id}": {
+      "get": {
+        "operationId": "get_recovery_email_request_recoveryEmailRequests__id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/recoveryEmailRequestItemOutput"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Recovery Email Request"
       }
     },
     "/sections": {

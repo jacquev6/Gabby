@@ -145,6 +145,14 @@ export interface paths {
     /** Update Project */
     patch: operations["update_project_api_projects__id__patch"];
   };
+  "/api/recoveryEmailRequests": {
+    /** Create Recovery Email Request */
+    post: operations["create_recovery_email_request_api_recoveryEmailRequests_post"];
+  };
+  "/api/recoveryEmailRequests/{id}": {
+    /** Get Recovery Email Request */
+    get: operations["get_recovery_email_request_api_recoveryEmailRequests__id__get"];
+  };
   "/api/sections": {
     /** Get Sections */
     get: operations["get_sections_api_sections_get"];
@@ -1246,6 +1254,41 @@ export interface components {
     };
     /** projectUpdateInputDataRelationships */
     projectUpdateInputDataRelationships: Record<string, never>;
+    /** recoveryEmailRequestCreateInput */
+    recoveryEmailRequestCreateInput: {
+      data: components["schemas"]["recoveryEmailRequestCreateInputData"];
+    };
+    /** recoveryEmailRequestCreateInputData */
+    recoveryEmailRequestCreateInputData: {
+      attributes: components["schemas"]["recoveryEmailRequestCreateInputDataAttributes"];
+      /** @default {} */
+      relationships?: components["schemas"]["recoveryEmailRequestCreateInputDataRelationships"];
+      /** Type */
+      type: string;
+    };
+    /** recoveryEmailRequestCreateInputDataAttributes */
+    recoveryEmailRequestCreateInputDataAttributes: {
+      /** Address */
+      address: string;
+      /** Language */
+      language: string;
+    };
+    /** recoveryEmailRequestCreateInputDataRelationships */
+    recoveryEmailRequestCreateInputDataRelationships: Record<string, never>;
+    /** recoveryEmailRequestItemOutput */
+    recoveryEmailRequestItemOutput: {
+      data: components["schemas"]["recoveryEmailRequestOutputItem"];
+      /** Included */
+      included?: unknown[];
+    };
+    /** recoveryEmailRequestOutputItem */
+    recoveryEmailRequestOutputItem: {
+      /** Id */
+      id: string;
+      links: components["schemas"]["ItemLinks"];
+      /** Type */
+      type: string;
+    };
     /** sectionCreateInput */
     sectionCreateInput: {
       data: components["schemas"]["sectionCreateInputData"];
@@ -2750,6 +2793,58 @@ export interface operations {
       200: {
         content: {
           "application/vnd.api+json": components["schemas"]["projectItemOutput"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  /** Create Recovery Email Request */
+  create_recovery_email_request_api_recoveryEmailRequests_post: {
+    parameters: {
+      query?: {
+        include?: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["recoveryEmailRequestCreateInput"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        content: {
+          "application/vnd.api+json": components["schemas"]["recoveryEmailRequestItemOutput"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  /** Get Recovery Email Request */
+  get_recovery_email_request_api_recoveryEmailRequests__id__get: {
+    parameters: {
+      query?: {
+        include?: string;
+      };
+      path: {
+        id: string;
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        content: {
+          "application/vnd.api+json": components["schemas"]["recoveryEmailRequestItemOutput"];
         };
       };
       /** @description Validation Error */
