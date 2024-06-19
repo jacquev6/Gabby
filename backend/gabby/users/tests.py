@@ -190,7 +190,7 @@ class AuthenticationApiTestCase(testing.ApiTestCase):
         response = self.api_client.get("http://server/mandatory-authenticated", headers={"Authorization": f"Bearer {token}"})
         self.assertEqual(response.status_code, 401, response.json())
 
-    def test_token_tempered(self):
+    def test_token_tempered__validity(self):
         self.expect_commits_rollbacks(2, 1)
 
         before = datetime.datetime.now(tz=datetime.timezone.utc)
@@ -215,6 +215,36 @@ class AuthenticationApiTestCase(testing.ApiTestCase):
             {
                 "userId": 1,
                 "validUntil": (valid_until + datetime.timedelta(hours=24)).isoformat(),
+            },
+            "not-the-secret",
+            algorithm="HS256",
+        )
+
+        # Be detected
+        response = self.api_client.get("http://server/optional-authenticated", headers={"Authorization": f"Bearer {tempered_token}"})
+        self.assertEqual(response.status_code, 200, response.json())
+        self.assertEqual(response.json(), None)
+
+        response = self.api_client.get("http://server/mandatory-authenticated", headers={"Authorization": f"Bearer {tempered_token}"})
+        self.assertEqual(response.status_code, 401, response.json())
+
+    def test_token_tempered__user_id(self):
+        self.expect_commits_rollbacks(2, 1)
+
+        response = self.api_client.post("http://server/token", data={"username": "john", "password": "password"})
+        self.assertEqual(response.status_code, 200, response.json())
+        token = jwt.decode(response.json()["access_token"], options={"verify_signature": False})
+        valid_until = token["validUntil"]
+
+        self.assertEqual(token, {
+            "userId": 1,
+            "validUntil": valid_until,
+        })
+        # Try to set 'userId' in the token
+        tempered_token = jwt.encode(
+            {
+                "userId": 2,
+                "validUntil": valid_until,
             },
             "not-the-secret",
             algorithm="HS256",
