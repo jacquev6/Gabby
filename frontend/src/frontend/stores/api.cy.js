@@ -812,7 +812,7 @@ describe('ApiStore', () => {
 
     const loggedIn = await api.client.post('ping', {}, {})
     cy.expect(loggedIn.relationships.createdBy.type).to.equal('user')
-    cy.expect(loggedIn.relationships.createdBy.id).to.equal('1')
+    cy.expect(loggedIn.relationships.createdBy.id).to.equal('fvirvd')
     cy.expect(loggedIn.relationships.createdBy.inCache).to.be.false
 
     api.auth.logout()
