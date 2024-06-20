@@ -12,6 +12,25 @@ Les améliorations techniques ne figurent que dans le `log git <https://github.c
 Les titres des sections de ce document correspondent au champ ``Gabby version`` dans le "À propos".
 Les versions sont nommées selon leur date de publication, au format ``YYYYMMDD-HHMMSS`` (année, mois, jour, tiret, heure, minute, seconde).
 
+20240620-113033
+---------------
+
+- Il est nécessaire de s'identifier pour accéder à l'application. Attention, à cause d'une limitation technique, il est encore possible pour un utilisateur technicien de voir les données sans s'identifier. Cela sera corrigé dans une prochaine version. Il est cependant impossible de modifier ces données sans être identifié.
+    - Il est possible de demander l'envoi par e-mail d'un lien de réinitialisation du mot de passe
+    - Il faut saisir ses identifiants après 16 heures d'utilisation
+    - Pour chaque donnée en base, l'utilisateur qui l'a créée et celui qui l'a modifiée en dernier sont enregistrés. Ces informations ne sont pas affichées pour l'instant mais peuvent servir si un audit est nécessaire.
+
+- Adaptation :
+    - Nouveaux type : choix multiples avec les choix dans l'énoncé
+    - Les choix multiples sont affichés dans un cadre (plutôt que dans une liste déroulante)
+    - L'exemple et l'indice sont affichés dans l'exercice adapté
+    - Les exercices adaptés sont affichés sur plusieurs pages
+
+- Interface :
+    - Sélectionner du texte dans le PDF ne remplit plus le champ "Rechercher" des outils
+    - Le bouton "Annuler" est désactivé lors du chargement ou de la création d'un exercice
+    - Ctrl+Z et Ctrl+Y sont utilisables pour annuler et refaire
+
 20240516-130222
 ---------------
 
