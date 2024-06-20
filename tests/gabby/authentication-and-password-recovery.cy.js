@@ -121,6 +121,9 @@ describe('Gabby\'s authentication system', () => {
       cy.get('h1:contains("Reset password")').should('exist')
       cy.get('label:contains("New password")').first().next().type('new-alice-password', {delay: 0})
       cy.get('label:contains("New password")').last().next().type('new-alice-password', {delay: 0})
+      cy.get('label:contains("New password")').first().next().type('{selectAll}new-alice-password', {delay: 0})
+      cy.get('label:contains("New password")').first().next().should('have.value', 'new-alice-password')
+      cy.get('label:contains("New password")').last().next().should('have.value', 'new-alice-password')
       cy.get('button:contains("Reset password")').click()
 
       cy.get('div.busy').should('not.exist')

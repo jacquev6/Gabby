@@ -396,7 +396,11 @@ export function defineApiStore(name: string, options?: {baseUrl?: string}) {
         }
 
         const json_body = {'atomic:operations': operations}
-        const raw_response = await fetch(url, {method: 'POST', headers: {'Content-Type': 'application/vnd.api+json'}, body: JSON.stringify(json_body)})
+        const headers: {[name: string]: string} = {'Content-Type': 'application/vnd.api+json'}
+        if (cache._authentication !== null) {
+          headers['Authorization'] = cache._authentication.header
+        }
+        const raw_response = await fetch(url, {method: 'POST', headers, body: JSON.stringify(json_body)})
         const json_response = raw_response.headers.get('Content-Type') == 'application/vnd.api+json' ? await raw_response.json() : null
         if (raw_response.ok) {
           const results = []

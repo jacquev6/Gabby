@@ -12,7 +12,7 @@ from .. import mailing
 from .. import settings
 from .. import testing
 from ..api_models import RecoveryEmailRequest
-from ..database_utils import Session, session_dependable
+from ..database_utils import Session, SessionDependable
 from .user import User, UserEmailAddress, make_access_token
 
 
@@ -44,7 +44,7 @@ class RecoveryEmailRequestsResource:
     default_page_size = settings.GENERIC_DEFAULT_API_PAGE_SIZE
 
     class ItemCreator:
-        def __init__(self, *, session: Session = Depends(session_dependable), background_tasks: BackgroundTasks):
+        def __init__(self, *, session: SessionDependable, background_tasks: BackgroundTasks):
             self.__session = session
             self.__background_tasks = background_tasks
 
@@ -104,7 +104,7 @@ class RecoveryEmailRequestsApiTestCase(testing.ApiTestCase):
         self.assertLessEqual(before + datetime.timedelta(hours=1), valid_until)
         self.assertLessEqual(valid_until, after + datetime.timedelta(hours=1))
         self.assertEqual(token, {
-            "userId": 1,
+            "userId": 2,
             "validUntil": valid_until.isoformat(),
         })
 

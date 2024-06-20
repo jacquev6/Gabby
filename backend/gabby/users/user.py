@@ -1,3 +1,4 @@
+from __future__ import annotations
 from contextlib import contextmanager
 from typing import Annotated
 import datetime
@@ -14,7 +15,8 @@ import sqlalchemy as sql
 
 from .. import api_models
 from .. import settings
-from ..database_utils import OrmBase, Session, make_item_getter, session_dependable
+from ..api_utils import get_item, save_item
+from ..database_utils import OrmBase, SessionDependable
 from ..wrapping import make_sqids, set_wrapper, orm_wrapper_with_sqids, unwrap, wrap
 
 
@@ -33,17 +35,26 @@ class User(OrmBase):
     __tablename__ = "users"
 
     id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
-    username: orm.Mapped[str | None] = orm.mapped_column()
-    hashed_password: orm.Mapped[str] = orm.mapped_column()
 
-    email_addresses: orm.Mapped[list['UserEmailAddress']] = orm.relationship("UserEmailAddress", back_populates="user")
+    # Can't use 'CreatedUpdatedByAtMixin' because of circular dependency
+    created_at: orm.Mapped[datetime.datetime] = orm.mapped_column(sql.DateTime(timezone=True), server_default=sql.func.now())
+    created_by_id: orm.Mapped[int] = orm.mapped_column(sql.ForeignKey("users.id"))
+    created_by: orm.Mapped[User] = orm.relationship(foreign_keys=[created_by_id], remote_side=[id], post_update=True)
+    updated_at: orm.Mapped[datetime.datetime] = orm.mapped_column(sql.DateTime(timezone=True), server_default=sql.func.now(), onupdate=sql.func.now())
+    updated_by_id: orm.Mapped[int] = orm.mapped_column(sql.ForeignKey("users.id"))
+    updated_by: orm.Mapped[User] = orm.relationship(foreign_keys=[updated_by_id], remote_side=[id], post_update=True)
+
+    username: orm.Mapped[str | None] = orm.mapped_column()
+    hashed_password: orm.Mapped[str | None] = orm.mapped_column()
+
+    email_addresses: orm.Mapped[list[UserEmailAddress]] = orm.relationship("UserEmailAddress", back_populates="user")
 
     __table_args__ = (
         # NEVER allow '@' in usernames, to avoid confusion with email addresses
         sql.CheckConstraint("regexp_like(username, '^[-_A-Za-z0-9]+$')", name="check_username"),
     )
 
-    def __init__(self, *, clear_text_password, **kwds):
+    def __init__(self, *, clear_text_password=None, **kwds):
         super().__init__(hashed_password=self.hash_password(clear_text_password), **kwds)
 
     @WriteOnlyProperty
@@ -54,17 +65,23 @@ class User(OrmBase):
 
     @classmethod
     def hash_password(cls, clear_text_password):
-        return cls.__password_hasher.hash(clear_text_password)
+        if clear_text_password is None:
+            return None
+        else:
+            return cls.__password_hasher.hash(clear_text_password)
 
     def check_password(self, clear_text_password):
-        try:
-            self.__password_hasher.verify(self.hashed_password, clear_text_password)
-        except argon2.exceptions.VerifyMismatchError:
+        if self.hashed_password is None:
             return False
         else:
-            if self.__password_hasher.check_needs_rehash(self.hashed_password):
-                self.hashed_password = self.hash_password(clear_text_password)
-            return True
+            try:
+                self.__password_hasher.verify(self.hashed_password, clear_text_password)
+            except argon2.exceptions.VerifyMismatchError:
+                return False
+            else:
+                if self.__password_hasher.check_needs_rehash(self.hashed_password):
+                    self.hashed_password = self.hash_password(clear_text_password)
+                return True
 
 
 class UserEmailAddress(OrmBase):
@@ -102,9 +119,9 @@ def make_access_token(user: User, validity: datetime.timedelta):
 
 
 def authentication_dependable(
+    session: SessionDependable,
     credentials: Annotated[OAuth2PasswordRequestForm, Depends()],
     options: Annotated[str | None, Form()] = None,
-    session: Session = Depends(session_dependable),
 ):
     user = authenticate(session, username=credentials.username, clear_text_password=credentials.password)
     if user is None:
@@ -126,9 +143,12 @@ def authentication_dependable(
     }
 
 
-def optional_authenticated_user_dependable(
+AuthenticationDependable = Annotated[dict, Depends(authentication_dependable)]
+
+
+def _optional_authenticated_user_dependable(
+    session: SessionDependable,
     token: str | None = Depends(OAuth2PasswordBearer(tokenUrl="token", auto_error=False)),
-    session: Session = Depends(session_dependable),
 ):
     if token is None:
         # No token => unauthenticated
@@ -152,33 +172,22 @@ def optional_authenticated_user_dependable(
                 return None
 
 
-def mandatory_authenticated_user_dependable(
-    user: User | None = Depends(optional_authenticated_user_dependable),
-):
+OptionalAuthenticatedUserDependable = Annotated[User | None, Depends(_optional_authenticated_user_dependable)]
+
+
+def _mandatory_authenticated_user_dependable(user: OptionalAuthenticatedUserDependable):
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid or expired token")
     else:
         return user
 
 
-class OptionalAuthenticatedUserDependent:
-    def __init__(
-        self,
-        session: Session = Depends(session_dependable),
-        authenticated_user: User | None = Depends(optional_authenticated_user_dependable),
-    ):
-        self.session = session
-        self.authenticated_user = authenticated_user
-
-
-class MandatoryAuthenticatedUserDependent:
-    def __init__(
-        self,
-        session: Session = Depends(session_dependable),
-        authenticated_user: User = Depends(mandatory_authenticated_user_dependable),
-    ):
-        self.session = session
-        self.authenticated_user = authenticated_user
+# @todo VERY IMPORTANT Fix 'MandatoryAuthenticatedUserDependable' to use '_mandatory_authenticated_user_dependable'
+# This is currently a workaround for a limitation of fastjsonapi, which instantiates all the 'ItemGetter's,
+# and so create dependencies on 'MandatoryAuthenticatedUserDependable' even in cases where it's not required.
+# Then merge these in a single simple 'MandatoryAuthenticatedUserDependable'.
+WanabeMandatoryAuthenticatedUserDependable = Annotated[User | None, Depends(_optional_authenticated_user_dependable)]
+ActuallyMandatoryAuthenticatedUserDependable = Annotated[User, Depends(_mandatory_authenticated_user_dependable)]
 
 
 class UsersResource:
@@ -191,31 +200,33 @@ class UsersResource:
 
     sqids = make_sqids(singular_name)
 
-    ItemGetter = make_item_getter(User)
-
-    class ItemGetter:
-        def __init__(self, session: Session = Depends(session_dependable), logged_in_user: User = Depends(optional_authenticated_user_dependable)):
-            self.__session = session
-            self.__logged_in_user = logged_in_user
-
-        def __call__(self, id):
+    @staticmethod
+    def ItemGetter(
+        session: SessionDependable,
+        authenticated_user: OptionalAuthenticatedUserDependable,
+    ):
+        def get(id):
             if id == "current":
-                user = self.__logged_in_user
+                return wrap(authenticated_user)
             else:
-                user = self.__session.get(User, UsersResource.sqids.decode(id)[0])
-            return wrap(user)
+                return get_item(session, User, UsersResource.sqids.decode(id)[0])
 
-    class ItemSaver:
-        def __init__(self, session: Session = Depends(session_dependable), logged_in_user: User = Depends(mandatory_authenticated_user_dependable)):
-            self.__session = session
-            self.__logged_in_user = logged_in_user
+        return get
 
+    @staticmethod
+    def ItemSaver(
+        session: SessionDependable,
+        authenticated_user: ActuallyMandatoryAuthenticatedUserDependable,
+    ):
         @contextmanager
-        def __call__(self, user):
-            user = unwrap(user)
-            if user != self.__logged_in_user:
+        def save(user):
+            if unwrap(user) != authenticated_user:
                 raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="You can only edit your own user")
             yield
+            user.updated_by = authenticated_user
+            save_item(session, user)
+
+        return save
 
 
 set_wrapper(User, orm_wrapper_with_sqids(UsersResource.sqids))

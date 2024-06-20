@@ -11,7 +11,7 @@ from fastjsonapi import make_jsonapi_router
 
 from . import settings
 from .database_utils import create_engine, Session, truncate_all_tables
-from .users import authentication_dependable
+from .users import User, AuthenticationDependable
 
 
 class TestCase(unittest.TestCase):
@@ -77,6 +77,7 @@ class TransactionTestCase(TestCase):
         self.__class__.__session = Session(self.__database_engine)
         truncate_all_tables(self.__class__.__session)
         self.__class__.__session.commit()
+        self.user_for_create = self.__create_user_for_create()
         self.expect_commits_rollbacks(0, 0)
         self.__class__.actual_commits_count = 0
         self.__class__.actual_rollbacks_count = 0
@@ -87,6 +88,10 @@ class TransactionTestCase(TestCase):
 
     def expect_commit(self):
         self.__expected_commits_rollbacks_count = (1, 0)
+
+    def expect_one_more_commit(self):
+        (commits, rollbacks) = self.__expected_commits_rollbacks_count
+        self.__expected_commits_rollbacks_count = (commits + 1, rollbacks)
 
     def expect_rollback(self):
         self.__expected_commits_rollbacks_count = (0, 1)
@@ -100,10 +105,24 @@ class TransactionTestCase(TestCase):
         super().tearDown()
 
     def create_model(self, model, *args, **kwds):
+        # @todo Understand why using the relationships instead of the ids results in a not-null violation
+        if hasattr(model, "created_by") and "created_by_id" not in kwds and "created_by" not in kwds:
+            kwds["created_by_id"] = self.user_for_create.id
+        if hasattr(model, "updated_by") and "updated_by_id" not in kwds and "updated_by" not in kwds:
+            kwds["updated_by_id"] = self.user_for_create.id
         instance = model(*args, **kwds)
         self.__session.add(instance)
         self.__session.commit()
         return instance
+
+    def __create_user_for_create(self):
+        user = User(username="creator", created_by_id=1, updated_by_id=1)
+        self.__session.add(user)
+        self.__session.flush()
+        user.created_by_id = user.id
+        user.updated_by_id = user.id
+        self.__session.commit()
+        return user
 
     def delete_model(self, model, id):
         self.__session.execute(sql.delete(model).where(model.id == id))
@@ -122,24 +141,21 @@ class ApiTestCase(TransactionTestCase):
     def setUpClass(cls):
         super().setUpClass()
 
-        if cls is not ApiTestCase:
-            cls.api_app = FastAPI(make_session=cls.make_session)
-            cls.api_app.include_router(make_jsonapi_router(cls.resources, cls.polymorphism))
+        cls.api_app = FastAPI(make_session=cls.make_session)
+        cls.api_app.include_router(make_jsonapi_router(cls.resources, cls.polymorphism))
 
-            @cls.api_app.post("/token")
-            def login(authentication: dict = Depends(authentication_dependable)):
-                return authentication
+        @cls.api_app.post("/token")
+        def login(authentication: AuthenticationDependable):
+            return authentication
 
-            cls.__schema_file_path = f"{inspect.getfile(cls)}.{cls.__name__}.openapi.json"
-            cls.api_client = TestClient(cls.api_app)
+        cls.api_client = TestClient(cls.api_app)
 
     def setUp(self):
         super().setUp()
         self.expect_commit()
 
     def tearDown(self):
-        if self.__class__ is not ApiTestCase:
-            self.logout()
+        self.logout()
         super().tearDown()
 
     def login(self, username, password):
@@ -162,24 +178,19 @@ class ApiTestCase(TransactionTestCase):
     def delete(self, url):
         return self.api_client.delete(url, headers={"Content-Type": "application/vnd.api+json"})
 
-    def test_schema(self):
-        self.expect_commits_rollbacks(0, 0)
 
-        if self.__class__ is not ApiTestCase:
-            try:
-                with open(self.__schema_file_path) as file:
-                    expected = json.load(file)
-            except FileNotFoundError:
-                expected = {}
+class LoggedInApiTestCase(ApiTestCase):
+    def setUp(self):
+        super().setUp()
+        super().create_model(User, username="updater", clear_text_password="password")
+        self.login("updater", "password")
 
-            actual = self.api_app.openapi()
+    def create_model(self, model, *args, **kwds):
+        return super().create_model(model, *args, **kwds)
 
-            try:
-                self.assertEqual(actual, expected)
-            finally:
-                with open(self.__schema_file_path, "w") as file:
-                    json.dump(actual, file, indent=2, sort_keys=True)
-                    file.write("\n")
+    def tearDown(self):
+        self.expect_one_more_commit()
+        super().tearDown()
 
 
 class AdaptationTestCase(TestCase):

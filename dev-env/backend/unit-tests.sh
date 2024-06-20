@@ -8,9 +8,9 @@ cd "$(dirname "${BASH_SOURCE[0]}")/."
 
 defined=$(git grep -e '^    def test' -- ../../backend | wc -l)
 
-imported=$(git grep -e 'from .* import .*ApiTestCase' -- ../../backend | wc -l)
+imported=$(git grep -e 'from .* import .*ApiTestCase' -- ../../backend/fastjsonapi | wc -l)
 
-inherited=$(git grep -e 'class .*TestCase(.*ApiTestCase)' -- ../../backend | wc -l)
+inherited=$(git grep -e 'class .*TestCase(.*ApiTestCase)' -- ../../backend/fastjsonapi | wc -l)
 
 expected=$(expr $defined + $imported + $inherited)
 

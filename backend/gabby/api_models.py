@@ -9,7 +9,30 @@ from fastjsonapi import Constant, Computed, Filterable, Secret, Secret as WriteO
 from . import renderable
 
 
-class User(Base):
+class CreatedByAtMixin:
+    created_at: Annotated[datetime.datetime, Computed()]
+    created_by: Annotated[User, Computed()]
+
+class UpdatedByAtMixin:
+    updated_at: Annotated[datetime.datetime, Computed()]
+    updated_by: Annotated[User, Computed()]
+
+class CreatedUpdatedByAtMixin(CreatedByAtMixin, UpdatedByAtMixin):
+    pass
+
+class OptionalCreatedByAtMixin:
+    created_at: Annotated[datetime.datetime, Computed()]
+    created_by: Annotated[User | None, Computed()] = None
+
+class OptionalUpdatedByAtMixin:
+    updated_at: Annotated[datetime.datetime, Computed()]
+    updated_by: Annotated[User | None, Computed()] = None
+
+class OptionalCreatedUpdatedByAtMixin(OptionalCreatedByAtMixin, OptionalUpdatedByAtMixin):
+    pass
+
+
+class User(Base, CreatedUpdatedByAtMixin):
     username: str | None
     clear_text_password: Annotated[str, Secret()]
 
@@ -19,17 +42,13 @@ class RecoveryEmailRequest(Base):
     language: Annotated[str, WriteOnly()]
 
 
-class Ping(Base):
+class Ping(Base, OptionalCreatedUpdatedByAtMixin):
     message: Annotated[str | None, Filterable()] = None
-    created_at: Annotated[datetime.datetime, Computed()]
-    created_by: Annotated[User | None, Computed()] = None
-    updated_at: Annotated[datetime.datetime, Computed()]
-    updated_by: Annotated[User | None, Computed()] = None
     prev: Annotated[Ping | None, Filterable()] = None
     next: list[Ping] = []
 
 
-class PdfFile(Base):
+class PdfFile(Base, CreatedByAtMixin):
     sha256: Annotated[str, Constant()]
     bytes_count: Annotated[int, Constant()]
     pages_count: Annotated[int, Constant()]
@@ -37,19 +56,19 @@ class PdfFile(Base):
     sections: Annotated[list[Section], Computed()] = []
 
 
-class PdfFileNaming(Base):
+class PdfFileNaming(Base, CreatedByAtMixin):
     name: Annotated[str, Constant()]
     pdf_file: Annotated[PdfFile, Constant()]
 
 
-class Project(Base):
+class Project(Base, CreatedUpdatedByAtMixin):
     title: str
     description: str = ""
     textbooks: Annotated[list[Textbook], Computed()] = []
     exercises: Annotated[list[Exercise], Computed()] = []
 
 
-class Textbook(Base):
+class Textbook(Base, CreatedUpdatedByAtMixin):
     title: str
     publisher: str | None = None
     year: int | None = None
@@ -59,7 +78,7 @@ class Textbook(Base):
     sections: Annotated[list[Section], Computed()] = []
 
 
-class Section(Base):
+class Section(Base, CreatedUpdatedByAtMixin):
     textbook_start_page: int
     pdf_file_start_page: int
     pages_count: int
@@ -75,7 +94,7 @@ class Rectangle(Base):
     start: Point
     stop: Point
 
-class Exercise(Base):
+class Exercise(Base, CreatedUpdatedByAtMixin):
     project: Annotated[Project, Constant()]
 
     textbook: Annotated[Textbook | None, Filterable(), Constant()] = None
@@ -100,7 +119,7 @@ class Exercise(Base):
     ) = None
 
 
-class ExtractionEvent(Base):
+class ExtractionEvent(Base, CreatedUpdatedByAtMixin):
     event: Annotated[str, Constant()]
     exercise: Annotated[Exercise, Constant()]
 
@@ -110,28 +129,28 @@ class SelectThingsAdaptationOptions(Base):
     words: bool
     punctuation: bool
 
-class SelectThingsAdaptation(SelectThingsAdaptationOptions):
+class SelectThingsAdaptation(SelectThingsAdaptationOptions, CreatedUpdatedByAtMixin):
     exercise: Annotated[Exercise, Constant()]
 
 
 class FillWithFreeTextAdaptationOptions(Base):
     placeholder: str
 
-class FillWithFreeTextAdaptation(FillWithFreeTextAdaptationOptions):
+class FillWithFreeTextAdaptation(FillWithFreeTextAdaptationOptions, CreatedUpdatedByAtMixin):
     exercise: Annotated[Exercise, Constant()]
 
 
 class MultipleChoicesInInstructionsAdaptationOptions(Base):
     placeholder: str
 
-class MultipleChoicesInInstructionsAdaptation(MultipleChoicesInInstructionsAdaptationOptions):
+class MultipleChoicesInInstructionsAdaptation(MultipleChoicesInInstructionsAdaptationOptions, CreatedUpdatedByAtMixin):
     exercise: Annotated[Exercise, Constant()]
 
 
 class MultipleChoicesInWordingAdaptationOptions(Base):
     pass
 
-class MultipleChoicesInWordingAdaptation(MultipleChoicesInWordingAdaptationOptions):
+class MultipleChoicesInWordingAdaptation(MultipleChoicesInWordingAdaptationOptions, CreatedUpdatedByAtMixin):
     exercise: Annotated[Exercise, Constant()]
 
 

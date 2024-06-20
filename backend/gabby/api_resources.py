@@ -9,7 +9,7 @@ from .exercises import Exercise, ExercisesResource, ExtractionEventsResource
 from .pdfs import PdfFile, PdfFileNaming, PdfFilesResource, PdfFileNamingsResource
 from .pings import PingsResource
 from .projects import Project, ProjectsResource
-from .testing import ApiTestCase
+from .testing import LoggedInApiTestCase
 from .textbooks import Textbook, TextbooksResource, SectionsResource
 from .users import UsersResource
 from .users.recovery import RecoveryEmailRequestsResource
@@ -43,11 +43,11 @@ polymorphism = {
 }
 
 
-class PdfFileApiTestCase(ApiTestCase):
+class PdfFilesApiTestCase(LoggedInApiTestCase):
     resources = resources
     polymorphism = polymorphism
 
-    def test_create(self):
+    def test_create__ok(self):
         payload = {
             "data": {
                 "type": "pdfFile",
@@ -67,10 +67,12 @@ class PdfFileApiTestCase(ApiTestCase):
                 "attributes": {
                     "sha256": "87428fc522803d31065e7bce3cf03fe475096631e5e07bbd7a0fde60c4cf25c7",
                     "bytesCount": 123456789, "pagesCount": 42,
+                    "createdAt": response.json()["data"]["attributes"]["createdAt"],
                 },
                 "relationships": {
                     "sections": {"data": [], "meta": {"count": 0}},
                     "namings": {"data": [], "meta": {"count": 0}},
+                    "createdBy": {"data": {"type": "user", "id": "ckylfa"}},
                 },
             },
         })
@@ -95,6 +97,7 @@ class PdfFileApiTestCase(ApiTestCase):
         }
         response = self.post("http://server/pdfFiles", payload)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
+        created_at = response.json()["data"]["attributes"]["createdAt"]
         response = self.post("http://server/pdfFiles", payload)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
         self.assertEqual(response.json(), {
@@ -105,10 +108,12 @@ class PdfFileApiTestCase(ApiTestCase):
                 "attributes": {
                     "sha256": "87428fc522803d31065e7bce3cf03fe475096631e5e07bbd7a0fde60c4cf25c7",
                     "bytesCount": 123456789, "pagesCount": 42,
+                    "createdAt": created_at,
                 },
                 "relationships": {
                     "sections": {"data": [], "meta": {"count": 0}},
                     "namings": {"data": [], "meta": {"count": 0}},
+                    "createdBy": {"data": {"type": "user", "id": "ckylfa"}},
                 },
             },
         })
@@ -169,18 +174,20 @@ class PdfFileApiTestCase(ApiTestCase):
                 "attributes": {
                     "sha256": "87428fc522803d31065e7bce3cf03fe475096631e5e07bbd7a0fde60c4cf25c7",
                     "bytesCount": 123456789, "pagesCount": 42,
+                    "createdAt": pdf_file.created_at.isoformat().replace("+00:00", "Z"),
                 },
                 "relationships": {
                     "namings": {"data": [{"type": "pdfFileNaming", "id": "tnahml"}], "meta": {"count": 1}},
                     "sections": {"data": [], "meta": {"count": 0}},
+                    "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
                 },
             },
         })
 
     def test_get__include_namings(self):
         pdf_file = self.create_model(PdfFile, sha256="87428fc522803d31065e7bce3cf03fe475096631e5e07bbd7a0fde60c4cf25c7", bytes_count=123456789, pages_count=42)
-        self.create_model(PdfFileNaming, pdf_file=pdf_file, name="amazing.pdf")
-        self.create_model(PdfFileNaming, pdf_file=pdf_file, name="alias.pdf")
+        naming_1 = self.create_model(PdfFileNaming, pdf_file=pdf_file, name="amazing.pdf")
+        naming_2 = self.create_model(PdfFileNaming, pdf_file=pdf_file, name="alias.pdf")
 
         response = self.get("http://server/pdfFiles/87428fc522803d31065e7bce3cf03fe475096631e5e07bbd7a0fde60c4cf25c7?include=namings")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
@@ -192,6 +199,7 @@ class PdfFileApiTestCase(ApiTestCase):
                 "attributes": {
                     "sha256": "87428fc522803d31065e7bce3cf03fe475096631e5e07bbd7a0fde60c4cf25c7",
                     "bytesCount": 123456789, "pagesCount": 42,
+                    "createdAt": pdf_file.created_at.isoformat().replace("+00:00", "Z"),
                 },
                 "relationships": {
                     "namings": {
@@ -202,6 +210,7 @@ class PdfFileApiTestCase(ApiTestCase):
                         "meta": {"count": 2},
                     },
                     "sections": {"data": [], "meta": {"count": 0}},
+                    "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
                 },
             },
             "included": [
@@ -211,11 +220,13 @@ class PdfFileApiTestCase(ApiTestCase):
                     "links": {"self": "http://server/pdfFileNamings/tnahml"},
                     "attributes": {
                         "name": "amazing.pdf",
+                        "createdAt": naming_1.created_at.isoformat().replace("+00:00", "Z"),
                     },
                     "relationships": {
                         "pdfFile": {
                             "data": {"type": "pdfFile", "id": "87428fc522803d31065e7bce3cf03fe475096631e5e07bbd7a0fde60c4cf25c7"},
                         },
+                        "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
                 },
                 {
@@ -224,18 +235,20 @@ class PdfFileApiTestCase(ApiTestCase):
                     "links": {"self": "http://server/pdfFileNamings/wmyxrm"},
                     "attributes": {
                         "name": "alias.pdf",
+                        "createdAt": naming_2.created_at.isoformat().replace("+00:00", "Z"),
                     },
                     "relationships": {
                         "pdfFile": {
                             "data": {"type": "pdfFile", "id": "87428fc522803d31065e7bce3cf03fe475096631e5e07bbd7a0fde60c4cf25c7"},
                         },
+                        "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
                 },
             ],
         })
 
 
-class TextbookApiTestCase(ApiTestCase):
+class TextbooksApiTestCase(LoggedInApiTestCase):
     resources = resources
     polymorphism = polymorphism
 
@@ -265,11 +278,15 @@ class TextbookApiTestCase(ApiTestCase):
                 "attributes": {
                     "title": "The title",
                     "publisher": None, "year": None, "isbn": None,
+                    "createdAt": response.json()["data"]["attributes"]["createdAt"],
+                    "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
                 },
                 "relationships": {
                     "project": {"data": {"type": "project", "id": "xkopqm"}},
                     "exercises": {"data": [], "meta": {"count": 0}},
                     "sections": {"data": [], "meta": {"count": 0}},
+                    "createdBy": {"data": {"type": "user", "id": "ckylfa"}},
+                    "updatedBy": {"data": {"type": "user", "id": "ckylfa"}},
                 },
             },
         })
@@ -310,11 +327,15 @@ class TextbookApiTestCase(ApiTestCase):
                     "publisher": "The publisher",
                     "year": 2023,
                     "isbn": "9783161484100",
+                    "createdAt": response.json()["data"]["attributes"]["createdAt"],
+                    "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
                 },
                 "relationships": {
                     "project": {"data": {"type": "project", "id": "xkopqm"}},
                     "exercises": {"data": [], "meta": {"count": 0}},
                     "sections": {"data": [], "meta": {"count": 0}},
+                    "createdBy": {"data": {"type": "user", "id": "ckylfa"}},
+                    "updatedBy": {"data": {"type": "user", "id": "ckylfa"}},
                 },
             },
         })
@@ -366,6 +387,8 @@ class TextbookApiTestCase(ApiTestCase):
                     "publisher": "The publisher",
                     "year": 2023,
                     "isbn": "9783161484100",
+                    "createdAt": response.json()["data"]["attributes"]["createdAt"],
+                    "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
                 },
                 "relationships": {
                     "project": {"data": {"type": "project", "id": "xkopqm"}},
@@ -377,6 +400,8 @@ class TextbookApiTestCase(ApiTestCase):
                         "meta": {"count": 2},
                     },
                     "sections": {"data": [], "meta": {"count": 0}},
+                    "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                    "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                 },
             },
         })
@@ -398,6 +423,8 @@ class TextbookApiTestCase(ApiTestCase):
                     "publisher": "The publisher",
                     "year": 2023,
                     "isbn": "9783161484100",
+                    "createdAt": response.json()["data"]["attributes"]["createdAt"],
+                    "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
                 },
                 "relationships": {
                     "project": {"data": {"type": "project", "id": "xkopqm"}},
@@ -409,6 +436,8 @@ class TextbookApiTestCase(ApiTestCase):
                         "meta": {"count": 2},
                     },
                     "sections": {"data": [], "meta": {"count": 0}},
+                    "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                    "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                 },
             },
             "included": [
@@ -420,12 +449,16 @@ class TextbookApiTestCase(ApiTestCase):
                         "textbookPage": 17, "number": "13",
                         "boundingRectangle": None,
                         "instructions": "", "example": "", "clue": "", "wording": "",
+                        "createdAt": response.json()["included"][0]["attributes"]["createdAt"],
+                        "updatedAt": response.json()["included"][0]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
                         "adaptation": {"data": None},
+                        "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                        "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
                 },
                 {
@@ -436,12 +469,16 @@ class TextbookApiTestCase(ApiTestCase):
                         "textbookPage": 16, "number": "11",
                         "boundingRectangle": None,
                         "instructions": "", "example": "", "clue": "", "wording": "",
+                        "createdAt": response.json()["included"][1]["attributes"]["createdAt"],
+                        "updatedAt": response.json()["included"][1]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
                         "adaptation": {"data": None},
+                        "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                        "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
                 },
             ],
@@ -473,11 +510,15 @@ class TextbookApiTestCase(ApiTestCase):
                         "publisher": "Another publisher",
                         "year": 2024,
                         "isbn": "9783161484101",
+                        "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
+                        "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
                         "exercises": {"data": [{"type": "exercise", "id": "jkrudc"}], "meta": {"count": 1}},
                         "sections": {"data": [], "meta": {"count": 0}},
+                        "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                        "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
                 },
                 {
@@ -489,11 +530,15 @@ class TextbookApiTestCase(ApiTestCase):
                         "publisher": "The publisher",
                         "year": 2023,
                         "isbn": "9783161484100",
+                        "createdAt": response.json()["data"][1]["attributes"]["createdAt"],
+                        "updatedAt": response.json()["data"][1]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
                         "exercises": {"data": [{"type": "exercise", "id": "wbqloc"}, {"type": "exercise", "id": "bylced"}], "meta": {"count": 2}},
                         "sections": {"data": [], "meta": {"count": 0}},
+                        "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                        "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
                 },
             ],
@@ -519,6 +564,8 @@ class TextbookApiTestCase(ApiTestCase):
                         "publisher": "Yet another publisher",
                         "year": 2025,
                         "isbn": "9783161484102",
+                        "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
+                        "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
@@ -531,6 +578,8 @@ class TextbookApiTestCase(ApiTestCase):
                             "meta": {"count": 3},
                         },
                         "sections": {"data": [], "meta": {"count": 0}},
+                        "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                        "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
                 },
             ],
@@ -569,11 +618,15 @@ class TextbookApiTestCase(ApiTestCase):
                         "publisher": "Another publisher",
                         "year": 2024,
                         "isbn": "9783161484101",
+                        "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
+                        "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
                         "exercises": {"data": [{"type": "exercise", "id": "jkrudc"}], "meta": {"count": 1}},
                         "sections": {"data": [], "meta": {"count": 0}},
+                        "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                        "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
                 },
                 {
@@ -585,6 +638,8 @@ class TextbookApiTestCase(ApiTestCase):
                         "publisher": "The publisher",
                         "year": 2025,
                         "isbn": "9783161484102",
+                        "createdAt": response.json()["data"][1]["attributes"]["createdAt"],
+                        "updatedAt": response.json()["data"][1]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
@@ -597,6 +652,8 @@ class TextbookApiTestCase(ApiTestCase):
                             "meta": {"count": 3},
                         },
                         "sections": {"data": [], "meta": {"count": 0}},
+                        "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                        "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
                 },
             ],
@@ -622,11 +679,15 @@ class TextbookApiTestCase(ApiTestCase):
                         "publisher": "Yet another publisher",
                         "year": 2023,
                         "isbn": "9783161484100",
+                        "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
+                        "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
                         "exercises": {"data": [{"type": "exercise", "id": "wbqloc"}, {"type": "exercise", "id": "bylced"}], "meta": {"count": 2}},
                         "sections": {"data": [], "meta": {"count": 0}},
+                        "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                        "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
                 },
             ],
@@ -665,11 +726,15 @@ class TextbookApiTestCase(ApiTestCase):
                         "publisher": "Another publisher",
                         "year": 2024,
                         "isbn": "9783161484101",
+                        "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
+                        "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
                         "exercises": {"data": [{"type": "exercise", "id": "jkrudc"}], "meta": {"count": 1}},
                         "sections": {"data": [], "meta": {"count": 0}},
+                        "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                        "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
                 },
                 {
@@ -681,11 +746,15 @@ class TextbookApiTestCase(ApiTestCase):
                         "publisher": "The publisher",
                         "year": 2023,
                         "isbn": "9783161484100",
+                        "createdAt": response.json()["data"][1]["attributes"]["createdAt"],
+                        "updatedAt": response.json()["data"][1]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
                         "exercises": {"data": [{"type": "exercise", "id": "wbqloc"}, {"type": "exercise", "id": "bylced"}], "meta": {"count": 2}},
                         "sections": {"data": [], "meta": {"count": 0}},
+                        "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                        "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
                 },
             ],
@@ -697,12 +766,16 @@ class TextbookApiTestCase(ApiTestCase):
                         "textbookPage": 13, "number": "5",
                         "boundingRectangle": None,
                         "instructions": "", "example": "", "clue": "", "wording": "",
+                        "createdAt": response.json()["included"][0]["attributes"]["createdAt"],
+                        "updatedAt": response.json()["included"][0]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
                         "adaptation": {"data": None},
+                        "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                        "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
                     "links": {"self": "http://server/exercises/bylced"},
                 },
@@ -713,12 +786,16 @@ class TextbookApiTestCase(ApiTestCase):
                         "textbookPage": 14, "number": "6",
                         "boundingRectangle": None,
                         "instructions": "", "example": "", "clue": "", "wording": "",
+                        "createdAt": response.json()["included"][1]["attributes"]["createdAt"],
+                        "updatedAt": response.json()["included"][1]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "ojsbmy"}},
                         "adaptation": {"data": None},
+                        "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                        "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
                     "links": {"self": "http://server/exercises/jkrudc"},
                 },
@@ -729,12 +806,16 @@ class TextbookApiTestCase(ApiTestCase):
                         "textbookPage": 12, "number": "4",
                         "boundingRectangle": None,
                         "instructions": "", "example": "", "clue": "", "wording": "",
+                        "createdAt": response.json()["included"][2]["attributes"]["createdAt"],
+                        "updatedAt": response.json()["included"][2]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
                         "adaptation": {"data": None},
+                        "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                        "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
                     "links": {"self": "http://server/exercises/wbqloc"},
                 },
@@ -761,6 +842,8 @@ class TextbookApiTestCase(ApiTestCase):
                         "publisher": "Yet another publisher",
                         "year": 2025,
                         "isbn": "9783161484102",
+                        "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
+                        "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
@@ -773,6 +856,8 @@ class TextbookApiTestCase(ApiTestCase):
                             "meta": {"count": 3},
                         },
                         "sections": {"data": [], "meta": {"count": 0}},
+                        "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                        "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
                 },
             ],
@@ -785,12 +870,16 @@ class TextbookApiTestCase(ApiTestCase):
                         "textbookPage": 17, "number": "9",
                         "boundingRectangle": None,
                         "instructions": "", "example": "", "clue": "", "wording": "",
+                        "createdAt": response.json()["included"][0]["attributes"]["createdAt"],
+                        "updatedAt": response.json()["included"][0]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "pkdksv"}},
                         "adaptation": {"data": None},
+                        "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                        "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
                 },
                 {
@@ -801,12 +890,16 @@ class TextbookApiTestCase(ApiTestCase):
                         "textbookPage": 16, "number": "8",
                         "boundingRectangle": None,
                         "instructions": "", "example": "", "clue": "", "wording": "",
+                        "createdAt": response.json()["included"][1]["attributes"]["createdAt"],
+                        "updatedAt": response.json()["included"][1]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "pkdksv"}},
                         "adaptation": {"data": None},
+                        "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                        "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
                 },
                 {
@@ -817,12 +910,16 @@ class TextbookApiTestCase(ApiTestCase):
                         "textbookPage": 15, "number": "7",
                         "boundingRectangle": None,
                         "instructions": "", "example": "", "clue": "", "wording": "",
+                        "createdAt": response.json()["included"][2]["attributes"]["createdAt"],
+                        "updatedAt": response.json()["included"][2]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "pkdksv"}},
                         "adaptation": {"data": None},
+                        "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                        "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
                 },
             ],
@@ -862,11 +959,15 @@ class TextbookApiTestCase(ApiTestCase):
                     "publisher": "The new publisher",
                     "year": 2024,
                     "isbn": "9783161484101",
+                    "createdAt": response.json()["data"]["attributes"]["createdAt"],
+                    "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
                 },
                 "relationships": {
                     "project": {"data": {"type": "project", "id": "xkopqm"}},
                     "exercises": {"data": [], "meta": {"count": 0}},
                     "sections": {"data": [], "meta": {"count": 0}},
+                    "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                    "updatedBy": {"data": {"type": "user", "id": "ckylfa"}},
                 },
             },
         })
@@ -904,11 +1005,15 @@ class TextbookApiTestCase(ApiTestCase):
                     "publisher": "The publisher",
                     "year": None,
                     "isbn": "9783161484100",
+                    "createdAt": response.json()["data"]["attributes"]["createdAt"],
+                    "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
                 },
                 "relationships": {
                     "project": {"data": {"type": "project", "id": "xkopqm"}},
                     "exercises": {"data": [], "meta": {"count": 0}},
                     "sections": {"data": [], "meta": {"count": 0}},
+                    "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                    "updatedBy": {"data": {"type": "user", "id": "ckylfa"}},
                 },
             },
         })
@@ -970,7 +1075,7 @@ class TextbookApiTestCase(ApiTestCase):
         self.assertEqual(self.count_models(Exercise), 0)
 
 
-class ExerciseApiTestCase(ApiTestCase):
+class ExercisesApiTestCase(LoggedInApiTestCase):
     resources = resources
     polymorphism = polymorphism
 
@@ -1002,12 +1107,16 @@ class ExerciseApiTestCase(ApiTestCase):
                     "textbookPage": None, "number": "42",
                     "boundingRectangle": None,
                     "instructions": "", "example": "", "clue": "", "wording": "",
+                    "createdAt": response.json()["data"]["attributes"]["createdAt"],
+                    "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
                 },
                 "relationships": {
                     "project": {"data": {"type": "project", "id": "xkopqm"}},
                     "extractionEvents": {"data": [], "meta": {"count": 0}},
                     "textbook": {"data": None},
                     "adaptation": {"data": None},
+                    "createdBy": {"data": {"type": "user", "id": "ckylfa"}},
+                    "updatedBy": {"data": {"type": "user", "id": "ckylfa"}},
                 },
             },
         })
@@ -1049,12 +1158,16 @@ class ExerciseApiTestCase(ApiTestCase):
                     "textbookPage": 12, "number": "42",
                     "boundingRectangle": None,
                     "instructions": "", "example": "", "clue": "", "wording": "",
+                    "createdAt": response.json()["data"]["attributes"]["createdAt"],
+                    "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
                 },
                 "relationships": {
                     "project": {"data": {"type": "project", "id": "xkopqm"}},
                     "extractionEvents": {"data": [], "meta": {"count": 0}},
                     "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
                     "adaptation": {"data": None},
+                    "createdBy": {"data": {"type": "user", "id": "ckylfa"}},
+                    "updatedBy": {"data": {"type": "user", "id": "ckylfa"}},
                 },
             },
         })
@@ -1097,12 +1210,16 @@ class ExerciseApiTestCase(ApiTestCase):
                     "textbookPage": 14, "number": "1",
                     "instructions": "instructions", "example": "example", "clue": "clue", "wording": "wording",
                     "boundingRectangle": {"start": {"x": 0, "y": 1}, "stop": {"x": 2, "y": 3}},
+                    "createdAt": response.json()["data"]["attributes"]["createdAt"],
+                    "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
                 },
                 "relationships": {
                     "project": {"data": {"type": "project", "id": "xkopqm"}},
                     "extractionEvents": {"data": [], "meta": {"count": 0}},
                     "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
                     "adaptation": {"data": None},
+                    "createdBy": {"data": {"type": "user", "id": "ckylfa"}},
+                    "updatedBy": {"data": {"type": "user", "id": "ckylfa"}},
                 },
             },
         })
@@ -1144,12 +1261,16 @@ class ExerciseApiTestCase(ApiTestCase):
                     "textbookPage": 16, "number": "11",
                     "boundingRectangle": None,
                     "instructions": "instructions", "example": "example", "clue": "clue", "wording": "wording",
+                    "createdAt": response.json()["data"]["attributes"]["createdAt"],
+                    "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
                 },
                 "relationships": {
                     "project": {"data": {"type": "project", "id": "xkopqm"}},
                     "extractionEvents": {"data": [], "meta": {"count": 0}},
                     "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
                     "adaptation": {"data": None},
+                    "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                    "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                 },
             },
         })
@@ -1178,12 +1299,16 @@ class ExerciseApiTestCase(ApiTestCase):
                     "textbookPage": 16, "number": "11",
                     "boundingRectangle": None,
                     "instructions": "instructions", "example": "example", "clue": "clue", "wording": "wording",
+                    "createdAt": response.json()["data"]["attributes"]["createdAt"],
+                    "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
                 },
                 "relationships": {
                     "project": {"data": {"type": "project", "id": "xkopqm"}},
                     "extractionEvents": {"data": [], "meta": {"count": 0}},
                     "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
                     "adaptation": {"data": None},
+                    "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                    "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                 },
             },
             "included": [
@@ -1194,11 +1319,15 @@ class ExerciseApiTestCase(ApiTestCase):
                     "attributes": {
                         "title": "The title",
                         "publisher": None, "year": None, "isbn": None,
+                        "createdAt": response.json()["included"][0]["attributes"]["createdAt"],
+                        "updatedAt": response.json()["included"][0]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
                         "exercises": {"data": [{"type": "exercise", "id": "wbqloc"}], "meta": {"count": 1}},
                         "sections": {"data": [], "meta": {"count": 0}},
+                        "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                        "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
                 },
             ],
@@ -1223,12 +1352,16 @@ class ExerciseApiTestCase(ApiTestCase):
                         "textbookPage": 16, "number": "11",
                         "boundingRectangle": None,
                         "instructions": "", "example": "", "clue": "", "wording": "",
+                        "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
+                        "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
                         "adaptation": {"data": None},
+                        "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                        "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
                 },
                 {
@@ -1239,12 +1372,16 @@ class ExerciseApiTestCase(ApiTestCase):
                         "textbookPage": 17, "number": "3",
                         "boundingRectangle": None,
                         "instructions": "", "example": "", "clue": "", "wording": "",
+                        "createdAt": response.json()["data"][1]["attributes"]["createdAt"],
+                        "updatedAt": response.json()["data"][1]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
                         "adaptation": {"data": None},
+                        "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                        "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
                 },
             ],
@@ -1269,12 +1406,16 @@ class ExerciseApiTestCase(ApiTestCase):
                         "textbookPage": 17, "number": "4",
                         "boundingRectangle": None,
                         "instructions": "", "example": "", "clue": "", "wording": "",
+                        "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
+                        "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
                         "adaptation": {"data": None},
+                        "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                        "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
                 },
             ],
@@ -1306,12 +1447,16 @@ class ExerciseApiTestCase(ApiTestCase):
                         "textbookPage": 16, "number": "11",
                         "boundingRectangle": None,
                         "instructions": "", "example": "", "clue": "", "wording": "",
+                        "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
+                        "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
                         "adaptation": {"data": None},
+                        "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                        "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
                 },
                 {
@@ -1322,12 +1467,16 @@ class ExerciseApiTestCase(ApiTestCase):
                         "textbookPage": 17, "number": "3",
                         "boundingRectangle": None,
                         "instructions": "", "example": "", "clue": "", "wording": "",
+                        "createdAt": response.json()["data"][1]["attributes"]["createdAt"],
+                        "updatedAt": response.json()["data"][1]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
                         "adaptation": {"data": None},
+                        "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                        "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
                 },
             ],
@@ -1352,12 +1501,16 @@ class ExerciseApiTestCase(ApiTestCase):
                         "textbookPage": 17, "number": "4",
                         "boundingRectangle": None,
                         "instructions": "", "example": "", "clue": "", "wording": "",
+                        "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
+                        "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
                         "adaptation": {"data": None},
+                        "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                        "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
                 },
             ],
@@ -1389,12 +1542,16 @@ class ExerciseApiTestCase(ApiTestCase):
                         "textbookPage": 17, "number": "3",
                         "boundingRectangle": None,
                         "instructions": "", "example": "", "clue": "", "wording": "",
+                        "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
+                        "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
                         "adaptation": {"data": None},
+                        "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                        "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
                 },
                 {
@@ -1405,12 +1562,16 @@ class ExerciseApiTestCase(ApiTestCase):
                         "textbookPage": 17, "number": "4",
                         "boundingRectangle": None,
                         "instructions": "", "example": "", "clue": "", "wording": "",
+                        "createdAt": response.json()["data"][1]["attributes"]["createdAt"],
+                        "updatedAt": response.json()["data"][1]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
                         "adaptation": {"data": None},
+                        "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                        "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
                 },
             ],
@@ -1435,12 +1596,16 @@ class ExerciseApiTestCase(ApiTestCase):
                         "textbookPage": 16, "number": "11",
                         "boundingRectangle": None,
                         "instructions": "", "example": "", "clue": "", "wording": "",
+                        "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
+                        "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
                         "adaptation": {"data": None},
+                        "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                        "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
                 },
             ],
@@ -1474,12 +1639,16 @@ class ExerciseApiTestCase(ApiTestCase):
                         "textbookPage": 16, "number": "11",
                         "boundingRectangle": None,
                         "instructions": "", "example": "", "clue": "", "wording": "",
+                        "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
+                        "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
                         "adaptation": {"data": None},
+                        "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                        "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
                 },
                 {
@@ -1490,12 +1659,16 @@ class ExerciseApiTestCase(ApiTestCase):
                         "textbookPage": 17, "number": "13",
                         "boundingRectangle": None,
                         "instructions": "", "example": "", "clue": "", "wording": "",
+                        "createdAt": response.json()["data"][1]["attributes"]["createdAt"],
+                        "updatedAt": response.json()["data"][1]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
                         "adaptation": {"data": None},
+                        "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                        "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
                 },
             ],
@@ -1507,6 +1680,8 @@ class ExerciseApiTestCase(ApiTestCase):
                     "attributes": {
                         "title": "The title",
                         "publisher": None, "year": None, "isbn": None,
+                        "createdAt": response.json()["included"][0]["attributes"]["createdAt"],
+                        "updatedAt": response.json()["included"][0]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
@@ -1519,6 +1694,8 @@ class ExerciseApiTestCase(ApiTestCase):
                             "meta": {"count": 3},
                         },
                         "sections": {"data": [], "meta": {"count": 0}},
+                        "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                        "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
                 },
             ],
@@ -1543,12 +1720,16 @@ class ExerciseApiTestCase(ApiTestCase):
                         "textbookPage": 17, "number": "14",
                         "boundingRectangle": None,
                         "instructions": "", "example": "", "clue": "", "wording": "",
+                        "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
+                        "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
                         "adaptation": {"data": None},
+                        "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                        "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
                 },
                 {
@@ -1559,12 +1740,16 @@ class ExerciseApiTestCase(ApiTestCase):
                         "textbookPage": 12, "number": "4",
                         "boundingRectangle": None,
                         "instructions": "", "example": "", "clue": "", "wording": "",
+                        "createdAt": response.json()["data"][1]["attributes"]["createdAt"],
+                        "updatedAt": response.json()["data"][1]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "ojsbmy"}},
                         "adaptation": {"data": None},
+                        "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                        "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
                 },
             ],
@@ -1576,6 +1761,8 @@ class ExerciseApiTestCase(ApiTestCase):
                     "attributes": {
                         "title": "The title",
                         "publisher": None, "year": None, "isbn": None,
+                        "createdAt": response.json()["included"][0]["attributes"]["createdAt"],
+                        "updatedAt": response.json()["included"][0]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
@@ -1588,6 +1775,8 @@ class ExerciseApiTestCase(ApiTestCase):
                             "meta": {"count": 3},
                         },
                         "sections": {"data": [], "meta": {"count": 0}},
+                        "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                        "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
                 },
                 {
@@ -1597,6 +1786,8 @@ class ExerciseApiTestCase(ApiTestCase):
                     "attributes": {
                         "title": "The other title",
                         "publisher": None, "year": None, "isbn": None,
+                        "createdAt": response.json()["included"][1]["attributes"]["createdAt"],
+                        "updatedAt": response.json()["included"][1]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
@@ -1607,6 +1798,8 @@ class ExerciseApiTestCase(ApiTestCase):
                             "meta": {"count": 1},
                         },
                         "sections": {"data": [], "meta": {"count": 0}},
+                        "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                        "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
                 },
             ],
@@ -1640,12 +1833,16 @@ class ExerciseApiTestCase(ApiTestCase):
                         "textbookPage": 16, "number": "11",
                         "boundingRectangle": None,
                         "instructions": "", "example": "", "clue": "", "wording": "",
+                        "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
+                        "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
                         "adaptation": {"data": None},
+                        "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                        "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
                 },
                 {
@@ -1656,12 +1853,16 @@ class ExerciseApiTestCase(ApiTestCase):
                         "textbookPage": 17, "number": "13",
                         "boundingRectangle": None,
                         "instructions": "", "example": "", "clue": "", "wording": "",
+                        "createdAt": response.json()["data"][1]["attributes"]["createdAt"],
+                        "updatedAt": response.json()["data"][1]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
                         "adaptation": {"data": None},
+                        "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                        "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
                 },
             ],
@@ -1686,12 +1887,16 @@ class ExerciseApiTestCase(ApiTestCase):
                         "textbookPage": 17, "number": "14",
                         "boundingRectangle": None,
                         "instructions": "", "example": "", "clue": "", "wording": "",
+                        "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
+                        "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
                         "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
                         "adaptation": {"data": None},
+                        "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                        "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
                 },
             ],
@@ -1748,12 +1953,16 @@ class ExerciseApiTestCase(ApiTestCase):
                     "textbookPage": 16, "number": "11",
                     "boundingRectangle": {"start": {"x": 10, "y": 11}, "stop": {"x": 12, "y": 13}},
                     "instructions": "INSTRUCTIONS", "example": "EXAMPLE", "clue": "CLUE", "wording": "WORDING",
+                    "createdAt": response.json()["data"]["attributes"]["createdAt"],
+                    "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
                 },
                 "relationships": {
                     "project": {"data": {"type": "project", "id": "xkopqm"}},
                     "extractionEvents": {"data": [], "meta": {"count": 0}},
                     "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
                     "adaptation": {"data": None},
+                    "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                    "updatedBy": {"data": {"type": "user", "id": "ckylfa"}},
                 },
             },
         })
@@ -1804,12 +2013,16 @@ class ExerciseApiTestCase(ApiTestCase):
                     "textbookPage": 16, "number": "11",
                     "boundingRectangle": None,
                     "instructions": "INSTRUCTIONS", "example": "example", "clue": "clue", "wording": "wording",
+                    "createdAt": response.json()["data"]["attributes"]["createdAt"],
+                    "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
                 },
                 "relationships": {
                     "project": {"data": {"type": "project", "id": "xkopqm"}},
                     "extractionEvents": {"data": [], "meta": {"count": 0}},
                     "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
                     "adaptation": {"data": None},
+                    "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                    "updatedBy": {"data": {"type": "user", "id": "ckylfa"}},
                 },
             },
         })
@@ -2010,7 +2223,7 @@ class ExerciseApiTestCase(ApiTestCase):
         self.assertEqual(self.count_models(Exercise), 0)
 
 
-class AdaptationApiTestCase(ApiTestCase):
+class AdaptationsApiTestCase(LoggedInApiTestCase):
     resources = resources
     polymorphism = polymorphism
 
@@ -2044,9 +2257,13 @@ class AdaptationApiTestCase(ApiTestCase):
                     "colors": 3,
                     "words": True,
                     "punctuation": True,
+                    "createdAt": response.json()["data"]["attributes"]["createdAt"],
+                    "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
                 },
                 "relationships": {
                     "exercise": {"data": {"type": "exercise", "id": "wbqloc"}},
+                    "createdBy": {"data": {"type": "user", "id": "ckylfa"}},
+                    "updatedBy": {"data": {"type": "user", "id": "ckylfa"}},
                 },
             },
         })
@@ -2078,9 +2295,13 @@ class AdaptationApiTestCase(ApiTestCase):
                 "links": {"self": "http://server/fillWithFreeTextAdaptations/ljpupg"},
                 "attributes": {
                     "placeholder": "...",
+                    "createdAt": response.json()["data"]["attributes"]["createdAt"],
+                    "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
                 },
                 "relationships": {
                     "exercise": {"data": {"type": "exercise", "id": "wbqloc"}},
+                    "createdBy": {"data": {"type": "user", "id": "ckylfa"}},
+                    "updatedBy": {"data": {"type": "user", "id": "ckylfa"}},
                 },
             },
         })
@@ -2112,12 +2333,16 @@ class AdaptationApiTestCase(ApiTestCase):
                     "textbookPage": None, "number": "Exercise",
                     "boundingRectangle": None,
                     "instructions": "INSTRUCTIONS", "example": "", "clue": "", "wording": "",
+                    "createdAt": response.json()["data"]["attributes"]["createdAt"],
+                    "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
                 },
                 "relationships": {
                     "project": {"data": {"type": "project", "id": "xkopqm"}},
                     "extractionEvents": {"data": [], "meta": {"count": 0}},
                     "textbook": {"data": None},
                     "adaptation": {"data": {"type": "selectThingsAdaptation", "id": "ugrfkh"}},
+                    "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                    "updatedBy": {"data": {"type": "user", "id": "ckylfa"}},
                 },
             },
         })
@@ -2149,12 +2374,16 @@ class AdaptationApiTestCase(ApiTestCase):
                     "textbookPage": None, "number": "Exercise",
                     "boundingRectangle": None,
                     "instructions": "", "example": "", "clue": "", "wording": "",
+                    "createdAt": response.json()["data"]["attributes"]["createdAt"],
+                    "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
                 },
                 "relationships": {
                     "project": {"data": {"type": "project", "id": "xkopqm"}},
                     "extractionEvents": {"data": [], "meta": {"count": 0}},
                     "textbook": {"data": None},
                     "adaptation": {"data": None},
+                    "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                    "updatedBy": {"data": {"type": "user", "id": "ckylfa"}},
                 },
             },
         })
@@ -2187,9 +2416,13 @@ class AdaptationApiTestCase(ApiTestCase):
                 "links": {"self": "http://server/fillWithFreeTextAdaptations/vahdwa"},
                 "attributes": {
                     "placeholder": "...",
+                    "createdAt": response.json()["data"]["attributes"]["createdAt"],
+                    "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
                 },
                 "relationships": {
                     "exercise": {"data": {"type": "exercise", "id": "wbqloc"}},
+                    "createdBy": {"data": {"type": "user", "id": "ckylfa"}},
+                    "updatedBy": {"data": {"type": "user", "id": "ckylfa"}},
                 },
             },
         })
@@ -2201,7 +2434,7 @@ class AdaptationApiTestCase(ApiTestCase):
         self.assertEqual(self.count_models(SelectThingsAdaptation), 0)
 
 
-class BatchingApiTestCase(ApiTestCase):
+class BatchingApiTestCase(LoggedInApiTestCase):
     resources = resources
     polymorphism = polymorphism
 
@@ -2235,11 +2468,18 @@ class BatchingApiTestCase(ApiTestCase):
                         "data": {
                             "type": "project",
                             "id": "xkopqm",
-                            "attributes": {"description": "Description", "title": "The project"},
+                            "attributes": {
+                                "description": "Description",
+                                "title": "The project",
+                                "createdAt": response.json()["atomic:results"][0]["data"]["attributes"]["createdAt"],
+                                "updatedAt": response.json()["atomic:results"][0]["data"]["attributes"]["updatedAt"],
+                            },
                             "links": {"self": "http://server/projects/xkopqm"},
                             "relationships": {
                                 "exercises": {"data": [], "meta": {"count": 0}},
                                 "textbooks": {"data": [], "meta": {"count": 0}},
+                                "createdBy": {"data": {"type": "user", "id": "ckylfa"}},
+                                "updatedBy": {"data": {"type": "user", "id": "ckylfa"}},
                             },
                         },
                     },
@@ -2273,11 +2513,18 @@ class BatchingApiTestCase(ApiTestCase):
                         "data": {
                             "type": "project",
                             "id": ProjectsResource.sqids.encode([i]),
-                            "attributes": {"description": f"Description {i}", "title": f"The project {i}"},
+                            "attributes": {
+                                "description": f"Description {i}",
+                                "title": f"The project {i}",
+                                "createdAt": response.json()["atomic:results"][i - 1]["data"]["attributes"]["createdAt"],
+                                "updatedAt": response.json()["atomic:results"][i - 1]["data"]["attributes"]["updatedAt"],
+                            },
                             "links": {"self": f"http://server/projects/{ProjectsResource.sqids.encode([i])}"},
                             "relationships": {
                                 "exercises": {"data": [], "meta": {"count": 0}},
                                 "textbooks": {"data": [], "meta": {"count": 0}},
+                                "createdBy": {"data": {"type": "user", "id": "ckylfa"}},
+                                "updatedBy": {"data": {"type": "user", "id": "ckylfa"}},
                             },
                         },
                     }

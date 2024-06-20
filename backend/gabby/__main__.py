@@ -99,6 +99,20 @@ def import_django_data(input_file):
 
     with orm.Session(database_engine) as session:
         database_utils.truncate_all_tables(session)
+
+        import_user = orm_models.User(username="import", created_by_id=1, updated_by_id=1)
+        session.add(import_user)
+        session.flush()
+        assert import_user.id == 1
+
+        vincent = orm_models.User(username="jacquev6")
+        # @todo Understand why using the relationships results in a not-null violation
+        vincent.created_by_id = import_user.id
+        vincent.updated_by_id = import_user.id
+        session.add(vincent)
+        session.add(orm_models.UserEmailAddress(user=vincent, address="vincent@vincent-jacques.net"))
+        session.flush()
+
         for instance_data in data:
             assert instance_data.keys() == {"model", "pk", "fields"}
             model = instance_data["model"]
@@ -204,6 +218,8 @@ def import_django_data(input_file):
                 assert model == "textbooks.adaptation", model
             else:
                 assert fields == {}, fields
+                instance.created_by = import_user
+                instance.updated_by = import_user
                 session.add(instance)
                 session.flush()
                 instances_by_model.setdefault(model, {})[pk] = instance

@@ -6,13 +6,14 @@ from fastapi.responses import HTMLResponse
 
 from fastjsonapi import make_jsonapi_router
 
+from . import api_resources
 from . import database_utils
 from . import settings
+from .database_utils import SessionDependable
+from .exercises import Exercise
 from .fixtures import load as load_fixtures
 from .projects import Project, ProjectsResource
-from .exercises import Exercise
-from .users import authentication_dependable
-from . import api_resources
+from .users import AuthenticationDependable
 
 
 app = FastAPI(
@@ -41,8 +42,9 @@ app.include_router(
     prefix="/api",
 )
 
+# @todo Require authentication (but keep it working: it's not an API call, so authentication must come through the browser)
 @app.get("/api/project-{project_id}-extraction-report.json")
-def extraction_report(project_id: str, session: database_utils.Session = Depends(database_utils.session_dependable)):
+def extraction_report(project_id: str, session: SessionDependable):
     project = session.get(Project, ProjectsResource.sqids.decode(project_id)[0])
     return {
         "project": {
@@ -67,8 +69,9 @@ def extraction_report(project_id: str, session: database_utils.Session = Depends
         },
     }
 
+# @todo Require authentication (but keep it working: it's not an API call, so authentication must come through the browser)
 @app.get("/api/project-{project_id}.html")
-def export_project(project_id: str, session: database_utils.Session = Depends(database_utils.session_dependable)):
+def export_project(project_id: str, session: SessionDependable):
     project = session.get(Project, ProjectsResource.sqids.decode(project_id)[0])
     exercises = []
     for exercise in project.exercises:
@@ -89,14 +92,14 @@ def export_project(project_id: str, session: database_utils.Session = Depends(da
     )
 
 @app.post("/api/token")
-def login(authentication: dict = Depends(authentication_dependable)):
+def login(authentication: AuthenticationDependable):
     return authentication
 
 
 # Test-only URL. Not in 'api/...' to avoid accidentally exposing it.
 if settings.EXPOSE_RESET_FOR_TESTS_URL:
     @app.post("/reset-for-tests/yes-im-sure")
-    def reset_for_tests(fixtures: str = None, session: database_utils.Session = Depends(database_utils.session_dependable)):
+    def reset_for_tests(session: SessionDependable, fixtures: str = None):
         load_fixtures(session, [] if fixtures is None else fixtures.split(","))
         return {}
 

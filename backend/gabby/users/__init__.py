@@ -1,4 +1,3 @@
 from .user import User, UserEmailAddress, UsersResource
-from .user import authentication_dependable
-from .user import optional_authenticated_user_dependable, OptionalAuthenticatedUserDependent
-from .user import mandatory_authenticated_user_dependable, MandatoryAuthenticatedUserDependent
+from .user import AuthenticationDependable
+from .user import ActuallyMandatoryAuthenticatedUserDependable, WanabeMandatoryAuthenticatedUserDependable, OptionalAuthenticatedUserDependable
