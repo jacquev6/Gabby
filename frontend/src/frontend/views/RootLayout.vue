@@ -11,6 +11,15 @@ import { useApiStore } from '../stores/api'
 const api = useApiStore()
 const i18n = useI18n()
 
+const unavailableUntil = (() => {
+  const envVar = import.meta.env.VITE_GABBY_UNAVAILABLE_UNTIL
+  if (envVar === undefined) {
+    return null
+  } else {
+    return new Date(envVar)
+  }
+})()
+
 const component = ref<{
   title?: string,
   breadcrumbs: {title: string, to: RouteLocationRaw}[],
@@ -54,13 +63,24 @@ const class_ = computed(() => componentHandlesScrolling.value ? 'overflow-hidden
 <template>
   <div class="vh-100 d-flex flex-column overflow-hidden">
     <Navbar :title :breadcrumbs></Navbar>
-    <LoginModal />
-    <template v-if="api.auth.isAuthenticated.value">
-      <div class="h-100 flex-fill container-fluid" data-cy="root-container" :class="class_">
-        <RouterView v-slot="{ Component }">
-          <component :is="Component" ref="component" />
-        </RouterView>
+    <template v-if="unavailableUntil">
+      <div class="alert alert-danger" role="alert">
+        <i18n-t keypath="siteUnavailableUntil">
+          <template v-slot:date>
+            {{ $d(unavailableUntil, 'long') }}
+          </template>
+        </i18n-t>
       </div>
     </template>
-  </div>
+    <template v-else>
+      <LoginModal />
+      <template v-if="api.auth.isAuthenticated.value">
+        <div class="h-100 flex-fill container-fluid" data-cy="root-container" :class="class_">
+          <RouterView v-slot="{ Component }">
+            <component :is="Component" ref="component" />
+          </RouterView>
+        </div>
+      </template>
+    </template>
+    </div>
 </template>

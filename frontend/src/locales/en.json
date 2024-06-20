@@ -6,6 +6,9 @@
   "close": "Close",
 
 
+  "siteUnavailableUntil": "The website is undergoing maintenance. Anticipated end: {date}.",
+
+
   "pleaseLogin": "Please log in",
   "loginButton": "Log in",
   "emailAddress": "e-mail address",

@@ -6,6 +6,9 @@
   "close": "Fermer",
 
 
+  "siteUnavailableUntil": "Le site est en maintenance. Fin prévue : {date}.",
+
+
   "pleaseLogin": "Veuillez vous connecter",
   "loginButton": "Se connecter",
   "emailAddress": "Adresse e-mail",
