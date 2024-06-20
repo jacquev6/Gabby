@@ -10,6 +10,7 @@ import tarfile
 from sqlalchemy import orm
 import boto3
 import click
+import sqlalchemy as sql
 import sqlalchemy_data_model_visualizer
 
 from . import database_utils
@@ -234,6 +235,29 @@ def load_fixtures_(fixtures):
     database_engine = database_utils.create_engine(settings.DATABASE_URL)
     with orm.Session(database_engine) as session:
         load_fixtures(session, fixtures)
+        session.commit()
+
+
+@main.group()
+@click.pass_context
+@click.argument("username")
+def sudo(context, username):
+    context.obj = {"username": username}
+
+
+@sudo.command()
+@click.pass_context
+@click.argument("email_address")
+@click.option("--username", required=False)
+def create_user(context, email_address, username):
+    database_engine = database_utils.create_engine(settings.DATABASE_URL)
+    with orm.Session(database_engine) as session:
+        sudo_user = session.scalar(sql.select(orm_models.User).where(orm_models.User.username == context.obj["username"]))
+        assert sudo_user is not None, f"No user with username {context.obj['username']}"
+        new_user = orm_models.User(username=username, created_by_id=sudo_user.id, updated_by_id=sudo_user.id)
+        session.add(new_user)
+        session.flush()
+        session.add(orm_models.UserEmailAddress(user=new_user, address=email_address))
         session.commit()
 
 
