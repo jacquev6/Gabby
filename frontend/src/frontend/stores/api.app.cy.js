@@ -11,6 +11,8 @@ describe('ApiStore', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
     cy.request('POST', 'http://fanout:8080/reset-for-tests/yes-im-sure?fixtures=test-exercises')
+    const api = useApiStore()
+    api.auth.login('admin', 'password')
   })
 
   after(() => {
@@ -216,6 +218,8 @@ describe('ApiStore', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
     cy.request('POST', 'http://fanout:8080/reset-for-tests/yes-im-sure?fixtures=more-test-exercises')
+    const api = useApiStore()
+    api.auth.login('admin', 'password')
   })
 
   after(() => {

@@ -77,6 +77,7 @@ class TransactionTestCase(TestCase):
         self.__class__.__session = Session(self.__database_engine)
         truncate_all_tables(self.__class__.__session)
         self.__class__.__session.commit()
+        self.user_for_create = self.__create_user_for_create()
         self.expect_commits_rollbacks(0, 0)
         self.__class__.actual_commits_count = 0
         self.__class__.actual_rollbacks_count = 0
@@ -104,10 +105,24 @@ class TransactionTestCase(TestCase):
         super().tearDown()
 
     def create_model(self, model, *args, **kwds):
+        # @todo Understand why using the relationships instead of the ids results in a not-null violation
+        if hasattr(model, "created_by") and "created_by_id" not in kwds and "created_by" not in kwds:
+            kwds["created_by_id"] = self.user_for_create.id
+        if hasattr(model, "updated_by") and "updated_by_id" not in kwds and "updated_by" not in kwds:
+            kwds["updated_by_id"] = self.user_for_create.id
         instance = model(*args, **kwds)
         self.__session.add(instance)
         self.__session.commit()
         return instance
+
+    def __create_user_for_create(self):
+        user = User(username="creator", created_by_id=1, updated_by_id=1)
+        self.__session.add(user)
+        self.__session.flush()
+        user.created_by_id = user.id
+        user.updated_by_id = user.id
+        self.__session.commit()
+        return user
 
     def delete_model(self, model, id):
         self.__session.execute(sql.delete(model).where(model.id == id))
@@ -167,15 +182,10 @@ class ApiTestCase(TransactionTestCase):
 class LoggedInApiTestCase(ApiTestCase):
     def setUp(self):
         super().setUp()
-        self.__user_for_create = super().create_model(User, username="creator")
         super().create_model(User, username="updater", clear_text_password="password")
         self.login("updater", "password")
 
     def create_model(self, model, *args, **kwds):
-        if hasattr(model, "created_by"):
-            kwds["created_by"] = self.__user_for_create
-        if hasattr(model, "updated_by"):
-            kwds["updated_by"] = self.__user_for_create
         return super().create_model(model, *args, **kwds)
 
     def tearDown(self):

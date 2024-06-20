@@ -13,6 +13,7 @@ describe('SectionEditor', () => {
     cy.request('POST', 'http://fanout:8080/reset-for-tests/yes-im-sure?fixtures=test-exercises')
 
     setActivePinia(createPinia())
+    cy.wrap(useApiStore()).then((api) => api.auth.login('admin', 'password'))
     cy.wrap(useApiStore()).then((api) => api.client.getAll('sections')).should('have.length', 1)
 
     cy.viewport(1000, 500)

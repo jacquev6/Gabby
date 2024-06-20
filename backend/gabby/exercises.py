@@ -179,6 +179,8 @@ class ExerciseTestCase(TransactionTestCase):
                     wording="",
                     example="",
                     clue="",
+                    created_by_id=self.user_for_create.id,
+                    updated_by_id=self.user_for_create.id,
                 ))
         self.assertEqual(cm.exception.orig.diag.constraint_name, "exercises_project_id_textbook_id_fkey")
 
@@ -189,13 +191,13 @@ class ExerciseTestCase(TransactionTestCase):
 
     def test_create_without_textbook__broken_by_orm(self):
         with self.make_session() as session:
-            session.add(project1 := Project(title='Premier projet de test', description="Ce projet contient des exercices d'un seul manuel."))
-            session.add(project2 := Project(title='Deuxième projet de test', description='Ce projet contient des exercices originaux.'))
+            session.add(project1 := Project(title='Premier projet de test', description="Ce projet contient des exercices d'un seul manuel.", created_by=self.user_for_create, updated_by=self.user_for_create))
+            session.add(project2 := Project(title='Deuxième projet de test', description='Ce projet contient des exercices originaux.', created_by=self.user_for_create, updated_by=self.user_for_create))
             session.flush()
-            session.add(Textbook(project=project1, title='Français CE2', publisher='Slabeuf', year=2021, isbn='1234567890123'))
+            session.add(Textbook(project=project1, title='Français CE2', publisher='Slabeuf', year=2021, isbn='1234567890123', created_by=self.user_for_create, updated_by=self.user_for_create))
             # session.flush()  # This flush would avoid the IntegrityError
             # The exercise is created with 'project=None', probably because of the ORM warning silenced by the 'overlaps=' arguments in the relationships
-            session.add(exercise4 := Exercise(project=project2, textbook=None, textbook_page=None, number='L1', instructions='Faire des choses intelligentes.', example='', clue='', wording=''))
+            session.add(exercise4 := Exercise(project=project2, textbook=None, textbook_page=None, number='L1', instructions='Faire des choses intelligentes.', example='', clue='', wording='', created_by=self.user_for_create, updated_by=self.user_for_create))
             with self.assertRaises(sql.exc.IntegrityError) as cm:
                 session.flush()
         self.assertEqual(cm.exception.orig.diag.column_name, "project_id")
@@ -257,12 +259,12 @@ class ExerciseTestCase(TransactionTestCase):
 
     def test_share_adaptation__fixed_by_orm(self):
         with self.make_session() as session:
-            session.add(project := Project(title="Project", description=""))
-            session.add(adaptation := GenericAdaptation())
+            session.add(project := Project(title="Project", description="", created_by=self.user_for_create, updated_by=self.user_for_create))
+            session.add(adaptation := GenericAdaptation(created_by=self.user_for_create, updated_by=self.user_for_create))
             session.flush()
-            session.add(exercise_1 := Exercise(project=project, number="Exercise 1", instructions="", wording="", example="", clue="", adaptation=adaptation))
+            session.add(exercise_1 := Exercise(project=project, number="Exercise 1", instructions="", wording="", example="", clue="", adaptation=adaptation, created_by=self.user_for_create, updated_by=self.user_for_create))
             session.flush()
-            session.add(exercise_2 := Exercise(project=project, number="Exercise 2", instructions="", wording="", example="", clue="", adaptation=adaptation))
+            session.add(exercise_2 := Exercise(project=project, number="Exercise 2", instructions="", wording="", example="", clue="", adaptation=adaptation, created_by=self.user_for_create, updated_by=self.user_for_create))
             session.flush()
 
             self.assertIs(exercise_1.adaptation, exercise_2.adaptation)
@@ -273,11 +275,11 @@ class ExerciseTestCase(TransactionTestCase):
 
     def test_share_adaptation__not_fixed_by_orm(self):
         with self.make_session() as session:
-            session.add(project := Project(title="Project", description=""))
-            session.add(adaptation := GenericAdaptation())
+            session.add(project := Project(title="Project", description="", created_by=self.user_for_create, updated_by=self.user_for_create))
+            session.add(adaptation := GenericAdaptation(created_by=self.user_for_create, updated_by=self.user_for_create))
             session.flush()
-            session.add(Exercise(project=project, number="Exercise 1", instructions="", wording="", example="", clue="", adaptation=adaptation))
-            session.add(Exercise(project=project, number="Exercise 2", instructions="", wording="", example="", clue="", adaptation=adaptation))
+            session.add(Exercise(project=project, number="Exercise 1", instructions="", wording="", example="", clue="", adaptation=adaptation, created_by=self.user_for_create, updated_by=self.user_for_create))
+            session.add(Exercise(project=project, number="Exercise 2", instructions="", wording="", example="", clue="", adaptation=adaptation, created_by=self.user_for_create, updated_by=self.user_for_create))
 
             with self.assertRaises(sql.exc.IntegrityError) as cm:
                 session.flush()

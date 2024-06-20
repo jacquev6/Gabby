@@ -1144,7 +1144,7 @@
             "$ref": "#/components/schemas/OptionalRelationship"
           },
           "createdBy": {
-            "$ref": "#/components/schemas/OptionalRelationship"
+            "$ref": "#/components/schemas/MandatoryRelationship"
           },
           "extractionEvents": {
             "$ref": "#/components/schemas/OutputListRelationship"
@@ -1156,7 +1156,7 @@
             "$ref": "#/components/schemas/OptionalRelationship"
           },
           "updatedBy": {
-            "$ref": "#/components/schemas/OptionalRelationship"
+            "$ref": "#/components/schemas/MandatoryRelationship"
           }
         },
         "required": [
@@ -1436,13 +1436,13 @@
         "additionalProperties": false,
         "properties": {
           "createdBy": {
-            "$ref": "#/components/schemas/OptionalRelationship"
+            "$ref": "#/components/schemas/MandatoryRelationship"
           },
           "exercise": {
             "$ref": "#/components/schemas/MandatoryRelationship"
           },
           "updatedBy": {
-            "$ref": "#/components/schemas/OptionalRelationship"
+            "$ref": "#/components/schemas/MandatoryRelationship"
           }
         },
         "required": [
@@ -1684,13 +1684,13 @@
         "additionalProperties": false,
         "properties": {
           "createdBy": {
-            "$ref": "#/components/schemas/OptionalRelationship"
+            "$ref": "#/components/schemas/MandatoryRelationship"
           },
           "exercise": {
             "$ref": "#/components/schemas/MandatoryRelationship"
           },
           "updatedBy": {
-            "$ref": "#/components/schemas/OptionalRelationship"
+            "$ref": "#/components/schemas/MandatoryRelationship"
           }
         },
         "required": [
@@ -1907,13 +1907,13 @@
         "additionalProperties": false,
         "properties": {
           "createdBy": {
-            "$ref": "#/components/schemas/OptionalRelationship"
+            "$ref": "#/components/schemas/MandatoryRelationship"
           },
           "exercise": {
             "$ref": "#/components/schemas/MandatoryRelationship"
           },
           "updatedBy": {
-            "$ref": "#/components/schemas/OptionalRelationship"
+            "$ref": "#/components/schemas/MandatoryRelationship"
           }
         },
         "required": [
@@ -2121,13 +2121,13 @@
         "additionalProperties": false,
         "properties": {
           "createdBy": {
-            "$ref": "#/components/schemas/OptionalRelationship"
+            "$ref": "#/components/schemas/MandatoryRelationship"
           },
           "exercise": {
             "$ref": "#/components/schemas/MandatoryRelationship"
           },
           "updatedBy": {
-            "$ref": "#/components/schemas/OptionalRelationship"
+            "$ref": "#/components/schemas/MandatoryRelationship"
           }
         },
         "required": [
@@ -2420,7 +2420,7 @@
         "additionalProperties": false,
         "properties": {
           "createdBy": {
-            "$ref": "#/components/schemas/OptionalRelationship"
+            "$ref": "#/components/schemas/MandatoryRelationship"
           },
           "pdfFile": {
             "$ref": "#/components/schemas/MandatoryRelationship"
@@ -2588,7 +2588,7 @@
         "additionalProperties": false,
         "properties": {
           "createdBy": {
-            "$ref": "#/components/schemas/OptionalRelationship"
+            "$ref": "#/components/schemas/MandatoryRelationship"
           },
           "namings": {
             "$ref": "#/components/schemas/OutputListRelationship"
@@ -3158,7 +3158,7 @@
         "additionalProperties": false,
         "properties": {
           "createdBy": {
-            "$ref": "#/components/schemas/OptionalRelationship"
+            "$ref": "#/components/schemas/MandatoryRelationship"
           },
           "exercises": {
             "$ref": "#/components/schemas/OutputListRelationship"
@@ -3167,7 +3167,7 @@
             "$ref": "#/components/schemas/OutputListRelationship"
           },
           "updatedBy": {
-            "$ref": "#/components/schemas/OptionalRelationship"
+            "$ref": "#/components/schemas/MandatoryRelationship"
           }
         },
         "required": [
@@ -3548,7 +3548,7 @@
         "additionalProperties": false,
         "properties": {
           "createdBy": {
-            "$ref": "#/components/schemas/OptionalRelationship"
+            "$ref": "#/components/schemas/MandatoryRelationship"
           },
           "pdfFile": {
             "$ref": "#/components/schemas/MandatoryRelationship"
@@ -3557,7 +3557,7 @@
             "$ref": "#/components/schemas/MandatoryRelationship"
           },
           "updatedBy": {
-            "$ref": "#/components/schemas/OptionalRelationship"
+            "$ref": "#/components/schemas/MandatoryRelationship"
           }
         },
         "required": [
@@ -3833,13 +3833,13 @@
         "additionalProperties": false,
         "properties": {
           "createdBy": {
-            "$ref": "#/components/schemas/OptionalRelationship"
+            "$ref": "#/components/schemas/MandatoryRelationship"
           },
           "exercise": {
             "$ref": "#/components/schemas/MandatoryRelationship"
           },
           "updatedBy": {
-            "$ref": "#/components/schemas/OptionalRelationship"
+            "$ref": "#/components/schemas/MandatoryRelationship"
           }
         },
         "required": [
@@ -4133,7 +4133,7 @@
         "additionalProperties": false,
         "properties": {
           "createdBy": {
-            "$ref": "#/components/schemas/OptionalRelationship"
+            "$ref": "#/components/schemas/MandatoryRelationship"
           },
           "exercises": {
             "$ref": "#/components/schemas/OutputListRelationship"
@@ -4145,7 +4145,7 @@
             "$ref": "#/components/schemas/OutputListRelationship"
           },
           "updatedBy": {
-            "$ref": "#/components/schemas/OptionalRelationship"
+            "$ref": "#/components/schemas/MandatoryRelationship"
           }
         },
         "required": [
@@ -4372,10 +4372,10 @@
         "additionalProperties": false,
         "properties": {
           "createdBy": {
-            "$ref": "#/components/schemas/OptionalRelationship"
+            "$ref": "#/components/schemas/MandatoryRelationship"
           },
           "updatedBy": {
-            "$ref": "#/components/schemas/OptionalRelationship"
+            "$ref": "#/components/schemas/MandatoryRelationship"
           }
         },
         "required": [

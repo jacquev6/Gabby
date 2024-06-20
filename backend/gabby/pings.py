@@ -13,11 +13,11 @@ from . import testing
 from .database_utils import OrmBase, SessionDependable
 from .api_utils import create_item, get_item, get_page, save_item, delete_item
 from .users import User, UsersResource, OptionalAuthenticatedUserDependable
-from .users.mixins import CreatedUpdatedByAtMixin
+from .users.mixins import OptionalCreatedUpdatedByAtMixin
 from .wrapping import set_wrapper, OrmWrapperWithStrIds, unwrap
 
 
-class Ping(OrmBase, CreatedUpdatedByAtMixin):
+class Ping(OrmBase, OptionalCreatedUpdatedByAtMixin):
     __tablename__ = "pings"
 
     id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
@@ -175,8 +175,8 @@ class PingsApiTestCase(testing.ApiTestCase):
         self.assertEqual(len(ping.next), 0)
 
     def test_create__full(self):
-        self.create_model(Ping)
-        self.create_model(Ping)
+        self.create_model(Ping, created_by=None, updated_by=None)
+        self.create_model(Ping, created_by=None, updated_by=None)
 
         response = self.post(
             "http://server/pings?include=prev,next",
@@ -261,7 +261,7 @@ class PingsApiTestCase(testing.ApiTestCase):
         self.assertEqual(ping.next, [self.get_model(Ping, 2)])
 
     def test_get_one(self):
-        ping = self.create_model(Ping)
+        ping = self.create_model(Ping, created_by=None, updated_by=None)
 
         response = self.get("http://server/pings/1")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
@@ -293,9 +293,9 @@ class PingsApiTestCase(testing.ApiTestCase):
     def test_get_all(self):
         self.expect_commits_rollbacks(2, 0)
 
-        ping1 = self.create_model(Ping)
-        ping2 = self.create_model(Ping, prev=ping1)
-        ping3 = self.create_model(Ping)
+        ping1 = self.create_model(Ping, created_by=None, updated_by=None)
+        ping2 = self.create_model(Ping, prev=ping1, created_by=None, updated_by=None)
+        ping3 = self.create_model(Ping, created_by=None, updated_by=None)
 
         response = self.get("http://server/pings")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
@@ -379,11 +379,11 @@ class PingsApiTestCase(testing.ApiTestCase):
     # @todo Add tests for 'filter[message]' set to null. How do we even set a query parameter to null?
 
     def test_filter__message_some(self):
-        ping1 = self.create_model(Ping, message="Hello")
-        self.create_model(Ping, message="Good bye")
-        ping3 = self.create_model(Ping, message="Hello")
-        self.create_model(Ping, message="Good bye")
-        self.create_model(Ping, message="Hello")
+        ping1 = self.create_model(Ping, message="Hello", created_by=None, updated_by=None)
+        self.create_model(Ping, message="Good bye", created_by=None, updated_by=None)
+        ping3 = self.create_model(Ping, message="Hello", created_by=None, updated_by=None)
+        self.create_model(Ping, message="Good bye", created_by=None, updated_by=None)
+        self.create_model(Ping, message="Hello", created_by=None, updated_by=None)
 
         response = self.get("http://server/pings?filter[message]=Hello")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
@@ -436,12 +436,12 @@ class PingsApiTestCase(testing.ApiTestCase):
     # @todo Add tests for 'filter[prev]' set to null
 
     def test_filter__prev_some(self):
-        prev = self.create_model(Ping)
-        ping2 = self.create_model(Ping, prev=prev)
-        self.create_model(Ping, prev=None)
-        ping4 = self.create_model(Ping, prev=prev)
-        self.create_model(Ping, prev=None)
-        self.create_model(Ping, prev=prev)
+        prev = self.create_model(Ping, created_by=None, updated_by=None)
+        ping2 = self.create_model(Ping, prev=prev, created_by=None, updated_by=None)
+        self.create_model(Ping, prev=None, created_by=None, updated_by=None)
+        ping4 = self.create_model(Ping, prev=prev, created_by=None, updated_by=None)
+        self.create_model(Ping, prev=None, created_by=None, updated_by=None)
+        self.create_model(Ping, prev=prev, created_by=None, updated_by=None)
 
         response = self.get("http://server/pings?filter[prev]=1")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
@@ -492,8 +492,8 @@ class PingsApiTestCase(testing.ApiTestCase):
         })
 
     def test_update_nothing(self):
-        ping = self.create_model(Ping, message="Hello", prev=self.create_model(Ping))
-        self.create_model(Ping, prev=ping)
+        ping = self.create_model(Ping, message="Hello", prev=self.create_model(Ping, created_by=None, updated_by=None), created_by=None, updated_by=None)
+        self.create_model(Ping, prev=ping, created_by=None, updated_by=None)
 
         before_update = ping.updated_at
 
@@ -530,8 +530,8 @@ class PingsApiTestCase(testing.ApiTestCase):
         self.assertEqual(ping.next, [self.get_model(Ping, 3)])
 
     def test_update_message(self):
-        ping = self.create_model(Ping, message="Hello", prev=self.create_model(Ping))
-        self.create_model(Ping, prev=ping)
+        ping = self.create_model(Ping, message="Hello", prev=self.create_model(Ping, created_by=None, updated_by=None), created_by=None, updated_by=None)
+        self.create_model(Ping, prev=ping, created_by=None, updated_by=None)
 
         before_update = ping.updated_at
 
@@ -573,7 +573,7 @@ class PingsApiTestCase(testing.ApiTestCase):
         self.assertEqual(ping.next, [self.get_model(Ping, 3)])
 
     def test_update_message_to_none(self):
-        self.create_model(Ping, prev=self.create_model(Ping, message="Hello", prev=self.create_model(Ping)))
+        self.create_model(Ping, prev=self.create_model(Ping, message="Hello", prev=self.create_model(Ping, created_by=None, updated_by=None), created_by=None, updated_by=None), created_by=None, updated_by=None)
 
         response = self.patch("http://server/pings/2", {
             "data": {
@@ -612,8 +612,8 @@ class PingsApiTestCase(testing.ApiTestCase):
         self.assertEqual(ping.next, [self.get_model(Ping, 3)])
 
     def test_update_prev__some_to_some(self):
-        self.create_model(Ping, prev=self.create_model(Ping, message="Hello", prev=self.create_model(Ping)))
-        self.create_model(Ping)
+        self.create_model(Ping, prev=self.create_model(Ping, message="Hello", prev=self.create_model(Ping, created_by=None, updated_by=None), created_by=None, updated_by=None), created_by=None, updated_by=None)
+        self.create_model(Ping, created_by=None, updated_by=None)
 
         response = self.patch("http://server/pings/2", {
             "data": {
@@ -652,7 +652,7 @@ class PingsApiTestCase(testing.ApiTestCase):
         self.assertEqual(ping.next, [self.get_model(Ping, 3)])
 
     def test_update_prev__some_to_none(self):
-        self.create_model(Ping, prev=self.create_model(Ping, message="Hello", prev=self.create_model(Ping)))
+        self.create_model(Ping, prev=self.create_model(Ping, message="Hello", prev=self.create_model(Ping, created_by=None, updated_by=None), created_by=None, updated_by=None), created_by=None, updated_by=None)
 
         response = self.patch("http://server/pings/2", {
             "data": {
@@ -691,8 +691,8 @@ class PingsApiTestCase(testing.ApiTestCase):
         self.assertEqual(ping.next, [self.get_model(Ping, 3)])
 
     def test_update_prev__none_to_some(self):
-        self.create_model(Ping, prev=self.create_model(Ping, message="Hello", prev=None))
-        self.create_model(Ping)
+        self.create_model(Ping, prev=self.create_model(Ping, message="Hello", prev=None, created_by=None, updated_by=None), created_by=None, updated_by=None)
+        self.create_model(Ping, created_by=None, updated_by=None)
 
         response = self.patch("http://server/pings/1", {
             "data": {
@@ -731,8 +731,8 @@ class PingsApiTestCase(testing.ApiTestCase):
         self.assertEqual(ping.next, [self.get_model(Ping, 2)])
 
     def test_update_next(self):
-        self.create_model(Ping, prev=self.create_model(Ping, message="Hello", prev=self.create_model(Ping)))
-        self.create_model(Ping)
+        self.create_model(Ping, prev=self.create_model(Ping, message="Hello", prev=self.create_model(Ping, created_by=None, updated_by=None), created_by=None, updated_by=None), created_by=None, updated_by=None)
+        self.create_model(Ping, created_by=None, updated_by=None)
 
         response = self.patch("http://server/pings/2", {
             "data": {
@@ -771,7 +771,7 @@ class PingsApiTestCase(testing.ApiTestCase):
         self.assertEqual(ping.next, [self.get_model(Ping, 4)])
 
     def test_update_next_to_empty(self):
-        self.create_model(Ping, prev=self.create_model(Ping, message="Hello", prev=self.create_model(Ping)))
+        self.create_model(Ping, prev=self.create_model(Ping, message="Hello", prev=self.create_model(Ping, created_by=None, updated_by=None), created_by=None, updated_by=None), created_by=None, updated_by=None)
 
         response = self.patch("http://server/pings/2", {
             "data": {
@@ -854,18 +854,18 @@ class PingOwnershipApiTestCase(testing.ApiTestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
         self.assertEqual(
             response.json()["data"]["relationships"]["createdBy"],
-            {"data": {"type": "user", "id": "fvirvd"}},
+            {"data": {"type": "user", "id": "ckylfa"}},
         )
         self.assertEqual(
             response.json()["data"]["relationships"]["updatedBy"],
-            {"data": {"type": "user", "id": "fvirvd"}},
+            {"data": {"type": "user", "id": "ckylfa"}},
         )
 
-        self.assertEqual(self.get_model(Ping, 1).created_by, self.get_model(User, 1))
-        self.assertEqual(self.get_model(Ping, 1).updated_by, self.get_model(User, 1))
+        self.assertEqual(self.get_model(Ping, 1).created_by, self.get_model(User, 2))
+        self.assertEqual(self.get_model(Ping, 1).updated_by, self.get_model(User, 2))
 
     def test_update__unauthenticated_ok(self):
-        ping = self.create_model(Ping, message="Hello")
+        ping = self.create_model(Ping, message="Hello", created_by=None, updated_by=None)
         before_update = ping.updated_at
 
         response = self.patch("http://server/pings/1", {
@@ -913,7 +913,7 @@ class PingOwnershipApiTestCase(testing.ApiTestCase):
         self.expect_commits_rollbacks(2, 0)
 
         self.create_model(User, username="alice", clear_text_password="alice's password")
-        ping = self.create_model(Ping, message="Hello")
+        ping = self.create_model(Ping, message="Hello", created_by=None, updated_by=None)
         before_update = ping.updated_at
 
         self.login("alice", "alice's password")
@@ -932,7 +932,7 @@ class PingOwnershipApiTestCase(testing.ApiTestCase):
         ping = self.get_model(Ping, 1)
         self.assertEqual(ping.message, "Bonjour")
         self.assertEqual(ping.created_by, None)
-        self.assertEqual(ping.updated_by, self.get_model(User, 1))
+        self.assertEqual(ping.updated_by, self.get_model(User, 2))
         self.assertGreater(ping.updated_at, before_update)
 
     def test_update__authenticated_on_own(self):
@@ -989,7 +989,7 @@ class PingOwnershipApiTestCase(testing.ApiTestCase):
         self.assertEqual(ping.updated_at, before_update)
 
     def test_delete__unauthenticated_ok(self):
-        ping = self.create_model(Ping, message="Hello")
+        ping = self.create_model(Ping, message="Hello", created_by=None, updated_by=None)
         before_update = ping.updated_at
 
         response = self.delete("http://server/pings/1")
@@ -1012,7 +1012,7 @@ class PingOwnershipApiTestCase(testing.ApiTestCase):
         self.expect_commits_rollbacks(2, 0)
 
         self.create_model(User, username="alice", clear_text_password="alice's password")
-        ping = self.create_model(Ping, message="Hello")
+        ping = self.create_model(Ping, message="Hello", created_by=None, updated_by=None)
         before_update = ping.updated_at
 
         self.login("alice", "alice's password")

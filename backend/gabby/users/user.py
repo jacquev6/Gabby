@@ -38,11 +38,11 @@ class User(OrmBase):
 
     # Can't use 'CreatedUpdatedByAtMixin' because of circular dependency
     created_at: orm.Mapped[datetime.datetime] = orm.mapped_column(sql.DateTime(timezone=True), server_default=sql.func.now())
-    created_by_id: orm.Mapped[int | None] = orm.mapped_column(sql.ForeignKey("users.id"))
-    created_by: orm.Mapped[User | None] = orm.relationship(foreign_keys=[created_by_id], remote_side=[id], post_update=True)
+    created_by_id: orm.Mapped[int] = orm.mapped_column(sql.ForeignKey("users.id"))
+    created_by: orm.Mapped[User] = orm.relationship(foreign_keys=[created_by_id], remote_side=[id], post_update=True)
     updated_at: orm.Mapped[datetime.datetime] = orm.mapped_column(sql.DateTime(timezone=True), server_default=sql.func.now(), onupdate=sql.func.now())
-    updated_by_id: orm.Mapped[int | None] = orm.mapped_column(sql.ForeignKey("users.id"))
-    updated_by: orm.Mapped[User | None] = orm.relationship(foreign_keys=[updated_by_id], remote_side=[id], post_update=True)
+    updated_by_id: orm.Mapped[int] = orm.mapped_column(sql.ForeignKey("users.id"))
+    updated_by: orm.Mapped[User] = orm.relationship(foreign_keys=[updated_by_id], remote_side=[id], post_update=True)
 
     username: orm.Mapped[str | None] = orm.mapped_column()
     hashed_password: orm.Mapped[str | None] = orm.mapped_column()

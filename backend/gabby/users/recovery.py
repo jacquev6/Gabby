@@ -104,7 +104,7 @@ class RecoveryEmailRequestsApiTestCase(testing.ApiTestCase):
         self.assertLessEqual(before + datetime.timedelta(hours=1), valid_until)
         self.assertLessEqual(valid_until, after + datetime.timedelta(hours=1))
         self.assertEqual(token, {
-            "userId": 1,
+            "userId": 2,
             "validUntil": valid_until.isoformat(),
         })
 

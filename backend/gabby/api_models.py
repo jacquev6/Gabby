@@ -11,13 +11,24 @@ from . import renderable
 
 class CreatedByAtMixin:
     created_at: Annotated[datetime.datetime, Computed()]
-    created_by: Annotated[User | None, Computed()] = None
+    created_by: Annotated[User, Computed()]
 
 class UpdatedByAtMixin:
     updated_at: Annotated[datetime.datetime, Computed()]
-    updated_by: Annotated[User | None, Computed()] = None
+    updated_by: Annotated[User, Computed()]
 
 class CreatedUpdatedByAtMixin(CreatedByAtMixin, UpdatedByAtMixin):
+    pass
+
+class OptionalCreatedByAtMixin:
+    created_at: Annotated[datetime.datetime, Computed()]
+    created_by: Annotated[User | None, Computed()] = None
+
+class OptionalUpdatedByAtMixin:
+    updated_at: Annotated[datetime.datetime, Computed()]
+    updated_by: Annotated[User | None, Computed()] = None
+
+class OptionalCreatedUpdatedByAtMixin(OptionalCreatedByAtMixin, OptionalUpdatedByAtMixin):
     pass
 
 
@@ -31,7 +42,7 @@ class RecoveryEmailRequest(Base):
     language: Annotated[str, WriteOnly()]
 
 
-class Ping(Base, CreatedUpdatedByAtMixin):
+class Ping(Base, OptionalCreatedUpdatedByAtMixin):
     message: Annotated[str | None, Filterable()] = None
     prev: Annotated[Ping | None, Filterable()] = None
     next: list[Ping] = []

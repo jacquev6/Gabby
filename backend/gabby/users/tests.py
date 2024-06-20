@@ -17,20 +17,20 @@ class AuthenticationTestCase(testing.TransactionTestCase):
         self.expect_commits_rollbacks(0, 0)
 
     def test_check_password__wrong(self):
-        self.assertFalse(self.get_model(User, 1).check_password("not-the-password"))
+        self.assertFalse(self.get_model(User, 2).check_password("not-the-password"))
 
     def test_check_password__right(self):
-        self.assertTrue(self.get_model(User, 1).check_password("password"))
+        self.assertTrue(self.get_model(User, 2).check_password("password"))
 
     def test_check_password__no_password(self):
-        self.assertFalse(self.get_model(User, 2).check_password("whatever"))
+        self.assertFalse(self.get_model(User, 3).check_password("whatever"))
 
     def test_hashed_password(self):
-        self.assertTrue(self.get_model(User, 1).hashed_password.startswith("$argon2id$v=19$m=65536,t=3,p=4$"))
+        self.assertTrue(self.get_model(User, 2).hashed_password.startswith("$argon2id$v=19$m=65536,t=3,p=4$"))
 
     def test_rehash_password(self):
         old_password_hasher = argon2.PasswordHasher(time_cost=1, memory_cost=1024, parallelism=1)
-        user = self.get_model(User, 1)
+        user = self.get_model(User, 2)
         user.hashed_password = old_password_hasher.hash("password")
 
         self.assertTrue(user.hashed_password.startswith("$argon2id$v=19$m=1024,t=1,p=1$"))
@@ -109,11 +109,11 @@ class AuthenticationApiTestCase(testing.ApiTestCase):
 
         response = self.api_client.get("http://server/optional-authenticated", headers={"Authorization": f"Bearer {token}"})
         self.assertEqual(response.status_code, 200, response.json())
-        self.assertEqual(response.json(), {"id": 1, "username": "john"})
+        self.assertEqual(response.json(), {"id": 2, "username": "john"})
 
         response = self.api_client.get("http://server/mandatory-authenticated", headers={"Authorization": f"Bearer {token}"})
         self.assertEqual(response.status_code, 200, response.json())
-        self.assertEqual(response.json(), {"id": 1, "username": "john"})
+        self.assertEqual(response.json(), {"id": 2, "username": "john"})
 
     def test_password_flow_using_email_address_for_named_user(self):
         self.expect_commits_rollbacks(2, 0)
@@ -124,7 +124,7 @@ class AuthenticationApiTestCase(testing.ApiTestCase):
 
         response = self.api_client.get("http://server/mandatory-authenticated", headers={"Authorization": f"Bearer {token}"})
         self.assertEqual(response.status_code, 200, response.json())
-        self.assertEqual(response.json(), {"id": 1, "username": "john"})
+        self.assertEqual(response.json(), {"id": 2, "username": "john"})
 
     def test_password_flow_using_email_address_for_anonymous_1_user(self):
         self.expect_commits_rollbacks(2, 0)
@@ -135,7 +135,7 @@ class AuthenticationApiTestCase(testing.ApiTestCase):
 
         response = self.api_client.get("http://server/mandatory-authenticated", headers={"Authorization": f"Bearer {token}"})
         self.assertEqual(response.status_code, 200, response.json())
-        self.assertEqual(response.json(), {"id": 2, "username": None})
+        self.assertEqual(response.json(), {"id": 3, "username": None})
 
     def test_password_flow_using_email_address_for_anonymous_2_user(self):
         self.expect_commits_rollbacks(2, 0)
@@ -146,7 +146,7 @@ class AuthenticationApiTestCase(testing.ApiTestCase):
 
         response = self.api_client.get("http://server/mandatory-authenticated", headers={"Authorization": f"Bearer {token}"})
         self.assertEqual(response.status_code, 200, response.json())
-        self.assertEqual(response.json(), {"id": 3, "username": None})
+        self.assertEqual(response.json(), {"id": 4, "username": None})
 
     def test_password_flow_using_email_address_for_non_existing_user(self):
         self.expect_commits_rollbacks(0, 1)
@@ -163,11 +163,11 @@ class AuthenticationApiTestCase(testing.ApiTestCase):
 
         response = self.api_client.get("http://server/optional-authenticated", headers={"Authorization": f"Bearer {token}"})
         self.assertEqual(response.status_code, 200, response.json())
-        self.assertEqual(response.json(), {"id": 1, "username": "john"})
+        self.assertEqual(response.json(), {"id": 2, "username": "john"})
 
         response = self.api_client.get("http://server/mandatory-authenticated", headers={"Authorization": f"Bearer {token}"})
         self.assertEqual(response.status_code, 200, response.json())
-        self.assertEqual(response.json(), {"id": 1, "username": "john"})
+        self.assertEqual(response.json(), {"id": 2, "username": "john"})
 
         time.sleep(1)
 
@@ -185,7 +185,7 @@ class AuthenticationApiTestCase(testing.ApiTestCase):
         self.assertEqual(response.status_code, 200, response.json())
         token = response.json()["access_token"]
 
-        self.delete_model(User, 1)
+        self.delete_model(User, 2)
 
         response = self.api_client.get("http://server/optional-authenticated", headers={"Authorization": f"Bearer {token}"})
         self.assertEqual(response.status_code, 200, response.json())
@@ -211,13 +211,13 @@ class AuthenticationApiTestCase(testing.ApiTestCase):
         self.assertLessEqual(valid_until, after + datetime.timedelta(hours=20))
 
         self.assertEqual(token, {
-            "userId": 1,
+            "userId": 2,
             "validUntil": valid_until.isoformat(),
         })
         # Try to set 'validUntil' in the token
         tempered_token = jwt.encode(
             {
-                "userId": 1,
+                "userId": 2,
                 "validUntil": (valid_until + datetime.timedelta(hours=24)).isoformat(),
             },
             "not-the-secret",
@@ -241,13 +241,13 @@ class AuthenticationApiTestCase(testing.ApiTestCase):
         valid_until = token["validUntil"]
 
         self.assertEqual(token, {
-            "userId": 1,
+            "userId": 2,
             "validUntil": valid_until,
         })
         # Try to set 'userId' in the token
         tempered_token = jwt.encode(
             {
-                "userId": 2,
+                "userId": 3,
                 "validUntil": valid_until,
             },
             "not-the-secret",
@@ -279,28 +279,6 @@ class UsersApiTestCase(testing.ApiTestCase):
         self.anonymous_updated_at = self.anonymous.updated_at.isoformat().replace("+00:00", "Z")
 
     def test_get_named_by_id(self):
-        response = self.get("http://server/users/fvirvd")
-        self.assertEqual(response.status_code, 200, response.json())
-        self.assertEqual(response.json(), {
-            "data": {
-                "type": "user",
-                "id": "fvirvd",
-                "links": {
-                    "self": "http://server/users/fvirvd",
-                },
-                "attributes": {
-                    "username": "john",
-                    "createdAt": self.john_created_at,
-                    "updatedAt": self.john_updated_at,
-                },
-                "relationships": {
-                    "createdBy": {"data": None},
-                    "updatedBy": {"data": None},
-                },
-            },
-        })
-
-    def test_get_anonymous_by_id(self):
         response = self.get("http://server/users/ckylfa")
         self.assertEqual(response.status_code, 200, response.json())
         self.assertEqual(response.json(), {
@@ -311,13 +289,35 @@ class UsersApiTestCase(testing.ApiTestCase):
                     "self": "http://server/users/ckylfa",
                 },
                 "attributes": {
+                    "username": "john",
+                    "createdAt": self.john_created_at,
+                    "updatedAt": self.john_updated_at,
+                },
+                "relationships": {
+                    "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                    "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
+                },
+            },
+        })
+
+    def test_get_anonymous_by_id(self):
+        response = self.get("http://server/users/jahykn")
+        self.assertEqual(response.status_code, 200, response.json())
+        self.assertEqual(response.json(), {
+            "data": {
+                "type": "user",
+                "id": "jahykn",
+                "links": {
+                    "self": "http://server/users/jahykn",
+                },
+                "attributes": {
                     "username": None,
                     "createdAt": self.anonymous_created_at,
                     "updatedAt": self.anonymous_updated_at,
                 },
                 "relationships": {
-                    "createdBy": {"data": None},
-                    "updatedBy": {"data": None},
+                    "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                    "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                 },
             },
         })
@@ -331,9 +331,9 @@ class UsersApiTestCase(testing.ApiTestCase):
         self.assertEqual(response.json(), {
             "data": {
                 "type": "user",
-                "id": "fvirvd",
+                "id": "ckylfa",
                 "links": {
-                    "self": "http://server/users/fvirvd",
+                    "self": "http://server/users/ckylfa",
                 },
                 "attributes": {
                     "username": "john",
@@ -341,8 +341,8 @@ class UsersApiTestCase(testing.ApiTestCase):
                     "updatedAt": self.john_updated_at,
                 },
                 "relationships": {
-                    "createdBy": {"data": None},
-                    "updatedBy": {"data": None},
+                    "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                    "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                 },
             },
         })
@@ -356,9 +356,9 @@ class UsersApiTestCase(testing.ApiTestCase):
         self.assertEqual(response.json(), {
             "data": {
                 "type": "user",
-                "id": "ckylfa",
+                "id": "jahykn",
                 "links": {
-                    "self": "http://server/users/ckylfa",
+                    "self": "http://server/users/jahykn",
                 },
                 "attributes": {
                     "username": None,
@@ -366,8 +366,8 @@ class UsersApiTestCase(testing.ApiTestCase):
                     "updatedAt": self.anonymous_updated_at,
                 },
                 "relationships": {
-                    "createdBy": {"data": None},
-                    "updatedBy": {"data": None},
+                    "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                    "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                 },
             },
         })
@@ -393,9 +393,9 @@ class UsersApiTestCase(testing.ApiTestCase):
         self.assertEqual(response.json(), {
             "data": {
                 "type": "user",
-                "id": "ckylfa",
+                "id": "jahykn",
                 "links": {
-                    "self": "http://server/users/ckylfa",
+                    "self": "http://server/users/jahykn",
                 },
                 "attributes": {
                     "username": "jane",
@@ -403,8 +403,8 @@ class UsersApiTestCase(testing.ApiTestCase):
                     "updatedAt": updated_at
                 },
                 "relationships": {
-                    "createdBy": {"data": None},
-                    "updatedBy": {"data": {"type": "user", "id": "ckylfa"}},
+                    "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                    "updatedBy": {"data": {"type": "user", "id": "jahykn"}},
                 },
             },
         })
@@ -430,9 +430,9 @@ class UsersApiTestCase(testing.ApiTestCase):
         self.assertEqual(response.json(), {
             "data": {
                 "type": "user",
-                "id": "ckylfa",
+                "id": "jahykn",
                 "links": {
-                    "self": "http://server/users/ckylfa",
+                    "self": "http://server/users/jahykn",
                 },
                 "attributes": {
                     "username": None,
@@ -440,8 +440,8 @@ class UsersApiTestCase(testing.ApiTestCase):
                     "updatedAt": updated_at
                 },
                 "relationships": {
-                    "createdBy": {"data": None},
-                    "updatedBy": {"data": {"type": "user", "id": "ckylfa"}},
+                    "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                    "updatedBy": {"data": {"type": "user", "id": "jahykn"}},
                 },
             },
         })
@@ -478,16 +478,16 @@ class UsersApiTestCase(testing.ApiTestCase):
                 },
             },
         }
-        response = self.patch("http://server/users/ckylfa", payload)
+        response = self.patch("http://server/users/jahykn", payload)
         self.assertEqual(response.status_code, 200, response.json())
         updated_at = response.json()["data"]["attributes"]["updatedAt"]
         self.assertGreater(datetime.datetime.fromisoformat(updated_at), datetime.datetime.fromisoformat(self.anonymous_created_at))
         self.assertEqual(response.json(), {
             "data": {
                 "type": "user",
-                "id": "ckylfa",
+                "id": "jahykn",
                 "links": {
-                    "self": "http://server/users/ckylfa",
+                    "self": "http://server/users/jahykn",
                 },
                 "attributes": {
                     "username": "jane",
@@ -495,8 +495,8 @@ class UsersApiTestCase(testing.ApiTestCase):
                     "updatedAt": updated_at
                 },
                 "relationships": {
-                    "createdBy": {"data": None},
-                    "updatedBy": {"data": {"type": "user", "id": "ckylfa"}},
+                    "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                    "updatedBy": {"data": {"type": "user", "id": "jahykn"}},
                 },
             },
         })
@@ -515,6 +515,6 @@ class UsersApiTestCase(testing.ApiTestCase):
                 },
             },
         }
-        response = self.patch("http://server/users/fvirvd", payload)
+        response = self.patch("http://server/users/ckylfa", payload)
         self.assertEqual(response.status_code, 403, response.json())
         self.assertEqual(response.json(), {'detail': 'You can only edit your own user'})

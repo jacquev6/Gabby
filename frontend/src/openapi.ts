@@ -610,11 +610,11 @@ export interface components {
     /** exerciseOutputItemRelationships */
     exerciseOutputItemRelationships: {
       adaptation: components["schemas"]["OptionalRelationship"];
-      createdBy: components["schemas"]["OptionalRelationship"];
+      createdBy: components["schemas"]["MandatoryRelationship"];
       extractionEvents: components["schemas"]["OutputListRelationship"];
       project: components["schemas"]["MandatoryRelationship"];
       textbook: components["schemas"]["OptionalRelationship"];
-      updatedBy: components["schemas"]["OptionalRelationship"];
+      updatedBy: components["schemas"]["MandatoryRelationship"];
     };
     /** exercisePageOutput */
     exercisePageOutput: {
@@ -709,9 +709,9 @@ export interface components {
     };
     /** extractionEventOutputItemRelationships */
     extractionEventOutputItemRelationships: {
-      createdBy: components["schemas"]["OptionalRelationship"];
+      createdBy: components["schemas"]["MandatoryRelationship"];
       exercise: components["schemas"]["MandatoryRelationship"];
-      updatedBy: components["schemas"]["OptionalRelationship"];
+      updatedBy: components["schemas"]["MandatoryRelationship"];
     };
     /** extractionEventPageOutput */
     extractionEventPageOutput: {
@@ -794,9 +794,9 @@ export interface components {
     };
     /** fillWithFreeTextAdaptationOutputItemRelationships */
     fillWithFreeTextAdaptationOutputItemRelationships: {
-      createdBy: components["schemas"]["OptionalRelationship"];
+      createdBy: components["schemas"]["MandatoryRelationship"];
       exercise: components["schemas"]["MandatoryRelationship"];
-      updatedBy: components["schemas"]["OptionalRelationship"];
+      updatedBy: components["schemas"]["MandatoryRelationship"];
     };
     /** fillWithFreeTextAdaptationUpdateInput */
     fillWithFreeTextAdaptationUpdateInput: {
@@ -873,9 +873,9 @@ export interface components {
     };
     /** multipleChoicesInInstructionsAdaptationOutputItemRelationships */
     multipleChoicesInInstructionsAdaptationOutputItemRelationships: {
-      createdBy: components["schemas"]["OptionalRelationship"];
+      createdBy: components["schemas"]["MandatoryRelationship"];
       exercise: components["schemas"]["MandatoryRelationship"];
-      updatedBy: components["schemas"]["OptionalRelationship"];
+      updatedBy: components["schemas"]["MandatoryRelationship"];
     };
     /** multipleChoicesInInstructionsAdaptationUpdateInput */
     multipleChoicesInInstructionsAdaptationUpdateInput: {
@@ -948,9 +948,9 @@ export interface components {
     };
     /** multipleChoicesInWordingAdaptationOutputItemRelationships */
     multipleChoicesInWordingAdaptationOutputItemRelationships: {
-      createdBy: components["schemas"]["OptionalRelationship"];
+      createdBy: components["schemas"]["MandatoryRelationship"];
       exercise: components["schemas"]["MandatoryRelationship"];
-      updatedBy: components["schemas"]["OptionalRelationship"];
+      updatedBy: components["schemas"]["MandatoryRelationship"];
     };
     /** multipleChoicesInWordingAdaptationUpdateInput */
     multipleChoicesInWordingAdaptationUpdateInput: {
@@ -1048,7 +1048,7 @@ export interface components {
     };
     /** pdfFileNamingOutputItemRelationships */
     pdfFileNamingOutputItemRelationships: {
-      createdBy: components["schemas"]["OptionalRelationship"];
+      createdBy: components["schemas"]["MandatoryRelationship"];
       pdfFile: components["schemas"]["MandatoryRelationship"];
     };
     /** pdfFileNamingPageOutput */
@@ -1105,7 +1105,7 @@ export interface components {
     };
     /** pdfFileOutputItemRelationships */
     pdfFileOutputItemRelationships: {
-      createdBy: components["schemas"]["OptionalRelationship"];
+      createdBy: components["schemas"]["MandatoryRelationship"];
       namings: components["schemas"]["OutputListRelationship"];
       sections: components["schemas"]["OutputListRelationship"];
     };
@@ -1304,10 +1304,10 @@ export interface components {
     };
     /** projectOutputItemRelationships */
     projectOutputItemRelationships: {
-      createdBy: components["schemas"]["OptionalRelationship"];
+      createdBy: components["schemas"]["MandatoryRelationship"];
       exercises: components["schemas"]["OutputListRelationship"];
       textbooks: components["schemas"]["OutputListRelationship"];
-      updatedBy: components["schemas"]["OptionalRelationship"];
+      updatedBy: components["schemas"]["MandatoryRelationship"];
     };
     /** projectPageOutput */
     projectPageOutput: {
@@ -1439,10 +1439,10 @@ export interface components {
     };
     /** sectionOutputItemRelationships */
     sectionOutputItemRelationships: {
-      createdBy: components["schemas"]["OptionalRelationship"];
+      createdBy: components["schemas"]["MandatoryRelationship"];
       pdfFile: components["schemas"]["MandatoryRelationship"];
       textbook: components["schemas"]["MandatoryRelationship"];
-      updatedBy: components["schemas"]["OptionalRelationship"];
+      updatedBy: components["schemas"]["MandatoryRelationship"];
     };
     /** sectionPageOutput */
     sectionPageOutput: {
@@ -1540,9 +1540,9 @@ export interface components {
     };
     /** selectThingsAdaptationOutputItemRelationships */
     selectThingsAdaptationOutputItemRelationships: {
-      createdBy: components["schemas"]["OptionalRelationship"];
+      createdBy: components["schemas"]["MandatoryRelationship"];
       exercise: components["schemas"]["MandatoryRelationship"];
-      updatedBy: components["schemas"]["OptionalRelationship"];
+      updatedBy: components["schemas"]["MandatoryRelationship"];
     };
     /** selectThingsAdaptationUpdateInput */
     selectThingsAdaptationUpdateInput: {
@@ -1635,11 +1635,11 @@ export interface components {
     };
     /** textbookOutputItemRelationships */
     textbookOutputItemRelationships: {
-      createdBy: components["schemas"]["OptionalRelationship"];
+      createdBy: components["schemas"]["MandatoryRelationship"];
       exercises: components["schemas"]["OutputListRelationship"];
       project: components["schemas"]["MandatoryRelationship"];
       sections: components["schemas"]["OutputListRelationship"];
-      updatedBy: components["schemas"]["OptionalRelationship"];
+      updatedBy: components["schemas"]["MandatoryRelationship"];
     };
     /** textbookPageOutput */
     textbookPageOutput: {
@@ -1711,8 +1711,8 @@ export interface components {
     };
     /** userOutputItemRelationships */
     userOutputItemRelationships: {
-      createdBy: components["schemas"]["OptionalRelationship"];
-      updatedBy: components["schemas"]["OptionalRelationship"];
+      createdBy: components["schemas"]["MandatoryRelationship"];
+      updatedBy: components["schemas"]["MandatoryRelationship"];
     };
     /** userUpdateInput */
     userUpdateInput: {
