@@ -1,9 +1,8 @@
 import datetime
-import inspect
 import json
 import unittest
 
-from fastapi import Depends, FastAPI
+from fastapi import FastAPI
 from fastapi.testclient import TestClient
 import sqlalchemy as sql
 
