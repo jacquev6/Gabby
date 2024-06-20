@@ -104,7 +104,7 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
     adaptation_id: orm.Mapped[int | None] = orm.mapped_column(sql.ForeignKey(Adaptation.id), unique=True)
     adaptation: orm.Mapped[Adaptation | None] = orm.relationship(back_populates="exercise")
 
-    extraction_events: orm.Mapped[list["ExtractionEvent"]] = orm.relationship(back_populates="exercise")
+    extraction_events: orm.Mapped[list["ExtractionEvent"]] = orm.relationship(back_populates="exercise", cascade="all, delete-orphan")
 
 
 class ExerciseTestCase(TransactionTestCase):
@@ -285,6 +285,17 @@ class ExerciseTestCase(TransactionTestCase):
                 session.flush()
         self.assertEqual(cm.exception.orig.diag.constraint_name, "exercises_adaptation_id_key")
 
+    def test_delete_with_extraction_events(self):
+        exercise = self.create_model(Exercise, project=self.project, textbook=None, textbook_page=None, number="5.b", instructions="", wording="", example="", clue="")
+        self.create_model(ExtractionEvent, exercise=exercise, event="{}")
+        self.create_model(ExtractionEvent, exercise=exercise, event="{}")
+
+        with self.make_session() as session:
+            session.delete(exercise)
+            session.flush()
+        self.assertEqual(self.count_models(Exercise), 0)
+        self.assertEqual(self.count_models(ExtractionEvent), 0)
+
 
 class ExercisesResource:
     singular_name = "exercise"
@@ -395,7 +406,7 @@ class ExtractionEvent(OrmBase, CreatedUpdatedByAtMixin):
 
     id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
 
-    exercise_id: orm.Mapped[int] = orm.mapped_column(sql.ForeignKey(Exercise.id))
+    exercise_id: orm.Mapped[int] = orm.mapped_column(sql.ForeignKey(Exercise.id , ondelete="CASCADE"))
     exercise: orm.Mapped[Exercise] = orm.relationship(back_populates="extraction_events")
 
     event: orm.Mapped[str]
