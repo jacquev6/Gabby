@@ -11,7 +11,7 @@ from fastjsonapi import make_jsonapi_router
 
 from . import settings
 from .database_utils import create_engine, Session, truncate_all_tables
-from .users import User, authentication_dependable
+from .users import User, AuthenticationDependable
 
 
 class TestCase(unittest.TestCase):
@@ -130,7 +130,7 @@ class ApiTestCase(TransactionTestCase):
         cls.api_app.include_router(make_jsonapi_router(cls.resources, cls.polymorphism))
 
         @cls.api_app.post("/token")
-        def login(authentication: dict = Depends(authentication_dependable)):
+        def login(authentication: AuthenticationDependable):
             return authentication
 
         cls.api_client = TestClient(cls.api_app)

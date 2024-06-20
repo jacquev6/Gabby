@@ -1,3 +1,5 @@
+from contextlib import contextmanager
+
 from sqlalchemy import orm
 import sqlalchemy as sql
 
@@ -6,11 +8,12 @@ from .. import parsing
 from .. import renderable
 from .. import renderable as r
 from .. import settings
-from ..api_utils import make_item_creator, make_item_deleter, make_item_getter, make_item_saver
+from ..api_utils import create_item, get_item, save_item, delete_item
+from ..database_utils import SessionDependable
 from ..exercises import Adaptation, Exercise
 from ..testing import AdaptationTestCase
+from ..users import WanabeMandatoryAuthenticatedUserDependable
 from ..wrapping import set_wrapper, make_sqids, orm_wrapper_with_sqids
-from .cleanup import delete_previous_adaptation
 
 
 class FillWithFreeTextAdaptation(Adaptation):
@@ -405,13 +408,52 @@ class FillWithFreeTextAdaptationsResource:
 
     sqids = make_sqids(singular_name)
 
-    ItemCreator = make_item_creator(FillWithFreeTextAdaptation, preprocess=delete_previous_adaptation)
+    @staticmethod
+    def ItemCreator(
+        session: SessionDependable,
+        authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
+    ):
+        def create(exercise, placeholder):
+            if exercise.adaptation is not None:
+                session.delete(exercise.adaptation)
+            return create_item(
+                session, FillWithFreeTextAdaptation,
+                exercise=exercise,
+                placeholder=placeholder,
+                created_by=authenticated_user,
+                updated_by=authenticated_user,
+            )
+        return create
 
-    ItemGetter = make_item_getter(FillWithFreeTextAdaptation, sqids=sqids)
+    @staticmethod
+    def ItemGetter(
+        session: SessionDependable,
+        authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
+    ):
+        def get(id):
+            return get_item(session, FillWithFreeTextAdaptation, FillWithFreeTextAdaptationsResource.sqids.decode(id)[0])
+        return get
 
-    ItemSaver = make_item_saver()
+    @staticmethod
+    def ItemSaver(
+        session: SessionDependable,
+        authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
+    ):
+        @contextmanager
+        def save(item):
+            yield
+            item.updated_by = authenticated_user
+            save_item(session, item)
+        return save
 
-    ItemDeleter = make_item_deleter()
+    @staticmethod
+    def ItemDeleter(
+        session: SessionDependable,
+        authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
+    ):
+        def delete(item):
+            delete_item(session, item)
+        return delete
 
 
 set_wrapper(FillWithFreeTextAdaptation, orm_wrapper_with_sqids(FillWithFreeTextAdaptationsResource.sqids))

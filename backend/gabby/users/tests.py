@@ -5,7 +5,7 @@ import argon2
 from fastapi import Depends
 import jwt
 
-from .user import User, UserEmailAddress, UsersResource, optional_authenticated_user_dependable, mandatory_authenticated_user_dependable
+from .user import User, UserEmailAddress, UsersResource, ActuallyMandatoryAuthenticatedUserDependable, OptionalAuthenticatedUserDependable
 from .. import testing
 
 
@@ -47,14 +47,14 @@ class AuthenticationApiTestCase(testing.ApiTestCase):
         super().setUpClass()
 
         @cls.api_app.get("/optional-authenticated")
-        def get(user: User | None = Depends(optional_authenticated_user_dependable)):
+        def get(user: OptionalAuthenticatedUserDependable):
             if user is None:
                 return None
             else:
                 return {"id": user.id, "username": user.username}
 
         @cls.api_app.get("/mandatory-authenticated")
-        def get(user: User = Depends(mandatory_authenticated_user_dependable)):
+        def get(user: ActuallyMandatoryAuthenticatedUserDependable):
             return {"id": user.id, "username": user.username}
 
     def setUp(self):

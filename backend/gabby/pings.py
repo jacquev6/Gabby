@@ -10,11 +10,11 @@ import sqlalchemy as sql
 from . import api_models
 from . import settings
 from . import testing
-from .database_utils import OrmBase, SessionDependent
-from .api_utils import make_item_getter, make_page_getter
-from .users import User, UsersResource, OptionalAuthenticatedUserDependent
+from .database_utils import OrmBase, SessionDependable
+from .api_utils import create_item, get_item, get_page, save_item, delete_item
+from .users import User, UsersResource, OptionalAuthenticatedUserDependable
 from .users.mixins import CreatedUpdatedByAtMixin
-from .wrapping import set_wrapper, OrmWrapperWithStrIds, wrap, unwrap
+from .wrapping import set_wrapper, OrmWrapperWithStrIds, unwrap
 
 
 class Ping(OrmBase, CreatedUpdatedByAtMixin):
@@ -37,47 +37,79 @@ class PingsResource:
 
     default_page_size = settings.GENERIC_DEFAULT_API_PAGE_SIZE
 
-    class ItemCreator(OptionalAuthenticatedUserDependent):
-        def __call__(self, *, message, prev, next):
-            ping = Ping(
+    @staticmethod
+    def ItemCreator(
+        session: SessionDependable,
+        authenticated_user: OptionalAuthenticatedUserDependable,
+    ):
+        def create(message, prev, next):
+            return create_item(
+                session,
+                Ping,
                 message=message,
-                created_by=self.authenticated_user,
-                updated_by=self.authenticated_user,
-                prev=unwrap(prev),
-                next=[unwrap(next_item) for next_item in next],
+                created_by=authenticated_user,
+                updated_by=authenticated_user,
+                prev=prev,
+                next=next,
             )
-            self.session.add(ping)
-            self.session.flush()
-            return wrap(ping)
 
-    ItemGetter = make_item_getter(Ping)
+        return create
 
-    PageGetter = make_page_getter(
-        Ping,
-        filter_functions={
-            "message": lambda q, message: q.where(Ping.message == message),
-            "prev": lambda q, prev: q.where(Ping.prev_id == prev),
-        },
-        base=SessionDependent,
-    )
+    @staticmethod
+    def ItemGetter(
+        session: SessionDependable,
+        authenticated_user: OptionalAuthenticatedUserDependable,
+    ):
+        def get(id):
+            return get_item(session, Ping, id)
 
-    class ItemSaver(OptionalAuthenticatedUserDependent):
+        return get
+
+    @staticmethod
+    def PageGetter(
+        session: SessionDependable,
+    ):
+        def get(sort, filters, first_index, page_size):
+            sort = sort or ("id",)
+            query = sql.select(Ping).order_by(*sort)
+            if filters.message is not None:
+                query = query.where(Ping.message == filters.message)
+            if filters.prev is not None:
+                query = query.where(Ping.prev_id == filters.prev)
+            return get_page(session, query, first_index, page_size)
+
+        return get
+
+    @staticmethod
+    def ItemSaver(
+        session: SessionDependable,
+        authenticated_user: OptionalAuthenticatedUserDependable,
+    ):
         @contextmanager
-        def __call__(self, item):
+        def save(item):
             created_by = unwrap(item.created_by)
             if created_by is not None:
-                if self.authenticated_user != created_by:
+                if authenticated_user != created_by:
                     raise HTTPException(status.HTTP_403_FORBIDDEN, "You are not the creator of this ping")
             yield
-            item.updated_by = self.authenticated_user
+            item.updated_by = authenticated_user
+            save_item(session, item)
 
-    class ItemDeleter(OptionalAuthenticatedUserDependent):
-        def __call__(self, item):
+        return save
+
+    @staticmethod
+    def ItemDeleter(
+        session: SessionDependable,
+        authenticated_user: OptionalAuthenticatedUserDependable,
+    ):
+        def delete(item):
             created_by = unwrap(item.created_by)
             if created_by is not None:
-                if self.authenticated_user != created_by:
+                if authenticated_user != created_by:
                     raise HTTPException(status.HTTP_403_FORBIDDEN, "You are not the creator of this ping")
-            self.session.delete(unwrap(item))
+            delete_item(session, item)
+
+        return delete
 
 
 set_wrapper(Ping, OrmWrapperWithStrIds)

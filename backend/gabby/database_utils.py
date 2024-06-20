@@ -1,3 +1,4 @@
+from typing import Annotated
 from fastapi import Depends, Request
 from sqlalchemy import orm
 import sqlalchemy
@@ -39,7 +40,7 @@ class SessionMaker:
         return orm.Session(self.__engine)
 
 
-def session_dependable(request: Request):
+def _session_dependable(request: Request):
     with request.app.extra["make_session"]() as session:
         try:
             yield session
@@ -50,7 +51,4 @@ def session_dependable(request: Request):
             session.commit()
 
 
-# @todo Double-check every use: it should not be used anymore, in favor of SessionAndUserDependent
-class SessionDependent:
-    def __init__(self, session: Session = Depends(session_dependable)):
-        self.session = session
+SessionDependable = Annotated[Session, Depends(_session_dependable)]

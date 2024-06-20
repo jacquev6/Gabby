@@ -15,7 +15,8 @@ import sqlalchemy as sql
 
 from .. import api_models
 from .. import settings
-from ..database_utils import OrmBase, Session, session_dependable
+from ..api_utils import get_item, save_item
+from ..database_utils import OrmBase, SessionDependable
 from ..wrapping import make_sqids, set_wrapper, orm_wrapper_with_sqids, unwrap, wrap
 
 
@@ -118,9 +119,9 @@ def make_access_token(user: User, validity: datetime.timedelta):
 
 
 def authentication_dependable(
+    session: SessionDependable,
     credentials: Annotated[OAuth2PasswordRequestForm, Depends()],
     options: Annotated[str | None, Form()] = None,
-    session: Session = Depends(session_dependable),
 ):
     user = authenticate(session, username=credentials.username, clear_text_password=credentials.password)
     if user is None:
@@ -142,9 +143,12 @@ def authentication_dependable(
     }
 
 
-def optional_authenticated_user_dependable(
+AuthenticationDependable = Annotated[dict, Depends(authentication_dependable)]
+
+
+def _optional_authenticated_user_dependable(
+    session: SessionDependable,
     token: str | None = Depends(OAuth2PasswordBearer(tokenUrl="token", auto_error=False)),
-    session: Session = Depends(session_dependable),
 ):
     if token is None:
         # No token => unauthenticated
@@ -168,33 +172,22 @@ def optional_authenticated_user_dependable(
                 return None
 
 
-def mandatory_authenticated_user_dependable(
-    user: User | None = Depends(optional_authenticated_user_dependable),
-):
+OptionalAuthenticatedUserDependable = Annotated[User | None, Depends(_optional_authenticated_user_dependable)]
+
+
+def _mandatory_authenticated_user_dependable(user: OptionalAuthenticatedUserDependable):
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid or expired token")
     else:
         return user
 
 
-class OptionalAuthenticatedUserDependent:
-    def __init__(
-        self,
-        session: Session = Depends(session_dependable),
-        authenticated_user: User | None = Depends(optional_authenticated_user_dependable),
-    ):
-        self.session = session
-        self.authenticated_user = authenticated_user
-
-
-class MandatoryAuthenticatedUserDependent:
-    def __init__(
-        self,
-        session: Session = Depends(session_dependable),
-        authenticated_user: User = Depends(mandatory_authenticated_user_dependable),
-    ):
-        self.session = session
-        self.authenticated_user = authenticated_user
+# @todo VERY IMPORTANT Fix 'MandatoryAuthenticatedUserDependable' to use '_mandatory_authenticated_user_dependable'
+# This is currently a workaround for a limitation of fastjsonapi, which instantiates all the 'ItemGetter's,
+# and so create dependencies on 'MandatoryAuthenticatedUserDependable' even in cases where it's not required.
+# Then merge these in a single simple 'MandatoryAuthenticatedUserDependable'.
+WanabeMandatoryAuthenticatedUserDependable = Annotated[User | None, Depends(_optional_authenticated_user_dependable)]
+ActuallyMandatoryAuthenticatedUserDependable = Annotated[User, Depends(_mandatory_authenticated_user_dependable)]
 
 
 class UsersResource:
@@ -207,31 +200,33 @@ class UsersResource:
 
     sqids = make_sqids(singular_name)
 
-    class ItemGetter:
-        def __init__(self, session: Session = Depends(session_dependable), logged_in_user: User = Depends(optional_authenticated_user_dependable)):
-            self.__session = session
-            self.__logged_in_user = logged_in_user
-
-        def __call__(self, id):
+    @staticmethod
+    def ItemGetter(
+        session: SessionDependable,
+        authenticated_user: OptionalAuthenticatedUserDependable,
+    ):
+        def get(id):
             if id == "current":
-                user = self.__logged_in_user
+                return wrap(authenticated_user)
             else:
-                user = self.__session.get(User, UsersResource.sqids.decode(id)[0])
-            return wrap(user)
+                return get_item(session, User, UsersResource.sqids.decode(id)[0])
 
-    class ItemSaver:
-        def __init__(self, session: Session = Depends(session_dependable), logged_in_user: User = Depends(mandatory_authenticated_user_dependable)):
-            self.__session = session
-            self.__logged_in_user = logged_in_user
+        return get
 
+    @staticmethod
+    def ItemSaver(
+        session: SessionDependable,
+        authenticated_user: ActuallyMandatoryAuthenticatedUserDependable,
+    ):
         @contextmanager
-        def __call__(self, user):
-            user = unwrap(user)
-            if user != self.__logged_in_user:
+        def save(user):
+            if unwrap(user) != authenticated_user:
                 raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="You can only edit your own user")
             yield
-            user.updated_by = self.__logged_in_user
-            self.__session.flush()
+            user.updated_by = authenticated_user
+            save_item(session, user)
+
+        return save
 
 
 set_wrapper(User, orm_wrapper_with_sqids(UsersResource.sqids))
