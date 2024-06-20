@@ -9,7 +9,7 @@ import ExerciseForm from '$frontend/components/ExerciseForm.vue'
 import TwoResizableColumns from '$frontend/components/TwoResizableColumns.vue'
 import ExerciseTools from '../ExerciseTools.vue'
 import type { Project, Textbook, Section, Exercise } from '$frontend/types/api'
-import AdaptedExercise from '$adapted/components/Exercise.vue'
+import AdaptedExercise from '../AdaptedExercise.vue'
 
 
 const props = defineProps<{
@@ -82,16 +82,15 @@ defineExpose({
     <template #right>
       <div class="h-100 overflow-auto" data-cy="right-col-2">
         <h1>{{ $t('adaptation') }}</h1>
-        <BBusy v-if="exerciseForm?.adaptedData" :busy="exerciseForm?.adaptedDataLoading">
+        <BBusy :busy="!exerciseForm || exerciseForm.adaptedDataLoading">
           <AdaptedExercise
+            v-if="exerciseForm?.adaptedData"
             :projectId="props.project.id"
             :exerciseId="props.exerciseId"
-            :exercise="exerciseForm?.adaptedData"
-            :settings="{tricolorWording: true}"
-            :isPreview="true"
+            :exercise="exerciseForm.adaptedData"
           />
+          <p v-else>{{ $t('selectExerciseType') }}</p>
         </BBusy>
-        <p v-else>{{ $t('selectExerciseType') }}</p>
       </div>
     </template>
   </TwoResizableColumns>

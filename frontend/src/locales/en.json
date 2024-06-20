@@ -6,6 +6,28 @@
   "close": "Close",
 
 
+  "siteUnavailableUntil": "The website is undergoing maintenance. Anticipated end: {date}.",
+
+
+  "pleaseLogin": "Please log in",
+  "loginButton": "Log in",
+  "emailAddress": "e-mail address",
+  "password": "Password",
+  "logoutButton": "Log out",
+  "loginFailed": "Login failed. Please check your credentials.",
+  "lostPasswordQuestion": "Lost password?",
+  "lostPasswordTitle": "Lost password",
+  "lostPasswordEmailAddress": "Send a recovery e-mail to this address",
+  "sendRecoveryMail": "Send",
+  "backFromLostPassword": "Back",
+  "recoveryMailSubmitted": "Recovery e-mail submitted. Please check your inbox.",
+  "resetPasswordTitle": "Reset password",
+  "newPasswordField": "New password",
+  "confirmNewPasswordField": "New password (confirm)",
+  "passwordsAreDifferent": "Passwords are different.",
+  "resetPasswordButton": "Reset password",
+
+
   "thisIsABug": "You should not be seeing this; this is a bug. Please let Vincent Jacques know about it.",
 
 
@@ -47,7 +69,8 @@
   "adaptationType": "Adaptation type",
   "selectThingsAdaptation": "Select words",
   "fillWithFreeTextAdaptation": "Fill with free text",
-  "multipleChoicesAdaptation": "Multiple choices",
+  "multipleChoicesInInstructionsAdaptation": "Multiple choices (in instructions)",
+  "multipleChoicesInWordingAdaptation": "Multiple choices (in wording)",
 
 
   "textbookNotFound": "Textbook not found",
@@ -83,8 +106,9 @@
 
   "colorsCount": "Number of colors",
   "includePunctuation": "Also select punctuation",
-  "useSel1ToSelN": "Use {first} to {last} in instructions to format text as if selected.",
+  "useSel1ToSelN": "Use {first} to {last} in instructions, example or clue to format text as if selected.",
   "useChoice": "Use {choice} in instructions to indicate a possible choice.",
+  "useChoices": "Use {choices} in wording to indicate a choice to make.",
   "placeholderText": "Placeholder to fill",
 
   "tools": "Tools",

@@ -35,21 +35,19 @@ $ok
 
 cd dev-env
 
-. .env
-
 if $do_build
 then
-  echo "$OPINION_APP_NAME dev-env: build"
+  echo "Gabby dev-env: build"
   docker compose build --builder default || docker compose build
-  echo "$OPINION_APP_NAME dev-env: pull"
+  echo "Gabby dev-env: pull"
   docker compose pull --ignore-buildable
 fi
 
-echo "$OPINION_APP_NAME dev-env: start"
+echo "Gabby dev-env: start"
 docker compose up --no-build --pull never --remove-orphans --detach
-echo "$OPINION_APP_NAME dev-env: started (close with Ctrl+C)"
+echo "Gabby dev-env: started (close with Ctrl+C)"
 docker compose logs --follow || true
 
-echo "$OPINION_APP_NAME dev-env: clean-up"
+echo "Gabby dev-env: clean-up"
 docker compose down --remove-orphans
 docker compose rm --stop --volumes --force

@@ -2,12 +2,11 @@ from contextlib import contextmanager
 from typing import Annotated
 import dataclasses
 
-from django.test import TestCase
 from fastapi import Depends
 from pydantic import BaseModel
 from starlette import status
 
-from ..testing import ItemsFactory, TestMixin
+from ..testing import ItemsFactory, ApiTestCase
 
 
 class AlphaPolyModel(BaseModel):
@@ -88,7 +87,7 @@ class OptionalRelationshipResource:
             yield
             item.saved += 1
 
-class OptionalRelationshipTestCase(TestMixin, TestCase):
+class OptionalRelationshipTestCase(ApiTestCase):
     resources = [AlphaPolyResource(), BravoPolyResource(), OptionalRelationshipResource()]
     polymorphism = {
         AlphaPolyItem: "alpha_poly",

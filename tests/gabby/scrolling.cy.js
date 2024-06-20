@@ -1,13 +1,24 @@
+function login() {
+  cy.get('select').last().select('en')
+  cy.get('h1:contains("Please log in")').should('exist')
+  cy.get('[name=username]').type('admin')  // This often leaves the field with just the few characters, e.g. 'adm'. I can't figure out why; probably some race condition.
+  cy.get('[name=password]').type('password')
+  cy.get('[name=username]').type('{selectall}admin')  // This is a workaround for the above issue.
+  cy.get('[name=username]').should('have.value', 'admin')
+  cy.get('button:contains("Log in")').click()
+  cy.get('h1:contains("Please log in")').should('not.exist')
+}
+
 describe('Gabby', () => {
   before(console.clear)
 
   beforeEach(() => {
-    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises,more-test-exercises')
+    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=admin-user,more-test-exercises')
     cy.viewport(1200, 200)
   })
 
   after(() => {
-    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises,more-test-exercises')
+    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=admin-user,more-test-exercises')
   })
 
   function haveVerticalScrollbar(el) {
@@ -40,8 +51,8 @@ describe('Gabby', () => {
 
   it('scrolls on index view', () => {
     cy.visit('/')
+    login()
     cy.get('.busy').should('not.exist')
-    cy.get('select').first().select('en')
 
     cy.get('html').its('0').should(haveNoScrollbar)
     cy.get('body').its('0').should(haveNoScrollbar)
@@ -59,8 +70,8 @@ describe('Gabby', () => {
 
   it('scrolls on project view', () => {
     cy.visit('/project-xkopqm')
+    login()
     cy.get('.busy').should('not.exist')
-    cy.get('select').first().select('en')
 
     cy.get('html').its('0').should(haveNoScrollbar)
     cy.get('body').its('0').should(haveNoScrollbar)
@@ -78,8 +89,8 @@ describe('Gabby', () => {
 
   it('scrolls on exercises list view', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-7')
+    login()
     cy.get('.busy').should('not.exist')
-    cy.get('select').first().select('en')
 
     cy.get('html').its('0').should(haveNoScrollbar)
     cy.get('body').its('0').should(haveNoScrollbar)
@@ -103,8 +114,8 @@ describe('Gabby', () => {
 
   it('scrolls on exercise creation view', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
+    login()
     cy.get('.busy').should('not.exist')
-    cy.get('select').first().select('en')
 
     cy.get('html').its('0').should(haveNoScrollbar)
     cy.get('body').its('0').should(haveNoScrollbar)
@@ -150,8 +161,8 @@ describe('Gabby', () => {
 
   it('scrolls on exercise edition view', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-7/exercise-vodhqn')
+    login()
     cy.get('.busy').should('not.exist')
-    cy.get('select').first().select('en')
 
     cy.get('html').its('0').should(haveNoScrollbar)
     cy.get('body').its('0').should(haveNoScrollbar)

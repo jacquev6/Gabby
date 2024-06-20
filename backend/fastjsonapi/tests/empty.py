@@ -1,12 +1,11 @@
 from typing import Annotated
 import dataclasses
 
-from django.test import TestCase
 from fastapi import Depends
 from pydantic import BaseModel
 from starlette import status
 
-from ..testing import TestMixin, ItemsFactory
+from ..testing import ApiTestCase, ItemsFactory
 
 
 
@@ -40,8 +39,9 @@ class Resource:
             return self.factory.create(Item, **kwds)
 
 
-class EmptyTestCase(TestMixin, TestCase):
+class EmptyTestCase(ApiTestCase):
     resources = [Resource()]
+    polymorphism = {}
 
     def setUp(self):
         super().setUp()

@@ -5,12 +5,15 @@ import type { RouteLocationRaw } from 'vue-router'
 
 import AboutModal from './AboutModal.vue'
 import LanguageSelector from './opinion/LanguageSelector.vue'
+import { useApiStore } from '../stores/api'
 
 
 const props = defineProps<{
   title: string,
   breadcrumbs: {title: string, to: RouteLocationRaw}[],
 }>()
+
+const api = useApiStore()
 
 useHead({
   title: computed(() => props.title)  // 'useHead' does not react to props directly,
@@ -41,6 +44,7 @@ const about = ref<typeof AboutModal | null>(null)
         <ul class="navbar-nav ms-auto">
           <li class="nav-item"><a href="/doc/" class="nav-link">{{ $t('help') }}</a></li>
           <li class="nav-item"><a href="#" class="nav-link" @click.prevent="about?.show()">{{ $t('about') }}</a></li>
+          <li class="nav-item"><a href="#" class="nav-link" @click.prevent="api.auth.logout">{{ $t('logoutButton') }}</a></li>
           <li><LanguageSelector class="w-auto" /></li>
         </ul>
       </div>

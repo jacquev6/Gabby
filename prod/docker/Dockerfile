@@ -24,6 +24,21 @@ ENV GABBY_ENTRY_POINT_NAME=frontend
 RUN npx vite build
 
 
+FROM frontend-dependencies AS maintenance-frontend-builder
+
+ADD frontend /app
+RUN cat src/promise-with-resolvers-polyfill.js node_modules/pdfjs-dist/build/pdf.worker.min.mjs >src/frontend/public/pdf.worker.min.js
+
+ARG GABBY_VERSION
+ENV VITE_OPINION_APP_VERSION=$GABBY_VERSION
+ENV VITE_OPINION_APP_DEFAULT_LOCALE=fr
+ENV GABBY_ENTRY_POINT_NAME=frontend
+# @todo Use NGinx docker-entrypoint.d/20-envsubst-on-templates.sh to update this value at runtime
+ENV VITE_GABBY_UNAVAILABLE_UNTIL=2024-06-20T17:00:00Z
+
+RUN npx vite build
+
+
 FROM frontend-dependencies AS adapted-builder
 
 ADD frontend /app
@@ -45,29 +60,9 @@ RUN set -x \
 
 WORKDIR /app
 
-ADD backend/requirements.opinion.txt /app
+ADD backend/requirements.txt /app
 
-RUN pip install -r requirements.opinion.txt
-
-
-FROM backend-dependencies AS backend-builder
-
-ADD backend /app
-
-ENV DJANGO_SETTINGS_MODULE=opinion.settings.prod
-ENV GABBY_SECRET_KEY=not-a-secret-but-still-quite-long-not-a-secret-but-still-quite-long-not-a-secret-but-still
-ENV GABBY_ALLOWED_HOSTS=not-a-host
-ENV GABBY_DB_NAME=not-a-db
-ENV GABBY_DB_USER=not-a-user
-ENV GABBY_DB_PASSWORD=not-a-password
-ENV GABBY_DB_HOST=not-a-host-either
-ENV GABBY_BACKUP_BUCKET_NAME=not-a-bucket
-ENV GABBY_BACKUP_LOCATION=not-a-location
-ENV GABBY_BACKUP_ACCESS_KEY=not-an-access-key
-ENV GABBY_BACKUP_SECRET_KEY=not-a-secret-key
-
-RUN ./manage.py check --fail-level DEBUG --verbosity 3 --deploy
-RUN ./manage.py collectstatic --noinput
+RUN pip install -r requirements.txt
 
 
 FROM python:3.12-slim AS doc-builder
@@ -90,7 +85,15 @@ RUN rm /etc/nginx/conf.d/default.conf
 RUN rm /usr/share/nginx/html/*.html
 ADD prod/docker/frontend.conf /etc/nginx/conf.d/frontend.conf
 COPY --from=fontend-builder /app/dist /usr/share/nginx/html/frontend
-COPY --from=backend-builder /app/api/static /usr/share/nginx/html/api/static
+COPY --from=doc-builder /app/build /usr/share/nginx/html/doc
+
+
+FROM nginx:alpine AS final-maintenance-frontend
+
+RUN rm /etc/nginx/conf.d/default.conf
+RUN rm /usr/share/nginx/html/*.html
+ADD prod/docker/frontend.conf /etc/nginx/conf.d/frontend.conf
+COPY --from=maintenance-frontend-builder /app/dist /usr/share/nginx/html/frontend
 COPY --from=doc-builder /app/build /usr/share/nginx/html/doc
 
 
@@ -100,5 +103,4 @@ ADD backend /app
 
 COPY --from=adapted-builder /app/dist/index.html /app/textbooks/templates/adapted.html
 
-ENV DJANGO_SETTINGS_MODULE=opinion.settings.prod
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]
+CMD ["uvicorn", "gabby.asgi:app", "--host", "0.0.0.0", "--port", "80"]

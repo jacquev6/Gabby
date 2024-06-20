@@ -3,12 +3,12 @@ import { ref, computed, watch } from 'vue'
 import { computedAsync, useDebouncedRefHistory } from '@vueuse/core'
 import { nextTick } from 'vue'
 
-import { BBusy, BLabeledInput, BLabeledTextarea, BButton, BSelect } from './opinion/bootstrap'
+import { BBusy, BLabeledInput, BLabeledTextarea, BLabeledCheckbox, BButton, BSelect } from './opinion/bootstrap'
 import TextSelectionMenu from './ExerciseFormTextSelectionMenu.vue'
 import OptionalTextarea from './OptionalTextarea.vue'
 import { useApiStore } from '$frontend/stores/api'
-import adaptationOptionsForms from './adaptation-options-forms'
 import type { Project, Textbook, Section, Exercise, AdaptedExercise } from '$frontend/types/api'
+import type { SelectThingsAdaptationOptions, FillWithFreeTextAdaptationOptions, MultipleChoicesInInstructionsAdaptationOptions, MultipleChoicesInWordingAdaptationOptions } from '$frontend/types/api'
 
 
 const props = defineProps<{
@@ -32,7 +32,9 @@ const api = useApiStore()
 
 var extractionEvents: object[] = []
 
-type AdaptationType = '-' | keyof typeof adaptationOptionsForms
+// @todo Automate updating this type when a new adaptation type is added
+type AdaptationType = '-' | 'selectThingsAdaptation' | 'fillWithFreeTextAdaptation' | 'multipleChoicesInInstructionsAdaptation' | 'multipleChoicesInWordingAdaptation'
+const adaptationTypes: AdaptationType[] = ['selectThingsAdaptation', 'fillWithFreeTextAdaptation', 'multipleChoicesInInstructionsAdaptation', 'multipleChoicesInWordingAdaptation']
 
 interface State {
   number: string,
@@ -42,7 +44,10 @@ interface State {
   example: string,
   clue: string,
   adaptationType: AdaptationType,
-  adaptationOptions: {[key: string]: object},
+  selectThingsAdaptationOptions: SelectThingsAdaptationOptions,
+  fillWithFreeTextAdaptationOptions: FillWithFreeTextAdaptationOptions,
+  multipleChoicesInInstructionsAdaptationOptions: MultipleChoicesInInstructionsAdaptationOptions,
+  multipleChoicesInWordingAdaptationOptions: MultipleChoicesInWordingAdaptationOptions,
 }
 
 const state = ref<State>({
@@ -53,7 +58,19 @@ const state = ref<State>({
   example: '',
   clue: '',
   adaptationType: '-',
-  adaptationOptions: {},
+  selectThingsAdaptationOptions: {
+    colors: 1,
+    words: true,
+    punctuation: true,
+  },
+  fillWithFreeTextAdaptationOptions: {
+    placeholder: '...',
+  },
+  multipleChoicesInInstructionsAdaptationOptions: {
+    placeholder: '...',
+  },
+  multipleChoicesInWordingAdaptationOptions: {
+  },
 })
 const needsBoundingRectangle = computed(() => {
   if (props.textbook !== null && props.pdf !== null && !props.editMode) {
@@ -65,21 +82,32 @@ const needsBoundingRectangle = computed(() => {
 type FieldName = 'instructions' | 'wording' | 'example' | 'clue'
 const fieldNamesForReplace: FieldName[] = ['instructions', 'wording', 'example', 'clue']
 
-// const adaptationType = ref<AdaptationType>('-')
-// const adaptationOptions = reactive<{[key: string]: object}>({})
 function resetAdaptationOptions() {
   state.value.adaptationType = '-'
-  state.value.adaptationOptions['-'] = {}
-  for (const [kind, component] of Object.entries(adaptationOptionsForms)) {
-    state.value.adaptationOptions[kind] = Object.assign({}, component.props.modelValue.default)
+  state.value.selectThingsAdaptationOptions = {
+    colors: 1,
+    words: true,
+    punctuation: true,
+  }
+  state.value.fillWithFreeTextAdaptationOptions = {
+    placeholder: '...',
+  }
+  state.value.multipleChoicesInInstructionsAdaptationOptions = {
+    placeholder: '...',
+  }
+  state.value.multipleChoicesInWordingAdaptationOptions = {
   }
 }
 resetAdaptationOptions()
 
-// @todo Make sure 'history.canUndo' remains false when loading an exercise
-// @todo Make sure 'history.canUndo' goes back to false when saving an exercise
-// @todo Make sure 'history.canUndo' goes back to false when skipping an exercise
+// @todo Consider using 'useThrottledRefHistory' instead of 'useDebouncedRefHistory'
 const history = useDebouncedRefHistory(state, {deep: true, debounce: 1000})
+function clearHistory(reset: () => void) {
+  // @todo Prevent the creation of a history state even if a change was done during the previous 1000ms
+  // Currently, the change is buffered for 1000ms, so an history commit can be created after this function returns
+  history.batch(reset)
+  history.clear()
+}
 
 const alreadyExists = computedAsync(
   async () => {
@@ -112,7 +140,10 @@ const alreadyExists = computedAsync(
 watch(
   [() => props.number, () => props.automaticNumber],
   () => {
-    state.value.number = props.number
+    clearHistory(() => {
+      state.value.number = props.number
+    })
+
     if (props.automaticNumber) {
       extractionEvents.push({kind: 'ExerciseNumberSetAutomatically', value: state.value.number})
     }
@@ -123,22 +154,41 @@ watch(
   () => props.exercise,
   () => {
     if (props.exercise !== undefined) {
-      console.assert(props.exercise.attributes !== undefined)
-      console.assert(props.exercise.relationships !== undefined)
+      clearHistory(() => {
+        console.assert(props.exercise !== undefined)
+        console.assert(props.exercise.attributes !== undefined)
+        console.assert(props.exercise.relationships !== undefined)
 
-      state.value.boundingRectangle = props.exercise.attributes.boundingRectangle ?? null
+        state.value.boundingRectangle = props.exercise.attributes.boundingRectangle ?? null
 
-      state.value.instructions = props.exercise.attributes.instructions ?? ''
-      state.value.wording = props.exercise.attributes.wording ?? ''
-      state.value.example = props.exercise.attributes.example ?? ''
-      state.value.clue = props.exercise.attributes.clue ?? ''
+        state.value.instructions = props.exercise.attributes.instructions ?? ''
+        state.value.wording = props.exercise.attributes.wording ?? ''
+        state.value.example = props.exercise.attributes.example ?? ''
+        state.value.clue = props.exercise.attributes.clue ?? ''
 
-      if (props.exercise.relationships.adaptation === null) {
-        state.value.adaptationType = '-'
-      } else {
-        state.value.adaptationType = props.exercise.relationships.adaptation.type as AdaptationType
-        Object.assign(state.value.adaptationOptions[state.value.adaptationType], props.exercise.relationships.adaptation.attributes)
-      }
+        if (props.exercise.relationships.adaptation === null) {
+          state.value.adaptationType = '-'
+        } else {
+          state.value.adaptationType = props.exercise.relationships.adaptation.type as AdaptationType
+          console.assert(state.value.adaptationType !== '-')
+          switch (state.value.adaptationType) {
+            case 'selectThingsAdaptation':
+              Object.assign(state.value.selectThingsAdaptationOptions, props.exercise.relationships.adaptation.attributes)
+              break
+            case 'fillWithFreeTextAdaptation':
+              Object.assign(state.value.fillWithFreeTextAdaptationOptions, props.exercise.relationships.adaptation.attributes)
+              break
+            case 'multipleChoicesInInstructionsAdaptation':
+              Object.assign(state.value.multipleChoicesInInstructionsAdaptationOptions, props.exercise.relationships.adaptation.attributes)
+              break
+            case 'multipleChoicesInWordingAdaptation':
+              Object.assign(state.value.multipleChoicesInWordingAdaptationOptions, props.exercise.relationships.adaptation.attributes)
+              break
+            default:
+              ((_1: never) => console.assert(false))(state.value.adaptationType)
+          }
+        }
+      })
     }
   },
   {immediate: true},
@@ -198,6 +248,7 @@ const textAreas = {
 
 const noClueNoExample = computed(() => !exampleTextArea.value?.expanded && !clueTextArea.value?.expanded)
 
+const settingSelectionRange = ref(false)
 function addTextTo(fieldName: FieldName, text: string) {
   const textArea = textAreas[fieldName].value
   console.assert(textArea !== null)
@@ -210,71 +261,95 @@ function addTextTo(fieldName: FieldName, text: string) {
   state.value[fieldName] += text  // @todo Double-check this is reactive (assigning to a member of a ref)
   nextTick(() => {
     textArea.focus()
+    settingSelectionRange.value = true  // Avoid changing 'selected' when selection doesn't originate from the user
     textArea.setSelectionRange(selectionBegin, selectionEnd)
   })
   extractionEvents.push({kind: `SelectedTextAddedTo${fieldName.charAt(0).toUpperCase()}${fieldName.slice(1)}`, valueBefore, valueAfter: state.value[fieldName]})
 }
 
 function skip() {
-  state.value.boundingRectangle = null
-  extractionEvents = []
-  state.value.number = tryIncrement(state.value.number)
-  state.value.instructions = ''
-  state.value.wording = ''
-  state.value.example = ''
-  state.value.clue = ''
+  clearHistory(() => {
+    state.value.boundingRectangle = null
+    extractionEvents = []
+    state.value.number = tryIncrement(state.value.number)
+    state.value.instructions = ''
+    state.value.wording = ''
+    state.value.example = ''
+    state.value.clue = ''
 
-  resetAdaptationOptions()
-
-  history.clear()
+    resetAdaptationOptions()
+  })
 }
+
+const adaptationOptions = computed(() => {
+  switch (state.value.adaptationType) {
+    case '-':
+      return null
+    case 'selectThingsAdaptation':
+      return state.value.selectThingsAdaptationOptions
+    case 'fillWithFreeTextAdaptation':
+      return state.value.fillWithFreeTextAdaptationOptions
+    case 'multipleChoicesInInstructionsAdaptation':
+      return state.value.multipleChoicesInInstructionsAdaptationOptions
+    case 'multipleChoicesInWordingAdaptation':
+      return state.value.multipleChoicesInWordingAdaptationOptions
+    default:
+      ((_1: never) => console.assert(false))(state.value.adaptationType)
+      return null
+  }
+})
 
 async function create() {
   busy.value = true
 
-  // @todo Use a batch request
-  const exercise = await api.client.post<Exercise>(
-    'exercise',
-    {
-      textbookPage: props.textbookPage,
-      boundingRectangle: state.value.boundingRectangle,
-      number: state.value.number,
-      instructions: state.value.instructions,
-      wording: state.value.wording,
-      example: state.value.example,
-      clue: state.value.clue,
-    },
-    {
-      project: props.project,
-      textbook: props.textbook,
-    },
-  )
+  const operations: any/* @todo Type */[] = [
+    [
+      'add', 'exercise', 'ex',
+      {
+        textbookPage: props.textbookPage,
+        boundingRectangle: state.value.boundingRectangle,
+        number: state.value.number,
+        instructions: state.value.instructions,
+        wording: state.value.wording,
+        example: state.value.example,
+        clue: state.value.clue,
+      },
+      {
+        project: props.project,
+        textbook: props.textbook,
+      },
+    ],
+  ]
   if (state.value.adaptationType !== '-') {
-    await api.client.post(
-      state.value.adaptationType,
-      state.value.adaptationOptions[state.value.adaptationType],
-      {exercise: {type: 'exercise', id: exercise.id}},
-    )
+    console.assert(adaptationOptions.value !== null)
+    operations.push([
+      'add', state.value.adaptationType, null,
+      adaptationOptions.value,
+      {exercise: {type: 'exercise', lid: 'ex'}},
+    ])
   }
   for (const event of extractionEvents) {
-    await api.client.post(
-      'extractionEvent',
+    operations.push([
+      'add', 'extractionEvent', null,
       {event: JSON.stringify(event)},
-      {exercise: {type: 'exercise', id: exercise.id}},
-    )
+      {exercise: {type: 'exercise', lid: 'ex'}},
+    ])
   }
 
-  state.value.boundingRectangle = null
-  extractionEvents = []
-  state.value.number = ''
-  state.value.instructions = ''
-  state.value.wording = ''
-  state.value.example = ''
-  state.value.clue = ''
+  const results = await (api.client.batch as any/* @todo Type */)(...operations)
+  const exercise = results[0]
 
-  resetAdaptationOptions()
+  clearHistory(() => {
+    state.value.boundingRectangle = null
+    extractionEvents = []
+    state.value.number = ''
+    state.value.instructions = ''
+    state.value.wording = ''
+    state.value.example = ''
+    state.value.clue = ''
 
-  history.clear()
+    resetAdaptationOptions()
+  })
 
   busy.value = false
 
@@ -295,7 +370,7 @@ async function save() {
 
   busy.value = true
 
-  // @todo Use a batch request
+  // @todo Use a *single* batch request (when batch requests support 'update' and 'delete' operations)
   await api.client.patch(
     'exercise',
     props.exercise.id,
@@ -313,19 +388,23 @@ async function save() {
       await api.client.delete(props.exercise.relationships.adaptation.type, props.exercise.relationships.adaptation.id)
     }
   } else {
+    console.assert(adaptationOptions.value !== null)
     await api.client.post(
       state.value.adaptationType,
-      state.value.adaptationOptions[state.value.adaptationType],
+      adaptationOptions.value,
       {exercise: {type: 'exercise', id: props.exercise.id}},
     )
   }
+  const operations = []
   for (const event of extractionEvents) {
-    await api.client.post(
-      'extractionEvent',
+    operations.push([
+      'add', 'extractionEvent', null,
       {event: JSON.stringify(event)},
       {exercise: {type: 'exercise', id: props.exercise.id}},
-    )
+    ])
   }
+
+  await (api.client.batch as any/* @todo Type */)(...operations)
 
   extractionEvents = []
 
@@ -345,8 +424,10 @@ const adaptedData = computedAsync(
         textbookPage: props.textbookPage,
         instructions: state.value.instructions,
         wording: state.value.wording,
+        example: state.value.example,
+        clue: state.value.clue,
         type: state.value.adaptationType,
-        adaptationOptions: state.value.adaptationOptions[state.value.adaptationType],
+        adaptationOptions: adaptationOptions.value,
       }
       try {
         const adapted = await api.client.post<AdaptedExercise>('adaptedExercise', attributes, {})
@@ -374,7 +455,10 @@ const selected = ref([null, ''])
 function updateSelected(fieldName: FieldName) {
   const textArea = textAreas[fieldName].value?.textarea
   if (textArea) {
-    selected.value = [fieldName, textArea.value.substring(textArea.selectionStart, textArea.selectionEnd)]
+    if (!settingSelectionRange.value) {
+      selected.value = [fieldName, textArea.value.substring(textArea.selectionStart, textArea.selectionEnd)]
+    }
+    settingSelectionRange.value = false
   }
 }
 
@@ -423,8 +507,8 @@ defineExpose({
   </TextSelectionMenu>
 
   <BBusy :busy>
-    <b-labeled-input :label="$t('exerciseNumber')" v-model="state.number" :disabled="editMode" @change="extractionEvents.push({kind: 'ExerciseNumberSetManually', value: state.number})" />
-    
+    <BLabeledInput :label="$t('exerciseNumber')" v-model="state.number" :disabled="editMode" @change="extractionEvents.push({kind: 'ExerciseNumberSetManually', value: state.number})" />
+
     <div style="position: relative">
       <BLabeledTextarea
         ref="instructionsTextArea"
@@ -463,21 +547,55 @@ defineExpose({
         </div>
       </div>
 
-      <BBusy :busy="adaptedDataLoading">
-        <div class="mb-3">
-          <label class="form-label" for="abc">{{ $t('adaptationType') }}</label>
-            <BSelect
-            id="abc"
-            v-model="state.adaptationType"
-            :options="['-', ...Object.keys(adaptationOptionsForms).map(kind => ({value: kind, label: $t(kind)}))]"
-          />
-        </div>
-        <component
-          v-if="state.adaptationType !== '-'"
-          :is="adaptationOptionsForms[state.adaptationType]"
-          v-model="state.adaptationOptions[state.adaptationType] as any/*Untypeable?*/"
+      <div class="mb-3">
+        <label class="form-label" for="abc">{{ $t('adaptationType') }}</label>
+          <BSelect
+          id="abc"
+          v-model="state.adaptationType"
+          :options="['-', ...adaptationTypes.map(kind => ({value: kind, label: $t(kind)}))]"
         />
-      </BBusy>
+      </div>
+      <template v-if="state.adaptationType === '-'">
+      </template>
+      <template v-else-if="state.adaptationType === 'fillWithFreeTextAdaptation'">
+        <BLabeledInput :label="$t('placeholderText')" type="text" v-model="state.fillWithFreeTextAdaptationOptions.placeholder" />
+      </template>
+      <template v-else-if="state.adaptationType === 'selectThingsAdaptation'">
+        <BLabeledInput :label="$t('colorsCount')" type="number" min="1" v-model="state.selectThingsAdaptationOptions.colors" />
+        <p class="alert alert-secondary" v-if="state.selectThingsAdaptationOptions.colors > 1">
+          <i18n-t keypath="useSel1ToSelN">
+            <template v-slot:first>
+              <code>{sel1|<em>text</em>}</code>
+            </template>
+            <template v-slot:last>
+              <code>{sel{{ state.selectThingsAdaptationOptions.colors }}|<em>text</em>}</code>
+            </template>
+          </i18n-t>
+        </p>
+        <BLabeledCheckbox :label="$t('includePunctuation')" v-model="state.selectThingsAdaptationOptions.punctuation" />
+      </template>
+      <template v-else-if="state.adaptationType === 'multipleChoicesInInstructionsAdaptation'">
+        <p class="alert alert-secondary">
+          <i18n-t keypath="useChoice">
+            <template v-slot:choice>
+              <code>{choice|<em>text</em>}</code>
+            </template>
+          </i18n-t>
+        </p>
+        <BLabeledInput :label="$t('placeholderText')" type="text" v-model="state.multipleChoicesInInstructionsAdaptationOptions.placeholder" />
+      </template>
+      <template v-else-if="state.adaptationType === 'multipleChoicesInWordingAdaptation'">
+        <p class="alert alert-secondary">
+          <i18n-t keypath="useChoices">
+            <template v-slot:choices>
+              <code>{choices|<em>text</em>|<em>text</em>|<em>...</em>}</code>
+            </template>
+          </i18n-t>
+        </p>
+      </template>
+      <template v-else>
+        <span>{{ ((t: never) => t)(state.adaptationType) }}</span>
+      </template>
 
       <div v-if="!editMode && alreadyExists" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8);" class="text-center">
         <div style="position: absolute; left: 25%; top: 25%; width: 50%; height: 50%; background-color: white">

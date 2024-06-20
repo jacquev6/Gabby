@@ -6,6 +6,28 @@
   "close": "Fermer",
 
 
+  "siteUnavailableUntil": "Le site est en maintenance. Fin prévue : {date}.",
+
+
+  "pleaseLogin": "Veuillez vous connecter",
+  "loginButton": "Se connecter",
+  "emailAddress": "Adresse e-mail",
+  "password": "Mot de passe",
+  "logoutButton": "Déconnexion",
+  "loginFailed": "Connexion échouée. Merci de vérifiez vos identifiants.",
+  "lostPasswordQuestion": "Mot de passe perdu ?",
+  "lostPasswordTitle": "Mot de passe perdu",
+  "lostPasswordEmailAddress": "Envoyer un e-mail de récupération à cette adresse",
+  "sendRecoveryMail": "Envoyer",
+  "backFromLostPassword": "Retour",
+  "recoveryMailSubmitted": "e-mail de récupération demandé. Consultez votre boîte de réception.",
+  "resetPasswordTitle": "Réinitialisation du mot de passe",
+  "newPasswordField": "Nouveau mot de passe",
+  "confirmNewPasswordField": "Nouveau mot de passe (confirmation)",
+  "passwordsAreDifferent": "Les mots de passe ne correspondent pas.",
+  "resetPasswordButton": "Réinitialiser le mot de passe",
+
+
   "thisIsABug": "Vous ne devriez pas voir ça ; c'est un bug. Merci de le signaler à Vincent Jacques.",
 
 
@@ -47,7 +69,8 @@
   "adaptationType": "Type d'adaptation",
   "selectThingsAdaptation": "Selection de mots",
   "fillWithFreeTextAdaptation": "Remplissage par texte libre",
-  "multipleChoicesAdaptation": "Choix multiples",
+  "multipleChoicesInInstructionsAdaptation": "Choix multiples (dans la consigne)",
+  "multipleChoicesInWordingAdaptation": "Choix multiples (dans l'énoncé)",
 
 
   "textbookNotFound": "Manuel introuvable",
@@ -82,8 +105,9 @@
 
   "colorsCount": "Nombre de couleurs",
   "includePunctuation": "Sélectionner aussi la ponctuation",
-  "useSel1ToSelN": "Utilisez {first} à {last} dans la consigne pour formatter du texte comme s'il était sélectionné.",
+  "useSel1ToSelN": "Utilisez {first} à {last} dans la consigne, l'example ou l'indice pour formatter du texte comme s'il était sélectionné.",
   "useChoice": "Utilisez {choice} dans la consigne pour indiquer un choix possible.",
+  "useChoices": "Utilisez {choices} dans l'énoncé pour indiquer choix à faire.",
   "placeholderText": "Trou à remplir",
 
   "tools": "Outils",

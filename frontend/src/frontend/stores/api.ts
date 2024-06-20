@@ -1,3 +1,5 @@
+import { computed, ref } from 'vue'
+
 import { defineStore } from 'pinia'
 import _ from 'lodash'
 
@@ -85,6 +87,10 @@ export function defineApiStore(name: string, options?: {baseUrl?: string}) {
       _items: {} as {[type: string]: {[id: string]: ItemInCache}},
       _lists: {} as {[url: Url]: ItemListInCache},
       _baseUrl: (options && options.baseUrl) || '/api/',
+      _authentication: null as null | {
+        header: string,
+        validUntil: Date | null,
+      }
     }),
     getters: {},
     actions: {
@@ -224,7 +230,11 @@ export function defineApiStore(name: string, options?: {baseUrl?: string}) {
       },
       async _request(method: 'POST' | 'GET' | 'PATCH' | 'DELETE', url: Url, json_body?: object) {
         const body = json_body ? JSON.stringify(json_body) : null
-        const raw_response = await fetch(url, {method, headers: {'Content-Type': 'application/vnd.api+json'}, body})
+        const headers: {[name: string]: string} = {'Content-Type': 'application/vnd.api+json'}
+        if (this._authentication !== null) {
+          headers['Authorization'] = this._authentication.header
+        }
+        const raw_response = await fetch(url, {method, headers, body})
         const json_response = raw_response.headers.get('Content-Type') == 'application/vnd.api+json' ? await raw_response.json() : null
         if (raw_response.ok) {
           if (json_response) {
@@ -260,6 +270,72 @@ export function defineApiStore(name: string, options?: {baseUrl?: string}) {
 
   return function() {
     const cache = useCache()
+
+    const expiresSoon = ref(false)
+    let expiresSoonTimeout: ReturnType<typeof setTimeout> | null = null
+    const defaultExpiresSoonMargin = 15 * 60 * 1000
+    let logoutTimeout: ReturnType<typeof setTimeout> | null = null
+    const defaultLogoutMargin = 5 * 60 * 1000
+
+    const auth = {
+      isAuthenticated: computed(() => cache._authentication !== null),
+      expiresSoon,
+      async login(
+        username: string,
+        password: string,
+        options = {
+          validity: null as null | string,
+          expiresSoonMargin: defaultExpiresSoonMargin,
+          logoutMargin: defaultLogoutMargin,
+        },
+      ) {
+        const body = new FormData()
+        body.append('username', username)
+        body.append('password', password)
+        if (options.validity !== null) {
+          body.append('options', JSON.stringify({validity: options.validity}))
+        }
+        const response = await fetch(cache._makeUrl('token'), {method: 'POST', body})
+        if (response.ok) {
+          const json_response = await response.json()
+          this._setAuth(json_response.access_token, new Date(json_response.valid_until), options.expiresSoonMargin, options.logoutMargin)
+          return true
+        } else {
+          this.logout()
+          return false
+        }
+      },
+      _setAuth(accessToken: string, validUntil: Date, expiresSoonMargin: number, logoutMargin: number) {
+        cache._authentication = {header: 'Bearer ' + accessToken, validUntil}
+        localStorage.setItem('auth-v1', JSON.stringify({accessToken, validUntil}))
+        expiresSoon.value = false
+        if (expiresSoonTimeout !== null) {
+          clearTimeout(expiresSoonTimeout)
+        }
+        if (logoutTimeout !== null) {
+          clearTimeout(logoutTimeout)
+        }
+        const validFor = (validUntil.getTime() - Date.now())
+        expiresSoonTimeout = setTimeout(() => { expiresSoon.value = true }, validFor - expiresSoonMargin)
+        logoutTimeout = setTimeout(() => { this.logout() }, validFor - logoutMargin)
+      },
+      setToken(accessToken: string) {
+        cache._authentication = {header: 'Bearer ' + accessToken, validUntil: new Date(0)}
+      },
+      logout() {
+        cache._authentication = null
+        localStorage.removeItem('auth-v1')
+        // Clear cache to avoid accessing data got while logged-in
+        cache._items = {}
+        cache._lists = {}
+      },
+    }
+
+    const stored = localStorage.getItem('auth-v1')
+    if (stored !== null) {
+      const {accessToken, validUntil} = JSON.parse(stored)
+      auth._setAuth(accessToken, new Date(validUntil), defaultExpiresSoonMargin, defaultLogoutMargin)
+    }
 
     const client = {
       async getAll<ItemType extends GenericItem=GenericItem>(path: string, options?: Options) {
@@ -320,7 +396,11 @@ export function defineApiStore(name: string, options?: {baseUrl?: string}) {
         }
 
         const json_body = {'atomic:operations': operations}
-        const raw_response = await fetch(url, {method: 'POST', headers: {'Content-Type': 'application/vnd.api+json'}, body: JSON.stringify(json_body)})
+        const headers: {[name: string]: string} = {'Content-Type': 'application/vnd.api+json'}
+        if (cache._authentication !== null) {
+          headers['Authorization'] = cache._authentication.header
+        }
+        const raw_response = await fetch(url, {method: 'POST', headers, body: JSON.stringify(json_body)})
         const json_response = raw_response.headers.get('Content-Type') == 'application/vnd.api+json' ? await raw_response.json() : null
         if (raw_response.ok) {
           const results = []
@@ -346,7 +426,7 @@ export function defineApiStore(name: string, options?: {baseUrl?: string}) {
       // @todo api.auto.getOne
     }
 
-    return {cache, client, auto}
+    return {auth, cache, client, auto}
   }
 }
 

@@ -11,10 +11,12 @@ describe('ApiStore', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
     cy.request('POST', 'http://fanout:8080/reset-for-tests/yes-im-sure?fixtures=test-exercises')
+    const api = useApiStore()
+    api.auth.login('admin', 'password')
   })
 
   after(() => {
-    cy.request('POST', 'http://fanout:8080/reset-for-tests/yes-im-sure?fixtures=test-exercises,more-test-exercises')
+    cy.request('POST', 'http://fanout:8080/reset-for-tests/yes-im-sure?fixtures=more-test-exercises')
   })
 
   it('gets all textbooks and sections', async () => {
@@ -215,11 +217,13 @@ describe('ApiStore', () => {
 
   beforeEach(() => {
     setActivePinia(createPinia())
-    cy.request('POST', 'http://fanout:8080/reset-for-tests/yes-im-sure?fixtures=test-exercises,more-test-exercises')
+    cy.request('POST', 'http://fanout:8080/reset-for-tests/yes-im-sure?fixtures=more-test-exercises')
+    const api = useApiStore()
+    api.auth.login('admin', 'password')
   })
 
   after(() => {
-    cy.request('POST', 'http://fanout:8080/reset-for-tests/yes-im-sure?fixtures=test-exercises,more-test-exercises')
+    cy.request('POST', 'http://fanout:8080/reset-for-tests/yes-im-sure?fixtures=more-test-exercises')
   })
 
   it('gets an exercise without an adaptation', async () => {

@@ -1,14 +1,26 @@
+function login() {
+  cy.get('select').last().select('en')
+  cy.get('h1:contains("Please log in")').should('exist')
+  cy.get('[name=username]').type('admin')  // This often leaves the field with just the few characters, e.g. 'adm'. I can't figure out why; probably some race condition.
+  cy.get('[name=password]').type('password')
+  cy.get('[name=username]').type('{selectall}admin')  // This is a workaround for the above issue.
+  cy.get('[name=username]').should('have.value', 'admin')
+  cy.get('button:contains("Log in")').click()
+  cy.get('h1:contains("Please log in")').should('not.exist')
+}
+
 describe('Gabby', () => {
   before(console.clear)
 
   after(() => {
-    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises,more-test-exercises')
+    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=admin-user,more-test-exercises')
   })
 
   it('performs extraction from scratch', () => {
-    cy.request('POST', '/reset-for-tests/yes-im-sure')
+    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=admin-user')
 
     cy.visit('/')
+    login()
     cy.get('select').select('fr')
     cy.get('select').blur()
     cy.get('div.busy').should('not.exist')
@@ -74,9 +86,10 @@ describe('Gabby', () => {
   it('loads existing data', () => {
     cy.viewport(1000, 1000)
 
-    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-exercises')
+    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=admin-user,test-exercises')
 
     cy.visit('/')
+    login()
     cy.get('select').select('fr')
     cy.get('select').blur()
     cy.get('div.busy').should('not.exist')
@@ -135,10 +148,8 @@ describe('Gabby', () => {
     cy.screenshot('project-textbook-page-exercise/tools', {clip: {x: 560, y: 0, width: 210, height: 500}})
 
     cy.get('label:contains("Type d\'adaptation")').next().select('selectThingsAdaptation')
+    cy.get('div.busy').should('exist')  // This may fail (race condition) but is required because the 'div.busy' is not displayed quickly enough.
     cy.get('div.busy').should('not.exist')
     cy.screenshot('project-textbook-page-exercise/project-textbook-page-exercise', {clip: {x: 0, y: 0, width: 1000, height: 330}})
-
-    cy.get('a:contains("Annuler")').click()
-    cy.get('div.busy').should('not.exist')
   })
 })

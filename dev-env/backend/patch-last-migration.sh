@@ -6,20 +6,17 @@ set -o pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
 
-docker compose exec backend-shell ./manage.py migrate textbooks zero
-docker compose exec backend-shell ./manage.py migrate opinion_ping zero
+rev_id_arg=
+if [ -e ../../backend/gabby/migrations/versions/*_dev.py ]
+then
+  rev_id_arg="--rev-id $(find ../../backend/gabby/migrations/versions/*_dev.py | sed -E 's#../../backend/gabby/migrations/versions/(.*)_dev\.py#\1#')"
+  docker compose exec --workdir /app/backend/gabby backend-shell alembic downgrade head-1
+  rm -f ../../backend/gabby/migrations/versions/*_dev.py
+else
+  docker compose exec --workdir /app/backend/gabby backend-shell alembic upgrade head
+fi
 
-rm -f ../../backend/textbooks/migrations/0006_*.{py,sql}
-rm -f ../../backend/opinion_ping/migrations/0003_*.{py,sql}
+docker compose exec --workdir /app/backend/gabby backend-shell alembic revision --autogenerate $rev_id_arg -m dev
 
-docker compose exec backend-shell ./manage.py makemigrations
-docker compose exec backend-shell ./manage.py migrate
-docker compose exec backend-shell ./manage.py loaddata test-users test-exercises more-test-exercises
-for app in textbooks opinion_ping
-do
-  docker compose exec backend-shell ./manage.py graph_models $app --disable-sort-fields --rankdir BT --output $app/models.png
-  # for migration in ../../backend/$app/migrations/0*.py
-  # do
-  #   docker compose exec backend-shell ./manage.py sqlmigrate $app $(basename $migration .py) >${migration%.py}.sql
-  # done
-done
+docker compose exec --workdir /app/backend/gabby backend-shell alembic upgrade head
+docker compose exec backend-shell python -m gabby graph-models

@@ -20,13 +20,21 @@ do
   esac
 done
 
+if (cd ..; git grep 'it\.only' -- tests)
+then
+  false
+fi
+
 docker compose exec \
   $console_options \
   frontend-shell \
     npx cypress run \
       --e2e "$@"
 
-find ../doc/user -name '*.png' -delete
-find ../tests/screenshots/gabby.cy.js -name '*.png' | while read line; do
-  cp $line ../doc/user/${line#../tests/screenshots/gabby.cy.js/}
-done
+if [ -d ../tests/screenshots/gabby.cy.js ]
+then
+  find ../doc/user -name '*.png' -delete
+  find ../tests/screenshots/gabby.cy.js -name '*.png' | while read line; do
+    cp $line ../doc/user/${line#../tests/screenshots/gabby.cy.js/}
+  done
+fi

@@ -1,74 +1,6 @@
 {
   "components": {
     "schemas": {
-      "Body_login_token_post": {
-        "properties": {
-          "client_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Client Id"
-          },
-          "client_secret": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Client Secret"
-          },
-          "grant_type": {
-            "anyOf": [
-              {
-                "pattern": "password",
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Grant Type"
-          },
-          "options": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Options"
-          },
-          "password": {
-            "title": "Password",
-            "type": "string"
-          },
-          "scope": {
-            "default": "",
-            "title": "Scope",
-            "type": "string"
-          },
-          "username": {
-            "title": "Username",
-            "type": "string"
-          }
-        },
-        "required": [
-          "username",
-          "password"
-        ],
-        "title": "Body_login_token_post",
-        "type": "object"
-      },
       "HTTPValidationError": {
         "properties": {
           "detail": {
@@ -82,7 +14,7 @@
         "title": "HTTPValidationError",
         "type": "object"
       },
-      "ItemLinksModel": {
+      "ItemLinks": {
         "additionalProperties": false,
         "properties": {
           "self": {
@@ -93,7 +25,7 @@
         "required": [
           "self"
         ],
-        "title": "ItemLinksModel",
+        "title": "ItemLinks",
         "type": "object"
       },
       "ObjectId": {
@@ -165,11 +97,11 @@
         "title": "ValidationError",
         "type": "object"
       },
-      "alphaPoly-ItemOutput": {
+      "alphaPolyItemOutput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/alphaPoly-OutputItem"
+            "$ref": "#/components/schemas/alphaPolyOutputItem"
           },
           "included": {
             "items": {},
@@ -180,10 +112,10 @@
         "required": [
           "data"
         ],
-        "title": "alphaPoly-ItemOutput",
+        "title": "alphaPolyItemOutput",
         "type": "object"
       },
-      "alphaPoly-OutputItem": {
+      "alphaPolyOutputItem": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -191,7 +123,7 @@
             "type": "string"
           },
           "links": {
-            "$ref": "#/components/schemas/ItemLinksModel"
+            "$ref": "#/components/schemas/ItemLinks"
           },
           "type": {
             "title": "Type",
@@ -203,14 +135,14 @@
           "id",
           "links"
         ],
-        "title": "alphaPoly-OutputItem",
+        "title": "alphaPolyOutputItem",
         "type": "object"
       },
-      "bravoPoly-ItemOutput": {
+      "bravoPolyItemOutput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/bravoPoly-OutputItem"
+            "$ref": "#/components/schemas/bravoPolyOutputItem"
           },
           "included": {
             "items": {},
@@ -221,10 +153,10 @@
         "required": [
           "data"
         ],
-        "title": "bravoPoly-ItemOutput",
+        "title": "bravoPolyItemOutput",
         "type": "object"
       },
-      "bravoPoly-OutputItem": {
+      "bravoPolyOutputItem": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -232,7 +164,7 @@
             "type": "string"
           },
           "links": {
-            "$ref": "#/components/schemas/ItemLinksModel"
+            "$ref": "#/components/schemas/ItemLinks"
           },
           "type": {
             "title": "Type",
@@ -244,29 +176,29 @@
           "id",
           "links"
         ],
-        "title": "bravoPoly-OutputItem",
+        "title": "bravoPolyOutputItem",
         "type": "object"
       },
-      "resource-CreateInput": {
+      "resourceCreateInput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/resource-CreateInput-Data"
+            "$ref": "#/components/schemas/resourceCreateInputData"
           }
         },
         "required": [
           "data"
         ],
-        "title": "resource-CreateInput",
+        "title": "resourceCreateInput",
         "type": "object"
       },
-      "resource-CreateInput-Data": {
+      "resourceCreateInputData": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/resource-CreateInput-Data-Attributes"
+                "$ref": "#/components/schemas/resourceCreateInputDataAttributes"
               }
             ],
             "default": {}
@@ -274,7 +206,7 @@
           "relationships": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/resource-CreateInput-Data-Relationships"
+                "$ref": "#/components/schemas/resourceCreateInputDataRelationships"
               }
             ],
             "default": {
@@ -289,16 +221,16 @@
         "required": [
           "type"
         ],
-        "title": "resource-CreateInput-Data",
+        "title": "resourceCreateInputData",
         "type": "object"
       },
-      "resource-CreateInput-Data-Attributes": {
+      "resourceCreateInputDataAttributes": {
         "additionalProperties": false,
         "properties": {},
-        "title": "resource-CreateInput-Data-Attributes",
+        "title": "resourceCreateInputDataAttributes",
         "type": "object"
       },
-      "resource-CreateInput-Data-Relationships": {
+      "resourceCreateInputDataRelationships": {
         "additionalProperties": false,
         "properties": {
           "rel": {
@@ -310,14 +242,14 @@
             "default": {}
           }
         },
-        "title": "resource-CreateInput-Data-Relationships",
+        "title": "resourceCreateInputDataRelationships",
         "type": "object"
       },
-      "resource-ItemOutput": {
+      "resourceItemOutput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/resource-OutputItem"
+            "$ref": "#/components/schemas/resourceOutputItem"
           },
           "included": {
             "items": {},
@@ -328,10 +260,10 @@
         "required": [
           "data"
         ],
-        "title": "resource-ItemOutput",
+        "title": "resourceItemOutput",
         "type": "object"
       },
-      "resource-OutputItem": {
+      "resourceOutputItem": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -339,10 +271,10 @@
             "type": "string"
           },
           "links": {
-            "$ref": "#/components/schemas/ItemLinksModel"
+            "$ref": "#/components/schemas/ItemLinks"
           },
           "relationships": {
-            "$ref": "#/components/schemas/resource-OutputItem-Relationships"
+            "$ref": "#/components/schemas/resourceOutputItemRelationships"
           },
           "type": {
             "title": "Type",
@@ -355,10 +287,10 @@
           "links",
           "relationships"
         ],
-        "title": "resource-OutputItem",
+        "title": "resourceOutputItem",
         "type": "object"
       },
-      "resource-OutputItem-Relationships": {
+      "resourceOutputItemRelationships": {
         "additionalProperties": false,
         "properties": {
           "rel": {
@@ -368,29 +300,29 @@
         "required": [
           "rel"
         ],
-        "title": "resource-OutputItem-Relationships",
+        "title": "resourceOutputItemRelationships",
         "type": "object"
       },
-      "resource-UpdateInput": {
+      "resourceUpdateInput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/resource-UpdateInput-Data"
+            "$ref": "#/components/schemas/resourceUpdateInputData"
           }
         },
         "required": [
           "data"
         ],
-        "title": "resource-UpdateInput",
+        "title": "resourceUpdateInput",
         "type": "object"
       },
-      "resource-UpdateInput-Data": {
+      "resourceUpdateInputData": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/resource-UpdateInput-Data-Attributes"
+                "$ref": "#/components/schemas/resourceUpdateInputDataAttributes"
               }
             ],
             "default": {}
@@ -402,7 +334,7 @@
           "relationships": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/resource-UpdateInput-Data-Relationships"
+                "$ref": "#/components/schemas/resourceUpdateInputDataRelationships"
               }
             ],
             "default": {}
@@ -416,16 +348,16 @@
           "type",
           "id"
         ],
-        "title": "resource-UpdateInput-Data",
+        "title": "resourceUpdateInputData",
         "type": "object"
       },
-      "resource-UpdateInput-Data-Attributes": {
+      "resourceUpdateInputDataAttributes": {
         "additionalProperties": false,
         "properties": {},
-        "title": "resource-UpdateInput-Data-Attributes",
+        "title": "resourceUpdateInputDataAttributes",
         "type": "object"
       },
-      "resource-UpdateInput-Data-Relationships": {
+      "resourceUpdateInputDataRelationships": {
         "additionalProperties": false,
         "properties": {
           "rel": {
@@ -436,7 +368,7 @@
             ]
           }
         },
-        "title": "resource-UpdateInput-Data-Relationships",
+        "title": "resourceUpdateInputDataRelationships",
         "type": "object"
       }
     }
@@ -475,7 +407,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/alphaPoly-ItemOutput"
+                  "$ref": "#/components/schemas/alphaPolyItemOutput"
                 }
               }
             },
@@ -560,7 +492,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/bravoPoly-ItemOutput"
+                  "$ref": "#/components/schemas/bravoPolyItemOutput"
                 }
               }
             },
@@ -598,7 +530,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/resource-CreateInput"
+                "$ref": "#/components/schemas/resourceCreateInput"
               }
             }
           },
@@ -609,7 +541,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/resource-ItemOutput"
+                  "$ref": "#/components/schemas/resourceItemOutput"
                 }
               }
             },
@@ -657,7 +589,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/resource-ItemOutput"
+                  "$ref": "#/components/schemas/resourceItemOutput"
                 }
               }
             },
@@ -702,7 +634,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/resource-UpdateInput"
+                "$ref": "#/components/schemas/resourceUpdateInput"
               }
             }
           },
@@ -713,7 +645,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/resource-ItemOutput"
+                  "$ref": "#/components/schemas/resourceItemOutput"
                 }
               }
             },
@@ -731,42 +663,6 @@
           }
         },
         "summary": "Update Resource"
-      }
-    },
-    "/token": {
-      "post": {
-        "operationId": "login_token_post",
-        "requestBody": {
-          "content": {
-            "application/x-www-form-urlencoded": {
-              "schema": {
-                "$ref": "#/components/schemas/Body_login_token_post"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Login"
       }
     }
   }
