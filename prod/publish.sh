@@ -56,5 +56,5 @@ git push origin main --tags
 # Continue working
 
 git checkout develop
-git merge --ff-only main
+git merge main
 git push origin develop
