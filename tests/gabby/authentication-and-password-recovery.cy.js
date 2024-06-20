@@ -154,6 +154,7 @@ describe('Gabby\'s authentication system', () => {
 
   it('warns about passwords being different', () => {
     cy.visit('/reset-password/jacquev6+gabby-dev-alice@gmail.com/unused-json-web-token')
+    cy.get('select').last().select('en')
 
     cy.get('button:contains("Reset password")').should('be.disabled')
     cy.get('p:contains("Passwords are different.")').should('not.exist')

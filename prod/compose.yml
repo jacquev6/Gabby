@@ -8,6 +8,7 @@ services:
 
   frontend:
     image: jacquev6/gabby:preview-frontend
+    # image: jacquev6/gabby:preview-maintenance-frontend
     pull_policy: never
 
   # Add a line like this in your crontab to replace the 'db-backup' service below:
@@ -44,6 +45,7 @@ services:
     env_file:
       - backend.env
       - secrets.env
+    working_dir: /app/gabby
     command: ["alembic", "upgrade", "head"]
     depends_on:
       db:
