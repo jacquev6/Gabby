@@ -12,7 +12,7 @@ Les améliorations techniques ne figurent que dans le `log git <https://github.c
 Les titres des sections de ce document correspondent au champ ``Gabby version`` dans le "À propos".
 Les versions sont nommées selon leur date de publication, au format ``YYYYMMDD-HHMMSS`` (année, mois, jour, tiret, heure, minute, seconde).
 
-20240620-113033
+20240620-140702
 ---------------
 
 - Il est nécessaire de s'identifier pour accéder à l'application. Attention, à cause d'une limitation technique, il est encore possible pour un utilisateur technicien de voir les données sans s'identifier. Cela sera corrigé dans une prochaine version. Il est cependant impossible de modifier ces données sans être identifié.
