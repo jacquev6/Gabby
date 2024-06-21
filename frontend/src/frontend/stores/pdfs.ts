@@ -9,8 +9,6 @@ import shajs from 'sha.js'
 
 const pdfjs = untypedPdfjs as typeof PdfjsType
 
-// @todo(Bug, now) Fix opening 03581037_nouvel_explorons_int_complet.pdf
-
 type Sha256 = string
 
 interface Info {

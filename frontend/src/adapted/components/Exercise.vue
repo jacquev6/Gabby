@@ -103,7 +103,6 @@ defineExpose({
     <MonocolorSection :paragraphs="exercise.example.paragraphs" :paragraphIndexOffset="0" v-model="models.example" />
     <MonocolorSection :paragraphs="exercise.clue.paragraphs" :paragraphIndexOffset="0" v-model="models.clue" />
     <hr />
-    <!-- @todo Fix models: they are shared on all pagelets -->
     <TricolorSection v-if="settings.tricolorWording" :paragraphs="wordingParagraphs" :paragraphIndexOffset="wordingParagraphIndexOffset" v-model="models.wording" />
     <MonocolorSection v-else :paragraphs="wordingParagraphs" :paragraphIndexOffset="wordingParagraphIndexOffset" v-model="models.wording" />
     <hr />
