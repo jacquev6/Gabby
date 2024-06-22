@@ -1,3 +1,4 @@
+import textwrap
 from typing import Annotated
 import ast
 import contextlib
@@ -9,13 +10,89 @@ from fastapi import Depends, Header
 import fastapi.params
 
 
-# class AstExplorationTestCase(unittest.TestCase):
-#     def test(self):
-#         print(ast.dump(ast.parse(textwrap.dedent("""\
-#             class C:
-#                 def __init__(self, *, a: annotations["a"], b: annotations["b"] = defaults["b"]):
-#                     pass
-#         """)), indent=4))
+def make_wrapper_ast(parameters):
+    from ast import Module, ClassDef, FunctionDef, Load, arguments, arg, Subscript, Name, Constant, Store, Assign, Dict, Attribute, Return, Call, keyword
+
+    module_ast = Module(
+        body=[ClassDef(
+            name="TargetWrapper",
+            bases=[],
+            keywords=[],
+            body=[
+                FunctionDef(
+                    name="__init__",
+                    args=arguments(
+                        posonlyargs=[],
+                        args=[arg(arg="self")],
+                        kwonlyargs=[
+                            arg(arg=name, annotation=Subscript(value=Name(id="annotations", ctx=Load()), slice=Constant(value=name), ctx=Load()))
+                            for name in parameters.keys()
+                        ],
+                        kw_defaults=[
+                            Subscript(value=Name(id="defaults", ctx=Load()), slice=Constant(value=name), ctx=Load()) if has_defaults else None
+                            for (name, has_defaults) in parameters.items()
+                        ],
+                        defaults=[],
+                    ),
+                    body=[
+                        Assign(
+                            targets=[Attribute(value=Name(id="self", ctx=Load()), attr="dependencies", ctx=Store())],
+                            value=Dict(
+                                keys=[Constant(value=name) for name in parameters.keys()],
+                                values=[Name(id=name, ctx=Load()) for name in parameters.keys()],
+                            )
+                        ),
+                    ],
+                    decorator_list=[],
+                    type_params=[],
+                ),
+                FunctionDef(name="__call__", args=arguments(posonlyargs=[], args=[arg(arg="self")], kwonlyargs=[], kw_defaults=[], kwarg=arg(arg="kwds"), defaults=[]), body=[Return(value=Call(func=Name(id="target", ctx=Load()), args=[], keywords=[keyword(value=Name(id="kwds", ctx=Load())), keyword(value=Attribute(value=Name(id="self", ctx=Load()), attr="dependencies", ctx=Load()))]))], decorator_list=[], type_params=[]),
+            ],
+            decorator_list=[],
+            type_params=[],
+        )],
+        type_ignores=[],
+    )
+
+    ast.fix_missing_locations(module_ast)
+
+    return module_ast
+
+
+class MakeWrapperAstTestCase(unittest.TestCase):
+    def do_test(self, parameters, expected):
+        self.assertEqual(
+            ast.unparse(make_wrapper_ast(parameters)),
+            textwrap.dedent(expected.lstrip("\n")).strip(),
+        )
+
+    def test_empty(self):
+        self.do_test(
+            {},
+            """
+            class TargetWrapper:
+
+                def __init__(self):
+                    self.dependencies = {}
+
+                def __call__(self, **kwds):
+                    return target(**kwds, **self.dependencies)
+            """,
+        )
+
+    def test_mixed(self):
+        self.do_test(
+            {"a": False, "b": True, "c": True},
+            """
+            class TargetWrapper:
+
+                def __init__(self, *, a: annotations['a'], b: annotations['b']=defaults['b'], c: annotations['c']=defaults['c']):
+                    self.dependencies = {'a': a, 'b': b, 'c': c}
+
+                def __call__(self, **kwds):
+                    return target(**kwds, **self.dependencies)
+            """,
+        )
 
 
 def extract_dependencies(target):
@@ -24,7 +101,7 @@ def extract_dependencies(target):
     annotations = {
         name: parameter.annotation
         for (name, parameter) in signature.parameters.items()
-        if 
+        if
             isinstance(parameter.annotation, typing._AnnotatedAlias)
             and
             any(
@@ -39,49 +116,8 @@ def extract_dependencies(target):
         if parameter.default is not inspect.Parameter.empty
     }
 
-    from ast import Module, ClassDef, FunctionDef, Load, arguments, arg, Subscript, Name, Constant, Store, Assign, Dict, Attribute, Return, Call, keyword
 
-    wrapper_ast = Module(
-        body=[ClassDef(
-            name="TargetWrapper",
-            bases=[],
-            keywords=[],
-            body=[
-                FunctionDef(
-                    name="__init__",
-                    args=arguments(
-                        posonlyargs=[],
-                        args=[arg(arg="self")],
-                        kwonlyargs=[
-                            arg(arg=name, annotation=Subscript(value=Name(id="annotations", ctx=Load()), slice=Constant(value=name), ctx=Load()))
-                            for name in annotations
-                        ],
-                        kw_defaults=[
-                            Subscript(value=Name(id="defaults", ctx=Load()), slice=Constant(value=name), ctx=Load()) if name in defaults else None
-                            for name in annotations
-                        ],
-                        defaults=[],
-                    ),
-                    body=[
-                        Assign(
-                            targets=[Attribute(value=Name(id="self", ctx=Load()), attr="dependencies", ctx=Store())],
-                            value=Dict(
-                                keys=[Constant(value=name) for name in annotations],
-                                values=[Name(id=name, ctx=Load()) for name in annotations],
-                            )
-                        ),
-                    ],
-                    decorator_list=[],
-                    type_params=[],
-                ),
-                FunctionDef(name="__call__", args=arguments(posonlyargs=[], args=[arg(arg="self")], kwonlyargs=[], kw_defaults=[], kwarg=arg(arg="kwds"), defaults=[]), body=[Return(value=Call(func=Name(id="target", ctx=Load()), args=[], keywords=[keyword(value=Name(id="kwds", ctx=Load())), keyword(value=Attribute(value=Name(id="self", ctx=Load()), attr="dependencies", ctx=Load()))]))], decorator_list=[], type_params=[]),
-            ],
-            decorator_list=[],
-            type_params=[],
-        )],
-        type_ignores=[],
-    )
-    ast.fix_missing_locations(wrapper_ast)
+    wrapper_ast = make_wrapper_ast({name: name in defaults for name in annotations})
 
     # print(ast.unparse(wrapper_ast))
 
