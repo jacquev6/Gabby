@@ -9,6 +9,7 @@ from starlette import status
 import humps
 
 from .annotations import Annotations
+from .dependencies_extraction import extract_dependencies
 from .utils import Urls
 from .models import Decider, make_create_input_model, make_filters_dependable, make_output_models, make_update_input_model
 
@@ -61,16 +62,28 @@ class CompiledResource:
         self.pluralName = humps.camelize(resource.plural_name)
 
         self.Model = resource.Model
-        # @todo Generate the following attributes:
-        # Let client code have a plain 'get_item' function accepting an 'id' and any FastAPI dependables,
-        # and extract dependables by 'inspect'ing it. The create a dynamyc 'ItemGetter', taking dependables
-        # in its constructor and calling 'get_item' with them and the 'id'.
-        # Same for 'get_page', 'create_item', 'save_item' and 'delete_item'.
-        self.ItemCreator = getattr(resource, "ItemCreator", None)
-        self.ItemGetter = getattr(resource, "ItemGetter", None)
-        self.PageGetter = getattr(resource, "PageGetter", None)
-        self.ItemSaver = getattr(resource, "ItemSaver", None)
-        self.ItemDeleter = getattr(resource, "ItemDeleter", None)
+
+        # @todo remove these 'else' branches: they were kept only to ease the transition to the new style
+        if hasattr(resource, "create_item"):
+            self.ItemCreator = extract_dependencies(resource.create_item)
+        else:
+            self.ItemCreator = getattr(resource, "ItemCreator", None)
+        if hasattr(resource, "get_item"):
+            self.ItemGetter = extract_dependencies(resource.get_item)
+        else:
+            self.ItemGetter = getattr(resource, "ItemGetter", None)
+        if hasattr(resource, "get_page"):
+            self.PageGetter = extract_dependencies(resource.get_page)
+        else:
+            self.PageGetter = getattr(resource, "PageGetter", None)
+        if hasattr(resource, "save_item"):
+            self.ItemSaver = extract_dependencies(resource.save_item)
+        else:
+            self.ItemSaver = getattr(resource, "ItemSaver", None)
+        if hasattr(resource, "delete_item"):
+            self.ItemDeleter = extract_dependencies(resource.delete_item)
+        else:
+            self.ItemDeleter = getattr(resource, "ItemDeleter", None)
 
         self.default_page_size = resource.default_page_size
 
@@ -287,7 +300,7 @@ def add_resource_routes(resources, resource, router):
             # @todo Allow explicit ascending sorting with a prefix plus sign
             parsed_sort = None if sort is None else [humps.decamelize(part) for part in sort.split(",")]
             # @todo Pass parsed 'include' to allow pre-fetching
-            (items_count, items) = get_page(parsed_sort, filters, (page_number - 1) * page_size, page_size)
+            (items_count, items) = get_page(sort=parsed_sort, filters=filters, first_index=(page_number - 1) * page_size, page_size=page_size)
             assert len(items) <= page_size
             return resource.make_page_response(
                 resources,
@@ -317,7 +330,7 @@ def add_resource_routes(resources, resource, router):
             include: str = None,
         ):
             # @todo Pass parsed 'include' to allow pre-fetching
-            item = get_item(id)
+            item = get_item(id=id)
             if item:
                 return resource.make_item_response(resources, urls=urls, item=item, include=parse_include(include))
             else:
@@ -340,13 +353,13 @@ def add_resource_routes(resources, resource, router):
             include: str = None,
         ):
             # @todo Pass parsed 'include' to allow pre-fetching
-            item = get_item(id)
+            item = get_item(id=id)
             if item:
                 class NothingToSave(Exception):
                     pass
 
                 try:
-                    with save_item(item):
+                    with save_item(item=item):
                         needs_save = False
                         for (key, value) in dict(payload.data.attributes).items():
                             if key in payload.data.attributes.model_fields_set:
@@ -382,9 +395,9 @@ def add_resource_routes(resources, resource, router):
             delete_item: Annotated[resource.ItemDeleter, Depends()],
             id: str,
         ):
-            item = get_item(id)
+            item = get_item(id=id)
             if item:
-                delete_item(item)
+                delete_item(item=item)
             else:
                 raise HTTPException(status_code=404, detail="Item not found")
 

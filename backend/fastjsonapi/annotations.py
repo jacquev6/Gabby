@@ -33,6 +33,7 @@ class Secret(Annotation):
         annotations.output = False
 
 
+# @todo Remove this annotation. Filters should be defined as dependencies on 'get_page'.
 class Filterable(Annotation):
     def apply(self, annotations : Annotations):
         annotations.filter = True

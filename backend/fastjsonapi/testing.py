@@ -56,6 +56,9 @@ class ApiTestCase(unittest.TestCase):
 
 class ItemsFactory:
     def __init__(self):
+        self.clear()
+
+    def clear(self):
         self.__next_id = 1
         self.__items = {}
         self.commits_count = 0

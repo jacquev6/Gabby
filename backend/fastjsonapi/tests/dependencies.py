@@ -1,24 +1,33 @@
 from typing import Annotated
 import dataclasses
 
-from fastapi import Header
+from fastapi import Depends, Header, Query
 from pydantic import BaseModel
 from starlette import status
 
 from ..testing import ApiTestCase
 
 
+
+def make_foo():
+    return "FOO"
+
+
 class Model(BaseModel):
-    foo: str | None
-    host: str | None
+    foo: str
+    bar: str
+    host: str
+    optional: str | None
 
 
 @dataclasses.dataclass
 class Item:
     id: str
 
-    foo: str | None
-    host: str | None
+    foo: str
+    bar: str
+    host: str
+    optional: str | None
 
 
 class Resource:
@@ -29,28 +38,24 @@ class Resource:
 
     Model = Model
 
-    class ItemGetter:
-        def __init__(
-            self,
-            foo: str | None = None,
-            host: Annotated[str | None, Header()] = None
-        ):
-            self.foo = foo
-            self.host = host
+    def __init__(self, bar: str):
+        self.bar = bar
 
-        def __call__(self, id: str):
-            return Item(
-                id=id,
-                foo=self.foo,
-                host=self.host,
-            )
+    def get_item(
+        self,
+        id: str,
+        foo: Annotated[str, Depends(make_foo)],
+        host: Annotated[str, Header()],
+        optional: Annotated[str | None, Query()] = None,
+    ):
+        return Item(id=id, foo=foo, bar=self.bar, host=host, optional=optional)
 
 
 class DependenciesTestCase(ApiTestCase):
-    resources = [Resource()]
+    resources = [Resource("BAR")]
     polymorphism = {}
 
-    def test_get_item__no_foo(self):
+    def test_get_item__without_query(self):
         response = self.get("http://server/resources/1")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
@@ -58,24 +63,28 @@ class DependenciesTestCase(ApiTestCase):
                 "type": "resource",
                 "id": "1",
                 "attributes": {
-                    "foo": None,
+                    "foo": "FOO",
+                    "bar": "BAR",
                     "host": "server",
+                    "optional": None,
                 },
                 "links": {"self": "http://server/resources/1"},
             },
         })
 
-    def test_get_item__some_foo(self):
-        response = self.get("http://blahblah/resources/1?foo=bar")
+    def test_get_item__with_query(self):
+        response = self.get("http://server/resources/1?optional=OPTIONAL")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": {
                 "type": "resource",
                 "id": "1",
                 "attributes": {
-                    "foo": "bar",
-                    "host": "blahblah",
+                    "foo": "FOO",
+                    "bar": "BAR",
+                    "host": "server",
+                    "optional": "OPTIONAL",
                 },
-                "links": {"self": "http://blahblah/resources/1"},
+                "links": {"self": "http://server/resources/1"},
             },
         })
