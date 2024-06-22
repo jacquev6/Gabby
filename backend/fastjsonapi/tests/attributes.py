@@ -10,6 +10,12 @@ from ..annotations import Computed, Constant, Filterable, Secret
 from ..testing import ApiTestCase, ItemsFactory
 
 
+# @todo Split these test cases: make one for each kind of attribute:
+# - each of the existing in 'AtomicAttributesTestCase.Resource.Model'
+# - int | None, without default
+# @todo Add tests for each (relevant) combination of presence/absence of 'create_item', 'get_item', 'get_page', 'save_item', 'delete_item'
+
+
 class AtomicAttributesTestCase(ApiTestCase):
     class Resource:
         singular_name = "resource"

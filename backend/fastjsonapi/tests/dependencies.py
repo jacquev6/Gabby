@@ -85,6 +85,7 @@ class DependenciesTestCase(ApiTestCase):
                     "host": "server",
                     "optional": "OPTIONAL",
                 },
+                # @todo Add '?optional=OPTIONAL' to the 'self' link
                 "links": {"self": "http://server/resources/1"},
             },
         })
