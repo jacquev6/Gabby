@@ -1,6 +1,7 @@
 # from __future__ import annotations  # This doesn't work because we're annotating with local types. So this code won't work on Python 4. OK.
 from typing import Annotated, Type
 from urllib.parse import urlencode, parse_qs
+import itertools
 import unittest
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Response
@@ -97,15 +98,15 @@ class CompiledResource:
 
             if decider.is_mandatory_relationship(info.annotation):
                 if annotations.output:
-                    self.output_relationships[name] = (False, decider.get_monomorphic_name(info.annotation))
+                    self.output_relationships[name] = (False, decider.get_polymorphic_names(info.annotation))
             elif decider.is_optional_relationship(info.annotation):
                 assert info.default is None
                 if annotations.output:
-                    self.output_relationships[name] = (False, decider.get_monomorphic_name(info.annotation))
+                    self.output_relationships[name] = (False, decider.get_polymorphic_names(info.annotation))
             elif decider.is_list_relationship(info.annotation):
                 assert info.default == []
                 if annotations.output:
-                    self.output_relationships[name] = (True, decider.get_monomorphic_name(info.annotation))
+                    self.output_relationships[name] = (True, decider.get_polymorphic_names(info.annotation))
             else:
                 if annotations.output:
                     self.output_attributes.append(name)
@@ -172,9 +173,11 @@ class CompiledResource:
             r["attributes"] = attributes
         if self.output_relationships:
             relationships = {}
-            for (key, (is_list, resource_name)) in self.output_relationships.items():
+            for (key, (is_list, resource_names)) in self.output_relationships.items():
                 attr = getattr(item, humps.decamelize(key))
                 if is_list:
+                    assert len(resource_names) == 1
+                    resource_name = resource_names[0]
                     data = [{"type": resource_name, "id": rel.id} for rel in attr]
                     relationship = {
                         "data": data,
@@ -183,7 +186,9 @@ class CompiledResource:
                 elif attr is None:
                     relationship = {"data": None}
                 else:
-                    if resource_name is None:
+                    if len(resource_names) == 1:
+                        resource_name = resource_names[0]
+                    else:
                         resource_name = self.polymorphism[type(attr)]
                     relationship = {"data": {"type": resource_name, "id": attr.id}}
                 relationships[key] = relationship
@@ -199,15 +204,19 @@ class CompiledResource:
         def recurse(resource, item, include):
             for (name, nested_include) in include.items():
                 attr = getattr(item, humps.decamelize(name))
-                (is_list, resource_name) = resource.output_relationships[name]
+                (is_list, resource_names) = resource.output_relationships[name]
                 if is_list:
+                    assert len(resource_names) == 1
+                    resource_name = resource_names[0]
                     # @todo Add test showing that this variable ('nested_resource') cannot be named 'resource' (bug fixed using tests from Gabby, deserves test in fastjsonapi)
                     nested_resource = resources[resource_name]
                     for incl in attr:
                         included[(resource_name, incl.id)] = nested_resource.make_item(resources, urls=urls, item=incl)
                         recurse(nested_resource, incl, nested_include)
                 elif attr is not None:
-                    if resource_name is None:
+                    if len(resource_names) == 1:
+                        resource_name = resource_names[0]
+                    else:
                         resource_name = self.polymorphism[type(attr)]
                     # @todo Add test showing that this variable ('nested_resource') cannot be named 'resource' (bug fixed using tests from Gabby, deserves test in fastjsonapi)
                     nested_resource = resources[resource_name]
@@ -222,15 +231,16 @@ class CompiledResource:
 
 
 def add_resource_routes(resources, resource, router):
-    # @todo Keep things structured all they way (avoid generating textual code)
+    related_resources = set(itertools.chain.from_iterable(resource_names for (is_list, resource_names) in resource.output_relationships.values()))
+    # @todo Keep things structured all the way (avoid generating textual code)
     # See... my old answer here: https://stackoverflow.com/a/29927459/905845
     def make_related_getters_code():
         yield "def make_related_getters("
-        for name in resources.keys():
+        for name in related_resources:
             yield f'    {name}: Annotated[resources["{name}"].ItemGetter, Depends()],'
         yield "):"
         yield "    return {"
-        for name in resources.keys():
+        for name in related_resources:
             yield f'        "{name}": {name},'
         yield "    }"
     exec("\n".join(make_related_getters_code()), {"resources": resources}, make_related_getters_globals := {"Annotated": Annotated, "Depends": Depends})

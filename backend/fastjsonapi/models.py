@@ -90,12 +90,15 @@ class Decider:
     def is_list_relationship(self, annotation):
         return annotation in self.__list_resource_models
 
-    def get_monomorphic_name(self, annotation):
-        return (
-            self.__resource_models.get(annotation)
-            or self.__optional_resource_models.get(annotation)
-            or self.__list_resource_models.get(annotation)
-        )
+    def get_polymorphic_names(self, annotation):
+        if self.is_mandatory_relationship(annotation):
+            return [self.__resource_models[annotation]]
+        elif self.is_optional_relationship(annotation):
+            return [self.__resource_models[arg] for arg in annotation.__args__ if arg in self.__resource_models]
+        elif self.is_list_relationship(annotation):
+            return [self.__list_resource_models[annotation]]
+        else:
+            return []
 
     def is_attribute(self, annotation):
         return not (

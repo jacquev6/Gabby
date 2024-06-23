@@ -259,3 +259,99 @@ class DependenciesApiTestCase(ApiTestCase):
                 "links": {"self": "http://server/resources/1"},
             },
         })
+
+
+class UsedModel(BaseModel):
+    bar: str
+
+class ResourceModel(BaseModel):
+    used: UsedModel
+
+class DontInstantiateUnnecessaryDependenciesApiTestCase(ApiTestCase):
+    class UnusedResource:
+        singular_name = "unused_resource"
+        plural_name = "unused_resources"
+
+        default_page_size = 2
+
+        class Model(BaseModel):
+            foo: str
+
+        @dataclasses.dataclass
+        class Item:
+            id: str
+            foo: str
+
+        def get_item(self, id, foo: Annotated[str, Query()]):
+            return self.Item(id=id, foo=foo)
+
+    class UsedResource:
+        singular_name = "used_resource"
+        plural_name = "used_resources"
+
+        default_page_size = 2
+
+        Model = UsedModel
+
+        @dataclasses.dataclass
+        class Item:
+            id: str
+            bar: str
+
+        def get_item(self, id, bar: Annotated[str, Query()]):
+            return self.Item(id=id, bar=bar)
+
+    class Resource:
+        singular_name = "resource"
+        plural_name = "resources"
+
+        default_page_size = 2
+
+        Model = ResourceModel
+
+        @dataclasses.dataclass
+        class Item:
+            id: str
+            used: 'DontInstantiateUnnecessaryDependenciesApiTestCase.UsedResource.Item'
+
+        def get_item(self, id):
+            return None
+
+        def create_item(self, used):
+            return self.Item(id="1", used=used)
+
+    resources = [Resource(), UsedResource(), UnusedResource()]
+    # There was a detail in the implementation that instantiated all polymorphic 'ItemGetters'.
+    # In this test, we check that the 'ItemGetter' for 'UnusedResource' is not instantiated.
+    polymorphism = {UnusedResource.Item: "unused_resource"}
+
+    def test_create_item(self):
+        # This would previously fail with:
+        #    'type': 'missing', 'loc': ['query', 'foo'], 'msg': 'Field required'
+        # because all 'ItemGetters' were instantiated as dependencies of the 'create_item' route.
+        payload = {"data": {
+            "type": "resource",
+            "relationships": {
+                "used": {"data": {"type": "usedResource", "id": "u"}},
+            },
+        }}
+        response = self.post("http://server/resources?bar=BAR&include=used", payload)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
+        self.assertEqual(response.json(), {
+            "data": {
+                "type": "resource",
+                "id": "1",
+                "relationships": {
+                    "used": {"data": {"type": "usedResource", "id": "u"}},
+                },
+                "links": {"self": "http://server/resources/1"},
+            },
+            "included": [
+                {
+                    "type": "usedResource",
+                    "id": "u",
+                    "attributes": {"bar": "BAR"},
+                    "links": {"self": "http://server/usedResources/u"},
+                }
+            ],
+        })
