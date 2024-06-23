@@ -6,7 +6,7 @@ import unittest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from .router import make_jsonapi_router
+from . import router
 
 
 class ApiTestCase(unittest.TestCase):
@@ -18,7 +18,7 @@ class ApiTestCase(unittest.TestCase):
 
         if hasattr(cls, "resources"):
             cls.__app = FastAPI()
-            cls.__app.include_router(make_jsonapi_router(cls.resources, cls.polymorphism))
+            cls.__app.include_router(router.make_jsonapi_router(cls.resources, cls.polymorphism))
 
             cls.__schema_file_path = f"{inspect.getfile(cls)}.{cls.__name__}.openapi.json"
             cls.__client = TestClient(cls.__app)

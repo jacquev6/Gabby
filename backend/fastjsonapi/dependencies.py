@@ -1,3 +1,4 @@
+import dataclasses
 import textwrap
 from typing import Annotated
 import ast
@@ -6,8 +7,12 @@ import inspect
 import typing
 import unittest
 
-from fastapi import Depends, Header
+from fastapi import Depends, Header, Query
 import fastapi.params
+from pydantic import BaseModel
+from starlette import status
+
+from .testing import ApiTestCase
 
 
 def make_wrapper_ast(parameters):
@@ -182,3 +187,76 @@ class ExtractDependenciesTestCase(unittest.TestCase):
         with extract_dependencies(f)()() as n:
             pass
         self.assertEqual(n, 42)
+
+
+class DependenciesTestCase(ApiTestCase):
+    class Resource:
+        singular_name = "resource"
+        plural_name = "resources"
+
+        default_page_size = 2
+
+        class Model(BaseModel):
+            foo: str
+            bar: str
+            host: str
+            optional: str | None
+
+        @dataclasses.dataclass
+        class Item:
+            id: str
+
+            foo: str
+            bar: str
+            host: str
+            optional: str | None
+
+        def __init__(self, bar: str):
+            self.bar = bar
+
+        def get_item(
+            self,
+            id: str,
+            foo: Annotated[str, Depends(lambda: "FOO")],
+            host: Annotated[str, Header()],
+            optional: Annotated[str | None, Query()] = None,
+        ):
+            return self.Item(id=id, foo=foo, bar=self.bar, host=host, optional=optional)
+
+    resources = [Resource("BAR")]
+    polymorphism = {}
+
+    def test_get_item__without_query(self):
+        response = self.get("http://server/resources/1")
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
+        self.assertEqual(response.json(), {
+            "data": {
+                "type": "resource",
+                "id": "1",
+                "attributes": {
+                    "foo": "FOO",
+                    "bar": "BAR",
+                    "host": "server",
+                    "optional": None,
+                },
+                "links": {"self": "http://server/resources/1"},
+            },
+        })
+
+    def test_get_item__with_query(self):
+        response = self.get("http://server/resources/1?optional=OPTIONAL")
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
+        self.assertEqual(response.json(), {
+            "data": {
+                "type": "resource",
+                "id": "1",
+                "attributes": {
+                    "foo": "FOO",
+                    "bar": "BAR",
+                    "host": "server",
+                    "optional": "OPTIONAL",
+                },
+                # @todo Add '?optional=OPTIONAL' to the 'self' link
+                "links": {"self": "http://server/resources/1"},
+            },
+        })
