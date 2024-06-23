@@ -182,7 +182,3 @@ class ExtractDependenciesTestCase(unittest.TestCase):
         with extract_dependencies(f)()() as n:
             pass
         self.assertEqual(n, 42)
-
-
-if __name__ == "__main__":
-    unittest.main()
