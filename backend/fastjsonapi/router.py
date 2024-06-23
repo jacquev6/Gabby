@@ -249,7 +249,7 @@ def add_resource_routes(resources, resource, router):
             create_item: Annotated[resource.ItemCreator, Depends()],
             get_related_item: Annotated[dict, Depends(make_related_getters)],
             payload: resource.CreateInputModel,
-            include: str = None
+            include: str = None,
         ):
             attributes = {
                 humps.decamelize(key) : value
