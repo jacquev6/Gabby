@@ -224,7 +224,6 @@ class DependenciesApiTestCase(ApiTestCase):
             return self.Item(id=id, foo=foo, bar=self.bar, host=host, optional=optional)
 
     resources = [Resource("BAR")]
-    polymorphism = {}
 
     def test_get_item__without_query(self):
         response = self.get("http://server/resources/1")

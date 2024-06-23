@@ -76,7 +76,6 @@ class AtomicAttributesTestCase(ApiTestCase):
 
     factory = ItemsFactory()
     resources = [Resource(factory)]
-    polymorphism = {}
 
     def setUp(self):
         super().setUp()
@@ -830,7 +829,6 @@ class CompoundAttributesTestCase(ApiTestCase):
 
     factory = ItemsFactory()
     resources = [Resource(factory)]
-    polymorphism = {}
 
     def setUp(self):
         super().setUp()

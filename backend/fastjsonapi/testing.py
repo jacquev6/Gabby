@@ -12,6 +12,7 @@ from . import router
 class ApiTestCase(unittest.TestCase):
     maxDiff = None
 
+    polymorphism = {}
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

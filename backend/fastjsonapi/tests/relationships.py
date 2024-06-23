@@ -114,7 +114,6 @@ class RelationshipsTestCase(ApiTestCase):
     factory = ItemsFactory()
     # @todo Shuffle the resources to test their order doesn't matter
     resources = [TopResource(factory), LeftResource(factory), RightResource(factory)]
-    polymorphism = {}
 
     def setUp(self):
         super().setUp()

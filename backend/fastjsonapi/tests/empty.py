@@ -30,7 +30,6 @@ class EmptyTestCase(ApiTestCase):
             return self.Item(id="1")
 
     resources = [Resource()]
-    polymorphism = {}
 
     def test_create(self):
         response = self.post("http://server/emptyResources", {

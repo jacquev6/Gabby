@@ -46,7 +46,6 @@ class BatchingTestCase(ApiTestCase):
 
     factory = ItemsFactory()
     resources = [Resource(factory)]
-    polymorphism = {}
 
     def setUp(self):
         super().setUp()

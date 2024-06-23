@@ -185,7 +185,6 @@ class FilteringApiTestCase(ApiTestCase):
             return (len(items), items)
 
     resources = [Resource()]
-    polymorphism = {}
 
     def test_no_filter(self):
         response = self.get(f"http://server/resources")
