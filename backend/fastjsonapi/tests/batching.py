@@ -46,6 +46,7 @@ class BatchingTestCase(ApiTestCase):
 
     factory = ItemsFactory()
     resources = [Resource(factory)]
+    batching = True
 
     def setUp(self):
         super().setUp()

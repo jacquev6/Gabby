@@ -13,13 +13,15 @@ class ApiTestCase(unittest.TestCase):
     maxDiff = None
 
     polymorphism = {}
+    batching = False
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
 
         if hasattr(cls, "resources"):
             cls.__app = FastAPI()
-            cls.__app.include_router(router.make_jsonapi_router(cls.resources, cls.polymorphism))
+            cls.__app.include_router(router.make_jsonapi_router(resources=cls.resources, polymorphism=cls.polymorphism, batching=cls.batching))
 
             cls.__schema_file_path = f"{inspect.getfile(cls)}.{cls.__name__.replace("ApiTestCase", "")}.openapi.json"
             cls.__client = TestClient(cls.__app)

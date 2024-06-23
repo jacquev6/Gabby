@@ -38,6 +38,7 @@ app.include_router(
     make_jsonapi_router(
         resources=api_resources.resources,
         polymorphism=api_resources.polymorphism,
+        batching=True,
     ),
     prefix="/api",
 )

@@ -25,7 +25,7 @@ class JSONAPIResponse(JSONResponse):
     media_type = "application/vnd.api+json"
 
 
-def make_jsonapi_router(resources, polymorphism: dict[Type, str]):
+def make_jsonapi_router(*, resources, polymorphism: dict[Type, str], batching: bool):
     decider = Decider({
         resource.Model: humps.camelize(resource.singular_name) for resource in resources
     })
@@ -45,7 +45,8 @@ def make_jsonapi_router(resources, polymorphism: dict[Type, str]):
     for resource in resources.values():
         add_resource_routes(resources, resource, router)
 
-    add_batch_route(resources, router)
+    if batching:
+        add_batch_route(resources, router)
 
     return router
 
