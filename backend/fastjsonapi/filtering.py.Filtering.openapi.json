@@ -333,10 +333,10 @@
           },
           {
             "in": "query",
-            "name": "filter[int]",
+            "name": "filter[anInt]",
             "required": false,
             "schema": {
-              "title": "Filter[Int]",
+              "title": "Filter[Anint]",
               "type": "integer"
             }
           }

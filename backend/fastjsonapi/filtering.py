@@ -171,15 +171,17 @@ class FilteringApiTestCase(ApiTestCase):
 
         class Filters(BaseModel):
             str: str | None
-            int: int | None
+            an_int: int | None
 
         def get_page(self, sort, filters: Annotated[Filters, make_filters(Filters)], first_index, page_size):
             # Filters usually remove items, but for this test they add items
             items = []
             if filters.str:
+                assert isinstance(filters.str, str)
                 items.append(self.Item(id=str(len(items)), filter_type="str", filter_value=filters.str))
-            if filters.int:
-                items.append(self.Item(id=str(len(items)), filter_type="int", filter_value=str(filters.int)))
+            if filters.an_int:
+                assert isinstance(filters.an_int, int)
+                items.append(self.Item(id=str(len(items)), filter_type="int", filter_value=str(filters.an_int)))
             return (len(items), items)
 
     resources = [Resource()]
@@ -239,7 +241,7 @@ class FilteringApiTestCase(ApiTestCase):
         })
 
     def test_int_filter(self):
-        response = self.get(f"http://server/resources?filter[int]=42")
+        response = self.get(f"http://server/resources?filter[anInt]=42")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": [
@@ -256,8 +258,8 @@ class FilteringApiTestCase(ApiTestCase):
                 },
             ],
             "links": {
-                "first": "http://server/resources?filter%5Bint%5D=42&page%5Bnumber%5D=1",
-                "last": "http://server/resources?filter%5Bint%5D=42&page%5Bnumber%5D=0",  # @todo Fix: should be page%5Bnumber%5D=1
+                "first": "http://server/resources?filter%5BanInt%5D=42&page%5Bnumber%5D=1",
+                "last": "http://server/resources?filter%5BanInt%5D=42&page%5Bnumber%5D=0",  # @todo Fix: should be page%5Bnumber%5D=1
                 "next": None,
                 "prev": None,
             },
