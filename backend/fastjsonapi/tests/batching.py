@@ -38,7 +38,7 @@ class Resource:
             return self.factory.get(Item, id)
 
     class PageGetter(FactoryMixin):
-        def __call__(self, sort, filters, first_index, page_size):
+        def __call__(self, sort, first_index, page_size):
             items = self.factory.get_all(Item)
             return (len(items), items[first_index:first_index + page_size])
 

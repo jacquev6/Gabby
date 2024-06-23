@@ -1,7 +1,12 @@
 from contextlib import contextmanager
+from typing import Annotated
 
+from fastapi import Depends
+from pydantic import BaseModel
 from sqlalchemy import orm
 import sqlalchemy as sql
+
+from fastjsonapi import make_filters
 
 from . import api_models
 from . import parsing
@@ -352,12 +357,18 @@ class ExercisesResource:
             return get_item(session, Exercise, ExercisesResource.sqids.decode(id)[0])
         return get
 
+    class Filters(BaseModel):
+        textbook: str | None
+        textbook_page: int | None
+        number: str | None
+
     @staticmethod
     def PageGetter(
         session: SessionDependable,
+        filters: Annotated[Filters, make_filters(Filters)],
         authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
     ):
-        def get(sort, filters, first_index, page_size):
+        def get(sort, first_index, page_size):
             sort = sort or ("textbook_id", "textbook_page", "number")
             query = sql.select(Exercise).order_by(*sort)
             if filters.textbook is not None:
@@ -451,7 +462,7 @@ class ExtractionEventsResource:
         session: SessionDependable,
         authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
     ):
-        def get(sort, filters, first_index, page_size):
+        def get(sort, first_index, page_size):
             sort = sort or ("id",)
             query = sql.select(ExtractionEvent).order_by(*sort)
             return get_page(session, query, first_index, page_size)

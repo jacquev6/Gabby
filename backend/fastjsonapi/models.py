@@ -105,6 +105,7 @@ class Decider:
             or self.is_list_relationship(annotation)
         )
 
+
 def make_create_input_model(resource_name: str, model, decider: Decider):
     assert humps.is_camelcase(resource_name)
 
@@ -207,50 +208,6 @@ def make_output_models(resource_name: str, model, decider: Decider):
     )
 
     return (ItemOutput, PageOutput)
-
-
-def make_filters_dependable(resource_name: str, model, decider: Decider):
-    assert humps.is_camelcase(resource_name)
-
-    attributes = {}
-
-    for (name, info) in model.model_fields.items():
-        if Annotations(info.metadata).filter:
-            if decider.is_mandatory_relationship(info.annotation):
-                attributes[name] = str
-            elif decider.is_optional_relationship(info.annotation):
-                attributes[name] = str
-            elif decider.is_list_relationship(info.annotation):
-                assert False
-            elif decider.is_attribute(info.annotation):
-                attributes[name] = info.annotation
-            else:
-                assert False
-
-    Filters = create_model(
-        f"{resource_name}Filters",
-        **{
-            key: (value | None, ...)
-            for (key, value) in attributes.items()
-        },
-    )
-    # @todo Keep things structured all they way (avoid generating textual code)
-    # See... my old answer here: https://stackoverflow.com/a/29927459/905845
-    def filter_code():
-        yield "def filters("
-        for (name, annotation) in attributes.items():
-            if isinstance(annotation, UnionType):
-                assert len(annotation.__args__) == 2
-                assert annotation.__args__[1] is type(None)
-                annotation = annotation.__args__[0]
-            yield f"    {name}: Annotated[{annotation.__name__}, Query(alias='filter[{humps.camelize(name)}]')] = None,"
-        yield "):"
-        yield "    return Filters("
-        for name in attributes:
-            yield f"        {name}={name},"
-        yield "    )"
-    exec("\n".join(filter_code()), {"Filters": Filters}, filter_globals := {"Query": Query, "Annotated": Annotated})
-    return filter_globals["filters"]
 
 
 def make_update_input_model(resource_name: str, model, decider: Decider):

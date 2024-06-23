@@ -6,8 +6,9 @@ import datetime
 from pydantic import BaseModel
 from starlette import status
 
-from ..annotations import Computed, Constant, Filterable, Secret
+from ..annotations import Computed, Constant, Secret
 from ..testing import ApiTestCase, ItemsFactory
+from ..filtering import make_filters
 
 
 # @todo Split these test cases: make one for each kind of attribute:
@@ -29,7 +30,7 @@ class AtomicAttributesTestCase(ApiTestCase):
             constant_str: Annotated[str, Constant()]
             defaulted_constant_float: Annotated[float, Constant()] = 3.14
             secret_str: Annotated[str, Secret()]
-            computed_str: Annotated[str, Computed(), Filterable()]
+            computed_str: Annotated[str, Computed()]
 
         @dataclasses.dataclass
         class Item:
@@ -56,7 +57,10 @@ class AtomicAttributesTestCase(ApiTestCase):
         def get_item(self, id: str):
             return self.factory.get(self.Item, id)
 
-        def get_page(self, sort, filters, first_index, page_size):
+        class Filters(BaseModel):
+            computed_str: str | None
+
+        def get_page(self, sort, filters: Annotated[Filters, make_filters(Filters)], first_index, page_size):
             items = self.factory.get_all(self.Item)
             if filters.computed_str:
                 items = [item for item in items if item.computed_str == filters.computed_str]
@@ -387,9 +391,9 @@ class AtomicAttributesTestCase(ApiTestCase):
                 },
             ],
             "links": {
-                "first": "http://server/resources?page%5Bnumber%5D=1&page%5Bsize%5D=3",
-                "last": "http://server/resources?page%5Bnumber%5D=2&page%5Bsize%5D=3",
-                "next": "http://server/resources?page%5Bnumber%5D=2&page%5Bsize%5D=3",
+                "first": "http://server/resources?page%5Bsize%5D=3&page%5Bnumber%5D=1",
+                "last": "http://server/resources?page%5Bsize%5D=3&page%5Bnumber%5D=2",
+                "next": "http://server/resources?page%5Bsize%5D=3&page%5Bnumber%5D=2",
                 "prev": None,
             },
             "meta": {
@@ -519,8 +523,8 @@ class AtomicAttributesTestCase(ApiTestCase):
                 },
             ],
             "links": {
-                "first": "http://server/resources?page%5Bnumber%5D=1&page%5Bsize%5D=5",
-                "last": "http://server/resources?page%5Bnumber%5D=1&page%5Bsize%5D=5",
+                "first": "http://server/resources?page%5Bsize%5D=5&page%5Bnumber%5D=1",
+                "last": "http://server/resources?page%5Bsize%5D=5&page%5Bnumber%5D=1",
                 "next": None,
                 "prev": None,
             },

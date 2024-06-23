@@ -77,7 +77,7 @@ class PdfFilesResource:
         session: SessionDependable,
         authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
     ):
-        def get(sort, filters, first_index, page_size):
+        def get(sort, first_index, page_size):
             sort = sort or ("id",)
             query = sql.select(PdfFile).order_by(*sort)
             return get_page(session, query, first_index, page_size)
@@ -164,7 +164,7 @@ class PdfFileNamingsResource:
         session: SessionDependable,
         authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
     ):
-        def get(sort, filters, first_index, page_size):
+        def get(sort, first_index, page_size):
             sort = sort or ("id",)
             query = sql.select(PdfFileNaming).order_by(*sort)
             return get_page(session, query, first_index, page_size)

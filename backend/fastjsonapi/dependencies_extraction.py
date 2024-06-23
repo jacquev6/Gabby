@@ -119,10 +119,9 @@ def extract_dependencies(target):
 
     wrapper_ast = make_wrapper_ast({name: name in defaults for name in annotations})
 
-    # print(ast.unparse(wrapper_ast))
-
     # @todo Try and avoid exec, similarly to the "f = FunctionType(function_code, {})" part of https://stackoverflow.com/a/29927459/905845
-    exec(compile(wrapper_ast, "<not_a_file>", "exec"), globals := dict(target=target, annotations=annotations, defaults=defaults))
+    globals = {"target": target, "annotations": annotations, "defaults": defaults}
+    exec(compile(wrapper_ast, "<not_a_file>", "exec"), globals)
     return globals["TargetWrapper"]
 
 

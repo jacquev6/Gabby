@@ -30,7 +30,7 @@ class TopResource:
             return self.factory.get(TopItem, id)
 
     class PageGetter(FactoryMixin):
-        def __call__(self, sort, filters, first_index, page_size):
+        def __call__(self, sort, first_index, page_size):
             items = self.factory.get_all(TopItem)
             return (len(items), items[first_index:first_index + page_size])
 
@@ -369,9 +369,9 @@ class RelationshipsTestCase(ApiTestCase):
                 },
             ],
             "links": {
-                "first": "http://server/tops?page%5Bnumber%5D=1&page%5Bsize%5D=3",
-                "last": "http://server/tops?page%5Bnumber%5D=2&page%5Bsize%5D=3",
-                "next": "http://server/tops?page%5Bnumber%5D=2&page%5Bsize%5D=3",
+                "first": "http://server/tops?page%5Bsize%5D=3&page%5Bnumber%5D=1",
+                "last": "http://server/tops?page%5Bsize%5D=3&page%5Bnumber%5D=2",
+                "next": "http://server/tops?page%5Bsize%5D=3&page%5Bnumber%5D=2",
                 "prev": None,
             },
             "meta": {
@@ -442,9 +442,9 @@ class RelationshipsTestCase(ApiTestCase):
             ],
             "included": [],
             "links": {
-                "first": "http://server/tops?page%5Bnumber%5D=1&page%5Bsize%5D=3&include=",
-                "last": "http://server/tops?page%5Bnumber%5D=2&page%5Bsize%5D=3&include=",
-                "next": "http://server/tops?page%5Bnumber%5D=2&page%5Bsize%5D=3&include=",
+                "first": "http://server/tops?page%5Bsize%5D=3&include=&page%5Bnumber%5D=1",
+                "last": "http://server/tops?page%5Bsize%5D=3&include=&page%5Bnumber%5D=2",
+                "next": "http://server/tops?page%5Bsize%5D=3&include=&page%5Bnumber%5D=2",
                 "prev": None,
             },
             "meta": {
@@ -543,9 +543,9 @@ class RelationshipsTestCase(ApiTestCase):
                 },
             ],
             "links": {
-                "first": "http://server/tops?page%5Bnumber%5D=1&page%5Bsize%5D=3&include=lefts",
-                "last": "http://server/tops?page%5Bnumber%5D=2&page%5Bsize%5D=3&include=lefts",
-                "next": "http://server/tops?page%5Bnumber%5D=2&page%5Bsize%5D=3&include=lefts",
+                "first": "http://server/tops?page%5Bsize%5D=3&include=lefts&page%5Bnumber%5D=1",
+                "last": "http://server/tops?page%5Bsize%5D=3&include=lefts&page%5Bnumber%5D=2",
+                "next": "http://server/tops?page%5Bsize%5D=3&include=lefts&page%5Bnumber%5D=2",
                 "prev": None,
             },
             "meta": {
@@ -659,9 +659,9 @@ class RelationshipsTestCase(ApiTestCase):
                 },
             ],
             "links": {
-                "first": "http://server/tops?page%5Bnumber%5D=1&page%5Bsize%5D=3&include=lefts.top",
-                "last": "http://server/tops?page%5Bnumber%5D=2&page%5Bsize%5D=3&include=lefts.top",
-                "next": "http://server/tops?page%5Bnumber%5D=2&page%5Bsize%5D=3&include=lefts.top",
+                "first": "http://server/tops?page%5Bsize%5D=3&include=lefts.top&page%5Bnumber%5D=1",
+                "last": "http://server/tops?page%5Bsize%5D=3&include=lefts.top&page%5Bnumber%5D=2",
+                "next": "http://server/tops?page%5Bsize%5D=3&include=lefts.top&page%5Bnumber%5D=2",
                 "prev": None,
             },
             "meta": {

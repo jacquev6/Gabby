@@ -84,7 +84,7 @@ class TextbooksResource:
         session: SessionDependable,
         authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
     ):
-        def get(sort, filters, first_index, page_size):
+        def get(sort, first_index, page_size):
             sort = sort or ("id",)
             query = sql.select(Textbook).order_by(*sort)
             return get_page(session, query, first_index, page_size)
@@ -178,7 +178,7 @@ class SectionsResource:
         session: SessionDependable,
         authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
     ):
-        def get(sort, filters, first_index, page_size):
+        def get(sort, first_index, page_size):
             sort = sort or ("id",)
             query = sql.select(Section).order_by(*sort)
             return get_page(session, query, first_index, page_size)

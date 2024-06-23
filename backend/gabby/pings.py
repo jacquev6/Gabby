@@ -1,11 +1,14 @@
-from __future__ import annotations
 from contextlib import contextmanager
 import datetime
+from typing import Annotated
 
 from fastapi import HTTPException
+from pydantic import BaseModel
 from sqlalchemy import orm
 from starlette import status
 import sqlalchemy as sql
+
+from fastjsonapi import make_filters
 
 from . import api_models
 from . import settings
@@ -25,8 +28,8 @@ class Ping(OrmBase, OptionalCreatedUpdatedByAtMixin):
     message: orm.Mapped[str | None] = orm.mapped_column()
 
     prev_id: orm.Mapped[int | None] = orm.mapped_column(sql.ForeignKey("pings.id"))
-    prev: orm.Mapped[Ping | None] = orm.relationship(back_populates="next", remote_side=[id], post_update=True)
-    next: orm.Mapped[list[Ping]] = orm.relationship(back_populates="prev")
+    prev: orm.Mapped["Ping | None"] = orm.relationship(back_populates="next", remote_side=[id], post_update=True)
+    next: orm.Mapped[list["Ping"]] = orm.relationship(back_populates="prev")
 
 
 class PingsResource:
@@ -65,11 +68,17 @@ class PingsResource:
 
         return get
 
+
+    class Filters(BaseModel):
+        message: str | None
+        prev: str | None
+
     @staticmethod
     def PageGetter(
         session: SessionDependable,
+        filters: Annotated[Filters, make_filters(Filters)],
     ):
-        def get(sort, filters, first_index, page_size):
+        def get(sort, first_index, page_size):
             sort = sort or ("id",)
             query = sql.select(Ping).order_by(*sort)
             if filters.message is not None:

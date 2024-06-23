@@ -1,9 +1,10 @@
 # from __future__ import annotations  # This doesn't work because we're annotating with local types. So this code won't work on Python 4. OK.
 from typing import Annotated, Type
-from urllib.parse import urlencode
+from urllib.parse import urlencode, parse_qs
 import unittest
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Response
+import fastapi
 from fastapi.responses import JSONResponse
 from starlette import status
 import humps
@@ -11,7 +12,7 @@ import humps
 from .annotations import Annotations
 from .dependencies_extraction import extract_dependencies
 from .utils import Urls
-from .models import Decider, make_create_input_model, make_filters_dependable, make_output_models, make_update_input_model
+from .models import Decider, make_create_input_model, make_output_models, make_update_input_model
 
 
 # @todo Check consistency of "type" attributes in input 'ObjectId's
@@ -110,7 +111,6 @@ class CompiledResource:
 
         self.CreateInputModel = make_create_input_model(self.singularName, resource.Model, decider)
         (self.ItemOutputModel, self.PageOutputModel) = make_output_models(self.singularName, resource.Model, decider)
-        self.filters = make_filters_dependable(self.singularName, resource.Model, decider)
         self.UpdateInputModel = make_update_input_model(self.singularName, resource.Model, decider)
 
     def make_item_response(self, resources, *, urls, item, include):
@@ -121,23 +121,16 @@ class CompiledResource:
             return_value["included"] = self.make_included(resources, urls, [item], include)
         return return_value
 
-    def make_page_response(self, resources, *, urls, items_count, filters, sort, page_number, page_size, items, raw_include, include):
+    def make_page_response(self, resources, request: fastapi.Request, *, urls, items_count, page_number, page_size, items, include):
         pages_count = (items_count + 1) // page_size
         pagination = dict(count=items_count, page=page_number, pages=pages_count)
 
         base_url = urls.make(f"get_{self.plural_name}")
         def make_url_for_page(number):
-            qs = {}
-            for (key, value) in sorted(filters.model_dump(exclude_unset=True).items()):
-                if value is not None:
-                    qs[f"filter[{humps.camelize(key)}]"] = value
+            qs = dict(request.query_params)
             qs["page[number]"] = number
             if page_size != self.default_page_size:
                 qs["page[size]"] = page_size
-            if raw_include is not None:
-                qs["include"] = raw_include
-            if sort is not None:
-                qs["sort"] = sort
             return base_url + "?" + urlencode(qs)
 
         if page_number < pages_count:
@@ -287,9 +280,9 @@ def add_resource_routes(resources, resource, router):
             response_model_exclude_unset=True,
         )
         def get_page(
+            request: fastapi.Request,
             urls: Urls,
             get_page: Annotated[resource.PageGetter, Depends()],
-            filters: Annotated[resource.filters, Depends()],
             page_size: Annotated[int, Query(alias="page[size]")] = resource.default_page_size,
             page_number: Annotated[int, Query(alias="page[number]")] = 1,
             sort: str = None,
@@ -300,18 +293,16 @@ def add_resource_routes(resources, resource, router):
             # @todo Allow explicit ascending sorting with a prefix plus sign
             parsed_sort = None if sort is None else [humps.decamelize(part) for part in sort.split(",")]
             # @todo Pass parsed 'include' to allow pre-fetching
-            (items_count, items) = get_page(sort=parsed_sort, filters=filters, first_index=(page_number - 1) * page_size, page_size=page_size)
+            (items_count, items) = get_page(sort=parsed_sort, first_index=(page_number - 1) * page_size, page_size=page_size)
             assert len(items) <= page_size
             return resource.make_page_response(
                 resources,
+                request,
                 urls=urls,
                 items_count=items_count,
-                filters=filters,
-                sort=sort,
                 page_number=page_number,
                 page_size=page_size,
                 items=items,
-                raw_include=include,
                 include=parse_include(include),
             )
 
