@@ -10,7 +10,7 @@ from starlette import status
 import humps
 
 from .annotations import Annotations
-from .dependencies_extraction import extract_dependencies
+from .dependencies import extract_dependencies
 from .utils import Urls
 from .models import Decider, make_create_input_model, make_output_models, make_update_input_model
 
