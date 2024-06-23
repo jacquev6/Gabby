@@ -148,7 +148,7 @@ def make_filters(filters_model: type[BaseModel]):
     return Depends(globals["filters"])
 
 
-class FilteringTestCase(ApiTestCase):
+class FilteringApiTestCase(ApiTestCase):
     class Resource:
         singular_name = "resource"
         plural_name = "resources"

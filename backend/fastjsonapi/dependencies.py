@@ -189,7 +189,7 @@ class ExtractDependenciesTestCase(unittest.TestCase):
         self.assertEqual(n, 42)
 
 
-class DependenciesTestCase(ApiTestCase):
+class DependenciesApiTestCase(ApiTestCase):
     class Resource:
         singular_name = "resource"
         plural_name = "resources"

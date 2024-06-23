@@ -20,7 +20,7 @@ class ApiTestCase(unittest.TestCase):
             cls.__app = FastAPI()
             cls.__app.include_router(router.make_jsonapi_router(cls.resources, cls.polymorphism))
 
-            cls.__schema_file_path = f"{inspect.getfile(cls)}.{cls.__name__}.openapi.json"
+            cls.__schema_file_path = f"{inspect.getfile(cls)}.{cls.__name__.replace("ApiTestCase", "")}.openapi.json"
             cls.__client = TestClient(cls.__app)
 
     def get(self, url):
