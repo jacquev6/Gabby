@@ -66,8 +66,8 @@ class PdfFilesResource:
         session: SessionDependable,
         authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
     ):
-        def get(sha256):
-            return get_item(session, PdfFile, sha256)
+        def get(id):
+            return get_item(session, PdfFile, id)
 
         return get
 

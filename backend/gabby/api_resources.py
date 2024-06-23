@@ -543,15 +543,15 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                 },
             ],
             "links": {
-                "first": "http://server/textbooks?page%5Bnumber%5D=1&sort=title",
-                "last": "http://server/textbooks?page%5Bnumber%5D=2&sort=title",
-                "next": "http://server/textbooks?page%5Bnumber%5D=2&sort=title",
+                "first": "http://server/textbooks?sort=title&page%5Bnumber%5D=1",
+                "last": "http://server/textbooks?sort=title&page%5Bnumber%5D=2",
+                "next": "http://server/textbooks?sort=title&page%5Bnumber%5D=2",
                 "prev": None,
             },
             "meta": {"pagination": {"count": 3, "page": 1, "pages": 2}},
         })
 
-        response = self.get("http://server/textbooks?page[number]=2&sort=title")
+        response = self.get("http://server/textbooks?sort=title&page[number]=2")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": [
@@ -584,10 +584,10 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                 },
             ],
             "links": {
-                "first": "http://server/textbooks?page%5Bnumber%5D=1&sort=title",
-                "last": "http://server/textbooks?page%5Bnumber%5D=2&sort=title",
+                "first": "http://server/textbooks?sort=title&page%5Bnumber%5D=1",
+                "last": "http://server/textbooks?sort=title&page%5Bnumber%5D=2",
                 "next": None,
-                "prev": "http://server/textbooks?page%5Bnumber%5D=1&sort=title",
+                "prev": "http://server/textbooks?sort=title&page%5Bnumber%5D=1",
             },
             "meta": {"pagination": {"count": 3, "page": 2, "pages": 2}},
         })
@@ -658,15 +658,15 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                 },
             ],
             "links": {
-                "first": "http://server/textbooks?page%5Bnumber%5D=1&sort=publisher",
-                "last": "http://server/textbooks?page%5Bnumber%5D=2&sort=publisher",
-                "next": "http://server/textbooks?page%5Bnumber%5D=2&sort=publisher",
+                "first": "http://server/textbooks?sort=publisher&page%5Bnumber%5D=1",
+                "last": "http://server/textbooks?sort=publisher&page%5Bnumber%5D=2",
+                "next": "http://server/textbooks?sort=publisher&page%5Bnumber%5D=2",
                 "prev": None,
             },
             "meta": {"pagination": {"count": 3, "page": 1, "pages": 2}},
         })
 
-        response = self.get("http://server/textbooks?page[number]=2&sort=publisher")
+        response = self.get("http://server/textbooks?sort=publisher&page[number]=2")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": [
@@ -692,10 +692,10 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                 },
             ],
             "links": {
-                "first": "http://server/textbooks?page%5Bnumber%5D=1&sort=publisher",
-                "last": "http://server/textbooks?page%5Bnumber%5D=2&sort=publisher",
+                "first": "http://server/textbooks?sort=publisher&page%5Bnumber%5D=1",
+                "last": "http://server/textbooks?sort=publisher&page%5Bnumber%5D=2",
                 "next": None,
-                "prev": "http://server/textbooks?page%5Bnumber%5D=1&sort=publisher",
+                "prev": "http://server/textbooks?sort=publisher&page%5Bnumber%5D=1",
             },
             "meta": {"pagination": {"count": 3, "page": 2, "pages": 2}},
         })
@@ -821,15 +821,15 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                 },
             ],
             "links": {
-                "first": "http://server/textbooks?page%5Bnumber%5D=1&include=exercises&sort=title",
-                "last": "http://server/textbooks?page%5Bnumber%5D=2&include=exercises&sort=title",
-                "next": "http://server/textbooks?page%5Bnumber%5D=2&include=exercises&sort=title",
+                "first": "http://server/textbooks?include=exercises&sort=title&page%5Bnumber%5D=1",
+                "last": "http://server/textbooks?include=exercises&sort=title&page%5Bnumber%5D=2",
+                "next": "http://server/textbooks?include=exercises&sort=title&page%5Bnumber%5D=2",
                 "prev": None,
             },
             "meta": {"pagination": {"count": 3, "page": 1, "pages": 2}},
         })
 
-        response = self.get("http://server/textbooks?include=exercises&page[number]=2&sort=title")
+        response = self.get("http://server/textbooks?include=exercises&sort=title&page[number]=2")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": [
@@ -924,10 +924,10 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                 },
             ],
             "links": {
-                "first": "http://server/textbooks?page%5Bnumber%5D=1&include=exercises&sort=title",
-                "last": "http://server/textbooks?page%5Bnumber%5D=2&include=exercises&sort=title",
+                "first": "http://server/textbooks?include=exercises&sort=title&page%5Bnumber%5D=1",
+                "last": "http://server/textbooks?include=exercises&sort=title&page%5Bnumber%5D=2",
                 "next": None,
-                "prev": "http://server/textbooks?page%5Bnumber%5D=1&include=exercises&sort=title",
+                "prev": "http://server/textbooks?include=exercises&sort=title&page%5Bnumber%5D=1",
             },
             "meta": {"pagination": {"count": 3, "page": 2, "pages": 2}},
         })
@@ -1481,15 +1481,15 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                 },
             ],
             "links": {
-                "first": "http://server/exercises?page%5Bnumber%5D=1&sort=textbookId%2CtextbookPage%2Cnumber",
-                "last": "http://server/exercises?page%5Bnumber%5D=2&sort=textbookId%2CtextbookPage%2Cnumber",
-                "next": "http://server/exercises?page%5Bnumber%5D=2&sort=textbookId%2CtextbookPage%2Cnumber",
+                "first": "http://server/exercises?sort=textbookId%2CtextbookPage%2Cnumber&page%5Bnumber%5D=1",
+                "last": "http://server/exercises?sort=textbookId%2CtextbookPage%2Cnumber&page%5Bnumber%5D=2",
+                "next": "http://server/exercises?sort=textbookId%2CtextbookPage%2Cnumber&page%5Bnumber%5D=2",
                 "prev": None,
             },
             "meta": {"pagination": {"count": 3, "page": 1, "pages": 2}},
         })
 
-        response = self.get("http://server/exercises?page[number]=2&sort=textbookId,textbookPage,number")
+        response = self.get("http://server/exercises?sort=textbookId,textbookPage,number&page[number]=2")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": [
@@ -1515,10 +1515,10 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                 },
             ],
             "links": {
-                "first": "http://server/exercises?page%5Bnumber%5D=1&sort=textbookId%2CtextbookPage%2Cnumber",
-                "last": "http://server/exercises?page%5Bnumber%5D=2&sort=textbookId%2CtextbookPage%2Cnumber",
+                "first": "http://server/exercises?sort=textbookId%2CtextbookPage%2Cnumber&page%5Bnumber%5D=1",
+                "last": "http://server/exercises?sort=textbookId%2CtextbookPage%2Cnumber&page%5Bnumber%5D=2",
                 "next": None,
-                "prev": "http://server/exercises?page%5Bnumber%5D=1&sort=textbookId%2CtextbookPage%2Cnumber",
+                "prev": "http://server/exercises?sort=textbookId%2CtextbookPage%2Cnumber&page%5Bnumber%5D=1",
             },
             "meta": {"pagination": {"count": 3, "page": 2, "pages": 2}},
         })
@@ -1576,15 +1576,15 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                 },
             ],
             "links": {
-                "first": "http://server/exercises?page%5Bnumber%5D=1&sort=number",
-                "last": "http://server/exercises?page%5Bnumber%5D=2&sort=number",
-                "next": "http://server/exercises?page%5Bnumber%5D=2&sort=number",
+                "first": "http://server/exercises?sort=number&page%5Bnumber%5D=1",
+                "last": "http://server/exercises?sort=number&page%5Bnumber%5D=2",
+                "next": "http://server/exercises?sort=number&page%5Bnumber%5D=2",
                 "prev": None,
             },
             "meta": {"pagination": {"count": 3, "page": 1, "pages": 2}},
         })
 
-        response = self.get("http://server/exercises?page[number]=2&sort=number")
+        response = self.get("http://server/exercises?sort=number&page[number]=2")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": [
@@ -1610,10 +1610,10 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                 },
             ],
             "links": {
-                "first": "http://server/exercises?page%5Bnumber%5D=1&sort=number",
-                "last": "http://server/exercises?page%5Bnumber%5D=2&sort=number",
+                "first": "http://server/exercises?sort=number&page%5Bnumber%5D=1",
+                "last": "http://server/exercises?sort=number&page%5Bnumber%5D=2",
                 "next": None,
-                "prev": "http://server/exercises?page%5Bnumber%5D=1&sort=number",
+                "prev": "http://server/exercises?sort=number&page%5Bnumber%5D=1",
             },
             "meta": {"pagination": {"count": 3, "page": 2, "pages": 2}},
         })
@@ -1700,9 +1700,9 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                 },
             ],
             "links": {
-                "first": "http://server/exercises?page%5Bnumber%5D=1&include=textbook",
-                "last": "http://server/exercises?page%5Bnumber%5D=2&include=textbook",
-                "next": "http://server/exercises?page%5Bnumber%5D=2&include=textbook",
+                "first": "http://server/exercises?include=textbook&page%5Bnumber%5D=1",
+                "last": "http://server/exercises?include=textbook&page%5Bnumber%5D=2",
+                "next": "http://server/exercises?include=textbook&page%5Bnumber%5D=2",
                 "prev": None,
             },
             "meta": {"pagination": {"count": 4, "page": 1, "pages": 2}},
@@ -1804,10 +1804,10 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                 },
             ],
             "links": {
-                "first": "http://server/exercises?page%5Bnumber%5D=1&include=textbook",
-                "last": "http://server/exercises?page%5Bnumber%5D=2&include=textbook",
+                "first": "http://server/exercises?include=textbook&page%5Bnumber%5D=1",
+                "last": "http://server/exercises?include=textbook&page%5Bnumber%5D=2",
                 "next": None,
-                "prev": "http://server/exercises?page%5Bnumber%5D=1&include=textbook",
+                "prev": "http://server/exercises?include=textbook&page%5Bnumber%5D=1",
             },
             "meta": {"pagination": {"count": 4, "page": 2, "pages": 2}},
         })
