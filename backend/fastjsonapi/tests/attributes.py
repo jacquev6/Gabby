@@ -60,7 +60,7 @@ class AtomicAttributesTestCase(ApiTestCase):
         class Filters(BaseModel):
             computed_str: str | None
 
-        def get_page(self, sort, filters: Annotated[Filters, make_filters(Filters)], first_index, page_size):
+        def get_page(self, filters: Annotated[Filters, make_filters(Filters)], first_index, page_size):
             items = self.factory.get_all(self.Item)
             if filters.computed_str:
                 items = [item for item in items if item.computed_str == filters.computed_str]

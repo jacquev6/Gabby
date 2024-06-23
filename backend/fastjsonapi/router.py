@@ -285,15 +285,10 @@ def add_resource_routes(resources, resource, router):
             get_page: Annotated[resource.PageGetter, Depends()],
             page_size: Annotated[int, Query(alias="page[size]")] = resource.default_page_size,
             page_number: Annotated[int, Query(alias="page[number]")] = 1,
-            sort: str = None,
             include: str = None,
         ):
-            # @todo Work out authorized values for 'sort' from the resources' definition
-            # @todo Sort descending when the sort field is prefixed with a minus sign
-            # @todo Allow explicit ascending sorting with a prefix plus sign
-            parsed_sort = None if sort is None else [humps.decamelize(part) for part in sort.split(",")]
             # @todo Pass parsed 'include' to allow pre-fetching
-            (items_count, items) = get_page(sort=parsed_sort, first_index=(page_number - 1) * page_size, page_size=page_size)
+            (items_count, items) = get_page(first_index=(page_number - 1) * page_size, page_size=page_size)
             assert len(items) <= page_size
             return resource.make_page_response(
                 resources,

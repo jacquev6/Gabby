@@ -63,9 +63,8 @@ class ProjectsResource:
         session: SessionDependable,
         authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
     ):
-        def get(sort, first_index, page_size):
-            sort = sort or ("id",)
-            query = sql.select(Project).order_by(*sort)
+        def get(first_index, page_size):
+            query = sql.select(Project)
             return get_page(session, query, first_index, page_size)
         return get
 

@@ -173,7 +173,7 @@ class FilteringApiTestCase(ApiTestCase):
             str: str | None
             an_int: int | None
 
-        def get_page(self, sort, filters: Annotated[Filters, make_filters(Filters)], first_index, page_size):
+        def get_page(self, filters: Annotated[Filters, make_filters(Filters)], first_index, page_size):
             # Filters usually remove items, but for this test they add items
             items = []
             if filters.str:

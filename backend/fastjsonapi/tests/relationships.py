@@ -48,7 +48,7 @@ class RelationshipsTestCase(ApiTestCase):
         def get_item(self, id):
             return self.factory.get(self.Item, id)
 
-        def get_page(self, sort, first_index, page_size):
+        def get_page(self, first_index, page_size):
             items = self.factory.get_all(self.Item)
             return (len(items), items[first_index:first_index + page_size])
 

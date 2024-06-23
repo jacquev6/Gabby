@@ -476,15 +476,6 @@
           },
           {
             "in": "query",
-            "name": "sort",
-            "required": false,
-            "schema": {
-              "title": "Sort",
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
             "name": "include",
             "required": false,
             "schema": {

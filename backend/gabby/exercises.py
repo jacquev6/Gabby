@@ -368,9 +368,8 @@ class ExercisesResource:
         filters: Annotated[Filters, make_filters(Filters)],
         authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
     ):
-        def get(sort, first_index, page_size):
-            sort = sort or ("textbook_id", "textbook_page", "number")
-            query = sql.select(Exercise).order_by(*sort)
+        def get(first_index, page_size):
+            query = sql.select(Exercise).order_by(Exercise.textbook_id, Exercise.textbook_page, Exercise.number)
             if filters.textbook is not None:
                 query = query.where(Exercise.textbook_id == TextbooksResource.sqids.decode(filters.textbook)[0])
             if filters.textbook_page is not None:
@@ -462,9 +461,8 @@ class ExtractionEventsResource:
         session: SessionDependable,
         authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
     ):
-        def get(sort, first_index, page_size):
-            sort = sort or ("id",)
-            query = sql.select(ExtractionEvent).order_by(*sort)
+        def get(first_index, page_size):
+            query = sql.select(ExtractionEvent)
             return get_page(session, query, first_index, page_size)
         return get
 

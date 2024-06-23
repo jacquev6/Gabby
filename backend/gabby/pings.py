@@ -78,9 +78,8 @@ class PingsResource:
         session: SessionDependable,
         filters: Annotated[Filters, make_filters(Filters)],
     ):
-        def get(sort, first_index, page_size):
-            sort = sort or ("id",)
-            query = sql.select(Ping).order_by(*sort)
+        def get(first_index, page_size):
+            query = sql.select(Ping)
             if filters.message is not None:
                 query = query.where(Ping.message == filters.message)
             if filters.prev is not None:
