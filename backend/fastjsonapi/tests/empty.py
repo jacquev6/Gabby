@@ -1,51 +1,36 @@
-from typing import Annotated
 import dataclasses
 
-from fastapi import Depends
 from pydantic import BaseModel
 from starlette import status
 
 from ..testing import ApiTestCase, ItemsFactory
 
 
-
-@dataclasses.dataclass
-class Item:
-    id: str
-
-    saved: int = 0
-
-
-class FactoryMixin:
-    def __init__(self, factory: Annotated[ItemsFactory, Depends(lambda: EmptyTestCase.factory)]):
-        self.factory = factory
-
-
-class Resource:
-    singular_name = "empty_resource"
-    plural_name = "empty_resources"
-
-    default_page_size = 2
-
-    class Model(BaseModel):
-        pass
-
-    class ItemGetter(FactoryMixin):
-        def __call__(self, id):
-            return self.factory.get(Item, id)
-
-    class ItemCreator(FactoryMixin):
-        def __call__(self, **kwds):
-            return self.factory.create(Item, **kwds)
-
-
 class EmptyTestCase(ApiTestCase):
+    class Resource:
+        singular_name = "empty_resource"
+        plural_name = "empty_resources"
+
+        default_page_size = 2
+
+        class Model(BaseModel):
+            pass
+
+        @dataclasses.dataclass
+        class Item:
+            id: str
+
+        def __init__(self):
+            self.factory = ItemsFactory()
+
+        def get_item(self, id):
+            return None
+
+        def create_item(self, **kwds):
+            return self.Item(id="1")
+
     resources = [Resource()]
     polymorphism = {}
-
-    def setUp(self):
-        super().setUp()
-        self.__class__.factory = ItemsFactory()
 
     def test_create(self):
         response = self.post("http://server/emptyResources", {

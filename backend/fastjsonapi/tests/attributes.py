@@ -48,8 +48,8 @@ class AtomicAttributesTestCase(ApiTestCase):
             def computed_str(self):
                 return self.secret_str.upper()
 
-        def __init__(self):
-            self.factory = ItemsFactory()
+        def __init__(self, factory):
+            self.factory = factory
 
         def create_item(self, **kwds):
             return self.factory.create(self.Item, **kwds)
@@ -74,10 +74,8 @@ class AtomicAttributesTestCase(ApiTestCase):
         def delete_item(self, item):
             self.factory.delete(self.Item, item.id)
 
-    resource = Resource()
-    factory = resource.factory
-
-    resources = [resource]
+    factory = ItemsFactory()
+    resources = [Resource(factory)]
     polymorphism = {}
 
     def setUp(self):
@@ -813,8 +811,8 @@ class CompoundAttributesTestCase(ApiTestCase):
 
             saved: int = 0
 
-        def __init__(self):
-            self.factory = ItemsFactory()
+        def __init__(self, factory):
+            self.factory = factory
 
         def create_item(self, **kwds):
             return self.factory.create(self.Item, **kwds)
@@ -830,15 +828,13 @@ class CompoundAttributesTestCase(ApiTestCase):
         def delete_item(self, item):
             self.factory.delete(self.Item, item.id)
 
-    resource = Resource()
-    factory = resource.factory
-
-    resources = [resource]
+    factory = ItemsFactory()
+    resources = [Resource(factory)]
     polymorphism = {}
 
     def setUp(self):
         super().setUp()
-        self.resource.factory.clear()
+        self.factory.clear()
 
     def test_create(self):
         response = self.post("http://server/resources", {

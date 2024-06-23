@@ -11,55 +11,46 @@ def make_transaction():
     with BatchingTestCase.factory.atomic():
         yield
 
-
-class FactoryMixin:
-    def __init__(
-        self,
-        factory: Annotated[ItemsFactory, Depends(lambda: BatchingTestCase.factory)],
-        transaction: Annotated[None, Depends(make_transaction)],
-    ):
-        self.factory = factory
-
-
-class Resource:
-    singular_name = "resource"
-    plural_name = "resources"
-
-    default_page_size = 2
-
-    Model = BatchingModel
-
-    class ItemCreator(FactoryMixin):
-        def __call__(self, **kwds):
-            return self.factory.create(Item, **kwds)
-
-    class ItemGetter(FactoryMixin):
-        def __call__(self, id):
-            return self.factory.get(Item, id)
-
-    class PageGetter(FactoryMixin):
-        def __call__(self, sort, first_index, page_size):
-            items = self.factory.get_all(Item)
-            return (len(items), items[first_index:first_index + page_size])
-
-    class ItemSaver:
-        @contextmanager
-        def __call__(self, item):
-            yield
-            item.saved += 1
-
-    class ItemDeleter(FactoryMixin):
-        def __call__(self, item):
-            self.factory.delete(Item, item.id)
+TransactionDependable = Annotated[None, Depends(make_transaction)]
 
 
 class BatchingTestCase(ApiTestCase):
-    resources = [Resource()]
+    class Resource:
+        singular_name = "resource"
+        plural_name = "resources"
+
+        default_page_size = 2
+
+        Model = BatchingModel
+
+        def __init__(self, factory):
+            self.factory = factory
+
+        def create_item(self, transaction: TransactionDependable, **kwds):
+            return self.factory.create(Item, **kwds)
+
+        def get_item(self, id):
+            return self.factory.get(Item, id)
+
+        def get_page(self, sort, first_index, page_size):
+            items = self.factory.get_all(Item)
+            return (len(items), items[first_index:first_index + page_size])
+
+        @contextmanager
+        def save_item(self, transaction: TransactionDependable, item):
+            yield
+            item.saved += 1
+
+        def delete_item(self, transaction: TransactionDependable, item):
+            self.factory.delete(Item, item.id)
+
+    factory = ItemsFactory()
+    resources = [Resource(factory)]
     polymorphism = {}
 
     def setUp(self):
         super().setUp()
-        self.__class__.factory = ItemsFactory()
+        self.factory.clear()
 
     def test_empty(self):
         response = self.post("http://server/batch", {"atomic:operations": []})
@@ -318,7 +309,7 @@ class BatchingTestCase(ApiTestCase):
     #                     "name": "item2",
     #                 },
     #                 "relationships": {
-    #                     # This object does not exist at the time of the request, so it can't be refered
+    #                     # This object does not exist at the time of the request, so it can't be referred
     #                     "single": {"data": {"type": "resource", "id": "1"}}
     #                 },
     #             },

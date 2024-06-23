@@ -260,12 +260,12 @@ def add_resource_routes(resources, resource, router):
                 key = humps.decamelize(key)
                 if isinstance(value.data, list):
                     # @todo Check item type against relationship type
-                    relationships[key] = [get_related_item[item.type](item.id) for item in value.data]
+                    relationships[key] = [get_related_item[item.type](id=item.id) for item in value.data]
                 elif value.data is None:
                     relationships[key] = None
                 else:
                     # @todo Check type against relationship type(s)
-                    relationships[key] = get_related_item[value.data.type](value.data.id)
+                    relationships[key] = get_related_item[value.data.type](id=value.data.id)
 
             # @todo Pass parsed 'include' to allow pre-fetching
             item = create_item(**attributes, **relationships)
@@ -360,11 +360,11 @@ def add_resource_routes(resources, resource, router):
                             if key in payload.data.relationships.model_fields_set:
                                 if isinstance(value.data, list):
                                     # @todo Check item type against relationship type
-                                    setattr(item, humps.decamelize(key), [get_related_item[item.type](item.id) for item in value.data])
+                                    setattr(item, humps.decamelize(key), [get_related_item[item.type](id=item.id) for item in value.data])
                                 elif value.data is None:
                                     setattr(item, humps.decamelize(key), None)
                                 else:
-                                    setattr(item, humps.decamelize(key), get_related_item[value.data.type](value.data.id))
+                                    setattr(item, humps.decamelize(key), get_related_item[value.data.type](id=value.data.id))
                                 needs_save = True
                         if not needs_save:
                             raise NothingToSave()
@@ -472,11 +472,11 @@ def add_batch_route(resources, router):
                     key = humps.decamelize(key)
                     if isinstance(value.data, list):
                         # @todo Check item type against relationship type
-                        relationships[key] = [item_getters[item.type](item.id) for item in value.data]
+                        relationships[key] = [item_getters[item.type](id=item.id) for item in value.data]
                     elif value.data is None:
                         relationships[key] = None
                     else:
-                        relationships[key] = item_getters[value.data.type](value.data.id)
+                        relationships[key] = item_getters[value.data.type](id=value.data.id)
 
                 item = item_creators[type](**attributes, **relationships)
 
