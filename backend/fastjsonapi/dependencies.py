@@ -12,6 +12,7 @@ import fastapi.params
 from pydantic import BaseModel
 from starlette import status
 
+from .annotations import Computed, Constant
 from .testing import ApiTestCase
 
 
@@ -269,21 +270,28 @@ class DependenciesApiTestCase(ApiTestCase):
         })
 
 
-class UsedModel(BaseModel):
+class ComputedModel(BaseModel):
+    foo: str
+
+class ConstantModel(BaseModel):
+    baz: str
+
+class WritableModel(BaseModel):
     bar: str
 
 class ResourceModel(BaseModel):
-    used: UsedModel
+    computed: Annotated[ComputedModel, Computed()]
+    constant: Annotated[ConstantModel, Constant()]
+    writable: WritableModel
 
 class DontInstantiateUnnecessaryDependenciesApiTestCase(ApiTestCase):
-    class UnusedResource:
-        singular_name = "unused_resource"
-        plural_name = "unused_resources"
+    class ComputedResource:
+        singular_name = "computed"
+        plural_name = "computeds"
 
         default_page_size = 2
 
-        class Model(BaseModel):
-            foo: str
+        Model = ComputedModel
 
         @dataclasses.dataclass
         class Item:
@@ -293,13 +301,29 @@ class DontInstantiateUnnecessaryDependenciesApiTestCase(ApiTestCase):
         def get_item(self, id, foo: Annotated[str, Query()]):
             return self.Item(id=id, foo=foo)
 
-    class UsedResource:
-        singular_name = "used_resource"
-        plural_name = "used_resources"
+    class ConstantResource:
+        singular_name = "constant"
+        plural_name = "constants"
 
         default_page_size = 2
 
-        Model = UsedModel
+        Model = ConstantModel
+
+        @dataclasses.dataclass
+        class Item:
+            id: str
+            baz: str
+
+        def get_item(self, id, baz: Annotated[str, Query()]):
+            return self.Item(id=id, baz=baz)
+
+    class WriteableResource:
+        singular_name = "writable"
+        plural_name = "writables"
+
+        default_page_size = 2
+
+        Model = WritableModel
 
         @dataclasses.dataclass
         class Item:
@@ -320,46 +344,114 @@ class DontInstantiateUnnecessaryDependenciesApiTestCase(ApiTestCase):
         @dataclasses.dataclass
         class Item:
             id: str
-            used: 'DontInstantiateUnnecessaryDependenciesApiTestCase.UsedResource.Item'
+            computed: 'DontInstantiateUnnecessaryDependenciesApiTestCase.ComputedResource.Item'
+            constant: 'DontInstantiateUnnecessaryDependenciesApiTestCase.ConstantResource.Item'
+            writable: 'DontInstantiateUnnecessaryDependenciesApiTestCase.WriteableResource.Item'
 
         def get_item(self, id):
-            return None
+            computed = DontInstantiateUnnecessaryDependenciesApiTestCase.ComputedResource.Item(id="c", foo="FOO")
+            constant = DontInstantiateUnnecessaryDependenciesApiTestCase.ConstantResource.Item(id="k", baz="BAZ")
+            writable = DontInstantiateUnnecessaryDependenciesApiTestCase.WriteableResource.Item(id="w", bar="BAR")
+            return self.Item(id="1", computed=computed, constant=constant, writable=writable)
 
-        def create_item(self, used):
-            return self.Item(id="1", used=used)
+        def create_item(self, constant, writable):
+            computed = DontInstantiateUnnecessaryDependenciesApiTestCase.ComputedResource.Item(id="c", foo="FOO")
+            return self.Item(id="1", computed=computed, constant=constant, writable=writable)
 
-    resources = [Resource(), UsedResource(), UnusedResource()]
+        @contextlib.contextmanager
+        def save_item(self, item):
+            yield
+
+    resources = [ComputedResource(), ConstantResource(), WriteableResource(), Resource()]
     # There was a detail in the implementation that instantiated all polymorphic 'ItemGetters'.
-    # In this test, we check that the 'ItemGetter' for 'UnusedResource' is not instantiated.
-    polymorphism = {UnusedResource.Item: "unused_resource"}
+    # In this test, we check that the 'ItemGetter' for 'ComputedResource' is not instantiated.
+    polymorphism = {ComputedResource.Item: "computed"}
 
-    def test_create_item(self):
+    def test_post(self):
         # This would previously fail with:
         #    'type': 'missing', 'loc': ['query', 'foo'], 'msg': 'Field required'
         # because all 'ItemGetters' were instantiated as dependencies of the 'create_item' route.
         payload = {"data": {
             "type": "resource",
             "relationships": {
-                "used": {"data": {"type": "usedResource", "id": "u"}},
+                "writable": {"data": {"type": "writable", "id": "w"}},
+                "constant": {"data": {"type": "constant", "id": "k"}},
             },
         }}
-        response = self.post("http://server/resources?bar=BAR&include=used", payload)
+        response = self.post("http://server/resources?bar=BAR&baz=BAZ&include=computed,constant,writable", payload)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
         self.assertEqual(response.json(), {
             "data": {
                 "type": "resource",
                 "id": "1",
                 "relationships": {
-                    "used": {"data": {"type": "usedResource", "id": "u"}},
+                    "computed": {"data": {"type": "computed", "id": "c"}},
+                    "constant": {"data": {"type": "constant", "id": "k"}},
+                    "writable": {"data": {"type": "writable", "id": "w"}},
                 },
                 "links": {"self": "http://server/resources/1"},
             },
             "included": [
                 {
-                    "type": "usedResource",
-                    "id": "u",
+                    "type": "computed",
+                    "id": "c",
+                    "attributes": {"foo": "FOO"},
+                    "links": {"self": "http://server/computeds/c"},
+                },
+                {
+                    "type": "constant",
+                    "id": "k",
+                    "attributes": {"baz": "BAZ"},
+                    "links": {"self": "http://server/constants/k"},
+                },
+                {
+                    "type": "writable",
+                    "id": "w",
                     "attributes": {"bar": "BAR"},
-                    "links": {"self": "http://server/usedResources/u"},
-                }
+                    "links": {"self": "http://server/writables/w"},
+                },
+            ],
+        })
+
+    def test_patch(self):
+        payload = {"data": {
+            "type": "resource",
+            "id": "1",
+            "relationships": {
+                "writable": {"data": {"type": "writable", "id": "w"}},
+            },
+        }}
+        response = self.patch("http://server/resources/1?bar=BAR&include=computed,constant,writable", payload)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
+        self.assertEqual(response.json(), {
+            "data": {
+                "type": "resource",
+                "id": "1",
+                "relationships": {
+                    "computed": {"data": {"type": "computed", "id": "c"}},
+                    "constant": {"data": {"type": "constant", "id": "k"}},
+                    "writable": {"data": {"type": "writable", "id": "w"}},
+                },
+                "links": {"self": "http://server/resources/1"},
+            },
+            "included": [
+                {
+                    "type": "computed",
+                    "id": "c",
+                    "attributes": {"foo": "FOO"},
+                    "links": {"self": "http://server/computeds/c"},
+                },
+                {
+                    "type": "constant",
+                    "id": "k",
+                    "attributes": {"baz": "BAZ"},
+                    "links": {"self": "http://server/constants/k"},
+                },
+                {
+                    "type": "writable",
+                    "id": "w",
+                    "attributes": {"bar": "BAR"},
+                    "links": {"self": "http://server/writables/w"},
+                },
             ],
         })

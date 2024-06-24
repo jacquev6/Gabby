@@ -93,6 +93,124 @@
         "title": "ValidationError",
         "type": "object"
       },
+      "computedItemOutput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/computedOutputItem"
+          },
+          "included": {
+            "items": {},
+            "title": "Included",
+            "type": "array"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "computedItemOutput",
+        "type": "object"
+      },
+      "computedOutputItem": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "$ref": "#/components/schemas/computedOutputItemAttributes"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "links": {
+            "$ref": "#/components/schemas/ItemLinks"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "links",
+          "attributes"
+        ],
+        "title": "computedOutputItem",
+        "type": "object"
+      },
+      "computedOutputItemAttributes": {
+        "additionalProperties": false,
+        "properties": {
+          "foo": {
+            "title": "Foo",
+            "type": "string"
+          }
+        },
+        "required": [
+          "foo"
+        ],
+        "title": "computedOutputItemAttributes",
+        "type": "object"
+      },
+      "constantItemOutput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/constantOutputItem"
+          },
+          "included": {
+            "items": {},
+            "title": "Included",
+            "type": "array"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "constantItemOutput",
+        "type": "object"
+      },
+      "constantOutputItem": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "$ref": "#/components/schemas/constantOutputItemAttributes"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "links": {
+            "$ref": "#/components/schemas/ItemLinks"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "links",
+          "attributes"
+        ],
+        "title": "constantOutputItem",
+        "type": "object"
+      },
+      "constantOutputItemAttributes": {
+        "additionalProperties": false,
+        "properties": {
+          "baz": {
+            "title": "Baz",
+            "type": "string"
+          }
+        },
+        "required": [
+          "baz"
+        ],
+        "title": "constantOutputItemAttributes",
+        "type": "object"
+      },
       "resourceCreateInput": {
         "additionalProperties": false,
         "properties": {
@@ -141,12 +259,16 @@
       "resourceCreateInputDataRelationships": {
         "additionalProperties": false,
         "properties": {
-          "used": {
+          "constant": {
+            "$ref": "#/components/schemas/MandatoryRelationship"
+          },
+          "writable": {
             "$ref": "#/components/schemas/MandatoryRelationship"
           }
         },
         "required": [
-          "used"
+          "constant",
+          "writable"
         ],
         "title": "resourceCreateInputDataRelationships",
         "type": "object"
@@ -199,21 +321,97 @@
       "resourceOutputItemRelationships": {
         "additionalProperties": false,
         "properties": {
-          "used": {
+          "computed": {
+            "$ref": "#/components/schemas/MandatoryRelationship"
+          },
+          "constant": {
+            "$ref": "#/components/schemas/MandatoryRelationship"
+          },
+          "writable": {
             "$ref": "#/components/schemas/MandatoryRelationship"
           }
         },
         "required": [
-          "used"
+          "computed",
+          "constant",
+          "writable"
         ],
         "title": "resourceOutputItemRelationships",
         "type": "object"
       },
-      "unusedResourceItemOutput": {
+      "resourceUpdateInput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/unusedResourceOutputItem"
+            "$ref": "#/components/schemas/resourceUpdateInputData"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "resourceUpdateInput",
+        "type": "object"
+      },
+      "resourceUpdateInputData": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceUpdateInputDataAttributes"
+              }
+            ],
+            "default": {}
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceUpdateInputDataRelationships"
+              }
+            ],
+            "default": {}
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "resourceUpdateInputData",
+        "type": "object"
+      },
+      "resourceUpdateInputDataAttributes": {
+        "additionalProperties": false,
+        "properties": {},
+        "title": "resourceUpdateInputDataAttributes",
+        "type": "object"
+      },
+      "resourceUpdateInputDataRelationships": {
+        "additionalProperties": false,
+        "properties": {
+          "writable": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MandatoryRelationship"
+              }
+            ]
+          }
+        },
+        "title": "resourceUpdateInputDataRelationships",
+        "type": "object"
+      },
+      "writableItemOutput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/writableOutputItem"
           },
           "included": {
             "items": {},
@@ -224,14 +422,14 @@
         "required": [
           "data"
         ],
-        "title": "unusedResourceItemOutput",
+        "title": "writableItemOutput",
         "type": "object"
       },
-      "unusedResourceOutputItem": {
+      "writableOutputItem": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "$ref": "#/components/schemas/unusedResourceOutputItemAttributes"
+            "$ref": "#/components/schemas/writableOutputItemAttributes"
           },
           "id": {
             "title": "Id",
@@ -251,69 +449,10 @@
           "links",
           "attributes"
         ],
-        "title": "unusedResourceOutputItem",
+        "title": "writableOutputItem",
         "type": "object"
       },
-      "unusedResourceOutputItemAttributes": {
-        "additionalProperties": false,
-        "properties": {
-          "foo": {
-            "title": "Foo",
-            "type": "string"
-          }
-        },
-        "required": [
-          "foo"
-        ],
-        "title": "unusedResourceOutputItemAttributes",
-        "type": "object"
-      },
-      "usedResourceItemOutput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/usedResourceOutputItem"
-          },
-          "included": {
-            "items": {},
-            "title": "Included",
-            "type": "array"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "usedResourceItemOutput",
-        "type": "object"
-      },
-      "usedResourceOutputItem": {
-        "additionalProperties": false,
-        "properties": {
-          "attributes": {
-            "$ref": "#/components/schemas/usedResourceOutputItemAttributes"
-          },
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "links": {
-            "$ref": "#/components/schemas/ItemLinks"
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "id",
-          "links",
-          "attributes"
-        ],
-        "title": "usedResourceOutputItem",
-        "type": "object"
-      },
-      "usedResourceOutputItemAttributes": {
+      "writableOutputItemAttributes": {
         "additionalProperties": false,
         "properties": {
           "bar": {
@@ -324,7 +463,7 @@
         "required": [
           "bar"
         ],
-        "title": "usedResourceOutputItemAttributes",
+        "title": "writableOutputItemAttributes",
         "type": "object"
       }
     }
@@ -335,6 +474,120 @@
   },
   "openapi": "3.1.0",
   "paths": {
+    "/computeds/{id}": {
+      "get": {
+        "operationId": "get_computed_computeds__id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "foo",
+            "required": true,
+            "schema": {
+              "title": "Foo",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/computedItemOutput"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Computed"
+      }
+    },
+    "/constants/{id}": {
+      "get": {
+        "operationId": "get_constant_constants__id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "baz",
+            "required": true,
+            "schema": {
+              "title": "Baz",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/constantItemOutput"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Constant"
+      }
+    },
     "/resources": {
       "post": {
         "operationId": "create_resource_resources_post",
@@ -345,6 +598,15 @@
             "required": true,
             "schema": {
               "title": "Bar",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "baz",
+            "required": true,
+            "schema": {
+              "title": "Baz",
               "type": "string"
             }
           },
@@ -439,11 +701,9 @@
           }
         },
         "summary": "Get Resource"
-      }
-    },
-    "/unusedResources/{id}": {
-      "get": {
-        "operationId": "get_unused_resource_unusedResources__id__get",
+      },
+      "patch": {
+        "operationId": "update_resource_resources__id__patch",
         "parameters": [
           {
             "in": "path",
@@ -456,10 +716,10 @@
           },
           {
             "in": "query",
-            "name": "foo",
+            "name": "bar",
             "required": true,
             "schema": {
-              "title": "Foo",
+              "title": "Bar",
               "type": "string"
             }
           },
@@ -473,12 +733,22 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/resourceUpdateInput"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/unusedResourceItemOutput"
+                  "$ref": "#/components/schemas/resourceItemOutput"
                 }
               }
             },
@@ -495,12 +765,12 @@
             "description": "Validation Error"
           }
         },
-        "summary": "Get Unused Resource"
+        "summary": "Update Resource"
       }
     },
-    "/usedResources/{id}": {
+    "/writables/{id}": {
       "get": {
-        "operationId": "get_used_resource_usedResources__id__get",
+        "operationId": "get_writable_writables__id__get",
         "parameters": [
           {
             "in": "path",
@@ -535,7 +805,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/usedResourceItemOutput"
+                  "$ref": "#/components/schemas/writableItemOutput"
                 }
               }
             },
@@ -552,7 +822,7 @@
             "description": "Validation Error"
           }
         },
-        "summary": "Get Used Resource"
+        "summary": "Get Writable"
       }
     }
   }

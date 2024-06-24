@@ -92,21 +92,38 @@ class CompiledResource:
 
         self.output_attributes = []
         self.output_relationships = {}
+        self.create_input_relationships = {}
+        self.update_input_relationships = {}
         for (name, info) in resource.Model.model_fields.items():
             name = humps.camelize(name)
             annotations = Annotations(info.metadata)
 
             if decider.is_mandatory_relationship(info.annotation):
+                rel = (False, decider.get_polymorphic_names(info.annotation))
                 if annotations.output:
-                    self.output_relationships[name] = (False, decider.get_polymorphic_names(info.annotation))
+                    self.output_relationships[name] = rel
+                if annotations.create_input:
+                    self.create_input_relationships[name] = rel
+                if annotations.update_input:
+                    self.update_input_relationships[name] = rel
             elif decider.is_optional_relationship(info.annotation):
                 assert info.default is None
+                rel = (False, decider.get_polymorphic_names(info.annotation))
                 if annotations.output:
-                    self.output_relationships[name] = (False, decider.get_polymorphic_names(info.annotation))
+                    self.output_relationships[name] = rel
+                if annotations.create_input:
+                    self.create_input_relationships[name] = rel
+                if annotations.update_input:
+                    self.update_input_relationships[name] = rel
             elif decider.is_list_relationship(info.annotation):
                 assert info.default == []
+                rel = (True, decider.get_polymorphic_names(info.annotation))
                 if annotations.output:
-                    self.output_relationships[name] = (True, decider.get_polymorphic_names(info.annotation))
+                    self.output_relationships[name] = rel
+                if annotations.create_input:
+                    self.create_input_relationships[name] = rel
+                if annotations.update_input:
+                    self.update_input_relationships[name] = rel
             else:
                 if annotations.output:
                     self.output_attributes.append(name)
@@ -231,20 +248,23 @@ class CompiledResource:
 
 
 def add_resource_routes(resources, resource, router):
-    related_resources = set(itertools.chain.from_iterable(resource_names for (is_list, resource_names) in resource.output_relationships.values()))
-    # @todo Keep things structured all the way (avoid generating textual code)
-    # See... my old answer here: https://stackoverflow.com/a/29927459/905845
-    def make_related_getters_code():
-        yield "def make_related_getters("
-        for name in related_resources:
-            yield f'    {name}: Annotated[resources["{name}"].ItemGetter, Depends()],'
-        yield "):"
-        yield "    return {"
-        for name in related_resources:
-            yield f'        "{name}": {name},'
-        yield "    }"
-    exec("\n".join(make_related_getters_code()), {"resources": resources}, make_related_getters_globals := {"Annotated": Annotated, "Depends": Depends})
-    make_related_getters = make_related_getters_globals["make_related_getters"]
+    def make_related_getters(relationships):
+        related_resources = set(itertools.chain.from_iterable(resource_names for (is_list, resource_names) in relationships.values()))
+        # @todo Keep things structured all the way (avoid generating textual code)
+        # See... my old answer here: https://stackoverflow.com/a/29927459/905845
+        def make_related_getters_code():
+            yield "def make_related_getters("
+            for name in related_resources:
+                yield f'    {name}: Annotated[resources["{name}"].ItemGetter, Depends()],'
+            yield "):"
+            yield "    return {"
+            for name in related_resources:
+                yield f'        "{name}": {name},'
+            yield "    }"
+
+        globals = {"Annotated": Annotated, "Depends": Depends}
+        exec("\n".join(make_related_getters_code()), {"resources": resources}, globals)
+        return globals["make_related_getters"]
 
     if resource.ItemCreator:
         @router.post(
@@ -257,7 +277,7 @@ def add_resource_routes(resources, resource, router):
         def create_item(
             urls: Urls,
             create_item: Annotated[resource.ItemCreator, Depends()],
-            get_related_item: Annotated[dict, Depends(make_related_getters)],
+            get_related_item: Annotated[dict, Depends(make_related_getters(resource.create_input_relationships))],
             payload: resource.CreateInputModel,
             include: str = None,
         ):
@@ -344,7 +364,7 @@ def add_resource_routes(resources, resource, router):
             urls: Urls,
             get_item: Annotated[resource.ItemGetter, Depends()],
             save_item: Annotated[resource.ItemSaver, Depends()],
-            get_related_item: Annotated[dict, Depends(make_related_getters)],
+            get_related_item: Annotated[dict, Depends(make_related_getters(resource.update_input_relationships))],
             id: str,
             payload: resource.UpdateInputModel,
             include: str = None,
