@@ -5,15 +5,15 @@ import itertools
 import unittest
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Response
-import fastapi
 from fastapi.responses import JSONResponse
 from starlette import status
+import fastapi
 import humps
 
 from .annotations import Annotations
 from .dependencies import extract_dependencies
-from .utils import Urls
 from .models import Decider, make_create_input_model, make_output_models, make_update_input_model
+from .utils import Urls
 
 
 # @todo Check consistency of "type" attributes in input 'ObjectId's
