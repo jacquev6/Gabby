@@ -12,7 +12,7 @@ from ..api_utils import create_item, get_item, save_item, delete_item
 from ..database_utils import SessionDependable
 from ..exercises import Adaptation, Exercise
 from ..testing import AdaptationTestCase
-from ..users import WanabeMandatoryAuthenticatedUserDependable
+from ..users import MandatoryAuthenticatedUserDependable
 from ..wrapping import set_wrapper, make_sqids, orm_wrapper_with_sqids
 
 
@@ -562,7 +562,7 @@ class SelectThingsAdaptationsResource:
         words,
         colors,
         session: SessionDependable,
-        authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthenticatedUserDependable,
     ):
         if exercise.adaptation is not None:
             session.delete(exercise.adaptation)
@@ -580,7 +580,7 @@ class SelectThingsAdaptationsResource:
         self,
         id,
         session: SessionDependable,
-        authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthenticatedUserDependable,
     ):
         return get_item(session, SelectThingsAdaptation, SelectThingsAdaptationsResource.sqids.decode(id)[0])
 
@@ -589,7 +589,7 @@ class SelectThingsAdaptationsResource:
         self,
         item,
         session: SessionDependable,
-        authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthenticatedUserDependable,
     ):
         yield
         item.updated_by = authenticated_user
@@ -599,7 +599,7 @@ class SelectThingsAdaptationsResource:
         self,
         item,
         session: SessionDependable,
-        authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthenticatedUserDependable,
     ):
         delete_item(session, item)
 

@@ -13,7 +13,7 @@ from .. import settings
 from .. import testing
 from ..api_models import RecoveryEmailRequest
 from ..database_utils import Session, SessionDependable
-from .user import User, UserEmailAddress, make_access_token, WanabeMandatoryAuthenticatedUserDependable
+from .user import User, UserEmailAddress, make_access_token, MandatoryAuthenticatedUserDependable
 
 
 @dataclasses.dataclass
@@ -56,7 +56,7 @@ class RecoveryEmailRequestsResource:
     def get_item(
         self,
         id,
-        authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthenticatedUserDependable,
     ):
         return None
 

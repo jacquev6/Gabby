@@ -8,7 +8,7 @@ from . import api_models
 from . import settings
 from .api_utils import create_item, get_item, get_page, save_item, delete_item
 from .database_utils import OrmBase, SessionDependable
-from .users import WanabeMandatoryAuthenticatedUserDependable
+from .users import MandatoryAuthenticatedUserDependable
 from .users.mixins import CreatedByAtMixin
 from .wrapping import wrap, set_wrapper, OrmWrapper, make_sqids, orm_wrapper_with_sqids
 
@@ -42,7 +42,7 @@ class PdfFilesResource:
         bytes_count,
         pages_count,
         session: SessionDependable,
-        authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthenticatedUserDependable,
     ):
         pdf_file = PdfFile(
             sha256=sha256,
@@ -65,7 +65,7 @@ class PdfFilesResource:
         self,
         id,
         session: SessionDependable,
-        authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthenticatedUserDependable,
     ):
         return get_item(session, PdfFile, id)
 
@@ -74,7 +74,7 @@ class PdfFilesResource:
         first_index,
         page_size,
         session: SessionDependable,
-        authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthenticatedUserDependable,
     ):
         query = sql.select(PdfFile)
         return get_page(session, query, first_index, page_size)
@@ -84,7 +84,7 @@ class PdfFilesResource:
         self,
         item,
         session: SessionDependable,
-        authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthenticatedUserDependable,
     ):
         yield
         item.updated_by = authenticated_user
@@ -94,7 +94,7 @@ class PdfFilesResource:
         self,
         item,
         session: SessionDependable,
-        authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthenticatedUserDependable,
     ):
         delete_item(session, item)
 
@@ -132,7 +132,7 @@ class PdfFileNamingsResource:
         self,
         pdf_file, name,
         session: SessionDependable,
-        authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthenticatedUserDependable,
     ):
         return create_item(
             session, PdfFileNaming,
@@ -145,7 +145,7 @@ class PdfFileNamingsResource:
         self,
         id,
         session: SessionDependable,
-        authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthenticatedUserDependable,
     ):
         return get_item(session, PdfFileNaming, PdfFileNamingsResource.sqids.decode(id)[0])
 
@@ -154,7 +154,7 @@ class PdfFileNamingsResource:
         first_index,
         page_size,
         session: SessionDependable,
-        authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthenticatedUserDependable,
     ):
         query = sql.select(PdfFileNaming)
         return get_page(session, query, first_index, page_size)
@@ -164,7 +164,7 @@ class PdfFileNamingsResource:
         self,
         item,
         session: SessionDependable,
-        authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthenticatedUserDependable,
     ):
         yield
         item.updated_by = authenticated_user
@@ -174,7 +174,7 @@ class PdfFileNamingsResource:
         self,
         item,
         session: SessionDependable,
-        authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthenticatedUserDependable,
     ):
         delete_item(session, item)
 

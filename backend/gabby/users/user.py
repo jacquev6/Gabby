@@ -181,9 +181,7 @@ def _mandatory_authenticated_user_dependable(user: OptionalAuthenticatedUserDepe
         return user
 
 
-# @todo Merge these in a single simple 'MandatoryAuthenticatedUserDependable'.
-WanabeMandatoryAuthenticatedUserDependable = Annotated[User | None, Depends(_mandatory_authenticated_user_dependable)]
-ActuallyMandatoryAuthenticatedUserDependable = Annotated[User, Depends(_mandatory_authenticated_user_dependable)]
+MandatoryAuthenticatedUserDependable = Annotated[User, Depends(_mandatory_authenticated_user_dependable)]
 
 
 class UsersResource:
@@ -200,7 +198,7 @@ class UsersResource:
         self,
         id,
         session: SessionDependable,
-        authenticated_user: ActuallyMandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthenticatedUserDependable,
     ):
         if id == "current":
             return wrap(authenticated_user)
@@ -212,7 +210,7 @@ class UsersResource:
         self,
         item,
         session: SessionDependable,
-        authenticated_user: ActuallyMandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthenticatedUserDependable,
     ):
         if unwrap(item) != authenticated_user:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="You can only edit your own user")

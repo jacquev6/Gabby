@@ -13,7 +13,7 @@ from .adaptations.multiple_choices_in_wording import MultipleChoicesInWordingAda
 from .adaptations.select_things import SelectThingsAdaptation
 from .exercises import Exercise
 from .testing import LoggedInApiTestCase
-from .users import WanabeMandatoryAuthenticatedUserDependable
+from .users import MandatoryAuthenticatedUserDependable
 
 
 @dataclasses.dataclass
@@ -40,7 +40,7 @@ class AdaptedExercisesResource:
         clue,
         type,
         adaptation_options,
-        authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthenticatedUserDependable,
     ):
         exercise = Exercise(
             number=number,
@@ -80,7 +80,7 @@ class AdaptedExercisesResource:
     def get_item(
         self,
         id,
-        authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthenticatedUserDependable,
     ):
         return None
 
