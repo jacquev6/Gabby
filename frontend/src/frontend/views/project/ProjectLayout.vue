@@ -23,6 +23,7 @@ const projectNeedsRefresh = ref(0)
 const project = computedAsync(
   async () => {
     projectNeedsRefresh.value  // Dependency for reactivity
+    await new Promise((resolve) => resolve(null))  // @todo Understand why removing this line duplicates the request
     return await api.client.getOne<Project>('project', props.projectId, {include: ['textbooks', 'exercises.textbook']})
   },
   null,

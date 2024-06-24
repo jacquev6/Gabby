@@ -117,6 +117,7 @@ const alreadyExists = computedAsync(
       return false
     } else if (props.textbook !== null) {
       console.assert(props.textbookPage !== null)
+      // @todo Understand why this request isn't duplicated like some others
       const exercises = await api.client.getAll(
         'exercises',
         {
@@ -430,6 +431,7 @@ const adaptedData = computedAsync(
         adaptationOptions: adaptationOptions.value,
       }
       try {
+        // @todo Understand why this request isn't duplicated like some others
         const adapted = await api.client.post<AdaptedExercise>('adaptedExercise', attributes, {})
         return adapted.attributes.adapted
       } catch (e) {
