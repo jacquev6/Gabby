@@ -9,7 +9,7 @@ from .api_utils import create_item, get_item, get_page, save_item, delete_item
 from .database_utils import OrmBase, SessionDependable
 from .pdfs import PdfFile
 from .projects import Project
-from .users import MandatoryAuthenticatedUserDependable
+from .users import MandatoryAuthBearerDependable
 from .users.mixins import CreatedUpdatedByAtMixin
 from .wrapping import set_wrapper, make_sqids, orm_wrapper_with_sqids
 
@@ -54,7 +54,7 @@ class TextbooksResource:
         year,
         isbn,
         session: SessionDependable,
-        authenticated_user: MandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
         return create_item(
             session, Textbook,
@@ -71,7 +71,7 @@ class TextbooksResource:
         self,
         id,
         session: SessionDependable,
-        authenticated_user: MandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
         return get_item(session, Textbook, TextbooksResource.sqids.decode(id)[0])
 
@@ -80,7 +80,7 @@ class TextbooksResource:
         first_index,
         page_size,
         session: SessionDependable,
-        authenticated_user: MandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
         query = sql.select(Textbook)
         return get_page(session, query, first_index, page_size)
@@ -90,7 +90,7 @@ class TextbooksResource:
         self,
         item,
         session: SessionDependable,
-        authenticated_user: MandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
         yield
         item.updated_by = authenticated_user
@@ -100,7 +100,7 @@ class TextbooksResource:
         self,
         item,
         session: SessionDependable,
-        authenticated_user: MandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
         delete_item(session, item)
 
@@ -141,7 +141,7 @@ class SectionsResource:
         pdf_file_start_page,
         pages_count,
         session: SessionDependable,
-        authenticated_user: MandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
         return create_item(
             session, Section,
@@ -158,7 +158,7 @@ class SectionsResource:
         self,
         id,
         session: SessionDependable,
-        authenticated_user: MandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
         return get_item(session, Section, SectionsResource.sqids.decode(id)[0])
 
@@ -167,7 +167,7 @@ class SectionsResource:
         first_index,
         page_size,
         session: SessionDependable,
-        authenticated_user: MandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
         query = sql.select(Section)
         return get_page(session, query, first_index, page_size)
@@ -177,7 +177,7 @@ class SectionsResource:
         self,
         item,
         session: SessionDependable,
-        authenticated_user: MandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
         yield
         item.updated_by = authenticated_user
@@ -187,7 +187,7 @@ class SectionsResource:
         self,
         item,
         session: SessionDependable,
-        authenticated_user: MandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
         delete_item(session, item)
 

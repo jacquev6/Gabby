@@ -17,7 +17,7 @@ from .api_utils import create_item, get_item, get_page, save_item, delete_item
 from .projects import Project
 from .testing import TransactionTestCase
 from .textbooks import Textbook, TextbooksResource
-from .users import MandatoryAuthenticatedUserDependable
+from .users import MandatoryAuthBearerDependable
 from .users.mixins import CreatedUpdatedByAtMixin
 from .wrapping import unwrap, set_wrapper, make_sqids, orm_wrapper_with_sqids
 
@@ -325,7 +325,7 @@ class ExercisesResource:
         clue,
         adaptation,
         session: SessionDependable,
-        authenticated_user: MandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
         bounding_rectangle = None if bounding_rectangle is None else bounding_rectangle.model_dump()
         return create_item(
@@ -348,7 +348,7 @@ class ExercisesResource:
         self,
         id,
         session: SessionDependable,
-        authenticated_user: MandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
         return get_item(session, Exercise, ExercisesResource.sqids.decode(id)[0])
 
@@ -363,7 +363,7 @@ class ExercisesResource:
         page_size,
         session: SessionDependable,
         filters: Annotated[Filters, make_filters(Filters)],
-        authenticated_user: MandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
         query = sql.select(Exercise).order_by(Exercise.textbook_id, Exercise.textbook_page, Exercise.number)
         if filters.textbook is not None:
@@ -379,7 +379,7 @@ class ExercisesResource:
         self,
         item,
         session: SessionDependable,
-        authenticated_user: MandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
         previous_adaptation = item.adaptation
         previous_bounding_rectangle = item.bounding_rectangle
@@ -395,7 +395,7 @@ class ExercisesResource:
         self,
         item,
         session: SessionDependable,
-        authenticated_user: MandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
         delete_item(session, item)
 
@@ -429,7 +429,7 @@ class ExtractionEventsResource:
         exercise,
         event,
         session: SessionDependable,
-        authenticated_user: MandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
         return create_item(
             session, ExtractionEvent,
@@ -443,7 +443,7 @@ class ExtractionEventsResource:
         self,
         id,
         session: SessionDependable,
-        authenticated_user: MandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
         return get_item(session, ExtractionEvent, ExtractionEventsResource.sqids.decode(id)[0])
 
@@ -452,7 +452,7 @@ class ExtractionEventsResource:
         first_index,
         page_size,
         session: SessionDependable,
-        authenticated_user: MandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
         query = sql.select(ExtractionEvent)
         return get_page(session, query, first_index, page_size)
@@ -462,7 +462,7 @@ class ExtractionEventsResource:
         self,
         item,
         session: SessionDependable,
-        authenticated_user: MandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
         yield
         item.updated_by = authenticated_user
@@ -472,7 +472,7 @@ class ExtractionEventsResource:
         self,
         item,
         session: SessionDependable,
-        authenticated_user: MandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
         delete_item(session, item)
 

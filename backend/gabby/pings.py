@@ -15,7 +15,7 @@ from . import settings
 from . import testing
 from .database_utils import OrmBase, SessionDependable
 from .api_utils import create_item, get_item, get_page, save_item, delete_item
-from .users import User, UsersResource, OptionalAuthenticatedUserDependable
+from .users import User, UsersResource, OptionalAuthBearerDependable
 from .users.mixins import OptionalCreatedUpdatedByAtMixin
 from .wrapping import set_wrapper, OrmWrapperWithStrIds, unwrap
 
@@ -46,7 +46,7 @@ class PingsResource:
         prev,
         next,
         session: SessionDependable,
-        authenticated_user: OptionalAuthenticatedUserDependable,
+        authenticated_user: OptionalAuthBearerDependable,
     ):
         return create_item(
             session,
@@ -88,7 +88,7 @@ class PingsResource:
         self,
         item,
         session: SessionDependable,
-        authenticated_user: OptionalAuthenticatedUserDependable,
+        authenticated_user: OptionalAuthBearerDependable,
     ):
         created_by = unwrap(item.created_by)
         if created_by is not None:
@@ -102,7 +102,7 @@ class PingsResource:
         self,
         item,
         session: SessionDependable,
-        authenticated_user: OptionalAuthenticatedUserDependable,
+        authenticated_user: OptionalAuthBearerDependable,
     ):
         created_by = unwrap(item.created_by)
         if created_by is not None:

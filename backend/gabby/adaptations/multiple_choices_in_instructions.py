@@ -14,7 +14,7 @@ from ..database_utils import SessionDependable
 from ..exercises import Adaptation
 from ..exercises import Adaptation, Exercise
 from ..testing import AdaptationTestCase
-from ..users import MandatoryAuthenticatedUserDependable
+from ..users import MandatoryAuthBearerDependable
 from ..wrapping import set_wrapper, make_sqids, orm_wrapper_with_sqids
 
 
@@ -238,7 +238,7 @@ class MultipleChoicesInInstructionsAdaptationsResource:
         exercise,
         placeholder,
         session: SessionDependable,
-        authenticated_user: MandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
         if exercise.adaptation is not None:
             session.delete(exercise.adaptation)
@@ -254,7 +254,7 @@ class MultipleChoicesInInstructionsAdaptationsResource:
         self,
         id,
         session: SessionDependable,
-        authenticated_user: MandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
         return get_item(session, MultipleChoicesInInstructionsAdaptation, MultipleChoicesInInstructionsAdaptationsResource.sqids.decode(id)[0])
 
@@ -263,7 +263,7 @@ class MultipleChoicesInInstructionsAdaptationsResource:
         self,
         item,
         session: SessionDependable,
-        authenticated_user: MandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
         yield
         item.updated_by = authenticated_user
@@ -273,7 +273,7 @@ class MultipleChoicesInInstructionsAdaptationsResource:
         self,
         item,
         session: SessionDependable,
-        authenticated_user: MandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
         delete_item(session, item)
 

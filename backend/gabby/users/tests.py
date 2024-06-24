@@ -4,7 +4,7 @@ import time
 import argon2
 import jwt
 
-from .user import User, UserEmailAddress, UsersResource, MandatoryAuthenticatedUserDependable, OptionalAuthenticatedUserDependable
+from .user import User, UserEmailAddress, UsersResource, MandatoryAuthBearerDependable, OptionalAuthBearerDependable
 from .. import testing
 
 
@@ -46,14 +46,14 @@ class AuthenticationApiTestCase(testing.ApiTestCase):
         super().setUpClass()
 
         @cls.api_app.get("/optional-authenticated")
-        def get(user: OptionalAuthenticatedUserDependable):
+        def get(user: OptionalAuthBearerDependable):
             if user is None:
                 return None
             else:
                 return {"id": user.id, "username": user.username}
 
         @cls.api_app.get("/mandatory-authenticated")
-        def get(user: MandatoryAuthenticatedUserDependable):
+        def get(user: MandatoryAuthBearerDependable):
             return {"id": user.id, "username": user.username}
 
     def setUp(self):

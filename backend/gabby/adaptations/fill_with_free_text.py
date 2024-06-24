@@ -12,7 +12,7 @@ from ..api_utils import create_item, get_item, save_item, delete_item
 from ..database_utils import SessionDependable
 from ..exercises import Adaptation, Exercise
 from ..testing import AdaptationTestCase
-from ..users import MandatoryAuthenticatedUserDependable
+from ..users import MandatoryAuthBearerDependable
 from ..wrapping import set_wrapper, make_sqids, orm_wrapper_with_sqids
 
 
@@ -413,7 +413,7 @@ class FillWithFreeTextAdaptationsResource:
         exercise,
         placeholder,
         session: SessionDependable,
-        authenticated_user: MandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
         if exercise.adaptation is not None:
             session.delete(exercise.adaptation)
@@ -429,7 +429,7 @@ class FillWithFreeTextAdaptationsResource:
         self,
         id,
         session: SessionDependable,
-        authenticated_user: MandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
         return get_item(session, FillWithFreeTextAdaptation, FillWithFreeTextAdaptationsResource.sqids.decode(id)[0])
 
@@ -438,7 +438,7 @@ class FillWithFreeTextAdaptationsResource:
         self,
         item,
         session: SessionDependable,
-        authenticated_user: MandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
         yield
         item.updated_by = authenticated_user
@@ -448,7 +448,7 @@ class FillWithFreeTextAdaptationsResource:
         self,
         item,
         session: SessionDependable,
-        authenticated_user: MandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
         delete_item(session, item)
 

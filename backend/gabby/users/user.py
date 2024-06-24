@@ -15,7 +15,7 @@ import sqlalchemy as sql
 from .. import api_models
 from .. import settings
 from ..api_utils import get_item, save_item
-from ..database_utils import OrmBase, SessionDependable
+from ..database_utils import OrmBase, SessionDependable, Session
 from ..wrapping import make_sqids, set_wrapper, orm_wrapper_with_sqids, unwrap, wrap
 
 
@@ -145,10 +145,7 @@ def authentication_dependable(
 AuthenticationDependable = Annotated[dict, Depends(authentication_dependable)]
 
 
-def _optional_authenticated_user_dependable(
-    session: SessionDependable,
-    token: str | None = Depends(OAuth2PasswordBearer(tokenUrl="token", auto_error=False)),
-):
+def get_optional_user_from_token(session: Session, token: str | None):
     if token is None:
         # No token => unauthenticated
         return None
@@ -159,29 +156,36 @@ def _optional_authenticated_user_dependable(
             # Corrupted token => silently unauthenticated
             return None
         else:
-            if datetime.datetime.now(tz=datetime.timezone.utc) < datetime.datetime.fromisoformat(token["validUntil"]):
+            if datetime.datetime.now(tz=datetime.timezone.utc) > datetime.datetime.fromisoformat(token["validUntil"]):
+                # Expired token => silently unauthenticated
+                return None
+            else:
                 user = session.get(User, token["userId"])
                 if user is None:
                     # User not found despite having a valid token: user was deleted => silently unauthenticated
                     return None
                 else:
                     return user
-            else:
-                # Expired token => silently unauthenticated
-                return None
 
 
-OptionalAuthenticatedUserDependable = Annotated[User | None, Depends(_optional_authenticated_user_dependable)]
+def optional_auth_bearer_dependable(
+    session: SessionDependable,
+    token: Annotated[str | None, Depends(OAuth2PasswordBearer(tokenUrl="token", auto_error=False))],
+):
+    return get_optional_user_from_token(session, token)
 
 
-def _mandatory_authenticated_user_dependable(user: OptionalAuthenticatedUserDependable):
+OptionalAuthBearerDependable = Annotated[User | None, Depends(optional_auth_bearer_dependable)]
+
+
+def mandatory_auth_bearer_dependable(user: OptionalAuthBearerDependable):
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid or expired token")
     else:
         return user
 
 
-MandatoryAuthenticatedUserDependable = Annotated[User, Depends(_mandatory_authenticated_user_dependable)]
+MandatoryAuthBearerDependable = Annotated[User, Depends(mandatory_auth_bearer_dependable)]
 
 
 class UsersResource:
@@ -198,7 +202,7 @@ class UsersResource:
         self,
         id,
         session: SessionDependable,
-        authenticated_user: MandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
         if id == "current":
             return wrap(authenticated_user)
@@ -210,7 +214,7 @@ class UsersResource:
         self,
         item,
         session: SessionDependable,
-        authenticated_user: MandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
         if unwrap(item) != authenticated_user:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="You can only edit your own user")

@@ -7,7 +7,7 @@ from . import api_models
 from . import settings
 from .api_utils import create_item, get_item, get_page, save_item, delete_item
 from .database_utils import OrmBase, SessionDependable
-from .users import MandatoryAuthenticatedUserDependable
+from .users import MandatoryAuthBearerDependable
 from .users.mixins import CreatedUpdatedByAtMixin
 from .wrapping import set_wrapper, make_sqids, orm_wrapper_with_sqids
 
@@ -39,7 +39,7 @@ class ProjectsResource:
         title,
         description,
         session: SessionDependable,
-        authenticated_user: MandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
         return create_item(
             session, Project,
@@ -53,7 +53,7 @@ class ProjectsResource:
         self,
         id,
         session: SessionDependable,
-        authenticated_user: MandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
         return get_item(session, Project, ProjectsResource.sqids.decode(id)[0])
 
@@ -62,7 +62,7 @@ class ProjectsResource:
         first_index,
         page_size,
         session: SessionDependable,
-        authenticated_user: MandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
         query = sql.select(Project)
         return get_page(session, query, first_index, page_size)
@@ -72,7 +72,7 @@ class ProjectsResource:
         self,
         item,
         session: SessionDependable,
-        authenticated_user: MandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
         yield
         item.updated_by = authenticated_user
@@ -82,7 +82,7 @@ class ProjectsResource:
         self,
         item,
         session: SessionDependable,
-        authenticated_user: MandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
         delete_item(session, item)
 
