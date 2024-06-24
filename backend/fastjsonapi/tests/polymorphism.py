@@ -8,21 +8,18 @@ from starlette import status
 from ..testing import ItemsFactory, ApiTestCase
 
 
+# @todo Support polymorphic mandatory relationships
+# @todo Support polymorphic list relationships
+
+
 class AlphaPolyModel(BaseModel):
     pass
-
 
 class BravoPolyModel(BaseModel):
     pass
 
-
 class OptionalRelationshipModel(BaseModel):
     rel: AlphaPolyModel | BravoPolyModel | None = None
-
-
-# @todo Support polymorphic mandatory relationships
-# @todo Support polymorphic list relationships
-
 
 class OptionalRelationshipTestCase(ApiTestCase):
     class AlphaPolyResource:

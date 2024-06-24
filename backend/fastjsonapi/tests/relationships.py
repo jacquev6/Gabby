@@ -20,7 +20,6 @@ class RightModel(BaseModel):
     top: TopModel
     left_or_none: LeftModel | None = None
 
-
 class RelationshipsTestCase(ApiTestCase):
     class TopResource:
         singular_name = "top"
