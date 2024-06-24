@@ -555,54 +555,53 @@ class SelectThingsAdaptationsResource:
 
     sqids = make_sqids(singular_name)
 
-    @staticmethod
-    def ItemCreator(
+    def create_item(
+        self,
+        exercise,
+        punctuation,
+        words,
+        colors,
         session: SessionDependable,
         authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
     ):
-        def create(exercise, punctuation, words, colors):
-            if exercise.adaptation is not None:
-                session.delete(exercise.adaptation)
-            return create_item(
-                session, SelectThingsAdaptation,
-                exercise=exercise,
-                punctuation=punctuation,
-                words=words,
-                colors=colors,
-                created_by=authenticated_user,
-                updated_by=authenticated_user,
-            )
-        return create
+        if exercise.adaptation is not None:
+            session.delete(exercise.adaptation)
+        return create_item(
+            session, SelectThingsAdaptation,
+            exercise=exercise,
+            punctuation=punctuation,
+            words=words,
+            colors=colors,
+            created_by=authenticated_user,
+            updated_by=authenticated_user,
+        )
 
-    @staticmethod
-    def ItemGetter(
+    def get_item(
+        self,
+        id,
         session: SessionDependable,
         authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
     ):
-        def get(id):
-            return get_item(session, SelectThingsAdaptation, SelectThingsAdaptationsResource.sqids.decode(id)[0])
-        return get
+        return get_item(session, SelectThingsAdaptation, SelectThingsAdaptationsResource.sqids.decode(id)[0])
 
-    @staticmethod
-    def ItemSaver(
+    @contextmanager
+    def save_item(
+        self,
+        item,
         session: SessionDependable,
         authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
     ):
-        @contextmanager
-        def save(item):
-            yield
-            item.updated_by = authenticated_user
-            save_item(session, item)
-        return save
+        yield
+        item.updated_by = authenticated_user
+        save_item(session, item)
 
-    @staticmethod
-    def ItemDeleter(
+    def delete_item(
+        self,
+        item,
         session: SessionDependable,
         authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
     ):
-        def delete(item):
-            delete_item(session, item)
-        return delete
+        delete_item(session, item)
 
 
 set_wrapper(SelectThingsAdaptation, orm_wrapper_with_sqids(SelectThingsAdaptationsResource.sqids))

@@ -40,84 +40,76 @@ class PingsResource:
 
     default_page_size = settings.GENERIC_DEFAULT_API_PAGE_SIZE
 
-    @staticmethod
-    def ItemCreator(
+    def create_item(
+        self,
+        message,
+        prev,
+        next,
         session: SessionDependable,
         authenticated_user: OptionalAuthenticatedUserDependable,
     ):
-        def create(message, prev, next):
-            return create_item(
-                session,
-                Ping,
-                message=message,
-                created_by=authenticated_user,
-                updated_by=authenticated_user,
-                prev=prev,
-                next=next,
-            )
+        return create_item(
+            session,
+            Ping,
+            message=message,
+            created_by=authenticated_user,
+            updated_by=authenticated_user,
+            prev=prev,
+            next=next,
+        )
 
-        return create
-
-    @staticmethod
-    def ItemGetter(
+    def get_item(
+        self,
+        id,
         session: SessionDependable,
         authenticated_user: OptionalAuthenticatedUserDependable,
     ):
-        def get(id):
-            return get_item(session, Ping, id)
-
-        return get
-
+        return get_item(session, Ping, id)
 
     class Filters(BaseModel):
         message: str | None
         prev: str | None
 
-    @staticmethod
-    def PageGetter(
+    def get_page(
+        self,
+        first_index,
+        page_size,
         session: SessionDependable,
         filters: Annotated[Filters, make_filters(Filters)],
     ):
-        def get(first_index, page_size):
-            query = sql.select(Ping)
-            if filters.message is not None:
-                query = query.where(Ping.message == filters.message)
-            if filters.prev is not None:
-                query = query.where(Ping.prev_id == filters.prev)
-            return get_page(session, query, first_index, page_size)
+        query = sql.select(Ping)
+        if filters.message is not None:
+            query = query.where(Ping.message == filters.message)
+        if filters.prev is not None:
+            query = query.where(Ping.prev_id == filters.prev)
+        return get_page(session, query, first_index, page_size)
 
-        return get
-
-    @staticmethod
-    def ItemSaver(
+    @contextmanager
+    def save_item(
+        self,
+        item,
         session: SessionDependable,
         authenticated_user: OptionalAuthenticatedUserDependable,
     ):
-        @contextmanager
-        def save(item):
-            created_by = unwrap(item.created_by)
-            if created_by is not None:
-                if authenticated_user != created_by:
-                    raise HTTPException(status.HTTP_403_FORBIDDEN, "You are not the creator of this ping")
-            yield
-            item.updated_by = authenticated_user
-            save_item(session, item)
+        created_by = unwrap(item.created_by)
+        if created_by is not None:
+            if authenticated_user != created_by:
+                raise HTTPException(status.HTTP_403_FORBIDDEN, "You are not the creator of this ping")
+        yield
+        item.updated_by = authenticated_user
+        save_item(session, item)
 
-        return save
-
-    @staticmethod
-    def ItemDeleter(
+    def delete_item(
+        self,
+        item,
         session: SessionDependable,
         authenticated_user: OptionalAuthenticatedUserDependable,
     ):
-        def delete(item):
-            created_by = unwrap(item.created_by)
-            if created_by is not None:
-                if authenticated_user != created_by:
-                    raise HTTPException(status.HTTP_403_FORBIDDEN, "You are not the creator of this ping")
-            delete_item(session, item)
-
-        return delete
+        created_by = unwrap(item.created_by)
+        if created_by is not None:
+            if authenticated_user != created_by:
+                raise HTTPException(status.HTTP_403_FORBIDDEN, "You are not the creator of this ping")
+        delete_item(session, item)
 
 
 set_wrapper(Ping, OrmWrapperWithStrIds)

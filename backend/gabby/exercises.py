@@ -312,100 +312,92 @@ class ExercisesResource:
 
     sqids = make_sqids(singular_name)
 
-    @staticmethod
-    def ItemCreator(
+    def create_item(
+        self,
+        project,
+        textbook,
+        textbook_page,
+        bounding_rectangle,
+        number,
+        instructions,
+        wording,
+        example,
+        clue,
+        adaptation,
         session: SessionDependable,
         authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
     ):
-        def create(
-            project,
-            textbook,
-            textbook_page,
-            bounding_rectangle,
-            number,
-            instructions,
-            wording,
-            example,
-            clue,
-            adaptation,
-        ):
-            bounding_rectangle = None if bounding_rectangle is None else bounding_rectangle.model_dump()
-            return create_item(
-                session, Exercise,
-                project=project,
-                textbook=textbook,
-                textbook_page=textbook_page,
-                bounding_rectangle=bounding_rectangle,
-                number=number,
-                instructions=instructions,
-                wording=wording,
-                example=example,
-                clue=clue,
-                adaptation=adaptation,
-                created_by=authenticated_user,
-                updated_by=authenticated_user,
-            )
+        bounding_rectangle = None if bounding_rectangle is None else bounding_rectangle.model_dump()
+        return create_item(
+            session, Exercise,
+            project=project,
+            textbook=textbook,
+            textbook_page=textbook_page,
+            bounding_rectangle=bounding_rectangle,
+            number=number,
+            instructions=instructions,
+            wording=wording,
+            example=example,
+            clue=clue,
+            adaptation=adaptation,
+            created_by=authenticated_user,
+            updated_by=authenticated_user,
+        )
 
-        return create
-
-    @staticmethod
-    def ItemGetter(
+    def get_item(
+        self,
+        id,
         session: SessionDependable,
         authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
     ):
-        def get(id):
-            return get_item(session, Exercise, ExercisesResource.sqids.decode(id)[0])
-        return get
+        return get_item(session, Exercise, ExercisesResource.sqids.decode(id)[0])
 
     class Filters(BaseModel):
         textbook: str | None
         textbook_page: int | None
         number: str | None
 
-    @staticmethod
-    def PageGetter(
+    def get_page(
+        self,
+        first_index,
+        page_size,
         session: SessionDependable,
         filters: Annotated[Filters, make_filters(Filters)],
         authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
     ):
-        def get(first_index, page_size):
-            query = sql.select(Exercise).order_by(Exercise.textbook_id, Exercise.textbook_page, Exercise.number)
-            if filters.textbook is not None:
-                query = query.where(Exercise.textbook_id == TextbooksResource.sqids.decode(filters.textbook)[0])
-            if filters.textbook_page is not None:
-                query = query.where(Exercise.textbook_page == filters.textbook_page)
-            if filters.number is not None:
-                query = query.where(Exercise.number == filters.number)
-            return get_page(session, query, first_index, page_size)
-        return get
+        query = sql.select(Exercise).order_by(Exercise.textbook_id, Exercise.textbook_page, Exercise.number)
+        if filters.textbook is not None:
+            query = query.where(Exercise.textbook_id == TextbooksResource.sqids.decode(filters.textbook)[0])
+        if filters.textbook_page is not None:
+            query = query.where(Exercise.textbook_page == filters.textbook_page)
+        if filters.number is not None:
+            query = query.where(Exercise.number == filters.number)
+        return get_page(session, query, first_index, page_size)
 
-    @staticmethod
-    def ItemSaver(
+    @contextmanager
+    def save_item(
+        self,
+        item,
         session: SessionDependable,
         authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
     ):
-        @contextmanager
-        def save(item):
-            previous_adaptation = item.adaptation
-            previous_bounding_rectangle = item.bounding_rectangle
-            yield
-            if item.bounding_rectangle is not previous_bounding_rectangle and item.bounding_rectangle is not None:
-                item.bounding_rectangle = item.bounding_rectangle.model_dump()
-            if previous_adaptation is not None and unwrap(item.adaptation) != unwrap(previous_adaptation):
-                session.delete(previous_adaptation)
-            item.updated_by = authenticated_user
-            save_item(session, item)
+        previous_adaptation = item.adaptation
+        previous_bounding_rectangle = item.bounding_rectangle
+        yield
+        if item.bounding_rectangle is not previous_bounding_rectangle and item.bounding_rectangle is not None:
+            item.bounding_rectangle = item.bounding_rectangle.model_dump()
+        if previous_adaptation is not None and unwrap(item.adaptation) != unwrap(previous_adaptation):
+            session.delete(previous_adaptation)
+        item.updated_by = authenticated_user
+        save_item(session, item)
 
-        return save
-
-    @staticmethod
-    def ItemDeleter(
+    def delete_item(
+        self,
+        item,
         session: SessionDependable,
         authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
     ):
-        def delete(item):
-            delete_item(session, item)
-        return delete
+        delete_item(session, item)
 
 
 set_wrapper(Exercise, orm_wrapper_with_sqids(ExercisesResource.sqids))
@@ -432,60 +424,57 @@ class ExtractionEventsResource:
 
     sqids = make_sqids(singular_name)
 
-    @staticmethod
-    def ItemCreator(
+    def create_item(
+        self,
+        exercise,
+        event,
         session: SessionDependable,
         authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
     ):
-        def create(exercise, event):
-            return create_item(
-                session, ExtractionEvent,
-                exercise=exercise,
-                event=event,
-                created_by=authenticated_user,
-                updated_by=authenticated_user,
-            )
-        return create
+        return create_item(
+            session, ExtractionEvent,
+            exercise=exercise,
+            event=event,
+            created_by=authenticated_user,
+            updated_by=authenticated_user,
+        )
 
-    @staticmethod
-    def ItemGetter(
+    def get_item(
+        self,
+        id,
         session: SessionDependable,
         authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
     ):
-        def get(id):
-            return get_item(session, ExtractionEvent, ExtractionEventsResource.sqids.decode(id)[0])
-        return get
+        return get_item(session, ExtractionEvent, ExtractionEventsResource.sqids.decode(id)[0])
 
-    @staticmethod
-    def PageGetter(
+    def get_page(
+        self,
+        first_index,
+        page_size,
         session: SessionDependable,
         authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
     ):
-        def get(first_index, page_size):
-            query = sql.select(ExtractionEvent)
-            return get_page(session, query, first_index, page_size)
-        return get
+        query = sql.select(ExtractionEvent)
+        return get_page(session, query, first_index, page_size)
 
-    @staticmethod
-    def ItemSaver(
+    @contextmanager
+    def save_item(
+        self,
+        item,
         session: SessionDependable,
         authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
     ):
-        @contextmanager
-        def save(item):
-            yield
-            item.updated_by = authenticated_user
-            save_item(session, item)
-        return save
+        yield
+        item.updated_by = authenticated_user
+        save_item(session, item)
 
-    @staticmethod
-    def ItemDeleter(
+    def delete_item(
+        self,
+        item,
         session: SessionDependable,
         authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
     ):
-        def delete(item):
-            delete_item(session, item)
-        return delete
+        delete_item(session, item)
 
 
 set_wrapper(ExtractionEvent, orm_wrapper_with_sqids(ExtractionEventsResource.sqids))

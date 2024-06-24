@@ -264,7 +264,7 @@ class AuthenticationApiTestCase(testing.ApiTestCase):
 
 
 class UsersApiTestCase(testing.ApiTestCase):
-    resources = [UsersResource]
+    resources = [UsersResource()]
     polymorphism = {}
 
     def setUp(self):

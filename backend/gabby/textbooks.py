@@ -46,69 +46,63 @@ class TextbooksResource:
 
     sqids = make_sqids(singular_name)
 
-    @staticmethod
-    def ItemCreator(
+    def create_item(
+        self,
+        project,
+        title,
+        publisher,
+        year,
+        isbn,
         session: SessionDependable,
         authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
     ):
-        def create(
-            project,
-            title,
-            publisher,
-            year,
-            isbn,
-        ):
-            return create_item(
-                session, Textbook,
-                project=project,
-                title=title,
-                publisher=publisher,
-                year=year,
-                isbn=isbn,
-                created_by=authenticated_user,
-                updated_by=authenticated_user,
-            )
-        return create
+        return create_item(
+            session, Textbook,
+            project=project,
+            title=title,
+            publisher=publisher,
+            year=year,
+            isbn=isbn,
+            created_by=authenticated_user,
+            updated_by=authenticated_user,
+        )
 
-    @staticmethod
-    def ItemGetter(
+    def get_item(
+        self,
+        id,
         session: SessionDependable,
         authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
     ):
-        def get(id):
-            return get_item(session, Textbook, TextbooksResource.sqids.decode(id)[0])
-        return get
+        return get_item(session, Textbook, TextbooksResource.sqids.decode(id)[0])
 
-    @staticmethod
-    def PageGetter(
+    def get_page(
+        self,
+        first_index,
+        page_size,
         session: SessionDependable,
         authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
     ):
-        def get(first_index, page_size):
-            query = sql.select(Textbook)
-            return get_page(session, query, first_index, page_size)
-        return get
+        query = sql.select(Textbook)
+        return get_page(session, query, first_index, page_size)
 
-    @staticmethod
-    def ItemSaver(
+    @contextmanager
+    def save_item(
+        self,
+        item,
         session: SessionDependable,
         authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
     ):
-        @contextmanager
-        def save(item):
-            yield
-            item.updated_by = authenticated_user
-            save_item(session, item)
-        return save
+        yield
+        item.updated_by = authenticated_user
+        save_item(session, item)
 
-    @staticmethod
-    def ItemDeleter(
+    def delete_item(
+        self,
+        item,
         session: SessionDependable,
         authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
     ):
-        def delete(item):
-            delete_item(session, item)
-        return delete
+        delete_item(session, item)
 
 
 set_wrapper(Textbook, orm_wrapper_with_sqids(TextbooksResource.sqids))
@@ -139,69 +133,63 @@ class SectionsResource:
 
     sqids = make_sqids(singular_name)
 
-    @staticmethod
-    def ItemCreator(
+    def create_item(
+        self,
+        textbook,
+        pdf_file,
+        textbook_start_page,
+        pdf_file_start_page,
+        pages_count,
         session: SessionDependable,
         authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
     ):
-        def create(
-            textbook,
-            pdf_file,
-            textbook_start_page,
-            pdf_file_start_page,
-            pages_count,
-        ):
-            return create_item(
-                session, Section,
-                textbook=textbook,
-                pdf_file=pdf_file,
-                textbook_start_page=textbook_start_page,
-                pdf_file_start_page=pdf_file_start_page,
-                pages_count=pages_count,
-                created_by=authenticated_user,
-                updated_by=authenticated_user,
-            )
-        return create
+        return create_item(
+            session, Section,
+            textbook=textbook,
+            pdf_file=pdf_file,
+            textbook_start_page=textbook_start_page,
+            pdf_file_start_page=pdf_file_start_page,
+            pages_count=pages_count,
+            created_by=authenticated_user,
+            updated_by=authenticated_user,
+        )
 
-    @staticmethod
-    def ItemGetter(
+    def get_item(
+        self,
+        id,
         session: SessionDependable,
         authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
     ):
-        def get(id):
-            return get_item(session, Section, SectionsResource.sqids.decode(id)[0])
-        return get
+        return get_item(session, Section, SectionsResource.sqids.decode(id)[0])
 
-    @staticmethod
-    def PageGetter(
+    def get_page(
+        self,
+        first_index,
+        page_size,
         session: SessionDependable,
         authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
     ):
-        def get(first_index, page_size):
-            query = sql.select(Section)
-            return get_page(session, query, first_index, page_size)
-        return get
+        query = sql.select(Section)
+        return get_page(session, query, first_index, page_size)
 
-    @staticmethod
-    def ItemSaver(
+    @contextmanager
+    def save_item(
+        self,
+        item,
         session: SessionDependable,
         authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
     ):
-        @contextmanager
-        def save(item):
-            yield
-            item.updated_by = authenticated_user
-            save_item(session, item)
-        return save
+        yield
+        item.updated_by = authenticated_user
+        save_item(session, item)
 
-    @staticmethod
-    def ItemDeleter(
+    def delete_item(
+        self,
+        item,
         session: SessionDependable,
         authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
     ):
-        def delete(item):
-            delete_item(session, item)
-        return delete
+        delete_item(session, item)
 
 
 set_wrapper(Section, orm_wrapper_with_sqids(SectionsResource.sqids))

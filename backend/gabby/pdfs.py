@@ -36,72 +36,67 @@ class PdfFilesResource:
 
     default_page_size = settings.GENERIC_DEFAULT_API_PAGE_SIZE
 
-    @staticmethod
-    def ItemCreator(
+    def create_item(
+        self,
+        sha256,
+        bytes_count,
+        pages_count,
         session: SessionDependable,
         authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
     ):
-        def create(sha256, bytes_count, pages_count):
-            pdf_file = PdfFile(
-                sha256=sha256,
-                bytes_count=bytes_count,
-                pages_count=pages_count,
-                created_by=authenticated_user,
-            )
-            session.add(pdf_file)
-            try:
-                session.flush()
-            except sql.exc.IntegrityError as e:
-                if e.orig.diag.constraint_name == "pdf_files_pkey":
-                    session.rollback()
-                    return get_item(session, PdfFile, sha256)
-                else:
-                    raise HTTPException(status_code=400, detail=e.orig.diag.constraint_name)
-            return wrap(pdf_file)
+        pdf_file = PdfFile(
+            sha256=sha256,
+            bytes_count=bytes_count,
+            pages_count=pages_count,
+            created_by=authenticated_user,
+        )
+        session.add(pdf_file)
+        try:
+            session.flush()
+        except sql.exc.IntegrityError as e:
+            if e.orig.diag.constraint_name == "pdf_files_pkey":
+                session.rollback()
+                return get_item(session, PdfFile, sha256)
+            else:
+                raise HTTPException(status_code=400, detail=e.orig.diag.constraint_name)
+        return wrap(pdf_file)
 
-        return create
-
-    @staticmethod
-    def ItemGetter(
+    def get_item(
+        self,
+        id,
         session: SessionDependable,
         authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
     ):
-        def get(id):
-            return get_item(session, PdfFile, id)
+        return get_item(session, PdfFile, id)
 
-        return get
-
-
-    @staticmethod
-    def PageGetter(
+    def get_page(
+        self,
+        first_index,
+        page_size,
         session: SessionDependable,
         authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
     ):
-        def get(first_index, page_size):
-            query = sql.select(PdfFile)
-            return get_page(session, query, first_index, page_size)
-        return get
+        query = sql.select(PdfFile)
+        return get_page(session, query, first_index, page_size)
 
-    @staticmethod
-    def ItemSaver(
+    @contextmanager
+    def save_item(
+        self,
+        item,
         session: SessionDependable,
         authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
     ):
-        @contextmanager
-        def save(item):
-            yield
-            item.updated_by = authenticated_user
-            save_item(session, item)
-        return save
+        yield
+        item.updated_by = authenticated_user
+        save_item(session, item)
 
-    @staticmethod
-    def ItemDeleter(
+    def delete_item(
+        self,
+        item,
         session: SessionDependable,
         authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
     ):
-        def delete(item):
-            delete_item(session, item)
-        return delete
+        delete_item(session, item)
 
 
 class PdfFileWrapper(OrmWrapper):
@@ -133,61 +128,55 @@ class PdfFileNamingsResource:
 
     sqids = make_sqids(singular_name)
 
-    @staticmethod
-    def ItemCreator(
+    def create_item(
+        self,
+        pdf_file, name,
         session: SessionDependable,
         authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
     ):
-        def create(pdf_file, name):
-            return create_item(
-                session, PdfFileNaming,
-                pdf_file=pdf_file,
-                name=name,
-                created_by=authenticated_user,
-            )
+        return create_item(
+            session, PdfFileNaming,
+            pdf_file=pdf_file,
+            name=name,
+            created_by=authenticated_user,
+        )
 
-        return create
-
-    @staticmethod
-    def ItemGetter(
+    def get_item(
+        self,
+        id,
         session: SessionDependable,
         authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
     ):
-        def get(id):
-            return get_item(session, PdfFileNaming, PdfFileNamingsResource.sqids.decode(id)[0])
-        return get
+        return get_item(session, PdfFileNaming, PdfFileNamingsResource.sqids.decode(id)[0])
 
-
-    @staticmethod
-    def PageGetter(
+    def get_page(
+        self,
+        first_index,
+        page_size,
         session: SessionDependable,
         authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
     ):
-        def get(first_index, page_size):
-            query = sql.select(PdfFileNaming)
-            return get_page(session, query, first_index, page_size)
-        return get
+        query = sql.select(PdfFileNaming)
+        return get_page(session, query, first_index, page_size)
 
-    @staticmethod
-    def ItemSaver(
+    @contextmanager
+    def save_item(
+        self,
+        item,
         session: SessionDependable,
         authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
     ):
-        @contextmanager
-        def save(item):
-            yield
-            item.updated_by = authenticated_user
-            save_item(session, item)
-        return save
+        yield
+        item.updated_by = authenticated_user
+        save_item(session, item)
 
-    @staticmethod
-    def ItemDeleter(
+    def delete_item(
+        self,
+        item,
         session: SessionDependable,
         authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
     ):
-        def delete(item):
-            delete_item(session, item)
-        return delete
+        delete_item(session, item)
 
 
 set_wrapper(PdfFileNaming, orm_wrapper_with_sqids(PdfFileNamingsResource.sqids))

@@ -1,4 +1,3 @@
-from __future__ import annotations
 from contextlib import contextmanager
 from typing import Annotated
 import datetime
@@ -39,15 +38,15 @@ class User(OrmBase):
     # Can't use 'CreatedUpdatedByAtMixin' because of circular dependency
     created_at: orm.Mapped[datetime.datetime] = orm.mapped_column(sql.DateTime(timezone=True), server_default=sql.func.now())
     created_by_id: orm.Mapped[int] = orm.mapped_column(sql.ForeignKey("users.id"))
-    created_by: orm.Mapped[User] = orm.relationship(foreign_keys=[created_by_id], remote_side=[id], post_update=True)
+    created_by: orm.Mapped['User'] = orm.relationship(foreign_keys=[created_by_id], remote_side=[id], post_update=True)
     updated_at: orm.Mapped[datetime.datetime] = orm.mapped_column(sql.DateTime(timezone=True), server_default=sql.func.now(), onupdate=sql.func.now())
     updated_by_id: orm.Mapped[int] = orm.mapped_column(sql.ForeignKey("users.id"))
-    updated_by: orm.Mapped[User] = orm.relationship(foreign_keys=[updated_by_id], remote_side=[id], post_update=True)
+    updated_by: orm.Mapped['User'] = orm.relationship(foreign_keys=[updated_by_id], remote_side=[id], post_update=True)
 
     username: orm.Mapped[str | None] = orm.mapped_column()
     hashed_password: orm.Mapped[str | None] = orm.mapped_column()
 
-    email_addresses: orm.Mapped[list[UserEmailAddress]] = orm.relationship("UserEmailAddress", back_populates="user")
+    email_addresses: orm.Mapped[list['UserEmailAddress']] = orm.relationship("UserEmailAddress", back_populates="user")
 
     __table_args__ = (
         # NEVER allow '@' in usernames, to avoid confusion with email addresses
@@ -200,33 +199,29 @@ class UsersResource:
 
     sqids = make_sqids(singular_name)
 
-    @staticmethod
-    def ItemGetter(
+    def get_item(
+        self,
+        id,
         session: SessionDependable,
         authenticated_user: OptionalAuthenticatedUserDependable,
     ):
-        def get(id):
-            if id == "current":
-                return wrap(authenticated_user)
-            else:
-                return get_item(session, User, UsersResource.sqids.decode(id)[0])
+        if id == "current":
+            return wrap(authenticated_user)
+        else:
+            return get_item(session, User, UsersResource.sqids.decode(id)[0])
 
-        return get
-
-    @staticmethod
-    def ItemSaver(
+    @contextmanager
+    def save_item(
+        self,
+        item,
         session: SessionDependable,
         authenticated_user: ActuallyMandatoryAuthenticatedUserDependable,
     ):
-        @contextmanager
-        def save(item):
-            if unwrap(item) != authenticated_user:
-                raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="You can only edit your own user")
-            yield
-            item.updated_by = authenticated_user
-            save_item(session, item)
-
-        return save
+        if unwrap(item) != authenticated_user:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="You can only edit your own user")
+        yield
+        item.updated_by = authenticated_user
+        save_item(session, item)
 
 
 set_wrapper(User, orm_wrapper_with_sqids(UsersResource.sqids))

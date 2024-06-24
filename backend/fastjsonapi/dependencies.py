@@ -107,11 +107,14 @@ def extract_dependencies(target):
         name: parameter.annotation
         for (name, parameter) in signature.parameters.items()
         if
-            isinstance(parameter.annotation, typing._AnnotatedAlias)
-            and
-            any(
-                isinstance(metadata, (fastapi.params.Depends, fastapi.params.Param))
-                for metadata in parameter.annotation.__metadata__
+            parameter.annotation is fastapi.BackgroundTasks
+            or (
+                isinstance(parameter.annotation, typing._AnnotatedAlias)
+                and
+                any(
+                    isinstance(metadata, (fastapi.params.Depends, fastapi.params.Param))
+                    for metadata in parameter.annotation.__metadata__
+                )
             )
     }
 
@@ -120,7 +123,6 @@ def extract_dependencies(target):
         for (name, parameter) in signature.parameters.items()
         if parameter.default is not inspect.Parameter.empty
     }
-
 
     wrapper_ast = make_wrapper_ast({name: name in defaults for name in annotations})
 
@@ -160,6 +162,12 @@ class ExtractDependenciesTestCase(unittest.TestCase):
             return h
 
         self.assertEqual(extract_dependencies(f)(h="H")(), "H")
+
+    def test_background_tasks(self):
+        def f(bg: fastapi.BackgroundTasks):
+            return bg
+
+        self.assertEqual(extract_dependencies(f)(bg="BG")(), "BG")
 
     def test_defaulted_dependency(self):
         def f(d: Annotated[str, Depends()] = "D"):
