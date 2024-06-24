@@ -88,7 +88,7 @@ export function defineApiStore(name: string, options?: {baseUrl?: string}) {
       _lists: {} as {[url: Url]: ItemListInCache},
       _baseUrl: (options && options.baseUrl) || '/api/',
       _authentication: null as null | {
-        header: string,
+        accessToken: string,
         validUntil: Date | null,
       }
     }),
@@ -232,7 +232,7 @@ export function defineApiStore(name: string, options?: {baseUrl?: string}) {
         const body = json_body ? JSON.stringify(json_body) : null
         const headers: {[name: string]: string} = {'Content-Type': 'application/vnd.api+json'}
         if (this._authentication !== null) {
-          headers['Authorization'] = this._authentication.header
+          headers['Authorization'] = `Bearer ${this._authentication.accessToken}`
         }
         const raw_response = await fetch(url, {method, headers, body})
         const json_response = raw_response.headers.get('Content-Type') == 'application/vnd.api+json' ? await raw_response.json() : null
@@ -306,7 +306,7 @@ export function defineApiStore(name: string, options?: {baseUrl?: string}) {
         }
       },
       _setAuth(accessToken: string, validUntil: Date, expiresSoonMargin: number, logoutMargin: number) {
-        cache._authentication = {header: 'Bearer ' + accessToken, validUntil}
+        cache._authentication = {accessToken, validUntil}
         localStorage.setItem('auth-v1', JSON.stringify({accessToken, validUntil}))
         expiresSoon.value = false
         if (expiresSoonTimeout !== null) {
@@ -320,7 +320,7 @@ export function defineApiStore(name: string, options?: {baseUrl?: string}) {
         logoutTimeout = setTimeout(() => { this.logout() }, validFor - logoutMargin)
       },
       setToken(accessToken: string) {
-        cache._authentication = {header: 'Bearer ' + accessToken, validUntil: new Date(0)}
+        cache._authentication = {accessToken, validUntil: new Date(0)}
       },
       logout() {
         cache._authentication = null
@@ -329,6 +329,7 @@ export function defineApiStore(name: string, options?: {baseUrl?: string}) {
         cache._items = {}
         cache._lists = {}
       },
+      token: computed(() => cache._authentication?.accessToken),
     }
 
     const stored = localStorage.getItem('auth-v1')
@@ -398,7 +399,7 @@ export function defineApiStore(name: string, options?: {baseUrl?: string}) {
         const json_body = {'atomic:operations': operations}
         const headers: {[name: string]: string} = {'Content-Type': 'application/vnd.api+json'}
         if (cache._authentication !== null) {
-          headers['Authorization'] = cache._authentication.header
+          headers['Authorization'] = `Bearer ${cache._authentication.accessToken}`
         }
         const raw_response = await fetch(url, {method: 'POST', headers, body: JSON.stringify(json_body)})
         const json_response = raw_response.headers.get('Content-Type') == 'application/vnd.api+json' ? await raw_response.json() : null

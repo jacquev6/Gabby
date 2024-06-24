@@ -14,7 +14,7 @@ from .database_utils import SessionDependable
 from .exercises import Exercise
 from .fixtures import load as load_fixtures
 from .projects import Project, ProjectsResource
-from .users import AuthenticationDependable
+from .users import AuthenticationDependable, MandatoryAuthTokenDependable
 
 
 app = FastAPI(
@@ -46,7 +46,11 @@ app.include_router(
 
 # @todo Require authentication (but keep it working: it's not an API call, so authentication must come through the browser)
 @app.get("/api/project-{project_id}-extraction-report.json")
-def extraction_report(project_id: str, session: SessionDependable):
+def extraction_report(
+    project_id: str,
+    session: SessionDependable,
+    authenticated_user: MandatoryAuthTokenDependable,
+):
     project = session.get(Project, ProjectsResource.sqids.decode(project_id)[0])
     return {
         "project": {
@@ -73,7 +77,11 @@ def extraction_report(project_id: str, session: SessionDependable):
 
 # @todo Require authentication (but keep it working: it's not an API call, so authentication must come through the browser)
 @app.get("/api/project-{project_id}.html")
-def export_project(project_id: str, session: SessionDependable):
+def export_project(
+    project_id: str,
+    session: SessionDependable,
+    authenticated_user: MandatoryAuthTokenDependable,
+):
     project = session.get(Project, ProjectsResource.sqids.decode(project_id)[0])
     exercises = []
     for exercise in project.exercises:

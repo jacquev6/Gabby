@@ -178,14 +178,28 @@ def optional_auth_bearer_dependable(
 OptionalAuthBearerDependable = Annotated[User | None, Depends(optional_auth_bearer_dependable)]
 
 
-def mandatory_auth_bearer_dependable(user: OptionalAuthBearerDependable):
+def make_user_mandatory(user: User | None):
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid or expired token")
     else:
         return user
 
 
+def mandatory_auth_bearer_dependable(user: OptionalAuthBearerDependable):
+    return make_user_mandatory(user)
+
+
 MandatoryAuthBearerDependable = Annotated[User, Depends(mandatory_auth_bearer_dependable)]
+
+
+def mandatory_auth_token_dependable(
+    session: SessionDependable,
+    token: str,
+):
+    make_user_mandatory(get_optional_user_from_token(session, token))
+
+
+MandatoryAuthTokenDependable = Annotated[dict, Depends(mandatory_auth_token_dependable)]
 
 
 class UsersResource:

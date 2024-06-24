@@ -10,9 +10,11 @@ import ExercisesList from './ExercisesList.vue'
 import PdfPreview from '$frontend/components/PdfPreview.vue'
 import type { Project } from '$frontend/types/api'
 import type { InfoDoc } from '$frontend/stores/pdfs'
+import { useApiStore } from '$/frontend/stores/api'
 
 
 const router = useRouter()
+const api = useApiStore()
 
 const props = defineProps<{
   project: Project
@@ -33,8 +35,8 @@ defineExpose({
 
 <template>
   <EditableProjectHeader :project />
-  <p>{{ $t('download') }} <a :href="`/api/project-${project.id}.html`">{{ $t('theExportedHtml') }}</a>.</p>
-  <p>{{ $t('download') }} <a :href="`/api/project-${project.id}-extraction-report.json`" download>{{ $t('theExtractionReport') }}</a>.</p>
+  <p>{{ $t('download') }} <a :href="`/api/project-${project.id}.html?token=${api.auth.token.value}`">{{ $t('theExportedHtml') }}</a>.</p>
+  <p>{{ $t('download') }} <a :href="`/api/project-${project.id}-extraction-report.json?token=${api.auth.token.value}`" download>{{ $t('theExtractionReport') }}</a>.</p>
   <BRow>
     <BCol>
       <h2>{{ $t('newTextbook') }}</h2>

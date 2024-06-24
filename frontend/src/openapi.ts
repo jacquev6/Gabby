@@ -2770,6 +2770,9 @@ export interface operations {
   /** Extraction Report */
   extraction_report_api_project__project_id__extraction_report_json_get: {
     parameters: {
+      query: {
+        token: string;
+      };
       path: {
         project_id: string;
       };
@@ -2792,6 +2795,9 @@ export interface operations {
   /** Export Project */
   export_project_api_project__project_id__html_get: {
     parameters: {
+      query: {
+        token: string;
+      };
       path: {
         project_id: string;
       };
