@@ -12,7 +12,8 @@ from .adaptations.multiple_choices_in_instructions import MultipleChoicesInInstr
 from .adaptations.multiple_choices_in_wording import MultipleChoicesInWordingAdaptation
 from .adaptations.select_things import SelectThingsAdaptation
 from .exercises import Exercise
-from .testing import ApiTestCase
+from .testing import LoggedInApiTestCase
+from .users import WanabeMandatoryAuthenticatedUserDependable
 
 
 @dataclasses.dataclass
@@ -39,6 +40,7 @@ class AdaptedExercisesResource:
         clue,
         type,
         adaptation_options,
+        authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
     ):
         exercise = Exercise(
             number=number,
@@ -75,17 +77,17 @@ class AdaptedExercisesResource:
             adapted=adapted.make_adapted(),
         )
 
-    def get_item(self, id):
+    def get_item(
+        self,
+        id,
+        authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
+    ):
         return None
 
 
-class AdaptedExerciseApiTestCase(ApiTestCase):
+class AdaptedExerciseApiTestCase(LoggedInApiTestCase):
     resources = [AdaptedExercisesResource()]
     polymorphism = {}
-
-    def setUp(self):
-        super().setUp()
-        self.expect_commits_rollbacks(0, 0)
 
     def test_select_things(self):
         payload = {

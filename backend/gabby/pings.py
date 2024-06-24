@@ -60,11 +60,10 @@ class PingsResource:
 
     def get_item(
         self,
-        id,
+        id: str,
         session: SessionDependable,
-        authenticated_user: OptionalAuthenticatedUserDependable,
     ):
-        return get_item(session, Ping, id)
+        return get_item(session, Ping, int(id))
 
     class Filters(BaseModel):
         message: str | None

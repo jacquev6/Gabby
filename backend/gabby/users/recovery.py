@@ -13,7 +13,7 @@ from .. import settings
 from .. import testing
 from ..api_models import RecoveryEmailRequest
 from ..database_utils import Session, SessionDependable
-from .user import User, UserEmailAddress, make_access_token
+from .user import User, UserEmailAddress, make_access_token, WanabeMandatoryAuthenticatedUserDependable
 
 
 @dataclasses.dataclass
@@ -53,7 +53,11 @@ class RecoveryEmailRequestsResource:
         background_tasks.add_task(maybe_send_recovery_email, session, address, language)
         return RecoveryEmailRequestItem(id=uuid.uuid4().hex)
 
-    def get_item(self, id):
+    def get_item(
+        self,
+        id,
+        authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
+    ):
         return None
 
 

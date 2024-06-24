@@ -86,22 +86,27 @@ class TransactionTestCase(TestCase):
         return cls.SessionWrapper(cls, cls.__session)
 
     def expect_commit(self):
-        self.__expected_commits_rollbacks_count = (1, 0)
+        self.__expected_commits_count = 1
+        self.__expected_rollbacks_count = 0
 
     def expect_one_more_commit(self):
-        (commits, rollbacks) = self.__expected_commits_rollbacks_count
-        self.__expected_commits_rollbacks_count = (commits + 1, rollbacks)
+        self.__expected_commits_count += 1
 
     def expect_rollback(self):
-        self.__expected_commits_rollbacks_count = (0, 1)
+        self.__expected_commits_count = 0
+        self.__expected_rollbacks_count = 1
 
     def expect_commits_rollbacks(self, commits, rollbacks):
-        self.__expected_commits_rollbacks_count = (commits, rollbacks)
+        self.__expected_commits_count = commits
+        self.__expected_rollbacks_count = rollbacks
 
     def tearDown(self):
-        self.assertEqual((self.actual_commits_count, self.actual_rollbacks_count), self.__expected_commits_rollbacks_count)
+        self.assert_commits_rollbacks(self.__expected_commits_count, self.__expected_rollbacks_count)
         self.__session.close()
         super().tearDown()
+
+    def assert_commits_rollbacks(self, commits, rollbacks):
+        self.assertEqual((self.actual_commits_count, self.actual_rollbacks_count), (commits, rollbacks))
 
     def create_model(self, model, *args, **kwds):
         # @todo Understand why using the relationships instead of the ids results in a not-null violation
@@ -165,6 +170,8 @@ class ApiTestCase(TransactionTestCase):
     def logout(self):
         self.api_client.headers.pop("Authorization", None)
 
+    # @todo Automate counting the requests to set the expected commits and rollbacks
+    # We should manage to need only explicit '.expect_rollbacks()'s
     def get(self, url):
         return self.api_client.get(url, headers={"Content-Type": "application/vnd.api+json"})
 

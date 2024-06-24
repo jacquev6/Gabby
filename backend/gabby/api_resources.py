@@ -9,7 +9,7 @@ from .exercises import Exercise, ExercisesResource, ExtractionEventsResource
 from .pdfs import PdfFile, PdfFileNaming, PdfFilesResource, PdfFileNamingsResource
 from .pings import PingsResource
 from .projects import Project, ProjectsResource
-from .testing import LoggedInApiTestCase
+from .testing import ApiTestCase, LoggedInApiTestCase
 from .textbooks import Textbook, TextbooksResource, SectionsResource
 from .users import UsersResource
 from .users.recovery import RecoveryEmailRequestsResource
@@ -2329,3 +2329,53 @@ class BatchingApiTestCase(LoggedInApiTestCase):
                 ],
             },
         )
+
+
+class UnauthenticatedUseApiTestCase(ApiTestCase):
+    resources = resources
+    polymorphism = polymorphism
+
+    anonymous_use_behavior = {
+        # We'd prefer if none of these would commit, but that's a quest for another day.
+        "/pings GET": (status.HTTP_200_OK, True),
+        "/pings POST": (status.HTTP_422_UNPROCESSABLE_ENTITY, True),
+        "/pings/0 DELETE": (status.HTTP_404_NOT_FOUND, False),
+        "/pings/0 GET": (status.HTTP_404_NOT_FOUND, False),
+        "/pings/0 PATCH": (status.HTTP_422_UNPROCESSABLE_ENTITY, True),
+        "/recoveryEmailRequests POST": (status.HTTP_422_UNPROCESSABLE_ENTITY, True),
+        "/token POST": (status.HTTP_422_UNPROCESSABLE_ENTITY, True),
+    }
+
+    def request(self, method, path):
+        match method:
+            case "get":
+                return self.get(f"http://server{path}")
+            case "post":
+                return self.post(f"http://server{path}", {})
+            case "patch":
+                return self.patch(f"http://server{path}", {})
+            case "delete":
+                return self.delete(f"http://server{path}")
+            case _:
+                self.fail(f"Unsupported method: {method}")
+
+    def test(self):
+        openapi = self.api_app.openapi()
+
+        expected_commits = 0
+        expected_rollbacks = 0
+        for path, operations in openapi["paths"].items():
+            path = path.replace("{id}", "0")
+            for method in operations.keys():
+                subTest = f"{path} {method.upper()}"
+                with self.subTest(subTest):
+                    response = self.request(method, path)
+                    expected_status_code, does_commit = self.anonymous_use_behavior.get(subTest, (status.HTTP_401_UNAUTHORIZED, False))
+                    self.assertEqual(response.status_code, expected_status_code, response.json())
+                    if does_commit:
+                        expected_commits += 1
+                    else:
+                        expected_rollbacks += 1
+                self.assert_commits_rollbacks(expected_commits, expected_rollbacks)
+
+        self.expect_commits_rollbacks(expected_commits, expected_rollbacks)

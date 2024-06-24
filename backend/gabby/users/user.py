@@ -181,11 +181,8 @@ def _mandatory_authenticated_user_dependable(user: OptionalAuthenticatedUserDepe
         return user
 
 
-# @todo VERY IMPORTANT Fix 'MandatoryAuthenticatedUserDependable' to use '_mandatory_authenticated_user_dependable'
-# This is currently a workaround for a limitation of fastjsonapi, which instantiates all the 'ItemGetter's,
-# and so create dependencies on 'MandatoryAuthenticatedUserDependable' even in cases where it's not required.
-# Then merge these in a single simple 'MandatoryAuthenticatedUserDependable'.
-WanabeMandatoryAuthenticatedUserDependable = Annotated[User | None, Depends(_optional_authenticated_user_dependable)]
+# @todo Merge these in a single simple 'MandatoryAuthenticatedUserDependable'.
+WanabeMandatoryAuthenticatedUserDependable = Annotated[User | None, Depends(_mandatory_authenticated_user_dependable)]
 ActuallyMandatoryAuthenticatedUserDependable = Annotated[User, Depends(_mandatory_authenticated_user_dependable)]
 
 
@@ -203,7 +200,7 @@ class UsersResource:
         self,
         id,
         session: SessionDependable,
-        authenticated_user: OptionalAuthenticatedUserDependable,
+        authenticated_user: ActuallyMandatoryAuthenticatedUserDependable,
     ):
         if id == "current":
             return wrap(authenticated_user)
