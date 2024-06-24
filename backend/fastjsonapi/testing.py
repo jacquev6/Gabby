@@ -6,11 +6,14 @@ import unittest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from .router import make_jsonapi_router
+from . import router
 
 
 class ApiTestCase(unittest.TestCase):
     maxDiff = None
+
+    polymorphism = {}
+    batching = False
 
     @classmethod
     def setUpClass(cls):
@@ -18,9 +21,9 @@ class ApiTestCase(unittest.TestCase):
 
         if hasattr(cls, "resources"):
             cls.__app = FastAPI()
-            cls.__app.include_router(make_jsonapi_router(cls.resources, cls.polymorphism))
+            cls.__app.include_router(router.make_jsonapi_router(resources=cls.resources, polymorphism=cls.polymorphism, batching=cls.batching))
 
-            cls.__schema_file_path = f"{inspect.getfile(cls)}.{cls.__name__}.openapi.json"
+            cls.__schema_file_path = f"{inspect.getfile(cls)}.{cls.__name__.replace("ApiTestCase", "")}.openapi.json"
             cls.__client = TestClient(cls.__app)
 
     def get(self, url):
@@ -56,6 +59,9 @@ class ApiTestCase(unittest.TestCase):
 
 class ItemsFactory:
     def __init__(self):
+        self.clear()
+
+    def clear(self):
         self.__next_id = 1
         self.__items = {}
         self.commits_count = 0

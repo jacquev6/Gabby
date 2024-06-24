@@ -1832,7 +1832,6 @@ export interface operations {
       query?: {
         "page[size]"?: number;
         "page[number]"?: number;
-        sort?: string;
         include?: string;
         "filter[textbook]"?: string;
         "filter[textbookPage]"?: number;
@@ -1962,7 +1961,6 @@ export interface operations {
       query?: {
         "page[size]"?: number;
         "page[number]"?: number;
-        sort?: string;
         include?: string;
       };
     };
@@ -2395,7 +2393,6 @@ export interface operations {
       query?: {
         "page[size]"?: number;
         "page[number]"?: number;
-        sort?: string;
         include?: string;
       };
     };
@@ -2522,7 +2519,6 @@ export interface operations {
       query?: {
         "page[size]"?: number;
         "page[number]"?: number;
-        sort?: string;
         include?: string;
       };
     };
@@ -2649,7 +2645,6 @@ export interface operations {
       query?: {
         "page[size]"?: number;
         "page[number]"?: number;
-        sort?: string;
         include?: string;
         "filter[message]"?: string;
         "filter[prev]"?: string;
@@ -2822,7 +2817,6 @@ export interface operations {
       query?: {
         "page[size]"?: number;
         "page[number]"?: number;
-        sort?: string;
         include?: string;
       };
     };
@@ -3001,7 +2995,6 @@ export interface operations {
       query?: {
         "page[size]"?: number;
         "page[number]"?: number;
-        sort?: string;
         include?: string;
       };
     };
@@ -3230,7 +3223,6 @@ export interface operations {
       query?: {
         "page[size]"?: number;
         "page[number]"?: number;
-        sort?: string;
         include?: string;
       };
     };

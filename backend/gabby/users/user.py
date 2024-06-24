@@ -219,12 +219,12 @@ class UsersResource:
         authenticated_user: ActuallyMandatoryAuthenticatedUserDependable,
     ):
         @contextmanager
-        def save(user):
-            if unwrap(user) != authenticated_user:
+        def save(item):
+            if unwrap(item) != authenticated_user:
                 raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="You can only edit your own user")
             yield
-            user.updated_by = authenticated_user
-            save_item(session, user)
+            item.updated_by = authenticated_user
+            save_item(session, item)
 
         return save
 

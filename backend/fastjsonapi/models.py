@@ -1,6 +1,5 @@
 from types import UnionType
-from typing import Annotated, Iterable, Type
-from fastapi import Query
+from typing import Type
 from pydantic_core import PydanticUndefined
 import humps
 import pydantic
@@ -91,12 +90,15 @@ class Decider:
     def is_list_relationship(self, annotation):
         return annotation in self.__list_resource_models
 
-    def get_monomorphic_name(self, annotation):
-        return (
-            self.__resource_models.get(annotation)
-            or self.__optional_resource_models.get(annotation)
-            or self.__list_resource_models.get(annotation)
-        )
+    def get_polymorphic_names(self, annotation):
+        if self.is_mandatory_relationship(annotation):
+            return [self.__resource_models[annotation]]
+        elif self.is_optional_relationship(annotation):
+            return [self.__resource_models[arg] for arg in annotation.__args__ if arg in self.__resource_models]
+        elif self.is_list_relationship(annotation):
+            return [self.__list_resource_models[annotation]]
+        else:
+            return []
 
     def is_attribute(self, annotation):
         return not (
@@ -104,6 +106,7 @@ class Decider:
             or self.is_optional_relationship(annotation)
             or self.is_list_relationship(annotation)
         )
+
 
 def make_create_input_model(resource_name: str, model, decider: Decider):
     assert humps.is_camelcase(resource_name)
@@ -207,50 +210,6 @@ def make_output_models(resource_name: str, model, decider: Decider):
     )
 
     return (ItemOutput, PageOutput)
-
-
-def make_filters_dependable(resource_name: str, model, decider: Decider):
-    assert humps.is_camelcase(resource_name)
-
-    attributes = {}
-
-    for (name, info) in model.model_fields.items():
-        if Annotations(info.metadata).filter:
-            if decider.is_mandatory_relationship(info.annotation):
-                attributes[name] = str
-            elif decider.is_optional_relationship(info.annotation):
-                attributes[name] = str
-            elif decider.is_list_relationship(info.annotation):
-                assert False
-            elif decider.is_attribute(info.annotation):
-                attributes[name] = info.annotation
-            else:
-                assert False
-
-    Filters = create_model(
-        f"{resource_name}Filters",
-        **{
-            key: (value | None, ...)
-            for (key, value) in attributes.items()
-        },
-    )
-    # @todo Keep things structured all they way (avoid generating textual code)
-    # See... my old answer here: https://stackoverflow.com/a/29927459/905845
-    def filter_code():
-        yield "def filters("
-        for (name, annotation) in attributes.items():
-            if isinstance(annotation, UnionType):
-                assert len(annotation.__args__) == 2
-                assert annotation.__args__[1] is type(None)
-                annotation = annotation.__args__[0]
-            yield f"    {name}: Annotated[{annotation.__name__}, Query(alias='filter[{humps.camelize(name)}]')] = None,"
-        yield "):"
-        yield "    return Filters("
-        for name in attributes:
-            yield f"        {name}={name},"
-        yield "    )"
-    exec("\n".join(filter_code()), {"Filters": Filters}, filter_globals := {"Query": Query, "Annotated": Annotated})
-    return filter_globals["filters"]
 
 
 def make_update_input_model(resource_name: str, model, decider: Decider):

@@ -1,8 +1,7 @@
+from __future__ import annotations
 from contextlib import contextmanager
-from typing import Annotated
 import dataclasses
 
-from fastapi import Depends
 from pydantic import BaseModel
 from starlette import status
 
@@ -12,91 +11,97 @@ from ..testing import ItemsFactory, ApiTestCase
 class AlphaPolyModel(BaseModel):
     pass
 
+
 class BravoPolyModel(BaseModel):
     pass
+
 
 class OptionalRelationshipModel(BaseModel):
     rel: AlphaPolyModel | BravoPolyModel | None = None
 
+
 # @todo Support polymorphic mandatory relationships
 # @todo Support polymorphic list relationships
 
-@dataclasses.dataclass
-class AlphaPolyItem:
-    id: str
-
-@dataclasses.dataclass
-class BravoPolyItem:
-    id: str
-
-@dataclasses.dataclass
-class OptionalRelationshipItem:
-    id: str
-
-    rel: AlphaPolyItem | BravoPolyItem | None
-
-    saved: int = 0
-
-class OptionalRelationshipFactoryMixin:
-    def __init__(self, factory: Annotated[ItemsFactory, Depends(lambda: OptionalRelationshipTestCase.factory)]):
-        self.factory = factory
-
-class AlphaPolyResource:
-    singular_name = "alpha_poly"
-    plural_name = "alpha_polys"
-
-    default_page_size = 2
-
-    Model = AlphaPolyModel
-
-    class ItemGetter(OptionalRelationshipFactoryMixin):
-        def __call__(self, id):
-            return self.factory.get(AlphaPolyItem, id)
-
-class BravoPolyResource:
-    singular_name = "bravo_poly"
-    plural_name = "bravo_polys"
-
-    default_page_size = 2
-
-    Model = BravoPolyModel
-
-    class ItemGetter(OptionalRelationshipFactoryMixin):
-        def __call__(self, id):
-            return self.factory.get(BravoPolyItem, id)
-
-class OptionalRelationshipResource:
-    singular_name = "resource"
-    plural_name = "resources"
-
-    default_page_size = 2
-
-    Model = OptionalRelationshipModel
-
-    class ItemCreator(OptionalRelationshipFactoryMixin):
-        def __call__(self, rel):
-            return self.factory.create(OptionalRelationshipItem, rel=rel)
-
-    class ItemGetter(OptionalRelationshipFactoryMixin):
-        def __call__(self, id):
-            return self.factory.get(OptionalRelationshipItem, id)
-
-    class ItemSaver:
-        @contextmanager
-        def __call__(self, item):
-            yield
-            item.saved += 1
 
 class OptionalRelationshipTestCase(ApiTestCase):
-    resources = [AlphaPolyResource(), BravoPolyResource(), OptionalRelationshipResource()]
+    class AlphaPolyResource:
+        singular_name = "alpha_poly"
+        plural_name = "alpha_polys"
+
+        default_page_size = 2
+
+        Model = AlphaPolyModel
+
+        @dataclasses.dataclass
+        class Item:
+            id: str
+
+        def __init__(self, factory):
+            self.factory = factory
+
+        def get_item(self, id):
+            return self.factory.get(self.Item, id)
+
+    class BravoPolyResource:
+        singular_name = "bravo_poly"
+        plural_name = "bravo_polys"
+
+        default_page_size = 2
+
+        Model = BravoPolyModel
+
+        @dataclasses.dataclass
+        class Item:
+            id: str
+
+        def __init__(self, factory):
+            self.factory = factory
+
+        def get_item(self, id):
+            return self.factory.get(self.Item, id)
+
+    class OptionalRelationshipResource:
+        singular_name = "resource"
+        plural_name = "resources"
+
+        default_page_size = 2
+
+        Model = OptionalRelationshipModel
+
+        @dataclasses.dataclass
+        class Item:
+            id: str
+
+            rel: OptionalRelationshipTestCase.AlphaPolyResource.Item | OptionalRelationshipTestCase.BravoPolyResource.Item | None
+
+            saved: int = 0
+
+        def __init__(self, factory):
+            self.factory = factory
+
+        def create_item(self, rel):
+            return self.factory.create(self.Item, rel=rel)
+
+        def get_item(self, id):
+            return self.factory.get(self.Item, id)
+
+        class ItemSaver:
+            @contextmanager
+            def __call__(self, item):
+                yield
+                item.saved += 1
+
+    factory = ItemsFactory()
+    resources = [AlphaPolyResource(factory), BravoPolyResource(factory), OptionalRelationshipResource(factory)]
     polymorphism = {
-        AlphaPolyItem: "alpha_poly",
-        BravoPolyItem: "bravo_poly",
+        AlphaPolyResource.Item: "alpha_poly",
+        BravoPolyResource.Item: "bravo_poly",
     }
 
     def setUp(self):
         super().setUp()
-        self.__class__.factory = ItemsFactory()
+        self.factory.clear()
 
     def test_create_item__none(self):
         response = self.post("http://server/resources", {
@@ -120,7 +125,7 @@ class OptionalRelationshipTestCase(ApiTestCase):
         })
 
     def test_create_item__alpha(self):
-        self.factory.create(AlphaPolyItem)
+        self.factory.create(self.AlphaPolyResource.Item)
         response = self.post("http://server/resources", {
             "data": {
                 "type": "resource",
@@ -142,7 +147,7 @@ class OptionalRelationshipTestCase(ApiTestCase):
         })
 
     def test_create_item__alpha__include(self):
-        self.factory.create(AlphaPolyItem)
+        self.factory.create(self.AlphaPolyResource.Item)
         response = self.post("http://server/resources?include=rel", {
             "data": {
                 "type": "resource",
@@ -171,7 +176,7 @@ class OptionalRelationshipTestCase(ApiTestCase):
         })
 
     def test_create_item__bravo(self):
-        self.factory.create(BravoPolyItem)
+        self.factory.create(self.BravoPolyResource.Item)
         response = self.post("http://server/resources", {
             "data": {
                 "type": "resource",
@@ -193,7 +198,7 @@ class OptionalRelationshipTestCase(ApiTestCase):
         })
 
     def test_create_item__bravo__include(self):
-        self.factory.create(BravoPolyItem)
+        self.factory.create(self.BravoPolyResource.Item)
         response = self.post("http://server/resources?include=rel", {
             "data": {
                 "type": "resource",
@@ -222,7 +227,7 @@ class OptionalRelationshipTestCase(ApiTestCase):
         })
 
     def test_get_item__none(self):
-        self.factory.create(OptionalRelationshipItem, rel=None)
+        self.factory.create(self.OptionalRelationshipResource.Item, rel=None)
         response = self.get("http://server/resources/1")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
@@ -237,7 +242,7 @@ class OptionalRelationshipTestCase(ApiTestCase):
         })
 
     def test_get_item__none__include(self):
-        self.factory.create(OptionalRelationshipItem, rel=None)
+        self.factory.create(self.OptionalRelationshipResource.Item, rel=None)
         response = self.get("http://server/resources/1?include=rel")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
@@ -253,7 +258,7 @@ class OptionalRelationshipTestCase(ApiTestCase):
         })
 
     def test_get_item__alpha(self):
-        self.factory.create(OptionalRelationshipItem, rel=self.factory.create(AlphaPolyItem))
+        self.factory.create(self.OptionalRelationshipResource.Item, rel=self.factory.create(self.AlphaPolyResource.Item))
         response = self.get("http://server/resources/2")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
@@ -268,7 +273,7 @@ class OptionalRelationshipTestCase(ApiTestCase):
         })
 
     def test_get_item__alpha__include(self):
-        self.factory.create(OptionalRelationshipItem, rel=self.factory.create(AlphaPolyItem))
+        self.factory.create(self.OptionalRelationshipResource.Item, rel=self.factory.create(self.AlphaPolyResource.Item))
         response = self.get("http://server/resources/2?include=rel")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
@@ -290,7 +295,7 @@ class OptionalRelationshipTestCase(ApiTestCase):
         })
 
     def test_get_item__bravo(self):
-        self.factory.create(OptionalRelationshipItem, rel=self.factory.create(BravoPolyItem))
+        self.factory.create(self.OptionalRelationshipResource.Item, rel=self.factory.create(self.BravoPolyResource.Item))
         response = self.get("http://server/resources/2")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
@@ -305,7 +310,7 @@ class OptionalRelationshipTestCase(ApiTestCase):
         })
 
     def test_get_item__bravo__include(self):
-        self.factory.create(OptionalRelationshipItem, rel=self.factory.create(BravoPolyItem))
+        self.factory.create(self.OptionalRelationshipResource.Item, rel=self.factory.create(self.BravoPolyResource.Item))
         response = self.get("http://server/resources/2?include=rel")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
@@ -327,8 +332,8 @@ class OptionalRelationshipTestCase(ApiTestCase):
         })
 
     def test_update_item__none_to_alpha(self):
-        item = self.factory.create(OptionalRelationshipItem, rel=None)
-        alpha = self.factory.create(AlphaPolyItem)
+        item = self.factory.create(self.OptionalRelationshipResource.Item, rel=None)
+        alpha = self.factory.create(self.AlphaPolyResource.Item)
         response = self.patch("http://server/resources/1", {
             "data": {
                 "type": "resource",
@@ -353,8 +358,8 @@ class OptionalRelationshipTestCase(ApiTestCase):
         self.assertEqual(item.saved, 1)
 
     def test_update_item__none_to_alpha__include(self):
-        self.factory.create(OptionalRelationshipItem, rel=None)
-        self.factory.create(AlphaPolyItem)
+        self.factory.create(self.OptionalRelationshipResource.Item, rel=None)
+        self.factory.create(self.AlphaPolyResource.Item)
         response = self.patch("http://server/resources/1?include=rel", {
             "data": {
                 "type": "resource",
@@ -384,7 +389,7 @@ class OptionalRelationshipTestCase(ApiTestCase):
         })
 
     def test_update_item__alpha_to_none(self):
-        item = self.factory.create(OptionalRelationshipItem, rel=self.factory.create(AlphaPolyItem))
+        item = self.factory.create(self.OptionalRelationshipResource.Item, rel=self.factory.create(self.AlphaPolyResource.Item))
         response = self.patch("http://server/resources/2", {
             "data": {
                 "type": "resource",
@@ -409,8 +414,8 @@ class OptionalRelationshipTestCase(ApiTestCase):
         self.assertEqual(item.saved, 1)
 
     def test_update_item__alpha_to_bravo(self):
-        item = self.factory.create(OptionalRelationshipItem, rel=self.factory.create(AlphaPolyItem))
-        bravo = self.factory.create(BravoPolyItem)
+        item = self.factory.create(self.OptionalRelationshipResource.Item, rel=self.factory.create(self.AlphaPolyResource.Item))
+        bravo = self.factory.create(self.BravoPolyResource.Item)
         response = self.patch("http://server/resources/2", {
             "data": {
                 "type": "resource",

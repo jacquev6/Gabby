@@ -4526,11 +4526,6 @@
             "description": "Validation Error"
           }
         },
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
         "summary": "Create Adapted Exercise"
       }
     },
@@ -4646,15 +4641,6 @@
               "default": 1,
               "title": "Page[Number]",
               "type": "integer"
-            }
-          },
-          {
-            "in": "query",
-            "name": "sort",
-            "required": false,
-            "schema": {
-              "title": "Sort",
-              "type": "string"
             }
           },
           {
@@ -4947,15 +4933,6 @@
               "default": 1,
               "title": "Page[Number]",
               "type": "integer"
-            }
-          },
-          {
-            "in": "query",
-            "name": "sort",
-            "required": false,
-            "schema": {
-              "title": "Sort",
-              "type": "string"
             }
           },
           {
@@ -5834,15 +5811,6 @@
           },
           {
             "in": "query",
-            "name": "sort",
-            "required": false,
-            "schema": {
-              "title": "Sort",
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
             "name": "include",
             "required": false,
             "schema": {
@@ -6108,15 +6076,6 @@
           },
           {
             "in": "query",
-            "name": "sort",
-            "required": false,
-            "schema": {
-              "title": "Sort",
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
             "name": "include",
             "required": false,
             "schema": {
@@ -6378,15 +6337,6 @@
               "default": 1,
               "title": "Page[Number]",
               "type": "integer"
-            }
-          },
-          {
-            "in": "query",
-            "name": "sort",
-            "required": false,
-            "schema": {
-              "title": "Sort",
-              "type": "string"
             }
           },
           {
@@ -6743,15 +6693,6 @@
           },
           {
             "in": "query",
-            "name": "sort",
-            "required": false,
-            "schema": {
-              "title": "Sort",
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
             "name": "include",
             "required": false,
             "schema": {
@@ -7037,11 +6978,6 @@
             "description": "Validation Error"
           }
         },
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
         "summary": "Create Recovery Email Request"
       }
     },
@@ -7115,15 +7051,6 @@
               "default": 1,
               "title": "Page[Number]",
               "type": "integer"
-            }
-          },
-          {
-            "in": "query",
-            "name": "sort",
-            "required": false,
-            "schema": {
-              "title": "Sort",
-              "type": "string"
             }
           },
           {
@@ -7592,15 +7519,6 @@
               "default": 1,
               "title": "Page[Number]",
               "type": "integer"
-            }
-          },
-          {
-            "in": "query",
-            "name": "sort",
-            "required": false,
-            "schema": {
-              "title": "Sort",
-              "type": "string"
             }
           },
           {

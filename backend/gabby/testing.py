@@ -141,7 +141,7 @@ class ApiTestCase(TransactionTestCase):
         super().setUpClass()
 
         cls.api_app = FastAPI(make_session=cls.make_session)
-        cls.api_app.include_router(make_jsonapi_router(cls.resources, cls.polymorphism))
+        cls.api_app.include_router(make_jsonapi_router(resources=cls.resources, polymorphism=cls.polymorphism, batching=True))
 
         @cls.api_app.post("/token")
         def login(authentication: AuthenticationDependable):

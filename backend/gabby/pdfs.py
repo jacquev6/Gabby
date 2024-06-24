@@ -66,8 +66,8 @@ class PdfFilesResource:
         session: SessionDependable,
         authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
     ):
-        def get(sha256):
-            return get_item(session, PdfFile, sha256)
+        def get(id):
+            return get_item(session, PdfFile, id)
 
         return get
 
@@ -77,9 +77,8 @@ class PdfFilesResource:
         session: SessionDependable,
         authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
     ):
-        def get(sort, filters, first_index, page_size):
-            sort = sort or ("id",)
-            query = sql.select(PdfFile).order_by(*sort)
+        def get(first_index, page_size):
+            query = sql.select(PdfFile)
             return get_page(session, query, first_index, page_size)
         return get
 
@@ -164,9 +163,8 @@ class PdfFileNamingsResource:
         session: SessionDependable,
         authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
     ):
-        def get(sort, filters, first_index, page_size):
-            sort = sort or ("id",)
-            query = sql.select(PdfFileNaming).order_by(*sort)
+        def get(first_index, page_size):
+            query = sql.select(PdfFileNaming)
             return get_page(session, query, first_index, page_size)
         return get
 

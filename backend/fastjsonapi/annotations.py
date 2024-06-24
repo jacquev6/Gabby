@@ -6,7 +6,6 @@ class Annotations:
         self.create_input = True
         self.update_input = True
         self.output = True
-        self.filter = False
 
         for annotation in annotations:
             if isinstance(annotation, Annotation):
@@ -31,8 +30,3 @@ class Computed(Annotation):
 class Secret(Annotation):
     def apply(self, annotations : Annotations):
         annotations.output = False
-
-
-class Filterable(Annotation):
-    def apply(self, annotations : Annotations):
-        annotations.filter = True

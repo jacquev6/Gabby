@@ -28,84 +28,36 @@
         "title": "ItemLinks",
         "type": "object"
       },
-      "PageLinks": {
+      "MandatoryRelationship": {
         "additionalProperties": false,
         "properties": {
-          "first": {
-            "title": "First",
-            "type": "string"
-          },
-          "last": {
-            "title": "Last",
-            "type": "string"
-          },
-          "next": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Next"
-          },
-          "prev": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Prev"
+          "data": {
+            "$ref": "#/components/schemas/ObjectId"
           }
         },
         "required": [
-          "first",
-          "last",
-          "next",
-          "prev"
+          "data"
         ],
-        "title": "PageLinks",
+        "title": "MandatoryRelationship",
         "type": "object"
       },
-      "PageMeta": {
+      "ObjectId": {
         "additionalProperties": false,
         "properties": {
-          "pagination": {
-            "$ref": "#/components/schemas/Pagination"
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
           }
         },
         "required": [
-          "pagination"
+          "type",
+          "id"
         ],
-        "title": "PageMeta",
-        "type": "object"
-      },
-      "Pagination": {
-        "additionalProperties": false,
-        "properties": {
-          "count": {
-            "title": "Count",
-            "type": "integer"
-          },
-          "page": {
-            "title": "Page",
-            "type": "integer"
-          },
-          "pages": {
-            "title": "Pages",
-            "type": "integer"
-          }
-        },
-        "required": [
-          "count",
-          "page",
-          "pages"
-        ],
-        "title": "Pagination",
+        "title": "ObjectId",
         "type": "object"
       },
       "ValidationError": {
@@ -158,15 +110,15 @@
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "$ref": "#/components/schemas/resourceCreateInputDataAttributes"
-          },
-          "relationships": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/resourceCreateInputDataRelationships"
+                "$ref": "#/components/schemas/resourceCreateInputDataAttributes"
               }
             ],
             "default": {}
+          },
+          "relationships": {
+            "$ref": "#/components/schemas/resourceCreateInputDataRelationships"
           },
           "type": {
             "title": "Type",
@@ -175,49 +127,27 @@
         },
         "required": [
           "type",
-          "attributes"
+          "relationships"
         ],
         "title": "resourceCreateInputData",
         "type": "object"
       },
       "resourceCreateInputDataAttributes": {
         "additionalProperties": false,
-        "properties": {
-          "constantStr": {
-            "title": "Constantstr",
-            "type": "string"
-          },
-          "defaultedConstantFloat": {
-            "default": 3.14,
-            "title": "Defaultedconstantfloat",
-            "type": "number"
-          },
-          "defaultedDatetime": {
-            "default": "2024-03-18T15:38:15Z",
-            "format": "date-time",
-            "title": "Defaulteddatetime",
-            "type": "string"
-          },
-          "plainInt": {
-            "title": "Plainint",
-            "type": "integer"
-          },
-          "secretStr": {
-            "title": "Secretstr",
-            "type": "string"
-          }
-        },
-        "required": [
-          "plainInt",
-          "constantStr",
-          "secretStr"
-        ],
+        "properties": {},
         "title": "resourceCreateInputDataAttributes",
         "type": "object"
       },
       "resourceCreateInputDataRelationships": {
         "additionalProperties": false,
-        "properties": {},
+        "properties": {
+          "used": {
+            "$ref": "#/components/schemas/MandatoryRelationship"
+          }
+        },
+        "required": [
+          "used"
+        ],
         "title": "resourceCreateInputDataRelationships",
         "type": "object"
       },
@@ -242,8 +172,66 @@
       "resourceOutputItem": {
         "additionalProperties": false,
         "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "links": {
+            "$ref": "#/components/schemas/ItemLinks"
+          },
+          "relationships": {
+            "$ref": "#/components/schemas/resourceOutputItemRelationships"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "links",
+          "relationships"
+        ],
+        "title": "resourceOutputItem",
+        "type": "object"
+      },
+      "resourceOutputItemRelationships": {
+        "additionalProperties": false,
+        "properties": {
+          "used": {
+            "$ref": "#/components/schemas/MandatoryRelationship"
+          }
+        },
+        "required": [
+          "used"
+        ],
+        "title": "resourceOutputItemRelationships",
+        "type": "object"
+      },
+      "unusedResourceItemOutput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/unusedResourceOutputItem"
+          },
+          "included": {
+            "items": {},
+            "title": "Included",
+            "type": "array"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "unusedResourceItemOutput",
+        "type": "object"
+      },
+      "unusedResourceOutputItem": {
+        "additionalProperties": false,
+        "properties": {
           "attributes": {
-            "$ref": "#/components/schemas/resourceOutputItemAttributes"
+            "$ref": "#/components/schemas/unusedResourceOutputItemAttributes"
           },
           "id": {
             "title": "Id",
@@ -263,109 +251,53 @@
           "links",
           "attributes"
         ],
-        "title": "resourceOutputItem",
+        "title": "unusedResourceOutputItem",
         "type": "object"
       },
-      "resourceOutputItemAttributes": {
+      "unusedResourceOutputItemAttributes": {
         "additionalProperties": false,
         "properties": {
-          "computedStr": {
-            "title": "Computedstr",
+          "foo": {
+            "title": "Foo",
             "type": "string"
-          },
-          "constantStr": {
-            "title": "Constantstr",
-            "type": "string"
-          },
-          "defaultedConstantFloat": {
-            "title": "Defaultedconstantfloat",
-            "type": "number"
-          },
-          "defaultedDatetime": {
-            "format": "date-time",
-            "title": "Defaulteddatetime",
-            "type": "string"
-          },
-          "plainInt": {
-            "title": "Plainint",
-            "type": "integer"
           }
         },
         "required": [
-          "plainInt",
-          "defaultedDatetime",
-          "constantStr",
-          "defaultedConstantFloat",
-          "computedStr"
+          "foo"
         ],
-        "title": "resourceOutputItemAttributes",
+        "title": "unusedResourceOutputItemAttributes",
         "type": "object"
       },
-      "resourcePageOutput": {
+      "usedResourceItemOutput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "items": {
-              "$ref": "#/components/schemas/resourceOutputItem"
-            },
-            "title": "Data",
-            "type": "array"
+            "$ref": "#/components/schemas/usedResourceOutputItem"
           },
           "included": {
             "items": {},
             "title": "Included",
             "type": "array"
-          },
-          "links": {
-            "$ref": "#/components/schemas/PageLinks"
-          },
-          "meta": {
-            "$ref": "#/components/schemas/PageMeta"
-          }
-        },
-        "required": [
-          "data",
-          "meta",
-          "links"
-        ],
-        "title": "resourcePageOutput",
-        "type": "object"
-      },
-      "resourceUpdateInput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/resourceUpdateInputData"
           }
         },
         "required": [
           "data"
         ],
-        "title": "resourceUpdateInput",
+        "title": "usedResourceItemOutput",
         "type": "object"
       },
-      "resourceUpdateInputData": {
+      "usedResourceOutputItem": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/resourceUpdateInputDataAttributes"
-              }
-            ],
-            "default": {}
+            "$ref": "#/components/schemas/usedResourceOutputItemAttributes"
           },
           "id": {
             "title": "Id",
             "type": "string"
           },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/resourceUpdateInputDataRelationships"
-              }
-            ],
-            "default": {}
+          "links": {
+            "$ref": "#/components/schemas/ItemLinks"
           },
           "type": {
             "title": "Type",
@@ -374,35 +306,25 @@
         },
         "required": [
           "type",
-          "id"
+          "id",
+          "links",
+          "attributes"
         ],
-        "title": "resourceUpdateInputData",
+        "title": "usedResourceOutputItem",
         "type": "object"
       },
-      "resourceUpdateInputDataAttributes": {
+      "usedResourceOutputItemAttributes": {
         "additionalProperties": false,
         "properties": {
-          "defaultedDatetime": {
-            "format": "date-time",
-            "title": "Defaulteddatetime",
-            "type": "string"
-          },
-          "plainInt": {
-            "title": "Plainint",
-            "type": "integer"
-          },
-          "secretStr": {
-            "title": "Secretstr",
+          "bar": {
+            "title": "Bar",
             "type": "string"
           }
         },
-        "title": "resourceUpdateInputDataAttributes",
-        "type": "object"
-      },
-      "resourceUpdateInputDataRelationships": {
-        "additionalProperties": false,
-        "properties": {},
-        "title": "resourceUpdateInputDataRelationships",
+        "required": [
+          "bar"
+        ],
+        "title": "usedResourceOutputItemAttributes",
         "type": "object"
       }
     }
@@ -414,72 +336,6 @@
   "openapi": "3.1.0",
   "paths": {
     "/resources": {
-      "get": {
-        "operationId": "get_resources_resources_get",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "page[size]",
-            "required": false,
-            "schema": {
-              "default": 2,
-              "title": "Page[Size]",
-              "type": "integer"
-            }
-          },
-          {
-            "in": "query",
-            "name": "page[number]",
-            "required": false,
-            "schema": {
-              "default": 1,
-              "title": "Page[Number]",
-              "type": "integer"
-            }
-          },
-          {
-            "in": "query",
-            "name": "include",
-            "required": false,
-            "schema": {
-              "title": "Include",
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "filter[computedStr]",
-            "required": false,
-            "schema": {
-              "title": "Filter[Computedstr]",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/resourcePageOutput"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Get Resources"
-      },
       "post": {
         "operationId": "create_resource_resources_post",
         "parameters": [
@@ -489,6 +345,15 @@
             "required": false,
             "schema": {
               "title": "Include",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "bar",
+            "required": true,
+            "schema": {
+              "title": "Bar",
               "type": "string"
             }
           }
@@ -529,36 +394,6 @@
       }
     },
     "/resources/{id}": {
-      "delete": {
-        "operationId": "delete_resource_resources__id__delete",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "title": "Id",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Delete Resource"
-      },
       "get": {
         "operationId": "get_resource_resources__id__get",
         "parameters": [
@@ -604,9 +439,11 @@
           }
         },
         "summary": "Get Resource"
-      },
-      "patch": {
-        "operationId": "update_resource_resources__id__patch",
+      }
+    },
+    "/unusedResources/{id}": {
+      "get": {
+        "operationId": "get_unused_resource_unusedResources__id__get",
         "parameters": [
           {
             "in": "path",
@@ -625,24 +462,23 @@
               "title": "Include",
               "type": "string"
             }
+          },
+          {
+            "in": "query",
+            "name": "foo",
+            "required": true,
+            "schema": {
+              "title": "Foo",
+              "type": "string"
+            }
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/resourceUpdateInput"
-              }
-            }
-          },
-          "required": true
-        },
         "responses": {
           "200": {
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/resourceItemOutput"
+                  "$ref": "#/components/schemas/unusedResourceItemOutput"
                 }
               }
             },
@@ -659,7 +495,64 @@
             "description": "Validation Error"
           }
         },
-        "summary": "Update Resource"
+        "summary": "Get Unused Resource"
+      }
+    },
+    "/usedResources/{id}": {
+      "get": {
+        "operationId": "get_used_resource_usedResources__id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "bar",
+            "required": true,
+            "schema": {
+              "title": "Bar",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/usedResourceItemOutput"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Used Resource"
       }
     }
   }

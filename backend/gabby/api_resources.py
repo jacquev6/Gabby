@@ -484,7 +484,7 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
             ],
         })
 
-    def test_list__sorted_by_title(self):
+    def test_list(self):
         self.expect_commits_rollbacks(2, 0)
 
         textbook = self.create_model(Textbook, project=self.project, title="The title", publisher="The publisher", year=2023, isbn="9783161484100")
@@ -497,30 +497,10 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
         self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=16, number="8", instructions="", wording="", example="", clue="")
         self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=17, number="9", instructions="", wording="", example="", clue="")
 
-        response = self.get("http://server/textbooks?sort=title")
+        response = self.get("http://server/textbooks")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": [
-                {
-                    "type": "textbook",
-                    "id": "ojsbmy",
-                    "links": {"self": "http://server/textbooks/ojsbmy"},
-                    "attributes": {
-                        "title": "Another title",
-                        "publisher": "Another publisher",
-                        "year": 2024,
-                        "isbn": "9783161484101",
-                        "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
-                        "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
-                    },
-                    "relationships": {
-                        "project": {"data": {"type": "project", "id": "xkopqm"}},
-                        "exercises": {"data": [{"type": "exercise", "id": "jkrudc"}], "meta": {"count": 1}},
-                        "sections": {"data": [], "meta": {"count": 0}},
-                        "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
-                        "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
-                    },
-                },
                 {
                     "type": "textbook",
                     "id": "klxufv",
@@ -530,8 +510,8 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                         "publisher": "The publisher",
                         "year": 2023,
                         "isbn": "9783161484100",
-                        "createdAt": response.json()["data"][1]["attributes"]["createdAt"],
-                        "updatedAt": response.json()["data"][1]["attributes"]["updatedAt"],
+                        "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
+                        "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
@@ -541,17 +521,37 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                         "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
                 },
+                {
+                    "type": "textbook",
+                    "id": "ojsbmy",
+                    "links": {"self": "http://server/textbooks/ojsbmy"},
+                    "attributes": {
+                        "title": "Another title",
+                        "publisher": "Another publisher",
+                        "year": 2024,
+                        "isbn": "9783161484101",
+                        "createdAt": response.json()["data"][1]["attributes"]["createdAt"],
+                        "updatedAt": response.json()["data"][1]["attributes"]["updatedAt"],
+                    },
+                    "relationships": {
+                        "project": {"data": {"type": "project", "id": "xkopqm"}},
+                        "exercises": {"data": [{"type": "exercise", "id": "jkrudc"}], "meta": {"count": 1}},
+                        "sections": {"data": [], "meta": {"count": 0}},
+                        "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                        "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
+                    },
+                },
             ],
             "links": {
-                "first": "http://server/textbooks?page%5Bnumber%5D=1&sort=title",
-                "last": "http://server/textbooks?page%5Bnumber%5D=2&sort=title",
-                "next": "http://server/textbooks?page%5Bnumber%5D=2&sort=title",
+                "first": "http://server/textbooks?page%5Bnumber%5D=1",
+                "last": "http://server/textbooks?page%5Bnumber%5D=2",
+                "next": "http://server/textbooks?page%5Bnumber%5D=2",
                 "prev": None,
             },
             "meta": {"pagination": {"count": 3, "page": 1, "pages": 2}},
         })
 
-        response = self.get("http://server/textbooks?page[number]=2&sort=title")
+        response = self.get("http://server/textbooks?page[number]=2")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": [
@@ -584,118 +584,10 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                 },
             ],
             "links": {
-                "first": "http://server/textbooks?page%5Bnumber%5D=1&sort=title",
-                "last": "http://server/textbooks?page%5Bnumber%5D=2&sort=title",
+                "first": "http://server/textbooks?page%5Bnumber%5D=1",
+                "last": "http://server/textbooks?page%5Bnumber%5D=2",
                 "next": None,
-                "prev": "http://server/textbooks?page%5Bnumber%5D=1&sort=title",
-            },
-            "meta": {"pagination": {"count": 3, "page": 2, "pages": 2}},
-        })
-
-    def test_list__sorted_by_publisher(self):
-        self.expect_commits_rollbacks(2, 0)
-
-        textbook = self.create_model(Textbook, project=self.project, title="The title", publisher="Yet another publisher", year=2023, isbn="9783161484100")
-        self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=12, number="4", instructions="", wording="", example="", clue="")
-        self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=13, number="5", instructions="", wording="", example="", clue="")
-        textbook = self.create_model(Textbook, project=self.project, title="Another title", publisher="Another publisher", year=2024, isbn="9783161484101")
-        self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=14, number="6", instructions="", wording="", example="", clue="")
-        textbook = self.create_model(Textbook, project=self.project, title="Yet another title", publisher="The publisher", year=2025, isbn="9783161484102")
-        self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=15, number="7", instructions="", wording="", example="", clue="")
-        self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=16, number="8", instructions="", wording="", example="", clue="")
-        self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=17, number="9", instructions="", wording="", example="", clue="")
-
-        response = self.get("http://server/textbooks?sort=publisher")
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
-        self.assertEqual(response.json(), {
-            "data": [
-                {
-                    "type": "textbook",
-                    "id": "ojsbmy",
-                    "links": {"self": "http://server/textbooks/ojsbmy"},
-                    "attributes": {
-                        "title": "Another title",
-                        "publisher": "Another publisher",
-                        "year": 2024,
-                        "isbn": "9783161484101",
-                        "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
-                        "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
-                    },
-                    "relationships": {
-                        "project": {"data": {"type": "project", "id": "xkopqm"}},
-                        "exercises": {"data": [{"type": "exercise", "id": "jkrudc"}], "meta": {"count": 1}},
-                        "sections": {"data": [], "meta": {"count": 0}},
-                        "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
-                        "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
-                    },
-                },
-                {
-                    "type": "textbook",
-                    "id": "pkdksv",
-                    "links": {"self": "http://server/textbooks/pkdksv"},
-                    "attributes": {
-                        "title": "Yet another title",
-                        "publisher": "The publisher",
-                        "year": 2025,
-                        "isbn": "9783161484102",
-                        "createdAt": response.json()["data"][1]["attributes"]["createdAt"],
-                        "updatedAt": response.json()["data"][1]["attributes"]["updatedAt"],
-                    },
-                    "relationships": {
-                        "project": {"data": {"type": "project", "id": "xkopqm"}},
-                        "exercises": {
-                            "data": [
-                                {"type": "exercise", "id": "ufefwu"},
-                                {"type": "exercise", "id": "orxbzq"},
-                                {"type": "exercise", "id": "ahbwey"},
-                            ],
-                            "meta": {"count": 3},
-                        },
-                        "sections": {"data": [], "meta": {"count": 0}},
-                        "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
-                        "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
-                    },
-                },
-            ],
-            "links": {
-                "first": "http://server/textbooks?page%5Bnumber%5D=1&sort=publisher",
-                "last": "http://server/textbooks?page%5Bnumber%5D=2&sort=publisher",
-                "next": "http://server/textbooks?page%5Bnumber%5D=2&sort=publisher",
-                "prev": None,
-            },
-            "meta": {"pagination": {"count": 3, "page": 1, "pages": 2}},
-        })
-
-        response = self.get("http://server/textbooks?page[number]=2&sort=publisher")
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
-        self.assertEqual(response.json(), {
-            "data": [
-                {
-                    "type": "textbook",
-                    "id": "klxufv",
-                    "links": {"self": "http://server/textbooks/klxufv"},
-                    "attributes": {
-                        "title": "The title",
-                        "publisher": "Yet another publisher",
-                        "year": 2023,
-                        "isbn": "9783161484100",
-                        "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
-                        "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
-                    },
-                    "relationships": {
-                        "project": {"data": {"type": "project", "id": "xkopqm"}},
-                        "exercises": {"data": [{"type": "exercise", "id": "wbqloc"}, {"type": "exercise", "id": "bylced"}], "meta": {"count": 2}},
-                        "sections": {"data": [], "meta": {"count": 0}},
-                        "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
-                        "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
-                    },
-                },
-            ],
-            "links": {
-                "first": "http://server/textbooks?page%5Bnumber%5D=1&sort=publisher",
-                "last": "http://server/textbooks?page%5Bnumber%5D=2&sort=publisher",
-                "next": None,
-                "prev": "http://server/textbooks?page%5Bnumber%5D=1&sort=publisher",
+                "prev": "http://server/textbooks?page%5Bnumber%5D=1",
             },
             "meta": {"pagination": {"count": 3, "page": 2, "pages": 2}},
         })
@@ -713,30 +605,10 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
         self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=16, number="8", instructions="", wording="", example="", clue="")
         self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=17, number="9", instructions="", wording="", example="", clue="")
 
-        response = self.get("http://server/textbooks?include=exercises&sort=title")
+        response = self.get("http://server/textbooks?include=exercises")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": [
-                {
-                    "type": "textbook",
-                    "id": "ojsbmy",
-                    "links": {"self": "http://server/textbooks/ojsbmy"},
-                    "attributes": {
-                        "title": "Another title",
-                        "publisher": "Another publisher",
-                        "year": 2024,
-                        "isbn": "9783161484101",
-                        "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
-                        "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
-                    },
-                    "relationships": {
-                        "project": {"data": {"type": "project", "id": "xkopqm"}},
-                        "exercises": {"data": [{"type": "exercise", "id": "jkrudc"}], "meta": {"count": 1}},
-                        "sections": {"data": [], "meta": {"count": 0}},
-                        "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
-                        "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
-                    },
-                },
                 {
                     "type": "textbook",
                     "id": "klxufv",
@@ -746,12 +618,32 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                         "publisher": "The publisher",
                         "year": 2023,
                         "isbn": "9783161484100",
+                        "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
+                        "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
+                    },
+                    "relationships": {
+                        "project": {"data": {"type": "project", "id": "xkopqm"}},
+                        "exercises": {"data": [{"type": "exercise", "id": "wbqloc"}, {"type": "exercise", "id": "bylced"}], "meta": {"count": 2}},
+                        "sections": {"data": [], "meta": {"count": 0}},
+                        "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                        "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
+                    },
+                },
+                {
+                    "type": "textbook",
+                    "id": "ojsbmy",
+                    "links": {"self": "http://server/textbooks/ojsbmy"},
+                    "attributes": {
+                        "title": "Another title",
+                        "publisher": "Another publisher",
+                        "year": 2024,
+                        "isbn": "9783161484101",
                         "createdAt": response.json()["data"][1]["attributes"]["createdAt"],
                         "updatedAt": response.json()["data"][1]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
-                        "exercises": {"data": [{"type": "exercise", "id": "wbqloc"}, {"type": "exercise", "id": "bylced"}], "meta": {"count": 2}},
+                        "exercises": {"data": [{"type": "exercise", "id": "jkrudc"}], "meta": {"count": 1}},
                         "sections": {"data": [], "meta": {"count": 0}},
                         "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
                         "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
@@ -821,15 +713,15 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                 },
             ],
             "links": {
-                "first": "http://server/textbooks?page%5Bnumber%5D=1&include=exercises&sort=title",
-                "last": "http://server/textbooks?page%5Bnumber%5D=2&include=exercises&sort=title",
-                "next": "http://server/textbooks?page%5Bnumber%5D=2&include=exercises&sort=title",
+                "first": "http://server/textbooks?include=exercises&page%5Bnumber%5D=1",
+                "last": "http://server/textbooks?include=exercises&page%5Bnumber%5D=2",
+                "next": "http://server/textbooks?include=exercises&page%5Bnumber%5D=2",
                 "prev": None,
             },
             "meta": {"pagination": {"count": 3, "page": 1, "pages": 2}},
         })
 
-        response = self.get("http://server/textbooks?include=exercises&page[number]=2&sort=title")
+        response = self.get("http://server/textbooks?include=exercises&page[number]=2")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": [
@@ -924,10 +816,10 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                 },
             ],
             "links": {
-                "first": "http://server/textbooks?page%5Bnumber%5D=1&include=exercises&sort=title",
-                "last": "http://server/textbooks?page%5Bnumber%5D=2&include=exercises&sort=title",
+                "first": "http://server/textbooks?include=exercises&page%5Bnumber%5D=1",
+                "last": "http://server/textbooks?include=exercises&page%5Bnumber%5D=2",
                 "next": None,
-                "prev": "http://server/textbooks?page%5Bnumber%5D=1&include=exercises&sort=title",
+                "prev": "http://server/textbooks?include=exercises&page%5Bnumber%5D=1",
             },
             "meta": {"pagination": {"count": 3, "page": 2, "pages": 2}},
         })
@@ -1435,7 +1327,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
         self.create_model(Exercise, project=self.textbook.project, textbook=self.textbook, textbook_page=17, number="3", instructions="", wording="", example="", clue="")
         self.create_model(Exercise, project=self.textbook.project, textbook=self.textbook, textbook_page=17, number="4", instructions="", wording="", example="", clue="")
 
-        response = self.get("http://server/exercises?sort=textbookId,textbookPage,number")
+        response = self.get("http://server/exercises")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": [
@@ -1481,15 +1373,15 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                 },
             ],
             "links": {
-                "first": "http://server/exercises?page%5Bnumber%5D=1&sort=textbookId%2CtextbookPage%2Cnumber",
-                "last": "http://server/exercises?page%5Bnumber%5D=2&sort=textbookId%2CtextbookPage%2Cnumber",
-                "next": "http://server/exercises?page%5Bnumber%5D=2&sort=textbookId%2CtextbookPage%2Cnumber",
+                "first": "http://server/exercises?page%5Bnumber%5D=1",
+                "last": "http://server/exercises?page%5Bnumber%5D=2",
+                "next": "http://server/exercises?page%5Bnumber%5D=2",
                 "prev": None,
             },
             "meta": {"pagination": {"count": 3, "page": 1, "pages": 2}},
         })
 
-        response = self.get("http://server/exercises?page[number]=2&sort=textbookId,textbookPage,number")
+        response = self.get("http://server/exercises?page[number]=2")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": [
@@ -1515,105 +1407,10 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                 },
             ],
             "links": {
-                "first": "http://server/exercises?page%5Bnumber%5D=1&sort=textbookId%2CtextbookPage%2Cnumber",
-                "last": "http://server/exercises?page%5Bnumber%5D=2&sort=textbookId%2CtextbookPage%2Cnumber",
+                "first": "http://server/exercises?page%5Bnumber%5D=1",
+                "last": "http://server/exercises?page%5Bnumber%5D=2",
                 "next": None,
-                "prev": "http://server/exercises?page%5Bnumber%5D=1&sort=textbookId%2CtextbookPage%2Cnumber",
-            },
-            "meta": {"pagination": {"count": 3, "page": 2, "pages": 2}},
-        })
-
-    def test_list__sorted_weirdly(self):
-        self.expect_commits_rollbacks(2, 0)
-
-        self.create_model(Exercise, project=self.textbook.project, textbook=self.textbook, textbook_page=16, number="11", instructions="", wording="", example="", clue="")
-        self.create_model(Exercise, project=self.textbook.project, textbook=self.textbook, textbook_page=17, number="3", instructions="", wording="", example="", clue="")
-        self.create_model(Exercise, project=self.textbook.project, textbook=self.textbook, textbook_page=17, number="4", instructions="", wording="", example="", clue="")
-
-        response = self.get("http://server/exercises?sort=number")
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
-        self.assertEqual(response.json(), {
-            "data": [
-                {
-                    "type": "exercise",
-                    "id": "bylced",
-                    "links": {"self": "http://server/exercises/bylced"},
-                    "attributes": {
-                        "textbookPage": 17, "number": "3",
-                        "boundingRectangle": None,
-                        "instructions": "", "example": "", "clue": "", "wording": "",
-                        "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
-                        "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
-                    },
-                    "relationships": {
-                        "project": {"data": {"type": "project", "id": "xkopqm"}},
-                        "extractionEvents": {"data": [], "meta": {"count": 0}},
-                        "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
-                        "adaptation": {"data": None},
-                        "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
-                        "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
-                    },
-                },
-                {
-                    "type": "exercise",
-                    "id": "jkrudc",
-                    "links": {"self": "http://server/exercises/jkrudc"},
-                    "attributes": {
-                        "textbookPage": 17, "number": "4",
-                        "boundingRectangle": None,
-                        "instructions": "", "example": "", "clue": "", "wording": "",
-                        "createdAt": response.json()["data"][1]["attributes"]["createdAt"],
-                        "updatedAt": response.json()["data"][1]["attributes"]["updatedAt"],
-                    },
-                    "relationships": {
-                        "project": {"data": {"type": "project", "id": "xkopqm"}},
-                        "extractionEvents": {"data": [], "meta": {"count": 0}},
-                        "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
-                        "adaptation": {"data": None},
-                        "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
-                        "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
-                    },
-                },
-            ],
-            "links": {
-                "first": "http://server/exercises?page%5Bnumber%5D=1&sort=number",
-                "last": "http://server/exercises?page%5Bnumber%5D=2&sort=number",
-                "next": "http://server/exercises?page%5Bnumber%5D=2&sort=number",
-                "prev": None,
-            },
-            "meta": {"pagination": {"count": 3, "page": 1, "pages": 2}},
-        })
-
-        response = self.get("http://server/exercises?page[number]=2&sort=number")
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
-        self.assertEqual(response.json(), {
-            "data": [
-                {
-                    "type": "exercise",
-                    "id": "wbqloc",
-                    "links": {"self": "http://server/exercises/wbqloc"},
-                    "attributes": {
-                        "textbookPage": 16, "number": "11",
-                        "boundingRectangle": None,
-                        "instructions": "", "example": "", "clue": "", "wording": "",
-                        "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
-                        "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
-                    },
-                    "relationships": {
-                        "project": {"data": {"type": "project", "id": "xkopqm"}},
-                        "extractionEvents": {"data": [], "meta": {"count": 0}},
-                        "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
-                        "adaptation": {"data": None},
-                        "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
-                        "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
-                    },
-                },
-            ],
-            "links": {
-                "first": "http://server/exercises?page%5Bnumber%5D=1&sort=number",
-                "last": "http://server/exercises?page%5Bnumber%5D=2&sort=number",
-                "next": None,
-                "prev": "http://server/exercises?page%5Bnumber%5D=1&sort=number",
+                "prev": "http://server/exercises?page%5Bnumber%5D=1",
             },
             "meta": {"pagination": {"count": 3, "page": 2, "pages": 2}},
         })
@@ -1700,9 +1497,9 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                 },
             ],
             "links": {
-                "first": "http://server/exercises?page%5Bnumber%5D=1&include=textbook",
-                "last": "http://server/exercises?page%5Bnumber%5D=2&include=textbook",
-                "next": "http://server/exercises?page%5Bnumber%5D=2&include=textbook",
+                "first": "http://server/exercises?include=textbook&page%5Bnumber%5D=1",
+                "last": "http://server/exercises?include=textbook&page%5Bnumber%5D=2",
+                "next": "http://server/exercises?include=textbook&page%5Bnumber%5D=2",
                 "prev": None,
             },
             "meta": {"pagination": {"count": 4, "page": 1, "pages": 2}},
@@ -1804,10 +1601,10 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                 },
             ],
             "links": {
-                "first": "http://server/exercises?page%5Bnumber%5D=1&include=textbook",
-                "last": "http://server/exercises?page%5Bnumber%5D=2&include=textbook",
+                "first": "http://server/exercises?include=textbook&page%5Bnumber%5D=1",
+                "last": "http://server/exercises?include=textbook&page%5Bnumber%5D=2",
                 "next": None,
-                "prev": "http://server/exercises?page%5Bnumber%5D=1&include=textbook",
+                "prev": "http://server/exercises?include=textbook&page%5Bnumber%5D=1",
             },
             "meta": {"pagination": {"count": 4, "page": 2, "pages": 2}},
         })
