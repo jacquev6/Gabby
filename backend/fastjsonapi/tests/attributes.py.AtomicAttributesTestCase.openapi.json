@@ -419,12 +419,20 @@
         "parameters": [
           {
             "in": "query",
-            "name": "page[size]",
+            "name": "filter[computedStr]",
             "required": false,
             "schema": {
-              "default": 2,
-              "title": "Page[Size]",
-              "type": "integer"
+              "title": "Filter[Computedstr]",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string"
             }
           },
           {
@@ -439,20 +447,12 @@
           },
           {
             "in": "query",
-            "name": "include",
+            "name": "page[size]",
             "required": false,
             "schema": {
-              "title": "Include",
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "filter[computedStr]",
-            "required": false,
-            "schema": {
-              "title": "Filter[Computedstr]",
-              "type": "string"
+              "default": 2,
+              "title": "Page[Size]",
+              "type": "integer"
             }
           }
         ],

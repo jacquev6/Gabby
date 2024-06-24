@@ -568,12 +568,11 @@
         "parameters": [
           {
             "in": "query",
-            "name": "page[size]",
+            "name": "include",
             "required": false,
             "schema": {
-              "default": 2,
-              "title": "Page[Size]",
-              "type": "integer"
+              "title": "Include",
+              "type": "string"
             }
           },
           {
@@ -588,11 +587,12 @@
           },
           {
             "in": "query",
-            "name": "include",
+            "name": "page[size]",
             "required": false,
             "schema": {
-              "title": "Include",
-              "type": "string"
+              "default": 2,
+              "title": "Page[Size]",
+              "type": "integer"
             }
           }
         ],

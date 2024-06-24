@@ -341,19 +341,19 @@
         "parameters": [
           {
             "in": "query",
-            "name": "include",
-            "required": false,
+            "name": "bar",
+            "required": true,
             "schema": {
-              "title": "Include",
+              "title": "Bar",
               "type": "string"
             }
           },
           {
             "in": "query",
-            "name": "bar",
-            "required": true,
+            "name": "include",
+            "required": false,
             "schema": {
-              "title": "Bar",
+              "title": "Include",
               "type": "string"
             }
           }
@@ -456,19 +456,19 @@
           },
           {
             "in": "query",
-            "name": "include",
-            "required": false,
+            "name": "foo",
+            "required": true,
             "schema": {
-              "title": "Include",
+              "title": "Foo",
               "type": "string"
             }
           },
           {
             "in": "query",
-            "name": "foo",
-            "required": true,
+            "name": "include",
+            "required": false,
             "schema": {
-              "title": "Foo",
+              "title": "Include",
               "type": "string"
             }
           }
@@ -513,19 +513,19 @@
           },
           {
             "in": "query",
-            "name": "include",
-            "required": false,
+            "name": "bar",
+            "required": true,
             "schema": {
-              "title": "Include",
+              "title": "Bar",
               "type": "string"
             }
           },
           {
             "in": "query",
-            "name": "bar",
-            "required": true,
+            "name": "include",
+            "required": false,
             "schema": {
-              "title": "Bar",
+              "title": "Include",
               "type": "string"
             }
           }

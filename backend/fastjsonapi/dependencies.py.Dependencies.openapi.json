@@ -155,6 +155,15 @@
         "operationId": "get_resource_resources__id__get",
         "parameters": [
           {
+            "in": "header",
+            "name": "host",
+            "required": true,
+            "schema": {
+              "title": "Host",
+              "type": "string"
+            }
+          },
+          {
             "in": "path",
             "name": "id",
             "required": true,
@@ -186,15 +195,6 @@
                 }
               ],
               "title": "Optional"
-            }
-          },
-          {
-            "in": "header",
-            "name": "host",
-            "required": true,
-            "schema": {
-              "title": "Host",
-              "type": "string"
             }
           }
         ],

@@ -7,6 +7,7 @@ from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 from . import router
+from . import openapi_utils
 
 
 class ApiTestCase(unittest.TestCase):
@@ -46,7 +47,7 @@ class ApiTestCase(unittest.TestCase):
             except FileNotFoundError:
                 expected = {}
 
-            actual = self.__app.openapi()
+            actual = openapi_utils.stabilize(self.__app.openapi())
             # @todo Remove all 'application/json' from schema; use only 'application/vnd.api+json'
 
             try:

@@ -1,10 +1,11 @@
 import json
 
-from fastapi import Depends, FastAPI, Request
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 
 from fastjsonapi import make_jsonapi_router
+import fastjsonapi.openapi_utils
 
 from . import api_resources
 from . import database_utils
@@ -107,5 +108,5 @@ if settings.EXPOSE_RESET_FOR_TESTS_URL:
 
 if settings.DEBUG:
     with open("openapi.json", "w") as file:
-        json.dump(app.openapi(), file, indent=2, sort_keys=True)
+        json.dump(fastjsonapi.openapi_utils.stabilize(app.openapi()), file, indent=2, sort_keys=True)
         file.write("\n")

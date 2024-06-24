@@ -4625,39 +4625,10 @@
         "parameters": [
           {
             "in": "query",
-            "name": "page[size]",
+            "name": "filter[number]",
             "required": false,
             "schema": {
-              "default": 2,
-              "title": "Page[Size]",
-              "type": "integer"
-            }
-          },
-          {
-            "in": "query",
-            "name": "page[number]",
-            "required": false,
-            "schema": {
-              "default": 1,
-              "title": "Page[Number]",
-              "type": "integer"
-            }
-          },
-          {
-            "in": "query",
-            "name": "include",
-            "required": false,
-            "schema": {
-              "title": "Include",
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "filter[textbook]",
-            "required": false,
-            "schema": {
-              "title": "Filter[Textbook]",
+              "title": "Filter[Number]",
               "type": "string"
             }
           },
@@ -4672,11 +4643,40 @@
           },
           {
             "in": "query",
-            "name": "filter[number]",
+            "name": "filter[textbook]",
             "required": false,
             "schema": {
-              "title": "Filter[Number]",
+              "title": "Filter[Textbook]",
               "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page[number]",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "title": "Page[Number]",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page[size]",
+            "required": false,
+            "schema": {
+              "default": 2,
+              "title": "Page[Size]",
+              "type": "integer"
             }
           }
         ],
@@ -4917,12 +4917,11 @@
         "parameters": [
           {
             "in": "query",
-            "name": "page[size]",
+            "name": "include",
             "required": false,
             "schema": {
-              "default": 2,
-              "title": "Page[Size]",
-              "type": "integer"
+              "title": "Include",
+              "type": "string"
             }
           },
           {
@@ -4937,11 +4936,12 @@
           },
           {
             "in": "query",
-            "name": "include",
+            "name": "page[size]",
             "required": false,
             "schema": {
-              "title": "Include",
-              "type": "string"
+              "default": 2,
+              "title": "Page[Size]",
+              "type": "integer"
             }
           }
         ],
@@ -5791,12 +5791,11 @@
         "parameters": [
           {
             "in": "query",
-            "name": "page[size]",
+            "name": "include",
             "required": false,
             "schema": {
-              "default": 2,
-              "title": "Page[Size]",
-              "type": "integer"
+              "title": "Include",
+              "type": "string"
             }
           },
           {
@@ -5811,11 +5810,12 @@
           },
           {
             "in": "query",
-            "name": "include",
+            "name": "page[size]",
             "required": false,
             "schema": {
-              "title": "Include",
-              "type": "string"
+              "default": 2,
+              "title": "Page[Size]",
+              "type": "integer"
             }
           }
         ],
@@ -6056,12 +6056,11 @@
         "parameters": [
           {
             "in": "query",
-            "name": "page[size]",
+            "name": "include",
             "required": false,
             "schema": {
-              "default": 2,
-              "title": "Page[Size]",
-              "type": "integer"
+              "title": "Include",
+              "type": "string"
             }
           },
           {
@@ -6076,11 +6075,12 @@
           },
           {
             "in": "query",
-            "name": "include",
+            "name": "page[size]",
             "required": false,
             "schema": {
-              "title": "Include",
-              "type": "string"
+              "default": 2,
+              "title": "Page[Size]",
+              "type": "integer"
             }
           }
         ],
@@ -6321,35 +6321,6 @@
         "parameters": [
           {
             "in": "query",
-            "name": "page[size]",
-            "required": false,
-            "schema": {
-              "default": 2,
-              "title": "Page[Size]",
-              "type": "integer"
-            }
-          },
-          {
-            "in": "query",
-            "name": "page[number]",
-            "required": false,
-            "schema": {
-              "default": 1,
-              "title": "Page[Number]",
-              "type": "integer"
-            }
-          },
-          {
-            "in": "query",
-            "name": "include",
-            "required": false,
-            "schema": {
-              "title": "Include",
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
             "name": "filter[message]",
             "required": false,
             "schema": {
@@ -6364,6 +6335,35 @@
             "schema": {
               "title": "Filter[Prev]",
               "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page[number]",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "title": "Page[Number]",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page[size]",
+            "required": false,
+            "schema": {
+              "default": 2,
+              "title": "Page[Size]",
+              "type": "integer"
             }
           }
         ],
@@ -6673,12 +6673,11 @@
         "parameters": [
           {
             "in": "query",
-            "name": "page[size]",
+            "name": "include",
             "required": false,
             "schema": {
-              "default": 2,
-              "title": "Page[Size]",
-              "type": "integer"
+              "title": "Include",
+              "type": "string"
             }
           },
           {
@@ -6693,11 +6692,12 @@
           },
           {
             "in": "query",
-            "name": "include",
+            "name": "page[size]",
             "required": false,
             "schema": {
-              "title": "Include",
-              "type": "string"
+              "default": 2,
+              "title": "Page[Size]",
+              "type": "integer"
             }
           }
         ],
@@ -7035,12 +7035,11 @@
         "parameters": [
           {
             "in": "query",
-            "name": "page[size]",
+            "name": "include",
             "required": false,
             "schema": {
-              "default": 2,
-              "title": "Page[Size]",
-              "type": "integer"
+              "title": "Include",
+              "type": "string"
             }
           },
           {
@@ -7055,11 +7054,12 @@
           },
           {
             "in": "query",
-            "name": "include",
+            "name": "page[size]",
             "required": false,
             "schema": {
-              "title": "Include",
-              "type": "string"
+              "default": 2,
+              "title": "Page[Size]",
+              "type": "integer"
             }
           }
         ],
@@ -7503,12 +7503,11 @@
         "parameters": [
           {
             "in": "query",
-            "name": "page[size]",
+            "name": "include",
             "required": false,
             "schema": {
-              "default": 2,
-              "title": "Page[Size]",
-              "type": "integer"
+              "title": "Include",
+              "type": "string"
             }
           },
           {
@@ -7523,11 +7522,12 @@
           },
           {
             "in": "query",
-            "name": "include",
+            "name": "page[size]",
             "required": false,
             "schema": {
-              "title": "Include",
-              "type": "string"
+              "default": 2,
+              "title": "Page[Size]",
+              "type": "integer"
             }
           }
         ],

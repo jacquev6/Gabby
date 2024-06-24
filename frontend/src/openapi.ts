@@ -1830,12 +1830,12 @@ export interface operations {
   get_exercises_api_exercises_get: {
     parameters: {
       query?: {
-        "page[size]"?: number;
-        "page[number]"?: number;
-        include?: string;
-        "filter[textbook]"?: string;
-        "filter[textbookPage]"?: number;
         "filter[number]"?: string;
+        "filter[textbookPage]"?: number;
+        "filter[textbook]"?: string;
+        include?: string;
+        "page[number]"?: number;
+        "page[size]"?: number;
       };
     };
     responses: {
@@ -1959,9 +1959,9 @@ export interface operations {
   get_extraction_events_api_extractionEvents_get: {
     parameters: {
       query?: {
-        "page[size]"?: number;
-        "page[number]"?: number;
         include?: string;
+        "page[number]"?: number;
+        "page[size]"?: number;
       };
     };
     responses: {
@@ -2391,9 +2391,9 @@ export interface operations {
   get_pdf_file_namings_api_pdfFileNamings_get: {
     parameters: {
       query?: {
-        "page[size]"?: number;
-        "page[number]"?: number;
         include?: string;
+        "page[number]"?: number;
+        "page[size]"?: number;
       };
     };
     responses: {
@@ -2517,9 +2517,9 @@ export interface operations {
   get_pdf_files_api_pdfFiles_get: {
     parameters: {
       query?: {
-        "page[size]"?: number;
-        "page[number]"?: number;
         include?: string;
+        "page[number]"?: number;
+        "page[size]"?: number;
       };
     };
     responses: {
@@ -2643,11 +2643,11 @@ export interface operations {
   get_pings_api_pings_get: {
     parameters: {
       query?: {
-        "page[size]"?: number;
-        "page[number]"?: number;
-        include?: string;
         "filter[message]"?: string;
         "filter[prev]"?: string;
+        include?: string;
+        "page[number]"?: number;
+        "page[size]"?: number;
       };
     };
     responses: {
@@ -2815,9 +2815,9 @@ export interface operations {
   get_projects_api_projects_get: {
     parameters: {
       query?: {
-        "page[size]"?: number;
-        "page[number]"?: number;
         include?: string;
+        "page[number]"?: number;
+        "page[size]"?: number;
       };
     };
     responses: {
@@ -2993,9 +2993,9 @@ export interface operations {
   get_sections_api_sections_get: {
     parameters: {
       query?: {
-        "page[size]"?: number;
-        "page[number]"?: number;
         include?: string;
+        "page[number]"?: number;
+        "page[size]"?: number;
       };
     };
     responses: {
@@ -3221,9 +3221,9 @@ export interface operations {
   get_textbooks_api_textbooks_get: {
     parameters: {
       query?: {
-        "page[size]"?: number;
-        "page[number]"?: number;
         include?: string;
+        "page[number]"?: number;
+        "page[size]"?: number;
       };
     };
     responses: {
