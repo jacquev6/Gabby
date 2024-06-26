@@ -1,7 +1,6 @@
 from contextlib import contextmanager
 from typing import Annotated
 
-from fastapi import Depends
 from pydantic import BaseModel
 from sqlalchemy import orm
 import sqlalchemy as sql
@@ -92,10 +91,10 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
     id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
 
     project_id: orm.Mapped[int] = orm.mapped_column(sql.ForeignKey(Project.id))
-    project: orm.Mapped[Project] = orm.relationship(back_populates="exercises", overlaps="exercises")
+    project: orm.Mapped[Project] = orm.relationship(back_populates="exercises")
 
-    textbook_id: orm.Mapped[int | None]
-    textbook: orm.Mapped[Textbook | None] = orm.relationship(back_populates="exercises", overlaps="exercises,project")
+    textbook_id: orm.Mapped[int | None] = orm.mapped_column()
+    textbook: orm.Mapped[Textbook | None] = orm.relationship(back_populates="exercises", foreign_keys=[textbook_id])
     textbook_page: orm.Mapped[int | None]
     bounding_rectangle: orm.Mapped[dict | None] = orm.mapped_column(sql.JSON)
 
@@ -152,7 +151,7 @@ class ExerciseTestCase(TransactionTestCase):
             self.create_model(Exercise, project=self.project, textbook=None, textbook_page=5, number="5", instructions="", wording="", example="", clue="")
         self.assertEqual(cm.exception.orig.diag.constraint_name, "textbook_id_textbook_page_consistently_null")
 
-    def test_create_without_project(self):
+    def test_create_without_project__without_orm(self):
         with self.make_session() as session:
             with self.assertRaises(sql.exc.IntegrityError) as cm:
                 session.execute(sql.insert(Exercise).values(
@@ -167,11 +166,14 @@ class ExerciseTestCase(TransactionTestCase):
                 ))
         self.assertEqual(cm.exception.orig.diag.column_name, "project_id")
 
-    def test_create_without_project__fixed_by_orm(self):
-        exercise = self.create_model(Exercise, project=None, textbook=self.textbook, textbook_page=5, number="5", instructions="", wording="", example="", clue="")
-        self.assertEqual(exercise.project, self.project)
+    def test_create_without_project__with_orm(self):
+        with self.make_session() as session:
+            session.add(Exercise(project=None, textbook=self.textbook, textbook_page=5, number="5", instructions="", wording="", example="", clue=""))
+            with self.assertRaises(sql.exc.IntegrityError) as cm:
+                session.flush()
+        self.assertEqual(cm.exception.orig.diag.column_name, "project_id")
 
-    def test_create_with_inconsistent_project(self):
+    def test_create_with_inconsistent_project__without_orm(self):
         other_project = self.create_model(Project, title="Other project", description="")
         with self.make_session() as session:
             with self.assertRaises(sql.exc.IntegrityError) as cm:
@@ -189,23 +191,24 @@ class ExerciseTestCase(TransactionTestCase):
                 ))
         self.assertEqual(cm.exception.orig.diag.constraint_name, "exercises_project_id_textbook_id_fkey")
 
-    def test_create_with_inconsistent_project__fixed_by_orm(self):
+    def test_create_with_inconsistent_project__with_orm(self):
         other_project = self.create_model(Project, title="Other project", description="")
-        exercise = self.create_model(Exercise, project=other_project, textbook=self.textbook, textbook_page=5, number="5", instructions="", wording="", example="", clue="")
-        self.assertEqual(exercise.project, self.project)
-
-    def test_create_without_textbook__broken_by_orm(self):
         with self.make_session() as session:
-            session.add(project1 := Project(title='Premier projet de test', description="Ce projet contient des exercices d'un seul manuel.", created_by=self.user_for_create, updated_by=self.user_for_create))
-            session.add(project2 := Project(title='Deuxième projet de test', description='Ce projet contient des exercices originaux.', created_by=self.user_for_create, updated_by=self.user_for_create))
-            session.flush()
-            session.add(Textbook(project=project1, title='Français CE2', publisher='Slabeuf', year=2021, isbn='1234567890123', created_by=self.user_for_create, updated_by=self.user_for_create))
-            # session.flush()  # This flush would avoid the IntegrityError
-            # The exercise is created with 'project=None', probably because of the ORM warning silenced by the 'overlaps=' arguments in the relationships
-            session.add(exercise4 := Exercise(project=project2, textbook=None, textbook_page=None, number='L1', instructions='Faire des choses intelligentes.', example='', clue='', wording='', created_by=self.user_for_create, updated_by=self.user_for_create))
+            session.add(Exercise(
+                project=other_project,
+                textbook=self.textbook,
+                textbook_page=5,
+                number="5",
+                instructions="",
+                wording="",
+                example="",
+                clue="",
+                created_by_id=self.user_for_create.id,
+                updated_by_id=self.user_for_create.id,
+            ))
             with self.assertRaises(sql.exc.IntegrityError) as cm:
                 session.flush()
-        self.assertEqual(cm.exception.orig.diag.column_name, "project_id")
+        self.assertEqual(cm.exception.orig.diag.constraint_name, "exercises_project_id_textbook_id_fkey")
 
     def test_ordering(self):
         self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=5, number="5.b", instructions="", wording="", example="", clue="")
