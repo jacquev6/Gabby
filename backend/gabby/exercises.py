@@ -16,7 +16,7 @@ from .api_utils import create_item, get_item, get_page, save_item, delete_item
 from .projects import Project
 from .testing import TransactionTestCase
 from .textbooks import Textbook, TextbooksResource
-from .users import MandatoryAuthBearerDependable
+from .users import User, MandatoryAuthBearerDependable
 from .users.mixins import CreatedUpdatedByAtMixin
 from .wrapping import unwrap, set_wrapper, make_sqids, orm_wrapper_with_sqids
 
@@ -168,7 +168,16 @@ class ExerciseTestCase(TransactionTestCase):
 
     def test_create_without_project__with_orm(self):
         with self.make_session() as session:
-            session.add(Exercise(project=None, textbook=self.textbook, textbook_page=5, number="5", instructions="", wording="", example="", clue=""))
+            session.add(Exercise(
+                project=None,
+                textbook=session.get(Textbook, self.textbook.id),
+                textbook_page=5,
+                number="5",
+                instructions="",
+                wording="",
+                example="",
+                clue="",
+            ))
             with self.assertRaises(sql.exc.IntegrityError) as cm:
                 session.flush()
         self.assertEqual(cm.exception.orig.diag.column_name, "project_id")
@@ -195,8 +204,8 @@ class ExerciseTestCase(TransactionTestCase):
         other_project = self.create_model(Project, title="Other project", description="")
         with self.make_session() as session:
             session.add(Exercise(
-                project=other_project,
-                textbook=self.textbook,
+                project=session.get(Project, other_project.id),
+                textbook=session.get(Textbook, self.textbook.id),
                 textbook_page=5,
                 number="5",
                 instructions="",
@@ -266,13 +275,17 @@ class ExerciseTestCase(TransactionTestCase):
         self.assertEqual(cm.exception.orig.diag.constraint_name, "exercises_adaptation_id_key")
 
     def test_share_adaptation__fixed_by_orm(self):
+        self.expect_rollback()
+
         with self.make_session() as session:
-            session.add(project := Project(title="Project", description="", created_by=self.user_for_create, updated_by=self.user_for_create))
-            session.add(adaptation := GenericAdaptation(created_by=self.user_for_create, updated_by=self.user_for_create))
+            user_for_create = session.get(User, self.user_for_create.id)
+
+            session.add(project := Project(title="Project", description="", created_by=user_for_create, updated_by=user_for_create))
+            session.add(adaptation := GenericAdaptation(created_by=user_for_create, updated_by=user_for_create))
             session.flush()
-            session.add(exercise_1 := Exercise(project=project, number="Exercise 1", instructions="", wording="", example="", clue="", adaptation=adaptation, created_by=self.user_for_create, updated_by=self.user_for_create))
+            session.add(exercise_1 := Exercise(project=project, number="Exercise 1", instructions="", wording="", example="", clue="", adaptation=adaptation, created_by=user_for_create, updated_by=user_for_create))
             session.flush()
-            session.add(exercise_2 := Exercise(project=project, number="Exercise 2", instructions="", wording="", example="", clue="", adaptation=adaptation, created_by=self.user_for_create, updated_by=self.user_for_create))
+            session.add(exercise_2 := Exercise(project=project, number="Exercise 2", instructions="", wording="", example="", clue="", adaptation=adaptation, created_by=user_for_create, updated_by=user_for_create))
             session.flush()
 
             self.assertIs(exercise_1.adaptation, exercise_2.adaptation)
@@ -281,16 +294,24 @@ class ExerciseTestCase(TransactionTestCase):
 
             self.assertIsNone(exercise_1.adaptation)
 
+            session.rollback()
+
     def test_share_adaptation__not_fixed_by_orm(self):
+        self.expect_rollback()
+
         with self.make_session() as session:
-            session.add(project := Project(title="Project", description="", created_by=self.user_for_create, updated_by=self.user_for_create))
-            session.add(adaptation := GenericAdaptation(created_by=self.user_for_create, updated_by=self.user_for_create))
+            user_for_create = session.get(User, self.user_for_create.id)
+
+            session.add(project := Project(title="Project", description="", created_by=user_for_create, updated_by=user_for_create))
+            session.add(adaptation := GenericAdaptation(created_by=user_for_create, updated_by=user_for_create))
             session.flush()
-            session.add(Exercise(project=project, number="Exercise 1", instructions="", wording="", example="", clue="", adaptation=adaptation, created_by=self.user_for_create, updated_by=self.user_for_create))
-            session.add(Exercise(project=project, number="Exercise 2", instructions="", wording="", example="", clue="", adaptation=adaptation, created_by=self.user_for_create, updated_by=self.user_for_create))
+            session.add(Exercise(project=project, number="Exercise 1", instructions="", wording="", example="", clue="", adaptation=adaptation, created_by=user_for_create, updated_by=user_for_create))
+            session.add(Exercise(project=project, number="Exercise 2", instructions="", wording="", example="", clue="", adaptation=adaptation, created_by=user_for_create, updated_by=user_for_create))
 
             with self.assertRaises(sql.exc.IntegrityError) as cm:
                 session.flush()
+
+            session.rollback()
         self.assertEqual(cm.exception.orig.diag.constraint_name, "exercises_adaptation_id_key")
 
     def test_delete_with_extraction_events(self):
@@ -298,9 +319,8 @@ class ExerciseTestCase(TransactionTestCase):
         self.create_model(ExtractionEvent, exercise=exercise, event="{}")
         self.create_model(ExtractionEvent, exercise=exercise, event="{}")
 
-        with self.make_session() as session:
-            session.delete(exercise)
-            session.flush()
+        self.delete_item(exercise)
+
         self.assertEqual(self.count_models(Exercise), 0)
         self.assertEqual(self.count_models(ExtractionEvent), 0)
 

@@ -83,7 +83,7 @@ class TransactionTestCase(TestCase):
 
     @classmethod
     def make_session(cls):
-        return cls.SessionWrapper(cls, cls.__session)
+        return cls.SessionWrapper(cls, Session(cls.__database_engine))
 
     def expect_commit(self):
         self.__expected_commits_count = 1
@@ -130,6 +130,11 @@ class TransactionTestCase(TestCase):
 
     def delete_model(self, model, id):
         self.__session.execute(sql.delete(model).where(model.id == id))
+        self.__session.commit()
+
+    def delete_item(self, item):
+        self.__session.delete(item)
+        self.__session.commit()
 
     def count_models(self, model):
         return self.__session.query(model).count()

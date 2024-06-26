@@ -370,7 +370,7 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
 
         self.assertEqual(self.count_models(Textbook), 0)
 
-    def test_get(self):
+    def test_get__no_include(self):
         textbook = self.create_model(Textbook, project=self.project, title="The title", publisher="The publisher", year=2023, isbn="9783161484100")
         self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=16, number="11", instructions="", wording="", example="", clue="")
         self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=17, number="13", instructions="", wording="", example="", clue="")
@@ -976,7 +976,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
         self.project = self.create_model(Project, title="The project", description="Description")
         self.textbook = self.create_model(Textbook, project=self.project, title="The title")
 
-    def test_create__minimal(self):
+    def test_create__minimal_without_textbook(self):
         payload = {
             "data": {
                 "type": "exercise",
@@ -1129,7 +1129,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
         self.assertEqual(exercise.clue, "clue")
         self.assertEqual(exercise.wording, "wording")
 
-    def test_get(self):
+    def test_get__no_include(self):
         self.create_model(
             Exercise,
             textbook=self.textbook,
@@ -2109,6 +2109,7 @@ class AdaptationsApiTestCase(LoggedInApiTestCase):
 
     def test_dont_update_adaptation(self):
         self.exercise.adaptation = self.create_model(SelectThingsAdaptation, colors=3, words=True, punctuation=True)
+        self._TransactionTestCase__session.commit()
 
         payload = {
             "data": {
@@ -2150,6 +2151,7 @@ class AdaptationsApiTestCase(LoggedInApiTestCase):
 
     def test_update_adaptation__none(self):
         self.exercise.adaptation = self.create_model(SelectThingsAdaptation, colors=3, words=True, punctuation=True)
+        self._TransactionTestCase__session.commit()
 
         payload = {
             "data": {
@@ -2192,6 +2194,7 @@ class AdaptationsApiTestCase(LoggedInApiTestCase):
 
     def test_update_adaptation__other_type(self):
         self.exercise.adaptation = self.create_model(SelectThingsAdaptation, colors=3, words=True, punctuation=True)
+        self._TransactionTestCase__session.commit()
 
         payload = {
             "data": {
