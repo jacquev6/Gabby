@@ -74,8 +74,8 @@ class TransactionTestCase(TestCase):
     def setUp(self):
         super().setUp()
         self.__class__.__session = Session(self.__database_engine)
-        truncate_all_tables(self.__class__.__session)
-        self.__class__.__session.commit()
+        truncate_all_tables(self.__session)
+        self.__session.commit()
         self.user_for_create = self.__create_user_for_create()
         self.expect_commits_rollbacks(0, 0)
         self.__class__.actual_commits_count = 0
@@ -175,8 +175,8 @@ class ApiTestCase(TransactionTestCase):
     def logout(self):
         self.api_client.headers.pop("Authorization", None)
 
-    # @todo Automate counting the requests to set the expected commits and rollbacks
-    # We should manage to need only explicit '.expect_rollbacks()'s
+    # @todo Automate counting the API requests to set the expected commits and rollbacks
+    # We could even check them for success (resp. failure) to expect a commit (resp. rollback)
     def get(self, url):
         return self.api_client.get(url, headers={"Content-Type": "application/vnd.api+json"})
 
@@ -195,9 +195,6 @@ class LoggedInApiTestCase(ApiTestCase):
         super().setUp()
         super().create_model(User, username="updater", clear_text_password="password")
         self.login("updater", "password")
-
-    def create_model(self, model, *args, **kwds):
-        return super().create_model(model, *args, **kwds)
 
     def tearDown(self):
         self.expect_one_more_commit()
