@@ -1225,6 +1225,69 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
             ],
         })
 
+    def test_get__include_adaptation(self):
+        exercise = self.create_model(
+            Exercise,
+            textbook=self.textbook,
+            project=self.textbook.project,
+            textbook_page=16,
+            number="11",
+            instructions="instructions",
+            example="example",
+            clue="clue",
+            wording="wording",
+        )
+        self.create_model(
+            FillWithFreeTextAdaptation,
+            exercise=exercise,
+            placeholder="...",
+        )
+
+        response = self.get("http://server/exercises/wbqloc?include=adaptation")
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
+        self.assertEqual(response.json(), {
+            "data": {
+                "type": "exercise",
+                "id": "wbqloc",
+                "links": {"self": "http://server/exercises/wbqloc"},
+                "attributes": {
+                    "textbookPage": 16, "number": "11",
+                    "boundingRectangle": None,
+                    "instructions": "instructions", "example": "example", "clue": "clue", "wording": "wording",
+                    "createdAt": response.json()["data"]["attributes"]["createdAt"],
+                    "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
+                },
+                "relationships": {
+                    "project": {"data": {"type": "project", "id": "xkopqm"}},
+                    "extractionEvents": {"data": [], "meta": {"count": 0}},
+                    "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
+                    "adaptation": {"data": {"type": "fillWithFreeTextAdaptation", "id": "ljpupg"}},
+                    "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
+                    "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
+                },
+            },
+            "included": [
+                {
+                    "type": "fillWithFreeTextAdaptation",
+                    "id": "ljpupg",
+                    "links": {"self": "http://server/fillWithFreeTextAdaptations/ljpupg"},
+                    "attributes": {
+                        "createdAt": response.json()["included"][0]["attributes"]["createdAt"],
+                        "placeholder": "...",
+                        "updatedAt": response.json()["included"][0]["attributes"]["updatedAt"],
+                    },
+                    "relationships": {
+                        "exercise": {"data": {"id": "wbqloc", "type": "exercise"}},
+                        "createdBy": {"data": {"id": "fvirvd", "type": "user"}},
+                        "updatedBy": {"data": {"id": "fvirvd", "type": "user"}},
+                    },
+                },
+            ],
+        })
+
+    # @todo Add test_get__include_adaptation_exercise(self) with include=adaptation.exercise,
+    # showing the exercise is not included again, because it's the main data
+
     def test_list__sorted_by_default(self):
         self.expect_commits_rollbacks(2, 0)
 
