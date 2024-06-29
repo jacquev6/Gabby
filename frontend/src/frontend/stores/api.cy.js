@@ -840,7 +840,7 @@ describe('ApiStore', () => {
   it('clears cache on logout', async () => {
     const api = useApiStore()
 
-    api.auth.login('admin', 'password')
+    await api.auth.login('admin', 'password')
 
     await api.client.getOne('ping', '1')
 

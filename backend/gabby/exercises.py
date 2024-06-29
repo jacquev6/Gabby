@@ -108,7 +108,11 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
     adaptation_id: orm.Mapped[int | None] = orm.mapped_column(sql.ForeignKey(Adaptation.id), unique=True)
     adaptation: orm.Mapped[Adaptation | None] = orm.relationship(back_populates="exercise")
 
-    extraction_events: orm.Mapped[list["ExtractionEvent"]] = orm.relationship(back_populates="exercise", cascade="all, delete-orphan")
+    extraction_events: orm.Mapped[list["ExtractionEvent"]] = orm.relationship(
+        back_populates="exercise",
+        cascade="all, delete-orphan",
+        order_by="ExtractionEvent.id",
+    )
 
 
 class ExerciseTestCase(TransactionTestCase):

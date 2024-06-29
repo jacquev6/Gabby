@@ -268,6 +268,8 @@ describe('Gabby\'s project\'s textbook page view', () => {
     cy.visit('/project-xkopqm')
     cy.get('select').select('en')
 
+    cy.get('a').contains('the exported HTML').its('0.href').then(cy.request)
+
     cy.get('a').contains('the extraction report').its('0.href').should('match', /\/api\/project-xkopqm-extraction-report.json\?token=/).then(href => {
       cy.request(href).as('report')
 

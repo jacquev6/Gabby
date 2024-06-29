@@ -11,8 +11,6 @@ describe('ApiStore', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
     cy.request('POST', 'http://fanout:8080/reset-for-tests/yes-im-sure?fixtures=test-exercises')
-    const api = useApiStore()
-    api.auth.login('admin', 'password')
   })
 
   after(() => {
@@ -21,6 +19,7 @@ describe('ApiStore', () => {
 
   it('gets all textbooks and sections', async () => {
     const api = useApiStore()
+    await api.auth.login('admin', 'password')
 
     expect(api.cache.getOne('textbook', 'klxufv').inCache).to.be.false
 
@@ -42,6 +41,7 @@ describe('ApiStore', () => {
 
   it('gets one textbook and its sections', async () => {
     const api = useApiStore()
+    await api.auth.login('admin', 'password')
 
     expect(api.cache.getOne('textbook', 'klxufv').inCache).to.be.false
 
@@ -54,6 +54,7 @@ describe('ApiStore', () => {
 
   it('keeps single included', async () => {
     const api = useApiStore()
+    await api.auth.login('admin', 'password')
 
     await api.client.getAll('textbooks', {include: 'sections'})
 
@@ -65,6 +66,7 @@ describe('ApiStore', () => {
 
   it('keeps deep included', async () => {
     const api = useApiStore()
+    await api.auth.login('admin', 'password')
 
     await api.client.getAll('textbooks', {include: 'sections.pdfFile.namings'})
 
@@ -79,6 +81,7 @@ describe('ApiStore', () => {
 
   it('keeps multiple included', async () => {
     const api = useApiStore()
+    await api.auth.login('admin', 'password')
 
     await api.client.getAll('sections', {include: ['textbook', 'pdfFile.namings']})
 
@@ -97,6 +100,7 @@ describe('ApiStore', () => {
 
   it('paginates exercises', async () => {
     const api = useApiStore()
+    await api.auth.login('admin', 'password')
 
     const exercises = await api.client.getAll('exercises')
 
@@ -105,6 +109,7 @@ describe('ApiStore', () => {
 
   it('filters exercises by textbook and page', async () => {
     const api = useApiStore()
+    await api.auth.login('admin', 'password')
 
     expect((await api.client.getAll('exercises')).length).to.equal(6)
     expect((await api.client.getAll('exercises', {filter: {textbook: 'klxufv'}})).length).to.equal(3)
@@ -114,6 +119,7 @@ describe('ApiStore', () => {
 
   it('creates a new exercise', async () => {
     const api = useApiStore()
+    await api.auth.login('admin', 'password')
 
     expect((await api.client.getAll('exercises', {filter: {textbook: 'klxufv', textbookPage: 6}})).length).to.equal(2)
 
@@ -143,6 +149,7 @@ describe('ApiStore', () => {
 
   it('creates a new exercise and retrieves its textbook', async () => {
     const api = useApiStore()
+    await api.auth.login('admin', 'password')
 
     expect((await api.client.getAll('exercises', {filter: {textbook: 'klxufv', textbookPage: 6}})).length).to.equal(2)
 
@@ -173,6 +180,7 @@ describe('ApiStore', () => {
 
   it('updates an exercise', async () => {
     const api = useApiStore()
+    await api.auth.login('admin', 'password')
 
     const updatedExercise = await api.client.patch('exercise', 'wbqloc', {instructions: 'Do that'}, {})
 
@@ -182,6 +190,7 @@ describe('ApiStore', () => {
 
   it('updates an exercise and retrieves its textbook', async () => {
     const api = useApiStore()
+    await api.auth.login('admin', 'password')
 
     expect(api.cache.getOne('textbook', 'klxufv').inCache).to.be.false
 
@@ -201,6 +210,7 @@ describe('ApiStore', () => {
 
   it('deletes an exercise', async () => {
     const api = useApiStore()
+    await api.auth.login('admin', 'password')
 
     expect(api.cache.getOne('exercise', 'wbqloc').inCache).to.be.false
 
@@ -218,8 +228,6 @@ describe('ApiStore', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
     cy.request('POST', 'http://fanout:8080/reset-for-tests/yes-im-sure?fixtures=more-test-exercises')
-    const api = useApiStore()
-    api.auth.login('admin', 'password')
   })
 
   after(() => {
@@ -228,6 +236,7 @@ describe('ApiStore', () => {
 
   it('gets an exercise without an adaptation', async () => {
     const api = useApiStore()
+    await api.auth.login('admin', 'password')
 
     const exercise = await api.client.getOne('exercise', 'bylced', {include: 'adaptation'})
 
@@ -237,6 +246,7 @@ describe('ApiStore', () => {
 
   it('gets an exercise with "select things" adaptation', async () => {
     const api = useApiStore()
+    await api.auth.login('admin', 'password')
 
     const exercise = await api.client.getOne('exercise', 'vodhqn', {include: 'adaptation'})
 
@@ -248,6 +258,7 @@ describe('ApiStore', () => {
 
   it('gets an exercise with "fill with free text" adaptation', async () => {
     const api = useApiStore()
+    await api.auth.login('admin', 'password')
 
     const exercise = await api.client.getOne('exercise', 'dymwin', {include: 'adaptation'})
 
@@ -258,6 +269,7 @@ describe('ApiStore', () => {
 
   it('creates an exercise and its adaptation at once', async () => {
     const api = useApiStore()
+    await api.auth.login('admin', 'password')
 
     const response = await api.client.batch(
       [
@@ -298,6 +310,7 @@ describe('ApiStore', () => {
 
   it('updates an adaptation', async () => {
     const api = useApiStore()
+    await api.auth.login('admin', 'password')
 
     const adapted = await api.client.patch('selectThingsAdaptation', 'fojjim', {colors: 17}, {})
 
@@ -306,6 +319,7 @@ describe('ApiStore', () => {
 
   it('changes the type of an adaptation', async () => {
     const api = useApiStore()
+    await api.auth.login('admin', 'password')
 
     const previous = await api.client.getOne('selectThingsAdaptation', 'fojjim')
     expect(previous.relationships.exercise.id).to.equal('vodhqn')
