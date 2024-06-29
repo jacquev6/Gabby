@@ -650,6 +650,8 @@ class PingsApiTestCase(testing.ApiTestCase):
         self.assertEqual(ping.prev, self.get_model(Ping, 4))
         self.assertEqual(ping.next, [self.get_model(Ping, 3)])
 
+    # @todo Add test_update_prev__to_unexisting, where the new prev does not exist
+
     def test_update_prev__some_to_none(self):
         self.create_model(Ping, prev=self.create_model(Ping, message="Hello", prev=self.create_model(Ping, created_by=None, updated_by=None), created_by=None, updated_by=None), created_by=None, updated_by=None)
 
@@ -768,6 +770,8 @@ class PingsApiTestCase(testing.ApiTestCase):
         self.assertEqual(ping.message, "Hello")
         self.assertEqual(ping.prev, self.get_model(Ping, 1))
         self.assertEqual(ping.next, [self.get_model(Ping, 4)])
+
+    # @todo Add test_update_next__to_self test_update_prev__to_self (Currently trigger a 'sqlalchemy.exc.CircularDependencyError')
 
     def test_update_next_to_empty(self):
         self.create_model(Ping, prev=self.create_model(Ping, message="Hello", prev=self.create_model(Ping, created_by=None, updated_by=None), created_by=None, updated_by=None), created_by=None, updated_by=None)
