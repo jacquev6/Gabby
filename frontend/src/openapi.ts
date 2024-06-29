@@ -611,7 +611,6 @@ export interface components {
     exerciseOutputItemRelationships: {
       adaptation: components["schemas"]["OptionalRelationship"];
       createdBy: components["schemas"]["MandatoryRelationship"];
-      extractionEvents: components["schemas"]["OutputListRelationship"];
       project: components["schemas"]["MandatoryRelationship"];
       textbook: components["schemas"]["OptionalRelationship"];
       updatedBy: components["schemas"]["MandatoryRelationship"];

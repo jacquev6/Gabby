@@ -1146,9 +1146,6 @@
           "createdBy": {
             "$ref": "#/components/schemas/MandatoryRelationship"
           },
-          "extractionEvents": {
-            "$ref": "#/components/schemas/OutputListRelationship"
-          },
           "project": {
             "$ref": "#/components/schemas/MandatoryRelationship"
           },
@@ -1164,7 +1161,6 @@
           "createdBy",
           "project",
           "textbook",
-          "extractionEvents",
           "adaptation"
         ],
         "title": "exerciseOutputItemRelationships",

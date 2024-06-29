@@ -454,7 +454,6 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
-                        "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
                         "adaptation": {"data": None},
                         "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
@@ -474,7 +473,6 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
-                        "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
                         "adaptation": {"data": None},
                         "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
@@ -663,7 +661,6 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
-                        "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
                         "adaptation": {"data": None},
                         "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
@@ -683,7 +680,6 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
-                        "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "ojsbmy"}},
                         "adaptation": {"data": None},
                         "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
@@ -703,7 +699,6 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
-                        "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
                         "adaptation": {"data": None},
                         "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
@@ -767,7 +762,6 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
-                        "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "pkdksv"}},
                         "adaptation": {"data": None},
                         "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
@@ -787,7 +781,6 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
-                        "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "pkdksv"}},
                         "adaptation": {"data": None},
                         "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
@@ -807,7 +800,6 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
-                        "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "pkdksv"}},
                         "adaptation": {"data": None},
                         "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
@@ -1004,7 +996,6 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                 },
                 "relationships": {
                     "project": {"data": {"type": "project", "id": "xkopqm"}},
-                    "extractionEvents": {"data": [], "meta": {"count": 0}},
                     "textbook": {"data": None},
                     "adaptation": {"data": None},
                     "createdBy": {"data": {"type": "user", "id": "ckylfa"}},
@@ -1055,7 +1046,6 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                 },
                 "relationships": {
                     "project": {"data": {"type": "project", "id": "xkopqm"}},
-                    "extractionEvents": {"data": [], "meta": {"count": 0}},
                     "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
                     "adaptation": {"data": None},
                     "createdBy": {"data": {"type": "user", "id": "ckylfa"}},
@@ -1107,7 +1097,6 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                 },
                 "relationships": {
                     "project": {"data": {"type": "project", "id": "xkopqm"}},
-                    "extractionEvents": {"data": [], "meta": {"count": 0}},
                     "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
                     "adaptation": {"data": None},
                     "createdBy": {"data": {"type": "user", "id": "ckylfa"}},
@@ -1158,7 +1147,6 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                 },
                 "relationships": {
                     "project": {"data": {"type": "project", "id": "xkopqm"}},
-                    "extractionEvents": {"data": [], "meta": {"count": 0}},
                     "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
                     "adaptation": {"data": None},
                     "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
@@ -1196,7 +1184,6 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                 },
                 "relationships": {
                     "project": {"data": {"type": "project", "id": "xkopqm"}},
-                    "extractionEvents": {"data": [], "meta": {"count": 0}},
                     "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
                     "adaptation": {"data": None},
                     "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
@@ -1259,7 +1246,6 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                 },
                 "relationships": {
                     "project": {"data": {"type": "project", "id": "xkopqm"}},
-                    "extractionEvents": {"data": [], "meta": {"count": 0}},
                     "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
                     "adaptation": {"data": {"type": "fillWithFreeTextAdaptation", "id": "ljpupg"}},
                     "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
@@ -1312,7 +1298,6 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
-                        "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
                         "adaptation": {"data": None},
                         "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
@@ -1332,7 +1317,6 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
-                        "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
                         "adaptation": {"data": None},
                         "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
@@ -1366,7 +1350,6 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
-                        "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
                         "adaptation": {"data": None},
                         "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
@@ -1407,7 +1390,6 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
-                        "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
                         "adaptation": {"data": None},
                         "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
@@ -1427,7 +1409,6 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
-                        "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
                         "adaptation": {"data": None},
                         "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
@@ -1461,7 +1442,6 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
-                        "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
                         "adaptation": {"data": None},
                         "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
@@ -1504,7 +1484,6 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
-                        "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
                         "adaptation": {"data": None},
                         "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
@@ -1524,7 +1503,6 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
-                        "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
                         "adaptation": {"data": None},
                         "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
@@ -1585,7 +1563,6 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
-                        "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
                         "adaptation": {"data": None},
                         "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
@@ -1605,7 +1582,6 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
-                        "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "ojsbmy"}},
                         "adaptation": {"data": None},
                         "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
@@ -1698,7 +1674,6 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
-                        "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
                         "adaptation": {"data": None},
                         "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
@@ -1718,7 +1693,6 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
-                        "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
                         "adaptation": {"data": None},
                         "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
@@ -1752,7 +1726,6 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
-                        "extractionEvents": {"data": [], "meta": {"count": 0}},
                         "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
                         "adaptation": {"data": None},
                         "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
@@ -1818,7 +1791,6 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                 },
                 "relationships": {
                     "project": {"data": {"type": "project", "id": "xkopqm"}},
-                    "extractionEvents": {"data": [], "meta": {"count": 0}},
                     "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
                     "adaptation": {"data": None},
                     "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
@@ -1878,7 +1850,6 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                 },
                 "relationships": {
                     "project": {"data": {"type": "project", "id": "xkopqm"}},
-                    "extractionEvents": {"data": [], "meta": {"count": 0}},
                     "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
                     "adaptation": {"data": None},
                     "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
@@ -2199,7 +2170,6 @@ class AdaptationsApiTestCase(LoggedInApiTestCase):
                 },
                 "relationships": {
                     "project": {"data": {"type": "project", "id": "xkopqm"}},
-                    "extractionEvents": {"data": [], "meta": {"count": 0}},
                     "textbook": {"data": None},
                     "adaptation": {"data": {"type": "selectThingsAdaptation", "id": "ugrfkh"}},
                     "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
@@ -2241,7 +2211,6 @@ class AdaptationsApiTestCase(LoggedInApiTestCase):
                 },
                 "relationships": {
                     "project": {"data": {"type": "project", "id": "xkopqm"}},
-                    "extractionEvents": {"data": [], "meta": {"count": 0}},
                     "textbook": {"data": None},
                     "adaptation": {"data": None},
                     "createdBy": {"data": {"type": "user", "id": "fvirvd"}},

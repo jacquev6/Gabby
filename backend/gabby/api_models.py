@@ -108,7 +108,7 @@ class Exercise(Base, CreatedUpdatedByAtMixin):
     example: str = ""
     clue: str = ""
 
-    extraction_events: Annotated[list[ExtractionEvent], Computed()] = []
+    extraction_events: Annotated[list[ExtractionEvent], Computed(), WriteOnly()] = []
 
     adaptation: (
         SelectThingsAdaptation
