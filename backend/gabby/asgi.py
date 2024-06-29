@@ -67,7 +67,7 @@ def extraction_report(
                                 for event in exercise.extraction_events
                             ],
                         }
-                        for exercise in session.query(Exercise).filter_by(project=project, textbook=textbook).order_by(Exercise.textbook_page, Exercise.number)
+                        for exercise in textbook.exercises
                     ],
                 }
                 for textbook in project.textbooks

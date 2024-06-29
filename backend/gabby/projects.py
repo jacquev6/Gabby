@@ -21,7 +21,10 @@ class Project(OrmBase, CreatedUpdatedByAtMixin):
     description: orm.Mapped[str]
 
     textbooks: orm.Mapped[list["Textbook"]] = orm.relationship(back_populates="project")
-    exercises: orm.Mapped[list["Exercise"]] = orm.relationship(back_populates="project")
+    exercises: orm.Mapped[list["Exercise"]] = orm.relationship(
+        back_populates="project",
+        order_by="[Exercise.textbook_id, Exercise.textbook_page, Exercise.number]",
+    )
 
 
 class ProjectsResource:

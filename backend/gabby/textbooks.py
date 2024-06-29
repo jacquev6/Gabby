@@ -33,7 +33,12 @@ class Textbook(OrmBase, CreatedUpdatedByAtMixin):
     isbn: orm.Mapped[str | None]
 
     sections: orm.Mapped[list["Section"]] = orm.relationship(back_populates="textbook")
-    exercises: orm.Mapped[list["Exercise"]] = orm.relationship(back_populates="textbook", cascade="all, delete-orphan", foreign_keys="Exercise.textbook_id")
+    exercises: orm.Mapped[list["Exercise"]] = orm.relationship(
+        back_populates="textbook",
+        cascade="all, delete-orphan",
+        foreign_keys="Exercise.textbook_id",
+        order_by="[Exercise.textbook_page, Exercise.number]",
+    )
 
 
 class TextbooksResource:
