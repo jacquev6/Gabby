@@ -26,6 +26,7 @@ class Adaptation(OrmBase, CreatedUpdatedByAtMixin):
 
     __mapper_args__ = {
         "polymorphic_on": "kind",
+        "with_polymorphic": "*",
     }
 
     id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
@@ -106,7 +107,10 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
     clue: orm.Mapped[str]
 
     adaptation_id: orm.Mapped[int | None] = orm.mapped_column(sql.ForeignKey(Adaptation.id), unique=True)
-    adaptation: orm.Mapped[Adaptation | None] = orm.relationship(back_populates="exercise")
+    adaptation: orm.Mapped[Adaptation | None] = orm.relationship(
+        back_populates="exercise",
+        lazy="joined",
+    )
 
     extraction_events: orm.Mapped[list["ExtractionEvent"]] = orm.relationship(
         back_populates="exercise",
