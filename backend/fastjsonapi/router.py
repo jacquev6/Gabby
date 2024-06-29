@@ -1,10 +1,9 @@
 # from __future__ import annotations  # This doesn't work because we're annotating with local types. So this code won't work on Python 4. OK.
 from typing import Annotated, Type
-from urllib.parse import urlencode, parse_qs
+from urllib.parse import urlencode
 import itertools
-import unittest
 
-from fastapi import APIRouter, Depends, HTTPException, Query, Response
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response
 from fastapi.responses import JSONResponse
 from starlette import status
 import fastapi
@@ -12,6 +11,7 @@ import humps
 
 from .annotations import Annotations
 from .dependencies import extract_dependencies
+from .inclusion import IncludeDependable
 from .models import Decider, make_create_input_model, make_output_models, make_update_input_model
 from .utils import Urls
 
@@ -279,7 +279,7 @@ def add_resource_routes(resources, resource, router):
             create_item: Annotated[resource.ItemCreator, Depends()],
             get_related_item: Annotated[dict, Depends(make_related_getters(resource.create_input_relationships))],
             payload: resource.CreateInputModel,
-            include: str = None,
+            include: IncludeDependable,
         ):
             attributes = {
                 humps.decamelize(key) : value
@@ -301,7 +301,7 @@ def add_resource_routes(resources, resource, router):
             # @todo Pass parsed 'include' to allow pre-fetching
             item = create_item(**attributes, **relationships)
 
-            return resource.make_item_response(resources, urls=urls, item=item, include=parse_include(include))
+            return resource.make_item_response(resources, urls=urls, item=item, include=include)
 
     if resource.PageGetter:
         @router.get(
@@ -311,12 +311,12 @@ def add_resource_routes(resources, resource, router):
             response_model_exclude_unset=True,
         )
         def get_page(
-            request: fastapi.Request,
+            request: Request,
             urls: Urls,
             get_page: Annotated[resource.PageGetter, Depends()],
+            include: IncludeDependable,
             page_size: Annotated[int, Query(alias="page[size]")] = resource.default_page_size,
             page_number: Annotated[int, Query(alias="page[number]")] = 1,
-            include: str = None,
         ):
             # @todo Pass parsed 'include' to allow pre-fetching
             (items_count, items) = get_page(first_index=(page_number - 1) * page_size, page_size=page_size)
@@ -329,7 +329,7 @@ def add_resource_routes(resources, resource, router):
                 page_number=page_number,
                 page_size=page_size,
                 items=items,
-                include=parse_include(include),
+                include=include,
             )
 
     # @todo Actually support resources without an ItemGetter (useful e.g. in Gabby for 'RecoveryEmailRequest' and 'AdaptedExercise')
@@ -344,12 +344,12 @@ def add_resource_routes(resources, resource, router):
             urls: Urls,
             get_item: Annotated[resource.ItemGetter, Depends()],
             id: str,
-            include: str = None,
+            include: IncludeDependable,
         ):
             # @todo Pass parsed 'include' to allow pre-fetching
             item = get_item(id=id)
             if item:
-                return resource.make_item_response(resources, urls=urls, item=item, include=parse_include(include))
+                return resource.make_item_response(resources, urls=urls, item=item, include=include)
             else:
                 raise HTTPException(status_code=404, detail="Item not found")
 
@@ -367,7 +367,7 @@ def add_resource_routes(resources, resource, router):
             get_related_item: Annotated[dict, Depends(make_related_getters(resource.update_input_relationships))],
             id: str,
             payload: resource.UpdateInputModel,
-            include: str = None,
+            include: IncludeDependable,
         ):
             # @todo Pass parsed 'include' to allow pre-fetching
             item = get_item(id=id)
@@ -396,7 +396,7 @@ def add_resource_routes(resources, resource, router):
                             raise NothingToSave()
                 except NothingToSave:
                     pass
-                return resource.make_item_response(resources, urls=urls, item=item, include=parse_include(include))
+                return resource.make_item_response(resources, urls=urls, item=item, include=include)
             else:
                 raise HTTPException(status_code=404, detail="Item not found")
 
@@ -516,41 +516,3 @@ def add_batch_route(resources, router):
         return {
             "atomic:results": results,
         }
-
-
-def parse_include(include):
-    if include is None:
-        return None
-    elif include == "":
-        return {}
-    else:
-        paths = [path.split(".") for path in include.split(",")]
-        return_value = {}
-        for path in paths:
-            current = return_value
-            for part in path:
-                current = current.setdefault(part, {})
-        return return_value
-
-
-class ParseIncludeTestCase(unittest.TestCase):
-    def test_none(self):
-        self.assertEqual(parse_include(None), None)
-
-    def test_empty_string(self):
-        self.assertEqual(parse_include(""), {})
-
-    def test_single_item(self):
-        self.assertEqual(parse_include("author"), {"author": {}})
-
-    def test_multiple_items(self):
-        self.assertEqual(parse_include("author,comments"), {"author": {}, "comments": {}})
-
-    def test_nested_items(self):
-        self.assertEqual(parse_include("comments.author.team.members"), {"comments": {"author": {"team": {"members": {}}}}})
-
-    def test_repeated_prefix(self):
-        self.assertEqual(
-            parse_include("comments.author.team.members.posts,comments.author.team.leader.comments"),
-            {"comments": {"author": {"team": {"members": {"posts": {}}, "leader": {"comments": {}}}}}},
-        )
