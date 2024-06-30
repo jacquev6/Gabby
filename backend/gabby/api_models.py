@@ -4,7 +4,7 @@ import datetime
 
 from pydantic import BaseModel as Base
 
-from fastjsonapi import Constant, Computed, Secret, Secret as WriteOnly
+from fastjsonapi import Constant, Computed, Secret, WriteOnly
 
 from . import renderable
 
