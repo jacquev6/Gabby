@@ -43,23 +43,23 @@ class CompiledResource:
         if hasattr(resource, "create_item"):
             self.ItemCreator = extract_dependencies(resource.create_item)
         else:
-            self.ItemCreator = getattr(resource, "ItemCreator", None)
+            self.ItemCreator = None
         if hasattr(resource, "get_item"):
             self.ItemGetter = extract_dependencies(resource.get_item)
         else:
-            self.ItemGetter = getattr(resource, "ItemGetter", None)
+            self.ItemGetter = None
         if hasattr(resource, "get_page"):
             self.PageGetter = extract_dependencies(resource.get_page)
         else:
-            self.PageGetter = getattr(resource, "PageGetter", None)
+            self.PageGetter = None
         if hasattr(resource, "save_item"):
             self.ItemSaver = extract_dependencies(resource.save_item)
         else:
-            self.ItemSaver = getattr(resource, "ItemSaver", None)
+            self.ItemSaver = None
         if hasattr(resource, "delete_item"):
             self.ItemDeleter = extract_dependencies(resource.delete_item)
         else:
-            self.ItemDeleter = getattr(resource, "ItemDeleter", None)
+            self.ItemDeleter = None
 
         self.default_page_size = resource.default_page_size
 

@@ -83,11 +83,10 @@ class OptionalRelationshipTestCase(ApiTestCase):
         def get_item(self, id):
             return self.factory.get(self.Item, id)
 
-        class ItemSaver:
-            @contextmanager
-            def __call__(self, item):
-                yield
-                item.saved += 1
+        @contextmanager
+        def save_item(self, item):
+            yield
+            item.saved += 1
 
     factory = ItemsFactory()
     resources = [AlphaPolyResource(factory), BravoPolyResource(factory), OptionalRelationshipResource(factory)]
