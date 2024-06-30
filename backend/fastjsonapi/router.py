@@ -2,7 +2,7 @@
 from typing import Annotated, Type
 import itertools
 
-from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response
+from fastapi import APIRouter, Body, Depends, HTTPException, Query, Request, Response
 from fastapi.responses import JSONResponse
 from starlette import status
 import humps
@@ -69,7 +69,7 @@ def add_resource_routes(resources, resource, router):
             urls: Urls,
             create_item: Annotated[resource.ItemCreator, Depends()],
             get_related_item: Annotated[dict, Depends(make_related_getters(resource.create_input_relationships))],
-            payload: resource.CreateInputModel,
+            payload: Annotated[resource.CreateInputModel, Body()],
             include: IncludeDependable,
         ):
             attributes = {
@@ -157,7 +157,7 @@ def add_resource_routes(resources, resource, router):
             save_item: Annotated[resource.ItemSaver, Depends()],
             get_related_item: Annotated[dict, Depends(make_related_getters(resource.update_input_relationships))],
             id: str,
-            payload: resource.UpdateInputModel,
+            payload: Annotated[resource.UpdateInputModel, Body()],
             include: IncludeDependable,
         ):
             # @todo Pass parsed 'include' to allow pre-fetching
