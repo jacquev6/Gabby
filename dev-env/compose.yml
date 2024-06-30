@@ -116,7 +116,7 @@ services:
       - ..:/app
       - backend-pip-packages:/root/.local
     working_dir: /app/backend
-    command: ["pip", "install", "--user", "-r", "requirements.txt"]
+    command: ["pip", "install", "--user", "coverage", "-r", "requirements.txt"]
   sqlalchemy-data-model-visualizer-patcher:
     image: gabby-dev_backend
     pull_policy: never
