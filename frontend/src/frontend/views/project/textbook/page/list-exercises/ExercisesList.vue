@@ -16,6 +16,7 @@ const api = useApiStore()
 
 const busy = ref(false)
 const exercises = computedAsync(
+  // @todo Understand why this request isn't duplicated like some others
   async () => await api.client.getAll<Exercise>('exercises', {filter: {'textbook': props.textbook.id, 'textbookPage': props.page.toString()}}),
   [] as Required<Exercise>[],
   busy,

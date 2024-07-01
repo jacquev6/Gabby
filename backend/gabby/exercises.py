@@ -1,7 +1,11 @@
 from contextlib import contextmanager
+from typing import Annotated
 
+from pydantic import BaseModel
 from sqlalchemy import orm
 import sqlalchemy as sql
+
+from fastjsonapi import make_filters
 
 from . import api_models
 from . import parsing
@@ -12,7 +16,7 @@ from .api_utils import create_item, get_item, get_page, save_item, delete_item
 from .projects import Project
 from .testing import TransactionTestCase
 from .textbooks import Textbook, TextbooksResource
-from .users import WanabeMandatoryAuthenticatedUserDependable
+from .users import User, MandatoryAuthBearerDependable
 from .users.mixins import CreatedUpdatedByAtMixin
 from .wrapping import unwrap, set_wrapper, make_sqids, orm_wrapper_with_sqids
 
@@ -22,6 +26,7 @@ class Adaptation(OrmBase, CreatedUpdatedByAtMixin):
 
     __mapper_args__ = {
         "polymorphic_on": "kind",
+        "with_polymorphic": "*",
     }
 
     id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
@@ -87,10 +92,10 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
     id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
 
     project_id: orm.Mapped[int] = orm.mapped_column(sql.ForeignKey(Project.id))
-    project: orm.Mapped[Project] = orm.relationship(back_populates="exercises", overlaps="exercises")
+    project: orm.Mapped[Project] = orm.relationship(back_populates="exercises")
 
-    textbook_id: orm.Mapped[int | None]
-    textbook: orm.Mapped[Textbook | None] = orm.relationship(back_populates="exercises", overlaps="exercises,project")
+    textbook_id: orm.Mapped[int | None] = orm.mapped_column()
+    textbook: orm.Mapped[Textbook | None] = orm.relationship(back_populates="exercises", foreign_keys=[textbook_id])
     textbook_page: orm.Mapped[int | None]
     bounding_rectangle: orm.Mapped[dict | None] = orm.mapped_column(sql.JSON)
 
@@ -102,9 +107,16 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
     clue: orm.Mapped[str]
 
     adaptation_id: orm.Mapped[int | None] = orm.mapped_column(sql.ForeignKey(Adaptation.id), unique=True)
-    adaptation: orm.Mapped[Adaptation | None] = orm.relationship(back_populates="exercise")
+    adaptation: orm.Mapped[Adaptation | None] = orm.relationship(
+        back_populates="exercise",
+        lazy="joined",
+    )
 
-    extraction_events: orm.Mapped[list["ExtractionEvent"]] = orm.relationship(back_populates="exercise", cascade="all, delete-orphan")
+    extraction_events: orm.Mapped[list["ExtractionEvent"]] = orm.relationship(
+        back_populates="exercise",
+        cascade="all, delete-orphan",
+        order_by="ExtractionEvent.id",
+    )
 
 
 class ExerciseTestCase(TransactionTestCase):
@@ -147,7 +159,7 @@ class ExerciseTestCase(TransactionTestCase):
             self.create_model(Exercise, project=self.project, textbook=None, textbook_page=5, number="5", instructions="", wording="", example="", clue="")
         self.assertEqual(cm.exception.orig.diag.constraint_name, "textbook_id_textbook_page_consistently_null")
 
-    def test_create_without_project(self):
+    def test_create_without_project__without_orm(self):
         with self.make_session() as session:
             with self.assertRaises(sql.exc.IntegrityError) as cm:
                 session.execute(sql.insert(Exercise).values(
@@ -162,11 +174,23 @@ class ExerciseTestCase(TransactionTestCase):
                 ))
         self.assertEqual(cm.exception.orig.diag.column_name, "project_id")
 
-    def test_create_without_project__fixed_by_orm(self):
-        exercise = self.create_model(Exercise, project=None, textbook=self.textbook, textbook_page=5, number="5", instructions="", wording="", example="", clue="")
-        self.assertEqual(exercise.project, self.project)
+    def test_create_without_project__with_orm(self):
+        with self.make_session() as session:
+            session.add(Exercise(
+                project=None,
+                textbook=session.get(Textbook, self.textbook.id),
+                textbook_page=5,
+                number="5",
+                instructions="",
+                wording="",
+                example="",
+                clue="",
+            ))
+            with self.assertRaises(sql.exc.IntegrityError) as cm:
+                session.flush()
+        self.assertEqual(cm.exception.orig.diag.column_name, "project_id")
 
-    def test_create_with_inconsistent_project(self):
+    def test_create_with_inconsistent_project__without_orm(self):
         other_project = self.create_model(Project, title="Other project", description="")
         with self.make_session() as session:
             with self.assertRaises(sql.exc.IntegrityError) as cm:
@@ -184,23 +208,24 @@ class ExerciseTestCase(TransactionTestCase):
                 ))
         self.assertEqual(cm.exception.orig.diag.constraint_name, "exercises_project_id_textbook_id_fkey")
 
-    def test_create_with_inconsistent_project__fixed_by_orm(self):
+    def test_create_with_inconsistent_project__with_orm(self):
         other_project = self.create_model(Project, title="Other project", description="")
-        exercise = self.create_model(Exercise, project=other_project, textbook=self.textbook, textbook_page=5, number="5", instructions="", wording="", example="", clue="")
-        self.assertEqual(exercise.project, self.project)
-
-    def test_create_without_textbook__broken_by_orm(self):
         with self.make_session() as session:
-            session.add(project1 := Project(title='Premier projet de test', description="Ce projet contient des exercices d'un seul manuel.", created_by=self.user_for_create, updated_by=self.user_for_create))
-            session.add(project2 := Project(title='Deuxième projet de test', description='Ce projet contient des exercices originaux.', created_by=self.user_for_create, updated_by=self.user_for_create))
-            session.flush()
-            session.add(Textbook(project=project1, title='Français CE2', publisher='Slabeuf', year=2021, isbn='1234567890123', created_by=self.user_for_create, updated_by=self.user_for_create))
-            # session.flush()  # This flush would avoid the IntegrityError
-            # The exercise is created with 'project=None', probably because of the ORM warning silenced by the 'overlaps=' arguments in the relationships
-            session.add(exercise4 := Exercise(project=project2, textbook=None, textbook_page=None, number='L1', instructions='Faire des choses intelligentes.', example='', clue='', wording='', created_by=self.user_for_create, updated_by=self.user_for_create))
+            session.add(Exercise(
+                project=session.get(Project, other_project.id),
+                textbook=session.get(Textbook, self.textbook.id),
+                textbook_page=5,
+                number="5",
+                instructions="",
+                wording="",
+                example="",
+                clue="",
+                created_by_id=self.user_for_create.id,
+                updated_by_id=self.user_for_create.id,
+            ))
             with self.assertRaises(sql.exc.IntegrityError) as cm:
                 session.flush()
-        self.assertEqual(cm.exception.orig.diag.column_name, "project_id")
+        self.assertEqual(cm.exception.orig.diag.constraint_name, "exercises_project_id_textbook_id_fkey")
 
     def test_ordering(self):
         self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=5, number="5.b", instructions="", wording="", example="", clue="")
@@ -258,13 +283,17 @@ class ExerciseTestCase(TransactionTestCase):
         self.assertEqual(cm.exception.orig.diag.constraint_name, "exercises_adaptation_id_key")
 
     def test_share_adaptation__fixed_by_orm(self):
+        self.expect_rollback()
+
         with self.make_session() as session:
-            session.add(project := Project(title="Project", description="", created_by=self.user_for_create, updated_by=self.user_for_create))
-            session.add(adaptation := GenericAdaptation(created_by=self.user_for_create, updated_by=self.user_for_create))
+            user_for_create = session.get(User, self.user_for_create.id)
+
+            session.add(project := Project(title="Project", description="", created_by=user_for_create, updated_by=user_for_create))
+            session.add(adaptation := GenericAdaptation(created_by=user_for_create, updated_by=user_for_create))
             session.flush()
-            session.add(exercise_1 := Exercise(project=project, number="Exercise 1", instructions="", wording="", example="", clue="", adaptation=adaptation, created_by=self.user_for_create, updated_by=self.user_for_create))
+            session.add(exercise_1 := Exercise(project=project, number="Exercise 1", instructions="", wording="", example="", clue="", adaptation=adaptation, created_by=user_for_create, updated_by=user_for_create))
             session.flush()
-            session.add(exercise_2 := Exercise(project=project, number="Exercise 2", instructions="", wording="", example="", clue="", adaptation=adaptation, created_by=self.user_for_create, updated_by=self.user_for_create))
+            session.add(exercise_2 := Exercise(project=project, number="Exercise 2", instructions="", wording="", example="", clue="", adaptation=adaptation, created_by=user_for_create, updated_by=user_for_create))
             session.flush()
 
             self.assertIs(exercise_1.adaptation, exercise_2.adaptation)
@@ -273,16 +302,24 @@ class ExerciseTestCase(TransactionTestCase):
 
             self.assertIsNone(exercise_1.adaptation)
 
+            session.rollback()
+
     def test_share_adaptation__not_fixed_by_orm(self):
+        self.expect_rollback()
+
         with self.make_session() as session:
-            session.add(project := Project(title="Project", description="", created_by=self.user_for_create, updated_by=self.user_for_create))
-            session.add(adaptation := GenericAdaptation(created_by=self.user_for_create, updated_by=self.user_for_create))
+            user_for_create = session.get(User, self.user_for_create.id)
+
+            session.add(project := Project(title="Project", description="", created_by=user_for_create, updated_by=user_for_create))
+            session.add(adaptation := GenericAdaptation(created_by=user_for_create, updated_by=user_for_create))
             session.flush()
-            session.add(Exercise(project=project, number="Exercise 1", instructions="", wording="", example="", clue="", adaptation=adaptation, created_by=self.user_for_create, updated_by=self.user_for_create))
-            session.add(Exercise(project=project, number="Exercise 2", instructions="", wording="", example="", clue="", adaptation=adaptation, created_by=self.user_for_create, updated_by=self.user_for_create))
+            session.add(Exercise(project=project, number="Exercise 1", instructions="", wording="", example="", clue="", adaptation=adaptation, created_by=user_for_create, updated_by=user_for_create))
+            session.add(Exercise(project=project, number="Exercise 2", instructions="", wording="", example="", clue="", adaptation=adaptation, created_by=user_for_create, updated_by=user_for_create))
 
             with self.assertRaises(sql.exc.IntegrityError) as cm:
                 session.flush()
+
+            session.rollback()
         self.assertEqual(cm.exception.orig.diag.constraint_name, "exercises_adaptation_id_key")
 
     def test_delete_with_extraction_events(self):
@@ -290,9 +327,8 @@ class ExerciseTestCase(TransactionTestCase):
         self.create_model(ExtractionEvent, exercise=exercise, event="{}")
         self.create_model(ExtractionEvent, exercise=exercise, event="{}")
 
-        with self.make_session() as session:
-            session.delete(exercise)
-            session.flush()
+        self.delete_item(exercise)
+
         self.assertEqual(self.count_models(Exercise), 0)
         self.assertEqual(self.count_models(ExtractionEvent), 0)
 
@@ -307,95 +343,92 @@ class ExercisesResource:
 
     sqids = make_sqids(singular_name)
 
-    @staticmethod
-    def ItemCreator(
+    def create_item(
+        self,
+        project,
+        textbook,
+        textbook_page,
+        bounding_rectangle,
+        number,
+        instructions,
+        wording,
+        example,
+        clue,
+        adaptation,
         session: SessionDependable,
-        authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
-        def create(
-            project,
-            textbook,
-            textbook_page,
-            bounding_rectangle,
-            number,
-            instructions,
-            wording,
-            example,
-            clue,
-            adaptation,
-        ):
-            bounding_rectangle = None if bounding_rectangle is None else bounding_rectangle.model_dump()
-            return create_item(
-                session, Exercise,
-                project=project,
-                textbook=textbook,
-                textbook_page=textbook_page,
-                bounding_rectangle=bounding_rectangle,
-                number=number,
-                instructions=instructions,
-                wording=wording,
-                example=example,
-                clue=clue,
-                adaptation=adaptation,
-                created_by=authenticated_user,
-                updated_by=authenticated_user,
-            )
+        bounding_rectangle = None if bounding_rectangle is None else bounding_rectangle.model_dump()
+        return create_item(
+            session, Exercise,
+            project=project,
+            textbook=textbook,
+            textbook_page=textbook_page,
+            bounding_rectangle=bounding_rectangle,
+            number=number,
+            instructions=instructions,
+            wording=wording,
+            example=example,
+            clue=clue,
+            adaptation=adaptation,
+            created_by=authenticated_user,
+            updated_by=authenticated_user,
+        )
 
-        return create
-
-    @staticmethod
-    def ItemGetter(
+    def get_item(
+        self,
+        id,
         session: SessionDependable,
-        authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
-        def get(id):
-            return get_item(session, Exercise, ExercisesResource.sqids.decode(id)[0])
-        return get
+        return get_item(session, Exercise, ExercisesResource.sqids.decode(id)[0])
 
-    @staticmethod
-    def PageGetter(
+    class Filters(BaseModel):
+        textbook: str | None
+        textbook_page: int | None
+        number: str | None
+
+    def get_page(
+        self,
+        first_index,
+        page_size,
         session: SessionDependable,
-        authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
+        filters: Annotated[Filters, make_filters(Filters)],
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
-        def get(sort, filters, first_index, page_size):
-            sort = sort or ("textbook_id", "textbook_page", "number")
-            query = sql.select(Exercise).order_by(*sort)
-            if filters.textbook is not None:
-                query = query.where(Exercise.textbook_id == TextbooksResource.sqids.decode(filters.textbook)[0])
-            if filters.textbook_page is not None:
-                query = query.where(Exercise.textbook_page == filters.textbook_page)
-            if filters.number is not None:
-                query = query.where(Exercise.number == filters.number)
-            return get_page(session, query, first_index, page_size)
-        return get
+        query = sql.select(Exercise).order_by(Exercise.textbook_id, Exercise.textbook_page, Exercise.number)
+        if filters.textbook is not None:
+            query = query.where(Exercise.textbook_id == TextbooksResource.sqids.decode(filters.textbook)[0])
+        if filters.textbook_page is not None:
+            query = query.where(Exercise.textbook_page == filters.textbook_page)
+        if filters.number is not None:
+            query = query.where(Exercise.number == filters.number)
+        return get_page(session, query, first_index, page_size)
 
-    @staticmethod
-    def ItemSaver(
+    @contextmanager
+    def save_item(
+        self,
+        item,
         session: SessionDependable,
-        authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
-        @contextmanager
-        def save(item):
-            previous_adaptation = item.adaptation
-            previous_bounding_rectangle = item.bounding_rectangle
-            yield
-            if item.bounding_rectangle is not previous_bounding_rectangle and item.bounding_rectangle is not None:
-                item.bounding_rectangle = item.bounding_rectangle.model_dump()
-            if previous_adaptation is not None and unwrap(item.adaptation) != unwrap(previous_adaptation):
-                session.delete(previous_adaptation)
-            item.updated_by = authenticated_user
-            save_item(session, item)
+        previous_adaptation = item.adaptation
+        previous_bounding_rectangle = item.bounding_rectangle
+        yield
+        if item.bounding_rectangle is not previous_bounding_rectangle and item.bounding_rectangle is not None:
+            item.bounding_rectangle = item.bounding_rectangle.model_dump()
+        if previous_adaptation is not None and unwrap(item.adaptation) != unwrap(previous_adaptation):
+            session.delete(previous_adaptation)
+        item.updated_by = authenticated_user
+        save_item(session, item)
 
-        return save
-
-    @staticmethod
-    def ItemDeleter(
+    def delete_item(
+        self,
+        item,
         session: SessionDependable,
-        authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
-        def delete(item):
-            delete_item(session, item)
-        return delete
+        delete_item(session, item)
 
 
 set_wrapper(Exercise, orm_wrapper_with_sqids(ExercisesResource.sqids))
@@ -422,61 +455,57 @@ class ExtractionEventsResource:
 
     sqids = make_sqids(singular_name)
 
-    @staticmethod
-    def ItemCreator(
+    def create_item(
+        self,
+        exercise,
+        event,
         session: SessionDependable,
-        authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
-        def create(exercise, event):
-            return create_item(
-                session, ExtractionEvent,
-                exercise=exercise,
-                event=event,
-                created_by=authenticated_user,
-                updated_by=authenticated_user,
-            )
-        return create
+        return create_item(
+            session, ExtractionEvent,
+            exercise=exercise,
+            event=event,
+            created_by=authenticated_user,
+            updated_by=authenticated_user,
+        )
 
-    @staticmethod
-    def ItemGetter(
+    def get_item(
+        self,
+        id,
         session: SessionDependable,
-        authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
-        def get(id):
-            return get_item(session, ExtractionEvent, ExtractionEventsResource.sqids.decode(id)[0])
-        return get
+        return get_item(session, ExtractionEvent, ExtractionEventsResource.sqids.decode(id)[0])
 
-    @staticmethod
-    def PageGetter(
+    def get_page(
+        self,
+        first_index,
+        page_size,
         session: SessionDependable,
-        authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
-        def get(sort, filters, first_index, page_size):
-            sort = sort or ("id",)
-            query = sql.select(ExtractionEvent).order_by(*sort)
-            return get_page(session, query, first_index, page_size)
-        return get
+        query = sql.select(ExtractionEvent)
+        return get_page(session, query, first_index, page_size)
 
-    @staticmethod
-    def ItemSaver(
+    @contextmanager
+    def save_item(
+        self,
+        item,
         session: SessionDependable,
-        authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
-        @contextmanager
-        def save(item):
-            yield
-            item.updated_by = authenticated_user
-            save_item(session, item)
-        return save
+        yield
+        item.updated_by = authenticated_user
+        save_item(session, item)
 
-    @staticmethod
-    def ItemDeleter(
+    def delete_item(
+        self,
+        item,
         session: SessionDependable,
-        authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
-        def delete(item):
-            delete_item(session, item)
-        return delete
+        delete_item(session, item)
 
 
 set_wrapper(ExtractionEvent, orm_wrapper_with_sqids(ExtractionEventsResource.sqids))

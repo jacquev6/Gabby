@@ -1,18 +1,21 @@
-from __future__ import annotations
 from contextlib import contextmanager
 import datetime
+from typing import Annotated
 
 from fastapi import HTTPException
+from pydantic import BaseModel
 from sqlalchemy import orm
 from starlette import status
 import sqlalchemy as sql
+
+from fastjsonapi import make_filters
 
 from . import api_models
 from . import settings
 from . import testing
 from .database_utils import OrmBase, SessionDependable
 from .api_utils import create_item, get_item, get_page, save_item, delete_item
-from .users import User, UsersResource, OptionalAuthenticatedUserDependable
+from .users import User, UsersResource, OptionalAuthBearerDependable
 from .users.mixins import OptionalCreatedUpdatedByAtMixin
 from .wrapping import set_wrapper, OrmWrapperWithStrIds, unwrap
 
@@ -25,8 +28,8 @@ class Ping(OrmBase, OptionalCreatedUpdatedByAtMixin):
     message: orm.Mapped[str | None] = orm.mapped_column()
 
     prev_id: orm.Mapped[int | None] = orm.mapped_column(sql.ForeignKey("pings.id"))
-    prev: orm.Mapped[Ping | None] = orm.relationship(back_populates="next", remote_side=[id], post_update=True)
-    next: orm.Mapped[list[Ping]] = orm.relationship(back_populates="prev")
+    prev: orm.Mapped["Ping | None"] = orm.relationship(back_populates="next", remote_side=[id], post_update=True)
+    next: orm.Mapped[list["Ping"]] = orm.relationship(back_populates="prev")
 
 
 class PingsResource:
@@ -37,79 +40,75 @@ class PingsResource:
 
     default_page_size = settings.GENERIC_DEFAULT_API_PAGE_SIZE
 
-    @staticmethod
-    def ItemCreator(
+    def create_item(
+        self,
+        message,
+        prev,
+        next,
         session: SessionDependable,
-        authenticated_user: OptionalAuthenticatedUserDependable,
+        authenticated_user: OptionalAuthBearerDependable,
     ):
-        def create(message, prev, next):
-            return create_item(
-                session,
-                Ping,
-                message=message,
-                created_by=authenticated_user,
-                updated_by=authenticated_user,
-                prev=prev,
-                next=next,
-            )
+        return create_item(
+            session,
+            Ping,
+            message=message,
+            created_by=authenticated_user,
+            updated_by=authenticated_user,
+            prev=prev,
+            next=next,
+        )
 
-        return create
-
-    @staticmethod
-    def ItemGetter(
-        session: SessionDependable,
-        authenticated_user: OptionalAuthenticatedUserDependable,
-    ):
-        def get(id):
-            return get_item(session, Ping, id)
-
-        return get
-
-    @staticmethod
-    def PageGetter(
+    def get_item(
+        self,
+        id: str,
         session: SessionDependable,
     ):
-        def get(sort, filters, first_index, page_size):
-            sort = sort or ("id",)
-            query = sql.select(Ping).order_by(*sort)
-            if filters.message is not None:
-                query = query.where(Ping.message == filters.message)
-            if filters.prev is not None:
-                query = query.where(Ping.prev_id == filters.prev)
-            return get_page(session, query, first_index, page_size)
+        return get_item(session, Ping, int(id))
 
-        return get
+    class Filters(BaseModel):
+        message: str | None
+        prev: str | None
 
-    @staticmethod
-    def ItemSaver(
+    def get_page(
+        self,
+        first_index,
+        page_size,
         session: SessionDependable,
-        authenticated_user: OptionalAuthenticatedUserDependable,
+        filters: Annotated[Filters, make_filters(Filters)],
     ):
-        @contextmanager
-        def save(item):
-            created_by = unwrap(item.created_by)
-            if created_by is not None:
-                if authenticated_user != created_by:
-                    raise HTTPException(status.HTTP_403_FORBIDDEN, "You are not the creator of this ping")
-            yield
-            item.updated_by = authenticated_user
-            save_item(session, item)
+        query = sql.select(Ping)
+        if filters.message is not None:
+            query = query.where(Ping.message == filters.message)
+        if filters.prev is not None:
+            query = query.where(Ping.prev_id == filters.prev)
+        return get_page(session, query, first_index, page_size)
 
-        return save
-
-    @staticmethod
-    def ItemDeleter(
+    @contextmanager
+    def save_item(
+        self,
+        item,
         session: SessionDependable,
-        authenticated_user: OptionalAuthenticatedUserDependable,
+        authenticated_user: OptionalAuthBearerDependable,
     ):
-        def delete(item):
-            created_by = unwrap(item.created_by)
-            if created_by is not None:
-                if authenticated_user != created_by:
-                    raise HTTPException(status.HTTP_403_FORBIDDEN, "You are not the creator of this ping")
-            delete_item(session, item)
+        created_by = unwrap(item.created_by)
+        if created_by is not None:
+            if authenticated_user != created_by:
+                raise HTTPException(status.HTTP_403_FORBIDDEN, "You are not the creator of this ping")
+        yield
+        item.updated_by = authenticated_user
+        save_item(session, item)
 
-        return delete
+    def delete_item(
+        self,
+        item,
+        session: SessionDependable,
+        authenticated_user: OptionalAuthBearerDependable,
+    ):
+        created_by = unwrap(item.created_by)
+        if created_by is not None:
+            if authenticated_user != created_by:
+                raise HTTPException(status.HTTP_403_FORBIDDEN, "You are not the creator of this ping")
+        delete_item(session, item)
 
 
 set_wrapper(Ping, OrmWrapperWithStrIds)
@@ -651,6 +650,8 @@ class PingsApiTestCase(testing.ApiTestCase):
         self.assertEqual(ping.prev, self.get_model(Ping, 4))
         self.assertEqual(ping.next, [self.get_model(Ping, 3)])
 
+    # @todo Add test_update_prev__to_unexisting, where the new prev does not exist
+
     def test_update_prev__some_to_none(self):
         self.create_model(Ping, prev=self.create_model(Ping, message="Hello", prev=self.create_model(Ping, created_by=None, updated_by=None), created_by=None, updated_by=None), created_by=None, updated_by=None)
 
@@ -769,6 +770,8 @@ class PingsApiTestCase(testing.ApiTestCase):
         self.assertEqual(ping.message, "Hello")
         self.assertEqual(ping.prev, self.get_model(Ping, 1))
         self.assertEqual(ping.next, [self.get_model(Ping, 4)])
+
+    # @todo Add test_update_next__to_self test_update_prev__to_self (Currently trigger a 'sqlalchemy.exc.CircularDependencyError')
 
     def test_update_next_to_empty(self):
         self.create_model(Ping, prev=self.create_model(Ping, message="Hello", prev=self.create_model(Ping, created_by=None, updated_by=None), created_by=None, updated_by=None), created_by=None, updated_by=None)

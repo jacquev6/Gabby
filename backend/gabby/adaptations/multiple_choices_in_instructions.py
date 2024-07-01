@@ -14,7 +14,7 @@ from ..database_utils import SessionDependable
 from ..exercises import Adaptation
 from ..exercises import Adaptation, Exercise
 from ..testing import AdaptationTestCase
-from ..users import WanabeMandatoryAuthenticatedUserDependable
+from ..users import MandatoryAuthBearerDependable
 from ..wrapping import set_wrapper, make_sqids, orm_wrapper_with_sqids
 
 
@@ -233,52 +233,49 @@ class MultipleChoicesInInstructionsAdaptationsResource:
 
     sqids = make_sqids(singular_name)
 
-    @staticmethod
-    def ItemCreator(
+    def create_item(
+        self,
+        exercise,
+        placeholder,
         session: SessionDependable,
-        authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
-        def create(exercise, placeholder):
-            if exercise.adaptation is not None:
-                session.delete(exercise.adaptation)
-            return create_item(
-                session, MultipleChoicesInInstructionsAdaptation,
-                exercise=exercise,
-                placeholder=placeholder,
-                created_by=authenticated_user,
-                updated_by=authenticated_user,
-            )
-        return create
+        if exercise.adaptation is not None:
+            session.delete(exercise.adaptation)
+        return create_item(
+            session, MultipleChoicesInInstructionsAdaptation,
+            exercise=exercise,
+            placeholder=placeholder,
+            created_by=authenticated_user,
+            updated_by=authenticated_user,
+        )
 
-    @staticmethod
-    def ItemGetter(
+    def get_item(
+        self,
+        id,
         session: SessionDependable,
-        authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
-        def get(id):
-            return get_item(session, MultipleChoicesInInstructionsAdaptation, MultipleChoicesInInstructionsAdaptationsResource.sqids.decode(id)[0])
-        return get
+        return get_item(session, MultipleChoicesInInstructionsAdaptation, MultipleChoicesInInstructionsAdaptationsResource.sqids.decode(id)[0])
 
-    @staticmethod
-    def ItemSaver(
+    @contextmanager
+    def save_item(
+        self,
+        item,
         session: SessionDependable,
-        authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
-        @contextmanager
-        def save(item):
-            yield
-            item.updated_by = authenticated_user
-            save_item(session, item)
-        return save
+        yield
+        item.updated_by = authenticated_user
+        save_item(session, item)
 
-    @staticmethod
-    def ItemDeleter(
+    def delete_item(
+        self,
+        item,
         session: SessionDependable,
-        authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
-        def delete(item):
-            delete_item(session, item)
-        return delete
+        delete_item(session, item)
 
 
 set_wrapper(MultipleChoicesInInstructionsAdaptation, orm_wrapper_with_sqids(MultipleChoicesInInstructionsAdaptationsResource.sqids))

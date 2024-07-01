@@ -13,7 +13,7 @@ from .. import settings
 from .. import testing
 from ..api_models import RecoveryEmailRequest
 from ..database_utils import Session, SessionDependable
-from .user import User, UserEmailAddress, make_access_token
+from .user import User, UserEmailAddress, make_access_token, MandatoryAuthBearerDependable
 
 
 @dataclasses.dataclass
@@ -43,22 +43,26 @@ class RecoveryEmailRequestsResource:
 
     default_page_size = settings.GENERIC_DEFAULT_API_PAGE_SIZE
 
-    class ItemCreator:
-        def __init__(self, *, session: SessionDependable, background_tasks: BackgroundTasks):
-            self.__session = session
-            self.__background_tasks = background_tasks
+    def create_item(
+        self,
+        address: str,
+        language: str,
+        session: SessionDependable,
+        background_tasks: BackgroundTasks,
+    ):
+        background_tasks.add_task(maybe_send_recovery_email, session, address, language)
+        return RecoveryEmailRequestItem(id=uuid.uuid4().hex)
 
-        def __call__(self, *, address: str, language: str):
-            self.__background_tasks.add_task(maybe_send_recovery_email, self.__session, address, language)
-            return RecoveryEmailRequestItem(id=uuid.uuid4().hex)
-
-    class ItemGetter:
-        def __call__(self, id):
-            return None
+    def get_item(
+        self,
+        id,
+        authenticated_user: MandatoryAuthBearerDependable,
+    ):
+        return None
 
 
 class RecoveryEmailRequestsApiTestCase(testing.ApiTestCase):
-    resources = [RecoveryEmailRequestsResource]
+    resources = [RecoveryEmailRequestsResource()]
     polymorphism = {}
 
     def setUp(self):

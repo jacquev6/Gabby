@@ -413,6 +413,8 @@ describe('ApiStore', () => {
     cy.expect(before.attributes).to.be.undefined
     cy.expect(before.relationships).to.be.undefined
 
+    cy.expect(await api.auth.login('admin', 'password')).to.be.true
+
     const posted = await api.client.batch(
       [
         'add',
@@ -459,6 +461,8 @@ describe('ApiStore', () => {
     cy.expect(before.exists).to.be.undefined
     cy.expect(before.attributes).to.be.undefined
     cy.expect(before.relationships).to.be.undefined
+
+    cy.expect(await api.auth.login('admin', 'password')).to.be.true
 
     const posted = await api.client.batch(
       [
@@ -836,7 +840,7 @@ describe('ApiStore', () => {
   it('clears cache on logout', async () => {
     const api = useApiStore()
 
-    api.auth.login('admin', 'password')
+    await api.auth.login('admin', 'password')
 
     await api.client.getOne('ping', '1')
 

@@ -1,10 +1,11 @@
 import json
 
-from fastapi import Depends, FastAPI, Request
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 
 from fastjsonapi import make_jsonapi_router
+import fastjsonapi.openapi_utils
 
 from . import api_resources
 from . import database_utils
@@ -13,7 +14,7 @@ from .database_utils import SessionDependable
 from .exercises import Exercise
 from .fixtures import load as load_fixtures
 from .projects import Project, ProjectsResource
-from .users import AuthenticationDependable
+from .users import AuthenticationDependable, MandatoryAuthTokenDependable
 
 
 app = FastAPI(
@@ -38,13 +39,18 @@ app.include_router(
     make_jsonapi_router(
         resources=api_resources.resources,
         polymorphism=api_resources.polymorphism,
+        batching=True,
     ),
     prefix="/api",
 )
 
 # @todo Require authentication (but keep it working: it's not an API call, so authentication must come through the browser)
 @app.get("/api/project-{project_id}-extraction-report.json")
-def extraction_report(project_id: str, session: SessionDependable):
+def extraction_report(
+    project_id: str,
+    session: SessionDependable,
+    authenticated_user: MandatoryAuthTokenDependable,
+):
     project = session.get(Project, ProjectsResource.sqids.decode(project_id)[0])
     return {
         "project": {
@@ -61,7 +67,7 @@ def extraction_report(project_id: str, session: SessionDependable):
                                 for event in exercise.extraction_events
                             ],
                         }
-                        for exercise in session.query(Exercise).filter_by(project=project, textbook=textbook).order_by(Exercise.textbook_page, Exercise.number)
+                        for exercise in textbook.exercises
                     ],
                 }
                 for textbook in project.textbooks
@@ -71,7 +77,11 @@ def extraction_report(project_id: str, session: SessionDependable):
 
 # @todo Require authentication (but keep it working: it's not an API call, so authentication must come through the browser)
 @app.get("/api/project-{project_id}.html")
-def export_project(project_id: str, session: SessionDependable):
+def export_project(
+    project_id: str,
+    session: SessionDependable,
+    authenticated_user: MandatoryAuthTokenDependable,
+):
     project = session.get(Project, ProjectsResource.sqids.decode(project_id)[0])
     exercises = []
     for exercise in project.exercises:
@@ -106,5 +116,5 @@ if settings.EXPOSE_RESET_FOR_TESTS_URL:
 
 if settings.DEBUG:
     with open("openapi.json", "w") as file:
-        json.dump(app.openapi(), file, indent=2, sort_keys=True)
+        json.dump(fastjsonapi.openapi_utils.stabilize(app.openapi()), file, indent=2, sort_keys=True)
         file.write("\n")

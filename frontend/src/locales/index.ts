@@ -14,7 +14,7 @@ const long = {
   timeZoneName: 'short',
 }
 
-export const i18n = createI18n({
+export const i18n = (createI18n as any/* @todo Type */)({
   legacy: false,
   locale: defaultLocale,
   fallbackLocale: defaultLocale,

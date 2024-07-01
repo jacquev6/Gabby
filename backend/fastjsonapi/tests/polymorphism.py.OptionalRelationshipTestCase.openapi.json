@@ -427,43 +427,6 @@
         "summary": "Get Alpha Poly"
       }
     },
-    "/batch": {
-      "post": {
-        "operationId": "batch_batch_post",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "title": "Payload",
-                "type": "object"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {}
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Batch"
-      }
-    },
     "/bravoPolys/{id}": {
       "get": {
         "operationId": "get_bravo_poly_bravoPolys__id__get",

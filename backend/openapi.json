@@ -1146,9 +1146,6 @@
           "createdBy": {
             "$ref": "#/components/schemas/MandatoryRelationship"
           },
-          "extractionEvents": {
-            "$ref": "#/components/schemas/OutputListRelationship"
-          },
           "project": {
             "$ref": "#/components/schemas/MandatoryRelationship"
           },
@@ -1164,7 +1161,6 @@
           "createdBy",
           "project",
           "textbook",
-          "extractionEvents",
           "adaptation"
         ],
         "title": "exerciseOutputItemRelationships",
@@ -4579,6 +4575,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Get Adapted Exercise"
       }
     },
@@ -4630,48 +4631,10 @@
         "parameters": [
           {
             "in": "query",
-            "name": "page[size]",
+            "name": "filter[number]",
             "required": false,
             "schema": {
-              "default": 2,
-              "title": "Page[Size]",
-              "type": "integer"
-            }
-          },
-          {
-            "in": "query",
-            "name": "page[number]",
-            "required": false,
-            "schema": {
-              "default": 1,
-              "title": "Page[Number]",
-              "type": "integer"
-            }
-          },
-          {
-            "in": "query",
-            "name": "sort",
-            "required": false,
-            "schema": {
-              "title": "Sort",
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "include",
-            "required": false,
-            "schema": {
-              "title": "Include",
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "filter[textbook]",
-            "required": false,
-            "schema": {
-              "title": "Filter[Textbook]",
+              "title": "Filter[Number]",
               "type": "string"
             }
           },
@@ -4686,11 +4649,40 @@
           },
           {
             "in": "query",
-            "name": "filter[number]",
+            "name": "filter[textbook]",
             "required": false,
             "schema": {
-              "title": "Filter[Number]",
+              "title": "Filter[Textbook]",
               "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page[number]",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "title": "Page[Number]",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page[size]",
+            "required": false,
+            "schema": {
+              "default": 2,
+              "title": "Page[Size]",
+              "type": "integer"
             }
           }
         ],
@@ -4931,12 +4923,11 @@
         "parameters": [
           {
             "in": "query",
-            "name": "page[size]",
+            "name": "include",
             "required": false,
             "schema": {
-              "default": 2,
-              "title": "Page[Size]",
-              "type": "integer"
+              "title": "Include",
+              "type": "string"
             }
           },
           {
@@ -4951,20 +4942,12 @@
           },
           {
             "in": "query",
-            "name": "sort",
+            "name": "page[size]",
             "required": false,
             "schema": {
-              "title": "Sort",
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "include",
-            "required": false,
-            "schema": {
-              "title": "Include",
-              "type": "string"
+              "default": 2,
+              "title": "Page[Size]",
+              "type": "integer"
             }
           }
         ],
@@ -5814,12 +5797,11 @@
         "parameters": [
           {
             "in": "query",
-            "name": "page[size]",
+            "name": "include",
             "required": false,
             "schema": {
-              "default": 2,
-              "title": "Page[Size]",
-              "type": "integer"
+              "title": "Include",
+              "type": "string"
             }
           },
           {
@@ -5834,20 +5816,12 @@
           },
           {
             "in": "query",
-            "name": "sort",
+            "name": "page[size]",
             "required": false,
             "schema": {
-              "title": "Sort",
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "include",
-            "required": false,
-            "schema": {
-              "title": "Include",
-              "type": "string"
+              "default": 2,
+              "title": "Page[Size]",
+              "type": "integer"
             }
           }
         ],
@@ -6088,12 +6062,11 @@
         "parameters": [
           {
             "in": "query",
-            "name": "page[size]",
+            "name": "include",
             "required": false,
             "schema": {
-              "default": 2,
-              "title": "Page[Size]",
-              "type": "integer"
+              "title": "Include",
+              "type": "string"
             }
           },
           {
@@ -6108,20 +6081,12 @@
           },
           {
             "in": "query",
-            "name": "sort",
+            "name": "page[size]",
             "required": false,
             "schema": {
-              "title": "Sort",
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "include",
-            "required": false,
-            "schema": {
-              "title": "Include",
-              "type": "string"
+              "default": 2,
+              "title": "Page[Size]",
+              "type": "integer"
             }
           }
         ],
@@ -6362,44 +6327,6 @@
         "parameters": [
           {
             "in": "query",
-            "name": "page[size]",
-            "required": false,
-            "schema": {
-              "default": 2,
-              "title": "Page[Size]",
-              "type": "integer"
-            }
-          },
-          {
-            "in": "query",
-            "name": "page[number]",
-            "required": false,
-            "schema": {
-              "default": 1,
-              "title": "Page[Number]",
-              "type": "integer"
-            }
-          },
-          {
-            "in": "query",
-            "name": "sort",
-            "required": false,
-            "schema": {
-              "title": "Sort",
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "include",
-            "required": false,
-            "schema": {
-              "title": "Include",
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
             "name": "filter[message]",
             "required": false,
             "schema": {
@@ -6414,6 +6341,35 @@
             "schema": {
               "title": "Filter[Prev]",
               "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page[number]",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "title": "Page[Number]",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page[size]",
+            "required": false,
+            "schema": {
+              "default": 2,
+              "title": "Page[Size]",
+              "type": "integer"
             }
           }
         ],
@@ -6574,11 +6530,6 @@
             "description": "Validation Error"
           }
         },
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
         "summary": "Get Ping"
       },
       "patch": {
@@ -6655,6 +6606,15 @@
               "title": "Project Id",
               "type": "string"
             }
+          },
+          {
+            "in": "query",
+            "name": "token",
+            "required": true,
+            "schema": {
+              "title": "Token",
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -6692,6 +6652,15 @@
               "title": "Project Id",
               "type": "string"
             }
+          },
+          {
+            "in": "query",
+            "name": "token",
+            "required": true,
+            "schema": {
+              "title": "Token",
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -6723,12 +6692,11 @@
         "parameters": [
           {
             "in": "query",
-            "name": "page[size]",
+            "name": "include",
             "required": false,
             "schema": {
-              "default": 2,
-              "title": "Page[Size]",
-              "type": "integer"
+              "title": "Include",
+              "type": "string"
             }
           },
           {
@@ -6743,20 +6711,12 @@
           },
           {
             "in": "query",
-            "name": "sort",
+            "name": "page[size]",
             "required": false,
             "schema": {
-              "title": "Sort",
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "include",
-            "required": false,
-            "schema": {
-              "title": "Include",
-              "type": "string"
+              "default": 2,
+              "title": "Page[Size]",
+              "type": "integer"
             }
           }
         ],
@@ -7037,11 +6997,6 @@
             "description": "Validation Error"
           }
         },
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
         "summary": "Create Recovery Email Request"
       }
     },
@@ -7090,6 +7045,11 @@
             "description": "Validation Error"
           }
         },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
         "summary": "Get Recovery Email Request"
       }
     },
@@ -7099,12 +7059,11 @@
         "parameters": [
           {
             "in": "query",
-            "name": "page[size]",
+            "name": "include",
             "required": false,
             "schema": {
-              "default": 2,
-              "title": "Page[Size]",
-              "type": "integer"
+              "title": "Include",
+              "type": "string"
             }
           },
           {
@@ -7119,20 +7078,12 @@
           },
           {
             "in": "query",
-            "name": "sort",
+            "name": "page[size]",
             "required": false,
             "schema": {
-              "title": "Sort",
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "include",
-            "required": false,
-            "schema": {
-              "title": "Include",
-              "type": "string"
+              "default": 2,
+              "title": "Page[Size]",
+              "type": "integer"
             }
           }
         ],
@@ -7576,12 +7527,11 @@
         "parameters": [
           {
             "in": "query",
-            "name": "page[size]",
+            "name": "include",
             "required": false,
             "schema": {
-              "default": 2,
-              "title": "Page[Size]",
-              "type": "integer"
+              "title": "Include",
+              "type": "string"
             }
           },
           {
@@ -7596,20 +7546,12 @@
           },
           {
             "in": "query",
-            "name": "sort",
+            "name": "page[size]",
             "required": false,
             "schema": {
-              "title": "Sort",
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "include",
-            "required": false,
-            "schema": {
-              "title": "Include",
-              "type": "string"
+              "default": 2,
+              "title": "Page[Size]",
+              "type": "integer"
             }
           }
         ],

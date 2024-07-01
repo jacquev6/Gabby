@@ -4,7 +4,7 @@ import datetime
 
 from pydantic import BaseModel as Base
 
-from fastjsonapi import Constant, Computed, Filterable, Secret, Secret as WriteOnly
+from fastjsonapi import Constant, Computed, Secret, WriteOnly
 
 from . import renderable
 
@@ -43,8 +43,8 @@ class RecoveryEmailRequest(Base):
 
 
 class Ping(Base, OptionalCreatedUpdatedByAtMixin):
-    message: Annotated[str | None, Filterable()] = None
-    prev: Annotated[Ping | None, Filterable()] = None
+    message: str | None = None
+    prev: Ping | None = None
     next: list[Ping] = []
 
 
@@ -97,18 +97,18 @@ class Rectangle(Base):
 class Exercise(Base, CreatedUpdatedByAtMixin):
     project: Annotated[Project, Constant()]
 
-    textbook: Annotated[Textbook | None, Filterable(), Constant()] = None
-    textbook_page: Annotated[int | None, Filterable(), Constant()] = None
+    textbook: Annotated[Textbook | None, Constant()] = None
+    textbook_page: Annotated[int | None, Constant()] = None
     bounding_rectangle: Rectangle | None = None
 
-    number: Annotated[str, Constant(), Filterable()]
+    number: Annotated[str, Constant()]
 
     instructions: str = ""
     wording: str = ""
     example: str = ""
     clue: str = ""
 
-    extraction_events: Annotated[list[ExtractionEvent], Computed()] = []
+    extraction_events: Annotated[list[ExtractionEvent], Computed(), WriteOnly()] = []
 
     adaptation: (
         SelectThingsAdaptation

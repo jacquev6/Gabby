@@ -61,66 +61,11 @@
         "title": "ValidationError",
         "type": "object"
       },
-      "emptyResourceCreateInput": {
+      "resourceItemOutput": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/emptyResourceCreateInputData"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "emptyResourceCreateInput",
-        "type": "object"
-      },
-      "emptyResourceCreateInputData": {
-        "additionalProperties": false,
-        "properties": {
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/emptyResourceCreateInputDataAttributes"
-              }
-            ],
-            "default": {}
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/emptyResourceCreateInputDataRelationships"
-              }
-            ],
-            "default": {}
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type"
-        ],
-        "title": "emptyResourceCreateInputData",
-        "type": "object"
-      },
-      "emptyResourceCreateInputDataAttributes": {
-        "additionalProperties": false,
-        "properties": {},
-        "title": "emptyResourceCreateInputDataAttributes",
-        "type": "object"
-      },
-      "emptyResourceCreateInputDataRelationships": {
-        "additionalProperties": false,
-        "properties": {},
-        "title": "emptyResourceCreateInputDataRelationships",
-        "type": "object"
-      },
-      "emptyResourceItemOutput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/emptyResourceOutputItem"
+            "$ref": "#/components/schemas/resourceOutputItem"
           },
           "included": {
             "items": {},
@@ -131,12 +76,15 @@
         "required": [
           "data"
         ],
-        "title": "emptyResourceItemOutput",
+        "title": "resourceItemOutput",
         "type": "object"
       },
-      "emptyResourceOutputItem": {
+      "resourceOutputItem": {
         "additionalProperties": false,
         "properties": {
+          "attributes": {
+            "$ref": "#/components/schemas/resourceOutputItemAttributes"
+          },
           "id": {
             "title": "Id",
             "type": "string"
@@ -152,9 +100,46 @@
         "required": [
           "type",
           "id",
-          "links"
+          "links",
+          "attributes"
         ],
-        "title": "emptyResourceOutputItem",
+        "title": "resourceOutputItem",
+        "type": "object"
+      },
+      "resourceOutputItemAttributes": {
+        "additionalProperties": false,
+        "properties": {
+          "bar": {
+            "title": "Bar",
+            "type": "string"
+          },
+          "foo": {
+            "title": "Foo",
+            "type": "string"
+          },
+          "host": {
+            "title": "Host",
+            "type": "string"
+          },
+          "optional": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Optional"
+          }
+        },
+        "required": [
+          "foo",
+          "bar",
+          "host",
+          "optional"
+        ],
+        "title": "resourceOutputItemAttributes",
         "type": "object"
       }
     }
@@ -165,59 +150,19 @@
   },
   "openapi": "3.1.0",
   "paths": {
-    "/emptyResources": {
-      "post": {
-        "operationId": "create_empty_resource_emptyResources_post",
+    "/resources/{id}": {
+      "get": {
+        "operationId": "get_resource_resources__id__get",
         "parameters": [
           {
-            "in": "query",
-            "name": "include",
-            "required": false,
+            "in": "header",
+            "name": "host",
+            "required": true,
             "schema": {
-              "title": "Include",
+              "title": "Host",
               "type": "string"
             }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/emptyResourceCreateInput"
-              }
-            }
           },
-          "required": true
-        },
-        "responses": {
-          "201": {
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/emptyResourceItemOutput"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Create Empty Resource"
-      }
-    },
-    "/emptyResources/{id}": {
-      "get": {
-        "operationId": "get_empty_resource_emptyResources__id__get",
-        "parameters": [
           {
             "in": "path",
             "name": "id",
@@ -235,6 +180,22 @@
               "title": "Include",
               "type": "string"
             }
+          },
+          {
+            "in": "query",
+            "name": "optional",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Optional"
+            }
           }
         ],
         "responses": {
@@ -242,7 +203,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/emptyResourceItemOutput"
+                  "$ref": "#/components/schemas/resourceItemOutput"
                 }
               }
             },
@@ -259,7 +220,7 @@
             "description": "Validation Error"
           }
         },
-        "summary": "Get Empty Resource"
+        "summary": "Get Resource"
       }
     }
   }

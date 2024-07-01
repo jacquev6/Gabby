@@ -12,7 +12,8 @@ from .adaptations.multiple_choices_in_instructions import MultipleChoicesInInstr
 from .adaptations.multiple_choices_in_wording import MultipleChoicesInWordingAdaptation
 from .adaptations.select_things import SelectThingsAdaptation
 from .exercises import Exercise
-from .testing import ApiTestCase
+from .testing import LoggedInApiTestCase
+from .users import MandatoryAuthBearerDependable
 
 
 @dataclasses.dataclass
@@ -29,55 +30,64 @@ class AdaptedExercisesResource:
 
     default_page_size = settings.GENERIC_DEFAULT_API_PAGE_SIZE
 
-    class ItemCreator:
-        def __call__(self, *, number, textbook_page, instructions, wording, example, clue, type, adaptation_options):
-            exercise = Exercise(
-                number=number,
-                textbook_page=textbook_page,
-                instructions=instructions,
-                wording=wording,
-                example=example,
-                clue=clue,
+    def create_item(
+        self,
+        number,
+        textbook_page,
+        instructions,
+        wording,
+        example,
+        clue,
+        type,
+        adaptation_options,
+        authenticated_user: MandatoryAuthBearerDependable,
+    ):
+        exercise = Exercise(
+            number=number,
+            textbook_page=textbook_page,
+            instructions=instructions,
+            wording=wording,
+            example=example,
+            clue=clue,
+        )
+        if type == "selectThingsAdaptation":
+            adapted = SelectThingsAdaptation(
+                exercise=exercise,
+                **adaptation_options.model_dump(),
             )
-            if type == "selectThingsAdaptation":
-                adapted = SelectThingsAdaptation(
-                    exercise=exercise,
-                    **adaptation_options.model_dump(),
-                )
-            elif type == "fillWithFreeTextAdaptation":
-                adapted = FillWithFreeTextAdaptation(
-                    exercise=exercise,
-                    **adaptation_options.model_dump(),
-                )
-            elif type == "multipleChoicesInInstructionsAdaptation":
-                adapted = MultipleChoicesInInstructionsAdaptation(
-                    exercise=exercise,
-                    **adaptation_options.model_dump(),
-                )
-            elif type == "multipleChoicesInWordingAdaptation":
-                adapted = MultipleChoicesInWordingAdaptation(
-                    exercise=exercise,
-                    **adaptation_options.model_dump(),
-                )
-            else:
-                raise HTTPException(status_code=400, detail="Unknown type")
-            return AdaptedExerciseItem(
-                id=uuid.uuid4().hex,
-                adapted=adapted.make_adapted(),
+        elif type == "fillWithFreeTextAdaptation":
+            adapted = FillWithFreeTextAdaptation(
+                exercise=exercise,
+                **adaptation_options.model_dump(),
             )
+        elif type == "multipleChoicesInInstructionsAdaptation":
+            adapted = MultipleChoicesInInstructionsAdaptation(
+                exercise=exercise,
+                **adaptation_options.model_dump(),
+            )
+        elif type == "multipleChoicesInWordingAdaptation":
+            adapted = MultipleChoicesInWordingAdaptation(
+                exercise=exercise,
+                **adaptation_options.model_dump(),
+            )
+        else:
+            raise HTTPException(status_code=400, detail="Unknown type")
+        return AdaptedExerciseItem(
+            id=uuid.uuid4().hex,
+            adapted=adapted.make_adapted(),
+        )
 
-    class ItemGetter:
-        def __call__(self, id):
-            return None
+    def get_item(
+        self,
+        id,
+        authenticated_user: MandatoryAuthBearerDependable,
+    ):
+        return None
 
 
-class AdaptedExerciseApiTestCase(ApiTestCase):
-    resources = [AdaptedExercisesResource]
+class AdaptedExerciseApiTestCase(LoggedInApiTestCase):
+    resources = [AdaptedExercisesResource()]
     polymorphism = {}
-
-    def setUp(self):
-        super().setUp()
-        self.expect_commits_rollbacks(0, 0)
 
     def test_select_things(self):
         payload = {

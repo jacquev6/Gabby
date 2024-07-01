@@ -1,16 +1,15 @@
 # from __future__ import annotations  # This doesn't work because we're annotating with local types. So this code won't work on Python 4. OK.
 from typing import Annotated, Type
-from urllib.parse import urlencode
-import unittest
+import itertools
 
-from fastapi import APIRouter, Depends, HTTPException, Query, Response
+from fastapi import APIRouter, Body, Depends, HTTPException, Query, Request, Response
 from fastapi.responses import JSONResponse
 from starlette import status
 import humps
 
-from .annotations import Annotations
+from .compilation import compile
+from .inclusion import IncludeDependable
 from .utils import Urls
-from .models import Decider, make_create_input_model, make_filters_dependable, make_output_models, make_update_input_model
 
 
 # @todo Check consistency of "type" attributes in input 'ObjectId's
@@ -23,211 +22,40 @@ class JSONAPIResponse(JSONResponse):
     media_type = "application/vnd.api+json"
 
 
-def make_jsonapi_router(resources, polymorphism: dict[Type, str]):
-    decider = Decider({
-        resource.Model: humps.camelize(resource.singular_name) for resource in resources
-    })
-    polymorphism = {
-        key: humps.camelize(value)
-        for (key, value) in polymorphism.items()
-    }
-    resources = {
-        humps.camelize(resource.singular_name): CompiledResource(decider, polymorphism, resource)
-        for resource in resources
-    }
+def make_jsonapi_router(*, resources, polymorphism: dict[Type, str], batching: bool):
+    compiled_resources = compile(resources, polymorphism)
 
     router = APIRouter(
         default_response_class=JSONAPIResponse,
     )
 
-    for resource in resources.values():
-        add_resource_routes(resources, resource, router)
+    for resource in compiled_resources.values():
+        add_resource_routes(compiled_resources, resource, router)
 
-    add_batch_route(resources, router)
+    if batching:
+        add_batch_route(compiled_resources, router)
 
     return router
 
 
-class CompiledResource:
-    def __init__(self, decider, polymorphism, resource):
-        self.polymorphism = polymorphism
-        self._resource = resource
-
-        assert humps.is_snakecase(resource.singular_name)
-        self.singular_name = resource.singular_name
-        self.singularName = humps.camelize(resource.singular_name)
-        assert humps.is_snakecase(resource.plural_name)
-        self.plural_name = resource.plural_name
-        self.pluralName = humps.camelize(resource.plural_name)
-
-        self.Model = resource.Model
-        # @todo Generate the following attributes:
-        # Let client code have a plain 'get_item' function accepting an 'id' and any FastAPI dependables,
-        # and extract dependables by 'inspect'ing it. The create a dynamyc 'ItemGetter', taking dependables
-        # in its constructor and calling 'get_item' with them and the 'id'.
-        # Same for 'get_page', 'create_item', 'save_item' and 'delete_item'.
-        self.ItemCreator = getattr(resource, "ItemCreator", None)
-        self.ItemGetter = getattr(resource, "ItemGetter", None)
-        self.PageGetter = getattr(resource, "PageGetter", None)
-        self.ItemSaver = getattr(resource, "ItemSaver", None)
-        self.ItemDeleter = getattr(resource, "ItemDeleter", None)
-
-        self.default_page_size = resource.default_page_size
-
-        self.output_attributes = []
-        self.output_relationships = {}
-        for (name, info) in resource.Model.model_fields.items():
-            name = humps.camelize(name)
-            annotations = Annotations(info.metadata)
-
-            if decider.is_mandatory_relationship(info.annotation):
-                if annotations.output:
-                    self.output_relationships[name] = (False, decider.get_monomorphic_name(info.annotation))
-            elif decider.is_optional_relationship(info.annotation):
-                assert info.default is None
-                if annotations.output:
-                    self.output_relationships[name] = (False, decider.get_monomorphic_name(info.annotation))
-            elif decider.is_list_relationship(info.annotation):
-                assert info.default == []
-                if annotations.output:
-                    self.output_relationships[name] = (True, decider.get_monomorphic_name(info.annotation))
-            else:
-                if annotations.output:
-                    self.output_attributes.append(name)
-
-        self.CreateInputModel = make_create_input_model(self.singularName, resource.Model, decider)
-        (self.ItemOutputModel, self.PageOutputModel) = make_output_models(self.singularName, resource.Model, decider)
-        self.filters = make_filters_dependable(self.singularName, resource.Model, decider)
-        self.UpdateInputModel = make_update_input_model(self.singularName, resource.Model, decider)
-
-    def make_item_response(self, resources, *, urls, item, include):
-        return_value = {
-            "data": self.make_item(resources, urls=urls, item=item),
-        }
-        if include is not None:
-            return_value["included"] = self.make_included(resources, urls, [item], include)
-        return return_value
-
-    def make_page_response(self, resources, *, urls, items_count, filters, sort, page_number, page_size, items, raw_include, include):
-        pages_count = (items_count + 1) // page_size
-        pagination = dict(count=items_count, page=page_number, pages=pages_count)
-
-        base_url = urls.make(f"get_{self.plural_name}")
-        def make_url_for_page(number):
-            qs = {}
-            for (key, value) in sorted(filters.model_dump(exclude_unset=True).items()):
-                if value is not None:
-                    qs[f"filter[{humps.camelize(key)}]"] = value
-            qs["page[number]"] = number
-            if page_size != self.default_page_size:
-                qs["page[size]"] = page_size
-            if raw_include is not None:
-                qs["include"] = raw_include
-            if sort is not None:
-                qs["sort"] = sort
-            return base_url + "?" + urlencode(qs)
-
-        if page_number < pages_count:
-            next = make_url_for_page(page_number + 1)
-        else:
-            next = None
-        if page_number > 1:
-            prev = make_url_for_page(page_number - 1)
-        else:
-            prev = None
-        links = dict(
-            first=make_url_for_page(1),
-            last=make_url_for_page(pages_count),
-            next=next,
-            prev=prev,
-        )
-
-        return_value = {
-            "data": [self.make_item(resources, urls=urls, item=item) for item in items],
-            "links": links,
-            "meta": dict(pagination=pagination),
-        }
-        if include is not None:
-            return_value["included"] = self.make_included(resources, urls, items, include)
-        return return_value
-
-    def make_item(self, resources, *, urls, item):
-        r = {
-            "type": self.singularName,
-            "id": item.id,
-            "links": {"self": urls.make(f"get_{self.singular_name}", id=item.id)},
-        }
-        if self.output_attributes:
-            attributes = {}
-            for key in self.output_attributes:
-                attr = getattr(item, humps.decamelize(key))
-                attributes[key] = attr
-            r["attributes"] = attributes
-        if self.output_relationships:
-            relationships = {}
-            for (key, (is_list, resource_name)) in self.output_relationships.items():
-                attr = getattr(item, humps.decamelize(key))
-                if is_list:
-                    data = [{"type": resource_name, "id": rel.id} for rel in attr]
-                    relationship = {
-                        "data": data,
-                        "meta": {"count": len(data)},
-                    }
-                elif attr is None:
-                    relationship = {"data": None}
-                else:
-                    if resource_name is None:
-                        resource_name = self.polymorphism[type(attr)]
-                    relationship = {"data": {"type": resource_name, "id": attr.id}}
-                relationships[key] = relationship
-            r["relationships"] = relationships
-        return r
-
-    def make_included(self, resources, urls, items, include):
-        included = {}
-
-        # @todo Add test showing we don't include the root items even if they appear in included relationships
-        # @todo Add test showing we don't include the same item twice
-
-        def recurse(resource, item, include):
-            for (name, nested_include) in include.items():
-                attr = getattr(item, humps.decamelize(name))
-                (is_list, resource_name) = resource.output_relationships[name]
-                if is_list:
-                    # @todo Add test showing that this variable ('nested_resource') cannot be named 'resource' (bug fixed using tests from Gabby, deserves test in fastjsonapi)
-                    nested_resource = resources[resource_name]
-                    for incl in attr:
-                        included[(resource_name, incl.id)] = nested_resource.make_item(resources, urls=urls, item=incl)
-                        recurse(nested_resource, incl, nested_include)
-                elif attr is not None:
-                    if resource_name is None:
-                        resource_name = self.polymorphism[type(attr)]
-                    # @todo Add test showing that this variable ('nested_resource') cannot be named 'resource' (bug fixed using tests from Gabby, deserves test in fastjsonapi)
-                    nested_resource = resources[resource_name]
-                    # @todo Add tests exercising this branch
-                    included[(resource_name, attr.id)] = nested_resource.make_item(resources, urls=urls, item=attr)
-                    recurse(nested_resource, attr, nested_include)
-
-        for item in items:
-            recurse(self, item, include)
-
-        return sorted(included.values(), key=lambda item: (item["type"], item["id"]))
-
-
 def add_resource_routes(resources, resource, router):
-    # @todo Keep things structured all they way (avoid generating textual code)
-    # See... my old answer here: https://stackoverflow.com/a/29927459/905845
-    def make_related_getters_code():
-        yield "def make_related_getters("
-        for name in resources.keys():
-            yield f'    {name}: Annotated[resources["{name}"].ItemGetter, Depends()],'
-        yield "):"
-        yield "    return {"
-        for name in resources.keys():
-            yield f'        "{name}": {name},'
-        yield "    }"
-    exec("\n".join(make_related_getters_code()), {"resources": resources}, make_related_getters_globals := {"Annotated": Annotated, "Depends": Depends})
-    make_related_getters = make_related_getters_globals["make_related_getters"]
+    def make_related_getters(relationships):
+        related_resources = set(itertools.chain.from_iterable(resource_names for (is_list, resource_names) in relationships.values()))
+        # @todo Keep things structured all the way (avoid generating textual code)
+        # See... my old answer here: https://stackoverflow.com/a/29927459/905845
+        def make_related_getters_code():
+            yield "def make_related_getters("
+            for name in related_resources:
+                yield f'    {name}: Annotated[resources["{name}"].ItemGetter, Depends()],'
+            yield "):"
+            yield "    return {"
+            for name in related_resources:
+                yield f'        "{name}": {name},'
+            yield "    }"
+
+        globals = {"Annotated": Annotated, "Depends": Depends}
+        exec("\n".join(make_related_getters_code()), {"resources": resources}, globals)
+        return globals["make_related_getters"]
 
     if resource.ItemCreator:
         @router.post(
@@ -240,9 +68,9 @@ def add_resource_routes(resources, resource, router):
         def create_item(
             urls: Urls,
             create_item: Annotated[resource.ItemCreator, Depends()],
-            get_related_item: Annotated[dict, Depends(make_related_getters)],
-            payload: resource.CreateInputModel,
-            include: str = None
+            get_related_item: Annotated[dict, Depends(make_related_getters(resource.create_input_relationships))],
+            payload: Annotated[resource.CreateInputModel, Body()],
+            include: IncludeDependable,
         ):
             attributes = {
                 humps.decamelize(key) : value
@@ -254,17 +82,17 @@ def add_resource_routes(resources, resource, router):
                 key = humps.decamelize(key)
                 if isinstance(value.data, list):
                     # @todo Check item type against relationship type
-                    relationships[key] = [get_related_item[item.type](item.id) for item in value.data]
+                    relationships[key] = [get_related_item[item.type](id=item.id) for item in value.data]
                 elif value.data is None:
                     relationships[key] = None
                 else:
                     # @todo Check type against relationship type(s)
-                    relationships[key] = get_related_item[value.data.type](value.data.id)
+                    relationships[key] = get_related_item[value.data.type](id=value.data.id)
 
             # @todo Pass parsed 'include' to allow pre-fetching
             item = create_item(**attributes, **relationships)
 
-            return resource.make_item_response(resources, urls=urls, item=item, include=parse_include(include))
+            return resource.make_item_response(resources, urls=urls, item=item, include=include)
 
     if resource.PageGetter:
         @router.get(
@@ -274,32 +102,25 @@ def add_resource_routes(resources, resource, router):
             response_model_exclude_unset=True,
         )
         def get_page(
+            request: Request,
             urls: Urls,
             get_page: Annotated[resource.PageGetter, Depends()],
-            filters: Annotated[resource.filters, Depends()],
+            include: IncludeDependable,
             page_size: Annotated[int, Query(alias="page[size]")] = resource.default_page_size,
             page_number: Annotated[int, Query(alias="page[number]")] = 1,
-            sort: str = None,
-            include: str = None,
         ):
-            # @todo Work out authorized values for 'sort' from the resources' definition
-            # @todo Sort descending when the sort field is prefixed with a minus sign
-            # @todo Allow explicit ascending sorting with a prefix plus sign
-            parsed_sort = None if sort is None else [humps.decamelize(part) for part in sort.split(",")]
             # @todo Pass parsed 'include' to allow pre-fetching
-            (items_count, items) = get_page(parsed_sort, filters, (page_number - 1) * page_size, page_size)
+            (items_count, items) = get_page(first_index=(page_number - 1) * page_size, page_size=page_size)
             assert len(items) <= page_size
             return resource.make_page_response(
                 resources,
+                request,
                 urls=urls,
                 items_count=items_count,
-                filters=filters,
-                sort=sort,
                 page_number=page_number,
                 page_size=page_size,
                 items=items,
-                raw_include=include,
-                include=parse_include(include),
+                include=include,
             )
 
     # @todo Actually support resources without an ItemGetter (useful e.g. in Gabby for 'RecoveryEmailRequest' and 'AdaptedExercise')
@@ -314,12 +135,12 @@ def add_resource_routes(resources, resource, router):
             urls: Urls,
             get_item: Annotated[resource.ItemGetter, Depends()],
             id: str,
-            include: str = None,
+            include: IncludeDependable,
         ):
             # @todo Pass parsed 'include' to allow pre-fetching
-            item = get_item(id)
+            item = get_item(id=id)
             if item:
-                return resource.make_item_response(resources, urls=urls, item=item, include=parse_include(include))
+                return resource.make_item_response(resources, urls=urls, item=item, include=include)
             else:
                 raise HTTPException(status_code=404, detail="Item not found")
 
@@ -334,19 +155,19 @@ def add_resource_routes(resources, resource, router):
             urls: Urls,
             get_item: Annotated[resource.ItemGetter, Depends()],
             save_item: Annotated[resource.ItemSaver, Depends()],
-            get_related_item: Annotated[dict, Depends(make_related_getters)],
+            get_related_item: Annotated[dict, Depends(make_related_getters(resource.update_input_relationships))],
             id: str,
-            payload: resource.UpdateInputModel,
-            include: str = None,
+            payload: Annotated[resource.UpdateInputModel, Body()],
+            include: IncludeDependable,
         ):
             # @todo Pass parsed 'include' to allow pre-fetching
-            item = get_item(id)
+            item = get_item(id=id)
             if item:
                 class NothingToSave(Exception):
                     pass
 
                 try:
-                    with save_item(item):
+                    with save_item(item=item):
                         needs_save = False
                         for (key, value) in dict(payload.data.attributes).items():
                             if key in payload.data.attributes.model_fields_set:
@@ -356,17 +177,17 @@ def add_resource_routes(resources, resource, router):
                             if key in payload.data.relationships.model_fields_set:
                                 if isinstance(value.data, list):
                                     # @todo Check item type against relationship type
-                                    setattr(item, humps.decamelize(key), [get_related_item[item.type](item.id) for item in value.data])
+                                    setattr(item, humps.decamelize(key), [get_related_item[item.type](id=item.id) for item in value.data])
                                 elif value.data is None:
                                     setattr(item, humps.decamelize(key), None)
                                 else:
-                                    setattr(item, humps.decamelize(key), get_related_item[value.data.type](value.data.id))
+                                    setattr(item, humps.decamelize(key), get_related_item[value.data.type](id=value.data.id))
                                 needs_save = True
                         if not needs_save:
                             raise NothingToSave()
                 except NothingToSave:
                     pass
-                return resource.make_item_response(resources, urls=urls, item=item, include=parse_include(include))
+                return resource.make_item_response(resources, urls=urls, item=item, include=include)
             else:
                 raise HTTPException(status_code=404, detail="Item not found")
 
@@ -382,9 +203,9 @@ def add_resource_routes(resources, resource, router):
             delete_item: Annotated[resource.ItemDeleter, Depends()],
             id: str,
         ):
-            item = get_item(id)
+            item = get_item(id=id)
             if item:
-                delete_item(item)
+                delete_item(item=item)
             else:
                 raise HTTPException(status_code=404, detail="Item not found")
 
@@ -468,11 +289,11 @@ def add_batch_route(resources, router):
                     key = humps.decamelize(key)
                     if isinstance(value.data, list):
                         # @todo Check item type against relationship type
-                        relationships[key] = [item_getters[item.type](item.id) for item in value.data]
+                        relationships[key] = [item_getters[item.type](id=item.id) for item in value.data]
                     elif value.data is None:
                         relationships[key] = None
                     else:
-                        relationships[key] = item_getters[value.data.type](value.data.id)
+                        relationships[key] = item_getters[value.data.type](id=value.data.id)
 
                 item = item_creators[type](**attributes, **relationships)
 
@@ -486,41 +307,3 @@ def add_batch_route(resources, router):
         return {
             "atomic:results": results,
         }
-
-
-def parse_include(include):
-    if include is None:
-        return None
-    elif include == "":
-        return {}
-    else:
-        paths = [path.split(".") for path in include.split(",")]
-        return_value = {}
-        for path in paths:
-            current = return_value
-            for part in path:
-                current = current.setdefault(part, {})
-        return return_value
-
-
-class ParseIncludeTestCase(unittest.TestCase):
-    def test_none(self):
-        self.assertEqual(parse_include(None), None)
-
-    def test_empty_string(self):
-        self.assertEqual(parse_include(""), {})
-
-    def test_single_item(self):
-        self.assertEqual(parse_include("author"), {"author": {}})
-
-    def test_multiple_items(self):
-        self.assertEqual(parse_include("author,comments"), {"author": {}, "comments": {}})
-
-    def test_nested_items(self):
-        self.assertEqual(parse_include("comments.author.team.members"), {"comments": {"author": {"team": {"members": {}}}}})
-
-    def test_repeated_prefix(self):
-        self.assertEqual(
-            parse_include("comments.author.team.members.posts,comments.author.team.leader.comments"),
-            {"comments": {"author": {"team": {"members": {"posts": {}}, "leader": {"comments": {}}}}}},
-        )

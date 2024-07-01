@@ -7,7 +7,7 @@ from . import api_models
 from . import settings
 from .api_utils import create_item, get_item, get_page, save_item, delete_item
 from .database_utils import OrmBase, SessionDependable
-from .users import WanabeMandatoryAuthenticatedUserDependable
+from .users import MandatoryAuthBearerDependable
 from .users.mixins import CreatedUpdatedByAtMixin
 from .wrapping import set_wrapper, make_sqids, orm_wrapper_with_sqids
 
@@ -21,7 +21,10 @@ class Project(OrmBase, CreatedUpdatedByAtMixin):
     description: orm.Mapped[str]
 
     textbooks: orm.Mapped[list["Textbook"]] = orm.relationship(back_populates="project")
-    exercises: orm.Mapped[list["Exercise"]] = orm.relationship(back_populates="project")
+    exercises: orm.Mapped[list["Exercise"]] = orm.relationship(
+        back_populates="project",
+        order_by="[Exercise.textbook_id, Exercise.textbook_page, Exercise.number]",
+    )
 
 
 class ProjectsResource:
@@ -34,61 +37,57 @@ class ProjectsResource:
 
     sqids = make_sqids(singular_name)
 
-    @staticmethod
-    def ItemCreator(
+    def create_item(
+        self,
+        title,
+        description,
         session: SessionDependable,
-        authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
-        def create(title, description):
-            return create_item(
-                session, Project,
-                title=title,
-                description=description,
-                created_by=authenticated_user,
-                updated_by=authenticated_user,
-            )
-        return create
+        return create_item(
+            session, Project,
+            title=title,
+            description=description,
+            created_by=authenticated_user,
+            updated_by=authenticated_user,
+        )
 
-    @staticmethod
-    def ItemGetter(
+    def get_item(
+        self,
+        id,
         session: SessionDependable,
-        authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
-        def get(id):
-            return get_item(session, Project, ProjectsResource.sqids.decode(id)[0])
-        return get
+        return get_item(session, Project, ProjectsResource.sqids.decode(id)[0])
 
-    @staticmethod
-    def PageGetter(
+    def get_page(
+        self,
+        first_index,
+        page_size,
         session: SessionDependable,
-        authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
-        def get(sort, filters, first_index, page_size):
-            sort = sort or ("id",)
-            query = sql.select(Project).order_by(*sort)
-            return get_page(session, query, first_index, page_size)
-        return get
+        query = sql.select(Project)
+        return get_page(session, query, first_index, page_size)
 
-    @staticmethod
-    def ItemSaver(
+    @contextmanager
+    def save_item(
+        self,
+        item,
         session: SessionDependable,
-        authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
-        @contextmanager
-        def save(item):
-            yield
-            item.updated_by = authenticated_user
-            save_item(session, item)
-        return save
+        yield
+        item.updated_by = authenticated_user
+        save_item(session, item)
 
-    @staticmethod
-    def ItemDeleter(
+    def delete_item(
+        self,
+        item,
         session: SessionDependable,
-        authenticated_user: WanabeMandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
-        def delete(item):
-            delete_item(session, item)
-        return delete
+        delete_item(session, item)
 
 
 set_wrapper(Project, orm_wrapper_with_sqids(ProjectsResource.sqids))

@@ -1,4 +1,3 @@
-from __future__ import annotations
 from contextlib import contextmanager
 from typing import Annotated
 import datetime
@@ -16,7 +15,7 @@ import sqlalchemy as sql
 from .. import api_models
 from .. import settings
 from ..api_utils import get_item, save_item
-from ..database_utils import OrmBase, SessionDependable
+from ..database_utils import OrmBase, SessionDependable, Session
 from ..wrapping import make_sqids, set_wrapper, orm_wrapper_with_sqids, unwrap, wrap
 
 
@@ -39,15 +38,15 @@ class User(OrmBase):
     # Can't use 'CreatedUpdatedByAtMixin' because of circular dependency
     created_at: orm.Mapped[datetime.datetime] = orm.mapped_column(sql.DateTime(timezone=True), server_default=sql.func.now())
     created_by_id: orm.Mapped[int] = orm.mapped_column(sql.ForeignKey("users.id"))
-    created_by: orm.Mapped[User] = orm.relationship(foreign_keys=[created_by_id], remote_side=[id], post_update=True)
+    created_by: orm.Mapped['User'] = orm.relationship(foreign_keys=[created_by_id], remote_side=[id], post_update=True)
     updated_at: orm.Mapped[datetime.datetime] = orm.mapped_column(sql.DateTime(timezone=True), server_default=sql.func.now(), onupdate=sql.func.now())
     updated_by_id: orm.Mapped[int] = orm.mapped_column(sql.ForeignKey("users.id"))
-    updated_by: orm.Mapped[User] = orm.relationship(foreign_keys=[updated_by_id], remote_side=[id], post_update=True)
+    updated_by: orm.Mapped['User'] = orm.relationship(foreign_keys=[updated_by_id], remote_side=[id], post_update=True)
 
     username: orm.Mapped[str | None] = orm.mapped_column()
     hashed_password: orm.Mapped[str | None] = orm.mapped_column()
 
-    email_addresses: orm.Mapped[list[UserEmailAddress]] = orm.relationship("UserEmailAddress", back_populates="user")
+    email_addresses: orm.Mapped[list['UserEmailAddress']] = orm.relationship("UserEmailAddress", back_populates="user")
 
     __table_args__ = (
         # NEVER allow '@' in usernames, to avoid confusion with email addresses
@@ -146,10 +145,7 @@ def authentication_dependable(
 AuthenticationDependable = Annotated[dict, Depends(authentication_dependable)]
 
 
-def _optional_authenticated_user_dependable(
-    session: SessionDependable,
-    token: str | None = Depends(OAuth2PasswordBearer(tokenUrl="token", auto_error=False)),
-):
+def get_optional_user_from_token(session: Session, token: str | None):
     if token is None:
         # No token => unauthenticated
         return None
@@ -160,34 +156,50 @@ def _optional_authenticated_user_dependable(
             # Corrupted token => silently unauthenticated
             return None
         else:
-            if datetime.datetime.now(tz=datetime.timezone.utc) < datetime.datetime.fromisoformat(token["validUntil"]):
+            if datetime.datetime.now(tz=datetime.timezone.utc) > datetime.datetime.fromisoformat(token["validUntil"]):
+                # Expired token => silently unauthenticated
+                return None
+            else:
                 user = session.get(User, token["userId"])
                 if user is None:
                     # User not found despite having a valid token: user was deleted => silently unauthenticated
                     return None
                 else:
                     return user
-            else:
-                # Expired token => silently unauthenticated
-                return None
 
 
-OptionalAuthenticatedUserDependable = Annotated[User | None, Depends(_optional_authenticated_user_dependable)]
+def optional_auth_bearer_dependable(
+    session: SessionDependable,
+    token: Annotated[str | None, Depends(OAuth2PasswordBearer(tokenUrl="token", auto_error=False))],
+):
+    return get_optional_user_from_token(session, token)
 
 
-def _mandatory_authenticated_user_dependable(user: OptionalAuthenticatedUserDependable):
+OptionalAuthBearerDependable = Annotated[User | None, Depends(optional_auth_bearer_dependable)]
+
+
+def make_user_mandatory(user: User | None):
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid or expired token")
     else:
         return user
 
 
-# @todo VERY IMPORTANT Fix 'MandatoryAuthenticatedUserDependable' to use '_mandatory_authenticated_user_dependable'
-# This is currently a workaround for a limitation of fastjsonapi, which instantiates all the 'ItemGetter's,
-# and so create dependencies on 'MandatoryAuthenticatedUserDependable' even in cases where it's not required.
-# Then merge these in a single simple 'MandatoryAuthenticatedUserDependable'.
-WanabeMandatoryAuthenticatedUserDependable = Annotated[User | None, Depends(_optional_authenticated_user_dependable)]
-ActuallyMandatoryAuthenticatedUserDependable = Annotated[User, Depends(_mandatory_authenticated_user_dependable)]
+def mandatory_auth_bearer_dependable(user: OptionalAuthBearerDependable):
+    return make_user_mandatory(user)
+
+
+MandatoryAuthBearerDependable = Annotated[User, Depends(mandatory_auth_bearer_dependable)]
+
+
+def mandatory_auth_token_dependable(
+    session: SessionDependable,
+    token: str,
+):
+    make_user_mandatory(get_optional_user_from_token(session, token))
+
+
+MandatoryAuthTokenDependable = Annotated[dict, Depends(mandatory_auth_token_dependable)]
 
 
 class UsersResource:
@@ -200,33 +212,29 @@ class UsersResource:
 
     sqids = make_sqids(singular_name)
 
-    @staticmethod
-    def ItemGetter(
+    def get_item(
+        self,
+        id,
         session: SessionDependable,
-        authenticated_user: OptionalAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
-        def get(id):
-            if id == "current":
-                return wrap(authenticated_user)
-            else:
-                return get_item(session, User, UsersResource.sqids.decode(id)[0])
+        if id == "current":
+            return wrap(authenticated_user)
+        else:
+            return get_item(session, User, UsersResource.sqids.decode(id)[0])
 
-        return get
-
-    @staticmethod
-    def ItemSaver(
+    @contextmanager
+    def save_item(
+        self,
+        item,
         session: SessionDependable,
-        authenticated_user: ActuallyMandatoryAuthenticatedUserDependable,
+        authenticated_user: MandatoryAuthBearerDependable,
     ):
-        @contextmanager
-        def save(user):
-            if unwrap(user) != authenticated_user:
-                raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="You can only edit your own user")
-            yield
-            user.updated_by = authenticated_user
-            save_item(session, user)
-
-        return save
+        if unwrap(item) != authenticated_user:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="You can only edit your own user")
+        yield
+        item.updated_by = authenticated_user
+        save_item(session, item)
 
 
 set_wrapper(User, orm_wrapper_with_sqids(UsersResource.sqids))

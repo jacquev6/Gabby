@@ -114,6 +114,13 @@ def import_django_data(input_file):
         session.add(orm_models.UserEmailAddress(user=vincent, address="vincent@vincent-jacques.net"))
         session.flush()
 
+        if settings.EXPOSE_RESET_FOR_TESTS_URL:
+            admin = orm_models.User(username="admin", clear_text_password="password")
+            admin.created_by_id = import_user.id
+            admin.updated_by_id = import_user.id
+            session.add(admin)
+            session.flush()
+
         for instance_data in data:
             assert instance_data.keys() == {"model", "pk", "fields"}
             model = instance_data["model"]

@@ -28,84 +28,36 @@
         "title": "ItemLinks",
         "type": "object"
       },
-      "PageLinks": {
+      "MandatoryRelationship": {
         "additionalProperties": false,
         "properties": {
-          "first": {
-            "title": "First",
-            "type": "string"
-          },
-          "last": {
-            "title": "Last",
-            "type": "string"
-          },
-          "next": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Next"
-          },
-          "prev": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Prev"
+          "data": {
+            "$ref": "#/components/schemas/ObjectId"
           }
         },
         "required": [
-          "first",
-          "last",
-          "next",
-          "prev"
+          "data"
         ],
-        "title": "PageLinks",
+        "title": "MandatoryRelationship",
         "type": "object"
       },
-      "PageMeta": {
+      "ObjectId": {
         "additionalProperties": false,
         "properties": {
-          "pagination": {
-            "$ref": "#/components/schemas/Pagination"
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
           }
         },
         "required": [
-          "pagination"
+          "type",
+          "id"
         ],
-        "title": "PageMeta",
-        "type": "object"
-      },
-      "Pagination": {
-        "additionalProperties": false,
-        "properties": {
-          "count": {
-            "title": "Count",
-            "type": "integer"
-          },
-          "page": {
-            "title": "Page",
-            "type": "integer"
-          },
-          "pages": {
-            "title": "Pages",
-            "type": "integer"
-          }
-        },
-        "required": [
-          "count",
-          "page",
-          "pages"
-        ],
-        "title": "Pagination",
+        "title": "ObjectId",
         "type": "object"
       },
       "ValidationError": {
@@ -141,6 +93,124 @@
         "title": "ValidationError",
         "type": "object"
       },
+      "computedItemOutput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/computedOutputItem"
+          },
+          "included": {
+            "items": {},
+            "title": "Included",
+            "type": "array"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "computedItemOutput",
+        "type": "object"
+      },
+      "computedOutputItem": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "$ref": "#/components/schemas/computedOutputItemAttributes"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "links": {
+            "$ref": "#/components/schemas/ItemLinks"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "links",
+          "attributes"
+        ],
+        "title": "computedOutputItem",
+        "type": "object"
+      },
+      "computedOutputItemAttributes": {
+        "additionalProperties": false,
+        "properties": {
+          "foo": {
+            "title": "Foo",
+            "type": "string"
+          }
+        },
+        "required": [
+          "foo"
+        ],
+        "title": "computedOutputItemAttributes",
+        "type": "object"
+      },
+      "constantItemOutput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/constantOutputItem"
+          },
+          "included": {
+            "items": {},
+            "title": "Included",
+            "type": "array"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "constantItemOutput",
+        "type": "object"
+      },
+      "constantOutputItem": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "$ref": "#/components/schemas/constantOutputItemAttributes"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "links": {
+            "$ref": "#/components/schemas/ItemLinks"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "links",
+          "attributes"
+        ],
+        "title": "constantOutputItem",
+        "type": "object"
+      },
+      "constantOutputItemAttributes": {
+        "additionalProperties": false,
+        "properties": {
+          "baz": {
+            "title": "Baz",
+            "type": "string"
+          }
+        },
+        "required": [
+          "baz"
+        ],
+        "title": "constantOutputItemAttributes",
+        "type": "object"
+      },
       "resourceCreateInput": {
         "additionalProperties": false,
         "properties": {
@@ -158,15 +228,15 @@
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "$ref": "#/components/schemas/resourceCreateInputDataAttributes"
-          },
-          "relationships": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/resourceCreateInputDataRelationships"
+                "$ref": "#/components/schemas/resourceCreateInputDataAttributes"
               }
             ],
             "default": {}
+          },
+          "relationships": {
+            "$ref": "#/components/schemas/resourceCreateInputDataRelationships"
           },
           "type": {
             "title": "Type",
@@ -175,49 +245,31 @@
         },
         "required": [
           "type",
-          "attributes"
+          "relationships"
         ],
         "title": "resourceCreateInputData",
         "type": "object"
       },
       "resourceCreateInputDataAttributes": {
         "additionalProperties": false,
-        "properties": {
-          "constantStr": {
-            "title": "Constantstr",
-            "type": "string"
-          },
-          "defaultedConstantFloat": {
-            "default": 3.14,
-            "title": "Defaultedconstantfloat",
-            "type": "number"
-          },
-          "defaultedDatetime": {
-            "default": "2024-03-18T15:38:15Z",
-            "format": "date-time",
-            "title": "Defaulteddatetime",
-            "type": "string"
-          },
-          "plainInt": {
-            "title": "Plainint",
-            "type": "integer"
-          },
-          "secretStr": {
-            "title": "Secretstr",
-            "type": "string"
-          }
-        },
-        "required": [
-          "plainInt",
-          "constantStr",
-          "secretStr"
-        ],
+        "properties": {},
         "title": "resourceCreateInputDataAttributes",
         "type": "object"
       },
       "resourceCreateInputDataRelationships": {
         "additionalProperties": false,
-        "properties": {},
+        "properties": {
+          "constant": {
+            "$ref": "#/components/schemas/MandatoryRelationship"
+          },
+          "writable": {
+            "$ref": "#/components/schemas/MandatoryRelationship"
+          }
+        },
+        "required": [
+          "constant",
+          "writable"
+        ],
         "title": "resourceCreateInputDataRelationships",
         "type": "object"
       },
@@ -242,15 +294,15 @@
       "resourceOutputItem": {
         "additionalProperties": false,
         "properties": {
-          "attributes": {
-            "$ref": "#/components/schemas/resourceOutputItemAttributes"
-          },
           "id": {
             "title": "Id",
             "type": "string"
           },
           "links": {
             "$ref": "#/components/schemas/ItemLinks"
+          },
+          "relationships": {
+            "$ref": "#/components/schemas/resourceOutputItemRelationships"
           },
           "type": {
             "title": "Type",
@@ -261,74 +313,30 @@
           "type",
           "id",
           "links",
-          "attributes"
+          "relationships"
         ],
         "title": "resourceOutputItem",
         "type": "object"
       },
-      "resourceOutputItemAttributes": {
+      "resourceOutputItemRelationships": {
         "additionalProperties": false,
         "properties": {
-          "computedStr": {
-            "title": "Computedstr",
-            "type": "string"
+          "computed": {
+            "$ref": "#/components/schemas/MandatoryRelationship"
           },
-          "constantStr": {
-            "title": "Constantstr",
-            "type": "string"
+          "constant": {
+            "$ref": "#/components/schemas/MandatoryRelationship"
           },
-          "defaultedConstantFloat": {
-            "title": "Defaultedconstantfloat",
-            "type": "number"
-          },
-          "defaultedDatetime": {
-            "format": "date-time",
-            "title": "Defaulteddatetime",
-            "type": "string"
-          },
-          "plainInt": {
-            "title": "Plainint",
-            "type": "integer"
+          "writable": {
+            "$ref": "#/components/schemas/MandatoryRelationship"
           }
         },
         "required": [
-          "plainInt",
-          "defaultedDatetime",
-          "constantStr",
-          "defaultedConstantFloat",
-          "computedStr"
+          "computed",
+          "constant",
+          "writable"
         ],
-        "title": "resourceOutputItemAttributes",
-        "type": "object"
-      },
-      "resourcePageOutput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "items": {
-              "$ref": "#/components/schemas/resourceOutputItem"
-            },
-            "title": "Data",
-            "type": "array"
-          },
-          "included": {
-            "items": {},
-            "title": "Included",
-            "type": "array"
-          },
-          "links": {
-            "$ref": "#/components/schemas/PageLinks"
-          },
-          "meta": {
-            "$ref": "#/components/schemas/PageMeta"
-          }
-        },
-        "required": [
-          "data",
-          "meta",
-          "links"
-        ],
-        "title": "resourcePageOutput",
+        "title": "resourceOutputItemRelationships",
         "type": "object"
       },
       "resourceUpdateInput": {
@@ -381,28 +389,81 @@
       },
       "resourceUpdateInputDataAttributes": {
         "additionalProperties": false,
-        "properties": {
-          "defaultedDatetime": {
-            "format": "date-time",
-            "title": "Defaulteddatetime",
-            "type": "string"
-          },
-          "plainInt": {
-            "title": "Plainint",
-            "type": "integer"
-          },
-          "secretStr": {
-            "title": "Secretstr",
-            "type": "string"
-          }
-        },
+        "properties": {},
         "title": "resourceUpdateInputDataAttributes",
         "type": "object"
       },
       "resourceUpdateInputDataRelationships": {
         "additionalProperties": false,
-        "properties": {},
+        "properties": {
+          "writable": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MandatoryRelationship"
+              }
+            ]
+          }
+        },
         "title": "resourceUpdateInputDataRelationships",
+        "type": "object"
+      },
+      "writableItemOutput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/writableOutputItem"
+          },
+          "included": {
+            "items": {},
+            "title": "Included",
+            "type": "array"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "writableItemOutput",
+        "type": "object"
+      },
+      "writableOutputItem": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "$ref": "#/components/schemas/writableOutputItemAttributes"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "links": {
+            "$ref": "#/components/schemas/ItemLinks"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "links",
+          "attributes"
+        ],
+        "title": "writableOutputItem",
+        "type": "object"
+      },
+      "writableOutputItemAttributes": {
+        "additionalProperties": false,
+        "properties": {
+          "bar": {
+            "title": "Bar",
+            "type": "string"
+          }
+        },
+        "required": [
+          "bar"
+        ],
+        "title": "writableOutputItemAttributes",
         "type": "object"
       }
     }
@@ -413,16 +474,25 @@
   },
   "openapi": "3.1.0",
   "paths": {
-    "/resources": {
+    "/computeds/{id}": {
       "get": {
-        "operationId": "get_resources_resources_get",
+        "operationId": "get_computed_computeds__id__get",
         "parameters": [
           {
-            "in": "query",
-            "name": "filter[computedStr]",
-            "required": false,
+            "in": "path",
+            "name": "id",
+            "required": true,
             "schema": {
-              "title": "Filter[Computedstr]",
+              "title": "Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "foo",
+            "required": true,
+            "schema": {
+              "title": "Foo",
               "type": "string"
             }
           },
@@ -434,26 +504,6 @@
               "title": "Include",
               "type": "string"
             }
-          },
-          {
-            "in": "query",
-            "name": "page[number]",
-            "required": false,
-            "schema": {
-              "default": 1,
-              "title": "Page[Number]",
-              "type": "integer"
-            }
-          },
-          {
-            "in": "query",
-            "name": "page[size]",
-            "required": false,
-            "schema": {
-              "default": 2,
-              "title": "Page[Size]",
-              "type": "integer"
-            }
           }
         ],
         "responses": {
@@ -461,7 +511,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/resourcePageOutput"
+                  "$ref": "#/components/schemas/computedItemOutput"
                 }
               }
             },
@@ -478,11 +528,88 @@
             "description": "Validation Error"
           }
         },
-        "summary": "Get Resources"
-      },
+        "summary": "Get Computed"
+      }
+    },
+    "/constants/{id}": {
+      "get": {
+        "operationId": "get_constant_constants__id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "baz",
+            "required": true,
+            "schema": {
+              "title": "Baz",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/constantItemOutput"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Constant"
+      }
+    },
+    "/resources": {
       "post": {
         "operationId": "create_resource_resources_post",
         "parameters": [
+          {
+            "in": "query",
+            "name": "bar",
+            "required": true,
+            "schema": {
+              "title": "Bar",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "baz",
+            "required": true,
+            "schema": {
+              "title": "Baz",
+              "type": "string"
+            }
+          },
           {
             "in": "query",
             "name": "include",
@@ -529,36 +656,6 @@
       }
     },
     "/resources/{id}": {
-      "delete": {
-        "operationId": "delete_resource_resources__id__delete",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "title": "Id",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Delete Resource"
-      },
       "get": {
         "operationId": "get_resource_resources__id__get",
         "parameters": [
@@ -619,6 +716,15 @@
           },
           {
             "in": "query",
+            "name": "bar",
+            "required": true,
+            "schema": {
+              "title": "Bar",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
             "name": "include",
             "required": false,
             "schema": {
@@ -660,6 +766,63 @@
           }
         },
         "summary": "Update Resource"
+      }
+    },
+    "/writables/{id}": {
+      "get": {
+        "operationId": "get_writable_writables__id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "bar",
+            "required": true,
+            "schema": {
+              "title": "Bar",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/writableItemOutput"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Writable"
       }
     }
   }

@@ -780,43 +780,6 @@
   },
   "openapi": "3.1.0",
   "paths": {
-    "/batch": {
-      "post": {
-        "operationId": "batch_batch_post",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "title": "Payload",
-                "type": "object"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {}
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Batch"
-      }
-    },
     "/lefts": {
       "post": {
         "operationId": "create_left_lefts_post",
@@ -1024,12 +987,11 @@
         "parameters": [
           {
             "in": "query",
-            "name": "page[size]",
+            "name": "include",
             "required": false,
             "schema": {
-              "default": 2,
-              "title": "Page[Size]",
-              "type": "integer"
+              "title": "Include",
+              "type": "string"
             }
           },
           {
@@ -1044,20 +1006,12 @@
           },
           {
             "in": "query",
-            "name": "sort",
+            "name": "page[size]",
             "required": false,
             "schema": {
-              "title": "Sort",
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "include",
-            "required": false,
-            "schema": {
-              "title": "Include",
-              "type": "string"
+              "default": 2,
+              "title": "Page[Size]",
+              "type": "integer"
             }
           }
         ],

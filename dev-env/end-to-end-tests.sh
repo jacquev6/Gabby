@@ -20,7 +20,7 @@ do
   esac
 done
 
-if (cd ..; git grep 'it\.only' -- tests)
+if (cd ..; git grep -n 'it\.only' -- tests)
 then
   false
 fi

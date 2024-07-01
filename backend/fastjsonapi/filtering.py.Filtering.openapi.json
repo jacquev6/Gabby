@@ -28,6 +28,86 @@
         "title": "ItemLinks",
         "type": "object"
       },
+      "PageLinks": {
+        "additionalProperties": false,
+        "properties": {
+          "first": {
+            "title": "First",
+            "type": "string"
+          },
+          "last": {
+            "title": "Last",
+            "type": "string"
+          },
+          "next": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next"
+          },
+          "prev": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Prev"
+          }
+        },
+        "required": [
+          "first",
+          "last",
+          "next",
+          "prev"
+        ],
+        "title": "PageLinks",
+        "type": "object"
+      },
+      "PageMeta": {
+        "additionalProperties": false,
+        "properties": {
+          "pagination": {
+            "$ref": "#/components/schemas/Pagination"
+          }
+        },
+        "required": [
+          "pagination"
+        ],
+        "title": "PageMeta",
+        "type": "object"
+      },
+      "Pagination": {
+        "additionalProperties": false,
+        "properties": {
+          "count": {
+            "title": "Count",
+            "type": "integer"
+          },
+          "page": {
+            "title": "Page",
+            "type": "integer"
+          },
+          "pages": {
+            "title": "Pages",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "count",
+          "page",
+          "pages"
+        ],
+        "title": "Pagination",
+        "type": "object"
+      },
       "ValidationError": {
         "properties": {
           "loc": {
@@ -109,34 +189,50 @@
       "resourceOutputItemAttributes": {
         "additionalProperties": false,
         "properties": {
-          "foo": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Foo"
+          "filterType": {
+            "title": "Filtertype",
+            "type": "string"
           },
-          "host": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Host"
+          "filterValue": {
+            "title": "Filtervalue",
+            "type": "string"
           }
         },
         "required": [
-          "foo",
-          "host"
+          "filterType",
+          "filterValue"
         ],
         "title": "resourceOutputItemAttributes",
+        "type": "object"
+      },
+      "resourcePageOutput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/resourceOutputItem"
+            },
+            "title": "Data",
+            "type": "array"
+          },
+          "included": {
+            "items": {},
+            "title": "Included",
+            "type": "array"
+          },
+          "links": {
+            "$ref": "#/components/schemas/PageLinks"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/PageMeta"
+          }
+        },
+        "required": [
+          "data",
+          "meta",
+          "links"
+        ],
+        "title": "resourcePageOutput",
         "type": "object"
       }
     }
@@ -147,59 +243,65 @@
   },
   "openapi": "3.1.0",
   "paths": {
-    "/batch": {
-      "post": {
-        "operationId": "batch_batch_post",
+    "/resources": {
+      "get": {
+        "operationId": "get_resources_resources_get",
         "parameters": [
           {
             "in": "query",
-            "name": "foo",
+            "name": "filter[anInt]",
             "required": false,
             "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Foo"
+              "title": "Filter[Anint]",
+              "type": "integer"
             }
           },
           {
-            "in": "header",
-            "name": "host",
+            "in": "query",
+            "name": "filter[str]",
             "required": false,
             "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Host"
+              "title": "Filter[Str]",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page[number]",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "title": "Page[Number]",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page[size]",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "title": "Page[Size]",
+              "type": "integer"
             }
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "title": "Payload",
-                "type": "object"
-              }
-            }
-          },
-          "required": true
-        },
         "responses": {
           "200": {
             "content": {
               "application/vnd.api+json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/resourcePageOutput"
+                }
               }
             },
             "description": "Successful Response"
@@ -215,7 +317,7 @@
             "description": "Validation Error"
           }
         },
-        "summary": "Batch"
+        "summary": "Get Resources"
       }
     },
     "/resources/{id}": {
@@ -238,38 +340,6 @@
             "schema": {
               "title": "Include",
               "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "foo",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Foo"
-            }
-          },
-          {
-            "in": "header",
-            "name": "host",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Host"
             }
           }
         ],
