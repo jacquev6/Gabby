@@ -32,7 +32,7 @@ onMounted(() => {
 async function resetPassword() {
   busy.value = true
   api.auth.setToken(props.token)
-  await api.client.patch('user', 'current', { clearTextPassword: newPassword1.value }, {})
+  await api.cache.getOne('user', 'current').patch({ clearTextPassword: newPassword1.value }, {})
   await api.auth.login(emailAddress.value, newPassword1.value)
   busy.value = false
   console.assert(modal.value !== null)

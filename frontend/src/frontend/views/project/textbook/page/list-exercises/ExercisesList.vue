@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { computedAsync } from '@vueuse/core'
-
+import { computed } from 'vue'
 import { BBusy } from '$frontend/components/opinion/bootstrap'
 import { useApiStore } from '$frontend/stores/api'
 import type { Textbook, Exercise } from '$frontend/types/api'
@@ -14,13 +12,10 @@ const props = defineProps<{
 
 const api = useApiStore()
 
-const busy = ref(false)
-const exercises = computedAsync(
-  // @todo Understand why this request isn't duplicated like some others
-  async () => await api.client.getAll<Exercise>('exercises', {filter: {'textbook': props.textbook.id, 'textbookPage': props.page.toString()}}),
-  [] as Required<Exercise>[],
-  busy,
-)
+const exercises = computed(() => api.auto.getAll<Exercise>(
+  'exercise',
+  {filters: {'textbook': props.textbook.id, 'textbookPage': props.page.toString()}}
+))
 
 function ellipsis(s: string) {
   return s.length > 25 ? s.slice(0, 25) + '…' : s
@@ -32,14 +27,16 @@ defineExpose({
 </script>
 
 <template>
-  <BBusy :busy>
-    <template v-if="exercises.length">
+  <BBusy :busy="exercises.loading">
+    <template v-if="exercises.items.length">
       <p>{{ $t('existingExercises') }}</p>
       <ul>
-        <li v-for="exercise in exercises">
-          <strong>{{ exercise.attributes.number }}</strong> {{ ellipsis(exercise.attributes.instructions) }}
-          <slot :exercise></slot>
-        </li>
+        <template v-for="exercise in exercises.items">
+          <li v-if="exercise.exists">
+            <strong>{{ exercise.attributes!.number }}</strong> {{ ellipsis(exercise.attributes!.instructions) }}
+            <slot :exercise></slot>
+          </li>
+        </template>
       </ul>
     </template>
     <p v-else>{{ $t('noExercises') }}</p>

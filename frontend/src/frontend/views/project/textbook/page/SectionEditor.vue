@@ -37,9 +37,7 @@ async function save() {
 
   try {
     saving.value = true
-    await api.client.patch(
-      'section',
-      sectionId.value,
+    await api.cache.getOne('section', sectionId.value).patch(
       {
         pdfFileStartPage: pdfFileFirstPage.value,
         textbookStartPage: textbookFirstPage.value,

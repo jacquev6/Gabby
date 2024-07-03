@@ -28,7 +28,7 @@ const exerciseLoading = ref(false)
 const exercise = computedAsync(
   async () => {
     await new Promise((resolve) => resolve(null))  // @todo Understand why removing this line duplicates the request
-    return await api.client.getOne<Exercise>('exercise', props.exerciseId, {include: 'adaptation'})
+    return await api.client.getOne<Exercise>('exercise', props.exerciseId, {include: ['adaptation']})
   },
   undefined,
   exerciseLoading,

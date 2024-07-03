@@ -1,6 +1,4 @@
-import { setActivePinia, createPinia } from 'pinia'
-
-import { defineApiStore } from '$frontend/stores/api'
+import { defineApiStore, resetApiStores } from '$frontend/stores/api'
 import Pinger from './Pinger.vue'
 
 
@@ -14,7 +12,7 @@ describe('Pinger', () => {
 
     cy.viewport(700, 400)
 
-    setActivePinia(createPinia())
+    resetApiStores()
     useApiStore()
   })
 
@@ -95,15 +93,15 @@ describe('Pinger', () => {
     cy.focused().should('not.exist')  // This requires the ':key' on the '<li>' to be set
   })
 
-  // it('detects failure to ping on no connection', () => {
-  //   setActivePinia(createPinia())
-  //   defineApiStore('api', {baseUrl: 'http://fanout:8181/not-the-api/'})()
+  // @todo it('detects failure to ping on no connection', () => {
+  //   resetApiStores()
+  //   defineApiStore('api', {baseUrl: 'http://not-the-fanout:8181/not-the-api/'})()
 
   //   cy.mount(Pinger)
   // })
 
-  // it('detects failure to ping on 404', () => {
-  //   setActivePinia(createPinia())
+  // @todo it('detects failure to ping on 404', () => {
+  //   resetApiStores()
   //   defineApiStore('api', {baseUrl: 'http://fanout:8080/not-the-api/'})()
 
   //   cy.mount(Pinger)

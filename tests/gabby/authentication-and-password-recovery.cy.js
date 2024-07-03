@@ -76,7 +76,7 @@ describe('Gabby\'s authentication system', () => {
     cy.get('[name=username]').type('{selectAll}jacquev6+gabby-dev-alice@gmail.com', {delay: 0})
     cy.get('[name=username]').should('have.value', 'jacquev6+gabby-dev-alice@gmail.com')
 
-    cy.intercept('POST', '/api/recoveryEmailRequests?', {
+    cy.intercept('POST', '/api/recoveryEmailRequests', {
       statusCode: 201,
       headers: {
         'Content-Type': 'application/vnd.api+json',
@@ -106,7 +106,9 @@ describe('Gabby\'s authentication system', () => {
     cy.get('[name=username]').type('jacquev6+gabby-dev-alice@gmail.com', {delay: 0})
     cy.get('[name=password]').type('alice-password', {delay: 0})
     cy.get('[name=username]').type('{selectall}jacquev6+gabby-dev-alice@gmail.com', {delay: 0})
-    cy.intercept('POST', '/api/token?').as('tokenRequest')
+    cy.get('[name=username]').should('have.value', 'jacquev6+gabby-dev-alice@gmail.com')
+    cy.get('[name=password]').should('have.value', 'alice-password')
+    cy.intercept('POST', '/api/token').as('tokenRequest')
     cy.get('button:contains("Log in")').click()
     cy.get('div.busy').should('not.exist')
     cy.get('a:contains("Log out")').click()
@@ -161,6 +163,7 @@ describe('Gabby\'s authentication system', () => {
 
     cy.get('label:contains("New password")').first().next().type('new-alice-password', {delay: 0})
     cy.get('label:contains("New password")').last().next().type('new-alice', {delay: 0})
+    cy.get('label:contains("New password")').first().next().type('{selectAll}new-alice-password', {delay: 0})
     cy.get('label:contains("New password")').first().next().should('have.value', 'new-alice-password')
     cy.get('label:contains("New password")').last().next().should('have.value', 'new-alice')
 

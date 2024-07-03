@@ -5,10 +5,12 @@ import { ref, computed, watch } from 'vue'
 const props = withDefaults(defineProps<{
   busy: boolean,
   showWhileBusy?: 'always' | 'afterNotBusy' | 'never',
-  size?: string
+  size?: string,
+  tag?: string,
 }>(), {
   showWhileBusy: 'always',
   size: '2rem',
+  tag: 'div',
 })
 
 const hasEverBeenNotBusy = ref(false)
@@ -41,7 +43,7 @@ const style = computed(() => {
 </script>
 
 <template>
-  <div style="position: relative" :style="style">
+  <component :is="tag" style="position: relative" :style="style">
     <template v-if="show">
       <slot v-bind="$attrs"></slot>
     </template>
@@ -50,5 +52,5 @@ const style = computed(() => {
         <span class="visually-hidden">Loading...</span>
       </div>
     </div>
-  </div>
+  </component>
 </template>

@@ -2,7 +2,6 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 
-import { useApiStore } from '$frontend/stores/api'
 import { BBusy, BButton } from '$frontend/components/opinion/bootstrap'
 import ExercisesList from './ExercisesList.vue'
 import type { Exercise, Project, Textbook } from '$frontend/types/api'
@@ -17,12 +16,12 @@ const props = defineProps<{
 }>()
 
 const router = useRouter()
-const api = useApiStore()
 
 const deletingExercise = ref(false)
 async function deleteExercise(exercise: Exercise) {
   deletingExercise.value = true
-  await api.client.delete('exercise', exercise.id)
+  await exercise.delete()
+  await exercisesList.value?.exercises.refresh()
   deletingExercise.value = false
 }
 
@@ -33,7 +32,7 @@ function changePage(page: number) {
 const exercisesList = ref<typeof ExercisesList | null>(null)
 
 const highlightedRectangles = computed(() => {
-  const rectangles = exercisesList.value?.exercises.map((exercise: Required<Exercise>) => exercise.attributes.boundingRectangle).filter((rectangle: any/* @todo Type */) => rectangle !== null)
+  const rectangles = exercisesList.value?.exercises.items.filter((exercise: Exercise) => exercise.exists).map((exercise: Required<Exercise>) => exercise.attributes.boundingRectangle).filter((rectangle: any/* @todo Type */) => rectangle !== null)
   if (rectangles?.length > 0) {
     return rectangles
   } else {
@@ -49,11 +48,12 @@ defineExpose({
 
 <template>
   <h1>{{ $t('edition') }}</h1>
-  <BBusy :busy="deletingExercise">
-    <ExercisesList ref="exercisesList" :textbook :page >
-      <template v-slot="{exercise}">
-        <RouterLink class="btn btn-primary btn-sm" :to="{name: 'project-textbook-page-edit-exercise', params: {exerciseId: exercise.id}}">{{ $t('edit') }}</RouterLink>
-        <BButton secondary sm @click="deleteExercise(exercise)">{{ $t('delete') }}</BButton>
+  <ExercisesList ref="exercisesList" :textbook :page >
+    <template v-slot="{exercise}">
+        <BBusy tag="span" :busy="exercise.loading">
+          <RouterLink class="btn btn-primary btn-sm" :to="{name: 'project-textbook-page-edit-exercise', params: {exerciseId: exercise.id}}">{{ $t('edit') }}</RouterLink>
+          <BButton secondary sm @click="deleteExercise(exercise)">{{ $t('delete') }}</BButton>
+        </BBusy>
       </template>
     </ExercisesList>
     <p>
@@ -61,5 +61,4 @@ defineExpose({
         {{ $t('create') }}
       </RouterLink>
     </p>
-  </BBusy>
 </template>

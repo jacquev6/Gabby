@@ -36,9 +36,11 @@ var extractionEvents: object[] = []
 type AdaptationType = '-' | 'selectThingsAdaptation' | 'fillWithFreeTextAdaptation' | 'multipleChoicesInInstructionsAdaptation' | 'multipleChoicesInWordingAdaptation'
 const adaptationTypes: AdaptationType[] = ['selectThingsAdaptation', 'fillWithFreeTextAdaptation', 'multipleChoicesInInstructionsAdaptation', 'multipleChoicesInWordingAdaptation']
 
+type Rectangle = { start: { x: number; y: number; }; stop: { x: number; y: number; }; }
+
 interface State {
   number: string,
-  boundingRectangle: object | null,
+  boundingRectangle: Rectangle | null,
   instructions: string,
   wording: string,
   example: string,
@@ -109,34 +111,28 @@ function clearHistory(reset: () => void) {
   history.clear()
 }
 
-const alreadyExists = computedAsync(
-  async () => {
-    if (props.editMode) {
-      return true
-    } else if (state.value.number === '') {
-      return false
-    } else if (props.textbook !== null) {
-      console.assert(props.textbookPage !== null)
-      // @todo Understand why this request isn't duplicated like some others
-      const exercises = await api.client.getAll(
-        'exercises',
-        {
-          filter: {
-            textbook: props.textbook.id,
-            textbookPage: props.textbookPage.toString(),
-            number: state.value.number,
-          }
-        },
-      )
-      console.assert(exercises.length <= 1)
-      return exercises.length === 1
-    } else {
-      // @todo Detect duplicate independent exercise
-      return false
-    }
-  },
-  false,
-)
+const matchingExercises = computed(() => {
+  if (state.value.number === '') {
+    return null
+  } else if (props.textbook === null) {
+    // @todo Implement 'filters: {textbookIsNull: true}'
+    return null
+  } else {
+    console.assert(props.textbookPage !== null)
+    return api.auto.getAll(
+      'exercise',
+      {
+        filters: {
+          textbook: props.textbook.id,
+          textbookPage: props.textbookPage.toString(),
+          number: state.value.number,
+        }
+      },
+    )
+  }
+})
+
+const alreadyExists = computed(() => matchingExercises.value?.items.length === 1)  // @todo Implement
 
 watch(
   [() => props.number, () => props.automaticNumber],
@@ -200,9 +196,9 @@ const busy = ref(false)
 
 const showTextSelectionMenu = ref(false)
 const selectedText = ref('')
-const selectedRectangle = ref<object | null>(null)
+const selectedRectangle = ref<Rectangle | null>(null)
 const selectedTextReference = ref<{x: number, y: number}>({x: 0, y: 0})
-function textSelected(text: string, point: {clientX: number, clientY: number}, textItems: [], rectangle: object) {
+function textSelected(text: string, point: {clientX: number, clientY: number}, textItems: [], rectangle: Rectangle) {
   console.assert(props.section?.relationships?.pdfFile.relationships?.namings[0].attributes !== undefined)
   console.assert(props.pdf !== null)
 
@@ -372,9 +368,7 @@ async function save() {
   busy.value = true
 
   // @todo Use a *single* batch request (when batch requests support 'update' and 'delete' operations)
-  await api.client.patch(
-    'exercise',
-    props.exercise.id,
+  await props.exercise.patch(
     {
       boundingRectangle: state.value.boundingRectangle,
       instructions: state.value.instructions,
@@ -386,14 +380,14 @@ async function save() {
   )
   if (state.value.adaptationType === '-') {
     if (props.exercise.relationships.adaptation !== null) {
-      await api.client.delete(props.exercise.relationships.adaptation.type, props.exercise.relationships.adaptation.id)
+      await props.exercise.relationships.adaptation.delete()
     }
   } else {
     console.assert(adaptationOptions.value !== null)
-    await api.client.post(
+    await api.client.createOne(
       state.value.adaptationType,
       adaptationOptions.value,
-      {exercise: {type: 'exercise', id: props.exercise.id}},
+      {exercise: props.exercise},
     )
   }
   const operations = []
@@ -401,7 +395,7 @@ async function save() {
     operations.push([
       'add', 'extractionEvent', null,
       {event: JSON.stringify(event)},
-      {exercise: {type: 'exercise', id: props.exercise.id}},
+      {exercise: props.exercise},
     ])
   }
 
@@ -432,8 +426,8 @@ const adaptedData = computedAsync(
       }
       try {
         // @todo Understand why this request isn't duplicated like some others
-        const adapted = await api.client.post<AdaptedExercise>('adaptedExercise', attributes, {})
-        return adapted.attributes.adapted
+        const adapted = await api.client.createOne<AdaptedExercise>('adaptedExercise', attributes, {})
+        return adapted.attributes!.adapted
       } catch (e) {
         console.error(e)
         return null
