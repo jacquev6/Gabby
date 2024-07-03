@@ -1,6 +1,6 @@
 {
   "extends": "@vue/tsconfig/tsconfig.dom.json",
-  "include": ["env.d.ts", "src/**/*.ts", "src/**/*.vue"],
+  "include": ["cypress/support/commands.d.ts", "env.d.ts", "src/**/*.ts", "src/**/*.vue"],
   "exclude": [],
   "compilerOptions": {
     "strict": true,
@@ -21,6 +21,7 @@
       "$adapted/*": ["./src/adapted/*"],
       "$frontend/*": ["./src/frontend/*"]
     },
-    "lib": ["Dom", "ES2022"]
-  }
+    "lib": ["Dom", "ES2022"],
+    "types": ["cypress", "node"],
+  },
 }
