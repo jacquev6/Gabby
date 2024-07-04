@@ -16,7 +16,7 @@ const props = defineProps<{
   project: Project,
   textbook: Textbook,
   pdf: any/* @todo Type */,
-  section: Section,
+  section: Section | null,
   page: number,
   exerciseId: string
 }>()
