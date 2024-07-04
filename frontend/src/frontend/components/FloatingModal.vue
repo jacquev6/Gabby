@@ -6,23 +6,27 @@ import bootstrap from 'bootstrap/dist/js/bootstrap.bundle.min.js'
 
 
 const props = defineProps<{
-  title: string,
-  reference: {x: number, y: number},
+  title: string
+  reference: {x: number, y: number}
 }>()
 
 const emit = defineEmits<{
-  dismissed: [],
+  shown: []
+  hidden: []
 }>()
 
-const modal = ref<HTMLDivElement | null>(null)
+const modalElement = ref<HTMLDivElement | null>(null)
+let modal: any/* @todo @types/bootstrap */ = null
 const dialog = ref(null)
 const floatingReference = ref<VirtualElement | null>(null)
 const {floatingStyles} = useFloating(floatingReference, dialog, { placement: 'top', middleware: [flip(), shift()] })
 
 onMounted(() => {
-  console.assert(modal.value !== null)
-  bootstrap.Modal.getOrCreateInstance(modal.value).show()
-  modal.value.addEventListener('hidden.bs.modal', () => { emit('dismissed') })
+  console.assert(modalElement.value !== null)
+  modal = new bootstrap.Modal(modalElement.value, {backdrop: true, keyboard: true})
+  modalElement.value.addEventListener('shown.bs.modal', () => emit('shown'))
+  modalElement.value.addEventListener('hidden.bs.modal', () => emit('hidden'))
+  modal.show()
   floatingReference.value = {
     getBoundingClientRect() {
       const { x, y } = props.reference
@@ -35,11 +39,13 @@ onMounted(() => {
   }
 })
 
-onBeforeUnmount(() => { bootstrap.Modal.getOrCreateInstance(modal.value).hide() })
+onBeforeUnmount(() => {
+  modal.hide()
+})
 </script>
 
 <template>
-  <div ref="modal" class="modal">
+  <div ref="modalElement" class="modal">
     <div ref="dialog" class="modal-dialog modal-xl" :style="{...floatingStyles, margin: 0}">
       <div class="modal-content">
         <div class="modal-header">
