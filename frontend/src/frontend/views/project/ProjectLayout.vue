@@ -17,7 +17,6 @@ const api = useApiStore()
 
 const component = ref<null | { title: string, breadcrumbs: [], handlesScrolling?: boolean }>(null)
 
-console.log('ProjectLayout setup')
 const project = api.auto.getOne<Project>('project', props.projectId, {include: ['textbooks', 'exercises.textbook']})
 
 const title = computed(() => {
