@@ -575,6 +575,7 @@ describe('ApiStore - Basic functionality', () => {
 
     const ping = await api.client.getOne<Ping>('ping', '1')
 
+    // @todo Add an attribute '.patching' dedicated to '.patch', and '.busy' = '.loading || .patching || .deleting'
     expect(ping.loading).to.be.false
     expect(ping.attributes!.message).to.equal('Hello 1')
 
@@ -668,6 +669,7 @@ describe('ApiStore - Basic functionality', () => {
 
     expect(ping.inCache).to.be.true
     expect(ping.exists).to.be.true
+    // @todo Add an attribute '.deleting' dedicated to '.delete', and '.busy' = '.loading || .patching || .deleting'
     expect(ping.loading).to.be.false
 
     const deleted = ping.delete()
