@@ -19,6 +19,11 @@ const component = ref<null | { title: string, breadcrumbs: [], handlesScrolling?
 
 const project = api.auto.getOne<Project>('project', props.projectId, {include: ['textbooks', 'exercises.textbook']})
 
+function refreshProject() {
+  // @todo Remove 'options' from '.refresh()' (use those from '.getOne'). The remove 'refreshProject' and have sub-components simply call 'project.refresh()'
+  project.refresh({include: ['textbooks', 'exercises.textbook']})
+}
+
 const title = computed(() => {
   if (project.loading) {
     return []
@@ -53,10 +58,6 @@ const componentHandlesScrolling = computed(() => component.value?.handlesScrolli
 
 const class_ = computed(() => componentHandlesScrolling.value ? ['h-100', 'overflow-hidden'] : [])
 
-function refreshProject() {
-  project.refresh({include: ['textbooks', 'exercises.textbook']})
-}
-
 defineExpose({
   title,
   breadcrumbs,
@@ -66,7 +67,7 @@ defineExpose({
 
 <template>
   <BBusy :busy="project.loading" showWhileBusy="afterNotBusy" size="20em" :class="class_">
-    <template v-if="project.exists">
+    <template v-if="project.exists"> <!-- @todo Start loading the textbook earlier (currently, it has to wait until the project is loaded) -->
       <RouterView v-slot="{ Component }">
         <component
           :is="Component" ref="component"

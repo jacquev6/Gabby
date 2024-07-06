@@ -18,7 +18,7 @@ const api = useApiStore()
 
 const props = defineProps<{
   project: Project
-  refreshProject: any/* @todo Type */
+  refreshProject(): void
 }>()
 
 function goToTextbook(textbookId: string) {
