@@ -16,9 +16,9 @@ import type { Project, Textbook } from '$frontend/types/api'
 
 const props = defineProps<{
   project: Project,
-  refreshProject: any/* @todo Type */,
+  refreshProject(): void,
   textbook: Textbook,
-  refreshTextbook: any/* @todo Type */,
+  refreshTextbook(): void,
   page: number,
 }>()
 
