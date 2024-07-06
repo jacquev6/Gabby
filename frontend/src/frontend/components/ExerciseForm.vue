@@ -148,7 +148,7 @@ watch(
   {immediate: true},
 )
 watch(
-  () => props.exercise,
+  [() => props.exercise, () => props.exercise?.loading],
   () => {
     if (props.exercise !== undefined) {
       clearHistory(() => {
@@ -163,7 +163,7 @@ watch(
         state.value.example = props.exercise.attributes.example ?? ''
         state.value.clue = props.exercise.attributes.clue ?? ''
 
-        if (props.exercise.relationships.adaptation === null) {
+        if (props.exercise.relationships.adaptation?.type === undefined) {
           state.value.adaptationType = '-'
         } else {
           state.value.adaptationType = props.exercise.relationships.adaptation.type as AdaptationType
@@ -182,7 +182,7 @@ watch(
               Object.assign(state.value.multipleChoicesInWordingAdaptationOptions, props.exercise.relationships.adaptation.attributes)
               break
             default:
-              ((_1: never) => console.assert(false))(state.value.adaptationType)
+              ((_1: never) => console.assert(false, state.value.adaptationType))(state.value.adaptationType)
           }
         }
       })
@@ -291,7 +291,7 @@ const adaptationOptions = computed(() => {
     case 'multipleChoicesInWordingAdaptation':
       return state.value.multipleChoicesInWordingAdaptationOptions
     default:
-      ((_1: never) => console.assert(false))(state.value.adaptationType)
+      ((_1: never) => console.assert(false, state.value.adaptationType))(state.value.adaptationType)
       return null
   }
 })
@@ -350,7 +350,11 @@ async function create() {
 
   busy.value = false
 
-  emit('created', exercise, tryIncrement(exercise.attributes.number))
+  const suggestedNumber = tryIncrement(exercise.attributes.number)
+
+  emit('created', exercise, suggestedNumber)
+
+  return {exercise, suggestedNumber}
 }
 
 function tryIncrement(s: string) {
@@ -425,7 +429,6 @@ const adaptedData = computedAsync(
         adaptationOptions: adaptationOptions.value,
       }
       try {
-        // @todo Understand why this request isn't duplicated like some others
         const adapted = await api.client.createOne<AdaptedExercise>('adaptedExercise', attributes, {})
         return adapted.attributes!.adapted
       } catch (e) {

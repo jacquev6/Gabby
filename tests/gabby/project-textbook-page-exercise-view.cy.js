@@ -1,28 +1,16 @@
-function login() {
-  cy.get('select').last().select('en')
-  cy.get('h1:contains("Please log in")').should('exist')
-  cy.get('[name=username]').type('admin')  // This often leaves the field with just the few characters, e.g. 'adm'. I can't figure out why; probably some race condition.
-  cy.get('[name=password]').type('password')
-  cy.get('[name=username]').type('{selectall}admin')  // This is a workaround for the above issue.
-  cy.get('[name=username]').should('have.value', 'admin')
-  cy.get('button:contains("Log in")').click()
-  cy.get('h1:contains("Please log in")').should('not.exist')
-}
+import { useApiStore } from '../../frontend/src/frontend/stores/api'
+
 
 describe('Gabby\'s project\'s textbook page exercise view', () => {
   before(console.clear)
 
   beforeEach(() => {
     cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=admin-user,more-test-exercises')
-  })
-
-  after(() => {
-    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=admin-user,more-test-exercises')
+    cy.wrap(useApiStore()).then(api => api.auth.login('admin', 'password'))
   })
 
   it('replaces all in given fields', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
-    login()
 
     cy.get('label:contains("Instructions")').next().type('Instructions!')
     cy.get('label:contains("Wording")').next().type('Wording!')
@@ -83,7 +71,6 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
 
   it('replaces line and paragraph ends', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-7/exercise-dymwin')
-    login()
 
     cy.get('label:contains("Wording")').next().should('have.value', 'nager ➞ … ◆ tracter ➞ … ◆ manger ➞ … ◆\ninventer ➞ … ◆ livrer ➞ …')
 
@@ -116,7 +103,6 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
 
   it('gets its "replace all" selection from the form', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-7/exercise-dymwin')
-    login()
 
     function select(selector, start, end) {
       cy.get(selector)
@@ -159,7 +145,6 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
 
   it('selects new text in field but keeps its "replace all" selection unchanged when selecting text from the PDF', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-7/exercise-dymwin')
-    login()
 
     cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
     cy.get('div.busy').should('not.exist')
@@ -187,7 +172,6 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
 
   it('has "undo/redo" on new exercise', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
-    login()
 
     cy.get('button:contains("Undo")').as('undo')
     cy.get('button:contains("Redo")').as('redo')
@@ -228,7 +212,7 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
     cy.get('label:contains("Number")').next().should('have.value', '12')  // Unchanged by 'redo'
     cy.get('label:contains("Instructions")').next().should('have.value', 'Blah blah')
 
-    cy.get('button:contains("Save")').click()
+    cy.get('button:contains("Save then next")').click()
 
     cy.wait(1500)  // We have to wait, see comment above
     cy.get('@undo').should('be.disabled')
@@ -247,7 +231,6 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
 
   it('has "undo/redo" on existing exercise', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-7/exercise-dymwin')
-    login()
     cy.get('div.busy').should('not.exist')
 
     cy.wait(1500)  // We have to wait, see comment above

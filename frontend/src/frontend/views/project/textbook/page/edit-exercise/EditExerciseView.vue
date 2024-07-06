@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { computedAsync } from '@vueuse/core'
 
 import { useApiStore } from '$frontend/stores/api'
 import { BButton, BBusy } from '$frontend/components/opinion/bootstrap'
@@ -10,6 +9,7 @@ import TwoResizableColumns from '$frontend/components/TwoResizableColumns.vue'
 import ExerciseTools from '../ExerciseTools.vue'
 import type { Project, Textbook, Section, Exercise } from '$frontend/types/api'
 import AdaptedExercise from '../AdaptedExercise.vue'
+import type { ExerciseCreationHistory } from '../ExerciseCreationHistory'
 
 
 const props = defineProps<{
@@ -19,25 +19,46 @@ const props = defineProps<{
   section: Section | null,
   page: number,
   exerciseId: string
+  exerciseCreationHistory: ExerciseCreationHistory,
 }>()
 
 const router = useRouter()
 const api = useApiStore()
 
-const exerciseLoading = ref(false)
-const exercise = computedAsync(
-  async () => {
-    await new Promise((resolve) => resolve(null))  // @todo Understand why removing this line duplicates the request
-    return await api.client.getOne<Exercise>('exercise', props.exerciseId, {include: ['adaptation']})
-  },
-  undefined,
-  exerciseLoading,
-)
+const exercise = computed(() => api.auto.getOne<Exercise>('exercise', props.exerciseId, {include: ['adaptation']}))
 
 const exerciseForm = ref<typeof ExerciseForm | null>(null)
 
-function saved() {
+function goToPrevious() {
+  const exerciseId = props.exerciseCreationHistory.previous
+  console.assert(exerciseId !== null)
+  props.exerciseCreationHistory.rewind()
+  router.push({
+    name: 'project-textbook-page-edit-exercise',
+    params: {projectId: props.project.id, textbookId: props.textbook.id, exerciseId},
+  })
+}
+
+async function saveThenBack(save: () => Promise<void>) {
+  await save()
   router.push({name: 'project-textbook-page-list-exercises'})
+}
+
+async function saveThenNext(save: () => Promise<void>) {
+  await save()
+  const exerciseId = props.exerciseCreationHistory.next
+  props.exerciseCreationHistory.forward()
+  if(exerciseId === null) {
+    router.push({
+      name: 'project-textbook-page-create-exercise',
+      params: {projectId: props.project.id, textbookId: props.textbook.id},
+    })
+  } else {
+    router.push({
+      name: 'project-textbook-page-edit-exercise',
+      params: {projectId: props.project.id, textbookId: props.textbook.id, exerciseId},
+    })
+  }
 }
 
 defineExpose({
@@ -63,11 +84,24 @@ defineExpose({
           :automaticNumber="false"
           :editMode="true"
           :exercise
-          @saved="saved"
           v-slot="{ disabled, save }"
         >
-          <RouterLink class="btn btn-secondary" :to="{name: 'project-textbook-page-list-exercises'}">{{ $t('cancel') }}</RouterLink>
-          <BButton primary :disabled @click="save" data-cy="save-exercise">{{ $t('save') }}</BButton>
+          <template v-if="exerciseCreationHistory.current === null">
+            <p>
+              <RouterLink class="btn btn-secondary" :to="{name: 'project-textbook-page-list-exercises'}">{{ $t('backToList') }}</RouterLink>
+              <BButton primary :disabled @click="saveThenBack(save)" data-cy="save-then-back">{{ $t('saveThenBack') }}</BButton>
+            </p>
+          </template>
+          <template v-else>
+            <p>
+              <BButton secondary :disabled="exerciseCreationHistory.previous === null" @click="goToPrevious">{{ $t('previous') }}</BButton>
+              <BButton primary :disabled @click="saveThenNext(save)" data-cy="save-then-next">{{ $t('saveThenNext') }}</BButton>
+            </p>
+            <p>
+              <RouterLink class="btn btn-secondary" :to="{name: 'project-textbook-page-list-exercises'}">{{ $t('backToList') }}</RouterLink>
+              <BButton secondary :disabled @click="saveThenBack(save)" data-cy="save-then-back">{{ $t('saveThenBack') }}</BButton>
+            </p>
+          </template>
         </ExerciseForm>
       </div>
     </template>

@@ -1,37 +1,31 @@
+import { useApiStore } from '../frontend/src/frontend/stores/api'
+
+
 const isProdPreview = Cypress.env('IS_PROD_PREVIEW')
 
 function login() {
-  cy.get('select').last().select('en')
-  cy.get('h1:contains("Please log in")').should('exist')
-  cy.get('[name=username]').type('admin')  // This often leaves the field with just the few characters, e.g. 'adm'. I can't figure out why; probably some race condition.
-  cy.get('[name=password]').type('password')
-  cy.get('[name=username]').type('{selectall}admin')  // This is a workaround for the above issue.
-  cy.get('[name=username]').should('have.value', 'admin')
-  cy.get('button:contains("Log in")').click()
-  cy.get('h1:contains("Please log in")').should('not.exist')
 }
 
 describe('Gabby has routes that', () => {
-  before(() => {
-    console.clear()
+  before(console.clear)
+
+  beforeEach(() => {
     cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=admin-user,test-exercises')
+    cy.wrap(useApiStore()).then(api => api.auth.login('admin', 'password'))
   })
 
   it('can access the default Vue Router view', () => {
     cy.visit('/')
-    login()
     cy.contains('h1', 'Existing projects')
   })
 
   it('can access a Vue Router view without trailing /', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-6')
-    login()
     cy.contains('h1', 'Edition')
   })
 
   it('can access a Vue Router view with trailing /', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-6/')
-    login()
     cy.contains('h1', 'Edition')
   })
 

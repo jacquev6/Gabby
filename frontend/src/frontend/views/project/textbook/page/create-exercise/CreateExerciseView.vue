@@ -8,7 +8,10 @@ import TwoResizableColumns from '$frontend/components/TwoResizableColumns.vue'
 import ExerciseTools from '../ExerciseTools.vue'
 import type { Project, Textbook, Section, Exercise } from '$frontend/types/api'
 import AdaptedExercise from '../AdaptedExercise.vue'
+import type { ExerciseCreationHistory } from '../ExerciseCreationHistory'
 
+
+type CreateExercise = () => Promise<{exercise: Exercise, suggestedNumber: string}>
 
 const props = defineProps<{
   project: Project,
@@ -16,17 +19,36 @@ const props = defineProps<{
   pdf: any/* @todo Type */,
   section: Section | null,
   page: number,
+  exerciseCreationHistory: ExerciseCreationHistory,
 }>()
 
 const router = useRouter()
 
 const exerciseForm = ref<typeof ExerciseForm | null>(null)
 
-const number = ref('')
+const number = ref(props.exerciseCreationHistory.suggestedNumber ?? '')
 const automaticNumber = ref(false)
-function created(_exercise: Exercise, suggestedNumber: string) {
+async function createThenNext(createExercise: CreateExercise) {
+  const { exercise, suggestedNumber } = await createExercise()
+  props.exerciseCreationHistory.push(exercise.id)
+  props.exerciseCreationHistory.suggestedNumber = suggestedNumber
   number.value = suggestedNumber
   automaticNumber.value = true
+}
+
+function goToPrevious() {
+  const exerciseId = props.exerciseCreationHistory.previous
+  console.assert(exerciseId !== null)
+  props.exerciseCreationHistory.rewind()
+  router.push({
+    name: 'project-textbook-page-edit-exercise',
+    params: {projectId: props.project.id, textbookId: props.textbook.id, exerciseId},
+  })
+}
+
+async function createThenBack(createExercise: CreateExercise) {
+  await createExercise()
+  router.push({name: 'project-textbook-page-list-exercises', params: {projectId: props.project.id, textbookId: props.textbook.id, page: props.page}})
 }
 
 function changePage(page: number) {
@@ -56,12 +78,16 @@ defineExpose({
           :number
           :automaticNumber
           :editMode="false"
-
-          @created="created"
           v-slot="{ disabled, create }"
         >
-          <RouterLink class="btn btn-secondary" :to="{name: 'project-textbook-page-list-exercises'}">{{ $t('cancel') }}</RouterLink>
-          <BButton primary :disabled @click="create" data-cy="create-exercise">{{ $t('save.next') }}</BButton>
+          <p>
+            <BButton secondary :disabled="exerciseCreationHistory.previous === null" @click="goToPrevious">{{ $t('previous') }}</BButton>
+            <BButton primary :disabled @click="createThenNext(create)" data-cy="create-then-next">{{ $t('saveThenNext') }}</BButton>
+          </p>
+          <p>
+            <RouterLink class="btn btn-secondary" :to="{name: 'project-textbook-page-list-exercises'}">{{ $t('backToList') }}</RouterLink>
+            <BButton secondary :disabled @click="createThenBack(create)" data-cy="create-then-back">{{ $t('saveThenBack') }}</BButton>
+          </p>
         </ExerciseForm>
       </div>
     </template>

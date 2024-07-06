@@ -5,6 +5,7 @@ import { useRouter } from 'vue-router'
 import { BBusy, BButton } from '$frontend/components/opinion/bootstrap'
 import ExercisesList from './ExercisesList.vue'
 import type { Exercise, Project, Textbook } from '$frontend/types/api'
+import type { ExerciseCreationHistory } from '../ExerciseCreationHistory'
 
 
 const props = defineProps<{
@@ -13,9 +14,12 @@ const props = defineProps<{
   pdf: unknown,  // Unused
   section: unknown,  // Unused
   page: number,
+  exerciseCreationHistory: ExerciseCreationHistory,
 }>()
 
 const router = useRouter()
+
+props.exerciseCreationHistory.reset()
 
 const deletingExercise = ref(false)
 async function deleteExercise(exercise: Exercise) {

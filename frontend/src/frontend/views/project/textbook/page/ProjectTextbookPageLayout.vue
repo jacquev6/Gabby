@@ -12,6 +12,7 @@ import TextPicker from './TextPicker.vue'
 import RectanglesHighlighter from './RectanglesHighlighter.vue'
 import TwoResizableColumns from '$frontend/components/TwoResizableColumns.vue'
 import type { Project, Textbook } from '$frontend/types/api'
+import { makeExerciseCreationHistory } from './ExerciseCreationHistory'
 
 
 const props = defineProps<{
@@ -98,6 +99,8 @@ const componentHandlesScrolling = computed(() => component.value?.handlesScrolli
 
 const class_ = computed(() => componentHandlesScrolling.value ? 'overflow-hidden' : 'overflow-auto')
 
+const exerciseCreationHistory = makeExerciseCreationHistory()
+
 defineExpose({
   title: computed(() => [`Page ${props.page}`]),
   breadcrumbs: computed(() => []),
@@ -150,7 +153,7 @@ defineExpose({
     <template #right>
       <div class="h-100" :class="class_" data-cy="right-col-1">
         <RouterView :project :textbook :pdf :section :page v-slot="{ Component }">
-          <component :is="Component" ref="component"></component>
+          <component :is="Component" ref="component" :exerciseCreationHistory></component>
         </RouterView>
       </div>
     </template>

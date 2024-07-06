@@ -91,7 +91,10 @@
   "save": "Save",
   "exerciseAlreadyExists": "Exercise {number} already exists.",
   "skipExercise": "Skip to next exercise",
-  "save.next": "Save then create next",
+  "previous": "Previous (without saving)",
+  "saveThenNext": "Save then next",
+  "backToList": "Back to list (without saving)",
+  "saveThenBack": "Save then back to list",
   "doStripExerciceNumber": "Strip exercise number automatically",
 
   "selectedText": "Selected text",
