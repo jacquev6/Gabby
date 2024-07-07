@@ -1,21 +1,6 @@
 {
   "components": {
     "schemas": {
-      "CreateInputListRelationship": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "default": [],
-            "items": {
-              "$ref": "#/components/schemas/ObjectId"
-            },
-            "title": "Data",
-            "type": "array"
-          }
-        },
-        "title": "CreateInputListRelationship",
-        "type": "object"
-      },
       "HTTPValidationError": {
         "properties": {
           "detail": {
@@ -43,7 +28,7 @@
         "title": "ItemLinks",
         "type": "object"
       },
-      "Meta": {
+      "OutputListRelationShipMeta": {
         "additionalProperties": false,
         "properties": {
           "count": {
@@ -54,43 +39,7 @@
         "required": [
           "count"
         ],
-        "title": "Meta",
-        "type": "object"
-      },
-      "ObjectId": {
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "id"
-        ],
-        "title": "ObjectId",
-        "type": "object"
-      },
-      "OptionalRelationship": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/ObjectId"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          }
-        },
-        "title": "OptionalRelationship",
+        "title": "OutputListRelationShipMeta",
         "type": "object"
       },
       "PageLinks": {
@@ -171,23 +120,6 @@
           "pages"
         ],
         "title": "Pagination",
-        "type": "object"
-      },
-      "UpdateInputListRelationship": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "items": {
-              "$ref": "#/components/schemas/ObjectId"
-            },
-            "title": "Data",
-            "type": "array"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "UpdateInputListRelationship",
         "type": "object"
       },
       "ValidationError": {
@@ -287,7 +219,7 @@
           "several": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/CreateInputListRelationship"
+                "$ref": "#/components/schemas/resource_several_RelationshipInput"
               }
             ],
             "default": {
@@ -297,7 +229,7 @@
           "single": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/OptionalRelationship"
+                "$ref": "#/components/schemas/resource_single_Relationship"
               }
             ],
             "default": {}
@@ -373,10 +305,10 @@
         "additionalProperties": false,
         "properties": {
           "several": {
-            "$ref": "#/components/schemas/resource_several_OutputRelationship"
+            "$ref": "#/components/schemas/resource_several_RelationshipOutput"
           },
           "single": {
-            "$ref": "#/components/schemas/resource_single_OutputRelationship"
+            "$ref": "#/components/schemas/resource_single_Relationship"
           }
         },
         "required": [
@@ -481,14 +413,14 @@
           "several": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/UpdateInputListRelationship"
+                "$ref": "#/components/schemas/resource_several_RelationshipInput"
               }
             ]
           },
           "single": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/OptionalRelationship"
+                "$ref": "#/components/schemas/resource_single_Relationship"
               }
             ]
           }
@@ -496,28 +428,24 @@
         "title": "resourceUpdateInputDataRelationships",
         "type": "object"
       },
-      "resource_several_OutputRelationship": {
+      "resource_several_RelationshipInput": {
         "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
-              "$ref": "#/components/schemas/resource_several_OutputRelationship_ObjectId"
+              "$ref": "#/components/schemas/resource_several_RelationshipInput_ObjectId"
             },
             "title": "Data",
             "type": "array"
-          },
-          "meta": {
-            "$ref": "#/components/schemas/Meta"
           }
         },
         "required": [
-          "data",
-          "meta"
+          "data"
         ],
-        "title": "resource_several_OutputRelationship",
+        "title": "resource_several_RelationshipInput",
         "type": "object"
       },
-      "resource_several_OutputRelationship_ObjectId": {
+      "resource_several_RelationshipInput_ObjectId": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -537,16 +465,60 @@
           "type",
           "id"
         ],
-        "title": "resource_several_OutputRelationship_ObjectId",
+        "title": "resource_several_RelationshipInput_ObjectId",
         "type": "object"
       },
-      "resource_single_OutputRelationship": {
+      "resource_several_RelationshipOutput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/resource_several_RelationshipOutput_ObjectId"
+            },
+            "title": "Data",
+            "type": "array"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/OutputListRelationShipMeta"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ],
+        "title": "resource_several_RelationshipOutput",
+        "type": "object"
+      },
+      "resource_several_RelationshipOutput_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "resource",
+            "enum": [
+              "resource"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "resource_several_RelationshipOutput_ObjectId",
+        "type": "object"
+      },
+      "resource_single_Relationship": {
         "additionalProperties": false,
         "properties": {
           "data": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/resource_single_OutputRelationship_ObjectId"
+                "$ref": "#/components/schemas/resource_single_Relationship_ObjectId"
               },
               {
                 "type": "null"
@@ -557,10 +529,10 @@
         "required": [
           "data"
         ],
-        "title": "resource_single_OutputRelationship",
+        "title": "resource_single_Relationship",
         "type": "object"
       },
-      "resource_single_OutputRelationship_ObjectId": {
+      "resource_single_Relationship_ObjectId": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -580,7 +552,7 @@
           "type",
           "id"
         ],
-        "title": "resource_single_OutputRelationship_ObjectId",
+        "title": "resource_single_Relationship_ObjectId",
         "type": "object"
       }
     }

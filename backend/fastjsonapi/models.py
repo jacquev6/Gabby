@@ -42,12 +42,8 @@ class ObjectId(BaseModel):
     id: str
 
 
-class MandatoryRelationship(BaseModel):
-    data: ObjectId
-
-
-def create_model_for_output_for_mandatory_relationship(resource_name, relationship_name, related_names):
-    model_name = f"{resource_name}_{relationship_name}_OutputRelationship"
+def create_model_for_mandatory_relationship(resource_name, relationship_name, related_names):
+    model_name = f"{resource_name}_{relationship_name}_Relationship"
 
     code = textwrap.dedent(f"""\
         class {model_name}_ObjectId(BaseModel):
@@ -63,12 +59,8 @@ def create_model_for_output_for_mandatory_relationship(resource_name, relationsh
     return globals[model_name]
 
 
-class OptionalRelationship(BaseModel):
-    data: ObjectId | None = None
-
-
-def create_model_for_output_for_optional_relationship(resource_name, relationship_name, related_names):
-    model_name = f"{resource_name}_{relationship_name}_OutputRelationship"
+def create_model_for_optional_relationship(resource_name, relationship_name, related_names):
+    model_name = f"{resource_name}_{relationship_name}_Relationship"
 
     code = textwrap.dedent(f"""\
         class {model_name}_ObjectId(BaseModel):
@@ -84,16 +76,29 @@ def create_model_for_output_for_optional_relationship(resource_name, relationshi
     return globals[model_name]
 
 
-class CreateInputListRelationship(BaseModel):
-    data: list[ObjectId] = []
+def create_model_for_list_relationship_for_input(resource_name, relationship_name, related_names):
+    model_name = f"{resource_name}_{relationship_name}_RelationshipInput"
+
+    code = textwrap.dedent(f"""\
+        class {model_name}_ObjectId(BaseModel):
+            type: Literal[{', '.join(repr(name) for name in related_names)}]
+            id: str
+
+        class {model_name}(BaseModel):
+            data: list[{model_name}_ObjectId]
+    """)
+
+    globals = {"BaseModel": BaseModel, "Literal": Literal, "OutputListRelationShipMeta": OutputListRelationShipMeta}
+    exec(code, globals)
+    return globals[model_name]
 
 
 class OutputListRelationShipMeta(BaseModel):
     count: int
 
 
-def create_model_for_output_for_list_relationship(resource_name, relationship_name, related_names):
-    model_name = f"{resource_name}_{relationship_name}_OutputRelationship"
+def create_model_for_list_relationship_for_output(resource_name, relationship_name, related_names):
+    model_name = f"{resource_name}_{relationship_name}_RelationshipOutput"
 
     code = textwrap.dedent(f"""\
         class {model_name}_ObjectId(BaseModel):
@@ -109,10 +114,6 @@ def create_model_for_output_for_list_relationship(resource_name, relationship_na
     globals = {"BaseModel": BaseModel, "Literal": Literal, "OutputListRelationShipMeta": OutputListRelationShipMeta}
     exec(code, globals)
     return globals[model_name]
-
-
-class UpdateInputListRelationship(BaseModel):
-    data: list[ObjectId]
 
 
 class Decider:
@@ -172,16 +173,16 @@ def create_model_for_input_for_create(resource_name: str, model, decider: Decide
             if decider.is_mandatory_relationship(info.annotation):
                 assert info.default is PydanticUndefined
                 relationships_can_be_defaulted = False
-                relationship_type = MandatoryRelationship
+                relationship_type = create_model_for_mandatory_relationship(resource_name, name, decider.get_polymorphic_names(info.annotation))
                 relationships[name] = (relationship_type, ...)
             elif decider.is_optional_relationship(info.annotation):
                 assert info.default is None
-                relationship_type = OptionalRelationship
-                relationships[name] = (relationship_type, relationship_type())
+                relationship_type = create_model_for_optional_relationship(resource_name, name, decider.get_polymorphic_names(info.annotation))
+                relationships[name] = (relationship_type, relationship_type(data=None))
             elif decider.is_list_relationship(info.annotation):
                 assert info.default == []
-                relationship_type = CreateInputListRelationship
-                relationships[name] = (relationship_type, relationship_type())
+                relationship_type = create_model_for_list_relationship_for_input(resource_name, name, decider.get_polymorphic_names(info.annotation))
+                relationships[name] = (relationship_type, relationship_type(data=[]))
             elif decider.is_attribute(info.annotation):
                 if info.default is PydanticUndefined:
                     attributes_can_be_defaulted = False
@@ -217,11 +218,14 @@ def create_models_for_output(resource_name: str, model, decider: Decider):
         name = humps.camelize(name)
         if Annotations(info.metadata).output:
             if decider.is_mandatory_relationship(info.annotation):
-                relationships[name] = (create_model_for_output_for_mandatory_relationship(resource_name, name, decider.get_polymorphic_names(info.annotation)), ...)
+                relationship_type = create_model_for_mandatory_relationship(resource_name, name, decider.get_polymorphic_names(info.annotation))
+                relationships[name] = (relationship_type, ...)
             elif decider.is_optional_relationship(info.annotation):
-                relationships[name] = (create_model_for_output_for_optional_relationship(resource_name, name, decider.get_polymorphic_names(info.annotation)), ...)
+                relationship_type = create_model_for_optional_relationship(resource_name, name, decider.get_polymorphic_names(info.annotation))
+                relationships[name] = (relationship_type, ...)
             elif decider.is_list_relationship(info.annotation):
-                relationships[name] = (create_model_for_output_for_list_relationship(resource_name, name, decider.get_polymorphic_names(info.annotation)), ...)
+                relationship_type = create_model_for_list_relationship_for_output(resource_name, name, decider.get_polymorphic_names(info.annotation))
+                relationships[name] = (relationship_type, ...)
             elif decider.is_attribute(info.annotation):
                 attributes[name] = (info.annotation, ...)
             else:
@@ -275,13 +279,16 @@ def create_model_for_input_for_update(resource_name: str, model, decider: Decide
         name = humps.camelize(name)
         if Annotations(info.metadata).update_input:
             if decider.is_mandatory_relationship(info.annotation):
-                relationships[name] = (MandatoryRelationship, None)
+                relationship_type = create_model_for_mandatory_relationship(resource_name, name, decider.get_polymorphic_names(info.annotation))
+                relationships[name] = (relationship_type, None)
             elif decider.is_optional_relationship(info.annotation):
                 assert info.default is None
-                relationships[name] = (OptionalRelationship, None)
+                relationship_type = create_model_for_optional_relationship(resource_name, name, decider.get_polymorphic_names(info.annotation))
+                relationships[name] = (relationship_type, None)
             elif decider.is_list_relationship(info.annotation):
                 assert info.default == []
-                relationships[name] = (UpdateInputListRelationship, None)
+                relationship_type = create_model_for_list_relationship_for_input(resource_name, name, decider.get_polymorphic_names(info.annotation))
+                relationships[name] = (relationship_type, None)
             elif decider.is_attribute(info.annotation):
                 attributes[name] = (info.annotation, None)
             else:

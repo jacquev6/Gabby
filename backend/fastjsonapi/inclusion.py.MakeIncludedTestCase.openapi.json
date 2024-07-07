@@ -28,7 +28,7 @@
         "title": "ItemLinks",
         "type": "object"
       },
-      "Meta": {
+      "OutputListRelationShipMeta": {
         "additionalProperties": false,
         "properties": {
           "count": {
@@ -39,7 +39,7 @@
         "required": [
           "count"
         ],
-        "title": "Meta",
+        "title": "OutputListRelationShipMeta",
         "type": "object"
       },
       "PageLinks": {
@@ -304,13 +304,13 @@
         "additionalProperties": false,
         "properties": {
           "children": {
-            "$ref": "#/components/schemas/node_children_OutputRelationship"
+            "$ref": "#/components/schemas/node_children_RelationshipOutput"
           },
           "parent": {
-            "$ref": "#/components/schemas/node_parent_OutputRelationship"
+            "$ref": "#/components/schemas/node_parent_Relationship"
           },
           "polymorphicScalar": {
-            "$ref": "#/components/schemas/node_polymorphicScalar_OutputRelationship"
+            "$ref": "#/components/schemas/node_polymorphicScalar_Relationship"
           }
         },
         "required": [
@@ -351,28 +351,28 @@
         "title": "nodePageOutput",
         "type": "object"
       },
-      "node_children_OutputRelationship": {
+      "node_children_RelationshipOutput": {
         "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
-              "$ref": "#/components/schemas/node_children_OutputRelationship_ObjectId"
+              "$ref": "#/components/schemas/node_children_RelationshipOutput_ObjectId"
             },
             "title": "Data",
             "type": "array"
           },
           "meta": {
-            "$ref": "#/components/schemas/Meta"
+            "$ref": "#/components/schemas/OutputListRelationShipMeta"
           }
         },
         "required": [
           "data",
           "meta"
         ],
-        "title": "node_children_OutputRelationship",
+        "title": "node_children_RelationshipOutput",
         "type": "object"
       },
-      "node_children_OutputRelationship_ObjectId": {
+      "node_children_RelationshipOutput_ObjectId": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -392,16 +392,16 @@
           "type",
           "id"
         ],
-        "title": "node_children_OutputRelationship_ObjectId",
+        "title": "node_children_RelationshipOutput_ObjectId",
         "type": "object"
       },
-      "node_parent_OutputRelationship": {
+      "node_parent_Relationship": {
         "additionalProperties": false,
         "properties": {
           "data": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/node_parent_OutputRelationship_ObjectId"
+                "$ref": "#/components/schemas/node_parent_Relationship_ObjectId"
               },
               {
                 "type": "null"
@@ -412,10 +412,10 @@
         "required": [
           "data"
         ],
-        "title": "node_parent_OutputRelationship",
+        "title": "node_parent_Relationship",
         "type": "object"
       },
-      "node_parent_OutputRelationship_ObjectId": {
+      "node_parent_Relationship_ObjectId": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -435,16 +435,16 @@
           "type",
           "id"
         ],
-        "title": "node_parent_OutputRelationship_ObjectId",
+        "title": "node_parent_Relationship_ObjectId",
         "type": "object"
       },
-      "node_polymorphicScalar_OutputRelationship": {
+      "node_polymorphicScalar_Relationship": {
         "additionalProperties": false,
         "properties": {
           "data": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/node_polymorphicScalar_OutputRelationship_ObjectId"
+                "$ref": "#/components/schemas/node_polymorphicScalar_Relationship_ObjectId"
               },
               {
                 "type": "null"
@@ -455,10 +455,10 @@
         "required": [
           "data"
         ],
-        "title": "node_polymorphicScalar_OutputRelationship",
+        "title": "node_polymorphicScalar_Relationship",
         "type": "object"
       },
-      "node_polymorphicScalar_OutputRelationship_ObjectId": {
+      "node_polymorphicScalar_Relationship_ObjectId": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -478,7 +478,7 @@
           "type",
           "id"
         ],
-        "title": "node_polymorphicScalar_OutputRelationship_ObjectId",
+        "title": "node_polymorphicScalar_Relationship_ObjectId",
         "type": "object"
       }
     }

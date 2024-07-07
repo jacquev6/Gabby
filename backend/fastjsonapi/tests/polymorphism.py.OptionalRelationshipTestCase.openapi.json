@@ -28,42 +28,6 @@
         "title": "ItemLinks",
         "type": "object"
       },
-      "ObjectId": {
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "id"
-        ],
-        "title": "ObjectId",
-        "type": "object"
-      },
-      "OptionalRelationship": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/ObjectId"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          }
-        },
-        "title": "OptionalRelationship",
-        "type": "object"
-      },
       "ValidationError": {
         "properties": {
           "loc": {
@@ -236,7 +200,7 @@
           "rel": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/OptionalRelationship"
+                "$ref": "#/components/schemas/resource_rel_Relationship"
               }
             ],
             "default": {}
@@ -294,7 +258,7 @@
         "additionalProperties": false,
         "properties": {
           "rel": {
-            "$ref": "#/components/schemas/resource_rel_OutputRelationship"
+            "$ref": "#/components/schemas/resource_rel_Relationship"
           }
         },
         "required": [
@@ -363,7 +327,7 @@
           "rel": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/OptionalRelationship"
+                "$ref": "#/components/schemas/resource_rel_Relationship"
               }
             ]
           }
@@ -371,13 +335,13 @@
         "title": "resourceUpdateInputDataRelationships",
         "type": "object"
       },
-      "resource_rel_OutputRelationship": {
+      "resource_rel_Relationship": {
         "additionalProperties": false,
         "properties": {
           "data": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/resource_rel_OutputRelationship_ObjectId"
+                "$ref": "#/components/schemas/resource_rel_Relationship_ObjectId"
               },
               {
                 "type": "null"
@@ -388,10 +352,10 @@
         "required": [
           "data"
         ],
-        "title": "resource_rel_OutputRelationship",
+        "title": "resource_rel_Relationship",
         "type": "object"
       },
-      "resource_rel_OutputRelationship_ObjectId": {
+      "resource_rel_Relationship_ObjectId": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -411,7 +375,7 @@
           "type",
           "id"
         ],
-        "title": "resource_rel_OutputRelationship_ObjectId",
+        "title": "resource_rel_Relationship_ObjectId",
         "type": "object"
       }
     }

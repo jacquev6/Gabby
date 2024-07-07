@@ -111,21 +111,6 @@
         "title": "Body_login_api_token_post",
         "type": "object"
       },
-      "CreateInputListRelationship": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "default": [],
-            "items": {
-              "$ref": "#/components/schemas/ObjectId"
-            },
-            "title": "Data",
-            "type": "array"
-          }
-        },
-        "title": "CreateInputListRelationship",
-        "type": "object"
-      },
       "FillWithFreeTextAdaptationOptions": {
         "properties": {
           "placeholder": {
@@ -166,19 +151,6 @@
         "title": "ItemLinks",
         "type": "object"
       },
-      "MandatoryRelationship": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/ObjectId"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "MandatoryRelationship",
-        "type": "object"
-      },
       "MultipleChoicesInInstructionsAdaptationOptions": {
         "properties": {
           "placeholder": {
@@ -195,42 +167,6 @@
       "MultipleChoicesInWordingAdaptationOptions": {
         "properties": {},
         "title": "MultipleChoicesInWordingAdaptationOptions",
-        "type": "object"
-      },
-      "ObjectId": {
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "id"
-        ],
-        "title": "ObjectId",
-        "type": "object"
-      },
-      "OptionalRelationship": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/ObjectId"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          }
-        },
-        "title": "OptionalRelationship",
         "type": "object"
       },
       "OutputListRelationShipMeta": {
@@ -458,23 +394,6 @@
           "tokens"
         ],
         "title": "Sentence",
-        "type": "object"
-      },
-      "UpdateInputListRelationship": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "items": {
-              "$ref": "#/components/schemas/ObjectId"
-            },
-            "title": "Data",
-            "type": "array"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "UpdateInputListRelationship",
         "type": "object"
       },
       "ValidationError": {
@@ -975,18 +894,18 @@
           "adaptation": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/OptionalRelationship"
+                "$ref": "#/components/schemas/exercise_adaptation_Relationship"
               }
             ],
             "default": {}
           },
           "project": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/exercise_project_Relationship"
           },
           "textbook": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/OptionalRelationship"
+                "$ref": "#/components/schemas/exercise_textbook_Relationship"
               }
             ],
             "default": {}
@@ -1120,19 +1039,19 @@
         "additionalProperties": false,
         "properties": {
           "adaptation": {
-            "$ref": "#/components/schemas/exercise_adaptation_OutputRelationship"
+            "$ref": "#/components/schemas/exercise_adaptation_Relationship"
           },
           "createdBy": {
-            "$ref": "#/components/schemas/exercise_createdBy_OutputRelationship"
+            "$ref": "#/components/schemas/exercise_createdBy_Relationship"
           },
           "project": {
-            "$ref": "#/components/schemas/exercise_project_OutputRelationship"
+            "$ref": "#/components/schemas/exercise_project_Relationship"
           },
           "textbook": {
-            "$ref": "#/components/schemas/exercise_textbook_OutputRelationship"
+            "$ref": "#/components/schemas/exercise_textbook_Relationship"
           },
           "updatedBy": {
-            "$ref": "#/components/schemas/exercise_updatedBy_OutputRelationship"
+            "$ref": "#/components/schemas/exercise_updatedBy_Relationship"
           }
         },
         "required": [
@@ -1262,7 +1181,7 @@
           "adaptation": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/OptionalRelationship"
+                "$ref": "#/components/schemas/exercise_adaptation_Relationship"
               }
             ]
           }
@@ -1270,13 +1189,13 @@
         "title": "exerciseUpdateInputDataRelationships",
         "type": "object"
       },
-      "exercise_adaptation_OutputRelationship": {
+      "exercise_adaptation_Relationship": {
         "additionalProperties": false,
         "properties": {
           "data": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/exercise_adaptation_OutputRelationship_ObjectId"
+                "$ref": "#/components/schemas/exercise_adaptation_Relationship_ObjectId"
               },
               {
                 "type": "null"
@@ -1287,10 +1206,10 @@
         "required": [
           "data"
         ],
-        "title": "exercise_adaptation_OutputRelationship",
+        "title": "exercise_adaptation_Relationship",
         "type": "object"
       },
-      "exercise_adaptation_OutputRelationship_ObjectId": {
+      "exercise_adaptation_Relationship_ObjectId": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -1312,23 +1231,23 @@
           "type",
           "id"
         ],
-        "title": "exercise_adaptation_OutputRelationship_ObjectId",
+        "title": "exercise_adaptation_Relationship_ObjectId",
         "type": "object"
       },
-      "exercise_createdBy_OutputRelationship": {
+      "exercise_createdBy_Relationship": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/exercise_createdBy_OutputRelationship_ObjectId"
+            "$ref": "#/components/schemas/exercise_createdBy_Relationship_ObjectId"
           }
         },
         "required": [
           "data"
         ],
-        "title": "exercise_createdBy_OutputRelationship",
+        "title": "exercise_createdBy_Relationship",
         "type": "object"
       },
-      "exercise_createdBy_OutputRelationship_ObjectId": {
+      "exercise_createdBy_Relationship_ObjectId": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -1348,23 +1267,23 @@
           "type",
           "id"
         ],
-        "title": "exercise_createdBy_OutputRelationship_ObjectId",
+        "title": "exercise_createdBy_Relationship_ObjectId",
         "type": "object"
       },
-      "exercise_project_OutputRelationship": {
+      "exercise_project_Relationship": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/exercise_project_OutputRelationship_ObjectId"
+            "$ref": "#/components/schemas/exercise_project_Relationship_ObjectId"
           }
         },
         "required": [
           "data"
         ],
-        "title": "exercise_project_OutputRelationship",
+        "title": "exercise_project_Relationship",
         "type": "object"
       },
-      "exercise_project_OutputRelationship_ObjectId": {
+      "exercise_project_Relationship_ObjectId": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -1384,16 +1303,16 @@
           "type",
           "id"
         ],
-        "title": "exercise_project_OutputRelationship_ObjectId",
+        "title": "exercise_project_Relationship_ObjectId",
         "type": "object"
       },
-      "exercise_textbook_OutputRelationship": {
+      "exercise_textbook_Relationship": {
         "additionalProperties": false,
         "properties": {
           "data": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/exercise_textbook_OutputRelationship_ObjectId"
+                "$ref": "#/components/schemas/exercise_textbook_Relationship_ObjectId"
               },
               {
                 "type": "null"
@@ -1404,10 +1323,10 @@
         "required": [
           "data"
         ],
-        "title": "exercise_textbook_OutputRelationship",
+        "title": "exercise_textbook_Relationship",
         "type": "object"
       },
-      "exercise_textbook_OutputRelationship_ObjectId": {
+      "exercise_textbook_Relationship_ObjectId": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -1427,23 +1346,23 @@
           "type",
           "id"
         ],
-        "title": "exercise_textbook_OutputRelationship_ObjectId",
+        "title": "exercise_textbook_Relationship_ObjectId",
         "type": "object"
       },
-      "exercise_updatedBy_OutputRelationship": {
+      "exercise_updatedBy_Relationship": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/exercise_updatedBy_OutputRelationship_ObjectId"
+            "$ref": "#/components/schemas/exercise_updatedBy_Relationship_ObjectId"
           }
         },
         "required": [
           "data"
         ],
-        "title": "exercise_updatedBy_OutputRelationship",
+        "title": "exercise_updatedBy_Relationship",
         "type": "object"
       },
-      "exercise_updatedBy_OutputRelationship_ObjectId": {
+      "exercise_updatedBy_Relationship_ObjectId": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -1463,7 +1382,7 @@
           "type",
           "id"
         ],
-        "title": "exercise_updatedBy_OutputRelationship_ObjectId",
+        "title": "exercise_updatedBy_Relationship_ObjectId",
         "type": "object"
       },
       "extractionEventCreateInput": {
@@ -1519,7 +1438,7 @@
         "additionalProperties": false,
         "properties": {
           "exercise": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/extractionEvent_exercise_Relationship"
           }
         },
         "required": [
@@ -1607,13 +1526,13 @@
         "additionalProperties": false,
         "properties": {
           "createdBy": {
-            "$ref": "#/components/schemas/extractionEvent_createdBy_OutputRelationship"
+            "$ref": "#/components/schemas/extractionEvent_createdBy_Relationship"
           },
           "exercise": {
-            "$ref": "#/components/schemas/extractionEvent_exercise_OutputRelationship"
+            "$ref": "#/components/schemas/extractionEvent_exercise_Relationship"
           },
           "updatedBy": {
-            "$ref": "#/components/schemas/extractionEvent_updatedBy_OutputRelationship"
+            "$ref": "#/components/schemas/extractionEvent_updatedBy_Relationship"
           }
         },
         "required": [
@@ -1714,20 +1633,20 @@
         "title": "extractionEventUpdateInputDataRelationships",
         "type": "object"
       },
-      "extractionEvent_createdBy_OutputRelationship": {
+      "extractionEvent_createdBy_Relationship": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/extractionEvent_createdBy_OutputRelationship_ObjectId"
+            "$ref": "#/components/schemas/extractionEvent_createdBy_Relationship_ObjectId"
           }
         },
         "required": [
           "data"
         ],
-        "title": "extractionEvent_createdBy_OutputRelationship",
+        "title": "extractionEvent_createdBy_Relationship",
         "type": "object"
       },
-      "extractionEvent_createdBy_OutputRelationship_ObjectId": {
+      "extractionEvent_createdBy_Relationship_ObjectId": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -1747,23 +1666,23 @@
           "type",
           "id"
         ],
-        "title": "extractionEvent_createdBy_OutputRelationship_ObjectId",
+        "title": "extractionEvent_createdBy_Relationship_ObjectId",
         "type": "object"
       },
-      "extractionEvent_exercise_OutputRelationship": {
+      "extractionEvent_exercise_Relationship": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/extractionEvent_exercise_OutputRelationship_ObjectId"
+            "$ref": "#/components/schemas/extractionEvent_exercise_Relationship_ObjectId"
           }
         },
         "required": [
           "data"
         ],
-        "title": "extractionEvent_exercise_OutputRelationship",
+        "title": "extractionEvent_exercise_Relationship",
         "type": "object"
       },
-      "extractionEvent_exercise_OutputRelationship_ObjectId": {
+      "extractionEvent_exercise_Relationship_ObjectId": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -1783,23 +1702,23 @@
           "type",
           "id"
         ],
-        "title": "extractionEvent_exercise_OutputRelationship_ObjectId",
+        "title": "extractionEvent_exercise_Relationship_ObjectId",
         "type": "object"
       },
-      "extractionEvent_updatedBy_OutputRelationship": {
+      "extractionEvent_updatedBy_Relationship": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/extractionEvent_updatedBy_OutputRelationship_ObjectId"
+            "$ref": "#/components/schemas/extractionEvent_updatedBy_Relationship_ObjectId"
           }
         },
         "required": [
           "data"
         ],
-        "title": "extractionEvent_updatedBy_OutputRelationship",
+        "title": "extractionEvent_updatedBy_Relationship",
         "type": "object"
       },
-      "extractionEvent_updatedBy_OutputRelationship_ObjectId": {
+      "extractionEvent_updatedBy_Relationship_ObjectId": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -1819,7 +1738,7 @@
           "type",
           "id"
         ],
-        "title": "extractionEvent_updatedBy_OutputRelationship_ObjectId",
+        "title": "extractionEvent_updatedBy_Relationship_ObjectId",
         "type": "object"
       },
       "fillWithFreeTextAdaptationCreateInput": {
@@ -1875,7 +1794,7 @@
         "additionalProperties": false,
         "properties": {
           "exercise": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/fillWithFreeTextAdaptation_exercise_Relationship"
           }
         },
         "required": [
@@ -1963,13 +1882,13 @@
         "additionalProperties": false,
         "properties": {
           "createdBy": {
-            "$ref": "#/components/schemas/fillWithFreeTextAdaptation_createdBy_OutputRelationship"
+            "$ref": "#/components/schemas/fillWithFreeTextAdaptation_createdBy_Relationship"
           },
           "exercise": {
-            "$ref": "#/components/schemas/fillWithFreeTextAdaptation_exercise_OutputRelationship"
+            "$ref": "#/components/schemas/fillWithFreeTextAdaptation_exercise_Relationship"
           },
           "updatedBy": {
-            "$ref": "#/components/schemas/fillWithFreeTextAdaptation_updatedBy_OutputRelationship"
+            "$ref": "#/components/schemas/fillWithFreeTextAdaptation_updatedBy_Relationship"
           }
         },
         "required": [
@@ -2045,20 +1964,20 @@
         "title": "fillWithFreeTextAdaptationUpdateInputDataRelationships",
         "type": "object"
       },
-      "fillWithFreeTextAdaptation_createdBy_OutputRelationship": {
+      "fillWithFreeTextAdaptation_createdBy_Relationship": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/fillWithFreeTextAdaptation_createdBy_OutputRelationship_ObjectId"
+            "$ref": "#/components/schemas/fillWithFreeTextAdaptation_createdBy_Relationship_ObjectId"
           }
         },
         "required": [
           "data"
         ],
-        "title": "fillWithFreeTextAdaptation_createdBy_OutputRelationship",
+        "title": "fillWithFreeTextAdaptation_createdBy_Relationship",
         "type": "object"
       },
-      "fillWithFreeTextAdaptation_createdBy_OutputRelationship_ObjectId": {
+      "fillWithFreeTextAdaptation_createdBy_Relationship_ObjectId": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -2078,23 +1997,23 @@
           "type",
           "id"
         ],
-        "title": "fillWithFreeTextAdaptation_createdBy_OutputRelationship_ObjectId",
+        "title": "fillWithFreeTextAdaptation_createdBy_Relationship_ObjectId",
         "type": "object"
       },
-      "fillWithFreeTextAdaptation_exercise_OutputRelationship": {
+      "fillWithFreeTextAdaptation_exercise_Relationship": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/fillWithFreeTextAdaptation_exercise_OutputRelationship_ObjectId"
+            "$ref": "#/components/schemas/fillWithFreeTextAdaptation_exercise_Relationship_ObjectId"
           }
         },
         "required": [
           "data"
         ],
-        "title": "fillWithFreeTextAdaptation_exercise_OutputRelationship",
+        "title": "fillWithFreeTextAdaptation_exercise_Relationship",
         "type": "object"
       },
-      "fillWithFreeTextAdaptation_exercise_OutputRelationship_ObjectId": {
+      "fillWithFreeTextAdaptation_exercise_Relationship_ObjectId": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -2114,23 +2033,23 @@
           "type",
           "id"
         ],
-        "title": "fillWithFreeTextAdaptation_exercise_OutputRelationship_ObjectId",
+        "title": "fillWithFreeTextAdaptation_exercise_Relationship_ObjectId",
         "type": "object"
       },
-      "fillWithFreeTextAdaptation_updatedBy_OutputRelationship": {
+      "fillWithFreeTextAdaptation_updatedBy_Relationship": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/fillWithFreeTextAdaptation_updatedBy_OutputRelationship_ObjectId"
+            "$ref": "#/components/schemas/fillWithFreeTextAdaptation_updatedBy_Relationship_ObjectId"
           }
         },
         "required": [
           "data"
         ],
-        "title": "fillWithFreeTextAdaptation_updatedBy_OutputRelationship",
+        "title": "fillWithFreeTextAdaptation_updatedBy_Relationship",
         "type": "object"
       },
-      "fillWithFreeTextAdaptation_updatedBy_OutputRelationship_ObjectId": {
+      "fillWithFreeTextAdaptation_updatedBy_Relationship_ObjectId": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -2150,7 +2069,7 @@
           "type",
           "id"
         ],
-        "title": "fillWithFreeTextAdaptation_updatedBy_OutputRelationship_ObjectId",
+        "title": "fillWithFreeTextAdaptation_updatedBy_Relationship_ObjectId",
         "type": "object"
       },
       "multipleChoicesInInstructionsAdaptationCreateInput": {
@@ -2206,7 +2125,7 @@
         "additionalProperties": false,
         "properties": {
           "exercise": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation_exercise_Relationship"
           }
         },
         "required": [
@@ -2294,13 +2213,13 @@
         "additionalProperties": false,
         "properties": {
           "createdBy": {
-            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation_createdBy_OutputRelationship"
+            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation_createdBy_Relationship"
           },
           "exercise": {
-            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation_exercise_OutputRelationship"
+            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation_exercise_Relationship"
           },
           "updatedBy": {
-            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation_updatedBy_OutputRelationship"
+            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation_updatedBy_Relationship"
           }
         },
         "required": [
@@ -2376,20 +2295,20 @@
         "title": "multipleChoicesInInstructionsAdaptationUpdateInputDataRelationships",
         "type": "object"
       },
-      "multipleChoicesInInstructionsAdaptation_createdBy_OutputRelationship": {
+      "multipleChoicesInInstructionsAdaptation_createdBy_Relationship": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation_createdBy_OutputRelationship_ObjectId"
+            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation_createdBy_Relationship_ObjectId"
           }
         },
         "required": [
           "data"
         ],
-        "title": "multipleChoicesInInstructionsAdaptation_createdBy_OutputRelationship",
+        "title": "multipleChoicesInInstructionsAdaptation_createdBy_Relationship",
         "type": "object"
       },
-      "multipleChoicesInInstructionsAdaptation_createdBy_OutputRelationship_ObjectId": {
+      "multipleChoicesInInstructionsAdaptation_createdBy_Relationship_ObjectId": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -2409,23 +2328,23 @@
           "type",
           "id"
         ],
-        "title": "multipleChoicesInInstructionsAdaptation_createdBy_OutputRelationship_ObjectId",
+        "title": "multipleChoicesInInstructionsAdaptation_createdBy_Relationship_ObjectId",
         "type": "object"
       },
-      "multipleChoicesInInstructionsAdaptation_exercise_OutputRelationship": {
+      "multipleChoicesInInstructionsAdaptation_exercise_Relationship": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation_exercise_OutputRelationship_ObjectId"
+            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation_exercise_Relationship_ObjectId"
           }
         },
         "required": [
           "data"
         ],
-        "title": "multipleChoicesInInstructionsAdaptation_exercise_OutputRelationship",
+        "title": "multipleChoicesInInstructionsAdaptation_exercise_Relationship",
         "type": "object"
       },
-      "multipleChoicesInInstructionsAdaptation_exercise_OutputRelationship_ObjectId": {
+      "multipleChoicesInInstructionsAdaptation_exercise_Relationship_ObjectId": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -2445,23 +2364,23 @@
           "type",
           "id"
         ],
-        "title": "multipleChoicesInInstructionsAdaptation_exercise_OutputRelationship_ObjectId",
+        "title": "multipleChoicesInInstructionsAdaptation_exercise_Relationship_ObjectId",
         "type": "object"
       },
-      "multipleChoicesInInstructionsAdaptation_updatedBy_OutputRelationship": {
+      "multipleChoicesInInstructionsAdaptation_updatedBy_Relationship": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation_updatedBy_OutputRelationship_ObjectId"
+            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation_updatedBy_Relationship_ObjectId"
           }
         },
         "required": [
           "data"
         ],
-        "title": "multipleChoicesInInstructionsAdaptation_updatedBy_OutputRelationship",
+        "title": "multipleChoicesInInstructionsAdaptation_updatedBy_Relationship",
         "type": "object"
       },
-      "multipleChoicesInInstructionsAdaptation_updatedBy_OutputRelationship_ObjectId": {
+      "multipleChoicesInInstructionsAdaptation_updatedBy_Relationship_ObjectId": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -2481,7 +2400,7 @@
           "type",
           "id"
         ],
-        "title": "multipleChoicesInInstructionsAdaptation_updatedBy_OutputRelationship_ObjectId",
+        "title": "multipleChoicesInInstructionsAdaptation_updatedBy_Relationship_ObjectId",
         "type": "object"
       },
       "multipleChoicesInWordingAdaptationCreateInput": {
@@ -2533,7 +2452,7 @@
         "additionalProperties": false,
         "properties": {
           "exercise": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/multipleChoicesInWordingAdaptation_exercise_Relationship"
           }
         },
         "required": [
@@ -2616,13 +2535,13 @@
         "additionalProperties": false,
         "properties": {
           "createdBy": {
-            "$ref": "#/components/schemas/multipleChoicesInWordingAdaptation_createdBy_OutputRelationship"
+            "$ref": "#/components/schemas/multipleChoicesInWordingAdaptation_createdBy_Relationship"
           },
           "exercise": {
-            "$ref": "#/components/schemas/multipleChoicesInWordingAdaptation_exercise_OutputRelationship"
+            "$ref": "#/components/schemas/multipleChoicesInWordingAdaptation_exercise_Relationship"
           },
           "updatedBy": {
-            "$ref": "#/components/schemas/multipleChoicesInWordingAdaptation_updatedBy_OutputRelationship"
+            "$ref": "#/components/schemas/multipleChoicesInWordingAdaptation_updatedBy_Relationship"
           }
         },
         "required": [
@@ -2693,20 +2612,20 @@
         "title": "multipleChoicesInWordingAdaptationUpdateInputDataRelationships",
         "type": "object"
       },
-      "multipleChoicesInWordingAdaptation_createdBy_OutputRelationship": {
+      "multipleChoicesInWordingAdaptation_createdBy_Relationship": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/multipleChoicesInWordingAdaptation_createdBy_OutputRelationship_ObjectId"
+            "$ref": "#/components/schemas/multipleChoicesInWordingAdaptation_createdBy_Relationship_ObjectId"
           }
         },
         "required": [
           "data"
         ],
-        "title": "multipleChoicesInWordingAdaptation_createdBy_OutputRelationship",
+        "title": "multipleChoicesInWordingAdaptation_createdBy_Relationship",
         "type": "object"
       },
-      "multipleChoicesInWordingAdaptation_createdBy_OutputRelationship_ObjectId": {
+      "multipleChoicesInWordingAdaptation_createdBy_Relationship_ObjectId": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -2726,23 +2645,23 @@
           "type",
           "id"
         ],
-        "title": "multipleChoicesInWordingAdaptation_createdBy_OutputRelationship_ObjectId",
+        "title": "multipleChoicesInWordingAdaptation_createdBy_Relationship_ObjectId",
         "type": "object"
       },
-      "multipleChoicesInWordingAdaptation_exercise_OutputRelationship": {
+      "multipleChoicesInWordingAdaptation_exercise_Relationship": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/multipleChoicesInWordingAdaptation_exercise_OutputRelationship_ObjectId"
+            "$ref": "#/components/schemas/multipleChoicesInWordingAdaptation_exercise_Relationship_ObjectId"
           }
         },
         "required": [
           "data"
         ],
-        "title": "multipleChoicesInWordingAdaptation_exercise_OutputRelationship",
+        "title": "multipleChoicesInWordingAdaptation_exercise_Relationship",
         "type": "object"
       },
-      "multipleChoicesInWordingAdaptation_exercise_OutputRelationship_ObjectId": {
+      "multipleChoicesInWordingAdaptation_exercise_Relationship_ObjectId": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -2762,23 +2681,23 @@
           "type",
           "id"
         ],
-        "title": "multipleChoicesInWordingAdaptation_exercise_OutputRelationship_ObjectId",
+        "title": "multipleChoicesInWordingAdaptation_exercise_Relationship_ObjectId",
         "type": "object"
       },
-      "multipleChoicesInWordingAdaptation_updatedBy_OutputRelationship": {
+      "multipleChoicesInWordingAdaptation_updatedBy_Relationship": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/multipleChoicesInWordingAdaptation_updatedBy_OutputRelationship_ObjectId"
+            "$ref": "#/components/schemas/multipleChoicesInWordingAdaptation_updatedBy_Relationship_ObjectId"
           }
         },
         "required": [
           "data"
         ],
-        "title": "multipleChoicesInWordingAdaptation_updatedBy_OutputRelationship",
+        "title": "multipleChoicesInWordingAdaptation_updatedBy_Relationship",
         "type": "object"
       },
-      "multipleChoicesInWordingAdaptation_updatedBy_OutputRelationship_ObjectId": {
+      "multipleChoicesInWordingAdaptation_updatedBy_Relationship_ObjectId": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -2798,7 +2717,7 @@
           "type",
           "id"
         ],
-        "title": "multipleChoicesInWordingAdaptation_updatedBy_OutputRelationship_ObjectId",
+        "title": "multipleChoicesInWordingAdaptation_updatedBy_Relationship_ObjectId",
         "type": "object"
       },
       "pdfFileCreateInput": {
@@ -2941,7 +2860,7 @@
         "additionalProperties": false,
         "properties": {
           "pdfFile": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/pdfFileNaming_pdfFile_Relationship"
           }
         },
         "required": [
@@ -3023,10 +2942,10 @@
         "additionalProperties": false,
         "properties": {
           "createdBy": {
-            "$ref": "#/components/schemas/pdfFileNaming_createdBy_OutputRelationship"
+            "$ref": "#/components/schemas/pdfFileNaming_createdBy_Relationship"
           },
           "pdfFile": {
-            "$ref": "#/components/schemas/pdfFileNaming_pdfFile_OutputRelationship"
+            "$ref": "#/components/schemas/pdfFileNaming_pdfFile_Relationship"
           }
         },
         "required": [
@@ -3126,20 +3045,20 @@
         "title": "pdfFileNamingUpdateInputDataRelationships",
         "type": "object"
       },
-      "pdfFileNaming_createdBy_OutputRelationship": {
+      "pdfFileNaming_createdBy_Relationship": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/pdfFileNaming_createdBy_OutputRelationship_ObjectId"
+            "$ref": "#/components/schemas/pdfFileNaming_createdBy_Relationship_ObjectId"
           }
         },
         "required": [
           "data"
         ],
-        "title": "pdfFileNaming_createdBy_OutputRelationship",
+        "title": "pdfFileNaming_createdBy_Relationship",
         "type": "object"
       },
-      "pdfFileNaming_createdBy_OutputRelationship_ObjectId": {
+      "pdfFileNaming_createdBy_Relationship_ObjectId": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -3159,23 +3078,23 @@
           "type",
           "id"
         ],
-        "title": "pdfFileNaming_createdBy_OutputRelationship_ObjectId",
+        "title": "pdfFileNaming_createdBy_Relationship_ObjectId",
         "type": "object"
       },
-      "pdfFileNaming_pdfFile_OutputRelationship": {
+      "pdfFileNaming_pdfFile_Relationship": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/pdfFileNaming_pdfFile_OutputRelationship_ObjectId"
+            "$ref": "#/components/schemas/pdfFileNaming_pdfFile_Relationship_ObjectId"
           }
         },
         "required": [
           "data"
         ],
-        "title": "pdfFileNaming_pdfFile_OutputRelationship",
+        "title": "pdfFileNaming_pdfFile_Relationship",
         "type": "object"
       },
-      "pdfFileNaming_pdfFile_OutputRelationship_ObjectId": {
+      "pdfFileNaming_pdfFile_Relationship_ObjectId": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -3195,7 +3114,7 @@
           "type",
           "id"
         ],
-        "title": "pdfFileNaming_pdfFile_OutputRelationship_ObjectId",
+        "title": "pdfFileNaming_pdfFile_Relationship_ObjectId",
         "type": "object"
       },
       "pdfFileOutputItem": {
@@ -3263,13 +3182,13 @@
         "additionalProperties": false,
         "properties": {
           "createdBy": {
-            "$ref": "#/components/schemas/pdfFile_createdBy_OutputRelationship"
+            "$ref": "#/components/schemas/pdfFile_createdBy_Relationship"
           },
           "namings": {
-            "$ref": "#/components/schemas/pdfFile_namings_OutputRelationship"
+            "$ref": "#/components/schemas/pdfFile_namings_RelationshipOutput"
           },
           "sections": {
-            "$ref": "#/components/schemas/pdfFile_sections_OutputRelationship"
+            "$ref": "#/components/schemas/pdfFile_sections_RelationshipOutput"
           }
         },
         "required": [
@@ -3370,20 +3289,20 @@
         "title": "pdfFileUpdateInputDataRelationships",
         "type": "object"
       },
-      "pdfFile_createdBy_OutputRelationship": {
+      "pdfFile_createdBy_Relationship": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/pdfFile_createdBy_OutputRelationship_ObjectId"
+            "$ref": "#/components/schemas/pdfFile_createdBy_Relationship_ObjectId"
           }
         },
         "required": [
           "data"
         ],
-        "title": "pdfFile_createdBy_OutputRelationship",
+        "title": "pdfFile_createdBy_Relationship",
         "type": "object"
       },
-      "pdfFile_createdBy_OutputRelationship_ObjectId": {
+      "pdfFile_createdBy_Relationship_ObjectId": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -3403,15 +3322,15 @@
           "type",
           "id"
         ],
-        "title": "pdfFile_createdBy_OutputRelationship_ObjectId",
+        "title": "pdfFile_createdBy_Relationship_ObjectId",
         "type": "object"
       },
-      "pdfFile_namings_OutputRelationship": {
+      "pdfFile_namings_RelationshipOutput": {
         "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
-              "$ref": "#/components/schemas/pdfFile_namings_OutputRelationship_ObjectId"
+              "$ref": "#/components/schemas/pdfFile_namings_RelationshipOutput_ObjectId"
             },
             "title": "Data",
             "type": "array"
@@ -3424,10 +3343,10 @@
           "data",
           "meta"
         ],
-        "title": "pdfFile_namings_OutputRelationship",
+        "title": "pdfFile_namings_RelationshipOutput",
         "type": "object"
       },
-      "pdfFile_namings_OutputRelationship_ObjectId": {
+      "pdfFile_namings_RelationshipOutput_ObjectId": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -3447,15 +3366,15 @@
           "type",
           "id"
         ],
-        "title": "pdfFile_namings_OutputRelationship_ObjectId",
+        "title": "pdfFile_namings_RelationshipOutput_ObjectId",
         "type": "object"
       },
-      "pdfFile_sections_OutputRelationship": {
+      "pdfFile_sections_RelationshipOutput": {
         "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
-              "$ref": "#/components/schemas/pdfFile_sections_OutputRelationship_ObjectId"
+              "$ref": "#/components/schemas/pdfFile_sections_RelationshipOutput_ObjectId"
             },
             "title": "Data",
             "type": "array"
@@ -3468,10 +3387,10 @@
           "data",
           "meta"
         ],
-        "title": "pdfFile_sections_OutputRelationship",
+        "title": "pdfFile_sections_RelationshipOutput",
         "type": "object"
       },
-      "pdfFile_sections_OutputRelationship_ObjectId": {
+      "pdfFile_sections_RelationshipOutput_ObjectId": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -3491,7 +3410,7 @@
           "type",
           "id"
         ],
-        "title": "pdfFile_sections_OutputRelationship_ObjectId",
+        "title": "pdfFile_sections_RelationshipOutput_ObjectId",
         "type": "object"
       },
       "pingCreateInput": {
@@ -3566,7 +3485,7 @@
           "next": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/CreateInputListRelationship"
+                "$ref": "#/components/schemas/ping_next_RelationshipInput"
               }
             ],
             "default": {
@@ -3576,7 +3495,7 @@
           "prev": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/OptionalRelationship"
+                "$ref": "#/components/schemas/ping_prev_Relationship"
               }
             ],
             "default": {}
@@ -3671,16 +3590,16 @@
         "additionalProperties": false,
         "properties": {
           "createdBy": {
-            "$ref": "#/components/schemas/ping_createdBy_OutputRelationship"
+            "$ref": "#/components/schemas/ping_createdBy_Relationship"
           },
           "next": {
-            "$ref": "#/components/schemas/ping_next_OutputRelationship"
+            "$ref": "#/components/schemas/ping_next_RelationshipOutput"
           },
           "prev": {
-            "$ref": "#/components/schemas/ping_prev_OutputRelationship"
+            "$ref": "#/components/schemas/ping_prev_Relationship"
           },
           "updatedBy": {
-            "$ref": "#/components/schemas/ping_updatedBy_OutputRelationship"
+            "$ref": "#/components/schemas/ping_updatedBy_Relationship"
           }
         },
         "required": [
@@ -3794,14 +3713,14 @@
           "next": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/UpdateInputListRelationship"
+                "$ref": "#/components/schemas/ping_next_RelationshipInput"
               }
             ]
           },
           "prev": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/OptionalRelationship"
+                "$ref": "#/components/schemas/ping_prev_Relationship"
               }
             ]
           }
@@ -3809,13 +3728,13 @@
         "title": "pingUpdateInputDataRelationships",
         "type": "object"
       },
-      "ping_createdBy_OutputRelationship": {
+      "ping_createdBy_Relationship": {
         "additionalProperties": false,
         "properties": {
           "data": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/ping_createdBy_OutputRelationship_ObjectId"
+                "$ref": "#/components/schemas/ping_createdBy_Relationship_ObjectId"
               },
               {
                 "type": "null"
@@ -3826,10 +3745,10 @@
         "required": [
           "data"
         ],
-        "title": "ping_createdBy_OutputRelationship",
+        "title": "ping_createdBy_Relationship",
         "type": "object"
       },
-      "ping_createdBy_OutputRelationship_ObjectId": {
+      "ping_createdBy_Relationship_ObjectId": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -3849,15 +3768,55 @@
           "type",
           "id"
         ],
-        "title": "ping_createdBy_OutputRelationship_ObjectId",
+        "title": "ping_createdBy_Relationship_ObjectId",
         "type": "object"
       },
-      "ping_next_OutputRelationship": {
+      "ping_next_RelationshipInput": {
         "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
-              "$ref": "#/components/schemas/ping_next_OutputRelationship_ObjectId"
+              "$ref": "#/components/schemas/ping_next_RelationshipInput_ObjectId"
+            },
+            "title": "Data",
+            "type": "array"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "ping_next_RelationshipInput",
+        "type": "object"
+      },
+      "ping_next_RelationshipInput_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "ping",
+            "enum": [
+              "ping"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "ping_next_RelationshipInput_ObjectId",
+        "type": "object"
+      },
+      "ping_next_RelationshipOutput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/ping_next_RelationshipOutput_ObjectId"
             },
             "title": "Data",
             "type": "array"
@@ -3870,10 +3829,10 @@
           "data",
           "meta"
         ],
-        "title": "ping_next_OutputRelationship",
+        "title": "ping_next_RelationshipOutput",
         "type": "object"
       },
-      "ping_next_OutputRelationship_ObjectId": {
+      "ping_next_RelationshipOutput_ObjectId": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -3893,16 +3852,16 @@
           "type",
           "id"
         ],
-        "title": "ping_next_OutputRelationship_ObjectId",
+        "title": "ping_next_RelationshipOutput_ObjectId",
         "type": "object"
       },
-      "ping_prev_OutputRelationship": {
+      "ping_prev_Relationship": {
         "additionalProperties": false,
         "properties": {
           "data": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/ping_prev_OutputRelationship_ObjectId"
+                "$ref": "#/components/schemas/ping_prev_Relationship_ObjectId"
               },
               {
                 "type": "null"
@@ -3913,10 +3872,10 @@
         "required": [
           "data"
         ],
-        "title": "ping_prev_OutputRelationship",
+        "title": "ping_prev_Relationship",
         "type": "object"
       },
-      "ping_prev_OutputRelationship_ObjectId": {
+      "ping_prev_Relationship_ObjectId": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -3936,16 +3895,16 @@
           "type",
           "id"
         ],
-        "title": "ping_prev_OutputRelationship_ObjectId",
+        "title": "ping_prev_Relationship_ObjectId",
         "type": "object"
       },
-      "ping_updatedBy_OutputRelationship": {
+      "ping_updatedBy_Relationship": {
         "additionalProperties": false,
         "properties": {
           "data": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/ping_updatedBy_OutputRelationship_ObjectId"
+                "$ref": "#/components/schemas/ping_updatedBy_Relationship_ObjectId"
               },
               {
                 "type": "null"
@@ -3956,10 +3915,10 @@
         "required": [
           "data"
         ],
-        "title": "ping_updatedBy_OutputRelationship",
+        "title": "ping_updatedBy_Relationship",
         "type": "object"
       },
-      "ping_updatedBy_OutputRelationship_ObjectId": {
+      "ping_updatedBy_Relationship_ObjectId": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -3979,7 +3938,7 @@
           "type",
           "id"
         ],
-        "title": "ping_updatedBy_OutputRelationship_ObjectId",
+        "title": "ping_updatedBy_Relationship_ObjectId",
         "type": "object"
       },
       "projectCreateInput": {
@@ -4130,16 +4089,16 @@
         "additionalProperties": false,
         "properties": {
           "createdBy": {
-            "$ref": "#/components/schemas/project_createdBy_OutputRelationship"
+            "$ref": "#/components/schemas/project_createdBy_Relationship"
           },
           "exercises": {
-            "$ref": "#/components/schemas/project_exercises_OutputRelationship"
+            "$ref": "#/components/schemas/project_exercises_RelationshipOutput"
           },
           "textbooks": {
-            "$ref": "#/components/schemas/project_textbooks_OutputRelationship"
+            "$ref": "#/components/schemas/project_textbooks_RelationshipOutput"
           },
           "updatedBy": {
-            "$ref": "#/components/schemas/project_updatedBy_OutputRelationship"
+            "$ref": "#/components/schemas/project_updatedBy_Relationship"
           }
         },
         "required": [
@@ -4250,20 +4209,20 @@
         "title": "projectUpdateInputDataRelationships",
         "type": "object"
       },
-      "project_createdBy_OutputRelationship": {
+      "project_createdBy_Relationship": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/project_createdBy_OutputRelationship_ObjectId"
+            "$ref": "#/components/schemas/project_createdBy_Relationship_ObjectId"
           }
         },
         "required": [
           "data"
         ],
-        "title": "project_createdBy_OutputRelationship",
+        "title": "project_createdBy_Relationship",
         "type": "object"
       },
-      "project_createdBy_OutputRelationship_ObjectId": {
+      "project_createdBy_Relationship_ObjectId": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -4283,15 +4242,15 @@
           "type",
           "id"
         ],
-        "title": "project_createdBy_OutputRelationship_ObjectId",
+        "title": "project_createdBy_Relationship_ObjectId",
         "type": "object"
       },
-      "project_exercises_OutputRelationship": {
+      "project_exercises_RelationshipOutput": {
         "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
-              "$ref": "#/components/schemas/project_exercises_OutputRelationship_ObjectId"
+              "$ref": "#/components/schemas/project_exercises_RelationshipOutput_ObjectId"
             },
             "title": "Data",
             "type": "array"
@@ -4304,10 +4263,10 @@
           "data",
           "meta"
         ],
-        "title": "project_exercises_OutputRelationship",
+        "title": "project_exercises_RelationshipOutput",
         "type": "object"
       },
-      "project_exercises_OutputRelationship_ObjectId": {
+      "project_exercises_RelationshipOutput_ObjectId": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -4327,15 +4286,15 @@
           "type",
           "id"
         ],
-        "title": "project_exercises_OutputRelationship_ObjectId",
+        "title": "project_exercises_RelationshipOutput_ObjectId",
         "type": "object"
       },
-      "project_textbooks_OutputRelationship": {
+      "project_textbooks_RelationshipOutput": {
         "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
-              "$ref": "#/components/schemas/project_textbooks_OutputRelationship_ObjectId"
+              "$ref": "#/components/schemas/project_textbooks_RelationshipOutput_ObjectId"
             },
             "title": "Data",
             "type": "array"
@@ -4348,10 +4307,10 @@
           "data",
           "meta"
         ],
-        "title": "project_textbooks_OutputRelationship",
+        "title": "project_textbooks_RelationshipOutput",
         "type": "object"
       },
-      "project_textbooks_OutputRelationship_ObjectId": {
+      "project_textbooks_RelationshipOutput_ObjectId": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -4371,23 +4330,23 @@
           "type",
           "id"
         ],
-        "title": "project_textbooks_OutputRelationship_ObjectId",
+        "title": "project_textbooks_RelationshipOutput_ObjectId",
         "type": "object"
       },
-      "project_updatedBy_OutputRelationship": {
+      "project_updatedBy_Relationship": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/project_updatedBy_OutputRelationship_ObjectId"
+            "$ref": "#/components/schemas/project_updatedBy_Relationship_ObjectId"
           }
         },
         "required": [
           "data"
         ],
-        "title": "project_updatedBy_OutputRelationship",
+        "title": "project_updatedBy_Relationship",
         "type": "object"
       },
-      "project_updatedBy_OutputRelationship_ObjectId": {
+      "project_updatedBy_Relationship_ObjectId": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -4407,7 +4366,7 @@
           "type",
           "id"
         ],
-        "title": "project_updatedBy_OutputRelationship_ObjectId",
+        "title": "project_updatedBy_Relationship_ObjectId",
         "type": "object"
       },
       "recoveryEmailRequestCreateInput": {
@@ -4578,10 +4537,10 @@
         "additionalProperties": false,
         "properties": {
           "pdfFile": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/section_pdfFile_Relationship"
           },
           "textbook": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/section_textbook_Relationship"
           }
         },
         "required": [
@@ -4680,16 +4639,16 @@
         "additionalProperties": false,
         "properties": {
           "createdBy": {
-            "$ref": "#/components/schemas/section_createdBy_OutputRelationship"
+            "$ref": "#/components/schemas/section_createdBy_Relationship"
           },
           "pdfFile": {
-            "$ref": "#/components/schemas/section_pdfFile_OutputRelationship"
+            "$ref": "#/components/schemas/section_pdfFile_Relationship"
           },
           "textbook": {
-            "$ref": "#/components/schemas/section_textbook_OutputRelationship"
+            "$ref": "#/components/schemas/section_textbook_Relationship"
           },
           "updatedBy": {
-            "$ref": "#/components/schemas/section_updatedBy_OutputRelationship"
+            "$ref": "#/components/schemas/section_updatedBy_Relationship"
           }
         },
         "required": [
@@ -4804,20 +4763,20 @@
         "title": "sectionUpdateInputDataRelationships",
         "type": "object"
       },
-      "section_createdBy_OutputRelationship": {
+      "section_createdBy_Relationship": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/section_createdBy_OutputRelationship_ObjectId"
+            "$ref": "#/components/schemas/section_createdBy_Relationship_ObjectId"
           }
         },
         "required": [
           "data"
         ],
-        "title": "section_createdBy_OutputRelationship",
+        "title": "section_createdBy_Relationship",
         "type": "object"
       },
-      "section_createdBy_OutputRelationship_ObjectId": {
+      "section_createdBy_Relationship_ObjectId": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -4837,23 +4796,23 @@
           "type",
           "id"
         ],
-        "title": "section_createdBy_OutputRelationship_ObjectId",
+        "title": "section_createdBy_Relationship_ObjectId",
         "type": "object"
       },
-      "section_pdfFile_OutputRelationship": {
+      "section_pdfFile_Relationship": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/section_pdfFile_OutputRelationship_ObjectId"
+            "$ref": "#/components/schemas/section_pdfFile_Relationship_ObjectId"
           }
         },
         "required": [
           "data"
         ],
-        "title": "section_pdfFile_OutputRelationship",
+        "title": "section_pdfFile_Relationship",
         "type": "object"
       },
-      "section_pdfFile_OutputRelationship_ObjectId": {
+      "section_pdfFile_Relationship_ObjectId": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -4873,23 +4832,23 @@
           "type",
           "id"
         ],
-        "title": "section_pdfFile_OutputRelationship_ObjectId",
+        "title": "section_pdfFile_Relationship_ObjectId",
         "type": "object"
       },
-      "section_textbook_OutputRelationship": {
+      "section_textbook_Relationship": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/section_textbook_OutputRelationship_ObjectId"
+            "$ref": "#/components/schemas/section_textbook_Relationship_ObjectId"
           }
         },
         "required": [
           "data"
         ],
-        "title": "section_textbook_OutputRelationship",
+        "title": "section_textbook_Relationship",
         "type": "object"
       },
-      "section_textbook_OutputRelationship_ObjectId": {
+      "section_textbook_Relationship_ObjectId": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -4909,23 +4868,23 @@
           "type",
           "id"
         ],
-        "title": "section_textbook_OutputRelationship_ObjectId",
+        "title": "section_textbook_Relationship_ObjectId",
         "type": "object"
       },
-      "section_updatedBy_OutputRelationship": {
+      "section_updatedBy_Relationship": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/section_updatedBy_OutputRelationship_ObjectId"
+            "$ref": "#/components/schemas/section_updatedBy_Relationship_ObjectId"
           }
         },
         "required": [
           "data"
         ],
-        "title": "section_updatedBy_OutputRelationship",
+        "title": "section_updatedBy_Relationship",
         "type": "object"
       },
-      "section_updatedBy_OutputRelationship_ObjectId": {
+      "section_updatedBy_Relationship_ObjectId": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -4945,7 +4904,7 @@
           "type",
           "id"
         ],
-        "title": "section_updatedBy_OutputRelationship_ObjectId",
+        "title": "section_updatedBy_Relationship_ObjectId",
         "type": "object"
       },
       "selectThingsAdaptationCreateInput": {
@@ -5011,7 +4970,7 @@
         "additionalProperties": false,
         "properties": {
           "exercise": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/selectThingsAdaptation_exercise_Relationship"
           }
         },
         "required": [
@@ -5109,13 +5068,13 @@
         "additionalProperties": false,
         "properties": {
           "createdBy": {
-            "$ref": "#/components/schemas/selectThingsAdaptation_createdBy_OutputRelationship"
+            "$ref": "#/components/schemas/selectThingsAdaptation_createdBy_Relationship"
           },
           "exercise": {
-            "$ref": "#/components/schemas/selectThingsAdaptation_exercise_OutputRelationship"
+            "$ref": "#/components/schemas/selectThingsAdaptation_exercise_Relationship"
           },
           "updatedBy": {
-            "$ref": "#/components/schemas/selectThingsAdaptation_updatedBy_OutputRelationship"
+            "$ref": "#/components/schemas/selectThingsAdaptation_updatedBy_Relationship"
           }
         },
         "required": [
@@ -5199,20 +5158,20 @@
         "title": "selectThingsAdaptationUpdateInputDataRelationships",
         "type": "object"
       },
-      "selectThingsAdaptation_createdBy_OutputRelationship": {
+      "selectThingsAdaptation_createdBy_Relationship": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/selectThingsAdaptation_createdBy_OutputRelationship_ObjectId"
+            "$ref": "#/components/schemas/selectThingsAdaptation_createdBy_Relationship_ObjectId"
           }
         },
         "required": [
           "data"
         ],
-        "title": "selectThingsAdaptation_createdBy_OutputRelationship",
+        "title": "selectThingsAdaptation_createdBy_Relationship",
         "type": "object"
       },
-      "selectThingsAdaptation_createdBy_OutputRelationship_ObjectId": {
+      "selectThingsAdaptation_createdBy_Relationship_ObjectId": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -5232,23 +5191,23 @@
           "type",
           "id"
         ],
-        "title": "selectThingsAdaptation_createdBy_OutputRelationship_ObjectId",
+        "title": "selectThingsAdaptation_createdBy_Relationship_ObjectId",
         "type": "object"
       },
-      "selectThingsAdaptation_exercise_OutputRelationship": {
+      "selectThingsAdaptation_exercise_Relationship": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/selectThingsAdaptation_exercise_OutputRelationship_ObjectId"
+            "$ref": "#/components/schemas/selectThingsAdaptation_exercise_Relationship_ObjectId"
           }
         },
         "required": [
           "data"
         ],
-        "title": "selectThingsAdaptation_exercise_OutputRelationship",
+        "title": "selectThingsAdaptation_exercise_Relationship",
         "type": "object"
       },
-      "selectThingsAdaptation_exercise_OutputRelationship_ObjectId": {
+      "selectThingsAdaptation_exercise_Relationship_ObjectId": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -5268,23 +5227,23 @@
           "type",
           "id"
         ],
-        "title": "selectThingsAdaptation_exercise_OutputRelationship_ObjectId",
+        "title": "selectThingsAdaptation_exercise_Relationship_ObjectId",
         "type": "object"
       },
-      "selectThingsAdaptation_updatedBy_OutputRelationship": {
+      "selectThingsAdaptation_updatedBy_Relationship": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/selectThingsAdaptation_updatedBy_OutputRelationship_ObjectId"
+            "$ref": "#/components/schemas/selectThingsAdaptation_updatedBy_Relationship_ObjectId"
           }
         },
         "required": [
           "data"
         ],
-        "title": "selectThingsAdaptation_updatedBy_OutputRelationship",
+        "title": "selectThingsAdaptation_updatedBy_Relationship",
         "type": "object"
       },
-      "selectThingsAdaptation_updatedBy_OutputRelationship_ObjectId": {
+      "selectThingsAdaptation_updatedBy_Relationship_ObjectId": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -5304,7 +5263,7 @@
           "type",
           "id"
         ],
-        "title": "selectThingsAdaptation_updatedBy_OutputRelationship_ObjectId",
+        "title": "selectThingsAdaptation_updatedBy_Relationship_ObjectId",
         "type": "object"
       },
       "textbookCreateInput": {
@@ -5393,7 +5352,7 @@
         "additionalProperties": false,
         "properties": {
           "project": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/textbook_project_Relationship"
           }
         },
         "required": [
@@ -5517,19 +5476,19 @@
         "additionalProperties": false,
         "properties": {
           "createdBy": {
-            "$ref": "#/components/schemas/textbook_createdBy_OutputRelationship"
+            "$ref": "#/components/schemas/textbook_createdBy_Relationship"
           },
           "exercises": {
-            "$ref": "#/components/schemas/textbook_exercises_OutputRelationship"
+            "$ref": "#/components/schemas/textbook_exercises_RelationshipOutput"
           },
           "project": {
-            "$ref": "#/components/schemas/textbook_project_OutputRelationship"
+            "$ref": "#/components/schemas/textbook_project_Relationship"
           },
           "sections": {
-            "$ref": "#/components/schemas/textbook_sections_OutputRelationship"
+            "$ref": "#/components/schemas/textbook_sections_RelationshipOutput"
           },
           "updatedBy": {
-            "$ref": "#/components/schemas/textbook_updatedBy_OutputRelationship"
+            "$ref": "#/components/schemas/textbook_updatedBy_Relationship"
           }
         },
         "required": [
@@ -5670,20 +5629,20 @@
         "title": "textbookUpdateInputDataRelationships",
         "type": "object"
       },
-      "textbook_createdBy_OutputRelationship": {
+      "textbook_createdBy_Relationship": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/textbook_createdBy_OutputRelationship_ObjectId"
+            "$ref": "#/components/schemas/textbook_createdBy_Relationship_ObjectId"
           }
         },
         "required": [
           "data"
         ],
-        "title": "textbook_createdBy_OutputRelationship",
+        "title": "textbook_createdBy_Relationship",
         "type": "object"
       },
-      "textbook_createdBy_OutputRelationship_ObjectId": {
+      "textbook_createdBy_Relationship_ObjectId": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -5703,15 +5662,15 @@
           "type",
           "id"
         ],
-        "title": "textbook_createdBy_OutputRelationship_ObjectId",
+        "title": "textbook_createdBy_Relationship_ObjectId",
         "type": "object"
       },
-      "textbook_exercises_OutputRelationship": {
+      "textbook_exercises_RelationshipOutput": {
         "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
-              "$ref": "#/components/schemas/textbook_exercises_OutputRelationship_ObjectId"
+              "$ref": "#/components/schemas/textbook_exercises_RelationshipOutput_ObjectId"
             },
             "title": "Data",
             "type": "array"
@@ -5724,10 +5683,10 @@
           "data",
           "meta"
         ],
-        "title": "textbook_exercises_OutputRelationship",
+        "title": "textbook_exercises_RelationshipOutput",
         "type": "object"
       },
-      "textbook_exercises_OutputRelationship_ObjectId": {
+      "textbook_exercises_RelationshipOutput_ObjectId": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -5747,23 +5706,23 @@
           "type",
           "id"
         ],
-        "title": "textbook_exercises_OutputRelationship_ObjectId",
+        "title": "textbook_exercises_RelationshipOutput_ObjectId",
         "type": "object"
       },
-      "textbook_project_OutputRelationship": {
+      "textbook_project_Relationship": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/textbook_project_OutputRelationship_ObjectId"
+            "$ref": "#/components/schemas/textbook_project_Relationship_ObjectId"
           }
         },
         "required": [
           "data"
         ],
-        "title": "textbook_project_OutputRelationship",
+        "title": "textbook_project_Relationship",
         "type": "object"
       },
-      "textbook_project_OutputRelationship_ObjectId": {
+      "textbook_project_Relationship_ObjectId": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -5783,15 +5742,15 @@
           "type",
           "id"
         ],
-        "title": "textbook_project_OutputRelationship_ObjectId",
+        "title": "textbook_project_Relationship_ObjectId",
         "type": "object"
       },
-      "textbook_sections_OutputRelationship": {
+      "textbook_sections_RelationshipOutput": {
         "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
-              "$ref": "#/components/schemas/textbook_sections_OutputRelationship_ObjectId"
+              "$ref": "#/components/schemas/textbook_sections_RelationshipOutput_ObjectId"
             },
             "title": "Data",
             "type": "array"
@@ -5804,10 +5763,10 @@
           "data",
           "meta"
         ],
-        "title": "textbook_sections_OutputRelationship",
+        "title": "textbook_sections_RelationshipOutput",
         "type": "object"
       },
-      "textbook_sections_OutputRelationship_ObjectId": {
+      "textbook_sections_RelationshipOutput_ObjectId": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -5827,23 +5786,23 @@
           "type",
           "id"
         ],
-        "title": "textbook_sections_OutputRelationship_ObjectId",
+        "title": "textbook_sections_RelationshipOutput_ObjectId",
         "type": "object"
       },
-      "textbook_updatedBy_OutputRelationship": {
+      "textbook_updatedBy_Relationship": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/textbook_updatedBy_OutputRelationship_ObjectId"
+            "$ref": "#/components/schemas/textbook_updatedBy_Relationship_ObjectId"
           }
         },
         "required": [
           "data"
         ],
-        "title": "textbook_updatedBy_OutputRelationship",
+        "title": "textbook_updatedBy_Relationship",
         "type": "object"
       },
-      "textbook_updatedBy_OutputRelationship_ObjectId": {
+      "textbook_updatedBy_Relationship_ObjectId": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -5863,7 +5822,7 @@
           "type",
           "id"
         ],
-        "title": "textbook_updatedBy_OutputRelationship_ObjectId",
+        "title": "textbook_updatedBy_Relationship_ObjectId",
         "type": "object"
       },
       "userItemOutput": {
@@ -5952,10 +5911,10 @@
         "additionalProperties": false,
         "properties": {
           "createdBy": {
-            "$ref": "#/components/schemas/user_createdBy_OutputRelationship"
+            "$ref": "#/components/schemas/user_createdBy_Relationship"
           },
           "updatedBy": {
-            "$ref": "#/components/schemas/user_updatedBy_OutputRelationship"
+            "$ref": "#/components/schemas/user_updatedBy_Relationship"
           }
         },
         "required": [
@@ -6041,20 +6000,20 @@
         "title": "userUpdateInputDataRelationships",
         "type": "object"
       },
-      "user_createdBy_OutputRelationship": {
+      "user_createdBy_Relationship": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/user_createdBy_OutputRelationship_ObjectId"
+            "$ref": "#/components/schemas/user_createdBy_Relationship_ObjectId"
           }
         },
         "required": [
           "data"
         ],
-        "title": "user_createdBy_OutputRelationship",
+        "title": "user_createdBy_Relationship",
         "type": "object"
       },
-      "user_createdBy_OutputRelationship_ObjectId": {
+      "user_createdBy_Relationship_ObjectId": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -6074,23 +6033,23 @@
           "type",
           "id"
         ],
-        "title": "user_createdBy_OutputRelationship_ObjectId",
+        "title": "user_createdBy_Relationship_ObjectId",
         "type": "object"
       },
-      "user_updatedBy_OutputRelationship": {
+      "user_updatedBy_Relationship": {
         "additionalProperties": false,
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/user_updatedBy_OutputRelationship_ObjectId"
+            "$ref": "#/components/schemas/user_updatedBy_Relationship_ObjectId"
           }
         },
         "required": [
           "data"
         ],
-        "title": "user_updatedBy_OutputRelationship",
+        "title": "user_updatedBy_Relationship",
         "type": "object"
       },
-      "user_updatedBy_OutputRelationship_ObjectId": {
+      "user_updatedBy_Relationship_ObjectId": {
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -6110,7 +6069,7 @@
           "type",
           "id"
         ],
-        "title": "user_updatedBy_OutputRelationship_ObjectId",
+        "title": "user_updatedBy_Relationship_ObjectId",
         "type": "object"
       }
     },
