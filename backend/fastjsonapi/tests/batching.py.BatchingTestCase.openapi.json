@@ -93,27 +93,6 @@
         "title": "OptionalRelationship",
         "type": "object"
       },
-      "OutputListRelationship": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "items": {
-              "$ref": "#/components/schemas/ObjectId"
-            },
-            "title": "Data",
-            "type": "array"
-          },
-          "meta": {
-            "$ref": "#/components/schemas/Meta"
-          }
-        },
-        "required": [
-          "data",
-          "meta"
-        ],
-        "title": "OutputListRelationship",
-        "type": "object"
-      },
       "PageLinks": {
         "additionalProperties": false,
         "properties": {
@@ -394,10 +373,10 @@
         "additionalProperties": false,
         "properties": {
           "several": {
-            "$ref": "#/components/schemas/OutputListRelationship"
+            "$ref": "#/components/schemas/resource_several_OutputRelationship"
           },
           "single": {
-            "$ref": "#/components/schemas/OptionalRelationship"
+            "$ref": "#/components/schemas/resource_single_OutputRelationship"
           }
         },
         "required": [
@@ -515,6 +494,93 @@
           }
         },
         "title": "resourceUpdateInputDataRelationships",
+        "type": "object"
+      },
+      "resource_several_OutputRelationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/resource_several_OutputRelationship_ObjectId"
+            },
+            "title": "Data",
+            "type": "array"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/Meta"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ],
+        "title": "resource_several_OutputRelationship",
+        "type": "object"
+      },
+      "resource_several_OutputRelationship_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "resource",
+            "enum": [
+              "resource"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "resource_several_OutputRelationship_ObjectId",
+        "type": "object"
+      },
+      "resource_single_OutputRelationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/resource_single_OutputRelationship_ObjectId"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "resource_single_OutputRelationship",
+        "type": "object"
+      },
+      "resource_single_OutputRelationship_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "resource",
+            "enum": [
+              "resource"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "resource_single_OutputRelationship_ObjectId",
         "type": "object"
       }
     }

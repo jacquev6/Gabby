@@ -1,5 +1,6 @@
+import textwrap
 from types import UnionType
-from typing import Type
+from typing import Literal, Type
 from pydantic_core import PydanticUndefined
 import humps
 import pydantic
@@ -45,20 +46,68 @@ class MandatoryRelationship(BaseModel):
     data: ObjectId
 
 
+def create_model_for_output_mandatory_relationship(resource_name, relationship_name, related_names):
+    model_name = f"{resource_name}_{relationship_name}_OutputRelationship"
+
+    code = textwrap.dedent(f"""\
+        class {model_name}_ObjectId(BaseModel):
+            type: Literal[{', '.join(repr(name) for name in related_names)}]
+            id: str
+
+        class {model_name}(BaseModel):
+            data: {model_name}_ObjectId
+    """)
+
+    globals = {"BaseModel": BaseModel, "Literal": Literal}
+    exec(code, globals)
+    return globals[model_name]
+
+
 class OptionalRelationship(BaseModel):
     data: ObjectId | None = None
+
+
+def create_model_for_output_optional_relationship(resource_name, relationship_name, related_names):
+    model_name = f"{resource_name}_{relationship_name}_OutputRelationship"
+
+    code = textwrap.dedent(f"""\
+        class {model_name}_ObjectId(BaseModel):
+            type: Literal[{', '.join(repr(name) for name in related_names)}]
+            id: str
+
+        class {model_name}(BaseModel):
+            data: {model_name}_ObjectId | None
+    """)
+
+    globals = {"BaseModel": BaseModel, "Literal": Literal}
+    exec(code, globals)
+    return globals[model_name]
 
 
 class CreateInputListRelationship(BaseModel):
     data: list[ObjectId] = []
 
 
-class OutputListRelationship(BaseModel):
-    class Meta(BaseModel):
-        count: int
+def create_model_for_output_list_relationship(resource_name, relationship_name, related_names):
+    model_name = f"{resource_name}_{relationship_name}_OutputRelationship"
 
-    data: list[ObjectId]
-    meta: Meta
+    code = textwrap.dedent(f"""\
+        class {model_name}_ObjectId(BaseModel):
+            type: Literal[{', '.join(repr(name) for name in related_names)}]
+            id: str
+
+        class {model_name}(BaseModel):
+            data: list[{model_name}_ObjectId]
+
+            class Meta(BaseModel):
+                count: int
+
+            meta: Meta
+    """)
+
+    globals = {"BaseModel": BaseModel, "Literal": Literal}
+    exec(code, globals)
+    return globals[model_name]
 
 
 class UpdateInputListRelationship(BaseModel):
@@ -164,11 +213,11 @@ def make_output_models(resource_name: str, model, decider: Decider):
         name = humps.camelize(name)
         if Annotations(info.metadata).output:
             if decider.is_mandatory_relationship(info.annotation):
-                relationships[name] = (MandatoryRelationship, ...)
+                relationships[name] = (create_model_for_output_mandatory_relationship(resource_name, name, decider.get_polymorphic_names(info.annotation)), ...)
             elif decider.is_optional_relationship(info.annotation):
-                relationships[name] = (OptionalRelationship, ...)
+                relationships[name] = (create_model_for_output_optional_relationship(resource_name, name, decider.get_polymorphic_names(info.annotation)), ...)
             elif decider.is_list_relationship(info.annotation):
-                relationships[name] = (OutputListRelationship, ...)
+                relationships[name] = (create_model_for_output_list_relationship(resource_name, name, decider.get_polymorphic_names(info.annotation)), ...)
             elif decider.is_attribute(info.annotation):
                 attributes[name] = (info.annotation, ...)
             else:

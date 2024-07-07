@@ -294,7 +294,7 @@
         "additionalProperties": false,
         "properties": {
           "rel": {
-            "$ref": "#/components/schemas/OptionalRelationship"
+            "$ref": "#/components/schemas/resource_rel_OutputRelationship"
           }
         },
         "required": [
@@ -369,6 +369,49 @@
           }
         },
         "title": "resourceUpdateInputDataRelationships",
+        "type": "object"
+      },
+      "resource_rel_OutputRelationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/resource_rel_OutputRelationship_ObjectId"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "resource_rel_OutputRelationship",
+        "type": "object"
+      },
+      "resource_rel_OutputRelationship_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "enum": [
+              "alphaPoly",
+              "bravoPoly"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "resource_rel_OutputRelationship_ObjectId",
         "type": "object"
       }
     }

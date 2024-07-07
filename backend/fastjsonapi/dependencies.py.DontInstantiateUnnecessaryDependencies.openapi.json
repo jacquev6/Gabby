@@ -322,13 +322,13 @@
         "additionalProperties": false,
         "properties": {
           "computed": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/resource_computed_OutputRelationship"
           },
           "constant": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/resource_constant_OutputRelationship"
           },
           "writable": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/resource_writable_OutputRelationship"
           }
         },
         "required": [
@@ -405,6 +405,114 @@
           }
         },
         "title": "resourceUpdateInputDataRelationships",
+        "type": "object"
+      },
+      "resource_computed_OutputRelationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/resource_computed_OutputRelationship_ObjectId"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "resource_computed_OutputRelationship",
+        "type": "object"
+      },
+      "resource_computed_OutputRelationship_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "computed",
+            "enum": [
+              "computed"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "resource_computed_OutputRelationship_ObjectId",
+        "type": "object"
+      },
+      "resource_constant_OutputRelationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/resource_constant_OutputRelationship_ObjectId"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "resource_constant_OutputRelationship",
+        "type": "object"
+      },
+      "resource_constant_OutputRelationship_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "constant",
+            "enum": [
+              "constant"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "resource_constant_OutputRelationship_ObjectId",
+        "type": "object"
+      },
+      "resource_writable_OutputRelationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/resource_writable_OutputRelationship_ObjectId"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "resource_writable_OutputRelationship",
+        "type": "object"
+      },
+      "resource_writable_OutputRelationship_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "writable",
+            "enum": [
+              "writable"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "resource_writable_OutputRelationship_ObjectId",
         "type": "object"
       },
       "writableItemOutput": {
