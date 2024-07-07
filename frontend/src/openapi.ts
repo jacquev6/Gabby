@@ -271,11 +271,6 @@ export interface components {
     MandatoryRelationship: {
       data: components["schemas"]["ObjectId"];
     };
-    /** Meta */
-    Meta: {
-      /** Count */
-      count: number;
-    };
     /** MultipleChoicesInInstructionsAdaptationOptions */
     MultipleChoicesInInstructionsAdaptationOptions: {
       /** Placeholder */
@@ -293,6 +288,11 @@ export interface components {
     /** OptionalRelationship */
     OptionalRelationship: {
       data?: components["schemas"]["ObjectId"] | null;
+    };
+    /** OutputListRelationShipMeta */
+    OutputListRelationShipMeta: {
+      /** Count */
+      count: number;
     };
     /** PageLinks */
     PageLinks: {
@@ -1433,7 +1433,7 @@ export interface components {
     pdfFile_namings_OutputRelationship: {
       /** Data */
       data: components["schemas"]["pdfFile_namings_OutputRelationship_ObjectId"][];
-      meta: components["schemas"]["Meta"];
+      meta: components["schemas"]["OutputListRelationShipMeta"];
     };
     /** pdfFile_namings_OutputRelationship_ObjectId */
     pdfFile_namings_OutputRelationship_ObjectId: {
@@ -1450,7 +1450,7 @@ export interface components {
     pdfFile_sections_OutputRelationship: {
       /** Data */
       data: components["schemas"]["pdfFile_sections_OutputRelationship_ObjectId"][];
-      meta: components["schemas"]["Meta"];
+      meta: components["schemas"]["OutputListRelationShipMeta"];
     };
     /** pdfFile_sections_OutputRelationship_ObjectId */
     pdfFile_sections_OutputRelationship_ObjectId: {
@@ -1590,7 +1590,7 @@ export interface components {
     ping_next_OutputRelationship: {
       /** Data */
       data: components["schemas"]["ping_next_OutputRelationship_ObjectId"][];
-      meta: components["schemas"]["Meta"];
+      meta: components["schemas"]["OutputListRelationShipMeta"];
     };
     /** ping_next_OutputRelationship_ObjectId */
     ping_next_OutputRelationship_ObjectId: {
@@ -1749,7 +1749,7 @@ export interface components {
     project_exercises_OutputRelationship: {
       /** Data */
       data: components["schemas"]["project_exercises_OutputRelationship_ObjectId"][];
-      meta: components["schemas"]["Meta"];
+      meta: components["schemas"]["OutputListRelationShipMeta"];
     };
     /** project_exercises_OutputRelationship_ObjectId */
     project_exercises_OutputRelationship_ObjectId: {
@@ -1766,7 +1766,7 @@ export interface components {
     project_textbooks_OutputRelationship: {
       /** Data */
       data: components["schemas"]["project_textbooks_OutputRelationship_ObjectId"][];
-      meta: components["schemas"]["Meta"];
+      meta: components["schemas"]["OutputListRelationShipMeta"];
     };
     /** project_textbooks_OutputRelationship_ObjectId */
     project_textbooks_OutputRelationship_ObjectId: {
@@ -2254,7 +2254,7 @@ export interface components {
     textbook_exercises_OutputRelationship: {
       /** Data */
       data: components["schemas"]["textbook_exercises_OutputRelationship_ObjectId"][];
-      meta: components["schemas"]["Meta"];
+      meta: components["schemas"]["OutputListRelationShipMeta"];
     };
     /** textbook_exercises_OutputRelationship_ObjectId */
     textbook_exercises_OutputRelationship_ObjectId: {
@@ -2286,7 +2286,7 @@ export interface components {
     textbook_sections_OutputRelationship: {
       /** Data */
       data: components["schemas"]["textbook_sections_OutputRelationship_ObjectId"][];
-      meta: components["schemas"]["Meta"];
+      meta: components["schemas"]["OutputListRelationShipMeta"];
     };
     /** textbook_sections_OutputRelationship_ObjectId */
     textbook_sections_OutputRelationship_ObjectId: {

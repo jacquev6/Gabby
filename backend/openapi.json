@@ -179,20 +179,6 @@
         "title": "MandatoryRelationship",
         "type": "object"
       },
-      "Meta": {
-        "additionalProperties": false,
-        "properties": {
-          "count": {
-            "title": "Count",
-            "type": "integer"
-          }
-        },
-        "required": [
-          "count"
-        ],
-        "title": "Meta",
-        "type": "object"
-      },
       "MultipleChoicesInInstructionsAdaptationOptions": {
         "properties": {
           "placeholder": {
@@ -245,6 +231,20 @@
           }
         },
         "title": "OptionalRelationship",
+        "type": "object"
+      },
+      "OutputListRelationShipMeta": {
+        "additionalProperties": false,
+        "properties": {
+          "count": {
+            "title": "Count",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "count"
+        ],
+        "title": "OutputListRelationShipMeta",
         "type": "object"
       },
       "PageLinks": {
@@ -3417,7 +3417,7 @@
             "type": "array"
           },
           "meta": {
-            "$ref": "#/components/schemas/Meta"
+            "$ref": "#/components/schemas/OutputListRelationShipMeta"
           }
         },
         "required": [
@@ -3461,7 +3461,7 @@
             "type": "array"
           },
           "meta": {
-            "$ref": "#/components/schemas/Meta"
+            "$ref": "#/components/schemas/OutputListRelationShipMeta"
           }
         },
         "required": [
@@ -3863,7 +3863,7 @@
             "type": "array"
           },
           "meta": {
-            "$ref": "#/components/schemas/Meta"
+            "$ref": "#/components/schemas/OutputListRelationShipMeta"
           }
         },
         "required": [
@@ -4297,7 +4297,7 @@
             "type": "array"
           },
           "meta": {
-            "$ref": "#/components/schemas/Meta"
+            "$ref": "#/components/schemas/OutputListRelationShipMeta"
           }
         },
         "required": [
@@ -4341,7 +4341,7 @@
             "type": "array"
           },
           "meta": {
-            "$ref": "#/components/schemas/Meta"
+            "$ref": "#/components/schemas/OutputListRelationShipMeta"
           }
         },
         "required": [
@@ -5717,7 +5717,7 @@
             "type": "array"
           },
           "meta": {
-            "$ref": "#/components/schemas/Meta"
+            "$ref": "#/components/schemas/OutputListRelationShipMeta"
           }
         },
         "required": [
@@ -5797,7 +5797,7 @@
             "type": "array"
           },
           "meta": {
-            "$ref": "#/components/schemas/Meta"
+            "$ref": "#/components/schemas/OutputListRelationShipMeta"
           }
         },
         "required": [
