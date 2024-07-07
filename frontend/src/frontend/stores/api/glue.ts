@@ -4,12 +4,11 @@ import type { Ref } from 'vue'
 import { makeItems } from './items'
 import { makeLists } from './lists'
 import { makeRequester } from './requester'
-import type { GenericAttributes, GenericRelationships, GenericItem, InclusionOptions, List, SelectionOptions } from './interface'
+import type { InclusionOptions, SelectionOptions, InclusionAndSelectionOptions, Operations } from './interface'
 import type { Items } from './items'
 import type { Lists } from './lists'
+import type { ItemTypes } from './interface'
 
-
-type InclusionAndSelectionOptions = InclusionOptions & SelectionOptions
 
 function makeAuth(baseUrl: string, token: Ref<string | null>, items: Items, lists: Lists) {
   const defaultExpiresSoonMargin = 15 * 60 * 1000
@@ -88,45 +87,45 @@ function makeAuth(baseUrl: string, token: Ref<string | null>, items: Items, list
 
 function makeCache(items: Items, lists: Lists) {
   return {
-    getOne<ItemType extends GenericItem>(type: string, id: string) {
-      return items.get(type, id) as unknown as ItemType
+    getOne<ItemType extends ItemTypes>(type: ItemType, id: string) {
+      return items.get(type, id)
     },
-    getAll<ItemType extends GenericItem>(type: string, selectionOptions?: SelectionOptions) {
-      return lists.get(type, selectionOptions || {}) as unknown as List<ItemType>
+    getAll(type: string, selectionOptions?: SelectionOptions) {
+      return lists.get(type, selectionOptions || {})
     },
   }
 }
 
 function makeAuto(items: Items, lists: Lists) {
   return {
-    getOne<ItemType extends GenericItem>(type: string, id: string, inclusionOptions?: InclusionOptions) {
+    getOne<ItemType extends ItemTypes>(type: ItemType, id: string, inclusionOptions?: InclusionOptions) {
       const item = items.get(type, id)
       item.refresh(inclusionOptions)
-      return item as unknown as ItemType
+      return item
     },
-    getAll<ItemType extends GenericItem>(type: string, inclusionAndSelectionOptions?: InclusionAndSelectionOptions) {
+    getAll(type: string, inclusionAndSelectionOptions?: InclusionAndSelectionOptions) {
       const list = lists.get(type, inclusionAndSelectionOptions || {})
       list.refresh(inclusionAndSelectionOptions)
-      return list as unknown as List<ItemType>
+      return list
     },
   }
 }
 
 function makeClient(items: Items, lists: Lists) {
   return {
-    async createOne<ItemType extends GenericItem>(type: string, attributes: GenericAttributes, relationships: GenericRelationships, inclusionOptions?: InclusionOptions) {
+    async createOne<ItemType extends ItemTypes>(type: ItemType, attributes: Operations<ItemType>['creatableAttributes'], relationships: Operations<ItemType>['creatableRelationships'], inclusionOptions?: InclusionOptions) {
       const item = await items.create(type, attributes, relationships, inclusionOptions)
-      return item as unknown as ItemType
+      return item
     },
-    async getOne<ItemType extends GenericItem>(type: string, id: string, inclusionOptions?: InclusionOptions) {
+    async getOne<ItemType extends ItemTypes>(type: ItemType, id: string, inclusionOptions?: InclusionOptions) {
       const item = items.get(type, id)
       await item.refresh(inclusionOptions)
-      return item as unknown as ItemType
+      return item
     },
-    async getAll<ItemType extends GenericItem>(type: string, inclusionAndSelectionOptions?: InclusionAndSelectionOptions) {
+    async getAll(type: string, inclusionAndSelectionOptions?: InclusionAndSelectionOptions) {
       const list = lists.get(type, inclusionAndSelectionOptions || {})
       await list.refresh(inclusionAndSelectionOptions)
-      return list as unknown as List<ItemType>
+      return list
     },
     async batch(...operations: any/* @todo Type */) {
       return items.batch(operations)

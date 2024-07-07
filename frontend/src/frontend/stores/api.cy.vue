@@ -2,12 +2,11 @@
 import Pinger from '$frontend/components/opinion/Pinger.vue'
 import { BBusy, BRow, BCol } from '$frontend/components/opinion/bootstrap'
 import { useApiStore } from './api'
-import type { Ping } from '$frontend/types/api'
 
 
 const api = useApiStore()
 
-const pings = api.auto.getAll<Ping>('ping')
+const pings = api.auto.getAll('ping')
 </script>
 
 <template>

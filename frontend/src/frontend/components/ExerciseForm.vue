@@ -7,8 +7,8 @@ import { BBusy, BLabeledInput, BLabeledTextarea, BLabeledCheckbox, BButton, BSel
 import TextSelectionMenu from './ExerciseFormTextSelectionMenu.vue'
 import OptionalTextarea from './OptionalTextarea.vue'
 import { useApiStore } from '$frontend/stores/api'
-import type { Project, Textbook, Section, Exercise, AdaptedExercise } from '$frontend/types/api'
-import type { SelectThingsAdaptationOptions, FillWithFreeTextAdaptationOptions, MultipleChoicesInInstructionsAdaptationOptions, MultipleChoicesInWordingAdaptationOptions } from '$frontend/types/api'
+import type { Project, Textbook, Section, Exercise } from '$frontend/stores/api'
+import type { SelectThingsAdaptationOptions, FillWithFreeTextAdaptationOptions, MultipleChoicesInInstructionsAdaptationOptions, MultipleChoicesInWordingAdaptationOptions } from '$frontend/stores/api'
 
 
 const props = defineProps<{
@@ -418,6 +418,7 @@ const adaptedData = computedAsync(
     if (state.value.adaptationType === '-') {
       return null
     } else {
+      console.assert(adaptationOptions.value !== null)
       const attributes = {
         number: state.value.number,
         textbookPage: props.textbookPage,
@@ -429,7 +430,7 @@ const adaptedData = computedAsync(
         adaptationOptions: adaptationOptions.value,
       }
       try {
-        const adapted = await api.client.createOne<AdaptedExercise>('adaptedExercise', attributes, {})
+        const adapted = await api.client.createOne('adaptedExercise', attributes, {})
         return adapted.attributes!.adapted
       } catch (e) {
         console.error(e)

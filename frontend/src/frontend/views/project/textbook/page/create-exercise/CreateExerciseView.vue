@@ -6,7 +6,7 @@ import { BButton } from '$frontend/components/opinion/bootstrap'
 import ExerciseForm from '$frontend/components/ExerciseForm.vue'
 import TwoResizableColumns from '$frontend/components/TwoResizableColumns.vue'
 import ExerciseTools from '../ExerciseTools.vue'
-import type { Project, Textbook, Section, Exercise } from '$frontend/types/api'
+import type { Project, Textbook, Section, Exercise } from '$frontend/stores/api'
 import AdaptedExercise from '../AdaptedExercise.vue'
 import type { ExerciseCreationHistory } from '../ExerciseCreationHistory'
 

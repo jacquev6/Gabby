@@ -4,7 +4,6 @@ import { useI18n } from 'vue-i18n'
 
 import { useApiStore } from '$frontend/stores/api'
 import { BBusy } from '$frontend/components/opinion/bootstrap'
-import type { Project } from '$frontend/types/api'
 
 
 const props = defineProps<{
@@ -17,7 +16,7 @@ const api = useApiStore()
 
 const component = ref<null | { title: string, breadcrumbs: [], handlesScrolling?: boolean }>(null)
 
-const project = api.auto.getOne<Project>('project', props.projectId, {include: ['textbooks', 'exercises.textbook']})
+const project = api.auto.getOne('project', props.projectId, {include: ['textbooks', 'exercises.textbook']})
 
 function refreshProject() {
   // @todo Remove 'options' from '.refresh()' (use those from '.getOne'). The remove 'refreshProject' and have sub-components simply call 'project.refresh()'

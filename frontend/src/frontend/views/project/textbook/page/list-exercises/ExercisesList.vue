@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import { BBusy } from '$frontend/components/opinion/bootstrap'
 import { useApiStore } from '$frontend/stores/api'
-import type { Textbook, Exercise } from '$frontend/types/api'
+import type { Textbook } from '$frontend/stores/api'
 
 
 const props = defineProps<{
@@ -12,7 +12,7 @@ const props = defineProps<{
 
 const api = useApiStore()
 
-const exercises = computed(() => api.auto.getAll<Exercise>(
+const exercises = computed(() => api.auto.getAll(
   'exercise',
   {filters: {'textbook': props.textbook.id, 'textbookPage': props.page.toString()}}
 ))

@@ -1,6 +1,6 @@
 import { reactive } from 'vue'
-import type { GenericItem, InclusionOptions, SelectionOptions } from './interface'
-import type { ItemReference, Items } from './items'
+import type { InclusionOptions, SelectionOptions } from './interface'
+import type { Items } from './items'
 import type { Requester, RequesterPageResponse } from './requester'
 
 
@@ -15,11 +15,11 @@ export interface CachedList {
   pageLoaded: Promise<void>
   refresh(inclusionOptions?: InclusionOptions): Promise<void>
 
-  items: GenericItem[]
+  items: any/* @todo Type */[]
   _reactive: {
     inCache: boolean
     loading: boolean
-    items: ItemReference[]
+    items: any/* @todo Type */[]
   }
 }
 
@@ -53,7 +53,7 @@ export function makeLists(requester: Requester, items: Items) {
       _reactive: reactive({
         inCache: false,
         loading: false,
-        items: [] as ItemReference[],
+        items: [] as any/* @todo Type */[],
       }),
       // Methods and getters
       get inCache() { return this._reactive.inCache },
