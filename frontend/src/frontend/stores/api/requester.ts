@@ -260,7 +260,7 @@ export function makeRequester(baseUrl: string, accessToken: Ref<string | null>) 
     }
   }
 
-  async function batch(operations: any/*@todo Type*/) {
+  async function batch(operations: any/*@todo Type*/): Promise<Item[]> {
     const url = `${baseUrl}/batch`
     
     const json_operations = []
@@ -300,7 +300,14 @@ export function makeRequester(baseUrl: string, accessToken: Ref<string | null>) 
         const json_response = await raw_response.json()
         const results = []
         for (const result of json_response['atomic:results']) {
-          results.push(result.data)
+
+          results.push({
+            type: result.data.type,
+            id: result.data.id,
+            exists: true,
+            attributes: result.data.attributes,
+            relationships: extractResponseRelationships(result.data.relationships),
+          })
         }
         return results
       } else {
