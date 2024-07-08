@@ -28,6 +28,7 @@ const api = useApiStore()
 const exercise = computed(() => api.auto.getOne('exercise', props.exerciseId, {include: ['adaptation']}))
 
 const exerciseForm = ref<typeof ExerciseForm | null>(null)
+const exerciseTools = ref<typeof ExerciseTools | null>(null)
 
 function goToPrevious() {
   const exerciseId = props.exerciseCreationHistory.previous
@@ -84,6 +85,7 @@ defineExpose({
           :automaticNumber="false"
           :editMode="true"
           :exercise
+          :teleportAdaptationDetailsTo="exerciseTools ? '#teleportTargetForAdaptationDetails' : undefined"
           v-slot="{ disabled, save }"
         >
           <template v-if="exerciseCreationHistory.current === null">
@@ -109,7 +111,7 @@ defineExpose({
       <div class="h-100 overflow-hidden d-flex flex-row">
         <div class="handle"></div>
         <div class="h-100 overflow-auto flex-fill" data-cy="gutter-2">
-          <ExerciseTools v-if="exerciseForm" :exerciseForm />
+          <ExerciseTools ref="exerciseTools" v-if="exerciseForm" :exerciseForm />
         </div>
         <div class="handle"></div>
       </div>

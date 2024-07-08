@@ -25,6 +25,7 @@ const props = defineProps<{
 const router = useRouter()
 
 const exerciseForm = ref<typeof ExerciseForm | null>(null)
+const exerciseTools = ref<typeof ExerciseTools | null>(null)
 
 const number = ref(props.exerciseCreationHistory.suggestedNumber ?? '')
 const automaticNumber = ref(false)
@@ -78,6 +79,7 @@ defineExpose({
           :number
           :automaticNumber
           :editMode="false"
+          :teleportAdaptationDetailsTo="exerciseTools ? '#teleportTargetForAdaptationDetails' : undefined"
           v-slot="{ disabled, create }"
         >
           <p>
@@ -95,7 +97,7 @@ defineExpose({
       <div class="h-100 overflow-hidden d-flex flex-row">
         <div class="handle"></div>
         <div class="h-100 overflow-auto flex-fill" data-cy="gutter-2">
-          <ExerciseTools v-if="exerciseForm" :exerciseForm />
+          <ExerciseTools ref="exerciseTools" v-if="exerciseForm" :exerciseForm />
         </div>
         <div class="handle"></div>
       </div>
