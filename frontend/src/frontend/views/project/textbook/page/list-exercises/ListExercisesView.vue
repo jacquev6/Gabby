@@ -51,18 +51,18 @@ defineExpose({
 </script>
 
 <template>
-  <h1>{{ $t('edition') }}</h1>
+  <h1>{{ $t('existingExercises') }}</h1>
+  <p>
+    <RouterLink class="btn btn-primary" :to="{name: 'project-textbook-page-create-exercise'}" data-cy="new-exercise">
+      {{ $t('create') }}
+    </RouterLink>
+  </p>
   <ExercisesList ref="exercisesList" :textbook :page >
     <template v-slot="{exercise}">
-        <BBusy tag="span" :busy="exercise.loading">
-          <RouterLink class="btn btn-primary btn-sm" :to="{name: 'project-textbook-page-edit-exercise', params: {exerciseId: exercise.id}}">{{ $t('edit') }}</RouterLink>
-          <BButton secondary sm @click="deleteExercise(exercise)">{{ $t('delete') }}</BButton>
-        </BBusy>
-      </template>
-    </ExercisesList>
-    <p>
-      <RouterLink class="btn btn-primary" :to="{name: 'project-textbook-page-create-exercise'}" data-cy="new-exercise">
-        {{ $t('create') }}
-      </RouterLink>
-    </p>
+      <BBusy tag="span" :busy="exercise.loading">
+        <RouterLink class="btn btn-primary btn-sm" :to="{name: 'project-textbook-page-edit-exercise', params: {exerciseId: exercise.id}}">{{ $t('edit') }}</RouterLink>
+        <BButton secondary sm @click="deleteExercise(exercise)">{{ $t('delete') }}</BButton>
+      </BBusy>
+    </template>
+  </ExercisesList>
 </template>

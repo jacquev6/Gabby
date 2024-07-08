@@ -1,16 +1,13 @@
 import { useApiStore } from '../frontend/src/frontend/stores/api'
 
 
-const isProdPreview = Cypress.env('IS_PROD_PREVIEW')
-
-function login() {
-}
-
 describe('Gabby has routes that', () => {
-  before(console.clear)
+  before(() => {
+    console.clear
+    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=admin-user,test-exercises')
+  })
 
   beforeEach(() => {
-    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=admin-user,test-exercises')
     cy.wrap(useApiStore()).then(api => api.auth.login('admin', 'password'))
   })
 
@@ -21,12 +18,12 @@ describe('Gabby has routes that', () => {
 
   it('can access a Vue Router view without trailing /', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-6')
-    cy.contains('h1', 'Edition')
+    cy.contains('h1', 'Existing exercises')
   })
 
   it('can access a Vue Router view with trailing /', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-6/')
-    cy.contains('h1', 'Edition')
+    cy.contains('h1', 'Existing exercises')
   })
 
   it('can access Vue statics', () => {

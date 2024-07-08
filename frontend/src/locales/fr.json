@@ -77,12 +77,13 @@
   "pdfNotLoaded": "Le PDF contenant cette page ({name}) n'a pas encore été ouvert. Si vous en disposez d'une copie, vous pouvez l'ouvrir ci-dessous.",
   "pageNoKnown": "Aucun PDF enregistré ne contient cette page.",
 
+
   "error.pdf": "Erreur pendant le chargement du PDF :",
 
   "edition": "Édition",
   "adaptation": "Exercice adapté",
   "inputFile": "Fichier d'entrée",
-  "existingExercises": "Exercices existants :",
+  "existingExercises": "Exercices existants",
   "noExercises": "Pas encore d'exercices.",
   "drawBoundingRectangle": "Dessinez un rectangle englobant l'exercice entier.",
   "create": "Nouvel exercice",

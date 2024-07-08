@@ -28,17 +28,14 @@ defineExpose({
 
 <template>
   <BBusy :busy="exercises.loading">
-    <template v-if="exercises.items.length">
-      <p>{{ $t('existingExercises') }}</p>
-      <ul>
-        <template v-for="exercise in exercises.items">
-          <li v-if="exercise.exists">
-            <strong>{{ exercise.attributes!.number }}</strong> {{ ellipsis(exercise.attributes!.instructions) }}
-            <slot :exercise></slot>
-          </li>
-        </template>
-      </ul>
-    </template>
+    <ul v-if="exercises.items.length">
+      <template v-for="exercise in exercises.items">
+        <li v-if="exercise.exists">
+          <strong>{{ exercise.attributes!.number }}</strong> {{ ellipsis(exercise.attributes!.instructions) }}
+          <slot :exercise></slot>
+        </li>
+      </template>
+    </ul>
     <p v-else>{{ $t('noExercises') }}</p>
   </BBusy>
 </template>

@@ -92,9 +92,9 @@ describe('Gabby', () => {
     cy.get('[data-cy="right-col-1"]').should('have.length', 1).its('0').as('container')
     cy.get('@container').should(haveVerticalScrollbarOnly)
     cy.get('@container').its('scrollTop').should('eq', 0)
-    cy.get('[data-cy="new-exercise"]').should('not.be.visible')
-    cy.get('[data-cy="new-exercise"]').scrollIntoView()
-    cy.get('[data-cy="new-exercise"]').should('be.visible')
+    cy.get('button:contains("Delete")').last().should('not.be.visible')
+    cy.get('button:contains("Delete")').last().scrollIntoView()
+    cy.get('button:contains("Delete")').last().should('be.visible')
     cy.get('@container').its('scrollTop').should('be.gt', 0)
   })
 
