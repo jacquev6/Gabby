@@ -1,14 +1,14 @@
 import datetime
+import json
 
 from . import database_utils
-from .orm_models import (
-  Exercise, ExtractionEvent,
-  FillWithFreeTextAdaptation, MultipleChoicesInInstructionsAdaptation, MultipleChoicesInWordingAdaptation, SelectThingsAdaptation,
-  PdfFile, PdfFileNaming, Section,
-  Ping,
-  Project, Textbook,
-  User, UserEmailAddress,
-)
+from . import import_from_visio_method
+from .orm_models import Exercise, ExtractionEvent
+from .orm_models import FillWithFreeTextAdaptation, MultipleChoicesInInstructionsAdaptation, MultipleChoicesInWordingAdaptation, SelectThingsAdaptation
+from .orm_models import PdfFile, PdfFileNaming, Section
+from .orm_models import Ping
+from .orm_models import Project, Textbook
+from .orm_models import User, UserEmailAddress
 
 
 def add(session, class_, **kwds):
@@ -109,6 +109,21 @@ def create_more_test_exercises_fixture(session):
     extractionevent10 = add(session, ExtractionEvent, exercise=exercise8, event='{"kind":"SelectedTextAddedToWording","valueBefore":"","valueAfter":"nager ➞ … ◆ tracter ➞ … ◆ manger ➞ … ◆\\ninventer ➞ … ◆ livrer ➞ …"}', created_by=admin, updated_by=admin)
 
 
+def create_import_from_visio_method_fixture(session):
+    admin = get_or_create_admin(session)
+    pdfFile = add(session, PdfFile, bytes_count=484714, pages_count=2, sha256="0beb715f8ed379b056a3d40522dcc8e0658c58316b3ef7a09da78c541257d756", created_by=admin)
+    add(session, PdfFileNaming, pdf_file=pdfFile, name="manual_CE2_FRANCAIS_HACHETTE.p13a15.pdf", created_by=admin)
+    project = add(session, Project, title="Vincent teste l'import des fichiers de Olivier", description="", created_by=admin, updated_by=admin)
+    textbook = add(session, Textbook, project=project, title="Français CE2", publisher="Hachette", year=2024, isbn=None, created_by=admin, updated_by=admin)
+    add(session, Section, textbook=textbook, pdf_file=pdfFile, textbook_start_page=13, pdf_file_start_page=1, pages_count=3, created_by=admin, updated_by=admin)
+
+    with open("../pdf-examples/manual_CE2_FRANCAIS_HACHETTE.p13.json", "r") as f:
+        page_data = import_from_visio_method.PageData(**json.load(f))
+
+    import_from_visio_method.import_page(session, admin, textbook, page_data)
+
+
+
 available_fixtures = {
     "admin-user": create_admin_user_fixture,
     "test-users": create_test_users_fixture,
@@ -116,6 +131,7 @@ available_fixtures = {
     "empty-project": create_empty_project_fixture,
     "test-exercises": create_test_exercises_fixture,
     "more-test-exercises": create_more_test_exercises_fixture,
+    "import-from-visio-method": create_import_from_visio_method_fixture,
 }
 
 def load(session, fixtures):
