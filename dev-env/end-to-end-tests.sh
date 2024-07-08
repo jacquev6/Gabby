@@ -31,10 +31,22 @@ docker compose exec \
     npx cypress run \
       --e2e "$@"
 
+docker compose exec \
+  $console_options \
+  frontend-shell \
+    chown -R "$(id -u):$(id -g)" ../tests/screenshots
+
 if [ -d ../tests/screenshots/gabby.cy.js ]
 then
   find ../doc/user -name '*.png' -delete
   find ../tests/screenshots/gabby.cy.js -name '*.png' | while read line; do
     cp $line ../doc/user/${line#../tests/screenshots/gabby.cy.js/}
   done
+fi
+
+# Happens when using --spec .../visual-appearance.cy.js
+if [ -d ../tests/screenshots/visual-appearance.cy.js ]
+then
+  mkdir -p ../tests/screenshots/gabby
+  sudo mv ../tests/screenshots/visual-appearance.cy.js ../tests/screenshots/gabby
 fi
