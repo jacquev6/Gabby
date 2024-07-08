@@ -1030,8 +1030,8 @@ describe('Gabby\'s project\'s textbook page view', () => {
     cy.get('label:contains("Adaptation type")').next().select('selectThingsAdaptation')
     cy.get('div.busy').should('not.exist')
 
-    cy.get('span:contains("…")').eq(1).click()
-    cy.get('span:contains("…")').eq(1).should('have.css', 'background-color', 'rgb(199, 177, 139)')
+    cy.get('span:contains("tracter")').eq(1).click()
+    cy.get('span:contains("tracter")').eq(1).should('have.css', 'background-color', 'rgb(199, 177, 139)')
 
     cy.get('label:contains("Adaptation type")').next().select('fillWithFreeTextAdaptation')
     cy.get('div.busy').should('not.exist')
@@ -1041,6 +1041,6 @@ describe('Gabby\'s project\'s textbook page view', () => {
     cy.get('label:contains("Adaptation type")').next().select('selectThingsAdaptation')
     cy.get('div.busy').should('not.exist')
 
-    cy.get('span:contains("…")').eq(1).should('have.css', 'background-color', 'rgba(0, 0, 0, 0)')
+    cy.get('span:contains("tracter")').eq(1).should('have.css', 'background-color', 'rgba(0, 0, 0, 0)')
   })
 })

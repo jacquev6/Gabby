@@ -63,7 +63,7 @@ const state = ref<State>({
   selectThingsAdaptationOptions: {
     colors: 1,
     words: true,
-    punctuation: true,
+    punctuation: false,
   },
   fillWithFreeTextAdaptationOptions: {
     placeholder: '...',
@@ -89,7 +89,7 @@ function resetAdaptationOptions() {
   state.value.selectThingsAdaptationOptions = {
     colors: 1,
     words: true,
-    punctuation: true,
+    punctuation: false,
   }
   state.value.fillWithFreeTextAdaptationOptions = {
     placeholder: '...',
