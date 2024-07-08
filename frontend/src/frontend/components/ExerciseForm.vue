@@ -562,13 +562,18 @@ defineExpose({
       </template>
       <template v-else-if="state.adaptationType === 'selectThingsAdaptation'">
         <BLabeledInput :label="$t('colorsCount')" type="number" min="1" v-model="state.selectThingsAdaptationOptions.colors" />
-        <p class="alert alert-secondary" v-if="state.selectThingsAdaptationOptions.colors > 1">
-          <i18n-t keypath="useSel1ToSelN">
+        <p class="alert alert-secondary">
+          <i18n-t keypath="useSel1ToSelN" v-if="state.selectThingsAdaptationOptions.colors > 1">
             <template v-slot:first>
               <code>{sel1|<em>text</em>}</code>
             </template>
             <template v-slot:last>
               <code>{sel{{ state.selectThingsAdaptationOptions.colors }}|<em>text</em>}</code>
+            </template>
+          </i18n-t>
+          <i18n-t keypath="useSel1" v-else>
+            <template v-slot:first>
+              <code>{sel1|<em>text</em>}</code>
             </template>
           </i18n-t>
         </p>
