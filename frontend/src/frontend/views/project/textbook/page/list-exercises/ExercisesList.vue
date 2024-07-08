@@ -31,7 +31,9 @@ defineExpose({
     <ul v-if="exercises.items.length">
       <template v-for="exercise in exercises.items">
         <li v-if="exercise.exists">
-          <strong>{{ exercise.attributes!.number }}</strong> {{ ellipsis(exercise.attributes!.instructions) }}
+          <strong>{{ exercise.attributes!.number }}</strong>
+          {{ ellipsis(exercise.attributes!.instructions) }}
+          <em>{{ exercise.relationships!.adaptation? $t(exercise.relationships!.adaptation.type) : '' }}</em>
           <slot :exercise></slot>
         </li>
       </template>

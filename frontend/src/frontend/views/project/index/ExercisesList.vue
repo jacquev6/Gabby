@@ -68,6 +68,7 @@ function ellipsis(s: string) {
                   <strong>{{ exercise.attributes!.number }}</strong>
                 </RouterLink>
                 {{ ellipsis(exercise.attributes!.instructions) }}
+                <em>{{ exercise.relationships!.adaptation? $t(exercise.relationships!.adaptation.type) : '' }}</em>
               </li>
             </ul>
           </li>
