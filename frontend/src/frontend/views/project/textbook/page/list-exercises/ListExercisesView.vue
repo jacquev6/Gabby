@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router'
 
 import { BBusy, BButton } from '$frontend/components/opinion/bootstrap'
 import ExercisesList from './ExercisesList.vue'
-import type { Exercise, Project, Textbook } from '$frontend/types/api'
+import type { Exercise, Project, Textbook } from '$frontend/stores/api'
 import type { ExerciseCreationHistory } from '../ExerciseCreationHistory'
 
 

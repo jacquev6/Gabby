@@ -111,21 +111,6 @@
         "title": "Body_login_api_token_post",
         "type": "object"
       },
-      "CreateInputListRelationship": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "default": [],
-            "items": {
-              "$ref": "#/components/schemas/ObjectId"
-            },
-            "title": "Data",
-            "type": "array"
-          }
-        },
-        "title": "CreateInputListRelationship",
-        "type": "object"
-      },
       "FillWithFreeTextAdaptationOptions": {
         "properties": {
           "placeholder": {
@@ -166,33 +151,6 @@
         "title": "ItemLinks",
         "type": "object"
       },
-      "MandatoryRelationship": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/ObjectId"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "MandatoryRelationship",
-        "type": "object"
-      },
-      "Meta": {
-        "additionalProperties": false,
-        "properties": {
-          "count": {
-            "title": "Count",
-            "type": "integer"
-          }
-        },
-        "required": [
-          "count"
-        ],
-        "title": "Meta",
-        "type": "object"
-      },
       "MultipleChoicesInInstructionsAdaptationOptions": {
         "properties": {
           "placeholder": {
@@ -211,61 +169,18 @@
         "title": "MultipleChoicesInWordingAdaptationOptions",
         "type": "object"
       },
-      "ObjectId": {
+      "OutputListRelationShipMeta": {
         "additionalProperties": false,
         "properties": {
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
+          "count": {
+            "title": "Count",
+            "type": "integer"
           }
         },
         "required": [
-          "type",
-          "id"
+          "count"
         ],
-        "title": "ObjectId",
-        "type": "object"
-      },
-      "OptionalRelationship": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/ObjectId"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          }
-        },
-        "title": "OptionalRelationship",
-        "type": "object"
-      },
-      "OutputListRelationship": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "items": {
-              "$ref": "#/components/schemas/ObjectId"
-            },
-            "title": "Data",
-            "type": "array"
-          },
-          "meta": {
-            "$ref": "#/components/schemas/Meta"
-          }
-        },
-        "required": [
-          "data",
-          "meta"
-        ],
-        "title": "OutputListRelationship",
+        "title": "OutputListRelationShipMeta",
         "type": "object"
       },
       "PageLinks": {
@@ -479,23 +394,6 @@
           "tokens"
         ],
         "title": "Sentence",
-        "type": "object"
-      },
-      "UpdateInputListRelationship": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "items": {
-              "$ref": "#/components/schemas/ObjectId"
-            },
-            "title": "Data",
-            "type": "array"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "UpdateInputListRelationship",
         "type": "object"
       },
       "ValidationError": {
@@ -996,18 +894,18 @@
           "adaptation": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/OptionalRelationship"
+                "$ref": "#/components/schemas/exercise_adaptation_Relationship"
               }
             ],
             "default": {}
           },
           "project": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/exercise_project_Relationship"
           },
           "textbook": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/OptionalRelationship"
+                "$ref": "#/components/schemas/exercise_textbook_Relationship"
               }
             ],
             "default": {}
@@ -1141,19 +1039,19 @@
         "additionalProperties": false,
         "properties": {
           "adaptation": {
-            "$ref": "#/components/schemas/OptionalRelationship"
+            "$ref": "#/components/schemas/exercise_adaptation_Relationship"
           },
           "createdBy": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/exercise_createdBy_Relationship"
           },
           "project": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/exercise_project_Relationship"
           },
           "textbook": {
-            "$ref": "#/components/schemas/OptionalRelationship"
+            "$ref": "#/components/schemas/exercise_textbook_Relationship"
           },
           "updatedBy": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/exercise_updatedBy_Relationship"
           }
         },
         "required": [
@@ -1283,12 +1181,208 @@
           "adaptation": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/OptionalRelationship"
+                "$ref": "#/components/schemas/exercise_adaptation_Relationship"
               }
             ]
           }
         },
         "title": "exerciseUpdateInputDataRelationships",
+        "type": "object"
+      },
+      "exercise_adaptation_Relationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exercise_adaptation_Relationship_ObjectId"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "exercise_adaptation_Relationship",
+        "type": "object"
+      },
+      "exercise_adaptation_Relationship_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "enum": [
+              "selectThingsAdaptation",
+              "fillWithFreeTextAdaptation",
+              "multipleChoicesInInstructionsAdaptation",
+              "multipleChoicesInWordingAdaptation"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "exercise_adaptation_Relationship_ObjectId",
+        "type": "object"
+      },
+      "exercise_createdBy_Relationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/exercise_createdBy_Relationship_ObjectId"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "exercise_createdBy_Relationship",
+        "type": "object"
+      },
+      "exercise_createdBy_Relationship_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "user",
+            "enum": [
+              "user"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "exercise_createdBy_Relationship_ObjectId",
+        "type": "object"
+      },
+      "exercise_project_Relationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/exercise_project_Relationship_ObjectId"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "exercise_project_Relationship",
+        "type": "object"
+      },
+      "exercise_project_Relationship_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "project",
+            "enum": [
+              "project"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "exercise_project_Relationship_ObjectId",
+        "type": "object"
+      },
+      "exercise_textbook_Relationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/exercise_textbook_Relationship_ObjectId"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "exercise_textbook_Relationship",
+        "type": "object"
+      },
+      "exercise_textbook_Relationship_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "textbook",
+            "enum": [
+              "textbook"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "exercise_textbook_Relationship_ObjectId",
+        "type": "object"
+      },
+      "exercise_updatedBy_Relationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/exercise_updatedBy_Relationship_ObjectId"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "exercise_updatedBy_Relationship",
+        "type": "object"
+      },
+      "exercise_updatedBy_Relationship_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "user",
+            "enum": [
+              "user"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "exercise_updatedBy_Relationship_ObjectId",
         "type": "object"
       },
       "extractionEventCreateInput": {
@@ -1344,7 +1438,7 @@
         "additionalProperties": false,
         "properties": {
           "exercise": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/extractionEvent_exercise_Relationship"
           }
         },
         "required": [
@@ -1432,13 +1526,13 @@
         "additionalProperties": false,
         "properties": {
           "createdBy": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/extractionEvent_createdBy_Relationship"
           },
           "exercise": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/extractionEvent_exercise_Relationship"
           },
           "updatedBy": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/extractionEvent_updatedBy_Relationship"
           }
         },
         "required": [
@@ -1539,6 +1633,114 @@
         "title": "extractionEventUpdateInputDataRelationships",
         "type": "object"
       },
+      "extractionEvent_createdBy_Relationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/extractionEvent_createdBy_Relationship_ObjectId"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "extractionEvent_createdBy_Relationship",
+        "type": "object"
+      },
+      "extractionEvent_createdBy_Relationship_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "user",
+            "enum": [
+              "user"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "extractionEvent_createdBy_Relationship_ObjectId",
+        "type": "object"
+      },
+      "extractionEvent_exercise_Relationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/extractionEvent_exercise_Relationship_ObjectId"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "extractionEvent_exercise_Relationship",
+        "type": "object"
+      },
+      "extractionEvent_exercise_Relationship_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "exercise",
+            "enum": [
+              "exercise"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "extractionEvent_exercise_Relationship_ObjectId",
+        "type": "object"
+      },
+      "extractionEvent_updatedBy_Relationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/extractionEvent_updatedBy_Relationship_ObjectId"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "extractionEvent_updatedBy_Relationship",
+        "type": "object"
+      },
+      "extractionEvent_updatedBy_Relationship_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "user",
+            "enum": [
+              "user"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "extractionEvent_updatedBy_Relationship_ObjectId",
+        "type": "object"
+      },
       "fillWithFreeTextAdaptationCreateInput": {
         "additionalProperties": false,
         "properties": {
@@ -1592,7 +1794,7 @@
         "additionalProperties": false,
         "properties": {
           "exercise": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/fillWithFreeTextAdaptation_exercise_Relationship"
           }
         },
         "required": [
@@ -1680,13 +1882,13 @@
         "additionalProperties": false,
         "properties": {
           "createdBy": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/fillWithFreeTextAdaptation_createdBy_Relationship"
           },
           "exercise": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/fillWithFreeTextAdaptation_exercise_Relationship"
           },
           "updatedBy": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/fillWithFreeTextAdaptation_updatedBy_Relationship"
           }
         },
         "required": [
@@ -1762,6 +1964,114 @@
         "title": "fillWithFreeTextAdaptationUpdateInputDataRelationships",
         "type": "object"
       },
+      "fillWithFreeTextAdaptation_createdBy_Relationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/fillWithFreeTextAdaptation_createdBy_Relationship_ObjectId"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "fillWithFreeTextAdaptation_createdBy_Relationship",
+        "type": "object"
+      },
+      "fillWithFreeTextAdaptation_createdBy_Relationship_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "user",
+            "enum": [
+              "user"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "fillWithFreeTextAdaptation_createdBy_Relationship_ObjectId",
+        "type": "object"
+      },
+      "fillWithFreeTextAdaptation_exercise_Relationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/fillWithFreeTextAdaptation_exercise_Relationship_ObjectId"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "fillWithFreeTextAdaptation_exercise_Relationship",
+        "type": "object"
+      },
+      "fillWithFreeTextAdaptation_exercise_Relationship_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "exercise",
+            "enum": [
+              "exercise"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "fillWithFreeTextAdaptation_exercise_Relationship_ObjectId",
+        "type": "object"
+      },
+      "fillWithFreeTextAdaptation_updatedBy_Relationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/fillWithFreeTextAdaptation_updatedBy_Relationship_ObjectId"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "fillWithFreeTextAdaptation_updatedBy_Relationship",
+        "type": "object"
+      },
+      "fillWithFreeTextAdaptation_updatedBy_Relationship_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "user",
+            "enum": [
+              "user"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "fillWithFreeTextAdaptation_updatedBy_Relationship_ObjectId",
+        "type": "object"
+      },
       "multipleChoicesInInstructionsAdaptationCreateInput": {
         "additionalProperties": false,
         "properties": {
@@ -1815,7 +2125,7 @@
         "additionalProperties": false,
         "properties": {
           "exercise": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation_exercise_Relationship"
           }
         },
         "required": [
@@ -1903,13 +2213,13 @@
         "additionalProperties": false,
         "properties": {
           "createdBy": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation_createdBy_Relationship"
           },
           "exercise": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation_exercise_Relationship"
           },
           "updatedBy": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation_updatedBy_Relationship"
           }
         },
         "required": [
@@ -1985,6 +2295,114 @@
         "title": "multipleChoicesInInstructionsAdaptationUpdateInputDataRelationships",
         "type": "object"
       },
+      "multipleChoicesInInstructionsAdaptation_createdBy_Relationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation_createdBy_Relationship_ObjectId"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "multipleChoicesInInstructionsAdaptation_createdBy_Relationship",
+        "type": "object"
+      },
+      "multipleChoicesInInstructionsAdaptation_createdBy_Relationship_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "user",
+            "enum": [
+              "user"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "multipleChoicesInInstructionsAdaptation_createdBy_Relationship_ObjectId",
+        "type": "object"
+      },
+      "multipleChoicesInInstructionsAdaptation_exercise_Relationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation_exercise_Relationship_ObjectId"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "multipleChoicesInInstructionsAdaptation_exercise_Relationship",
+        "type": "object"
+      },
+      "multipleChoicesInInstructionsAdaptation_exercise_Relationship_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "exercise",
+            "enum": [
+              "exercise"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "multipleChoicesInInstructionsAdaptation_exercise_Relationship_ObjectId",
+        "type": "object"
+      },
+      "multipleChoicesInInstructionsAdaptation_updatedBy_Relationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation_updatedBy_Relationship_ObjectId"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "multipleChoicesInInstructionsAdaptation_updatedBy_Relationship",
+        "type": "object"
+      },
+      "multipleChoicesInInstructionsAdaptation_updatedBy_Relationship_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "user",
+            "enum": [
+              "user"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "multipleChoicesInInstructionsAdaptation_updatedBy_Relationship_ObjectId",
+        "type": "object"
+      },
       "multipleChoicesInWordingAdaptationCreateInput": {
         "additionalProperties": false,
         "properties": {
@@ -2034,7 +2452,7 @@
         "additionalProperties": false,
         "properties": {
           "exercise": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/multipleChoicesInWordingAdaptation_exercise_Relationship"
           }
         },
         "required": [
@@ -2117,13 +2535,13 @@
         "additionalProperties": false,
         "properties": {
           "createdBy": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/multipleChoicesInWordingAdaptation_createdBy_Relationship"
           },
           "exercise": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/multipleChoicesInWordingAdaptation_exercise_Relationship"
           },
           "updatedBy": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/multipleChoicesInWordingAdaptation_updatedBy_Relationship"
           }
         },
         "required": [
@@ -2192,6 +2610,114 @@
         "additionalProperties": false,
         "properties": {},
         "title": "multipleChoicesInWordingAdaptationUpdateInputDataRelationships",
+        "type": "object"
+      },
+      "multipleChoicesInWordingAdaptation_createdBy_Relationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/multipleChoicesInWordingAdaptation_createdBy_Relationship_ObjectId"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "multipleChoicesInWordingAdaptation_createdBy_Relationship",
+        "type": "object"
+      },
+      "multipleChoicesInWordingAdaptation_createdBy_Relationship_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "user",
+            "enum": [
+              "user"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "multipleChoicesInWordingAdaptation_createdBy_Relationship_ObjectId",
+        "type": "object"
+      },
+      "multipleChoicesInWordingAdaptation_exercise_Relationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/multipleChoicesInWordingAdaptation_exercise_Relationship_ObjectId"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "multipleChoicesInWordingAdaptation_exercise_Relationship",
+        "type": "object"
+      },
+      "multipleChoicesInWordingAdaptation_exercise_Relationship_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "exercise",
+            "enum": [
+              "exercise"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "multipleChoicesInWordingAdaptation_exercise_Relationship_ObjectId",
+        "type": "object"
+      },
+      "multipleChoicesInWordingAdaptation_updatedBy_Relationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/multipleChoicesInWordingAdaptation_updatedBy_Relationship_ObjectId"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "multipleChoicesInWordingAdaptation_updatedBy_Relationship",
+        "type": "object"
+      },
+      "multipleChoicesInWordingAdaptation_updatedBy_Relationship_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "user",
+            "enum": [
+              "user"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "multipleChoicesInWordingAdaptation_updatedBy_Relationship_ObjectId",
         "type": "object"
       },
       "pdfFileCreateInput": {
@@ -2334,7 +2860,7 @@
         "additionalProperties": false,
         "properties": {
           "pdfFile": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/pdfFileNaming_pdfFile_Relationship"
           }
         },
         "required": [
@@ -2416,10 +2942,10 @@
         "additionalProperties": false,
         "properties": {
           "createdBy": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/pdfFileNaming_createdBy_Relationship"
           },
           "pdfFile": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/pdfFileNaming_pdfFile_Relationship"
           }
         },
         "required": [
@@ -2519,6 +3045,78 @@
         "title": "pdfFileNamingUpdateInputDataRelationships",
         "type": "object"
       },
+      "pdfFileNaming_createdBy_Relationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/pdfFileNaming_createdBy_Relationship_ObjectId"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "pdfFileNaming_createdBy_Relationship",
+        "type": "object"
+      },
+      "pdfFileNaming_createdBy_Relationship_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "user",
+            "enum": [
+              "user"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "pdfFileNaming_createdBy_Relationship_ObjectId",
+        "type": "object"
+      },
+      "pdfFileNaming_pdfFile_Relationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/pdfFileNaming_pdfFile_Relationship_ObjectId"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "pdfFileNaming_pdfFile_Relationship",
+        "type": "object"
+      },
+      "pdfFileNaming_pdfFile_Relationship_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "pdfFile",
+            "enum": [
+              "pdfFile"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "pdfFileNaming_pdfFile_Relationship_ObjectId",
+        "type": "object"
+      },
       "pdfFileOutputItem": {
         "additionalProperties": false,
         "properties": {
@@ -2584,13 +3182,13 @@
         "additionalProperties": false,
         "properties": {
           "createdBy": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/pdfFile_createdBy_Relationship"
           },
           "namings": {
-            "$ref": "#/components/schemas/OutputListRelationship"
+            "$ref": "#/components/schemas/pdfFile_namings_RelationshipOutput"
           },
           "sections": {
-            "$ref": "#/components/schemas/OutputListRelationship"
+            "$ref": "#/components/schemas/pdfFile_sections_RelationshipOutput"
           }
         },
         "required": [
@@ -2691,6 +3289,130 @@
         "title": "pdfFileUpdateInputDataRelationships",
         "type": "object"
       },
+      "pdfFile_createdBy_Relationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/pdfFile_createdBy_Relationship_ObjectId"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "pdfFile_createdBy_Relationship",
+        "type": "object"
+      },
+      "pdfFile_createdBy_Relationship_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "user",
+            "enum": [
+              "user"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "pdfFile_createdBy_Relationship_ObjectId",
+        "type": "object"
+      },
+      "pdfFile_namings_RelationshipOutput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/pdfFile_namings_RelationshipOutput_ObjectId"
+            },
+            "title": "Data",
+            "type": "array"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/OutputListRelationShipMeta"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ],
+        "title": "pdfFile_namings_RelationshipOutput",
+        "type": "object"
+      },
+      "pdfFile_namings_RelationshipOutput_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "pdfFileNaming",
+            "enum": [
+              "pdfFileNaming"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "pdfFile_namings_RelationshipOutput_ObjectId",
+        "type": "object"
+      },
+      "pdfFile_sections_RelationshipOutput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/pdfFile_sections_RelationshipOutput_ObjectId"
+            },
+            "title": "Data",
+            "type": "array"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/OutputListRelationShipMeta"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ],
+        "title": "pdfFile_sections_RelationshipOutput",
+        "type": "object"
+      },
+      "pdfFile_sections_RelationshipOutput_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "section",
+            "enum": [
+              "section"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "pdfFile_sections_RelationshipOutput_ObjectId",
+        "type": "object"
+      },
       "pingCreateInput": {
         "additionalProperties": false,
         "properties": {
@@ -2763,7 +3485,7 @@
           "next": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/CreateInputListRelationship"
+                "$ref": "#/components/schemas/ping_next_RelationshipInput"
               }
             ],
             "default": {
@@ -2773,7 +3495,7 @@
           "prev": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/OptionalRelationship"
+                "$ref": "#/components/schemas/ping_prev_Relationship"
               }
             ],
             "default": {}
@@ -2868,16 +3590,16 @@
         "additionalProperties": false,
         "properties": {
           "createdBy": {
-            "$ref": "#/components/schemas/OptionalRelationship"
+            "$ref": "#/components/schemas/ping_createdBy_Relationship"
           },
           "next": {
-            "$ref": "#/components/schemas/OutputListRelationship"
+            "$ref": "#/components/schemas/ping_next_RelationshipOutput"
           },
           "prev": {
-            "$ref": "#/components/schemas/OptionalRelationship"
+            "$ref": "#/components/schemas/ping_prev_Relationship"
           },
           "updatedBy": {
-            "$ref": "#/components/schemas/OptionalRelationship"
+            "$ref": "#/components/schemas/ping_updatedBy_Relationship"
           }
         },
         "required": [
@@ -2991,19 +3713,232 @@
           "next": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/UpdateInputListRelationship"
+                "$ref": "#/components/schemas/ping_next_RelationshipInput"
               }
             ]
           },
           "prev": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/OptionalRelationship"
+                "$ref": "#/components/schemas/ping_prev_Relationship"
               }
             ]
           }
         },
         "title": "pingUpdateInputDataRelationships",
+        "type": "object"
+      },
+      "ping_createdBy_Relationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ping_createdBy_Relationship_ObjectId"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "ping_createdBy_Relationship",
+        "type": "object"
+      },
+      "ping_createdBy_Relationship_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "user",
+            "enum": [
+              "user"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "ping_createdBy_Relationship_ObjectId",
+        "type": "object"
+      },
+      "ping_next_RelationshipInput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/ping_next_RelationshipInput_ObjectId"
+            },
+            "title": "Data",
+            "type": "array"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "ping_next_RelationshipInput",
+        "type": "object"
+      },
+      "ping_next_RelationshipInput_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "ping",
+            "enum": [
+              "ping"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "ping_next_RelationshipInput_ObjectId",
+        "type": "object"
+      },
+      "ping_next_RelationshipOutput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/ping_next_RelationshipOutput_ObjectId"
+            },
+            "title": "Data",
+            "type": "array"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/OutputListRelationShipMeta"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ],
+        "title": "ping_next_RelationshipOutput",
+        "type": "object"
+      },
+      "ping_next_RelationshipOutput_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "ping",
+            "enum": [
+              "ping"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "ping_next_RelationshipOutput_ObjectId",
+        "type": "object"
+      },
+      "ping_prev_Relationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ping_prev_Relationship_ObjectId"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "ping_prev_Relationship",
+        "type": "object"
+      },
+      "ping_prev_Relationship_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "ping",
+            "enum": [
+              "ping"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "ping_prev_Relationship_ObjectId",
+        "type": "object"
+      },
+      "ping_updatedBy_Relationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ping_updatedBy_Relationship_ObjectId"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "ping_updatedBy_Relationship",
+        "type": "object"
+      },
+      "ping_updatedBy_Relationship_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "user",
+            "enum": [
+              "user"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "ping_updatedBy_Relationship_ObjectId",
         "type": "object"
       },
       "projectCreateInput": {
@@ -3154,16 +4089,16 @@
         "additionalProperties": false,
         "properties": {
           "createdBy": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/project_createdBy_Relationship"
           },
           "exercises": {
-            "$ref": "#/components/schemas/OutputListRelationship"
+            "$ref": "#/components/schemas/project_exercises_RelationshipOutput"
           },
           "textbooks": {
-            "$ref": "#/components/schemas/OutputListRelationship"
+            "$ref": "#/components/schemas/project_textbooks_RelationshipOutput"
           },
           "updatedBy": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/project_updatedBy_Relationship"
           }
         },
         "required": [
@@ -3272,6 +4207,166 @@
         "additionalProperties": false,
         "properties": {},
         "title": "projectUpdateInputDataRelationships",
+        "type": "object"
+      },
+      "project_createdBy_Relationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/project_createdBy_Relationship_ObjectId"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "project_createdBy_Relationship",
+        "type": "object"
+      },
+      "project_createdBy_Relationship_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "user",
+            "enum": [
+              "user"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "project_createdBy_Relationship_ObjectId",
+        "type": "object"
+      },
+      "project_exercises_RelationshipOutput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/project_exercises_RelationshipOutput_ObjectId"
+            },
+            "title": "Data",
+            "type": "array"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/OutputListRelationShipMeta"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ],
+        "title": "project_exercises_RelationshipOutput",
+        "type": "object"
+      },
+      "project_exercises_RelationshipOutput_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "exercise",
+            "enum": [
+              "exercise"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "project_exercises_RelationshipOutput_ObjectId",
+        "type": "object"
+      },
+      "project_textbooks_RelationshipOutput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/project_textbooks_RelationshipOutput_ObjectId"
+            },
+            "title": "Data",
+            "type": "array"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/OutputListRelationShipMeta"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ],
+        "title": "project_textbooks_RelationshipOutput",
+        "type": "object"
+      },
+      "project_textbooks_RelationshipOutput_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "textbook",
+            "enum": [
+              "textbook"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "project_textbooks_RelationshipOutput_ObjectId",
+        "type": "object"
+      },
+      "project_updatedBy_Relationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/project_updatedBy_Relationship_ObjectId"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "project_updatedBy_Relationship",
+        "type": "object"
+      },
+      "project_updatedBy_Relationship_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "user",
+            "enum": [
+              "user"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "project_updatedBy_Relationship_ObjectId",
         "type": "object"
       },
       "recoveryEmailRequestCreateInput": {
@@ -3442,10 +4537,10 @@
         "additionalProperties": false,
         "properties": {
           "pdfFile": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/section_pdfFile_Relationship"
           },
           "textbook": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/section_textbook_Relationship"
           }
         },
         "required": [
@@ -3544,16 +4639,16 @@
         "additionalProperties": false,
         "properties": {
           "createdBy": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/section_createdBy_Relationship"
           },
           "pdfFile": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/section_pdfFile_Relationship"
           },
           "textbook": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/section_textbook_Relationship"
           },
           "updatedBy": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/section_updatedBy_Relationship"
           }
         },
         "required": [
@@ -3668,6 +4763,150 @@
         "title": "sectionUpdateInputDataRelationships",
         "type": "object"
       },
+      "section_createdBy_Relationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/section_createdBy_Relationship_ObjectId"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "section_createdBy_Relationship",
+        "type": "object"
+      },
+      "section_createdBy_Relationship_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "user",
+            "enum": [
+              "user"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "section_createdBy_Relationship_ObjectId",
+        "type": "object"
+      },
+      "section_pdfFile_Relationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/section_pdfFile_Relationship_ObjectId"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "section_pdfFile_Relationship",
+        "type": "object"
+      },
+      "section_pdfFile_Relationship_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "pdfFile",
+            "enum": [
+              "pdfFile"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "section_pdfFile_Relationship_ObjectId",
+        "type": "object"
+      },
+      "section_textbook_Relationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/section_textbook_Relationship_ObjectId"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "section_textbook_Relationship",
+        "type": "object"
+      },
+      "section_textbook_Relationship_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "textbook",
+            "enum": [
+              "textbook"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "section_textbook_Relationship_ObjectId",
+        "type": "object"
+      },
+      "section_updatedBy_Relationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/section_updatedBy_Relationship_ObjectId"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "section_updatedBy_Relationship",
+        "type": "object"
+      },
+      "section_updatedBy_Relationship_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "user",
+            "enum": [
+              "user"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "section_updatedBy_Relationship_ObjectId",
+        "type": "object"
+      },
       "selectThingsAdaptationCreateInput": {
         "additionalProperties": false,
         "properties": {
@@ -3731,7 +4970,7 @@
         "additionalProperties": false,
         "properties": {
           "exercise": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/selectThingsAdaptation_exercise_Relationship"
           }
         },
         "required": [
@@ -3829,13 +5068,13 @@
         "additionalProperties": false,
         "properties": {
           "createdBy": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/selectThingsAdaptation_createdBy_Relationship"
           },
           "exercise": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/selectThingsAdaptation_exercise_Relationship"
           },
           "updatedBy": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/selectThingsAdaptation_updatedBy_Relationship"
           }
         },
         "required": [
@@ -3917,6 +5156,114 @@
         "additionalProperties": false,
         "properties": {},
         "title": "selectThingsAdaptationUpdateInputDataRelationships",
+        "type": "object"
+      },
+      "selectThingsAdaptation_createdBy_Relationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/selectThingsAdaptation_createdBy_Relationship_ObjectId"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "selectThingsAdaptation_createdBy_Relationship",
+        "type": "object"
+      },
+      "selectThingsAdaptation_createdBy_Relationship_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "user",
+            "enum": [
+              "user"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "selectThingsAdaptation_createdBy_Relationship_ObjectId",
+        "type": "object"
+      },
+      "selectThingsAdaptation_exercise_Relationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/selectThingsAdaptation_exercise_Relationship_ObjectId"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "selectThingsAdaptation_exercise_Relationship",
+        "type": "object"
+      },
+      "selectThingsAdaptation_exercise_Relationship_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "exercise",
+            "enum": [
+              "exercise"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "selectThingsAdaptation_exercise_Relationship_ObjectId",
+        "type": "object"
+      },
+      "selectThingsAdaptation_updatedBy_Relationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/selectThingsAdaptation_updatedBy_Relationship_ObjectId"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "selectThingsAdaptation_updatedBy_Relationship",
+        "type": "object"
+      },
+      "selectThingsAdaptation_updatedBy_Relationship_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "user",
+            "enum": [
+              "user"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "selectThingsAdaptation_updatedBy_Relationship_ObjectId",
         "type": "object"
       },
       "textbookCreateInput": {
@@ -4005,7 +5352,7 @@
         "additionalProperties": false,
         "properties": {
           "project": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/textbook_project_Relationship"
           }
         },
         "required": [
@@ -4129,19 +5476,19 @@
         "additionalProperties": false,
         "properties": {
           "createdBy": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/textbook_createdBy_Relationship"
           },
           "exercises": {
-            "$ref": "#/components/schemas/OutputListRelationship"
+            "$ref": "#/components/schemas/textbook_exercises_RelationshipOutput"
           },
           "project": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/textbook_project_Relationship"
           },
           "sections": {
-            "$ref": "#/components/schemas/OutputListRelationship"
+            "$ref": "#/components/schemas/textbook_sections_RelationshipOutput"
           },
           "updatedBy": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/textbook_updatedBy_Relationship"
           }
         },
         "required": [
@@ -4282,6 +5629,202 @@
         "title": "textbookUpdateInputDataRelationships",
         "type": "object"
       },
+      "textbook_createdBy_Relationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/textbook_createdBy_Relationship_ObjectId"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "textbook_createdBy_Relationship",
+        "type": "object"
+      },
+      "textbook_createdBy_Relationship_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "user",
+            "enum": [
+              "user"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "textbook_createdBy_Relationship_ObjectId",
+        "type": "object"
+      },
+      "textbook_exercises_RelationshipOutput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/textbook_exercises_RelationshipOutput_ObjectId"
+            },
+            "title": "Data",
+            "type": "array"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/OutputListRelationShipMeta"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ],
+        "title": "textbook_exercises_RelationshipOutput",
+        "type": "object"
+      },
+      "textbook_exercises_RelationshipOutput_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "exercise",
+            "enum": [
+              "exercise"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "textbook_exercises_RelationshipOutput_ObjectId",
+        "type": "object"
+      },
+      "textbook_project_Relationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/textbook_project_Relationship_ObjectId"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "textbook_project_Relationship",
+        "type": "object"
+      },
+      "textbook_project_Relationship_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "project",
+            "enum": [
+              "project"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "textbook_project_Relationship_ObjectId",
+        "type": "object"
+      },
+      "textbook_sections_RelationshipOutput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/textbook_sections_RelationshipOutput_ObjectId"
+            },
+            "title": "Data",
+            "type": "array"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/OutputListRelationShipMeta"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ],
+        "title": "textbook_sections_RelationshipOutput",
+        "type": "object"
+      },
+      "textbook_sections_RelationshipOutput_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "section",
+            "enum": [
+              "section"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "textbook_sections_RelationshipOutput_ObjectId",
+        "type": "object"
+      },
+      "textbook_updatedBy_Relationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/textbook_updatedBy_Relationship_ObjectId"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "textbook_updatedBy_Relationship",
+        "type": "object"
+      },
+      "textbook_updatedBy_Relationship_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "user",
+            "enum": [
+              "user"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "textbook_updatedBy_Relationship_ObjectId",
+        "type": "object"
+      },
       "userItemOutput": {
         "additionalProperties": false,
         "properties": {
@@ -4368,10 +5911,10 @@
         "additionalProperties": false,
         "properties": {
           "createdBy": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/user_createdBy_Relationship"
           },
           "updatedBy": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/user_updatedBy_Relationship"
           }
         },
         "required": [
@@ -4455,6 +5998,78 @@
         "additionalProperties": false,
         "properties": {},
         "title": "userUpdateInputDataRelationships",
+        "type": "object"
+      },
+      "user_createdBy_Relationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/user_createdBy_Relationship_ObjectId"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "user_createdBy_Relationship",
+        "type": "object"
+      },
+      "user_createdBy_Relationship_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "user",
+            "enum": [
+              "user"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "user_createdBy_Relationship_ObjectId",
+        "type": "object"
+      },
+      "user_updatedBy_Relationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/user_updatedBy_Relationship_ObjectId"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "user_updatedBy_Relationship",
+        "type": "object"
+      },
+      "user_updatedBy_Relationship_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "user",
+            "enum": [
+              "user"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "user_updatedBy_Relationship_ObjectId",
         "type": "object"
       }
     },

@@ -3,19 +3,19 @@ import { ref } from 'vue'
 
 import { useApiStore } from '$frontend/stores/api'
 import { BBusy, BLabeledInput, BButton } from './bootstrap'
-import { type Ping } from '$frontend/types/api'
+import type { Ping } from '$frontend/stores/api'
 
 
 const api = useApiStore()
 
-const pings = api.auto.getAll<Ping>('ping')
+const pings = api.auto.getAll('ping')
 
 const creatingPing = ref(false)
 const newPingMessage = ref('')
 async function createPing() {
   const message = newPingMessage.value !== '' ? newPingMessage.value : undefined
   creatingPing.value = true
-  await api.client.createOne<Ping>('ping', {message}, {next: []})
+  await api.client.createOne('ping', {message}, {next: []})
   creatingPing.value = false
   newPingMessage.value = ''
   await pings.refresh()

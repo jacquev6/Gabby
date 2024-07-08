@@ -11,7 +11,7 @@ import SectionEditor from './SectionEditor.vue'
 import TextPicker from './TextPicker.vue'
 import RectanglesHighlighter from './RectanglesHighlighter.vue'
 import TwoResizableColumns from '$frontend/components/TwoResizableColumns.vue'
-import type { Project, Textbook } from '$frontend/types/api'
+import type { Project, Textbook } from '$frontend/stores/api'
 import { makeExerciseCreationHistory } from './ExerciseCreationHistory'
 
 

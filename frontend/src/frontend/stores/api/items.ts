@@ -1,96 +1,100 @@
 import { reactive } from 'vue'
 import type { Requester, RequesterItemResponse } from './requester'
-import type { GenericAttributes, GenericRelationships, GenericItem, InclusionOptions } from './interface'
+import { itemTypes } from './interface'
+import type { ItemTypes, Operations, Item } from './interface'
+import type { InclusionOptions } from './interface'
 
 
-interface CachedAttributes {
-  [name: string]: unknown
+type GettableAttributes<ItemType extends ItemTypes> = Operations<ItemType>['gettableAttributes']
+type GettableRelationships<ItemType extends ItemTypes> = Operations<ItemType>['gettableRelationships']
+
+type GenericGettableRelationship = Item<ItemTypes>[] | Item<ItemTypes> | null
+
+type CachedAttributes<ItemType extends ItemTypes> = GettableAttributes<ItemType>
+type CachedRelationships<ItemType extends ItemTypes> = {
+  [name in keyof GettableRelationships<ItemType>]:
+    [GettableRelationships<ItemType>[name]] extends [Item<infer ItemType extends ItemTypes>[]] ? {type: ItemType, id: string}[] :
+    [GettableRelationships<ItemType>[name]] extends [Item<infer ItemType extends ItemTypes>] ? {type: ItemType, id: string} :
+    [GettableRelationships<ItemType>[name]] extends [Item<infer ItemType extends ItemTypes> | null] ? {type: ItemType, id: string} | null :
+    never
 }
 
-export interface ItemReference {
-  type: string
-  id: string
-}
+type GenericCachedRelationship = {type: ItemTypes, id: string}[] | {type: ItemTypes, id: string} | null
 
-type CachedRelationship = null | ItemReference | ItemReference[]
+type PatchableAttributes<ItemType extends ItemTypes> = Operations<ItemType>['patchableAttributes']
+type PatchableRelationships<ItemType extends ItemTypes> = Operations<ItemType>['patchableRelationships']
 
-interface CachedRelationships {
-  [name: string]: CachedRelationship
-}
-
-export interface CachedItem {
-  type: string
-  id: string
-
+type CachedItem<ItemType extends ItemTypes> = Item<ItemType> & {
   _reactive: {
     inCache: boolean
     loading: boolean
     exists?: boolean
-    attributes?: CachedAttributes
-    relationships?: CachedRelationships
+    attributes?: CachedAttributes<ItemType>
+    relationships?: CachedRelationships<ItemType>
   }
-
-  inCache: boolean
-  exists?: boolean
-  attributes?: CachedAttributes
-  relationships?: GenericRelationships
-
-  loading: boolean
   _loadingPromise: Promise<void> | null
   _needsRefresh: boolean
-  loaded: Promise<void>
-  refresh(inclusionOptions?: InclusionOptions): Promise<void>
+  _reset(): void
+}
 
-  patch(attributes: Partial<CachedAttributes>, relationships: Partial<CachedRelationships>, inclusionOptions?: InclusionOptions): Promise<void>
-  delete(): Promise<void>
+type Cache = {
+  [ItemType in ItemTypes]?: {[id: string]: CachedItem<ItemType>}
 }
 
 export function makeItems(requester: Requester) {
-  const cache: {[type: string]: {[id: string]: CachedItem}} = {}
+  const cache: Cache = Object.fromEntries(itemTypes.map((type: ItemTypes) => [type, {}]))
 
-  async function createItem(type: string, attributes: GenericAttributes, relationships: GenericRelationships, inclusionOptions?: InclusionOptions) {
-    const response = await requester.postList(type, attributes, relationships, inclusionOptions || {})
-    return processResponse(response)
+  function clearCache() {
+    for (const type of itemTypes) {
+      const items = cache[type]
+      console.assert(items !== undefined)
+      for (const id in items) {
+        const item = items[id]
+        item._reset()
+      }
+    }
   }
 
-  function getItem(type: string, id: string) {
-    if (!cache[type]) {
-      cache[type] = {}
-    }
-    if (!cache[type][id]) {
-      cache[type][id] = makeItem(type, id)
-    }
-    return cache[type][id]
+  async function createItem<ItemType extends ItemTypes>(type: ItemType, attributes: Operations<ItemType>['creatableAttributes'], relationships: Operations<ItemType>['creatableRelationships'], inclusionOptions?: InclusionOptions) {
+    const response = await requester.postList(type, attributes as any/* @todo Type */, relationships as any/* @todo Type */, inclusionOptions || {})
+    return processResponse(response) as any/* @todo Type */ as Item<ItemType>
   }
 
-  function makeRelationships(_relationships: CachedRelationships | undefined) {
-    if (_relationships === undefined) {
+  function getItem<ItemType extends ItemTypes>(type: ItemType, id: string): CachedItem<ItemType> {
+    const items = cache[type]
+    console.assert(items !== undefined)
+    if (items[id] === undefined) {
+      items[id] = makeItem(type, id)
+    }
+    return items[id]
+  }
+
+  function makeGettableRelationships<ItemType extends ItemTypes>(cached: CachedRelationships<ItemType> | undefined) {
+    if (cached === undefined) {
       return undefined
     } else {
-      const relationships: GenericItem['relationships'] = {}
-      for (const [name, relationship] of Object.entries(_relationships)) {
+      // @todo Read more about TypeScript to decide whether we can do better than this.
+      const relationships: Record<string, GenericGettableRelationship> = {}
+      for (const name in cached) {
+        const relationship: GenericCachedRelationship = cached[name]
         if (relationship === null) {
           relationships[name] = null
         } else if (Array.isArray(relationship)) {
-          const rel = []
-          for (const related of relationship) {
-            rel.push(getItem(related.type, related.id))
-          }
-          relationships[name] = rel
+          relationships[name] = relationship.map(related => getItem(related.type, related.id))
         } else {
           relationships[name] = getItem(relationship.type, relationship.id)
         }
       }
-      return relationships
+      return relationships as GettableRelationships<ItemType>
     }
   }
 
-  function makeItem(type: string, id: string): CachedItem {
+  function makeItem<ItemType extends ItemTypes>(type: ItemType, id: string): CachedItem<ItemType> {
     return {
       // Constant attributes
       type,
       id,
-      // Attributes to reset in 'resetItem' below
+      // Attributes to reset in 'reset' below
       _reactive: reactive({
         inCache: false,
         loading: false,
@@ -98,14 +102,14 @@ export function makeItems(requester: Requester) {
         attributes: undefined,
         relationships: undefined,
       }),
-      _loadingPromise: null as Promise<void> | null,
+      _loadingPromise: null,
       _needsRefresh: false,
       // Methods and getters
       get inCache() { return this._reactive.inCache },
       get loading() { return this._reactive.loading },  
       get exists() { return this._reactive.exists },
       get attributes() { return this._reactive.attributes },
-      get relationships() { return makeRelationships(this._reactive.relationships) },
+      get relationships() { return makeGettableRelationships(this._reactive.relationships) },
       get loaded() {
         if (this._loadingPromise !== null) {
           return this._loadingPromise
@@ -114,6 +118,15 @@ export function makeItems(requester: Requester) {
         } else {
           return Promise.reject(new Error('Never refreshed'))
         }
+      },
+      _reset() {
+        this._reactive.inCache = false
+        this._reactive.loading = false
+        this._reactive.exists = undefined
+        this._reactive.attributes = undefined
+        this._reactive.relationships = undefined
+        this._loadingPromise = null
+        this._needsRefresh = false
       },
       refresh(inclusionOptions?: InclusionOptions) {
         console.assert(cache[this.type]?.[this.id] === this, 'Item detached from store')
@@ -137,29 +150,11 @@ export function makeItems(requester: Requester) {
         processResponse(await requester.deleteItem(this.type, this.id))
         this._reactive.loading = false
       },
-      async patch(attributes: GenericRelationships, relationships: CachedRelationships, inclusionOptions?: InclusionOptions) {
+      async patch(attributes: PatchableAttributes<ItemType>, relationships: PatchableRelationships<ItemType>, inclusionOptions?: InclusionOptions) {
         this._reactive.loading = true
-        processResponse(await requester.patchItem(this.type, this.id, attributes, relationships, inclusionOptions || {}))
+        processResponse(await requester.patchItem(this.type, this.id, attributes as any/* @todo Type */, relationships as any/* @todo Type */, inclusionOptions || {}))
         this._reactive.loading = false
       },
-    }
-  }
-
-  function resetItem(item: CachedItem) {
-    item._reactive.inCache = false
-    item._reactive.loading = false
-    item._reactive.exists = undefined
-    item._reactive.attributes = undefined
-    item._reactive.relationships = undefined
-    item._loadingPromise = null
-    item._needsRefresh = false
-  }
-
-  function clearCache() {
-    for (const type in cache) {
-      for (const id in cache[type]) {
-        resetItem(cache[type][id])
-      }
     }
   }
 
@@ -171,11 +166,11 @@ export function makeItems(requester: Requester) {
   }
 
   function processItemInResponse(item: RequesterItemResponse['main']) {
-    const cached = getItem(item.type, item.id)
+    const cached = getItem(item.type as any/* @todo Type */, item.id)
     cached._reactive.inCache = true
     cached._reactive.exists = item.exists
-    cached._reactive.attributes = item.attributes
-    cached._reactive.relationships = item.relationships
+    cached._reactive.attributes = item.attributes as any/* @todo Type */
+    cached._reactive.relationships = item.relationships as any/* @todo Type */
     return cached
   }
 

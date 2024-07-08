@@ -3,7 +3,6 @@ import { ref, computed, type Ref } from 'vue'
 
 import { BBusy, BLabeledInput, BButton, BRow, BCol, BModal } from '$frontend/components/opinion/bootstrap'
 import { useApiStore } from '$frontend/stores/api'
-import type { Section } from '$frontend/types/api'
 
 
 const sectionId = ref<string | null>(null)
@@ -54,7 +53,7 @@ function show(id: string) {
   console.assert(modal.value !== null)
 
   sectionId.value = id
-  const section = api.cache.getOne<Section>('section', id)
+  const section = api.cache.getOne('section', id)
   console.assert(section.attributes !== undefined)
 
   pdfFileFirstPage.value = section.attributes.pdfFileStartPage

@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n'
 
 import { useApiStore } from '$frontend/stores/api'
 import { BBusy } from '$frontend/components/opinion/bootstrap'
-import type { Project, Textbook } from '$frontend/types/api'
+import type { Project } from '$frontend/stores/api'
 
 
 const props = defineProps<{
@@ -19,7 +19,7 @@ const api = useApiStore()
 
 const component = ref<null | { title: string, breadcrumbs: [], handlesScrolling?: boolean }>(null)
 
-const textbook = api.auto.getOne<Textbook>('textbook', props.textbookId, {include: ['sections.pdfFile.namings']})
+const textbook = api.auto.getOne('textbook', props.textbookId, {include: ['sections.pdfFile.namings']})
 
 function refreshTextbook() {
   // @todo Remove 'options' from '.refresh()' (use those from '.getOne'). The remove 'refreshTextbook' and have sub-components simply call 'textbook.refresh()'

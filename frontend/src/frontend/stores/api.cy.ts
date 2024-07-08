@@ -1,5 +1,5 @@
 import { defineApiStore, resetApiStores } from './api'
-import type { Ping, Textbook, Exercise, SelectThingsAdaptation, FillWithFreeTextAdaptation, Section } from '../types/api'
+import type { FillWithFreeTextAdaptation, SelectThingsAdaptation } from './api'
 import TestComponent from './api.cy.vue'
 import { computed, watch } from 'vue'
 
@@ -19,7 +19,7 @@ describe('ApiStore - Basic functionality', () => {
   it('creates a ping with attributes', async () => {
     const api = useApiStore()
 
-    const ping = await api.client.createOne<Ping>('ping', {message: 'NEW'}, {})
+    const ping = await api.client.createOne('ping', {message: 'NEW'}, {})
 
     expect(ping.inCache).to.be.true
     expect(ping.loading).to.be.false
@@ -32,9 +32,9 @@ describe('ApiStore - Basic functionality', () => {
   it("creates a ping with 'prev' relationship", async () => {
     const api = useApiStore()
 
-    const prev = api.cache.getOne<Ping>('ping', '1')
+    const prev = api.cache.getOne('ping', '1')
 
-    const ping = await api.client.createOne<Ping>('ping', {}, {prev})
+    const ping = await api.client.createOne('ping', {}, {prev})
 
     expect(ping.inCache).to.be.true
     expect(ping.loading).to.be.false
@@ -49,9 +49,9 @@ describe('ApiStore - Basic functionality', () => {
   it("creates a ping with 'next' relationship", async () => {
     const api = useApiStore()
 
-    const next = api.cache.getOne<Ping>('ping', '1')
+    const next = api.cache.getOne('ping', '1')
 
-    const ping = await api.client.createOne<Ping>('ping', {}, {next: [next]})
+    const ping = await api.client.createOne('ping', {}, {next: [next]})
 
     expect(ping.inCache).to.be.true
     expect(ping.loading).to.be.false
@@ -67,10 +67,10 @@ describe('ApiStore - Basic functionality', () => {
   it("creates a ping with relationships, including related", async () => {
     const api = useApiStore()
 
-    const prev = api.cache.getOne<Ping>('ping', '2')
-    const next = api.cache.getOne<Ping>('ping', '1')
+    const prev = api.cache.getOne('ping', '2')
+    const next = api.cache.getOne('ping', '1')
 
-    const ping = await api.client.createOne<Ping>('ping', {}, {prev, next: [next]}, {include: ['prev', 'next']})
+    const ping = await api.client.createOne('ping', {}, {prev, next: [next]}, {include: ['prev', 'next']})
 
     expect(ping.inCache).to.be.true
     expect(ping.loading).to.be.false
@@ -110,14 +110,14 @@ describe('ApiStore - Basic functionality', () => {
       ],
     )
 
-    const fromCache = api.cache.getOne<Ping>('ping', posted[2].id)
+    const fromCache = api.cache.getOne('ping', posted[2].id)
     expect(fromCache).to.equal(posted[2])
   })
 
   it("gets one ping from cache then refreshes it, awaiting on '.refresh()'", async () => {
     const api = useApiStore()
 
-    const ping = api.cache.getOne<Ping>('ping', '1')
+    const ping = api.cache.getOne('ping', '1')
 
     expect(ping.inCache).to.be.false
     expect(ping.loading).to.be.false
@@ -131,7 +131,7 @@ describe('ApiStore - Basic functionality', () => {
   it("gets one ping from cache then refreshes it, awaiting on the return value of '.refresh()'", async () => {
     const api = useApiStore()
 
-    const ping = api.cache.getOne<Ping>('ping', '1')
+    const ping = api.cache.getOne('ping', '1')
 
     expect(ping.inCache).to.be.false
     expect(ping.loading).to.be.false
@@ -150,7 +150,7 @@ describe('ApiStore - Basic functionality', () => {
   it("gets one ping from cache then refreshes it, awaiting on '.loaded'", async () => {
     const api = useApiStore()
 
-    const ping = api.cache.getOne<Ping>('ping', '1')
+    const ping = api.cache.getOne('ping', '1')
 
     expect(ping.inCache).to.be.false
     expect(ping.loading).to.be.false
@@ -169,7 +169,7 @@ describe('ApiStore - Basic functionality', () => {
   it("gets one ping from cache then refreshes it several times", () => {
     const api = useApiStore()
 
-    const ping = api.cache.getOne<Ping>('ping', '1')
+    const ping = api.cache.getOne('ping', '1')
 
     cy.intercept('GET', 'http://fanout:8080/api/pings/1').as('getPing').then(async () => {
       ping.refresh()  // Triggers a refresh
@@ -207,7 +207,7 @@ describe('ApiStore - Basic functionality', () => {
   it("gets one ping from cache, awaits on '.loaded' without '.refresh()'ing it", async () => {
     const api = useApiStore()
 
-    const ping = api.cache.getOne<Ping>('ping', '1')
+    const ping = api.cache.getOne('ping', '1')
 
     await ping.loaded.then(
       () => { throw new Error('promise should have rejected') },
@@ -218,7 +218,7 @@ describe('ApiStore - Basic functionality', () => {
   it("gets one ping from auto, awaits on '.loaded'", async () => {
     const api = useApiStore()
 
-    const ping = api.auto.getOne<Ping>('ping', '1')
+    const ping = api.auto.getOne('ping', '1')
 
     expect(ping.inCache).to.be.false
     expect(ping.loading).to.be.true
@@ -238,9 +238,9 @@ describe('ApiStore - Basic functionality', () => {
   it('gets the same ping from all access methods', async () => {
     const api = useApiStore()
 
-    const fromCache = api.cache.getOne<Ping>('ping', '1')
-    const fromAuto = api.auto.getOne<Ping>('ping', '1')
-    const fromClient = await api.client.getOne<Ping>('ping', '1')
+    const fromCache = api.cache.getOne('ping', '1')
+    const fromAuto = api.auto.getOne('ping', '1')
+    const fromClient = await api.client.getOne('ping', '1')
 
     expect(fromCache).to.equal(fromAuto)
     expect(fromCache).to.equal(fromClient)
@@ -249,7 +249,7 @@ describe('ApiStore - Basic functionality', () => {
   it("gets one unexisting ping from client", async () => {
     const api = useApiStore()
 
-    const ping = await api.client.getOne<Ping>('ping', '0')
+    const ping = await api.client.getOne('ping', '0')
 
     expect(ping.inCache).to.be.true
     expect(ping.loading).to.be.false
@@ -261,7 +261,7 @@ describe('ApiStore - Basic functionality', () => {
   it("gets one existing ping without relationships from client", async () => {
     const api = useApiStore()
 
-    const ping = await api.client.getOne<Ping>('ping', '1')
+    const ping = await api.client.getOne('ping', '1')
 
     expect(ping.inCache).to.be.true
     expect(ping.loading).to.be.false
@@ -276,7 +276,7 @@ describe('ApiStore - Basic functionality', () => {
   it("gets one existing ping with relationships from client", async () => {
     const api = useApiStore()
 
-    const ping = await api.client.getOne<Ping>('ping', '3')
+    const ping = await api.client.getOne('ping', '3')
 
     expect(ping.inCache).to.be.true
     expect(ping.loading).to.be.false
@@ -300,7 +300,7 @@ describe('ApiStore - Basic functionality', () => {
   it("gets one existing ping with relationships from client, including related", async () => {
     const api = useApiStore()
 
-    const ping = await api.client.getOne<Ping>('ping', '3', {include: ['prev', 'next']})
+    const ping = await api.client.getOne('ping', '3', {include: ['prev', 'next']})
 
     expect(ping.inCache).to.be.true
     expect(ping.loading).to.be.false
@@ -331,7 +331,7 @@ describe('ApiStore - Basic functionality', () => {
   it("gets a list of pings from cache, then refreshes it, awaiting on '.refresh()'", async () => {
     const api = useApiStore()
 
-    const pings = api.cache.getAll<Ping>('ping')
+    const pings = api.cache.getAll('ping')
 
     expect(pings.inCache).to.be.false
     expect(pings.loading).to.be.false
@@ -347,7 +347,7 @@ describe('ApiStore - Basic functionality', () => {
   it("gets a list of pings from cache, then refreshes it, awaiting on the return value of '.refresh()'", async () => {
     const api = useApiStore()
 
-    const pings = api.cache.getAll<Ping>('ping')
+    const pings = api.cache.getAll('ping')
 
     expect(pings.inCache).to.be.false
     expect(pings.loading).to.be.false
@@ -369,7 +369,7 @@ describe('ApiStore - Basic functionality', () => {
   it("gets a list of pings from cache, then refreshes it, awaiting on '.fullyLoaded'", async () => {
     const api = useApiStore()
 
-    const pings = api.cache.getAll<Ping>('ping')
+    const pings = api.cache.getAll('ping')
 
     expect(pings.inCache).to.be.false
     expect(pings.loading).to.be.false
@@ -391,7 +391,7 @@ describe('ApiStore - Basic functionality', () => {
   it("gets a list of pings from cache, then refreshes it several times", () => {
     const api = useApiStore()
 
-    const pings = api.cache.getAll<Ping>('ping')
+    const pings = api.cache.getAll('ping')
 
     cy.intercept('GET', 'http://fanout:8080/api/pings').as('getPings1')
     cy.intercept('GET', 'http://fanout:8080/api/pings?page%5Bnumber%5D=2').as('getPings2').then(async () => {
@@ -434,7 +434,7 @@ describe('ApiStore - Basic functionality', () => {
   it("gets a list of pings from cache, awaits on '.fullyLoaded' without '.reresh()'ing it", async () => {
     const api = useApiStore()
 
-    const pings = api.cache.getAll<Ping>('ping')
+    const pings = api.cache.getAll('ping')
 
     await pings.fullyLoaded.then(
       () => { throw new Error('promise should have rejected') },
@@ -445,7 +445,7 @@ describe('ApiStore - Basic functionality', () => {
   it("gets a list of pings from auto, awaits on '.fullyLoaded'", async () => {
     const api = useApiStore()
 
-    const pings = api.auto.getAll<Ping>('ping')
+    const pings = api.auto.getAll('ping')
 
     expect(pings.inCache).to.be.false
     expect(pings.loading).to.be.true
@@ -461,9 +461,9 @@ describe('ApiStore - Basic functionality', () => {
   it("gets the same list from all access methods", async () => {
     const api = useApiStore()
 
-    const fromCache = api.cache.getAll<Ping>('ping')
-    const fromAuto = api.auto.getAll<Ping>('ping')
-    const fromClient = await api.client.getAll<Ping>('ping')
+    const fromCache = api.cache.getAll('ping')
+    const fromAuto = api.auto.getAll('ping')
+    const fromClient = await api.client.getAll('ping')
 
     expect(fromCache).to.equal(fromAuto)
     expect(fromCache).to.equal(fromClient)
@@ -472,9 +472,9 @@ describe('ApiStore - Basic functionality', () => {
   it('gets the same filtered list from all access methods', async () => {
     const api = useApiStore()
 
-    const fromCache = api.cache.getAll<Ping>('ping', {filters: {message: 'Hello 1'}})
-    const fromAuto = api.auto.getAll<Ping>('ping', {filters: {message: 'Hello 1'}})
-    const fromClient = await api.client.getAll<Ping>('ping', {filters: {message: 'Hello 1'}})
+    const fromCache = api.cache.getAll('ping', {filters: {message: 'Hello 1'}})
+    const fromAuto = api.auto.getAll('ping', {filters: {message: 'Hello 1'}})
+    const fromClient = await api.client.getAll('ping', {filters: {message: 'Hello 1'}})
 
     expect(fromCache).to.equal(fromAuto)
     expect(fromCache).to.equal(fromClient)
@@ -485,57 +485,57 @@ describe('ApiStore - Basic functionality', () => {
   it('gets a filtered list from cache, including related', async () => {
     const api = useApiStore()
 
-    const pings = api.cache.getAll<Ping>('ping', {filters: {message: 'Hello 3'}})
+    const pings = api.cache.getAll('ping', {filters: {message: 'Hello 3'}})
     await pings.refresh({include: ['prev', 'next']})
 
     expect(pings.items).to.have.length(1)
     expect(pings.items[0].relationships!.prev?.inCache).to.be.true
-    expect(pings.items[0].relationships!.prev).to.equal(api.cache.getOne<Ping>('ping', '2'))
+    expect(pings.items[0].relationships!.prev).to.equal(api.cache.getOne('ping', '2'))
     expect(pings.items[0].relationships!.next).to.have.length(2)
     expect(pings.items[0].relationships!.next[0].inCache).to.be.true
-    expect(pings.items[0].relationships!.next[0]).to.equal(api.cache.getOne<Ping>('ping', '4'))
+    expect(pings.items[0].relationships!.next[0]).to.equal(api.cache.getOne('ping', '4'))
     expect(pings.items[0].relationships!.next[1].inCache).to.be.true
-    expect(pings.items[0].relationships!.next[1]).to.equal(api.cache.getOne<Ping>('ping', '5'))
+    expect(pings.items[0].relationships!.next[1]).to.equal(api.cache.getOne('ping', '5'))
   })
 
   it('gets a filtered list from auto, including related', async () => {
     const api = useApiStore()
 
-    const pings = api.auto.getAll<Ping>('ping', {filters: {message: 'Hello 3'}, include: ['prev', 'next']})
+    const pings = api.auto.getAll('ping', {filters: {message: 'Hello 3'}, include: ['prev', 'next']})
 
     await pings.fullyLoaded
 
     expect(pings.items).to.have.length(1)
     expect(pings.items[0].relationships!.prev?.inCache).to.be.true
-    expect(pings.items[0].relationships!.prev).to.equal(api.cache.getOne<Ping>('ping', '2'))
+    expect(pings.items[0].relationships!.prev).to.equal(api.cache.getOne('ping', '2'))
     expect(pings.items[0].relationships!.next).to.have.length(2)
     expect(pings.items[0].relationships!.next[0].inCache).to.be.true
-    expect(pings.items[0].relationships!.next[0]).to.equal(api.cache.getOne<Ping>('ping', '4'))
+    expect(pings.items[0].relationships!.next[0]).to.equal(api.cache.getOne('ping', '4'))
     expect(pings.items[0].relationships!.next[1].inCache).to.be.true
-    expect(pings.items[0].relationships!.next[1]).to.equal(api.cache.getOne<Ping>('ping', '5'))
+    expect(pings.items[0].relationships!.next[1]).to.equal(api.cache.getOne('ping', '5'))
   })
 
   it('gets a filtered list from client, including related', async () => {
     const api = useApiStore()
 
-    const pings = await api.client.getAll<Ping>('ping', {filters: {message: 'Hello 3'}, include: ['prev', 'next']})
+    const pings = await api.client.getAll('ping', {filters: {message: 'Hello 3'}, include: ['prev', 'next']})
 
     expect(pings.items).to.have.length(1)
     expect(pings.items[0].relationships!.prev?.inCache).to.be.true
-    expect(pings.items[0].relationships!.prev).to.equal(api.cache.getOne<Ping>('ping', '2'))
+    expect(pings.items[0].relationships!.prev).to.equal(api.cache.getOne('ping', '2'))
     expect(pings.items[0].relationships!.next).to.have.length(2)
     expect(pings.items[0].relationships!.next[0].inCache).to.be.true
-    expect(pings.items[0].relationships!.next[0]).to.equal(api.cache.getOne<Ping>('ping', '4'))
+    expect(pings.items[0].relationships!.next[0]).to.equal(api.cache.getOne('ping', '4'))
     expect(pings.items[0].relationships!.next[1].inCache).to.be.true
-    expect(pings.items[0].relationships!.next[1]).to.equal(api.cache.getOne<Ping>('ping', '5'))
+    expect(pings.items[0].relationships!.next[1]).to.equal(api.cache.getOne('ping', '5'))
   })
 
   it('gets different paginated lists for different filters', async () => {
     const api = useApiStore()
 
-    const notFiltered = api.cache.getAll<Ping>('ping')
-    const filtered1 = api.cache.getAll<Ping>('ping', {filters: {message: 'Hello 1'}})
-    const filtered2 = api.cache.getAll<Ping>('ping', {filters: {message: 'Hello 2'}})
+    const notFiltered = api.cache.getAll('ping')
+    const filtered1 = api.cache.getAll('ping', {filters: {message: 'Hello 1'}})
+    const filtered2 = api.cache.getAll('ping', {filters: {message: 'Hello 2'}})
 
     expect(notFiltered).to.not.equal(filtered1)
     expect(notFiltered).to.not.equal(filtered2)
@@ -545,7 +545,7 @@ describe('ApiStore - Basic functionality', () => {
   it('keeps the items in a list during refresh until it gets the first page', async () => {
     const api = useApiStore()
 
-    const pings = await api.client.getAll<Ping>('ping')
+    const pings = await api.client.getAll('ping')
 
     expect(pings.items).to.have.length(6)
 
@@ -573,7 +573,7 @@ describe('ApiStore - Basic functionality', () => {
   it('patches a ping', async () => {
     const api = useApiStore()
 
-    const ping = await api.client.getOne<Ping>('ping', '1')
+    const ping = await api.client.getOne('ping', '1')
 
     // @todo Add an attribute '.patching' dedicated to '.patch', and '.busy' = '.loading || .patching || .deleting'
     expect(ping.loading).to.be.false
@@ -593,7 +593,7 @@ describe('ApiStore - Basic functionality', () => {
   it("patches a never-heard-of existing ping's attributes", async () => {
     const api = useApiStore()
 
-    const ping = api.cache.getOne<Ping>('ping', '1')
+    const ping = api.cache.getOne('ping', '1')
 
     await ping.patch({message: 'HELLO 1'}, {})
     expect(ping.inCache).to.be.true
@@ -604,7 +604,7 @@ describe('ApiStore - Basic functionality', () => {
   it("patches a known existing ping's attributes", async () => {
     const api = useApiStore()
 
-    const ping = await api.client.getOne<Ping>('ping', '1')
+    const ping = await api.client.getOne('ping', '1')
 
     await ping.patch({message: 'HELLO 1'}, {})
     expect(ping.inCache).to.be.true
@@ -615,9 +615,9 @@ describe('ApiStore - Basic functionality', () => {
   it("patches a never-heard-of existing ping's 'prev' relationship", async () => {
     const api = useApiStore()
 
-    const ping = api.cache.getOne<Ping>('ping', '1')
+    const ping = api.cache.getOne('ping', '1')
 
-    const prev = api.cache.getOne<Ping>('ping', '2')
+    const prev = api.cache.getOne('ping', '2')
 
     await ping.patch({}, {prev})
     expect(ping.inCache).to.be.true
@@ -630,9 +630,9 @@ describe('ApiStore - Basic functionality', () => {
   it("patches a never-heard-of existing ping's 'next' relationship", async () => {
     const api = useApiStore()
 
-    const ping = api.cache.getOne<Ping>('ping', '1')
+    const ping = api.cache.getOne('ping', '1')
 
-    const next = api.cache.getOne<Ping>('ping', '2')
+    const next = api.cache.getOne('ping', '2')
 
     await ping.patch({}, {next: [next]})
 
@@ -647,10 +647,10 @@ describe('ApiStore - Basic functionality', () => {
   it("patches a never-heard-of existing ping's relationships, including related", async () => {
     const api = useApiStore()
 
-    const ping = api.cache.getOne<Ping>('ping', '1')
+    const ping = api.cache.getOne('ping', '1')
 
-    const prev = api.cache.getOne<Ping>('ping', '2')
-    const next = api.cache.getOne<Ping>('ping', '3')
+    const prev = api.cache.getOne('ping', '2')
+    const next = api.cache.getOne('ping', '3')
 
     await ping.patch({}, {prev, next: [next]}, {include: ['prev', 'next']})
     expect(ping.inCache).to.be.true
@@ -665,7 +665,7 @@ describe('ApiStore - Basic functionality', () => {
   it('deletes a ping', async () => {
     const api = useApiStore()
 
-    const ping = await api.client.getOne<Ping>('ping', '1')
+    const ping = await api.client.getOne('ping', '1')
 
     expect(ping.inCache).to.be.true
     expect(ping.exists).to.be.true
@@ -690,7 +690,7 @@ describe('ApiStore - Basic functionality', () => {
 
     cy.intercept('DELETE', 'http://fanout:8080/api/pings/1').as('deletePing')
     cy.intercept('GET', 'http://fanout:8080/api/pings/1').as('getPing').then(async () => {
-      const ping = api.cache.getOne<Ping>('ping', '1')
+      const ping = api.cache.getOne('ping', '1')
 
       await ping.delete()
       expect(ping.inCache).to.be.true
@@ -716,10 +716,10 @@ describe('ApiStore - Basic functionality', () => {
     const api1 = useApiStore()
     const api2 = useAnotherApiStore()
 
-    await api1.client.getOne<Ping>('ping', '1')
-    await api1.cache.getOne<Ping>('ping', '1').loaded
+    await api1.client.getOne('ping', '1')
+    await api1.cache.getOne('ping', '1').loaded
 
-    const ping = api2.cache.getOne<Ping>('ping', '1')
+    const ping = api2.cache.getOne('ping', '1')
     expect(ping.inCache).to.be.false
 
     await ping.loaded.then(
@@ -785,7 +785,7 @@ describe('ApiStore - Reactivity', () => {
     let counter = 0
     const ping = computed(() => {
       counter += 1
-      return api.auto.getOne<Ping>('ping', '1')
+      return api.auto.getOne('ping', '1')
     })
 
     expect(counter).to.equal(0)
@@ -811,7 +811,7 @@ describe('ApiStore - Reactivity', () => {
   it("makes sure 'getOne().inCache' is reactive", async () => {
     const api = useApiStore()
 
-    const ping = api.cache.getOne<Ping>('ping', '1')
+    const ping = api.cache.getOne('ping', '1')
     const inCache = computed(() => ping.inCache)
     let counter = 0
     watch(inCache, () => { counter += 1 })
@@ -834,7 +834,7 @@ describe('ApiStore - Reactivity', () => {
   it("makes sure 'getOne().loading' is reactive", async () => {
     const api = useApiStore()
 
-    const ping = api.cache.getOne<Ping>('ping', '1')
+    const ping = api.cache.getOne('ping', '1')
     const loading = computed(() => ping.loading)
     let counter = 0
     watch(loading, () => { counter += 1 })
@@ -857,7 +857,7 @@ describe('ApiStore - Reactivity', () => {
   it("makes sure 'getOne().exists' is reactive", async () => {
     const api = useApiStore()
 
-    const ping = api.cache.getOne<Ping>('ping', '1')
+    const ping = api.cache.getOne('ping', '1')
     const exists = computed(() => ping.exists)
     let counter = 0
     watch(exists, () => { counter += 1 })
@@ -880,7 +880,7 @@ describe('ApiStore - Reactivity', () => {
   it("makes sure 'getOne().attributes' is reactive", async () => {
     const api = useApiStore()
 
-    const ping = api.cache.getOne<Ping>('ping', '1')
+    const ping = api.cache.getOne('ping', '1')
     const attributes = computed(() => ping.attributes)
     let counter = 0
     watch(attributes, () => { counter += 1 })
@@ -903,7 +903,7 @@ describe('ApiStore - Reactivity', () => {
   it("makes sure 'getOne().relationships' is reactive", async () => {
     const api = useApiStore()
 
-    const ping = api.cache.getOne<Ping>('ping', '1')
+    const ping = api.cache.getOne('ping', '1')
     const relationships = computed(() => ping.relationships)
     let counter = 0
     watch(relationships, () => { counter += 1 })
@@ -930,7 +930,7 @@ describe('ApiStore - Reactivity', () => {
     let counter = 0
     const pings = computed(() => {
       counter += 1
-      return api.auto.getAll<Ping>('ping', {filters: {message: 'Hello 1'}})
+      return api.auto.getAll('ping', {filters: {message: 'Hello 1'}})
     })
 
     expect(counter).to.equal(0)
@@ -956,7 +956,7 @@ describe('ApiStore - Reactivity', () => {
   it("makes sure 'getAll().inCache' is reactive", async () => {
     const api = useApiStore()
 
-    const pings = api.cache.getAll<Ping>('ping')
+    const pings = api.cache.getAll('ping')
     const inCache = computed(() => pings.inCache)
     let counter = 0
     watch(inCache, () => { counter += 1 })
@@ -979,7 +979,7 @@ describe('ApiStore - Reactivity', () => {
   it("makes sure 'getAll().loading' is reactive", async () => {
     const api = useApiStore()
 
-    const pings = api.cache.getAll<Ping>('ping')
+    const pings = api.cache.getAll('ping')
     const loading = computed(() => pings.loading)
     let counter = 0
     watch(loading, () => { counter += 1 })
@@ -1002,7 +1002,7 @@ describe('ApiStore - Reactivity', () => {
   it("makes sure 'getAll().items' is reactive", async () => {
     const api = useApiStore()
 
-    const pings = api.cache.getAll<Ping>('ping')
+    const pings = api.cache.getAll('ping')
     const items = computed(() => pings.items)
     let counter = 0
     watch(items, () => { counter += 1 })
@@ -1035,7 +1035,7 @@ describe('ApiStore - Authentication', () => {
   it('logs in and out', async () => {
     const api = useApiStore()
 
-    const loggedOut1 = await api.client.createOne<Ping>('ping', {}, {})
+    const loggedOut1 = await api.client.createOne('ping', {}, {})
     expect(loggedOut1.relationships!.createdBy).to.be.null
 
     expect(api.auth.isAuthenticated.value).to.be.false
@@ -1044,7 +1044,7 @@ describe('ApiStore - Authentication', () => {
 
     expect(api.auth.isAuthenticated.value).to.be.true
 
-    const loggedIn = await api.client.createOne<Ping>('ping', {}, {})
+    const loggedIn = await api.client.createOne('ping', {}, {})
     expect(loggedIn.relationships!.createdBy!.type).to.equal('user')
     expect(loggedIn.relationships!.createdBy!.id).to.equal('fvirvd')
     expect(loggedIn.relationships!.createdBy!.inCache).to.be.false
@@ -1053,14 +1053,14 @@ describe('ApiStore - Authentication', () => {
 
     expect(api.auth.isAuthenticated.value).to.be.false
 
-    const loggedOut2 = await api.client.createOne<Ping>('ping', {}, {})
+    const loggedOut2 = await api.client.createOne('ping', {}, {})
     expect(loggedOut2.relationships!.createdBy).to.be.null
   })
 
   it('sets token and logs out', async () => {
     const api = useApiStore()
 
-    const loggedOut1 = await api.client.createOne<Ping>('ping', {}, {})
+    const loggedOut1 = await api.client.createOne('ping', {}, {})
     expect(loggedOut1.relationships!.createdBy).to.be.null
 
     expect(api.auth.isAuthenticated.value).to.be.false
@@ -1207,32 +1207,32 @@ describe('ApiStore - Application - 1', () => {
     const api = useApiStore()
     await api.auth.login('admin', 'password')
 
-    expect(api.cache.getOne<Textbook>('textbook', 'klxufv').inCache).to.be.false
+    expect(api.cache.getOne('textbook', 'klxufv').inCache).to.be.false
 
     const textbooks = await api.client.getAll('textbook')
     expect(textbooks.items.length).to.equal(1)
     expect(textbooks.items[0].attributes!.title).to.equal('Français CE2')
 
-    expect(api.cache.getOne<Textbook>('textbook', '0').inCache).to.be.false
-    expect(api.cache.getOne<Textbook>('textbook', 'klxufv').attributes!.title).to.equal('Français CE2')
-    expect(api.cache.getOne<Textbook>('textbook', 'klxufv').relationships!.sections[0].inCache).to.be.false
+    expect(api.cache.getOne('textbook', '0').inCache).to.be.false
+    expect(api.cache.getOne('textbook', 'klxufv').attributes!.title).to.equal('Français CE2')
+    expect(api.cache.getOne('textbook', 'klxufv').relationships!.sections[0].inCache).to.be.false
 
     await api.client.getAll('section')
 
-    expect(api.cache.getOne<Textbook>('textbook', 'klxufv').relationships!.sections[0].attributes!.textbookStartPage).to.equal(6)
+    expect(api.cache.getOne('textbook', 'klxufv').relationships!.sections[0].attributes!.textbookStartPage).to.equal(6)
   })
 
   it('gets one textbook and its sections', async () => {
     const api = useApiStore()
     await api.auth.login('admin', 'password')
 
-    expect(api.cache.getOne<Textbook>('textbook', 'klxufv').inCache).to.be.false
+    expect(api.cache.getOne('textbook', 'klxufv').inCache).to.be.false
 
-    const textbook = await api.client.getOne<Textbook>('textbook', 'klxufv', {include: ['sections']})
+    const textbook = await api.client.getOne('textbook', 'klxufv', {include: ['sections']})
     expect(textbook.attributes!.title).to.equal('Français CE2')
 
-    expect(api.cache.getOne<Textbook>('textbook', 'klxufv').attributes!.title).to.equal('Français CE2')
-    expect(api.cache.getOne<Textbook>('textbook', 'klxufv').relationships!.sections[0].attributes!.textbookStartPage).to.equal(6)
+    expect(api.cache.getOne('textbook', 'klxufv').attributes!.title).to.equal('Français CE2')
+    expect(api.cache.getOne('textbook', 'klxufv').relationships!.sections[0].attributes!.textbookStartPage).to.equal(6)
   })
 
   it('keeps single included', async () => {
@@ -1241,7 +1241,7 @@ describe('ApiStore - Application - 1', () => {
 
     await api.client.getAll('textbook', {include: ['sections']})
 
-    expect(api.cache.getOne<Textbook>('textbook', 'klxufv').relationships!.sections[0].attributes!.textbookStartPage).to.equal(6)
+    expect(api.cache.getOne('textbook', 'klxufv').relationships!.sections[0].attributes!.textbookStartPage).to.equal(6)
   })
 
   it('keeps deep included', async () => {
@@ -1251,7 +1251,7 @@ describe('ApiStore - Application - 1', () => {
     await api.client.getAll('textbook', {include: ['sections.pdfFile.namings']})
 
     expect(
-      api.cache.getOne<Textbook>('textbook', 'klxufv').relationships!.sections[0].relationships!.pdfFile.relationships!.namings[0].attributes!.name).to.equal('test.pdf')
+      api.cache.getOne('textbook', 'klxufv').relationships!.sections[0].relationships!.pdfFile.relationships!.namings[0].attributes!.name).to.equal('test.pdf')
   })
 
   it('keeps multiple included', async () => {
@@ -1260,8 +1260,8 @@ describe('ApiStore - Application - 1', () => {
 
     await api.client.getAll('section', {include: ['textbook', 'pdfFile.namings']})
 
-    expect(api.cache.getOne<Section>('section', 'eyjahd').relationships!.textbook.attributes!.title).to.equal('Français CE2')
-    expect(api.cache.getOne<Section>('section', 'eyjahd').relationships!.pdfFile.relationships!.namings[0].attributes!.name).to.equal('test.pdf')
+    expect(api.cache.getOne('section', 'eyjahd').relationships!.textbook.attributes!.title).to.equal('Français CE2')
+    expect(api.cache.getOne('section', 'eyjahd').relationships!.pdfFile.relationships!.namings[0].attributes!.name).to.equal('test.pdf')
   })
 
   it('paginates exercises', async () => {
@@ -1289,7 +1289,7 @@ describe('ApiStore - Application - 1', () => {
 
     expect((await api.client.getAll('exercise', {filters: {textbook: 'klxufv', textbookPage: 6}})).items.length).to.equal(2)
 
-    expect(api.cache.getOne<Textbook>('textbook', 'klxufv').inCache).to.be.false
+    expect(api.cache.getOne('textbook', 'klxufv').inCache).to.be.false
 
     const newExercise = await api.client.createOne(
       'exercise',
@@ -1308,7 +1308,7 @@ describe('ApiStore - Application - 1', () => {
     expect(newExercise.attributes!.instructions).to.equal('Do this')
     expect(newExercise.attributes!.boundingRectangle).to.deep.equal({start: {x: 0, y: 1}, stop: {x: 2, y: 3}})
 
-    expect(api.cache.getOne<Textbook>('textbook', 'klxufv').inCache).to.be.false
+    expect(api.cache.getOne('textbook', 'klxufv').inCache).to.be.false
 
     expect((await api.client.getAll('exercise', {filters: {textbook: 'klxufv', textbookPage: 6}})).items.length).to.equal(3)
   })
@@ -1319,7 +1319,7 @@ describe('ApiStore - Application - 1', () => {
 
     expect((await api.client.getAll('exercise', {filters: {textbook: 'klxufv', textbookPage: 6}})).items.length).to.equal(2)
 
-    expect(api.cache.getOne<Textbook>('textbook', 'klxufv').inCache).to.be.false
+    expect(api.cache.getOne('textbook', 'klxufv').inCache).to.be.false
 
     const newExercise = await api.client.createOne(
       'exercise',
@@ -1339,7 +1339,7 @@ describe('ApiStore - Application - 1', () => {
     expect(newExercise.id).to.equal('vodhqn')
     expect(newExercise.attributes!.instructions).to.equal('Do that')
 
-    expect(api.cache.getOne<Textbook>('textbook', 'klxufv').attributes!.title).to.equal('Français CE2')
+    expect(api.cache.getOne('textbook', 'klxufv').attributes!.title).to.equal('Français CE2')
 
     expect((await api.client.getAll('exercise', {filters: {textbook: 'klxufv', textbookPage: 6}})).items.length).to.equal(3)
   })
@@ -1359,7 +1359,7 @@ describe('ApiStore - Application - 1', () => {
     const api = useApiStore()
     await api.auth.login('admin', 'password')
 
-    expect(api.cache.getOne<Textbook>('textbook', 'klxufv').inCache).to.be.false
+    expect(api.cache.getOne('textbook', 'klxufv').inCache).to.be.false
 
     const updatedExercise = api.cache.getOne('exercise', 'wbqloc')
     await updatedExercise.patch(
@@ -1371,7 +1371,7 @@ describe('ApiStore - Application - 1', () => {
     expect(updatedExercise.attributes!.instructions).to.equal('Do that')
     expect(api.cache.getOne('exercise', 'wbqloc').attributes!.instructions).to.equal('Do that')
 
-    expect(api.cache.getOne<Textbook>('textbook', 'klxufv').attributes!.title).to.equal('Français CE2')
+    expect(api.cache.getOne('textbook', 'klxufv').attributes!.title).to.equal('Français CE2')
   })
 
   it('deletes an exercise', async () => {
@@ -1402,7 +1402,7 @@ describe('ApiStore - Application - 2', () => {
   it('gets an exercise without an adaptation', async () => {
     const api = useApiStore()
 
-    const exercise = await api.client.getOne<Exercise>('exercise', 'bylced', {include: ['adaptation']})
+    const exercise = await api.client.getOne('exercise', 'bylced', {include: ['adaptation']})
 
     expect(exercise.attributes!.instructions).to.equal('Écris une phrase en respectant l\'ordre des classes grammaticales indiquées.')
     expect(exercise.relationships!.adaptation).to.be.null
@@ -1411,18 +1411,19 @@ describe('ApiStore - Application - 2', () => {
   it('gets an exercise with "select things" adaptation', async () => {
     const api = useApiStore()
 
-    const exercise = await api.client.getOne<Exercise>('exercise', 'vodhqn', {include: ['adaptation']})
+    const exercise = await api.client.getOne('exercise', 'vodhqn', {include: ['adaptation']})
 
     expect(exercise.attributes!.instructions).to.equal('Relève dans le texte trois\n{sel1|déterminants}, un {sel2|nom propre}, quatre\n{sel3|noms communs} et trois {sel4|verbes}.')
     expect(exercise.relationships!.adaptation!.type).to.equal('selectThingsAdaptation')
     expect(exercise.relationships!.adaptation!.id).to.equal('fojjim')
+    console.assert(exercise.relationships!.adaptation!.type === 'selectThingsAdaptation')
     expect((exercise.relationships!.adaptation as SelectThingsAdaptation).attributes!.colors).to.equal(4)
   })
 
   it('gets an exercise with "fill with free text" adaptation', async () => {
     const api = useApiStore()
 
-    const exercise = await api.client.getOne<Exercise>('exercise', 'dymwin', {include: ['adaptation']})
+    const exercise = await api.client.getOne('exercise', 'dymwin', {include: ['adaptation']})
 
     expect(exercise.attributes!.instructions).to.equal('Ajoute le suffixe –eur aux verbes.\nIndique la classe des mots fabriqués.')
     expect(exercise.relationships!.adaptation!.type).to.equal('fillWithFreeTextAdaptation')
@@ -1461,19 +1462,19 @@ describe('ApiStore - Application - 2', () => {
       ],
     )
 
-    const exercise: Exercise = response[0]
+    const exercise = response[0]
 
     // @todo Return up-to-date objects in batch response, then remove next line
     await exercise.refresh()
 
     expect(exercise.relationships!.adaptation!.type).to.equal('selectThingsAdaptation')
-    expect((exercise.relationships!.adaptation as SelectThingsAdaptation).attributes!.colors).to.equal(5)
+    expect(exercise.relationships!.adaptation.attributes!.colors).to.equal(5)
   })
 
   it('updates an adaptation', async () => {
     const api = useApiStore()
 
-    const adapted = api.cache.getOne<SelectThingsAdaptation>('selectThingsAdaptation', 'fojjim')
+    const adapted = api.cache.getOne('selectThingsAdaptation', 'fojjim')
     await adapted.patch({colors: 17}, {})
 
     expect(adapted.attributes!.colors).to.equal(17)
@@ -1482,10 +1483,10 @@ describe('ApiStore - Application - 2', () => {
   it('changes the type of an adaptation', async () => {
     const api = useApiStore()
 
-    const previous = await api.client.getOne<SelectThingsAdaptation>('selectThingsAdaptation', 'fojjim')
+    const previous = await api.client.getOne('selectThingsAdaptation', 'fojjim')
     expect(previous.relationships!.exercise.id).to.equal('vodhqn')
 
-    const adapted = await api.client.createOne<FillWithFreeTextAdaptation>('fillWithFreeTextAdaptation', {placeholder: '...'}, {exercise: previous.relationships!.exercise}, {include: ['exercise']})
+    const adapted = await api.client.createOne('fillWithFreeTextAdaptation', {placeholder: '...'}, {exercise: previous.relationships!.exercise}, {include: ['exercise']})
 
     expect(adapted.attributes!.placeholder).to.equal('...')
     expect(adapted.relationships!.exercise.attributes!.instructions).to.equal('Relève dans le texte trois\n{sel1|déterminants}, un {sel2|nom propre}, quatre\n{sel3|noms communs} et trois {sel4|verbes}.')

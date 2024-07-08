@@ -28,38 +28,6 @@
         "title": "ItemLinks",
         "type": "object"
       },
-      "MandatoryRelationship": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/ObjectId"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "MandatoryRelationship",
-        "type": "object"
-      },
-      "ObjectId": {
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "id"
-        ],
-        "title": "ObjectId",
-        "type": "object"
-      },
       "ValidationError": {
         "properties": {
           "loc": {
@@ -260,10 +228,10 @@
         "additionalProperties": false,
         "properties": {
           "constant": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/resource_constant_Relationship"
           },
           "writable": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/resource_writable_Relationship"
           }
         },
         "required": [
@@ -322,13 +290,13 @@
         "additionalProperties": false,
         "properties": {
           "computed": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/resource_computed_Relationship"
           },
           "constant": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/resource_constant_Relationship"
           },
           "writable": {
-            "$ref": "#/components/schemas/MandatoryRelationship"
+            "$ref": "#/components/schemas/resource_writable_Relationship"
           }
         },
         "required": [
@@ -399,12 +367,120 @@
           "writable": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/MandatoryRelationship"
+                "$ref": "#/components/schemas/resource_writable_Relationship"
               }
             ]
           }
         },
         "title": "resourceUpdateInputDataRelationships",
+        "type": "object"
+      },
+      "resource_computed_Relationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/resource_computed_Relationship_ObjectId"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "resource_computed_Relationship",
+        "type": "object"
+      },
+      "resource_computed_Relationship_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "computed",
+            "enum": [
+              "computed"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "resource_computed_Relationship_ObjectId",
+        "type": "object"
+      },
+      "resource_constant_Relationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/resource_constant_Relationship_ObjectId"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "resource_constant_Relationship",
+        "type": "object"
+      },
+      "resource_constant_Relationship_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "constant",
+            "enum": [
+              "constant"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "resource_constant_Relationship_ObjectId",
+        "type": "object"
+      },
+      "resource_writable_Relationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/resource_writable_Relationship_ObjectId"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "resource_writable_Relationship",
+        "type": "object"
+      },
+      "resource_writable_Relationship_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "writable",
+            "enum": [
+              "writable"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "resource_writable_Relationship_ObjectId",
         "type": "object"
       },
       "writableItemOutput": {

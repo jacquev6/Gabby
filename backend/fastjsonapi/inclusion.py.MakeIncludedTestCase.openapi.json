@@ -28,7 +28,7 @@
         "title": "ItemLinks",
         "type": "object"
       },
-      "Meta": {
+      "OutputListRelationShipMeta": {
         "additionalProperties": false,
         "properties": {
           "count": {
@@ -39,64 +39,7 @@
         "required": [
           "count"
         ],
-        "title": "Meta",
-        "type": "object"
-      },
-      "ObjectId": {
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "id"
-        ],
-        "title": "ObjectId",
-        "type": "object"
-      },
-      "OptionalRelationship": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/ObjectId"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          }
-        },
-        "title": "OptionalRelationship",
-        "type": "object"
-      },
-      "OutputListRelationship": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "items": {
-              "$ref": "#/components/schemas/ObjectId"
-            },
-            "title": "Data",
-            "type": "array"
-          },
-          "meta": {
-            "$ref": "#/components/schemas/Meta"
-          }
-        },
-        "required": [
-          "data",
-          "meta"
-        ],
-        "title": "OutputListRelationship",
+        "title": "OutputListRelationShipMeta",
         "type": "object"
       },
       "PageLinks": {
@@ -361,13 +304,13 @@
         "additionalProperties": false,
         "properties": {
           "children": {
-            "$ref": "#/components/schemas/OutputListRelationship"
+            "$ref": "#/components/schemas/node_children_RelationshipOutput"
           },
           "parent": {
-            "$ref": "#/components/schemas/OptionalRelationship"
+            "$ref": "#/components/schemas/node_parent_Relationship"
           },
           "polymorphicScalar": {
-            "$ref": "#/components/schemas/OptionalRelationship"
+            "$ref": "#/components/schemas/node_polymorphicScalar_Relationship"
           }
         },
         "required": [
@@ -406,6 +349,136 @@
           "links"
         ],
         "title": "nodePageOutput",
+        "type": "object"
+      },
+      "node_children_RelationshipOutput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/node_children_RelationshipOutput_ObjectId"
+            },
+            "title": "Data",
+            "type": "array"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/OutputListRelationShipMeta"
+          }
+        },
+        "required": [
+          "data",
+          "meta"
+        ],
+        "title": "node_children_RelationshipOutput",
+        "type": "object"
+      },
+      "node_children_RelationshipOutput_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "node",
+            "enum": [
+              "node"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "node_children_RelationshipOutput_ObjectId",
+        "type": "object"
+      },
+      "node_parent_Relationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/node_parent_Relationship_ObjectId"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "node_parent_Relationship",
+        "type": "object"
+      },
+      "node_parent_Relationship_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "node",
+            "enum": [
+              "node"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "node_parent_Relationship_ObjectId",
+        "type": "object"
+      },
+      "node_polymorphicScalar_Relationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/node_polymorphicScalar_Relationship_ObjectId"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "node_polymorphicScalar_Relationship",
+        "type": "object"
+      },
+      "node_polymorphicScalar_Relationship_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "enum": [
+              "alpha",
+              "bravo"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "node_polymorphicScalar_Relationship_ObjectId",
         "type": "object"
       }
     }

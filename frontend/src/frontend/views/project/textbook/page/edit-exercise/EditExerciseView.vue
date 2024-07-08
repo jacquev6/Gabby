@@ -7,7 +7,7 @@ import { BButton, BBusy } from '$frontend/components/opinion/bootstrap'
 import ExerciseForm from '$frontend/components/ExerciseForm.vue'
 import TwoResizableColumns from '$frontend/components/TwoResizableColumns.vue'
 import ExerciseTools from '../ExerciseTools.vue'
-import type { Project, Textbook, Section, Exercise } from '$frontend/types/api'
+import type { Project, Textbook, Section } from '$frontend/stores/api'
 import AdaptedExercise from '../AdaptedExercise.vue'
 import type { ExerciseCreationHistory } from '../ExerciseCreationHistory'
 
@@ -25,7 +25,7 @@ const props = defineProps<{
 const router = useRouter()
 const api = useApiStore()
 
-const exercise = computed(() => api.auto.getOne<Exercise>('exercise', props.exerciseId, {include: ['adaptation']}))
+const exercise = computed(() => api.auto.getOne('exercise', props.exerciseId, {include: ['adaptation']}))
 
 const exerciseForm = ref<typeof ExerciseForm | null>(null)
 
