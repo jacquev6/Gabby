@@ -10,7 +10,7 @@ describe('Gabby', () => {
 
     cy.visit('/')
     cy.get('select').select('fr')
-    cy.get('select').blur()
+    cy.focused().blur()
     cy.get('div.busy').should('not.exist')
 
     cy.get('label:contains("Titre")').next().type('Projet de test')
@@ -79,7 +79,7 @@ describe('Gabby', () => {
 
     cy.visit('/')
     cy.get('select').select('fr')
-    cy.get('select').blur()
+    cy.focused().blur()
     cy.get('div.busy').should('not.exist')
 
     cy.screenshot('index/index', {clip: {x: 0, y: 0, width: 1000, height: 350}})
@@ -123,12 +123,23 @@ describe('Gabby', () => {
     cy.screenshot('project-textbook-page/project-textbook-page', {clip: {x: 0, y: 0, width: 1000, height: 400}})
     cy.screenshot('project-textbook-page/existing-exercises', {clip: {x: 330, y: 50, width: 500, height: 250}})
     cy.get('canvas').last().screenshot('project-textbook-page/existing-exercises-in-pdf', {clip: {x: 0, y: 233, width: 1000, height: 1000}})
+  })
 
-    cy.get('a:contains("Modifier")').first().click()
+  it('modifies existing exercise', () => {
+    cy.viewport(1000, 1000)
 
+    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=admin-user,test-exercises')
+    cy.wrap(useApiStore()).then(api => api.auth.login('admin', 'password'))
+
+    cy.visit('/project-xkopqm/textbook-klxufv/page-6/exercise-wbqloc')
+    cy.get('select').select('fr')
+    cy.focused().blur()
+    cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
     cy.get('div.busy').should('not.exist')
+
     cy.get('label:contains("Énoncé")').next().type('{selectAll}... vide\n... vident')
-    // Image is cropped to 670px height in headless mode. I don't know why.
+    cy.get('label:contains("Énoncé")').next().type('{selectAll}... vide\n... vident')
+    cy.get('label:contains("Énoncé")').next().should('have.value', '... vide\n... vident')
     cy.screenshot('project-textbook-page-exercise/modify-exercise', {clip: {x: 0, y: 50, width: 575, height: 1000}})
 
     cy.get('label:contains("Remplacer")').next().type('{selectAll}{backspace}')
