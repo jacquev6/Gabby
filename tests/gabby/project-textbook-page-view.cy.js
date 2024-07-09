@@ -1022,8 +1022,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
     cy.get('label:contains("Number")').next().should('have.value', '11')
     cy.get('div.busy').should('not.exist')
 
-    // Selection using '.eq' is fragile but I'm in a hurry. Sorry, future me.
-    cy.get('input').eq(6).type('Abcd')
+    cy.get('span[contenteditable]').first().type('Abcd')
 
     cy.get('label:contains("Adaptation type")').next().select('selectThingsAdaptation')
     cy.get('div.busy').should('not.exist')
@@ -1034,7 +1033,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
     cy.get('label:contains("Adaptation type")').next().select('fillWithFreeTextAdaptation')
     cy.get('div.busy').should('not.exist')
 
-    cy.get('input').eq(6).should('have.value', '')
+    cy.get('span[contenteditable]').first().should('have.value', '')
 
     cy.get('label:contains("Adaptation type")').next().select('selectThingsAdaptation')
     cy.get('div.busy').should('not.exist')
