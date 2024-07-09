@@ -37,7 +37,7 @@ describe('Gabby', () => {
     cy.get('a:contains("Nouvel exercice")').click()
     cy.get('label').contains('Numéro').next().type(5).blur()
 
-    const canvas = cy.get('canvas[style="position: absolute; top: 0px; left: 0px;"]')
+    const canvas = cy.get('canvas[style="position: absolute; top: 0px; left: 0px;"]').last()
 
     canvas.trigger('pointermove', 5, 5)
     canvas.trigger('pointerdown', 15, 15, { pointerId: 1 })

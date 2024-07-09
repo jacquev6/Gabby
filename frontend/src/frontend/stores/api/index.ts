@@ -1,7 +1,7 @@
 import type { components } from '../../../openapi'
 
 import { makeStore } from "./glue"
-import type { ApiStore, Item } from "./interface"
+import type { ApiStore, Item, List } from "./interface"
 
 
 // Multiple, lazy-instantiated singletons, à la Pinia, but handled manually for flexibility.
@@ -21,6 +21,8 @@ export function defineApiStore(id: string, options: {baseUrl: string}): () => Ap
 }
 
 export const useApiStore = defineApiStore('api', {baseUrl: '/api'})
+
+export type { Item, List }
 
 export type AdaptedExercise = Item<'adaptedExercise'>
 export type Exercise = Item<'exercise'>

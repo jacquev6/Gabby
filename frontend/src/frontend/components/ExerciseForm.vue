@@ -439,11 +439,11 @@ const adaptedData = computedAsync(
   adaptedDataLoading,
 )
 
-const highlightedRectangles = computed(() => {
+const surroundedRectangles = computed(() => {
   if (state.value.boundingRectangle) {
     return [state.value.boundingRectangle]
   } else {
-    return null
+    return []
   }
 })
 
@@ -474,7 +474,7 @@ function replace(fieldName: FieldName | null, searchValue: string, replaceValue:
 defineExpose({
   textSelected: computed(() => !props.editMode && alreadyExists.value ? null : textSelected),
   adaptedData, adaptedDataLoading,
-  highlightedRectangles,
+  surroundedRectangles,
   // Tools
   selected,
   replace,

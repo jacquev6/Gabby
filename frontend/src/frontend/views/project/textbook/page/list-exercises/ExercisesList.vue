@@ -1,29 +1,15 @@
 <script setup lang="ts">
-import { computed } from 'vue'
 import { BBusy } from '$frontend/components/opinion/bootstrap'
-import { useApiStore } from '$frontend/stores/api'
-import type { Textbook } from '$frontend/stores/api'
+import type { List } from '$frontend/stores/api'
 
 
-const props = defineProps<{
-  textbook: Textbook,
-  page: number,
+defineProps<{
+  exercises: List<'exercise'>,
 }>()
-
-const api = useApiStore()
-
-const exercises = computed(() => api.auto.getAll(
-  'exercise',
-  {filters: {'textbook': props.textbook.id, 'textbookPage': props.page.toString()}}
-))
 
 function ellipsis(s: string) {
   return s.length > 25 ? s.slice(0, 25) + '…' : s
 }
-
-defineExpose({
-  exercises,
-})
 </script>
 
 <template>

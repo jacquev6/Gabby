@@ -10,6 +10,8 @@ import ExerciseTools from '../ExerciseTools.vue'
 import type { Project, Textbook, Section } from '$frontend/stores/api'
 import AdaptedExercise from '../AdaptedExercise.vue'
 import type { ExerciseCreationHistory } from '../ExerciseCreationHistory'
+import type { List } from '$frontend/stores/api'
+import type { Rectangle } from '../RectanglesHighlighter.vue'
 
 
 const props = defineProps<{
@@ -18,6 +20,7 @@ const props = defineProps<{
   pdf: any/* @todo Type */,
   section: Section | null,
   page: number,
+  exercises: List<'exercise'>
   exerciseId: string
   exerciseCreationHistory: ExerciseCreationHistory,
 }>()
@@ -62,9 +65,24 @@ async function saveThenNext(save: () => Promise<void>) {
   }
 }
 
+const greyRectangles = computed(() => {
+  const rectangles = props.exercises.items
+    .filter(exercise => exercise.exists)
+    .filter(exercise => exercise.id !== props.exerciseId)
+    .map(exercise => exercise.attributes!.boundingRectangle)
+    .filter((x): x is Rectangle => x !== null)
+
+  if (rectangles.length > 0) {
+    return rectangles
+  } else {
+    return []
+  }
+})
+
 defineExpose({
   textSelected: computed(() => exerciseForm.value?.textSelected),
-  highlightedRectangles: computed(() => exerciseForm.value?.highlightedRectangles),
+  surroundedRectangles: computed(() => exerciseForm.value?.surroundedRectangles ?? []),
+  greyRectangles,
   handlesScrolling: true,
 })
 </script>

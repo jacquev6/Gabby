@@ -9,6 +9,8 @@ import ExerciseTools from '../ExerciseTools.vue'
 import type { Project, Textbook, Section, Exercise } from '$frontend/stores/api'
 import AdaptedExercise from '../AdaptedExercise.vue'
 import type { ExerciseCreationHistory } from '../ExerciseCreationHistory'
+import type { List } from '$frontend/stores/api'
+import type { Rectangle } from '../RectanglesHighlighter.vue'
 
 
 type CreateExercise = () => Promise<{exercise: Exercise, suggestedNumber: string}>
@@ -19,6 +21,7 @@ const props = defineProps<{
   pdf: any/* @todo Type */,
   section: Section | null,
   page: number,
+  exercises: List<'exercise'>
   exerciseCreationHistory: ExerciseCreationHistory,
 }>()
 
@@ -31,6 +34,7 @@ const number = ref(props.exerciseCreationHistory.suggestedNumber ?? '')
 const automaticNumber = ref(false)
 async function createThenNext(createExercise: CreateExercise) {
   const { exercise, suggestedNumber } = await createExercise()
+  /* no need to await */ props.exercises.refresh()
   props.exerciseCreationHistory.push(exercise.id)
   props.exerciseCreationHistory.suggestedNumber = suggestedNumber
   number.value = suggestedNumber
@@ -49,6 +53,7 @@ function goToPrevious() {
 
 async function createThenBack(createExercise: CreateExercise) {
   await createExercise()
+  /* no need to await */ props.exercises.refresh()
   router.push({name: 'project-textbook-page-list-exercises', params: {projectId: props.project.id, textbookId: props.textbook.id, page: props.page}})
 }
 
@@ -56,10 +61,24 @@ function changePage(page: number) {
   router.push({name: 'project-textbook-page-create-exercise', params: {projectId: props.project.id, textbookId: props.textbook.id, page}})
 }
 
+const greyRectangles = computed(() => {
+  const rectangles = props.exercises.items
+    .filter(exercise => exercise.exists)
+    .map(exercise => exercise.attributes!.boundingRectangle)
+    .filter((x): x is Rectangle => x !== null)
+
+  if (rectangles.length > 0) {
+    return rectangles
+  } else {
+    return []
+  }
+})
+
 defineExpose({
   changePage,
   textSelected: computed(() => exerciseForm.value?.textSelected),
-  highlightedRectangles: computed(() => exerciseForm.value?.highlightedRectangles),
+  surroundedRectangles: computed(() => exerciseForm.value?.surroundedRectangles ?? []),
+  greyRectangles,
   handlesScrolling: true,
 })
 </script>
