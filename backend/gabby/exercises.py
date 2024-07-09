@@ -45,6 +45,12 @@ class Adaptation(OrmBase, CreatedUpdatedByAtMixin):
         )
 
     def to_generic_adaptation(self):
+        def to_generic_or_empty(adapted):
+            if adapted is None:
+                return ""
+            else:
+                return adapted.to_generic()
+
         return GenericAdaptation(
             exercise=Exercise(
                 project=None,
@@ -53,8 +59,8 @@ class Adaptation(OrmBase, CreatedUpdatedByAtMixin):
                 number=self.exercise.number,
                 instructions=self.make_adapted_instructions().to_generic(),
                 wording=self.make_adapted_wording().to_generic(),
-                example=example.to_generic() if (example := self.make_adapted_example()) else "",
-                clue=clue.to_generic() if (clue := self.make_adapted_clue()) else "",
+                example=to_generic_or_empty(self.make_adapted_example()),
+                clue=to_generic_or_empty(self.make_adapted_clue()),
             ),
         )
 
