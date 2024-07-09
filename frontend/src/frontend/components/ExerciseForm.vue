@@ -282,7 +282,7 @@ function skip() {
 const adaptationOptions = computed(() => {
   switch (state.value.adaptationType) {
     case '-':
-      return null
+      return {}
     case 'selectThingsAdaptation':
       return state.value.selectThingsAdaptationOptions
     case 'fillWithFreeTextAdaptation':
@@ -416,27 +416,23 @@ async function save() {
 const adaptedDataLoading = ref(false)
 const adaptedData = computedAsync(
   async () => {
-    if (state.value.adaptationType === '-') {
+    console.assert(adaptationOptions.value !== null)
+    const attributes = {
+      number: state.value.number,
+      textbookPage: props.textbookPage,
+      instructions: state.value.instructions,
+      wording: state.value.wording,
+      example: state.value.example,
+      clue: state.value.clue,
+      type: state.value.adaptationType,
+      adaptationOptions: adaptationOptions.value,
+    }
+    try {
+      const adapted = await api.client.createOne('adaptedExercise', attributes, {})
+      return adapted.attributes!.adapted
+    } catch (e) {
+      console.error(e)
       return null
-    } else {
-      console.assert(adaptationOptions.value !== null)
-      const attributes = {
-        number: state.value.number,
-        textbookPage: props.textbookPage,
-        instructions: state.value.instructions,
-        wording: state.value.wording,
-        example: state.value.example,
-        clue: state.value.clue,
-        type: state.value.adaptationType,
-        adaptationOptions: adaptationOptions.value,
-      }
-      try {
-        const adapted = await api.client.createOne('adaptedExercise', attributes, {})
-        return adapted.attributes!.adapted
-      } catch (e) {
-        console.error(e)
-        return null
-      }
     }
   },
   null,

@@ -111,7 +111,6 @@ defineExpose({
           exerciseId="unused @todo Compute storageKey in an independent composable, and let AdaptedExercise load and save iif the key is not null"
           :exercise="exerciseForm?.adaptedData"
         />
-        <p v-else>{{ $t('selectExerciseType') }}</p>
       </div>
     </template>
   </TwoResizableColumns>

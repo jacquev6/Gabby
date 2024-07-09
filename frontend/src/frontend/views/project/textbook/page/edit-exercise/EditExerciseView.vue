@@ -126,7 +126,6 @@ defineExpose({
             :exerciseId="props.exerciseId"
             :exercise="exerciseForm.adaptedData"
           />
-          <p v-else>{{ $t('selectExerciseType') }}</p>
         </BBusy>
       </div>
     </template>
