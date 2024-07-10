@@ -33,7 +33,7 @@ class SelectThingsAdaptation(Adaptation):
         return range(1, self.colors + 1)
 
     def adapt_instructions(self, section):
-        return parsing.parse_section(
+        return parsing.parse_instructions_section(
             {f"sel{color_index}": r""" "|" STR """ for color_index in self.color_indexes},
             type("InstructionsAdapter", (parsing.SectionTransformer,), {
                 f"sel{color_index}_tag": (lambda color: staticmethod(lambda args: renderable.SelectedText(text=args[0], color=color, colors=self.colors)))(color_index)
@@ -74,7 +74,7 @@ class SelectThingsAdaptation(Adaptation):
                 return renderable.PlainText(text=args[0])
 
     def make_adapted_wording(self):
-        return parsing.parse_section(
+        return parsing.parse_wording_section(
             {},
             self.WordingAdapter(self.words, self.punctuation, self.colors),
             self.exercise.wording,

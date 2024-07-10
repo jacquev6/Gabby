@@ -74,16 +74,16 @@ class GenericAdaptation(Adaptation):
     id: orm.Mapped[int] = orm.mapped_column(sql.ForeignKey(Adaptation.id), primary_key=True)
 
     def make_adapted_instructions(self):
-        return parsing.parse_generic_section(self.exercise.instructions)
+        return parsing.parse_generic_instructions_section(self.exercise.instructions)
 
     def make_adapted_wording(self):
-        return parsing.parse_generic_section(self.exercise.wording)
+        return parsing.parse_generic_wording_section(self.exercise.wording)
 
     def make_adapted_example(self):
-        return parsing.parse_generic_section(self.exercise.example)
+        return parsing.parse_generic_instructions_section(self.exercise.example)
 
     def make_adapted_clue(self):
-        return parsing.parse_generic_section(self.exercise.clue)
+        return parsing.parse_generic_instructions_section(self.exercise.clue)
 
 
 class Exercise(OrmBase, CreatedUpdatedByAtMixin):

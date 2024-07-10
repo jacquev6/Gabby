@@ -21,16 +21,16 @@ class NullAdaptation(Adaptation):
     __abstract__ = True  # Abstract with regards to SQL tables, but instantiable in Python
 
     def make_adapted_instructions(self):
-        return parsing.parse_plain_section(self.exercise.instructions)
+        return parsing.parse_plain_instructions_section(self.exercise.instructions)
 
     def make_adapted_wording(self):
-        return parsing.parse_plain_section(self.exercise.wording)
+        return parsing.parse_plain_wording_section(self.exercise.wording)
 
     def make_adapted_example(self):
-        return parsing.parse_plain_section(self.exercise.example)
+        return parsing.parse_plain_instructions_section(self.exercise.example)
 
     def make_adapted_clue(self):
-        return parsing.parse_plain_section(self.exercise.clue)
+        return parsing.parse_plain_instructions_section(self.exercise.clue)
 
 
 @dataclasses.dataclass
