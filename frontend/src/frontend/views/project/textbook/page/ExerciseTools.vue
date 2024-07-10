@@ -83,14 +83,14 @@ function applyReplace() {
 <template>
   <h1>{{ $t('tools') }}</h1>
   <hr/>
-  <div @mousedown="e => e.stopPropagation()" @touchstart="e => e.stopPropagation()" style="cursor: initial;">
+  <div @mousedown="e => e.stopPropagation()" @touchstart="e => e.stopPropagation()" style="cursor: initial">
     <BButton primary sm @click="exerciseForm.undo" :disabled="!exerciseForm.canUndo" title="Ctrl+Z">{{ $t('undo') }}</BButton>
     <BButton primary sm @click="exerciseForm.redo" :disabled="!exerciseForm.canRedo" title="Ctrl+Y">{{ $t('redo') }}</BButton>
   </div>
   <hr/>
-  <div id="teleportTargetForAdaptationDetails" @mousedown="e => e.stopPropagation()" @touchstart="e => e.stopPropagation()" ></div>
+  <div id="teleportTargetForAdaptationDetails" @mousedown="e => e.stopPropagation()" @touchstart="e => e.stopPropagation()" style="cursor: initial"></div>
   <hr/>
-  <div @mousedown="e => e.stopPropagation()" @touchstart="e => e.stopPropagation()" style="cursor: initial;">
+  <div @mousedown="e => e.stopPropagation()" @touchstart="e => e.stopPropagation()" style="cursor: initial">
     <BLabeledInput :label="$t('replace')" v-model="search" list="escapes"/>
     <BLabeledInput :label="$t('replaceWith')" v-model="replace" list="escapes"/>
     <datalist id="escapes">
