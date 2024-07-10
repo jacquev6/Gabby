@@ -170,7 +170,6 @@ watch(
         } else {
           console.assert(props.exercise.relationships.adaptation !== undefined)
           console.assert(props.exercise.relationships.adaptation.inCache)
-          console.log('HERE')
           state.value.adaptationType = props.exercise.relationships.adaptation.type as AdaptationType
           console.assert(state.value.adaptationType !== '-')
           switch (state.value.adaptationType) {
