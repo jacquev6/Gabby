@@ -19,11 +19,23 @@ class SectionTransformer(lark.Transformer):
     def section(self, paragraphs):
         return renderable.Section(paragraphs=paragraphs)
 
-    def paragraph(self, sentences):
-        return renderable.Paragraph(sentences=sentences)
+    def paragraph(self, args):
+        return args[0]
 
-    def sentence(self, args):
+    def strict_paragraph(self, sentences):
+        return renderable.Paragraph(sentences=sentences[0::2])
+
+    def strict_sentence(self, args):
         return renderable.Sentence(tokens=args)
+
+    def in_sentence_punctuation(self, args):
+        return renderable.PlainText(text=args[0])
+
+    def end_of_sentence_punctuation(self, args):
+        return renderable.PlainText(text=args[0])
+
+    def lenient_paragraph(self, args):
+        return renderable.Paragraph(sentences=[renderable.Sentence(tokens=args)])
 
     def word(self, args):
         return renderable.PlainText(text=args[0])
@@ -44,15 +56,21 @@ class SectionParser(abc.ABC):
             r"""\
                 section: paragraph ("\n\n" paragraph)*
 
-                paragraph: sentence  # @todo Split paragraph in several sentences
+                paragraph: strict_paragraph | lenient_paragraph
 
-                sentence: (_tag | word | punctuation | whitespace)+
+                strict_paragraph: strict_sentence (whitespace strict_sentence)*
+                strict_sentence: (_tag | word | in_sentence_punctuation | whitespace)+ end_of_sentence_punctuation
+                in_sentence_punctuation: /[,;:]/
+                end_of_sentence_punctuation: /\.\.\.|[.!?…]/
+
+                lenient_paragraph: (_tag | word | punctuation | whitespace)+
 
                 # Keep these three regular expressions mutually exclusive
                 word: /[\w]+/
                 whitespace: /[ \t]+/
-                punctuation: /[^\w \t\n]/
+                punctuation: /\.\.\.|[^\w \t\n]/
 
+                # Rules uses in tags; do not delete
                 STR: /[^}|]+/
                 INT: /[0-9]+/
             """
@@ -136,10 +154,13 @@ parse_generic_instructions_section = InstructionsSectionParser(
 
 
 class ParseGenericInstructionsSectionTestCase(TestCase):
-    def do_test(self, input, expected):
-        self.assertEqual(parse_generic_instructions_section(input), expected)
-        if expected is not None:
-            self.assertEqual(parse_generic_instructions_section(expected.to_generic()), expected)
+    def do_test(self, input, expected_section):
+        actual_section = parse_generic_instructions_section(input)
+        for paragraph_index, (actual_paragraph, expected_paragraph) in enumerate(zip(actual_section.paragraphs, expected_section.paragraphs, strict=True)):
+            for sentence_index, (actual_sentence, expected_sentence) in enumerate(zip(actual_paragraph.sentences, expected_paragraph.sentences, strict=True)):
+                self.assertEqual(actual_sentence, expected_sentence, f"Paragraph {paragraph_index}, sentence {sentence_index}")
+        if expected_section is not None:
+            self.assertEqual(parse_generic_instructions_section(expected_section.to_generic()), expected_section)
 
     # In instructions (and example and clue) sections, we want to:
     # - join consecutive lines separated by a single carriage return into a single paragraph
@@ -380,10 +401,13 @@ parse_generic_wording_section = WordingSectionParser(
 
 
 class ParseGenericWordingSectionTestCase(TestCase):
-    def do_test(self, input, expected):
-        self.assertEqual(parse_generic_wording_section(input), expected)
-        if expected is not None:
-            self.assertEqual(parse_generic_wording_section(expected.to_generic()), expected)
+    def do_test(self, input, expected_section):
+        actual_section = parse_generic_wording_section(input)
+        for paragraph_index, (actual_paragraph, expected_paragraph) in enumerate(zip(actual_section.paragraphs, expected_section.paragraphs, strict=True)):
+            for sentence_index, (actual_sentence, expected_sentence) in enumerate(zip(actual_paragraph.sentences, expected_paragraph.sentences, strict=True)):
+                self.assertEqual(actual_sentence, expected_sentence, f"Paragraph {paragraph_index}, sentence {sentence_index}")
+        if expected_section is not None:
+            self.assertEqual(parse_generic_wording_section(expected_section.to_generic()), expected_section)
 
     # In wording sections, we want to:
     # - make a paragraph for each non-empty line
@@ -415,6 +439,95 @@ class ParseGenericWordingSectionTestCase(TestCase):
                     renderable.PlainText(text="yet"),
                     renderable.Whitespace(),
                     renderable.PlainText(text="another"),
+                ])]),
+            ]),
+        )
+
+    def test_one_paragraph_with_strict_sentences(self):
+        self.do_test(
+            "This is: a   sentence.   And, another; one. Again... Again… \t Another? Yes! Une autre ? Oui !",
+            renderable.Section(paragraphs=[renderable.Paragraph(sentences=[
+                renderable.Sentence(tokens=[
+                    renderable.PlainText(text="This"),
+                    renderable.Whitespace(),
+                    renderable.PlainText(text="is"),
+                    renderable.PlainText(text=":"),
+                    renderable.Whitespace(),
+                    renderable.PlainText(text="a"),
+                    renderable.Whitespace(),
+                    renderable.PlainText(text="sentence"),
+                    renderable.PlainText(text="."),
+                ]),
+                renderable.Sentence(tokens=[
+                    renderable.PlainText(text="And"),
+                    renderable.PlainText(text=","),
+                    renderable.Whitespace(),
+                    renderable.PlainText(text="another"),
+                    renderable.PlainText(text=";"),
+                    renderable.Whitespace(),
+                    renderable.PlainText(text="one"),
+                    renderable.PlainText(text="."),
+                ]),
+                renderable.Sentence(tokens=[
+                    renderable.PlainText(text="Again"),
+                    renderable.PlainText(text="..."),
+                ]),
+                renderable.Sentence(tokens=[
+                    renderable.PlainText(text="Again"),
+                    renderable.PlainText(text="…"),
+                ]),
+                renderable.Sentence(tokens=[
+                    renderable.PlainText(text="Another"),
+                    renderable.PlainText(text="?"),
+                ]),
+                renderable.Sentence(tokens=[
+                    renderable.PlainText(text="Yes"),
+                    renderable.PlainText(text="!"),
+                ]),
+                renderable.Sentence(tokens=[
+                    renderable.PlainText(text="Une"),
+                    renderable.Whitespace(),
+                    renderable.PlainText(text="autre"),
+                    renderable.Whitespace(),
+                    renderable.PlainText(text="?"),
+                ]),
+                renderable.Sentence(tokens=[
+                    renderable.PlainText(text="Oui"),
+                    renderable.Whitespace(),
+                    renderable.PlainText(text="!"),
+                ]),
+            ])]),
+        )
+
+    def test_one_paragraph_with_almost_two_strict_sentences(self):
+        self.do_test(
+            "This is a sentence. And another one but without its final dot",
+            renderable.Section(paragraphs=[
+                renderable.Paragraph(sentences=[renderable.Sentence(tokens=[
+                    renderable.PlainText(text="This"),
+                    renderable.Whitespace(),
+                    renderable.PlainText(text="is"),
+                    renderable.Whitespace(),
+                    renderable.PlainText(text="a"),
+                    renderable.Whitespace(),
+                    renderable.PlainText(text="sentence"),
+                    renderable.PlainText(text="."),
+                    renderable.Whitespace(),
+                    renderable.PlainText(text="And"),
+                    renderable.Whitespace(),
+                    renderable.PlainText(text="another"),
+                    renderable.Whitespace(),
+                    renderable.PlainText(text="one"),
+                    renderable.Whitespace(),
+                    renderable.PlainText(text="but"),
+                    renderable.Whitespace(),
+                    renderable.PlainText(text="without"),
+                    renderable.Whitespace(),
+                    renderable.PlainText(text="its"),
+                    renderable.Whitespace(),
+                    renderable.PlainText(text="final"),
+                    renderable.Whitespace(),
+                    renderable.PlainText(text="dot"),
                 ])]),
             ]),
         )
