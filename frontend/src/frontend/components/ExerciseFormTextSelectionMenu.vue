@@ -38,7 +38,7 @@ watch(
     :reference
   >
     <BLabeledCheckbox :label="$t('doStripExerciceNumber')" v-model="doStripExerciceNumber" :disabled="!canStripExerciceNumber" />
-    <BLabeledTextarea ref="selectedText" :label="$t('selectedText')" v-model="textToAdd" @change="emit('extractionEvent', {kind: 'SelectedTextEdited', value: textToAdd})" />
+    <BLabeledTextarea ref="selectedText" :maxRows="15" v-model="textToAdd" @change="emit('extractionEvent', {kind: 'SelectedTextEdited', value: textToAdd})" />
 
     <slot :textToAdd :hide="() => { show = false }"></slot>
   </FloatingModal>

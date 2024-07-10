@@ -7,9 +7,12 @@ defineOptions({
   inheritAttrs: false
 })
 
-defineProps<{
-  label: string,
-}>()
+withDefaults(defineProps<{
+  label?: string
+  maxRows?: number
+}>(), {
+  maxRows: Infinity,
+})
 
 const model = defineModel<string>({default: ''})
 
@@ -26,7 +29,7 @@ defineExpose({
 
 <template>
   <div class="mb-3">
-    <label class="form-label" :for="id">{{ label }}</label>
-    <textarea class="form-control" :id="id" ref="textarea" v-model="model" v-bind="$attrs" :rows="model.split('\n').length + 1"></textarea>
+    <label v-if="label !== undefined" class="form-label" :for="id">{{ label }}</label>
+    <textarea class="form-control" :id="id" ref="textarea" v-model="model" v-bind="$attrs" :rows="Math.min(model.split('\n').length + 1, maxRows)"></textarea>
   </div>
 </template>

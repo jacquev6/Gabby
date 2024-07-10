@@ -160,7 +160,7 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
     cy.get('@canvas').trigger('pointerdown', 165, 175, { pointerId: 1 })
     cy.get('@canvas').trigger('pointermove', 300, 202)
     cy.get('@canvas').trigger('pointerup', 300, 202, { pointerId: 1 })
-    cy.get('label:contains("Selected text")').next().should('have.value', 'nager ➞ … ◆ tracter ➞ … ◆ manger ➞ … ◆\ninventer ➞ … ◆ livrer ➞ …')
+    cy.get('textarea').first().should('have.value', 'nager ➞ … ◆ tracter ➞ … ◆ manger ➞ … ◆\ninventer ➞ … ◆ livrer ➞ …')
     cy.get('button:contains("Wording")').click()
 
     cy.get('label:contains("Wording")').next().should('have.value', 'blah blah\nnager ➞ … ◆ tracter ➞ … ◆ manger ➞ … ◆\ninventer ➞ … ◆ livrer ➞ …')
