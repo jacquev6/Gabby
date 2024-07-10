@@ -54,6 +54,11 @@ const router = createRouter({
           component: RootIndexView,
         },
         {
+          path: 'errors',
+          name: 'errors',
+          component: () => import('./views/ErrorsView.vue'),
+        },
+        {
           path: 'project-:projectId',
           component: ProjectLayout,
           props: (route) => (
@@ -118,9 +123,10 @@ const router = createRouter({
 })
 
 
-createApp(RouterView)
-  .use(i18n)
-  .use(createHead())
-  .use(createPinia().use(PiniaSharedState({enable: false})))
-  .use(router)
-  .mount('#app')
+export const app = createApp(RouterView)
+
+app.use(i18n)
+app.use(createHead())
+app.use(createPinia().use(PiniaSharedState({enable: false})))
+app.use(router)
+app.mount('#app')

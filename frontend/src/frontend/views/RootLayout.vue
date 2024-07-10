@@ -5,6 +5,7 @@ import type { RouteLocationRaw } from 'vue-router'
 
 import LoginModal from '$frontend/components/LoginModal.vue'
 import Navbar from '$frontend/components/Navbar.vue'
+import ErrorReportingModal from '$frontend/components/ErrorReportingModal.vue'
 import { useApiStore } from '../stores/api'
 
 
@@ -63,6 +64,7 @@ const class_ = computed(() => componentHandlesScrolling.value ? 'overflow-hidden
 <template>
   <div class="vh-100 d-flex flex-column overflow-hidden">
     <Navbar :title :breadcrumbs></Navbar>
+    <ErrorReportingModal />
     <template v-if="unavailableUntil">
       <div class="alert alert-danger" role="alert">
         <i18n-t keypath="siteUnavailableUntil">

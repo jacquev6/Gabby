@@ -5266,6 +5266,47 @@
         "title": "selectThingsAdaptation_updatedBy_Relationship_ObjectId",
         "type": "object"
       },
+      "syntheticErrorItemOutput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/syntheticErrorOutputItem"
+          },
+          "included": {
+            "items": {},
+            "title": "Included",
+            "type": "array"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "syntheticErrorItemOutput",
+        "type": "object"
+      },
+      "syntheticErrorOutputItem": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "links": {
+            "$ref": "#/components/schemas/ItemLinks"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "links"
+        ],
+        "title": "syntheticErrorOutputItem",
+        "type": "object"
+      },
       "textbookCreateInput": {
         "additionalProperties": false,
         "properties": {
@@ -9134,6 +9175,54 @@
           }
         ],
         "summary": "Update Select Things Adaptation"
+      }
+    },
+    "/api/syntheticErrors/{id}": {
+      "get": {
+        "operationId": "get_synthetic_error_api_syntheticErrors__id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/syntheticErrorItemOutput"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Synthetic Error"
       }
     },
     "/api/textbooks": {

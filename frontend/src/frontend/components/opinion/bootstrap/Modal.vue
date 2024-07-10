@@ -59,7 +59,7 @@ defineExpose({show, hide, active})
 
 <template>
   <div v-if="inDom" class="modal fade" ref="modalElement" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
       <div class="modal-content">
         <div class="modal-header">
           <slot name="header"></slot>

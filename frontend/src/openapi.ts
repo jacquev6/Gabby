@@ -179,6 +179,10 @@ export interface paths {
     /** Update Select Things Adaptation */
     patch: operations["update_select_things_adaptation_api_selectThingsAdaptations__id__patch"];
   };
+  "/api/syntheticErrors/{id}": {
+    /** Get Synthetic Error */
+    get: operations["get_synthetic_error_api_syntheticErrors__id__get"];
+  };
   "/api/textbooks": {
     /** Get Textbooks */
     get: operations["get_textbooks_api_textbooks_get"];
@@ -2115,6 +2119,20 @@ export interface components {
        */
       type: "user";
     };
+    /** syntheticErrorItemOutput */
+    syntheticErrorItemOutput: {
+      data: components["schemas"]["syntheticErrorOutputItem"];
+      /** Included */
+      included?: unknown[];
+    };
+    /** syntheticErrorOutputItem */
+    syntheticErrorOutputItem: {
+      /** Id */
+      id: string;
+      links: components["schemas"]["ItemLinks"];
+      /** Type */
+      type: string;
+    };
     /** textbookCreateInput */
     textbookCreateInput: {
       data: components["schemas"]["textbookCreateInputData"];
@@ -3867,6 +3885,31 @@ export interface operations {
       200: {
         content: {
           "application/vnd.api+json": components["schemas"]["selectThingsAdaptationItemOutput"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  /** Get Synthetic Error */
+  get_synthetic_error_api_syntheticErrors__id__get: {
+    parameters: {
+      query?: {
+        include?: string;
+      };
+      path: {
+        id: string;
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        content: {
+          "application/vnd.api+json": components["schemas"]["syntheticErrorItemOutput"];
         };
       };
       /** @description Validation Error */

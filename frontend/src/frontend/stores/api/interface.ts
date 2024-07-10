@@ -31,6 +31,7 @@ export const itemTypes = [
   'recoveryEmailRequest',
   'section',
   'selectThingsAdaptation',
+  'syntheticError',
   'textbook',
   'user',
 ] as const

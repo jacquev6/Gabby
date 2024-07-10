@@ -6,6 +6,10 @@
   "close": "Close",
 
 
+  "thereWasABug": "There was a bug",
+  "thisIsNotYourFault": "This is not your fault. Please send an e-mail to Vincent Jacques with all the details below, and optionally a description of what you were doing.",
+
+
   "siteUnavailableUntil": "The website is undergoing maintenance. Anticipated end: {date}.",
 
 
