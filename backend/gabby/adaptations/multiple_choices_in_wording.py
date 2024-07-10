@@ -27,7 +27,7 @@ class MultipleChoicesInWordingAdaptation(Adaptation):
     def make_adapted_instructions(self):
         return parsing.parse_plain_instructions_section(self.exercise.instructions)
 
-    class WordingAdapter(parsing.SectionTransformer):
+    class WordingAdapter(parsing.WordingSectionTransformer):
         def choices_tag(self, args):
             return renderable.MultipleChoicesInput(choices=[arg.value for arg in args])
 

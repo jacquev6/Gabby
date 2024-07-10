@@ -29,7 +29,7 @@ class FillWithFreeTextAdaptation(Adaptation):
     def make_adapted_instructions(self):
         return parsing.parse_plain_instructions_section(self.exercise.instructions)
 
-    class WordingAdapter(parsing.SectionTransformer):
+    class WordingAdapter(parsing.WordingSectionTransformer):
         def placeholder_tag(self, args):
             return renderable.FreeTextInput()
 
@@ -191,7 +191,7 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
             number="number",
             textbook_page=42,
             instructions="instructions",
-            wording="foo\ntoto : ...\n\nbar : ...\n\nbaz : ...",
+            wording="foo toto : ...\n\nbar : ...\n\nbaz : ...",
             example="",
             clue="",
         )

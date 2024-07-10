@@ -123,7 +123,11 @@ class Section(BaseModel):
         generic = "\n\n".join(p.to_generic() for p in self.paragraphs)
         if settings.DEBUG:
             from . import parsing
-            assert parsing.parse_generic_instructions_section(generic) == self
+            reparsed = parsing.parse_generic_wording_section(generic)
+            if reparsed != self:
+                print("Expected:", generic)
+                print("Got:", reparsed.to_generic())
+                assert False
         return generic
 
 

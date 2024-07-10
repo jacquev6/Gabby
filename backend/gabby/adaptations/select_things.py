@@ -35,7 +35,7 @@ class SelectThingsAdaptation(Adaptation):
     def adapt_instructions(self, section):
         return parsing.parse_instructions_section(
             {f"sel{color_index}": r""" "|" STR """ for color_index in self.color_indexes},
-            type("InstructionsAdapter", (parsing.SectionTransformer,), {
+            type("InstructionsAdapter", (parsing.InstructionsSectionTransformer,), {
                 f"sel{color_index}_tag": (lambda color: staticmethod(lambda args: renderable.SelectedText(text=args[0], color=color, colors=self.colors)))(color_index)
                 for color_index in self.color_indexes
             })(),
@@ -55,7 +55,7 @@ class SelectThingsAdaptation(Adaptation):
 
         return section
 
-    class WordingAdapter(parsing.SectionTransformer):
+    class WordingAdapter(parsing.WordingSectionTransformer):
         def __init__(self, words, punctuation, colors):
             self.select_words = words
             self.select_punctuation = punctuation
@@ -290,7 +290,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             number="number",
             textbook_page=42,
             instructions="instructions",
-            wording="wording\nis\n\non\n\nmultiple\nlines",
+            wording="wording is\n\non\n\nmultiple lines",
             example="",
             clue="",
         )

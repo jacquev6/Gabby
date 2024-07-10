@@ -1,5 +1,6 @@
 import abc
 import functools
+import itertools
 
 import lark
 
@@ -15,10 +16,7 @@ def memoize_parser(grammar, start):
     return lark.Lark(grammar, start=start)
 
 
-class SectionTransformer(lark.Transformer):
-    def section(self, paragraphs):
-        return renderable.Section(paragraphs=paragraphs)
-
+class _SectionTransformer(lark.Transformer):
     def paragraph(self, args):
         return args[0]
 
@@ -50,7 +48,7 @@ class SectionTransformer(lark.Transformer):
         return int(arg.value)
 
 
-class SectionParser(abc.ABC):
+class _SectionParser(abc.ABC):
     def __init__(self, tags, transformer):
         grammar = (
             r"""\
@@ -87,6 +85,7 @@ class SectionParser(abc.ABC):
             normalized = self.normalize(section)
             try:
                 return self.transformer.transform(self.parser.parse(normalized))
+                # return self.post_process(self.transformer.transform(self.parser.parse(normalized)))
             except lark.exceptions.ParseError as e:
                 raise ValueError(f"Error parsing section {normalized}: {e}")
 
@@ -94,8 +93,21 @@ class SectionParser(abc.ABC):
     def normalize(self, section: str) -> str:
         raise NotImplementedError()
 
+    # @abc.abstractmethod
+    # def post_process(self, section: renderable.Section) -> renderable.Section:
+    #     raise NotImplementedError()
 
-class InstructionsSectionParser(SectionParser):
+
+class InstructionsSectionTransformer(_SectionTransformer):
+    def section(self, paragraphs):
+        return renderable.Section(paragraphs=list(
+            renderable.Paragraph(sentences=[sentence])
+            for sentence in
+            itertools.chain.from_iterable(paragraph.sentences for paragraph in paragraphs)
+        ))
+
+
+class InstructionsSectionParser(_SectionParser):
     def normalize(self, section):
         # This string manipulation before parsing is fragile but works for now.
         return "\n\n".join(
@@ -112,10 +124,10 @@ def parse_instructions_section(tags, transformer, section):
     return InstructionsSectionParser(tags, transformer)(section)
 
 
-parse_plain_instructions_section = InstructionsSectionParser({}, SectionTransformer())
+parse_plain_instructions_section = InstructionsSectionParser({}, InstructionsSectionTransformer())
 
 
-class GenericSectionTransformer(SectionTransformer):
+class GenericSectionTransformerMixin:
     def boxed_text_tag(self, args):
         text, = args
         return renderable.BoxedText(text=text)
@@ -140,6 +152,10 @@ class GenericSectionTransformer(SectionTransformer):
         return renderable.FreeTextInput()
 
 
+class GenericInstructionsSectionTransformer(InstructionsSectionTransformer, GenericSectionTransformerMixin):
+    pass
+
+
 parse_generic_instructions_section = InstructionsSectionParser(
     {
         "boxed_text": r""" "|" STR """,
@@ -149,7 +165,7 @@ parse_generic_instructions_section = InstructionsSectionParser(
         "multiple_choices_input": r""" ("|" STR)+ """,
         "free_text_input": "",
     },
-    GenericSectionTransformer(),
+    GenericInstructionsSectionTransformer(),
 )
 
 
@@ -165,7 +181,7 @@ class ParseGenericInstructionsSectionTestCase(TestCase):
     # In instructions (and example and clue) sections, we want to:
     # - join consecutive lines separated by a single carriage return into a single paragraph
     # - separate paragraphs by at least two carriage returns
-    # - @todo split paragraphs made of several sentences into several paragraphs of one sentence each
+    # - split paragraphs made of several sentences into several paragraphs of one sentence each
 
     def test_empty(self):
         self.do_test("", renderable.Section(paragraphs=[]))
@@ -206,7 +222,7 @@ class ParseGenericInstructionsSectionTestCase(TestCase):
 
     def test_several_paragraphs_of_one_sentence_each(self):
         self.do_test(
-            "This\ris\ta\nparagraph.\n\nThis is\nanother\nparagraph!\r\n\r\nThird\r\nparagraph.\r\r4th paragraph.",
+            "This\ris\ta\nparagraph.\n\nThis is\n{boxed-text|another}\nparagraph!\r\n\r\nThird\r\nparagraph.\r\r4th paragraph.",
             renderable.Section(paragraphs=[
                 renderable.Paragraph(sentences=[renderable.Sentence(tokens=[
                     renderable.PlainText(text="This"),
@@ -223,7 +239,7 @@ class ParseGenericInstructionsSectionTestCase(TestCase):
                     renderable.Whitespace(),
                     renderable.PlainText(text="is"),
                     renderable.Whitespace(),
-                    renderable.PlainText(text="another"),
+                    renderable.BoxedText(text="another"),
                     renderable.Whitespace(),
                     renderable.PlainText(text="paragraph"),
                     renderable.PlainText(text="!"),
@@ -238,6 +254,45 @@ class ParseGenericInstructionsSectionTestCase(TestCase):
                     renderable.PlainText(text="4th"),
                     renderable.Whitespace(),
                     renderable.PlainText(text="paragraph"),
+                    renderable.PlainText(text="."),
+                ])]),
+            ]),
+        )
+
+    def test_one_paragraph_of_several_sentences(self):
+        self.do_test(
+            "This\ris\ta\nsentence. This is\n{boxed-text|another}\nsentence! Third\r\nsentence. 4th sentence.",
+            renderable.Section(paragraphs=[
+                renderable.Paragraph(sentences=[renderable.Sentence(tokens=[
+                    renderable.PlainText(text="This"),
+                    renderable.Whitespace(),
+                    renderable.PlainText(text="is"),
+                    renderable.Whitespace(),
+                    renderable.PlainText(text="a"),
+                    renderable.Whitespace(),
+                    renderable.PlainText(text="sentence"),
+                    renderable.PlainText(text="."),
+                ])]),
+                renderable.Paragraph(sentences=[renderable.Sentence(tokens=[
+                    renderable.PlainText(text="This"),
+                    renderable.Whitespace(),
+                    renderable.PlainText(text="is"),
+                    renderable.Whitespace(),
+                    renderable.BoxedText(text="another"),
+                    renderable.Whitespace(),
+                    renderable.PlainText(text="sentence"),
+                    renderable.PlainText(text="!"),
+                ])]),
+                renderable.Paragraph(sentences=[renderable.Sentence(tokens=[
+                    renderable.PlainText(text="Third"),
+                    renderable.Whitespace(),
+                    renderable.PlainText(text="sentence"),
+                    renderable.PlainText(text="."),
+                ])]),
+                renderable.Paragraph(sentences=[renderable.Sentence(tokens=[
+                    renderable.PlainText(text="4th"),
+                    renderable.Whitespace(),
+                    renderable.PlainText(text="sentence"),
                     renderable.PlainText(text="."),
                 ])]),
             ]),
@@ -367,7 +422,7 @@ class ParseGenericInstructionsSectionTestCase(TestCase):
         )
 
 
-class WordingSectionParser(SectionParser):
+class WordingSectionParser(_SectionParser):
     def normalize(self, section):
         # This string manipulation before parsing is fragile but works for now.
         return "\n\n".join(
@@ -380,11 +435,20 @@ class WordingSectionParser(SectionParser):
         )
 
 
+class WordingSectionTransformer(_SectionTransformer):
+    def section(self, paragraphs):
+        return renderable.Section(paragraphs=paragraphs)
+
+
 def parse_wording_section(tags, transformer, section):
     return WordingSectionParser(tags, transformer)(section)
 
 
-parse_plain_wording_section = WordingSectionParser({}, SectionTransformer())
+parse_plain_wording_section = WordingSectionParser({}, WordingSectionTransformer())
+
+
+class GenericWordingSectionTransformer(WordingSectionTransformer, GenericSectionTransformerMixin):
+    pass
 
 
 parse_generic_wording_section = WordingSectionParser(
@@ -396,7 +460,7 @@ parse_generic_wording_section = WordingSectionParser(
         "multiple_choices_input": r""" ("|" STR)+ """,
         "free_text_input": "",
     },
-    GenericSectionTransformer(),
+    GenericWordingSectionTransformer(),
 )
 
 
@@ -445,7 +509,7 @@ class ParseGenericWordingSectionTestCase(TestCase):
 
     def test_one_paragraph_with_strict_sentences(self):
         self.do_test(
-            "This is: a   sentence.   And, another; one. Again... Again… \t Another? Yes! Une autre ? Oui !",
+            "This is: a   sentence.   And, {boxed-text|another}; one. Again... Again… \t Another? Yes! Une autre ? Oui !",
             renderable.Section(paragraphs=[renderable.Paragraph(sentences=[
                 renderable.Sentence(tokens=[
                     renderable.PlainText(text="This"),
@@ -462,7 +526,7 @@ class ParseGenericWordingSectionTestCase(TestCase):
                     renderable.PlainText(text="And"),
                     renderable.PlainText(text=","),
                     renderable.Whitespace(),
-                    renderable.PlainText(text="another"),
+                    renderable.BoxedText(text="another"),
                     renderable.PlainText(text=";"),
                     renderable.Whitespace(),
                     renderable.PlainText(text="one"),
