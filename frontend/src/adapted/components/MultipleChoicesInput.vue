@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { inject } from 'vue'
-import { useFloating, shift, flip } from '@floating-ui/vue'
+import { useFloating, shift } from '@floating-ui/vue'
 
 
 const props = withDefaults(defineProps<{
@@ -35,7 +35,7 @@ const { floatingStyles } = useFloating(
   floating,
   {
     transform: false,
-    middleware: [flip(), shift()],
+    middleware: [shift({crossAxis: true})],
   },
 );
 
