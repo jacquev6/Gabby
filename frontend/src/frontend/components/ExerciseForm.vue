@@ -7,7 +7,7 @@ import { BBusy, BLabeledInput, BLabeledTextarea, BLabeledCheckbox, BButton, BSel
 import TextSelectionMenu from './ExerciseFormTextSelectionMenu.vue'
 import OptionalTextarea from './OptionalTextarea.vue'
 import { useApiStore } from '$frontend/stores/api'
-import type { Project, Textbook, Section, Exercise } from '$frontend/stores/api'
+import type { Project, Textbook, Section, Exercise, SelectThingsAdaptation, FillWithFreeTextAdaptation, MultipleChoicesInWordingAdaptation, MultipleChoicesInInstructionsAdaptation } from '$frontend/stores/api'
 import type { SelectThingsAdaptationOptions, FillWithFreeTextAdaptationOptions, MultipleChoicesInInstructionsAdaptationOptions, MultipleChoicesInWordingAdaptationOptions } from '$frontend/stores/api'
 
 
@@ -148,10 +148,11 @@ watch(
   },
   {immediate: true},
 )
+
 watch(
-  [() => props.exercise, () => props.exercise?.loading],
+  computed(() => props.exercise?.loading),
   () => {
-    if (props.exercise !== undefined) {
+    if (props.exercise?.inCache) {
       clearHistory(() => {
         console.assert(props.exercise !== undefined)
         console.assert(props.exercise.attributes !== undefined)
@@ -164,23 +165,44 @@ watch(
         state.value.example = props.exercise.attributes.example ?? ''
         state.value.clue = props.exercise.attributes.clue ?? ''
 
-        if (props.exercise.relationships.adaptation?.type === undefined) {
+        if (props.exercise.relationships.adaptation === null || !props.exercise.relationships.adaptation.inCache) {
           state.value.adaptationType = '-'
         } else {
+          console.assert(props.exercise.relationships.adaptation !== undefined)
+          console.assert(props.exercise.relationships.adaptation.inCache)
+          console.log('HERE')
           state.value.adaptationType = props.exercise.relationships.adaptation.type as AdaptationType
           console.assert(state.value.adaptationType !== '-')
           switch (state.value.adaptationType) {
             case 'selectThingsAdaptation':
-              Object.assign(state.value.selectThingsAdaptationOptions, props.exercise.relationships.adaptation.attributes)
+              {
+                const adaptation = props.exercise.relationships.adaptation as SelectThingsAdaptation
+                console.assert(adaptation.attributes !== undefined)
+                state.value.selectThingsAdaptationOptions.colors = adaptation.attributes.colors
+                state.value.selectThingsAdaptationOptions.punctuation = adaptation.attributes.punctuation
+                state.value.selectThingsAdaptationOptions.words = adaptation.attributes.words
+              }
               break
             case 'fillWithFreeTextAdaptation':
-              Object.assign(state.value.fillWithFreeTextAdaptationOptions, props.exercise.relationships.adaptation.attributes)
+              {
+                const adaptation = props.exercise.relationships.adaptation as FillWithFreeTextAdaptation
+                console.assert(adaptation.attributes !== undefined)
+                state.value.fillWithFreeTextAdaptationOptions.placeholder = adaptation.attributes.placeholder
+              }
               break
             case 'multipleChoicesInInstructionsAdaptation':
-              Object.assign(state.value.multipleChoicesInInstructionsAdaptationOptions, props.exercise.relationships.adaptation.attributes)
+              {
+                const adaptation = props.exercise.relationships.adaptation as MultipleChoicesInInstructionsAdaptation
+                console.assert(adaptation.attributes !== undefined)
+                state.value.multipleChoicesInInstructionsAdaptationOptions.placeholder = adaptation.attributes.placeholder
+              }
               break
             case 'multipleChoicesInWordingAdaptation':
-              Object.assign(state.value.multipleChoicesInWordingAdaptationOptions, props.exercise.relationships.adaptation.attributes)
+              {
+                const adaptation = props.exercise.relationships.adaptation as MultipleChoicesInWordingAdaptation
+                console.assert(adaptation.attributes !== undefined)
+                // Nothing to do
+              }
               break
             default:
               ((_1: never) => console.assert(false, state.value.adaptationType))(state.value.adaptationType)

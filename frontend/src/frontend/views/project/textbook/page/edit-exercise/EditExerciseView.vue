@@ -45,6 +45,7 @@ function goToPrevious() {
 
 async function saveThenBack(save: () => Promise<void>) {
   await save()
+  /* no need to await */ props.exercises.refresh()
   router.push({name: 'project-textbook-page-list-exercises'})
 }
 
@@ -93,13 +94,14 @@ defineExpose({
       <div class="h-100 overflow-auto" data-cy="left-col-2">
         <h1>{{ $t('edition') }}</h1>
         <ExerciseForm
+          v-if="exercise.inCache"
           ref="exerciseForm"
           :project
           :textbook
           :textbookPage="page"
           :section
           :pdf
-          :number="exercise?.attributes!.number || ''"
+          :number="exercise.attributes!.number || ''"
           :automaticNumber="false"
           :editMode="true"
           :exercise

@@ -95,12 +95,15 @@ export type Item<ItemType extends ItemTypes> = ({
   relationships?: Readonly<Operations<ItemType>['gettableRelationships']>
   attributes?: Readonly<Operations<ItemType>['gettableAttributes']>
 
+  busy: boolean
   loading: boolean
   loaded: Promise<void>
   refresh(inclusionOptions?: InclusionOptions): Promise<void>
 }) & (Operations<ItemType>['patchable'] extends false ? {} : {
+  patching: boolean
   patch(attributes: Operations<ItemType>['patchableAttributes'], relationships: Operations<ItemType>['patchableRelationships'], inclusionOptions?: InclusionOptions): Promise<void>
 }) & (Operations<ItemType>['deletable'] extends false ? {} : {
+  deleting: boolean
   delete(): Promise<void>
 })
 

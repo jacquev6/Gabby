@@ -575,18 +575,17 @@ describe('ApiStore - Basic functionality', () => {
 
     const ping = await api.client.getOne('ping', '1')
 
-    // @todo Add an attribute '.patching' dedicated to '.patch', and '.busy' = '.loading || .patching || .deleting'
-    expect(ping.loading).to.be.false
+    expect(ping.patching).to.be.false
     expect(ping.attributes!.message).to.equal('Hello 1')
 
     const patched = ping.patch({message: 'HELLO 1'}, {})
 
-    expect(ping.loading).to.be.true
+    expect(ping.patching).to.be.true
     expect(ping.attributes!.message).to.equal('Hello 1')
 
     await patched
 
-    expect(ping.loading).to.be.false
+    expect(ping.patching).to.be.false
     expect(ping.attributes!.message).to.equal('HELLO 1')
   })
 
@@ -669,20 +668,19 @@ describe('ApiStore - Basic functionality', () => {
 
     expect(ping.inCache).to.be.true
     expect(ping.exists).to.be.true
-    // @todo Add an attribute '.deleting' dedicated to '.delete', and '.busy' = '.loading || .patching || .deleting'
-    expect(ping.loading).to.be.false
+    expect(ping.deleting).to.be.false
 
     const deleted = ping.delete()
 
     expect(ping.inCache).to.be.true
     expect(ping.exists).to.be.true
-    expect(ping.loading).to.be.true
+    expect(ping.deleting).to.be.true
 
     await deleted
 
     expect(ping.inCache).to.be.true
     expect(ping.exists).to.be.false
-    expect(ping.loading).to.be.false
+    expect(ping.deleting).to.be.false
   })
 
   it('deletes a never-heard-of ping', () => {

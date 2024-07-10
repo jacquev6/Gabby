@@ -28,6 +28,8 @@ type CachedItem<ItemType extends ItemTypes> = Item<ItemType> & {
   _reactive: {
     inCache: boolean
     loading: boolean
+    patching: boolean
+    deleting: boolean
     exists?: boolean
     attributes?: CachedAttributes<ItemType>
     relationships?: CachedRelationships<ItemType>
@@ -98,6 +100,8 @@ export function makeItems(requester: Requester) {
       _reactive: reactive({
         inCache: false,
         loading: false,
+        patching: false,
+        deleting: false,
         exists: undefined,
         attributes: undefined,
         relationships: undefined,
@@ -106,7 +110,10 @@ export function makeItems(requester: Requester) {
       _needsRefresh: false,
       // Methods and getters
       get inCache() { return this._reactive.inCache },
-      get loading() { return this._reactive.loading },  
+      get loading() { return this._reactive.loading },
+      get patching() { return this._reactive.patching },
+      get deleting() { return this._reactive.deleting },
+      get busy() { return this._reactive.loading || this._reactive.patching || this._reactive.deleting },
       get exists() { return this._reactive.exists },
       get attributes() { return this._reactive.attributes },
       get relationships() { return makeGettableRelationships(this._reactive.relationships) },
@@ -146,14 +153,14 @@ export function makeItems(requester: Requester) {
         return this._loadingPromise
       },
       async delete() {
-        this._reactive.loading = true
+        this._reactive.deleting = true
         processResponse(await requester.deleteItem(this.type, this.id))
-        this._reactive.loading = false
+        this._reactive.deleting = false
       },
       async patch(attributes: PatchableAttributes<ItemType>, relationships: PatchableRelationships<ItemType>, inclusionOptions?: InclusionOptions) {
-        this._reactive.loading = true
+        this._reactive.patching = true
         processResponse(await requester.patchItem(this.type, this.id, attributes as any/* @todo Type */, relationships as any/* @todo Type */, inclusionOptions || {}))
-        this._reactive.loading = false
+        this._reactive.patching = false
       },
     }
   }
