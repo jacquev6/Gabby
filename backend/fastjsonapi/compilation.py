@@ -8,7 +8,7 @@ import humps
 from .annotations import Annotations
 from .dependencies import extract_dependencies
 from . import inclusion
-from .models import Decider, make_create_input_model, make_output_models, make_update_input_model
+from .models import Decider, create_model_for_input_for_create, create_models_for_output, create_model_for_input_for_update
 
 
 def compile(resources, polymorphism: dict[Type, str]):
@@ -101,9 +101,9 @@ class CompiledResource:
                 if annotations.output:
                     self.output_attributes.append(name)
 
-        self.CreateInputModel = make_create_input_model(self.singularName, resource.Model, decider)
-        (self.ItemOutputModel, self.PageOutputModel) = make_output_models(self.singularName, resource.Model, decider)
-        self.UpdateInputModel = make_update_input_model(self.singularName, resource.Model, decider)
+        self.CreateInputModel = create_model_for_input_for_create(self.singularName, resource.Model, decider)
+        (self.ItemOutputModel, self.PageOutputModel) = create_models_for_output(self.singularName, resource.Model, decider)
+        self.UpdateInputModel = create_model_for_input_for_update(self.singularName, resource.Model, decider)
 
     def make_item_response(self, resources, *, urls, item, include):
         return_value = {

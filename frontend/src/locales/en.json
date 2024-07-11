@@ -6,6 +6,10 @@
   "close": "Close",
 
 
+  "thereWasABug": "There was a bug",
+  "thisIsNotYourFault": "This is not your fault. Please send an e-mail to Vincent Jacques with all the details below, and optionally a description of what you were doing.",
+
+
   "siteUnavailableUntil": "The website is undergoing maintenance. Anticipated end: {date}.",
 
 
@@ -83,7 +87,7 @@
   "edition": "Edition",
   "adaptation": "Adapted exercice",
   "inputFile": "Input file",
-  "existingExercises": "Existing exercises:",
+  "existingExercises": "Existing exercises",
   "drawBoundingRectangle": "Draw a rectangle around the whole exercise.",
   "noExercises": "No exercises yet.",
   "create": "New exercise",
@@ -91,7 +95,10 @@
   "save": "Save",
   "exerciseAlreadyExists": "Exercise {number} already exists.",
   "skipExercise": "Skip to next exercise",
-  "save.next": "Save then create next",
+  "previous": "Previous (without saving)",
+  "saveThenNext": "Save then next",
+  "backToList": "Back to list (without saving)",
+  "saveThenBack": "Save then back to list",
   "doStripExerciceNumber": "Strip exercise number automatically",
 
   "selectedText": "Selected text",
@@ -102,11 +109,11 @@
   "example": "Example",
   "clue": "Clue",
   "wording": "Wording",
-  "selectExerciseType": "Select adaptation type",
 
   "colorsCount": "Number of colors",
   "includePunctuation": "Also select punctuation",
   "useSel1ToSelN": "Use {first} to {last} in instructions, example or clue to format text as if selected.",
+  "useSel1": "Use {first} in instructions, example or clue to format text as if selected.",
   "useChoice": "Use {choice} in instructions to indicate a possible choice.",
   "useChoices": "Use {choices} in wording to indicate a choice to make.",
   "placeholderText": "Placeholder to fill",

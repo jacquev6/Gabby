@@ -11,22 +11,26 @@ import SectionEditor from './SectionEditor.vue'
 import TextPicker from './TextPicker.vue'
 import RectanglesHighlighter from './RectanglesHighlighter.vue'
 import TwoResizableColumns from '$frontend/components/TwoResizableColumns.vue'
-import type { Project, Textbook } from '$frontend/types/api'
+import { useApiStore, type Project, type Textbook } from '$frontend/stores/api'
+import { makeExerciseCreationHistory } from './ExerciseCreationHistory'
+import type { Rectangle } from './RectanglesHighlighter.vue'
 
 
 const props = defineProps<{
   project: Project,
-  refreshProject: any/* @todo Type */,
+  refreshProject(): void,
   textbook: Textbook,
-  refreshTextbook: any/* @todo Type */,
+  refreshTextbook(): void,
   page: number,
 }>()
 
 const pdfs = usePdfsStore()
+const api = useApiStore()
 
 const component = ref<{
   changePage?: any/* @todo Type */,
-  highlightedRectangles?: any/* @todo Type */,
+  greyRectangles: Rectangle[],
+  surroundedRectangles: Rectangle[],
   textSelected?: any/* @todo Type */,
   handlesScrolling: boolean,
 } | null>(null)
@@ -94,9 +98,16 @@ const pdf = computedAsync(
   pdfLoading,
 )
 
+const exercises = computed(() => api.auto.getAll(
+  'exercise',
+  {filters: {'textbook': props.textbook.id, 'textbookPage': props.page.toString()}}
+))
+
 const componentHandlesScrolling = computed(() => component.value?.handlesScrolling ?? false)
 
 const class_ = computed(() => componentHandlesScrolling.value ? 'overflow-hidden' : 'overflow-auto')
+
+const exerciseCreationHistory = makeExerciseCreationHistory()
 
 defineExpose({
   title: computed(() => [`Page ${props.page}`]),
@@ -123,10 +134,10 @@ defineExpose({
                   class="img w-100"
                 />
                 <RectanglesHighlighter
-                  v-if="pdfRenderer?.transform && component?.highlightedRectangles"
+                  v-if="pdfRenderer?.transform && component"
                   class="img w-100" style="position: absolute; top: 0; left: 0"
                   :width="pdfRenderer.width" :height="pdfRenderer.height" :transform="pdfRenderer.transform"
-                  :rectangles="component.highlightedRectangles"
+                  :greyRectangles="component.greyRectangles" :surroundedRectangles="component.surroundedRectangles"
                 />
                 <TextPicker
                   v-if="pdfRenderer?.transform && component?.textSelected"
@@ -149,8 +160,8 @@ defineExpose({
     </template>
     <template #right>
       <div class="h-100" :class="class_" data-cy="right-col-1">
-        <RouterView :project :textbook :pdf :section :page v-slot="{ Component }">
-          <component :is="Component" ref="component"></component>
+        <RouterView v-slot="{ Component }">
+          <component :is="Component" ref="component" :project :textbook :pdf :section :page :exercises :exerciseCreationHistory></component>
         </RouterView>
       </div>
     </template>

@@ -20,6 +20,8 @@ const emit = defineEmits<{
 const canStripExerciceNumber = computed(() => props.number !== '' && props.text.startsWith(props.number))
 const doStripExerciceNumber = ref(true)
 
+const selectedText = ref<typeof BLabeledTextarea | null>(null)
+
 const textToAdd = ref('')
 watch(
   [() => props.text, doStripExerciceNumber],
@@ -31,12 +33,12 @@ watch(
 
 <template>
   <FloatingModal
-    v-if="show" @dismissed="show = false"
+    v-if="show" @shown="selectedText!.focus()" @hidden="show = false"
     :title="$t('selectedText')"
     :reference
   >
     <BLabeledCheckbox :label="$t('doStripExerciceNumber')" v-model="doStripExerciceNumber" :disabled="!canStripExerciceNumber" />
-    <BLabeledTextarea :label="$t('selectedText')" v-model="textToAdd" @change="emit('extractionEvent', {kind: 'SelectedTextEdited', value: textToAdd})" />
+    <BLabeledTextarea ref="selectedText" :maxRows="15" v-model="textToAdd" @change="emit('extractionEvent', {kind: 'SelectedTextEdited', value: textToAdd})" />
 
     <slot :textToAdd :hide="() => { show = false }"></slot>
   </FloatingModal>

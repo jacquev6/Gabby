@@ -27,22 +27,22 @@ class FillWithFreeTextAdaptation(Adaptation):
     placeholder: orm.Mapped[str]
 
     def make_adapted_instructions(self):
-        return parsing.parse_plain_section(self.exercise.instructions)
+        return parsing.parse_plain_instructions_section(self.exercise.instructions)
 
-    class WordingAdapter(parsing.SectionTransformer):
+    class WordingAdapter(parsing.WordingSectionTransformer):
         def placeholder_tag(self, args):
             return renderable.FreeTextInput()
 
-    adapt_wording = parsing.SectionParser({"placeholder": ""}, WordingAdapter())
+    adapt_wording = parsing.WordingSectionParser({"placeholder": ""}, WordingAdapter())
 
     def make_adapted_wording(self):
         return self.adapt_wording(self.exercise.wording.replace(self.placeholder, "{placeholder}"))
 
     def make_adapted_example(self):
-        return parsing.parse_plain_section(self.exercise.example)
+        return parsing.parse_plain_instructions_section(self.exercise.example)
 
     def make_adapted_clue(self):
-        return parsing.parse_plain_section(self.exercise.clue)
+        return parsing.parse_plain_instructions_section(self.exercise.clue)
 
 
 class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
@@ -191,7 +191,7 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
             number="number",
             textbook_page=42,
             instructions="instructions",
-            wording="foo\ntoto : ...\n\nbar : ...\n\nbaz : ...",
+            wording="foo toto : ...\n\nbar : ...\n\nbaz : ...",
             example="",
             clue="",
         )

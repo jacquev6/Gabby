@@ -7,8 +7,8 @@ import { BBusy, BLabeledInput, BLabeledTextarea, BLabeledCheckbox, BButton, BSel
 import TextSelectionMenu from './ExerciseFormTextSelectionMenu.vue'
 import OptionalTextarea from './OptionalTextarea.vue'
 import { useApiStore } from '$frontend/stores/api'
-import type { Project, Textbook, Section, Exercise, AdaptedExercise } from '$frontend/types/api'
-import type { SelectThingsAdaptationOptions, FillWithFreeTextAdaptationOptions, MultipleChoicesInInstructionsAdaptationOptions, MultipleChoicesInWordingAdaptationOptions } from '$frontend/types/api'
+import type { Project, Textbook, Section, Exercise, SelectThingsAdaptation, FillWithFreeTextAdaptation, MultipleChoicesInWordingAdaptation, MultipleChoicesInInstructionsAdaptation } from '$frontend/stores/api'
+import type { SelectThingsAdaptationOptions, FillWithFreeTextAdaptationOptions, MultipleChoicesInInstructionsAdaptationOptions, MultipleChoicesInWordingAdaptationOptions } from '$frontend/stores/api'
 
 
 const props = defineProps<{
@@ -21,6 +21,7 @@ const props = defineProps<{
   automaticNumber: boolean,
   editMode: boolean,
   exercise?: Exercise,
+  teleportAdaptationDetailsTo?: string
 }>()
 
 const emit = defineEmits<{
@@ -36,9 +37,11 @@ var extractionEvents: object[] = []
 type AdaptationType = '-' | 'selectThingsAdaptation' | 'fillWithFreeTextAdaptation' | 'multipleChoicesInInstructionsAdaptation' | 'multipleChoicesInWordingAdaptation'
 const adaptationTypes: AdaptationType[] = ['selectThingsAdaptation', 'fillWithFreeTextAdaptation', 'multipleChoicesInInstructionsAdaptation', 'multipleChoicesInWordingAdaptation']
 
+type Rectangle = { start: { x: number; y: number; }; stop: { x: number; y: number; }; }
+
 interface State {
   number: string,
-  boundingRectangle: object | null,
+  boundingRectangle: Rectangle | null,
   instructions: string,
   wording: string,
   example: string,
@@ -61,7 +64,7 @@ const state = ref<State>({
   selectThingsAdaptationOptions: {
     colors: 1,
     words: true,
-    punctuation: true,
+    punctuation: false,
   },
   fillWithFreeTextAdaptationOptions: {
     placeholder: '...',
@@ -87,7 +90,7 @@ function resetAdaptationOptions() {
   state.value.selectThingsAdaptationOptions = {
     colors: 1,
     words: true,
-    punctuation: true,
+    punctuation: false,
   }
   state.value.fillWithFreeTextAdaptationOptions = {
     placeholder: '...',
@@ -109,34 +112,28 @@ function clearHistory(reset: () => void) {
   history.clear()
 }
 
-const alreadyExists = computedAsync(
-  async () => {
-    if (props.editMode) {
-      return true
-    } else if (state.value.number === '') {
-      return false
-    } else if (props.textbook !== null) {
-      console.assert(props.textbookPage !== null)
-      // @todo Understand why this request isn't duplicated like some others
-      const exercises = await api.client.getAll(
-        'exercises',
-        {
-          filter: {
-            textbook: props.textbook.id,
-            textbookPage: props.textbookPage.toString(),
-            number: state.value.number,
-          }
-        },
-      )
-      console.assert(exercises.length <= 1)
-      return exercises.length === 1
-    } else {
-      // @todo Detect duplicate independent exercise
-      return false
-    }
-  },
-  false,
-)
+const matchingExercises = computed(() => {
+  if (state.value.number === '') {
+    return null
+  } else if (props.textbook === null) {
+    // @todo Implement 'filters: {textbookIsNull: true}'
+    return null
+  } else {
+    console.assert(props.textbookPage !== null)
+    return api.auto.getAll(
+      'exercise',
+      {
+        filters: {
+          textbook: props.textbook.id,
+          textbookPage: props.textbookPage.toString(),
+          number: state.value.number,
+        }
+      },
+    )
+  }
+})
+
+const alreadyExists = computed(() => matchingExercises.value?.items.length === 1)  // @todo Implement
 
 watch(
   [() => props.number, () => props.automaticNumber],
@@ -151,10 +148,11 @@ watch(
   },
   {immediate: true},
 )
+
 watch(
-  () => props.exercise,
+  computed(() => props.exercise?.loading),
   () => {
-    if (props.exercise !== undefined) {
+    if (props.exercise?.inCache) {
       clearHistory(() => {
         console.assert(props.exercise !== undefined)
         console.assert(props.exercise.attributes !== undefined)
@@ -167,26 +165,46 @@ watch(
         state.value.example = props.exercise.attributes.example ?? ''
         state.value.clue = props.exercise.attributes.clue ?? ''
 
-        if (props.exercise.relationships.adaptation === null) {
+        if (props.exercise.relationships.adaptation === null || !props.exercise.relationships.adaptation.inCache) {
           state.value.adaptationType = '-'
         } else {
+          console.assert(props.exercise.relationships.adaptation !== undefined)
+          console.assert(props.exercise.relationships.adaptation.inCache)
           state.value.adaptationType = props.exercise.relationships.adaptation.type as AdaptationType
           console.assert(state.value.adaptationType !== '-')
           switch (state.value.adaptationType) {
             case 'selectThingsAdaptation':
-              Object.assign(state.value.selectThingsAdaptationOptions, props.exercise.relationships.adaptation.attributes)
+              {
+                const adaptation = props.exercise.relationships.adaptation as SelectThingsAdaptation
+                console.assert(adaptation.attributes !== undefined)
+                state.value.selectThingsAdaptationOptions.colors = adaptation.attributes.colors
+                state.value.selectThingsAdaptationOptions.punctuation = adaptation.attributes.punctuation
+                state.value.selectThingsAdaptationOptions.words = adaptation.attributes.words
+              }
               break
             case 'fillWithFreeTextAdaptation':
-              Object.assign(state.value.fillWithFreeTextAdaptationOptions, props.exercise.relationships.adaptation.attributes)
+              {
+                const adaptation = props.exercise.relationships.adaptation as FillWithFreeTextAdaptation
+                console.assert(adaptation.attributes !== undefined)
+                state.value.fillWithFreeTextAdaptationOptions.placeholder = adaptation.attributes.placeholder
+              }
               break
             case 'multipleChoicesInInstructionsAdaptation':
-              Object.assign(state.value.multipleChoicesInInstructionsAdaptationOptions, props.exercise.relationships.adaptation.attributes)
+              {
+                const adaptation = props.exercise.relationships.adaptation as MultipleChoicesInInstructionsAdaptation
+                console.assert(adaptation.attributes !== undefined)
+                state.value.multipleChoicesInInstructionsAdaptationOptions.placeholder = adaptation.attributes.placeholder
+              }
               break
             case 'multipleChoicesInWordingAdaptation':
-              Object.assign(state.value.multipleChoicesInWordingAdaptationOptions, props.exercise.relationships.adaptation.attributes)
+              {
+                const adaptation = props.exercise.relationships.adaptation as MultipleChoicesInWordingAdaptation
+                console.assert(adaptation.attributes !== undefined)
+                // Nothing to do
+              }
               break
             default:
-              ((_1: never) => console.assert(false))(state.value.adaptationType)
+              ((_1: never) => console.assert(false, state.value.adaptationType))(state.value.adaptationType)
           }
         }
       })
@@ -200,9 +218,9 @@ const busy = ref(false)
 
 const showTextSelectionMenu = ref(false)
 const selectedText = ref('')
-const selectedRectangle = ref<object | null>(null)
+const selectedRectangle = ref<Rectangle | null>(null)
 const selectedTextReference = ref<{x: number, y: number}>({x: 0, y: 0})
-function textSelected(text: string, point: {clientX: number, clientY: number}, textItems: [], rectangle: object) {
+function textSelected(text: string, point: {clientX: number, clientY: number}, textItems: [], rectangle: Rectangle) {
   console.assert(props.section?.relationships?.pdfFile.relationships?.namings[0].attributes !== undefined)
   console.assert(props.pdf !== null)
 
@@ -285,7 +303,7 @@ function skip() {
 const adaptationOptions = computed(() => {
   switch (state.value.adaptationType) {
     case '-':
-      return null
+      return {}
     case 'selectThingsAdaptation':
       return state.value.selectThingsAdaptationOptions
     case 'fillWithFreeTextAdaptation':
@@ -295,7 +313,7 @@ const adaptationOptions = computed(() => {
     case 'multipleChoicesInWordingAdaptation':
       return state.value.multipleChoicesInWordingAdaptationOptions
     default:
-      ((_1: never) => console.assert(false))(state.value.adaptationType)
+      ((_1: never) => console.assert(false, state.value.adaptationType))(state.value.adaptationType)
       return null
   }
 })
@@ -354,7 +372,11 @@ async function create() {
 
   busy.value = false
 
-  emit('created', exercise, tryIncrement(exercise.attributes.number))
+  const suggestedNumber = tryIncrement(exercise.attributes.number)
+
+  emit('created', exercise, suggestedNumber)
+
+  return {exercise, suggestedNumber}
 }
 
 function tryIncrement(s: string) {
@@ -372,9 +394,7 @@ async function save() {
   busy.value = true
 
   // @todo Use a *single* batch request (when batch requests support 'update' and 'delete' operations)
-  await api.client.patch(
-    'exercise',
-    props.exercise.id,
+  await props.exercise.patch(
     {
       boundingRectangle: state.value.boundingRectangle,
       instructions: state.value.instructions,
@@ -386,14 +406,14 @@ async function save() {
   )
   if (state.value.adaptationType === '-') {
     if (props.exercise.relationships.adaptation !== null) {
-      await api.client.delete(props.exercise.relationships.adaptation.type, props.exercise.relationships.adaptation.id)
+      await props.exercise.relationships.adaptation.delete()
     }
   } else {
     console.assert(adaptationOptions.value !== null)
-    await api.client.post(
+    await api.client.createOne(
       state.value.adaptationType,
       adaptationOptions.value,
-      {exercise: {type: 'exercise', id: props.exercise.id}},
+      {exercise: props.exercise},
     )
   }
   const operations = []
@@ -401,7 +421,7 @@ async function save() {
     operations.push([
       'add', 'extractionEvent', null,
       {event: JSON.stringify(event)},
-      {exercise: {type: 'exercise', id: props.exercise.id}},
+      {exercise: props.exercise},
     ])
   }
 
@@ -417,38 +437,34 @@ async function save() {
 const adaptedDataLoading = ref(false)
 const adaptedData = computedAsync(
   async () => {
-    if (state.value.adaptationType === '-') {
+    console.assert(adaptationOptions.value !== null)
+    const attributes = {
+      number: state.value.number,
+      textbookPage: props.textbookPage,
+      instructions: state.value.instructions,
+      wording: state.value.wording,
+      example: state.value.example,
+      clue: state.value.clue,
+      type: state.value.adaptationType,
+      adaptationOptions: adaptationOptions.value,
+    }
+    try {
+      const adapted = await api.client.createOne('adaptedExercise', attributes, {})
+      return adapted.attributes!.adapted
+    } catch (e) {
+      console.error(e)
       return null
-    } else {
-      const attributes = {
-        number: state.value.number,
-        textbookPage: props.textbookPage,
-        instructions: state.value.instructions,
-        wording: state.value.wording,
-        example: state.value.example,
-        clue: state.value.clue,
-        type: state.value.adaptationType,
-        adaptationOptions: adaptationOptions.value,
-      }
-      try {
-        // @todo Understand why this request isn't duplicated like some others
-        const adapted = await api.client.post<AdaptedExercise>('adaptedExercise', attributes, {})
-        return adapted.attributes.adapted
-      } catch (e) {
-        console.error(e)
-        return null
-      }
     }
   },
   null,
   adaptedDataLoading,
 )
 
-const highlightedRectangles = computed(() => {
+const surroundedRectangles = computed(() => {
   if (state.value.boundingRectangle) {
     return [state.value.boundingRectangle]
   } else {
-    return null
+    return []
   }
 })
 
@@ -479,7 +495,7 @@ function replace(fieldName: FieldName | null, searchValue: string, replaceValue:
 defineExpose({
   textSelected: computed(() => !props.editMode && alreadyExists.value ? null : textSelected),
   adaptedData, adaptedDataLoading,
-  highlightedRectangles,
+  surroundedRectangles,
   // Tools
   selected,
   replace,
@@ -512,6 +528,63 @@ defineExpose({
     <BLabeledInput :label="$t('exerciseNumber')" v-model="state.number" :disabled="editMode" @change="extractionEvents.push({kind: 'ExerciseNumberSetManually', value: state.number})" />
 
     <div style="position: relative">
+      <div class="mb-3">
+        <label class="form-label" for="abc">{{ $t('adaptationType') }}</label>
+          <BSelect
+          id="abc"
+          v-model="state.adaptationType"
+          :options="['-', ...adaptationTypes.map(kind => ({value: kind, label: $t(kind)}))]"
+        />
+      </div>
+      <Teleport :to="teleportAdaptationDetailsTo" :disabled="teleportAdaptationDetailsTo === undefined">
+        <template v-if="state.adaptationType === '-'">
+        </template>
+        <template v-else-if="state.adaptationType === 'fillWithFreeTextAdaptation'">
+          <BLabeledInput :label="$t('placeholderText')" type="text" v-model="state.fillWithFreeTextAdaptationOptions.placeholder" />
+        </template>
+        <template v-else-if="state.adaptationType === 'selectThingsAdaptation'">
+          <BLabeledInput :label="$t('colorsCount')" type="number" min="1" v-model="state.selectThingsAdaptationOptions.colors" />
+          <p class="alert alert-secondary">
+            <i18n-t keypath="useSel1ToSelN" v-if="state.selectThingsAdaptationOptions.colors > 1">
+              <template v-slot:first>
+                <code>{sel1|<em>text</em>}</code>
+              </template>
+              <template v-slot:last>
+                <code>{sel{{ state.selectThingsAdaptationOptions.colors }}|<em>text</em>}</code>
+              </template>
+            </i18n-t>
+            <i18n-t keypath="useSel1" v-else>
+              <template v-slot:first>
+                <code>{sel1|<em>text</em>}</code>
+              </template>
+            </i18n-t>
+          </p>
+          <BLabeledCheckbox :label="$t('includePunctuation')" v-model="state.selectThingsAdaptationOptions.punctuation" />
+        </template>
+        <template v-else-if="state.adaptationType === 'multipleChoicesInInstructionsAdaptation'">
+          <p class="alert alert-secondary">
+            <i18n-t keypath="useChoice">
+              <template v-slot:choice>
+                <code>{choice|<em>text</em>}</code>
+              </template>
+            </i18n-t>
+          </p>
+          <BLabeledInput :label="$t('placeholderText')" type="text" v-model="state.multipleChoicesInInstructionsAdaptationOptions.placeholder" />
+        </template>
+        <template v-else-if="state.adaptationType === 'multipleChoicesInWordingAdaptation'">
+          <p class="alert alert-secondary">
+            <i18n-t keypath="useChoices">
+              <template v-slot:choices>
+                <code>{choices|<em>text</em>|<em>text</em>|<em>...</em>}</code>
+              </template>
+            </i18n-t>
+          </p>
+        </template>
+        <template v-else>
+          <span>{{ ((t: never) => t)(state.adaptationType) }}</span>
+        </template>
+      </Teleport>
+
       <BLabeledTextarea
         ref="instructionsTextArea"
         :label="$t('exerciseInstructions')"
@@ -548,56 +621,6 @@ defineExpose({
           </div>
         </div>
       </div>
-
-      <div class="mb-3">
-        <label class="form-label" for="abc">{{ $t('adaptationType') }}</label>
-          <BSelect
-          id="abc"
-          v-model="state.adaptationType"
-          :options="['-', ...adaptationTypes.map(kind => ({value: kind, label: $t(kind)}))]"
-        />
-      </div>
-      <template v-if="state.adaptationType === '-'">
-      </template>
-      <template v-else-if="state.adaptationType === 'fillWithFreeTextAdaptation'">
-        <BLabeledInput :label="$t('placeholderText')" type="text" v-model="state.fillWithFreeTextAdaptationOptions.placeholder" />
-      </template>
-      <template v-else-if="state.adaptationType === 'selectThingsAdaptation'">
-        <BLabeledInput :label="$t('colorsCount')" type="number" min="1" v-model="state.selectThingsAdaptationOptions.colors" />
-        <p class="alert alert-secondary" v-if="state.selectThingsAdaptationOptions.colors > 1">
-          <i18n-t keypath="useSel1ToSelN">
-            <template v-slot:first>
-              <code>{sel1|<em>text</em>}</code>
-            </template>
-            <template v-slot:last>
-              <code>{sel{{ state.selectThingsAdaptationOptions.colors }}|<em>text</em>}</code>
-            </template>
-          </i18n-t>
-        </p>
-        <BLabeledCheckbox :label="$t('includePunctuation')" v-model="state.selectThingsAdaptationOptions.punctuation" />
-      </template>
-      <template v-else-if="state.adaptationType === 'multipleChoicesInInstructionsAdaptation'">
-        <p class="alert alert-secondary">
-          <i18n-t keypath="useChoice">
-            <template v-slot:choice>
-              <code>{choice|<em>text</em>}</code>
-            </template>
-          </i18n-t>
-        </p>
-        <BLabeledInput :label="$t('placeholderText')" type="text" v-model="state.multipleChoicesInInstructionsAdaptationOptions.placeholder" />
-      </template>
-      <template v-else-if="state.adaptationType === 'multipleChoicesInWordingAdaptation'">
-        <p class="alert alert-secondary">
-          <i18n-t keypath="useChoices">
-            <template v-slot:choices>
-              <code>{choices|<em>text</em>|<em>text</em>|<em>...</em>}</code>
-            </template>
-          </i18n-t>
-        </p>
-      </template>
-      <template v-else>
-        <span>{{ ((t: never) => t)(state.adaptationType) }}</span>
-      </template>
 
       <div v-if="!editMode && alreadyExists" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8);" class="text-center">
         <div style="position: absolute; left: 25%; top: 25%; width: 50%; height: 50%; background-color: white">

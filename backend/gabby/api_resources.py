@@ -1,3 +1,4 @@
+from fastapi import HTTPException
 from starlette import status
 
 from .adaptations.fill_with_free_text import FillWithFreeTextAdaptation, FillWithFreeTextAdaptationsResource
@@ -5,6 +6,7 @@ from .adaptations.multiple_choices_in_instructions import MultipleChoicesInInstr
 from .adaptations.multiple_choices_in_wording import MultipleChoicesInWordingAdaptation, MultipleChoicesInWordingAdaptationsResource
 from .adaptations.select_things import SelectThingsAdaptation, SelectThingsAdaptationsResource
 from .adapted_exercises import AdaptedExercisesResource
+from .api_models import SyntheticError
 from .exercises import Exercise, ExercisesResource, ExtractionEventsResource
 from .pdfs import PdfFile, PdfFileNaming, PdfFilesResource, PdfFileNamingsResource
 from .pings import PingsResource
@@ -14,6 +16,18 @@ from .textbooks import Textbook, TextbooksResource, SectionsResource
 from .users import UsersResource
 from .users.recovery import RecoveryEmailRequestsResource
 from .wrapping import get_wrapper
+
+
+class SyntheticErrorsResource:
+    singular_name = "synthetic_error"
+    plural_name = "synthetic_errors"
+
+    Model = SyntheticError
+
+    default_page_size = 1
+
+    def get_item(self, id):
+        raise HTTPException(status_code=int(id), detail="Synthetic error")
 
 
 resources = [
@@ -32,6 +46,7 @@ resources = [
     MultipleChoicesInInstructionsAdaptationsResource(),
     MultipleChoicesInWordingAdaptationsResource(),
     AdaptedExercisesResource(),
+    SyntheticErrorsResource(),
 ]
 
 
@@ -2372,13 +2387,14 @@ class UnauthenticatedUseApiTestCase(ApiTestCase):
 
     anonymous_use_behavior = {
         # We'd prefer if none of these would commit, but that's a quest for another day.
-        "/pings GET": (status.HTTP_200_OK, True),
-        "/pings POST": (status.HTTP_422_UNPROCESSABLE_ENTITY, True),
-        "/pings/0 DELETE": (status.HTTP_404_NOT_FOUND, False),
-        "/pings/0 GET": (status.HTTP_404_NOT_FOUND, False),
-        "/pings/0 PATCH": (status.HTTP_422_UNPROCESSABLE_ENTITY, True),
-        "/recoveryEmailRequests POST": (status.HTTP_422_UNPROCESSABLE_ENTITY, True),
-        "/token POST": (status.HTTP_422_UNPROCESSABLE_ENTITY, True),
+        "/pings GET": (status.HTTP_200_OK, True, False),
+        "/pings POST": (status.HTTP_422_UNPROCESSABLE_ENTITY, True, False),
+        "/pings/404 DELETE": (status.HTTP_404_NOT_FOUND, False, True),
+        "/pings/404 GET": (status.HTTP_404_NOT_FOUND, False, True),
+        "/pings/404 PATCH": (status.HTTP_422_UNPROCESSABLE_ENTITY, True, False),
+        "/recoveryEmailRequests POST": (status.HTTP_422_UNPROCESSABLE_ENTITY, True, False),
+        "/token POST": (status.HTTP_422_UNPROCESSABLE_ENTITY, True, False),
+        "/syntheticErrors/404 GET": (status.HTTP_404_NOT_FOUND, False, False),
     }
 
     def request(self, method, path):
@@ -2400,16 +2416,16 @@ class UnauthenticatedUseApiTestCase(ApiTestCase):
         expected_commits = 0
         expected_rollbacks = 0
         for path, operations in openapi["paths"].items():
-            path = path.replace("{id}", "0")
+            path = path.replace("{id}", "404")
             for method in operations.keys():
                 subTest = f"{path} {method.upper()}"
                 with self.subTest(subTest):
                     response = self.request(method, path)
-                    expected_status_code, does_commit = self.anonymous_use_behavior.get(subTest, (status.HTTP_401_UNAUTHORIZED, False))
+                    expected_status_code, does_commit, does_rollback = self.anonymous_use_behavior.get(subTest, (status.HTTP_401_UNAUTHORIZED, False, True))
                     self.assertEqual(response.status_code, expected_status_code, response.json())
                     if does_commit:
                         expected_commits += 1
-                    else:
+                    if does_rollback:
                         expected_rollbacks += 1
                 self.assert_commits_rollbacks(expected_commits, expected_rollbacks)
 

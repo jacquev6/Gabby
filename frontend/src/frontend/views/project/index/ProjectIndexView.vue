@@ -8,7 +8,7 @@ import CreateTextbookForm from './CreateTextbookForm.vue'
 import CreateExerciseForm from './CreateExerciseForm.vue'
 import ExercisesList from './ExercisesList.vue'
 import PdfPreview from '$frontend/components/PdfPreview.vue'
-import type { Project } from '$frontend/types/api'
+import type { Project } from '$frontend/stores/api'
 import type { InfoDoc } from '$frontend/stores/pdfs'
 import { useApiStore } from '$/frontend/stores/api'
 
@@ -18,7 +18,7 @@ const api = useApiStore()
 
 const props = defineProps<{
   project: Project
-  refreshProject: any/* @todo Type */
+  refreshProject(): void
 }>()
 
 function goToTextbook(textbookId: string) {

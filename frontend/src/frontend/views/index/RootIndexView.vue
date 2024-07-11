@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router'
 import { BRow, BCol } from '$frontend/components/opinion/bootstrap'
 import CreateProjectForm from './CreateProjectForm.vue'
 import ProjectsList from './ProjectsList.vue'
-import type { Project } from '$frontend/types/api'
+import type { Project } from '$frontend/stores/api'
 
 
 const router = useRouter()

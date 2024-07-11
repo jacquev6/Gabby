@@ -45,6 +45,12 @@ class Adaptation(OrmBase, CreatedUpdatedByAtMixin):
         )
 
     def to_generic_adaptation(self):
+        def to_generic_or_empty(adapted):
+            if adapted is None:
+                return ""
+            else:
+                return adapted.to_generic()
+
         return GenericAdaptation(
             exercise=Exercise(
                 project=None,
@@ -53,8 +59,8 @@ class Adaptation(OrmBase, CreatedUpdatedByAtMixin):
                 number=self.exercise.number,
                 instructions=self.make_adapted_instructions().to_generic(),
                 wording=self.make_adapted_wording().to_generic(),
-                example=example.to_generic() if (example := self.make_adapted_example()) else "",
-                clue=clue.to_generic() if (clue := self.make_adapted_clue()) else "",
+                example=to_generic_or_empty(self.make_adapted_example()),
+                clue=to_generic_or_empty(self.make_adapted_clue()),
             ),
         )
 
@@ -68,16 +74,16 @@ class GenericAdaptation(Adaptation):
     id: orm.Mapped[int] = orm.mapped_column(sql.ForeignKey(Adaptation.id), primary_key=True)
 
     def make_adapted_instructions(self):
-        return parsing.parse_generic_section(self.exercise.instructions)
+        return parsing.parse_generic_instructions_section(self.exercise.instructions)
 
     def make_adapted_wording(self):
-        return parsing.parse_generic_section(self.exercise.wording)
+        return parsing.parse_generic_wording_section(self.exercise.wording)
 
     def make_adapted_example(self):
-        return parsing.parse_generic_section(self.exercise.example)
+        return parsing.parse_generic_instructions_section(self.exercise.example)
 
     def make_adapted_clue(self):
-        return parsing.parse_generic_section(self.exercise.clue)
+        return parsing.parse_generic_instructions_section(self.exercise.clue)
 
 
 class Exercise(OrmBase, CreatedUpdatedByAtMixin):

@@ -34,7 +34,7 @@ if git \
       -e '\<Symbol$' -e '\<Symbol[^.]' \
       -e '\<Object$' -e '\<Object[^.]' \
       -- \
-      ../../frontend/*.js ../../frontend/*.vue
+      ../../frontend/src/{frontend,adapted}*
 then
   false
 fi

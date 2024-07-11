@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { computedAsync } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
 
 import { useApiStore } from '$frontend/stores/api'
 import { BBusy } from '$frontend/components/opinion/bootstrap'
-import type { Project } from '$frontend/types/api'
 
 
 const props = defineProps<{
@@ -18,41 +16,34 @@ const api = useApiStore()
 
 const component = ref<null | { title: string, breadcrumbs: [], handlesScrolling?: boolean }>(null)
 
-const projectIsLoading = ref(false)
-const projectNeedsRefresh = ref(0)
-const project = computedAsync(
-  async () => {
-    projectNeedsRefresh.value  // Dependency for reactivity
-    await new Promise((resolve) => resolve(null))  // @todo Understand why removing this line duplicates the request
-    return await api.client.getOne<Project>('project', props.projectId, {include: ['textbooks', 'exercises.textbook']})
-  },
-  null,
-  projectIsLoading,
-)
+const project = api.auto.getOne('project', props.projectId, {include: ['textbooks', 'exercises.textbook']})
 
-const projectExists = computed(() => project.value?.exists)
+function refreshProject() {
+  // @todo Remove 'options' from '.refresh()' (use those from '.getOne'). The remove 'refreshProject' and have sub-components simply call 'project.refresh()'
+  project.refresh({include: ['textbooks', 'exercises.textbook']})
+}
 
 const title = computed(() => {
-  if (projectIsLoading.value) {
+  if (project.loading) {
     return []
-  } else if (projectExists.value) {
-    console.assert(project.value?.attributes !== undefined)
+  } else if (project.exists) {
+    console.assert(project.attributes !== undefined)
     const componentTitle = component.value ? component.value.title : []
-    return [project.value.attributes.title, ...componentTitle]
+    return [project.attributes.title, ...componentTitle]
   } else {
     return [i18n.t('projectNotFound')]
   }
 })
 
 const breadcrumbs = computed(() => {
-  if (projectIsLoading.value) {
+  if (project.loading) {
     return []
-  } else if (projectExists.value) {
-    console.assert(project.value?.attributes !== undefined)
+  } else if (project.exists) {
+    console.assert(project.attributes !== undefined)
     const componentBreadcrumbs = component.value ? component.value.breadcrumbs : []
     return [
       {
-        title: project.value.attributes.title,
+        title: project.attributes.title,
         to: {name: 'project', params: {projectId: props.projectId}},
       },
       ...componentBreadcrumbs,
@@ -74,12 +65,12 @@ defineExpose({
 </script>
 
 <template>
-  <BBusy :busy="projectIsLoading" showWhileBusy="afterNotBusy" size="20em" :class="class_">
-    <template v-if="projectExists">
+  <BBusy :busy="project.loading" showWhileBusy="afterNotBusy" size="20em" :class="class_">
+    <template v-if="project.exists"> <!-- @todo Start loading the textbook earlier (currently, it has to wait until the project is loaded) -->
       <RouterView v-slot="{ Component }">
         <component
           :is="Component" ref="component"
-          :project :refreshProject="() => { ++projectNeedsRefresh }"
+          :project :refreshProject
         />
       </RouterView>
     </template>

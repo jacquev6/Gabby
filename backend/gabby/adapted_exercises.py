@@ -5,15 +5,32 @@ from fastapi import HTTPException
 from starlette import status
 
 from . import api_models
+from . import parsing
 from . import renderable
 from . import settings
 from .adaptations.fill_with_free_text import FillWithFreeTextAdaptation
 from .adaptations.multiple_choices_in_instructions import MultipleChoicesInInstructionsAdaptation
 from .adaptations.multiple_choices_in_wording import MultipleChoicesInWordingAdaptation
 from .adaptations.select_things import SelectThingsAdaptation
-from .exercises import Exercise
+from .exercises import Exercise, Adaptation
 from .testing import LoggedInApiTestCase
 from .users import MandatoryAuthBearerDependable
+
+
+class NullAdaptation(Adaptation):
+    __abstract__ = True  # Abstract with regards to SQL tables, but instantiable in Python
+
+    def make_adapted_instructions(self):
+        return parsing.parse_plain_instructions_section(self.exercise.instructions)
+
+    def make_adapted_wording(self):
+        return parsing.parse_plain_wording_section(self.exercise.wording)
+
+    def make_adapted_example(self):
+        return parsing.parse_plain_instructions_section(self.exercise.example)
+
+    def make_adapted_clue(self):
+        return parsing.parse_plain_instructions_section(self.exercise.clue)
 
 
 @dataclasses.dataclass
@@ -50,23 +67,27 @@ class AdaptedExercisesResource:
             example=example,
             clue=clue,
         )
-        if type == "selectThingsAdaptation":
-            adapted = SelectThingsAdaptation(
+        if type == "-":
+            adaptation = NullAdaptation(
+                exercise=exercise,
+            )
+        elif type == "selectThingsAdaptation":
+            adaptation = SelectThingsAdaptation(
                 exercise=exercise,
                 **adaptation_options.model_dump(),
             )
         elif type == "fillWithFreeTextAdaptation":
-            adapted = FillWithFreeTextAdaptation(
+            adaptation = FillWithFreeTextAdaptation(
                 exercise=exercise,
                 **adaptation_options.model_dump(),
             )
         elif type == "multipleChoicesInInstructionsAdaptation":
-            adapted = MultipleChoicesInInstructionsAdaptation(
+            adaptation = MultipleChoicesInInstructionsAdaptation(
                 exercise=exercise,
                 **adaptation_options.model_dump(),
             )
         elif type == "multipleChoicesInWordingAdaptation":
-            adapted = MultipleChoicesInWordingAdaptation(
+            adaptation = MultipleChoicesInWordingAdaptation(
                 exercise=exercise,
                 **adaptation_options.model_dump(),
             )
@@ -74,7 +95,7 @@ class AdaptedExercisesResource:
             raise HTTPException(status_code=400, detail="Unknown type")
         return AdaptedExerciseItem(
             id=uuid.uuid4().hex,
-            adapted=adapted.make_adapted(),
+            adapted=adaptation.make_adapted(),
         )
 
     def get_item(
@@ -88,6 +109,59 @@ class AdaptedExercisesResource:
 class AdaptedExerciseApiTestCase(LoggedInApiTestCase):
     resources = [AdaptedExercisesResource()]
     polymorphism = {}
+
+    def test_null(self):
+        payload = {
+            "data": {
+                "type": "adaptedExercise",
+                "attributes": {
+                    "number": "C",
+                    "textbookPage": 1,
+                    "instructions": "This is the {boxed-text|instructions}.",
+                    "wording": "This is the wording.",
+                    "example": "",
+                    "clue": "",
+                    "type": "-",
+                    "adaptationOptions": {},
+                },
+            },
+        }
+        response = self.post("http://server/adaptedExercises", payload)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
+        self.assertEqual(response.json()["data"]["attributes"]["adapted"], {
+            "number": "C",
+            "textbook_page": 1,
+            "instructions": {"paragraphs": [
+                {"sentences": [{"tokens": [
+                    {"type": "plainText", "text": "This"},
+                    {"type": "whitespace"},
+                    {"type": "plainText", "text": "is"},
+                    {"type": "whitespace"},
+                    {"type": "plainText", "text": "the"},
+                    {"type": "whitespace"},
+                    {"type": "plainText", "text": "{"},
+                    {"type": "plainText", "text": "boxed"},
+                    {"type": "plainText", "text": "-"},
+                    {"type": "plainText", "text": "text"},
+                    {"type": "plainText", "text": "|"},
+                    {"type": "plainText", "text": "instructions"},
+                    {"type": "plainText", "text": "}"},
+                    {"type": "plainText", "text": "."},
+                ]}]},
+            ]},
+            "wording": {"paragraphs": [{"sentences": [{"tokens": [
+                {"type": "plainText", "text": "This"},
+                {"type": "whitespace"},
+                {"type": "plainText", "text": "is"},
+                {"type": "whitespace"},
+                {"type": "plainText", "text": "the"},
+                {"type": "whitespace"},
+                {"type": "plainText", "text": "wording"},
+                {"type": "plainText", "text": "."},
+            ]}]}]},
+            "example": {"paragraphs": []},
+            "clue": {"paragraphs": []},
+        })
 
     def test_select_things(self):
         payload = {

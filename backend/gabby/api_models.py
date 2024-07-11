@@ -172,3 +172,7 @@ class AdaptedExercise(Base):
         WriteOnly(),
     ]
     adapted: Annotated[renderable.AdaptedExercise, Computed()]
+
+
+class SyntheticError(Base):
+    pass

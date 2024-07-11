@@ -1,20 +1,19 @@
-import { setActivePinia, createPinia } from 'pinia'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap'
 
-import { defineApiStore } from '$frontend/stores/api'
+import { defineApiStore, resetApiStores } from '$frontend/stores/api'
 import SectionEditor from './SectionEditor.vue'
 
 
-const useApiStore = defineApiStore('api', {baseUrl: 'http://fanout:8080/api/'})
+const useApiStore = defineApiStore('api', {baseUrl: 'http://fanout:8080/api'})
 
 describe('SectionEditor', () => {
   beforeEach(() => {
     cy.request('POST', 'http://fanout:8080/reset-for-tests/yes-im-sure?fixtures=test-exercises')
 
-    setActivePinia(createPinia())
+    resetApiStores()
     cy.wrap(useApiStore()).then((api) => api.auth.login('admin', 'password'))
-    cy.wrap(useApiStore()).then((api) => api.client.getAll('sections')).should('have.length', 1)
+    cy.wrap(useApiStore()).then((api) => api.client.getAll('section')).its('items').should('have.length', 1)
 
     cy.viewport(1000, 500)
 
@@ -53,7 +52,7 @@ describe('SectionEditor', () => {
   it('disables "Save" button on invalid order', () => {
     cy.get('label').contains('Début dans le PDF').next().type('{selectAll}5')
     cy.get('button').contains('Enregistrer').should('be.disabled')
-})
+  })
 
   it('keeps pages counts in sync', () => {
     cy.get('label').contains('Fin dans le PDF').next().type('{selectAll}4')

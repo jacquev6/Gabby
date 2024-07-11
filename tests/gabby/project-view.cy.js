@@ -1,12 +1,8 @@
-function login() {
+import { useApiStore } from '../../frontend/src/frontend/stores/api'
+
+
+function setLocale() {
   cy.get('select').last().select('en')
-  cy.get('h1:contains("Please log in")').should('exist')
-  cy.get('[name=username]').type('admin')  // This often leaves the field with just the few characters, e.g. 'adm'. I can't figure out why; probably some race condition.
-  cy.get('[name=password]').type('password')
-  cy.get('[name=username]').type('{selectall}admin')  // This is a workaround for the above issue.
-  cy.get('[name=username]').should('have.value', 'admin')
-  cy.get('button:contains("Log in")').click()
-  cy.get('h1:contains("Please log in")').should('not.exist')
 }
 
 describe('Gabby\'s project view', () => {
@@ -14,16 +10,13 @@ describe('Gabby\'s project view', () => {
 
   beforeEach(() => {
     cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=admin-user,empty-project')
-  })
-
-  after(() => {
-    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=admin-user,more-test-exercises')
+    cy.wrap(useApiStore()).then(api => api.auth.login('admin', 'password'))
   })
 
   it('displays an error message if the project does not exist', () => {
     cy.visit('/project-nope')
+    setLocale()
     cy.get('div.busy').should('not.exist')
-    login()
 
     cy.get('h1:contains("Project not found")').should('exist')
     cy.title().should('eq', 'MALIN - Project not found')
@@ -31,7 +24,7 @@ describe('Gabby\'s project view', () => {
 
   it('lands', () => {
     cy.visit('/project-xkopqm')
-    login()
+    setLocale()
 
     cy.get('h1:contains("Test project")').should('exist')
     cy.title().should('eq', 'MALIN - Test project')
@@ -44,7 +37,7 @@ describe('Gabby\'s project view', () => {
 
   it('edits title and description', () => {
     cy.visit('/project-xkopqm')
-    login()
+    setLocale()
 
     cy.get('h1:contains("Test project") button:contains("Edit")').click()
     cy.get('label:contains("Title")').first().next().clear().type('New title')
@@ -56,6 +49,7 @@ describe('Gabby\'s project view', () => {
     cy.get('p:contains("New description.")').should('exist')
 
     cy.visit('/project-xkopqm')
+    setLocale()
     cy.get('h1:contains("New title")').should('exist')
     cy.title().should('eq', 'MALIN - New title')
     cy.get('p:contains("New description.")').should('exist')
@@ -63,7 +57,7 @@ describe('Gabby\'s project view', () => {
 
   it('refuses to empty title', () => {
     cy.visit('/project-xkopqm')
-    login()
+    setLocale()
 
     cy.get('h1:contains("Test project") button:contains("Edit")').click()
     cy.get('label:contains("Title")').first().next().clear()
@@ -72,7 +66,7 @@ describe('Gabby\'s project view', () => {
 
   it('enables the "Create textbook" button', () => {
     cy.visit('/project-xkopqm')
-    login()
+    setLocale()
     cy.get('button:contains("Create textbook")').should('be.disabled')
 
     cy.get('label:contains("Title")').next().type('Test textbook')
@@ -90,7 +84,7 @@ describe('Gabby\'s project view', () => {
 
   it('previews the pdf', () => {
     cy.visit('/project-xkopqm')
-    login()
+    setLocale()
 
     cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
 
@@ -116,7 +110,7 @@ describe('Gabby\'s project view', () => {
 
   it('creates a minimal textbook', () => {
     cy.visit('/project-xkopqm')
-    login()
+    setLocale()
 
     cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
     cy.get('label:contains("Title")').next().type('Test textbook')
@@ -125,13 +119,14 @@ describe('Gabby\'s project view', () => {
     cy.get('p:contains("No exercises yet")').should('exist')
 
     cy.visit('/project-xkopqm')
+    setLocale()
 
     cy.get('h3:contains("Test textbook")').should('exist')
   })
 
   it('creates a full textbook', () => {
     cy.visit('/project-xkopqm')
-    login()
+    setLocale()
 
     cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
     cy.get('label:contains("Title")').next().type('Test textbook')
@@ -143,19 +138,20 @@ describe('Gabby\'s project view', () => {
     cy.get('p:contains("No exercises yet")').should('exist')
 
     cy.visit('/project-xkopqm')
+    setLocale()
 
     cy.get('h3:contains("Test textbook, Test publisher (2024)")').should('exist')
   })
 
   it('creates two textbooks from the same PDF', () => {
     cy.visit('/project-xkopqm')
-    login()
+    setLocale()
     cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
     cy.get('label:contains("Title")').next().type('First textbook')
     cy.get('button:contains("Create textbook")').click()
     cy.get('p:contains("No exercises yet")').should('exist')
     cy.visit('/project-xkopqm')
-    cy.get('select').select('en')
+    setLocale()
 
     cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
     cy.get('label:contains("Title")').next().type('Second textbook')
@@ -163,7 +159,7 @@ describe('Gabby\'s project view', () => {
     cy.get('p:contains("No exercises yet")').should('exist')
 
     cy.visit('/project-xkopqm')
-    cy.get('select').select('en')
+    setLocale()
     cy.get('h3:contains("First textbook")').should('exist')
     cy.get('h3:contains("Second textbook")').should('exist')
   })
@@ -172,7 +168,7 @@ describe('Gabby\'s project view', () => {
     cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=admin-user,test-exercises')
 
     cy.visit('/project-xkopqm')
-    login()
+    setLocale()
 
     cy.get('h3:contains("Français CE2, Slabeuf (2021)")').should('exist')
     cy.get('a:contains("Français CE2")').should('exist')
@@ -187,7 +183,7 @@ describe('Gabby\'s project view', () => {
     cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=admin-user,test-exercises')
 
     cy.visit('/project-fryrbl')
-    login()
+    setLocale()
     cy.get('li:contains("L1 Faire des choses intellig…")').should('exist')
     cy.get('li:contains("L2 Faire d\'autres choses int…")').should('exist')
     cy.get('li:contains("L3 Prendre le temps de faire…")').should('exist')
@@ -195,7 +191,7 @@ describe('Gabby\'s project view', () => {
 
   it('enables the "Create exercise" button', () => {
     cy.visit('/project-xkopqm')
-    login()
+    setLocale()
     cy.get('button:contains("Create exercise")').should('be.disabled')
 
     cy.get('label:contains("Number")').next().type('a')
@@ -209,7 +205,7 @@ describe('Gabby\'s project view', () => {
 
   it('creates a minimal independent exercise', () => {
     cy.visit('/project-xkopqm')
-    login()
+    setLocale()
 
     cy.get('label:contains("Number")').next().type('10')
     cy.get('label:contains("Instructions")').next().type('Do something smart.')
@@ -224,7 +220,7 @@ describe('Gabby\'s project view', () => {
 
   it('creates a full independent exercise', () => {
     cy.visit('/project-xkopqm')
-    login()
+    setLocale()
 
     cy.get('label:contains("Number")').next().type('L10')
     cy.get('label:contains("Instructions")').next().type('Do the smartest thing ever.')

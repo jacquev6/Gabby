@@ -179,6 +179,10 @@ export interface paths {
     /** Update Select Things Adaptation */
     patch: operations["update_select_things_adaptation_api_selectThingsAdaptations__id__patch"];
   };
+  "/api/syntheticErrors/{id}": {
+    /** Get Synthetic Error */
+    get: operations["get_synthetic_error_api_syntheticErrors__id__get"];
+  };
   "/api/textbooks": {
     /** Get Textbooks */
     get: operations["get_textbooks_api_textbooks_get"];
@@ -244,14 +248,6 @@ export interface components {
       /** Username */
       username: string;
     };
-    /** CreateInputListRelationship */
-    CreateInputListRelationship: {
-      /**
-       * Data
-       * @default []
-       */
-      data?: components["schemas"]["ObjectId"][];
-    };
     /** FillWithFreeTextAdaptationOptions */
     FillWithFreeTextAdaptationOptions: {
       /** Placeholder */
@@ -267,15 +263,6 @@ export interface components {
       /** Self */
       self: string;
     };
-    /** MandatoryRelationship */
-    MandatoryRelationship: {
-      data: components["schemas"]["ObjectId"];
-    };
-    /** Meta */
-    Meta: {
-      /** Count */
-      count: number;
-    };
     /** MultipleChoicesInInstructionsAdaptationOptions */
     MultipleChoicesInInstructionsAdaptationOptions: {
       /** Placeholder */
@@ -283,22 +270,10 @@ export interface components {
     };
     /** MultipleChoicesInWordingAdaptationOptions */
     MultipleChoicesInWordingAdaptationOptions: Record<string, never>;
-    /** ObjectId */
-    ObjectId: {
-      /** Id */
-      id: string;
-      /** Type */
-      type: string;
-    };
-    /** OptionalRelationship */
-    OptionalRelationship: {
-      data?: components["schemas"]["ObjectId"] | null;
-    };
-    /** OutputListRelationship */
-    OutputListRelationship: {
-      /** Data */
-      data: components["schemas"]["ObjectId"][];
-      meta: components["schemas"]["Meta"];
+    /** OutputListRelationShipMeta */
+    OutputListRelationShipMeta: {
+      /** Count */
+      count: number;
     };
     /** PageLinks */
     PageLinks: {
@@ -359,11 +334,6 @@ export interface components {
     Sentence: {
       /** Tokens */
       tokens: (components["schemas"]["_PlainText"] | components["schemas"]["_BoxedText"] | components["schemas"]["_SelectableText"] | components["schemas"]["_SelectedText"] | components["schemas"]["_SelectedClicks"] | components["schemas"]["_FreeTextInput"] | components["schemas"]["_MultipleChoicesInput"] | components["schemas"]["_Whitespace"])[];
-    };
-    /** UpdateInputListRelationship */
-    UpdateInputListRelationship: {
-      /** Data */
-      data: components["schemas"]["ObjectId"][];
     };
     /** ValidationError */
     ValidationError: {
@@ -560,10 +530,10 @@ export interface components {
     /** exerciseCreateInputDataRelationships */
     exerciseCreateInputDataRelationships: {
       /** @default {} */
-      adaptation?: components["schemas"]["OptionalRelationship"];
-      project: components["schemas"]["MandatoryRelationship"];
+      adaptation?: components["schemas"]["exercise_adaptation_Relationship"];
+      project: components["schemas"]["exercise_project_Relationship"];
       /** @default {} */
-      textbook?: components["schemas"]["OptionalRelationship"];
+      textbook?: components["schemas"]["exercise_textbook_Relationship"];
     };
     /** exerciseItemOutput */
     exerciseItemOutput: {
@@ -609,11 +579,11 @@ export interface components {
     };
     /** exerciseOutputItemRelationships */
     exerciseOutputItemRelationships: {
-      adaptation: components["schemas"]["OptionalRelationship"];
-      createdBy: components["schemas"]["MandatoryRelationship"];
-      project: components["schemas"]["MandatoryRelationship"];
-      textbook: components["schemas"]["OptionalRelationship"];
-      updatedBy: components["schemas"]["MandatoryRelationship"];
+      adaptation: components["schemas"]["exercise_adaptation_Relationship"];
+      createdBy: components["schemas"]["exercise_createdBy_Relationship"];
+      project: components["schemas"]["exercise_project_Relationship"];
+      textbook: components["schemas"]["exercise_textbook_Relationship"];
+      updatedBy: components["schemas"]["exercise_updatedBy_Relationship"];
     };
     /** exercisePageOutput */
     exercisePageOutput: {
@@ -653,7 +623,81 @@ export interface components {
     };
     /** exerciseUpdateInputDataRelationships */
     exerciseUpdateInputDataRelationships: {
-      adaptation?: components["schemas"]["OptionalRelationship"];
+      adaptation?: components["schemas"]["exercise_adaptation_Relationship"];
+    };
+    /** exercise_adaptation_Relationship */
+    exercise_adaptation_Relationship: {
+      data: components["schemas"]["exercise_adaptation_Relationship_ObjectId"] | null;
+    };
+    /** exercise_adaptation_Relationship_ObjectId */
+    exercise_adaptation_Relationship_ObjectId: {
+      /** Id */
+      id: string;
+      /**
+       * Type
+       * @enum {string}
+       */
+      type: "selectThingsAdaptation" | "fillWithFreeTextAdaptation" | "multipleChoicesInInstructionsAdaptation" | "multipleChoicesInWordingAdaptation";
+    };
+    /** exercise_createdBy_Relationship */
+    exercise_createdBy_Relationship: {
+      data: components["schemas"]["exercise_createdBy_Relationship_ObjectId"];
+    };
+    /** exercise_createdBy_Relationship_ObjectId */
+    exercise_createdBy_Relationship_ObjectId: {
+      /** Id */
+      id: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "user";
+    };
+    /** exercise_project_Relationship */
+    exercise_project_Relationship: {
+      data: components["schemas"]["exercise_project_Relationship_ObjectId"];
+    };
+    /** exercise_project_Relationship_ObjectId */
+    exercise_project_Relationship_ObjectId: {
+      /** Id */
+      id: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "project";
+    };
+    /** exercise_textbook_Relationship */
+    exercise_textbook_Relationship: {
+      data: components["schemas"]["exercise_textbook_Relationship_ObjectId"] | null;
+    };
+    /** exercise_textbook_Relationship_ObjectId */
+    exercise_textbook_Relationship_ObjectId: {
+      /** Id */
+      id: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "textbook";
+    };
+    /** exercise_updatedBy_Relationship */
+    exercise_updatedBy_Relationship: {
+      data: components["schemas"]["exercise_updatedBy_Relationship_ObjectId"];
+    };
+    /** exercise_updatedBy_Relationship_ObjectId */
+    exercise_updatedBy_Relationship_ObjectId: {
+      /** Id */
+      id: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "user";
     };
     /** extractionEventCreateInput */
     extractionEventCreateInput: {
@@ -673,7 +717,7 @@ export interface components {
     };
     /** extractionEventCreateInputDataRelationships */
     extractionEventCreateInputDataRelationships: {
-      exercise: components["schemas"]["MandatoryRelationship"];
+      exercise: components["schemas"]["extractionEvent_exercise_Relationship"];
     };
     /** extractionEventItemOutput */
     extractionEventItemOutput: {
@@ -708,9 +752,9 @@ export interface components {
     };
     /** extractionEventOutputItemRelationships */
     extractionEventOutputItemRelationships: {
-      createdBy: components["schemas"]["MandatoryRelationship"];
-      exercise: components["schemas"]["MandatoryRelationship"];
-      updatedBy: components["schemas"]["MandatoryRelationship"];
+      createdBy: components["schemas"]["extractionEvent_createdBy_Relationship"];
+      exercise: components["schemas"]["extractionEvent_exercise_Relationship"];
+      updatedBy: components["schemas"]["extractionEvent_updatedBy_Relationship"];
     };
     /** extractionEventPageOutput */
     extractionEventPageOutput: {
@@ -740,6 +784,51 @@ export interface components {
     extractionEventUpdateInputDataAttributes: Record<string, never>;
     /** extractionEventUpdateInputDataRelationships */
     extractionEventUpdateInputDataRelationships: Record<string, never>;
+    /** extractionEvent_createdBy_Relationship */
+    extractionEvent_createdBy_Relationship: {
+      data: components["schemas"]["extractionEvent_createdBy_Relationship_ObjectId"];
+    };
+    /** extractionEvent_createdBy_Relationship_ObjectId */
+    extractionEvent_createdBy_Relationship_ObjectId: {
+      /** Id */
+      id: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "user";
+    };
+    /** extractionEvent_exercise_Relationship */
+    extractionEvent_exercise_Relationship: {
+      data: components["schemas"]["extractionEvent_exercise_Relationship_ObjectId"];
+    };
+    /** extractionEvent_exercise_Relationship_ObjectId */
+    extractionEvent_exercise_Relationship_ObjectId: {
+      /** Id */
+      id: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "exercise";
+    };
+    /** extractionEvent_updatedBy_Relationship */
+    extractionEvent_updatedBy_Relationship: {
+      data: components["schemas"]["extractionEvent_updatedBy_Relationship_ObjectId"];
+    };
+    /** extractionEvent_updatedBy_Relationship_ObjectId */
+    extractionEvent_updatedBy_Relationship_ObjectId: {
+      /** Id */
+      id: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "user";
+    };
     /** fillWithFreeTextAdaptationCreateInput */
     fillWithFreeTextAdaptationCreateInput: {
       data: components["schemas"]["fillWithFreeTextAdaptationCreateInputData"];
@@ -758,7 +847,7 @@ export interface components {
     };
     /** fillWithFreeTextAdaptationCreateInputDataRelationships */
     fillWithFreeTextAdaptationCreateInputDataRelationships: {
-      exercise: components["schemas"]["MandatoryRelationship"];
+      exercise: components["schemas"]["fillWithFreeTextAdaptation_exercise_Relationship"];
     };
     /** fillWithFreeTextAdaptationItemOutput */
     fillWithFreeTextAdaptationItemOutput: {
@@ -793,9 +882,9 @@ export interface components {
     };
     /** fillWithFreeTextAdaptationOutputItemRelationships */
     fillWithFreeTextAdaptationOutputItemRelationships: {
-      createdBy: components["schemas"]["MandatoryRelationship"];
-      exercise: components["schemas"]["MandatoryRelationship"];
-      updatedBy: components["schemas"]["MandatoryRelationship"];
+      createdBy: components["schemas"]["fillWithFreeTextAdaptation_createdBy_Relationship"];
+      exercise: components["schemas"]["fillWithFreeTextAdaptation_exercise_Relationship"];
+      updatedBy: components["schemas"]["fillWithFreeTextAdaptation_updatedBy_Relationship"];
     };
     /** fillWithFreeTextAdaptationUpdateInput */
     fillWithFreeTextAdaptationUpdateInput: {
@@ -819,6 +908,51 @@ export interface components {
     };
     /** fillWithFreeTextAdaptationUpdateInputDataRelationships */
     fillWithFreeTextAdaptationUpdateInputDataRelationships: Record<string, never>;
+    /** fillWithFreeTextAdaptation_createdBy_Relationship */
+    fillWithFreeTextAdaptation_createdBy_Relationship: {
+      data: components["schemas"]["fillWithFreeTextAdaptation_createdBy_Relationship_ObjectId"];
+    };
+    /** fillWithFreeTextAdaptation_createdBy_Relationship_ObjectId */
+    fillWithFreeTextAdaptation_createdBy_Relationship_ObjectId: {
+      /** Id */
+      id: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "user";
+    };
+    /** fillWithFreeTextAdaptation_exercise_Relationship */
+    fillWithFreeTextAdaptation_exercise_Relationship: {
+      data: components["schemas"]["fillWithFreeTextAdaptation_exercise_Relationship_ObjectId"];
+    };
+    /** fillWithFreeTextAdaptation_exercise_Relationship_ObjectId */
+    fillWithFreeTextAdaptation_exercise_Relationship_ObjectId: {
+      /** Id */
+      id: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "exercise";
+    };
+    /** fillWithFreeTextAdaptation_updatedBy_Relationship */
+    fillWithFreeTextAdaptation_updatedBy_Relationship: {
+      data: components["schemas"]["fillWithFreeTextAdaptation_updatedBy_Relationship_ObjectId"];
+    };
+    /** fillWithFreeTextAdaptation_updatedBy_Relationship_ObjectId */
+    fillWithFreeTextAdaptation_updatedBy_Relationship_ObjectId: {
+      /** Id */
+      id: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "user";
+    };
     /** multipleChoicesInInstructionsAdaptationCreateInput */
     multipleChoicesInInstructionsAdaptationCreateInput: {
       data: components["schemas"]["multipleChoicesInInstructionsAdaptationCreateInputData"];
@@ -837,7 +971,7 @@ export interface components {
     };
     /** multipleChoicesInInstructionsAdaptationCreateInputDataRelationships */
     multipleChoicesInInstructionsAdaptationCreateInputDataRelationships: {
-      exercise: components["schemas"]["MandatoryRelationship"];
+      exercise: components["schemas"]["multipleChoicesInInstructionsAdaptation_exercise_Relationship"];
     };
     /** multipleChoicesInInstructionsAdaptationItemOutput */
     multipleChoicesInInstructionsAdaptationItemOutput: {
@@ -872,9 +1006,9 @@ export interface components {
     };
     /** multipleChoicesInInstructionsAdaptationOutputItemRelationships */
     multipleChoicesInInstructionsAdaptationOutputItemRelationships: {
-      createdBy: components["schemas"]["MandatoryRelationship"];
-      exercise: components["schemas"]["MandatoryRelationship"];
-      updatedBy: components["schemas"]["MandatoryRelationship"];
+      createdBy: components["schemas"]["multipleChoicesInInstructionsAdaptation_createdBy_Relationship"];
+      exercise: components["schemas"]["multipleChoicesInInstructionsAdaptation_exercise_Relationship"];
+      updatedBy: components["schemas"]["multipleChoicesInInstructionsAdaptation_updatedBy_Relationship"];
     };
     /** multipleChoicesInInstructionsAdaptationUpdateInput */
     multipleChoicesInInstructionsAdaptationUpdateInput: {
@@ -898,6 +1032,51 @@ export interface components {
     };
     /** multipleChoicesInInstructionsAdaptationUpdateInputDataRelationships */
     multipleChoicesInInstructionsAdaptationUpdateInputDataRelationships: Record<string, never>;
+    /** multipleChoicesInInstructionsAdaptation_createdBy_Relationship */
+    multipleChoicesInInstructionsAdaptation_createdBy_Relationship: {
+      data: components["schemas"]["multipleChoicesInInstructionsAdaptation_createdBy_Relationship_ObjectId"];
+    };
+    /** multipleChoicesInInstructionsAdaptation_createdBy_Relationship_ObjectId */
+    multipleChoicesInInstructionsAdaptation_createdBy_Relationship_ObjectId: {
+      /** Id */
+      id: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "user";
+    };
+    /** multipleChoicesInInstructionsAdaptation_exercise_Relationship */
+    multipleChoicesInInstructionsAdaptation_exercise_Relationship: {
+      data: components["schemas"]["multipleChoicesInInstructionsAdaptation_exercise_Relationship_ObjectId"];
+    };
+    /** multipleChoicesInInstructionsAdaptation_exercise_Relationship_ObjectId */
+    multipleChoicesInInstructionsAdaptation_exercise_Relationship_ObjectId: {
+      /** Id */
+      id: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "exercise";
+    };
+    /** multipleChoicesInInstructionsAdaptation_updatedBy_Relationship */
+    multipleChoicesInInstructionsAdaptation_updatedBy_Relationship: {
+      data: components["schemas"]["multipleChoicesInInstructionsAdaptation_updatedBy_Relationship_ObjectId"];
+    };
+    /** multipleChoicesInInstructionsAdaptation_updatedBy_Relationship_ObjectId */
+    multipleChoicesInInstructionsAdaptation_updatedBy_Relationship_ObjectId: {
+      /** Id */
+      id: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "user";
+    };
     /** multipleChoicesInWordingAdaptationCreateInput */
     multipleChoicesInWordingAdaptationCreateInput: {
       data: components["schemas"]["multipleChoicesInWordingAdaptationCreateInputData"];
@@ -914,7 +1093,7 @@ export interface components {
     multipleChoicesInWordingAdaptationCreateInputDataAttributes: Record<string, never>;
     /** multipleChoicesInWordingAdaptationCreateInputDataRelationships */
     multipleChoicesInWordingAdaptationCreateInputDataRelationships: {
-      exercise: components["schemas"]["MandatoryRelationship"];
+      exercise: components["schemas"]["multipleChoicesInWordingAdaptation_exercise_Relationship"];
     };
     /** multipleChoicesInWordingAdaptationItemOutput */
     multipleChoicesInWordingAdaptationItemOutput: {
@@ -947,9 +1126,9 @@ export interface components {
     };
     /** multipleChoicesInWordingAdaptationOutputItemRelationships */
     multipleChoicesInWordingAdaptationOutputItemRelationships: {
-      createdBy: components["schemas"]["MandatoryRelationship"];
-      exercise: components["schemas"]["MandatoryRelationship"];
-      updatedBy: components["schemas"]["MandatoryRelationship"];
+      createdBy: components["schemas"]["multipleChoicesInWordingAdaptation_createdBy_Relationship"];
+      exercise: components["schemas"]["multipleChoicesInWordingAdaptation_exercise_Relationship"];
+      updatedBy: components["schemas"]["multipleChoicesInWordingAdaptation_updatedBy_Relationship"];
     };
     /** multipleChoicesInWordingAdaptationUpdateInput */
     multipleChoicesInWordingAdaptationUpdateInput: {
@@ -970,6 +1149,51 @@ export interface components {
     multipleChoicesInWordingAdaptationUpdateInputDataAttributes: Record<string, never>;
     /** multipleChoicesInWordingAdaptationUpdateInputDataRelationships */
     multipleChoicesInWordingAdaptationUpdateInputDataRelationships: Record<string, never>;
+    /** multipleChoicesInWordingAdaptation_createdBy_Relationship */
+    multipleChoicesInWordingAdaptation_createdBy_Relationship: {
+      data: components["schemas"]["multipleChoicesInWordingAdaptation_createdBy_Relationship_ObjectId"];
+    };
+    /** multipleChoicesInWordingAdaptation_createdBy_Relationship_ObjectId */
+    multipleChoicesInWordingAdaptation_createdBy_Relationship_ObjectId: {
+      /** Id */
+      id: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "user";
+    };
+    /** multipleChoicesInWordingAdaptation_exercise_Relationship */
+    multipleChoicesInWordingAdaptation_exercise_Relationship: {
+      data: components["schemas"]["multipleChoicesInWordingAdaptation_exercise_Relationship_ObjectId"];
+    };
+    /** multipleChoicesInWordingAdaptation_exercise_Relationship_ObjectId */
+    multipleChoicesInWordingAdaptation_exercise_Relationship_ObjectId: {
+      /** Id */
+      id: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "exercise";
+    };
+    /** multipleChoicesInWordingAdaptation_updatedBy_Relationship */
+    multipleChoicesInWordingAdaptation_updatedBy_Relationship: {
+      data: components["schemas"]["multipleChoicesInWordingAdaptation_updatedBy_Relationship_ObjectId"];
+    };
+    /** multipleChoicesInWordingAdaptation_updatedBy_Relationship_ObjectId */
+    multipleChoicesInWordingAdaptation_updatedBy_Relationship_ObjectId: {
+      /** Id */
+      id: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "user";
+    };
     /** pdfFileCreateInput */
     pdfFileCreateInput: {
       data: components["schemas"]["pdfFileCreateInputData"];
@@ -1017,7 +1241,7 @@ export interface components {
     };
     /** pdfFileNamingCreateInputDataRelationships */
     pdfFileNamingCreateInputDataRelationships: {
-      pdfFile: components["schemas"]["MandatoryRelationship"];
+      pdfFile: components["schemas"]["pdfFileNaming_pdfFile_Relationship"];
     };
     /** pdfFileNamingItemOutput */
     pdfFileNamingItemOutput: {
@@ -1047,8 +1271,8 @@ export interface components {
     };
     /** pdfFileNamingOutputItemRelationships */
     pdfFileNamingOutputItemRelationships: {
-      createdBy: components["schemas"]["MandatoryRelationship"];
-      pdfFile: components["schemas"]["MandatoryRelationship"];
+      createdBy: components["schemas"]["pdfFileNaming_createdBy_Relationship"];
+      pdfFile: components["schemas"]["pdfFileNaming_pdfFile_Relationship"];
     };
     /** pdfFileNamingPageOutput */
     pdfFileNamingPageOutput: {
@@ -1078,6 +1302,36 @@ export interface components {
     pdfFileNamingUpdateInputDataAttributes: Record<string, never>;
     /** pdfFileNamingUpdateInputDataRelationships */
     pdfFileNamingUpdateInputDataRelationships: Record<string, never>;
+    /** pdfFileNaming_createdBy_Relationship */
+    pdfFileNaming_createdBy_Relationship: {
+      data: components["schemas"]["pdfFileNaming_createdBy_Relationship_ObjectId"];
+    };
+    /** pdfFileNaming_createdBy_Relationship_ObjectId */
+    pdfFileNaming_createdBy_Relationship_ObjectId: {
+      /** Id */
+      id: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "user";
+    };
+    /** pdfFileNaming_pdfFile_Relationship */
+    pdfFileNaming_pdfFile_Relationship: {
+      data: components["schemas"]["pdfFileNaming_pdfFile_Relationship_ObjectId"];
+    };
+    /** pdfFileNaming_pdfFile_Relationship_ObjectId */
+    pdfFileNaming_pdfFile_Relationship_ObjectId: {
+      /** Id */
+      id: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "pdfFile";
+    };
     /** pdfFileOutputItem */
     pdfFileOutputItem: {
       attributes: components["schemas"]["pdfFileOutputItemAttributes"];
@@ -1104,9 +1358,9 @@ export interface components {
     };
     /** pdfFileOutputItemRelationships */
     pdfFileOutputItemRelationships: {
-      createdBy: components["schemas"]["MandatoryRelationship"];
-      namings: components["schemas"]["OutputListRelationship"];
-      sections: components["schemas"]["OutputListRelationship"];
+      createdBy: components["schemas"]["pdfFile_createdBy_Relationship"];
+      namings: components["schemas"]["pdfFile_namings_RelationshipOutput"];
+      sections: components["schemas"]["pdfFile_sections_RelationshipOutput"];
     };
     /** pdfFilePageOutput */
     pdfFilePageOutput: {
@@ -1136,6 +1390,55 @@ export interface components {
     pdfFileUpdateInputDataAttributes: Record<string, never>;
     /** pdfFileUpdateInputDataRelationships */
     pdfFileUpdateInputDataRelationships: Record<string, never>;
+    /** pdfFile_createdBy_Relationship */
+    pdfFile_createdBy_Relationship: {
+      data: components["schemas"]["pdfFile_createdBy_Relationship_ObjectId"];
+    };
+    /** pdfFile_createdBy_Relationship_ObjectId */
+    pdfFile_createdBy_Relationship_ObjectId: {
+      /** Id */
+      id: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "user";
+    };
+    /** pdfFile_namings_RelationshipOutput */
+    pdfFile_namings_RelationshipOutput: {
+      /** Data */
+      data: components["schemas"]["pdfFile_namings_RelationshipOutput_ObjectId"][];
+      meta: components["schemas"]["OutputListRelationShipMeta"];
+    };
+    /** pdfFile_namings_RelationshipOutput_ObjectId */
+    pdfFile_namings_RelationshipOutput_ObjectId: {
+      /** Id */
+      id: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "pdfFileNaming";
+    };
+    /** pdfFile_sections_RelationshipOutput */
+    pdfFile_sections_RelationshipOutput: {
+      /** Data */
+      data: components["schemas"]["pdfFile_sections_RelationshipOutput_ObjectId"][];
+      meta: components["schemas"]["OutputListRelationShipMeta"];
+    };
+    /** pdfFile_sections_RelationshipOutput_ObjectId */
+    pdfFile_sections_RelationshipOutput_ObjectId: {
+      /** Id */
+      id: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "section";
+    };
     /** pingCreateInput */
     pingCreateInput: {
       data: components["schemas"]["pingCreateInputData"];
@@ -1168,9 +1471,9 @@ export interface components {
        *   "data": []
        * }
        */
-      next?: components["schemas"]["CreateInputListRelationship"];
+      next?: components["schemas"]["ping_next_RelationshipInput"];
       /** @default {} */
-      prev?: components["schemas"]["OptionalRelationship"];
+      prev?: components["schemas"]["ping_prev_Relationship"];
     };
     /** pingItemOutput */
     pingItemOutput: {
@@ -1205,10 +1508,10 @@ export interface components {
     };
     /** pingOutputItemRelationships */
     pingOutputItemRelationships: {
-      createdBy: components["schemas"]["OptionalRelationship"];
-      next: components["schemas"]["OutputListRelationship"];
-      prev: components["schemas"]["OptionalRelationship"];
-      updatedBy: components["schemas"]["OptionalRelationship"];
+      createdBy: components["schemas"]["ping_createdBy_Relationship"];
+      next: components["schemas"]["ping_next_RelationshipOutput"];
+      prev: components["schemas"]["ping_prev_Relationship"];
+      updatedBy: components["schemas"]["ping_updatedBy_Relationship"];
     };
     /** pingPageOutput */
     pingPageOutput: {
@@ -1241,8 +1544,86 @@ export interface components {
     };
     /** pingUpdateInputDataRelationships */
     pingUpdateInputDataRelationships: {
-      next?: components["schemas"]["UpdateInputListRelationship"];
-      prev?: components["schemas"]["OptionalRelationship"];
+      next?: components["schemas"]["ping_next_RelationshipInput"];
+      prev?: components["schemas"]["ping_prev_Relationship"];
+    };
+    /** ping_createdBy_Relationship */
+    ping_createdBy_Relationship: {
+      data: components["schemas"]["ping_createdBy_Relationship_ObjectId"] | null;
+    };
+    /** ping_createdBy_Relationship_ObjectId */
+    ping_createdBy_Relationship_ObjectId: {
+      /** Id */
+      id: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "user";
+    };
+    /** ping_next_RelationshipInput */
+    ping_next_RelationshipInput: {
+      /** Data */
+      data: components["schemas"]["ping_next_RelationshipInput_ObjectId"][];
+    };
+    /** ping_next_RelationshipInput_ObjectId */
+    ping_next_RelationshipInput_ObjectId: {
+      /** Id */
+      id: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "ping";
+    };
+    /** ping_next_RelationshipOutput */
+    ping_next_RelationshipOutput: {
+      /** Data */
+      data: components["schemas"]["ping_next_RelationshipOutput_ObjectId"][];
+      meta: components["schemas"]["OutputListRelationShipMeta"];
+    };
+    /** ping_next_RelationshipOutput_ObjectId */
+    ping_next_RelationshipOutput_ObjectId: {
+      /** Id */
+      id: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "ping";
+    };
+    /** ping_prev_Relationship */
+    ping_prev_Relationship: {
+      data: components["schemas"]["ping_prev_Relationship_ObjectId"] | null;
+    };
+    /** ping_prev_Relationship_ObjectId */
+    ping_prev_Relationship_ObjectId: {
+      /** Id */
+      id: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "ping";
+    };
+    /** ping_updatedBy_Relationship */
+    ping_updatedBy_Relationship: {
+      data: components["schemas"]["ping_updatedBy_Relationship_ObjectId"] | null;
+    };
+    /** ping_updatedBy_Relationship_ObjectId */
+    ping_updatedBy_Relationship_ObjectId: {
+      /** Id */
+      id: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "user";
     };
     /** projectCreateInput */
     projectCreateInput: {
@@ -1303,10 +1684,10 @@ export interface components {
     };
     /** projectOutputItemRelationships */
     projectOutputItemRelationships: {
-      createdBy: components["schemas"]["MandatoryRelationship"];
-      exercises: components["schemas"]["OutputListRelationship"];
-      textbooks: components["schemas"]["OutputListRelationship"];
-      updatedBy: components["schemas"]["MandatoryRelationship"];
+      createdBy: components["schemas"]["project_createdBy_Relationship"];
+      exercises: components["schemas"]["project_exercises_RelationshipOutput"];
+      textbooks: components["schemas"]["project_textbooks_RelationshipOutput"];
+      updatedBy: components["schemas"]["project_updatedBy_Relationship"];
     };
     /** projectPageOutput */
     projectPageOutput: {
@@ -1341,6 +1722,70 @@ export interface components {
     };
     /** projectUpdateInputDataRelationships */
     projectUpdateInputDataRelationships: Record<string, never>;
+    /** project_createdBy_Relationship */
+    project_createdBy_Relationship: {
+      data: components["schemas"]["project_createdBy_Relationship_ObjectId"];
+    };
+    /** project_createdBy_Relationship_ObjectId */
+    project_createdBy_Relationship_ObjectId: {
+      /** Id */
+      id: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "user";
+    };
+    /** project_exercises_RelationshipOutput */
+    project_exercises_RelationshipOutput: {
+      /** Data */
+      data: components["schemas"]["project_exercises_RelationshipOutput_ObjectId"][];
+      meta: components["schemas"]["OutputListRelationShipMeta"];
+    };
+    /** project_exercises_RelationshipOutput_ObjectId */
+    project_exercises_RelationshipOutput_ObjectId: {
+      /** Id */
+      id: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "exercise";
+    };
+    /** project_textbooks_RelationshipOutput */
+    project_textbooks_RelationshipOutput: {
+      /** Data */
+      data: components["schemas"]["project_textbooks_RelationshipOutput_ObjectId"][];
+      meta: components["schemas"]["OutputListRelationShipMeta"];
+    };
+    /** project_textbooks_RelationshipOutput_ObjectId */
+    project_textbooks_RelationshipOutput_ObjectId: {
+      /** Id */
+      id: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "textbook";
+    };
+    /** project_updatedBy_Relationship */
+    project_updatedBy_Relationship: {
+      data: components["schemas"]["project_updatedBy_Relationship_ObjectId"];
+    };
+    /** project_updatedBy_Relationship_ObjectId */
+    project_updatedBy_Relationship_ObjectId: {
+      /** Id */
+      id: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "user";
+    };
     /** recoveryEmailRequestCreateInput */
     recoveryEmailRequestCreateInput: {
       data: components["schemas"]["recoveryEmailRequestCreateInputData"];
@@ -1398,8 +1843,8 @@ export interface components {
     };
     /** sectionCreateInputDataRelationships */
     sectionCreateInputDataRelationships: {
-      pdfFile: components["schemas"]["MandatoryRelationship"];
-      textbook: components["schemas"]["MandatoryRelationship"];
+      pdfFile: components["schemas"]["section_pdfFile_Relationship"];
+      textbook: components["schemas"]["section_textbook_Relationship"];
     };
     /** sectionItemOutput */
     sectionItemOutput: {
@@ -1438,10 +1883,10 @@ export interface components {
     };
     /** sectionOutputItemRelationships */
     sectionOutputItemRelationships: {
-      createdBy: components["schemas"]["MandatoryRelationship"];
-      pdfFile: components["schemas"]["MandatoryRelationship"];
-      textbook: components["schemas"]["MandatoryRelationship"];
-      updatedBy: components["schemas"]["MandatoryRelationship"];
+      createdBy: components["schemas"]["section_createdBy_Relationship"];
+      pdfFile: components["schemas"]["section_pdfFile_Relationship"];
+      textbook: components["schemas"]["section_textbook_Relationship"];
+      updatedBy: components["schemas"]["section_updatedBy_Relationship"];
     };
     /** sectionPageOutput */
     sectionPageOutput: {
@@ -1478,6 +1923,66 @@ export interface components {
     };
     /** sectionUpdateInputDataRelationships */
     sectionUpdateInputDataRelationships: Record<string, never>;
+    /** section_createdBy_Relationship */
+    section_createdBy_Relationship: {
+      data: components["schemas"]["section_createdBy_Relationship_ObjectId"];
+    };
+    /** section_createdBy_Relationship_ObjectId */
+    section_createdBy_Relationship_ObjectId: {
+      /** Id */
+      id: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "user";
+    };
+    /** section_pdfFile_Relationship */
+    section_pdfFile_Relationship: {
+      data: components["schemas"]["section_pdfFile_Relationship_ObjectId"];
+    };
+    /** section_pdfFile_Relationship_ObjectId */
+    section_pdfFile_Relationship_ObjectId: {
+      /** Id */
+      id: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "pdfFile";
+    };
+    /** section_textbook_Relationship */
+    section_textbook_Relationship: {
+      data: components["schemas"]["section_textbook_Relationship_ObjectId"];
+    };
+    /** section_textbook_Relationship_ObjectId */
+    section_textbook_Relationship_ObjectId: {
+      /** Id */
+      id: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "textbook";
+    };
+    /** section_updatedBy_Relationship */
+    section_updatedBy_Relationship: {
+      data: components["schemas"]["section_updatedBy_Relationship_ObjectId"];
+    };
+    /** section_updatedBy_Relationship_ObjectId */
+    section_updatedBy_Relationship_ObjectId: {
+      /** Id */
+      id: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "user";
+    };
     /** selectThingsAdaptationCreateInput */
     selectThingsAdaptationCreateInput: {
       data: components["schemas"]["selectThingsAdaptationCreateInputData"];
@@ -1500,7 +2005,7 @@ export interface components {
     };
     /** selectThingsAdaptationCreateInputDataRelationships */
     selectThingsAdaptationCreateInputDataRelationships: {
-      exercise: components["schemas"]["MandatoryRelationship"];
+      exercise: components["schemas"]["selectThingsAdaptation_exercise_Relationship"];
     };
     /** selectThingsAdaptationItemOutput */
     selectThingsAdaptationItemOutput: {
@@ -1539,9 +2044,9 @@ export interface components {
     };
     /** selectThingsAdaptationOutputItemRelationships */
     selectThingsAdaptationOutputItemRelationships: {
-      createdBy: components["schemas"]["MandatoryRelationship"];
-      exercise: components["schemas"]["MandatoryRelationship"];
-      updatedBy: components["schemas"]["MandatoryRelationship"];
+      createdBy: components["schemas"]["selectThingsAdaptation_createdBy_Relationship"];
+      exercise: components["schemas"]["selectThingsAdaptation_exercise_Relationship"];
+      updatedBy: components["schemas"]["selectThingsAdaptation_updatedBy_Relationship"];
     };
     /** selectThingsAdaptationUpdateInput */
     selectThingsAdaptationUpdateInput: {
@@ -1569,6 +2074,65 @@ export interface components {
     };
     /** selectThingsAdaptationUpdateInputDataRelationships */
     selectThingsAdaptationUpdateInputDataRelationships: Record<string, never>;
+    /** selectThingsAdaptation_createdBy_Relationship */
+    selectThingsAdaptation_createdBy_Relationship: {
+      data: components["schemas"]["selectThingsAdaptation_createdBy_Relationship_ObjectId"];
+    };
+    /** selectThingsAdaptation_createdBy_Relationship_ObjectId */
+    selectThingsAdaptation_createdBy_Relationship_ObjectId: {
+      /** Id */
+      id: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "user";
+    };
+    /** selectThingsAdaptation_exercise_Relationship */
+    selectThingsAdaptation_exercise_Relationship: {
+      data: components["schemas"]["selectThingsAdaptation_exercise_Relationship_ObjectId"];
+    };
+    /** selectThingsAdaptation_exercise_Relationship_ObjectId */
+    selectThingsAdaptation_exercise_Relationship_ObjectId: {
+      /** Id */
+      id: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "exercise";
+    };
+    /** selectThingsAdaptation_updatedBy_Relationship */
+    selectThingsAdaptation_updatedBy_Relationship: {
+      data: components["schemas"]["selectThingsAdaptation_updatedBy_Relationship_ObjectId"];
+    };
+    /** selectThingsAdaptation_updatedBy_Relationship_ObjectId */
+    selectThingsAdaptation_updatedBy_Relationship_ObjectId: {
+      /** Id */
+      id: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "user";
+    };
+    /** syntheticErrorItemOutput */
+    syntheticErrorItemOutput: {
+      data: components["schemas"]["syntheticErrorOutputItem"];
+      /** Included */
+      included?: unknown[];
+    };
+    /** syntheticErrorOutputItem */
+    syntheticErrorOutputItem: {
+      /** Id */
+      id: string;
+      links: components["schemas"]["ItemLinks"];
+      /** Type */
+      type: string;
+    };
     /** textbookCreateInput */
     textbookCreateInput: {
       data: components["schemas"]["textbookCreateInputData"];
@@ -1593,7 +2157,7 @@ export interface components {
     };
     /** textbookCreateInputDataRelationships */
     textbookCreateInputDataRelationships: {
-      project: components["schemas"]["MandatoryRelationship"];
+      project: components["schemas"]["textbook_project_Relationship"];
     };
     /** textbookItemOutput */
     textbookItemOutput: {
@@ -1634,11 +2198,11 @@ export interface components {
     };
     /** textbookOutputItemRelationships */
     textbookOutputItemRelationships: {
-      createdBy: components["schemas"]["MandatoryRelationship"];
-      exercises: components["schemas"]["OutputListRelationship"];
-      project: components["schemas"]["MandatoryRelationship"];
-      sections: components["schemas"]["OutputListRelationship"];
-      updatedBy: components["schemas"]["MandatoryRelationship"];
+      createdBy: components["schemas"]["textbook_createdBy_Relationship"];
+      exercises: components["schemas"]["textbook_exercises_RelationshipOutput"];
+      project: components["schemas"]["textbook_project_Relationship"];
+      sections: components["schemas"]["textbook_sections_RelationshipOutput"];
+      updatedBy: components["schemas"]["textbook_updatedBy_Relationship"];
     };
     /** textbookPageOutput */
     textbookPageOutput: {
@@ -1677,6 +2241,85 @@ export interface components {
     };
     /** textbookUpdateInputDataRelationships */
     textbookUpdateInputDataRelationships: Record<string, never>;
+    /** textbook_createdBy_Relationship */
+    textbook_createdBy_Relationship: {
+      data: components["schemas"]["textbook_createdBy_Relationship_ObjectId"];
+    };
+    /** textbook_createdBy_Relationship_ObjectId */
+    textbook_createdBy_Relationship_ObjectId: {
+      /** Id */
+      id: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "user";
+    };
+    /** textbook_exercises_RelationshipOutput */
+    textbook_exercises_RelationshipOutput: {
+      /** Data */
+      data: components["schemas"]["textbook_exercises_RelationshipOutput_ObjectId"][];
+      meta: components["schemas"]["OutputListRelationShipMeta"];
+    };
+    /** textbook_exercises_RelationshipOutput_ObjectId */
+    textbook_exercises_RelationshipOutput_ObjectId: {
+      /** Id */
+      id: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "exercise";
+    };
+    /** textbook_project_Relationship */
+    textbook_project_Relationship: {
+      data: components["schemas"]["textbook_project_Relationship_ObjectId"];
+    };
+    /** textbook_project_Relationship_ObjectId */
+    textbook_project_Relationship_ObjectId: {
+      /** Id */
+      id: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "project";
+    };
+    /** textbook_sections_RelationshipOutput */
+    textbook_sections_RelationshipOutput: {
+      /** Data */
+      data: components["schemas"]["textbook_sections_RelationshipOutput_ObjectId"][];
+      meta: components["schemas"]["OutputListRelationShipMeta"];
+    };
+    /** textbook_sections_RelationshipOutput_ObjectId */
+    textbook_sections_RelationshipOutput_ObjectId: {
+      /** Id */
+      id: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "section";
+    };
+    /** textbook_updatedBy_Relationship */
+    textbook_updatedBy_Relationship: {
+      data: components["schemas"]["textbook_updatedBy_Relationship_ObjectId"];
+    };
+    /** textbook_updatedBy_Relationship_ObjectId */
+    textbook_updatedBy_Relationship_ObjectId: {
+      /** Id */
+      id: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "user";
+    };
     /** userItemOutput */
     userItemOutput: {
       data: components["schemas"]["userOutputItem"];
@@ -1710,8 +2353,8 @@ export interface components {
     };
     /** userOutputItemRelationships */
     userOutputItemRelationships: {
-      createdBy: components["schemas"]["MandatoryRelationship"];
-      updatedBy: components["schemas"]["MandatoryRelationship"];
+      createdBy: components["schemas"]["user_createdBy_Relationship"];
+      updatedBy: components["schemas"]["user_updatedBy_Relationship"];
     };
     /** userUpdateInput */
     userUpdateInput: {
@@ -1737,6 +2380,36 @@ export interface components {
     };
     /** userUpdateInputDataRelationships */
     userUpdateInputDataRelationships: Record<string, never>;
+    /** user_createdBy_Relationship */
+    user_createdBy_Relationship: {
+      data: components["schemas"]["user_createdBy_Relationship_ObjectId"];
+    };
+    /** user_createdBy_Relationship_ObjectId */
+    user_createdBy_Relationship_ObjectId: {
+      /** Id */
+      id: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "user";
+    };
+    /** user_updatedBy_Relationship */
+    user_updatedBy_Relationship: {
+      data: components["schemas"]["user_updatedBy_Relationship_ObjectId"];
+    };
+    /** user_updatedBy_Relationship_ObjectId */
+    user_updatedBy_Relationship_ObjectId: {
+      /** Id */
+      id: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "user";
+    };
   };
   responses: never;
   parameters: never;
@@ -3212,6 +3885,31 @@ export interface operations {
       200: {
         content: {
           "application/vnd.api+json": components["schemas"]["selectThingsAdaptationItemOutput"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  /** Get Synthetic Error */
+  get_synthetic_error_api_syntheticErrors__id__get: {
+    parameters: {
+      query?: {
+        include?: string;
+      };
+      path: {
+        id: string;
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        content: {
+          "application/vnd.api+json": components["schemas"]["syntheticErrorItemOutput"];
         };
       };
       /** @description Validation Error */

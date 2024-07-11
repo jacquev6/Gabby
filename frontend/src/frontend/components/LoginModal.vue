@@ -50,7 +50,7 @@ async function login() {
 
 async function sendRecoveryMail() {
   busy.value = true
-  await api.client.post('recoveryEmailRequest', { address: username.value, language: i18n.locale.value }, {})
+  await api.client.createOne('recoveryEmailRequest', { address: username.value, language: i18n.locale.value }, {})
   busy.value = false
   submitted.value = true
 }

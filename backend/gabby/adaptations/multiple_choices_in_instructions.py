@@ -28,27 +28,35 @@ class MultipleChoicesInInstructionsAdaptation(Adaptation):
 
     placeholder: orm.Mapped[str]
 
-    class InstructionsAdapter(parsing.SectionTransformer):
-        def __init__(self):
-            self.choices = []
-
+    class InstructionsAdapter(parsing.InstructionsSectionTransformer):
         def choice_tag(self, args):
-            self.choices.append(args[0])
             return renderable.BoxedText(text=args[0])
 
-    adapt_instructions = parsing.SectionParser({"choice": r""" "|" STR """}, InstructionsAdapter())
+    adapt_instructions = parsing.InstructionsSectionParser({"choice": r""" "|" STR """}, InstructionsAdapter())
 
     def make_adapted_instructions(self):
         return self.adapt_instructions(self.exercise.instructions)
 
-    class ChoicesGatherer(parsing.SectionTransformer):
+    class ChoicesGatherer(parsing.InstructionsSectionTransformer):
         def section(self, choices):
             return list(itertools.chain.from_iterable(choices))
 
         def paragraph(self, choices):
             return list(itertools.chain.from_iterable(choices))
 
-        def sentence(self, choices):
+        def strict_paragraph(self, choices):
+            return list(itertools.chain.from_iterable(choices))
+
+        def strict_sentence(self, choices):
+            return list(itertools.chain.from_iterable(choices))
+
+        def in_sentence_punctuation(self, args):
+            return []
+
+        def end_of_sentence_punctuation(self, args):
+            return []
+
+        def lenient_paragraph(self, choices):
             return list(itertools.chain.from_iterable(choices))
 
         def word(self, args):
@@ -63,9 +71,9 @@ class MultipleChoicesInInstructionsAdaptation(Adaptation):
         def choice_tag(self, args):
             return [args[0].value]
 
-    gather_choices = parsing.SectionParser({"choice": r""" "|" STR """}, ChoicesGatherer())
+    gather_choices = parsing.InstructionsSectionParser({"choice": r""" "|" STR """}, ChoicesGatherer())
 
-    class WordingAdapter(parsing.SectionTransformer):
+    class WordingAdapter(parsing.WordingSectionTransformer):
         def __init__(self, choices):
             self.choices = choices
 
@@ -74,17 +82,17 @@ class MultipleChoicesInInstructionsAdaptation(Adaptation):
 
     def make_adapted_wording(self):
         choices = self.gather_choices(self.exercise.instructions)
-        return parsing.parse_section(
+        return parsing.parse_wording_section(
             {"placeholder": ""},
             self.WordingAdapter(choices),
             self.exercise.wording.replace(self.placeholder, "{placeholder}")
         )
 
     def make_adapted_example(self):
-        return parsing.parse_plain_section(self.exercise.example)
+        return parsing.parse_plain_instructions_section(self.exercise.example)
 
     def make_adapted_clue(self):
-        return parsing.parse_plain_section(self.exercise.clue)
+        return parsing.parse_plain_instructions_section(self.exercise.clue)
 
 
 class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):

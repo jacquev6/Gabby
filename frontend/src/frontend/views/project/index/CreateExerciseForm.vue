@@ -3,7 +3,7 @@ import { ref } from 'vue'
 
 import { BButton } from '$frontend/components/opinion/bootstrap'
 import ExerciseForm from '$frontend/components/ExerciseForm.vue'
-import type { Project, Exercise } from '$frontend/types/api'
+import type { Project, Exercise } from '$frontend/stores/api'
 
 
 defineProps<{

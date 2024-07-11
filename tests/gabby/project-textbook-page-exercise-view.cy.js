@@ -1,12 +1,8 @@
-function login() {
+import { useApiStore } from '../../frontend/src/frontend/stores/api'
+
+
+function setLocale() {
   cy.get('select').last().select('en')
-  cy.get('h1:contains("Please log in")').should('exist')
-  cy.get('[name=username]').type('admin')  // This often leaves the field with just the few characters, e.g. 'adm'. I can't figure out why; probably some race condition.
-  cy.get('[name=password]').type('password')
-  cy.get('[name=username]').type('{selectall}admin')  // This is a workaround for the above issue.
-  cy.get('[name=username]').should('have.value', 'admin')
-  cy.get('button:contains("Log in")').click()
-  cy.get('h1:contains("Please log in")').should('not.exist')
 }
 
 describe('Gabby\'s project\'s textbook page exercise view', () => {
@@ -14,15 +10,12 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
 
   beforeEach(() => {
     cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=admin-user,more-test-exercises')
-  })
-
-  after(() => {
-    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=admin-user,more-test-exercises')
+    cy.wrap(useApiStore()).then(api => api.auth.login('admin', 'password'))
   })
 
   it('replaces all in given fields', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
-    login()
+    setLocale()
 
     cy.get('label:contains("Instructions")').next().type('Instructions!')
     cy.get('label:contains("Wording")').next().type('Wording!')
@@ -83,7 +76,7 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
 
   it('replaces line and paragraph ends', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-7/exercise-dymwin')
-    login()
+    setLocale()
 
     cy.get('label:contains("Wording")').next().should('have.value', 'nager ➞ … ◆ tracter ➞ … ◆ manger ➞ … ◆\ninventer ➞ … ◆ livrer ➞ …')
 
@@ -116,7 +109,7 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
 
   it('gets its "replace all" selection from the form', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-7/exercise-dymwin')
-    login()
+    setLocale()
 
     function select(selector, start, end) {
       cy.get(selector)
@@ -159,7 +152,7 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
 
   it('selects new text in field but keeps its "replace all" selection unchanged when selecting text from the PDF', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-7/exercise-dymwin')
-    login()
+    setLocale()
 
     cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
     cy.get('div.busy').should('not.exist')
@@ -175,7 +168,7 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
     cy.get('@canvas').trigger('pointerdown', 165, 175, { pointerId: 1 })
     cy.get('@canvas').trigger('pointermove', 300, 202)
     cy.get('@canvas').trigger('pointerup', 300, 202, { pointerId: 1 })
-    cy.get('label:contains("Selected text")').next().should('have.value', 'nager ➞ … ◆ tracter ➞ … ◆ manger ➞ … ◆\ninventer ➞ … ◆ livrer ➞ …')
+    cy.get('textarea').first().should('have.value', 'nager ➞ … ◆ tracter ➞ … ◆ manger ➞ … ◆\ninventer ➞ … ◆ livrer ➞ …')
     cy.get('button:contains("Wording")').click()
 
     cy.get('label:contains("Wording")').next().should('have.value', 'blah blah\nnager ➞ … ◆ tracter ➞ … ◆ manger ➞ … ◆\ninventer ➞ … ◆ livrer ➞ …')
@@ -187,7 +180,7 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
 
   it('has "undo/redo" on new exercise', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
-    login()
+    setLocale()
 
     cy.get('button:contains("Undo")').as('undo')
     cy.get('button:contains("Redo")').as('redo')
@@ -228,7 +221,7 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
     cy.get('label:contains("Number")').next().should('have.value', '12')  // Unchanged by 'redo'
     cy.get('label:contains("Instructions")').next().should('have.value', 'Blah blah')
 
-    cy.get('button:contains("Save")').click()
+    cy.get('button:contains("Save then next")').click()
 
     cy.wait(1500)  // We have to wait, see comment above
     cy.get('@undo').should('be.disabled')
@@ -247,7 +240,7 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
 
   it('has "undo/redo" on existing exercise', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-7/exercise-dymwin')
-    login()
+    setLocale()
     cy.get('div.busy').should('not.exist')
 
     cy.wait(1500)  // We have to wait, see comment above
@@ -261,5 +254,94 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
 
     cy.get('button:contains("Undo")').click()
     cy.get('label:contains("Instructions")').next().should('have.value', 'Ajoute le suffixe –eur aux verbes.\nIndique la classe des mots fabriqués.')
+  })
+
+  it('saves an exercise after setting its adaptation', () => {
+    cy.visit('/project-xkopqm/textbook-klxufv/page-7/exercise-jkrudc')
+    setLocale()
+    cy.get('div.busy').should('not.exist')
+
+    cy.get('label:contains("Adaptation type")').next().should('have.value', '-')
+
+    cy.get('label:contains("Adaptation type")').next().select('selectThingsAdaptation')
+    cy.get('label:contains("Instructions")').next().type('{selectAll}Instructions!')
+    cy.get('div.busy').should('not.exist')
+    // There was a bug with a 422 response from POST /api/fillWithFreeTextAdaptations
+    cy.get('button:contains("Save then back to list")').click()
+    cy.get('div.busy').should('not.exist')
+
+    cy.get('li:contains("Instructions!"):contains("Select words")').should('exist')
+
+    cy.visit('/project-xkopqm/textbook-klxufv/page-7/exercise-jkrudc')
+    setLocale()
+    cy.get('div.busy').should('not.exist')
+    cy.get('label:contains("Adaptation type")').next().should('have.value', 'selectThingsAdaptation')
+    cy.get('label:contains("Instructions")').next().should('have.value', 'Instructions!')
+  })
+
+  it('saves an exercise after resetting its pre-existing adaptation', () => {
+    cy.visit('/project-xkopqm/textbook-klxufv/page-7/exercise-dymwin')
+    setLocale()
+    cy.get('div.busy').should('not.exist')
+
+    cy.get('label:contains("Adaptation type")').next().should('have.value', 'fillWithFreeTextAdaptation')
+
+    cy.get('label:contains("Adaptation type")').next().select('-')
+    cy.get('label:contains("Instructions")').next().type('{selectAll}Instructions!')
+    cy.get('div.busy').should('not.exist')
+    cy.get('button:contains("Save then back to list")').click()
+    cy.get('div.busy').should('not.exist')
+
+    cy.get('li:contains("Instructions!")').should('exist').should('not.contain', 'Fill with free text')
+
+    cy.visit('/project-xkopqm/textbook-klxufv/page-7/exercise-dymwin')
+    setLocale()
+    cy.get('div.busy').should('not.exist')
+    cy.get('label:contains("Adaptation type")').next().should('have.value', '-')
+    cy.get('label:contains("Instructions")').next().should('have.value', 'Instructions!')
+  })
+
+  it('saves an exercise without changing its pre-existing adaptation', () => {
+    cy.visit('/project-xkopqm/textbook-klxufv/page-7/exercise-dymwin')
+    setLocale()
+    cy.get('div.busy').should('not.exist')
+
+    cy.get('label:contains("Adaptation type")').next().should('have.value', 'fillWithFreeTextAdaptation')
+
+    cy.get('label:contains("Instructions")').next().type('{selectAll}Instructions!')
+    cy.get('div.busy').should('not.exist')
+    // There was a bug with a 422 response from POST /api/fillWithFreeTextAdaptations
+    cy.get('button:contains("Save then back to list")').click()
+    cy.get('div.busy').should('not.exist')
+
+    cy.get('li:contains("Instructions!"):contains("Fill with free text")').should('exist')
+
+    cy.visit('/project-xkopqm/textbook-klxufv/page-7/exercise-dymwin')
+    setLocale()
+    cy.get('div.busy').should('not.exist')
+    cy.get('label:contains("Adaptation type")').next().should('have.value', 'fillWithFreeTextAdaptation')
+    cy.get('label:contains("Instructions")').next().should('have.value', 'Instructions!')
+  })
+
+  it('saves an exercise after changing the type of its pre-existing adaptation', () => {
+    cy.visit('/project-xkopqm/textbook-klxufv/page-7/exercise-dymwin')
+    setLocale()
+    cy.get('div.busy').should('not.exist')
+
+    cy.get('label:contains("Adaptation type")').next().should('have.value', 'fillWithFreeTextAdaptation')
+
+    cy.get('label:contains("Adaptation type")').next().select('selectThingsAdaptation')
+    cy.get('label:contains("Instructions")').next().type('{selectAll}Instructions!')
+    cy.get('div.busy').should('not.exist')
+    cy.get('button:contains("Save then back to list")').click()
+    cy.get('div.busy').should('not.exist')
+
+    cy.get('li:contains("Instructions!"):contains("Select words")').should('exist')
+
+    cy.visit('/project-xkopqm/textbook-klxufv/page-7/exercise-dymwin')
+    setLocale()
+    cy.get('div.busy').should('not.exist')
+    cy.get('label:contains("Adaptation type")').next().should('have.value', 'selectThingsAdaptation')
+    cy.get('label:contains("Instructions")').next().should('have.value', 'Instructions!')
   })
 })

@@ -1,28 +1,16 @@
-function login() {
-  cy.get('select').last().select('en')
-  cy.get('h1:contains("Please log in")').should('exist')
-  cy.get('[name=username]').type('admin')  // This often leaves the field with just the few characters, e.g. 'adm'. I can't figure out why; probably some race condition.
-  cy.get('[name=password]').type('password')
-  cy.get('[name=username]').type('{selectall}admin')  // This is a workaround for the above issue.
-  cy.get('[name=username]').should('have.value', 'admin')
-  cy.get('button:contains("Log in")').click()
-  cy.get('h1:contains("Please log in")').should('not.exist')
-}
+import { useApiStore } from '../frontend/src/frontend/stores/api'
+
 
 describe('Gabby', () => {
   before(console.clear)
 
-  after(() => {
-    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=admin-user,more-test-exercises')
-  })
-
   it('performs extraction from scratch', () => {
     cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=admin-user')
+    cy.wrap(useApiStore()).then(api => api.auth.login('admin', 'password'))
 
     cy.visit('/')
-    login()
     cy.get('select').select('fr')
-    cy.get('select').blur()
+    cy.focused().blur()
     cy.get('div.busy').should('not.exist')
 
     cy.get('label:contains("Titre")').next().type('Projet de test')
@@ -49,7 +37,7 @@ describe('Gabby', () => {
     cy.get('a:contains("Nouvel exercice")').click()
     cy.get('label').contains('Numéro').next().type(5).blur()
 
-    const canvas = cy.get('canvas[style="position: absolute; top: 0px; left: 0px;"]')
+    const canvas = cy.get('canvas[style="position: absolute; top: 0px; left: 0px;"]').last()
 
     canvas.trigger('pointermove', 5, 5)
     canvas.trigger('pointerdown', 15, 15, { pointerId: 1 })
@@ -75,9 +63,9 @@ describe('Gabby', () => {
     canvas.trigger('pointerup', 140, 105, { pointerId: 1 })
     cy.get('button').contains('Énoncé').click()
 
-    cy.get('button').contains('Enregistrer').click()
+    cy.get('button').contains('Enregistrer puis suivant').click()
     cy.get('div.busy').should('not.exist')
-    cy.get('a:contains("Annuler")').click()
+    cy.get('a:contains("Retour à la liste (sans enregistrer)")').click()
     cy.get('div.busy').should('not.exist')
 
     cy.get('li').contains('Recopie les mots suivants').should('exist')
@@ -87,11 +75,11 @@ describe('Gabby', () => {
     cy.viewport(1000, 1000)
 
     cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=admin-user,test-exercises')
+    cy.wrap(useApiStore()).then(api => api.auth.login('admin', 'password'))
 
     cy.visit('/')
-    login()
     cy.get('select').select('fr')
-    cy.get('select').blur()
+    cy.focused().blur()
     cy.get('div.busy').should('not.exist')
 
     cy.screenshot('index/index', {clip: {x: 0, y: 0, width: 1000, height: 350}})
@@ -135,12 +123,23 @@ describe('Gabby', () => {
     cy.screenshot('project-textbook-page/project-textbook-page', {clip: {x: 0, y: 0, width: 1000, height: 400}})
     cy.screenshot('project-textbook-page/existing-exercises', {clip: {x: 330, y: 50, width: 500, height: 250}})
     cy.get('canvas').last().screenshot('project-textbook-page/existing-exercises-in-pdf', {clip: {x: 0, y: 233, width: 1000, height: 1000}})
+  })
 
-    cy.get('a:contains("Modifier")').first().click()
+  it('modifies existing exercise', () => {
+    cy.viewport(1000, 1000)
 
+    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=admin-user,test-exercises')
+    cy.wrap(useApiStore()).then(api => api.auth.login('admin', 'password'))
+
+    cy.visit('/project-xkopqm/textbook-klxufv/page-6/exercise-wbqloc')
+    cy.get('select').select('fr')
+    cy.focused().blur()
+    cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
     cy.get('div.busy').should('not.exist')
+
     cy.get('label:contains("Énoncé")').next().type('{selectAll}... vide\n... vident')
-    // Image is cropped to 670px height in headless mode. I don't know why.
+    cy.get('label:contains("Énoncé")').next().type('{selectAll}... vide\n... vident')
+    cy.get('label:contains("Énoncé")').next().should('have.value', '... vide\n... vident')
     cy.screenshot('project-textbook-page-exercise/modify-exercise', {clip: {x: 0, y: 50, width: 575, height: 1000}})
 
     cy.get('label:contains("Remplacer")').next().type('{selectAll}{backspace}')

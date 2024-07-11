@@ -6,6 +6,10 @@
   "close": "Fermer",
 
 
+  "thereWasABug": "Il y a eu un bug",
+  "thisIsNotYourFault": "Ce n'est pas votre faute. Merci d'envoyer un e-mail à Vincent Jacques avec tous les détails ci-dessous, et facultativement une description de ce que vous faisiez.",
+
+
   "siteUnavailableUntil": "Le site est en maintenance. Fin prévue : {date}.",
 
 
@@ -77,12 +81,13 @@
   "pdfNotLoaded": "Le PDF contenant cette page ({name}) n'a pas encore été ouvert. Si vous en disposez d'une copie, vous pouvez l'ouvrir ci-dessous.",
   "pageNoKnown": "Aucun PDF enregistré ne contient cette page.",
 
+
   "error.pdf": "Erreur pendant le chargement du PDF :",
 
   "edition": "Édition",
   "adaptation": "Exercice adapté",
   "inputFile": "Fichier d'entrée",
-  "existingExercises": "Exercices existants :",
+  "existingExercises": "Exercices existants",
   "noExercises": "Pas encore d'exercices.",
   "drawBoundingRectangle": "Dessinez un rectangle englobant l'exercice entier.",
   "create": "Nouvel exercice",
@@ -90,7 +95,10 @@
   "save": "Enregistrer",
   "exerciseAlreadyExists": "L'exercice {number} existe déjà.",
   "skipExercise": "Passer au suivant",
-  "save.next": "Enregistrer puis créer le suivant",
+  "previous": "Précédent (sans enregistrer)",
+  "saveThenNext": "Enregistrer puis suivant",
+  "backToList": "Retour à la liste (sans enregistrer)",
+  "saveThenBack": "Enregistrer et retourner à la liste",
   "doStripExerciceNumber": "Enlever le numéro d'exercice automatiquement",
 
   "selectedText": "Texte sélectionné",
@@ -101,11 +109,11 @@
   "example": "Exemple",
   "clue": "Indice",
   "wording": "Énoncé",
-  "selectExerciseType": "Sélectionner le type d'adaptation",
 
   "colorsCount": "Nombre de couleurs",
   "includePunctuation": "Sélectionner aussi la ponctuation",
   "useSel1ToSelN": "Utilisez {first} à {last} dans la consigne, l'example ou l'indice pour formatter du texte comme s'il était sélectionné.",
+  "useSel1": "Utilisez {first} dans la consigne, l'example ou l'indice pour formatter du texte comme s'il était sélectionné.",
   "useChoice": "Utilisez {choice} dans la consigne pour indiquer un choix possible.",
   "useChoices": "Utilisez {choices} dans l'énoncé pour indiquer choix à faire.",
   "placeholderText": "Trou à remplir",

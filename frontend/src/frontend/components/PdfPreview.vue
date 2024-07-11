@@ -22,7 +22,7 @@ const page = computedAsync(
 </script>
 
 <template>
-  <PdfNavigationControls :pagesCount="pdf.numPages" v-model="pageNumber" :disabled="false" />
+  <PdfNavigationControls :pagesCount="pdf.numPages" v-model:page="pageNumber" :disabled="false" />
   <template v-if="page">
     <PdfRenderer
       class="img img-fluid"

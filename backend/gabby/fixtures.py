@@ -1,14 +1,14 @@
 import datetime
+import json
 
 from . import database_utils
-from .orm_models import (
-  Exercise, ExtractionEvent,
-  FillWithFreeTextAdaptation, MultipleChoicesInInstructionsAdaptation, MultipleChoicesInWordingAdaptation, SelectThingsAdaptation,
-  PdfFile, PdfFileNaming, Section,
-  Ping,
-  Project, Textbook,
-  User, UserEmailAddress,
-)
+from . import import_from_visio_method
+from .orm_models import Exercise, ExtractionEvent
+from .orm_models import FillWithFreeTextAdaptation, MultipleChoicesInInstructionsAdaptation, MultipleChoicesInWordingAdaptation, SelectThingsAdaptation
+from .orm_models import PdfFile, PdfFileNaming, Section
+from .orm_models import Ping
+from .orm_models import Project, Textbook
+from .orm_models import User, UserEmailAddress
 
 
 def add(session, class_, **kwds):
@@ -88,15 +88,15 @@ def create_more_test_exercises_fixture(session):
     adaptation2 = add(session, SelectThingsAdaptation, colors=4, words=True, punctuation=True, created_by=admin, updated_by=admin)
     adaptation3 = add(session, MultipleChoicesInInstructionsAdaptation, placeholder='@', created_by=admin, updated_by=admin)
     adaptation4 = add(session, MultipleChoicesInWordingAdaptation, created_by=admin, updated_by=admin)
-    exercise1 = add(session, Exercise, project=project1, textbook=textbook1, textbook_page=6, bounding_rectangle={'stop': {'x': 563.0859853571111, 'y': 165.01653324025676}, 'start': {'x': 321.7851195562453, 'y': 298.5614176476993}}, number='3', instructions='Complète avec : le, une, un, des, tu, elles, ils.\r\nPuis, souligne les verbes.', example='', clue='Il peut y avoir plusieurs solutions.', wording='{choices|le|une|un|des|tu|elles|ils} vide\r\n\r\n{choices|le|une|un|des|tu|elles|ils} vident\r\n\r\n{choices|le|une|un|des|tu|elles|ils} dépenses\r\n\r\n{choices|le|une|un|des|tu|elles|ils} dépensent\r\n\r\n{choices|le|une|un|des|tu|elles|ils} savon\r\n\r\n{choices|le|une|un|des|tu|elles|ils} savons\r\n\r\n{choices|le|une|un|des|tu|elles|ils} commande', adaptation=adaptation4, created_by=admin, updated_by=admin)
+    exercise1 = add(session, Exercise, project=project1, textbook=textbook1, textbook_page=6, bounding_rectangle={'stop': {'x': 563.0859853571111, 'y': 165.01653324025676}, 'start': {'x': 321.7851195562453, 'y': 298.5614176476993}}, number='3', instructions='Complète avec : le, une, un, des, tu, elles, ils.\r\nPuis, souligne les verbes.', example='', clue='Il peut y avoir plusieurs solutions.', wording='{choices|le|une|un|des|tu|elles|ils} vide\r\n{choices|le|une|un|des|tu|elles|ils} vident\r\n{choices|le|une|un|des|tu|elles|ils} dépenses\r\n{choices|le|une|un|des|tu|elles|ils} dépensent\r\n{choices|le|une|un|des|tu|elles|ils} savon\r\n{choices|le|une|un|des|tu|elles|ils} savons\r\n{choices|le|une|un|des|tu|elles|ils} commande', adaptation=adaptation4, created_by=admin, updated_by=admin)
     exercise2 = add(session, Exercise, project=project1, textbook=textbook1, textbook_page=6, bounding_rectangle={'stop': {'x': 565.8489723700982, 'y': 59.10162491711276}, 'start': {'x': 321.7851195562453, 'y': 165.93753244306663}}, number='4', instructions="Écris une phrase en respectant l'ordre des classes grammaticales indiquées.", example='pronom personnel / verbe / déterminant / nom commun :\r\nJe mange une pomme.', clue='', wording='nom propre / verbe / déterminant / adjectif / nom commun', created_by=admin, updated_by=admin)
     exercise3 = add(session, Exercise, project=project1, textbook=textbook1, textbook_page=7, bounding_rectangle={'stop': {'x': 537.2981065692323, 'y': 689.0650796391174}, 'start': {'x': 313.4961585172843, 'y': 790.3749919482118}}, number='9', instructions='Recopie l’intrus qui se cache dans chaque liste et écris sa classe.', example='', clue='', wording='a. partons ◆ bidons ◆ allons ◆ vendons\r\nb. vidons ◆ mentons ◆ ballons ◆ salons\r\nc. voir ◆ armoire ◆ couloir ◆ dortoir', created_by=admin, updated_by=admin)
     exercise4 = add(session, Exercise, project=project2, textbook=None, textbook_page=None, number='L1', instructions='Faire des choses intelligentes.', example='', clue='', wording='', created_by=admin, updated_by=admin)
     exercise5 = add(session, Exercise, project=project2, textbook=None, textbook_page=None, number='L2', instructions="Faire d'autres choses intelligentes.", example='', clue='', wording='', created_by=admin, updated_by=admin)
     exercise6 = add(session, Exercise, project=project2, textbook=None, textbook_page=None, number='L3', instructions='Prendre le temps de faire aussi des choses banales.', example='', clue='', wording='', created_by=admin, updated_by=admin)
-    exercise7 = add(session, Exercise, project=project1, textbook=textbook1, textbook_page=7, bounding_rectangle={'stop': {'x': 303.3652061363319, 'y': 311.45540648703854}, 'start': {'x': 57.45936198048777, 'y': 508.54923588836755}}, number='7', instructions='Relève dans le texte trois\n{sel1|déterminants}, un {sel2|nom propre}, quatre\n{sel3|noms communs} et trois {sel4|verbes}.', example='', clue='', wording='Les Touaregs sont des Berbères, un peuple\nqui habite en Afrique du Nord depuis la\npréhistoire. Ils vivent dans le désert du Sahara\n(Algérie, Libye, Mali, Niger, Burkina Faso…). En\nété, les températures y montent à plus de 50 °C\net elles descendent en dessous de zéro durant\nles nuits d’hiver.', adaptation=adaptation2, created_by=admin, updated_by=admin)
+    exercise7 = add(session, Exercise, project=project1, textbook=textbook1, textbook_page=7, bounding_rectangle={'stop': {'x': 303.3652061363319, 'y': 311.45540648703854}, 'start': {'x': 57.45936198048777, 'y': 508.54923588836755}}, number='7', instructions='Relève dans le texte trois\n{sel1|déterminants}, un {sel2|nom propre}, quatre\n{sel3|noms communs} et trois {sel4|verbes}.', example='', clue='', wording='Les Touaregs sont des Berbères, un peuple qui habite en Afrique du Nord depuis la préhistoire.\nIls vivent dans le désert du Sahara (Algérie, Libye, Mali, Niger, Burkina Faso…).\nEn été, les températures y montent à plus de 50 °C et elles descendent en dessous de zéro durant les nuits d’hiver.', adaptation=adaptation2, created_by=admin, updated_by=admin)
     exercise8 = add(session, Exercise, project=project1, textbook=textbook1, textbook_page=7, bounding_rectangle={'stop': {'x': 556.6390156601415, 'y': 462.4992757478701}, 'start': {'x': 317.18014120126696, 'y': 538.0212103782859}}, number='11', instructions='Ajoute le suffixe –eur aux verbes.\nIndique la classe des mots fabriqués.', example='', clue='', wording='nager ➞ … ◆ tracter ➞ … ◆ manger ➞ … ◆\ninventer ➞ … ◆ livrer ➞ …', adaptation=adaptation1, created_by=admin, updated_by=admin)
-    exercise9 = add(session, Exercise, project=project1, textbook=textbook1, textbook_page=7, bounding_rectangle={'start': {'x': 60, 'y': 180}, 'stop': {'x': 250, 'y': 320}}, number='8', instructions='Réponds par {choice|vrai} ou {choice|faux}.', example='', clue='', wording='a. coccinelle est un adjectif. @\n\nb. bûche est un verbe. @\n\nc. cette est un déterminant. @\n\nd. dentier est un verbe. @\n\ne. respirer est un verbe. @\n\nf. aspiration est un nom. @', adaptation=adaptation3, created_by=admin, updated_by=admin)
+    exercise9 = add(session, Exercise, project=project1, textbook=textbook1, textbook_page=7, bounding_rectangle={'start': {'x': 60, 'y': 180}, 'stop': {'x': 250, 'y': 320}}, number='8', instructions='Réponds par {choice|vrai} ou {choice|faux}.', example='', clue='', wording='a. coccinelle est un adjectif. @\nb. bûche est un verbe. @\nc. cette est un déterminant. @\nd. dentier est un verbe. @\ne. respirer est un verbe. @\nf. aspiration est un nom. @', adaptation=adaptation3, created_by=admin, updated_by=admin)
     extractionevent1 = add(session, ExtractionEvent, exercise=exercise7, event='{"kind":"ExerciseNumberSetManually","value":"7"}', created_by=admin, updated_by=admin)
     extractionevent2 = add(session, ExtractionEvent, exercise=exercise7, event='{"kind":"TextSelectedInPdf","pdf":{"name":"test.pdf","sha256":"f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c","page":2,"rectangle":{"start":{"x":41.81553087016726,"y":512.8599582877939},"stop":{"x":299.93876428559844,"y":444.8714829639081}}},"value":"7\\nRelève dans le texte trois\\ndéterminants, un nom propre, quatre\\nnoms communs et trois verbes.","textItems":[{"str":"","font":"g_d0_f2","left":73.5201,"width":0,"right":73.5201,"bottom":488.3804,"height":0,"top":488.3804},{"str":"7","font":"g_d0_f2","left":73.5201,"width":6.492245200000001,"right":80.0123452,"bottom":488.3804,"height":11.6767,"top":500.0571},{"str":" ","font":"g_d0_f2","left":80.0123452,"width":1.4357699349987583,"right":81.44811513499876,"bottom":488.3804,"height":0,"top":488.3804},{"str":"Relève dans le texte trois","font":"g_d0_f1","left":96.7774,"width":134.49874999999994,"right":231.27614999999994,"bottom":487.2676,"height":12.5,"top":499.7676},{"str":"déterminants, un nom propre, quatre","font":"g_d0_f1","left":68.11489999999999,"width":203.32124999999994,"right":271.43614999999994,"bottom":472.2676,"height":12.5,"top":484.7676},{"str":"noms communs et trois verbes.","font":"g_d0_f1","left":68.11489999999999,"width":167.63500000000002,"right":235.74990000000003,"bottom":457.2676,"height":12.5,"top":469.7676}]}', created_by=admin, updated_by=admin)
     extractionevent3 = add(session, ExtractionEvent, exercise=exercise7, event='{"kind":"SelectedTextAddedToInstructions","valueBefore":"","valueAfter":"Relève dans le texte trois\\ndéterminants, un nom propre, quatre\\nnoms communs et trois verbes."}', created_by=admin, updated_by=admin)
@@ -109,6 +109,21 @@ def create_more_test_exercises_fixture(session):
     extractionevent10 = add(session, ExtractionEvent, exercise=exercise8, event='{"kind":"SelectedTextAddedToWording","valueBefore":"","valueAfter":"nager ➞ … ◆ tracter ➞ … ◆ manger ➞ … ◆\\ninventer ➞ … ◆ livrer ➞ …"}', created_by=admin, updated_by=admin)
 
 
+def create_import_from_visio_method_fixture(session):
+    admin = get_or_create_admin(session)
+    pdfFile = add(session, PdfFile, bytes_count=484714, pages_count=2, sha256="0beb715f8ed379b056a3d40522dcc8e0658c58316b3ef7a09da78c541257d756", created_by=admin)
+    add(session, PdfFileNaming, pdf_file=pdfFile, name="manual_CE2_FRANCAIS_HACHETTE.p13a15.pdf", created_by=admin)
+    project = add(session, Project, title="Vincent teste l'import des fichiers de Olivier", description="", created_by=admin, updated_by=admin)
+    textbook = add(session, Textbook, project=project, title="Français CE2", publisher="Hachette", year=2024, isbn=None, created_by=admin, updated_by=admin)
+    add(session, Section, textbook=textbook, pdf_file=pdfFile, textbook_start_page=13, pdf_file_start_page=1, pages_count=3, created_by=admin, updated_by=admin)
+
+    with open("../pdf-examples/manual_CE2_FRANCAIS_HACHETTE.p13.json", "r") as f:
+        page_data = import_from_visio_method.PageData(**json.load(f))
+
+    import_from_visio_method.import_page(session, admin, textbook, page_data)
+
+
+
 available_fixtures = {
     "admin-user": create_admin_user_fixture,
     "test-users": create_test_users_fixture,
@@ -116,6 +131,7 @@ available_fixtures = {
     "empty-project": create_empty_project_fixture,
     "test-exercises": create_test_exercises_fixture,
     "more-test-exercises": create_more_test_exercises_fixture,
+    "import-from-visio-method": create_import_from_visio_method_fixture,
 }
 
 def load(session, fixtures):

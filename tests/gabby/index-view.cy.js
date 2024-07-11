@@ -1,12 +1,8 @@
-function login() {
+import { useApiStore } from '../../frontend/src/frontend/stores/api'
+
+
+function setLocale() {
   cy.get('select').last().select('en')
-  cy.get('h1:contains("Please log in")').should('exist')
-  cy.get('[name=username]').type('admin')  // This often leaves the field with just the few characters, e.g. 'adm'. I can't figure out why; probably some race condition.
-  cy.get('[name=password]').type('password')
-  cy.get('[name=username]').type('{selectall}admin')  // This is a workaround for the above issue.
-  cy.get('[name=username]').should('have.value', 'admin')
-  cy.get('button:contains("Log in")').click()
-  cy.get('h1:contains("Please log in")').should('not.exist')
 }
 
 describe('Gabby\'s index view', () => {
@@ -14,15 +10,12 @@ describe('Gabby\'s index view', () => {
 
   beforeEach(() => {
     cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=admin-user')
-  })
-
-  after(() => {
-    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=more-test-exercises')
+    cy.wrap(useApiStore()).then(api => api.auth.login('admin', 'password'))
   })
 
   it('lands', () => {
     cy.visit('/')
-    login()
+    setLocale()
 
     cy.get('div.busy').should('not.exist')
     cy.get('p').should('contain', 'No projects')
@@ -31,7 +24,7 @@ describe('Gabby\'s index view', () => {
 
   it('enables the "Create project" button', () => {
     cy.visit('/')
-    login()
+    setLocale()
 
     cy.get('button:contains("Create project")').should('be.disabled')
 
@@ -46,7 +39,7 @@ describe('Gabby\'s index view', () => {
 
   it('creates a minimal project', () => {
     cy.visit('/')
-    login()
+    setLocale()
 
     cy.get('label:contains("Title")').next().type('Test project')
     cy.get('button:contains("Create project")').click()
@@ -54,13 +47,14 @@ describe('Gabby\'s index view', () => {
     cy.get('h1:contains("Test project")').should('exist')
 
     cy.visit('/')
+    setLocale()
 
     cy.get('li a:contains("Test project")').should('exist')
   })
 
   it('creates a full project', () => {
     cy.visit('/')
-    login()
+    setLocale()
 
     cy.get('label:contains("Title")').next().type('Test project')
     cy.get('label:contains("Description")').next().type('This is a test project')
@@ -70,13 +64,14 @@ describe('Gabby\'s index view', () => {
     cy.get('p:contains("This is a test project")').should('exist')
 
     cy.visit('/')
+    setLocale()
 
     cy.get('li a:contains("Test project")').should('exist')
   })
 
   it('navigates to user documentation', () => {
     cy.visit('/')
-    login()
+    setLocale()
 
     cy.get('a:contains("Help")').click()
     cy.contains('h1', 'Documentation de MALIN')

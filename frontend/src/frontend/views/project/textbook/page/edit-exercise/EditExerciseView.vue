@@ -1,48 +1,89 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { computedAsync } from '@vueuse/core'
 
 import { useApiStore } from '$frontend/stores/api'
 import { BButton, BBusy } from '$frontend/components/opinion/bootstrap'
 import ExerciseForm from '$frontend/components/ExerciseForm.vue'
 import TwoResizableColumns from '$frontend/components/TwoResizableColumns.vue'
 import ExerciseTools from '../ExerciseTools.vue'
-import type { Project, Textbook, Section, Exercise } from '$frontend/types/api'
+import type { Project, Textbook, Section } from '$frontend/stores/api'
 import AdaptedExercise from '../AdaptedExercise.vue'
+import type { ExerciseCreationHistory } from '../ExerciseCreationHistory'
+import type { List } from '$frontend/stores/api'
+import type { Rectangle } from '../RectanglesHighlighter.vue'
 
 
 const props = defineProps<{
   project: Project,
   textbook: Textbook,
   pdf: any/* @todo Type */,
-  section: Section,
+  section: Section | null,
   page: number,
+  exercises: List<'exercise'>
   exerciseId: string
+  exerciseCreationHistory: ExerciseCreationHistory,
 }>()
 
 const router = useRouter()
 const api = useApiStore()
 
-const exerciseLoading = ref(false)
-const exercise = computedAsync(
-  async () => {
-    await new Promise((resolve) => resolve(null))  // @todo Understand why removing this line duplicates the request
-    return await api.client.getOne<Exercise>('exercise', props.exerciseId, {include: 'adaptation'})
-  },
-  undefined,
-  exerciseLoading,
-)
+const exercise = computed(() => api.auto.getOne('exercise', props.exerciseId, {include: ['adaptation']}))
 
 const exerciseForm = ref<typeof ExerciseForm | null>(null)
+const exerciseTools = ref<typeof ExerciseTools | null>(null)
 
-function saved() {
+function goToPrevious() {
+  const exerciseId = props.exerciseCreationHistory.previous
+  console.assert(exerciseId !== null)
+  props.exerciseCreationHistory.rewind()
+  router.push({
+    name: 'project-textbook-page-edit-exercise',
+    params: {projectId: props.project.id, textbookId: props.textbook.id, exerciseId},
+  })
+}
+
+async function saveThenBack(save: () => Promise<void>) {
+  await save()
+  /* no need to await */ props.exercises.refresh()
   router.push({name: 'project-textbook-page-list-exercises'})
 }
 
+async function saveThenNext(save: () => Promise<void>) {
+  await save()
+  const exerciseId = props.exerciseCreationHistory.next
+  props.exerciseCreationHistory.forward()
+  if(exerciseId === null) {
+    router.push({
+      name: 'project-textbook-page-create-exercise',
+      params: {projectId: props.project.id, textbookId: props.textbook.id},
+    })
+  } else {
+    router.push({
+      name: 'project-textbook-page-edit-exercise',
+      params: {projectId: props.project.id, textbookId: props.textbook.id, exerciseId},
+    })
+  }
+}
+
+const greyRectangles = computed(() => {
+  const rectangles = props.exercises.items
+    .filter(exercise => exercise.exists)
+    .filter(exercise => exercise.id !== props.exerciseId)
+    .map(exercise => exercise.attributes!.boundingRectangle)
+    .filter((x): x is Rectangle => x !== null)
+
+  if (rectangles.length > 0) {
+    return rectangles
+  } else {
+    return []
+  }
+})
+
 defineExpose({
   textSelected: computed(() => exerciseForm.value?.textSelected),
-  highlightedRectangles: computed(() => exerciseForm.value?.highlightedRectangles),
+  surroundedRectangles: computed(() => exerciseForm.value?.surroundedRectangles ?? []),
+  greyRectangles,
   handlesScrolling: true,
 })
 </script>
@@ -53,21 +94,36 @@ defineExpose({
       <div class="h-100 overflow-auto" data-cy="left-col-2">
         <h1>{{ $t('edition') }}</h1>
         <ExerciseForm
+          v-if="exercise.inCache"
           ref="exerciseForm"
           :project
           :textbook
           :textbookPage="page"
           :section
           :pdf
-          :number="exercise?.attributes!.number || ''"
+          :number="exercise.attributes!.number || ''"
           :automaticNumber="false"
           :editMode="true"
           :exercise
-          @saved="saved"
+          :teleportAdaptationDetailsTo="exerciseTools ? '#teleportTargetForAdaptationDetails' : undefined"
           v-slot="{ disabled, save }"
         >
-          <RouterLink class="btn btn-secondary" :to="{name: 'project-textbook-page-list-exercises'}">{{ $t('cancel') }}</RouterLink>
-          <BButton primary :disabled @click="save" data-cy="save-exercise">{{ $t('save') }}</BButton>
+          <template v-if="exerciseCreationHistory.current === null">
+            <p>
+              <RouterLink class="btn btn-secondary" :to="{name: 'project-textbook-page-list-exercises'}">{{ $t('backToList') }}</RouterLink>
+              <BButton primary :disabled @click="saveThenBack(save)" data-cy="save-then-back">{{ $t('saveThenBack') }}</BButton>
+            </p>
+          </template>
+          <template v-else>
+            <p>
+              <BButton secondary :disabled="exerciseCreationHistory.previous === null" @click="goToPrevious">{{ $t('previous') }}</BButton>
+              <BButton primary :disabled @click="saveThenNext(save)" data-cy="save-then-next">{{ $t('saveThenNext') }}</BButton>
+            </p>
+            <p>
+              <RouterLink class="btn btn-secondary" :to="{name: 'project-textbook-page-list-exercises'}">{{ $t('backToList') }}</RouterLink>
+              <BButton secondary :disabled @click="saveThenBack(save)" data-cy="save-then-back">{{ $t('saveThenBack') }}</BButton>
+            </p>
+          </template>
         </ExerciseForm>
       </div>
     </template>
@@ -75,7 +131,7 @@ defineExpose({
       <div class="h-100 overflow-hidden d-flex flex-row">
         <div class="handle"></div>
         <div class="h-100 overflow-auto flex-fill" data-cy="gutter-2">
-          <ExerciseTools v-if="exerciseForm" :exerciseForm />
+          <ExerciseTools ref="exerciseTools" v-if="exerciseForm" :exerciseForm />
         </div>
         <div class="handle"></div>
       </div>
@@ -90,7 +146,6 @@ defineExpose({
             :exerciseId="props.exerciseId"
             :exercise="exerciseForm.adaptedData"
           />
-          <p v-else>{{ $t('selectExerciseType') }}</p>
         </BBusy>
       </div>
     </template>

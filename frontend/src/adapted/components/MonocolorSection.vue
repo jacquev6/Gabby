@@ -1,8 +1,11 @@
 <script setup lang="ts">
+import { watch } from 'vue'
+
 import type { Paragraph } from '$adapted/types'
 import MultipleChoicesInput from './MultipleChoicesInput.vue'
 import SelectableText from './SelectableText.vue'
 import SelectedText from './SelectedText.vue'
+import FreeTextInput from './FreeTextInput.vue'
 
 
 defineProps<{
@@ -15,6 +18,12 @@ const models = defineModel<{
 }>({
   required: true,
 })
+
+const emit = defineEmits<{
+  layoutChanged: []
+}>()
+
+watch(models, () => emit('layoutChanged'), { deep: true })
 </script>
 
 <template>
@@ -27,7 +36,7 @@ const models = defineModel<{
             <template v-else-if="token.type === 'whitespace'"><wbr /> <wbr /></template>
             <template v-else-if="token.type === 'boxedText'"><span class="boxed">{{ token.text }}</span></template>
             <template v-else-if="token.type === 'freeTextInput'">
-              <input type="text" v-model="models[modelKey]" />
+              <FreeTextInput v-model="models[modelKey]" />
             </template>
             <template v-else-if="token.type === 'selectableText'">
               <SelectableText :colors="token.colors" v-model="models[modelKey]">{{ token.text }}</SelectableText>

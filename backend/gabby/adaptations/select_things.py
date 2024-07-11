@@ -33,17 +33,14 @@ class SelectThingsAdaptation(Adaptation):
         return range(1, self.colors + 1)
 
     def adapt_instructions(self, section):
-        if self.colors > 1:
-            return parsing.parse_section(
-                {f"sel{color_index}": r""" "|" STR """ for color_index in self.color_indexes},
-                type("InstructionsAdapter", (parsing.SectionTransformer,), {
-                    f"sel{color_index}_tag": (lambda color: staticmethod(lambda args: renderable.SelectedText(text=args[0], color=color, colors=self.colors)))(color_index)
-                    for color_index in self.color_indexes
-                })(),
-                section,
-            )
-        else:
-            return parsing.parse_plain_section(section)
+        return parsing.parse_instructions_section(
+            {f"sel{color_index}": r""" "|" STR """ for color_index in self.color_indexes},
+            type("InstructionsAdapter", (parsing.InstructionsSectionTransformer,), {
+                f"sel{color_index}_tag": (lambda color: staticmethod(lambda args: renderable.SelectedText(text=args[0], color=color, colors=self.colors)))(color_index)
+                for color_index in self.color_indexes
+            })(),
+            section,
+        )
 
     def make_adapted_instructions(self):
         section = self.adapt_instructions(self.exercise.instructions)
@@ -58,7 +55,7 @@ class SelectThingsAdaptation(Adaptation):
 
         return section
 
-    class WordingAdapter(parsing.SectionTransformer):
+    class WordingAdapter(parsing.WordingSectionTransformer):
         def __init__(self, words, punctuation, colors):
             self.select_words = words
             self.select_punctuation = punctuation
@@ -77,7 +74,7 @@ class SelectThingsAdaptation(Adaptation):
                 return renderable.PlainText(text=args[0])
 
     def make_adapted_wording(self):
-        return parsing.parse_section(
+        return parsing.parse_wording_section(
             {},
             self.WordingAdapter(self.words, self.punctuation, self.colors),
             self.exercise.wording,
@@ -223,11 +220,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 instructions=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.PlainText(text="{"),
-                            r.PlainText(text="sel1"),
-                            r.PlainText(text="|"),
-                            r.PlainText(text="abc"),
-                            r.PlainText(text="}"),
+                            r.SelectedText(text="abc", color=1, colors=1),
                         ]),
                     ]),
                 ]),
@@ -297,7 +290,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             number="number",
             textbook_page=42,
             instructions="instructions",
-            wording="wording\nis\n\non\n\nmultiple\nlines",
+            wording="wording is\n\non\n\nmultiple lines",
             example="",
             clue="",
         )

@@ -25,22 +25,22 @@ class MultipleChoicesInWordingAdaptation(Adaptation):
     id: orm.Mapped[int] = orm.mapped_column(sql.ForeignKey(Adaptation.id), primary_key=True)
 
     def make_adapted_instructions(self):
-        return parsing.parse_plain_section(self.exercise.instructions)
+        return parsing.parse_plain_instructions_section(self.exercise.instructions)
 
-    class WordingAdapter(parsing.SectionTransformer):
+    class WordingAdapter(parsing.WordingSectionTransformer):
         def choices_tag(self, args):
             return renderable.MultipleChoicesInput(choices=[arg.value for arg in args])
 
-    adapt_wording = parsing.SectionParser({"choices": r""" ("|" STR)+ """}, WordingAdapter())
+    adapt_wording = parsing.WordingSectionParser({"choices": r""" ("|" STR)+ """}, WordingAdapter())
 
     def make_adapted_wording(self):
         return self.adapt_wording(self.exercise.wording)
 
     def make_adapted_example(self):
-        return parsing.parse_plain_section(self.exercise.example)
+        return parsing.parse_plain_instructions_section(self.exercise.example)
 
     def make_adapted_clue(self):
-        return parsing.parse_plain_section(self.exercise.clue)
+        return parsing.parse_plain_instructions_section(self.exercise.clue)
 
 
 class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):

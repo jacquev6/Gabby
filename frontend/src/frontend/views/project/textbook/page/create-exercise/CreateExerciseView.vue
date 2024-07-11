@@ -6,37 +6,79 @@ import { BButton } from '$frontend/components/opinion/bootstrap'
 import ExerciseForm from '$frontend/components/ExerciseForm.vue'
 import TwoResizableColumns from '$frontend/components/TwoResizableColumns.vue'
 import ExerciseTools from '../ExerciseTools.vue'
-import type { Project, Textbook, Section, Exercise } from '$frontend/types/api'
+import type { Project, Textbook, Section, Exercise } from '$frontend/stores/api'
 import AdaptedExercise from '../AdaptedExercise.vue'
+import type { ExerciseCreationHistory } from '../ExerciseCreationHistory'
+import type { List } from '$frontend/stores/api'
+import type { Rectangle } from '../RectanglesHighlighter.vue'
 
+
+type CreateExercise = () => Promise<{exercise: Exercise, suggestedNumber: string}>
 
 const props = defineProps<{
   project: Project,
   textbook: Textbook,
   pdf: any/* @todo Type */,
-  section: Section,
+  section: Section | null,
   page: number,
+  exercises: List<'exercise'>
+  exerciseCreationHistory: ExerciseCreationHistory,
 }>()
 
 const router = useRouter()
 
 const exerciseForm = ref<typeof ExerciseForm | null>(null)
+const exerciseTools = ref<typeof ExerciseTools | null>(null)
 
-const number = ref('')
+const number = ref(props.exerciseCreationHistory.suggestedNumber ?? '')
 const automaticNumber = ref(false)
-function created(_exercise: Exercise, suggestedNumber: string) {
+async function createThenNext(createExercise: CreateExercise) {
+  const { exercise, suggestedNumber } = await createExercise()
+  /* no need to await */ props.exercises.refresh()
+  props.exerciseCreationHistory.push(exercise.id)
+  props.exerciseCreationHistory.suggestedNumber = suggestedNumber
   number.value = suggestedNumber
   automaticNumber.value = true
+}
+
+function goToPrevious() {
+  const exerciseId = props.exerciseCreationHistory.previous
+  console.assert(exerciseId !== null)
+  props.exerciseCreationHistory.rewind()
+  router.push({
+    name: 'project-textbook-page-edit-exercise',
+    params: {projectId: props.project.id, textbookId: props.textbook.id, exerciseId},
+  })
+}
+
+async function createThenBack(createExercise: CreateExercise) {
+  await createExercise()
+  /* no need to await */ props.exercises.refresh()
+  router.push({name: 'project-textbook-page-list-exercises', params: {projectId: props.project.id, textbookId: props.textbook.id, page: props.page}})
 }
 
 function changePage(page: number) {
   router.push({name: 'project-textbook-page-create-exercise', params: {projectId: props.project.id, textbookId: props.textbook.id, page}})
 }
 
+const greyRectangles = computed(() => {
+  const rectangles = props.exercises.items
+    .filter(exercise => exercise.exists)
+    .map(exercise => exercise.attributes!.boundingRectangle)
+    .filter((x): x is Rectangle => x !== null)
+
+  if (rectangles.length > 0) {
+    return rectangles
+  } else {
+    return []
+  }
+})
+
 defineExpose({
   changePage,
   textSelected: computed(() => exerciseForm.value?.textSelected),
-  highlightedRectangles: computed(() => exerciseForm.value?.highlightedRectangles),
+  surroundedRectangles: computed(() => exerciseForm.value?.surroundedRectangles ?? []),
+  greyRectangles,
   handlesScrolling: true,
 })
 </script>
@@ -56,12 +98,17 @@ defineExpose({
           :number
           :automaticNumber
           :editMode="false"
-
-          @created="created"
+          :teleportAdaptationDetailsTo="exerciseTools ? '#teleportTargetForAdaptationDetails' : undefined"
           v-slot="{ disabled, create }"
         >
-          <RouterLink class="btn btn-secondary" :to="{name: 'project-textbook-page-list-exercises'}">{{ $t('cancel') }}</RouterLink>
-          <BButton primary :disabled @click="create" data-cy="create-exercise">{{ $t('save.next') }}</BButton>
+          <p>
+            <BButton secondary :disabled="exerciseCreationHistory.previous === null" @click="goToPrevious">{{ $t('previous') }}</BButton>
+            <BButton primary :disabled @click="createThenNext(create)" data-cy="create-then-next">{{ $t('saveThenNext') }}</BButton>
+          </p>
+          <p>
+            <RouterLink class="btn btn-secondary" :to="{name: 'project-textbook-page-list-exercises'}">{{ $t('backToList') }}</RouterLink>
+            <BButton secondary :disabled @click="createThenBack(create)" data-cy="create-then-back">{{ $t('saveThenBack') }}</BButton>
+          </p>
         </ExerciseForm>
       </div>
     </template>
@@ -69,7 +116,7 @@ defineExpose({
       <div class="h-100 overflow-hidden d-flex flex-row">
         <div class="handle"></div>
         <div class="h-100 overflow-auto flex-fill" data-cy="gutter-2">
-          <ExerciseTools v-if="exerciseForm" :exerciseForm />
+          <ExerciseTools ref="exerciseTools" v-if="exerciseForm" :exerciseForm />
         </div>
         <div class="handle"></div>
       </div>
@@ -83,7 +130,6 @@ defineExpose({
           exerciseId="unused @todo Compute storageKey in an independent composable, and let AdaptedExercise load and save iif the key is not null"
           :exercise="exerciseForm?.adaptedData"
         />
-        <p v-else>{{ $t('selectExerciseType') }}</p>
       </div>
     </template>
   </TwoResizableColumns>

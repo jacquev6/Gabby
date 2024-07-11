@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-import type { Project, Exercise } from '$frontend/types/api'
+import type { Project, Exercise } from '$frontend/stores/api'
 
 
 const props = defineProps<{
@@ -68,6 +68,7 @@ function ellipsis(s: string) {
                   <strong>{{ exercise.attributes!.number }}</strong>
                 </RouterLink>
                 {{ ellipsis(exercise.attributes!.instructions) }}
+                <em>{{ exercise.relationships!.adaptation? $t(exercise.relationships!.adaptation.type) : '' }}</em>
               </li>
             </ul>
           </li>

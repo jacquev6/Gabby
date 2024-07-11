@@ -3,7 +3,7 @@ import { ref, computed, watch } from 'vue'
 
 import { BBusy, BLabeledInput, BLabeledTextarea } from './opinion/bootstrap'
 import { useApiStore } from '$frontend/stores/api'
-import type { Project } from '$frontend/types/api'
+import type { Project } from '$frontend/stores/api'
 
 
 const props = defineProps<{
@@ -38,7 +38,7 @@ const busy = ref(false)
 
 async function create() {
   busy.value = true
-  const project = await api.client.post<Project>(
+  const project = await api.client.createOne(
     'project',
     {title: title.value, description: description.value},
     {},
@@ -56,9 +56,7 @@ async function save() {
   console.assert(props.project !== undefined)
 
   busy.value = true
-  await api.client.patch(
-    'project',
-    props.project.id,
+  await props.project.patch(
     {
       title: title.value,
       description: description.value,

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import type { Paragraph } from '$adapted/types'
 import TricolorLines from './TricolorLines.vue'
 import MonocolorSection from './MonocolorSection.vue'
@@ -14,11 +15,13 @@ const model = defineModel<{
 }>({
   required: true,
 })
+
+const tricolorLines = ref<typeof TricolorLines | null>(null)
 </script>
 
 <template>
-  <TricolorLines>
-    <MonocolorSection :paragraphs :paragraphIndexOffset v-model="model">
+  <TricolorLines ref="tricolorLines">
+    <MonocolorSection :paragraphs :paragraphIndexOffset v-model="model" @layoutChanged="tricolorLines?.recolor()">
       <template v-slot="{ token, tokenIndex }">
         <slot :token :tokenIndex></slot>
       </template>
