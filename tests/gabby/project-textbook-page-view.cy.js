@@ -171,9 +171,9 @@ describe('Gabby\'s project\'s textbook page view', () => {
     cy.get('label:contains("Number of colors")').next().type('{selectAll}2')
 
     cy.get('span:contains("artificial")').last().click()
-    cy.get('span:contains("artificial")').last().should('have.css', 'background-color', 'rgb(102, 194, 165)')
+    cy.get('span:contains("artificial")').last().should('have.css', 'background-color', 'rgb(255, 255, 0)')
     cy.get('span:contains("artificial")').last().click()
-    cy.get('span:contains("artificial")').last().should('have.css', 'background-color', 'rgb(179, 179, 179)')
+    cy.get('span:contains("artificial")').last().should('have.css', 'background-color', 'rgb(255, 192, 203)')
     cy.get('span:contains("artificial")').last().click()
     cy.get('span:contains("artificial")').last().should('have.css', 'background-color', 'rgba(0, 0, 0, 0)')
 
@@ -1029,7 +1029,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
     cy.get('div.busy').should('not.exist')
 
     cy.get('span:contains("tracter")').eq(1).click()
-    cy.get('span:contains("tracter")').eq(1).should('have.css', 'background-color', 'rgb(199, 177, 139)')
+    cy.get('span:contains("tracter")').eq(1).should('have.css', 'background-color', 'rgb(255, 255, 0)')
 
     cy.get('label:contains("Adaptation type")').next().select('fillWithFreeTextAdaptation')
     cy.get('div.busy').should('not.exist')

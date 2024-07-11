@@ -36,8 +36,10 @@ function forbidNewlines(event: KeyboardEvent) {
 </template>
 
 <style scoped>
+/* Based on Etude_de_la_langue_CE1_Belin/P34Ex6_hrl2.html */
+
 span {
   padding: 0 1ch;
-  border: 2px solid black;
+  border: 2px solid #555;
 }
 </style>
