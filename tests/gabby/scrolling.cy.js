@@ -1,6 +1,10 @@
 import { useApiStore } from '../../frontend/src/frontend/stores/api'
 
 
+function setLocale() {
+  cy.get('select').last().select('en')
+}
+
 describe('Gabby', () => {
   before(console.clear)
 
@@ -40,6 +44,7 @@ describe('Gabby', () => {
 
   it('scrolls on index view', () => {
     cy.visit('/')
+    setLocale()
     cy.get('.busy').should('not.exist')
 
     cy.get('html').its('0').should(haveNoScrollbar)
@@ -58,6 +63,7 @@ describe('Gabby', () => {
 
   it('scrolls on project view', () => {
     cy.visit('/project-xkopqm')
+    setLocale()
     cy.get('.busy').should('not.exist')
 
     cy.get('html').its('0').should(haveNoScrollbar)
@@ -76,6 +82,7 @@ describe('Gabby', () => {
 
   it('scrolls on exercises list view', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-7')
+    setLocale()
     cy.get('.busy').should('not.exist')
 
     cy.get('html').its('0').should(haveNoScrollbar)
@@ -100,6 +107,7 @@ describe('Gabby', () => {
 
   it('scrolls on exercise creation view', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
+    setLocale()
     cy.get('.busy').should('not.exist')
 
     cy.get('html').its('0').should(haveNoScrollbar)
@@ -146,6 +154,7 @@ describe('Gabby', () => {
 
   it('scrolls on exercise edition view', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-7/exercise-vodhqn')
+    setLocale()
     cy.get('.busy').should('not.exist')
 
     cy.get('html').its('0').should(haveNoScrollbar)

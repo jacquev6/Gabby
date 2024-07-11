@@ -1,6 +1,10 @@
 import { useApiStore } from '../../frontend/src/frontend/stores/api'
 
 
+function setLocale() {
+  cy.get('select').last().select('en')
+}
+
 describe('Gabby\'s index view', () => {
   before(console.clear)
 
@@ -11,6 +15,7 @@ describe('Gabby\'s index view', () => {
 
   it('lands', () => {
     cy.visit('/')
+    setLocale()
 
     cy.get('div.busy').should('not.exist')
     cy.get('p').should('contain', 'No projects')
@@ -19,6 +24,7 @@ describe('Gabby\'s index view', () => {
 
   it('enables the "Create project" button', () => {
     cy.visit('/')
+    setLocale()
 
     cy.get('button:contains("Create project")').should('be.disabled')
 
@@ -33,6 +39,7 @@ describe('Gabby\'s index view', () => {
 
   it('creates a minimal project', () => {
     cy.visit('/')
+    setLocale()
 
     cy.get('label:contains("Title")').next().type('Test project')
     cy.get('button:contains("Create project")').click()
@@ -40,12 +47,14 @@ describe('Gabby\'s index view', () => {
     cy.get('h1:contains("Test project")').should('exist')
 
     cy.visit('/')
+    setLocale()
 
     cy.get('li a:contains("Test project")').should('exist')
   })
 
   it('creates a full project', () => {
     cy.visit('/')
+    setLocale()
 
     cy.get('label:contains("Title")').next().type('Test project')
     cy.get('label:contains("Description")').next().type('This is a test project')
@@ -55,12 +64,14 @@ describe('Gabby\'s index view', () => {
     cy.get('p:contains("This is a test project")').should('exist')
 
     cy.visit('/')
+    setLocale()
 
     cy.get('li a:contains("Test project")').should('exist')
   })
 
   it('navigates to user documentation', () => {
     cy.visit('/')
+    setLocale()
 
     cy.get('a:contains("Help")').click()
     cy.contains('h1', 'Documentation de MALIN')

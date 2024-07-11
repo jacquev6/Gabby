@@ -1,6 +1,10 @@
 import { useApiStore } from '../../frontend/src/frontend/stores/api'
 
 
+function setLocale() {
+  cy.get('select').last().select('en')
+}
+
 describe('Gabby\'s new exercise view', () => {
   before(console.clear)
 
@@ -11,6 +15,7 @@ describe('Gabby\'s new exercise view', () => {
 
   it('navigates using "Save then next" and "Previous" buttons', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-1/new-exercise')
+    setLocale()
 
     cy.get('label:contains("Number")').next().type('1')
 
@@ -57,6 +62,7 @@ describe('Gabby\'s new exercise view', () => {
 
   it('resets history when going back to list', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-1/new-exercise')
+    setLocale()
 
     cy.get('label:contains("Number")').next().type('1')
 

@@ -3,6 +3,10 @@ import { useApiStore } from '../../frontend/src/frontend/stores/api'
 
 const isProdPreview = Cypress.env('IS_PROD_PREVIEW')
 
+function setLocale() {
+  cy.get('select').last().select('en')
+}
+
 describe('Gabby\'s project\'s textbook page view', () => {
   before(console.clear)
 
@@ -13,6 +17,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
 
   it('displays an error message if the project does not exist', () => {
     cy.visit('/project-nope/textbook-klxufv/page-6')
+    setLocale()
     cy.get('div.busy').should('not.exist')
 
     cy.get('h1:contains("Project not found")').should('exist')
@@ -21,6 +26,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
 
   it('displays an error message if the textbook does not exist', () => {
     cy.visit('/project-xkopqm/textbook-nope/page-6')
+    setLocale()
     cy.get('div.busy').should('not.exist')
 
     cy.get('h1:contains("Textbook not found")').should('exist')
@@ -29,6 +35,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
 
   it('displays an error message if the textbook does not belong to this project', () => {
     cy.visit('/project-fryrbl/textbook-klxufv/page-6')
+    setLocale()
     cy.get('div.busy').should('not.exist')
 
     cy.get('h1:contains("Textbook not found")').should('exist')
@@ -41,6 +48,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
 
   it('lands', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-6')
+    setLocale()
 
     cy.title().should('eq', 'MALIN - Premier projet de test - Français CE2 - Page 6')
     cy.get('.navbar').should('contain', 'Premier projet de test')
@@ -49,6 +57,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
 
   it('adjusts textarea heights', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise')
+    setLocale()
 
     for (const label of ['Instructions', 'Wording']) {
       cy.get(`label:contains("${label}")`).next().should('have.attr', 'rows', '2')
@@ -66,6 +75,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
 
   it('navigates the textbook', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-6')
+    setLocale()
     cy.get('p:contains("Page"):contains("(on 7)") input').should('have.value', '6')
     cy.get('p:contains("The PDF that contains this page (test.pdf) has not been loaded yet.")').should('exist')
 
@@ -102,6 +112,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
 
   it('enables the "Save exercise" button', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise')
+    setLocale()
 
     cy.get('button:contains("Save then next")').should('be.disabled')
 
@@ -117,13 +128,14 @@ describe('Gabby\'s project\'s textbook page view', () => {
 
   it('lists existing exercises', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-7')
+    setLocale()
     cy.get('button:contains("Delete")').click()
     cy.get('div.busy').should('not.exist')
     cy.get('p:contains("No exercises yet.")').should('exist')
 
     cy.visit('/project-xkopqm/textbook-klxufv/page-7')
+    setLocale()
     cy.get('div.busy').should('not.exist')
-    cy.get('select').select('en')
     cy.get('p:contains("No exercises yet.")').should('exist')
 
     cy.get('button:contains("<")').click()
@@ -133,6 +145,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
 
   it('loads a PDF', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-6')
+    setLocale()
     cy.get('div.busy').should('not.exist')
     cy.get('p:contains("The PDF that contains this page (test.pdf) has not been loaded yet.")').should('exist')
 
@@ -144,6 +157,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
 
   it('creates a minimal exercise', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise')
+    setLocale()
 
     cy.get('label:contains("Number")').next().type('1')
     cy.get('button:contains("Save then next")').click()
@@ -158,6 +172,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
 
   it('creates a full exercise', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise')
+    setLocale()
 
     cy.get('label:contains("Number")').next().type('Défis')
     cy.get('label:contains("Instructions")').next().type('Do the smartest thing ever.')
@@ -199,6 +214,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
     // (because it interferes with pointer coordinates, making the test harder to maintain)
 
     cy.visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise')
+    setLocale()
     cy.get('div.busy').should('not.exist')
 
     cy.get('label:contains("Number")').next().type('1')
@@ -240,7 +256,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
     cy.get('div.busy').should('not.exist')
 
     cy.visit('/project-xkopqm')
-    cy.get('select').select('en')
+    setLocale()
 
     cy.get('a').contains('the exported HTML').its('0.href').then(cy.request)
 
@@ -870,6 +886,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
     cy.viewport(1000, 1000)
 
     cy.visit('/project-xkopqm/textbook-klxufv/page-6')
+    setLocale()
     cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
     cy.get('div.busy').should('not.exist')
 
@@ -891,7 +908,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
     cy.get('div.busy').should('not.exist')
 
     cy.visit('/project-xkopqm')
-    cy.get('select').select('en')
+    setLocale()
 
     cy.get('a').contains('the extraction report').its('0.href').then(href => {
       cy.request(href).as('report')
@@ -958,6 +975,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
 
   it('shows and hides the section editor dialog', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-6')
+    setLocale()
     cy.get('select').select('fr')
     cy.get('div.busy').should('not.exist')
 
@@ -972,6 +990,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
 
   it('detects when an exercise already exists', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise')
+    setLocale()
     cy.get('div.busy').should('not.exist')
 
     cy.get('label:contains("Number")').next().type('2')
@@ -997,6 +1016,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
 
   it('allows navigating the PDF when creating an exercise', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise')
+    setLocale()
     cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
     cy.get('div.busy').should('not.exist')
 
@@ -1020,6 +1040,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
     cy.viewport(1000, 1100)
 
     cy.visit('/project-xkopqm/textbook-klxufv/page-7/exercise-dymwin')
+    setLocale()
     cy.get('label:contains("Number")').next().should('have.value', '11')
     cy.get('div.busy').should('not.exist')
 

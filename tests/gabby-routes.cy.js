@@ -1,6 +1,10 @@
 import { useApiStore } from '../frontend/src/frontend/stores/api'
 
 
+function setLocale() {
+  cy.get('select').last().select('en')
+}
+
 describe('Gabby has routes that', () => {
   before(() => {
     console.clear
@@ -13,16 +17,19 @@ describe('Gabby has routes that', () => {
 
   it('can access the default Vue Router view', () => {
     cy.visit('/')
+    setLocale()
     cy.contains('h1', 'Existing projects')
   })
 
   it('can access a Vue Router view without trailing /', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-6')
+    setLocale()
     cy.contains('h1', 'Existing exercises')
   })
 
   it('can access a Vue Router view with trailing /', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-6/')
+    setLocale()
     cy.contains('h1', 'Existing exercises')
   })
 
