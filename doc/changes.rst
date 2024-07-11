@@ -12,6 +12,41 @@ Les améliorations techniques ne figurent que dans le `log git <https://github.c
 Les titres des sections de ce document correspondent au champ ``Gabby version`` dans le "À propos".
 Les versions sont nommées selon leur date de publication, au format ``YYYYMMDD-HHMMSS`` (année, mois, jour, tiret, heure, minute, seconde).
 
+20240711-155526
+---------------
+
+- Correction de bugs:
+    - la navigation dans le PDF fonctionne lors de l'ajout d'un manuel à un projet
+    - la popup "Text sélectionné" ne sort plus jamais de l'écran
+
+- Une popup peut maintenant apparaître en cas de bug dans l'interface. Elle comporte des détails à transmettre à Vincent
+
+- Améliorations d'interface:
+    - la popup "Text sélectionné" se ferme avec la touche Echap
+    - les boutons du formulaire d'ajout d'exercise ont évolué
+        - ils ont été renommés plus explicitement
+        - des boutons "précédent" et "suivant" ont été ajoutés
+    - les listes d'exercices affichent le type d'adaptation
+    - la colonne "Edition" de la vue listant les exercices d'une page a été renommée "Exercices existants"
+    - le bouton "Nouvel exercice" a été déplacé en haut de la colonne
+    - le type d'adaptation a été déplacé en haut du formulaire d'ajout d'exercice
+    - les détails de l'adaptation ont été déplacés dans la colonne "Outils"
+    - l'exercise adapté est toujours affiché, même quand aucun type d'adaptation n'a été sélectionné
+    - Selection de mots: la case "sélectionner la ponctuation" est désactivée par défaut
+    - Selection de mots: il est possible d'utiliser la balise `{sel1|*texte*}` même quand il n'y a qu'une couleur
+    - les exercices déjà extraits sont grisés dans le PDF au lieux d'être mis en surbrillance
+    - les exercices déjà extraits restent grisés lors de la création d'un exercice
+
+- Amélioration de l'affichage des exercices adaptés:
+    - Trous à remplir: les trous sont plus petits par défaut et s'élargissent quand on y tape du texte
+    - les retours à la ligne des énoncés sont tous conservéS
+    - les retours à la ligne des consignes, examples et indices sont ignorés au milieu des phrases
+    - dans les consignes, examples et indices, si des phrases sont reconnues, elles sont séparées par des retour à la ligne
+        - la reconnaissance des phrases est assez strict, dans le but d'éviter des retours à la ligne non souhaitables
+    - Selection de mots: les 5 couleurs fixes de la plateforme précédente sont utilisée
+    - Trous à remplir: la CSS correspond mieux à la plateforme précédente
+    - QCM: la CSS correspond mieux à la plateforme précédente
+
 20240701-062228
 ---------------
 
