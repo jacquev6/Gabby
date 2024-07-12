@@ -21,8 +21,8 @@ describe('ApiStore - Basic functionality', () => {
 
     const ping = await api.client.createOne('ping', {message: 'NEW'}, {})
 
-    expect(ping.inCache).to.be.true
     expect(ping.loading).to.be.false
+    expect(ping.inCache).to.be.true
     expect(ping.exists).to.be.true
     expect(ping.attributes.message).to.equal('NEW')
     expect(ping.relationships.prev).to.be.null
@@ -36,8 +36,8 @@ describe('ApiStore - Basic functionality', () => {
 
     const ping = await api.client.createOne('ping', {}, {prev})
 
-    expect(ping.inCache).to.be.true
     expect(ping.loading).to.be.false
+    expect(ping.inCache).to.be.true
     expect(ping.exists).to.be.true
     expect(ping.attributes.message).to.be.null
     expect(ping.relationships.prev).to.equal(prev)
@@ -53,8 +53,8 @@ describe('ApiStore - Basic functionality', () => {
 
     const ping = await api.client.createOne('ping', {}, {next: [next]})
 
-    expect(ping.inCache).to.be.true
     expect(ping.loading).to.be.false
+    expect(ping.inCache).to.be.true
     expect(ping.exists).to.be.true
     expect(ping.attributes.message).to.be.null
     expect(ping.relationships.prev).to.be.null
@@ -72,8 +72,8 @@ describe('ApiStore - Basic functionality', () => {
 
     const ping = await api.client.createOne('ping', {}, {prev, next: [next]}, {include: ['prev', 'next']})
 
-    expect(ping.inCache).to.be.true
     expect(ping.loading).to.be.false
+    expect(ping.inCache).to.be.true
     expect(ping.exists).to.be.true
     expect(ping.attributes.message).to.be.null
     expect(ping.relationships.prev).to.equal(prev)
@@ -119,13 +119,13 @@ describe('ApiStore - Basic functionality', () => {
 
     const ping = api.cache.getOne('ping', '1')
 
-    expect(ping.inCache).to.be.false
     expect(ping.loading).to.be.false
+    expect(ping.inCache).to.be.false
 
     await ping.refresh()
 
-    expect(ping.inCache).to.be.true
     expect(ping.loading).to.be.false
+    expect(ping.inCache).to.be.true
   })
 
   it("gets one ping from cache then refreshes it, awaiting on the return value of '.refresh()'", async () => {
@@ -133,18 +133,18 @@ describe('ApiStore - Basic functionality', () => {
 
     const ping = api.cache.getOne('ping', '1')
 
-    expect(ping.inCache).to.be.false
     expect(ping.loading).to.be.false
+    expect(ping.inCache).to.be.false
 
     const loaded = ping.refresh()
 
-    expect(ping.inCache).to.be.false
     expect(ping.loading).to.be.true
+    expect(ping.inCache).to.be.false
 
     await loaded
 
-    expect(ping.inCache).to.be.true
     expect(ping.loading).to.be.false
+    expect(ping.inCache).to.be.true
   })
 
   it("gets one ping from cache then refreshes it, awaiting on '.loaded'", async () => {
@@ -152,18 +152,18 @@ describe('ApiStore - Basic functionality', () => {
 
     const ping = api.cache.getOne('ping', '1')
 
-    expect(ping.inCache).to.be.false
     expect(ping.loading).to.be.false
+    expect(ping.inCache).to.be.false
 
     ping.refresh()
 
-    expect(ping.inCache).to.be.false
     expect(ping.loading).to.be.true
+    expect(ping.inCache).to.be.false
 
     await ping.loaded
 
-    expect(ping.inCache).to.be.true
     expect(ping.loading).to.be.false
+    expect(ping.inCache).to.be.true
   })
 
   it("gets one ping from cache then refreshes it several times", () => {
@@ -220,16 +220,16 @@ describe('ApiStore - Basic functionality', () => {
 
     const ping = api.auto.getOne('ping', '1')
 
-    expect(ping.inCache).to.be.false
     expect(ping.loading).to.be.true
+    expect(ping.inCache).to.be.false
     expect(ping.exists).to.be.undefined
     expect(ping.attributes).to.be.undefined
     expect(ping.relationships).to.be.undefined
 
     await ping.loaded
 
-    expect(ping.inCache).to.be.true
     expect(ping.loading).to.be.false
+    expect(ping.inCache).to.be.true
     expect(ping.exists).to.not.be.undefined
     expect(ping.attributes).to.not.be.undefined
     expect(ping.relationships).to.not.be.undefined
@@ -251,8 +251,8 @@ describe('ApiStore - Basic functionality', () => {
 
     const ping = await api.client.getOne('ping', '0')
 
-    expect(ping.inCache).to.be.true
     expect(ping.loading).to.be.false
+    expect(ping.inCache).to.be.true
     expect(ping.exists).to.be.false
     expect(ping.attributes).to.be.undefined
     expect(ping.relationships).to.be.undefined
@@ -263,8 +263,8 @@ describe('ApiStore - Basic functionality', () => {
 
     const ping = await api.client.getOne('ping', '1')
 
-    expect(ping.inCache).to.be.true
     expect(ping.loading).to.be.false
+    expect(ping.inCache).to.be.true
     expect(ping.exists).to.be.true
     console.assert(ping.attributes !== undefined)
     expect(ping.attributes.message).to.equal('Hello 1')
@@ -278,8 +278,8 @@ describe('ApiStore - Basic functionality', () => {
 
     const ping = await api.client.getOne('ping', '3')
 
-    expect(ping.inCache).to.be.true
     expect(ping.loading).to.be.false
+    expect(ping.inCache).to.be.true
     expect(ping.exists).to.be.true
     console.assert(ping.attributes !== undefined)
     expect(ping.attributes.message).to.equal('Hello 3')
@@ -302,8 +302,8 @@ describe('ApiStore - Basic functionality', () => {
 
     const ping = await api.client.getOne('ping', '3', {include: ['prev', 'next']})
 
-    expect(ping.inCache).to.be.true
     expect(ping.loading).to.be.false
+    expect(ping.inCache).to.be.true
     expect(ping.exists).to.be.true
 
     expect(ping.attributes.message).to.equal('Hello 3')
@@ -333,14 +333,14 @@ describe('ApiStore - Basic functionality', () => {
 
     const pings = api.cache.getAll('ping')
 
-    expect(pings.inCache).to.be.false
     expect(pings.loading).to.be.false
+    expect(pings.inCache).to.be.false
     expect(pings.items).to.have.length(0)
 
     await pings.refresh()
 
-    expect(pings.inCache).to.be.true
     expect(pings.loading).to.be.false
+    expect(pings.inCache).to.be.true
     expect(pings.items).to.have.length(6)
   })
 
@@ -349,20 +349,20 @@ describe('ApiStore - Basic functionality', () => {
 
     const pings = api.cache.getAll('ping')
 
-    expect(pings.inCache).to.be.false
     expect(pings.loading).to.be.false
+    expect(pings.inCache).to.be.false
     expect(pings.items).to.have.length(0)
 
     const loaded = pings.refresh()
 
-    expect(pings.inCache).to.be.false
     expect(pings.loading).to.be.true
+    expect(pings.inCache).to.be.false
     expect(pings.items).to.have.length(0)
 
     await loaded
 
-    expect(pings.inCache).to.be.true
     expect(pings.loading).to.be.false
+    expect(pings.inCache).to.be.true
     expect(pings.items).to.have.length(6)
   })
 
@@ -371,20 +371,20 @@ describe('ApiStore - Basic functionality', () => {
 
     const pings = api.cache.getAll('ping')
 
-    expect(pings.inCache).to.be.false
     expect(pings.loading).to.be.false
+    expect(pings.inCache).to.be.false
     expect(pings.items).to.have.length(0)
 
     pings.refresh()
 
-    expect(pings.inCache).to.be.false
     expect(pings.loading).to.be.true
+    expect(pings.inCache).to.be.false
     expect(pings.items).to.have.length(0)
 
     await pings.fullyLoaded
 
-    expect(pings.inCache).to.be.true
     expect(pings.loading).to.be.false
+    expect(pings.inCache).to.be.true
     expect(pings.items).to.have.length(6)
   })
 
@@ -447,14 +447,14 @@ describe('ApiStore - Basic functionality', () => {
 
     const pings = api.auto.getAll('ping')
 
-    expect(pings.inCache).to.be.false
     expect(pings.loading).to.be.true
+    expect(pings.inCache).to.be.false
     expect(pings.items).to.have.length(0)
 
     await pings.fullyLoaded
 
-    expect(pings.inCache).to.be.true
     expect(pings.loading).to.be.false
+    expect(pings.inCache).to.be.true
     expect(pings.items).to.have.length(6)
   })
 
