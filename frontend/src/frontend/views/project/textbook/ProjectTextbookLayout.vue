@@ -19,37 +19,37 @@ const api = useApiStore()
 
 const component = ref<null | { title: string, breadcrumbs: [], handlesScrolling?: boolean }>(null)
 
-const textbook = api.auto.getOne('textbook', props.textbookId, {include: ['sections.pdfFile.namings']})
+const textbook = computed(() => api.auto.getOne('textbook', props.textbookId, {include: ['sections.pdfFile.namings']}))
 
 function refreshTextbook() {
   // @todo Remove 'options' from '.refresh()' (use those from '.getOne'). The remove 'refreshTextbook' and have sub-components simply call 'textbook.refresh()'
-  textbook.refresh({include: ['sections.pdfFile.namings']})
+  textbook.value.refresh({include: ['sections.pdfFile.namings']})
 }
 
 // @todo Move this check (that the textbook belongs to the project) to the backend, probably by adding a *required* query parameter 'filter[project]'
-const textbookExists = computed(() => textbook.exists && textbook.relationships && textbook.relationships.project.id === props.project.id)
+const textbookExists = computed(() => textbook.value.exists && textbook.value.relationships && textbook.value.relationships.project.id === props.project.id)
 
 const title = computed(() => {
-  if (textbook.loading) {
+  if (textbook.value.loading) {
     return []
   } else if (textbookExists.value) {
-    console.assert(textbook.attributes !== undefined)
+    console.assert(textbook.value.attributes !== undefined)
     const componentTitle = component.value ? component.value.title : []
-    return [textbook.attributes.title, ...componentTitle]
+    return [textbook.value.attributes.title, ...componentTitle]
   } else {
     return [i18n.t('textbookNotFound')]
   }
 })
 
 const breadcrumbs = computed(() => {
-  if (textbook.loading) {
+  if (textbook.value.loading) {
     return []
   } else if (textbookExists.value) {
-    console.assert(textbook.attributes !== undefined)
+    console.assert(textbook.value.attributes !== undefined)
     const componentBreadcrumbs = component.value ? component.value.breadcrumbs : []
     return [
       {
-        title: textbook.attributes.title,
+        title: textbook.value.attributes.title,
         to: {name: 'textbook', params: {textbookId: props.textbookId}},
       },
       ...componentBreadcrumbs,

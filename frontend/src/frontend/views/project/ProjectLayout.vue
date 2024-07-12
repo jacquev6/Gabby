@@ -16,34 +16,34 @@ const api = useApiStore()
 
 const component = ref<null | { title: string, breadcrumbs: [], handlesScrolling?: boolean }>(null)
 
-const project = api.auto.getOne('project', props.projectId, {include: ['textbooks', 'exercises.textbook']})
+const project = computed(() => api.auto.getOne('project', props.projectId, {include: ['textbooks', 'exercises.textbook']}))
 
 function refreshProject() {
-  // @todo Remove 'options' from '.refresh()' (use those from '.getOne'). The remove 'refreshProject' and have sub-components simply call 'project.refresh()'
-  project.refresh({include: ['textbooks', 'exercises.textbook']})
+  // @todo Remove 'options' from '.refresh()' (use those from '.getOne'). The remove 'refreshProject' and have sub-components simply call 'project.value.refresh()'
+  project.value.refresh({include: ['textbooks', 'exercises.textbook']})
 }
 
 const title = computed(() => {
-  if (project.loading) {
+  if (project.value.loading) {
     return []
-  } else if (project.exists) {
-    console.assert(project.attributes !== undefined)
+  } else if (project.value.exists) {
+    console.assert(project.value.attributes !== undefined)
     const componentTitle = component.value ? component.value.title : []
-    return [project.attributes.title, ...componentTitle]
+    return [project.value.attributes.title, ...componentTitle]
   } else {
     return [i18n.t('projectNotFound')]
   }
 })
 
 const breadcrumbs = computed(() => {
-  if (project.loading) {
+  if (project.value.loading) {
     return []
-  } else if (project.exists) {
-    console.assert(project.attributes !== undefined)
+  } else if (project.value.exists) {
+    console.assert(project.value.attributes !== undefined)
     const componentBreadcrumbs = component.value ? component.value.breadcrumbs : []
     return [
       {
-        title: project.attributes.title,
+        title: project.value.attributes.title,
         to: {name: 'project', params: {projectId: props.projectId}},
       },
       ...componentBreadcrumbs,
