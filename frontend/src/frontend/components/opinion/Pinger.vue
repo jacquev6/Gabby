@@ -39,12 +39,12 @@ async function deletePing(ping: Ping) {
       <template v-for="ping in pings.items" :key="ping.id">
         <li v-if="ping.exists">
           <BBusy :busy="ping.loading">
-            {{ ping.id }} - {{ ping.attributes!.createdAt }}<span v-if="ping.attributes!.message">: {{ ping.attributes!.message }}</span>
+            {{ ping.id }} - {{ ping.attributes.createdAt }}<span v-if="ping.attributes.message">: {{ ping.attributes.message }}</span>
             <BButton sm secondary @click="setMessage(ping)">Set message</BButton>
             <BButton sm secondary @click="resetMessage(ping)">Reset message</BButton>
             <BButton sm secondary @click="deletePing(ping)">Delete</BButton>
-            <template v-if="ping.relationships!.prev">Prev: {{ ping.relationships!.prev.id }}</template>
-            <template v-if="ping.relationships!.next.length">Next:<template v-for="next in ping.relationships!.next">&nbsp;{{ next.id }}</template></template>
+            <template v-if="ping.relationships.prev">Prev: {{ ping.relationships.prev.id }}</template>
+            <template v-if="ping.relationships.next.length">Next:<template v-for="next in ping.relationships.next">&nbsp;{{ next.id }}</template></template>
           </BBusy>
         </li>
       </template>

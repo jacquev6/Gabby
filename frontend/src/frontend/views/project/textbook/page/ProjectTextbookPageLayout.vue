@@ -65,9 +65,9 @@ const pdfLoading = ref(false)
 const pdf = computedAsync(
   async () => {
     if (section.value) {
-      const pageNumber = section.value.attributes!.pdfFileStartPage + props.page - section.value.attributes!.textbookStartPage
-      if (pdfs.getInfo(section.value.relationships!.pdfFile.id)) {
-        const document = await pdfs.getDocument(section.value.relationships!.pdfFile.id)
+      const pageNumber = section.value.attributes.pdfFileStartPage + props.page - section.value.attributes.textbookStartPage
+      if (pdfs.getInfo(section.value.relationships.pdfFile.id)) {
+        const document = await pdfs.getDocument(section.value.relationships.pdfFile.id)
         // WARNING: no reactivity to dependencies accessed after this first await (https://vueuse.org/core/computedAsync/#caveats)
         const page = await document?.getPage(pageNumber)
         const textContent = []
@@ -121,7 +121,7 @@ defineExpose({
     <template #left>
       <div class="h-100 overflow-hidden d-flex flex-column">
         <PdfNavigationControls :page @update:page="component?.changePage" :disabled="!component?.changePage" :pagesCount="textbookPagesCount">
-          <BButton secondary sm :disabled="!section" @click="sectionEditor!.show(section!.id)">&#9881;</BButton>
+          <BButton secondary sm :disabled="!section" @click="sectionEditor.show(section.id)">&#9881;</BButton>
         </PdfNavigationControls>
         <SectionEditor ref="sectionEditor" />
         <template v-if="section">
@@ -149,7 +149,7 @@ defineExpose({
               </div>
             </template>
             <template v-else>
-              <PdfNotLoaded :name="section.relationships!.pdfFile.relationships!.namings[0].attributes!.name" />
+              <PdfNotLoaded :name="section.relationships.pdfFile.relationships.namings[0].attributes.name" />
             </template>
           </BBusy>
         </template>

@@ -450,7 +450,7 @@ const adaptedData = computedAsync(
     }
     try {
       const adapted = await api.client.createOne('adaptedExercise', attributes, {})
-      return adapted.attributes!.adapted
+      return adapted.attributes.adapted
     } catch (e) {
       console.error(e)
       return null

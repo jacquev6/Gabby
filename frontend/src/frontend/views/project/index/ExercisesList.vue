@@ -47,17 +47,17 @@ function ellipsis(s: string) {
 </script>
 
 <template>
-  <template v-if="project.relationships!.textbooks.length || project.relationships!.exercises.length">
+  <template v-if="project.relationships.textbooks.length || project.relationships.exercises.length">
     <template v-if="independentExercises.length">
       <h3>{{ $t('independentExercises') }}</h3>
       <ul>
         <li v-for="exercise in independentExercises">
-          <strong>{{ exercise.attributes!.number }}</strong> {{ ellipsis(exercise.attributes!.instructions) }}
+          <strong>{{ exercise.attributes.number }}</strong> {{ ellipsis(exercise.attributes.instructions) }}
         </li>
       </ul>
     </template>
-    <template v-for="textbook in project.relationships!.textbooks">
-      <h3><RouterLink :to="{name: 'project-textbook-page-list-exercises', params: {projectId: project.id, textbookId: textbook.id, page: 1}}">{{ textbook.attributes!.title }}</RouterLink><template v-if="textbook.attributes!.publisher">, {{ textbook.attributes!.publisher }}</template><template v-if="textbook.attributes!.year"> ({{ textbook.attributes!.year }})</template></h3>
+    <template v-for="textbook in project.relationships.textbooks">
+      <h3><RouterLink :to="{name: 'project-textbook-page-list-exercises', params: {projectId: project.id, textbookId: textbook.id, page: 1}}">{{ textbook.attributes.title }}</RouterLink><template v-if="textbook.attributes.publisher">, {{ textbook.attributes.publisher }}</template><template v-if="textbook.attributes.year"> ({{ textbook.attributes.year }})</template></h3>
       <template v-if="exercisesByTextbookAndPage[textbook.id]">
         <ul v-for="[page, exercises] of Object.entries(exercisesByTextbookAndPage[textbook.id]?.pages)">
           <li>
@@ -65,10 +65,10 @@ function ellipsis(s: string) {
             <ul>
               <li v-for="exercise in exercises">
                 <RouterLink :to="{name: 'project-textbook-page-edit-exercise', params: {projectId: project.id, textbookId: textbook.id, page, exerciseId: exercise.id}}">
-                  <strong>{{ exercise.attributes!.number }}</strong>
+                  <strong>{{ exercise.attributes.number }}</strong>
                 </RouterLink>
-                {{ ellipsis(exercise.attributes!.instructions) }}
-                <em>{{ exercise.relationships!.adaptation? $t(exercise.relationships!.adaptation.type) : '' }}</em>
+                {{ ellipsis(exercise.attributes.instructions) }}
+                <em>{{ exercise.relationships.adaptation? $t(exercise.relationships.adaptation.type) : '' }}</em>
               </li>
             </ul>
           </li>

@@ -24,9 +24,9 @@ describe('ApiStore - Basic functionality', () => {
     expect(ping.inCache).to.be.true
     expect(ping.loading).to.be.false
     expect(ping.exists).to.be.true
-    expect(ping.attributes!.message).to.equal('NEW')
-    expect(ping.relationships!.prev).to.be.null
-    expect(ping.relationships!.next).to.have.length(0)
+    expect(ping.attributes.message).to.equal('NEW')
+    expect(ping.relationships.prev).to.be.null
+    expect(ping.relationships.next).to.have.length(0)
   })
 
   it("creates a ping with 'prev' relationship", async () => {
@@ -39,9 +39,9 @@ describe('ApiStore - Basic functionality', () => {
     expect(ping.inCache).to.be.true
     expect(ping.loading).to.be.false
     expect(ping.exists).to.be.true
-    expect(ping.attributes!.message).to.be.null
-    expect(ping.relationships!.prev).to.equal(prev)
-    expect(ping.relationships!.next).to.have.length(0)
+    expect(ping.attributes.message).to.be.null
+    expect(ping.relationships.prev).to.equal(prev)
+    expect(ping.relationships.next).to.have.length(0)
 
     expect(prev.inCache).to.be.false
   })
@@ -56,10 +56,10 @@ describe('ApiStore - Basic functionality', () => {
     expect(ping.inCache).to.be.true
     expect(ping.loading).to.be.false
     expect(ping.exists).to.be.true
-    expect(ping.attributes!.message).to.be.null
-    expect(ping.relationships!.prev).to.be.null
-    expect(ping.relationships!.next).to.have.length(1)
-    expect(ping.relationships!.next[0]).to.equal(next)
+    expect(ping.attributes.message).to.be.null
+    expect(ping.relationships.prev).to.be.null
+    expect(ping.relationships.next).to.have.length(1)
+    expect(ping.relationships.next[0]).to.equal(next)
 
     expect(next.inCache).to.be.false
   })
@@ -75,10 +75,10 @@ describe('ApiStore - Basic functionality', () => {
     expect(ping.inCache).to.be.true
     expect(ping.loading).to.be.false
     expect(ping.exists).to.be.true
-    expect(ping.attributes!.message).to.be.null
-    expect(ping.relationships!.prev).to.equal(prev)
-    expect(ping.relationships!.next).to.have.length(1)
-    expect(ping.relationships!.next[0]).to.equal(next)
+    expect(ping.attributes.message).to.be.null
+    expect(ping.relationships.prev).to.equal(prev)
+    expect(ping.relationships.next).to.have.length(1)
+    expect(ping.relationships.next[0]).to.equal(next)
 
     expect(prev.inCache).to.be.true
     expect(next.inCache).to.be.true
@@ -306,26 +306,26 @@ describe('ApiStore - Basic functionality', () => {
     expect(ping.loading).to.be.false
     expect(ping.exists).to.be.true
 
-    expect(ping.attributes!.message).to.equal('Hello 3')
+    expect(ping.attributes.message).to.equal('Hello 3')
 
-    console.assert(ping.relationships!.prev !== null)
-    expect(ping.relationships!.prev.type).to.equal('ping')
-    expect(ping.relationships!.prev.id).to.equal('2')
-    expect(ping.relationships!.prev.inCache).to.be.true
-    expect(ping.relationships!.prev.relationships!.next).to.have.length(1)
-    expect(ping.relationships!.prev.relationships!.next[0]).to.equal(ping)
+    console.assert(ping.relationships.prev !== null)
+    expect(ping.relationships.prev.type).to.equal('ping')
+    expect(ping.relationships.prev.id).to.equal('2')
+    expect(ping.relationships.prev.inCache).to.be.true
+    expect(ping.relationships.prev.relationships.next).to.have.length(1)
+    expect(ping.relationships.prev.relationships.next[0]).to.equal(ping)
 
-    expect(ping.relationships!.next).to.have.length(2)
-    expect(ping.relationships!.next[0].type).to.equal('ping')
-    expect(ping.relationships!.next[0].id).to.equal('4')
-    expect(ping.relationships!.next[0].inCache).to.be.true
-    expect(ping.relationships!.next[0].attributes!.message).to.equal('Hello 4')
-    expect(ping.relationships!.next[0].relationships!.prev).to.equal(ping)
-    expect(ping.relationships!.next[1].type).to.equal('ping')
-    expect(ping.relationships!.next[1].id).to.equal('5')
-    expect(ping.relationships!.next[1].inCache).to.be.true
-    expect(ping.relationships!.next[1].attributes!.message).to.equal('Hello 5')
-    expect(ping.relationships!.next[1].relationships!.prev).to.equal(ping)
+    expect(ping.relationships.next).to.have.length(2)
+    expect(ping.relationships.next[0].type).to.equal('ping')
+    expect(ping.relationships.next[0].id).to.equal('4')
+    expect(ping.relationships.next[0].inCache).to.be.true
+    expect(ping.relationships.next[0].attributes.message).to.equal('Hello 4')
+    expect(ping.relationships.next[0].relationships.prev).to.equal(ping)
+    expect(ping.relationships.next[1].type).to.equal('ping')
+    expect(ping.relationships.next[1].id).to.equal('5')
+    expect(ping.relationships.next[1].inCache).to.be.true
+    expect(ping.relationships.next[1].attributes.message).to.equal('Hello 5')
+    expect(ping.relationships.next[1].relationships.prev).to.equal(ping)
   })
 
   it("gets a list of pings from cache, then refreshes it, awaiting on '.refresh()'", async () => {
@@ -489,13 +489,13 @@ describe('ApiStore - Basic functionality', () => {
     await pings.refresh({include: ['prev', 'next']})
 
     expect(pings.items).to.have.length(1)
-    expect(pings.items[0].relationships!.prev?.inCache).to.be.true
-    expect(pings.items[0].relationships!.prev).to.equal(api.cache.getOne('ping', '2'))
-    expect(pings.items[0].relationships!.next).to.have.length(2)
-    expect(pings.items[0].relationships!.next[0].inCache).to.be.true
-    expect(pings.items[0].relationships!.next[0]).to.equal(api.cache.getOne('ping', '4'))
-    expect(pings.items[0].relationships!.next[1].inCache).to.be.true
-    expect(pings.items[0].relationships!.next[1]).to.equal(api.cache.getOne('ping', '5'))
+    expect(pings.items[0].relationships.prev?.inCache).to.be.true
+    expect(pings.items[0].relationships.prev).to.equal(api.cache.getOne('ping', '2'))
+    expect(pings.items[0].relationships.next).to.have.length(2)
+    expect(pings.items[0].relationships.next[0].inCache).to.be.true
+    expect(pings.items[0].relationships.next[0]).to.equal(api.cache.getOne('ping', '4'))
+    expect(pings.items[0].relationships.next[1].inCache).to.be.true
+    expect(pings.items[0].relationships.next[1]).to.equal(api.cache.getOne('ping', '5'))
   })
 
   it('gets a filtered list from auto, including related', async () => {
@@ -506,13 +506,13 @@ describe('ApiStore - Basic functionality', () => {
     await pings.fullyLoaded
 
     expect(pings.items).to.have.length(1)
-    expect(pings.items[0].relationships!.prev?.inCache).to.be.true
-    expect(pings.items[0].relationships!.prev).to.equal(api.cache.getOne('ping', '2'))
-    expect(pings.items[0].relationships!.next).to.have.length(2)
-    expect(pings.items[0].relationships!.next[0].inCache).to.be.true
-    expect(pings.items[0].relationships!.next[0]).to.equal(api.cache.getOne('ping', '4'))
-    expect(pings.items[0].relationships!.next[1].inCache).to.be.true
-    expect(pings.items[0].relationships!.next[1]).to.equal(api.cache.getOne('ping', '5'))
+    expect(pings.items[0].relationships.prev?.inCache).to.be.true
+    expect(pings.items[0].relationships.prev).to.equal(api.cache.getOne('ping', '2'))
+    expect(pings.items[0].relationships.next).to.have.length(2)
+    expect(pings.items[0].relationships.next[0].inCache).to.be.true
+    expect(pings.items[0].relationships.next[0]).to.equal(api.cache.getOne('ping', '4'))
+    expect(pings.items[0].relationships.next[1].inCache).to.be.true
+    expect(pings.items[0].relationships.next[1]).to.equal(api.cache.getOne('ping', '5'))
   })
 
   it('gets a filtered list from client, including related', async () => {
@@ -521,13 +521,13 @@ describe('ApiStore - Basic functionality', () => {
     const pings = await api.client.getAll('ping', {filters: {message: 'Hello 3'}, include: ['prev', 'next']})
 
     expect(pings.items).to.have.length(1)
-    expect(pings.items[0].relationships!.prev?.inCache).to.be.true
-    expect(pings.items[0].relationships!.prev).to.equal(api.cache.getOne('ping', '2'))
-    expect(pings.items[0].relationships!.next).to.have.length(2)
-    expect(pings.items[0].relationships!.next[0].inCache).to.be.true
-    expect(pings.items[0].relationships!.next[0]).to.equal(api.cache.getOne('ping', '4'))
-    expect(pings.items[0].relationships!.next[1].inCache).to.be.true
-    expect(pings.items[0].relationships!.next[1]).to.equal(api.cache.getOne('ping', '5'))
+    expect(pings.items[0].relationships.prev?.inCache).to.be.true
+    expect(pings.items[0].relationships.prev).to.equal(api.cache.getOne('ping', '2'))
+    expect(pings.items[0].relationships.next).to.have.length(2)
+    expect(pings.items[0].relationships.next[0].inCache).to.be.true
+    expect(pings.items[0].relationships.next[0]).to.equal(api.cache.getOne('ping', '4'))
+    expect(pings.items[0].relationships.next[1].inCache).to.be.true
+    expect(pings.items[0].relationships.next[1]).to.equal(api.cache.getOne('ping', '5'))
   })
 
   it('gets different paginated lists for different filters', async () => {
@@ -576,17 +576,17 @@ describe('ApiStore - Basic functionality', () => {
     const ping = await api.client.getOne('ping', '1')
 
     expect(ping.patching).to.be.false
-    expect(ping.attributes!.message).to.equal('Hello 1')
+    expect(ping.attributes.message).to.equal('Hello 1')
 
     const patched = ping.patch({message: 'HELLO 1'}, {})
 
     expect(ping.patching).to.be.true
-    expect(ping.attributes!.message).to.equal('Hello 1')
+    expect(ping.attributes.message).to.equal('Hello 1')
 
     await patched
 
     expect(ping.patching).to.be.false
-    expect(ping.attributes!.message).to.equal('HELLO 1')
+    expect(ping.attributes.message).to.equal('HELLO 1')
   })
 
   it("patches a never-heard-of existing ping's attributes", async () => {
@@ -597,7 +597,7 @@ describe('ApiStore - Basic functionality', () => {
     await ping.patch({message: 'HELLO 1'}, {})
     expect(ping.inCache).to.be.true
     expect(ping.exists).to.be.true
-    expect(ping.attributes!.message).to.equal('HELLO 1')
+    expect(ping.attributes.message).to.equal('HELLO 1')
   })
 
   it("patches a known existing ping's attributes", async () => {
@@ -608,7 +608,7 @@ describe('ApiStore - Basic functionality', () => {
     await ping.patch({message: 'HELLO 1'}, {})
     expect(ping.inCache).to.be.true
     expect(ping.exists).to.be.true
-    expect(ping.attributes!.message).to.equal('HELLO 1')
+    expect(ping.attributes.message).to.equal('HELLO 1')
   })
 
   it("patches a never-heard-of existing ping's 'prev' relationship", async () => {
@@ -621,7 +621,7 @@ describe('ApiStore - Basic functionality', () => {
     await ping.patch({}, {prev})
     expect(ping.inCache).to.be.true
     expect(ping.exists).to.be.true
-    expect(ping.relationships!.prev).to.equal(prev)
+    expect(ping.relationships.prev).to.equal(prev)
 
     expect(prev.inCache).to.be.false
   })
@@ -637,8 +637,8 @@ describe('ApiStore - Basic functionality', () => {
 
     expect(ping.inCache).to.be.true
     expect(ping.exists).to.be.true
-    expect(ping.relationships!.next).to.have.length(1)
-    expect(ping.relationships!.next[0]).to.equal(next)
+    expect(ping.relationships.next).to.have.length(1)
+    expect(ping.relationships.next[0]).to.equal(next)
 
     expect(next.inCache).to.be.false
   })
@@ -654,8 +654,8 @@ describe('ApiStore - Basic functionality', () => {
     await ping.patch({}, {prev, next: [next]}, {include: ['prev', 'next']})
     expect(ping.inCache).to.be.true
     expect(ping.exists).to.be.true
-    expect(ping.relationships!.next).to.have.length(1)
-    expect(ping.relationships!.next[0]).to.equal(next)
+    expect(ping.relationships.next).to.have.length(1)
+    expect(ping.relationships.next[0]).to.equal(next)
 
     expect(prev.inCache).to.be.true
     expect(next.inCache).to.be.true
@@ -793,17 +793,17 @@ describe('ApiStore - Reactivity', () => {
     await ping.value.loaded
 
     expect(counter).to.equal(1)
-    expect(ping.value.attributes!.message).to.equal('Hello 1')
+    expect(ping.value.attributes.message).to.equal('Hello 1')
 
     await ping.value.loaded
 
     expect(counter).to.equal(1)
-    expect(ping.value.attributes!.message).to.equal('Hello 1')
+    expect(ping.value.attributes.message).to.equal('Hello 1')
 
     await ping.value.loaded
 
     expect(counter).to.equal(1)
-    expect(ping.value.attributes!.message).to.equal('Hello 1')
+    expect(ping.value.attributes.message).to.equal('Hello 1')
   })
 
   it("makes sure 'getOne().inCache' is reactive", async () => {
@@ -1034,7 +1034,7 @@ describe('ApiStore - Authentication', () => {
     const api = useApiStore()
 
     const loggedOut1 = await api.client.createOne('ping', {}, {})
-    expect(loggedOut1.relationships!.createdBy).to.be.null
+    expect(loggedOut1.relationships.createdBy).to.be.null
 
     expect(api.auth.isAuthenticated.value).to.be.false
 
@@ -1043,23 +1043,23 @@ describe('ApiStore - Authentication', () => {
     expect(api.auth.isAuthenticated.value).to.be.true
 
     const loggedIn = await api.client.createOne('ping', {}, {})
-    expect(loggedIn.relationships!.createdBy!.type).to.equal('user')
-    expect(loggedIn.relationships!.createdBy!.id).to.equal('fvirvd')
-    expect(loggedIn.relationships!.createdBy!.inCache).to.be.false
+    expect(loggedIn.relationships.createdBy.type).to.equal('user')
+    expect(loggedIn.relationships.createdBy.id).to.equal('fvirvd')
+    expect(loggedIn.relationships.createdBy.inCache).to.be.false
 
     api.auth.logout()
 
     expect(api.auth.isAuthenticated.value).to.be.false
 
     const loggedOut2 = await api.client.createOne('ping', {}, {})
-    expect(loggedOut2.relationships!.createdBy).to.be.null
+    expect(loggedOut2.relationships.createdBy).to.be.null
   })
 
   it('sets token and logs out', async () => {
     const api = useApiStore()
 
     const loggedOut1 = await api.client.createOne('ping', {}, {})
-    expect(loggedOut1.relationships!.createdBy).to.be.null
+    expect(loggedOut1.relationships.createdBy).to.be.null
 
     expect(api.auth.isAuthenticated.value).to.be.false
 
@@ -1209,15 +1209,15 @@ describe('ApiStore - Application - 1', () => {
 
     const textbooks = await api.client.getAll('textbook')
     expect(textbooks.items.length).to.equal(1)
-    expect(textbooks.items[0].attributes!.title).to.equal('Français CE2')
+    expect(textbooks.items[0].attributes.title).to.equal('Français CE2')
 
     expect(api.cache.getOne('textbook', '0').inCache).to.be.false
-    expect(api.cache.getOne('textbook', 'klxufv').attributes!.title).to.equal('Français CE2')
-    expect(api.cache.getOne('textbook', 'klxufv').relationships!.sections[0].inCache).to.be.false
+    expect(api.cache.getOne('textbook', 'klxufv').attributes.title).to.equal('Français CE2')
+    expect(api.cache.getOne('textbook', 'klxufv').relationships.sections[0].inCache).to.be.false
 
     await api.client.getAll('section')
 
-    expect(api.cache.getOne('textbook', 'klxufv').relationships!.sections[0].attributes!.textbookStartPage).to.equal(6)
+    expect(api.cache.getOne('textbook', 'klxufv').relationships.sections[0].attributes.textbookStartPage).to.equal(6)
   })
 
   it('gets one textbook and its sections', async () => {
@@ -1227,10 +1227,10 @@ describe('ApiStore - Application - 1', () => {
     expect(api.cache.getOne('textbook', 'klxufv').inCache).to.be.false
 
     const textbook = await api.client.getOne('textbook', 'klxufv', {include: ['sections']})
-    expect(textbook.attributes!.title).to.equal('Français CE2')
+    expect(textbook.attributes.title).to.equal('Français CE2')
 
-    expect(api.cache.getOne('textbook', 'klxufv').attributes!.title).to.equal('Français CE2')
-    expect(api.cache.getOne('textbook', 'klxufv').relationships!.sections[0].attributes!.textbookStartPage).to.equal(6)
+    expect(api.cache.getOne('textbook', 'klxufv').attributes.title).to.equal('Français CE2')
+    expect(api.cache.getOne('textbook', 'klxufv').relationships.sections[0].attributes.textbookStartPage).to.equal(6)
   })
 
   it('keeps single included', async () => {
@@ -1239,7 +1239,7 @@ describe('ApiStore - Application - 1', () => {
 
     await api.client.getAll('textbook', {include: ['sections']})
 
-    expect(api.cache.getOne('textbook', 'klxufv').relationships!.sections[0].attributes!.textbookStartPage).to.equal(6)
+    expect(api.cache.getOne('textbook', 'klxufv').relationships.sections[0].attributes.textbookStartPage).to.equal(6)
   })
 
   it('keeps deep included', async () => {
@@ -1249,7 +1249,7 @@ describe('ApiStore - Application - 1', () => {
     await api.client.getAll('textbook', {include: ['sections.pdfFile.namings']})
 
     expect(
-      api.cache.getOne('textbook', 'klxufv').relationships!.sections[0].relationships!.pdfFile.relationships!.namings[0].attributes!.name).to.equal('test.pdf')
+      api.cache.getOne('textbook', 'klxufv').relationships.sections[0].relationships.pdfFile.relationships.namings[0].attributes.name).to.equal('test.pdf')
   })
 
   it('keeps multiple included', async () => {
@@ -1258,8 +1258,8 @@ describe('ApiStore - Application - 1', () => {
 
     await api.client.getAll('section', {include: ['textbook', 'pdfFile.namings']})
 
-    expect(api.cache.getOne('section', 'eyjahd').relationships!.textbook.attributes!.title).to.equal('Français CE2')
-    expect(api.cache.getOne('section', 'eyjahd').relationships!.pdfFile.relationships!.namings[0].attributes!.name).to.equal('test.pdf')
+    expect(api.cache.getOne('section', 'eyjahd').relationships.textbook.attributes.title).to.equal('Français CE2')
+    expect(api.cache.getOne('section', 'eyjahd').relationships.pdfFile.relationships.namings[0].attributes.name).to.equal('test.pdf')
   })
 
   it('paginates exercises', async () => {
@@ -1303,8 +1303,8 @@ describe('ApiStore - Application - 1', () => {
     )
 
     expect(newExercise.id).to.equal('vodhqn')
-    expect(newExercise.attributes!.instructions).to.equal('Do this')
-    expect(newExercise.attributes!.boundingRectangle).to.deep.equal({start: {x: 0, y: 1}, stop: {x: 2, y: 3}})
+    expect(newExercise.attributes.instructions).to.equal('Do this')
+    expect(newExercise.attributes.boundingRectangle).to.deep.equal({start: {x: 0, y: 1}, stop: {x: 2, y: 3}})
 
     expect(api.cache.getOne('textbook', 'klxufv').inCache).to.be.false
 
@@ -1335,9 +1335,9 @@ describe('ApiStore - Application - 1', () => {
     )
 
     expect(newExercise.id).to.equal('vodhqn')
-    expect(newExercise.attributes!.instructions).to.equal('Do that')
+    expect(newExercise.attributes.instructions).to.equal('Do that')
 
-    expect(api.cache.getOne('textbook', 'klxufv').attributes!.title).to.equal('Français CE2')
+    expect(api.cache.getOne('textbook', 'klxufv').attributes.title).to.equal('Français CE2')
 
     expect((await api.client.getAll('exercise', {filters: {textbook: 'klxufv', textbookPage: 6}})).items.length).to.equal(3)
   })
@@ -1349,8 +1349,8 @@ describe('ApiStore - Application - 1', () => {
     const updatedExercise = api.cache.getOne('exercise', 'wbqloc')
     await updatedExercise.patch({instructions: 'Do that'}, {})
 
-    expect(updatedExercise.attributes!.instructions).to.equal('Do that')
-    expect(api.cache.getOne('exercise', 'wbqloc').attributes!.instructions).to.equal('Do that')
+    expect(updatedExercise.attributes.instructions).to.equal('Do that')
+    expect(api.cache.getOne('exercise', 'wbqloc').attributes.instructions).to.equal('Do that')
   })
 
   it('updates an exercise and retrieves its textbook', async () => {
@@ -1366,10 +1366,10 @@ describe('ApiStore - Application - 1', () => {
       {include: ['textbook']},
     )
 
-    expect(updatedExercise.attributes!.instructions).to.equal('Do that')
-    expect(api.cache.getOne('exercise', 'wbqloc').attributes!.instructions).to.equal('Do that')
+    expect(updatedExercise.attributes.instructions).to.equal('Do that')
+    expect(api.cache.getOne('exercise', 'wbqloc').attributes.instructions).to.equal('Do that')
 
-    expect(api.cache.getOne('textbook', 'klxufv').attributes!.title).to.equal('Français CE2')
+    expect(api.cache.getOne('textbook', 'klxufv').attributes.title).to.equal('Français CE2')
   })
 
   it('deletes an exercise', async () => {
@@ -1402,8 +1402,8 @@ describe('ApiStore - Application - 2', () => {
 
     const exercise = await api.client.getOne('exercise', 'bylced', {include: ['adaptation']})
 
-    expect(exercise.attributes!.instructions).to.equal('Écris une phrase en respectant l\'ordre des classes grammaticales indiquées.')
-    expect(exercise.relationships!.adaptation).to.be.null
+    expect(exercise.attributes.instructions).to.equal('Écris une phrase en respectant l\'ordre des classes grammaticales indiquées.')
+    expect(exercise.relationships.adaptation).to.be.null
   })
 
   it('gets an exercise with "select things" adaptation', async () => {
@@ -1411,11 +1411,11 @@ describe('ApiStore - Application - 2', () => {
 
     const exercise = await api.client.getOne('exercise', 'vodhqn', {include: ['adaptation']})
 
-    expect(exercise.attributes!.instructions).to.equal('Relève dans le texte trois\n{sel1|déterminants}, un {sel2|nom propre}, quatre\n{sel3|noms communs} et trois {sel4|verbes}.')
-    expect(exercise.relationships!.adaptation!.type).to.equal('selectThingsAdaptation')
-    expect(exercise.relationships!.adaptation!.id).to.equal('fojjim')
-    console.assert(exercise.relationships!.adaptation!.type === 'selectThingsAdaptation')
-    expect((exercise.relationships!.adaptation as SelectThingsAdaptation).attributes!.colors).to.equal(4)
+    expect(exercise.attributes.instructions).to.equal('Relève dans le texte trois\n{sel1|déterminants}, un {sel2|nom propre}, quatre\n{sel3|noms communs} et trois {sel4|verbes}.')
+    expect(exercise.relationships.adaptation.type).to.equal('selectThingsAdaptation')
+    expect(exercise.relationships.adaptation.id).to.equal('fojjim')
+    console.assert(exercise.relationships.adaptation.type === 'selectThingsAdaptation')
+    expect((exercise.relationships.adaptation as SelectThingsAdaptation).attributes.colors).to.equal(4)
   })
 
   it('gets an exercise with "fill with free text" adaptation', async () => {
@@ -1423,9 +1423,9 @@ describe('ApiStore - Application - 2', () => {
 
     const exercise = await api.client.getOne('exercise', 'dymwin', {include: ['adaptation']})
 
-    expect(exercise.attributes!.instructions).to.equal('Ajoute le suffixe –eur aux verbes.\nIndique la classe des mots fabriqués.')
-    expect(exercise.relationships!.adaptation!.type).to.equal('fillWithFreeTextAdaptation')
-    expect((exercise.relationships!.adaptation as FillWithFreeTextAdaptation).attributes!.placeholder).to.equal('…')
+    expect(exercise.attributes.instructions).to.equal('Ajoute le suffixe –eur aux verbes.\nIndique la classe des mots fabriqués.')
+    expect(exercise.relationships.adaptation.type).to.equal('fillWithFreeTextAdaptation')
+    expect((exercise.relationships.adaptation as FillWithFreeTextAdaptation).attributes.placeholder).to.equal('…')
   })
 
   it('creates an exercise and its adaptation at once', async () => {
@@ -1465,8 +1465,8 @@ describe('ApiStore - Application - 2', () => {
     // @todo Return up-to-date objects in batch response, then remove next line
     await exercise.refresh()
 
-    expect(exercise.relationships!.adaptation!.type).to.equal('selectThingsAdaptation')
-    expect(exercise.relationships!.adaptation.attributes!.colors).to.equal(5)
+    expect(exercise.relationships.adaptation.type).to.equal('selectThingsAdaptation')
+    expect(exercise.relationships.adaptation.attributes.colors).to.equal(5)
   })
 
   it('updates an adaptation', async () => {
@@ -1475,19 +1475,19 @@ describe('ApiStore - Application - 2', () => {
     const adapted = api.cache.getOne('selectThingsAdaptation', 'fojjim')
     await adapted.patch({colors: 17}, {})
 
-    expect(adapted.attributes!.colors).to.equal(17)
+    expect(adapted.attributes.colors).to.equal(17)
   })
 
   it('changes the type of an adaptation', async () => {
     const api = useApiStore()
 
     const previous = await api.client.getOne('selectThingsAdaptation', 'fojjim')
-    expect(previous.relationships!.exercise.id).to.equal('vodhqn')
+    expect(previous.relationships.exercise.id).to.equal('vodhqn')
 
-    const adapted = await api.client.createOne('fillWithFreeTextAdaptation', {placeholder: '...'}, {exercise: previous.relationships!.exercise}, {include: ['exercise']})
+    const adapted = await api.client.createOne('fillWithFreeTextAdaptation', {placeholder: '...'}, {exercise: previous.relationships.exercise}, {include: ['exercise']})
 
-    expect(adapted.attributes!.placeholder).to.equal('...')
-    expect(adapted.relationships!.exercise.attributes!.instructions).to.equal('Relève dans le texte trois\n{sel1|déterminants}, un {sel2|nom propre}, quatre\n{sel3|noms communs} et trois {sel4|verbes}.')
+    expect(adapted.attributes.placeholder).to.equal('...')
+    expect(adapted.relationships.exercise.attributes.instructions).to.equal('Relève dans le texte trois\n{sel1|déterminants}, un {sel2|nom propre}, quatre\n{sel3|noms communs} et trois {sel4|verbes}.')
 
     await previous.refresh()
     expect(previous.exists).to.be.false

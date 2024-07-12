@@ -13,7 +13,7 @@ const projects = api.auto.getAll('project')
     <template v-if="projects.items.length">
       <ul>
         <li v-for="project in projects.items" :key="project.id">
-          <RouterLink :to="{name: 'project', params: {projectId: project.id}}">{{ project.attributes!.title }}</RouterLink>
+          <RouterLink :to="{name: 'project', params: {projectId: project.id}}">{{ project.attributes.title }}</RouterLink>
         </li>
       </ul>
     </template>

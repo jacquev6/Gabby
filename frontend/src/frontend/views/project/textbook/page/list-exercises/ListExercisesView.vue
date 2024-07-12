@@ -39,7 +39,7 @@ function changePage(page: number) {
 const greyRectangles = computed(() => {
   const rectangles = props.exercises.items
     .filter(exercise => exercise.exists)
-    .map(exercise => exercise.attributes!.boundingRectangle)
+    .map(exercise => exercise.attributes.boundingRectangle)
     .filter((x): x is Rectangle => x !== null)
 
   if (rectangles.length > 0) {
