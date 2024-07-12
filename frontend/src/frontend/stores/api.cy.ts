@@ -489,7 +489,7 @@ describe('ApiStore - Basic functionality', () => {
     await pings.refresh({include: ['prev', 'next']})
 
     expect(pings.items).to.have.length(1)
-    expect(pings.items[0].relationships.prev?.inCache).to.be.true
+    expect(pings.items[0].relationships.prev.inCache).to.be.true
     expect(pings.items[0].relationships.prev).to.equal(api.cache.getOne('ping', '2'))
     expect(pings.items[0].relationships.next).to.have.length(2)
     expect(pings.items[0].relationships.next[0].inCache).to.be.true
@@ -506,7 +506,7 @@ describe('ApiStore - Basic functionality', () => {
     await pings.fullyLoaded
 
     expect(pings.items).to.have.length(1)
-    expect(pings.items[0].relationships.prev?.inCache).to.be.true
+    expect(pings.items[0].relationships.prev.inCache).to.be.true
     expect(pings.items[0].relationships.prev).to.equal(api.cache.getOne('ping', '2'))
     expect(pings.items[0].relationships.next).to.have.length(2)
     expect(pings.items[0].relationships.next[0].inCache).to.be.true
@@ -521,7 +521,7 @@ describe('ApiStore - Basic functionality', () => {
     const pings = await api.client.getAll('ping', {filters: {message: 'Hello 3'}, include: ['prev', 'next']})
 
     expect(pings.items).to.have.length(1)
-    expect(pings.items[0].relationships.prev?.inCache).to.be.true
+    expect(pings.items[0].relationships.prev.inCache).to.be.true
     expect(pings.items[0].relationships.prev).to.equal(api.cache.getOne('ping', '2'))
     expect(pings.items[0].relationships.next).to.have.length(2)
     expect(pings.items[0].relationships.next[0].inCache).to.be.true
