@@ -5,6 +5,7 @@ import { useI18n } from 'vue-i18n'
 
 import PasswordResetModal from '$frontend/components/PasswordResetModal.vue'
 import Navbar from '$frontend/components/Navbar.vue'
+import bc from '$frontend/components/breadcrumbs'
 
 
 defineProps<{
@@ -15,7 +16,7 @@ defineProps<{
 const i18n = useI18n()
 
 const title = computed(() => ['MALIN', i18n.t('resetPasswordTitle')].join(' - '))
-const breadcrumbs = computed(() => [{title: i18n.t('home'), to: '/'}])
+const breadcrumbs = computed(() => bc.last(i18n.t('home')))
 </script>
 
 <template>

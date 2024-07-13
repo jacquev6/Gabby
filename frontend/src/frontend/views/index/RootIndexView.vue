@@ -5,6 +5,7 @@ import { BRow, BCol } from '$frontend/components/opinion/bootstrap'
 import CreateProjectForm from './CreateProjectForm.vue'
 import ProjectsList from './ProjectsList.vue'
 import type { Project } from '$frontend/stores/api'
+import bc from '$frontend/components/breadcrumbs'
 
 
 const router = useRouter()
@@ -15,7 +16,7 @@ function goToProject(project: Project) {
 
 defineExpose({
   title: [],
-  breadcrumbs: [],
+  breadcrumbs: bc.empty,
 })
 </script>
 

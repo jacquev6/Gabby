@@ -14,6 +14,7 @@ import TwoResizableColumns from '$frontend/components/TwoResizableColumns.vue'
 import { useApiStore, type Project, type Textbook, type InCache, type Exists } from '$frontend/stores/api'
 import { makeExerciseCreationHistory } from './ExerciseCreationHistory'
 import type { Rectangle } from './RectanglesHighlighter.vue'
+import bc from '$frontend/components/breadcrumbs'
 
 
 const props = defineProps<{
@@ -108,7 +109,7 @@ const exerciseCreationHistory = makeExerciseCreationHistory()
 
 defineExpose({
   title: computed(() => [`Page ${props.page}`]),
-  breadcrumbs: computed(() => []),
+  breadcrumbs: computed(() => bc.empty),
   handlesScrolling: true,
 })
 </script>

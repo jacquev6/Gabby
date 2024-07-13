@@ -4,6 +4,8 @@ import { useI18n } from 'vue-i18n'
 
 import { useApiStore } from '$frontend/stores/api'
 import { BBusy } from '$frontend/components/opinion/bootstrap'
+import type { Breadcrumbs } from '$frontend/components/breadcrumbs'
+import bc from '$frontend/components/breadcrumbs'
 
 
 const props = defineProps<{
@@ -14,7 +16,7 @@ const i18n = useI18n()
 
 const api = useApiStore()
 
-const component = ref<null | { title: string, breadcrumbs: [], handlesScrolling?: boolean }>(null)
+const component = ref<null | { title: string, breadcrumbs: Breadcrumbs, handlesScrolling?: boolean }>(null)
 
 const project = computed(() => api.auto.getOne('project', props.projectId, {include: ['textbooks', 'exercises.textbook']}))
 
@@ -37,19 +39,17 @@ const title = computed(() => {
 
 const breadcrumbs = computed(() => {
   if (project.value.loading) {
-    return []
+    return bc.empty
   } else if (project.value.inCache && project.value.exists) {
     console.assert(project.value.attributes !== undefined)
-    const componentBreadcrumbs = component.value ? component.value.breadcrumbs : []
-    return [
-      {
-        title: project.value.attributes.title,
-        to: {name: 'project', params: {projectId: props.projectId}},
-      },
-      ...componentBreadcrumbs,
-    ]
+    const componentBreadcrumbs = component.value ? component.value.breadcrumbs : bc.empty
+    return bc.prepend(
+      project.value.attributes.title,
+      {name: 'project', params: {projectId: props.projectId}},
+      componentBreadcrumbs,
+    )
   } else {
-    return [{title: i18n.t('projectNotFound')}]
+    return bc.last(i18n.t('projectNotFound'))
   }
 })
 

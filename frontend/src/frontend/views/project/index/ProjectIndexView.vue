@@ -11,6 +11,7 @@ import PdfPreview from '$frontend/components/PdfPreview.vue'
 import type { Project } from '$frontend/stores/api'
 import type { InfoDoc } from '$frontend/stores/pdfs'
 import { useApiStore } from '$/frontend/stores/api'
+import bc from '$frontend/components/breadcrumbs'
 
 
 const router = useRouter()
@@ -29,7 +30,7 @@ const pdfToPreview = ref<InfoDoc | null>(null)
 
 defineExpose({
   title: [],
-  breadcrumbs: [],
+  breadcrumbs: bc.empty,
 })
 </script>
 

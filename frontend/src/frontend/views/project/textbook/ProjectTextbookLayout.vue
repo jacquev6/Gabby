@@ -5,6 +5,8 @@ import { useI18n } from 'vue-i18n'
 import { useApiStore } from '$frontend/stores/api'
 import { BBusy } from '$frontend/components/opinion/bootstrap'
 import type { Project, InCache, Exists } from '$frontend/stores/api'
+import type { Breadcrumbs } from '$frontend/components/breadcrumbs'
+import bc from '$frontend/components/breadcrumbs'
 
 
 const props = defineProps<{
@@ -17,7 +19,7 @@ const i18n = useI18n()
 
 const api = useApiStore()
 
-const component = ref<null | { title: string, breadcrumbs: [], handlesScrolling?: boolean }>(null)
+const component = ref<null | { title: string, breadcrumbs: Breadcrumbs, handlesScrolling?: boolean }>(null)
 
 const textbook = computed(() => api.auto.getOne('textbook', props.textbookId, {include: ['sections.pdfFile.namings']}))
 
@@ -42,18 +44,16 @@ const title = computed(() => {
 
 const breadcrumbs = computed(() => {
   if (textbook.value.loading) {
-    return []
+    return bc.empty
   } else if (textbook.value.inCache && textbook.value.exists && textbookBelongsToProject.value) {
-    const componentBreadcrumbs = component.value ? component.value.breadcrumbs : []
-    return [
-      {
-        title: textbook.value.attributes.title,
-        to: {name: 'textbook', params: {textbookId: props.textbookId}},
-      },
-      ...componentBreadcrumbs,
-    ]
+    const componentBreadcrumbs = component.value ? component.value.breadcrumbs : bc.empty
+    return bc.prepend(
+      textbook.value.attributes.title,
+      {name: 'textbook', params: {textbookId: props.textbookId}},
+      componentBreadcrumbs,
+    )
   } else {
-    return [{title: i18n.t('textbookNotFound')}]
+    return bc.last(i18n.t('textbookNotFound'))
   }
 })
 
