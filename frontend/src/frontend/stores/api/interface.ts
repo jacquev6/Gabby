@@ -89,38 +89,51 @@ export type Operations<ItemType extends ItemTypes> = {
 }
 
 export type Item<ItemType extends ItemTypes> = ({
-  type: ItemType
-  id: string
-  inCache: boolean
-  exists?: boolean
-  relationships?: Readonly<Operations<ItemType>['gettableRelationships']>
-  attributes?: Readonly<Operations<ItemType>['gettableAttributes']>
+  readonly type: ItemType
+  readonly id: string
 
-  busy: boolean
-  loading: boolean
-  loaded: Promise<void>
+  readonly busy: boolean
+  readonly loading: boolean
+  readonly loaded: Promise<void>
   refresh(inclusionOptions?: InclusionOptions): Promise<void>
 }) & (Operations<ItemType>['patchable'] extends false ? {} : {
-  patching: boolean
+  readonly patching: boolean
   patch(attributes: Operations<ItemType>['patchableAttributes'], relationships: Operations<ItemType>['patchableRelationships'], inclusionOptions?: InclusionOptions): Promise<void>
 }) & (Operations<ItemType>['deletable'] extends false ? {} : {
-  deleting: boolean
+  readonly deleting: boolean
   delete(): Promise<void>
+}) & ({
+  inCache: false
+  exists?: boolean
+} | {
+  inCache: true
+  exists: false
+} | {
+  inCache: true
+  exists: true
+  // @todo Consider bringing these down, to access e.g. 'ping.attributes.message' directly as 'ping.message'
+  readonly relationships: Readonly<Operations<ItemType>['gettableRelationships']>
+  readonly attributes: Readonly<Operations<ItemType>['gettableAttributes']>
 })
 
+export type InCache = { inCache: true }
+
+export type Exists = { exists: true }
+
 export type List<ItemType extends ItemTypes> = {
-  inCache: boolean
+  readonly inCache: boolean
 
-  items: Item<ItemType>[]  // @todo Maybe List<> should extend ArrayLike<> instead of having an 'items' property?
+  // @todo Consider having List<> extend ArrayLike<> instead of having an 'items' property?
+  readonly items: Readonly<(Item<ItemType> & InCache)[]>
 
-  loading: boolean
-  fullyLoaded: Promise<void>
-  pageLoaded: Promise<void>
+  readonly loading: boolean
+  readonly fullyLoaded: Promise<void>
+  readonly pageLoaded: Promise<void>
   refresh(inclusionOptions?: InclusionOptions): Promise<void>
 }
 
 export type ApiStore = {
-  auth: {
+  readonly auth: {
     login(username: string, password: string, options?: {validity: string | null,expiresSoonMargin: number, logoutMargin: number}): Promise<boolean>
     logout(): void
     setToken(accessToken: string): void
@@ -128,18 +141,18 @@ export type ApiStore = {
     readonly token: Ref<string | null>
     readonly expiresSoon: Ref<boolean>
   }
-  cache: {
+  readonly cache: {
     getOne<ItemType extends ItemTypes>(type: ItemType, id: string, inclusionOptions?: InclusionOptions): Item<ItemType>
     getAll<ItemType extends ItemTypes>(type: ItemType, selectionOptions?: SelectionOptions): List<ItemType>
   }
-  auto: {
+  readonly auto: {
     getOne<ItemType extends ItemTypes>(type: ItemType, id: string, inclusionOptions?: InclusionOptions): Item<ItemType>
     getAll<ItemType extends ItemTypes>(type: ItemType, inclusionAndSelectionOptions?: InclusionAndSelectionOptions): List<ItemType>
   }
-  client: {
-    createOne<ItemType extends ItemTypes>(type: ItemType, attributes: Operations<ItemType>['creatableAttributes'], relationships: Operations<ItemType>['creatableRelationships'], inclusionOptions?: InclusionOptions): Promise<Item<ItemType>>
-    getOne<ItemType extends ItemTypes>(type: ItemType, id: string, inclusionOptions?: InclusionOptions): Promise<Item<ItemType>>
-    getAll<ItemType extends ItemTypes>(type: ItemType, inclusionAndSelectionOptions?: InclusionAndSelectionOptions): Promise<List<ItemType>>
+  readonly client: {
+    createOne<ItemType extends ItemTypes>(type: ItemType, attributes: Operations<ItemType>['creatableAttributes'], relationships: Operations<ItemType>['creatableRelationships'], inclusionOptions?: InclusionOptions): Promise<Item<ItemType> & InCache>
+    getOne<ItemType extends ItemTypes>(type: ItemType, id: string, inclusionOptions?: InclusionOptions): Promise<Item<ItemType> & InCache>
+    getAll<ItemType extends ItemTypes>(type: ItemType, inclusionAndSelectionOptions?: InclusionAndSelectionOptions): Promise<List<ItemType> & InCache>
     batch(...operations: any/* @todo Type */): Promise<any/* @todo Type */>
   }
 }

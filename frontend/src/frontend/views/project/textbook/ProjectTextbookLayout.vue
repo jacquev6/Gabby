@@ -4,11 +4,11 @@ import { useI18n } from 'vue-i18n'
 
 import { useApiStore } from '$frontend/stores/api'
 import { BBusy } from '$frontend/components/opinion/bootstrap'
-import type { Project } from '$frontend/stores/api'
+import type { Project, InCache, Exists } from '$frontend/stores/api'
 
 
 const props = defineProps<{
-  project: Project,
+  project: Project & InCache & Exists,
   refreshProject(): void,
   textbookId: string,
 }>()
@@ -27,13 +27,12 @@ function refreshTextbook() {
 }
 
 // @todo Move this check (that the textbook belongs to the project) to the backend, probably by adding a *required* query parameter 'filter[project]'
-const textbookExists = computed(() => textbook.value.exists && textbook.value.relationships && textbook.value.relationships.project.id === props.project.id)
+const textbookBelongsToProject = computed(() => textbook.value.inCache && textbook.value.exists && textbook.value.relationships && textbook.value.relationships.project.id === props.project.id)
 
 const title = computed(() => {
   if (textbook.value.loading) {
     return []
-  } else if (textbookExists.value) {
-    console.assert(textbook.value.attributes !== undefined)
+  } else if (textbook.value.inCache && textbook.value.exists && textbookBelongsToProject.value) {
     const componentTitle = component.value ? component.value.title : []
     return [textbook.value.attributes.title, ...componentTitle]
   } else {
@@ -44,8 +43,7 @@ const title = computed(() => {
 const breadcrumbs = computed(() => {
   if (textbook.value.loading) {
     return []
-  } else if (textbookExists.value) {
-    console.assert(textbook.value.attributes !== undefined)
+  } else if (textbook.value.inCache && textbook.value.exists && textbookBelongsToProject.value) {
     const componentBreadcrumbs = component.value ? component.value.breadcrumbs : []
     return [
       {
@@ -72,7 +70,7 @@ defineExpose({
 
 <template>
   <BBusy :busy="textbook.loading" showWhileBusy="afterNotBusy" size="20em" :class="class_">
-    <template v-if="textbookExists">
+    <template v-if="textbookBelongsToProject">
       <RouterView v-slot="{ Component }">
         <component
           :is="Component" ref="component"

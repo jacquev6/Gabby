@@ -7,7 +7,7 @@ import { makeRequester } from './requester'
 import type { InclusionOptions, SelectionOptions, InclusionAndSelectionOptions, Operations } from './interface'
 import type { Items } from './items'
 import type { Lists } from './lists'
-import type { ItemTypes } from './interface'
+import type { ItemTypes, List, Item, InCache } from './interface'
 
 
 function makeAuth(baseUrl: string, token: Ref<string | null>, items: Items, lists: Lists) {
@@ -115,17 +115,17 @@ function makeClient(items: Items, lists: Lists) {
   return {
     async createOne<ItemType extends ItemTypes>(type: ItemType, attributes: Operations<ItemType>['creatableAttributes'], relationships: Operations<ItemType>['creatableRelationships'], inclusionOptions?: InclusionOptions) {
       const item = await items.create(type, attributes, relationships, inclusionOptions)
-      return item
+      return item as Item<ItemType> & InCache
     },
     async getOne<ItemType extends ItemTypes>(type: ItemType, id: string, inclusionOptions?: InclusionOptions) {
       const item = items.get(type, id)
       await item.refresh(inclusionOptions)
-      return item
+      return item as Item<ItemType> & InCache
     },
-    async getAll(type: string, inclusionAndSelectionOptions?: InclusionAndSelectionOptions) {
+    async getAll<ItemType extends ItemTypes>(type: ItemType, inclusionAndSelectionOptions?: InclusionAndSelectionOptions) {
       const list = lists.get(type, inclusionAndSelectionOptions || {})
       await list.refresh(inclusionAndSelectionOptions)
-      return list
+      return list as List<ItemType> & InCache
     },
     async batch(...operations: any/* @todo Type */) {
       return items.batch(operations)

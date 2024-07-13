@@ -3,11 +3,11 @@ import { ref } from 'vue'
 
 import ProjectForm from '$frontend/components/ProjectForm.vue'
 import { BButton } from '$frontend/components/opinion/bootstrap'
-import type { Project } from '$frontend/stores/api'
+import type { Project, InCache, Exists } from '$frontend/stores/api'
 
 
 defineProps<{
-  project: Project,
+  project: Project & InCache & Exists,
 }>()
 
 const editing = ref(false)

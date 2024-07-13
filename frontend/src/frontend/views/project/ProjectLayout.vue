@@ -26,7 +26,7 @@ function refreshProject() {
 const title = computed(() => {
   if (project.value.loading) {
     return []
-  } else if (project.value.exists) {
+  } else if (project.value.inCache && project.value.exists) {
     console.assert(project.value.attributes !== undefined)
     const componentTitle = component.value ? component.value.title : []
     return [project.value.attributes.title, ...componentTitle]
@@ -38,7 +38,7 @@ const title = computed(() => {
 const breadcrumbs = computed(() => {
   if (project.value.loading) {
     return []
-  } else if (project.value.exists) {
+  } else if (project.value.inCache && project.value.exists) {
     console.assert(project.value.attributes !== undefined)
     const componentBreadcrumbs = component.value ? component.value.breadcrumbs : []
     return [
@@ -66,7 +66,7 @@ defineExpose({
 
 <template>
   <BBusy :busy="project.loading" showWhileBusy="afterNotBusy" size="20em" :class="class_">
-    <template v-if="project.exists"> <!-- @todo Start loading the textbook earlier (currently, it has to wait until the project is loaded) -->
+    <template v-if="project.inCache && project.exists"> <!-- @todo Start loading the textbook earlier (currently, it has to wait until the project is loaded) -->
       <RouterView v-slot="{ Component }">
         <component
           :is="Component" ref="component"

@@ -33,7 +33,7 @@ watch(
 
 <template>
   <FloatingModal
-    v-if="show" @shown="selectedText.focus()" @hidden="show = false"
+    v-if="show" @shown="selectedText?.focus()" @hidden="show = false"
     :title="$t('selectedText')"
     :reference
   >

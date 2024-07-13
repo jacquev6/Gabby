@@ -6,7 +6,7 @@ import { BBusy, BButton } from '$frontend/components/opinion/bootstrap'
 import ExercisesList from './ExercisesList.vue'
 import type { Exercise, Project, Textbook } from '$frontend/stores/api'
 import type { ExerciseCreationHistory } from '../ExerciseCreationHistory'
-import type { List } from '$frontend/stores/api'
+import type { List, InCache, Exists } from '$frontend/stores/api'
 import type { Rectangle } from '../RectanglesHighlighter.vue'
 
 
@@ -38,7 +38,7 @@ function changePage(page: number) {
 
 const greyRectangles = computed(() => {
   const rectangles = props.exercises.items
-    .filter(exercise => exercise.exists)
+    .filter((exercise): exercise is Exercise & InCache & Exists => exercise.inCache && exercise.exists)
     .map(exercise => exercise.attributes.boundingRectangle)
     .filter((x): x is Rectangle => x !== null)
 

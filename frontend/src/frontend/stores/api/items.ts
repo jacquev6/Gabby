@@ -162,7 +162,7 @@ export function makeItems(requester: Requester) {
         processResponse(await requester.patchItem(this.type, this.id, attributes as any/* @todo Type */, relationships as any/* @todo Type */, inclusionOptions || {}))
         this._reactive.patching = false
       },
-    }
+    } as CachedItem<ItemType>  // Type assertion required because of dynamic relation between 'inCache', 'exists', and 'attributes'/'relationships'
   }
 
   function processResponse(response: RequesterItemResponse) {
@@ -178,6 +178,17 @@ export function makeItems(requester: Requester) {
     cached._reactive.exists = item.exists
     cached._reactive.attributes = item.attributes as any/* @todo Type */
     cached._reactive.relationships = item.relationships as any/* @todo Type */
+    if (item.relationships) {
+      for (const relationship of Object.values(item.relationships)) {
+        if (Array.isArray(relationship)) {
+          for (const related of relationship) {
+            getItem(related.type as any/* @todo Type */, related.id)._reactive.exists = true
+          }
+        } else if (relationship !== null) {
+          getItem(relationship.type as any/* @todo Type */, relationship.id)._reactive.exists = true
+        }
+      }
+    }
     return cached
   }
 

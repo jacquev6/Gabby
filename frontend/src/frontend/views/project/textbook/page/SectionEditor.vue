@@ -54,7 +54,7 @@ function show(id: string) {
 
   sectionId.value = id
   const section = api.cache.getOne('section', id)
-  console.assert(section.attributes !== undefined)
+  console.assert(section.inCache && section.exists)
 
   pdfFileFirstPage.value = section.attributes.pdfFileStartPage
   pdfFileLastPage.value = section.attributes.pdfFileStartPage + section.attributes.pagesCount - 1

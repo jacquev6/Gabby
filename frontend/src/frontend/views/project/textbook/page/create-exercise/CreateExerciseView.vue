@@ -6,7 +6,7 @@ import { BButton } from '$frontend/components/opinion/bootstrap'
 import ExerciseForm from '$frontend/components/ExerciseForm.vue'
 import TwoResizableColumns from '$frontend/components/TwoResizableColumns.vue'
 import ExerciseTools from '../ExerciseTools.vue'
-import type { Project, Textbook, Section, Exercise } from '$frontend/stores/api'
+import type { Project, Textbook, Section, Exercise, InCache, Exists } from '$frontend/stores/api'
 import AdaptedExercise from '../AdaptedExercise.vue'
 import type { ExerciseCreationHistory } from '../ExerciseCreationHistory'
 import type { List } from '$frontend/stores/api'
@@ -16,13 +16,13 @@ import type { Rectangle } from '../RectanglesHighlighter.vue'
 type CreateExercise = () => Promise<{exercise: Exercise, suggestedNumber: string}>
 
 const props = defineProps<{
-  project: Project,
-  textbook: Textbook,
-  pdf: any/* @todo Type */,
-  section: Section | null,
-  page: number,
+  project: Project & InCache & Exists
+  textbook: Textbook & InCache & Exists
+  pdf: any/* @todo Type */
+  section: Section | null
+  page: number
   exercises: List<'exercise'>
-  exerciseCreationHistory: ExerciseCreationHistory,
+  exerciseCreationHistory: ExerciseCreationHistory
 }>()
 
 const router = useRouter()
@@ -63,7 +63,7 @@ function changePage(page: number) {
 
 const greyRectangles = computed(() => {
   const rectangles = props.exercises.items
-    .filter(exercise => exercise.exists)
+    .filter((exercise): exercise is Exercise & InCache & Exists => exercise.inCache && exercise.exists)
     .map(exercise => exercise.attributes.boundingRectangle)
     .filter((x): x is Rectangle => x !== null)
 

@@ -3,11 +3,11 @@ import { ref } from 'vue'
 
 import { BButton } from '$frontend/components/opinion/bootstrap'
 import ExerciseForm from '$frontend/components/ExerciseForm.vue'
-import type { Project, Exercise } from '$frontend/stores/api'
+import type { Project, Exercise, InCache, Exists } from '$frontend/stores/api'
 
 
 defineProps<{
-  project: Project,
+  project: Project & InCache & Exists,
 }>()
 
 const emit = defineEmits<{

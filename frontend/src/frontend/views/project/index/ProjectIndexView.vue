@@ -34,33 +34,35 @@ defineExpose({
 </script>
 
 <template>
-  <EditableProjectHeader :project />
-  <p>{{ $t('download') }} <a :href="`/api/project-${project.id}.html?token=${api.auth.token.value}`">{{ $t('theExportedHtml') }}</a>.</p>
-  <p>{{ $t('download') }} <a :href="`/api/project-${project.id}-extraction-report.json?token=${api.auth.token.value}`" download>{{ $t('theExtractionReport') }}</a>.</p>
-  <BRow>
-    <BCol>
-      <h2>{{ $t('newTextbook') }}</h2>
-      <BRow>
-        <BCol>
-          <CreateTextbookForm
-            :projectId="project.id"
-            @loadedPdf="pdf => pdfToPreview = pdf"
-            @unloadedPdf="pdfToPreview = null"
-            @created="goToTextbook"
-          />
-        </BCol>
-        <BCol v-if="pdfToPreview !== null" :w="6">
-          <PdfPreview :pdf="pdfToPreview.document as any/* @todo Understand and fix typing issue*/" />
-        </BCol>
-      </BRow>
-    </BCol>
-    <BCol v-if="pdfToPreview === null">
-      <h2>{{ $t('newIndependentExercise') }}</h2>
-      <CreateExerciseForm :project @created="refreshProject" />
-    </BCol>
-    <BCol :w="4">
-      <h2>{{ $t('existingTextbooksAndExercises') }}</h2>
-      <ExercisesList :project />
-    </BCol>
-  </BRow>
+  <template v-if="project.inCache && project.exists">
+    <EditableProjectHeader :project />
+    <p>{{ $t('download') }} <a :href="`/api/project-${project.id}.html?token=${api.auth.token.value}`">{{ $t('theExportedHtml') }}</a>.</p>
+    <p>{{ $t('download') }} <a :href="`/api/project-${project.id}-extraction-report.json?token=${api.auth.token.value}`" download>{{ $t('theExtractionReport') }}</a>.</p>
+    <BRow>
+      <BCol>
+        <h2>{{ $t('newTextbook') }}</h2>
+        <BRow>
+          <BCol>
+            <CreateTextbookForm
+              :projectId="project.id"
+              @loadedPdf="pdf => pdfToPreview = pdf"
+              @unloadedPdf="pdfToPreview = null"
+              @created="goToTextbook"
+            />
+          </BCol>
+          <BCol v-if="pdfToPreview !== null" :w="6">
+            <PdfPreview :pdf="pdfToPreview.document as any/* @todo Understand and fix typing issue*/" />
+          </BCol>
+        </BRow>
+      </BCol>
+      <BCol v-if="pdfToPreview === null">
+        <h2>{{ $t('newIndependentExercise') }}</h2>
+        <CreateExerciseForm :project @created="refreshProject" />
+      </BCol>
+      <BCol :w="4">
+        <h2>{{ $t('existingTextbooksAndExercises') }}</h2>
+        <ExercisesList :project />
+      </BCol>
+    </BRow>
+  </template>
 </template>

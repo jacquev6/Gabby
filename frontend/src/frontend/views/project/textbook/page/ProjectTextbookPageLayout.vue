@@ -11,15 +11,15 @@ import SectionEditor from './SectionEditor.vue'
 import TextPicker from './TextPicker.vue'
 import RectanglesHighlighter from './RectanglesHighlighter.vue'
 import TwoResizableColumns from '$frontend/components/TwoResizableColumns.vue'
-import { useApiStore, type Project, type Textbook } from '$frontend/stores/api'
+import { useApiStore, type Project, type Textbook, type InCache, type Exists } from '$frontend/stores/api'
 import { makeExerciseCreationHistory } from './ExerciseCreationHistory'
 import type { Rectangle } from './RectanglesHighlighter.vue'
 
 
 const props = defineProps<{
-  project: Project,
+  project: Project & InCache & Exists,
   refreshProject(): void,
-  textbook: Textbook,
+  textbook: Textbook & InCache & Exists,
   refreshTextbook(): void,
   page: number,
 }>()
@@ -39,21 +39,18 @@ const pdfRenderer = ref<typeof PdfRenderer | null>(null)
 
 // @todo(Feature, soon) Get the number of pages from the textbook itself
 const textbookPagesCount = computed(() => {
-  console.assert(props.textbook.relationships !== undefined)
 
   let c = 1
   for (const section of props.textbook.relationships.sections) {
-    console.assert(section.attributes !== undefined)
+    console.assert(section.inCache && section.exists)
     c = Math.max(c, section.attributes.textbookStartPage + section.attributes.pagesCount - 1)
   }
   return c
 })
 
 const section = computed(() => {
-  console.assert(props.textbook.relationships !== undefined)
-
   for (const section of props.textbook.relationships.sections) {
-    console.assert(section.attributes !== undefined)
+    console.assert(section.inCache && section.exists)
     if (props.page >= section.attributes.textbookStartPage && props.page < section.attributes.textbookStartPage + section.attributes.pagesCount) {
       return section
     }
@@ -121,10 +118,10 @@ defineExpose({
     <template #left>
       <div class="h-100 overflow-hidden d-flex flex-column">
         <PdfNavigationControls :page @update:page="component?.changePage" :disabled="!component?.changePage" :pagesCount="textbookPagesCount">
-          <BButton secondary sm :disabled="!section" @click="sectionEditor.show(section.id)">&#9881;</BButton>
+          <BButton secondary sm :disabled="!section" @click="sectionEditor?.show(section?.id)">&#9881;</BButton>
         </PdfNavigationControls>
         <SectionEditor ref="sectionEditor" />
-        <template v-if="section">
+        <template v-if="section?.inCache && section.exists">
           <BBusy size="7rem" :busy="pdfLoading" class="flex-fill overflow-auto" data-cy="pdf-container">
             <template v-if="pdf?.page">
               <div style="border: 1px solid black">
@@ -149,7 +146,13 @@ defineExpose({
               </div>
             </template>
             <template v-else>
-              <PdfNotLoaded :name="section.relationships.pdfFile.relationships.namings[0].attributes.name" />
+              <PdfNotLoaded :name="
+                section.relationships.pdfFile.inCache
+                && section.relationships.pdfFile.exists
+                && section.relationships.pdfFile.relationships.namings.length > 0
+                && section.relationships.pdfFile.relationships.namings[0].inCache
+                && section.relationships.pdfFile.relationships.namings[0].exists
+                ? section.relationships.pdfFile.relationships.namings[0].attributes.name : ''" />
             </template>
           </BBusy>
         </template>

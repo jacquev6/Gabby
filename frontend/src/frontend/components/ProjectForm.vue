@@ -3,11 +3,11 @@ import { ref, computed, watch } from 'vue'
 
 import { BBusy, BLabeledInput, BLabeledTextarea } from './opinion/bootstrap'
 import { useApiStore } from '$frontend/stores/api'
-import type { Project } from '$frontend/stores/api'
+import type { Project, InCache, Exists } from '$frontend/stores/api'
 
 
 const props = defineProps<{
-  project?: Project,
+  project?: Project & InCache & Exists,
 }>()
 
 const emit = defineEmits<{
@@ -24,8 +24,6 @@ watch(
   () => props.project,
   () => {
     if (props.project !== undefined) {
-      console.assert(props.project.attributes !== undefined)
-
       title.value = props.project.attributes.title ?? ''
       description.value = props.project.attributes.description ?? ''
     }

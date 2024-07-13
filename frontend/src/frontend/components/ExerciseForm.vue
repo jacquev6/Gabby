@@ -7,20 +7,21 @@ import { BBusy, BLabeledInput, BLabeledTextarea, BLabeledCheckbox, BButton, BSel
 import TextSelectionMenu from './ExerciseFormTextSelectionMenu.vue'
 import OptionalTextarea from './OptionalTextarea.vue'
 import { useApiStore } from '$frontend/stores/api'
-import type { Project, Textbook, Section, Exercise, SelectThingsAdaptation, FillWithFreeTextAdaptation, MultipleChoicesInWordingAdaptation, MultipleChoicesInInstructionsAdaptation } from '$frontend/stores/api'
+import type { InCache, Exists } from '$frontend/stores/api'
+import type { Project, Textbook, Section, Exercise, SelectThingsAdaptation, FillWithFreeTextAdaptation, MultipleChoicesInInstructionsAdaptation } from '$frontend/stores/api'
 import type { SelectThingsAdaptationOptions, FillWithFreeTextAdaptationOptions, MultipleChoicesInInstructionsAdaptationOptions, MultipleChoicesInWordingAdaptationOptions } from '$frontend/stores/api'
 
 
 const props = defineProps<{
-  project: Project,
-  textbook: Textbook | null,
-  textbookPage: number | null,
-  section: Section | null,
-  pdf: {page: {pageNumber: number}} | null,
-  number: string,
-  automaticNumber: boolean,
-  editMode: boolean,
-  exercise?: Exercise,
+  project: Project & InCache & Exists
+  textbook: Textbook & InCache & Exists | null
+  textbookPage: number | null
+  section: Section | null
+  pdf: {page: {pageNumber: number}} | null
+  number: string
+  automaticNumber: boolean
+  editMode: boolean
+  exercise?: Exercise & InCache & Exists
   teleportAdaptationDetailsTo?: string
 }>()
 
@@ -152,11 +153,9 @@ watch(
 watch(
   computed(() => props.exercise?.loading),
   () => {
-    if (props.exercise?.inCache) {
+    if (props.exercise && props.exercise.inCache && props.exercise.exists) {
       clearHistory(() => {
-        console.assert(props.exercise !== undefined)
-        console.assert(props.exercise.attributes !== undefined)
-        console.assert(props.exercise.relationships !== undefined)
+        console.assert(props.exercise && props.exercise.inCache && props.exercise.exists)
 
         state.value.boundingRectangle = props.exercise.attributes.boundingRectangle ?? null
 
@@ -168,15 +167,14 @@ watch(
         if (props.exercise.relationships.adaptation === null || !props.exercise.relationships.adaptation.inCache) {
           state.value.adaptationType = '-'
         } else {
-          console.assert(props.exercise.relationships.adaptation !== undefined)
           console.assert(props.exercise.relationships.adaptation.inCache)
+          console.assert(props.exercise.relationships.adaptation.exists)
           state.value.adaptationType = props.exercise.relationships.adaptation.type as AdaptationType
           console.assert(state.value.adaptationType !== '-')
           switch (state.value.adaptationType) {
             case 'selectThingsAdaptation':
               {
-                const adaptation = props.exercise.relationships.adaptation as SelectThingsAdaptation
-                console.assert(adaptation.attributes !== undefined)
+                const adaptation = props.exercise.relationships.adaptation as SelectThingsAdaptation & InCache & Exists
                 state.value.selectThingsAdaptationOptions.colors = adaptation.attributes.colors
                 state.value.selectThingsAdaptationOptions.punctuation = adaptation.attributes.punctuation
                 state.value.selectThingsAdaptationOptions.words = adaptation.attributes.words
@@ -184,24 +182,18 @@ watch(
               break
             case 'fillWithFreeTextAdaptation':
               {
-                const adaptation = props.exercise.relationships.adaptation as FillWithFreeTextAdaptation
-                console.assert(adaptation.attributes !== undefined)
+                const adaptation = props.exercise.relationships.adaptation as FillWithFreeTextAdaptation & InCache & Exists
                 state.value.fillWithFreeTextAdaptationOptions.placeholder = adaptation.attributes.placeholder
               }
               break
             case 'multipleChoicesInInstructionsAdaptation':
               {
-                const adaptation = props.exercise.relationships.adaptation as MultipleChoicesInInstructionsAdaptation
-                console.assert(adaptation.attributes !== undefined)
+                const adaptation = props.exercise.relationships.adaptation as MultipleChoicesInInstructionsAdaptation & InCache & Exists
                 state.value.multipleChoicesInInstructionsAdaptationOptions.placeholder = adaptation.attributes.placeholder
               }
               break
             case 'multipleChoicesInWordingAdaptation':
-              {
-                const adaptation = props.exercise.relationships.adaptation as MultipleChoicesInWordingAdaptation
-                console.assert(adaptation.attributes !== undefined)
-                // Nothing to do
-              }
+              // Nothing to do
               break
             default:
               ((_1: never) => console.assert(false, state.value.adaptationType))(state.value.adaptationType)
@@ -221,7 +213,15 @@ const selectedText = ref('')
 const selectedRectangle = ref<Rectangle | null>(null)
 const selectedTextReference = ref<{x: number, y: number}>({x: 0, y: 0})
 function textSelected(text: string, point: {clientX: number, clientY: number}, textItems: [], rectangle: Rectangle) {
-  console.assert(props.section?.relationships?.pdfFile.relationships?.namings[0].attributes !== undefined)
+  console.assert(props.section !== null)
+  console.assert(props.section.inCache)
+  console.assert(props.section.exists)
+  console.assert(props.section.relationships.pdfFile !== null)
+  console.assert(props.section.relationships.pdfFile.inCache)
+  console.assert(props.section.relationships.pdfFile.exists)
+  console.assert(props.section.relationships.pdfFile.relationships.namings.length > 0)
+  console.assert(props.section.relationships.pdfFile.relationships.namings[0].inCache)
+  console.assert(props.section.relationships.pdfFile.relationships.namings[0].exists)
   console.assert(props.pdf !== null)
 
   if (needsBoundingRectangle.value) {
@@ -450,6 +450,7 @@ const adaptedData = computedAsync(
     }
     try {
       const adapted = await api.client.createOne('adaptedExercise', attributes, {})
+      console.assert(adapted.exists)
       return adapted.attributes.adapted
     } catch (e) {
       console.error(e)
