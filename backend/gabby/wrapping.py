@@ -51,6 +51,7 @@ def make_sqids(name):
     random.shuffle(alphabet)
     sqids = Sqids(min_length=6, alphabet="".join(alphabet))
     # print(f"IDs of the first few {name}s:", " ".join(sqids.encode([i]) for i in range(1, 10)), flush=True)
+    # @todo Return a wrapper that checks if the sqid is "canonical" (cf. https://sqids.org/faq#valid-ids)
     return sqids
 # IDs of the first few exercises: wbqloc bylced jkrudc ufefwu orxbzq ahbwey vodhqn dymwin xnyegk
 # IDs of the first few extraction_events: stzemo mkgilf dskyis yotcht axwgxv jusflx gyvtgb omqipm fqjjte
