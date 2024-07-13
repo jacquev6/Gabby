@@ -95,7 +95,7 @@ export type Item<ItemType extends ItemTypes> = ({
   readonly busy: boolean
   readonly loading: boolean
   readonly loaded: Promise<void>
-  refresh(inclusionOptions?: InclusionOptions): Promise<void>
+  refresh(): Promise<void>
 }) & (Operations<ItemType>['patchable'] extends false ? {} : {
   readonly patching: boolean
   patch(attributes: Operations<ItemType>['patchableAttributes'], relationships: Operations<ItemType>['patchableRelationships'], inclusionOptions?: InclusionOptions): Promise<void>
@@ -129,7 +129,7 @@ export type List<ItemType extends ItemTypes> = {
   readonly loading: boolean
   readonly fullyLoaded: Promise<void>
   readonly pageLoaded: Promise<void>
-  refresh(inclusionOptions?: InclusionOptions): Promise<void>
+  refresh(): Promise<void>
 }
 
 export type ApiStore = {
@@ -143,7 +143,7 @@ export type ApiStore = {
   }
   readonly cache: {
     getOne<ItemType extends ItemTypes>(type: ItemType, id: string, inclusionOptions?: InclusionOptions): Item<ItemType>
-    getAll<ItemType extends ItemTypes>(type: ItemType, selectionOptions?: SelectionOptions): List<ItemType>
+    getAll<ItemType extends ItemTypes>(type: ItemType, inclusionAndSelectionOptions?: InclusionAndSelectionOptions): List<ItemType>
   }
   readonly auto: {
     getOne<ItemType extends ItemTypes>(type: ItemType, id: string, inclusionOptions?: InclusionOptions): Item<ItemType>

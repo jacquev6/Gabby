@@ -325,6 +325,39 @@ describe('ApiStore - Basic functionality', () => {
     expect(ping.relationships.next[1].relationships.prev).to.equal(ping)
   })
 
+  it('gets a ping from cache, only including prev', async () => {
+    const api = useApiStore()
+
+    const ping = api.cache.getOne('ping', '3', {include: ['prev']})
+
+    await ping.refresh()
+
+    expectToBeTrue(ping.inCache)
+    expectToBeTrue(ping.exists)
+    expectToNotBeNull(ping.relationships.prev)
+    expect(ping.relationships.prev.inCache).to.be.true
+    expect(ping.relationships.next).to.have.length(2)
+    expect(ping.relationships.next[0].inCache).to.be.false
+    expect(ping.relationships.next[1].inCache).to.be.false
+  })
+
+  it('gets a ping from cache, merging the inclusion options', async () => {
+    const api = useApiStore()
+
+    const ping = api.cache.getOne('ping', '3', {include: ['prev']})
+    api.cache.getOne('ping', '3', {include: ['next']})
+
+    await ping.refresh()
+
+    expectToBeTrue(ping.inCache)
+    expectToBeTrue(ping.exists)
+    expectToNotBeNull(ping.relationships.prev)
+    expect(ping.relationships.prev.inCache).to.be.true
+    expect(ping.relationships.next).to.have.length(2)
+    expect(ping.relationships.next[0].inCache).to.be.true
+    expect(ping.relationships.next[1].inCache).to.be.true
+  })
+
   it("gets a list of pings from cache, then refreshes it, awaiting on '.refresh()'", async () => {
     const api = useApiStore()
 
@@ -482,8 +515,8 @@ describe('ApiStore - Basic functionality', () => {
   it('gets a filtered list from cache, including related', async () => {
     const api = useApiStore()
 
-    const pings = api.cache.getAll('ping', {filters: {message: 'Hello 3'}})
-    await pings.refresh({include: ['prev', 'next']})
+    const pings = api.cache.getAll('ping', {filters: {message: 'Hello 3'}, include: ['prev', 'next']})
+    await pings.refresh()
 
     expect(pings.items).to.have.length(1)
     expectToBeTrue(pings.items[0].exists)
@@ -531,6 +564,37 @@ describe('ApiStore - Basic functionality', () => {
     expect(pings.items[0].relationships.next[0]).to.equal(api.cache.getOne('ping', '4'))
     expect(pings.items[0].relationships.next[1].inCache).to.be.true
     expect(pings.items[0].relationships.next[1]).to.equal(api.cache.getOne('ping', '5'))
+  })
+
+  it('gets a filtered list from cache, only including prev', async () => {
+    const api = useApiStore()
+
+    const pings = api.cache.getAll('ping', {filters: {message: 'Hello 3'}, include: ['prev']})
+    await pings.refresh()
+
+    expect(pings.items).to.have.length(1)
+    expectToBeTrue(pings.items[0].exists)
+    expectToNotBeNull(pings.items[0].relationships.prev)
+    expect(pings.items[0].relationships.prev.inCache).to.be.true
+    expect(pings.items[0].relationships.next).to.have.length(2)
+    expect(pings.items[0].relationships.next[0].inCache).to.be.false
+    expect(pings.items[0].relationships.next[1].inCache).to.be.false
+  })
+
+  it('gets a filtered list from cache, merging the inclusion options', async () => {
+    const api = useApiStore()
+
+    const pings = api.cache.getAll('ping', {filters: {message: 'Hello 3'}, include: ['prev']})
+    api.cache.getAll('ping', {filters: {message: 'Hello 3'}, include: ['next']})
+    await pings.refresh()
+
+    expect(pings.items).to.have.length(1)
+    expectToBeTrue(pings.items[0].exists)
+    expectToNotBeNull(pings.items[0].relationships.prev)
+    expect(pings.items[0].relationships.prev.inCache).to.be.true
+    expect(pings.items[0].relationships.next).to.have.length(2)
+    expect(pings.items[0].relationships.next[0].inCache).to.be.true
+    expect(pings.items[0].relationships.next[1].inCache).to.be.true
   })
 
   it('gets different paginated lists for different filters', async () => {

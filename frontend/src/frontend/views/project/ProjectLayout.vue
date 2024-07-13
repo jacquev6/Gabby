@@ -21,8 +21,8 @@ const component = ref<null | { title: string, breadcrumbs: Breadcrumbs, handlesS
 const project = computed(() => api.auto.getOne('project', props.projectId, {include: ['textbooks', 'exercises.textbook']}))
 
 function refreshProject() {
-  // @todo Remove 'options' from '.refresh()' (use those from '.getOne'). The remove 'refreshProject' and have sub-components simply call 'project.value.refresh()'
-  project.value.refresh({include: ['textbooks', 'exercises.textbook']})
+  // @todo Remove 'refreshProject' and have sub-components simply call 'project.value.refresh()'
+  project.value.refresh()
 }
 
 const title = computed(() => {

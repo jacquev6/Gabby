@@ -34,6 +34,7 @@ type CachedItem<ItemType extends ItemTypes> = Item<ItemType> & {
     attributes?: CachedAttributes<ItemType>
     relationships?: CachedRelationships<ItemType>
   }
+  _include: Record<string, true>
   _loadingPromise: Promise<void> | null
   _needsRefresh: boolean
   _reset(): void
@@ -96,7 +97,7 @@ export function makeItems(requester: Requester) {
       // Constant attributes
       type,
       id,
-      // Attributes to reset in 'reset' below
+      // Attributes to reset in method '_reset' below
       _reactive: reactive({
         inCache: false,
         loading: false,
@@ -106,6 +107,7 @@ export function makeItems(requester: Requester) {
         attributes: undefined,
         relationships: undefined,
       }),
+      _include: {},
       _loadingPromise: null,
       _needsRefresh: false,
       // Methods and getters
@@ -132,10 +134,11 @@ export function makeItems(requester: Requester) {
         this._reactive.exists = undefined
         this._reactive.attributes = undefined
         this._reactive.relationships = undefined
+        this._include = {}
         this._loadingPromise = null
         this._needsRefresh = false
       },
-      refresh(inclusionOptions?: InclusionOptions) {
+      refresh() {
         console.assert(cache[this.type]?.[this.id] === this, 'Item detached from store')
 
         this._needsRefresh = true
@@ -144,7 +147,8 @@ export function makeItems(requester: Requester) {
           this._loadingPromise = (async () => {
             while(this._needsRefresh) {
               this._needsRefresh = false
-              processResponse(await requester.getItem(this.type, this.id, inclusionOptions || {}))
+              const include = Object.keys(this._include)
+              processResponse(await requester.getItem(this.type, this.id, include.length === 0 ? {} : {include}))
             }
             this._reactive.loading = false
             this._loadingPromise = null
@@ -197,10 +201,22 @@ export function makeItems(requester: Requester) {
     return results.map(processItemInResponse) as any/* @todo Type*/[]
   }
 
+  function get<ItemType extends ItemTypes>(type: ItemType, id: string, inclusionOptions: InclusionOptions): [CachedItem<ItemType>, boolean] {
+    const item = getItem(type, id)
+    let needsRefresh = false
+    for (const include of inclusionOptions.include || []) {
+      if (!item._include[include]) {
+        item._include[include] = true
+        needsRefresh = true
+      }
+    }
+    return [item, needsRefresh]
+  }
+
   return {
     create: createItem,
     clearCache,
-    get: getItem,
+    get,
     batch,
     processItemInResponse,
   }

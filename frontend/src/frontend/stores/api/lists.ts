@@ -1,5 +1,5 @@
 import { reactive } from 'vue'
-import type { InclusionOptions, SelectionOptions } from './interface'
+import type { InclusionAndSelectionOptions, SelectionOptions } from './interface'
 import type { Items } from './items'
 import type { Requester, RequesterPageResponse } from './requester'
 
@@ -13,7 +13,8 @@ export interface CachedList {
   fullyLoaded: Promise<void>
   _pageLoadingPromise: Promise<RequesterPageResponse> | null
   pageLoaded: Promise<void>
-  refresh(inclusionOptions?: InclusionOptions): Promise<void>
+  refresh(): Promise<void>
+  _include: Record<string, true>
 
   items: any/* @todo Type */[]
   _reactive: {
@@ -55,6 +56,7 @@ export function makeLists(requester: Requester, items: Items) {
         loading: false,
         items: [] as any/* @todo Type */[],
       }),
+      _include: {},
       // Methods and getters
       get inCache() { return this._reactive.inCache },
       get loading() { return this._reactive.loading },  
@@ -74,7 +76,7 @@ export function makeLists(requester: Requester, items: Items) {
           return Promise.reject(new Error('Never refreshed'))
         }
       },
-      async refresh(inclusionOptions?: InclusionOptions) {
+      async refresh() {
         console.assert(cache[type]?.[selection] === this, 'List detached from store')
 
         this._needsRefresh = true
@@ -83,7 +85,8 @@ export function makeLists(requester: Requester, items: Items) {
           this._loadingPromise = (async () => {
             while(this._needsRefresh) {
               this._needsRefresh = false
-              this._pageLoadingPromise = requester.getFirstPage(type, selectionOptions, inclusionOptions || {})
+              const include = Object.keys(this._include)
+              this._pageLoadingPromise = requester.getFirstPage(type, selectionOptions, include.length === 0 ? {} : {include})
               const firstPage = await this._pageLoadingPromise
               this._reactive.items = []
               processResponse(firstPage)
@@ -113,7 +116,7 @@ export function makeLists(requester: Requester, items: Items) {
         return this._loadingPromise
       },
       get items() {
-        return this._reactive.items.map(ref => items.get(ref.type, ref.id))
+        return this._reactive.items.map(ref => items.get(ref.type, ref.id, {})[0])
       },
     }
   }
@@ -125,6 +128,7 @@ export function makeLists(requester: Requester, items: Items) {
     list._needsRefresh = false
     list._pageLoadingPromise = null
     list._reactive.items = []
+    list._include = {}
   }
 
   function clearCache() {
@@ -144,8 +148,20 @@ export function makeLists(requester: Requester, items: Items) {
     }
   }
 
+  function get(type: string, inclusionAndSelectionOptions: InclusionAndSelectionOptions): [CachedList, boolean] {
+    const list = getList(type, inclusionAndSelectionOptions)
+    let needsRefresh = false
+    for (const include of inclusionAndSelectionOptions.include || []) {
+      if (!list._include[include]) {
+        list._include[include] = true
+        needsRefresh = true
+      }
+    }
+    return [list, needsRefresh]
+  }
+
   return {
-    get: getList,
+    get,
     clearCache,
   }
 }

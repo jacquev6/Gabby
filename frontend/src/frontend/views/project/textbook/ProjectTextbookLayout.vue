@@ -24,8 +24,8 @@ const component = ref<null | { title: string, breadcrumbs: Breadcrumbs, handlesS
 const textbook = computed(() => api.auto.getOne('textbook', props.textbookId, {include: ['sections.pdfFile.namings']}))
 
 function refreshTextbook() {
-  // @todo Remove 'options' from '.refresh()' (use those from '.getOne'). The remove 'refreshTextbook' and have sub-components simply call 'textbook.refresh()'
-  textbook.value.refresh({include: ['sections.pdfFile.namings']})
+  // @todo Remove 'refreshTextbook' and have sub-components simply call 'textbook.refresh()'
+  textbook.value.refresh()
 }
 
 // @todo Move this check (that the textbook belongs to the project) to the backend, probably by adding a *required* query parameter 'filter[project]'
