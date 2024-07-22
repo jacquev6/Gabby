@@ -6,7 +6,7 @@ import { BButton } from './opinion/bootstrap'
 
 const props = withDefaults(defineProps<{
   pagesCount: number,
-  disabled: boolean,
+  disabled?: boolean,
 }>(), {
   disabled: false,
 })
