@@ -21,8 +21,8 @@ const errors: [string, () => void][] = [
 ]
 
 defineExpose({
-  title: ["Errors"],
-  breadcrumbs: bc.last("Errors" /* @todo Restore second argument "/errors" */),
+  title: ['Errors'],
+  breadcrumbs: bc.last('Errors', '/errors'),
 })
 
 if (window.location.search.includes('reject')) {

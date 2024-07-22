@@ -20,8 +20,12 @@ export function prepend(title: string, to: RouteLocationRaw, breadcrumbs: Breadc
   )
 }
 
-export function last(title: string) {
-  return make([], title)
+export function last(title: string, to?: RouteLocationRaw) {
+  if (to === undefined) {
+    return make([], title)
+  } else {
+    return make([{title, to}], null)
+  }
 }
 
 export const empty = make([], null)
