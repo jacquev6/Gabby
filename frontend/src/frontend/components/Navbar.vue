@@ -22,7 +22,7 @@ useHead({
 
 const breadcrumbs = computed(() => bc.normalize(props.breadcrumbs))
 
-const about = ref<typeof AboutModal | null>(null)
+const about = ref<InstanceType<typeof AboutModal> | null>(null)
 </script>
 
 <template>

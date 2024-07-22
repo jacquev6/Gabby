@@ -35,8 +35,8 @@ const component = ref<{
   textSelected?: any/* @todo Type */,
   handlesScrolling: boolean,
 } | null>(null)
-const sectionEditor = ref<typeof SectionEditor | null>(null)
-const pdfRenderer = ref<typeof PdfRenderer | null>(null)
+const sectionEditor = ref<InstanceType<typeof SectionEditor> | null>(null)
+const pdfRenderer = ref<InstanceType<typeof PdfRenderer> | null>(null)
 
 // @todo(Feature, soon) Get the number of pages from the textbook itself
 const textbookPagesCount = computed(() => {
@@ -119,7 +119,7 @@ defineExpose({
     <template #left>
       <div class="h-100 overflow-hidden d-flex flex-column">
         <PdfNavigationControls :page @update:page="component?.changePage" :disabled="!component?.changePage" :pagesCount="textbookPagesCount">
-          <BButton secondary sm :disabled="!section" @click="sectionEditor?.show(section?.id)">&#9881;</BButton>
+          <BButton secondary sm :disabled="!section" @click="console.assert(section !== null); sectionEditor?.show(section.id)">&#9881;</BButton>
         </PdfNavigationControls>
         <SectionEditor ref="sectionEditor" />
         <template v-if="section?.inCache && section.exists">

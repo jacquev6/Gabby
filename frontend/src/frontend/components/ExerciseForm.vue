@@ -254,10 +254,10 @@ function textSelected(text: string, point: {clientX: number, clientY: number}, t
   }
 }
 
-const instructionsTextArea = ref<typeof BLabeledTextarea | null>(null)
-const wordingTextArea = ref<typeof BLabeledTextarea | null>(null)
-const exampleTextArea = ref<typeof OptionalTextarea | null>(null)
-const clueTextArea = ref<typeof OptionalTextarea | null>(null)
+const instructionsTextArea = ref<InstanceType<typeof BLabeledTextarea> | null>(null)
+const wordingTextArea = ref<InstanceType<typeof BLabeledTextarea> | null>(null)
+const exampleTextArea = ref<InstanceType<typeof OptionalTextarea> | null>(null)
+const clueTextArea = ref<InstanceType<typeof OptionalTextarea> | null>(null)
 const textAreas = {
   instructions: instructionsTextArea,
   wording: wordingTextArea,
@@ -469,7 +469,7 @@ const surroundedRectangles = computed(() => {
   }
 })
 
-const selected = ref([null, ''])
+const selected = ref<[FieldName | null, string]>([null, ''])
 
 function updateSelected(fieldName: FieldName) {
   const textArea = textAreas[fieldName].value?.textarea

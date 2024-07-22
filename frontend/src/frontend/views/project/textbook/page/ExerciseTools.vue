@@ -8,7 +8,7 @@ import type ExerciseForm from '$/frontend/components/ExerciseForm.vue'
 
 
 const props = defineProps<{
-  exerciseForm: typeof ExerciseForm,
+  exerciseForm: InstanceType<typeof ExerciseForm>,
 }>()
 
 const i18n = useI18n()
@@ -33,8 +33,9 @@ const { pause: pauseSearchWatch, resume: resumeSearchWatch } = watchPausable(
   {flush: 'sync'},
 )
 const replace = ref('')
-const where = ref('everywhere')
+const where = ref<'instructions' | 'wording' | 'example' | 'clue' | 'everywhere'>('everywhere')
 watch(() => props.exerciseForm.selected, ([fieldName, selected]) => {
+  console.assert(fieldName !== null)
   if (selected !== '' && !searchHasBeenModified.value) {
     pauseSearchWatch()
     where.value = fieldName

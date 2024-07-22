@@ -27,8 +27,8 @@ const props = defineProps<{
 
 const router = useRouter()
 
-const exerciseForm = ref<typeof ExerciseForm | null>(null)
-const exerciseTools = ref<typeof ExerciseTools | null>(null)
+const exerciseForm = ref<InstanceType<typeof ExerciseForm> | null>(null)
+const exerciseTools = ref<InstanceType<typeof ExerciseTools> | null>(null)
 
 const number = ref(props.exerciseCreationHistory.suggestedNumber ?? '')
 const automaticNumber = ref(false)

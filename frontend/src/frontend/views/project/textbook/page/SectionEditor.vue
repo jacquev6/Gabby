@@ -29,7 +29,7 @@ const disabled = computed(() => {
   )
 })
 
-const modal = ref<typeof BModal | null>(null)
+const modal = ref<InstanceType<typeof BModal> | null>(null)
 const saving = ref(false)
 async function save() {
   console.assert(sectionId.value !== null)

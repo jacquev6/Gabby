@@ -10,7 +10,7 @@ const userAgent = JSON.stringify((window.navigator as any/* Chromium-specific */
 
 const { width: windowWidth, height: windowHeight } = useWindowSize()
 
-const modal = ref<typeof BModal | null>(null)
+const modal = ref<InstanceType<typeof BModal> | null>(null)
 function show() {
   modal.value?.show()
 }

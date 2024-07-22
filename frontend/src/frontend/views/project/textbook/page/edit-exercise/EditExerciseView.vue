@@ -30,8 +30,8 @@ const api = useApiStore()
 
 const exercise = computed(() => api.auto.getOne('exercise', props.exerciseId, {include: ['adaptation']}))
 
-const exerciseForm = ref<typeof ExerciseForm | null>(null)
-const exerciseTools = ref<typeof ExerciseTools | null>(null)
+const exerciseForm = ref<InstanceType<typeof ExerciseForm> | null>(null)
+const exerciseTools = ref<InstanceType<typeof ExerciseTools> | null>(null)
 
 function goToPrevious() {
   const exerciseId = props.exerciseCreationHistory.previous

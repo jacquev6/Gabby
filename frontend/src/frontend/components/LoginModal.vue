@@ -10,7 +10,7 @@ import { useApiStore } from '../stores/api'
 const api = useApiStore()
 const i18n = useI18n()
 
-const modal = ref<typeof BModal | null>(null)
+const modal = ref<InstanceType<typeof BModal> | null>(null)
 
 watch(
   [modal, api.auth.isAuthenticated, api.auth.expiresSoon],

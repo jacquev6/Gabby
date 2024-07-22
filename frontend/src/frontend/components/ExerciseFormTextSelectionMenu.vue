@@ -20,7 +20,7 @@ const emit = defineEmits<{
 const canStripExerciceNumber = computed(() => props.number !== '' && props.text.startsWith(props.number))
 const doStripExerciceNumber = ref(true)
 
-const selectedText = ref<typeof BLabeledTextarea | null>(null)
+const selectedText = ref<InstanceType<typeof BLabeledTextarea> | null>(null)
 
 const textToAdd = ref('')
 watch(
