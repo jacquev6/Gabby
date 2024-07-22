@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useApiStore } from '../stores/api'
+import bc from '$frontend/components/breadcrumbs'
 
 
 const api = useApiStore()
@@ -21,7 +22,7 @@ const errors: [string, () => void][] = [
 
 defineExpose({
   title: ["Errors"],
-  breadcrumbs: [{title: "Errors", to: "/errors"}],
+  breadcrumbs: bc.last("Errors" /* @todo Restore second argument "/errors" */),
 })
 
 if (window.location.search.includes('reject')) {
