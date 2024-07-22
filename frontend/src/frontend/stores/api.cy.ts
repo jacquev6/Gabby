@@ -365,13 +365,13 @@ describe('ApiStore - Basic functionality', () => {
 
     expect(pings.loading).to.be.false
     expect(pings.inCache).to.be.false
-    expect(pings.items).to.have.length(0)
+    expect(pings.allItems).to.have.length(0)
 
     await pings.refresh()
 
     expect(pings.loading).to.be.false
     expect(pings.inCache).to.be.true
-    expect(pings.items).to.have.length(6)
+    expect(pings.allItems).to.have.length(6)
   })
 
   it("gets a list of pings from cache, then refreshes it, awaiting on the return value of '.refresh()'", async () => {
@@ -381,19 +381,19 @@ describe('ApiStore - Basic functionality', () => {
 
     expect(pings.loading).to.be.false
     expect(pings.inCache).to.be.false
-    expect(pings.items).to.have.length(0)
+    expect(pings.allItems).to.have.length(0)
 
     const loaded = pings.refresh()
 
     expect(pings.loading).to.be.true
     expect(pings.inCache).to.be.false
-    expect(pings.items).to.have.length(0)
+    expect(pings.allItems).to.have.length(0)
 
     await loaded
 
     expect(pings.loading).to.be.false
     expect(pings.inCache).to.be.true
-    expect(pings.items).to.have.length(6)
+    expect(pings.allItems).to.have.length(6)
   })
 
   it("gets a list of pings from cache, then refreshes it, awaiting on '.fullyLoaded'", async () => {
@@ -403,19 +403,19 @@ describe('ApiStore - Basic functionality', () => {
 
     expect(pings.loading).to.be.false
     expect(pings.inCache).to.be.false
-    expect(pings.items).to.have.length(0)
+    expect(pings.allItems).to.have.length(0)
 
     pings.refresh()
 
     expect(pings.loading).to.be.true
     expect(pings.inCache).to.be.false
-    expect(pings.items).to.have.length(0)
+    expect(pings.allItems).to.have.length(0)
 
     await pings.fullyLoaded
 
     expect(pings.loading).to.be.false
     expect(pings.inCache).to.be.true
-    expect(pings.items).to.have.length(6)
+    expect(pings.allItems).to.have.length(6)
   })
 
   it("gets a list of pings from cache, then refreshes it several times", () => {
@@ -437,7 +437,7 @@ describe('ApiStore - Basic functionality', () => {
       await pings.fullyLoaded
 
       expect(pings.loading).to.be.false
-      expect(pings.items).to.have.length(6)
+      expect(pings.allItems).to.have.length(6)
 
       cy.get('@getPings1.all').should('have.length', 2)
       cy.get('@getPings2.all').should('have.length', 1).then(async () => {
@@ -453,7 +453,7 @@ describe('ApiStore - Basic functionality', () => {
         await pings.fullyLoaded
 
         expect(pings.loading).to.be.false
-        expect(pings.items).to.have.length(6)
+        expect(pings.allItems).to.have.length(6)
 
         cy.get('@getPings1.all').should('have.length', 4)
         cy.get('@getPings2.all').should('have.length', 2)
@@ -479,13 +479,13 @@ describe('ApiStore - Basic functionality', () => {
 
     expect(pings.loading).to.be.true
     expect(pings.inCache).to.be.false
-    expect(pings.items).to.have.length(0)
+    expect(pings.allItems).to.have.length(0)
 
     await pings.fullyLoaded
 
     expect(pings.loading).to.be.false
     expect(pings.inCache).to.be.true
-    expect(pings.items).to.have.length(6)
+    expect(pings.allItems).to.have.length(6)
   })
 
   it("gets the same list from all access methods", async () => {
@@ -509,7 +509,7 @@ describe('ApiStore - Basic functionality', () => {
     expect(fromCache).to.equal(fromAuto)
     expect(fromCache).to.equal(fromClient)
 
-    expect(fromClient.items).to.have.length(1)
+    expect(fromClient.allItems).to.have.length(1)
   })
 
   it('gets a filtered list from cache, including related', async () => {
@@ -518,16 +518,16 @@ describe('ApiStore - Basic functionality', () => {
     const pings = api.cache.getAll('ping', {filters: {message: 'Hello 3'}, include: ['prev', 'next']})
     await pings.refresh()
 
-    expect(pings.items).to.have.length(1)
-    expectToBeTrue(pings.items[0].exists)
-    expectToNotBeNull(pings.items[0].relationships.prev)
-    expect(pings.items[0].relationships.prev.inCache).to.be.true
-    expect(pings.items[0].relationships.prev).to.equal(api.cache.getOne('ping', '2'))
-    expect(pings.items[0].relationships.next).to.have.length(2)
-    expect(pings.items[0].relationships.next[0].inCache).to.be.true
-    expect(pings.items[0].relationships.next[0]).to.equal(api.cache.getOne('ping', '4'))
-    expect(pings.items[0].relationships.next[1].inCache).to.be.true
-    expect(pings.items[0].relationships.next[1]).to.equal(api.cache.getOne('ping', '5'))
+    expect(pings.allItems).to.have.length(1)
+    expectToBeTrue(pings.allItems[0].exists)
+    expectToNotBeNull(pings.allItems[0].relationships.prev)
+    expect(pings.allItems[0].relationships.prev.inCache).to.be.true
+    expect(pings.allItems[0].relationships.prev).to.equal(api.cache.getOne('ping', '2'))
+    expect(pings.allItems[0].relationships.next).to.have.length(2)
+    expect(pings.allItems[0].relationships.next[0].inCache).to.be.true
+    expect(pings.allItems[0].relationships.next[0]).to.equal(api.cache.getOne('ping', '4'))
+    expect(pings.allItems[0].relationships.next[1].inCache).to.be.true
+    expect(pings.allItems[0].relationships.next[1]).to.equal(api.cache.getOne('ping', '5'))
   })
 
   it('gets a filtered list from auto, including related', async () => {
@@ -537,16 +537,16 @@ describe('ApiStore - Basic functionality', () => {
 
     await pings.fullyLoaded
 
-    expect(pings.items).to.have.length(1)
-    expectToBeTrue(pings.items[0].exists)
-    expectToNotBeNull(pings.items[0].relationships.prev)
-    expect(pings.items[0].relationships.prev.inCache).to.be.true
-    expect(pings.items[0].relationships.prev).to.equal(api.cache.getOne('ping', '2'))
-    expect(pings.items[0].relationships.next).to.have.length(2)
-    expect(pings.items[0].relationships.next[0].inCache).to.be.true
-    expect(pings.items[0].relationships.next[0]).to.equal(api.cache.getOne('ping', '4'))
-    expect(pings.items[0].relationships.next[1].inCache).to.be.true
-    expect(pings.items[0].relationships.next[1]).to.equal(api.cache.getOne('ping', '5'))
+    expect(pings.allItems).to.have.length(1)
+    expectToBeTrue(pings.allItems[0].exists)
+    expectToNotBeNull(pings.allItems[0].relationships.prev)
+    expect(pings.allItems[0].relationships.prev.inCache).to.be.true
+    expect(pings.allItems[0].relationships.prev).to.equal(api.cache.getOne('ping', '2'))
+    expect(pings.allItems[0].relationships.next).to.have.length(2)
+    expect(pings.allItems[0].relationships.next[0].inCache).to.be.true
+    expect(pings.allItems[0].relationships.next[0]).to.equal(api.cache.getOne('ping', '4'))
+    expect(pings.allItems[0].relationships.next[1].inCache).to.be.true
+    expect(pings.allItems[0].relationships.next[1]).to.equal(api.cache.getOne('ping', '5'))
   })
 
   it('gets a filtered list from client, including related', async () => {
@@ -554,16 +554,16 @@ describe('ApiStore - Basic functionality', () => {
 
     const pings = await api.client.getAll('ping', {filters: {message: 'Hello 3'}, include: ['prev', 'next']})
 
-    expect(pings.items).to.have.length(1)
-    expectToBeTrue(pings.items[0].exists)
-    expectToNotBeNull(pings.items[0].relationships.prev)
-    expect(pings.items[0].relationships.prev.inCache).to.be.true
-    expect(pings.items[0].relationships.prev).to.equal(api.cache.getOne('ping', '2'))
-    expect(pings.items[0].relationships.next).to.have.length(2)
-    expect(pings.items[0].relationships.next[0].inCache).to.be.true
-    expect(pings.items[0].relationships.next[0]).to.equal(api.cache.getOne('ping', '4'))
-    expect(pings.items[0].relationships.next[1].inCache).to.be.true
-    expect(pings.items[0].relationships.next[1]).to.equal(api.cache.getOne('ping', '5'))
+    expect(pings.allItems).to.have.length(1)
+    expectToBeTrue(pings.allItems[0].exists)
+    expectToNotBeNull(pings.allItems[0].relationships.prev)
+    expect(pings.allItems[0].relationships.prev.inCache).to.be.true
+    expect(pings.allItems[0].relationships.prev).to.equal(api.cache.getOne('ping', '2'))
+    expect(pings.allItems[0].relationships.next).to.have.length(2)
+    expect(pings.allItems[0].relationships.next[0].inCache).to.be.true
+    expect(pings.allItems[0].relationships.next[0]).to.equal(api.cache.getOne('ping', '4'))
+    expect(pings.allItems[0].relationships.next[1].inCache).to.be.true
+    expect(pings.allItems[0].relationships.next[1]).to.equal(api.cache.getOne('ping', '5'))
   })
 
   it('gets a filtered list from cache, only including prev', async () => {
@@ -572,13 +572,13 @@ describe('ApiStore - Basic functionality', () => {
     const pings = api.cache.getAll('ping', {filters: {message: 'Hello 3'}, include: ['prev']})
     await pings.refresh()
 
-    expect(pings.items).to.have.length(1)
-    expectToBeTrue(pings.items[0].exists)
-    expectToNotBeNull(pings.items[0].relationships.prev)
-    expect(pings.items[0].relationships.prev.inCache).to.be.true
-    expect(pings.items[0].relationships.next).to.have.length(2)
-    expect(pings.items[0].relationships.next[0].inCache).to.be.false
-    expect(pings.items[0].relationships.next[1].inCache).to.be.false
+    expect(pings.allItems).to.have.length(1)
+    expectToBeTrue(pings.allItems[0].exists)
+    expectToNotBeNull(pings.allItems[0].relationships.prev)
+    expect(pings.allItems[0].relationships.prev.inCache).to.be.true
+    expect(pings.allItems[0].relationships.next).to.have.length(2)
+    expect(pings.allItems[0].relationships.next[0].inCache).to.be.false
+    expect(pings.allItems[0].relationships.next[1].inCache).to.be.false
   })
 
   it('gets a filtered list from cache, merging the inclusion options', async () => {
@@ -588,13 +588,13 @@ describe('ApiStore - Basic functionality', () => {
     api.cache.getAll('ping', {filters: {message: 'Hello 3'}, include: ['next']})
     await pings.refresh()
 
-    expect(pings.items).to.have.length(1)
-    expectToBeTrue(pings.items[0].exists)
-    expectToNotBeNull(pings.items[0].relationships.prev)
-    expect(pings.items[0].relationships.prev.inCache).to.be.true
-    expect(pings.items[0].relationships.next).to.have.length(2)
-    expect(pings.items[0].relationships.next[0].inCache).to.be.true
-    expect(pings.items[0].relationships.next[1].inCache).to.be.true
+    expect(pings.allItems).to.have.length(1)
+    expectToBeTrue(pings.allItems[0].exists)
+    expectToNotBeNull(pings.allItems[0].relationships.prev)
+    expect(pings.allItems[0].relationships.prev.inCache).to.be.true
+    expect(pings.allItems[0].relationships.next).to.have.length(2)
+    expect(pings.allItems[0].relationships.next[0].inCache).to.be.true
+    expect(pings.allItems[0].relationships.next[1].inCache).to.be.true
   })
 
   it('gets different paginated lists for different filters', async () => {
@@ -614,27 +614,27 @@ describe('ApiStore - Basic functionality', () => {
 
     const pings = await api.client.getAll('ping')
 
-    expect(pings.items).to.have.length(6)
+    expect(pings.allItems).to.have.length(6)
 
     pings.refresh()
 
     expect(pings.loading).to.be.true
-    expect(pings.items).to.have.length(6)
+    expect(pings.allItems).to.have.length(6)
 
     await pings.pageLoaded
 
     expect(pings.loading).to.be.true
-    expect(pings.items).to.have.length(2)
+    expect(pings.allItems).to.have.length(2)
 
     await pings.pageLoaded
 
     expect(pings.loading).to.be.true
-    expect(pings.items).to.have.length(4)
+    expect(pings.allItems).to.have.length(4)
 
     await pings.pageLoaded
 
     expect(pings.loading).to.be.false
-    expect(pings.items).to.have.length(6)
+    expect(pings.allItems).to.have.length(6)
   })
 
   it('patches a ping', async () => {
@@ -748,6 +748,25 @@ describe('ApiStore - Basic functionality', () => {
     expect(ping.inCache).to.be.true
     expect(ping.exists).to.be.false
     expect(ping.deleting).to.be.false
+  })
+
+  it('deletes a ping from a list', async () => {
+    const api = useApiStore()
+
+    const pings = await api.client.getAll('ping')
+
+    expect(pings.allItems).to.have.length(6)
+    expect(pings.existingItems).to.have.length(6)
+
+    const deleted = pings.allItems[0].delete()
+
+    expect(pings.allItems).to.have.length(6)
+    expect(pings.existingItems).to.have.length(6)
+
+    await deleted
+
+    expect(pings.allItems).to.have.length(6)
+    expect(pings.existingItems).to.have.length(5)
   })
 
   it('deletes a never-heard-of ping', () => {
@@ -1074,23 +1093,23 @@ describe('ApiStore - Reactivity', () => {
     })
 
     expect(counter).to.equal(0)
-    expect(pings.value.items).to.have.length(0)
+    expect(pings.value.allItems).to.have.length(0)
     expect(counter).to.equal(1)
 
     await pings.value.fullyLoaded
 
     expect(counter).to.equal(1)
-    expect(pings.value.items).to.have.length(1)
+    expect(pings.value.allItems).to.have.length(1)
 
     await pings.value.fullyLoaded
 
     expect(counter).to.equal(1)
-    expect(pings.value.items).to.have.length(1)
+    expect(pings.value.allItems).to.have.length(1)
 
     await pings.value.fullyLoaded
 
     expect(counter).to.equal(1)
-    expect(pings.value.items).to.have.length(1)
+    expect(pings.value.allItems).to.have.length(1)
   })
 
   it("makes sure 'getAll().inCache' is reactive", async () => {
@@ -1139,11 +1158,11 @@ describe('ApiStore - Reactivity', () => {
     expect(counter).to.equal(6)
   })
 
-  it("makes sure 'getAll().items' is reactive", async () => {
+  it("makes sure 'getAll().allItems' is reactive", async () => {
     const api = useApiStore()
 
     const pings = api.cache.getAll('ping')
-    const items = computed(() => pings.items)
+    const items = computed(() => pings.allItems)
     let counter = 0
     watch(items, () => { counter += 1 })
 
@@ -1355,9 +1374,9 @@ describe('ApiStore - Application - 1', () => {
     expect(api.cache.getOne('textbook', 'klxufv').inCache).to.be.false
 
     const textbooks = await api.client.getAll('textbook')
-    expect(textbooks.items.length).to.equal(1)
-    expectToBeTrue(textbooks.items[0].exists)
-    expect(textbooks.items[0].attributes.title).to.equal('Français CE2')
+    expect(textbooks.allItems.length).to.equal(1)
+    expectToBeTrue(textbooks.allItems[0].exists)
+    expect(textbooks.allItems[0].attributes.title).to.equal('Français CE2')
 
     expect(api.cache.getOne('textbook', '0').inCache).to.be.false
     const textbook = api.cache.getOne('textbook', 'klxufv')
@@ -1444,24 +1463,24 @@ describe('ApiStore - Application - 1', () => {
 
     const exercises = await api.client.getAll('exercise')
 
-    expect(exercises.items.length).to.equal(6)
+    expect(exercises.allItems.length).to.equal(6)
   })
 
   it('filters exercises by textbook and page', async () => {
     const api = useApiStore()
     await api.auth.login('admin', 'password')
 
-    expect((await api.client.getAll('exercise')).items.length).to.equal(6)
-    expect((await api.client.getAll('exercise', {filters: {textbook: 'klxufv'}})).items.length).to.equal(3)
-    expect((await api.client.getAll('exercise', {filters: {textbook: 'klxufv', textbookPage: 6}})).items.length).to.equal(2)
-    expect((await api.client.getAll('exercise', {filters: {textbook: 'klxufv', textbookPage: 7}})).items.length).to.equal(1)
+    expect((await api.client.getAll('exercise')).allItems.length).to.equal(6)
+    expect((await api.client.getAll('exercise', {filters: {textbook: 'klxufv'}})).allItems.length).to.equal(3)
+    expect((await api.client.getAll('exercise', {filters: {textbook: 'klxufv', textbookPage: 6}})).allItems.length).to.equal(2)
+    expect((await api.client.getAll('exercise', {filters: {textbook: 'klxufv', textbookPage: 7}})).allItems.length).to.equal(1)
   })
 
   it('creates a new exercise', async () => {
     const api = useApiStore()
     await api.auth.login('admin', 'password')
 
-    expect((await api.client.getAll('exercise', {filters: {textbook: 'klxufv', textbookPage: 6}})).items.length).to.equal(2)
+    expect((await api.client.getAll('exercise', {filters: {textbook: 'klxufv', textbookPage: 6}})).allItems.length).to.equal(2)
 
     expect(api.cache.getOne('textbook', 'klxufv').inCache).to.be.false
 
@@ -1485,14 +1504,14 @@ describe('ApiStore - Application - 1', () => {
 
     expect(api.cache.getOne('textbook', 'klxufv').inCache).to.be.false
 
-    expect((await api.client.getAll('exercise', {filters: {textbook: 'klxufv', textbookPage: 6}})).items.length).to.equal(3)
+    expect((await api.client.getAll('exercise', {filters: {textbook: 'klxufv', textbookPage: 6}})).allItems.length).to.equal(3)
   })
 
   it('creates a new exercise and retrieves its textbook', async () => {
     const api = useApiStore()
     await api.auth.login('admin', 'password')
 
-    expect((await api.client.getAll('exercise', {filters: {textbook: 'klxufv', textbookPage: 6}})).items.length).to.equal(2)
+    expect((await api.client.getAll('exercise', {filters: {textbook: 'klxufv', textbookPage: 6}})).allItems.length).to.equal(2)
 
     const textbook = api.cache.getOne('textbook', 'klxufv')
 
@@ -1521,7 +1540,7 @@ describe('ApiStore - Application - 1', () => {
     expectToBeTrue(textbook.exists)
     expect(textbook.attributes.title).to.equal('Français CE2')
 
-    expect((await api.client.getAll('exercise', {filters: {textbook: 'klxufv', textbookPage: 6}})).items.length).to.equal(3)
+    expect((await api.client.getAll('exercise', {filters: {textbook: 'klxufv', textbookPage: 6}})).allItems.length).to.equal(3)
   })
 
   it('updates an exercise', async () => {
@@ -1571,7 +1590,7 @@ describe('ApiStore - Application - 1', () => {
 
     expectToBeTrue(exercise.inCache)
     expect(exercise.exists).to.be.false
-    expect((await api.client.getAll('exercise', {filters: {textbook: 'klxufv', textbookPage: 6}})).items.length).to.equal(1)
+    expect((await api.client.getAll('exercise', {filters: {textbook: 'klxufv', textbookPage: 6}})).allItems.length).to.equal(1)
   })
 })
 

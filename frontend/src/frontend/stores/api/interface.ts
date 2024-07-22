@@ -124,7 +124,8 @@ export type List<ItemType extends ItemTypes> = {
   readonly inCache: boolean
 
   // @todo Consider having List<> extend ArrayLike<> instead of having an 'items' property?
-  readonly items: Readonly<(Item<ItemType> & InCache)[]>
+  readonly allItems: Readonly<(Item<ItemType> & InCache)[]>
+  readonly existingItems: Readonly<(Item<ItemType> & InCache & Exists)[]>
 
   readonly loading: boolean
   readonly fullyLoaded: Promise<void>

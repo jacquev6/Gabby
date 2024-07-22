@@ -134,7 +134,7 @@ const matchingExercises = computed(() => {
   }
 })
 
-const alreadyExists = computed(() => matchingExercises.value?.items.length === 1)  // @todo Implement
+const alreadyExists = computed(() => matchingExercises.value?.existingItems.length === 1)  // @todo Implement
 
 watch(
   [() => props.number, () => props.automaticNumber],

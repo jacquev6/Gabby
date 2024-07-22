@@ -62,8 +62,7 @@ function changePage(page: number) {
 }
 
 const greyRectangles = computed(() => {
-  const rectangles = props.exercises.items
-    .filter((exercise): exercise is Exercise & InCache & Exists => exercise.inCache && exercise.exists)
+  const rectangles = props.exercises.existingItems
     .map(exercise => exercise.attributes.boundingRectangle)
     .filter((x): x is Rectangle => x !== null)
 

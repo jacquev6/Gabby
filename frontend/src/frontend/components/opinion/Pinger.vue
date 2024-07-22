@@ -35,9 +35,9 @@ async function deletePing(ping: Ping) {
 
 <template>
   <BBusy :busy="pings.loading">
-    <ul v-if="pings.items.length">
-      <template v-for="ping in pings.items" :key="ping.id">
-        <li v-if="ping.exists">
+    <ul v-if="pings.existingItems.length">
+      <template v-for="ping in pings.existingItems" :key="ping.id">
+        <li>
           <BBusy :busy="ping.loading">
             {{ ping.id }} - {{ ping.attributes.createdAt }}<span v-if="ping.attributes.message">: {{ ping.attributes.message }}</span>
             <BButton sm secondary @click="setMessage(ping)">Set message</BButton>

@@ -10,7 +10,7 @@ import ExerciseTools from '../ExerciseTools.vue'
 import type { Project, Textbook, Section } from '$frontend/stores/api'
 import AdaptedExercise from '../AdaptedExercise.vue'
 import type { ExerciseCreationHistory } from '../ExerciseCreationHistory'
-import type { List, Exercise, InCache, Exists } from '$frontend/stores/api'
+import type { List, InCache, Exists } from '$frontend/stores/api'
 import type { Rectangle } from '../RectanglesHighlighter.vue'
 
 
@@ -67,8 +67,7 @@ async function saveThenNext(save: () => Promise<void>) {
 }
 
 const greyRectangles = computed(() => {
-  const rectangles = props.exercises.items
-    .filter((exercise): exercise is Exercise & InCache & Exists => exercise.inCache && exercise.exists)
+  const rectangles = props.exercises.existingItems
     .filter(exercise => exercise.id !== props.exerciseId)
     .map(exercise => exercise.attributes.boundingRectangle)
     .filter((x): x is Rectangle => x !== null)

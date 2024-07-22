@@ -16,7 +16,8 @@ export interface CachedList {
   refresh(): Promise<void>
   _include: Record<string, true>
 
-  items: any/* @todo Type */[]
+  allItems: any/* @todo Type */[]
+  existingItems: any/* @todo Type */[]
   _reactive: {
     inCache: boolean
     loading: boolean
@@ -115,8 +116,13 @@ export function makeLists(requester: Requester, items: Items) {
         }
         return this._loadingPromise
       },
-      get items() {
+      get allItems() {
         return this._reactive.items.map(ref => items.get(ref.type, ref.id, {})[0])
+      },
+      get existingItems() {
+        return this._reactive.items
+          .map(ref => items.get(ref.type, ref.id, {})[0])
+          .filter(item => item.inCache && item.exists)
       },
     }
   }

@@ -14,9 +14,9 @@ function ellipsis(s: string) {
 
 <template>
   <BBusy :busy="exercises.loading">
-    <ul v-if="exercises.items.length">
-      <template v-for="exercise in exercises.items">
-        <li v-if="exercise.exists">
+    <ul v-if="exercises.existingItems.length">
+      <template v-for="exercise in exercises.existingItems">
+        <li>
           <strong>{{ exercise.attributes.number }}</strong>
           {{ ellipsis(exercise.attributes.instructions) }}
           <em>{{ exercise.relationships.adaptation? $t(exercise.relationships.adaptation.type) : '' }}</em>

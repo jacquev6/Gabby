@@ -13,7 +13,7 @@ describe('SectionEditor', () => {
 
     resetApiStores()
     cy.wrap(useApiStore()).then((api) => api.auth.login('admin', 'password'))
-    cy.wrap(useApiStore()).then((api) => api.client.getAll('section')).its('items').should('have.length', 1)
+    cy.wrap(useApiStore()).then((api) => api.client.getAll('section')).its('existingItems').should('have.length', 1)
 
     cy.viewport(1000, 500)
 
