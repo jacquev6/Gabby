@@ -98,6 +98,7 @@ export type Item<ItemType extends ItemTypes> = ({
   refresh(): Promise<void>
 }) & (Operations<ItemType>['patchable'] extends false ? {} : {
   readonly patching: boolean
+  // @todo Remove InclusionOptions, use the ones in cache
   patch(attributes: Operations<ItemType>['patchableAttributes'], relationships: Operations<ItemType>['patchableRelationships'], inclusionOptions?: InclusionOptions): Promise<void>
 }) & (Operations<ItemType>['deletable'] extends false ? {} : {
   readonly deleting: boolean
