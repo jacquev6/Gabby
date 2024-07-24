@@ -34,7 +34,7 @@ async function create() {
 
   /* no await */ props.projects.refresh()
 
-  router.push({name: 'new--project', params: {projectId: project.id}})
+  router.push({name: 'project', params: {projectId: project.id}})
 }
 </script>
 

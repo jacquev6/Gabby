@@ -35,7 +35,7 @@ const breadcrumbs = computed(() => {
   } else if (props.project.inCache && props.project.exists) {
     return bc.prepend(
       props.project.attributes.title,
-      {name: 'new--project', params: {projectId: props.project.id}},
+      {name: 'project', params: {projectId: props.project.id}},
       props.breadcrumbs,
     )
   } else {

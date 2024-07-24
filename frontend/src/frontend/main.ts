@@ -45,12 +45,12 @@ const router = createRouter({
       children: [
         {
           path: '',
-          name: 'new--index',
+          name: 'index',
           component: RootView,
         },
         {
           path: 'errors',
-          name: 'new--errors',
+          name: 'errors',
           component: () => import('./views/ErrorsView.vue'),
         },
         {
@@ -58,7 +58,7 @@ const router = createRouter({
           children: [
             {
               path: '',
-              name: 'new--project',
+              name: 'project',
               component: ProjectView,
               props: true,
             },

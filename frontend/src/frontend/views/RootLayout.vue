@@ -35,7 +35,7 @@ const title = computed(() => {
 })
 
 const breadcrumbs = computed(() => {
-  return bc.prepend(i18n.t('home'), {name: 'new--index'}, props.breadcrumbs)
+  return bc.prepend(i18n.t('home'), {name: 'index'}, props.breadcrumbs)
 })
 </script>
 

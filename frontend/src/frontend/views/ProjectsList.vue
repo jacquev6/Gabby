@@ -13,7 +13,7 @@ defineProps<{
     <template v-if="projects.existingItems.length !== 0">
       <ul>
         <li v-for="project in projects.existingItems" :key="project.id">
-          <RouterLink :to="{name: 'new--project', params: {projectId: project.id}}">{{ project.attributes.title }}</RouterLink>
+          <RouterLink :to="{name: 'project', params: {projectId: project.id}}">{{ project.attributes.title }}</RouterLink>
         </li>
       </ul>
     </template>
