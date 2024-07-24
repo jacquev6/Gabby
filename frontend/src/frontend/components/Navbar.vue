@@ -7,6 +7,7 @@ import LanguageSelector from './opinion/LanguageSelector.vue'
 import { useApiStore } from '$frontend/stores/api'
 import type { Breadcrumbs } from './breadcrumbs'
 import bc from './breadcrumbs'
+import { useGloballyBusyStore } from '$frontend/stores/globallyBusy'
 
 
 const props = defineProps<{
@@ -15,6 +16,7 @@ const props = defineProps<{
 }>()
 
 const api = useApiStore()
+const globallyBusy = useGloballyBusyStore()
 
 useHead({
   title: computed(() => props.title)  // 'useHead' does not react to props directly,
@@ -29,7 +31,8 @@ const about = ref<InstanceType<typeof AboutModal> | null>(null)
   <nav class="navbar navbar-expand-sm bg-body-tertiary">
     <div class="container-fluid">
       <RouterLink to="/" class="navbar-brand"><img src="/logo-cartable-fantastique.png" alt="Logo Cartable Fantastique" width="28" height="28"> MALIN</RouterLink>
-      <nav v-if="breadcrumbs !== null" style="--bs-breadcrumb-divider: '>'" aria-label="breadcrumb">
+      <span v-if="globallyBusy.reasons.length !== 0"><wbr/> ({{ globallyBusy.reasons.join(', ') }})</span>
+      <nav v-else-if="breadcrumbs !== null" style="--bs-breadcrumb-divider: '>'" aria-label="breadcrumb">
         <!-- @todo Fix vertical alignment of the breadcrumbs -->
         <ol class="breadcrumb">
           <li v-for="breadcrumb in breadcrumbs.intermediate" class="breadcrumb-item">

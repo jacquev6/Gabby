@@ -10,6 +10,12 @@ defineProps<{
 const model = defineModel<unknown>()
 
 const id = `input-${ Math.floor(Math.random() * 4000000000) }`
+
+defineExpose({
+  clear: () => {
+    model.value = ''
+  }
+})
 </script>
 
 <template>

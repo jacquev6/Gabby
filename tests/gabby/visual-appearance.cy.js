@@ -42,5 +42,5 @@ describe('Gabby', () => {
 
   test('/project-nope', 'project-not-found')
   test('/project-xkopqm/textbook-nope/page-1', 'textbook-not-found')
-  // @todo /project-xkopqm/textbook-klxufv/page-6/exercise-nope
+  test('/project-xkopqm/textbook-klxufv/page-6/exercise-nope', 'exercise-not-found')
 })

@@ -18,6 +18,11 @@ import ProjectIndexView from './views/project/index/ProjectIndexView.vue'
 import ProjectTextbookPageListExercisesView from './views/project/textbook/page/list-exercises/ListExercisesView.vue'
 import ProjectTextbookPageCreateExerciseView from './views/project/textbook/page/create-exercise/CreateExerciseView.vue'
 import ProjectTextbookPageEditExerciseView from './views/project/textbook/page/edit-exercise/EditExerciseView.vue'
+import RootView from './new-views/RootView.vue'
+import ProjectView from './new-views/project/ProjectView.vue'
+import ProjectTextbookPageView from './new-views/project/textbook/page/ProjectTextbookPageView.vue'
+import ProjectTextbookPageNewExerciseView from './new-views/project/textbook/page/ProjectTextbookPageNewExerciseView.vue'
+import ProjectTextbookPageExerciseView from './new-views/project/textbook/page/ProjectTextbookPageExerciseView.vue'
 import '$/promise-with-resolvers-polyfill.js'
 
 
@@ -46,6 +51,86 @@ const router = createRouter({
     },
     {
       path: '/',
+      children: [
+        {
+          path: '',
+          name: 'new--index',
+          component: RootView,
+        },
+        {
+          path: 'errors',
+          name: 'new--errors',
+          component: () => import('./new-views/ErrorsView.vue'),
+        },
+        {
+          path: 'project-:projectId',
+          children: [
+            {
+              path: '',
+              name: 'new--project',
+              component: ProjectView,
+              props: true,
+            },
+            {
+              path: 'textbook-:textbookId/page-:page',
+              children: [
+                {
+                  path: '',
+                  name: 'project-textbook-page',
+                  component: ProjectTextbookPageView,
+                  props: (route) => {
+                    console.assert(typeof(route.params.projectId) === 'string')
+                    console.assert(typeof(route.params.textbookId) === 'string')
+                    console.assert(typeof(route.params.page) === 'string')
+                    return {
+                      projectId: route.params.projectId,
+                      textbookId: route.params.textbookId,
+                      page: Number.parseInt(route.params.page),
+                    }
+                  },
+                },
+                {
+                  path: 'new-exercise',
+                  name: 'project-textbook-page-new-exercise',
+                  component: ProjectTextbookPageNewExerciseView,
+                  props: (route) => {
+                    console.assert(typeof(route.params.projectId) === 'string')
+                    console.assert(typeof(route.params.textbookId) === 'string')
+                    console.assert(typeof(route.params.page) === 'string')
+                    return {
+                      projectId: route.params.projectId,
+                      textbookId: route.params.textbookId,
+                      page: Number.parseInt(route.params.page),
+                    }
+                  },
+                },
+                {
+                  path: 'exercise-:exerciseId',
+                  name: 'project-textbook-page-exercise',
+                  component: ProjectTextbookPageExerciseView,
+                  props: (route) => {
+                    console.assert(typeof(route.params.projectId) === 'string')
+                    console.assert(typeof(route.params.textbookId) === 'string')
+                    console.assert(typeof(route.params.page) === 'string')
+                    console.assert(typeof(route.params.exerciseId) === 'string')
+                    console.assert(route.query.displayPage === undefined || typeof(route.query.displayPage) === 'string')
+                    return {
+                      projectId: route.params.projectId,
+                      textbookId: route.params.textbookId,
+                      page: Number.parseInt(route.params.page),
+                      exerciseId: route.params.exerciseId,
+                      displayPage: route.query.displayPage === undefined ? undefined : Number.parseInt(route.query.displayPage),
+                    }
+                  },
+                }
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      path: '/old',
       component: RootLayout,
       children: [
         {
