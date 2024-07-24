@@ -4,8 +4,8 @@ import { ref, computed, watch } from 'vue'
 import { BLabeledCheckbox, BLabeledTextarea, BButton } from '$/frontend/components/opinion/bootstrap'
 import { textualFieldNames } from '$/frontend/components/ExerciseFieldsForm.vue'
 import type { Model, TextualFieldName } from '$frontend/components/ExerciseFieldsForm.vue'
-import FloatingModal from '$frontend/components/NewFloatingModal.vue'
-import type { Point } from '$frontend/components/NewFloatingModal.vue'
+import FloatingModal from '$frontend/components/FloatingModal.vue'
+import type { Point } from '$frontend/components/FloatingModal.vue'
 
 
 
