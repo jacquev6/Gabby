@@ -9,11 +9,11 @@ import type PdfjsType from 'pdfjs-dist/types/src/pdf'
 
 import { i18n } from '$/locales'
 import ResetPasswordView from './views/ResetPasswordView.vue'
-import RootView from './new-views/RootView.vue'
-import ProjectView from './new-views/project/ProjectView.vue'
-import ProjectTextbookPageView from './new-views/project/textbook/page/ProjectTextbookPageView.vue'
-import ProjectTextbookPageNewExerciseView from './new-views/project/textbook/page/ProjectTextbookPageNewExerciseView.vue'
-import ProjectTextbookPageExerciseView from './new-views/project/textbook/page/ProjectTextbookPageExerciseView.vue'
+import RootView from './views/RootView.vue'
+import ProjectView from './views/project/ProjectView.vue'
+import ProjectTextbookPageView from './views/project/textbook/page/ProjectTextbookPageView.vue'
+import ProjectTextbookPageNewExerciseView from './views/project/textbook/page/ProjectTextbookPageNewExerciseView.vue'
+import ProjectTextbookPageExerciseView from './views/project/textbook/page/ProjectTextbookPageExerciseView.vue'
 import '$/promise-with-resolvers-polyfill.js'
 
 
@@ -51,7 +51,7 @@ const router = createRouter({
         {
           path: 'errors',
           name: 'new--errors',
-          component: () => import('./new-views/ErrorsView.vue'),
+          component: () => import('./views/ErrorsView.vue'),
         },
         {
           path: 'project-:projectId',
