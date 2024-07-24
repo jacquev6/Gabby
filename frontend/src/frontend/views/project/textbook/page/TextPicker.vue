@@ -12,6 +12,16 @@ export interface TextItem {
   str: string,
 }
 
+interface Point {
+  x: number
+  y: number
+}
+
+export interface Rectangle {
+  start: Point
+  stop: Point
+}
+
 // WARNING: this component doesn't handle well when its props are changed after it's mounted.
 const props = defineProps<{
   width: number,
@@ -21,7 +31,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  textSelected: [text: string, point: {clientX: number, clientY: number}, items: TextItem[], rectangle: {start: {x: number, y: number}, stop: {x: number, y: number}}],
+  textSelected: [text: string, point: {clientX: number, clientY: number}, items: TextItem[], rectangle: Rectangle],
 }>()
 
 const canvas = ref<HTMLCanvasElement | null>(null)

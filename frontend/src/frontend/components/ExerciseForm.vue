@@ -531,10 +531,10 @@ defineExpose({
       <div class="mb-3">
         <label class="form-label" for="abc">{{ $t('adaptationType') }}</label>
           <BSelect
-          id="abc"
-          v-model="state.adaptationType"
-          :options="['-', ...adaptationTypes.map(kind => ({value: kind, label: $t(kind)}))]"
-        />
+            id="abc"
+            v-model="state.adaptationType"
+            :options="['-', ...adaptationTypes.map(kind => ({value: kind, label: $t(kind)}))]"
+          />
       </div>
       <Teleport :to="teleportAdaptationDetailsTo" :disabled="teleportAdaptationDetailsTo === undefined">
         <template v-if="state.adaptationType === '-'">

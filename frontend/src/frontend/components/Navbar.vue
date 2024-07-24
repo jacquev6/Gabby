@@ -4,7 +4,7 @@ import { useHead } from '@unhead/vue'
 
 import AboutModal from './AboutModal.vue'
 import LanguageSelector from './opinion/LanguageSelector.vue'
-import { useApiStore } from '../stores/api'
+import { useApiStore } from '$frontend/stores/api'
 import type { Breadcrumbs } from './breadcrumbs'
 import bc from './breadcrumbs'
 
