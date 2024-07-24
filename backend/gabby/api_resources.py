@@ -12,7 +12,7 @@ from .pdfs import PdfFile, PdfFileNaming, PdfFilesResource, PdfFileNamingsResour
 from .pings import PingsResource
 from .projects import Project, ProjectsResource
 from .testing import ApiTestCase, LoggedInApiTestCase
-from .textbooks import Textbook, TextbooksResource, SectionsResource
+from .textbooks import Textbook, Section, TextbooksResource, SectionsResource
 from .users import UsersResource
 from .users.recovery import RecoveryEmailRequestsResource
 from .wrapping import get_wrapper
@@ -99,7 +99,7 @@ class PdfFilesApiTestCase(LoggedInApiTestCase):
         self.assertEqual(pdf_file.pages_count, 42)
 
     def test_create_twice(self):
-        self.expect_commits_rollbacks(2, 1)
+        self.expect_one_more_commit()
 
         payload = {
             "data": {
@@ -2379,6 +2379,55 @@ class BatchingApiTestCase(LoggedInApiTestCase):
                 ],
             },
         )
+
+    def test_create_two_textbooks_with_same_pdf__pdf_first(self):
+        project = self.create_model(Project, title="The project", description="Description")
+        textbook = self.create_model(Textbook, project=project, title="First textbook")
+        pdfFile = self.create_model(PdfFile, sha256="f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c", bytes_count=0, pages_count=2)
+        self.create_model(PdfFileNaming, name="test.pdf", pdf_file=pdfFile)
+        self.create_model(Section, pdf_file_start_page=1, pages_count=2, textbook_start_page=1, pdf_file=pdfFile, textbook=textbook)
+
+        payload = {
+            "atomic:operations": [
+                {"op":"add","data":{"type":"pdfFile","lid":"pdf","attributes":{"sha256":"f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c","bytesCount":0,"pagesCount":2},"relationships":{}}},
+                {"op":"add","data":{"type":"pdfFileNaming","attributes":{"name":"test.pdf"},"relationships":{"pdfFile":{"data":{"type":"pdfFile","lid":"pdf"}}}}},
+                {"op":"add","data":{"type":"textbook","lid":"tb","attributes":{"title":"Second textbook"},"relationships":{"project":{"data":{"type":"project","id":"xkopqm"}}}}},
+                {"op":"add","data":{"type":"section","attributes":{"pdfFileStartPage":1,"pagesCount":2,"textbookStartPage":1},"relationships":{"pdfFile":{"data":{"type":"pdfFile","lid":"pdf"}},"textbook":{"data":{"type":"textbook","lid":"tb"}}}}},
+            ],
+        }
+        response = self.post("http://server/batch", payload)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
+
+        self.assertEqual(self.count_models(Textbook), 2)
+        self.assertEqual(self.count_models(PdfFile), 1)
+        self.assertEqual(self.count_models(PdfFileNaming), 2)
+        self.assertEqual(self.count_models(Section), 2)
+
+    def test_create_two_textbooks_with_same_pdf__textbook_first(self):
+        project = self.create_model(Project, title="The project", description="Description")
+        textbook = self.create_model(Textbook, project=project, title="First textbook")
+        pdfFile = self.create_model(PdfFile, sha256="f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c", bytes_count=0, pages_count=2)
+        self.create_model(PdfFileNaming, name="test.pdf", pdf_file=pdfFile)
+        self.create_model(Section, pdf_file_start_page=1, pages_count=2, textbook_start_page=1, pdf_file=pdfFile, textbook=textbook)
+
+        payload = {
+            "atomic:operations": [
+                {"op":"add","data":{"type":"textbook","lid":"tb","attributes":{"title":"Second textbook"},"relationships":{"project":{"data":{"type":"project","id":"xkopqm"}}}}},
+                {"op":"add","data":{"type":"pdfFile","lid":"pdf","attributes":{"sha256":"f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c","bytesCount":0,"pagesCount":2},"relationships":{}}},
+                {"op":"add","data":{"type":"pdfFileNaming","attributes":{"name":"test.pdf"},"relationships":{"pdfFile":{"data":{"type":"pdfFile","lid":"pdf"}}}}},
+                {"op":"add","data":{"type":"section","attributes":{"pdfFileStartPage":1,"pagesCount":2,"textbookStartPage":1},"relationships":{"pdfFile":{"data":{"type":"pdfFile","lid":"pdf"}},"textbook":{"data":{"type":"textbook","lid":"tb"}}}}},
+            ],
+        }
+        # There was a bug where this request got a 400 claiming that the section's textbook was null.
+        # This was due to the rollback in the PdfsResource it failed to add the PDF: that rollback also rollbacked the addition of the textbook.
+        # This was fixed by using a nested transaction in the PdfsResource.
+        response = self.post("http://server/batch", payload)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
+
+        self.assertEqual(self.count_models(Textbook), 2)
+        self.assertEqual(self.count_models(PdfFile), 1)
+        self.assertEqual(self.count_models(PdfFileNaming), 2)
+        self.assertEqual(self.count_models(Section), 2)
 
 
 class UnauthenticatedUseApiTestCase(ApiTestCase):
