@@ -7,7 +7,7 @@ import ProjectLayout from './ProjectLayout.vue'
 import { useApiStore } from '$frontend/stores/api'
 import bc from '$frontend/components/breadcrumbs'
 import ExercisesList from './ExercisesList.vue'
-import EditableProjectHeader from '$/frontend/views/project/index/EditableProjectHeader.vue'
+import EditableProjectHeader from './EditableProjectHeader.vue'
 import CreateTextbookForm from './CreateTextbookForm.vue'
 import CreateIndependentExerciseForm from './CreateIndependentExerciseForm.vue'
 
