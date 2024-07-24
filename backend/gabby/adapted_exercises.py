@@ -50,7 +50,6 @@ class AdaptedExercisesResource:
     def create_item(
         self,
         number,
-        textbook_page,
         instructions,
         wording,
         example,
@@ -61,7 +60,6 @@ class AdaptedExercisesResource:
     ):
         exercise = Exercise(
             number=number,
-            textbook_page=textbook_page,
             instructions=instructions,
             wording=wording,
             example=example,
@@ -116,7 +114,6 @@ class AdaptedExerciseApiTestCase(LoggedInApiTestCase):
                 "type": "adaptedExercise",
                 "attributes": {
                     "number": "C",
-                    "textbookPage": 1,
                     "instructions": "This is the {boxed-text|instructions}.",
                     "wording": "This is the wording.",
                     "example": "",
@@ -130,7 +127,7 @@ class AdaptedExerciseApiTestCase(LoggedInApiTestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
         self.assertEqual(response.json()["data"]["attributes"]["adapted"], {
             "number": "C",
-            "textbook_page": 1,
+            "textbook_page": None,  # @todo Rename to textbookPage
             "instructions": {"paragraphs": [
                 {"sentences": [{"tokens": [
                     {"type": "plainText", "text": "This"},
@@ -169,7 +166,6 @@ class AdaptedExerciseApiTestCase(LoggedInApiTestCase):
                 "type": "adaptedExercise",
                 "attributes": {
                     "number": "A.1",
-                    "textbookPage": 1,
                     "instructions": "This is the instructions.",
                     "wording": "This is the wording.",
                     "example": "",
@@ -187,7 +183,7 @@ class AdaptedExerciseApiTestCase(LoggedInApiTestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
         self.assertEqual(response.json()["data"]["attributes"]["adapted"], {
             "number": "A.1",
-            "textbook_page": 1,  # @todo Rename to textbookPage
+            "textbook_page": None,  # @todo Rename to textbookPage
             "instructions": {"paragraphs": [
                 {"sentences": [{"tokens": [
                     {"type": "plainText", "text": "This"},
@@ -227,7 +223,6 @@ class AdaptedExerciseApiTestCase(LoggedInApiTestCase):
                 "type": "adaptedExercise",
                 "attributes": {
                     "number": "A.1",
-                    "textbookPage": 1,
                     "instructions": "This is the instructions.",
                     "wording": "This is the wording.",
                     "example": "This is the example.",
@@ -245,7 +240,7 @@ class AdaptedExerciseApiTestCase(LoggedInApiTestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
         self.assertEqual(response.json()["data"]["attributes"]["adapted"], {
             "number": "A.1",
-            "textbook_page": 1,  # @todo Rename to textbookPage
+            "textbook_page": None,  # @todo Rename to textbookPage
             "instructions": {"paragraphs": [
                 {"sentences": [{"tokens": [
                     {"type": "plainText", "text": "This"},
@@ -303,7 +298,6 @@ class AdaptedExerciseApiTestCase(LoggedInApiTestCase):
                 "type": "adaptedExercise",
                 "attributes": {
                     "number": "A.1",
-                    "textbookPage": 1,
                     "instructions": "This is the instructions.",
                     "wording": "Fill @",
                     "example": "",
@@ -319,7 +313,7 @@ class AdaptedExerciseApiTestCase(LoggedInApiTestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
         self.assertEqual(response.json()["data"]["attributes"]["adapted"], {
             "number": "A.1",
-            "textbook_page": 1,  # @todo Rename to textbookPage
+            "textbook_page": None,  # @todo Rename to textbookPage
             "instructions": {"paragraphs": [{"sentences": [{"tokens": [
                 {"type": "plainText", "text": "This"},
                 {"type": "whitespace"},
@@ -345,7 +339,6 @@ class AdaptedExerciseApiTestCase(LoggedInApiTestCase):
                 "type": "adaptedExercise",
                 "attributes": {
                     "number": "A.1",
-                    "textbookPage": 1,
                     "instructions": "{choice|a} or {choice|b}",
                     "wording": "A @\n\nB @",
                     "example": "",
@@ -361,7 +354,7 @@ class AdaptedExerciseApiTestCase(LoggedInApiTestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
         self.assertEqual(response.json()["data"]["attributes"]["adapted"], {
             "number": "A.1",
-            "textbook_page": 1,  # @todo Rename to textbookPage
+            "textbook_page": None,  # @todo Rename to textbookPage
             "instructions": {"paragraphs": [{"sentences": [{"tokens": [
                 {"type": "boxedText", "text": "a"},
                 {"type": "whitespace"},

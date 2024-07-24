@@ -440,7 +440,6 @@ const adaptedData = computedAsync(
     console.assert(adaptationOptions.value !== null)
     const attributes = {
       number: state.value.number,
-      textbookPage: props.textbookPage,
       instructions: state.value.instructions,
       wording: state.value.wording,
       example: state.value.example,

@@ -156,7 +156,6 @@ class MultipleChoicesInWordingAdaptation(MultipleChoicesInWordingAdaptationOptio
 
 class AdaptedExercise(Base):
     number: Annotated[str, WriteOnly()]
-    textbookPage: Annotated[int | None, WriteOnly()]
     instructions: Annotated[str, WriteOnly()]
     wording: Annotated[str, WriteOnly()]
     example: Annotated[str, WriteOnly()]

@@ -701,17 +701,6 @@
             "title": "Number",
             "type": "string"
           },
-          "textbookPage": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Textbookpage"
-          },
           "type": {
             "title": "Type",
             "type": "string"
@@ -723,7 +712,6 @@
         },
         "required": [
           "number",
-          "textbookPage",
           "instructions",
           "wording",
           "example",

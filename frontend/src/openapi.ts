@@ -460,8 +460,6 @@ export interface components {
       instructions: string;
       /** Number */
       number: string;
-      /** Textbookpage */
-      textbookPage: number | null;
       /** Type */
       type: string;
       /** Wording */
