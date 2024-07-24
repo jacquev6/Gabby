@@ -178,6 +178,12 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
     cy.get('label:contains("Replace")').next().should('have.value', '')
   })
 
+  function undoRedoHistoryShouldBeCleared() {
+    cy.wait(1500)  // We have to wait because the history is debounced: it always starts disabled and gets enabled after 1s.
+    cy.get('@undo').should('be.disabled')
+    cy.get('@redo').should('be.disabled')
+  }
+
   it('has "undo/redo" on new exercise', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
     setLocale()
@@ -185,9 +191,7 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
     cy.get('button:contains("Undo")').as('undo')
     cy.get('button:contains("Redo")').as('redo')
 
-    cy.wait(1500)  // We have to wait, because the history is debounced: it always starts disabled and gets enabled after 1s.
-    cy.get('@undo').should('be.disabled')
-    cy.get('@redo').should('be.disabled')
+    undoRedoHistoryShouldBeCleared()
 
     cy.get('label:contains("Number")').next().type('6')
     cy.get('@undo').should('be.enabled')
@@ -201,15 +205,42 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
     cy.get('@undo').should('be.enabled')
     cy.get('@redo').should('be.disabled')
 
-    // @todo Test that undo/redo works on all fields (incl. bounding rectangle, adaptation type, etc.)
+    cy.get('label:contains("Instructions")').next().type('First\n')
+    cy.wait(1500)
+    cy.get('label:contains("Instructions")').next().type('Second')
+    cy.get('label:contains("Instructions")').next().should('have.value', 'First\nSecond')
+    cy.wait(1500)
+    cy.get('@undo').click()
+    cy.get('label:contains("Instructions")').next().should('have.value', 'First\n')
+    cy.get('@redo').should('be.enabled')
+    cy.get('@undo').click()
+    cy.get('label:contains("Instructions")').next().should('have.value', '')
+    cy.get('@redo').click()
+    cy.get('label:contains("Instructions")').next().should('have.value', 'First\n')
+    cy.get('label:contains("Instructions")').next().type('Third')
+    cy.get('label:contains("Instructions")').next().should('have.value', 'First\nThird')
+    cy.get('@redo').should('be.disabled')
+    cy.get('@undo').click()
+    cy.get('label:contains("Instructions")').next().should('have.value', 'First\n')
+    cy.get('@redo').click()
+    cy.get('label:contains("Instructions")').next().should('have.value', 'First\nThird')
 
-    cy.get('label:contains("Number")').next().type('{selectall}11')
-    cy.wait(1100)  // @todo Remove. See '@todo' in 'clearHistory' in 'ExerciseForm.vue'
+    // @todo Test that undo/redo works on all fields (incl. bounding rectangle, adaptation type, etc.)
+  })
+
+  it('clears "undo/redo" history on skip', () => {
+    cy.visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
+    setLocale()
+
+    cy.get('button:contains("Undo")').as('undo')
+    cy.get('button:contains("Redo")').as('redo')
+
+    cy.get('label:contains("Number")').next().type('11')
+    cy.get('@undo').should('be.enabled')
+
     cy.get('button:contains("Skip")').click()
 
-    cy.wait(1500)  // We have to wait, see comment above
-    cy.get('@undo').should('be.disabled')
-    cy.get('@redo').should('be.disabled')
+    undoRedoHistoryShouldBeCleared()
 
     cy.get('label:contains("Instructions")').next().type('Blah blah')
     cy.get('@undo').should('be.enabled')
@@ -220,14 +251,23 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
     cy.get('@redo').click()
     cy.get('label:contains("Number")').next().should('have.value', '12')  // Unchanged by 'redo'
     cy.get('label:contains("Instructions")').next().should('have.value', 'Blah blah')
+  })
+
+  it('clears "undo/redo" history on save', () => {
+    cy.visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
+    setLocale()
+
+    cy.get('button:contains("Undo")').as('undo')
+    cy.get('button:contains("Redo")').as('redo')
+
+    cy.get('label:contains("Number")').next().type('12')
+    cy.get('@undo').should('be.enabled')
 
     cy.get('button:contains("Save then next")').click()
 
-    cy.wait(1500)  // We have to wait, see comment above
-    cy.get('@undo').should('be.disabled')
-    cy.get('@redo').should('be.disabled')
+    undoRedoHistoryShouldBeCleared()
 
-    cy.get('label:contains("Instructions")').next().type('Bloh bloh')
+    cy.get('label:contains("Instructions")').next().type('Blah blah')
     cy.get('@undo').should('be.enabled')
     cy.get('@redo').should('be.disabled')
     cy.get('@undo').click()
@@ -235,7 +275,53 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
     cy.get('label:contains("Instructions")').next().should('have.value', '')
     cy.get('@redo').click()
     cy.get('label:contains("Number")').next().should('have.value', '13')  // Unchanged by 'redo'
-    cy.get('label:contains("Instructions")').next().should('have.value', 'Bloh bloh')
+    cy.get('label:contains("Instructions")').next().should('have.value', 'Blah blah')
+  })
+
+  it('clears "undo/redo" history when navigating exercise creation history', () => {
+    cy.viewport(1000, 800)
+
+    cy.visit('/project-xkopqm/textbook-klxufv/page-5/new-exercise')
+    setLocale()
+
+    cy.get('button:contains("Undo")').as('undo')
+    cy.get('button:contains("Redo")').as('redo')
+
+    cy.get('label:contains("Number")').next().type('1')
+    cy.get('button:contains("Save then next")').click()
+    cy.get('button:contains("Save then next")').click()
+
+    cy.get('label:contains("Instructions")').next().type('Blah blah')
+    cy.get('@undo').should('be.enabled')
+
+    cy.get('button:contains("Previous (without saving)")').click()
+
+    cy.location('pathname').should('equal', '/project-xkopqm/textbook-klxufv/page-5/exercise-fxcuac')
+    undoRedoHistoryShouldBeCleared()
+
+    cy.get('label:contains("Instructions")').next().type('Blah blah')
+    cy.get('@undo').should('be.enabled')
+
+    cy.get('button:contains("Previous (without saving)")').click()
+
+    cy.location('pathname').should('equal', '/project-xkopqm/textbook-klxufv/page-5/exercise-pghtfo')
+    undoRedoHistoryShouldBeCleared()
+
+    cy.get('label:contains("Instructions")').next().type('Blah blah')
+    cy.get('@undo').should('be.enabled')
+
+    cy.get('button:contains("Save then next")').click()
+
+    cy.location('pathname').should('equal', '/project-xkopqm/textbook-klxufv/page-5/exercise-fxcuac')
+    undoRedoHistoryShouldBeCleared()
+
+    cy.get('label:contains("Instructions")').next().type('Blah blah')
+    cy.get('@undo').should('be.enabled')
+
+    cy.get('button:contains("Save then next")').click()
+
+    cy.location('pathname').should('equal', '/project-xkopqm/textbook-klxufv/page-5/new-exercise')
+    undoRedoHistoryShouldBeCleared()
   })
 
   it('has "undo/redo" on existing exercise', () => {
