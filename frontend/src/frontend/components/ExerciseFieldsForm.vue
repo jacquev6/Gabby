@@ -2,11 +2,20 @@
 import { nextTick } from 'vue'
 
 import { useApiStore } from '$frontend/stores/api'
-import type { Rectangle } from '$frontend/views/project/textbook/page/TextPicker.vue'
 import type { Project, Textbook, Exercise, InCache, Exists, SelectThingsAdaptation, FillWithFreeTextAdaptation, MultipleChoicesInInstructionsAdaptation, MultipleChoicesInWordingAdaptation } from '$frontend/stores/api'
 
 
 const api = useApiStore()
+
+export interface Point {
+  x: number
+  y: number
+}
+
+export interface Rectangle {
+  start: Point
+  stop: Point
+}
 
 // @todo Automate updating this type when a new adaptation type is added
 export const adaptationTypes = ['selectThingsAdaptation', 'fillWithFreeTextAdaptation', 'multipleChoicesInInstructionsAdaptation', 'multipleChoicesInWordingAdaptation'] as const

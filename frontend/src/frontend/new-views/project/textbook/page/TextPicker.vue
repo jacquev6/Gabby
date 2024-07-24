@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 
+import type { Point, Rectangle } from '$frontend/components/ExerciseFieldsForm.vue'
+
 
 export interface TextItem {
   left: number,
@@ -10,16 +12,6 @@ export interface TextItem {
   bottom: number,
   height: number,
   str: string,
-}
-
-interface Point {
-  x: number
-  y: number
-}
-
-export interface Rectangle {
-  start: Point
-  stop: Point
 }
 
 // WARNING: this component doesn't handle well when its props are changed after it's mounted.
@@ -53,11 +45,6 @@ watch([props, context], () => {
 
   context.value.setTransform(props.transform[0], props.transform[1], props.transform[2], props.transform[3], props.transform[4], props.transform[5])
 })
-
-interface Point {
-  x: number,
-  y: number,
-}
 
 var startPoint: Point | null = null
 
