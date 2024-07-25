@@ -111,7 +111,10 @@ const extractionEvents: object[] = []
 const resetUndoRedo = ref(0)
 
 watch(
-  computed(() => exercise.value.inCache && exercise.value.exists ? exercise.value.attributes.number : null),
+  [
+    computed(() => exercise.value.inCache && exercise.value.exists ? exercise.value.attributes.number : null),
+    computed(() => exercise.value.inCache && exercise.value.exists && exercise.value.relationships.adaptation !== null && exercise.value.relationships.adaptation.inCache),
+  ],
   () => {
     if (exercise.value.inCache && exercise.value.exists) {
       assignModelFrom(model, exercise.value, extractionEvents)
