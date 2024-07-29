@@ -149,9 +149,9 @@ function textSelected(pdfFile: PdfFile, pdf: {page: PDFPageProxy}, text: string,
   textSelectionModal.value.show(text, {x: point.clientX, y: point.clientY})
 }
 
-function highlightSelection(fieldName: TextualFieldName, text: string, range: {start: number, end: number}) {
+function highlightSuffix(fieldName: TextualFieldName, text: string) {
   console.assert(fields.value !== null)
-  fields.value.highlightSelection(fieldName, text, range)
+  fields.value.highlightSuffix(fieldName, text)
 }
 
 const lastSelection = ref<Selection | null>(null)
@@ -207,7 +207,7 @@ const adaptedData = computedAsync(
 </script>
 
 <template>
-  <TextSelectionModal ref="textSelectionModal" v-model="model" :extractionEvents @textAdded="highlightSelection" />
+  <TextSelectionModal ref="textSelectionModal" v-model="model" :extractionEvents @textAdded="highlightSuffix" />
   <ProjectTextbookPageLayout
     :project :textbook :page :displayPage @update:displayPage="changeDisplayPage"
     :title :breadcrumbs
