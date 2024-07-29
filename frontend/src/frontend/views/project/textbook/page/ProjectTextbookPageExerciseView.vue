@@ -106,6 +106,8 @@ const breadcrumbs = computed(() => {
 })
 
 const model = reactive(makeModel())
+const wysiwyg = ref(true)
+const addingChoices = ref(false)
 const extractionEvents: object[] = []
 
 const resetUndoRedo = ref(0)
@@ -229,11 +231,11 @@ const adaptedData = computedAsync(
         <TwoResizableColumns saveKey="projectTextbookPage-2" :snap="150" class="h-100" gutterWidth="200px">
           <template #left>
             <div class="h-100 overflow-auto" data-cy="left-col-2">
-              <h1>{{ $t('edition') }}</h1>
+              <h1>{{ $t('edition') }} <span style="font-size: small">(<label>WYSIWYG: <input type="checkbox" v-model="wysiwyg" /></label>)</span></h1>
               <BBusy :busy>
                 <ExerciseFieldsForm ref="fields"
                   v-model="model"
-                  :fixedNumber="true" :extractionEvents
+                  :fixedNumber="true" :extractionEvents :wysiwyg :addingChoices
                   @selected="selection => { lastSelection = selection }"
                 />
                 <template v-if="exerciseCreationHistory.current === null">
@@ -265,7 +267,7 @@ const adaptedData = computedAsync(
                     <UndoRedoTool v-model="model" :reset="resetUndoRedo" />
                   </template>
                   <template #adaptationDetails>
-                    <AdaptationDetailsFieldsForm v-model="model" />
+                    <AdaptationDetailsFieldsForm v-model="model" :wysiwyg v-model:addingChoices="addingChoices" />
                   </template>
                   <template #replace>
                     <ReplaceTool v-model="model" :lastSelection />

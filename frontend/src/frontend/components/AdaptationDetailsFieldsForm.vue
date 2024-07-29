@@ -4,7 +4,13 @@ import { BLabeledInput, BLabeledCheckbox } from './opinion/bootstrap'
 import type { Model } from './ExerciseFieldsForm.vue'
 
 
+defineProps<{
+  wysiwyg: boolean
+}>()
+
 const model = defineModel<Model>({required: true})
+
+const addingChoices = defineModel<boolean>('addingChoices', {required: true})
 </script>
 
 <template>
@@ -33,7 +39,11 @@ const model = defineModel<Model>({required: true})
     <BLabeledCheckbox :label="$t('includePunctuation')" v-model="model.selectThingsAdaptationOptions.punctuation" />
   </template>
   <template v-else-if="model.adaptationType === 'multipleChoicesInInstructionsAdaptation'">
-    <p class="alert alert-secondary">
+    <div v-if="wysiwyg" class="mb-3">
+      <input id="add-choices" type="checkbox" class="btn-check" v-model="addingChoices">
+      <label class="btn btn-primary" for="add-choices">Add choices</label>
+    </div>
+    <p v-else class="alert alert-secondary">
       <i18n-t keypath="useChoice">
         <template v-slot:choice>
           <code>{choice|<em>text</em>}</code>

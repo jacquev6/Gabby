@@ -246,14 +246,17 @@ export function suggestNextNumber(number: string) {
 </script>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
+import { onMounted, onBeforeUpdate } from 'vue'
 
 import { BLabeledInput, BLabeledTextarea, BLabeledSelect } from './opinion/bootstrap'
 import OptionalTextarea from './OptionalTextarea.vue'
 
-defineProps<{
+const props = defineProps<{
   fixedNumber: boolean
   extractionEvents: object[]
+  wysiwyg: boolean
+  addingChoices: boolean
 }>()
 
 const emit = defineEmits<{
@@ -271,6 +274,43 @@ const textAreas = {
   wording: wordingTextArea,
   example: exampleTextArea,
   clue: clueTextArea,
+}
+
+const instructionsDiv = ref<HTMLDivElement | null>(null)
+
+function updateInstructionsModel() {
+  console.assert(instructionsDiv.value !== null)
+  model.value.instructions = instructionsDiv.value.innerText
+}
+
+function updateInstructionsDivContent() {
+  if (instructionsDiv.value !== null) {
+    const innerText = model.value.instructions ?? ''
+    if (instructionsDiv.value.innerText !== innerText) {  // Avoid resetting the caret to the beginning: change only if necessary
+      instructionsDiv.value.innerText = innerText
+    }
+  }
+}
+
+onMounted(updateInstructionsDivContent)
+onBeforeUpdate(updateInstructionsDivContent)  // For re-used components
+watch(instructionsDiv, updateInstructionsDivContent)
+
+function mouseupInInstructionsDiv() {
+  if (props.addingChoices) {
+    const selection = window.getSelection()
+    if (selection !== null) {
+      const start = Math.min(selection.anchorOffset, selection.focusOffset)
+      const end = Math.max(selection.anchorOffset, selection.focusOffset)
+      const selectedText = model.value.instructions.substring(start, end)
+      if (selectedText !== '') {
+        const prefix = model.value.instructions.substring(0, start)
+        const suffix = model.value.instructions.substring(end)
+        model.value.instructions = `${prefix}{choice|${selectedText}}${suffix}`
+        updateInstructionsDivContent()
+      }
+    }
+  }
 }
 
 const noClueNoExample = computed(() => !exampleTextArea.value?.expanded && !clueTextArea.value?.expanded)
@@ -311,7 +351,12 @@ defineExpose({
       :label="$t('adaptationType')" v-model="model.adaptationType"
       :options="['-', ...adaptationTypes.map(kind => ({value: kind, label: $t(kind)}))]"
     />
+    <template v-if="wysiwyg && model.adaptationType === 'multipleChoicesInInstructionsAdaptation'">
+      <p>{{ $t('exerciseInstructions') }}</p>
+      <div ref="instructionsDiv" :contenteditable="!addingChoices" @input="updateInstructionsModel" @mouseup="mouseupInInstructionsDiv"></div>
+    </template>
     <BLabeledTextarea
+      v-else
       ref="instructionsTextArea"
       :label="$t('exerciseInstructions')"
       v-model="model.instructions"
