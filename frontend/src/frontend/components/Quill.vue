@@ -27,6 +27,9 @@ import 'quill/dist/quill.core.css'  // Removing this CSS causes a bug on Firefox
 // and re-style the typography.
 
 
+// @todo Avoid registering blots globally: https://quilljs.com/docs/configuration#formats
+// seems to indicate that 'formats' and 'registry' can be passed at instanciation time.
+
 const InlineBlot = Quill.import('blots/inline') as any/* @todo Type. Maybe see https://github.com/slab/quill/issues/1233 */
 
 class BoldBlot extends InlineBlot {
