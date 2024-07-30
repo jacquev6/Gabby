@@ -398,7 +398,7 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
     cy.get('label:contains("Instructions")').next().should('have.value', 'Ajoute le suffixe –eur aux verbes.\nIndique la classe des mots fabriqués.')
   })
 
-  it.only('has a *single* "undo/redo" history even for WYSIWYG fields', () => {
+  it('has a *single* "undo/redo" history even for WYSIWYG fields', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-7/exercise-xnyegk')
     setLocale()
 
