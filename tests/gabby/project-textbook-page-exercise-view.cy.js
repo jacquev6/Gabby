@@ -398,6 +398,28 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
     cy.get('label:contains("Instructions")').next().should('have.value', 'Ajoute le suffixe –eur aux verbes.\nIndique la classe des mots fabriqués.')
   })
 
+  it.only('has a *single* "undo/redo" history even for WYSIWYG fields', () => {
+    cy.visit('/project-xkopqm/textbook-klxufv/page-7/exercise-xnyegk')
+    setLocale()
+
+    cy.get('button:contains("Undo")').as('undo')
+    cy.get('button:contains("Redo")').as('redo')
+
+    cy.get(':has(>label:contains("Instructions")) .ql-editor').as('editor')
+    cy.get('@editor').focus().type('{selectall}Foo')
+    expectUndoRedoHistory(1, 0)
+    cy.get('@editor').should('contain.text', 'Foo')
+
+    // Ctrl+Z specifically in the editor doesn't have any effect
+    cy.get('@editor').focus().type('{ctrl+z}')  // Not caught by the undo/redo tool because of how Cypress emulates typing
+    expectStableUndoRedoHistory(1, 0)  // With the default Quill settings, the undo stack would grow to 2
+    cy.get('@editor').should('contain.text', 'Foo')
+
+    undoUsingKeyboard()
+    expectUndoRedoHistory(0, 1)
+    cy.get('@editor').should('contain.text', 'Réponds par vrai ou faux.')
+  })
+
   it('saves an exercise after setting its adaptation', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-7/exercise-jkrudc')
     setLocale()

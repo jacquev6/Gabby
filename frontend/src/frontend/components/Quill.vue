@@ -76,7 +76,12 @@ watch([quill, model], ([quill, model]) => {
 
 onMounted(() => {
   console.assert(container.value !== null)
-  quill.value = new Quill(container.value)
+  quill.value = new Quill(
+    container.value,
+    {
+      modules: {history: {maxStack: 0, userOnly: true}},  // https://github.com/slab/quill/issues/691#issuecomment-797861431
+    },
+  )
   quill.value.on('text-change', (_1: unknown, _2: unknown, source: string) => {
     if (source === 'user') {
       console.assert(quill.value !== null)
