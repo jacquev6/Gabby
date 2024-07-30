@@ -245,6 +245,45 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
     // @todo Test that undo/redo works on all fields (incl. bounding rectangle, adaptation type, etc.)
   })
 
+  function undoUsingKeyboard() {
+    cy.document().trigger('keydown', {key: 'Control', ctrlKey: true})
+    cy.wait(100)
+    cy.document().trigger('keydown', {key: 'z', ctrlKey: true})
+    cy.wait(100)
+    cy.document().trigger('keyup', {key: 'z', ctrlKey: true})
+    cy.document().trigger('keyup', {key: 'Control', ctrlKey: false})
+  }
+
+  function redoUsingKeyboard() {
+    cy.document().trigger('keydown', {key: 'Control', ctrlKey: true})
+    cy.wait(100)
+    cy.document().trigger('keydown', {key: 'Y', ctrlKey: true})
+    cy.wait(100)
+    cy.document().trigger('keyup', {key: 'Y', ctrlKey: true})
+    cy.document().trigger('keyup', {key: 'Control', ctrlKey: false})
+  }
+
+  it('has "undo/redo" using Ctrl+Z/Ctrl+Y', () => {
+    cy.visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
+    setLocale()
+
+    cy.get('button:contains("Undo")').as('undo')
+    cy.get('button:contains("Redo")').as('redo')
+
+    expectStableUndoRedoHistory(0, 0)
+
+    cy.get('label:contains("Number")').next().type('6')
+    expectUndoRedoHistory(1, 0)
+
+    undoUsingKeyboard()
+    cy.get('label:contains("Number")').next().should('have.value', '')
+    expectUndoRedoHistory(0, 1)
+
+    redoUsingKeyboard()
+    cy.get('label:contains("Number")').next().should('have.value', '6')
+    expectUndoRedoHistory(1, 0)
+  })
+
   it('clears "undo/redo" history on skip', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
     setLocale()
