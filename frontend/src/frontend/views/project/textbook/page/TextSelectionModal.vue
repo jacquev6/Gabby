@@ -16,7 +16,7 @@ const props = defineProps<{
 const model = defineModel<Model>({required: true})
 
 const emit = defineEmits<{
-  textAdded: [fieldName: TextualFieldName, text: string, range: {start: number, end: number}],
+  textAdded: [fieldName: TextualFieldName, text: string],
 }>()
 
 const modal = ref<InstanceType<typeof FloatingModal> | null>(null)
@@ -53,13 +53,11 @@ function addTextTo(fieldName: TextualFieldName) {
   if (model.value[fieldName] !== '' && !model.value[fieldName].endsWith('\n')) {
     model.value[fieldName] += '\n'
   }
-  const start = model.value[fieldName].length
-  const end = start + textToAdd.value.length
   model.value[fieldName] += textToAdd.value
   console.assert(modal.value !== null)
   modal.value.hide()
   props.extractionEvents.push({kind: `SelectedTextAddedTo${fieldName.charAt(0).toUpperCase()}${fieldName.slice(1)}`, valueBefore, valueAfter: model.value[fieldName]})
-  emit('textAdded', fieldName, textToAdd.value, {start, end})
+  emit('textAdded', fieldName, textToAdd.value)
 }
 
 defineExpose({

@@ -136,9 +136,9 @@ function textSelected(pdfFile: PdfFile, pdf: {page: PDFPageProxy}, text: string,
   }
 }
 
-function highlightSelection(fieldName: TextualFieldName, text: string, range: {start: number, end: number}) {
+function highlightSuffix(fieldName: TextualFieldName, text: string) {
   console.assert(fields.value !== null)
-  fields.value.highlightSelection(fieldName, text, range)
+  fields.value.highlightSuffix(fieldName, text)
 }
 
 const lastSelection = ref<Selection | null>(null)
@@ -196,7 +196,7 @@ const adaptedData = computedAsync(
 </script>
 
 <template>
-  <TextSelectionModal ref="textSelectionModal" v-model="model" :extractionEvents @textAdded="highlightSelection" />
+  <TextSelectionModal ref="textSelectionModal" v-model="model" :extractionEvents @textAdded="highlightSuffix" />
   <ProjectTextbookPageLayout
     :project :textbook :page :displayPage="page" @update:displayPage="changePage"
     :title :breadcrumbs
@@ -223,7 +223,7 @@ const adaptedData = computedAsync(
             <BBusy :busy>
               <ExerciseFieldsForm ref="fields"
                 v-model="model"
-                :fixedNumber="false" :extractionEvents
+                :fixedNumber="false" :extractionEvents :wysiwyg="false"
                 @selected="selection => { lastSelection = selection }"
               >
                 <template #overlay>
@@ -263,7 +263,9 @@ const adaptedData = computedAsync(
                   <UndoRedoTool v-model="model" :reset="resetUndoRedo" />
                 </template>
                 <template #adaptationDetails>
-                  <AdaptationDetailsFieldsForm v-model="model" />
+                  <template v-if="fields !== null">
+                    <AdaptationDetailsFieldsForm v-model="model" :wysiwyg="false" :fields/>
+                  </template>
                 </template>
                 <template #replace>
                   <ReplaceTool v-model="model" :lastSelection />

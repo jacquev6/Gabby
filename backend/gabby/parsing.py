@@ -79,10 +79,10 @@ class _SectionParser(abc.ABC):
         self.transformer = transformer
 
     def __call__(self, section: str):
-        if section == "":
+        normalized = self.normalize(section)
+        if normalized == "":
             return self.transformer.section([])
         else:
-            normalized = self.normalize(section)
             try:
                 return self.transformer.transform(self.parser.parse(normalized))
                 # return self.post_process(self.transformer.transform(self.parser.parse(normalized)))
@@ -185,6 +185,9 @@ class ParseGenericInstructionsSectionTestCase(TestCase):
 
     def test_empty(self):
         self.do_test("", renderable.Section(paragraphs=[]))
+
+    def test_only_whitespace(self):
+        self.do_test("   \t\n    ", renderable.Section(paragraphs=[]))
 
     def test_single_paragraph_of_a_single_sentence_of_plain_words(self):
         self.do_test(

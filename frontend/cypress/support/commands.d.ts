@@ -7,6 +7,10 @@ declare global {
   namespace Cypress {
     interface Chainable {
       mount: typeof mount
+      vue<C>(): Chainable<{
+        componentVM: InstanceType<C>
+        setProps(props: {[key: string]: unknown}): void
+      }>
     }
   }
 }

@@ -106,6 +106,7 @@ const breadcrumbs = computed(() => {
 })
 
 const model = reactive(makeModel())
+const wysiwyg = ref(true)
 const extractionEvents: object[] = []
 
 const resetUndoRedo = ref(0)
@@ -147,9 +148,9 @@ function textSelected(pdfFile: PdfFile, pdf: {page: PDFPageProxy}, text: string,
   textSelectionModal.value.show(text, {x: point.clientX, y: point.clientY})
 }
 
-function highlightSelection(fieldName: TextualFieldName, text: string, range: {start: number, end: number}) {
+function highlightSuffix(fieldName: TextualFieldName, text: string) {
   console.assert(fields.value !== null)
-  fields.value.highlightSelection(fieldName, text, range)
+  fields.value.highlightSuffix(fieldName, text)
 }
 
 const lastSelection = ref<Selection | null>(null)
@@ -205,7 +206,7 @@ const adaptedData = computedAsync(
 </script>
 
 <template>
-  <TextSelectionModal ref="textSelectionModal" v-model="model" :extractionEvents @textAdded="highlightSelection" />
+  <TextSelectionModal ref="textSelectionModal" v-model="model" :extractionEvents @textAdded="highlightSuffix" />
   <ProjectTextbookPageLayout
     :project :textbook :page :displayPage @update:displayPage="changeDisplayPage"
     :title :breadcrumbs
@@ -229,11 +230,11 @@ const adaptedData = computedAsync(
         <TwoResizableColumns saveKey="projectTextbookPage-2" :snap="150" class="h-100" gutterWidth="200px">
           <template #left>
             <div class="h-100 overflow-auto" data-cy="left-col-2">
-              <h1>{{ $t('edition') }}</h1>
+              <h1>{{ $t('edition') }} <span style="font-size: small">(<label>WYSIWYG: <input type="checkbox" v-model="wysiwyg" /></label>)</span></h1>
               <BBusy :busy>
                 <ExerciseFieldsForm ref="fields"
                   v-model="model"
-                  :fixedNumber="true" :extractionEvents
+                  :fixedNumber="true" :extractionEvents :wysiwyg
                   @selected="selection => { lastSelection = selection }"
                 />
                 <template v-if="exerciseCreationHistory.current === null">
@@ -265,7 +266,9 @@ const adaptedData = computedAsync(
                     <UndoRedoTool v-model="model" :reset="resetUndoRedo" />
                   </template>
                   <template #adaptationDetails>
-                    <AdaptationDetailsFieldsForm v-model="model" />
+                    <template v-if="fields !== null">
+                      <AdaptationDetailsFieldsForm v-model="model" :wysiwyg :fields />
+                    </template>
                   </template>
                   <template #replace>
                     <ReplaceTool v-model="model" :lastSelection />

@@ -250,10 +250,14 @@ import { ref, computed } from 'vue'
 
 import { BLabeledInput, BLabeledTextarea, BLabeledSelect } from './opinion/bootstrap'
 import OptionalTextarea from './OptionalTextarea.vue'
+import WysiwygInstructionsEditor from './WysiwygInstructionsEditor.vue'
+import type { Format as QuillFormat } from './Quill.vue'
 
-defineProps<{
+
+const props = defineProps<{
   fixedNumber: boolean
   extractionEvents: object[]
+  wysiwyg: boolean
 }>()
 
 const emit = defineEmits<{
@@ -273,6 +277,8 @@ const textAreas = {
   clue: clueTextArea,
 }
 
+const instructionsEditor = ref<InstanceType<typeof WysiwygInstructionsEditor> | null>(null)
+
 const noClueNoExample = computed(() => !exampleTextArea.value?.expanded && !clueTextArea.value?.expanded)
 
 const saveDisabled = computed(() => model.value.number === '')
@@ -287,20 +293,39 @@ function emitSelected(fieldName: TextualFieldName, e: Event) {
   settingSelectionRange.value = false
 }
 
-function highlightSelection(fieldName: TextualFieldName, text: string, {start, end}: {start: number, end: number}) {
-  console.assert(model.value[fieldName].endsWith(text))
+function highlightSuffix(fieldName: TextualFieldName, suffix: string) {
+  console.log('highlightSuffix', fieldName, suffix)
+  const text = model.value[fieldName]
+  console.assert(text.endsWith(suffix))
   const textArea = textAreas[fieldName].value
-  console.assert(textArea !== null)
-  nextTick(() => {
-    textArea.focus()
-    settingSelectionRange.value = true
-    textArea.setSelectionRange(start, end)
-  })
+  if(textArea === null) {
+    if (fieldName === 'instructions' && props.wysiwyg) {
+      nextTick(() => {
+        console.assert(instructionsEditor.value !== null)
+        instructionsEditor.value.focus()
+        settingSelectionRange.value = true
+        instructionsEditor.value.setSelection(instructionsEditor.value.getLength() - suffix.length - 1, suffix.length)
+      })
+    }
+  } else {
+    nextTick(() => {
+      textArea.focus()
+      settingSelectionRange.value = true
+      textArea.setSelectionRange(text.length - suffix.length, text.length)
+    })
+  }
+}
+
+function toggle(format: QuillFormat) {
+  if (instructionsEditor.value !== null) {
+    instructionsEditor.value.toggle(format)
+  }
 }
 
 defineExpose({
   saveDisabled,
-  highlightSelection
+  highlightSuffix,
+  toggle,
 })
 </script>
 
@@ -311,7 +336,14 @@ defineExpose({
       :label="$t('adaptationType')" v-model="model.adaptationType"
       :options="['-', ...adaptationTypes.map(kind => ({value: kind, label: $t(kind)}))]"
     />
+    <template v-if="wysiwyg && model.adaptationType === 'multipleChoicesInInstructionsAdaptation'">
+      <div class="mb-3">
+        <label class="form-label" @click="instructionsEditor?.focus()">{{ $t('exerciseInstructions') }}</label>
+        <WysiwygInstructionsEditor ref="instructionsEditor" v-model="model.instructions" />
+      </div>
+    </template>
     <BLabeledTextarea
+      v-else
       ref="instructionsTextArea"
       :label="$t('exerciseInstructions')"
       v-model="model.instructions"
