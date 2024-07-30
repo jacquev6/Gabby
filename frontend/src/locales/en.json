@@ -119,6 +119,7 @@
   "useSel1": "Use {first} in instructions, example or clue to format text as if selected.",
   "useChoice": "Use {choice} in instructions to indicate a possible choice.",
   "useChoices": "Use {choices} in wording to indicate a choice to make.",
+  "choiceButton": "Choice",
   "placeholderText": "Placeholder to fill",
 
   "tools": "Tools",

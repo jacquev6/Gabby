@@ -119,6 +119,7 @@
   "useSel1": "Utilisez {first} dans la consigne, l'example ou l'indice pour formatter du texte comme s'il était sélectionné.",
   "useChoice": "Utilisez {choice} dans la consigne pour indiquer un choix possible.",
   "useChoices": "Utilisez {choices} dans l'énoncé pour indiquer choix à faire.",
+  "choiceButton": "Choix",
   "placeholderText": "Trou à remplir",
 
   "tools": "Outils",

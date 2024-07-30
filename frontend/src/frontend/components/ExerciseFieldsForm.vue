@@ -246,17 +246,18 @@ export function suggestNextNumber(number: string) {
 </script>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
-import { onMounted, onBeforeUpdate } from 'vue'
+import { ref, computed } from 'vue'
 
 import { BLabeledInput, BLabeledTextarea, BLabeledSelect } from './opinion/bootstrap'
 import OptionalTextarea from './OptionalTextarea.vue'
+import WysiwygInstructionsEditor from './WysiwygInstructionsEditor.vue'
+import type { Format as QuillFormat } from './Quill.vue'
+
 
 const props = defineProps<{
   fixedNumber: boolean
   extractionEvents: object[]
   wysiwyg: boolean
-  addingChoices: boolean
 }>()
 
 const emit = defineEmits<{
@@ -276,42 +277,7 @@ const textAreas = {
   clue: clueTextArea,
 }
 
-const instructionsDiv = ref<HTMLDivElement | null>(null)
-
-function updateInstructionsModel() {
-  console.assert(instructionsDiv.value !== null)
-  model.value.instructions = instructionsDiv.value.innerText
-}
-
-function updateInstructionsDivContent() {
-  if (instructionsDiv.value !== null) {
-    const innerText = model.value.instructions ?? ''
-    if (instructionsDiv.value.innerText !== innerText) {  // Avoid resetting the caret to the beginning: change only if necessary
-      instructionsDiv.value.innerText = innerText
-    }
-  }
-}
-
-onMounted(updateInstructionsDivContent)
-onBeforeUpdate(updateInstructionsDivContent)  // For re-used components
-watch(instructionsDiv, updateInstructionsDivContent)
-
-function mouseupInInstructionsDiv() {
-  if (props.addingChoices) {
-    const selection = window.getSelection()
-    if (selection !== null) {
-      const start = Math.min(selection.anchorOffset, selection.focusOffset)
-      const end = Math.max(selection.anchorOffset, selection.focusOffset)
-      const selectedText = model.value.instructions.substring(start, end)
-      if (selectedText !== '') {
-        const prefix = model.value.instructions.substring(0, start)
-        const suffix = model.value.instructions.substring(end)
-        model.value.instructions = `${prefix}{choice|${selectedText}}${suffix}`
-        updateInstructionsDivContent()
-      }
-    }
-  }
-}
+const instructionsEditor = ref<InstanceType<typeof WysiwygInstructionsEditor> | null>(null)
 
 const noClueNoExample = computed(() => !exampleTextArea.value?.expanded && !clueTextArea.value?.expanded)
 
@@ -327,20 +293,39 @@ function emitSelected(fieldName: TextualFieldName, e: Event) {
   settingSelectionRange.value = false
 }
 
-function highlightSelection(fieldName: TextualFieldName, text: string, {start, end}: {start: number, end: number}) {
-  console.assert(model.value[fieldName].endsWith(text))
+function highlightSuffix(fieldName: TextualFieldName, suffix: string) {
+  console.log('highlightSuffix', fieldName, suffix)
+  const text = model.value[fieldName]
+  console.assert(text.endsWith(suffix))
   const textArea = textAreas[fieldName].value
-  console.assert(textArea !== null)
-  nextTick(() => {
-    textArea.focus()
-    settingSelectionRange.value = true
-    textArea.setSelectionRange(start, end)
-  })
+  if(textArea === null) {
+    if (fieldName === 'instructions' && props.wysiwyg) {
+      nextTick(() => {
+        console.assert(instructionsEditor.value !== null)
+        instructionsEditor.value.focus()
+        settingSelectionRange.value = true
+        instructionsEditor.value.setSelection(instructionsEditor.value.getLength() - suffix.length - 1, suffix.length)
+      })
+    }
+  } else {
+    nextTick(() => {
+      textArea.focus()
+      settingSelectionRange.value = true
+      textArea.setSelectionRange(text.length - suffix.length, text.length)
+    })
+  }
+}
+
+function toggle(format: QuillFormat) {
+  if (instructionsEditor.value !== null) {
+    instructionsEditor.value.toggle(format)
+  }
 }
 
 defineExpose({
   saveDisabled,
-  highlightSelection
+  highlightSuffix,
+  toggle,
 })
 </script>
 
@@ -352,8 +337,10 @@ defineExpose({
       :options="['-', ...adaptationTypes.map(kind => ({value: kind, label: $t(kind)}))]"
     />
     <template v-if="wysiwyg && model.adaptationType === 'multipleChoicesInInstructionsAdaptation'">
-      <p>{{ $t('exerciseInstructions') }}</p>
-      <div ref="instructionsDiv" :contenteditable="!addingChoices" @input="updateInstructionsModel" @mouseup="mouseupInInstructionsDiv"></div>
+      <div class="mb-3">
+        <label class="form-label" @click="instructionsEditor?.focus()">{{ $t('exerciseInstructions') }}</label>
+        <WysiwygInstructionsEditor ref="instructionsEditor" v-model="model.instructions" />
+      </div>
     </template>
     <BLabeledTextarea
       v-else

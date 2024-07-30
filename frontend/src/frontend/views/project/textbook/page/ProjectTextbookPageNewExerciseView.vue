@@ -223,7 +223,7 @@ const adaptedData = computedAsync(
             <BBusy :busy>
               <ExerciseFieldsForm ref="fields"
                 v-model="model"
-                :fixedNumber="false" :extractionEvents :wysiwyg="false" :addingChoices="false"
+                :fixedNumber="false" :extractionEvents :wysiwyg="false"
                 @selected="selection => { lastSelection = selection }"
               >
                 <template #overlay>
@@ -263,7 +263,9 @@ const adaptedData = computedAsync(
                   <UndoRedoTool v-model="model" :reset="resetUndoRedo" />
                 </template>
                 <template #adaptationDetails>
-                  <AdaptationDetailsFieldsForm v-model="model" :wysiwyg="false" :addingChoices="false"/>
+                  <template v-if="fields !== null">
+                    <AdaptationDetailsFieldsForm v-model="model" :wysiwyg="false" :fields/>
+                  </template>
                 </template>
                 <template #replace>
                   <ReplaceTool v-model="model" :lastSelection />

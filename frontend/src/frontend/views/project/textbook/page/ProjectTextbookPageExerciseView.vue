@@ -107,7 +107,6 @@ const breadcrumbs = computed(() => {
 
 const model = reactive(makeModel())
 const wysiwyg = ref(true)
-const addingChoices = ref(false)
 const extractionEvents: object[] = []
 
 const resetUndoRedo = ref(0)
@@ -235,7 +234,7 @@ const adaptedData = computedAsync(
               <BBusy :busy>
                 <ExerciseFieldsForm ref="fields"
                   v-model="model"
-                  :fixedNumber="true" :extractionEvents :wysiwyg :addingChoices
+                  :fixedNumber="true" :extractionEvents :wysiwyg
                   @selected="selection => { lastSelection = selection }"
                 />
                 <template v-if="exerciseCreationHistory.current === null">
@@ -267,7 +266,9 @@ const adaptedData = computedAsync(
                     <UndoRedoTool v-model="model" :reset="resetUndoRedo" />
                   </template>
                   <template #adaptationDetails>
-                    <AdaptationDetailsFieldsForm v-model="model" :wysiwyg v-model:addingChoices="addingChoices" />
+                    <template v-if="fields !== null">
+                      <AdaptationDetailsFieldsForm v-model="model" :wysiwyg :fields />
+                    </template>
                   </template>
                   <template #replace>
                     <ReplaceTool v-model="model" :lastSelection />
