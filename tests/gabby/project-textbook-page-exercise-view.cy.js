@@ -178,10 +178,26 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
     cy.get('label:contains("Replace")').next().should('have.value', '')
   })
 
-  function undoRedoHistoryShouldBeCleared() {
-    cy.wait(1500)  // We have to wait because the history is debounced: it always starts disabled and gets enabled after 1s.
-    cy.get('@undo').should('be.disabled')
-    cy.get('@redo').should('be.disabled')
+  function expectUndoRedoHistory(undo, redo) {
+    cy.get('button:contains("Undo")').should('have.attr', 'data-gab', undo.toString())
+    if (undo === 0) {
+      cy.get('button:contains("Undo")').should('be.disabled')
+    } else {
+      cy.get('button:contains("Undo")').should('be.enabled')
+    }
+
+    cy.get('button:contains("Redo")').should('have.attr', 'data-gab', redo.toString())
+    if (redo === 0) {
+      cy.get('button:contains("Redo")').should('be.disabled')
+    } else {
+      cy.get('button:contains("Redo")').should('be.enabled')
+    }
+  }
+
+  function expectStableUndoRedoHistory(undo, redo) {
+    expectUndoRedoHistory(undo, redo)
+    cy.wait(1500)  // Wait because the history is debounced: it can push a new snapshot in the undo queue during a 1s period.
+    expectUndoRedoHistory(undo, redo)
   }
 
   it('has "undo/redo" on new exercise', () => {
@@ -191,38 +207,39 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
     cy.get('button:contains("Undo")').as('undo')
     cy.get('button:contains("Redo")').as('redo')
 
-    undoRedoHistoryShouldBeCleared()
+    expectStableUndoRedoHistory(0, 0)
 
     cy.get('label:contains("Number")').next().type('6')
-    cy.get('@undo').should('be.enabled')
-    cy.get('@redo').should('be.disabled')
+    expectUndoRedoHistory(1, 0)
     cy.get('@undo').click()
     cy.get('label:contains("Number")').next().should('have.value', '')
-    cy.get('@undo').should('be.disabled')
-    cy.get('@redo').should('be.enabled')
+    expectUndoRedoHistory(0, 1)
     cy.get('@redo').click()
     cy.get('label:contains("Number")').next().should('have.value', '6')
-    cy.get('@undo').should('be.enabled')
-    cy.get('@redo').should('be.disabled')
+    expectUndoRedoHistory(1, 0)
 
     cy.get('label:contains("Instructions")').next().type('First\n')
-    cy.wait(1500)
+    expectUndoRedoHistory(2, 0)
     cy.get('label:contains("Instructions")').next().type('Second')
     cy.get('label:contains("Instructions")').next().should('have.value', 'First\nSecond')
-    cy.wait(1500)
+    expectUndoRedoHistory(3, 0)
     cy.get('@undo').click()
+    expectUndoRedoHistory(2, 1)
     cy.get('label:contains("Instructions")').next().should('have.value', 'First\n')
-    cy.get('@redo').should('be.enabled')
     cy.get('@undo').click()
+    expectUndoRedoHistory(1, 2)
     cy.get('label:contains("Instructions")').next().should('have.value', '')
     cy.get('@redo').click()
+    expectUndoRedoHistory(2, 1)
     cy.get('label:contains("Instructions")').next().should('have.value', 'First\n')
     cy.get('label:contains("Instructions")').next().type('Third')
     cy.get('label:contains("Instructions")').next().should('have.value', 'First\nThird')
-    cy.get('@redo').should('be.disabled')
+    expectUndoRedoHistory(3, 0)
     cy.get('@undo').click()
+    expectUndoRedoHistory(2, 1)
     cy.get('label:contains("Instructions")').next().should('have.value', 'First\n')
     cy.get('@redo').click()
+    expectUndoRedoHistory(3, 0)
     cy.get('label:contains("Instructions")').next().should('have.value', 'First\nThird')
 
     // @todo Test that undo/redo works on all fields (incl. bounding rectangle, adaptation type, etc.)
@@ -236,19 +253,20 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
     cy.get('button:contains("Redo")').as('redo')
 
     cy.get('label:contains("Number")').next().type('11')
-    cy.get('@undo').should('be.enabled')
+    expectUndoRedoHistory(1, 0)
 
     cy.get('button:contains("Skip")').click()
 
-    undoRedoHistoryShouldBeCleared()
+    expectStableUndoRedoHistory(0, 0)
 
     cy.get('label:contains("Instructions")').next().type('Blah blah')
-    cy.get('@undo').should('be.enabled')
-    cy.get('@redo').should('be.disabled')
+    expectUndoRedoHistory(1, 0)
     cy.get('@undo').click()
+    expectUndoRedoHistory(0, 1)
     cy.get('label:contains("Number")').next().should('have.value', '12')  // Unchanged by 'undo'
     cy.get('label:contains("Instructions")').next().should('have.value', '')
     cy.get('@redo').click()
+    expectUndoRedoHistory(1, 0)
     cy.get('label:contains("Number")').next().should('have.value', '12')  // Unchanged by 'redo'
     cy.get('label:contains("Instructions")').next().should('have.value', 'Blah blah')
   })
@@ -261,19 +279,20 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
     cy.get('button:contains("Redo")').as('redo')
 
     cy.get('label:contains("Number")').next().type('12')
-    cy.get('@undo').should('be.enabled')
+    expectUndoRedoHistory(1, 0)
 
     cy.get('button:contains("Save then next")').click()
 
-    undoRedoHistoryShouldBeCleared()
+    expectStableUndoRedoHistory(0, 0)
 
     cy.get('label:contains("Instructions")').next().type('Blah blah')
-    cy.get('@undo').should('be.enabled')
-    cy.get('@redo').should('be.disabled')
+    expectUndoRedoHistory(1, 0)
     cy.get('@undo').click()
+    expectUndoRedoHistory(0, 1)
     cy.get('label:contains("Number")').next().should('have.value', '13')  // Unchanged by 'undo'
     cy.get('label:contains("Instructions")').next().should('have.value', '')
     cy.get('@redo').click()
+    expectUndoRedoHistory(1, 0)
     cy.get('label:contains("Number")').next().should('have.value', '13')  // Unchanged by 'redo'
     cy.get('label:contains("Instructions")').next().should('have.value', 'Blah blah')
   })
@@ -292,36 +311,36 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
     cy.get('button:contains("Save then next")').click()
 
     cy.get('label:contains("Instructions")').next().type('Blah blah')
-    cy.get('@undo').should('be.enabled')
+    expectUndoRedoHistory(1, 0)
 
     cy.get('button:contains("Previous (without saving)")').click()
 
     cy.location('pathname').should('equal', '/project-xkopqm/textbook-klxufv/page-5/exercise-fxcuac')
-    undoRedoHistoryShouldBeCleared()
+    expectStableUndoRedoHistory(0, 0)
 
     cy.get('label:contains("Instructions")').next().type('Blah blah')
-    cy.get('@undo').should('be.enabled')
+    expectUndoRedoHistory(1, 0)
 
     cy.get('button:contains("Previous (without saving)")').click()
 
     cy.location('pathname').should('equal', '/project-xkopqm/textbook-klxufv/page-5/exercise-pghtfo')
-    undoRedoHistoryShouldBeCleared()
+    expectStableUndoRedoHistory(0, 0)
 
     cy.get('label:contains("Instructions")').next().type('Blah blah')
-    cy.get('@undo').should('be.enabled')
+    expectUndoRedoHistory(1, 0)
 
     cy.get('button:contains("Save then next")').click()
 
     cy.location('pathname').should('equal', '/project-xkopqm/textbook-klxufv/page-5/exercise-fxcuac')
-    undoRedoHistoryShouldBeCleared()
+    expectStableUndoRedoHistory(0, 0)
 
     cy.get('label:contains("Instructions")').next().type('Blah blah')
-    cy.get('@undo').should('be.enabled')
+    expectUndoRedoHistory(1, 0)
 
     cy.get('button:contains("Save then next")').click()
 
     cy.location('pathname').should('equal', '/project-xkopqm/textbook-klxufv/page-5/new-exercise')
-    undoRedoHistoryShouldBeCleared()
+    expectStableUndoRedoHistory(0, 0)
   })
 
   it('has "undo/redo" on existing exercise', () => {
@@ -329,16 +348,14 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
     setLocale()
     cy.get('div.busy').should('not.exist')
 
-    cy.wait(1500)  // We have to wait, see comment above
-    cy.get('button:contains("Undo")').should('be.disabled')
-    cy.get('button:contains("Redo")').should('be.disabled')
+    expectStableUndoRedoHistory(0, 0)
 
     cy.get('label:contains("Instructions")').next().should('have.value', 'Ajoute le suffixe –eur aux verbes.\nIndique la classe des mots fabriqués.')
     cy.get('label:contains("Instructions")').next().type('{selectall}Blah blah')
-    cy.get('button:contains("Undo")').should('be.enabled')
-    cy.get('button:contains("Redo")').should('be.disabled')
+    expectUndoRedoHistory(1, 0)
 
     cy.get('button:contains("Undo")').click()
+    expectUndoRedoHistory(0, 1)
     cy.get('label:contains("Instructions")').next().should('have.value', 'Ajoute le suffixe –eur aux verbes.\nIndique la classe des mots fabriqués.')
   })
 
