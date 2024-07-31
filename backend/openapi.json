@@ -1,48 +1,6 @@
 {
   "components": {
     "schemas": {
-      "AdaptedExercise": {
-        "additionalProperties": false,
-        "properties": {
-          "clue": {
-            "$ref": "#/components/schemas/Section"
-          },
-          "example": {
-            "$ref": "#/components/schemas/Section"
-          },
-          "instructions": {
-            "$ref": "#/components/schemas/Section"
-          },
-          "number": {
-            "title": "Number",
-            "type": "string"
-          },
-          "textbook_page": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Textbook Page"
-          },
-          "wording": {
-            "$ref": "#/components/schemas/Section"
-          }
-        },
-        "required": [
-          "number",
-          "textbook_page",
-          "instructions",
-          "wording",
-          "example",
-          "clue"
-        ],
-        "title": "AdaptedExercise",
-        "type": "object"
-      },
       "Body_login_api_token_post": {
         "properties": {
           "client_id": {
@@ -109,6 +67,48 @@
           "password"
         ],
         "title": "Body_login_api_token_post",
+        "type": "object"
+      },
+      "Exercise": {
+        "additionalProperties": false,
+        "properties": {
+          "clue": {
+            "$ref": "#/components/schemas/Section"
+          },
+          "example": {
+            "$ref": "#/components/schemas/Section"
+          },
+          "instructions": {
+            "$ref": "#/components/schemas/Section"
+          },
+          "number": {
+            "title": "Number",
+            "type": "string"
+          },
+          "textbook_page": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Textbook Page"
+          },
+          "wording": {
+            "$ref": "#/components/schemas/Section"
+          }
+        },
+        "required": [
+          "number",
+          "textbook_page",
+          "instructions",
+          "wording",
+          "example",
+          "clue"
+        ],
+        "title": "Exercise",
         "type": "object"
       },
       "FillWithFreeTextAdaptationOptions": {
@@ -624,166 +624,6 @@
           "type"
         ],
         "title": "_Whitespace",
-        "type": "object"
-      },
-      "adaptedExerciseCreateInput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/adaptedExerciseCreateInputData"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "adaptedExerciseCreateInput",
-        "type": "object"
-      },
-      "adaptedExerciseCreateInputData": {
-        "additionalProperties": false,
-        "properties": {
-          "attributes": {
-            "$ref": "#/components/schemas/adaptedExerciseCreateInputDataAttributes"
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/adaptedExerciseCreateInputDataRelationships"
-              }
-            ],
-            "default": {}
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "attributes"
-        ],
-        "title": "adaptedExerciseCreateInputData",
-        "type": "object"
-      },
-      "adaptedExerciseCreateInputDataAttributes": {
-        "additionalProperties": false,
-        "properties": {
-          "adaptationOptions": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/SelectThingsAdaptationOptions"
-              },
-              {
-                "$ref": "#/components/schemas/FillWithFreeTextAdaptationOptions"
-              },
-              {
-                "$ref": "#/components/schemas/MultipleChoicesInInstructionsAdaptationOptions"
-              },
-              {
-                "$ref": "#/components/schemas/MultipleChoicesInWordingAdaptationOptions"
-              }
-            ],
-            "title": "Adaptationoptions"
-          },
-          "clue": {
-            "title": "Clue",
-            "type": "string"
-          },
-          "example": {
-            "title": "Example",
-            "type": "string"
-          },
-          "instructions": {
-            "title": "Instructions",
-            "type": "string"
-          },
-          "number": {
-            "title": "Number",
-            "type": "string"
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          },
-          "wording": {
-            "title": "Wording",
-            "type": "string"
-          }
-        },
-        "required": [
-          "number",
-          "instructions",
-          "wording",
-          "example",
-          "clue",
-          "type",
-          "adaptationOptions"
-        ],
-        "title": "adaptedExerciseCreateInputDataAttributes",
-        "type": "object"
-      },
-      "adaptedExerciseCreateInputDataRelationships": {
-        "additionalProperties": false,
-        "properties": {},
-        "title": "adaptedExerciseCreateInputDataRelationships",
-        "type": "object"
-      },
-      "adaptedExerciseItemOutput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/adaptedExerciseOutputItem"
-          },
-          "included": {
-            "items": {},
-            "title": "Included",
-            "type": "array"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "adaptedExerciseItemOutput",
-        "type": "object"
-      },
-      "adaptedExerciseOutputItem": {
-        "additionalProperties": false,
-        "properties": {
-          "attributes": {
-            "$ref": "#/components/schemas/adaptedExerciseOutputItemAttributes"
-          },
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "links": {
-            "$ref": "#/components/schemas/ItemLinks"
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "id",
-          "links",
-          "attributes"
-        ],
-        "title": "adaptedExerciseOutputItem",
-        "type": "object"
-      },
-      "adaptedExerciseOutputItemAttributes": {
-        "additionalProperties": false,
-        "properties": {
-          "adapted": {
-            "$ref": "#/components/schemas/AdaptedExercise"
-          }
-        },
-        "required": [
-          "adapted"
-        ],
-        "title": "adaptedExerciseOutputItemAttributes",
         "type": "object"
       },
       "exerciseCreateInput": {
@@ -2706,6 +2546,166 @@
           "id"
         ],
         "title": "multipleChoicesInWordingAdaptation_updatedBy_Relationship_ObjectId",
+        "type": "object"
+      },
+      "parsedExerciseCreateInput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/parsedExerciseCreateInputData"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "parsedExerciseCreateInput",
+        "type": "object"
+      },
+      "parsedExerciseCreateInputData": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "$ref": "#/components/schemas/parsedExerciseCreateInputDataAttributes"
+          },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/parsedExerciseCreateInputDataRelationships"
+              }
+            ],
+            "default": {}
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "attributes"
+        ],
+        "title": "parsedExerciseCreateInputData",
+        "type": "object"
+      },
+      "parsedExerciseCreateInputDataAttributes": {
+        "additionalProperties": false,
+        "properties": {
+          "adaptationOptions": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SelectThingsAdaptationOptions"
+              },
+              {
+                "$ref": "#/components/schemas/FillWithFreeTextAdaptationOptions"
+              },
+              {
+                "$ref": "#/components/schemas/MultipleChoicesInInstructionsAdaptationOptions"
+              },
+              {
+                "$ref": "#/components/schemas/MultipleChoicesInWordingAdaptationOptions"
+              }
+            ],
+            "title": "Adaptationoptions"
+          },
+          "clue": {
+            "title": "Clue",
+            "type": "string"
+          },
+          "example": {
+            "title": "Example",
+            "type": "string"
+          },
+          "instructions": {
+            "title": "Instructions",
+            "type": "string"
+          },
+          "number": {
+            "title": "Number",
+            "type": "string"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          },
+          "wording": {
+            "title": "Wording",
+            "type": "string"
+          }
+        },
+        "required": [
+          "number",
+          "instructions",
+          "wording",
+          "example",
+          "clue",
+          "type",
+          "adaptationOptions"
+        ],
+        "title": "parsedExerciseCreateInputDataAttributes",
+        "type": "object"
+      },
+      "parsedExerciseCreateInputDataRelationships": {
+        "additionalProperties": false,
+        "properties": {},
+        "title": "parsedExerciseCreateInputDataRelationships",
+        "type": "object"
+      },
+      "parsedExerciseItemOutput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/parsedExerciseOutputItem"
+          },
+          "included": {
+            "items": {},
+            "title": "Included",
+            "type": "array"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "parsedExerciseItemOutput",
+        "type": "object"
+      },
+      "parsedExerciseOutputItem": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "$ref": "#/components/schemas/parsedExerciseOutputItemAttributes"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "links": {
+            "$ref": "#/components/schemas/ItemLinks"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "links",
+          "attributes"
+        ],
+        "title": "parsedExerciseOutputItem",
+        "type": "object"
+      },
+      "parsedExerciseOutputItemAttributes": {
+        "additionalProperties": false,
+        "properties": {
+          "adapted": {
+            "$ref": "#/components/schemas/Exercise"
+          }
+        },
+        "required": [
+          "adapted"
+        ],
+        "title": "parsedExerciseOutputItemAttributes",
         "type": "object"
       },
       "pdfFileCreateInput": {
@@ -6120,113 +6120,6 @@
   },
   "openapi": "3.1.0",
   "paths": {
-    "/api/adaptedExercises": {
-      "post": {
-        "operationId": "create_adapted_exercise_api_adaptedExercises_post",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "include",
-            "required": false,
-            "schema": {
-              "title": "Include",
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/adaptedExerciseCreateInput"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "201": {
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/adaptedExerciseItemOutput"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "summary": "Create Adapted Exercise"
-      }
-    },
-    "/api/adaptedExercises/{id}": {
-      "get": {
-        "operationId": "get_adapted_exercise_api_adaptedExercises__id__get",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "title": "Id",
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "include",
-            "required": false,
-            "schema": {
-              "title": "Include",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/adaptedExerciseItemOutput"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "summary": "Get Adapted Exercise"
-      }
-    },
     "/api/batch": {
       "post": {
         "operationId": "batch_api_batch_post",
@@ -7433,6 +7326,113 @@
           }
         ],
         "summary": "Update Multiple Choices In Wording Adaptation"
+      }
+    },
+    "/api/parsedExercises": {
+      "post": {
+        "operationId": "create_parsed_exercise_api_parsedExercises_post",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/parsedExerciseCreateInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/parsedExerciseItemOutput"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "summary": "Create Parsed Exercise"
+      }
+    },
+    "/api/parsedExercises/{id}": {
+      "get": {
+        "operationId": "get_parsed_exercise_api_parsedExercises__id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/parsedExerciseItemOutput"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "summary": "Get Parsed Exercise"
       }
     },
     "/api/pdfFileNamings": {

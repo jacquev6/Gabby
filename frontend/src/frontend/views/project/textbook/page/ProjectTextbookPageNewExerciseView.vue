@@ -24,7 +24,7 @@ import UndoRedoTool from './UndoRedoTool.vue'
 import type { Rectangle, TextualFieldName, Selection } from '$/frontend/components/ExerciseFieldsForm.vue'
 import AdaptationDetailsFieldsForm from '$/frontend/components/AdaptationDetailsFieldsForm.vue'
 import TextSelectionModal from './TextSelectionModal.vue'
-import { makeModel, resetModel, getAdapted, create, suggestNextNumber } from '$frontend/components/ExerciseFieldsForm.vue'
+import { makeModel, resetModel, getParsed, create, suggestNextNumber } from '$frontend/components/ExerciseFieldsForm.vue'
 import type { PDFPageProxy } from 'pdfjs-dist'
 
 
@@ -187,12 +187,20 @@ function goToPrevious() {
   })
 }
 
-const adaptedDataLoading = ref(false)
-const adaptedData = computedAsync(
-  async () => getAdapted(model),
+const parsedExerciseLoading = ref(false)
+const parsedExercise = computedAsync(
+  () => getParsed(model),
   null,
-  adaptedDataLoading,
+  parsedExerciseLoading,
 )
+
+const adaptedExercise = computed(() => {
+  if (parsedExercise.value === null) {
+    return null
+  } else {
+    return parsedExercise.value.attributes.adapted
+  }
+})
 </script>
 
 <template>
@@ -279,12 +287,12 @@ const adaptedData = computedAsync(
         <template #right>
           <div class="h-100 overflow-auto" data-cy="right-col-2">
             <h1>{{ $t('adaptation') }}</h1>
-            <BBusy :busy="adaptedDataLoading">
+            <BBusy :busy="parsedExerciseLoading">
               <AdaptedExercise
-                v-if="adaptedData !== null"
+                v-if="adaptedExercise !== null"
                 :projectId="projectId"
                 exerciseId="unused @todo Compute storageKey in an independent composable, and let AdaptedExercise load and save iif the key is not null"
-                :exercise="adaptedData"
+                :exercise="adaptedExercise"
               />
             </BBusy>
           </div>

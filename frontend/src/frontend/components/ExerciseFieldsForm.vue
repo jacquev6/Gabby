@@ -143,7 +143,7 @@ export function getAdaptationOptions(model: Model) {
   }
 }
 
-export async function getAdapted(model: Model) {
+export async function getParsed(model: Model) {
   const attributes = {
     number: model.number,
     // textbookPage: props.page,
@@ -154,14 +154,9 @@ export async function getAdapted(model: Model) {
     type: model.adaptationType,
     adaptationOptions: getAdaptationOptions(model),
   }
-  try {
-    const adapted = await api.client.createOne('adaptedExercise', attributes, {})
-    console.assert(adapted.exists)
-    return adapted.attributes.adapted
-  } catch (e) {
-    console.error(e)
-    return null
-  }
+  const parsed = await api.client.createOne('parsedExercise', attributes, {})
+  console.assert(parsed.exists)
+  return parsed
 }
 
 export async function create(project: Project, textbook: Textbook | null, textbookPage: number | null, model: Model, extractionEvents: object[]) {

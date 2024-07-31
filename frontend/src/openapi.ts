@@ -5,14 +5,6 @@
 
 
 export interface paths {
-  "/api/adaptedExercises": {
-    /** Create Adapted Exercise */
-    post: operations["create_adapted_exercise_api_adaptedExercises_post"];
-  };
-  "/api/adaptedExercises/{id}": {
-    /** Get Adapted Exercise */
-    get: operations["get_adapted_exercise_api_adaptedExercises__id__get"];
-  };
   "/api/batch": {
     /** Batch */
     post: operations["batch_api_batch_post"];
@@ -80,6 +72,14 @@ export interface paths {
     delete: operations["delete_multiple_choices_in_wording_adaptation_api_multipleChoicesInWordingAdaptations__id__delete"];
     /** Update Multiple Choices In Wording Adaptation */
     patch: operations["update_multiple_choices_in_wording_adaptation_api_multipleChoicesInWordingAdaptations__id__patch"];
+  };
+  "/api/parsedExercises": {
+    /** Create Parsed Exercise */
+    post: operations["create_parsed_exercise_api_parsedExercises_post"];
+  };
+  "/api/parsedExercises/{id}": {
+    /** Get Parsed Exercise */
+    get: operations["get_parsed_exercise_api_parsedExercises__id__get"];
   };
   "/api/pdfFileNamings": {
     /** Get Pdf File Namings */
@@ -217,17 +217,6 @@ export type webhooks = Record<string, never>;
 
 export interface components {
   schemas: {
-    /** AdaptedExercise */
-    AdaptedExercise: {
-      clue: components["schemas"]["Section"];
-      example: components["schemas"]["Section"];
-      instructions: components["schemas"]["Section"];
-      /** Number */
-      number: string;
-      /** Textbook Page */
-      textbook_page: number | null;
-      wording: components["schemas"]["Section"];
-    };
     /** Body_login_api_token_post */
     Body_login_api_token_post: {
       /** Client Id */
@@ -247,6 +236,17 @@ export interface components {
       scope?: string;
       /** Username */
       username: string;
+    };
+    /** Exercise */
+    Exercise: {
+      clue: components["schemas"]["Section"];
+      example: components["schemas"]["Section"];
+      instructions: components["schemas"]["Section"];
+      /** Number */
+      number: string;
+      /** Textbook Page */
+      textbook_page: number | null;
+      wording: components["schemas"]["Section"];
     };
     /** FillWithFreeTextAdaptationOptions */
     FillWithFreeTextAdaptationOptions: {
@@ -435,56 +435,6 @@ export interface components {
        * @enum {string}
        */
       type: "whitespace";
-    };
-    /** adaptedExerciseCreateInput */
-    adaptedExerciseCreateInput: {
-      data: components["schemas"]["adaptedExerciseCreateInputData"];
-    };
-    /** adaptedExerciseCreateInputData */
-    adaptedExerciseCreateInputData: {
-      attributes: components["schemas"]["adaptedExerciseCreateInputDataAttributes"];
-      /** @default {} */
-      relationships?: components["schemas"]["adaptedExerciseCreateInputDataRelationships"];
-      /** Type */
-      type: string;
-    };
-    /** adaptedExerciseCreateInputDataAttributes */
-    adaptedExerciseCreateInputDataAttributes: {
-      /** Adaptationoptions */
-      adaptationOptions: components["schemas"]["SelectThingsAdaptationOptions"] | components["schemas"]["FillWithFreeTextAdaptationOptions"] | components["schemas"]["MultipleChoicesInInstructionsAdaptationOptions"] | components["schemas"]["MultipleChoicesInWordingAdaptationOptions"];
-      /** Clue */
-      clue: string;
-      /** Example */
-      example: string;
-      /** Instructions */
-      instructions: string;
-      /** Number */
-      number: string;
-      /** Type */
-      type: string;
-      /** Wording */
-      wording: string;
-    };
-    /** adaptedExerciseCreateInputDataRelationships */
-    adaptedExerciseCreateInputDataRelationships: Record<string, never>;
-    /** adaptedExerciseItemOutput */
-    adaptedExerciseItemOutput: {
-      data: components["schemas"]["adaptedExerciseOutputItem"];
-      /** Included */
-      included?: unknown[];
-    };
-    /** adaptedExerciseOutputItem */
-    adaptedExerciseOutputItem: {
-      attributes: components["schemas"]["adaptedExerciseOutputItemAttributes"];
-      /** Id */
-      id: string;
-      links: components["schemas"]["ItemLinks"];
-      /** Type */
-      type: string;
-    };
-    /** adaptedExerciseOutputItemAttributes */
-    adaptedExerciseOutputItemAttributes: {
-      adapted: components["schemas"]["AdaptedExercise"];
     };
     /** exerciseCreateInput */
     exerciseCreateInput: {
@@ -1191,6 +1141,56 @@ export interface components {
        * @enum {string}
        */
       type: "user";
+    };
+    /** parsedExerciseCreateInput */
+    parsedExerciseCreateInput: {
+      data: components["schemas"]["parsedExerciseCreateInputData"];
+    };
+    /** parsedExerciseCreateInputData */
+    parsedExerciseCreateInputData: {
+      attributes: components["schemas"]["parsedExerciseCreateInputDataAttributes"];
+      /** @default {} */
+      relationships?: components["schemas"]["parsedExerciseCreateInputDataRelationships"];
+      /** Type */
+      type: string;
+    };
+    /** parsedExerciseCreateInputDataAttributes */
+    parsedExerciseCreateInputDataAttributes: {
+      /** Adaptationoptions */
+      adaptationOptions: components["schemas"]["SelectThingsAdaptationOptions"] | components["schemas"]["FillWithFreeTextAdaptationOptions"] | components["schemas"]["MultipleChoicesInInstructionsAdaptationOptions"] | components["schemas"]["MultipleChoicesInWordingAdaptationOptions"];
+      /** Clue */
+      clue: string;
+      /** Example */
+      example: string;
+      /** Instructions */
+      instructions: string;
+      /** Number */
+      number: string;
+      /** Type */
+      type: string;
+      /** Wording */
+      wording: string;
+    };
+    /** parsedExerciseCreateInputDataRelationships */
+    parsedExerciseCreateInputDataRelationships: Record<string, never>;
+    /** parsedExerciseItemOutput */
+    parsedExerciseItemOutput: {
+      data: components["schemas"]["parsedExerciseOutputItem"];
+      /** Included */
+      included?: unknown[];
+    };
+    /** parsedExerciseOutputItem */
+    parsedExerciseOutputItem: {
+      attributes: components["schemas"]["parsedExerciseOutputItemAttributes"];
+      /** Id */
+      id: string;
+      links: components["schemas"]["ItemLinks"];
+      /** Type */
+      type: string;
+    };
+    /** parsedExerciseOutputItemAttributes */
+    parsedExerciseOutputItemAttributes: {
+      adapted: components["schemas"]["Exercise"];
     };
     /** pdfFileCreateInput */
     pdfFileCreateInput: {
@@ -2422,58 +2422,6 @@ export type external = Record<string, never>;
 
 export interface operations {
 
-  /** Create Adapted Exercise */
-  create_adapted_exercise_api_adaptedExercises_post: {
-    parameters: {
-      query?: {
-        include?: string;
-      };
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["adaptedExerciseCreateInput"];
-      };
-    };
-    responses: {
-      /** @description Successful Response */
-      201: {
-        content: {
-          "application/vnd.api+json": components["schemas"]["adaptedExerciseItemOutput"];
-        };
-      };
-      /** @description Validation Error */
-      422: {
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
-    };
-  };
-  /** Get Adapted Exercise */
-  get_adapted_exercise_api_adaptedExercises__id__get: {
-    parameters: {
-      query?: {
-        include?: string;
-      };
-      path: {
-        id: string;
-      };
-    };
-    responses: {
-      /** @description Successful Response */
-      200: {
-        content: {
-          "application/vnd.api+json": components["schemas"]["adaptedExerciseItemOutput"];
-        };
-      };
-      /** @description Validation Error */
-      422: {
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
-    };
-  };
   /** Batch */
   batch_api_batch_post: {
     requestBody: {
@@ -3047,6 +2995,58 @@ export interface operations {
       200: {
         content: {
           "application/vnd.api+json": components["schemas"]["multipleChoicesInWordingAdaptationItemOutput"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  /** Create Parsed Exercise */
+  create_parsed_exercise_api_parsedExercises_post: {
+    parameters: {
+      query?: {
+        include?: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["parsedExerciseCreateInput"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        content: {
+          "application/vnd.api+json": components["schemas"]["parsedExerciseItemOutput"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  /** Get Parsed Exercise */
+  get_parsed_exercise_api_parsedExercises__id__get: {
+    parameters: {
+      query?: {
+        include?: string;
+      };
+      path: {
+        id: string;
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        content: {
+          "application/vnd.api+json": components["schemas"]["parsedExerciseItemOutput"];
         };
       };
       /** @description Validation Error */

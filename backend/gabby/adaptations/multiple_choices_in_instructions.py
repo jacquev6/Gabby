@@ -28,7 +28,7 @@ class MultipleChoicesInInstructionsAdaptation(Adaptation):
 
     placeholder: orm.Mapped[str]
 
-    class InstructionsAdapter(parsing.InstructionsSectionTransformer):
+    class InstructionsAdapter(parsing.InstructionsSectionAdapter):
         def choice_tag(self, args):
             return renderable.BoxedText(text=args[0])
 
@@ -37,7 +37,7 @@ class MultipleChoicesInInstructionsAdaptation(Adaptation):
     def make_adapted_instructions(self):
         return self.adapt_instructions(self.exercise.instructions)
 
-    class ChoicesGatherer(parsing.InstructionsSectionTransformer):
+    class ChoicesGatherer(parsing.InstructionsSectionAdapter):
         def section(self, choices):
             return list(itertools.chain.from_iterable(choices))
 
@@ -73,7 +73,7 @@ class MultipleChoicesInInstructionsAdaptation(Adaptation):
 
     gather_choices = parsing.InstructionsSectionParser({"choice": r""" "|" STR """}, ChoicesGatherer())
 
-    class WordingAdapter(parsing.WordingSectionTransformer):
+    class WordingAdapter(parsing.WordingSectionAdapter):
         def __init__(self, choices):
             self.choices = choices
 
@@ -89,10 +89,10 @@ class MultipleChoicesInInstructionsAdaptation(Adaptation):
         )
 
     def make_adapted_example(self):
-        return parsing.parse_plain_instructions_section(self.exercise.example)
+        return parsing.adapt_plain_instructions_section(self.exercise.example)
 
     def make_adapted_clue(self):
-        return parsing.parse_plain_instructions_section(self.exercise.clue)
+        return parsing.adapt_plain_instructions_section(self.exercise.clue)
 
 
 class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
@@ -109,7 +109,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
 
         self.do_test(
             adaptation,
-            r.AdaptedExercise(
+            r.Exercise(
                 number="number",
                 textbook_page=42,
                 instructions=r.Section(paragraphs=[
@@ -157,7 +157,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
 
         self.do_test(
             adaptation,
-            r.AdaptedExercise(
+            r.Exercise(
                 number="number",
                 textbook_page=42,
                 instructions=r.Section(paragraphs=[

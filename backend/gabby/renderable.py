@@ -123,15 +123,15 @@ class Section(BaseModel):
         generic = "\n\n".join(p.to_generic() for p in self.paragraphs)
         if settings.DEBUG:
             from . import parsing
-            reparsed = parsing.parse_generic_wording_section(generic)
-            if reparsed != self:
+            adapted_again = parsing.adapt_generic_wording_section(generic)
+            if adapted_again != self:
                 print("Expected:", generic)
-                print("Got:", reparsed.to_generic())
+                print("Got:", adapted_again.to_generic())
                 assert False
         return generic
 
 
-class AdaptedExercise(BaseModel):
+class Exercise(BaseModel):
     number: str
     textbook_page: int | None
     instructions: Section

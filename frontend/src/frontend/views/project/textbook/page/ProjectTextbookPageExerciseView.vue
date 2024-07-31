@@ -17,7 +17,7 @@ import ToolsGutter from './ToolsGutter.vue'
 import ReplaceTool from './ReplaceTool.vue'
 import UndoRedoTool from './UndoRedoTool.vue'
 import { useExerciseCreationHistoryStore } from './ExerciseCreationHistoryStore'
-import { makeModel, assignModelFrom, getAdapted, save } from '$frontend/components/ExerciseFieldsForm.vue'
+import { makeModel, assignModelFrom, getParsed, save } from '$frontend/components/ExerciseFieldsForm.vue'
 import TextSelectionModal from './TextSelectionModal.vue'
 import type { Rectangle, TextualFieldName, Selection } from '$/frontend/components/ExerciseFieldsForm.vue'
 import type { TextItem } from './TextPicker.vue'
@@ -197,12 +197,20 @@ async function saveThenNext() {
   }
 }
 
-const adaptedDataLoading = ref(false)
-const adaptedData = computedAsync(
-  async () => getAdapted(model),
+const parsedExerciseLoading = ref(false)
+const parsedExercise = computedAsync(
+  () => getParsed(model),
   null,
-  adaptedDataLoading,
+  parsedExerciseLoading,
 )
+
+const adaptedExercise = computed(() => {
+  if (parsedExercise.value === null) {
+    return null
+  } else {
+    return parsedExercise.value.attributes.adapted
+  }
+})
 </script>
 
 <template>
@@ -282,12 +290,12 @@ const adaptedData = computedAsync(
           <template #right>
             <div class="h-100 overflow-auto" data-cy="right-col-2">
               <h1>{{ $t('adaptation') }}</h1>
-              <BBusy :busy="adaptedDataLoading">
+              <BBusy :busy="parsedExerciseLoading">
                 <AdaptedExercise
-                  v-if="adaptedData !== null"
+                  v-if="adaptedExercise !== null"
                   :projectId="projectId"
                   exerciseId="unused @todo Compute storageKey in an independent composable, and let AdaptedExercise load and save iif the key is not null"
-                  :exercise="adaptedData"
+                  :exercise="adaptedExercise"
                 />
               </BBusy>
             </div>

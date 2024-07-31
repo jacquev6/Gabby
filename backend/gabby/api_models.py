@@ -154,7 +154,7 @@ class MultipleChoicesInWordingAdaptation(MultipleChoicesInWordingAdaptationOptio
     exercise: Annotated[Exercise, Constant()]
 
 
-class AdaptedExercise(Base):
+class ParsedExercise(Base):
     number: Annotated[str, WriteOnly()]
     instructions: Annotated[str, WriteOnly()]
     wording: Annotated[str, WriteOnly()]
@@ -170,7 +170,7 @@ class AdaptedExercise(Base):
         ),
         WriteOnly(),
     ]
-    adapted: Annotated[renderable.AdaptedExercise, Computed()]
+    adapted: Annotated[renderable.Exercise, Computed()]
 
 
 class SyntheticError(Base):

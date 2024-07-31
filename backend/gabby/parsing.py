@@ -16,7 +16,7 @@ def memoize_parser(grammar, start):
     return lark.Lark(grammar, start=start)
 
 
-class _SectionTransformer(lark.Transformer):
+class _SectionAdapter(lark.Transformer):
     def paragraph(self, args):
         return args[0]
 
@@ -85,7 +85,6 @@ class _SectionParser(abc.ABC):
         else:
             try:
                 return self.transformer.transform(self.parser.parse(normalized))
-                # return self.post_process(self.transformer.transform(self.parser.parse(normalized)))
             except lark.exceptions.ParseError as e:
                 raise ValueError(f"Error parsing section {normalized}: {e}")
 
@@ -93,12 +92,8 @@ class _SectionParser(abc.ABC):
     def normalize(self, section: str) -> str:
         raise NotImplementedError()
 
-    # @abc.abstractmethod
-    # def post_process(self, section: renderable.Section) -> renderable.Section:
-    #     raise NotImplementedError()
 
-
-class InstructionsSectionTransformer(_SectionTransformer):
+class InstructionsSectionAdapter(_SectionAdapter):
     def section(self, paragraphs):
         return renderable.Section(paragraphs=list(
             renderable.Paragraph(sentences=[sentence])
@@ -124,10 +119,10 @@ def parse_instructions_section(tags, transformer, section):
     return InstructionsSectionParser(tags, transformer)(section)
 
 
-parse_plain_instructions_section = InstructionsSectionParser({}, InstructionsSectionTransformer())
+adapt_plain_instructions_section = InstructionsSectionParser({}, InstructionsSectionAdapter())
 
 
-class GenericSectionTransformerMixin:
+class GenericSectionAdapterMixin:
     def boxed_text_tag(self, args):
         text, = args
         return renderable.BoxedText(text=text)
@@ -152,11 +147,11 @@ class GenericSectionTransformerMixin:
         return renderable.FreeTextInput()
 
 
-class GenericInstructionsSectionTransformer(InstructionsSectionTransformer, GenericSectionTransformerMixin):
+class GenericInstructionsSectionAdapter(InstructionsSectionAdapter, GenericSectionAdapterMixin):
     pass
 
 
-parse_generic_instructions_section = InstructionsSectionParser(
+adapt_generic_instructions_section = InstructionsSectionParser(
     {
         "boxed_text": r""" "|" STR """,
         "selectable_text": r""" "|" INT "|" STR """,
@@ -165,18 +160,18 @@ parse_generic_instructions_section = InstructionsSectionParser(
         "multiple_choices_input": r""" ("|" STR)+ """,
         "free_text_input": "",
     },
-    GenericInstructionsSectionTransformer(),
+    GenericInstructionsSectionAdapter(),
 )
 
 
-class ParseGenericInstructionsSectionTestCase(TestCase):
+class AdaptGenericInstructionsSectionTestCase(TestCase):
     def do_test(self, input, expected_section):
-        actual_section = parse_generic_instructions_section(input)
+        actual_section = adapt_generic_instructions_section(input)
         for paragraph_index, (actual_paragraph, expected_paragraph) in enumerate(zip(actual_section.paragraphs, expected_section.paragraphs, strict=True)):
             for sentence_index, (actual_sentence, expected_sentence) in enumerate(zip(actual_paragraph.sentences, expected_paragraph.sentences, strict=True)):
                 self.assertEqual(actual_sentence, expected_sentence, f"Paragraph {paragraph_index}, sentence {sentence_index}")
         if expected_section is not None:
-            self.assertEqual(parse_generic_instructions_section(expected_section.to_generic()), expected_section)
+            self.assertEqual(adapt_generic_instructions_section(expected_section.to_generic()), expected_section)
 
     # In instructions (and example and clue) sections, we want to:
     # - join consecutive lines separated by a single carriage return into a single paragraph
@@ -438,7 +433,7 @@ class WordingSectionParser(_SectionParser):
         )
 
 
-class WordingSectionTransformer(_SectionTransformer):
+class WordingSectionAdapter(_SectionAdapter):
     def section(self, paragraphs):
         return renderable.Section(paragraphs=paragraphs)
 
@@ -447,14 +442,14 @@ def parse_wording_section(tags, transformer, section):
     return WordingSectionParser(tags, transformer)(section)
 
 
-parse_plain_wording_section = WordingSectionParser({}, WordingSectionTransformer())
+adapt_plain_wording_section = WordingSectionParser({}, WordingSectionAdapter())
 
 
-class GenericWordingSectionTransformer(WordingSectionTransformer, GenericSectionTransformerMixin):
+class GenericWordingSectionAdapter(WordingSectionAdapter, GenericSectionAdapterMixin):
     pass
 
 
-parse_generic_wording_section = WordingSectionParser(
+adapt_generic_wording_section = WordingSectionParser(
     {
         "boxed_text": r""" "|" STR """,
         "selectable_text": r""" "|" INT "|" STR """,
@@ -463,18 +458,18 @@ parse_generic_wording_section = WordingSectionParser(
         "multiple_choices_input": r""" ("|" STR)+ """,
         "free_text_input": "",
     },
-    GenericWordingSectionTransformer(),
+    GenericWordingSectionAdapter(),
 )
 
 
-class ParseGenericWordingSectionTestCase(TestCase):
+class AdaptGenericWordingSectionTestCase(TestCase):
     def do_test(self, input, expected_section):
-        actual_section = parse_generic_wording_section(input)
+        actual_section = adapt_generic_wording_section(input)
         for paragraph_index, (actual_paragraph, expected_paragraph) in enumerate(zip(actual_section.paragraphs, expected_section.paragraphs, strict=True)):
             for sentence_index, (actual_sentence, expected_sentence) in enumerate(zip(actual_paragraph.sentences, expected_paragraph.sentences, strict=True)):
                 self.assertEqual(actual_sentence, expected_sentence, f"Paragraph {paragraph_index}, sentence {sentence_index}")
         if expected_section is not None:
-            self.assertEqual(parse_generic_wording_section(expected_section.to_generic()), expected_section)
+            self.assertEqual(adapt_generic_wording_section(expected_section.to_generic()), expected_section)
 
     # In wording sections, we want to:
     # - make a paragraph for each non-empty line

@@ -27,9 +27,9 @@ class FillWithFreeTextAdaptation(Adaptation):
     placeholder: orm.Mapped[str]
 
     def make_adapted_instructions(self):
-        return parsing.parse_plain_instructions_section(self.exercise.instructions)
+        return parsing.adapt_plain_instructions_section(self.exercise.instructions)
 
-    class WordingAdapter(parsing.WordingSectionTransformer):
+    class WordingAdapter(parsing.WordingSectionAdapter):
         def placeholder_tag(self, args):
             return renderable.FreeTextInput()
 
@@ -39,10 +39,10 @@ class FillWithFreeTextAdaptation(Adaptation):
         return self.adapt_wording(self.exercise.wording.replace(self.placeholder, "{placeholder}"))
 
     def make_adapted_example(self):
-        return parsing.parse_plain_instructions_section(self.exercise.example)
+        return parsing.adapt_plain_instructions_section(self.exercise.example)
 
     def make_adapted_clue(self):
-        return parsing.parse_plain_instructions_section(self.exercise.clue)
+        return parsing.adapt_plain_instructions_section(self.exercise.clue)
 
 
 class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
@@ -59,7 +59,7 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
 
         self.do_test(
             adaptation,
-            r.AdaptedExercise(
+            r.Exercise(
                 number="number",
                 textbook_page=42,
                 instructions=r.Section(paragraphs=[
@@ -111,7 +111,7 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
 
         self.do_test(
             adaptation,
-            r.AdaptedExercise(
+            r.Exercise(
                 number="number",
                 textbook_page=None,
                 instructions=r.Section(paragraphs=[
@@ -150,7 +150,7 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
 
         self.do_test(
             adaptation,
-            r.AdaptedExercise(
+            r.Exercise(
                 number="number",
                 textbook_page=42,
                 instructions=r.Section(paragraphs=[
@@ -199,7 +199,7 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
 
         self.do_test(
             adaptation,
-            r.AdaptedExercise(
+            r.Exercise(
                 number="number",
                 textbook_page=42,
                 instructions=r.Section(paragraphs=[
@@ -258,7 +258,7 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
 
         self.do_test(
             adaptation,
-            r.AdaptedExercise(
+            r.Exercise(
                 number="number",
                 textbook_page=42,
                 instructions=r.Section(paragraphs=[
@@ -301,7 +301,7 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
 
         self.do_test(
             adaptation,
-            r.AdaptedExercise(
+            r.Exercise(
                 number="number",
                 textbook_page=42,
                 instructions=r.Section(paragraphs=[
@@ -336,7 +336,7 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
 
         self.do_test(
             adaptation,
-            r.AdaptedExercise(
+            r.Exercise(
                 number="number",
                 textbook_page=42,
                 instructions=r.Section(paragraphs=[
