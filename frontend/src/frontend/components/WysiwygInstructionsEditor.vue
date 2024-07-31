@@ -9,6 +9,7 @@ const model = defineModel<string>({required: true})
 const quillModel = ref<QuillModel>([])
 const quill = ref<InstanceType<typeof Quill> | null>(null)
 
+// @todo Consider using a writable 'computed' instead of this two-way 'watch' (https://vuejs.org/api/reactivity-core.html#computed)
 watch(
   model,
   model => {
