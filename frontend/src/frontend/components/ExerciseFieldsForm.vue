@@ -251,7 +251,6 @@ import { ref, computed } from 'vue'
 import { BLabeledInput, BLabeledTextarea, BLabeledSelect } from './opinion/bootstrap'
 import OptionalTextarea from './OptionalTextarea.vue'
 import WysiwygInstructionsEditor from './WysiwygInstructionsEditor.vue'
-import type { Format as QuillFormat } from './Quill.vue'
 
 
 const props = defineProps<{
@@ -294,7 +293,6 @@ function emitSelected(fieldName: TextualFieldName, e: Event) {
 }
 
 function highlightSuffix(fieldName: TextualFieldName, suffix: string) {
-  console.log('highlightSuffix', fieldName, suffix)
   const text = model.value[fieldName]
   console.assert(text.endsWith(suffix))
   const textArea = textAreas[fieldName].value
@@ -316,7 +314,7 @@ function highlightSuffix(fieldName: TextualFieldName, suffix: string) {
   }
 }
 
-function toggle(format: QuillFormat) {
+function toggle(format: string) {
   if (instructionsEditor.value !== null) {
     instructionsEditor.value.toggle(format)
   }
