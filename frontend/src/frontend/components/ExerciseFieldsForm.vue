@@ -144,7 +144,7 @@ export function getAdaptationOptions(model: Model) {
 }
 
 export async function getAdapted(model: Model) {
-const attributes = {
+  const attributes = {
     number: model.number,
     // textbookPage: props.page,
     instructions: model.instructions,
