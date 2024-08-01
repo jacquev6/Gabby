@@ -18,7 +18,7 @@ def memoize_parser(grammar, start):
 
 
 class _SectionDeltaMaker(lark.Transformer):
-    def _merge(self, args):
+    def _merge(self, *args):
         for arg in args:
             assert isinstance(arg, list), arg
             for item in arg:
@@ -33,7 +33,7 @@ class _SectionDeltaMaker(lark.Transformer):
         ]
 
     def paragraph(self, args):
-        assert len(args) == 1
+        assert len(args) == 1, args
         return args[0]
 
     def strict_paragraph(self, args):
@@ -48,6 +48,10 @@ class _SectionDeltaMaker(lark.Transformer):
                 assert isinstance(item, exercise_delta.InsertOp), item
                 items.append(item)
         return items
+
+    def paragraph_separator(self, args):
+        assert len(args) == 1, args
+        return exercise_delta.InsertOp(insert=args[0].value)
 
     def strict_sentence(self, args):
         for arg in args:
@@ -86,8 +90,9 @@ class _SectionAdapter(lark.Transformer):
         assert len(args) == 1
         return args[0]
 
-    def strict_paragraph(self, sentences):
-        return renderable.Paragraph(sentences=sentences[0::2])
+    def strict_paragraph(self, args):
+        sentences = args[0::2]
+        return renderable.Paragraph(sentences=sentences)
 
     def strict_sentence(self, args):
         return renderable.Sentence(tokens=args)
@@ -120,12 +125,23 @@ class _SectionAdapter(lark.Transformer):
 
 
 class InstructionsSectionDeltaMaker(_SectionDeltaMaker):
-    def section(self, paragraphs):
-        return self._merge(paragraphs)
+    def section(self, args):
+        items = []
+        for i, arg in enumerate(args):
+            if i % 2 == 0:
+                for item in arg:
+                    assert isinstance(item, exercise_delta.InsertOp), item
+                    items.append(item)
+            else:
+                item = arg
+                assert isinstance(item, exercise_delta.InsertOp), item
+                items.append(item)
+        return self._merge(items)
 
 
 class InstructionsSectionAdapter(_SectionAdapter):
-    def section(self, paragraphs):
+    def section(self, args):
+        paragraphs = args[0::2]
         return renderable.Section(paragraphs=list(
             renderable.Paragraph(sentences=[sentence])
             for sentence in
@@ -137,7 +153,8 @@ class InstructionsSectionParser:
     def __init__(self, tags, transformer):
         grammar = (
             r"""\
-                section: paragraph ("\n\n" paragraph)*
+                section: paragraph (paragraph_separator paragraph)*
+                paragraph_separator: /\n\n/
 
                 paragraph: strict_paragraph | lenient_paragraph
 

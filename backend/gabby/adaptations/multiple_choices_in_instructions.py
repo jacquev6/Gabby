@@ -57,6 +57,9 @@ class MultipleChoicesInInstructionsAdaptation(Adaptation):
         def paragraph(self, choices):
             return list(itertools.chain.from_iterable(choices))
 
+        def paragraph_separator(self, args):
+            return []
+
         def strict_paragraph(self, choices):
             return list(itertools.chain.from_iterable(choices))
 
@@ -304,7 +307,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                     d.InsertOp(insert="a", attributes={"choice": True}),
                     d.InsertOp(insert=" # "),
                     d.InsertOp(insert="b", attributes={"choice": True}),
-                    d.InsertOp(insert="c # d."),
+                    d.InsertOp(insert="\n\nc # d."),
                 ],
             ),
         )
