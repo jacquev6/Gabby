@@ -237,17 +237,6 @@ export interface components {
       /** Username */
       username: string;
     };
-    /** Exercise */
-    Exercise: {
-      clue: components["schemas"]["Section"];
-      example: components["schemas"]["Section"];
-      instructions: components["schemas"]["Section"];
-      /** Number */
-      number: string;
-      /** Textbook Page */
-      textbook_page: number | null;
-      wording: components["schemas"]["Section"];
-    };
     /** FillWithFreeTextAdaptationOptions */
     FillWithFreeTextAdaptationOptions: {
       /** Placeholder */
@@ -257,6 +246,18 @@ export interface components {
     HTTPValidationError: {
       /** Detail */
       detail?: components["schemas"]["ValidationError"][];
+    };
+    /** InsertOp */
+    InsertOp: {
+      /**
+       * Attributes
+       * @default {}
+       */
+      attributes?: {
+        [key: string]: true;
+      };
+      /** Insert */
+      insert: string;
     };
     /** ItemLinks */
     ItemLinks: {
@@ -901,6 +902,22 @@ export interface components {
        */
       type: "user";
     };
+    /** Exercise */
+    gabby__exercise_delta__Exercise: {
+      /** Instructions */
+      instructions: components["schemas"]["InsertOp"][];
+    };
+    /** Exercise */
+    gabby__renderable__Exercise: {
+      clue: components["schemas"]["Section"];
+      example: components["schemas"]["Section"];
+      instructions: components["schemas"]["Section"];
+      /** Number */
+      number: string;
+      /** Textbook Page */
+      textbook_page: number | null;
+      wording: components["schemas"]["Section"];
+    };
     /** multipleChoicesInInstructionsAdaptationCreateInput */
     multipleChoicesInInstructionsAdaptationCreateInput: {
       data: components["schemas"]["multipleChoicesInInstructionsAdaptationCreateInputData"];
@@ -1190,7 +1207,8 @@ export interface components {
     };
     /** parsedExerciseOutputItemAttributes */
     parsedExerciseOutputItemAttributes: {
-      adapted: components["schemas"]["Exercise"];
+      adapted: components["schemas"]["gabby__renderable__Exercise"];
+      delta: components["schemas"]["gabby__exercise_delta__Exercise"];
     };
     /** pdfFileCreateInput */
     pdfFileCreateInput: {

@@ -6,6 +6,7 @@ import lark
 
 from .testing import TestCase
 
+from . import exercise_delta
 from . import renderable
 
 
@@ -16,8 +17,73 @@ def memoize_parser(grammar, start):
     return lark.Lark(grammar, start=start)
 
 
+class _SectionDeltaMaker(lark.Transformer):
+    def _merge(self, args):
+        for arg in args:
+            assert isinstance(arg, list), arg
+            for item in arg:
+                assert isinstance(item, exercise_delta.InsertOp), item
+        return [
+            exercise_delta.InsertOp(
+                insert="".join(item.insert for item in group),
+                attributes=attributes
+            )
+            for attributes, group in
+            itertools.groupby(itertools.chain.from_iterable(args), key=lambda arg: arg.attributes)
+        ]
+
+    def paragraph(self, args):
+        assert len(args) == 1
+        return args[0]
+
+    def strict_paragraph(self, args):
+        items = []
+        for i, arg in enumerate(args):
+            if i % 2 == 0:
+                for item in arg:
+                    assert isinstance(item, exercise_delta.InsertOp), item
+                    items.append(item)
+            else:
+                item = arg
+                assert isinstance(item, exercise_delta.InsertOp), item
+                items.append(item)
+        return items
+
+    def strict_sentence(self, args):
+        for arg in args:
+            assert isinstance(arg, exercise_delta.InsertOp), arg
+        return args
+
+    def lenient_paragraph(self, args):
+        return args
+
+    def in_sentence_punctuation(self, args):
+        assert len(args) == 1
+        return exercise_delta.InsertOp(insert=args[0].value)
+
+    def end_of_sentence_punctuation(self, args):
+        assert len(args) == 1
+        return exercise_delta.InsertOp(insert=args[0].value)
+
+    def word(self, args):
+        assert len(args) == 1
+        return exercise_delta.InsertOp(insert=args[0].value)
+
+    def whitespace(self, args):
+        assert len(args) == 1
+        return exercise_delta.InsertOp(insert=args[0].value)
+
+    def punctuation(self, args):
+        assert len(args) == 1
+        return exercise_delta.InsertOp(insert=args[0].value)
+
+    def INT(self, arg):
+        return exercise_delta.InsertOp(insert=arg.value)
+
+
 class _SectionAdapter(lark.Transformer):
     def paragraph(self, args):
+        assert len(args) == 1
         return args[0]
 
     def strict_paragraph(self, sentences):
@@ -27,28 +93,47 @@ class _SectionAdapter(lark.Transformer):
         return renderable.Sentence(tokens=args)
 
     def in_sentence_punctuation(self, args):
-        return renderable.PlainText(text=args[0])
+        assert len(args) == 1
+        return renderable.PlainText(text=args[0].value)
 
     def end_of_sentence_punctuation(self, args):
-        return renderable.PlainText(text=args[0])
+        assert len(args) == 1
+        return renderable.PlainText(text=args[0].value)
 
     def lenient_paragraph(self, args):
         return renderable.Paragraph(sentences=[renderable.Sentence(tokens=args)])
 
     def word(self, args):
-        return renderable.PlainText(text=args[0])
+        assert len(args) == 1
+        return renderable.PlainText(text=args[0].value)
 
     def whitespace(self, args):
+        assert len(args) == 1
         return renderable.Whitespace()
 
     def punctuation(self, args):
-        return renderable.PlainText(text=args[0])
+        assert len(args) == 1
+        return renderable.PlainText(text=args[0].value)
 
     def INT(self, arg):
         return int(arg.value)
 
 
-class _SectionParser(abc.ABC):
+class InstructionsSectionDeltaMaker(_SectionDeltaMaker):
+    def section(self, paragraphs):
+        return self._merge(paragraphs)
+
+
+class InstructionsSectionAdapter(_SectionAdapter):
+    def section(self, paragraphs):
+        return renderable.Section(paragraphs=list(
+            renderable.Paragraph(sentences=[sentence])
+            for sentence in
+            itertools.chain.from_iterable(paragraph.sentences for paragraph in paragraphs)
+        ))
+
+
+class InstructionsSectionParser:
     def __init__(self, tags, transformer):
         grammar = (
             r"""\
@@ -68,7 +153,7 @@ class _SectionParser(abc.ABC):
                 whitespace: /[ \t]+/
                 punctuation: /\.\.\.|[^\w \t\n]/
 
-                # Rules uses in tags; do not delete
+                # Rules used in tags; do not delete
                 STR: /[^}|]+/
                 INT: /[0-9]+/
             """
@@ -88,21 +173,6 @@ class _SectionParser(abc.ABC):
             except lark.exceptions.ParseError as e:
                 raise ValueError(f"Error parsing section {normalized}: {e}")
 
-    @abc.abstractmethod
-    def normalize(self, section: str) -> str:
-        raise NotImplementedError()
-
-
-class InstructionsSectionAdapter(_SectionAdapter):
-    def section(self, paragraphs):
-        return renderable.Section(paragraphs=list(
-            renderable.Paragraph(sentences=[sentence])
-            for sentence in
-            itertools.chain.from_iterable(paragraph.sentences for paragraph in paragraphs)
-        ))
-
-
-class InstructionsSectionParser(_SectionParser):
     def normalize(self, section):
         # This string manipulation before parsing is fragile but works for now.
         return "\n\n".join(
@@ -119,21 +189,23 @@ def parse_instructions_section(tags, transformer, section):
     return InstructionsSectionParser(tags, transformer)(section)
 
 
+parse_plain_instructions_section = InstructionsSectionParser({}, InstructionsSectionDeltaMaker())
+
 adapt_plain_instructions_section = InstructionsSectionParser({}, InstructionsSectionAdapter())
 
 
 class GenericSectionAdapterMixin:
     def boxed_text_tag(self, args):
         text, = args
-        return renderable.BoxedText(text=text)
+        return renderable.BoxedText(text=text.value)
 
     def selectable_text_tag(self, args):
         colors, text = args
-        return renderable.SelectableText(colors=colors, text=text)
+        return renderable.SelectableText(colors=colors, text=text.value)
 
     def selected_text_tag(self, args):
         color, colors, text = args
-        return renderable.SelectedText(color=color, colors=colors, text=text)
+        return renderable.SelectedText(color=color, colors=colors, text=text.value)
 
     def selected_clicks_tag(self, args):
         color, colors = args
@@ -420,7 +492,46 @@ class AdaptGenericInstructionsSectionTestCase(TestCase):
         )
 
 
-class WordingSectionParser(_SectionParser):
+class WordingSectionParser:
+    def __init__(self, tags, transformer):
+        grammar = (
+            r"""\
+                section: paragraph ("\n\n" paragraph)*
+
+                paragraph: strict_paragraph | lenient_paragraph
+
+                strict_paragraph: strict_sentence (whitespace strict_sentence)*
+                strict_sentence: (_tag | word | in_sentence_punctuation | whitespace)+ end_of_sentence_punctuation
+                in_sentence_punctuation: /[,;:]/
+                end_of_sentence_punctuation: /\.\.\.|[.!?…]/
+
+                lenient_paragraph: (_tag | word | punctuation | whitespace)+
+
+                # Keep these three regular expressions mutually exclusive
+                word: /[\w]+/
+                whitespace: /[ \t]+/
+                punctuation: /\.\.\.|[^\w \t\n]/
+
+                # Rules used in tags; do not delete
+                STR: /[^}|]+/
+                INT: /[0-9]+/
+            """
+            + f"_tag: {' | '.join(f"{tag}_tag" for tag in tags.keys())}\n"
+            + "\n".join(f'{tag}_tag: "{{" "{tag.replace("_", "-")}" {definition} "}}"' for (tag, definition) in tags.items())
+        )
+        self.parser = memoize_parser(grammar, start="section")
+        self.transformer = transformer
+
+    def __call__(self, section: str):
+        normalized = self.normalize(section)
+        if normalized == "":
+            return self.transformer.section([])
+        else:
+            try:
+                return self.transformer.transform(self.parser.parse(normalized))
+            except lark.exceptions.ParseError as e:
+                raise ValueError(f"Error parsing section {normalized}: {e}")
+
     def normalize(self, section):
         # This string manipulation before parsing is fragile but works for now.
         return "\n\n".join(

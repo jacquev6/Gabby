@@ -36,7 +36,7 @@ class SelectThingsAdaptation(Adaptation):
         return parsing.parse_instructions_section(
             {f"sel{color_index}": r""" "|" STR """ for color_index in self.color_indexes},
             type("InstructionsAdapter", (parsing.InstructionsSectionAdapter,), {
-                f"sel{color_index}_tag": (lambda color: staticmethod(lambda args: renderable.SelectedText(text=args[0], color=color, colors=self.colors)))(color_index)
+                f"sel{color_index}_tag": (lambda color: staticmethod(lambda args: renderable.SelectedText(text=args[0].value, color=color, colors=self.colors)))(color_index)
                 for color_index in self.color_indexes
             })(),
             section,
@@ -63,15 +63,15 @@ class SelectThingsAdaptation(Adaptation):
 
         def word(self, args):
             if self.select_words:
-                return renderable.SelectableText(text=args[0], colors=self.colors)
+                return renderable.SelectableText(text=args[0].value, colors=self.colors)
             else:
-                return renderable.PlainText(text=args[0])
+                return renderable.PlainText(text=args[0].value)
 
         def punctuation(self, args):
             if self.select_punctuation:
-                return renderable.SelectableText(text=args[0], colors=self.colors)
+                return renderable.SelectableText(text=args[0].value, colors=self.colors)
             else:
-                return renderable.PlainText(text=args[0])
+                return renderable.PlainText(text=args[0].value)
 
     def make_adapted_wording(self):
         return parsing.parse_wording_section(

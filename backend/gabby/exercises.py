@@ -8,6 +8,7 @@ import sqlalchemy as sql
 from fastjsonapi import make_filters
 
 from . import api_models
+from . import exercise_delta
 from . import parsing
 from . import renderable
 from . import settings
@@ -42,6 +43,11 @@ class Adaptation(OrmBase, CreatedUpdatedByAtMixin):
             wording=self.make_adapted_wording(),
             example=self.make_adapted_example(),
             clue=self.make_adapted_clue(),
+        )
+
+    def make_delta(self):
+        return exercise_delta.Exercise(
+            instructions=self.make_instructions_delta(),
         )
 
     def to_generic_adaptation(self):

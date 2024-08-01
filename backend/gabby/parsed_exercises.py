@@ -5,6 +5,7 @@ from fastapi import HTTPException
 from starlette import status
 
 from . import api_models
+from . import exercise_delta
 from . import parsing
 from . import renderable
 from . import settings
@@ -19,6 +20,9 @@ from .users import MandatoryAuthBearerDependable
 
 class NullAdaptation(Adaptation):
     __abstract__ = True  # Abstract with regards to SQL tables, but instantiable in Python
+
+    def make_instructions_delta(self):
+        return parsing.parse_plain_instructions_section(self.exercise.instructions)
 
     def make_adapted_instructions(self):
         return parsing.adapt_plain_instructions_section(self.exercise.instructions)
@@ -37,6 +41,7 @@ class NullAdaptation(Adaptation):
 class ParsedExerciseItem:
     id: str
     adapted: renderable.Exercise
+    delta: exercise_delta.Exercise
 
 
 class ParsedExercisesResource:
@@ -94,6 +99,7 @@ class ParsedExercisesResource:
         return ParsedExerciseItem(
             id=uuid.uuid4().hex,
             adapted=adaptation.make_adapted(),
+            delta=adaptation.make_delta(),
         )
 
     def get_item(

@@ -201,6 +201,14 @@ const adaptedExercise = computed(() => {
     return parsedExercise.value.attributes.adapted
   }
 })
+
+const deltas = computed(() => {
+  if (parsedExercise.value === null) {
+    return null
+  } else {
+    return parsedExercise.value.attributes.delta
+  }
+})
 </script>
 
 <template>
@@ -231,7 +239,7 @@ const adaptedExercise = computed(() => {
             <BBusy :busy>
               <ExerciseFieldsForm ref="fields"
                 v-model="model"
-                :fixedNumber="false" :extractionEvents :wysiwyg="false"
+                :fixedNumber="false" :extractionEvents :wysiwyg="false" :deltas
                 @selected="selection => { lastSelection = selection }"
               >
                 <template #overlay>

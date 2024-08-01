@@ -1,10 +1,12 @@
 from contextlib import contextmanager
-
 import itertools
+
 from sqlalchemy import orm
 import sqlalchemy as sql
 
 from .. import api_models
+from .. import exercise_delta
+from .. import exercise_delta as d
 from .. import parsing
 from .. import renderable
 from .. import renderable as r
@@ -30,12 +32,23 @@ class MultipleChoicesInInstructionsAdaptation(Adaptation):
 
     class InstructionsAdapter(parsing.InstructionsSectionAdapter):
         def choice_tag(self, args):
-            return renderable.BoxedText(text=args[0])
+            return renderable.BoxedText(text=args[0].value)
 
-    adapt_instructions = parsing.InstructionsSectionParser({"choice": r""" "|" STR """}, InstructionsAdapter())
+    instructions_tags = {"choice": r""" "|" STR """}
+
+    adapt_instructions = parsing.InstructionsSectionParser(instructions_tags, InstructionsAdapter())
 
     def make_adapted_instructions(self):
         return self.adapt_instructions(self.exercise.instructions)
+
+    class InstructionsDeltaMaker(parsing.InstructionsSectionDeltaMaker):
+        def choice_tag(self, args):
+            return exercise_delta.InsertOp(insert=args[0].value, attributes={"choice": True})
+
+    make_instructions_delta_ = parsing.InstructionsSectionParser(instructions_tags, InstructionsDeltaMaker())
+
+    def make_instructions_delta(self):
+        return self.make_instructions_delta_(self.exercise.instructions)
 
     class ChoicesGatherer(parsing.InstructionsSectionAdapter):
         def section(self, choices):
@@ -71,7 +84,7 @@ class MultipleChoicesInInstructionsAdaptation(Adaptation):
         def choice_tag(self, args):
             return [args[0].value]
 
-    gather_choices = parsing.InstructionsSectionParser({"choice": r""" "|" STR """}, ChoicesGatherer())
+    gather_choices = parsing.InstructionsSectionParser(instructions_tags, ChoicesGatherer())
 
     class WordingAdapter(parsing.WordingSectionAdapter):
         def __init__(self, choices):
@@ -141,6 +154,15 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                 ]),
                 example=r.Section(paragraphs=[]),
                 clue=r.Section(paragraphs=[]),
+            ),
+            d.Exercise(
+                instructions=[
+                    d.InsertOp(insert="Choose "),
+                    d.InsertOp(insert="a", attributes={"choice": True}),
+                    d.InsertOp(insert=" or "),
+                    d.InsertOp(insert="b", attributes={"choice": True}),
+                    d.InsertOp(insert="."),
+                ],
             ),
         )
 
@@ -227,6 +249,119 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                         ]),
                     ]),
                 ]),
+            ),
+        )
+
+    def test_lenient_paragraphs(self):
+        exercise = Exercise(
+            number="number",
+            textbook_page=42,
+            instructions="{choice|a} # {choice|b}\n\n c #\nd.",
+            wording="...",
+            example="",
+            clue="",
+        )
+        adaptation = MultipleChoicesInInstructionsAdaptation(exercise=exercise, placeholder="...")
+
+        self.do_test(
+            adaptation,
+            r.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.BoxedText(text="a"),
+                            r.Whitespace(),
+                            r.PlainText(text="#"),
+                            r.Whitespace(),
+                            r.BoxedText(text="b"),
+                        ]),
+                    ]),
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(text="c"),
+                            r.Whitespace(),
+                            r.PlainText(text="#"),
+                            r.Whitespace(),
+                            r.PlainText(text="d"),
+                            r.PlainText(text="."),
+                        ]),
+                    ]),
+                ]),
+                wording=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.MultipleChoicesInput(choices=["a", "b"]),
+                        ]),
+                    ]),
+                ]),
+                example=r.Section(paragraphs=[]),
+                clue=r.Section(paragraphs=[]),
+            ),
+            d.Exercise(
+                instructions=[
+                    d.InsertOp(insert="a", attributes={"choice": True}),
+                    d.InsertOp(insert=" # "),
+                    d.InsertOp(insert="b", attributes={"choice": True}),
+                    d.InsertOp(insert="c # d."),
+                ],
+            ),
+        )
+
+    def test_whitespace(self):
+        exercise = Exercise(
+            number="number",
+            textbook_page=42,
+            instructions=" \t  Choose  \t\n  {choice|a}.   Or {choice|b} .   \t\n   ",
+            wording="...",
+            example="",
+            clue="",
+        )
+        adaptation = MultipleChoicesInInstructionsAdaptation(exercise=exercise, placeholder="...")
+
+        self.do_test(
+            adaptation,
+            r.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(text="Choose"),
+                            r.Whitespace(),
+                            r.BoxedText(text="a"),
+                            r.PlainText(text="."),
+                        ]),
+                    ]),
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(text="Or"),
+                            r.Whitespace(),
+                            r.BoxedText(text="b"),
+                            r.Whitespace(),
+                            r.PlainText(text="."),
+                        ]),
+                    ]),
+                ]),
+                wording=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.MultipleChoicesInput(choices=["a", "b"]),
+                        ]),
+                    ]),
+                ]),
+                example=r.Section(paragraphs=[]),
+                clue=r.Section(paragraphs=[]),
+            ),
+            d.Exercise(
+                instructions=[
+                    d.InsertOp(insert="Choose  \t   "),
+                    d.InsertOp(insert="a", attributes={"choice": True}),
+                    d.InsertOp(insert=".   Or "),
+                    d.InsertOp(insert="b", attributes={"choice": True}),
+                    d.InsertOp(insert=" ."),
+                ],
             ),
         )
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, reactive, watch } from 'vue'
+import { ref, computed, reactive, watch, toRaw } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { computedAsync } from '@vueuse/core'
@@ -211,6 +211,15 @@ const adaptedExercise = computed(() => {
     return parsedExercise.value.attributes.adapted
   }
 })
+
+const deltas = computed(() => {
+  if (parsedExercise.value === null) {
+    return null
+  } else {
+    console.log('Instructions delta:', toRaw(parsedExercise.value.attributes.delta.instructions))
+    return parsedExercise.value.attributes.delta
+  }
+})
 </script>
 
 <template>
@@ -242,7 +251,7 @@ const adaptedExercise = computed(() => {
               <BBusy :busy>
                 <ExerciseFieldsForm ref="fields"
                   v-model="model"
-                  :fixedNumber="true" :extractionEvents :wysiwyg
+                  :fixedNumber="true" :extractionEvents :wysiwyg :deltas
                   @selected="selection => { lastSelection = selection }"
                 />
                 <template v-if="exerciseCreationHistory.current === null">

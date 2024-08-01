@@ -69,48 +69,6 @@
         "title": "Body_login_api_token_post",
         "type": "object"
       },
-      "Exercise": {
-        "additionalProperties": false,
-        "properties": {
-          "clue": {
-            "$ref": "#/components/schemas/Section"
-          },
-          "example": {
-            "$ref": "#/components/schemas/Section"
-          },
-          "instructions": {
-            "$ref": "#/components/schemas/Section"
-          },
-          "number": {
-            "title": "Number",
-            "type": "string"
-          },
-          "textbook_page": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Textbook Page"
-          },
-          "wording": {
-            "$ref": "#/components/schemas/Section"
-          }
-        },
-        "required": [
-          "number",
-          "textbook_page",
-          "instructions",
-          "wording",
-          "example",
-          "clue"
-        ],
-        "title": "Exercise",
-        "type": "object"
-      },
       "FillWithFreeTextAdaptationOptions": {
         "properties": {
           "placeholder": {
@@ -135,6 +93,32 @@
           }
         },
         "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "InsertOp": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "additionalProperties": {
+              "const": true,
+              "enum": [
+                true
+              ],
+              "type": "boolean"
+            },
+            "default": {},
+            "title": "Attributes",
+            "type": "object"
+          },
+          "insert": {
+            "title": "Insert",
+            "type": "string"
+          }
+        },
+        "required": [
+          "insert"
+        ],
+        "title": "InsertOp",
         "type": "object"
       },
       "ItemLinks": {
@@ -1900,6 +1884,65 @@
         "title": "fillWithFreeTextAdaptation_updatedBy_Relationship_ObjectId",
         "type": "object"
       },
+      "gabby__exercise_delta__Exercise": {
+        "additionalProperties": false,
+        "properties": {
+          "instructions": {
+            "items": {
+              "$ref": "#/components/schemas/InsertOp"
+            },
+            "title": "Instructions",
+            "type": "array"
+          }
+        },
+        "required": [
+          "instructions"
+        ],
+        "title": "Exercise",
+        "type": "object"
+      },
+      "gabby__renderable__Exercise": {
+        "additionalProperties": false,
+        "properties": {
+          "clue": {
+            "$ref": "#/components/schemas/Section"
+          },
+          "example": {
+            "$ref": "#/components/schemas/Section"
+          },
+          "instructions": {
+            "$ref": "#/components/schemas/Section"
+          },
+          "number": {
+            "title": "Number",
+            "type": "string"
+          },
+          "textbook_page": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Textbook Page"
+          },
+          "wording": {
+            "$ref": "#/components/schemas/Section"
+          }
+        },
+        "required": [
+          "number",
+          "textbook_page",
+          "instructions",
+          "wording",
+          "example",
+          "clue"
+        ],
+        "title": "Exercise",
+        "type": "object"
+      },
       "multipleChoicesInInstructionsAdaptationCreateInput": {
         "additionalProperties": false,
         "properties": {
@@ -2699,11 +2742,15 @@
         "additionalProperties": false,
         "properties": {
           "adapted": {
-            "$ref": "#/components/schemas/Exercise"
+            "$ref": "#/components/schemas/gabby__renderable__Exercise"
+          },
+          "delta": {
+            "$ref": "#/components/schemas/gabby__exercise_delta__Exercise"
           }
         },
         "required": [
-          "adapted"
+          "adapted",
+          "delta"
         ],
         "title": "parsedExerciseOutputItemAttributes",
         "type": "object"

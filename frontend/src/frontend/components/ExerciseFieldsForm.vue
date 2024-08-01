@@ -2,7 +2,7 @@
 import { nextTick } from 'vue'
 
 import { useApiStore } from '$frontend/stores/api'
-import type { Project, Textbook, Exercise, InCache, Exists, SelectThingsAdaptation, FillWithFreeTextAdaptation, MultipleChoicesInInstructionsAdaptation, MultipleChoicesInWordingAdaptation } from '$frontend/stores/api'
+import type { Project, Textbook, Exercise, InCache, Exists, SelectThingsAdaptation, FillWithFreeTextAdaptation, MultipleChoicesInInstructionsAdaptation, MultipleChoicesInWordingAdaptation, ParsedExercise } from '$frontend/stores/api'
 
 
 const api = useApiStore()
@@ -252,6 +252,7 @@ const props = defineProps<{
   fixedNumber: boolean
   extractionEvents: object[]
   wysiwyg: boolean
+  deltas: (ParsedExercise & InCache & Exists)['attributes']['delta'] | null
 }>()
 
 const emit = defineEmits<{
@@ -332,7 +333,7 @@ defineExpose({
     <template v-if="wysiwyg && model.adaptationType === 'multipleChoicesInInstructionsAdaptation'">
       <div class="mb-3">
         <label class="form-label" @click="instructionsEditor?.focus()">{{ $t('exerciseInstructions') }}</label>
-        <WysiwygInstructionsEditor ref="instructionsEditor" v-model="model.instructions" />
+        <WysiwygInstructionsEditor ref="instructionsEditor" v-model="model.instructions" :delta="deltas === null ? [] : deltas.instructions" />
       </div>
     </template>
     <BLabeledTextarea

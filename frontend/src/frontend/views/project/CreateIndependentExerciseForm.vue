@@ -32,7 +32,7 @@ async function create() {
     <ExerciseFieldsForm
       ref="fields"
       v-model="model"
-      :fixedNumber="false" :extractionEvents="[]" :wysiwyg="false" :addingChoices="false"
+      :fixedNumber="false" :extractionEvents="[]" :wysiwyg="false" :deltas="{instructions: []}" :addingChoices="false"
     />
     <BButton primary :disabled="fields === null || fields.saveDisabled" @click="create" data-cy="create-exercise">{{ $t('createExercise' )}}</BButton>
   </BBusy>
