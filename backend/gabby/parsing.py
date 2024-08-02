@@ -438,7 +438,7 @@ class InstructionsSectionDeltaMaker(lark.Transformer):
         return arg.value
 
 
-parse_plain_instructions_section = InstructionsSectionParser({}, InstructionsSectionDeltaMaker())
+make_plain_instructions_section_delta = InstructionsSectionParser({}, InstructionsSectionDeltaMaker())
 
 
 class InstructionsSectionAdapter(lark.Transformer):

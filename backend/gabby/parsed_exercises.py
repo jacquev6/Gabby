@@ -22,7 +22,7 @@ class NullAdaptation(Adaptation):
     __abstract__ = True  # Abstract with regards to SQL tables, but instantiable in Python
 
     def make_instructions_delta(self):
-        return parsing.parse_plain_instructions_section(self.exercise.instructions)
+        return parsing.make_plain_instructions_section_delta(self.exercise.instructions)
 
     def make_adapted_instructions(self):
         return parsing.adapt_plain_instructions_section(self.exercise.instructions)
@@ -380,6 +380,40 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     {"type": "multipleChoicesInput", "choices": ["a", "b"]},
                 ]}]},
             ]},
+            "example": {"paragraphs": []},
+            "clue": {"paragraphs": []},
+        })
+
+    def test_multiple_choices_in_wording(self):
+        payload = {
+            "data": {
+                "type": "parsedExercise",
+                "attributes": {
+                    "number": "A.1",
+                    "instructions": "Instructions.",
+                    "wording": "A {choices|alpha|beta}.",
+                    "example": "",
+                    "clue": "",
+                    "type": "multipleChoicesInWordingAdaptation",
+                    "adaptationOptions": {},
+                },
+            },
+        }
+        response = self.post("http://server/parsedExercises", payload)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
+        self.assertEqual(response.json()["data"]["attributes"]["adapted"], {
+            "number": "A.1",
+            "textbook_page": None,  # @todo Rename to textbookPage
+            "instructions": {"paragraphs": [{"sentences": [{"tokens": [
+                {"type": "plainText", "text": "Instructions"},
+                {"type": "plainText", "text": "."},
+            ]}]}]},
+            "wording": {"paragraphs": [{"sentences": [{"tokens": [
+                {"type": "plainText", "text": "A"},
+                {"type": "whitespace"},
+                {"type": "multipleChoicesInput", "choices": ["alpha", "beta"]},
+                {"type": "plainText", "text": "."},
+            ]}]}]},
             "example": {"paragraphs": []},
             "clue": {"paragraphs": []},
         })

@@ -44,6 +44,9 @@ class FillWithFreeTextAdaptation(Adaptation):
     def make_adapted_clue(self):
         return parsing.adapt_plain_instructions_section(self.exercise.clue)
 
+    def make_instructions_delta(self):
+        return parsing.make_plain_instructions_section_delta(self.exercise.instructions)
+
 
 class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
     def test_single_sentence(self):

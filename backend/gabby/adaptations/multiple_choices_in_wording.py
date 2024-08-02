@@ -42,6 +42,9 @@ class MultipleChoicesInWordingAdaptation(Adaptation):
     def make_adapted_clue(self):
         return parsing.adapt_plain_instructions_section(self.exercise.clue)
 
+    def make_instructions_delta(self):
+        return parsing.make_plain_instructions_section_delta(self.exercise.instructions)
+
 
 class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
     def test_simple(self):
