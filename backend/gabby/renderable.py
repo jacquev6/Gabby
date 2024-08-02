@@ -6,7 +6,7 @@ from . import settings
 
 
 class BaseModel(pydantic.BaseModel):
-    model_config = pydantic.ConfigDict(extra="forbid")
+    model_config = pydantic.ConfigDict(extra="forbid", strict=True)
 
 
 class _PlainText(BaseModel):
@@ -17,7 +17,7 @@ class _PlainText(BaseModel):
         return self.text
 
 def PlainText(text: str):
-    assert text.__class__ == str
+    assert text.__class__ == str, text.__class__
     return _PlainText(type="plainText", text=text)
 
 
@@ -29,7 +29,7 @@ class _BoxedText(BaseModel):
         return f"{{boxed-text|{self.text}}}"
 
 def BoxedText(text: str):
-    assert text.__class__ == str
+    assert text.__class__ == str, text.__class__
     return _BoxedText(type="boxedText", text=text)
 
 
@@ -42,7 +42,7 @@ class _SelectableText(BaseModel):
         return f"{{selectable-text|{self.colors}|{self.text}}}"
 
 def SelectableText(text: str, colors: int):
-    assert text.__class__ == str
+    assert text.__class__ == str, text.__class__
     return _SelectableText(type="selectableText", text=text, colors=colors)
 
 
@@ -56,7 +56,7 @@ class _SelectedText(BaseModel):
         return f"{{selected-text|{self.color}|{self.colors}|{self.text}}}"
 
 def SelectedText(text: str, color: int, colors: int):
-    assert text.__class__ == str
+    assert text.__class__ == str, text.__class__
     return _SelectedText(type="selectedText", text=text, color=color, colors=colors)
 
 

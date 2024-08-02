@@ -29,7 +29,7 @@ class MultipleChoicesInWordingAdaptation(Adaptation):
 
     class WordingAdapter(parsing.WordingSectionAdapter):
         def choices_tag(self, args):
-            return renderable.MultipleChoicesInput(choices=[arg.value for arg in args])
+            return renderable.MultipleChoicesInput(choices=[arg for arg in args])
 
     adapt_wording = parsing.WordingSectionParser({"choices": r""" ("|" STR)+ """}, WordingAdapter())
 

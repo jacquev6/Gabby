@@ -32,7 +32,8 @@ class MultipleChoicesInInstructionsAdaptation(Adaptation):
 
     class InstructionsAdapter(parsing.InstructionsSectionAdapter):
         def choice_tag(self, args):
-            return renderable.BoxedText(text=args[0].value)
+            assert len(args) == 1
+            return renderable.BoxedText(text=args[0])
 
     instructions_tags = {"choice": r""" "|" STR """}
 
@@ -43,7 +44,7 @@ class MultipleChoicesInInstructionsAdaptation(Adaptation):
 
     class InstructionsDeltaMaker(parsing.InstructionsSectionDeltaMaker):
         def choice_tag(self, args):
-            return exercise_delta.InsertOp(insert=args[0].value, attributes={"choice": True})
+            return exercise_delta.InsertOp(insert=args[0], attributes={"choice": True})
 
     make_instructions_delta_ = parsing.InstructionsSectionParser(instructions_tags, InstructionsDeltaMaker())
 
@@ -51,41 +52,45 @@ class MultipleChoicesInInstructionsAdaptation(Adaptation):
         return self.make_instructions_delta_(self.exercise.instructions)
 
     class ChoicesGatherer(parsing.InstructionsSectionAdapter):
-        def section(self, choices):
-            return list(itertools.chain.from_iterable(choices))
+        def section(self, args):
+            return list(itertools.chain(*args))
 
-        def paragraph(self, choices):
-            return list(itertools.chain.from_iterable(choices))
+        def strict_paragraph(self, args):
+            return list(itertools.chain(*args))
 
-        def paragraph_separator(self, args):
-            return []
+        def sentence(self, args):
+            return list(itertools.chain(*args))
 
-        def strict_paragraph(self, choices):
-            return list(itertools.chain.from_iterable(choices))
-
-        def strict_sentence(self, choices):
-            return list(itertools.chain.from_iterable(choices))
-
-        def in_sentence_punctuation(self, args):
-            return []
-
-        def end_of_sentence_punctuation(self, args):
-            return []
-
-        def lenient_paragraph(self, choices):
-            return list(itertools.chain.from_iterable(choices))
-
-        def word(self, args):
-            return []
-
-        def whitespace(self, args):
-            return []
-
-        def punctuation(self, args):
-            return []
+        def lenient_paragraph(self, args):
+            return list(itertools.chain(*args))
 
         def choice_tag(self, args):
-            return [args[0].value]
+            assert len(args) == 1
+            return [args[0]]
+
+        def WORD(self, arg):
+            return []
+
+        def LEADING_WHITESPACE(self, arg):
+            return []
+
+        def TRAILING_WHITESPACE(self, arg):
+            return []
+
+        def PARAGRAPH_SEPARATOR(self, arg):
+            return []
+
+        def SENTENCE_SEPARATOR(self, arg):
+            return []
+
+        def WHITESPACE_IN_SENTENCE(self, arg):
+            return []
+
+        def PUNCTUATION_AT_END_OF_SENTENCE(self, arg):
+            return []
+
+        def ANY_PUNCTUATION(self, arg):
+            return []
 
     gather_choices = parsing.InstructionsSectionParser(instructions_tags, ChoicesGatherer())
 
@@ -307,7 +312,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                     d.InsertOp(insert="a", attributes={"choice": True}),
                     d.InsertOp(insert=" # "),
                     d.InsertOp(insert="b", attributes={"choice": True}),
-                    d.InsertOp(insert="\n\nc # d."),
+                    d.InsertOp(insert="\n\n c #\nd."),
                 ],
             ),
         )
@@ -359,11 +364,11 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
             ),
             d.Exercise(
                 instructions=[
-                    d.InsertOp(insert="Choose  \t   "),
+                    d.InsertOp(insert=" \t  Choose  \t\n  "),
                     d.InsertOp(insert="a", attributes={"choice": True}),
                     d.InsertOp(insert=".   Or "),
                     d.InsertOp(insert="b", attributes={"choice": True}),
-                    d.InsertOp(insert=" ."),
+                    d.InsertOp(insert=" .   \t\n   "),
                 ],
             ),
         )
