@@ -198,6 +198,12 @@ async function saveThenNext() {
 }
 
 const parsedExerciseLoading = ref(false)
+// This 'computedAsync' gets cancelled when the user types faster than the server can respond,
+// and only the last response is actually assigned to 'parsedExercise' by VueUse.
+// Thus, 'adaptedExercise' and 'deltas' are -recomputed only when they correspond to the current value of the field.
+// This is the expected behavior, but is very difficult to test. An attempt to test it has been made in
+//   it("keeps what's been typed in WYSIWYG fields regardless of the typing speed and server response time"
+// but is arguably fragile. So... don't mess this up, future me!
 const parsedExercise = computedAsync(
   () => getParsed(model),
   null,
@@ -216,7 +222,6 @@ const deltas = computed(() => {
   if (parsedExercise.value === null) {
     return null
   } else {
-    console.log('Instructions delta:', toRaw(parsedExercise.value.attributes.delta.instructions))
     return parsedExercise.value.attributes.delta
   }
 })

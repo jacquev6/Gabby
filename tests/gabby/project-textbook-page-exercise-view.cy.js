@@ -508,4 +508,25 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
     cy.get('label:contains("Adaptation type")').next().should('have.value', 'selectThingsAdaptation')
     cy.get('label:contains("Instructions")').next().should('have.value', 'Instructions!')
   })
+
+  it("keeps what's been typed in WYSIWYG fields regardless of the typing speed and server response time", () => {
+    cy.visit('/project-xkopqm/textbook-klxufv/page-7/exercise-xnyegk')
+    setLocale()
+
+    cy.intercept('POST', '/api/parsedExercises', (req) => {
+      const throttle = req.body.data.attributes.instructions === "Foo\n" ? 1000 : 0
+      req.on('response', (res) => { res.delay = throttle })
+    })
+
+    cy.get(':has(>label:contains("Instructions")) .ql-editor').as('editor')
+
+    cy.get('@editor').focus().type('{selectall}Foo')
+    cy.get('@editor').focus().type('{selectall}Bar')
+
+    cy.get('div.busy').should('not.exist')
+
+    // The response for 'Foo' reaches the frontend after the response for 'Bar', but is discarded and 'Bar' is kept.
+    cy.get('@editor').should('not.contain.text', 'Foo')
+    cy.get('@editor').should('contain.text', 'Bar')
+  })
 })
