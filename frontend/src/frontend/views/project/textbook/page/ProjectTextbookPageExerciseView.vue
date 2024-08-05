@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, reactive, watch } from 'vue'
+import { ref, computed, reactive, watch, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { computedAsync } from '@vueuse/core'
@@ -149,11 +149,6 @@ function textSelected(pdfFile: PdfFile, pdf: {page: PDFPageProxy}, text: string,
   textSelectionModal.value.show(text, {x: point.clientX, y: point.clientY})
 }
 
-function highlightSuffix(fieldName: TextualFieldName, text: string) {
-  console.assert(fields.value !== null)
-  fields.value.highlightSuffix(fieldName, text)
-}
-
 const lastSelection = ref<Selection | null>(null)
 
 function goToPrevious() {
@@ -224,6 +219,22 @@ const deltas = computed(() => {
     return null
   } else {
     return parsedExercise.value.attributes.delta
+  }
+})
+
+const suffixToHighlight = ref<{fieldName: TextualFieldName, text: string} | null>(null)
+function highlightSuffix(fieldName: TextualFieldName, text: string) {
+  suffixToHighlight.value = {fieldName, text}
+}
+
+watch(parsedExercise, () => {
+  if (suffixToHighlight.value !== null) {
+    const {fieldName, text} = suffixToHighlight.value
+    suffixToHighlight.value = null
+    nextTick(() => {
+      console.assert(fields.value !== null)
+      fields.value.highlightSuffix(fieldName, text)
+    })
   }
 })
 </script>

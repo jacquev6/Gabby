@@ -1,6 +1,4 @@
 <script lang="ts">
-import { nextTick } from 'vue'
-
 import { useApiStore } from '$frontend/stores/api'
 import type { Project, Textbook, Exercise, InCache, Exists, SelectThingsAdaptation, FillWithFreeTextAdaptation, MultipleChoicesInInstructionsAdaptation, MultipleChoicesInWordingAdaptation, ParsedExercise } from '$frontend/stores/api'
 
@@ -294,19 +292,15 @@ function highlightSuffix(fieldName: TextualFieldName, suffix: string) {
   const textArea = textAreas[fieldName].value
   if(textArea === null) {
     if (fieldName === 'instructions' && props.wysiwyg) {
-      nextTick(() => {
-        console.assert(instructionsEditor.value !== null)
-        instructionsEditor.value.focus()
-        settingSelectionRange.value = true
-        instructionsEditor.value.setSelection(instructionsEditor.value.getLength() - suffix.length - 1, suffix.length)
-      })
+      console.assert(instructionsEditor.value !== null)
+      instructionsEditor.value.focus()
+      settingSelectionRange.value = true
+      instructionsEditor.value.setSelection(instructionsEditor.value.getLength() - suffix.length - 1, suffix.length)
     }
   } else {
-    nextTick(() => {
-      textArea.focus()
-      settingSelectionRange.value = true
-      textArea.setSelectionRange(text.length - suffix.length, text.length)
-    })
+    textArea.focus()
+    settingSelectionRange.value = true
+    textArea.setSelectionRange(text.length - suffix.length, text.length)
   }
 }
 
