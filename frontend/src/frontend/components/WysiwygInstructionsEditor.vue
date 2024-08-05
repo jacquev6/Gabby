@@ -22,7 +22,7 @@ watch(
       quillModel.value = delta
     }
   },
-  {immediate: true}
+  {immediate: true},
 )
 
 watch(quillModel, quillModel => {
