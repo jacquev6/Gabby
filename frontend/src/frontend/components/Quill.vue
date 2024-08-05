@@ -12,11 +12,15 @@ import Scroll from 'quill/blots/scroll'
 import TextBlot from 'quill/blots/text'
 // import Clipboard from 'quill/modules/clipboard'
 // import History from 'quill/modules/history'
-// import Keyboard from 'quill/modules/keyboard'
+import Keyboard from 'quill/modules/keyboard'
 // import Uploader from 'quill/modules/uploader'
 // import Input from 'quill/modules/input'
 // import UINode from 'quill/modules/uiNode'
 
+
+// Monkey-patching Quill to remove some default bindings, until I learn how to do it properly.
+delete Keyboard.DEFAULTS.bindings.bold
+delete Keyboard.DEFAULTS.bindings.italic
 
 // Partial of node_modules/quill-delta/dist/Op.d.ts, more readable than using TypeScript's 'Omit',
 // but slightly more fragile in the unlikely case quill-delta changes its interface. OK.
