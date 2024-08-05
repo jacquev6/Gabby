@@ -18,7 +18,6 @@ watch(
   () => props.delta,
   delta => {
     if (makeModel(quillModel.value) !== makeModel(delta)) {
-      console.log('delta -> quillModel', makeModel(quillModel.value), '->', makeModel(delta))
       quillModel.value = delta
     }
   },
