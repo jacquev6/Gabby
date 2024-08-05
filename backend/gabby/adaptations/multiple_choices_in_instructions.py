@@ -86,10 +86,13 @@ class MultipleChoicesInInstructionsAdaptation(Adaptation):
         def WHITESPACE_IN_SENTENCE(self, arg):
             return []
 
+        def PUNCTUATION_IN_SENTENCE(self, arg):
+            return []
+
         def PUNCTUATION_AT_END_OF_SENTENCE(self, arg):
             return []
 
-        def ANY_PUNCTUATION(self, arg):
+        def PUNCTUATION_IN_LENIENT_PARAGRAPH(self, arg):
             return []
 
         def INT(self, arg):

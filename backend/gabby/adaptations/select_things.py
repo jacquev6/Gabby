@@ -68,17 +68,20 @@ class SelectThingsAdaptation(Adaptation):
             self.select_punctuation = punctuation
             self.colors = colors
 
-        def word(self, args):
+        def WORD(self, arg):
             if self.select_words:
-                return renderable.SelectableText(text=args[0].value, colors=self.colors)
+                return renderable.SelectableText(text=arg.value, colors=self.colors)
             else:
-                return renderable.PlainText(text=args[0].value)
+                return renderable.PlainText(text=arg.value)
 
-        def punctuation(self, args):
+        def PUNCTUATION_IN_SENTENCE(self, arg):
             if self.select_punctuation:
-                return renderable.SelectableText(text=args[0].value, colors=self.colors)
+                return renderable.SelectableText(text=arg.value, colors=self.colors)
             else:
-                return renderable.PlainText(text=args[0].value)
+                return renderable.PlainText(text=arg.value)
+
+        PUNCTUATION_AT_END_OF_SENTENCE = PUNCTUATION_IN_SENTENCE
+        PUNCTUATION_IN_LENIENT_PARAGRAPH = PUNCTUATION_IN_SENTENCE
 
     def make_adapted_wording(self):
         return parsing.parse_wording_section(
