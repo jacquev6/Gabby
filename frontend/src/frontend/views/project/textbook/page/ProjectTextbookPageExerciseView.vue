@@ -239,6 +239,18 @@ watch(parsedExercise, () => {
     })
   }
 })
+
+const toolSlotNames = computed(() => {
+  const names = ['undoRedo']
+  if (wysiwyg.value) {
+    names.push('basicFormatting')
+  }
+  if (model.adaptationType !== '-') {
+    names.push('adaptationDetails')
+  }
+  names.push('replace')
+  return names
+})
 </script>
 
 <template>
@@ -297,12 +309,12 @@ watch(parsedExercise, () => {
             <div class="h-100 overflow-hidden d-flex flex-row">
               <div class="handle"></div>
               <div class="h-100 overflow-auto flex-fill" data-cy="gutter-2">
-                <ToolsGutter>
+                <ToolsGutter :slotNames="toolSlotNames">
                   <template #undoRedo>
                     <UndoRedoTool v-model="model" :reset="resetUndoRedo" />
                   </template>
                   <template #basicFormatting>
-                    <BasicFormattingTools v-if="fields !== null && wysiwyg" :fields />
+                    <BasicFormattingTools v-if="fields !== null" :fields />
                   </template>
                   <template #adaptationDetails>
                     <AdaptationDetailsFieldsForm v-if="fields !== null" v-model="model" :wysiwyg :fields />

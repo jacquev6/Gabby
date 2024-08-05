@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, computed, watch } from 'vue'
 
 import Quill, { type Model as QuillModel, BoldBlot, ChoiceBlot, ItalicBlot } from './Quill.vue'
 
@@ -80,6 +80,7 @@ defineExpose({
     console.assert(quill.value !== null)
     return quill.value.getLength()
   },
+  hasFocus: computed(() => quill.value !== null && quill.value.hasFocus),
 })
 </script>
 

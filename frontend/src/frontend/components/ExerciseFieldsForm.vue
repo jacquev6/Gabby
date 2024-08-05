@@ -310,10 +310,13 @@ function toggle(format: string) {
   }
 }
 
+const wysiwygInstructionsHasFocus = computed(() => instructionsEditor.value?.hasFocus ?? false)
+
 defineExpose({
   saveDisabled,
   highlightSuffix,
   toggle,
+  wysiwygInstructionsHasFocus,
 })
 </script>
 

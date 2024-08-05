@@ -107,6 +107,8 @@ function getContents(quill: Quill): Model {
   })
 }
 
+const hasFocus = ref(false)
+
 const quill = computed(() => {
   if (container.value === null) {
     return null
@@ -118,10 +120,13 @@ const quill = computed(() => {
         modules: {history: {maxStack: 0, userOnly: true}},  // https://github.com/slab/quill/issues/691#issuecomment-797861431
       },
     )
-    quill.on('text-change', (_1: unknown, _2: unknown, source: string) => {
+    quill.on('text-change', (_delta: unknown, _oldDelta: unknown, source: string) => {
       if (source === 'user') {
         model.value = getContents(quill)
       }
+    })
+    quill.on('selection-change', (range: object | null, _oldRange: object | null, _source: string) => {
+      hasFocus.value = range !== null
     })
     return quill
   }
@@ -155,6 +160,7 @@ function toggle(formatting: string) {
 
 defineExpose({
   toggle,
+  hasFocus,
   focus() {
     console.assert(quill.value !== null)
     quill.value.focus()
