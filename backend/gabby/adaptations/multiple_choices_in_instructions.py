@@ -51,7 +51,7 @@ class MultipleChoicesInInstructionsAdaptation(Adaptation):
     def make_instructions_delta(self):
         return self.make_instructions_delta_(self.exercise.instructions)
 
-    class ChoicesGatherer(parsing.InstructionsSectionAdapter):
+    class ChoicesGatherer(parsing.Transformer):
         def section(self, args):
             return list(itertools.chain(*args))
 
@@ -91,6 +91,12 @@ class MultipleChoicesInInstructionsAdaptation(Adaptation):
 
         def ANY_PUNCTUATION(self, arg):
             return []
+
+        def INT(self, arg):
+            return None
+
+        def STR(self, arg):
+            return arg.value
 
     gather_choices = parsing.InstructionsSectionParser(instructions_tags, ChoicesGatherer())
 

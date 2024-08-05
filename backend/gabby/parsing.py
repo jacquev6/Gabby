@@ -362,7 +362,65 @@ class InstructionsSectionParser:
             raise ValueError(f"Error transforming instructions section {section}: {e}")
 
 
-class InstructionsSectionDeltaMaker(lark.Transformer):
+class Transformer(lark.Transformer, abc.ABC):
+    @abc.abstractmethod
+    def section(self, args):
+        pass
+
+    @abc.abstractmethod
+    def strict_paragraph(self, args):
+        pass
+
+    @abc.abstractmethod
+    def sentence(self, args):
+        pass
+
+    @abc.abstractmethod
+    def lenient_paragraph(self, args):
+        pass
+
+    @abc.abstractmethod
+    def WORD(self, arg):
+        pass
+
+    @abc.abstractmethod
+    def LEADING_WHITESPACE(self, arg):
+        pass
+
+    @abc.abstractmethod
+    def TRAILING_WHITESPACE(self, arg):
+        pass
+
+    @abc.abstractmethod
+    def PARAGRAPH_SEPARATOR(self, arg):
+        pass
+
+    @abc.abstractmethod
+    def SENTENCE_SEPARATOR(self, arg):
+        pass
+
+    @abc.abstractmethod
+    def WHITESPACE_IN_SENTENCE(self, arg):
+        pass
+
+    @abc.abstractmethod
+    def PUNCTUATION_AT_END_OF_SENTENCE(self, arg):
+        pass
+
+    @abc.abstractmethod
+    def ANY_PUNCTUATION(self, arg):
+        pass
+
+    @abc.abstractmethod
+    def INT(self, arg):
+        pass
+
+    @abc.abstractmethod
+    def STR(self, arg):
+        pass
+
+
+class InstructionsSectionDeltaMaker(Transformer):
     def _merge(self, args):
         return [
             exercise_delta.InsertOp(
@@ -428,7 +486,7 @@ class InstructionsSectionDeltaMaker(lark.Transformer):
 make_plain_instructions_section_delta = InstructionsSectionParser({}, InstructionsSectionDeltaMaker())
 
 
-class InstructionsSectionAdapter(lark.Transformer):
+class InstructionsSectionAdapter(Transformer):
     def section(self, args):
         paragraphs = list(filter(None, args))
         return renderable.Section(paragraphs=list(
