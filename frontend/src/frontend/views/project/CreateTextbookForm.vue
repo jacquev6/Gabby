@@ -61,7 +61,6 @@ async function create() {
       {pdfFile: {type: 'pdfFile', lid: 'pdf'}, textbook: {type: 'textbook', lid: 'tb'}},
     ])
   }
-  console.log(operations)
   const results = await api.client.batch(...operations)
   const textbook = results[0] as Textbook & InCache & Exists
   busy.value = false

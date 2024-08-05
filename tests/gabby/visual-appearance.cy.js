@@ -1,11 +1,14 @@
 import { useApiStore } from '../../frontend/src/frontend/stores/api'
 
+function setLocale() {
+  cy.get('select[data-cy="language"]').last().select('fr')
+  cy.focused().blur()
+}
 
 function test(path, title, f = () => {}) {
   it(`${title} looks like this`, () => {
     cy.visit(path)
-    cy.get('select').first().select('fr')
-    cy.get('select').first().blur()
+    setLocale()
     cy.get('.busy').should('not.exist')
     f()
     cy.get('.busy').should('not.exist')

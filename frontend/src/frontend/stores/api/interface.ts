@@ -18,7 +18,7 @@ export type InclusionAndSelectionOptions = InclusionOptions & SelectionOptions
 // @todo make 'ItemTypes' and 'Paths' generic arguments to everything, so that they can be specified by the client
 
 export const itemTypes = [
-  'adaptedExercise',
+  'parsedExercise',
   'exercise',
   'extractionEvent',
   'fillWithFreeTextAdaptation',

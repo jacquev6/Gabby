@@ -32,13 +32,20 @@ class SelectThingsAdaptation(Adaptation):
     def color_indexes(self):
         return range(1, self.colors + 1)
 
+    def _make_tags(self):
+        return {f"sel{color_index}": r""" "|" STR """ for color_index in self.color_indexes}
+
+    def _make_adapter_type(self):
+        return type("InstructionsAdapter", (parsing.InstructionsSectionAdapter,), {
+            f"sel{color_index}_tag": (lambda color: staticmethod(lambda args: renderable.SelectedText(text=args[0], color=color, colors=self.colors)))(color_index)
+            for color_index in self.color_indexes
+        })
+
     def adapt_instructions(self, section):
-        return parsing.parse_instructions_section(
-            {f"sel{color_index}": r""" "|" STR """ for color_index in self.color_indexes},
-            type("InstructionsAdapter", (parsing.InstructionsSectionTransformer,), {
-                f"sel{color_index}_tag": (lambda color: staticmethod(lambda args: renderable.SelectedText(text=args[0], color=color, colors=self.colors)))(color_index)
-                for color_index in self.color_indexes
-            })(),
+        return parsing.InstructionsSectionParser(
+            self._make_tags(),
+            self._make_adapter_type()(),
+        )(
             section,
         )
 
@@ -55,23 +62,26 @@ class SelectThingsAdaptation(Adaptation):
 
         return section
 
-    class WordingAdapter(parsing.WordingSectionTransformer):
+    class WordingAdapter(parsing.WordingSectionAdapter):
         def __init__(self, words, punctuation, colors):
             self.select_words = words
             self.select_punctuation = punctuation
             self.colors = colors
 
-        def word(self, args):
+        def WORD(self, arg):
             if self.select_words:
-                return renderable.SelectableText(text=args[0], colors=self.colors)
+                return renderable.SelectableText(text=arg.value, colors=self.colors)
             else:
-                return renderable.PlainText(text=args[0])
+                return renderable.PlainText(text=arg.value)
 
-        def punctuation(self, args):
+        def PUNCTUATION_IN_SENTENCE(self, arg):
             if self.select_punctuation:
-                return renderable.SelectableText(text=args[0], colors=self.colors)
+                return renderable.SelectableText(text=arg.value, colors=self.colors)
             else:
-                return renderable.PlainText(text=args[0])
+                return renderable.PlainText(text=arg.value)
+
+        PUNCTUATION_AT_END_OF_SENTENCE = PUNCTUATION_IN_SENTENCE
+        PUNCTUATION_IN_LENIENT_PARAGRAPH = PUNCTUATION_IN_SENTENCE
 
     def make_adapted_wording(self):
         return parsing.parse_wording_section(
@@ -85,6 +95,10 @@ class SelectThingsAdaptation(Adaptation):
 
     def make_adapted_clue(self):
         return self.adapt_instructions(self.exercise.clue)
+
+    def make_instructions_delta(self):
+        # @todo Implement
+        return parsing.make_plain_instructions_section_delta(self.exercise.instructions)
 
 
 class SelectThingsAdaptationTestCase(AdaptationTestCase):
@@ -101,7 +115,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
 
         self.do_test(
             adaptation,
-            r.AdaptedExercise(
+            r.Exercise(
                 number="number",
                 textbook_page=None,
                 instructions=r.Section(paragraphs=[
@@ -160,7 +174,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
 
         self.do_test(
             adaptation,
-            r.AdaptedExercise(
+            r.Exercise(
                 number="number",
                 textbook_page=None,
                 instructions=r.Section(paragraphs=[
@@ -214,7 +228,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
 
         self.do_test(
             adaptation,
-            r.AdaptedExercise(
+            r.Exercise(
                 number="number",
                 textbook_page=None,
                 instructions=r.Section(paragraphs=[
@@ -249,7 +263,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
 
         self.do_test(
             adaptation,
-            r.AdaptedExercise(
+            r.Exercise(
                 number="number",
                 textbook_page=42,
                 instructions=r.Section(paragraphs=[
@@ -298,7 +312,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
 
         self.do_test(
             adaptation,
-            r.AdaptedExercise(
+            r.Exercise(
                 number="number",
                 textbook_page=42,
                 instructions=r.Section(paragraphs=[
@@ -347,7 +361,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
 
         self.do_test(
             adaptation,
-            r.AdaptedExercise(
+            r.Exercise(
                 number="number",
                 textbook_page=42,
                 instructions=r.Section(paragraphs=[
@@ -390,7 +404,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
 
         self.do_test(
             adaptation,
-            r.AdaptedExercise(
+            r.Exercise(
                 number="number",
                 textbook_page=42,
                 instructions=r.Section(paragraphs=[
@@ -425,7 +439,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
 
         self.do_test(
             adaptation,
-            r.AdaptedExercise(
+            r.Exercise(
                 number="number",
                 textbook_page=None,
                 instructions=r.Section(paragraphs=[
@@ -486,7 +500,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
 
         self.do_test(
             adaptation,
-            r.AdaptedExercise(
+            r.Exercise(
                 number="number",
                 textbook_page=None,
                 instructions=r.Section(paragraphs=[

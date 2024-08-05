@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import { computed, useSlots } from 'vue'
-
-const slots = useSlots()
-
-const slotNames = computed(() => Object.keys(slots))
+defineProps<{
+  slotNames: string[]
+}>()
 </script>
 
 <template>

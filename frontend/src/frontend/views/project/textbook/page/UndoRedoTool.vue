@@ -44,6 +44,6 @@ watch(Ctrl_Y, (v) => {
 </script>
 
 <template>
-  <BButton primary sm @click="history.undo" :disabled="!history.canUndo.value" title="Ctrl+Z">{{ $t('undo') }}</BButton>
-  <BButton primary sm @click="history.redo" :disabled="!history.canRedo.value" title="Ctrl+Y">{{ $t('redo') }}</BButton>
+  <BButton primary sm @click="history.undo" :disabled="!history.canUndo.value" title="Ctrl+Z" :data-gab="history.undoStack.value.length">{{ $t('undo') }}</BButton>
+  <BButton primary sm @click="history.redo" :disabled="!history.canRedo.value" title="Ctrl+Y" :data-gab="history.redoStack.value.length">{{ $t('redo') }}</BButton>
 </template>

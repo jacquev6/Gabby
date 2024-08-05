@@ -1,8 +1,15 @@
 <script setup lang="ts">
 import { BLabeledInput, BLabeledCheckbox } from './opinion/bootstrap'
 
+import { BButton } from './opinion/bootstrap'
 import type { Model } from './ExerciseFieldsForm.vue'
+import type ExerciseFieldsForm from './ExerciseFieldsForm.vue'
 
+
+defineProps<{
+  wysiwyg: boolean
+  fields: InstanceType<typeof ExerciseFieldsForm>
+}>()
 
 const model = defineModel<Model>({required: true})
 </script>
@@ -33,7 +40,10 @@ const model = defineModel<Model>({required: true})
     <BLabeledCheckbox :label="$t('includePunctuation')" v-model="model.selectThingsAdaptationOptions.punctuation" />
   </template>
   <template v-else-if="model.adaptationType === 'multipleChoicesInInstructionsAdaptation'">
-    <p class="alert alert-secondary">
+    <template v-if="wysiwyg">
+      <p><BButton sm primary @click="fields.toggle('choice')">{{ $t('choiceButton') }}</BButton></p>
+    </template>
+    <p v-else class="alert alert-secondary">
       <i18n-t keypath="useChoice">
         <template v-slot:choice>
           <code>{choice|<em>text</em>}</code>

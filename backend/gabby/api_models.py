@@ -7,6 +7,7 @@ from pydantic import BaseModel as Base
 from fastjsonapi import Constant, Computed, Secret, WriteOnly
 
 from . import renderable
+from . import exercise_delta
 
 
 class CreatedByAtMixin:
@@ -154,7 +155,7 @@ class MultipleChoicesInWordingAdaptation(MultipleChoicesInWordingAdaptationOptio
     exercise: Annotated[Exercise, Constant()]
 
 
-class AdaptedExercise(Base):
+class ParsedExercise(Base):
     number: Annotated[str, WriteOnly()]
     instructions: Annotated[str, WriteOnly()]
     wording: Annotated[str, WriteOnly()]
@@ -170,7 +171,8 @@ class AdaptedExercise(Base):
         ),
         WriteOnly(),
     ]
-    adapted: Annotated[renderable.AdaptedExercise, Computed()]
+    adapted: Annotated[renderable.Exercise, Computed()]
+    delta: Annotated[exercise_delta.Exercise, Computed()]
 
 
 class SyntheticError(Base):

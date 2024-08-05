@@ -35,6 +35,8 @@ watch(models, () => emit('layoutChanged'), { deep: true })
             <template v-if="token.type === 'plainText'">{{ token.text }}</template>
             <template v-else-if="token.type === 'whitespace'"><wbr /> <wbr /></template>
             <template v-else-if="token.type === 'boxedText'"><span class="boxed">{{ token.text }}</span></template>
+            <template v-else-if="token.type === 'boldText'"><b>{{ token.text }}</b></template>
+            <template v-else-if="token.type === 'italicText'"><i>{{ token.text }}</i></template>
             <template v-else-if="token.type === 'freeTextInput'">
               <FreeTextInput v-model="models[modelKey]" />
             </template>

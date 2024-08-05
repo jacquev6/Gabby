@@ -1,4 +1,4 @@
-import type { components } from '$/openapi'
+import type { paths } from '$/openapi'
 
 
 export interface Settings {
@@ -7,13 +7,12 @@ export interface Settings {
 }
 
 
-type schemas = components['schemas']
+export type Exercise = paths['/api/parsedExercises/{id}']['get']['responses']['200']['content']['application/vnd.api+json']['data']['attributes']['adapted']
 
-export type Section = schemas['Section']
+export type Section = Exercise['instructions']
 
-export type Paragraph = schemas['Paragraph']
+export type Paragraph = Section['paragraphs'][number]
 
-export type Exercise = schemas['AdaptedExercise']
 
 export interface Data {
   projectId: string,

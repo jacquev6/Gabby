@@ -14,5 +14,5 @@ const options = computed(() => i18n.availableLocales.map(locale => ({
 </script>
 
 <template>
-  <BSelect v-model="$i18n.locale" :options="options" />
+  <BSelect v-model="$i18n.locale" :options="options" data-cy="language" />
 </template>

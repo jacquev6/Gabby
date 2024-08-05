@@ -3,8 +3,8 @@ import { useApiStore } from '../../frontend/src/frontend/stores/api'
 
 const isProdPreview = Cypress.env('IS_PROD_PREVIEW')
 
-function setLocale() {
-  cy.get('select').last().select('en')
+function setLocale(locale = 'en') {
+  cy.get('select[data-cy="language"]').last().select(locale)
 }
 
 describe('Gabby\'s project\'s textbook page view', () => {
@@ -975,8 +975,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
 
   it('shows and hides the section editor dialog', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-6')
-    setLocale()
-    cy.get('select').select('fr')
+    setLocale('fr')
     cy.get('div.busy').should('not.exist')
 
     cy.get('h1').contains('Lien entre PDF et manuel').should('not.exist')
