@@ -432,6 +432,28 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
     cy.get(':has(>label:contains("Instructions")) .ql-editor').should('contain.text', 'Réponds par vrai ou faux.')
   })
 
+  it('creates an exercise with a WYSIWYG field', () => {
+    cy.visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
+    setLocale()
+
+    cy.get('label:contains("Number")').next().type('6')
+    cy.get('label:contains("Adaptation type")').next().select('multipleChoicesInInstructionsAdaptation')
+    cy.get(':has(>label:contains("Instructions")) .ql-editor').as('instructions')
+    cy.get('@instructions').focus().type('Choix : ')
+    cy.get('button:contains("Choice")').click()
+    cy.get('@instructions').focus().type('vrai')
+    cy.get('button:contains("Choice")').click()
+    cy.get('@instructions').focus().type(' ou ')
+    cy.get('button:contains("Choice")').click()
+    cy.get('@instructions').focus().type('faux')
+
+    cy.get('choice-blot').should('have.length', 2)
+
+    cy.get('button:contains("Save then back to list")').click()
+
+    cy.get('li:contains("Choix : {choice|vrai} ou")').should('exist')
+  })
+
   it('saves an exercise after setting its adaptation', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-7/exercise-jkrudc')
     setLocale()

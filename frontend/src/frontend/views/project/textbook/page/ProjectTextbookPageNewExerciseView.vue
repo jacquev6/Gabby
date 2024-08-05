@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, reactive } from 'vue'
+import { ref, computed, reactive, watch, nextTick } from 'vue'
 import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -26,6 +26,7 @@ import AdaptationDetailsFieldsForm from '$/frontend/components/AdaptationDetails
 import TextSelectionModal from './TextSelectionModal.vue'
 import { makeModel, resetModel, getParsed, create, suggestNextNumber } from '$frontend/components/ExerciseFieldsForm.vue'
 import type { PDFPageProxy } from 'pdfjs-dist'
+import BasicFormattingTools from './BasicFormattingTools.vue'
 
 
 const props = defineProps<{
@@ -79,7 +80,7 @@ const title = computed(() => [i18n.t('create')])
 const breadcrumbs = computed(() => bc.last(i18n.t('create')))
 
 const model = reactive(makeModel())
-
+const wysiwyg = ref(true)
 const extractionEvents: object[] = []
 
 const resetUndoRedo = ref(0)
@@ -134,11 +135,6 @@ function textSelected(pdfFile: PdfFile, pdf: {page: PDFPageProxy}, text: string,
     })
     textSelectionModal.value.show(text, {x: point.clientX, y: point.clientY})
   }
-}
-
-function highlightSuffix(fieldName: TextualFieldName, text: string) {
-  console.assert(fields.value !== null)
-  fields.value.highlightSuffix(fieldName, text)
 }
 
 const lastSelection = ref<Selection | null>(null)
@@ -209,6 +205,22 @@ const deltas = computed(() => {
     return parsedExercise.value.attributes.delta
   }
 })
+
+const suffixToHighlight = ref<{fieldName: TextualFieldName, text: string} | null>(null)
+function highlightSuffix(fieldName: TextualFieldName, text: string) {
+  suffixToHighlight.value = {fieldName, text}
+}
+
+watch(parsedExercise, () => {
+  if (suffixToHighlight.value !== null) {
+    const {fieldName, text} = suffixToHighlight.value
+    suffixToHighlight.value = null
+    nextTick(() => {
+      console.assert(fields.value !== null)
+      fields.value.highlightSuffix(fieldName, text)
+    })
+  }
+})
 </script>
 
 <template>
@@ -235,11 +247,11 @@ const deltas = computed(() => {
       <TwoResizableColumns saveKey="projectTextbookPage-2" :snap="150" class="h-100" gutterWidth="200px">
         <template #left>
           <div class="h-100 overflow-auto" data-cy="left-col-2">
-            <h1>{{ $t('edition') }}</h1>
+            <h1>{{ $t('edition') }} <span style="font-size: small">(<label>WYSIWYG: <input type="checkbox" v-model="wysiwyg" /></label>)</span></h1>
             <BBusy :busy>
               <ExerciseFieldsForm ref="fields"
                 v-model="model"
-                :fixedNumber="false" :extractionEvents :wysiwyg="false" :deltas
+                :fixedNumber="false" :extractionEvents :wysiwyg :deltas
                 @selected="selection => { lastSelection = selection }"
               >
                 <template #overlay>
@@ -278,10 +290,11 @@ const deltas = computed(() => {
                 <template #undoRedo>
                   <UndoRedoTool v-model="model" :reset="resetUndoRedo" />
                 </template>
+                <template #basicFormatting>
+                  <BasicFormattingTools v-if="fields !== null && wysiwyg" :fields />
+                </template>
                 <template #adaptationDetails>
-                  <template v-if="fields !== null">
-                    <AdaptationDetailsFieldsForm v-model="model" :wysiwyg="false" :fields/>
-                  </template>
+                  <AdaptationDetailsFieldsForm v-if="fields !== null" v-model="model" :wysiwyg :fields/>
                 </template>
                 <template #replace>
                   <ReplaceTool v-model="model" :lastSelection />
