@@ -25,6 +25,7 @@ import AdaptationDetailsFieldsForm from '$/frontend/components/AdaptationDetails
 import TextPicker from './TextPicker.vue'
 import type { PdfFile } from '$/frontend/stores/api'
 import type { PDFPageProxy } from 'pdfjs-dist'
+import BasicFormattingTools from './BasicFormattingTools.vue'
 
 
 const props = defineProps<{
@@ -287,10 +288,11 @@ const deltas = computed(() => {
                   <template #undoRedo>
                     <UndoRedoTool v-model="model" :reset="resetUndoRedo" />
                   </template>
+                  <template #basicFormatting>
+                    <BasicFormattingTools v-if="fields !== null && wysiwyg" :fields />
+                  </template>
                   <template #adaptationDetails>
-                    <template v-if="fields !== null">
-                      <AdaptationDetailsFieldsForm v-model="model" :wysiwyg :fields />
-                    </template>
+                    <AdaptationDetailsFieldsForm v-if="fields !== null" v-model="model" :wysiwyg :fields />
                   </template>
                   <template #replace>
                     <ReplaceTool v-model="model" :lastSelection />

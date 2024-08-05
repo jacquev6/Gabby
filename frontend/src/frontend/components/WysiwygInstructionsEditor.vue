@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 
-import Quill, { type Model as QuillModel, ChoiceBlot } from './Quill.vue'
+import Quill, { type Model as QuillModel, BoldBlot, ChoiceBlot, ItalicBlot } from './Quill.vue'
 
 
 const props = defineProps<{
@@ -37,6 +37,10 @@ function makeModel(quillModel: QuillModel): string {
   for (const delta of quillModel) {
     if (delta.attributes?.choice) {
       model += `{choice|${delta.insert}}`
+    } else if (delta.attributes?.bold) {
+      model += `{bold|${delta.insert}}`
+    } else if (delta.attributes?.italic) {
+      model += `{italic|${delta.insert}}`
     } else {
       model += delta.insert
     }
@@ -46,7 +50,7 @@ function makeModel(quillModel: QuillModel): string {
 
 // This variable is required: passing ':blots="[ChoiceBlot]"' to the 'Quill' component
 // changes its 'props.blots' on every update, triggering unwanted re-computations.
-const blots = [ChoiceBlot]
+const blots = [ChoiceBlot, BoldBlot, ItalicBlot]
 
 defineExpose({
   // Could we automate these? They all forward to 'quill.value'.

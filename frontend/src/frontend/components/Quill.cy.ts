@@ -39,13 +39,10 @@ describe('Quill', () => {
     })
   })
 
-  function selectTextRange(obj: HTMLElement, start: number, end: number) {
-    const child = obj.firstChild
-    console.assert(child !== null)
-
+  function selectRange(startNode: Node, startOffset: number, endNode: Node, endOffset: number) {
     var range = document.createRange()
-    range.setStart(child, start)
-    range.setEnd(child, end)
+    range.setStart(startNode, startOffset)
+    range.setEnd(endNode, endOffset)
 
     var sel = window.getSelection()
     console.assert(sel !== null)
@@ -53,22 +50,120 @@ describe('Quill', () => {
     sel.addRange(range)
   }
 
-  it('updates its model when formatting', () => {
-    let modelValue: Model = [{insert: 'plain'}]
+  it('adds a format to the selection', () => {
+    let modelValue: Model = [{insert: 'abcdefghi'}]
     cy.mount(Quill, {props: {
       blots: [BoldBlot, ItalicBlot],
       modelValue,
       'onUpdate:modelValue': (m: Model) => { modelValue = m},
     }})
     cy.get('div.ql-editor').focus()
-    cy.get('div.ql-editor > p').then($el => selectTextRange($el[0], 2, 4))
+    cy.get('div.ql-editor > p').then($el => {
+      const node = $el[0].firstChild
+      console.assert(node !== null)
+      selectRange(node, 3, node, 6)
+    })
     cy.vue<typeof Quill>()
       .then(w => w.componentVM.toggle('bold'))
       .then(() => {
         expect(modelValue).to.deep.equal([
-          {insert: 'pl', attributes: undefined},
-          {insert: 'ai', attributes: {bold: true}},
-          {insert: 'n\n', attributes: undefined},
+          {insert: 'abc', attributes: undefined},
+          {insert: 'def', attributes: {bold: true}},
+          {insert: 'ghi\n', attributes: undefined},
+        ])
+      })
+  })
+
+  it('removes a format from the selection', () => {
+    let modelValue: Model = [{insert: 'abcdefghi', attributes: {bold: true}}]
+    cy.mount(Quill, {props: {
+      blots: [BoldBlot, ItalicBlot],
+      modelValue,
+      'onUpdate:modelValue': (m: Model) => { modelValue = m},
+    }})
+    cy.get('div.ql-editor').focus()
+    cy.get('div.ql-editor > p > bold-blot').then($el => {
+      const node = $el[0].firstChild
+      console.assert(node !== null)
+      selectRange(node, 3, node, 6)
+    })
+    cy.vue<typeof Quill>()
+      .then(w => w.componentVM.toggle('bold'))
+      .then(() => {
+        expect(modelValue).to.deep.equal([
+          {insert: 'abc', attributes: {bold: true}},
+          {insert: 'def', attributes: undefined},
+          {insert: 'ghi', attributes: {bold: true}},
+          {insert: '\n', attributes: undefined},
+        ])
+      })
+  })
+
+  it('removes a format from the selection before adding another', () => {
+    let modelValue: Model = [{insert: 'abcdefghi', attributes: {bold: true}}]
+    cy.mount(Quill, {props: {
+      blots: [BoldBlot, ItalicBlot],
+      modelValue,
+      'onUpdate:modelValue': (m: Model) => { modelValue = m},
+    }})
+    cy.get('div.ql-editor').focus()
+    cy.get('div.ql-editor > p > bold-blot').then($el => {
+      const node = $el[0].firstChild
+      console.assert(node !== null)
+      selectRange(node, 3, node, 6)
+    })
+    cy.vue<typeof Quill>()
+      .then(w => w.componentVM.toggle('italic'))
+      .then(() => {
+        expect(modelValue).to.deep.equal([
+          {insert: 'abc', attributes: {bold: true}},
+          {insert: 'def', attributes: {italic: true}},
+          {insert: 'ghi', attributes: {bold: true}},
+          {insert: '\n', attributes: undefined},
+        ])
+      })
+  })
+
+  it('removes a format from a part of the selection before adding another', () => {
+    let modelValue: Model = [{insert: 'abcd'}, {insert: 'e', attributes: {bold: true}}, {insert: 'fghi'}]
+    cy.mount(Quill, {props: {
+      blots: [BoldBlot, ItalicBlot],
+      modelValue,
+      'onUpdate:modelValue': (m: Model) => { modelValue = m},
+    }})
+    cy.get('div.ql-editor > p').then($el => {
+      selectRange($el[0].firstChild!, 3, $el[0].firstChild!.nextSibling!.nextSibling!, 1)
+    })
+    cy.wait(200)  // I've not investigated why this is needed
+    cy.vue<typeof Quill>()
+      .then(w => w.componentVM.toggle('italic'))
+      .then(() => {
+        expect(modelValue).to.deep.equal([
+          {insert: 'abc', attributes: undefined},
+          {insert: 'def', attributes: {italic: true}},
+          {insert: 'ghi\n', attributes: undefined},
+        ])
+      })
+  })
+
+  it('adds a format to the caret, removes it before adding another', () => {
+    let modelValue: Model = [{insert: 'abc'}]
+    cy.mount(Quill, {props: {
+      blots: [BoldBlot, ItalicBlot],
+      modelValue,
+      'onUpdate:modelValue': (m: Model) => { modelValue = m},
+    }})
+    cy.get('div.ql-editor').focus().type('{rightarrow}{rightarrow}{rightarrow}')
+    cy.vue<typeof Quill>().then(w => w.componentVM.toggle('bold'))
+    cy.get('div.ql-editor').type('def')
+    cy.vue<typeof Quill>().then(w => w.componentVM.toggle('italic'))
+    cy.get('div.ql-editor').type('ghi')
+      .then(() => {
+        expect(modelValue).to.deep.equal([
+          {insert: 'abc', attributes: undefined},
+          {insert: 'def', attributes: {bold: true}},
+          {insert: 'ghi', attributes: {italic: true}},
+          {insert: '\n', attributes: undefined},
         ])
       })
   })

@@ -33,6 +33,30 @@ def BoxedText(text: str):
     return _BoxedText(type="boxedText", text=text)
 
 
+class _BoldText(BaseModel):
+    type: Literal["boldText"]
+    text: str
+
+    def to_generic(self):
+        return f"{{bold-text|{self.text}}}"
+
+def BoldText(text: str):
+    assert text.__class__ == str, text.__class__
+    return _BoldText(type="boldText", text=text)
+
+
+class _ItalicText(BaseModel):
+    type: Literal["italicText"]
+    text: str
+
+    def to_generic(self):
+        return f"{{italic-text|{self.text}}}"
+
+def ItalicText(text: str):
+    assert text.__class__ == str, text.__class__
+    return _ItalicText(type="italicText", text=text)
+
+
 class _SelectableText(BaseModel):
     type: Literal["selectableText"]
     text: str
@@ -103,7 +127,7 @@ def Whitespace():
     return _Whitespace(type="whitespace")
 
 
-SentenceToken = _PlainText | _BoxedText | _SelectableText | _SelectedText | _SelectedClicks | _FreeTextInput | _MultipleChoicesInput | _Whitespace
+SentenceToken = _PlainText | _BoxedText | _BoldText | _ItalicText | _SelectableText | _SelectedText | _SelectedClicks | _FreeTextInput | _MultipleChoicesInput | _Whitespace
 
 
 class Sentence(BaseModel):

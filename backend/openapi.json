@@ -351,6 +351,12 @@
                   "$ref": "#/components/schemas/_BoxedText"
                 },
                 {
+                  "$ref": "#/components/schemas/_BoldText"
+                },
+                {
+                  "$ref": "#/components/schemas/_ItalicText"
+                },
+                {
                   "$ref": "#/components/schemas/_SelectableText"
                 },
                 {
@@ -413,6 +419,29 @@
         "title": "ValidationError",
         "type": "object"
       },
+      "_BoldText": {
+        "additionalProperties": false,
+        "properties": {
+          "text": {
+            "title": "Text",
+            "type": "string"
+          },
+          "type": {
+            "const": "boldText",
+            "enum": [
+              "boldText"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "text"
+        ],
+        "title": "_BoldText",
+        "type": "object"
+      },
       "_BoxedText": {
         "additionalProperties": false,
         "properties": {
@@ -452,6 +481,29 @@
           "type"
         ],
         "title": "_FreeTextInput",
+        "type": "object"
+      },
+      "_ItalicText": {
+        "additionalProperties": false,
+        "properties": {
+          "text": {
+            "title": "Text",
+            "type": "string"
+          },
+          "type": {
+            "const": "italicText",
+            "enum": [
+              "italicText"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "text"
+        ],
+        "title": "_ItalicText",
         "type": "object"
       },
       "_MultipleChoicesInput": {

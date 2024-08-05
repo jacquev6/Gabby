@@ -101,6 +101,12 @@ class MultipleChoicesInInstructionsAdaptation(Adaptation):
         def STR(self, arg):
             return arg.value
 
+        def bold_tag(self, args):
+            return []
+
+        def italic_tag(self, args):
+            return []
+
     gather_choices = parsing.InstructionsSectionParser(instructions_tags, ChoicesGatherer())
 
     class WordingAdapter(parsing.WordingSectionAdapter):

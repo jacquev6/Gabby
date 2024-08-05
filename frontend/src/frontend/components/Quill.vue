@@ -129,12 +129,23 @@ watch([quill, model], ([quill, model]) => {
   }
 })
 
-function toggle(format: string) {
+function toggle(formatting: string) {
   console.assert(quill.value !== null)
-  if (quill.value.getFormat()[format]) {
-    quill.value.format(format, false, 'user')
-  } else {
-    quill.value.format(format, true, 'user')
+
+  // Clear formatting of the caret, in case selection is empty.
+  // Incidentally, this also clears the formatting of the selected range in whole.
+  const previousFormat = quill.value.getFormat()
+  for (const f of Object.keys(previousFormat)) {
+    quill.value.format(f, false, 'user')
+  }
+
+  // Clear any formatting of (any part of) the selected range.
+  const {index, length} = quill.value.getSelection(true)
+  quill.value.removeFormat(index, length)
+
+  // Toggle the requested formatting, either for the caret, or for the selected range.
+  if (!previousFormat[formatting]) {
+    quill.value.format(formatting, true, 'user')
   }
 }
 
@@ -143,6 +154,10 @@ defineExpose({
   focus() {
     console.assert(quill.value !== null)
     quill.value.focus()
+  },
+  getSelection() {
+    console.assert(quill.value !== null)
+    return quill.value.getSelection(true)
   },
   setSelection(index: number, length: number) {
     console.assert(quill.value !== null)

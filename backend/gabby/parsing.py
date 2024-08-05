@@ -348,6 +348,11 @@ class InstructionsGrammarWithoutTagsTestCase(GrammarTestCase(make_instructions_g
 
 class InstructionsSectionParser:
     def __init__(self, tags, transformer):
+        tags = dict(
+            bold = r""" "|" STR """,
+            italic = r""" "|" STR """,
+            **tags
+        )
         self.parser = memoize_parser(make_instructions_grammar(tags), start="section")
         self.transformer = transformer
 
@@ -423,6 +428,14 @@ class Transformer(lark.Transformer, abc.ABC):
     def STR(self, arg):
         pass
 
+    @abc.abstractmethod
+    def bold_tag(self, args):
+        pass
+
+    @abc.abstractmethod
+    def italic_tag(self, args):
+        pass
+
 
 class InstructionsSectionDeltaMaker(Transformer):
     def _merge(self, args):
@@ -489,6 +502,14 @@ class InstructionsSectionDeltaMaker(Transformer):
     def STR(self, arg):
         return arg.value
 
+    def bold_tag(self, args):
+        assert len(args) == 1
+        return exercise_delta.InsertOp(insert=args[0], attributes={"bold": True})
+
+    def italic_tag(self, args):
+        assert len(args) == 1
+        return exercise_delta.InsertOp(insert=args[0], attributes={"italic": True})
+
 
 make_plain_instructions_section_delta = InstructionsSectionParser({}, InstructionsSectionDeltaMaker())
 
@@ -544,6 +565,14 @@ class InstructionsSectionAdapter(Transformer):
 
     def STR(self, arg):
         return arg.value
+
+    def bold_tag(self, args):
+        assert len(args) == 1
+        return renderable.BoldText(text=args[0])
+
+    def italic_tag(self, args):
+        assert len(args) == 1
+        return renderable.ItalicText(text=args[0])
 
 
 adapt_plain_instructions_section = InstructionsSectionParser({}, InstructionsSectionAdapter())
@@ -976,6 +1005,11 @@ class WordingGrammarTestCase(GrammarTestCase(make_wording_grammar({}))):
 
 class WordingSectionParser:
     def __init__(self, tags, transformer):
+        tags = dict(
+            bold = r""" "|" STR """,
+            italic = r""" "|" STR """,
+            **tags
+        )
         self.parser = memoize_parser(make_wording_grammar(tags), start="section")
         self.transformer = transformer
 
@@ -1037,6 +1071,14 @@ class WordingSectionAdapter(Transformer):
 
     def STR(self, arg):
         return arg.value
+
+    def bold_tag(self, args):
+        assert len(args) == 1
+        return renderable.BoldText(text=args[0])
+
+    def italic_tag(self, args):
+        assert len(args) == 1
+        return renderable.ItalicText(text=args[0])
 
 
 def parse_wording_section(tags, transformer, section):

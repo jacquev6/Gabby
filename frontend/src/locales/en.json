@@ -121,6 +121,8 @@
   "useChoices": "Use {choices} in wording to indicate a choice to make.",
   "choiceButton": "Choice",
   "placeholderText": "Placeholder to fill",
+  "boldButton": "Bold",
+  "italicButton": "Italic",
 
   "tools": "Tools",
   "undo": "Undo",

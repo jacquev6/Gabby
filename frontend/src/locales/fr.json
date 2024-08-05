@@ -121,6 +121,8 @@
   "useChoices": "Utilisez {choices} dans l'énoncé pour indiquer choix à faire.",
   "choiceButton": "Choix",
   "placeholderText": "Trou à remplir",
+  "boldButton": "Gras",
+  "italicButton": "Italique",
 
   "tools": "Outils",
   "undo": "Annuler",

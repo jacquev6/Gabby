@@ -334,7 +334,7 @@ export interface components {
     /** Sentence */
     Sentence: {
       /** Tokens */
-      tokens: (components["schemas"]["_PlainText"] | components["schemas"]["_BoxedText"] | components["schemas"]["_SelectableText"] | components["schemas"]["_SelectedText"] | components["schemas"]["_SelectedClicks"] | components["schemas"]["_FreeTextInput"] | components["schemas"]["_MultipleChoicesInput"] | components["schemas"]["_Whitespace"])[];
+      tokens: (components["schemas"]["_PlainText"] | components["schemas"]["_BoxedText"] | components["schemas"]["_BoldText"] | components["schemas"]["_ItalicText"] | components["schemas"]["_SelectableText"] | components["schemas"]["_SelectedText"] | components["schemas"]["_SelectedClicks"] | components["schemas"]["_FreeTextInput"] | components["schemas"]["_MultipleChoicesInput"] | components["schemas"]["_Whitespace"])[];
     };
     /** ValidationError */
     ValidationError: {
@@ -344,6 +344,17 @@ export interface components {
       msg: string;
       /** Error Type */
       type: string;
+    };
+    /** _BoldText */
+    _BoldText: {
+      /** Text */
+      text: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "boldText";
     };
     /** _BoxedText */
     _BoxedText: {
@@ -364,6 +375,17 @@ export interface components {
        * @enum {string}
        */
       type: "freeTextInput";
+    };
+    /** _ItalicText */
+    _ItalicText: {
+      /** Text */
+      text: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "italicText";
     };
     /** _MultipleChoicesInput */
     _MultipleChoicesInput: {
