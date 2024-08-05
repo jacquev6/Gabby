@@ -5,6 +5,7 @@ from fastapi import HTTPException
 from starlette import status
 
 from . import api_models
+from . import exercise_delta
 from . import parsing
 from . import renderable
 from . import settings
@@ -20,30 +21,34 @@ from .users import MandatoryAuthBearerDependable
 class NullAdaptation(Adaptation):
     __abstract__ = True  # Abstract with regards to SQL tables, but instantiable in Python
 
+    def make_instructions_delta(self):
+        return parsing.make_plain_instructions_section_delta(self.exercise.instructions)
+
     def make_adapted_instructions(self):
-        return parsing.parse_plain_instructions_section(self.exercise.instructions)
+        return parsing.adapt_plain_instructions_section(self.exercise.instructions)
 
     def make_adapted_wording(self):
-        return parsing.parse_plain_wording_section(self.exercise.wording)
+        return parsing.adapt_plain_wording_section(self.exercise.wording)
 
     def make_adapted_example(self):
-        return parsing.parse_plain_instructions_section(self.exercise.example)
+        return parsing.adapt_plain_instructions_section(self.exercise.example)
 
     def make_adapted_clue(self):
-        return parsing.parse_plain_instructions_section(self.exercise.clue)
+        return parsing.adapt_plain_instructions_section(self.exercise.clue)
 
 
 @dataclasses.dataclass
-class AdaptedExerciseItem:
+class ParsedExerciseItem:
     id: str
-    adapted: renderable.AdaptedExercise
+    adapted: renderable.Exercise
+    delta: exercise_delta.Exercise
 
 
-class AdaptedExercisesResource:
-    singular_name = "adapted_exercise"
-    plural_name = "adapted_exercises"
+class ParsedExercisesResource:
+    singular_name = "parsed_exercise"
+    plural_name = "parsed_exercises"
 
-    Model = api_models.AdaptedExercise
+    Model = api_models.ParsedExercise
 
     default_page_size = settings.GENERIC_DEFAULT_API_PAGE_SIZE
 
@@ -91,9 +96,10 @@ class AdaptedExercisesResource:
             )
         else:
             raise HTTPException(status_code=400, detail="Unknown type")
-        return AdaptedExerciseItem(
+        return ParsedExerciseItem(
             id=uuid.uuid4().hex,
             adapted=adaptation.make_adapted(),
+            delta=adaptation.make_delta(),
         )
 
     def get_item(
@@ -104,14 +110,14 @@ class AdaptedExercisesResource:
         return None
 
 
-class AdaptedExerciseApiTestCase(LoggedInApiTestCase):
-    resources = [AdaptedExercisesResource()]
+class ParsedExerciseApiTestCase(LoggedInApiTestCase):
+    resources = [ParsedExercisesResource()]
     polymorphism = {}
 
     def test_null(self):
         payload = {
             "data": {
-                "type": "adaptedExercise",
+                "type": "parsedExercise",
                 "attributes": {
                     "number": "C",
                     "instructions": "This is the {boxed-text|instructions}.",
@@ -123,7 +129,7 @@ class AdaptedExerciseApiTestCase(LoggedInApiTestCase):
                 },
             },
         }
-        response = self.post("http://server/adaptedExercises", payload)
+        response = self.post("http://server/parsedExercises", payload)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
         self.assertEqual(response.json()["data"]["attributes"]["adapted"], {
             "number": "C",
@@ -163,7 +169,7 @@ class AdaptedExerciseApiTestCase(LoggedInApiTestCase):
     def test_select_things(self):
         payload = {
             "data": {
-                "type": "adaptedExercise",
+                "type": "parsedExercise",
                 "attributes": {
                     "number": "A.1",
                     "instructions": "This is the instructions.",
@@ -179,7 +185,7 @@ class AdaptedExerciseApiTestCase(LoggedInApiTestCase):
                 },
             },
         }
-        response = self.post("http://server/adaptedExercises", payload)
+        response = self.post("http://server/parsedExercises", payload)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
         self.assertEqual(response.json()["data"]["attributes"]["adapted"], {
             "number": "A.1",
@@ -220,7 +226,7 @@ class AdaptedExerciseApiTestCase(LoggedInApiTestCase):
     def test_select_things_with_example_and_clue(self):
         payload = {
             "data": {
-                "type": "adaptedExercise",
+                "type": "parsedExercise",
                 "attributes": {
                     "number": "A.1",
                     "instructions": "This is the instructions.",
@@ -236,7 +242,7 @@ class AdaptedExerciseApiTestCase(LoggedInApiTestCase):
                 },
             },
         }
-        response = self.post("http://server/adaptedExercises", payload)
+        response = self.post("http://server/parsedExercises", payload)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
         self.assertEqual(response.json()["data"]["attributes"]["adapted"], {
             "number": "A.1",
@@ -295,7 +301,7 @@ class AdaptedExerciseApiTestCase(LoggedInApiTestCase):
     def test_fill_with_free_text(self):
         payload = {
             "data": {
-                "type": "adaptedExercise",
+                "type": "parsedExercise",
                 "attributes": {
                     "number": "A.1",
                     "instructions": "This is the instructions.",
@@ -309,7 +315,7 @@ class AdaptedExerciseApiTestCase(LoggedInApiTestCase):
                 },
             },
         }
-        response = self.post("http://server/adaptedExercises", payload)
+        response = self.post("http://server/parsedExercises", payload)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
         self.assertEqual(response.json()["data"]["attributes"]["adapted"], {
             "number": "A.1",
@@ -336,7 +342,7 @@ class AdaptedExerciseApiTestCase(LoggedInApiTestCase):
     def test_multiple_choices_in_instructions(self):
         payload = {
             "data": {
-                "type": "adaptedExercise",
+                "type": "parsedExercise",
                 "attributes": {
                     "number": "A.1",
                     "instructions": "{choice|a} or {choice|b}",
@@ -350,7 +356,7 @@ class AdaptedExerciseApiTestCase(LoggedInApiTestCase):
                 },
             },
         }
-        response = self.post("http://server/adaptedExercises", payload)
+        response = self.post("http://server/parsedExercises", payload)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
         self.assertEqual(response.json()["data"]["attributes"]["adapted"], {
             "number": "A.1",
@@ -374,6 +380,40 @@ class AdaptedExerciseApiTestCase(LoggedInApiTestCase):
                     {"type": "multipleChoicesInput", "choices": ["a", "b"]},
                 ]}]},
             ]},
+            "example": {"paragraphs": []},
+            "clue": {"paragraphs": []},
+        })
+
+    def test_multiple_choices_in_wording(self):
+        payload = {
+            "data": {
+                "type": "parsedExercise",
+                "attributes": {
+                    "number": "A.1",
+                    "instructions": "Instructions.",
+                    "wording": "A {choices|alpha|beta}.",
+                    "example": "",
+                    "clue": "",
+                    "type": "multipleChoicesInWordingAdaptation",
+                    "adaptationOptions": {},
+                },
+            },
+        }
+        response = self.post("http://server/parsedExercises", payload)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
+        self.assertEqual(response.json()["data"]["attributes"]["adapted"], {
+            "number": "A.1",
+            "textbook_page": None,  # @todo Rename to textbookPage
+            "instructions": {"paragraphs": [{"sentences": [{"tokens": [
+                {"type": "plainText", "text": "Instructions"},
+                {"type": "plainText", "text": "."},
+            ]}]}]},
+            "wording": {"paragraphs": [{"sentences": [{"tokens": [
+                {"type": "plainText", "text": "A"},
+                {"type": "whitespace"},
+                {"type": "multipleChoicesInput", "choices": ["alpha", "beta"]},
+                {"type": "plainText", "text": "."},
+            ]}]}]},
             "example": {"paragraphs": []},
             "clue": {"paragraphs": []},
         })

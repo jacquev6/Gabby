@@ -6,7 +6,7 @@ from . import settings
 
 
 class BaseModel(pydantic.BaseModel):
-    model_config = pydantic.ConfigDict(extra="forbid")
+    model_config = pydantic.ConfigDict(extra="forbid", strict=True)
 
 
 class _PlainText(BaseModel):
@@ -17,6 +17,7 @@ class _PlainText(BaseModel):
         return self.text
 
 def PlainText(text: str):
+    assert text.__class__ == str, text.__class__
     return _PlainText(type="plainText", text=text)
 
 
@@ -28,7 +29,32 @@ class _BoxedText(BaseModel):
         return f"{{boxed-text|{self.text}}}"
 
 def BoxedText(text: str):
+    assert text.__class__ == str, text.__class__
     return _BoxedText(type="boxedText", text=text)
+
+
+class _BoldText(BaseModel):
+    type: Literal["boldText"]
+    text: str
+
+    def to_generic(self):
+        return f"{{bold-text|{self.text}}}"
+
+def BoldText(text: str):
+    assert text.__class__ == str, text.__class__
+    return _BoldText(type="boldText", text=text)
+
+
+class _ItalicText(BaseModel):
+    type: Literal["italicText"]
+    text: str
+
+    def to_generic(self):
+        return f"{{italic-text|{self.text}}}"
+
+def ItalicText(text: str):
+    assert text.__class__ == str, text.__class__
+    return _ItalicText(type="italicText", text=text)
 
 
 class _SelectableText(BaseModel):
@@ -40,6 +66,7 @@ class _SelectableText(BaseModel):
         return f"{{selectable-text|{self.colors}|{self.text}}}"
 
 def SelectableText(text: str, colors: int):
+    assert text.__class__ == str, text.__class__
     return _SelectableText(type="selectableText", text=text, colors=colors)
 
 
@@ -53,6 +80,7 @@ class _SelectedText(BaseModel):
         return f"{{selected-text|{self.color}|{self.colors}|{self.text}}}"
 
 def SelectedText(text: str, color: int, colors: int):
+    assert text.__class__ == str, text.__class__
     return _SelectedText(type="selectedText", text=text, color=color, colors=colors)
 
 
@@ -99,7 +127,7 @@ def Whitespace():
     return _Whitespace(type="whitespace")
 
 
-SentenceToken = _PlainText | _BoxedText | _SelectableText | _SelectedText | _SelectedClicks | _FreeTextInput | _MultipleChoicesInput | _Whitespace
+SentenceToken = _PlainText | _BoxedText | _BoldText | _ItalicText | _SelectableText | _SelectedText | _SelectedClicks | _FreeTextInput | _MultipleChoicesInput | _Whitespace
 
 
 class Sentence(BaseModel):
@@ -123,15 +151,15 @@ class Section(BaseModel):
         generic = "\n\n".join(p.to_generic() for p in self.paragraphs)
         if settings.DEBUG:
             from . import parsing
-            reparsed = parsing.parse_generic_wording_section(generic)
-            if reparsed != self:
+            adapted_again = parsing.adapt_generic_wording_section(generic)
+            if adapted_again != self:
                 print("Expected:", generic)
-                print("Got:", reparsed.to_generic())
+                print("Got:", adapted_again.to_generic())
                 assert False
         return generic
 
 
-class AdaptedExercise(BaseModel):
+class Exercise(BaseModel):
     number: str
     textbook_page: int | None
     instructions: Section

@@ -1,5 +1,9 @@
 import { useApiStore } from '../frontend/src/frontend/stores/api'
 
+function setLocale() {
+  cy.get('select[data-cy="language"]').last().select('fr')
+  cy.focused().blur()
+}
 
 describe('Gabby', () => {
   before(console.clear)
@@ -9,8 +13,7 @@ describe('Gabby', () => {
     cy.wrap(useApiStore()).then(api => api.auth.login('admin', 'password'))
 
     cy.visit('/')
-    cy.get('select').select('fr')
-    cy.focused().blur()
+    setLocale()
     cy.get('div.busy').should('not.exist')
 
     cy.get('label:contains("Titre")').next().type('Projet de test')
@@ -78,8 +81,7 @@ describe('Gabby', () => {
     cy.wrap(useApiStore()).then(api => api.auth.login('admin', 'password'))
 
     cy.visit('/')
-    cy.get('select').select('fr')
-    cy.focused().blur()
+    setLocale()
     cy.get('div.busy').should('not.exist')
 
     cy.screenshot('index/index', {clip: {x: 0, y: 0, width: 1000, height: 350}})
@@ -132,8 +134,7 @@ describe('Gabby', () => {
     cy.wrap(useApiStore()).then(api => api.auth.login('admin', 'password'))
 
     cy.visit('/project-xkopqm/textbook-klxufv/page-6/exercise-wbqloc')
-    cy.get('select').select('fr')
-    cy.focused().blur()
+    setLocale()
     cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
     cy.get('div.busy').should('not.exist')
 

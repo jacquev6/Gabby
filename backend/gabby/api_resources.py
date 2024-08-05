@@ -5,7 +5,7 @@ from .adaptations.fill_with_free_text import FillWithFreeTextAdaptation, FillWit
 from .adaptations.multiple_choices_in_instructions import MultipleChoicesInInstructionsAdaptation, MultipleChoicesInInstructionsAdaptationsResource
 from .adaptations.multiple_choices_in_wording import MultipleChoicesInWordingAdaptation, MultipleChoicesInWordingAdaptationsResource
 from .adaptations.select_things import SelectThingsAdaptation, SelectThingsAdaptationsResource
-from .adapted_exercises import AdaptedExercisesResource
+from .parsed_exercises import ParsedExercisesResource
 from .api_models import SyntheticError
 from .exercises import Exercise, ExercisesResource, ExtractionEventsResource
 from .pdfs import PdfFile, PdfFileNaming, PdfFilesResource, PdfFileNamingsResource
@@ -45,7 +45,7 @@ resources = [
     FillWithFreeTextAdaptationsResource(),
     MultipleChoicesInInstructionsAdaptationsResource(),
     MultipleChoicesInWordingAdaptationsResource(),
-    AdaptedExercisesResource(),
+    ParsedExercisesResource(),
     SyntheticErrorsResource(),
 ]
 

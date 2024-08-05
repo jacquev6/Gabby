@@ -2,7 +2,7 @@ import { useApiStore } from '../../frontend/src/frontend/stores/api'
 
 
 function setLocale() {
-  cy.get('select').last().select('en')
+  cy.get('select[data-cy="language"]').last().select('en')
 }
 
 describe('Gabby\'s project\'s textbook page exercise view', () => {
@@ -420,6 +420,40 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
     cy.get('@editor').should('contain.text', 'Réponds par vrai ou faux.')
   })
 
+  it('handles adaptation type changes from non-WYSIWYG to WYSIWYG', () => {
+    cy.visit('/project-xkopqm/textbook-klxufv/page-7/exercise-jkrudc')
+    setLocale()
+
+    cy.get('label:contains("Instructions")').next().type('{selectall}Réponds par {{}choice|vrai} ou {{}choice|faux}.')
+    cy.get('div.busy').should('not.exist')
+    cy.get('label:contains("Adaptation type")').next().select('multipleChoicesInInstructionsAdaptation')
+    cy.get('div.busy').should('not.exist')
+
+    cy.get(':has(>label:contains("Instructions")) .ql-editor').should('contain.text', 'Réponds par vrai ou faux.')
+  })
+
+  it('creates an exercise with a WYSIWYG field', () => {
+    cy.visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
+    setLocale()
+
+    cy.get('label:contains("Number")').next().type('6')
+    cy.get('label:contains("Adaptation type")').next().select('multipleChoicesInInstructionsAdaptation')
+    cy.get(':has(>label:contains("Instructions")) .ql-editor').as('instructions')
+    cy.get('@instructions').focus().type('Choix : ')
+    cy.get('button:contains("Choice")').click()
+    cy.get('@instructions').focus().type('vrai')
+    cy.get('button:contains("Choice")').click()
+    cy.get('@instructions').focus().type(' ou ')
+    cy.get('button:contains("Choice")').click()
+    cy.get('@instructions').focus().type('faux')
+
+    cy.get('choice-blot').should('have.length', 2)
+
+    cy.get('button:contains("Save then back to list")').click()
+
+    cy.get('li:contains("Choix : {choice|vrai} ou")').should('exist')
+  })
+
   it('saves an exercise after setting its adaptation', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-7/exercise-jkrudc')
     setLocale()
@@ -507,5 +541,26 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
     cy.get('div.busy').should('not.exist')
     cy.get('label:contains("Adaptation type")').next().should('have.value', 'selectThingsAdaptation')
     cy.get('label:contains("Instructions")').next().should('have.value', 'Instructions!')
+  })
+
+  it("keeps what's been typed in WYSIWYG fields regardless of the typing speed and server response time", () => {
+    cy.visit('/project-xkopqm/textbook-klxufv/page-7/exercise-xnyegk')
+    setLocale()
+
+    cy.intercept('POST', '/api/parsedExercises', (req) => {
+      const throttle = req.body.data.attributes.instructions === "Foo\n" ? 1000 : 0
+      req.on('response', (res) => { res.delay = throttle })
+    })
+
+    cy.get(':has(>label:contains("Instructions")) .ql-editor').as('editor')
+
+    cy.get('@editor').focus().type('{selectall}Foo')
+    cy.get('@editor').focus().type('{selectall}Bar')
+
+    cy.get('div.busy').should('not.exist')
+
+    // The response for 'Foo' reaches the frontend after the response for 'Bar', but is discarded and 'Bar' is kept.
+    cy.get('@editor').should('not.contain.text', 'Foo')
+    cy.get('@editor').should('contain.text', 'Bar')
   })
 })

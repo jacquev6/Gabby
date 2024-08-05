@@ -1,6 +1,26 @@
 <script lang="ts">
 import type AttributeMap from 'quill-delta/dist/AttributeMap'
+import Quill, { Parchment } from 'quill/core'
+import Block from 'quill/blots/block'
+// import { BlockEmbed } from 'quill/blots/block'
+import Break from 'quill/blots/break'
+// import Container from 'quill/blots/container'
+import Cursor from 'quill/blots/cursor'
+// import Embed from 'quill/blots/embed'
+import Inline from 'quill/blots/inline'
+import Scroll from 'quill/blots/scroll'
+import TextBlot from 'quill/blots/text'
+// import Clipboard from 'quill/modules/clipboard'
+// import History from 'quill/modules/history'
+import Keyboard from 'quill/modules/keyboard'
+// import Uploader from 'quill/modules/uploader'
+// import Input from 'quill/modules/input'
+// import UINode from 'quill/modules/uiNode'
 
+
+// Monkey-patching Quill to remove some default bindings, until I learn how to do it properly.
+delete Keyboard.DEFAULTS.bindings.bold
+delete Keyboard.DEFAULTS.bindings.italic
 
 // Partial of node_modules/quill-delta/dist/Op.d.ts, more readable than using TypeScript's 'Omit',
 // but slightly more fragile in the unlikely case quill-delta changes its interface. OK.
@@ -11,13 +31,56 @@ interface InsertOp {
 
 export type Model = InsertOp[]
 
-export type Format = 'bold' | 'italic' | 'choice'
+function makeMinimalRegistry() {
+  const registry = new Parchment.Registry()
+  registry.register(Block)
+  // registry.register(BlockEmbed)
+  registry.register(Break)
+  // registry.register(Container)
+  registry.register(Cursor)
+  // registry.register(Embed)
+  registry.register(Inline)
+  registry.register(Scroll)
+  registry.register(TextBlot)
+  // registry.register(Clipboard)
+  // registry.register(History)
+  // registry.register(Keyboard)
+  // registry.register(Uploader)
+  // registry.register(Input)
+  // registry.register(UINode)
+  return registry
+}
+
+export type Blot = typeof Inline
+
+function makeRegistryWithBlots(blots: Blot[]) {
+  const registry = makeMinimalRegistry()
+  for (const blot of blots) {
+    registry.register(blot)
+  }
+  return registry
+}
+
+const InlineBlot = Quill.import('blots/inline') as Blot
+
+export class BoldBlot extends InlineBlot {
+  static override blotName = 'bold'
+  static override tagName = 'bold-blot'
+}
+
+export class ItalicBlot extends InlineBlot {
+  static override blotName = 'italic'
+  static override tagName = 'italic-blot'
+}
+
+export class ChoiceBlot extends InlineBlot {
+  static override blotName = 'choice'
+  static override tagName = 'choice-blot'
+}
 </script>
 
 <script setup lang="ts">
-import { ref, shallowRef, watch } from 'vue'
-import { onMounted } from 'vue'
-import Quill from 'quill/core'
+import { ref, watch, computed } from 'vue'
 import 'quill/dist/quill.core.css'  // Removing this CSS causes a bug on Firefox:
 // spaces added at the end of the editor are ignored, resulting in space-less text.
 // This is because this CSS adds a 'white-space: pre' style or similar.
@@ -27,42 +90,15 @@ import 'quill/dist/quill.core.css'  // Removing this CSS causes a bug on Firefox
 // and re-style the typography.
 
 
-// @todo Avoid registering blots globally: https://quilljs.com/docs/configuration#formats
-// seems to indicate that 'formats' and 'registry' can be passed at instanciation time.
+const props = defineProps<{
+  blots: Blot[]
+}>()
 
-const InlineBlot = Quill.import('blots/inline') as any/* @todo Type. Maybe see https://github.com/slab/quill/issues/1233 */
-
-class BoldBlot extends InlineBlot {
-  static blotName = 'bold'
-  static tagName = 'bold-blot'
-}
-
-if (Quill.imports['formats/bold'] === undefined) {
-  Quill.register(BoldBlot)
-}
-
-class ItalicBlot extends InlineBlot {
-  static blotName = 'italic'
-  static tagName = 'italic-blot'
-}
-
-if (Quill.imports['formats/italic'] === undefined) {
-  Quill.register(ItalicBlot)
-}
-
-class ChoiceBlot extends InlineBlot {
-  static blotName = 'choice'
-  static tagName = 'choice-blot'
-}
-
-if (Quill.imports['formats/choice'] === undefined) {
-  Quill.register(ChoiceBlot)
-}
+const registry = computed(() => makeRegistryWithBlots(props.blots))
 
 const model = defineModel<Model>({required: true})
 
 const container = ref<HTMLDivElement | null>(null)
-let quill = shallowRef<Quill | null>(null)
 
 function getContents(quill: Quill): Model {
   return quill.getContents().ops.map(op => {
@@ -71,43 +107,67 @@ function getContents(quill: Quill): Model {
   })
 }
 
+const hasFocus = ref(false)
+
+const quill = computed(() => {
+  if (container.value === null) {
+    return null
+  } else {
+    const quill = new Quill(
+      container.value,
+      {
+        registry: registry.value,
+        modules: {history: {maxStack: 0, userOnly: true}},  // https://github.com/slab/quill/issues/691#issuecomment-797861431
+      },
+    )
+    quill.on('text-change', (_delta: unknown, _oldDelta: unknown, source: string) => {
+      if (source === 'user') {
+        model.value = getContents(quill)
+      }
+    })
+    quill.on('selection-change', (range: object | null, _oldRange: object | null, _source: string) => {
+      hasFocus.value = range !== null
+    })
+    return quill
+  }
+})
+
 watch([quill, model], ([quill, model]) => {
   if (quill !== null && JSON.stringify(getContents(quill)) !== JSON.stringify(model)) {
     quill.setContents(model)
   }
 })
 
-onMounted(() => {
-  console.assert(container.value !== null)
-  quill.value = new Quill(
-    container.value,
-    {
-      modules: {history: {maxStack: 0, userOnly: true}},  // https://github.com/slab/quill/issues/691#issuecomment-797861431
-    },
-  )
-  quill.value.on('text-change', (_1: unknown, _2: unknown, source: string) => {
-    if (source === 'user') {
-      console.assert(quill.value !== null)
-      model.value = getContents(quill.value)
-    }
-  })
-})
-
-function toggle(format: Format) {
+function toggle(formatting: string) {
   console.assert(quill.value !== null)
-  console.assert(Quill.imports[`formats/${format}`] !== undefined)
-  if (quill.value.getFormat()[format]) {
-    quill.value.format(format, false, 'user')
-  } else {
-    quill.value.format(format, true, 'user')
+
+  // Clear formatting of the caret, in case selection is empty.
+  // Incidentally, this also clears the formatting of the selected range in whole.
+  const previousFormat = quill.value.getFormat()
+  for (const f of Object.keys(previousFormat)) {
+    quill.value.format(f, false, 'user')
+  }
+
+  // Clear any formatting of (any part of) the selected range.
+  const {index, length} = quill.value.getSelection(true)
+  quill.value.removeFormat(index, length)
+
+  // Toggle the requested formatting, either for the caret, or for the selected range.
+  if (!previousFormat[formatting]) {
+    quill.value.format(formatting, true, 'user')
   }
 }
 
 defineExpose({
   toggle,
+  hasFocus,
   focus() {
     console.assert(quill.value !== null)
     quill.value.focus()
+  },
+  getSelection() {
+    console.assert(quill.value !== null)
+    return quill.value.getSelection(true)
   },
   setSelection(index: number, length: number) {
     console.assert(quill.value !== null)

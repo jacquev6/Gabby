@@ -1,8 +1,6 @@
 <script lang="ts">
-import { nextTick } from 'vue'
-
 import { useApiStore } from '$frontend/stores/api'
-import type { Project, Textbook, Exercise, InCache, Exists, SelectThingsAdaptation, FillWithFreeTextAdaptation, MultipleChoicesInInstructionsAdaptation, MultipleChoicesInWordingAdaptation } from '$frontend/stores/api'
+import type { Project, Textbook, Exercise, InCache, Exists, SelectThingsAdaptation, FillWithFreeTextAdaptation, MultipleChoicesInInstructionsAdaptation, MultipleChoicesInWordingAdaptation, ParsedExercise } from '$frontend/stores/api'
 
 
 const api = useApiStore()
@@ -143,8 +141,8 @@ export function getAdaptationOptions(model: Model) {
   }
 }
 
-export async function getAdapted(model: Model) {
-const attributes = {
+export async function getParsed(model: Model) {
+  const attributes = {
     number: model.number,
     // textbookPage: props.page,
     instructions: model.instructions,
@@ -154,14 +152,9 @@ const attributes = {
     type: model.adaptationType,
     adaptationOptions: getAdaptationOptions(model),
   }
-  try {
-    const adapted = await api.client.createOne('adaptedExercise', attributes, {})
-    console.assert(adapted.exists)
-    return adapted.attributes.adapted
-  } catch (e) {
-    console.error(e)
-    return null
-  }
+  const parsed = await api.client.createOne('parsedExercise', attributes, {})
+  console.assert(parsed.exists)
+  return parsed
 }
 
 export async function create(project: Project, textbook: Textbook | null, textbookPage: number | null, model: Model, extractionEvents: object[]) {
@@ -251,13 +244,13 @@ import { ref, computed } from 'vue'
 import { BLabeledInput, BLabeledTextarea, BLabeledSelect } from './opinion/bootstrap'
 import OptionalTextarea from './OptionalTextarea.vue'
 import WysiwygInstructionsEditor from './WysiwygInstructionsEditor.vue'
-import type { Format as QuillFormat } from './Quill.vue'
 
 
 const props = defineProps<{
   fixedNumber: boolean
   extractionEvents: object[]
   wysiwyg: boolean
+  deltas: (ParsedExercise & InCache & Exists)['attributes']['delta'] | null
 }>()
 
 const emit = defineEmits<{
@@ -294,38 +287,36 @@ function emitSelected(fieldName: TextualFieldName, e: Event) {
 }
 
 function highlightSuffix(fieldName: TextualFieldName, suffix: string) {
-  console.log('highlightSuffix', fieldName, suffix)
   const text = model.value[fieldName]
   console.assert(text.endsWith(suffix))
   const textArea = textAreas[fieldName].value
   if(textArea === null) {
     if (fieldName === 'instructions' && props.wysiwyg) {
-      nextTick(() => {
-        console.assert(instructionsEditor.value !== null)
-        instructionsEditor.value.focus()
-        settingSelectionRange.value = true
-        instructionsEditor.value.setSelection(instructionsEditor.value.getLength() - suffix.length - 1, suffix.length)
-      })
+      console.assert(instructionsEditor.value !== null)
+      instructionsEditor.value.focus()
+      settingSelectionRange.value = true
+      instructionsEditor.value.setSelection(instructionsEditor.value.getLength() - suffix.length - 1, suffix.length)
     }
   } else {
-    nextTick(() => {
-      textArea.focus()
-      settingSelectionRange.value = true
-      textArea.setSelectionRange(text.length - suffix.length, text.length)
-    })
+    textArea.focus()
+    settingSelectionRange.value = true
+    textArea.setSelectionRange(text.length - suffix.length, text.length)
   }
 }
 
-function toggle(format: QuillFormat) {
+function toggle(format: string) {
   if (instructionsEditor.value !== null) {
     instructionsEditor.value.toggle(format)
   }
 }
 
+const wysiwygInstructionsHasFocus = computed(() => instructionsEditor.value?.hasFocus ?? false)
+
 defineExpose({
   saveDisabled,
   highlightSuffix,
   toggle,
+  wysiwygInstructionsHasFocus,
 })
 </script>
 
@@ -339,7 +330,7 @@ defineExpose({
     <template v-if="wysiwyg && model.adaptationType === 'multipleChoicesInInstructionsAdaptation'">
       <div class="mb-3">
         <label class="form-label" @click="instructionsEditor?.focus()">{{ $t('exerciseInstructions') }}</label>
-        <WysiwygInstructionsEditor ref="instructionsEditor" v-model="model.instructions" />
+        <WysiwygInstructionsEditor ref="instructionsEditor" v-model="model.instructions" :delta="deltas === null ? [] : deltas.instructions" />
       </div>
     </template>
     <BLabeledTextarea

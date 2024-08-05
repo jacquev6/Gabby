@@ -24,7 +24,7 @@ export const useApiStore = defineApiStore('api', {baseUrl: '/api'})
 
 export type { Item, List, InCache, Exists }
 
-export type AdaptedExercise = Item<'adaptedExercise'>
+export type ParsedExercise = Item<'parsedExercise'>
 export type Exercise = Item<'exercise'>
 export type ExtractionEvent = Item<'extractionEvent'>
 export type FillWithFreeTextAdaptation = Item<'fillWithFreeTextAdaptation'>

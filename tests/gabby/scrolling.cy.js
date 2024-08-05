@@ -2,7 +2,7 @@ import { useApiStore } from '../../frontend/src/frontend/stores/api'
 
 
 function setLocale() {
-  cy.get('select').first().select('en')
+  cy.get('select[data-cy="language"]').last().select('en')
 }
 
 describe('Gabby', () => {
