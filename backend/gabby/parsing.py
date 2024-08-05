@@ -17,7 +17,7 @@ def memoize_parser(grammar, start):
     return lark.Lark(grammar, start=start)
 
 
-def make_instructions_grammar(tags):
+def make_grammar(tags, whitespace):
     grammar = (
         r"""\
             _separated{x, sep}: x (sep x)*
@@ -36,8 +36,6 @@ def make_instructions_grammar(tags):
             WORD: /\w+/
 
             ANY_WHITESPACE: /[ \t\n\r]+/
-            PARAGRAPH_SEPARATING_WHITESPACE: /([ \t]*(\r\n|\n)){2,}[ \t]*/
-            NON_PARAGRAPH_SEPARATING_WHITESPACE: /([ \t]*(\r\n|\r|\n)[ \t]*)|[ \t]+/
 
             LEADING_WHITESPACE: ANY_WHITESPACE
             TRAILING_WHITESPACE: ANY_WHITESPACE
@@ -53,6 +51,7 @@ def make_instructions_grammar(tags):
             STR: /[^}|]+/
             INT: /[0-9]+/
         """
+        + whitespace
         + f"_tag.1: {' | '.join(f"{tag}_tag" for tag in tags.keys())}\n"
         + "\n".join(f'{tag}_tag: "{{" "{tag.replace("_", "-")}" {definition} "}}"' for (tag, definition) in tags.items())
     )
@@ -62,16 +61,17 @@ def make_instructions_grammar(tags):
         return grammar
 
 
-class InstructionsGrammarWithTagsTestCase(TestCase):
-    tags = {
-        "empty": "",
-        "single_str": r""" "|" STR """,
-        "int_and_str": r""" "|" INT "|" STR """,
-        "several_ints": r""" ("|" INT)+ """,
-    }
+def make_instructions_grammar(tags):
+    return make_grammar(
+        tags,
+        r"""
+            PARAGRAPH_SEPARATING_WHITESPACE: /([ \t]*(\r\n|\n)){2,}[ \t]*/
+            NON_PARAGRAPH_SEPARATING_WHITESPACE: /([ \t]*(\r\n|\r|\n)[ \t]*)|[ \t]+/
+        """
+    )
 
-    grammar = make_instructions_grammar(tags)
 
+def GrammarTestCase(grammar):
     class Transformer(lark.Transformer):
         def __getattr__(self, name):
             if name.isupper():
@@ -86,13 +86,23 @@ class InstructionsGrammarWithTagsTestCase(TestCase):
     parser = lark.Lark(grammar, start="section")
     transformer = Transformer()
 
-    def do_test(self, test, expected_ast):
-        parse_tree = self.parser.parse(test)
-        actual_ast = self.transformer.transform(parse_tree)
-        if actual_ast != expected_ast:
-            print(actual_ast)
-        self.assertEqual(actual_ast, expected_ast)
+    class GrammarTestCase(TestCase):
+        def do_test(self, test, expected_ast):
+            parse_tree = parser.parse(test)
+            actual_ast = transformer.transform(parse_tree)
+            if actual_ast != expected_ast:
+                print(actual_ast)
+            self.assertEqual(actual_ast, expected_ast)
 
+    return GrammarTestCase
+
+
+class InstructionsGrammarWithTagsTestCase(GrammarTestCase(make_instructions_grammar({
+    "empty": "",
+    "single_str": r""" "|" STR """,
+    "int_and_str": r""" "|" INT "|" STR """,
+    "several_ints": r""" ("|" INT)+ """,
+}))):
     def test_empty(self):
         self.do_test("", ("section", []))
 
@@ -331,30 +341,7 @@ class InstructionsGrammarWithTagsTestCase(TestCase):
         )
 
 
-class InstructionsGrammarWithoutTagsTestCase(TestCase):
-    grammar = make_instructions_grammar({})
-
-    class Transformer(lark.Transformer):
-        def __getattr__(self, name):
-            if name.isupper():
-                def token(arg):
-                    return (name, arg.value)
-                return token
-            else:
-                def rule(args):
-                    return (name.value, args)
-                return rule
-
-    parser = lark.Lark(grammar, start="section")
-    transformer = Transformer()
-
-    def do_test(self, test, expected_ast):
-        parse_tree = self.parser.parse(test)
-        actual_ast = self.transformer.transform(parse_tree)
-        if actual_ast != expected_ast:
-            print(actual_ast)
-        self.assertEqual(actual_ast, expected_ast)
-
+class InstructionsGrammarWithoutTagsTestCase(GrammarTestCase(make_instructions_grammar({}))):
     def test_empty(self):
         self.do_test("", ("section", []))
 
@@ -368,11 +355,11 @@ class InstructionsSectionParser:
         try:
             parsed = self.parser.parse(section)
         except lark.exceptions.ParseError as e:
-            raise ValueError(f"Error parsing section {section}: {e}")
+            raise ValueError(f"Error parsing instructions section {section}: {e}")
         try:
             return self.transformer.transform(parsed)
         except lark.exceptions.VisitError as e:
-            raise ValueError(f"Error transforming section {section}: {e}")
+            raise ValueError(f"Error transforming instructions section {section}: {e}")
 
 
 class InstructionsSectionDeltaMaker(lark.Transformer):
