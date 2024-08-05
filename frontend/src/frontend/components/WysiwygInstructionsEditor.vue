@@ -17,12 +17,23 @@ const quill = ref<InstanceType<typeof Quill> | null>(null)
 watch(
   () => props.delta,
   delta => {
-    if (makeModel(quillModel.value) !== makeModel(delta)) {
+    if (homogenizeDelta(quillModel.value) !== homogenizeDelta(delta)) {
       quillModel.value = delta
     }
   },
   {immediate: true},
 )
+
+function homogenizeDelta(delta: QuillModel): string {
+  return JSON.stringify(delta.map(op => {
+    const {insert, attributes} = op
+    if (attributes === undefined || Object.keys(attributes).length === 0) {
+      return {insert, attributes: {}}
+    } else {
+      return {insert, attributes}
+    }
+  }))
+}
 
 watch(quillModel, quillModel => {
   const expectedModel = makeModel(quillModel)

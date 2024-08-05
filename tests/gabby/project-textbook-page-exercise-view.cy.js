@@ -420,6 +420,18 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
     cy.get('@editor').should('contain.text', 'Réponds par vrai ou faux.')
   })
 
+  it('handles adaptation type changes from non-WYSIWYG to WYSIWYG', () => {
+    cy.visit('/project-xkopqm/textbook-klxufv/page-7/exercise-jkrudc')
+    setLocale()
+
+    cy.get('label:contains("Instructions")').next().type('{selectall}Réponds par {{}choice|vrai} ou {{}choice|faux}.')
+    cy.get('div.busy').should('not.exist')
+    cy.get('label:contains("Adaptation type")').next().select('multipleChoicesInInstructionsAdaptation')
+    cy.get('div.busy').should('not.exist')
+
+    cy.get(':has(>label:contains("Instructions")) .ql-editor').should('contain.text', 'Réponds par vrai ou faux.')
+  })
+
   it('saves an exercise after setting its adaptation', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-7/exercise-jkrudc')
     setLocale()
