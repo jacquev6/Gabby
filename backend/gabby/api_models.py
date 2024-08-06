@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Annotated
+from typing import Annotated, Literal
 import datetime
 
 from fastjsonapi import Constant, Computed, Secret, WriteOnly
@@ -93,6 +93,19 @@ class Point(PydanticBase):
 class Rectangle(PydanticBase):
     start: Point
     stop: Point
+
+class PdfRectangle(PydanticBase):
+    pdf_sha256: str
+    pdf_page: int
+    # @todo Migrate all coordinates to "relative"
+    coordinates: Literal[
+        "pdfjs",  # As returned by PdfJs
+        "relative",  # To the size of the page, in the range [0, 1], with (0, 0) at the top-left corner.
+    ]
+    start: Point
+    stop: Point
+    text: str | None
+    role: Literal["bounding", "instructions", "wording", "example", "clue"]
 
 class Exercise(PydanticBase, CreatedUpdatedByAtMixin):
     project: Annotated[Project, Constant()]

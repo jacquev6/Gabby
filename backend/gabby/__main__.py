@@ -168,12 +168,13 @@ def sudo(context, username):
 @click.pass_context
 @click.argument("email_address")
 @click.option("--username", required=False)
-def create_user(context, email_address, username):
+@click.option("--password", required=False)
+def create_user(context, email_address, username, password):
     database_engine = database_utils.create_engine(settings.DATABASE_URL)
     with orm.Session(database_engine) as session:
         sudo_user = session.scalar(sql.select(orm_models.User).where(orm_models.User.username == context.obj["username"]))
         assert sudo_user is not None, f"No user with username {context.obj['username']}"
-        new_user = orm_models.User(username=username, created_by_id=sudo_user.id, updated_by_id=sudo_user.id)
+        new_user = orm_models.User(username=username, clear_text_password=password, created_by_id=sudo_user.id, updated_by_id=sudo_user.id)
         session.add(new_user)
         session.flush()
         session.add(orm_models.UserEmailAddress(user=new_user, address=email_address))
