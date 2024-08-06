@@ -3,6 +3,7 @@ from urllib.parse import urlparse
 import datetime
 import io
 import os
+import re
 import subprocess
 import sys
 import tarfile
@@ -12,6 +13,7 @@ import boto3
 import click
 import sqlalchemy as sql
 import sqlalchemy_data_model_visualizer
+import sqlalchemy_utils.functions
 
 from . import database_utils
 from . import orm_models
@@ -79,6 +81,71 @@ def backup_database():
         raise NotImplementedError(f"Unsupported database backup URL scheme: {parsed_database_backups_url.scheme}")
 
     print(f"Backed up database {settings.DATABASE_URL} to {settings.DATABASE_BACKUPS_URL}/{archive_name}", file=sys.stderr)
+
+
+@main.command()
+@click.argument("backup_url")
+@click.option("--yes", is_flag=True)
+@click.option("--patch-according-to-settings", is_flag=True)
+def restore_database(backup_url, yes, patch_according_to_settings):
+    parsed_backup_url = urlparse(backup_url)
+
+    if parsed_backup_url.scheme == "file":
+        with tarfile.open(parsed_backup_url.path, "r:gz") as tarball:
+            pg_dump = tarball.extractfile(tarball.getnames()[0]).read()
+    elif parsed_backup_url.scheme == "s3":
+        assert "AWS_ACCESS_KEY_ID" in os.environ
+        assert "AWS_SECRET_ACCESS_KEY" in os.environ
+        s3 = boto3.client("s3")
+        buffer = io.BytesIO()
+        s3.download_fileobj(parsed_backup_url.netloc, f"{parsed_backup_url.path[1:]}", buffer)
+        buffer.seek(0)
+        with tarfile.open(fileobj=buffer, mode="r:gz") as tarball:
+            pg_dump = tarball.extractfile(tarball.getnames()[0]).read()
+    else:
+        raise NotImplementedError(f"Unsupported database backup URL scheme: {parsed_database_backups_url.scheme}")
+
+    print(f"Restoring database {settings.DATABASE_URL} from {backup_url} ({len(pg_dump)} bytes)", file=sys.stderr)
+    if not yes:
+        print("This will overwrite the current database. Are you sure you want to continue? [y/N]", file=sys.stderr, end=" ")
+        if input().strip().lower() != "y":
+            print("Aborting.", file=sys.stderr)
+            return
+
+    placeholder_database_url = settings.DATABASE_URL + "-restore"
+    if not sqlalchemy_utils.functions.database_exists(placeholder_database_url):
+        sqlalchemy_utils.functions.create_database(placeholder_database_url)
+    parsed_placeholder_database_url = urlparse(placeholder_database_url)
+
+    if sqlalchemy_utils.functions.database_exists(settings.DATABASE_URL):
+        sqlalchemy_utils.functions.drop_database(settings.DATABASE_URL)
+
+    sql = pg_dump.decode()
+    if patch_according_to_settings:
+        # Comments
+        sql = re.sub(r" Owner: \w+", f" Owner: {parsed_database_url.username}", sql)
+        sql = re.sub(r"-- Name: \w+; Type: DATABASE;", f"-- Name: {parsed_database_url.path[1:]}; Type: DATABASE;", sql)
+        # Postgres commands
+        sql = re.sub(r"connect \"\w+\"", f"connect \"{parsed_database_url.path[1:]}\"", sql)
+        # Actual SQL
+        sql = re.sub(r" OWNER TO \"\w+\";", f" OWNER TO \"{parsed_database_url.username}\";", sql)
+        sql = re.sub(r"DATABASE \"\w+\"", f"DATABASE \"{parsed_database_url.path[1:]}\"", sql)
+
+    subprocess.run(
+        [
+            "psql",
+            "--host", parsed_placeholder_database_url.hostname,
+            "--username", parsed_placeholder_database_url.username,
+            "--no-password",
+            "--dbname", parsed_placeholder_database_url.path[1:],
+        ],
+        env=dict(os.environ, PGPASSWORD=parsed_placeholder_database_url.password),
+        check=True,
+        input=sql,
+        universal_newlines=True,
+    )
+
+    sqlalchemy_utils.functions.drop_database(placeholder_database_url)
 
 
 @main.command(name="load-fixtures")
