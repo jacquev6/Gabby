@@ -18,5 +18,9 @@ fi
 
 docker compose exec --workdir /app/backend/gabby backend-shell alembic revision --autogenerate $rev_id_arg -m dev
 
+# Check the new revision can be applied and rollbacked
+docker compose exec --workdir /app/backend/gabby backend-shell alembic upgrade head
+docker compose exec --workdir /app/backend/gabby backend-shell alembic downgrade head-1
+
 docker compose exec --workdir /app/backend/gabby backend-shell alembic upgrade head
 docker compose exec backend-shell python -m gabby graph-models
