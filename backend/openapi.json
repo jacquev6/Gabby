@@ -70,6 +70,7 @@
         "type": "object"
       },
       "FillWithFreeTextAdaptationOptions": {
+        "additionalProperties": false,
         "properties": {
           "placeholder": {
             "title": "Placeholder",
@@ -136,6 +137,7 @@
         "type": "object"
       },
       "MultipleChoicesInInstructionsAdaptationOptions": {
+        "additionalProperties": false,
         "properties": {
           "placeholder": {
             "title": "Placeholder",
@@ -149,6 +151,7 @@
         "type": "object"
       },
       "MultipleChoicesInWordingAdaptationOptions": {
+        "additionalProperties": false,
         "properties": {},
         "title": "MultipleChoicesInWordingAdaptationOptions",
         "type": "object"
@@ -265,6 +268,7 @@
         "type": "object"
       },
       "Point": {
+        "additionalProperties": false,
         "properties": {
           "x": {
             "title": "X",
@@ -283,6 +287,7 @@
         "type": "object"
       },
       "Rectangle": {
+        "additionalProperties": false,
         "properties": {
           "start": {
             "$ref": "#/components/schemas/Point"
@@ -316,6 +321,7 @@
         "type": "object"
       },
       "SelectThingsAdaptationOptions": {
+        "additionalProperties": false,
         "properties": {
           "colors": {
             "title": "Colors",

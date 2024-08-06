@@ -3,12 +3,12 @@ from typing import Annotated
 import dataclasses
 import datetime
 
-from pydantic import BaseModel
 from starlette import status
 
 from ..annotations import Computed, Constant, Secret
-from ..testing import ApiTestCase, ItemsFactory
 from ..filtering import make_filters
+from ..testing import ApiTestCase, ItemsFactory
+from mydantic import PydanticBase
 
 
 # @todo Split these test cases: make one for each kind of attribute:
@@ -24,7 +24,7 @@ class AtomicAttributesTestCase(ApiTestCase):
 
         default_page_size = 2
 
-        class Model(BaseModel):
+        class Model(PydanticBase):
             plain_int: int
             defaulted_datetime: datetime.datetime = datetime.datetime(2024, 3, 18, 15, 38, 15, tzinfo=datetime.timezone.utc)
             constant_str: Annotated[str, Constant()]
@@ -57,7 +57,7 @@ class AtomicAttributesTestCase(ApiTestCase):
         def get_item(self, id: str):
             return self.factory.get(self.Item, id)
 
-        class Filters(BaseModel):
+        class Filters(PydanticBase):
             computed_str: str | None
 
         def get_page(self, filters: Annotated[Filters, make_filters(Filters)], first_index, page_size):
@@ -777,9 +777,9 @@ class CompoundAttributesTestCase(ApiTestCase):
 
         default_page_size = 2
 
-        class Model(BaseModel):
-            class Rectangle(BaseModel):
-                class Point(BaseModel):
+        class Model(PydanticBase):
+            class Rectangle(PydanticBase):
+                class Point(PydanticBase):
                     x: float
                     y: float
 

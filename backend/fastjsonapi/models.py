@@ -1,23 +1,14 @@
 import textwrap
 from types import UnionType
 from typing import Literal, Type
-from pydantic_core import PydanticUndefined
 import humps
-import pydantic
 
 from .annotations import Annotations
+from mydantic import PydanticBase, create_model, PydanticUndefined
 
 
-class BaseModel(pydantic.BaseModel):
-    model_config = pydantic.ConfigDict(extra="forbid")
-
-
-def create_model(*args, **kwds):
-    return pydantic.create_model(*args, **kwds, __base__=BaseModel)
-
-
-class PageMeta(BaseModel):
-    class Pagination(BaseModel):
+class PageMeta(PydanticBase):
+    class Pagination(PydanticBase):
         count: int
         page: int
         pages: int
@@ -25,7 +16,7 @@ class PageMeta(BaseModel):
     pagination: Pagination
 
 
-class PageLinks(BaseModel):
+class PageLinks(PydanticBase):
     # @todo Consider adding 'self'
     first: str
     last: str
@@ -33,11 +24,11 @@ class PageLinks(BaseModel):
     prev: str | None
 
 
-class ItemLinks(BaseModel):
+class ItemLinks(PydanticBase):
     self: str
 
 
-class ObjectId(BaseModel):
+class ObjectId(PydanticBase):
     type: str
     id: str
 
@@ -46,15 +37,15 @@ def create_model_for_mandatory_relationship(resource_name, relationship_name, re
     model_name = f"{resource_name}_{relationship_name}_Relationship"
 
     code = textwrap.dedent(f"""\
-        class {model_name}_ObjectId(BaseModel):
+        class {model_name}_ObjectId(PydanticBase):
             type: Literal[{', '.join(repr(name) for name in related_names)}]
             id: str
 
-        class {model_name}(BaseModel):
+        class {model_name}(PydanticBase):
             data: {model_name}_ObjectId
     """)
 
-    globals = {"BaseModel": BaseModel, "Literal": Literal}
+    globals = {"PydanticBase": PydanticBase, "Literal": Literal}
     exec(code, globals)
     return globals[model_name]
 
@@ -63,15 +54,15 @@ def create_model_for_optional_relationship(resource_name, relationship_name, rel
     model_name = f"{resource_name}_{relationship_name}_Relationship"
 
     code = textwrap.dedent(f"""\
-        class {model_name}_ObjectId(BaseModel):
+        class {model_name}_ObjectId(PydanticBase):
             type: Literal[{', '.join(repr(name) for name in related_names)}]
             id: str
 
-        class {model_name}(BaseModel):
+        class {model_name}(PydanticBase):
             data: {model_name}_ObjectId | None
     """)
 
-    globals = {"BaseModel": BaseModel, "Literal": Literal}
+    globals = {"PydanticBase": PydanticBase, "Literal": Literal}
     exec(code, globals)
     return globals[model_name]
 
@@ -80,20 +71,20 @@ def create_model_for_list_relationship_for_input(resource_name, relationship_nam
     model_name = f"{resource_name}_{relationship_name}_RelationshipInput"
 
     code = textwrap.dedent(f"""\
-        class {model_name}_ObjectId(BaseModel):
+        class {model_name}_ObjectId(PydanticBase):
             type: Literal[{', '.join(repr(name) for name in related_names)}]
             id: str
 
-        class {model_name}(BaseModel):
+        class {model_name}(PydanticBase):
             data: list[{model_name}_ObjectId]
     """)
 
-    globals = {"BaseModel": BaseModel, "Literal": Literal, "OutputListRelationShipMeta": OutputListRelationShipMeta}
+    globals = {"PydanticBase": PydanticBase, "Literal": Literal, "OutputListRelationShipMeta": OutputListRelationShipMeta}
     exec(code, globals)
     return globals[model_name]
 
 
-class OutputListRelationShipMeta(BaseModel):
+class OutputListRelationShipMeta(PydanticBase):
     count: int
 
 
@@ -101,17 +92,17 @@ def create_model_for_list_relationship_for_output(resource_name, relationship_na
     model_name = f"{resource_name}_{relationship_name}_RelationshipOutput"
 
     code = textwrap.dedent(f"""\
-        class {model_name}_ObjectId(BaseModel):
+        class {model_name}_ObjectId(PydanticBase):
             type: Literal[{', '.join(repr(name) for name in related_names)}]
             id: str
 
-        class {model_name}(BaseModel):
+        class {model_name}(PydanticBase):
             data: list[{model_name}_ObjectId]
 
             meta: OutputListRelationShipMeta
     """)
 
-    globals = {"BaseModel": BaseModel, "Literal": Literal, "OutputListRelationShipMeta": OutputListRelationShipMeta}
+    globals = {"PydanticBase": PydanticBase, "Literal": Literal, "OutputListRelationShipMeta": OutputListRelationShipMeta}
     exec(code, globals)
     return globals[model_name]
 

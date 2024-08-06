@@ -2,21 +2,21 @@ from __future__ import annotations
 from contextlib import contextmanager
 import dataclasses
 
-from pydantic import BaseModel
 from starlette import status
 
 from ..testing import ApiTestCase, ItemsFactory
+from mydantic import PydanticBase
 
 
-class TopModel(BaseModel):
+class TopModel(PydanticBase):
     lefts: list[LeftModel] = []
     rights: list[RightModel] = []
 
-class LeftModel(BaseModel):
+class LeftModel(PydanticBase):
     top: TopModel
     right_or_none: RightModel | None = None
 
-class RightModel(BaseModel):
+class RightModel(PydanticBase):
     top: TopModel
     left_or_none: LeftModel | None = None
 

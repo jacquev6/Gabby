@@ -2,23 +2,23 @@ from __future__ import annotations
 from contextlib import contextmanager
 import dataclasses
 
-from pydantic import BaseModel
 from starlette import status
 
 from ..testing import ItemsFactory, ApiTestCase
+from mydantic import PydanticBase
 
 
 # @todo Support polymorphic mandatory relationships
 # @todo Support polymorphic list relationships
 
 
-class AlphaPolyModel(BaseModel):
+class AlphaPolyModel(PydanticBase):
     pass
 
-class BravoPolyModel(BaseModel):
+class BravoPolyModel(PydanticBase):
     pass
 
-class OptionalRelationshipModel(BaseModel):
+class OptionalRelationshipModel(PydanticBase):
     rel: AlphaPolyModel | BravoPolyModel | None = None
 
 class OptionalRelationshipTestCase(ApiTestCase):

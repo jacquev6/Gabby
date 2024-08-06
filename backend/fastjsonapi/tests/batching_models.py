@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-from pydantic import BaseModel
+from mydantic import PydanticBase
 
 
-class Model(BaseModel):
+class Model(PydanticBase):
     name: str
     single: Model | None = None
     several: list[Model] = []

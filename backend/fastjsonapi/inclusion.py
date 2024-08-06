@@ -5,10 +5,10 @@ import itertools
 import unittest
 
 from fastapi import Depends, Query
-from pydantic import BaseModel
 import humps
 
 from .testing import ApiTestCase
+from mydantic import PydanticBase
 
 
 def make_include_tuple(include_dict):
@@ -108,13 +108,13 @@ def make_included(root_resource, resources, urls, root_items, root_include):
     return sorted(included, key=lambda item: (item["type"], item["id"]))
 
 
-class MakeIncludedTestCaseAlphaModel(BaseModel):
+class MakeIncludedTestCaseAlphaModel(PydanticBase):
     pass
 
-class MakeIncludedTestCaseBravoModel(BaseModel):
+class MakeIncludedTestCaseBravoModel(PydanticBase):
     pass
 
-class MakeIncludedTestCaseNodeModel(BaseModel):
+class MakeIncludedTestCaseNodeModel(PydanticBase):
     v: str
     parent: MakeIncludedTestCaseNodeModel | None = None
     children: list[MakeIncludedTestCaseNodeModel] = []

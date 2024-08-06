@@ -1,16 +1,12 @@
 from typing import Literal
 
-import pydantic
+from mydantic import PydanticBase
 
 
-class BaseModel(pydantic.BaseModel):
-    model_config = pydantic.ConfigDict(extra="forbid")
-
-
-class InsertOp(BaseModel):
+class InsertOp(PydanticBase):
     insert: str
     attributes: dict[str, Literal[True]] = {}
 
 
-class Exercise(BaseModel):
+class Exercise(PydanticBase):
     instructions: list[InsertOp]

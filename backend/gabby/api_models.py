@@ -2,12 +2,11 @@ from __future__ import annotations
 from typing import Annotated
 import datetime
 
-from pydantic import BaseModel as Base
-
 from fastjsonapi import Constant, Computed, Secret, WriteOnly
 
-from . import renderable
 from . import exercise_delta
+from . import renderable
+from mydantic import PydanticBase
 
 
 class CreatedByAtMixin:
@@ -33,23 +32,23 @@ class OptionalCreatedUpdatedByAtMixin(OptionalCreatedByAtMixin, OptionalUpdatedB
     pass
 
 
-class User(Base, CreatedUpdatedByAtMixin):
+class User(PydanticBase, CreatedUpdatedByAtMixin):
     username: str | None
     clear_text_password: Annotated[str, Secret()]
 
 
-class RecoveryEmailRequest(Base):
+class RecoveryEmailRequest(PydanticBase):
     address: Annotated[str, WriteOnly()]
     language: Annotated[str, WriteOnly()]
 
 
-class Ping(Base, OptionalCreatedUpdatedByAtMixin):
+class Ping(PydanticBase, OptionalCreatedUpdatedByAtMixin):
     message: str | None = None
     prev: Ping | None = None
     next: list[Ping] = []
 
 
-class PdfFile(Base, CreatedByAtMixin):
+class PdfFile(PydanticBase, CreatedByAtMixin):
     sha256: Annotated[str, Constant()]
     bytes_count: Annotated[int, Constant()]
     pages_count: Annotated[int, Constant()]
@@ -57,19 +56,19 @@ class PdfFile(Base, CreatedByAtMixin):
     sections: Annotated[list[Section], Computed()] = []
 
 
-class PdfFileNaming(Base, CreatedByAtMixin):
+class PdfFileNaming(PydanticBase, CreatedByAtMixin):
     name: Annotated[str, Constant()]
     pdf_file: Annotated[PdfFile, Constant()]
 
 
-class Project(Base, CreatedUpdatedByAtMixin):
+class Project(PydanticBase, CreatedUpdatedByAtMixin):
     title: str
     description: str = ""
     textbooks: Annotated[list[Textbook], Computed()] = []
     exercises: Annotated[list[Exercise], Computed()] = []
 
 
-class Textbook(Base, CreatedUpdatedByAtMixin):
+class Textbook(PydanticBase, CreatedUpdatedByAtMixin):
     title: str
     publisher: str | None = None
     year: int | None = None
@@ -79,7 +78,7 @@ class Textbook(Base, CreatedUpdatedByAtMixin):
     sections: Annotated[list[Section], Computed()] = []
 
 
-class Section(Base, CreatedUpdatedByAtMixin):
+class Section(PydanticBase, CreatedUpdatedByAtMixin):
     textbook_start_page: int
     pdf_file_start_page: int
     pages_count: int
@@ -87,15 +86,15 @@ class Section(Base, CreatedUpdatedByAtMixin):
     pdf_file: Annotated[PdfFile, Constant()]
 
 
-class Point(Base):
+class Point(PydanticBase):
     x: float
     y: float
 
-class Rectangle(Base):
+class Rectangle(PydanticBase):
     start: Point
     stop: Point
 
-class Exercise(Base, CreatedUpdatedByAtMixin):
+class Exercise(PydanticBase, CreatedUpdatedByAtMixin):
     project: Annotated[Project, Constant()]
 
     textbook: Annotated[Textbook | None, Constant()] = None
@@ -120,12 +119,12 @@ class Exercise(Base, CreatedUpdatedByAtMixin):
     ) = None
 
 
-class ExtractionEvent(Base, CreatedUpdatedByAtMixin):
+class ExtractionEvent(PydanticBase, CreatedUpdatedByAtMixin):
     event: Annotated[str, Constant()]
     exercise: Annotated[Exercise, Constant()]
 
 
-class SelectThingsAdaptationOptions(Base):
+class SelectThingsAdaptationOptions(PydanticBase):
     colors: int
     words: bool
     punctuation: bool
@@ -134,28 +133,28 @@ class SelectThingsAdaptation(SelectThingsAdaptationOptions, CreatedUpdatedByAtMi
     exercise: Annotated[Exercise, Constant()]
 
 
-class FillWithFreeTextAdaptationOptions(Base):
+class FillWithFreeTextAdaptationOptions(PydanticBase):
     placeholder: str
 
 class FillWithFreeTextAdaptation(FillWithFreeTextAdaptationOptions, CreatedUpdatedByAtMixin):
     exercise: Annotated[Exercise, Constant()]
 
 
-class MultipleChoicesInInstructionsAdaptationOptions(Base):
+class MultipleChoicesInInstructionsAdaptationOptions(PydanticBase):
     placeholder: str
 
 class MultipleChoicesInInstructionsAdaptation(MultipleChoicesInInstructionsAdaptationOptions, CreatedUpdatedByAtMixin):
     exercise: Annotated[Exercise, Constant()]
 
 
-class MultipleChoicesInWordingAdaptationOptions(Base):
+class MultipleChoicesInWordingAdaptationOptions(PydanticBase):
     pass
 
 class MultipleChoicesInWordingAdaptation(MultipleChoicesInWordingAdaptationOptions, CreatedUpdatedByAtMixin):
     exercise: Annotated[Exercise, Constant()]
 
 
-class ParsedExercise(Base):
+class ParsedExercise(PydanticBase):
     number: Annotated[str, WriteOnly()]
     instructions: Annotated[str, WriteOnly()]
     wording: Annotated[str, WriteOnly()]
@@ -175,5 +174,5 @@ class ParsedExercise(Base):
     delta: Annotated[exercise_delta.Exercise, Computed()]
 
 
-class SyntheticError(Base):
+class SyntheticError(PydanticBase):
     pass

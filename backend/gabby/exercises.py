@@ -1,7 +1,6 @@
 from contextlib import contextmanager
 from typing import Annotated
 
-from pydantic import BaseModel
 from sqlalchemy import orm
 import sqlalchemy as sql
 
@@ -12,14 +11,15 @@ from . import exercise_delta
 from . import parsing
 from . import renderable
 from . import settings
-from .database_utils import OrmBase, SessionDependable
 from .api_utils import create_item, get_item, get_page, save_item, delete_item
+from .database_utils import OrmBase, SessionDependable
 from .projects import Project
 from .testing import TransactionTestCase
 from .textbooks import Textbook, TextbooksResource
 from .users import User, MandatoryAuthBearerDependable
 from .users.mixins import CreatedUpdatedByAtMixin
 from .wrapping import unwrap, set_wrapper, make_sqids, orm_wrapper_with_sqids
+from mydantic import PydanticBase
 
 
 class Adaptation(OrmBase, CreatedUpdatedByAtMixin):
@@ -395,7 +395,7 @@ class ExercisesResource:
     ):
         return get_item(session, Exercise, ExercisesResource.sqids.decode(id)[0])
 
-    class Filters(BaseModel):
+    class Filters(PydanticBase):
         textbook: str | None
         textbook_page: int | None
         number: str | None

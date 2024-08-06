@@ -5,7 +5,6 @@ import json
 
 from fastapi import Depends, Form, HTTPException
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from pydantic import BaseModel, ConfigDict
 from sqlalchemy import orm
 from starlette import status
 import argon2
@@ -17,6 +16,7 @@ from .. import settings
 from ..api_utils import get_item, save_item
 from ..database_utils import OrmBase, SessionDependable, Session
 from ..wrapping import make_sqids, set_wrapper, orm_wrapper_with_sqids, unwrap, wrap
+from mydantic import PydanticBase, PydanticField
 
 
 # Tests for this code are in an other file ('.tests') to break a circular dependency with '..testing'
@@ -127,10 +127,8 @@ def authentication_dependable(
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Incorrect username or password")
 
     default_validity = datetime.timedelta(hours=20)  # Require login every morning, and token expires during the night
-    class Options(BaseModel):
-        model_config = ConfigDict(extra="forbid")
-
-        validity: datetime.timedelta = default_validity
+    class Options(PydanticBase):
+        validity: Annotated[datetime.timedelta, PydanticField(strict=False)] = default_validity
 
     options = Options(**({} if options is None else json.loads(options)))
     options.validity = min(options.validity, default_validity)
