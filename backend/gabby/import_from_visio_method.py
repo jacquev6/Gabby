@@ -1,28 +1,36 @@
-import textwrap
-from typing import Tuple
+from typing import Annotated, Any, Tuple
 import json
-
-from pydantic import BaseModel
+import textwrap
 
 from .database_utils import Session
 from .orm_models import User, Project, Textbook, Exercise
 from .testing import TransactionTestCase
+from mydantic import PydanticBase as BaseModel, PydanticField
 
 
 # File format comes from external tool with some field names in French
 class PageData(BaseModel):
     pdfSha256: str
     textbookPage: int
+    imagePath: str
     imageHeight: int
     imageWidth: int
     class Contenu(BaseModel):
+        cours: list[Any]
         class Exercice(BaseModel):
             class Textbox(BaseModel):
                 contenu: str
-                box: Tuple[Tuple[float, float], Tuple[float, float]]
+                box: Annotated[
+                    Tuple[
+                        Annotated[Tuple[float, float], PydanticField(strict=False)],
+                        Annotated[Tuple[float, float], PydanticField(strict=False)],
+                    ],
+                    PydanticField(strict=False),
+                ]
             num: Textbox
-            consigne: list[Textbox] = []
-            enonce: list[Textbox] = []
+            indicateur: Textbox
+            consigne: list[Textbox]
+            enonce: list[Textbox]
             exemple: list[Textbox] = []
             conseil: list[Textbox] = []
         exercices: list[Exercice]

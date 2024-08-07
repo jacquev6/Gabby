@@ -1,8 +1,9 @@
 from contextlib import contextmanager
 from typing import Annotated
+import json
 
-from pydantic import BaseModel
 from sqlalchemy import orm
+import Levenshtein
 import sqlalchemy as sql
 
 from fastjsonapi import make_filters
@@ -12,14 +13,15 @@ from . import exercise_delta
 from . import parsing
 from . import renderable
 from . import settings
-from .database_utils import OrmBase, SessionDependable
 from .api_utils import create_item, get_item, get_page, save_item, delete_item
+from .database_utils import OrmBase, SessionDependable
 from .projects import Project
 from .testing import TransactionTestCase
 from .textbooks import Textbook, TextbooksResource
 from .users import User, MandatoryAuthBearerDependable
 from .users.mixins import CreatedUpdatedByAtMixin
 from .wrapping import unwrap, set_wrapper, make_sqids, orm_wrapper_with_sqids
+from mydantic import PydanticBase
 
 
 class Adaptation(OrmBase, CreatedUpdatedByAtMixin):
@@ -118,6 +120,16 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
     example: orm.Mapped[str]
     clue: orm.Mapped[str]
 
+    _rectangles: orm.Mapped[list] = orm.mapped_column(sql.JSON, name="rectangles", default=[], server_default="[]")
+
+    @property
+    def rectangles(self) -> list[api_models.PdfRectangle]:
+        return [api_models.PdfRectangle(**rectangle) for rectangle in self._rectangles]
+
+    @rectangles.setter
+    def rectangles(self, rectangles: list[api_models.PdfRectangle]):
+        self._rectangles = [rectangle.model_dump() for rectangle in rectangles]
+
     adaptation_id: orm.Mapped[int | None] = orm.mapped_column(sql.ForeignKey(Adaptation.id), unique=True)
     adaptation: orm.Mapped[Adaptation | None] = orm.relationship(
         back_populates="exercise",
@@ -129,6 +141,103 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
         cascade="all, delete-orphan",
         order_by="ExtractionEvent.id",
     )
+
+
+def populate_rectangles_from_extraction_events(session: orm.Session):
+    extraction_events_by_exercise_id = {}
+    for extraction_event in session.execute(sql.select(ExtractionEvent)):
+        event = json.loads(extraction_event[0].event)
+        extraction_events_by_exercise_id.setdefault(extraction_event[0].exercise_id, []).append(event)
+
+    for exercise_ in session.execute(sql.select(Exercise)):
+        exercise: Exercise = exercise_[0]
+        events = extraction_events_by_exercise_id.get(exercise.id, [])
+
+        for event in events:
+            assert event["kind"] in {
+                "ExerciseNumberSetAutomatically",
+                "ExerciseNumberSetManually",
+                "InstructionsSetManually",
+                "WordingSetManually",
+                "ExampleSetManually",
+                "ClueSetManually",
+                "TextSelectedInPdf",
+                "SelectedTextEdited",
+                "SelectedTextAddedToInstructions",
+                "SelectedTextAddedToWording",
+                "SelectedTextAddedToExample",
+                "SelectedTextAddedToClue",
+                "BoundingRectangleSelectedInPdf",
+            }
+
+        text_selected_events_by_text = dict()
+        for event in events:
+            if event["kind"] == "TextSelectedInPdf":
+                text_selected_events_by_text[event["value"]] = event
+                if event["value"].startswith(exercise.number):
+                    text_selected_events_by_text[event["value"][len(exercise.number):].lstrip()] = event
+        for event in events:
+            if event["kind"] == "SelectedTextEdited":
+                best_distance = None
+                for text, text_selected_events in list(text_selected_events_by_text.items()):
+                    distance = Levenshtein.distance(event["value"], text)
+                    if best_distance is None or distance < best_distance:
+                        best_distance = distance
+                        text_selected_events_by_text[event["value"]] = text_selected_events
+
+        assert exercise.rectangles == []
+        rectangles = []
+
+        for event in events:
+            if event["kind"] == "BoundingRectangleSelectedInPdf":
+                rectangles.append(api_models.PdfRectangle(
+                    pdf_sha256=event["pdf"]["sha256"],
+                    pdf_page=event["pdf"]["page"],
+                    coordinates="pdfjs",
+                    start=api_models.Point(**event["pdf"]["rectangle"]["start"]),
+                    stop=api_models.Point(**event["pdf"]["rectangle"]["stop"]),
+                    text=None,
+                    role="bounding",
+                ))
+
+        if len(rectangles) == 0 and exercise.bounding_rectangle is not None:
+            textbook = exercise.textbook
+            if textbook is not None:
+                textbook_page = exercise.textbook_page
+                sections = textbook.sections
+                if sections:
+                    section = sections[0]
+                    pdf_file = section.pdf_file
+                    rectangles.append(api_models.PdfRectangle(
+                        pdf_sha256=pdf_file.sha256,
+                        pdf_page=textbook_page + section.pdf_file_start_page - section.textbook_start_page,
+                        coordinates="pdfjs",
+                        start=exercise.bounding_rectangle["start"],
+                        stop=exercise.bounding_rectangle["stop"],
+                        text=None,
+                        role="bounding",
+                    ))
+
+        for event in events:
+            if event["kind"].startswith("SelectedTextAddedTo"):
+                if event["valueBefore"] == "":
+                    text_added = event["valueAfter"]
+                elif event["valueBefore"].endswith("\n"):
+                    text_added = event["valueAfter"][len(event["valueBefore"]):]
+                else:
+                    text_added = event["valueAfter"][len(event["valueBefore"]) + 1:]
+                text_selected_event = text_selected_events_by_text[text_added]  # No .get: the text *has* been seen.
+                rectangles.append(api_models.PdfRectangle(
+                    pdf_sha256=text_selected_event["pdf"]["sha256"],
+                    pdf_page=text_selected_event["pdf"]["page"],
+                    coordinates="pdfjs",
+                    start=api_models.Point(**text_selected_event["pdf"]["rectangle"]["start"]),
+                    stop=api_models.Point(**text_selected_event["pdf"]["rectangle"]["stop"]),
+                    text=text_selected_event["value"],
+                    role=event["kind"][len("SelectedTextAddedTo"):].lower(),
+                ))
+
+        exercise.rectangles = rectangles
 
 
 class ExerciseTestCase(TransactionTestCase):
@@ -360,28 +469,27 @@ class ExercisesResource:
         project,
         textbook,
         textbook_page,
-        bounding_rectangle,
         number,
         instructions,
         wording,
         example,
         clue,
+        rectangles,
         adaptation,
         session: SessionDependable,
         authenticated_user: MandatoryAuthBearerDependable,
     ):
-        bounding_rectangle = None if bounding_rectangle is None else bounding_rectangle.model_dump()
         return create_item(
             session, Exercise,
             project=project,
             textbook=textbook,
             textbook_page=textbook_page,
-            bounding_rectangle=bounding_rectangle,
             number=number,
             instructions=instructions,
             wording=wording,
             example=example,
             clue=clue,
+            rectangles=rectangles,
             adaptation=adaptation,
             created_by=authenticated_user,
             updated_by=authenticated_user,
@@ -395,7 +503,7 @@ class ExercisesResource:
     ):
         return get_item(session, Exercise, ExercisesResource.sqids.decode(id)[0])
 
-    class Filters(BaseModel):
+    class Filters(PydanticBase):
         textbook: str | None
         textbook_page: int | None
         number: str | None
@@ -425,10 +533,7 @@ class ExercisesResource:
         authenticated_user: MandatoryAuthBearerDependable,
     ):
         previous_adaptation = item.adaptation
-        previous_bounding_rectangle = item.bounding_rectangle
         yield
-        if item.bounding_rectangle is not previous_bounding_rectangle and item.bounding_rectangle is not None:
-            item.bounding_rectangle = item.bounding_rectangle.model_dump()
         if previous_adaptation is not None and unwrap(item.adaptation) != unwrap(previous_adaptation):
             session.delete(previous_adaptation)
         item.updated_by = authenticated_user
@@ -455,69 +560,3 @@ class ExtractionEvent(OrmBase, CreatedUpdatedByAtMixin):
     exercise: orm.Mapped[Exercise] = orm.relationship(back_populates="extraction_events")
 
     event: orm.Mapped[str]
-
-
-class ExtractionEventsResource:
-    singular_name = "extraction_event"
-    plural_name = "extraction_events"
-
-    Model = api_models.ExtractionEvent
-
-    default_page_size = settings.GENERIC_DEFAULT_API_PAGE_SIZE
-
-    sqids = make_sqids(singular_name)
-
-    def create_item(
-        self,
-        exercise,
-        event,
-        session: SessionDependable,
-        authenticated_user: MandatoryAuthBearerDependable,
-    ):
-        return create_item(
-            session, ExtractionEvent,
-            exercise=exercise,
-            event=event,
-            created_by=authenticated_user,
-            updated_by=authenticated_user,
-        )
-
-    def get_item(
-        self,
-        id,
-        session: SessionDependable,
-        authenticated_user: MandatoryAuthBearerDependable,
-    ):
-        return get_item(session, ExtractionEvent, ExtractionEventsResource.sqids.decode(id)[0])
-
-    def get_page(
-        self,
-        first_index,
-        page_size,
-        session: SessionDependable,
-        authenticated_user: MandatoryAuthBearerDependable,
-    ):
-        query = sql.select(ExtractionEvent)
-        return get_page(session, query, first_index, page_size)
-
-    @contextmanager
-    def save_item(
-        self,
-        item,
-        session: SessionDependable,
-        authenticated_user: MandatoryAuthBearerDependable,
-    ):
-        yield
-        item.updated_by = authenticated_user
-        save_item(session, item)
-
-    def delete_item(
-        self,
-        item,
-        session: SessionDependable,
-        authenticated_user: MandatoryAuthBearerDependable,
-    ):
-        delete_item(session, item)
-
-
-set_wrapper(ExtractionEvent, orm_wrapper_with_sqids(ExtractionEventsResource.sqids))

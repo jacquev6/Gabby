@@ -15,3 +15,5 @@ sqlalchemy  # Database ORM
 sqlalchemy-data-model-visualizer  # Draw database schema
 sqlalchemy-utils  # Database utilities
 uvicorn[standard]  # ASGI server
+
+levenshtein  # Temporary, to find the best match during migration of Exercise.extraction_events to Exercise.rectangles

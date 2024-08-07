@@ -3,6 +3,7 @@ from urllib.parse import urlparse
 import datetime
 import io
 import os
+import re
 import subprocess
 import sys
 import tarfile
@@ -12,6 +13,7 @@ import boto3
 import click
 import sqlalchemy as sql
 import sqlalchemy_data_model_visualizer
+import sqlalchemy_utils.functions
 
 from . import database_utils
 from . import orm_models
@@ -81,159 +83,69 @@ def backup_database():
     print(f"Backed up database {settings.DATABASE_URL} to {settings.DATABASE_BACKUPS_URL}/{archive_name}", file=sys.stderr)
 
 
-@main.command(help="Import data from a Django './manage.py dumpdata textbooks' JSON file")
-@click.argument("input_file", type=click.File("r"))
-def import_django_data(input_file):
-    database_engine = database_utils.create_engine(settings.DATABASE_URL)
+@main.command()
+@click.argument("backup_url")
+@click.option("--yes", is_flag=True)
+@click.option("--patch-according-to-settings", is_flag=True)
+def restore_database(backup_url, yes, patch_according_to_settings):
+    parsed_backup_url = urlparse(backup_url)
 
-    last_pk_by_model = {}
-    def assert_pk(model, pk):
-        assert isinstance(pk, int)
-        last_pk_by_model.setdefault(model, 0)
-        assert pk > last_pk_by_model[model]  # Not always 'last_pk_by_model[model] + 1'
-        last_pk_by_model[model] = pk
+    if parsed_backup_url.scheme == "file":
+        with tarfile.open(parsed_backup_url.path, "r:gz") as tarball:
+            pg_dump = tarball.extractfile(tarball.getnames()[0]).read()
+    elif parsed_backup_url.scheme == "s3":
+        assert "AWS_ACCESS_KEY_ID" in os.environ
+        assert "AWS_SECRET_ACCESS_KEY" in os.environ
+        s3 = boto3.client("s3")
+        buffer = io.BytesIO()
+        s3.download_fileobj(parsed_backup_url.netloc, f"{parsed_backup_url.path[1:]}", buffer)
+        buffer.seek(0)
+        with tarfile.open(fileobj=buffer, mode="r:gz") as tarball:
+            pg_dump = tarball.extractfile(tarball.getnames()[0]).read()
+    else:
+        raise NotImplementedError(f"Unsupported database backup URL scheme: {parsed_database_backups_url.scheme}")
 
-    data = json.load(input_file)
+    print(f"Restoring database {settings.DATABASE_URL} from {backup_url} ({len(pg_dump)} bytes)", file=sys.stderr)
+    if not yes:
+        print("This will overwrite the current database. Are you sure you want to continue? [y/N]", file=sys.stderr, end=" ")
+        if input().strip().lower() != "y":
+            print("Aborting.", file=sys.stderr)
+            return
 
-    instances_by_model = {}
-    exercises_by_adaptation = {}
+    placeholder_database_url = settings.DATABASE_URL + "-restore"
+    if not sqlalchemy_utils.functions.database_exists(placeholder_database_url):
+        sqlalchemy_utils.functions.create_database(placeholder_database_url)
+    parsed_placeholder_database_url = urlparse(placeholder_database_url)
 
-    with orm.Session(database_engine) as session:
-        database_utils.truncate_all_tables(session)
+    if sqlalchemy_utils.functions.database_exists(settings.DATABASE_URL):
+        sqlalchemy_utils.functions.drop_database(settings.DATABASE_URL)
 
-        import_user = orm_models.User(username="import", created_by_id=1, updated_by_id=1)
-        session.add(import_user)
-        session.flush()
-        assert import_user.id == 1
+    sql = pg_dump.decode()
+    if patch_according_to_settings:
+        # Comments
+        sql = re.sub(r" Owner: \w+", f" Owner: {parsed_database_url.username}", sql)
+        sql = re.sub(r"-- Name: \w+; Type: DATABASE;", f"-- Name: {parsed_database_url.path[1:]}; Type: DATABASE;", sql)
+        # Postgres commands
+        sql = re.sub(r"connect \"\w+\"", f"connect \"{parsed_database_url.path[1:]}\"", sql)
+        # Actual SQL
+        sql = re.sub(r" OWNER TO \"\w+\";", f" OWNER TO \"{parsed_database_url.username}\";", sql)
+        sql = re.sub(r"DATABASE \"\w+\"", f"DATABASE \"{parsed_database_url.path[1:]}\"", sql)
 
-        vincent = orm_models.User(username="jacquev6")
-        # @todo Understand why using the relationships results in a not-null violation
-        vincent.created_by_id = import_user.id
-        vincent.updated_by_id = import_user.id
-        session.add(vincent)
-        session.add(orm_models.UserEmailAddress(user=vincent, address="vincent@vincent-jacques.net"))
-        session.flush()
+    subprocess.run(
+        [
+            "psql",
+            "--host", parsed_placeholder_database_url.hostname,
+            "--username", parsed_placeholder_database_url.username,
+            "--no-password",
+            "--dbname", parsed_placeholder_database_url.path[1:],
+        ],
+        env=dict(os.environ, PGPASSWORD=parsed_placeholder_database_url.password),
+        check=True,
+        input=sql,
+        universal_newlines=True,
+    )
 
-        if settings.EXPOSE_RESET_FOR_TESTS_URL:
-            admin = orm_models.User(username="admin", clear_text_password="password")
-            admin.created_by_id = import_user.id
-            admin.updated_by_id = import_user.id
-            session.add(admin)
-            session.flush()
-
-        for instance_data in data:
-            assert instance_data.keys() == {"model", "pk", "fields"}
-            model = instance_data["model"]
-            pk = instance_data["pk"]
-            fields = instance_data["fields"]
-            instance = None
-            match model:
-                case "textbooks.pdffile":
-                    assert isinstance(pk, str)
-                    assert len(pk) == 64
-                    assert fields.keys() == {"bytes_count", "pages_count"}, fields
-                    instance = orm_models.PdfFile(
-                        sha256=pk,
-                        bytes_count=fields.pop("bytes_count"),
-                        pages_count=fields.pop("pages_count"),
-                    )
-                case "textbooks.pdffilenaming":
-                    assert_pk(model, pk)
-                    assert fields.keys() == {"pdf_file", "name"}, fields
-                    instance = orm_models.PdfFileNaming(
-                        pdf_file=instances_by_model["textbooks.pdffile"][fields.pop("pdf_file")],
-                        name=fields.pop("name"),
-                    )
-                case "textbooks.project":
-                    assert_pk(model, pk)
-                    assert fields.keys() == {"title", "description"}, fields
-                    instance = orm_models.Project(
-                        title=fields.pop("title"),
-                        description=fields.pop("description"),
-                    )
-                case "textbooks.textbook":
-                    assert_pk(model, pk)
-                    assert fields.keys() == {"project", "title", "publisher", "year", "isbn"}, fields
-                    instance = orm_models.Textbook(
-                        project=instances_by_model["textbooks.project"][fields.pop("project")],
-                        title=fields.pop("title"),
-                        publisher=fields.pop("publisher"),
-                        year=fields.pop("year"),
-                        isbn=fields.pop("isbn"),
-                    )
-                case "textbooks.section":
-                    assert_pk(model, pk)
-                    assert fields.keys() == {"textbook", "pdf_file", "textbook_start_page", "pdf_file_start_page", "pages_count"}, fields
-                    instance = orm_models.Section(
-                        textbook=instances_by_model["textbooks.textbook"][fields.pop("textbook")],
-                        pdf_file=instances_by_model["textbooks.pdffile"][fields.pop("pdf_file")],
-                        textbook_start_page=fields.pop("textbook_start_page"),
-                        pdf_file_start_page=fields.pop("pdf_file_start_page"),
-                        pages_count=fields.pop("pages_count"),
-                    )
-                case "textbooks.adaptation":
-                    assert_pk(model, pk)
-                    assert fields.keys() == {"polymorphic_ctype"}, fields
-                case "textbooks.exercise":
-                    assert_pk(model, pk)
-                    assert fields.keys() == {"project", "textbook", "textbook_page", "bounding_rectangle", "number", "instructions", "wording", "example", "clue", "adaptation"}, fields
-                    instance = orm_models.Exercise(
-                        project=instances_by_model["textbooks.project"][fields.pop("project")],
-                        textbook=None if (textbook := fields.pop("textbook")) is None else instances_by_model["textbooks.textbook"][textbook],
-                        textbook_page=fields.pop("textbook_page"),
-                        bounding_rectangle=fields.pop("bounding_rectangle"),
-                        number=fields.pop("number"),
-                        instructions=fields.pop("instructions"),
-                        wording=fields.pop("wording"),
-                        example=fields.pop("example"),
-                        clue=fields.pop("clue"),
-                        adaptation=None,
-                    )
-                    exercises_by_adaptation[fields.pop("adaptation")] = instance
-                case "textbooks.extractionevent":
-                    assert_pk(model, pk)
-                    assert fields.keys() == {"exercise", "event"}, fields
-                    instance = orm_models.ExtractionEvent(
-                        exercise=instances_by_model["textbooks.exercise"][fields.pop("exercise")],
-                        event=fields.pop("event"),
-                    )
-                case "textbooks.selectthingsadaptation":
-                    assert_pk(model, pk)
-                    assert fields.keys() == {"punctuation", "words", "colors"}, fields
-                    instance = orm_models.SelectThingsAdaptation(
-                        punctuation=fields.pop("punctuation"),
-                        words=fields.pop("words"),
-                        colors=fields.pop("colors"),
-                    )
-                    exercises_by_adaptation.pop(pk).adaptation = instance
-                case "textbooks.fillwithfreetextadaptation":
-                    assert_pk(model, pk)
-                    assert fields.keys() == {"placeholder"}, fields
-                    instance = orm_models.FillWithFreeTextAdaptation(
-                        placeholder=fields.pop("placeholder"),
-                    )
-                    exercises_by_adaptation.pop(pk).adaptation = instance
-                case "textbooks.multiplechoicesadaptation":
-                    assert_pk(model, pk)
-                    assert fields.keys() == {"placeholder"}, fields
-                    instance = orm_models.MultipleChoicesInInstructionsAdaptation(
-                        placeholder=fields.pop("placeholder"),
-                    )
-                    exercises_by_adaptation.pop(pk).adaptation = instance
-                case _:
-                    assert False, model
-            if instance is None:
-                assert model == "textbooks.adaptation", model
-            else:
-                assert fields == {}, fields
-                instance.created_by = import_user
-                instance.updated_by = import_user
-                session.add(instance)
-                session.flush()
-                instances_by_model.setdefault(model, {})[pk] = instance
-        exercises_by_adaptation.pop(None)
-        assert exercises_by_adaptation == {}, exercises_by_adaptation
-        session.commit()
+    sqlalchemy_utils.functions.drop_database(placeholder_database_url)
 
 
 @main.command(name="load-fixtures")
@@ -256,12 +168,13 @@ def sudo(context, username):
 @click.pass_context
 @click.argument("email_address")
 @click.option("--username", required=False)
-def create_user(context, email_address, username):
+@click.option("--password", required=False)
+def create_user(context, email_address, username, password):
     database_engine = database_utils.create_engine(settings.DATABASE_URL)
     with orm.Session(database_engine) as session:
         sudo_user = session.scalar(sql.select(orm_models.User).where(orm_models.User.username == context.obj["username"]))
         assert sudo_user is not None, f"No user with username {context.obj['username']}"
-        new_user = orm_models.User(username=username, created_by_id=sudo_user.id, updated_by_id=sudo_user.id)
+        new_user = orm_models.User(username=username, clear_text_password=password, created_by_id=sudo_user.id, updated_by_id=sudo_user.id)
         session.add(new_user)
         session.flush()
         session.add(orm_models.UserEmailAddress(user=new_user, address=email_address))

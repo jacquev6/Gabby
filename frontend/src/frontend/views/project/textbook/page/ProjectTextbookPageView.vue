@@ -5,8 +5,7 @@ import { useRouter } from 'vue-router'
 
 import bc from '$frontend/components/breadcrumbs'
 import ProjectTextbookPageLayout from './ProjectTextbookPageLayout.vue'
-import RectanglesHighlighter from './RectanglesHighlighter.vue'
-import type { Rectangle } from './RectanglesHighlighter.vue'
+import RectanglesHighlighter, { makeBoundingRectangles } from './RectanglesHighlighter.vue'
 import { useProjectTextbookPageData } from './ProjectTextbookPageLayout.vue'
 import ExercisesList from './ExercisesList.vue'
 import { useExerciseCreationHistoryStore } from './ExerciseCreationHistoryStore'
@@ -30,11 +29,7 @@ onMounted(() => {
 
 const { project, textbook, exercises } = useProjectTextbookPageData(projectId, textbookId, page)
 
-const greyRectangles = computed(() =>
-  exercises.value.existingItems
-    .map(exercise => exercise.attributes.boundingRectangle)
-    .filter((x): x is Rectangle => x !== null)
-)
+const greyRectangles = computed(() => makeBoundingRectangles(exercises.value.existingItems))
 
 function changePage(page: number) {
   router.push({name: 'project-textbook-page', params: {page}})

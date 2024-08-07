@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 
-import type { Point, Rectangle } from '$frontend/components/ExerciseFieldsForm.vue'
+import type { Point, Rectangle } from './RectanglesHighlighter.vue'
 
 
 export interface TextItem {
@@ -23,7 +23,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  textSelected: [text: string, point: {clientX: number, clientY: number}, items: TextItem[], rectangle: Rectangle],
+  textSelected: [text: string, point: {clientX: number, clientY: number}, rectangle: Rectangle],
 }>()
 
 const canvas = ref<HTMLCanvasElement | null>(null)
@@ -123,7 +123,6 @@ function pointerup(event: any/* @todo Type */) {
         'textSelected',
         text,
         {clientX: event.clientX, clientY: event.clientY},
-        items,
         {start: {x: startPoint.x, y: startPoint.y}, stop: {x: stopPoint.x, y: stopPoint.y}},
       )
     }

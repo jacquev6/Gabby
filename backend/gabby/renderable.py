@@ -1,15 +1,10 @@
 from typing import Literal
 
-import pydantic
-
 from . import settings
+from mydantic import PydanticBase
 
 
-class BaseModel(pydantic.BaseModel):
-    model_config = pydantic.ConfigDict(extra="forbid", strict=True)
-
-
-class _PlainText(BaseModel):
+class _PlainText(PydanticBase):
     type: Literal["plainText"]
     text: str
 
@@ -21,7 +16,7 @@ def PlainText(text: str):
     return _PlainText(type="plainText", text=text)
 
 
-class _BoxedText(BaseModel):
+class _BoxedText(PydanticBase):
     type: Literal["boxedText"]
     text: str
 
@@ -33,7 +28,7 @@ def BoxedText(text: str):
     return _BoxedText(type="boxedText", text=text)
 
 
-class _BoldText(BaseModel):
+class _BoldText(PydanticBase):
     type: Literal["boldText"]
     text: str
 
@@ -45,7 +40,7 @@ def BoldText(text: str):
     return _BoldText(type="boldText", text=text)
 
 
-class _ItalicText(BaseModel):
+class _ItalicText(PydanticBase):
     type: Literal["italicText"]
     text: str
 
@@ -57,7 +52,7 @@ def ItalicText(text: str):
     return _ItalicText(type="italicText", text=text)
 
 
-class _SelectableText(BaseModel):
+class _SelectableText(PydanticBase):
     type: Literal["selectableText"]
     text: str
     colors: int
@@ -70,7 +65,7 @@ def SelectableText(text: str, colors: int):
     return _SelectableText(type="selectableText", text=text, colors=colors)
 
 
-class _SelectedText(BaseModel):
+class _SelectedText(PydanticBase):
     type: Literal["selectedText"]
     text: str
     color: int
@@ -84,7 +79,7 @@ def SelectedText(text: str, color: int, colors: int):
     return _SelectedText(type="selectedText", text=text, color=color, colors=colors)
 
 
-class _SelectedClicks(BaseModel):
+class _SelectedClicks(PydanticBase):
     type: Literal["selectedClicks"]
     color: int
     colors: int
@@ -96,7 +91,7 @@ def SelectedClicks(color: int, colors: int):
     return _SelectedClicks(type="selectedClicks", color=color, colors=colors)
 
 
-class _FreeTextInput(BaseModel):
+class _FreeTextInput(PydanticBase):
     type: Literal["freeTextInput"]
 
     def to_generic(self):
@@ -106,7 +101,7 @@ def FreeTextInput():
     return _FreeTextInput(type="freeTextInput")
 
 
-class _MultipleChoicesInput(BaseModel):
+class _MultipleChoicesInput(PydanticBase):
     type: Literal["multipleChoicesInput"]
     choices: list[str]
 
@@ -117,7 +112,7 @@ def MultipleChoicesInput(choices: list[str]):
     return _MultipleChoicesInput(type="multipleChoicesInput", choices=choices)
 
 
-class _Whitespace(BaseModel):
+class _Whitespace(PydanticBase):
     type: Literal["whitespace"]
 
     def to_generic(self):
@@ -130,21 +125,21 @@ def Whitespace():
 SentenceToken = _PlainText | _BoxedText | _BoldText | _ItalicText | _SelectableText | _SelectedText | _SelectedClicks | _FreeTextInput | _MultipleChoicesInput | _Whitespace
 
 
-class Sentence(BaseModel):
+class Sentence(PydanticBase):
     tokens: list[SentenceToken]
 
     def to_generic(self):
         return "".join(token.to_generic() for token in self.tokens)
 
 
-class Paragraph(BaseModel):
+class Paragraph(PydanticBase):
     sentences: list[Sentence]
 
     def to_generic(self):
         return " ".join(sentence.to_generic() for sentence in self.sentences)
 
 
-class Section(BaseModel):
+class Section(PydanticBase):
     paragraphs: list[Paragraph]
 
     def to_generic(self):
@@ -159,7 +154,7 @@ class Section(BaseModel):
         return generic
 
 
-class Exercise(BaseModel):
+class Exercise(PydanticBase):
     number: str
     textbook_page: int | None
     instructions: Section

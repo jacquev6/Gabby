@@ -3,7 +3,6 @@ import datetime
 from typing import Annotated
 
 from fastapi import HTTPException
-from pydantic import BaseModel
 from sqlalchemy import orm
 from starlette import status
 import sqlalchemy as sql
@@ -13,11 +12,12 @@ from fastjsonapi import make_filters
 from . import api_models
 from . import settings
 from . import testing
-from .database_utils import OrmBase, SessionDependable
 from .api_utils import create_item, get_item, get_page, save_item, delete_item
+from .database_utils import OrmBase, SessionDependable
 from .users import User, UsersResource, OptionalAuthBearerDependable
 from .users.mixins import OptionalCreatedUpdatedByAtMixin
 from .wrapping import set_wrapper, OrmWrapperWithStrIds, unwrap
+from mydantic import PydanticBase
 
 
 class Ping(OrmBase, OptionalCreatedUpdatedByAtMixin):
@@ -65,7 +65,7 @@ class PingsResource:
     ):
         return get_item(session, Ping, int(id))
 
-    class Filters(BaseModel):
+    class Filters(PydanticBase):
         message: str | None
         prev: str | None
 

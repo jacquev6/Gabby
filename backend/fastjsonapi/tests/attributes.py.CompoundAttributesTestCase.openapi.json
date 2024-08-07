@@ -29,6 +29,7 @@
         "type": "object"
       },
       "Point": {
+        "additionalProperties": false,
         "properties": {
           "x": {
             "title": "X",
@@ -47,6 +48,7 @@
         "type": "object"
       },
       "Rectangle": {
+        "additionalProperties": false,
         "properties": {
           "br": {
             "$ref": "#/components/schemas/Point"

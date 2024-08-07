@@ -20,7 +20,6 @@ export type InclusionAndSelectionOptions = InclusionOptions & SelectionOptions
 export const itemTypes = [
   'parsedExercise',
   'exercise',
-  'extractionEvent',
   'fillWithFreeTextAdaptation',
   'multipleChoicesInInstructionsAdaptation',
   'multipleChoicesInWordingAdaptation',
