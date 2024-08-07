@@ -8,8 +8,7 @@ import { computedAsync } from '@vueuse/core'
 import { BButton, BBusy } from '$/frontend/components/opinion/bootstrap'
 import bc from '$frontend/components/breadcrumbs'
 import ProjectTextbookPageLayout from './ProjectTextbookPageLayout.vue'
-import RectanglesHighlighter from './RectanglesHighlighter.vue'
-import type { TextItem } from './TextPicker.vue'
+import RectanglesHighlighter, { makeBoundingRectangle, makeBoundingRectangles, type Rectangle } from './RectanglesHighlighter.vue'
 import TextPicker from './TextPicker.vue'
 import { useProjectTextbookPageData } from './ProjectTextbookPageLayout.vue'
 import TwoResizableColumns from '$frontend/components/TwoResizableColumns.vue'
@@ -21,7 +20,7 @@ import AdaptedExercise from './AdaptedExercise.vue'
 import ToolsGutter from './ToolsGutter.vue'
 import ReplaceTool from './ReplaceTool.vue'
 import UndoRedoTool from './UndoRedoTool.vue'
-import type { Rectangle, TextualFieldName, Selection } from '$/frontend/components/ExerciseFieldsForm.vue'
+import type { TextualFieldName, Selection } from '$/frontend/components/ExerciseFieldsForm.vue'
 import AdaptationDetailsFieldsForm from '$/frontend/components/AdaptationDetailsFieldsForm.vue'
 import TextSelectionModal from './TextSelectionModal.vue'
 import { makeModel, resetModel, getParsed, create, suggestNextNumber } from '$frontend/components/ExerciseFieldsForm.vue'
@@ -45,11 +44,7 @@ const exerciseCreationHistory = useExerciseCreationHistoryStore()
 
 const { project, textbook, exercises } = useProjectTextbookPageData(projectId, textbookId, page)
 
-const greyRectangles = computed(() =>
-  exercises.value.existingItems
-    .map(exercise => exercise.attributes.boundingRectangle)
-    .filter((x): x is Rectangle => x !== null)
-)
+const greyRectangles = computed(() => makeBoundingRectangles(exercises.value.existingItems))
 
 const matchingExercises = computed(() => {
   if (model.number === '') {
@@ -83,23 +78,22 @@ const model = reactive(makeModel())
 const canWysiwyg = computed(() => model.adaptationType === 'multipleChoicesInInstructionsAdaptation')
 const wantWysiwyg = ref(true)
 const wysiwyg = computed(() => canWysiwyg.value && wantWysiwyg.value)
-const extractionEvents: object[] = []
 
 const resetUndoRedo = ref(0)
 
 onMounted(() => {
   if (exerciseCreationHistory.suggestedNumber !== null) {
     model.number = exerciseCreationHistory.suggestedNumber
-    extractionEvents.push({kind: 'ExerciseNumberSetAutomatically', value: model.number})
     resetUndoRedo.value++
   }
 })
 
 const surroundedRectangles = computed(() => {
-  if (model.boundingRectangle === null) {
+  const boundingRectangle = makeBoundingRectangle(model.rectangles)
+  if (boundingRectangle === null) {
     return []
   } else {
-    return [model.boundingRectangle]
+    return [boundingRectangle]
   }
 })
 
@@ -107,45 +101,26 @@ const fields = ref<InstanceType<typeof ExerciseFieldsForm> | null>(null)
 
 const textSelectionModal = ref<InstanceType<typeof TextSelectionModal> | null>(null)
 
-function textSelected(pdfFile: PdfFile, pdf: {page: PDFPageProxy}, text: string, point: {clientX: number, clientY: number}, textItems: TextItem[], rectangle: Rectangle) {
+function textSelected(pdfFile: PdfFile, pdf: {page: PDFPageProxy}, selectedText: string, point: {clientX: number, clientY: number}, rectangle: Rectangle) {
   console.assert(pdfFile.inCache && pdfFile.exists)
   console.assert(pdfFile.relationships.namings.length > 0)
   console.assert(pdfFile.relationships.namings[0].inCache && pdfFile.relationships.namings[0].exists)
   console.assert(textSelectionModal.value !== null)
-  if (model.boundingRectangle === null) {
-    model.boundingRectangle = rectangle
-    extractionEvents.push({
-      kind: "BoundingRectangleSelectedInPdf",
-      pdf: {
-        name: pdfFile.relationships.namings[0].attributes.name,
-        sha256: pdfFile.id,
-        page: pdf.page.pageNumber,
-        rectangle,
-      },
-    })
-  } else {
-    extractionEvents.push({
-      kind: "TextSelectedInPdf",
-      pdf: {
-        name: pdfFile.relationships.namings[0].attributes.name,
-        sha256: pdfFile.id,
-        page: pdf.page.pageNumber,
-        rectangle,
-      },
-      value: text,
-      textItems,
-    })
-    textSelectionModal.value.show(text, {x: point.clientX, y: point.clientY})
-  }
+  textSelectionModal.value.show({
+    selectedText,
+    at: {x: point.clientX, y: point.clientY},
+    pdfSha256: pdfFile.attributes.sha256,
+    pdfPage: pdf.page.pageNumber,
+    rectangle,
+  })
 }
 
 const lastSelection = ref<Selection | null>(null)
 
 function skip() {
   const suggestedNextNumber = suggestNextNumber(model.number)
-  resetModel(model, extractionEvents)
+  resetModel(model)
   model.number = suggestedNextNumber
-  extractionEvents.push({kind: 'ExerciseNumberSetAutomatically', value: model.number})
   resetUndoRedo.value++
 }
 
@@ -153,23 +128,22 @@ const busy = ref(false)
 async function createThenNext() {
   const suggestedNextNumber = suggestNextNumber(model.number)
   busy.value = true
-  const exercise = await create(project.value, textbook.value, page.value, model, extractionEvents)
+  const exercise = await create(project.value, textbook.value, page.value, model)
   busy.value = false
 
   exerciseCreationHistory.push(exercise.id)
 
   /* no await */ exercises.value.refresh()
 
-  resetModel(model, extractionEvents)
+  resetModel(model)
   model.number = suggestedNextNumber
-  extractionEvents.push({kind: 'ExerciseNumberSetAutomatically', value: model.number})
   exerciseCreationHistory.suggestedNumber = suggestedNextNumber
   resetUndoRedo.value++
 }
 
 async function createThenBack() {
   busy.value = true
-  await create(project.value, textbook.value, page.value, model, extractionEvents)
+  await create(project.value, textbook.value, page.value, model)
   busy.value = false
   /* no await */ exercises.value.refresh()
   router.push({name: 'project-textbook-page'})
@@ -238,7 +212,7 @@ const toolSlotNames = computed(() => {
 </script>
 
 <template>
-  <TextSelectionModal ref="textSelectionModal" v-model="model" :extractionEvents @textAdded="highlightSuffix" />
+  <TextSelectionModal ref="textSelectionModal" v-model="model" @textAdded="highlightSuffix" />
   <ProjectTextbookPageLayout
     :project :textbook :page :displayPage="page" @update:displayPage="changePage"
     :title :breadcrumbs
@@ -253,11 +227,11 @@ const toolSlotNames = computed(() => {
         class="img w-100" style="position: absolute; top: 0; left: 0"
         :width :height :transform
         :textContent="pdf.textContent"
-        @textSelected="(text, point, items, rectangle) => textSelected(pdfFile, pdf, text, point, items, rectangle)"
+        @textSelected="(text, point, rectangle) => textSelected(pdfFile, pdf, text, point, rectangle)"
       />
     </template>
 
-    <template #="{ pdf }">
+    <template #>
       <TwoResizableColumns saveKey="projectTextbookPage-2" :snap="150" class="h-100" gutterWidth="200px">
         <template #left>
           <div class="h-100 overflow-auto" data-cy="left-col-2">
@@ -265,7 +239,7 @@ const toolSlotNames = computed(() => {
             <BBusy :busy>
               <ExerciseFieldsForm ref="fields"
                 v-model="model"
-                :fixedNumber="false" :extractionEvents :wysiwyg :deltas
+                :fixedNumber="false" :wysiwyg :deltas
                 @selected="selection => { lastSelection = selection }"
               >
                 <template #overlay>
@@ -275,11 +249,6 @@ const toolSlotNames = computed(() => {
                       <p>
                         <BButton primary @click="skip">{{ $t('skipExercise') }}</BButton>
                       </p>
-                    </div>
-                  </div>
-                  <div v-else-if="model.boundingRectangle === null && pdf !== null" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8);" class="text-center">
-                    <div style="position: absolute; left: 25%; top: 25%; width: 50%; height: 50%; background-color: white">
-                      <p>{{ $t('drawBoundingRectangle') }}</p>
                     </div>
                   </div>
                 </template>

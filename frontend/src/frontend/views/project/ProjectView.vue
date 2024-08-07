@@ -31,7 +31,6 @@ const createTextbookForm = ref<InstanceType<typeof CreateTextbookForm> | null>(n
   >
     <EditableProjectHeader :project />
     <p>{{ $t('download') }} <a :href="`/api/project-${project.id}.html?token=${api.auth.token.value}`">{{ $t('theExportedHtml') }}</a>.</p>
-    <p>{{ $t('download') }} <a :href="`/api/project-${project.id}-extraction-report.json?token=${api.auth.token.value}`" download>{{ $t('theExtractionReport') }}</a>.</p>
 
     <BRow>
       <BCol>

@@ -90,10 +90,6 @@ class Point(PydanticBase):
     x: float
     y: float
 
-class Rectangle(PydanticBase):
-    start: Point
-    stop: Point
-
 class PdfRectangle(PydanticBase):
     pdf_sha256: str
     pdf_page: int
@@ -112,7 +108,6 @@ class Exercise(PydanticBase, CreatedUpdatedByAtMixin):
 
     textbook: Annotated[Textbook | None, Constant()] = None
     textbook_page: Annotated[int | None, Constant()] = None
-    bounding_rectangle: Rectangle | None = None
 
     number: Annotated[str, Constant()]
 
@@ -121,7 +116,7 @@ class Exercise(PydanticBase, CreatedUpdatedByAtMixin):
     example: str = ""
     clue: str = ""
 
-    extraction_events: Annotated[list[ExtractionEvent], Computed(), WriteOnly()] = []
+    rectangles: list[PdfRectangle] = []
 
     adaptation: (
         SelectThingsAdaptation
@@ -130,11 +125,6 @@ class Exercise(PydanticBase, CreatedUpdatedByAtMixin):
         | MultipleChoicesInWordingAdaptation
         | None
     ) = None
-
-
-class ExtractionEvent(PydanticBase, CreatedUpdatedByAtMixin):
-    event: Annotated[str, Constant()]
-    exercise: Annotated[Exercise, Constant()]
 
 
 class SelectThingsAdaptationOptions(PydanticBase):

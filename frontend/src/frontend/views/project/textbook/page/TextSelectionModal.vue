@@ -5,13 +5,8 @@ import { BLabeledCheckbox, BLabeledTextarea, BButton } from '$/frontend/componen
 import { textualFieldNames } from '$/frontend/components/ExerciseFieldsForm.vue'
 import type { Model, TextualFieldName } from '$frontend/components/ExerciseFieldsForm.vue'
 import FloatingModal from '$frontend/components/FloatingModal.vue'
-import type { Point } from '$frontend/components/FloatingModal.vue'
+import type { Point, Rectangle } from './RectanglesHighlighter.vue'
 
-
-
-const props = defineProps<{
-  extractionEvents: object[],
-}>()
 
 const model = defineModel<Model>({required: true})
 
@@ -24,14 +19,28 @@ const textarea = ref<InstanceType<typeof BLabeledTextarea> | null>(null)
 
 const selectedText = ref('')
 const textToAdd = ref('')
+const pdfSha256 = ref('')
+const pdfPage = ref(0)
+const start = ref<Point>({x: 0, y: 0})
+const stop = ref<Point>({x: 0, y: 0})
 
 const canStripExerciceNumber = computed(() => model.value.number !== '' && selectedText.value.startsWith(model.value.number))
 const doStripExerciceNumber = ref(true)
 
-function show(text: string, at: Point) {
+function show(options: {
+  selectedText: string
+  at: Point
+  pdfSha256: string
+  pdfPage: number
+  rectangle: Rectangle
+}) {
   console.assert(modal.value !== null)
-  selectedText.value = text
-  modal.value.show(at)
+  selectedText.value = options.selectedText
+  pdfSha256.value = options.pdfSha256
+  pdfPage.value = options.pdfPage
+  start.value = options.rectangle.start
+  stop.value = options.rectangle.stop
+  modal.value.show(options.at)
 }
 
 watch([selectedText, doStripExerciceNumber], () => {
@@ -49,14 +58,21 @@ watch(computed(() => modal.value !== null && modal.value.active), active => {
 })
 
 function addTextTo(fieldName: TextualFieldName) {
-  const valueBefore = model.value[fieldName]
   if (model.value[fieldName] !== '' && !model.value[fieldName].endsWith('\n')) {
     model.value[fieldName] += '\n'
   }
   model.value[fieldName] += textToAdd.value
+  model.value.rectangles.push({
+    pdf_sha256: pdfSha256.value,
+    pdf_page: pdfPage.value,
+    coordinates: 'pdfjs',
+    start: start.value,
+    stop: stop.value,
+    text: textToAdd.value,
+    role: fieldName,
+  })
   console.assert(modal.value !== null)
   modal.value.hide()
-  props.extractionEvents.push({kind: `SelectedTextAddedTo${fieldName.charAt(0).toUpperCase()}${fieldName.slice(1)}`, valueBefore, valueAfter: model.value[fieldName]})
   emit('textAdded', fieldName, textToAdd.value)
 }
 
@@ -72,7 +88,7 @@ defineExpose({
     </template>
 
     <BLabeledCheckbox :label="$t('doStripExerciceNumber')" v-model="doStripExerciceNumber" :disabled="!canStripExerciceNumber" />
-    <BLabeledTextarea ref="textarea" :maxRows="15" v-model="textToAdd" @change="extractionEvents.push({kind: 'SelectedTextEdited', value: textToAdd})" />
+    <BLabeledTextarea ref="textarea" :maxRows="15" v-model="textToAdd" />
 
     <!-- <p><BButton secondary @click="state.boundingRectangle = selectedRectangle; hide()">{{ $t('setBoundingRect') }}</BButton></p> -->
     <p>{{ $t('addTo') }}</p>

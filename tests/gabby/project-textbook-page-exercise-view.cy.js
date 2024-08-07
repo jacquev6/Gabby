@@ -42,7 +42,7 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
     cy.get('label:contains("Example")').next().should('have.value', 'Example.')
     cy.get('label:contains("Clue")').next().should('have.value', 'Clue.')
     cy.get('label:contains("Instructions")').next().type('{moveToEnd}{backspace}.')
-    
+
     cy.get('label:contains("Replace")').next().type('.')
     cy.get('label:contains("with")').next().type('!')
     cy.get('label:contains("in")').last().next().select('wording')
@@ -116,7 +116,7 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
         .type('{moveToStart}')
         .then(el => el[0].setSelectionRange(start, end))
     }
-  
+
     cy.get('label:contains("Instructions")').next().as('instructions')
     cy.get('label:contains("Wording")').next().as('wording')
 
@@ -562,5 +562,259 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
     // The response for 'Foo' reaches the frontend after the response for 'Bar', but is discarded and 'Bar' is kept.
     cy.get('@editor').should('not.contain.text', 'Foo')
     cy.get('@editor').should('contain.text', 'Bar')
+  })
+
+  // Coordinates are in percentage of the canvas, for stability
+  function traceRectangle(alias, x1, y1, x2, y2, up=true) {
+    cy.get(alias).then(canvas => {
+      const w = canvas[0].width
+      const h = canvas[0].height
+      cy.get(alias).trigger('pointermove', x1 / 100 * w, y1 / 100 * h)
+      cy.get(alias).trigger('pointerdown', x1 / 100 * w, y1 / 100 * h, { pointerId: 1 })
+      cy.get(alias).trigger('pointermove', x2 / 100 * w, y2 / 100 * h)
+      if (up) {
+        cy.get(alias).trigger('pointerup', x2 / 100 * w, y2 / 100 * h, { pointerId: 1 })
+      }
+    })
+  }
+
+  it('collects rectangles', () => {
+    cy.viewport(1600, 1000)
+
+    cy.visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
+    setLocale()
+    cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
+    cy.get('div.busy').should('not.exist')
+
+    cy.get('label:contains("Number")').next().type('5')
+
+    cy.get('canvas[style="position: absolute; top: 0px; left: 0px;"]').last().as('canvas')
+    cy.get('canvas[style="position: absolute; top: 0px; left: 0px;"]').first().as('highlighter')
+
+    traceRectangle('@canvas', 5, 4, 45, 12)
+    cy.get('textarea').first().should('have.value', 'Recopie les mots suivants, puis\nentoure les pronoms personnels.\nIndique la classe des autres mots.')
+    cy.get('button:contains("Instructions")').click()
+    cy.get('@highlighter').should('have.attr', 'data-cy-drawnrectangles').then(JSON.parse).its('surrounded')
+      .should('deep.equal', [{'left': 56.26098090252517, 'top': 725.8392892267519, 'width': 226.18785085087657, 'height': 64.16036412560493}])
+
+    traceRectangle('@canvas', 6, 13, 44, 15.5)
+    cy.get('textarea').first().should('have.value', 'b. vous ◆ un ◆ arbre ◆ ce')
+    cy.get('button:contains("Wording")').click()
+    cy.get('@highlighter').should('have.attr', 'data-cy-drawnrectangles').then(JSON.parse).its('surrounded')
+      .should('deep.equal', [{'left': 56.26098090252517, 'top': 698.6526942582752, 'width': 226.18785085087657, 'height': 91.34695909408163}])
+
+    traceRectangle('@canvas', 6, 15, 38, 17.5)
+    cy.get('textarea').first().should('have.value', 'c. ils ◆ des ◆ grandir ◆ port')
+    cy.get('button:contains("Wording")').click()
+    cy.get('@highlighter').should('have.attr', 'data-cy-drawnrectangles').then(JSON.parse).its('surrounded')
+      .should('deep.equal', [{'left': 56.26098090252517, 'top': 682.3407372771892, 'width': 226.18785085087657, 'height': 107.65891607516767}])
+
+    traceRectangle('@canvas', 6, 17, 35, 19.5)
+    cy.get('textarea').first().should('have.value', 'd. dessin ◆ tu ◆ aller ◆ mon')
+    cy.get('button:contains("Example")').click()
+    cy.get('@highlighter').should('have.attr', 'data-cy-drawnrectangles').then(JSON.parse).its('surrounded')
+      .should('deep.equal', [{'left': 56.26098090252517, 'top': 667.1162440948424, 'width': 226.18785085087657, 'height': 122.88340925751447}])
+
+    traceRectangle('@canvas', 6, 19, 37, 21.5)
+    cy.get('textarea').first().should('have.value', 'e. elle ◆ gomme ◆ peindre ◆ ces')
+    cy.get('button:contains("Clue")').click()
+    cy.get('@highlighter').should('have.attr', 'data-cy-drawnrectangles').then(JSON.parse).its('surrounded')
+      .should('deep.equal', [{'left': 56.26098090252517, 'top': 650.8042871137563, 'width': 226.18785085087657, 'height': 139.1953662386005}])
+
+    cy.get('div.busy').should('not.exist')
+
+    cy.get('button:contains("Save then back to list")').click()
+    cy.location('pathname').should('equal', '/project-xkopqm/textbook-klxufv/page-7')
+    cy.get('div.busy', {timeout: 10000}).should('not.exist')
+
+    cy.intercept('GET', '/api/exercises/pghtfo?include=adaptation').as('getExercise')
+
+    cy.visit('/project-xkopqm/textbook-klxufv/page-7/exercise-pghtfo')
+    setLocale()
+    cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
+    cy.get('div.busy').should('not.exist')
+
+    cy.get('@getExercise').its('response.body.data.attributes.rectangles').should('deep.equal', [
+      {
+        'pdf_sha256': 'f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c',
+        'pdf_page': 2,
+        'coordinates': 'pdfjs',
+        'start': {
+          'x': 56.26098090252517,
+          'y': 789.9996533523569
+        },
+        'stop': {
+          'x': 282.44883175340175,
+          'y': 725.8392892267519
+        },
+        'text': 'Recopie les mots suivants, puis\nentoure les pronoms personnels.\nIndique la classe des autres mots.',
+        'role': 'instructions',
+      },
+      {
+        'pdf_sha256': 'f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c',
+        'pdf_page': 2,
+        'coordinates': 'pdfjs',
+        'start': {
+          'x': 62.78563044630046,
+          'y': 718.2270426355784
+        },
+        'stop': {
+          'x': 277.0116238002557,
+          'y': 698.6526942582752
+        },
+        'text': 'b. vous ◆ un ◆ arbre ◆ ce',
+        'role': 'wording',
+      },
+      {
+        'pdf_sha256': 'f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c',
+        'pdf_page': 2,
+        'coordinates': 'pdfjs',
+        'start': {
+          'x': 62.78563044630046,
+          'y': 703.0025494532315
+        },
+        'stop': {
+          'x': 243.30093449075005,
+          'y': 682.3407372771892
+        },
+        'text': 'c. ils ◆ des ◆ grandir ◆ port',
+        'role': 'wording',
+      },
+      {
+        'pdf_sha256': 'f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c',
+        'pdf_page': 2,
+        'coordinates': 'pdfjs',
+        'start': {
+          'x': 62.78563044630046,
+          'y': 686.6905924721455
+        },
+        'stop': {
+          'x': 225.9018690406826,
+          'y': 667.1162440948424
+        },
+        'text': 'd. dessin ◆ tu ◆ aller ◆ mon',
+        'role': 'example',
+      },
+      {
+        'pdf_sha256': 'f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c',
+        'pdf_page': 2,
+        'coordinates': 'pdfjs',
+        'start': {
+          'x': 62.78563044630046,
+          'y': 671.4660992897986
+        },
+        'stop': {
+          'x': 237.86372653760395,
+          'y': 650.8042871137563
+        },
+        'text': 'e. elle ◆ gomme ◆ peindre ◆ ces',
+        'role': 'clue',
+      },
+    ])
+
+    traceRectangle('@canvas', 6, 21, 37, 23.5)
+    cy.get('textarea').first().should('have.value', 'f. histoire ◆ nous ◆ gentil ◆ la')
+    cy.get('button:contains("Wording")').click()
+    cy.get('@highlighter').should('have.attr', 'data-cy-drawnrectangles').then(JSON.parse).its('surrounded')
+      .should('deep.equal', [{'left': 56.26098090252517, 'top': 635.5797939314094, 'width': 226.18785085087657, 'height': 154.41985942094743}])
+
+    cy.get('button:contains("Save then back to list")').click()
+    cy.location('pathname').should('equal', '/project-xkopqm/textbook-klxufv/page-7')
+    cy.get('div.busy', {timeout: 10000}).should('not.exist')
+
+    cy.visit('/project-xkopqm/textbook-klxufv/page-7/exercise-pghtfo')
+
+    cy.get('@getExercise').its('response.body.data.attributes.rectangles').should('deep.equal', [
+      {
+        'pdf_sha256': 'f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c',
+        'pdf_page': 2,
+        'coordinates': 'pdfjs',
+        'start': {
+          'x': 56.26098090252517,
+          'y': 789.9996533523569
+        },
+        'stop': {
+          'x': 282.44883175340175,
+          'y': 725.8392892267519
+        },
+        'text': 'Recopie les mots suivants, puis\nentoure les pronoms personnels.\nIndique la classe des autres mots.',
+        'role': 'instructions',
+      },
+      {
+        'pdf_sha256': 'f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c',
+        'pdf_page': 2,
+        'coordinates': 'pdfjs',
+        'start': {
+          'x': 62.78563044630046,
+          'y': 718.2270426355784
+        },
+        'stop': {
+          'x': 277.0116238002557,
+          'y': 698.6526942582752
+        },
+        'text': 'b. vous ◆ un ◆ arbre ◆ ce',
+        'role': 'wording',
+      },
+      {
+        'pdf_sha256': 'f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c',
+        'pdf_page': 2,
+        'coordinates': 'pdfjs',
+        'start': {
+          'x': 62.78563044630046,
+          'y': 703.0025494532315
+        },
+        'stop': {
+          'x': 243.30093449075005,
+          'y': 682.3407372771892
+        },
+        'text': 'c. ils ◆ des ◆ grandir ◆ port',
+        'role': 'wording',
+      },
+      {
+        'pdf_sha256': 'f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c',
+        'pdf_page': 2,
+        'coordinates': 'pdfjs',
+        'start': {
+          'x': 62.78563044630046,
+          'y': 686.6905924721455
+        },
+        'stop': {
+          'x': 225.9018690406826,
+          'y': 667.1162440948424
+        },
+        'text': 'd. dessin ◆ tu ◆ aller ◆ mon',
+        'role': 'example',
+      },
+      {
+        'pdf_sha256': 'f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c',
+        'pdf_page': 2,
+        'coordinates': 'pdfjs',
+        'start': {
+          'x': 62.78563044630046,
+          'y': 671.4660992897986
+        },
+        'stop': {
+          'x': 237.86372653760395,
+          'y': 650.8042871137563
+        },
+        'text': 'e. elle ◆ gomme ◆ peindre ◆ ces',
+        'role': 'clue',
+      },
+      {
+        'pdf_sha256': 'f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c',
+        'pdf_page': 2,
+        'coordinates': 'pdfjs',
+        'start': {
+            'x': 62.78563044630046,
+            'y': 655.1541423087126
+        },
+        'stop': {
+            'x': 237.86372653760395,
+            'y': 635.5797939314094
+        },
+        'text': 'f. histoire ◆ nous ◆ gentil ◆ la',
+        'role': 'wording',
+      },
+    ])
   })
 })

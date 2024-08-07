@@ -1489,7 +1489,6 @@ describe('ApiStore - Application - 1', () => {
       {
         textbookPage: 6, number: '14',
         instructions: 'Do this',
-        boundingRectangle: {start: {x: 0, y: 1}, stop: {x: 2, y: 3}},
       },
       {
         project: api.cache.getOne('project', 'xkopqm'),
@@ -1500,7 +1499,6 @@ describe('ApiStore - Application - 1', () => {
     expect(newExercise.id).to.equal('vodhqn')
     expectToBeTrue(newExercise.exists)
     expect(newExercise.attributes.instructions).to.equal('Do this')
-    expect(newExercise.attributes.boundingRectangle).to.deep.equal({start: {x: 0, y: 1}, stop: {x: 2, y: 3}})
 
     expect(api.cache.getOne('textbook', 'klxufv').inCache).to.be.false
 

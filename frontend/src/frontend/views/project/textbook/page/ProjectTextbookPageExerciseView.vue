@@ -8,7 +8,7 @@ import { BButton, BBusy } from '$/frontend/components/opinion/bootstrap'
 import { useApiStore } from '$frontend/stores/api'
 import bc from '$frontend/components/breadcrumbs'
 import ProjectTextbookPageLayout from './ProjectTextbookPageLayout.vue'
-import RectanglesHighlighter from './RectanglesHighlighter.vue'
+import RectanglesHighlighter, { makeBoundingRectangle, makeBoundingRectangles, type Rectangle } from './RectanglesHighlighter.vue'
 import { useProjectTextbookPageData } from './ProjectTextbookPageLayout.vue'
 import TwoResizableColumns from '$frontend/components/TwoResizableColumns.vue'
 import ExerciseFieldsForm from '$/frontend/components/ExerciseFieldsForm.vue'
@@ -19,8 +19,7 @@ import UndoRedoTool from './UndoRedoTool.vue'
 import { useExerciseCreationHistoryStore } from './ExerciseCreationHistoryStore'
 import { makeModel, assignModelFrom, getParsed, save } from '$frontend/components/ExerciseFieldsForm.vue'
 import TextSelectionModal from './TextSelectionModal.vue'
-import type { Rectangle, TextualFieldName, Selection } from '$/frontend/components/ExerciseFieldsForm.vue'
-import type { TextItem } from './TextPicker.vue'
+import type { TextualFieldName, Selection } from '$/frontend/components/ExerciseFieldsForm.vue'
 import AdaptationDetailsFieldsForm from '$/frontend/components/AdaptationDetailsFieldsForm.vue'
 import TextPicker from './TextPicker.vue'
 import type { PdfFile } from '$/frontend/stores/api'
@@ -63,12 +62,10 @@ function changeDisplayPage(newDisplayPage: number) {
 
 const { project, textbook, exercises } = useProjectTextbookPageData(projectId, textbookId, displayPage)
 
-const greyRectangles = computed(() =>
-  exercises.value.existingItems
-    .filter(exercise => exercise.id !== props.exerciseId)
-    .map(exercise => exercise.attributes.boundingRectangle)
-    .filter((x): x is Rectangle => x !== null)
-)
+const greyRectangles = computed(() => {
+  const otherExercises = exercises.value.existingItems.filter(exercise => exercise.id !== props.exerciseId)
+  return makeBoundingRectangles(otherExercises)
+})
 
 const exercise = computed(() => api.auto.getOne('exercise', props.exerciseId, {include: ['adaptation']}))
 
@@ -77,14 +74,12 @@ const exerciseBelongsToTextbookPage = computed(() =>
 )
 
 const surroundedRectangles = computed(() => {
-  if (exercise.value.inCache && exercise.value.exists) {
-    if (exercise.value.attributes.textbookPage === displayPage.value) {
-      if (exercise.value.attributes.boundingRectangle !== null) {
-        return [exercise.value.attributes.boundingRectangle]
-      }
-    }
+  const boundingRectangle = makeBoundingRectangle(model.rectangles)
+  if (boundingRectangle === null) {
+    return []
+  } else {
+    return [boundingRectangle]
   }
-  return []
 })
 
 const title = computed(() => {
@@ -110,7 +105,6 @@ const model = reactive(makeModel())
 const canWysiwyg = computed(() => model.adaptationType === 'multipleChoicesInInstructionsAdaptation')
 const wantWysiwyg = ref(true)
 const wysiwyg = computed(() => canWysiwyg.value && wantWysiwyg.value)
-const extractionEvents: object[] = []
 
 const resetUndoRedo = ref(0)
 
@@ -121,7 +115,7 @@ watch(
   ],
   () => {
     if (exercise.value.inCache && exercise.value.exists) {
-      assignModelFrom(model, exercise.value, extractionEvents)
+      assignModelFrom(model, exercise.value)
       resetUndoRedo.value++
     }
   },
@@ -132,23 +126,18 @@ const fields = ref<InstanceType<typeof ExerciseFieldsForm> | null>(null)
 
 const textSelectionModal = ref<InstanceType<typeof TextSelectionModal> | null>(null)
 
-function textSelected(pdfFile: PdfFile, pdf: {page: PDFPageProxy}, text: string, point: {clientX: number, clientY: number}, textItems: TextItem[], rectangle: Rectangle) {
+function textSelected(pdfFile: PdfFile, pdf: {page: PDFPageProxy}, selectedText: string, point: {clientX: number, clientY: number}, rectangle: Rectangle) {
   console.assert(pdfFile.inCache && pdfFile.exists)
   console.assert(pdfFile.relationships.namings.length > 0)
   console.assert(pdfFile.relationships.namings[0].inCache && pdfFile.relationships.namings[0].exists)
   console.assert(textSelectionModal.value !== null)
-  extractionEvents.push({
-    kind: "TextSelectedInPdf",
-    pdf: {
-      name: pdfFile.relationships.namings[0].attributes.name,
-      sha256: pdfFile.id,
-      page: pdf.page.pageNumber,
-      rectangle,
-    },
-    value: text,
-    textItems,
+  textSelectionModal.value.show({
+    selectedText,
+    at: {x: point.clientX, y: point.clientY},
+    pdfSha256: pdfFile.attributes.sha256,
+    pdfPage: pdf.page.pageNumber,
+    rectangle,
   })
-  textSelectionModal.value.show(text, {x: point.clientX, y: point.clientY})
 }
 
 const lastSelection = ref<Selection | null>(null)
@@ -167,7 +156,7 @@ const busy = ref(false)
 async function saveThenBack() {
   busy.value = true
   console.assert(exercise.value.inCache && exercise.value.exists)
-  await save(exercise.value, model, extractionEvents)
+  await save(exercise.value, model)
   busy.value = false
 
   router.push({
@@ -178,7 +167,7 @@ async function saveThenBack() {
 async function saveThenNext() {
   busy.value = true
   console.assert(exercise.value.inCache && exercise.value.exists)
-  await save(exercise.value, model, extractionEvents)
+  await save(exercise.value, model)
   busy.value = false
 
   const exerciseId = exerciseCreationHistory.next
@@ -254,7 +243,7 @@ const toolSlotNames = computed(() => {
 </script>
 
 <template>
-  <TextSelectionModal ref="textSelectionModal" v-model="model" :extractionEvents @textAdded="highlightSuffix" />
+  <TextSelectionModal ref="textSelectionModal" v-model="model" @textAdded="highlightSuffix" />
   <ProjectTextbookPageLayout
     :project :textbook :page :displayPage @update:displayPage="changeDisplayPage"
     :title :breadcrumbs
@@ -269,7 +258,7 @@ const toolSlotNames = computed(() => {
         class="img w-100" style="position: absolute; top: 0; left: 0"
         :width :height :transform
         :textContent="pdf.textContent"
-        @textSelected="(text, point, items, rectangle) => textSelected(pdfFile, pdf, text, point, items, rectangle)"
+        @textSelected="(text, point, rectangle) => textSelected(pdfFile, pdf, text, point, rectangle)"
       />
     </template>
 
@@ -282,7 +271,7 @@ const toolSlotNames = computed(() => {
               <BBusy :busy>
                 <ExerciseFieldsForm ref="fields"
                   v-model="model"
-                  :fixedNumber="true" :extractionEvents :wysiwyg :deltas
+                  :fixedNumber="true" :wysiwyg :deltas
                   @selected="selection => { lastSelection = selection }"
                 />
                 <template v-if="exerciseCreationHistory.current === null">

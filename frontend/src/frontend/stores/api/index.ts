@@ -26,7 +26,6 @@ export type { Item, List, InCache, Exists }
 
 export type ParsedExercise = Item<'parsedExercise'>
 export type Exercise = Item<'exercise'>
-export type ExtractionEvent = Item<'extractionEvent'>
 export type FillWithFreeTextAdaptation = Item<'fillWithFreeTextAdaptation'>
 export type MultipleChoicesInInstructionsAdaptation = Item<'multipleChoicesInInstructionsAdaptation'>
 export type MultipleChoicesInWordingAdaptation = Item<'multipleChoicesInWordingAdaptation'>
@@ -46,3 +45,5 @@ export type SelectThingsAdaptationOptions = schemas["SelectThingsAdaptationOptio
 export type FillWithFreeTextAdaptationOptions = schemas["FillWithFreeTextAdaptationOptions"]
 export type MultipleChoicesInInstructionsAdaptationOptions = schemas["MultipleChoicesInInstructionsAdaptationOptions"]
 export type MultipleChoicesInWordingAdaptationOptions = schemas["MultipleChoicesInWordingAdaptationOptions"]
+
+export type PdfRectangle = (Exercise & InCache & Exists)['attributes']['rectangles'][number]

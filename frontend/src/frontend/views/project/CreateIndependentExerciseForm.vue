@@ -19,9 +19,9 @@ const busy = ref(false)
 async function create() {
   const suggestedNextNumber = suggestNextNumber(model.number)
   busy.value = true
-  await createExercise(props.project, null, null, model, [])
+  await createExercise(props.project, null, null, model)
   busy.value = false
-  resetModel(model, [])
+  resetModel(model)
   model.number = suggestedNextNumber
   /* no await */ props.project.refresh()
 }
@@ -32,7 +32,7 @@ async function create() {
     <ExerciseFieldsForm
       ref="fields"
       v-model="model"
-      :fixedNumber="false" :extractionEvents="[]" :wysiwyg="false" :deltas="{instructions: []}" :addingChoices="false"
+      :fixedNumber="false" :wysiwyg="false" :deltas="{instructions: []}"
     />
     <BButton primary :disabled="fields === null || fields.saveDisabled" @click="create" data-cy="create-exercise">{{ $t('createExercise' )}}</BButton>
   </BBusy>

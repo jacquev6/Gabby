@@ -6,8 +6,8 @@ from .adaptations.multiple_choices_in_instructions import MultipleChoicesInInstr
 from .adaptations.multiple_choices_in_wording import MultipleChoicesInWordingAdaptation, MultipleChoicesInWordingAdaptationsResource
 from .adaptations.select_things import SelectThingsAdaptation, SelectThingsAdaptationsResource
 from .parsed_exercises import ParsedExercisesResource
-from .api_models import SyntheticError
-from .exercises import Exercise, ExercisesResource, ExtractionEventsResource
+from .api_models import PdfRectangle, Point, SyntheticError
+from .exercises import Exercise, ExercisesResource
 from .pdfs import PdfFile, PdfFileNaming, PdfFilesResource, PdfFileNamingsResource
 from .pings import PingsResource
 from .projects import Project, ProjectsResource
@@ -40,7 +40,6 @@ resources = [
     TextbooksResource(),
     SectionsResource(),
     ExercisesResource(),
-    ExtractionEventsResource(),
     SelectThingsAdaptationsResource(),
     FillWithFreeTextAdaptationsResource(),
     MultipleChoicesInInstructionsAdaptationsResource(),
@@ -462,7 +461,7 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                     "links": {"self": "http://server/exercises/bylced"},
                     "attributes": {
                         "textbookPage": 17, "number": "13",
-                        "boundingRectangle": None,
+                        "rectangles": [],
                         "instructions": "", "example": "", "clue": "", "wording": "",
                         "createdAt": response.json()["included"][0]["attributes"]["createdAt"],
                         "updatedAt": response.json()["included"][0]["attributes"]["updatedAt"],
@@ -481,7 +480,7 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                     "links": {"self": "http://server/exercises/wbqloc"},
                     "attributes": {
                         "textbookPage": 16, "number": "11",
-                        "boundingRectangle": None,
+                        "rectangles": [],
                         "instructions": "", "example": "", "clue": "", "wording": "",
                         "createdAt": response.json()["included"][1]["attributes"]["createdAt"],
                         "updatedAt": response.json()["included"][1]["attributes"]["updatedAt"],
@@ -669,7 +668,7 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                     "id": "bylced",
                     "attributes": {
                         "textbookPage": 13, "number": "5",
-                        "boundingRectangle": None,
+                        "rectangles": [],
                         "instructions": "", "example": "", "clue": "", "wording": "",
                         "createdAt": response.json()["included"][0]["attributes"]["createdAt"],
                         "updatedAt": response.json()["included"][0]["attributes"]["updatedAt"],
@@ -688,7 +687,7 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                     "id": "jkrudc",
                     "attributes": {
                         "textbookPage": 14, "number": "6",
-                        "boundingRectangle": None,
+                        "rectangles": [],
                         "instructions": "", "example": "", "clue": "", "wording": "",
                         "createdAt": response.json()["included"][1]["attributes"]["createdAt"],
                         "updatedAt": response.json()["included"][1]["attributes"]["updatedAt"],
@@ -707,7 +706,7 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                     "id": "wbqloc",
                     "attributes": {
                         "textbookPage": 12, "number": "4",
-                        "boundingRectangle": None,
+                        "rectangles": [],
                         "instructions": "", "example": "", "clue": "", "wording": "",
                         "createdAt": response.json()["included"][2]["attributes"]["createdAt"],
                         "updatedAt": response.json()["included"][2]["attributes"]["updatedAt"],
@@ -770,7 +769,7 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                     "links": {"self": "http://server/exercises/ahbwey"},
                     "attributes": {
                         "textbookPage": 17, "number": "9",
-                        "boundingRectangle": None,
+                        "rectangles": [],
                         "instructions": "", "example": "", "clue": "", "wording": "",
                         "createdAt": response.json()["included"][0]["attributes"]["createdAt"],
                         "updatedAt": response.json()["included"][0]["attributes"]["updatedAt"],
@@ -789,7 +788,7 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                     "links": {"self": "http://server/exercises/orxbzq"},
                     "attributes": {
                         "textbookPage": 16, "number": "8",
-                        "boundingRectangle": None,
+                        "rectangles": [],
                         "instructions": "", "example": "", "clue": "", "wording": "",
                         "createdAt": response.json()["included"][1]["attributes"]["createdAt"],
                         "updatedAt": response.json()["included"][1]["attributes"]["updatedAt"],
@@ -808,7 +807,7 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                     "links": {"self": "http://server/exercises/ufefwu"},
                     "attributes": {
                         "textbookPage": 15, "number": "7",
-                        "boundingRectangle": None,
+                        "rectangles": [],
                         "instructions": "", "example": "", "clue": "", "wording": "",
                         "createdAt": response.json()["included"][2]["attributes"]["createdAt"],
                         "updatedAt": response.json()["included"][2]["attributes"]["updatedAt"],
@@ -1004,7 +1003,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                 "links": {"self": "http://server/exercises/wbqloc"},
                 "attributes": {
                     "textbookPage": None, "number": "42",
-                    "boundingRectangle": None,
+                    "rectangles": [],
                     "instructions": "", "example": "", "clue": "", "wording": "",
                     "createdAt": response.json()["data"]["attributes"]["createdAt"],
                     "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
@@ -1037,7 +1036,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                 "type": "exercise",
                 "attributes": {
                     "textbookPage": 12, "number": "42",
-                    "boundingRectangle": None,
+                    "rectangles": [],
                 },
                 "relationships": {
                     "project": {"data": {"type": "project", "id": "xkopqm"}},
@@ -1054,7 +1053,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                 "links": {"self": "http://server/exercises/wbqloc"},
                 "attributes": {
                     "textbookPage": 12, "number": "42",
-                    "boundingRectangle": None,
+                    "rectangles": [],
                     "instructions": "", "example": "", "clue": "", "wording": "",
                     "createdAt": response.json()["data"]["attributes"]["createdAt"],
                     "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
@@ -1088,7 +1087,17 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                 "attributes": {
                     "textbookPage": 14, "number": "1",
                     "instructions": "instructions", "example": "example", "clue": "clue", "wording": "wording",
-                    "boundingRectangle": {"start": {"x": 0, "y": 1}, "stop": {"x": 2, "y": 3}},
+                    "rectangles": [
+                        {
+                            "pdf_sha256": "sha256",
+                            "pdf_page": 42,
+                            "coordinates": "pdfjs",
+                            "start": {"x": 10, "y": 20},
+                            "stop": {"x": 30, "y": 40},
+                            "text": "text",
+                            "role": "instructions",
+                        },
+                    ],
                 },
                 "relationships": {
                     "project": {"data": {"type": "project", "id": "xkopqm"}},
@@ -1106,7 +1115,17 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                 "attributes": {
                     "textbookPage": 14, "number": "1",
                     "instructions": "instructions", "example": "example", "clue": "clue", "wording": "wording",
-                    "boundingRectangle": {"start": {"x": 0, "y": 1}, "stop": {"x": 2, "y": 3}},
+                    "rectangles": [
+                        {
+                            "pdf_sha256": "sha256",  # @todo Rename to 'pdfSha256'
+                            "pdf_page": 42,  # @todo Rename to 'pdfPage'
+                            "coordinates": "pdfjs",
+                            "start": {"x": 10, "y": 20},
+                            "stop": {"x": 30, "y": 40},
+                            "text": "text",
+                            "role": "instructions",
+                        },
+                    ],
                     "createdAt": response.json()["data"]["attributes"]["createdAt"],
                     "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
                 },
@@ -1126,12 +1145,25 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
         self.assertEqual(exercise.project, self.project)
         self.assertEqual(exercise.textbook, self.textbook)
         self.assertEqual(exercise.textbook_page, 14)
-        self.assertEqual(exercise.bounding_rectangle, {"start": {"x": 0, "y": 1}, "stop": {"x": 2, "y": 3}})
         self.assertEqual(exercise.number, "1")
         self.assertEqual(exercise.instructions, "instructions")
         self.assertEqual(exercise.example, "example")
         self.assertEqual(exercise.clue, "clue")
         self.assertEqual(exercise.wording, "wording")
+        self.assertEqual(
+            exercise.rectangles,
+            [
+                PdfRectangle(
+                    pdf_sha256="sha256",
+                    pdf_page=42,
+                    coordinates="pdfjs",
+                    start=Point(x=10, y=20),
+                    stop=Point(x=30, y=40),
+                    text="text",
+                    role="instructions",
+                ),
+            ],
+        )
 
     def test_get__no_include(self):
         self.create_model(
@@ -1155,7 +1187,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                 "links": {"self": "http://server/exercises/wbqloc"},
                 "attributes": {
                     "textbookPage": 16, "number": "11",
-                    "boundingRectangle": None,
+                    "rectangles": [],
                     "instructions": "instructions", "example": "example", "clue": "clue", "wording": "wording",
                     "createdAt": response.json()["data"]["attributes"]["createdAt"],
                     "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
@@ -1192,7 +1224,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                 "links": {"self": "http://server/exercises/wbqloc"},
                 "attributes": {
                     "textbookPage": 16, "number": "11",
-                    "boundingRectangle": None,
+                    "rectangles": [],
                     "instructions": "instructions", "example": "example", "clue": "clue", "wording": "wording",
                     "createdAt": response.json()["data"]["attributes"]["createdAt"],
                     "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
@@ -1254,7 +1286,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                 "links": {"self": "http://server/exercises/wbqloc"},
                 "attributes": {
                     "textbookPage": 16, "number": "11",
-                    "boundingRectangle": None,
+                    "rectangles": [],
                     "instructions": "instructions", "example": "example", "clue": "clue", "wording": "wording",
                     "createdAt": response.json()["data"]["attributes"]["createdAt"],
                     "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
@@ -1306,7 +1338,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     "links": {"self": "http://server/exercises/wbqloc"},
                     "attributes": {
                         "textbookPage": 16, "number": "11",
-                        "boundingRectangle": None,
+                        "rectangles": [],
                         "instructions": "", "example": "", "clue": "", "wording": "",
                         "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
                         "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
@@ -1325,7 +1357,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     "links": {"self": "http://server/exercises/bylced"},
                     "attributes": {
                         "textbookPage": 17, "number": "3",
-                        "boundingRectangle": None,
+                        "rectangles": [],
                         "instructions": "", "example": "", "clue": "", "wording": "",
                         "createdAt": response.json()["data"][1]["attributes"]["createdAt"],
                         "updatedAt": response.json()["data"][1]["attributes"]["updatedAt"],
@@ -1358,7 +1390,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     "links": {"self": "http://server/exercises/jkrudc"},
                     "attributes": {
                         "textbookPage": 17, "number": "4",
-                        "boundingRectangle": None,
+                        "rectangles": [],
                         "instructions": "", "example": "", "clue": "", "wording": "",
                         "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
                         "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
@@ -1398,7 +1430,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     "links": {"self": "http://server/exercises/wbqloc"},
                     "attributes": {
                         "textbookPage": 16, "number": "11",
-                        "boundingRectangle": None,
+                        "rectangles": [],
                         "instructions": "", "example": "", "clue": "", "wording": "",
                         "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
                         "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
@@ -1417,7 +1449,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     "links": {"self": "http://server/exercises/bylced"},
                     "attributes": {
                         "textbookPage": 17, "number": "3",
-                        "boundingRectangle": None,
+                        "rectangles": [],
                         "instructions": "", "example": "", "clue": "", "wording": "",
                         "createdAt": response.json()["data"][1]["attributes"]["createdAt"],
                         "updatedAt": response.json()["data"][1]["attributes"]["updatedAt"],
@@ -1450,7 +1482,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     "links": {"self": "http://server/exercises/jkrudc"},
                     "attributes": {
                         "textbookPage": 17, "number": "4",
-                        "boundingRectangle": None,
+                        "rectangles": [],
                         "instructions": "", "example": "", "clue": "", "wording": "",
                         "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
                         "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
@@ -1492,7 +1524,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     "links": {"self": "http://server/exercises/wbqloc"},
                     "attributes": {
                         "textbookPage": 16, "number": "11",
-                        "boundingRectangle": None,
+                        "rectangles": [],
                         "instructions": "", "example": "", "clue": "", "wording": "",
                         "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
                         "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
@@ -1511,7 +1543,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     "links": {"self": "http://server/exercises/bylced"},
                     "attributes": {
                         "textbookPage": 17, "number": "13",
-                        "boundingRectangle": None,
+                        "rectangles": [],
                         "instructions": "", "example": "", "clue": "", "wording": "",
                         "createdAt": response.json()["data"][1]["attributes"]["createdAt"],
                         "updatedAt": response.json()["data"][1]["attributes"]["updatedAt"],
@@ -1571,7 +1603,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     "links": {"self": "http://server/exercises/jkrudc"},
                     "attributes": {
                         "textbookPage": 17, "number": "14",
-                        "boundingRectangle": None,
+                        "rectangles": [],
                         "instructions": "", "example": "", "clue": "", "wording": "",
                         "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
                         "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
@@ -1590,7 +1622,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     "links": {"self": "http://server/exercises/ufefwu"},
                     "attributes": {
                         "textbookPage": 12, "number": "4",
-                        "boundingRectangle": None,
+                        "rectangles": [],
                         "instructions": "", "example": "", "clue": "", "wording": "",
                         "createdAt": response.json()["data"][1]["attributes"]["createdAt"],
                         "updatedAt": response.json()["data"][1]["attributes"]["updatedAt"],
@@ -1682,7 +1714,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     "links": {"self": "http://server/exercises/wbqloc"},
                     "attributes": {
                         "textbookPage": 16, "number": "11",
-                        "boundingRectangle": None,
+                        "rectangles": [],
                         "instructions": "", "example": "", "clue": "", "wording": "",
                         "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
                         "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
@@ -1701,7 +1733,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     "links": {"self": "http://server/exercises/bylced"},
                     "attributes": {
                         "textbookPage": 17, "number": "13",
-                        "boundingRectangle": None,
+                        "rectangles": [],
                         "instructions": "", "example": "", "clue": "", "wording": "",
                         "createdAt": response.json()["data"][1]["attributes"]["createdAt"],
                         "updatedAt": response.json()["data"][1]["attributes"]["updatedAt"],
@@ -1734,7 +1766,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     "links": {"self": "http://server/exercises/jkrudc"},
                     "attributes": {
                         "textbookPage": 17, "number": "14",
-                        "boundingRectangle": None,
+                        "rectangles": [],
                         "instructions": "", "example": "", "clue": "", "wording": "",
                         "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
                         "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
@@ -1768,6 +1800,15 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
             example="example",
             clue="clue",
             wording="wording",
+            rectangles=[PdfRectangle(
+                pdf_sha256="sha256",
+                pdf_page=42,
+                coordinates="pdfjs",
+                start=Point(x=10, y=20),
+                stop=Point(x=30, y=40),
+                text="text",
+                role="instructions",
+            )],
         )
         self.assertEqual(self.count_models(Exercise), 1)
         self.assertEqual(exercise.id, 1)
@@ -1779,6 +1820,20 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
         self.assertEqual(exercise.example, "example")
         self.assertEqual(exercise.clue, "clue")
         self.assertEqual(exercise.wording, "wording")
+        self.assertEqual(
+            exercise.rectangles,
+            [
+                PdfRectangle(
+                    pdf_sha256="sha256",
+                    pdf_page=42,
+                    coordinates="pdfjs",
+                    start=Point(x=10, y=20),
+                    stop=Point(x=30, y=40),
+                    text="text",
+                    role="instructions",
+                ),
+            ],
+        )
 
         payload = {
             "data": {
@@ -1786,7 +1841,26 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                 "id": "wbqloc",
                 "attributes": {
                     "instructions": "INSTRUCTIONS", "example": "EXAMPLE", "clue": "CLUE", "wording": "WORDING",
-                    "boundingRectangle": {"start": {"x": 10, "y": 11}, "stop": {"x": 12, "y": 13}},
+                    "rectangles": [
+                        {
+                            "pdf_sha256": "sha256",
+                            "pdf_page": 42,
+                            "coordinates": "pdfjs",
+                            "start": {"x": 10, "y": 20},
+                            "stop": {"x": 30, "y": 40},
+                            "text": "text",
+                            "role": "instructions",
+                        },
+                        {
+                            "pdf_sha256": "sha256",
+                            "pdf_page": 42,
+                            "coordinates": "pdfjs",
+                            "start": {"x": 100, "y": 200},
+                            "stop": {"x": 300, "y": 400},
+                            "text": "text 2",
+                            "role": "instructions",
+                        },
+                    ],
                 },
             },
         }
@@ -1799,10 +1873,29 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                 "links": {"self": "http://server/exercises/wbqloc"},
                 "attributes": {
                     "textbookPage": 16, "number": "11",
-                    "boundingRectangle": {"start": {"x": 10, "y": 11}, "stop": {"x": 12, "y": 13}},
                     "instructions": "INSTRUCTIONS", "example": "EXAMPLE", "clue": "CLUE", "wording": "WORDING",
                     "createdAt": response.json()["data"]["attributes"]["createdAt"],
                     "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
+                    "rectangles": [
+                        {
+                            "pdf_sha256": "sha256",  # @todo Rename to 'pdfSha256'
+                            "pdf_page": 42,  # @todo Rename to 'pdfPage'
+                            "coordinates": "pdfjs",
+                            "start": {"x": 10, "y": 20},
+                            "stop": {"x": 30, "y": 40},
+                            "text": "text",
+                            "role": "instructions",
+                        },
+                        {
+                            "pdf_sha256": "sha256",
+                            "pdf_page": 42,
+                            "coordinates": "pdfjs",
+                            "start": {"x": 100, "y": 200},
+                            "stop": {"x": 300, "y": 400},
+                            "text": "text 2",
+                            "role": "instructions",
+                        },
+                    ],
                 },
                 "relationships": {
                     "project": {"data": {"type": "project", "id": "xkopqm"}},
@@ -1820,12 +1913,34 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
         self.assertEqual(exercise.project, self.project)
         self.assertEqual(exercise.textbook, self.textbook)
         self.assertEqual(exercise.textbook_page, 16)
-        self.assertEqual(exercise.bounding_rectangle, {"start": {"x": 10, "y": 11}, "stop": {"x": 12, "y": 13}})
         self.assertEqual(exercise.number, "11")
         self.assertEqual(exercise.instructions, "INSTRUCTIONS")
         self.assertEqual(exercise.example, "EXAMPLE")
         self.assertEqual(exercise.clue, "CLUE")
         self.assertEqual(exercise.wording, "WORDING")
+        self.assertEqual(
+            exercise.rectangles,
+            [
+                PdfRectangle(
+                    pdf_sha256="sha256",
+                    pdf_page=42,
+                    coordinates="pdfjs",
+                    start=Point(x=10, y=20),
+                    stop=Point(x=30, y=40),
+                    text="text",
+                    role="instructions",
+                ),
+                PdfRectangle(
+                    pdf_sha256="sha256",
+                    pdf_page=42,
+                    coordinates="pdfjs",
+                    start=Point(x=100, y=200),
+                    stop=Point(x=300, y=400),
+                    text="text 2",
+                    role="instructions",
+                ),
+            ],
+        )
 
     def test_patch__partial(self):
         self.create_model(
@@ -1858,7 +1973,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                 "links": {"self": "http://server/exercises/wbqloc"},
                 "attributes": {
                     "textbookPage": 16, "number": "11",
-                    "boundingRectangle": None,
+                    "rectangles": [],
                     "instructions": "INSTRUCTIONS", "example": "example", "clue": "clue", "wording": "wording",
                     "createdAt": response.json()["data"]["attributes"]["createdAt"],
                     "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
@@ -2178,7 +2293,7 @@ class AdaptationsApiTestCase(LoggedInApiTestCase):
                 "links": {"self": "http://server/exercises/wbqloc"},
                 "attributes": {
                     "textbookPage": None, "number": "Exercise",
-                    "boundingRectangle": None,
+                    "rectangles": [],
                     "instructions": "INSTRUCTIONS", "example": "", "clue": "", "wording": "",
                     "createdAt": response.json()["data"]["attributes"]["createdAt"],
                     "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
@@ -2219,7 +2334,7 @@ class AdaptationsApiTestCase(LoggedInApiTestCase):
                 "links": {"self": "http://server/exercises/wbqloc"},
                 "attributes": {
                     "textbookPage": None, "number": "Exercise",
-                    "boundingRectangle": None,
+                    "rectangles": [],
                     "instructions": "", "example": "", "clue": "", "wording": "",
                     "createdAt": response.json()["data"]["attributes"]["createdAt"],
                     "updatedAt": response.json()["data"]["attributes"]["updatedAt"],

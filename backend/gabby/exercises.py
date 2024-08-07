@@ -469,28 +469,27 @@ class ExercisesResource:
         project,
         textbook,
         textbook_page,
-        bounding_rectangle,
         number,
         instructions,
         wording,
         example,
         clue,
+        rectangles,
         adaptation,
         session: SessionDependable,
         authenticated_user: MandatoryAuthBearerDependable,
     ):
-        bounding_rectangle = None if bounding_rectangle is None else bounding_rectangle.model_dump()
         return create_item(
             session, Exercise,
             project=project,
             textbook=textbook,
             textbook_page=textbook_page,
-            bounding_rectangle=bounding_rectangle,
             number=number,
             instructions=instructions,
             wording=wording,
             example=example,
             clue=clue,
+            rectangles=rectangles,
             adaptation=adaptation,
             created_by=authenticated_user,
             updated_by=authenticated_user,
@@ -534,10 +533,7 @@ class ExercisesResource:
         authenticated_user: MandatoryAuthBearerDependable,
     ):
         previous_adaptation = item.adaptation
-        previous_bounding_rectangle = item.bounding_rectangle
         yield
-        if item.bounding_rectangle is not previous_bounding_rectangle and item.bounding_rectangle is not None:
-            item.bounding_rectangle = item.bounding_rectangle.model_dump()
         if previous_adaptation is not None and unwrap(item.adaptation) != unwrap(previous_adaptation):
             session.delete(previous_adaptation)
         item.updated_by = authenticated_user
@@ -564,69 +560,3 @@ class ExtractionEvent(OrmBase, CreatedUpdatedByAtMixin):
     exercise: orm.Mapped[Exercise] = orm.relationship(back_populates="extraction_events")
 
     event: orm.Mapped[str]
-
-
-class ExtractionEventsResource:
-    singular_name = "extraction_event"
-    plural_name = "extraction_events"
-
-    Model = api_models.ExtractionEvent
-
-    default_page_size = settings.GENERIC_DEFAULT_API_PAGE_SIZE
-
-    sqids = make_sqids(singular_name)
-
-    def create_item(
-        self,
-        exercise,
-        event,
-        session: SessionDependable,
-        authenticated_user: MandatoryAuthBearerDependable,
-    ):
-        return create_item(
-            session, ExtractionEvent,
-            exercise=exercise,
-            event=event,
-            created_by=authenticated_user,
-            updated_by=authenticated_user,
-        )
-
-    def get_item(
-        self,
-        id,
-        session: SessionDependable,
-        authenticated_user: MandatoryAuthBearerDependable,
-    ):
-        return get_item(session, ExtractionEvent, ExtractionEventsResource.sqids.decode(id)[0])
-
-    def get_page(
-        self,
-        first_index,
-        page_size,
-        session: SessionDependable,
-        authenticated_user: MandatoryAuthBearerDependable,
-    ):
-        query = sql.select(ExtractionEvent)
-        return get_page(session, query, first_index, page_size)
-
-    @contextmanager
-    def save_item(
-        self,
-        item,
-        session: SessionDependable,
-        authenticated_user: MandatoryAuthBearerDependable,
-    ):
-        yield
-        item.updated_by = authenticated_user
-        save_item(session, item)
-
-    def delete_item(
-        self,
-        item,
-        session: SessionDependable,
-        authenticated_user: MandatoryAuthBearerDependable,
-    ):
-        delete_item(session, item)
-
-
-set_wrapper(ExtractionEvent, orm_wrapper_with_sqids(ExtractionEventsResource.sqids))

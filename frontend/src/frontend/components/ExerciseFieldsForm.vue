@@ -1,19 +1,10 @@
 <script lang="ts">
 import { useApiStore } from '$frontend/stores/api'
 import type { Project, Textbook, Exercise, InCache, Exists, SelectThingsAdaptation, FillWithFreeTextAdaptation, MultipleChoicesInInstructionsAdaptation, MultipleChoicesInWordingAdaptation, ParsedExercise } from '$frontend/stores/api'
+import type { SelectThingsAdaptationOptions, FillWithFreeTextAdaptationOptions, MultipleChoicesInInstructionsAdaptationOptions, MultipleChoicesInWordingAdaptationOptions, PdfRectangle } from '$frontend/stores/api'
 
 
 const api = useApiStore()
-
-export interface Point {
-  x: number
-  y: number
-}
-
-export interface Rectangle {
-  start: Point
-  stop: Point
-}
 
 // @todo Automate updating this type when a new adaptation type is added
 export const adaptationTypes = ['selectThingsAdaptation', 'fillWithFreeTextAdaptation', 'multipleChoicesInInstructionsAdaptation', 'multipleChoicesInWordingAdaptation'] as const
@@ -29,30 +20,21 @@ export interface Selection {
 
 export interface Model {
   number: string
-  boundingRectangle: Rectangle | null,
   adaptationType: AdaptationType
-  selectThingsAdaptationOptions: {
-    colors: number
-    words: boolean
-    punctuation: boolean
-  }
-  fillWithFreeTextAdaptationOptions: {
-    placeholder: string
-  }
-  multipleChoicesInInstructionsAdaptationOptions: {
-    placeholder: string
-  }
-  multipleChoicesInWordingAdaptationOptions: {}
+  selectThingsAdaptationOptions: SelectThingsAdaptationOptions
+  fillWithFreeTextAdaptationOptions: FillWithFreeTextAdaptationOptions
+  multipleChoicesInInstructionsAdaptationOptions: MultipleChoicesInInstructionsAdaptationOptions
+  multipleChoicesInWordingAdaptationOptions: MultipleChoicesInWordingAdaptationOptions
   instructions: string
   wording: string
   example: string
   clue: string
+  rectangles: PdfRectangle[]
 }
 
 export function makeModel(): Model {
   return {
     number: '',
-    boundingRectangle: null,
     adaptationType: '-',
     selectThingsAdaptationOptions: {
       colors: 1,
@@ -70,12 +52,12 @@ export function makeModel(): Model {
     wording: '',
     example: '',
     clue: '',
+    rectangles: [],
   }
 }
 
-export function assignModelFrom(model: Model, exercise: Exercise & InCache & Exists, extractionEvents: object[]) {
+export function assignModelFrom(model: Model, exercise: Exercise & InCache & Exists) {
   model.number = exercise.attributes.number
-  model.boundingRectangle = exercise.attributes.boundingRectangle
   model.adaptationType = exercise.relationships.adaptation === null ? '-' : exercise.relationships.adaptation.type
   if (exercise.relationships.adaptation !== null && exercise.relationships.adaptation.inCache && exercise.relationships.adaptation.exists) {
     switch (exercise.relationships.adaptation.type) {
@@ -113,14 +95,11 @@ export function assignModelFrom(model: Model, exercise: Exercise & InCache & Exi
   model.wording = exercise.attributes.wording
   model.example = exercise.attributes.example
   model.clue = exercise.attributes.clue
-
-  extractionEvents.splice(0, extractionEvents.length)
+  model.rectangles = exercise.attributes.rectangles
 }
 
-export function resetModel(model: Model, extractionEvents: object[]) {
+export function resetModel(model: Model) {
   Object.assign(model, makeModel())
-
-  extractionEvents.splice(0, extractionEvents.length)
 }
 
 export function getAdaptationOptions(model: Model) {
@@ -157,18 +136,18 @@ export async function getParsed(model: Model) {
   return parsed
 }
 
-export async function create(project: Project, textbook: Textbook | null, textbookPage: number | null, model: Model, extractionEvents: object[]) {
+export async function create(project: Project, textbook: Textbook | null, textbookPage: number | null, model: Model) {
   const operations: any/* @todo Type */[] = [
     [
       'add', 'exercise', 'ex',
       {
         textbookPage,
-        boundingRectangle: model.boundingRectangle,
         number: model.number,
         instructions: model.instructions,
         wording: model.wording,
         example: model.example,
         clue: model.clue,
+        rectangles: model.rectangles,
       },
       {
         project,
@@ -183,26 +162,19 @@ export async function create(project: Project, textbook: Textbook | null, textbo
       {exercise: {type: 'exercise', lid: 'ex'}},
     ])
   }
-  for (const event of extractionEvents) {
-    operations.push([
-      'add', 'extractionEvent', null,
-      {event: JSON.stringify(event)},
-      {exercise: {type: 'exercise', lid: 'ex'}},
-    ])
-  }
   const results = await api.client.batch(...operations)
   return results[0] as Exercise & InCache & Exists  // @todo Remove type assertion when batch is typed
 }
 
-export async function save(exercise: Exercise & InCache & Exists, model: Model, extractionEvents: object[]) {
+export async function save(exercise: Exercise & InCache & Exists, model: Model) {
   // @todo Use a *single* batch request (when batch requests support 'update' and 'delete' operations)
   await exercise.patch(
     {
-      boundingRectangle: model.boundingRectangle,
       instructions: model.instructions,
       wording: model.wording,
       example: model.example,
       clue: model.clue,
+      rectangles: model.rectangles,
     },
     {},
   )
@@ -217,15 +189,6 @@ export async function save(exercise: Exercise & InCache & Exists, model: Model, 
       {exercise},
     )
   }
-  const operations = []
-  for (const event of extractionEvents) {
-    operations.push([
-      'add', 'extractionEvent', null,
-      {event: JSON.stringify(event)},
-      {exercise},
-    ])
-  }
-  await api.client.batch(...operations)
 }
 
 export function suggestNextNumber(number: string) {
@@ -248,7 +211,6 @@ import WysiwygInstructionsEditor from './WysiwygInstructionsEditor.vue'
 
 const props = defineProps<{
   fixedNumber: boolean
-  extractionEvents: object[]
   wysiwyg: boolean
   deltas: (ParsedExercise & InCache & Exists)['attributes']['delta'] | null
 }>()
@@ -321,7 +283,7 @@ defineExpose({
 </script>
 
 <template>
-  <BLabeledInput :label="$t('exerciseNumber')" v-model="model.number" :disabled="fixedNumber" @change="extractionEvents.push({kind: 'ExerciseNumberSetManually', value: model.number})" />
+  <BLabeledInput :label="$t('exerciseNumber')" v-model="model.number" :disabled="fixedNumber" />
   <div style="position: relative">
     <BLabeledSelect
       :label="$t('adaptationType')" v-model="model.adaptationType"
@@ -339,14 +301,12 @@ defineExpose({
       :label="$t('exerciseInstructions')"
       v-model="model.instructions"
       @select="(e: Event) => emitSelected('instructions', e)"
-      @change="extractionEvents.push({kind: 'InstructionsSetManually', value: model.instructions})"
     />
     <BLabeledTextarea
       ref="wordingTextArea"
       :label="$t('exerciseWording')"
       v-model="model.wording"
       @select="(e: Event) => emitSelected('wording', e)"
-      @change="extractionEvents.push({kind: 'WordingSetManually', value: model.wording})"
     />
     <div :class="{'container-fluid': noClueNoExample}">
       <div :class="{row: noClueNoExample}">
@@ -356,7 +316,6 @@ defineExpose({
             :label="$t('exerciseExample')"
             v-model="model.example"
             @select="(e: Event) => emitSelected('example', e)"
-            @change="extractionEvents.push({kind: 'ExampleSetManually', value: model.example})"
           />
         </div>
         <div :class="{col: noClueNoExample}" style="padding: 0;">
@@ -365,7 +324,6 @@ defineExpose({
             :label="$t('exerciseClue')"
             v-model="model.clue"
             @select="(e: Event) => emitSelected('clue', e)"
-            @change="extractionEvents.push({kind: 'ClueSetManually', value: model.clue})"
           />
         </div>
       </div>
