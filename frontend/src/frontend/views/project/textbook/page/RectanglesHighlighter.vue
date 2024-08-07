@@ -97,8 +97,6 @@ watch([props, context], () => {
   }
   context.value.fillStyle = 'rgb(0, 0, 255, 0.15)'
   context.value.fill()
-
-  console.log('drawnRectangles', drawnRectangles.value)
 })
 </script>
 
