@@ -5,8 +5,8 @@ function setLocale() {
   cy.focused().blur()
 }
 
-function test(path, title, f = () => {}) {
-  it(`${title} looks like this`, () => {
+function test(path, title, f = () => {}, it_ = it) {
+  it_(`${title} looks like this`, () => {
     cy.visit(path)
     setLocale()
     cy.get('.busy').should('not.exist')
@@ -16,9 +16,13 @@ function test(path, title, f = () => {}) {
   })
 }
 
-function loadTestPdf() {
-  cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
+test['only'] = (path, title, f) => test(path, title, f, it['only'])
+
+function loadPdf(name) {
+  return () => cy.get('input[type=file]').selectFile(`../pdf-examples/${name}.pdf`)
 }
+
+const loadTestPdf = loadPdf('test')
 
 describe('Gabby', () => {
   before(() => {
