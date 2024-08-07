@@ -171,8 +171,8 @@ const pdf = computedAsync(
               </PdfNavigationControls>
               <SectionEditor ref="sectionEditor" />
               <template v-if="section?.inCache && section.exists">
-                <BBusy size="7rem" :busy="pdfLoading" showWhileBusy="never" class="flex-fill overflow-auto" data-cy="pdf-container">
-                  <template v-if="pdf?.page">
+                <BBusy size="7rem" :busy="pdfLoading" showWhileBusy="afterNotBusy" class="flex-fill overflow-auto" data-cy="pdf-container">
+                  <template v-if="pdf !== null">
                     <div style="border: 1px solid black">
                       <!--
                         @todo Fix the PdfRenderer. Form the console logs:
