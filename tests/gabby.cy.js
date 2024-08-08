@@ -137,8 +137,6 @@ describe('Gabby', () => {
     cy.get('label:contains("Énoncé")').next().should('have.value', '... vide\n... vident')
     cy.screenshot('project-textbook-page-exercise/modify-exercise', {clip: {x: 0, y: 50, width: 575, height: 1000}})
 
-    cy.get('label:contains("Remplacer")').next().type('{selectAll}{backspace}')
-    cy.get('label:contains("dans")').next().select('everywhere').blur()
     cy.screenshot('project-textbook-page-exercise/tools', {clip: {x: 560, y: 0, width: 210, height: 500}})
 
     cy.get('label:contains("Type d\'adaptation")').next().select('selectThingsAdaptation')

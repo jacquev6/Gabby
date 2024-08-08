@@ -125,19 +125,6 @@
   "tools": "Tools",
   "undo": "Undo",
   "redo": "Redo",
-  "replace": "Replace",
-  "replaceWith": "with",
-  "replaceWhere": "in",
-  "replaceIn": {
-    "everywhere": "all fields",
-    "instructions": "the instructions",
-    "wording": "the wording",
-    "example": "the example",
-    "clue": "the clue"
-  },
-  "lineEnd": "Line end",
-  "paragraphEnd": "Paragraph end",
-  "apply": "Apply",
 
   "not-yet-implemented": "Not yet implemented",
 

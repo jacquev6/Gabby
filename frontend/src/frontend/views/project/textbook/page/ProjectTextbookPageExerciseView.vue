@@ -14,7 +14,6 @@ import TwoResizableColumns from '$frontend/components/TwoResizableColumns.vue'
 import ExerciseFieldsForm from '$/frontend/components/ExerciseFieldsForm.vue'
 import AdaptedExercise from './AdaptedExercise.vue'
 import ToolsGutter from './ToolsGutter.vue'
-import ReplaceTool from './ReplaceTool.vue'
 import UndoRedoTool from './UndoRedoTool.vue'
 import { useExerciseCreationHistoryStore } from './ExerciseCreationHistoryStore'
 import { makeModel, assignModelFrom, getParsed, save } from '$frontend/components/ExerciseFieldsForm.vue'
@@ -237,7 +236,6 @@ const toolSlotNames = computed(() => {
   if (model.adaptationType !== '-') {
     names.push('adaptationDetails')
   }
-  names.push('replace')
   return names
 })
 </script>
@@ -307,9 +305,6 @@ const toolSlotNames = computed(() => {
                   </template>
                   <template #adaptationDetails>
                     <AdaptationDetailsFieldsForm v-if="fields !== null" v-model="model" :wysiwyg :fields />
-                  </template>
-                  <template #replace>
-                    <ReplaceTool v-model="model" :lastSelection />
                   </template>
                 </ToolsGutter>
               </div>

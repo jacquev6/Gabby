@@ -125,19 +125,6 @@
   "tools": "Outils",
   "undo": "Annuler",
   "redo": "Refaire",
-  "replace": "Remplacer",
-  "replaceWith": "par",
-  "replaceWhere": "dans",
-  "replaceIn": {
-    "everywhere": "tous les champs",
-    "instructions": "la consigne",
-    "wording": "l'énoncé",
-    "example": "l'exemple",
-    "clue": "l'indice"
-  },
-  "lineEnd": "Fin de ligne",
-  "paragraphEnd": "Fin de paragraphe",
-  "apply": "Appliquer",
 
   "not-yet-implemented": "Pas encore implémenté",
 

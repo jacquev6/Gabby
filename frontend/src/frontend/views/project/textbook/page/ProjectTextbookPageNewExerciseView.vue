@@ -18,7 +18,6 @@ import { useApiStore } from '$/frontend/stores/api'
 import type { PdfFile } from '$/frontend/stores/api'
 import AdaptedExercise from './AdaptedExercise.vue'
 import ToolsGutter from './ToolsGutter.vue'
-import ReplaceTool from './ReplaceTool.vue'
 import UndoRedoTool from './UndoRedoTool.vue'
 import type { TextualFieldName, Selection } from '$/frontend/components/ExerciseFieldsForm.vue'
 import AdaptationDetailsFieldsForm from '$/frontend/components/AdaptationDetailsFieldsForm.vue'
@@ -206,7 +205,6 @@ const toolSlotNames = computed(() => {
   if (model.adaptationType !== '-') {
     names.push('adaptationDetails')
   }
-  names.push('replace')
   return names
 })
 </script>
@@ -278,9 +276,6 @@ const toolSlotNames = computed(() => {
                 </template>
                 <template #adaptationDetails>
                   <AdaptationDetailsFieldsForm v-if="fields !== null" v-model="model" :wysiwyg :fields/>
-                </template>
-                <template #replace>
-                  <ReplaceTool v-model="model" :lastSelection />
                 </template>
               </ToolsGutter>
             </div>

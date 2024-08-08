@@ -131,17 +131,17 @@ describe('Gabby', () => {
     cy.get('[data-cy="create-then-next"]').should('be.visible')
     cy.get('@container').its('scrollTop').should('be.gt', 0)
 
-    cy.get('[data-cy="gutter-2"]').should('have.length', 1).its('0').as('container')
-    cy.get('@container').should(haveVerticalScrollbarOnly)
-    cy.get('@container').its('scrollTop').should('eq', 0)
-    cy.get('[data-cy="apply-replace"]').should('not.be.visible')
-    cy.get('[data-cy="apply-replace"]').scrollIntoView()
-    cy.get('[data-cy="apply-replace"]').should('be.visible')
-    cy.get('@container').its('scrollTop').should('be.gt', 0)
-
     cy.get('label:contains("Adaptation type")').next().select('selectThingsAdaptation')
     cy.get('label:contains("Wording")').next().type('This is a quite long wording to ensure a scrollbar appears.')
     cy.get('label:contains("Instructions")').next().type('Hello')
+
+    cy.get('[data-cy="gutter-2"]').should('have.length', 1).its('0').as('container')
+    cy.get('@container').should(haveVerticalScrollbarOnly)
+    cy.get('@container').its('scrollTop').should('eq', 0)
+    cy.get('label:contains("Also select punctuation")').should('not.be.visible')
+    cy.get('label:contains("Also select punctuation")').scrollIntoView()
+    cy.get('label:contains("Also select punctuation")').should('be.visible')
+    cy.get('@container').its('scrollTop').should('be.gt', 0)
 
     cy.get('[data-cy="right-col-2"]').should('have.length', 1).its('0').as('container')
     cy.get('@container').should(haveVerticalScrollbarOnly)
@@ -181,9 +181,9 @@ describe('Gabby', () => {
     cy.get('[data-cy="gutter-2"]').should('have.length', 1).its('0').as('container')
     cy.get('@container').should(haveVerticalScrollbarOnly)
     cy.get('@container').its('scrollTop').should('eq', 0)
-    cy.get('[data-cy="apply-replace"]').should('not.be.visible')
-    cy.get('[data-cy="apply-replace"]').scrollIntoView()
-    cy.get('[data-cy="apply-replace"]').should('be.visible')
+    cy.get('label:contains("Also select punctuation")').should('not.be.visible')
+    cy.get('label:contains("Also select punctuation")').scrollIntoView()
+    cy.get('label:contains("Also select punctuation")').should('be.visible')
     cy.get('@container').its('scrollTop').should('be.gt', 0)
 
     cy.get('[data-cy="right-col-2"]').should('have.length', 1).its('0').as('container')
