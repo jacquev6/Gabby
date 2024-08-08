@@ -1,8 +1,5 @@
 import { useApiStore } from '../../frontend/src/frontend/stores/api'
 
-
-const isProdPreview = Cypress.env('IS_PROD_PREVIEW')
-
 function setLocale(locale = 'en') {
   cy.get('select[data-cy="language"]').last().select(locale)
 }
