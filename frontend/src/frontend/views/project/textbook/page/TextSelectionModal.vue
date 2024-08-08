@@ -4,7 +4,7 @@ import { ref, computed, watch } from 'vue'
 import { BLabeledCheckbox, BLabeledTextarea, BButton } from '$/frontend/components/opinion/bootstrap'
 import { textualFieldNames } from '$/frontend/components/ExerciseFieldsForm.vue'
 import type { Model, TextualFieldName } from '$frontend/components/ExerciseFieldsForm.vue'
-import FloatingModal from '$frontend/components/FloatingModal.vue'
+import { BModal } from '$frontend/components/opinion/bootstrap'
 import type { Point, Rectangle } from './RectanglesHighlighter.vue'
 
 
@@ -14,7 +14,7 @@ const emit = defineEmits<{
   textAdded: [fieldName: TextualFieldName, text: string],
 }>()
 
-const modal = ref<InstanceType<typeof FloatingModal> | null>(null)
+const modal = ref<InstanceType<typeof BModal> | null>(null)
 const textarea = ref<InstanceType<typeof BLabeledTextarea> | null>(null)
 
 const selectedText = ref('')
@@ -40,7 +40,7 @@ function show(options: {
   pdfPage.value = options.pdfPage
   start.value = options.rectangle.start
   stop.value = options.rectangle.stop
-  modal.value.show(options.at)
+  modal.value.show({at: options.at})
 }
 
 watch([selectedText, doStripExerciceNumber], () => {
@@ -82,20 +82,22 @@ defineExpose({
 </script>
 
 <template>
-  <FloatingModal ref="modal">
+  <BModal ref="modal" :fade="false">
     <template #header>
       <h1>{{ $t('selectedText') }}</h1>
     </template>
 
-    <BLabeledCheckbox :label="$t('doStripExerciceNumber')" v-model="doStripExerciceNumber" :disabled="!canStripExerciceNumber" />
-    <BLabeledTextarea ref="textarea" :maxRows="15" v-model="textToAdd" />
+    <template #body>
+      <BLabeledCheckbox :label="$t('doStripExerciceNumber')" v-model="doStripExerciceNumber" :disabled="!canStripExerciceNumber" />
+      <BLabeledTextarea ref="textarea" :maxRows="15" v-model="textToAdd" />
 
-    <p>{{ $t('addTo') }}</p>
-    <p>
-      <template v-for="fieldName in textualFieldNames">
-        <BButton primary @click="addTextTo(fieldName)">{{ $t(fieldName) }}</BButton>
-        <wbr />
-      </template>
-    </p>
-  </FloatingModal>
+      <p>{{ $t('addTo') }}</p>
+      <p>
+        <template v-for="fieldName in textualFieldNames">
+          <BButton primary @click="addTextTo(fieldName)">{{ $t(fieldName) }}</BButton>
+          <wbr />
+        </template>
+      </p>
+    </template>
+  </BModal>
 </template>
