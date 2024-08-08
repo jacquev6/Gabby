@@ -92,7 +92,6 @@
   "inputFile": "Fichier d'entrée",
   "existingExercises": "Exercices existants",
   "noExercises": "Pas encore d'exercices.",
-  "drawBoundingRectangle": "Dessinez un rectangle englobant l'exercice entier.",
   "create": "Nouvel exercice",
   "delete": "Supprimer",
   "save": "Enregistrer",
@@ -107,7 +106,6 @@
   "selectedText": "Texte sélectionné",
   "addTo": "Ajouter à :",
 
-  "setBoundingRect": "Utiliser comme rectangle englobant",
   "instructions": "Consigne",
   "example": "Exemple",
   "clue": "Indice",

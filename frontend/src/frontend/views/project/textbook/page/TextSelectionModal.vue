@@ -90,7 +90,6 @@ defineExpose({
     <BLabeledCheckbox :label="$t('doStripExerciceNumber')" v-model="doStripExerciceNumber" :disabled="!canStripExerciceNumber" />
     <BLabeledTextarea ref="textarea" :maxRows="15" v-model="textToAdd" />
 
-    <!-- <p><BButton secondary @click="state.boundingRectangle = selectedRectangle; hide()">{{ $t('setBoundingRect') }}</BButton></p> -->
     <p>{{ $t('addTo') }}</p>
     <p>
       <template v-for="fieldName in textualFieldNames">
