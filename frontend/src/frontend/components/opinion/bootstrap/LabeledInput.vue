@@ -21,6 +21,6 @@ defineExpose({
 <template>
   <div class="mb-3">
     <label class="form-label" :for="id">{{ label }}</label>
-    <input class="form-control" :id="id" v-model="model" v-bind="$attrs"/>
+    <input class="form-control" :id="id" v-model="model" v-bind="$attrs" />
   </div>
 </template>
