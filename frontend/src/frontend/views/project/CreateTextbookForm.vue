@@ -28,9 +28,10 @@ const pdf = ref<InfoDoc | null>(null)
 async function loadPdf(event: Event) {
   loadingPdf.value = true
   console.assert(event.target !== null)
-  const target = event.target as HTMLInputElement
-  console.assert(target.files !== null)
-  pdf.value = await pdfs.open(target.files[0])
+  const input = event.target as HTMLInputElement
+  if (input.files !== null && input.files.length !== 0) {
+    pdf.value = await pdfs.open(input.files[0])
+  }
   loadingPdf.value = false
 }
 
