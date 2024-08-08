@@ -37,13 +37,16 @@ fi
 
 gabby_version=$(date +%Y%m%d-%H%M%S)
 
+git --no-pager log --oneline --graph --decorate $(git tag | sort | tail -n 1)^..
+
+echo "Edit the 'doc/changes.rst' for version $gabby_version and press enter to continue, Ctrl+C to abort."
+read
+
 migrations=backend/gabby/migrations/versions
 find $migrations -name '*_dev.py' \
 | sed "s#$migrations/\(.*\)_dev\.py#\mv $migrations/\1_dev.py $migrations/\1_$gabby_version.py#" \
 | sh
 
-echo "Edit the changelog for version $gabby_version and press enter to continue, Ctrl+C to abort."
-read
 git add .
 git commit -m "Publish version $gabby_version"
 

@@ -12,6 +12,33 @@ Les améliorations techniques ne figurent que dans le `log git <https://github.c
 Les titres des sections de ce document correspondent au champ ``Gabby version`` dans le "À propos".
 Les versions sont nommées selon leur date de publication, au format ``YYYYMMDD-HHMMSS`` (année, mois, jour, tiret, heure, minute, seconde).
 
+20240808-133707
+---------------
+
+- Correction de bugs:
+    - préservation des espaces après les champs "texte libre" dans les exercices adaptés (cet espace disparaissait sous Chrome)
+    - le caret est maintenant correctement centré verticalement les champs "texte libre" (il était décalé vers le bas sous Chrome)
+    - choisir "Annuler" après avoir ouvert un PDF sous Chrome ne cause plus de crash
+
+- Améliorations d'interface:
+    - il est possible de changer la page affichée du PDF même lors de l'édition d'un exercice. Cela ne modifie pas la page de l'exercice lui-même
+    - un lien vers la liste des exercices de la page a été ajouté aux "breadcrumbs" (liens séparés par des chevrons en haut de la page) sur les pages d'ajout et d'édition d'exercice
+    - l'outil "Remplacer" a été supprimé. Je l'avais implémenté avant de comprendre la volonté "WYSIWYG"
+
+- Suppression de la notion de rectangle englobant:
+    - plus besoin de le tracer au début de la création d'un exercice
+    - les exercices existants sont grisés dans le PDF en fonction des rectangles utilisés pour en extraire les différents champs
+
+- Éditeur WYSIWYG:
+    - disponible **exclusivement** pour le champs "instructions" pour les exercices de type "Choix multiples (dans la consigne)"
+    - désactivable par une case à cocher (n'apparaissant que dans ce cas)
+    - permet l'ajout de gras, italique et de choix pour le QCM
+    - les formatages sont exclusifs les uns des autres
+    - conserve les fonctionnalités existantes :
+        - annuler / refaire
+        - mise en surbrillance du texte ajouté depuis le PDF
+        - *etc.*
+
 20240711-155526
 ---------------
 
