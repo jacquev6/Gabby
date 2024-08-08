@@ -1,7 +1,7 @@
 import type { components } from '../../../openapi'
 
 import { makeStore } from "./glue"
-import type { ApiStore, Item, List } from "./interface"
+import type { ApiStore, Item, List, InCache, Exists } from "./interface"
 
 
 // Multiple, lazy-instantiated singletons, à la Pinia, but handled manually for flexibility.
@@ -22,11 +22,10 @@ export function defineApiStore(id: string, options: {baseUrl: string}): () => Ap
 
 export const useApiStore = defineApiStore('api', {baseUrl: '/api'})
 
-export type { Item, List }
+export type { Item, List, InCache, Exists }
 
-export type AdaptedExercise = Item<'adaptedExercise'>
+export type ParsedExercise = Item<'parsedExercise'>
 export type Exercise = Item<'exercise'>
-export type ExtractionEvent = Item<'extractionEvent'>
 export type FillWithFreeTextAdaptation = Item<'fillWithFreeTextAdaptation'>
 export type MultipleChoicesInInstructionsAdaptation = Item<'multipleChoicesInInstructionsAdaptation'>
 export type MultipleChoicesInWordingAdaptation = Item<'multipleChoicesInWordingAdaptation'>
@@ -46,3 +45,5 @@ export type SelectThingsAdaptationOptions = schemas["SelectThingsAdaptationOptio
 export type FillWithFreeTextAdaptationOptions = schemas["FillWithFreeTextAdaptationOptions"]
 export type MultipleChoicesInInstructionsAdaptationOptions = schemas["MultipleChoicesInInstructionsAdaptationOptions"]
 export type MultipleChoicesInWordingAdaptationOptions = schemas["MultipleChoicesInWordingAdaptationOptions"]
+
+export type PdfRectangle = (Exercise & InCache & Exists)['attributes']['rectangles'][number]

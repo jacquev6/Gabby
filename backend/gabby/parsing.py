@@ -6,6 +6,7 @@ import lark
 
 from .testing import TestCase
 
+from . import exercise_delta
 from . import renderable
 
 
@@ -16,118 +17,568 @@ def memoize_parser(grammar, start):
     return lark.Lark(grammar, start=start)
 
 
-class _SectionTransformer(lark.Transformer):
-    def paragraph(self, args):
-        return args[0]
+def make_grammar(tags, whitespace):
+    grammar = (
+        r"""\
+            _separated{x, sep}: x (sep x)*
 
-    def strict_paragraph(self, sentences):
-        return renderable.Paragraph(sentences=sentences[0::2])
+            section: LEADING_WHITESPACE? [_separated{_paragraph, PARAGRAPH_SEPARATOR}] TRAILING_WHITESPACE?
 
-    def strict_sentence(self, args):
-        return renderable.Sentence(tokens=args)
+            _paragraph: strict_paragraph | lenient_paragraph
 
-    def in_sentence_punctuation(self, args):
-        return renderable.PlainText(text=args[0])
+            strict_paragraph.3: _separated{sentence, SENTENCE_SEPARATOR}
 
-    def end_of_sentence_punctuation(self, args):
-        return renderable.PlainText(text=args[0])
+            sentence.4: (_tag | WORD | PUNCTUATION_IN_SENTENCE | WHITESPACE_IN_SENTENCE)+ PUNCTUATION_AT_END_OF_SENTENCE
 
-    def lenient_paragraph(self, args):
-        return renderable.Paragraph(sentences=[renderable.Sentence(tokens=args)])
+            lenient_paragraph.2: (_paragraph_token | WHITESPACE_IN_SENTENCE)* _paragraph_token
+            _paragraph_token: _tag | WORD | PUNCTUATION_IN_LENIENT_PARAGRAPH
 
-    def word(self, args):
-        return renderable.PlainText(text=args[0])
+            WORD: /\w+/
 
-    def whitespace(self, args):
-        return renderable.Whitespace()
+            ANY_WHITESPACE: /[ \t\n\r]+/
 
-    def punctuation(self, args):
-        return renderable.PlainText(text=args[0])
+            LEADING_WHITESPACE: ANY_WHITESPACE
+            TRAILING_WHITESPACE: ANY_WHITESPACE
+            PARAGRAPH_SEPARATOR: PARAGRAPH_SEPARATING_WHITESPACE
+            SENTENCE_SEPARATOR: NON_PARAGRAPH_SEPARATING_WHITESPACE
+            WHITESPACE_IN_SENTENCE: NON_PARAGRAPH_SEPARATING_WHITESPACE
 
-    def INT(self, arg):
-        return int(arg.value)
+            PUNCTUATION_IN_LENIENT_PARAGRAPH: /\.\.\.|[^\w \t\n\r]/
+            PUNCTUATION_IN_SENTENCE: /[,;:]/
+            PUNCTUATION_AT_END_OF_SENTENCE: /\.\.\.|[.!?…]/
+
+            # Terminals usable in tags
+            STR: /[^}|]+/
+            INT: /[0-9]+/
+        """
+        + whitespace
+        + f"_tag.1: {' | '.join(f"{tag}_tag" for tag in tags.keys())}\n"
+        + "\n".join(f'{tag}_tag: "{{" "{tag.replace("_", "-")}" {definition} "}}"' for (tag, definition) in tags.items())
+    )
+    if len(tags) == 0:
+        return grammar.replace("_tag | ", "")
+    else:
+        return grammar
 
 
-class _SectionParser(abc.ABC):
-    def __init__(self, tags, transformer):
-        grammar = (
-            r"""\
-                section: paragraph ("\n\n" paragraph)*
+def make_instructions_grammar(tags):
+    return make_grammar(
+        tags,
+        r"""
+            PARAGRAPH_SEPARATING_WHITESPACE: /([ \t]*(\r\n|\n)){2,}[ \t]*/
+            NON_PARAGRAPH_SEPARATING_WHITESPACE: /([ \t]*(\r\n|\r|\n)[ \t]*)|[ \t]+/
+        """
+    )
 
-                paragraph: strict_paragraph | lenient_paragraph
 
-                strict_paragraph: strict_sentence (whitespace strict_sentence)*
-                strict_sentence: (_tag | word | in_sentence_punctuation | whitespace)+ end_of_sentence_punctuation
-                in_sentence_punctuation: /[,;:]/
-                end_of_sentence_punctuation: /\.\.\.|[.!?…]/
+def GrammarTestCase(grammar):
+    class Transformer(lark.Transformer):
+        def __getattr__(self, name):
+            if name.isupper():
+                def token(arg):
+                    return (name, arg.value)
+                return token
+            else:
+                def rule(args):
+                    return (name.value, args)
+                return rule
 
-                lenient_paragraph: (_tag | word | punctuation | whitespace)+
+    parser = lark.Lark(grammar, start="section")
+    transformer = Transformer()
 
-                # Keep these three regular expressions mutually exclusive
-                word: /[\w]+/
-                whitespace: /[ \t]+/
-                punctuation: /\.\.\.|[^\w \t\n]/
+    class GrammarTestCase(TestCase):
+        def do_test(self, test, expected_ast):
+            parse_tree = parser.parse(test)
+            actual_ast = transformer.transform(parse_tree)
+            if actual_ast != expected_ast:
+                print(actual_ast)
+            self.assertEqual(actual_ast, expected_ast)
 
-                # Rules uses in tags; do not delete
-                STR: /[^}|]+/
-                INT: /[0-9]+/
-            """
-            + f"_tag: {' | '.join(f"{tag}_tag" for tag in tags.keys())}\n"
-            + "\n".join(f'{tag}_tag: "{{" "{tag.replace("_", "-")}" {definition} "}}"' for (tag, definition) in tags.items())
+    return GrammarTestCase
+
+
+class InstructionsGrammarWithTagsTestCase(GrammarTestCase(make_instructions_grammar({
+    "empty": "",
+    "single_str": r""" "|" STR """,
+    "int_and_str": r""" "|" INT "|" STR """,
+    "several_ints": r""" ("|" INT)+ """,
+}))):
+    def test_empty(self):
+        self.do_test("", ("section", []))
+
+    def test_only_whitespace(self):
+        self.do_test("    \t\n\n \t  \r\n\n\n    ", ("section", [("LEADING_WHITESPACE", "    \t\n\n \t  \r\n\n\n    ")]))
+
+    def test_simple_strict_paragraphs(self):
+        self.do_test(
+            "First sentence. Second sentence.\n\nThird sentence.\n\nFourth sentence.",
+            ("section", [
+                ("strict_paragraph", [
+                    ("sentence", [("WORD", "First"), ("WHITESPACE_IN_SENTENCE", " "), ("WORD", "sentence"), ("PUNCTUATION_AT_END_OF_SENTENCE", ".")]),
+                    ("SENTENCE_SEPARATOR", " "),
+                    ("sentence", [("WORD", "Second"), ("WHITESPACE_IN_SENTENCE", " "), ("WORD", "sentence"), ("PUNCTUATION_AT_END_OF_SENTENCE", ".")]),
+                ]),
+                ("PARAGRAPH_SEPARATOR", "\n\n"),
+                ("strict_paragraph", [
+                    ("sentence", [("WORD", "Third"), ("WHITESPACE_IN_SENTENCE", " "), ("WORD", "sentence"), ("PUNCTUATION_AT_END_OF_SENTENCE", ".")]),
+                ]),
+                ("PARAGRAPH_SEPARATOR", "\n\n"),
+                ("strict_paragraph", [
+                    ("sentence", [("WORD", "Fourth"), ("WHITESPACE_IN_SENTENCE", " "), ("WORD", "sentence"), ("PUNCTUATION_AT_END_OF_SENTENCE", ".")]),
+                ]),
+            ]),
         )
-        self.parser = memoize_parser(grammar, start="section")
+
+    def test_punctuation_at_end_of_sentence(self):
+        for punctuation in [".", "!", "?", "…", "..."]:
+            with self.subTest(punctuation=punctuation):
+                self.do_test(
+                    f"Strict sentence{punctuation}",
+                    ("section", [("strict_paragraph", [("sentence", [("WORD", "Strict"), ("WHITESPACE_IN_SENTENCE", " "), ("WORD", "sentence"), ("PUNCTUATION_AT_END_OF_SENTENCE", punctuation)])])]),
+                )
+
+    def test_punctuation_in_sentence(self):
+        for punctuation in [",", ";", ":"]:
+            with self.subTest(punctuation=punctuation):
+                self.do_test(
+                    f"Strict{punctuation} sentence.",
+                    ("section", [("strict_paragraph", [("sentence", [
+                        ("WORD", "Strict"), ("PUNCTUATION_IN_SENTENCE", punctuation), ("WHITESPACE_IN_SENTENCE", " "), ("WORD", "sentence"), ("PUNCTUATION_AT_END_OF_SENTENCE", "."),
+                    ])])]),
+                )
+
+    whitespaces_in_sentence = [
+        " ",
+        "\t",
+        " \t",
+        "\t " * 5,
+        "\n",
+        "\r",
+        "\r\n",
+        "  \t\n",
+        "  \t\n \t ",
+        "\r",
+        "  \t\r  ",
+    ]
+
+    def test_whitespace_in_sentence(self):
+        for whitespace in self.whitespaces_in_sentence:
+            with self.subTest(whitespace=whitespace):
+                self.do_test(
+                    f"Strict{whitespace}sentence.",
+                    ("section", [("strict_paragraph", [("sentence", [("WORD", "Strict"), ("WHITESPACE_IN_SENTENCE", whitespace), ("WORD", "sentence"), ("PUNCTUATION_AT_END_OF_SENTENCE", ".")])])]),
+                )
+
+    def test_leading_and_trailing_space(self):
+        self.do_test(
+            "    \t\n\n \t  \r\n\n\n    Strict sentence.    \t\n\n \t  \r\n\n\n    ",
+            ("section", [
+                ("LEADING_WHITESPACE", "    \t\n\n \t  \r\n\n\n    "),
+                ("strict_paragraph", [
+                    ("sentence", [("WORD", "Strict"), ("WHITESPACE_IN_SENTENCE", " "), ("WORD", "sentence"), ("PUNCTUATION_AT_END_OF_SENTENCE", ".")]),
+                ]),
+                ("TRAILING_WHITESPACE", "    \t\n\n \t  \r\n\n\n    "),
+            ]),
+        )
+
+    paragraph_separators = [
+        "\n\n",
+        "\r\n\n",
+        "\r\n\r\n",
+        "\n\r\n",
+        "\n" * 5,
+        "\r\n" * 5,
+        "\n    \n",
+        "     \n\n",
+        "\r\n\t\r\n",
+        "    \n    \n",
+        "    \n" * 5,
+        "    \n    \n    ",
+    ]
+
+    def test_strict_paragraph_separator(self):
+        for separator in self.paragraph_separators:
+            with self.subTest(separator=separator):
+                self.do_test(
+                    "First sentence." + separator + "Second sentence.",
+                    ("section", [
+                        ("strict_paragraph", [
+                            ("sentence", [("WORD", "First"), ("WHITESPACE_IN_SENTENCE", " "), ("WORD", "sentence"), ("PUNCTUATION_AT_END_OF_SENTENCE", ".")]),
+                        ]),
+                        ("PARAGRAPH_SEPARATOR", separator),
+                        ("strict_paragraph", [
+                            ("sentence", [("WORD", "Second"), ("WHITESPACE_IN_SENTENCE", " "), ("WORD", "sentence"), ("PUNCTUATION_AT_END_OF_SENTENCE", ".")]),
+                        ]),
+                    ]),
+                )
+
+    sentence_separators = whitespaces_in_sentence
+
+    def test_sentence_separator(self):
+        for separator in self.sentence_separators:
+            with self.subTest(separator=separator):
+                self.do_test(
+                    "First sentence." + separator + "Second sentence.",
+                    ("section", [("strict_paragraph", [
+                        ("sentence", [("WORD", "First"), ("WHITESPACE_IN_SENTENCE", " "), ("WORD", "sentence"), ("PUNCTUATION_AT_END_OF_SENTENCE", ".")]),
+                        ("SENTENCE_SEPARATOR", separator),
+                        ("sentence", [("WORD", "Second"), ("WHITESPACE_IN_SENTENCE", " "), ("WORD", "sentence"), ("PUNCTUATION_AT_END_OF_SENTENCE", ".")]),
+                    ])]),
+                )
+
+    def test_simple_lenient_paragraphs(self):
+        self.do_test(
+            "First # sentence. Second # sentence.\n\nThird # sentence.\n\nFourth # sentence.",
+            ("section", [
+                ("lenient_paragraph", [
+                    ("WORD", "First"),
+                    ("WHITESPACE_IN_SENTENCE", " "),
+                    ("PUNCTUATION_IN_LENIENT_PARAGRAPH", "#"),
+                    ("WHITESPACE_IN_SENTENCE", " "),
+                    ("WORD", "sentence"),
+                    ("PUNCTUATION_IN_LENIENT_PARAGRAPH", "."),
+                    ("WHITESPACE_IN_SENTENCE", " "),
+                    ("WORD", "Second"),
+                    ("WHITESPACE_IN_SENTENCE", " "),
+                    ("PUNCTUATION_IN_LENIENT_PARAGRAPH", "#"),
+                    ("WHITESPACE_IN_SENTENCE", " "),
+                    ("WORD", "sentence"),
+                    ("PUNCTUATION_IN_LENIENT_PARAGRAPH", "."),
+                ]),
+                ("PARAGRAPH_SEPARATOR", "\n\n"),
+                ("lenient_paragraph", [
+                    ("WORD", "Third"),
+                    ("WHITESPACE_IN_SENTENCE", " "),
+                    ("PUNCTUATION_IN_LENIENT_PARAGRAPH", "#"),
+                    ("WHITESPACE_IN_SENTENCE", " "),
+                    ("WORD", "sentence"),
+                    ("PUNCTUATION_IN_LENIENT_PARAGRAPH", "."),
+                ]),
+                ("PARAGRAPH_SEPARATOR", "\n\n"),
+                ("lenient_paragraph", [
+                    ("WORD", "Fourth"),
+                    ("WHITESPACE_IN_SENTENCE", " "),
+                    ("PUNCTUATION_IN_LENIENT_PARAGRAPH", "#"),
+                    ("WHITESPACE_IN_SENTENCE", " "),
+                    ("WORD", "sentence"),
+                    ("PUNCTUATION_IN_LENIENT_PARAGRAPH", "."),
+                ]),
+            ]),
+        )
+
+    def test_lenient_paragraph_separator(self):
+        for separator in self.paragraph_separators:
+            with self.subTest(separator=separator):
+                self.do_test(
+                    "First #." + separator + "Second #.",
+                    ("section", [
+                        ("lenient_paragraph", [
+                            ("WORD", "First"), ("WHITESPACE_IN_SENTENCE", " "), ("PUNCTUATION_IN_LENIENT_PARAGRAPH", "#"), ("PUNCTUATION_IN_LENIENT_PARAGRAPH", "."),
+                        ]),
+                        ("PARAGRAPH_SEPARATOR", separator),
+                        ("lenient_paragraph", [
+                            ("WORD", "Second"), ("WHITESPACE_IN_SENTENCE", " "), ("PUNCTUATION_IN_LENIENT_PARAGRAPH", "#"), ("PUNCTUATION_IN_LENIENT_PARAGRAPH", "."),
+                        ]),
+                    ]),
+                )
+
+    def test_exotic_characters(self):
+        self.do_test(
+            "Straße 120 àéïîöôù",
+            ("section", [
+                ("lenient_paragraph", [
+                    ("WORD", "Straße"), ("WHITESPACE_IN_SENTENCE", " "), ("WORD", "120"), ("WHITESPACE_IN_SENTENCE", " "), ("WORD", "àéïîöôù"),
+                ]),
+            ]),
+        )
+
+    def test_empty_tag_in_strict_paragraph(self):
+        self.do_test(
+            "{empty}.",
+            ("section", [("strict_paragraph", [("sentence", [("empty_tag", []), ("PUNCTUATION_AT_END_OF_SENTENCE", ".")])])])
+        )
+
+    def test_empty_tag_in_lenient_paragraph(self):
+        self.do_test(
+            "{empty}",
+            ("section", [("lenient_paragraph", [("empty_tag", [])])])
+        )
+
+    def test_single_str_tag_in_strict_paragraph(self):
+        self.do_test(
+            "{single-str|foo}.",
+            ("section", [("strict_paragraph", [("sentence", [("single_str_tag", [("STR", "foo")]), ("PUNCTUATION_AT_END_OF_SENTENCE", ".")])])])
+        )
+
+    def test_single_str_tag_in_lenient_paragraph(self):
+        self.do_test(
+            "{single-str|foo}",
+            ("section", [("lenient_paragraph", [("single_str_tag", [("STR", "foo")])])])
+        )
+
+    def test_int_and_str_tag_in_strict_paragraph(self):
+        self.do_test(
+            "{int-and-str|12|bar baz}.",
+            ("section", [("strict_paragraph", [("sentence", [("int_and_str_tag", [("INT", "12"), ("STR", "bar baz")]), ("PUNCTUATION_AT_END_OF_SENTENCE", ".")])])])
+        )
+
+    def test_int_and_str_tag_in_lenient_paragraph(self):
+        self.do_test(
+            "{int-and-str|12|bar baz}",
+            ("section", [("lenient_paragraph", [("int_and_str_tag", [("INT", "12"), ("STR", "bar baz")])])])
+        )
+
+    def test_several_ints_tag_in_strict_paragraph(self):
+        self.do_test(
+            "{several-ints|42|43|45}.",
+            ("section", [("strict_paragraph", [("sentence", [("several_ints_tag", [("INT", "42"), ("INT", "43"), ("INT", "45")]), ("PUNCTUATION_AT_END_OF_SENTENCE", ".")])])])
+        )
+
+    def test_several_ints_tag_in_lenient_paragraph(self):
+        self.do_test(
+            "{several-ints|42|43|45}",
+            ("section", [("lenient_paragraph", [("several_ints_tag", [("INT", "42"), ("INT", "43"), ("INT", "45")])])])
+        )
+
+
+class InstructionsGrammarWithoutTagsTestCase(GrammarTestCase(make_instructions_grammar({}))):
+    def test_empty(self):
+        self.do_test("", ("section", []))
+
+
+class InstructionsSectionParser:
+    def __init__(self, tags, transformer):
+        tags = dict(
+            bold = r""" "|" STR """,
+            italic = r""" "|" STR """,
+            **tags
+        )
+        self.parser = memoize_parser(make_instructions_grammar(tags), start="section")
         self.transformer = transformer
 
     def __call__(self, section: str):
-        if section == "":
-            return self.transformer.section([])
-        else:
-            normalized = self.normalize(section)
-            try:
-                return self.transformer.transform(self.parser.parse(normalized))
-                # return self.post_process(self.transformer.transform(self.parser.parse(normalized)))
-            except lark.exceptions.ParseError as e:
-                raise ValueError(f"Error parsing section {normalized}: {e}")
+        try:
+            parsed = self.parser.parse(section)
+        except lark.exceptions.ParseError as e:
+            raise ValueError(f"Error parsing instructions section {section}: {e}")
+        try:
+            return self.transformer.transform(parsed)
+        except lark.exceptions.VisitError as e:
+            raise ValueError(f"Error transforming instructions section {section}: {e}")
+
+
+class Transformer(lark.Transformer, abc.ABC):
+    @abc.abstractmethod
+    def section(self, args):
+        pass
 
     @abc.abstractmethod
-    def normalize(self, section: str) -> str:
-        raise NotImplementedError()
+    def strict_paragraph(self, args):
+        pass
 
-    # @abc.abstractmethod
-    # def post_process(self, section: renderable.Section) -> renderable.Section:
-    #     raise NotImplementedError()
+    @abc.abstractmethod
+    def sentence(self, args):
+        pass
+
+    @abc.abstractmethod
+    def lenient_paragraph(self, args):
+        pass
+
+    @abc.abstractmethod
+    def WORD(self, arg):
+        pass
+
+    @abc.abstractmethod
+    def LEADING_WHITESPACE(self, arg):
+        pass
+
+    @abc.abstractmethod
+    def TRAILING_WHITESPACE(self, arg):
+        pass
+
+    @abc.abstractmethod
+    def PARAGRAPH_SEPARATOR(self, arg):
+        pass
+
+    @abc.abstractmethod
+    def SENTENCE_SEPARATOR(self, arg):
+        pass
+
+    @abc.abstractmethod
+    def WHITESPACE_IN_SENTENCE(self, arg):
+        pass
+
+    @abc.abstractmethod
+    def PUNCTUATION_AT_END_OF_SENTENCE(self, arg):
+        pass
+
+    @abc.abstractmethod
+    def PUNCTUATION_IN_SENTENCE(self, arg):
+        pass
+
+    @abc.abstractmethod
+    def PUNCTUATION_IN_LENIENT_PARAGRAPH(self, arg):
+        pass
+
+    @abc.abstractmethod
+    def INT(self, arg):
+        pass
+
+    @abc.abstractmethod
+    def STR(self, arg):
+        pass
+
+    @abc.abstractmethod
+    def bold_tag(self, args):
+        pass
+
+    @abc.abstractmethod
+    def italic_tag(self, args):
+        pass
 
 
-class InstructionsSectionTransformer(_SectionTransformer):
-    def section(self, paragraphs):
+class InstructionsSectionDeltaMaker(Transformer):
+    def _merge(self, args):
+        return [
+            exercise_delta.InsertOp(
+                insert="".join(item.insert for item in group),
+                attributes=attributes
+            )
+            for attributes, group in
+            itertools.groupby(args, key=lambda arg: arg.attributes)
+        ]
+
+    def _flatten(self, args):
+        items = []
+        for arg in args:
+            if isinstance(arg, list):
+                items.extend(arg)
+            else:
+                items.append(arg)
+        return items
+
+    def section(self, args):
+        return self._merge(self._flatten(args))
+
+    def strict_paragraph(self, args):
+        return self._flatten(args)
+
+    def sentence(self, args):
+        return args
+
+    def lenient_paragraph(self, args):
+        return args
+
+    def WORD(self, arg):
+        return exercise_delta.InsertOp(insert=arg.value)
+
+    def LEADING_WHITESPACE(self, arg):
+        return exercise_delta.InsertOp(insert=arg.value)
+
+    def TRAILING_WHITESPACE(self, arg):
+        return exercise_delta.InsertOp(insert=arg.value)
+
+    def PARAGRAPH_SEPARATOR(self, arg):
+        return exercise_delta.InsertOp(insert=arg.value)
+
+    def SENTENCE_SEPARATOR(self, arg):
+        return exercise_delta.InsertOp(insert=arg.value)
+
+    def WHITESPACE_IN_SENTENCE(self, arg):
+        return exercise_delta.InsertOp(insert=arg.value)
+
+    def PUNCTUATION_IN_SENTENCE(self, arg):
+        return exercise_delta.InsertOp(insert=arg.value)
+
+    def PUNCTUATION_AT_END_OF_SENTENCE(self, arg):
+        return exercise_delta.InsertOp(insert=arg.value)
+
+    def PUNCTUATION_IN_LENIENT_PARAGRAPH(self, arg):
+        return exercise_delta.InsertOp(insert=arg.value)
+
+    def INT(self, arg):
+        return arg.value
+
+    def STR(self, arg):
+        return arg.value
+
+    def bold_tag(self, args):
+        assert len(args) == 1
+        return exercise_delta.InsertOp(insert=args[0], attributes={"bold": True})
+
+    def italic_tag(self, args):
+        assert len(args) == 1
+        return exercise_delta.InsertOp(insert=args[0], attributes={"italic": True})
+
+
+make_plain_instructions_section_delta = InstructionsSectionParser({}, InstructionsSectionDeltaMaker())
+
+
+class InstructionsSectionAdapter(Transformer):
+    def section(self, args):
+        paragraphs = list(filter(None, args))
         return renderable.Section(paragraphs=list(
             renderable.Paragraph(sentences=[sentence])
             for sentence in
             itertools.chain.from_iterable(paragraph.sentences for paragraph in paragraphs)
         ))
 
+    def strict_paragraph(self, args):
+        sentences = list(filter(None, args))
+        return renderable.Paragraph(sentences=sentences)
 
-class InstructionsSectionParser(_SectionParser):
-    def normalize(self, section):
-        # This string manipulation before parsing is fragile but works for now.
-        return "\n\n".join(
-            p
-            for p in (
-                p.strip().replace("\n", " ")
-                for p in section.strip().replace("\r\n", "\n").replace("\r", "\n").split("\n\n")
-            )
-            if p != ""
-        )
+    def sentence(self, args):
+        return renderable.Sentence(tokens=args)
+
+    def lenient_paragraph(self, args):
+        return renderable.Paragraph(sentences=[renderable.Sentence(tokens=args)])
+
+    def WORD(self, arg):
+        return renderable.PlainText(text=arg.value)
+
+    def LEADING_WHITESPACE(self, arg):
+        return None
+
+    def TRAILING_WHITESPACE(self, arg):
+        return None
+
+    def PARAGRAPH_SEPARATOR(self, arg):
+        return None
+
+    def SENTENCE_SEPARATOR(self, arg):
+        return None
+
+    def WHITESPACE_IN_SENTENCE(self, arg):
+        return renderable.Whitespace()
+
+    def PUNCTUATION_IN_SENTENCE(self, arg):
+        return renderable.PlainText(text=arg.value)
+
+    def PUNCTUATION_AT_END_OF_SENTENCE(self, arg):
+        return renderable.PlainText(text=arg.value)
+
+    def PUNCTUATION_IN_LENIENT_PARAGRAPH(self, arg):
+        return renderable.PlainText(text=arg.value)
+
+    def INT(self, arg):
+        return int(arg.value)
+
+    def STR(self, arg):
+        return arg.value
+
+    def bold_tag(self, args):
+        assert len(args) == 1
+        return renderable.BoldText(text=args[0])
+
+    def italic_tag(self, args):
+        assert len(args) == 1
+        return renderable.ItalicText(text=args[0])
 
 
-def parse_instructions_section(tags, transformer, section):
-    return InstructionsSectionParser(tags, transformer)(section)
+adapt_plain_instructions_section = InstructionsSectionParser({}, InstructionsSectionAdapter())
 
 
-parse_plain_instructions_section = InstructionsSectionParser({}, InstructionsSectionTransformer())
-
-
-class GenericSectionTransformerMixin:
+class GenericSectionAdapterMixin:
     def boxed_text_tag(self, args):
         text, = args
         return renderable.BoxedText(text=text)
@@ -146,17 +597,17 @@ class GenericSectionTransformerMixin:
 
     def multiple_choices_input_tag(self, args):
         choices = args
-        return renderable.MultipleChoicesInput(choices=[choice.value for choice in choices])
+        return renderable.MultipleChoicesInput(choices=[choice for choice in choices])
 
     def free_text_input_tag(self, args):
         return renderable.FreeTextInput()
 
 
-class GenericInstructionsSectionTransformer(InstructionsSectionTransformer, GenericSectionTransformerMixin):
+class GenericInstructionsSectionAdapter(InstructionsSectionAdapter, GenericSectionAdapterMixin):
     pass
 
 
-parse_generic_instructions_section = InstructionsSectionParser(
+adapt_generic_instructions_section = InstructionsSectionParser(
     {
         "boxed_text": r""" "|" STR """,
         "selectable_text": r""" "|" INT "|" STR """,
@@ -165,18 +616,17 @@ parse_generic_instructions_section = InstructionsSectionParser(
         "multiple_choices_input": r""" ("|" STR)+ """,
         "free_text_input": "",
     },
-    GenericInstructionsSectionTransformer(),
+    GenericInstructionsSectionAdapter(),
 )
 
 
-class ParseGenericInstructionsSectionTestCase(TestCase):
+class AdaptGenericInstructionsSectionTestCase(TestCase):
     def do_test(self, input, expected_section):
-        actual_section = parse_generic_instructions_section(input)
+        actual_section = adapt_generic_instructions_section(input)
         for paragraph_index, (actual_paragraph, expected_paragraph) in enumerate(zip(actual_section.paragraphs, expected_section.paragraphs, strict=True)):
             for sentence_index, (actual_sentence, expected_sentence) in enumerate(zip(actual_paragraph.sentences, expected_paragraph.sentences, strict=True)):
                 self.assertEqual(actual_sentence, expected_sentence, f"Paragraph {paragraph_index}, sentence {sentence_index}")
-        if expected_section is not None:
-            self.assertEqual(parse_generic_instructions_section(expected_section.to_generic()), expected_section)
+        self.assertEqual(adapt_generic_instructions_section(expected_section.to_generic()), expected_section)
 
     # In instructions (and example and clue) sections, we want to:
     # - join consecutive lines separated by a single carriage return into a single paragraph
@@ -185,6 +635,9 @@ class ParseGenericInstructionsSectionTestCase(TestCase):
 
     def test_empty(self):
         self.do_test("", renderable.Section(paragraphs=[]))
+
+    def test_only_whitespace(self):
+        self.do_test("   \t\n    ", renderable.Section(paragraphs=[]))
 
     def test_single_paragraph_of_a_single_sentence_of_plain_words(self):
         self.do_test(
@@ -222,7 +675,7 @@ class ParseGenericInstructionsSectionTestCase(TestCase):
 
     def test_several_paragraphs_of_one_sentence_each(self):
         self.do_test(
-            "This\ris\ta\nparagraph.\n\nThis is\n{boxed-text|another}\nparagraph!\r\n\r\nThird\r\nparagraph.\r\r4th paragraph.",
+            "This\ris\ta\nparagraph.\n\nThis is\n{boxed-text|another}\nparagraph!\r\n\r\nThird\r\nparagraph.\n\n4th paragraph.",
             renderable.Section(paragraphs=[
                 renderable.Paragraph(sentences=[renderable.Sentence(tokens=[
                     renderable.PlainText(text="This"),
@@ -261,7 +714,7 @@ class ParseGenericInstructionsSectionTestCase(TestCase):
 
     def test_one_paragraph_of_several_sentences(self):
         self.do_test(
-            "This\ris\ta\nsentence. This is\n{boxed-text|another}\nsentence! Third\r\nsentence. 4th sentence.",
+            "This is\ta\nsentence. This is\n{boxed-text|another}\nsentence! Third \nsentence. 4th sentence.",
             renderable.Section(paragraphs=[
                 renderable.Paragraph(sentences=[renderable.Sentence(tokens=[
                     renderable.PlainText(text="This"),
@@ -422,36 +875,224 @@ class ParseGenericInstructionsSectionTestCase(TestCase):
         )
 
 
-class WordingSectionParser(_SectionParser):
-    def normalize(self, section):
-        # This string manipulation before parsing is fragile but works for now.
-        return "\n\n".join(
-            p
-            for p in (
-                p.strip()
-                for p in section.strip().replace("\r\n", "\n").replace("\r", "\n").split("\n")
-            )
-            if p != ""
+def make_wording_grammar(tags):
+    return make_grammar(
+        tags,
+        r"""
+            PARAGRAPH_SEPARATING_WHITESPACE: /([ \t]*(\r\n|\n))+[ \t]*/
+            NON_PARAGRAPH_SEPARATING_WHITESPACE: /[ \t]+/
+        """
+    )
+
+
+class WordingGrammarTestCase(GrammarTestCase(make_wording_grammar({}))):
+    def test_empty(self):
+        self.do_test("", ("section", []))
+
+    def test_only_whitespace(self):
+        self.do_test("    \t\n\n \t  \r\n\n\n    ", ("section", [("LEADING_WHITESPACE", "    \t\n\n \t  \r\n\n\n    ")]))
+
+    def test_simple_strict_paragraphs(self):
+        self.do_test(
+            "First sentence. Second sentence.\nThird sentence.\nFourth sentence.",
+            ("section", [
+                ("strict_paragraph", [
+                    ("sentence", [("WORD", "First"), ("WHITESPACE_IN_SENTENCE", " "), ("WORD", "sentence"), ("PUNCTUATION_AT_END_OF_SENTENCE", ".")]),
+                    ("SENTENCE_SEPARATOR", " "),
+                    ("sentence", [("WORD", "Second"), ("WHITESPACE_IN_SENTENCE", " "), ("WORD", "sentence"), ("PUNCTUATION_AT_END_OF_SENTENCE", ".")]),
+                ]),
+                ("PARAGRAPH_SEPARATOR", "\n"),
+                ("strict_paragraph", [
+                    ("sentence", [("WORD", "Third"), ("WHITESPACE_IN_SENTENCE", " "), ("WORD", "sentence"), ("PUNCTUATION_AT_END_OF_SENTENCE", ".")]),
+                ]),
+                ("PARAGRAPH_SEPARATOR", "\n"),
+                ("strict_paragraph", [
+                    ("sentence", [("WORD", "Fourth"), ("WHITESPACE_IN_SENTENCE", " "), ("WORD", "sentence"), ("PUNCTUATION_AT_END_OF_SENTENCE", ".")]),
+                ]),
+            ]),
         )
 
+    whitespaces_in_sentence = [
+        " ",
+        "\t",
+        " \t",
+        "\t " * 5,
+    ]
 
-class WordingSectionTransformer(_SectionTransformer):
-    def section(self, paragraphs):
+    def test_whitespace_in_sentence(self):
+        for whitespace in self.whitespaces_in_sentence:
+            with self.subTest(whitespace=whitespace):
+                self.do_test(
+                    f"Strict{whitespace}sentence.",
+                    ("section", [("strict_paragraph", [("sentence", [("WORD", "Strict"), ("WHITESPACE_IN_SENTENCE", whitespace), ("WORD", "sentence"), ("PUNCTUATION_AT_END_OF_SENTENCE", ".")])])]),
+                )
+
+    def test_leading_and_trailing_space(self):
+        self.do_test(
+            "    \t\n\n \t  \r\n\n\n    Strict sentence.    \t\n\n \t  \r\n\n\n    ",
+            ("section", [
+                ("LEADING_WHITESPACE", "    \t\n\n \t  \r\n\n\n    "),
+                ("strict_paragraph", [
+                    ("sentence", [("WORD", "Strict"), ("WHITESPACE_IN_SENTENCE", " "), ("WORD", "sentence"), ("PUNCTUATION_AT_END_OF_SENTENCE", ".")]),
+                ]),
+                ("TRAILING_WHITESPACE", "    \t\n\n \t  \r\n\n\n    "),
+            ]),
+        )
+
+    paragraph_separators = [
+        "\n",
+        "\r\n",
+        "\n\n",
+        "\r\n\n",
+        "\r\n\r\n",
+        "\n\r\n",
+        "\n" * 5,
+        "\r\n" * 5,
+        "\n    \n",
+        "     \n\n",
+        "\r\n\t\r\n",
+        "    \n    \n",
+        "    \n" * 5,
+        "    \n    \n    ",
+    ]
+
+    def test_strict_paragraph_separator(self):
+        for separator in self.paragraph_separators:
+            with self.subTest(separator=separator):
+                self.do_test(
+                    "First sentence." + separator + "Second sentence.",
+                    ("section", [
+                        ("strict_paragraph", [
+                            ("sentence", [("WORD", "First"), ("WHITESPACE_IN_SENTENCE", " "), ("WORD", "sentence"), ("PUNCTUATION_AT_END_OF_SENTENCE", ".")]),
+                        ]),
+                        ("PARAGRAPH_SEPARATOR", separator),
+                        ("strict_paragraph", [
+                            ("sentence", [("WORD", "Second"), ("WHITESPACE_IN_SENTENCE", " "), ("WORD", "sentence"), ("PUNCTUATION_AT_END_OF_SENTENCE", ".")]),
+                        ]),
+                    ]),
+                )
+
+    sentence_separators = whitespaces_in_sentence
+
+    def test_sentence_separator(self):
+        for separator in self.sentence_separators:
+            with self.subTest(separator=separator):
+                self.do_test(
+                    "First sentence." + separator + "Second sentence.",
+                    ("section", [("strict_paragraph", [
+                        ("sentence", [("WORD", "First"), ("WHITESPACE_IN_SENTENCE", " "), ("WORD", "sentence"), ("PUNCTUATION_AT_END_OF_SENTENCE", ".")]),
+                        ("SENTENCE_SEPARATOR", separator),
+                        ("sentence", [("WORD", "Second"), ("WHITESPACE_IN_SENTENCE", " "), ("WORD", "sentence"), ("PUNCTUATION_AT_END_OF_SENTENCE", ".")]),
+                    ])]),
+                )
+
+    def test_lenient_paragraph_separator(self):
+        for separator in self.paragraph_separators:
+            with self.subTest(separator=separator):
+                self.do_test(
+                    "First #." + separator + "Second #.",
+                    ("section", [
+                        ("lenient_paragraph", [
+                            ("WORD", "First"), ("WHITESPACE_IN_SENTENCE", " "), ("PUNCTUATION_IN_LENIENT_PARAGRAPH", "#"), ("PUNCTUATION_IN_LENIENT_PARAGRAPH", "."),
+                        ]),
+                        ("PARAGRAPH_SEPARATOR", separator),
+                        ("lenient_paragraph", [
+                            ("WORD", "Second"), ("WHITESPACE_IN_SENTENCE", " "), ("PUNCTUATION_IN_LENIENT_PARAGRAPH", "#"), ("PUNCTUATION_IN_LENIENT_PARAGRAPH", "."),
+                        ]),
+                    ]),
+                )
+
+
+class WordingSectionParser:
+    def __init__(self, tags, transformer):
+        tags = dict(
+            bold = r""" "|" STR """,
+            italic = r""" "|" STR """,
+            **tags
+        )
+        self.parser = memoize_parser(make_wording_grammar(tags), start="section")
+        self.transformer = transformer
+
+    def __call__(self, section: str):
+        try:
+            parsed = self.parser.parse(section)
+        except lark.exceptions.ParseError as e:
+            raise ValueError(f"Error parsing wording section {section}: {e}")
+        try:
+            return self.transformer.transform(parsed)
+        except lark.exceptions.VisitError as e:
+            raise ValueError(f"Error transforming wording section {section}: {e}")
+
+
+class WordingSectionAdapter(Transformer):
+    def section(self, args):
+        paragraphs = list(filter(None, args))
         return renderable.Section(paragraphs=paragraphs)
+
+    def strict_paragraph(self, args):
+        sentences = list(filter(None, args))
+        return renderable.Paragraph(sentences=sentences)
+
+    def sentence(self, args):
+        return renderable.Sentence(tokens=args)
+
+    def lenient_paragraph(self, args):
+        return renderable.Paragraph(sentences=[renderable.Sentence(tokens=args)])
+
+    def WORD(self, arg):
+        return renderable.PlainText(text=arg.value)
+
+    def LEADING_WHITESPACE(self, arg):
+        return None
+
+    def TRAILING_WHITESPACE(self, arg):
+        return None
+
+    def PARAGRAPH_SEPARATOR(self, arg):
+        return None
+
+    def SENTENCE_SEPARATOR(self, arg):
+        return None
+
+    def WHITESPACE_IN_SENTENCE(self, arg):
+        return renderable.Whitespace()
+
+    def PUNCTUATION_IN_SENTENCE(self, arg):
+        return renderable.PlainText(text=arg.value)
+
+    def PUNCTUATION_AT_END_OF_SENTENCE(self, arg):
+        return renderable.PlainText(text=arg.value)
+
+    def PUNCTUATION_IN_LENIENT_PARAGRAPH(self, arg):
+        return renderable.PlainText(text=arg.value)
+
+    def INT(self, arg):
+        return int(arg.value)
+
+    def STR(self, arg):
+        return arg.value
+
+    def bold_tag(self, args):
+        assert len(args) == 1
+        return renderable.BoldText(text=args[0])
+
+    def italic_tag(self, args):
+        assert len(args) == 1
+        return renderable.ItalicText(text=args[0])
 
 
 def parse_wording_section(tags, transformer, section):
     return WordingSectionParser(tags, transformer)(section)
 
 
-parse_plain_wording_section = WordingSectionParser({}, WordingSectionTransformer())
+adapt_plain_wording_section = WordingSectionParser({}, WordingSectionAdapter())
 
 
-class GenericWordingSectionTransformer(WordingSectionTransformer, GenericSectionTransformerMixin):
+class GenericWordingSectionAdapter(WordingSectionAdapter, GenericSectionAdapterMixin):
     pass
 
 
-parse_generic_wording_section = WordingSectionParser(
+adapt_generic_wording_section = WordingSectionParser(
     {
         "boxed_text": r""" "|" STR """,
         "selectable_text": r""" "|" INT "|" STR """,
@@ -460,18 +1101,18 @@ parse_generic_wording_section = WordingSectionParser(
         "multiple_choices_input": r""" ("|" STR)+ """,
         "free_text_input": "",
     },
-    GenericWordingSectionTransformer(),
+    GenericWordingSectionAdapter(),
 )
 
 
-class ParseGenericWordingSectionTestCase(TestCase):
+class AdaptGenericWordingSectionTestCase(TestCase):
     def do_test(self, input, expected_section):
-        actual_section = parse_generic_wording_section(input)
+        actual_section = adapt_generic_wording_section(input)
         for paragraph_index, (actual_paragraph, expected_paragraph) in enumerate(zip(actual_section.paragraphs, expected_section.paragraphs, strict=True)):
             for sentence_index, (actual_sentence, expected_sentence) in enumerate(zip(actual_paragraph.sentences, expected_paragraph.sentences, strict=True)):
                 self.assertEqual(actual_sentence, expected_sentence, f"Paragraph {paragraph_index}, sentence {sentence_index}")
         if expected_section is not None:
-            self.assertEqual(parse_generic_wording_section(expected_section.to_generic()), expected_section)
+            self.assertEqual(adapt_generic_wording_section(expected_section.to_generic()), expected_section)
 
     # In wording sections, we want to:
     # - make a paragraph for each non-empty line

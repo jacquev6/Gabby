@@ -29,7 +29,7 @@ const disabled = computed(() => {
   )
 })
 
-const modal = ref<typeof BModal | null>(null)
+const modal = ref<InstanceType<typeof BModal> | null>(null)
 const saving = ref(false)
 async function save() {
   console.assert(sectionId.value !== null)
@@ -54,7 +54,7 @@ function show(id: string) {
 
   sectionId.value = id
   const section = api.cache.getOne('section', id)
-  console.assert(section.attributes !== undefined)
+  console.assert(section.inCache && section.exists)
 
   pdfFileFirstPage.value = section.attributes.pdfFileStartPage
   pdfFileLastPage.value = section.attributes.pdfFileStartPage + section.attributes.pagesCount - 1

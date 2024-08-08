@@ -1,9 +1,9 @@
 import dataclasses
 
-from pydantic import BaseModel
 from starlette import status
 
 from ..testing import ApiTestCase, ItemsFactory
+from mydantic import PydanticBase
 
 
 class EmptyTestCase(ApiTestCase):
@@ -13,7 +13,7 @@ class EmptyTestCase(ApiTestCase):
 
         default_page_size = 2
 
-        class Model(BaseModel):
+        class Model(PydanticBase):
             pass
 
         @dataclasses.dataclass

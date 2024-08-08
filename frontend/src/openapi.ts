@@ -5,14 +5,6 @@
 
 
 export interface paths {
-  "/api/adaptedExercises": {
-    /** Create Adapted Exercise */
-    post: operations["create_adapted_exercise_api_adaptedExercises_post"];
-  };
-  "/api/adaptedExercises/{id}": {
-    /** Get Adapted Exercise */
-    get: operations["get_adapted_exercise_api_adaptedExercises__id__get"];
-  };
   "/api/batch": {
     /** Batch */
     post: operations["batch_api_batch_post"];
@@ -30,20 +22,6 @@ export interface paths {
     delete: operations["delete_exercise_api_exercises__id__delete"];
     /** Update Exercise */
     patch: operations["update_exercise_api_exercises__id__patch"];
-  };
-  "/api/extractionEvents": {
-    /** Get Extraction Events */
-    get: operations["get_extraction_events_api_extractionEvents_get"];
-    /** Create Extraction Event */
-    post: operations["create_extraction_event_api_extractionEvents_post"];
-  };
-  "/api/extractionEvents/{id}": {
-    /** Get Extraction Event */
-    get: operations["get_extraction_event_api_extractionEvents__id__get"];
-    /** Delete Extraction Event */
-    delete: operations["delete_extraction_event_api_extractionEvents__id__delete"];
-    /** Update Extraction Event */
-    patch: operations["update_extraction_event_api_extractionEvents__id__patch"];
   };
   "/api/fillWithFreeTextAdaptations": {
     /** Create Fill With Free Text Adaptation */
@@ -80,6 +58,14 @@ export interface paths {
     delete: operations["delete_multiple_choices_in_wording_adaptation_api_multipleChoicesInWordingAdaptations__id__delete"];
     /** Update Multiple Choices In Wording Adaptation */
     patch: operations["update_multiple_choices_in_wording_adaptation_api_multipleChoicesInWordingAdaptations__id__patch"];
+  };
+  "/api/parsedExercises": {
+    /** Create Parsed Exercise */
+    post: operations["create_parsed_exercise_api_parsedExercises_post"];
+  };
+  "/api/parsedExercises/{id}": {
+    /** Get Parsed Exercise */
+    get: operations["get_parsed_exercise_api_parsedExercises__id__get"];
   };
   "/api/pdfFileNamings": {
     /** Get Pdf File Namings */
@@ -217,17 +203,6 @@ export type webhooks = Record<string, never>;
 
 export interface components {
   schemas: {
-    /** AdaptedExercise */
-    AdaptedExercise: {
-      clue: components["schemas"]["Section"];
-      example: components["schemas"]["Section"];
-      instructions: components["schemas"]["Section"];
-      /** Number */
-      number: string;
-      /** Textbook Page */
-      textbook_page: number | null;
-      wording: components["schemas"]["Section"];
-    };
     /** Body_login_api_token_post */
     Body_login_api_token_post: {
       /** Client Id */
@@ -257,6 +232,18 @@ export interface components {
     HTTPValidationError: {
       /** Detail */
       detail?: components["schemas"]["ValidationError"][];
+    };
+    /** InsertOp */
+    InsertOp: {
+      /**
+       * Attributes
+       * @default {}
+       */
+      attributes?: {
+        [key: string]: true;
+      };
+      /** Insert */
+      insert: string;
     };
     /** ItemLinks */
     ItemLinks: {
@@ -304,17 +291,33 @@ export interface components {
       /** Sentences */
       sentences: components["schemas"]["Sentence"][];
     };
+    /** PdfRectangle */
+    PdfRectangle: {
+      /**
+       * Coordinates
+       * @enum {string}
+       */
+      coordinates: "pdfjs" | "relative";
+      /** Pdf Page */
+      pdf_page: number;
+      /** Pdf Sha256 */
+      pdf_sha256: string;
+      /**
+       * Role
+       * @enum {string}
+       */
+      role: "bounding" | "instructions" | "wording" | "example" | "clue";
+      start: components["schemas"]["Point"];
+      stop: components["schemas"]["Point"];
+      /** Text */
+      text: string | null;
+    };
     /** Point */
     Point: {
       /** X */
       x: number;
       /** Y */
       y: number;
-    };
-    /** Rectangle */
-    Rectangle: {
-      start: components["schemas"]["Point"];
-      stop: components["schemas"]["Point"];
     };
     /** Section */
     Section: {
@@ -333,7 +336,7 @@ export interface components {
     /** Sentence */
     Sentence: {
       /** Tokens */
-      tokens: (components["schemas"]["_PlainText"] | components["schemas"]["_BoxedText"] | components["schemas"]["_SelectableText"] | components["schemas"]["_SelectedText"] | components["schemas"]["_SelectedClicks"] | components["schemas"]["_FreeTextInput"] | components["schemas"]["_MultipleChoicesInput"] | components["schemas"]["_Whitespace"])[];
+      tokens: (components["schemas"]["_PlainText"] | components["schemas"]["_BoxedText"] | components["schemas"]["_BoldText"] | components["schemas"]["_ItalicText"] | components["schemas"]["_SelectableText"] | components["schemas"]["_SelectedText"] | components["schemas"]["_SelectedClicks"] | components["schemas"]["_FreeTextInput"] | components["schemas"]["_MultipleChoicesInput"] | components["schemas"]["_Whitespace"])[];
     };
     /** ValidationError */
     ValidationError: {
@@ -343,6 +346,17 @@ export interface components {
       msg: string;
       /** Error Type */
       type: string;
+    };
+    /** _BoldText */
+    _BoldText: {
+      /** Text */
+      text: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "boldText";
     };
     /** _BoxedText */
     _BoxedText: {
@@ -363,6 +377,17 @@ export interface components {
        * @enum {string}
        */
       type: "freeTextInput";
+    };
+    /** _ItalicText */
+    _ItalicText: {
+      /** Text */
+      text: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "italicText";
     };
     /** _MultipleChoicesInput */
     _MultipleChoicesInput: {
@@ -436,58 +461,6 @@ export interface components {
        */
       type: "whitespace";
     };
-    /** adaptedExerciseCreateInput */
-    adaptedExerciseCreateInput: {
-      data: components["schemas"]["adaptedExerciseCreateInputData"];
-    };
-    /** adaptedExerciseCreateInputData */
-    adaptedExerciseCreateInputData: {
-      attributes: components["schemas"]["adaptedExerciseCreateInputDataAttributes"];
-      /** @default {} */
-      relationships?: components["schemas"]["adaptedExerciseCreateInputDataRelationships"];
-      /** Type */
-      type: string;
-    };
-    /** adaptedExerciseCreateInputDataAttributes */
-    adaptedExerciseCreateInputDataAttributes: {
-      /** Adaptationoptions */
-      adaptationOptions: components["schemas"]["SelectThingsAdaptationOptions"] | components["schemas"]["FillWithFreeTextAdaptationOptions"] | components["schemas"]["MultipleChoicesInInstructionsAdaptationOptions"] | components["schemas"]["MultipleChoicesInWordingAdaptationOptions"];
-      /** Clue */
-      clue: string;
-      /** Example */
-      example: string;
-      /** Instructions */
-      instructions: string;
-      /** Number */
-      number: string;
-      /** Textbookpage */
-      textbookPage: number | null;
-      /** Type */
-      type: string;
-      /** Wording */
-      wording: string;
-    };
-    /** adaptedExerciseCreateInputDataRelationships */
-    adaptedExerciseCreateInputDataRelationships: Record<string, never>;
-    /** adaptedExerciseItemOutput */
-    adaptedExerciseItemOutput: {
-      data: components["schemas"]["adaptedExerciseOutputItem"];
-      /** Included */
-      included?: unknown[];
-    };
-    /** adaptedExerciseOutputItem */
-    adaptedExerciseOutputItem: {
-      attributes: components["schemas"]["adaptedExerciseOutputItemAttributes"];
-      /** Id */
-      id: string;
-      links: components["schemas"]["ItemLinks"];
-      /** Type */
-      type: string;
-    };
-    /** adaptedExerciseOutputItemAttributes */
-    adaptedExerciseOutputItemAttributes: {
-      adapted: components["schemas"]["AdaptedExercise"];
-    };
     /** exerciseCreateInput */
     exerciseCreateInput: {
       data: components["schemas"]["exerciseCreateInputData"];
@@ -501,7 +474,6 @@ export interface components {
     };
     /** exerciseCreateInputDataAttributes */
     exerciseCreateInputDataAttributes: {
-      boundingRectangle?: components["schemas"]["Rectangle"] | null;
       /**
        * Clue
        * @default
@@ -519,6 +491,11 @@ export interface components {
       instructions?: string;
       /** Number */
       number: string;
+      /**
+       * Rectangles
+       * @default []
+       */
+      rectangles?: components["schemas"]["PdfRectangle"][];
       /** Textbookpage */
       textbookPage?: number | null;
       /**
@@ -553,7 +530,6 @@ export interface components {
     };
     /** exerciseOutputItemAttributes */
     exerciseOutputItemAttributes: {
-      boundingRectangle: components["schemas"]["Rectangle"] | null;
       /** Clue */
       clue: string;
       /**
@@ -567,6 +543,8 @@ export interface components {
       instructions: string;
       /** Number */
       number: string;
+      /** Rectangles */
+      rectangles: components["schemas"]["PdfRectangle"][];
       /** Textbookpage */
       textbookPage: number | null;
       /**
@@ -611,13 +589,14 @@ export interface components {
     };
     /** exerciseUpdateInputDataAttributes */
     exerciseUpdateInputDataAttributes: {
-      boundingRectangle?: components["schemas"]["Rectangle"] | null;
       /** Clue */
       clue?: string;
       /** Example */
       example?: string;
       /** Instructions */
       instructions?: string;
+      /** Rectangles */
+      rectangles?: components["schemas"]["PdfRectangle"][];
       /** Wording */
       wording?: string;
     };
@@ -690,136 +669,6 @@ export interface components {
     };
     /** exercise_updatedBy_Relationship_ObjectId */
     exercise_updatedBy_Relationship_ObjectId: {
-      /** Id */
-      id: string;
-      /**
-       * Type
-       * @constant
-       * @enum {string}
-       */
-      type: "user";
-    };
-    /** extractionEventCreateInput */
-    extractionEventCreateInput: {
-      data: components["schemas"]["extractionEventCreateInputData"];
-    };
-    /** extractionEventCreateInputData */
-    extractionEventCreateInputData: {
-      attributes: components["schemas"]["extractionEventCreateInputDataAttributes"];
-      relationships: components["schemas"]["extractionEventCreateInputDataRelationships"];
-      /** Type */
-      type: string;
-    };
-    /** extractionEventCreateInputDataAttributes */
-    extractionEventCreateInputDataAttributes: {
-      /** Event */
-      event: string;
-    };
-    /** extractionEventCreateInputDataRelationships */
-    extractionEventCreateInputDataRelationships: {
-      exercise: components["schemas"]["extractionEvent_exercise_Relationship"];
-    };
-    /** extractionEventItemOutput */
-    extractionEventItemOutput: {
-      data: components["schemas"]["extractionEventOutputItem"];
-      /** Included */
-      included?: unknown[];
-    };
-    /** extractionEventOutputItem */
-    extractionEventOutputItem: {
-      attributes: components["schemas"]["extractionEventOutputItemAttributes"];
-      /** Id */
-      id: string;
-      links: components["schemas"]["ItemLinks"];
-      relationships: components["schemas"]["extractionEventOutputItemRelationships"];
-      /** Type */
-      type: string;
-    };
-    /** extractionEventOutputItemAttributes */
-    extractionEventOutputItemAttributes: {
-      /**
-       * Createdat
-       * Format: date-time
-       */
-      createdAt: string;
-      /** Event */
-      event: string;
-      /**
-       * Updatedat
-       * Format: date-time
-       */
-      updatedAt: string;
-    };
-    /** extractionEventOutputItemRelationships */
-    extractionEventOutputItemRelationships: {
-      createdBy: components["schemas"]["extractionEvent_createdBy_Relationship"];
-      exercise: components["schemas"]["extractionEvent_exercise_Relationship"];
-      updatedBy: components["schemas"]["extractionEvent_updatedBy_Relationship"];
-    };
-    /** extractionEventPageOutput */
-    extractionEventPageOutput: {
-      /** Data */
-      data: components["schemas"]["extractionEventOutputItem"][];
-      /** Included */
-      included?: unknown[];
-      links: components["schemas"]["PageLinks"];
-      meta: components["schemas"]["PageMeta"];
-    };
-    /** extractionEventUpdateInput */
-    extractionEventUpdateInput: {
-      data: components["schemas"]["extractionEventUpdateInputData"];
-    };
-    /** extractionEventUpdateInputData */
-    extractionEventUpdateInputData: {
-      /** @default {} */
-      attributes?: components["schemas"]["extractionEventUpdateInputDataAttributes"];
-      /** Id */
-      id: string;
-      /** @default {} */
-      relationships?: components["schemas"]["extractionEventUpdateInputDataRelationships"];
-      /** Type */
-      type: string;
-    };
-    /** extractionEventUpdateInputDataAttributes */
-    extractionEventUpdateInputDataAttributes: Record<string, never>;
-    /** extractionEventUpdateInputDataRelationships */
-    extractionEventUpdateInputDataRelationships: Record<string, never>;
-    /** extractionEvent_createdBy_Relationship */
-    extractionEvent_createdBy_Relationship: {
-      data: components["schemas"]["extractionEvent_createdBy_Relationship_ObjectId"];
-    };
-    /** extractionEvent_createdBy_Relationship_ObjectId */
-    extractionEvent_createdBy_Relationship_ObjectId: {
-      /** Id */
-      id: string;
-      /**
-       * Type
-       * @constant
-       * @enum {string}
-       */
-      type: "user";
-    };
-    /** extractionEvent_exercise_Relationship */
-    extractionEvent_exercise_Relationship: {
-      data: components["schemas"]["extractionEvent_exercise_Relationship_ObjectId"];
-    };
-    /** extractionEvent_exercise_Relationship_ObjectId */
-    extractionEvent_exercise_Relationship_ObjectId: {
-      /** Id */
-      id: string;
-      /**
-       * Type
-       * @constant
-       * @enum {string}
-       */
-      type: "exercise";
-    };
-    /** extractionEvent_updatedBy_Relationship */
-    extractionEvent_updatedBy_Relationship: {
-      data: components["schemas"]["extractionEvent_updatedBy_Relationship_ObjectId"];
-    };
-    /** extractionEvent_updatedBy_Relationship_ObjectId */
-    extractionEvent_updatedBy_Relationship_ObjectId: {
       /** Id */
       id: string;
       /**
@@ -952,6 +801,22 @@ export interface components {
        * @enum {string}
        */
       type: "user";
+    };
+    /** Exercise */
+    gabby__exercise_delta__Exercise: {
+      /** Instructions */
+      instructions: components["schemas"]["InsertOp"][];
+    };
+    /** Exercise */
+    gabby__renderable__Exercise: {
+      clue: components["schemas"]["Section"];
+      example: components["schemas"]["Section"];
+      instructions: components["schemas"]["Section"];
+      /** Number */
+      number: string;
+      /** Textbook Page */
+      textbook_page: number | null;
+      wording: components["schemas"]["Section"];
     };
     /** multipleChoicesInInstructionsAdaptationCreateInput */
     multipleChoicesInInstructionsAdaptationCreateInput: {
@@ -1193,6 +1058,57 @@ export interface components {
        * @enum {string}
        */
       type: "user";
+    };
+    /** parsedExerciseCreateInput */
+    parsedExerciseCreateInput: {
+      data: components["schemas"]["parsedExerciseCreateInputData"];
+    };
+    /** parsedExerciseCreateInputData */
+    parsedExerciseCreateInputData: {
+      attributes: components["schemas"]["parsedExerciseCreateInputDataAttributes"];
+      /** @default {} */
+      relationships?: components["schemas"]["parsedExerciseCreateInputDataRelationships"];
+      /** Type */
+      type: string;
+    };
+    /** parsedExerciseCreateInputDataAttributes */
+    parsedExerciseCreateInputDataAttributes: {
+      /** Adaptationoptions */
+      adaptationOptions: components["schemas"]["SelectThingsAdaptationOptions"] | components["schemas"]["FillWithFreeTextAdaptationOptions"] | components["schemas"]["MultipleChoicesInInstructionsAdaptationOptions"] | components["schemas"]["MultipleChoicesInWordingAdaptationOptions"];
+      /** Clue */
+      clue: string;
+      /** Example */
+      example: string;
+      /** Instructions */
+      instructions: string;
+      /** Number */
+      number: string;
+      /** Type */
+      type: string;
+      /** Wording */
+      wording: string;
+    };
+    /** parsedExerciseCreateInputDataRelationships */
+    parsedExerciseCreateInputDataRelationships: Record<string, never>;
+    /** parsedExerciseItemOutput */
+    parsedExerciseItemOutput: {
+      data: components["schemas"]["parsedExerciseOutputItem"];
+      /** Included */
+      included?: unknown[];
+    };
+    /** parsedExerciseOutputItem */
+    parsedExerciseOutputItem: {
+      attributes: components["schemas"]["parsedExerciseOutputItemAttributes"];
+      /** Id */
+      id: string;
+      links: components["schemas"]["ItemLinks"];
+      /** Type */
+      type: string;
+    };
+    /** parsedExerciseOutputItemAttributes */
+    parsedExerciseOutputItemAttributes: {
+      adapted: components["schemas"]["gabby__renderable__Exercise"];
+      delta: components["schemas"]["gabby__exercise_delta__Exercise"];
     };
     /** pdfFileCreateInput */
     pdfFileCreateInput: {
@@ -2424,58 +2340,6 @@ export type external = Record<string, never>;
 
 export interface operations {
 
-  /** Create Adapted Exercise */
-  create_adapted_exercise_api_adaptedExercises_post: {
-    parameters: {
-      query?: {
-        include?: string;
-      };
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["adaptedExerciseCreateInput"];
-      };
-    };
-    responses: {
-      /** @description Successful Response */
-      201: {
-        content: {
-          "application/vnd.api+json": components["schemas"]["adaptedExerciseItemOutput"];
-        };
-      };
-      /** @description Validation Error */
-      422: {
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
-    };
-  };
-  /** Get Adapted Exercise */
-  get_adapted_exercise_api_adaptedExercises__id__get: {
-    parameters: {
-      query?: {
-        include?: string;
-      };
-      path: {
-        id: string;
-      };
-    };
-    responses: {
-      /** @description Successful Response */
-      200: {
-        content: {
-          "application/vnd.api+json": components["schemas"]["adaptedExerciseItemOutput"];
-        };
-      };
-      /** @description Validation Error */
-      422: {
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
-    };
-  };
   /** Batch */
   batch_api_batch_post: {
     requestBody: {
@@ -2617,132 +2481,6 @@ export interface operations {
       200: {
         content: {
           "application/vnd.api+json": components["schemas"]["exerciseItemOutput"];
-        };
-      };
-      /** @description Validation Error */
-      422: {
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
-    };
-  };
-  /** Get Extraction Events */
-  get_extraction_events_api_extractionEvents_get: {
-    parameters: {
-      query?: {
-        include?: string;
-        "page[number]"?: number;
-        "page[size]"?: number;
-      };
-    };
-    responses: {
-      /** @description Successful Response */
-      200: {
-        content: {
-          "application/vnd.api+json": components["schemas"]["extractionEventPageOutput"];
-        };
-      };
-      /** @description Validation Error */
-      422: {
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
-    };
-  };
-  /** Create Extraction Event */
-  create_extraction_event_api_extractionEvents_post: {
-    parameters: {
-      query?: {
-        include?: string;
-      };
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["extractionEventCreateInput"];
-      };
-    };
-    responses: {
-      /** @description Successful Response */
-      201: {
-        content: {
-          "application/vnd.api+json": components["schemas"]["extractionEventItemOutput"];
-        };
-      };
-      /** @description Validation Error */
-      422: {
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
-    };
-  };
-  /** Get Extraction Event */
-  get_extraction_event_api_extractionEvents__id__get: {
-    parameters: {
-      query?: {
-        include?: string;
-      };
-      path: {
-        id: string;
-      };
-    };
-    responses: {
-      /** @description Successful Response */
-      200: {
-        content: {
-          "application/vnd.api+json": components["schemas"]["extractionEventItemOutput"];
-        };
-      };
-      /** @description Validation Error */
-      422: {
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
-    };
-  };
-  /** Delete Extraction Event */
-  delete_extraction_event_api_extractionEvents__id__delete: {
-    parameters: {
-      path: {
-        id: string;
-      };
-    };
-    responses: {
-      /** @description Successful Response */
-      204: {
-        content: never;
-      };
-      /** @description Validation Error */
-      422: {
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
-    };
-  };
-  /** Update Extraction Event */
-  update_extraction_event_api_extractionEvents__id__patch: {
-    parameters: {
-      query?: {
-        include?: string;
-      };
-      path: {
-        id: string;
-      };
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["extractionEventUpdateInput"];
-      };
-    };
-    responses: {
-      /** @description Successful Response */
-      200: {
-        content: {
-          "application/vnd.api+json": components["schemas"]["extractionEventItemOutput"];
         };
       };
       /** @description Validation Error */
@@ -3049,6 +2787,58 @@ export interface operations {
       200: {
         content: {
           "application/vnd.api+json": components["schemas"]["multipleChoicesInWordingAdaptationItemOutput"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  /** Create Parsed Exercise */
+  create_parsed_exercise_api_parsedExercises_post: {
+    parameters: {
+      query?: {
+        include?: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["parsedExerciseCreateInput"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        content: {
+          "application/vnd.api+json": components["schemas"]["parsedExerciseItemOutput"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  /** Get Parsed Exercise */
+  get_parsed_exercise_api_parsedExercises__id__get: {
+    parameters: {
+      query?: {
+        include?: string;
+      };
+      path: {
+        id: string;
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        content: {
+          "application/vnd.api+json": components["schemas"]["parsedExerciseItemOutput"];
         };
       };
       /** @description Validation Error */

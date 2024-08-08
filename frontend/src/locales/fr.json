@@ -82,6 +82,9 @@
   "pageNoKnown": "Aucun PDF enregistré ne contient cette page.",
 
 
+  "exerciseNotFound": "Exercice introuvable",
+
+
   "error.pdf": "Erreur pendant le chargement du PDF :",
 
   "edition": "Édition",
@@ -89,7 +92,6 @@
   "inputFile": "Fichier d'entrée",
   "existingExercises": "Exercices existants",
   "noExercises": "Pas encore d'exercices.",
-  "drawBoundingRectangle": "Dessinez un rectangle englobant l'exercice entier.",
   "create": "Nouvel exercice",
   "delete": "Supprimer",
   "save": "Enregistrer",
@@ -104,7 +106,6 @@
   "selectedText": "Texte sélectionné",
   "addTo": "Ajouter à :",
 
-  "setBoundingRect": "Utiliser comme rectangle englobant",
   "instructions": "Consigne",
   "example": "Exemple",
   "clue": "Indice",
@@ -112,28 +113,18 @@
 
   "colorsCount": "Nombre de couleurs",
   "includePunctuation": "Sélectionner aussi la ponctuation",
-  "useSel1ToSelN": "Utilisez {first} à {last} dans la consigne, l'example ou l'indice pour formatter du texte comme s'il était sélectionné.",
-  "useSel1": "Utilisez {first} dans la consigne, l'example ou l'indice pour formatter du texte comme s'il était sélectionné.",
+  "useSel1ToSelN": "Utilisez {first} à {last} dans la consigne, l'exemple ou l'indice pour formatter du texte comme s'il était sélectionné.",
+  "useSel1": "Utilisez {first} dans la consigne, l'exemple ou l'indice pour formatter du texte comme s'il était sélectionné.",
   "useChoice": "Utilisez {choice} dans la consigne pour indiquer un choix possible.",
   "useChoices": "Utilisez {choices} dans l'énoncé pour indiquer choix à faire.",
+  "choiceButton": "Choix",
   "placeholderText": "Trou à remplir",
+  "boldButton": "Gras",
+  "italicButton": "Italique",
 
   "tools": "Outils",
   "undo": "Annuler",
   "redo": "Refaire",
-  "replace": "Remplacer",
-  "replaceWith": "par",
-  "replaceWhere": "dans",
-  "replaceIn": {
-    "everywhere": "tous les champs",
-    "instructions": "la consigne",
-    "wording": "l'énoncé",
-    "example": "l'exemple",
-    "clue": "l'indice"
-  },
-  "lineEnd": "Fin de ligne",
-  "paragraphEnd": "Fin de paragraphe",
-  "apply": "Appliquer",
 
   "not-yet-implemented": "Pas encore implémenté",
 

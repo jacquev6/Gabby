@@ -39,6 +39,7 @@ function forbidNewlines(event: KeyboardEvent) {
 /* Based on Etude_de_la_langue_CE1_Belin/P34Ex6_hrl2.html */
 
 span {
+  line-height: 1em;  /* Fix caret position on Chrome */
   padding: 0 1ch;
   border: 2px solid #555;
 }

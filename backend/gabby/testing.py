@@ -71,6 +71,9 @@ class TransactionTestCase(TestCase):
         def delete(self, *args, **kwds):
             return self.__session.delete(*args, **kwds)
 
+        def begin_nested(self, *args, **kwds):
+            return self.__session.begin_nested(*args, **kwds)
+
     def setUp(self):
         super().setUp()
         self.__class__.__session = Session(self.__database_engine)
@@ -101,7 +104,9 @@ class TransactionTestCase(TestCase):
         self.__expected_rollbacks_count = rollbacks
 
     def tearDown(self):
-        self.assert_commits_rollbacks(self.__expected_commits_count, self.__expected_rollbacks_count)
+        # https://stackoverflow.com/a/39606065/905845
+        if all(test != self for test, text in self._outcome.result.errors + self._outcome.result.failures):
+            self.assert_commits_rollbacks(self.__expected_commits_count, self.__expected_rollbacks_count)
         self.__session.close()
         super().tearDown()
 
@@ -202,6 +207,9 @@ class LoggedInApiTestCase(ApiTestCase):
 
 
 class AdaptationTestCase(TestCase):
-    def do_test(self, adaptation, expected):
-        self.assertEqual(adaptation.make_adapted(), expected)
-        self.assertEqual(adaptation.to_generic_adaptation().make_adapted(), expected)
+    # @todo Remove default vale, enforce testing the delta
+    def do_test(self, adaptation, expected_adapted, expected_delta=None):
+        self.assertEqual(adaptation.make_adapted(), expected_adapted)
+        self.assertEqual(adaptation.to_generic_adaptation().make_adapted(), expected_adapted)
+        if expected_delta is not None:
+            self.assertEqual(adaptation.make_delta(), expected_delta)

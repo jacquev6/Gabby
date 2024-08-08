@@ -2,7 +2,7 @@ import { useApiStore } from '../../frontend/src/frontend/stores/api'
 
 
 function setLocale() {
-  cy.get('select').last().select('en')
+  cy.get('select[data-cy="language"]').last().select('en')
 }
 
 describe('Gabby\'s project view', () => {
@@ -73,9 +73,6 @@ describe('Gabby\'s project view', () => {
     cy.get('button:contains("Create textbook")').should('be.disabled')
 
     cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
-    cy.get('button:contains("Create textbook")').should('be.disabled')
-
-    cy.get('label:contains("Title")').next().type('Test textbook')
     cy.get('button:contains("Create textbook")').should('be.enabled')
 
     cy.get('label:contains("Title")').next().clear()
@@ -150,9 +147,9 @@ describe('Gabby\'s project view', () => {
     cy.get('label:contains("Title")').next().type('First textbook')
     cy.get('button:contains("Create textbook")').click()
     cy.get('p:contains("No exercises yet")').should('exist')
+
     cy.visit('/project-xkopqm')
     setLocale()
-
     cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
     cy.get('label:contains("Title")').next().type('Second textbook')
     cy.get('button:contains("Create textbook")').click()

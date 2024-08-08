@@ -31,7 +31,7 @@ if git \
       -e '\<Number$' -e '\<Number[^.]' \
       -e '\<String$' -e '\<String[^.]' \
       -e '\<Boolean$' -e '\<Boolean[^.]' \
-      -e '\<Symbol$' -e '\<Symbol[^.]' \
+      -e '\<Symbol$' -e '\<Symbol[^.(]' \
       -e '\<Object$' -e '\<Object[^.]' \
       -- \
       ../../frontend/src/{frontend,adapted}*

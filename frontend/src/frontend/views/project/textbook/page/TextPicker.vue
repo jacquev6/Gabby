@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 
+import type { Point, Rectangle } from './RectanglesHighlighter.vue'
+
 
 export interface TextItem {
   left: number,
@@ -21,7 +23,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  textSelected: [text: string, point: {clientX: number, clientY: number}, items: TextItem[], rectangle: {start: {x: number, y: number}, stop: {x: number, y: number}}],
+  textSelected: [text: string, point: {clientX: number, clientY: number}, rectangle: Rectangle],
 }>()
 
 const canvas = ref<HTMLCanvasElement | null>(null)
@@ -43,11 +45,6 @@ watch([props, context], () => {
 
   context.value.setTransform(props.transform[0], props.transform[1], props.transform[2], props.transform[3], props.transform[4], props.transform[5])
 })
-
-interface Point {
-  x: number,
-  y: number,
-}
 
 var startPoint: Point | null = null
 
@@ -126,7 +123,6 @@ function pointerup(event: any/* @todo Type */) {
         'textSelected',
         text,
         {clientX: event.clientX, clientY: event.clientY},
-        items,
         {start: {x: startPoint.x, y: startPoint.y}, stop: {x: stopPoint.x, y: stopPoint.y}},
       )
     }

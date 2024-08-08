@@ -1,11 +1,14 @@
 import { useApiStore } from '../../frontend/src/frontend/stores/api'
 
+function setLocale() {
+  cy.get('select[data-cy="language"]').last().select('fr')
+  cy.focused().blur()
+}
 
-function test(path, title, f = () => {}) {
-  it(`${title} looks like this`, () => {
+function test(path, title, f = () => {}, it_ = it) {
+  it_(`${title} looks like this`, () => {
     cy.visit(path)
-    cy.get('select').first().select('fr')
-    cy.get('select').first().blur()
+    setLocale()
     cy.get('.busy').should('not.exist')
     f()
     cy.get('.busy').should('not.exist')
@@ -13,9 +16,13 @@ function test(path, title, f = () => {}) {
   })
 }
 
-function loadTestPdf() {
-  cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
+test['only'] = (path, title, f) => test(path, title, f, it['only'])
+
+function loadPdf(name) {
+  return () => cy.get('input[type=file]').selectFile(`../pdf-examples/${name}.pdf`)
 }
+
+const loadTestPdf = loadPdf('test')
 
 describe('Gabby', () => {
   before(() => {
@@ -41,6 +48,6 @@ describe('Gabby', () => {
   test('/project-xkopqm/textbook-klxufv/page-6/exercise-wbqloc', 'edit-exercise', loadTestPdf)
 
   test('/project-nope', 'project-not-found')
-  test('/project-xkopqm/textbook-nope', 'textbook-not-found')
-  // @todo /project-xkopqm/textbook-klxufv/page-6/exercise-nope
+  test('/project-xkopqm/textbook-nope/page-1', 'textbook-not-found')
+  test('/project-xkopqm/textbook-klxufv/page-6/exercise-nope', 'exercise-not-found')
 })

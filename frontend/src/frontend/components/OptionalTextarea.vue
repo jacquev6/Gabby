@@ -13,7 +13,7 @@ const model = defineModel<string>({required: true})
 
 const forced = ref(false)
 
-const textArea = ref<typeof BLabeledTextarea | null>(null)
+const textArea = ref<InstanceType<typeof BLabeledTextarea> | null>(null)
 
 function force() {
   forced.value = true

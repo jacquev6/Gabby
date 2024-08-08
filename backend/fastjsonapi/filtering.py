@@ -5,12 +5,12 @@ from typing import Annotated
 import unittest
 
 from fastapi import Depends, Query
-from pydantic import BaseModel
-import pydantic
 from starlette import status
 import humps
 
 from .testing import ApiTestCase
+from mydantic import PydanticBase
+import mydantic
 
 
 def make_filters_ast(fields):
@@ -100,7 +100,7 @@ class MakeFiltersAstTestCase(unittest.TestCase):
 
     def test_optional_str(self):
         self.do_test(
-            {"s": pydantic.fields.FieldInfo(annotation=str | None)},
+            {"s": mydantic.fields.FieldInfo(annotation=str | None)},
             """
                 def filters(s: Annotated[str, Query(alias='filter[s]')]=None):
                     return filters_model(s=s)
@@ -109,7 +109,7 @@ class MakeFiltersAstTestCase(unittest.TestCase):
 
     def test_optional_int(self):
         self.do_test(
-            {"i": pydantic.fields.FieldInfo(annotation=int | None)},
+            {"i": mydantic.fields.FieldInfo(annotation=int | None)},
             """
                 def filters(i: Annotated[int, Query(alias='filter[i]')]=None):
                     return filters_model(i=i)
@@ -118,7 +118,7 @@ class MakeFiltersAstTestCase(unittest.TestCase):
 
     def test_case_adaptation(self):
         self.do_test(
-            {"identifier_with_several_words": pydantic.fields.FieldInfo(annotation=str | None)},
+            {"identifier_with_several_words": mydantic.fields.FieldInfo(annotation=str | None)},
             """
                 def filters(identifier_with_several_words: Annotated[str, Query(alias='filter[identifierWithSeveralWords]')]=None):
                     return filters_model(identifier_with_several_words=identifier_with_several_words)
@@ -128,9 +128,9 @@ class MakeFiltersAstTestCase(unittest.TestCase):
     def test_several(self):
         self.do_test(
             {
-                "s1": pydantic.fields.FieldInfo(annotation=str | None),
-                "s2": pydantic.fields.FieldInfo(annotation=str | None),
-                "s3": pydantic.fields.FieldInfo(annotation=str | None),
+                "s1": mydantic.fields.FieldInfo(annotation=str | None),
+                "s2": mydantic.fields.FieldInfo(annotation=str | None),
+                "s3": mydantic.fields.FieldInfo(annotation=str | None),
             },
             """
                 def filters(s1: Annotated[str, Query(alias='filter[s1]')]=None, s2: Annotated[str, Query(alias='filter[s2]')]=None, s3: Annotated[str, Query(alias='filter[s3]')]=None):
@@ -139,7 +139,7 @@ class MakeFiltersAstTestCase(unittest.TestCase):
         )
 
 
-def make_filters(filters_model: type[BaseModel]):
+def make_filters(filters_model: type[PydanticBase]):
     filters_ast = make_filters_ast(filters_model.model_fields)
 
     # @todo Try and avoid exec, similarly to the "f = FunctionType(function_code, {})" part of https://stackoverflow.com/a/29927459/905845
@@ -153,7 +153,7 @@ class FilteringApiTestCase(ApiTestCase):
         singular_name = "resource"
         plural_name = "resources"
 
-        class Model(BaseModel):
+        class Model(PydanticBase):
             filter_type: str
             filter_value: str
 
@@ -169,7 +169,7 @@ class FilteringApiTestCase(ApiTestCase):
         def get_item(self, id: str):
             return None
 
-        class Filters(BaseModel):
+        class Filters(PydanticBase):
             str: str | None
             an_int: int | None
 

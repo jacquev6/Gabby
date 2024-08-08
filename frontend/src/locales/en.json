@@ -82,13 +82,15 @@
   "pageNoKnown": "No known PDF contains this page.",
 
 
+  "exerciseNotFound": "Exercise not found",
+
+
   "error.pdf": "Error while loading the PDF:",
 
   "edition": "Edition",
   "adaptation": "Adapted exercice",
   "inputFile": "Input file",
   "existingExercises": "Existing exercises",
-  "drawBoundingRectangle": "Draw a rectangle around the whole exercise.",
   "noExercises": "No exercises yet.",
   "create": "New exercise",
   "delete": "Delete",
@@ -104,7 +106,6 @@
   "selectedText": "Selected text",
   "addTo": "Add to:",
 
-  "setBoundingRect": "Set bounding rect",
   "instructions": "Instructions",
   "example": "Example",
   "clue": "Clue",
@@ -116,24 +117,14 @@
   "useSel1": "Use {first} in instructions, example or clue to format text as if selected.",
   "useChoice": "Use {choice} in instructions to indicate a possible choice.",
   "useChoices": "Use {choices} in wording to indicate a choice to make.",
+  "choiceButton": "Choice",
   "placeholderText": "Placeholder to fill",
+  "boldButton": "Bold",
+  "italicButton": "Italic",
 
   "tools": "Tools",
   "undo": "Undo",
   "redo": "Redo",
-  "replace": "Replace",
-  "replaceWith": "with",
-  "replaceWhere": "in",
-  "replaceIn": {
-    "everywhere": "all fields",
-    "instructions": "the instructions",
-    "wording": "the wording",
-    "example": "the example",
-    "clue": "the clue"
-  },
-  "lineEnd": "Line end",
-  "paragraphEnd": "Paragraph end",
-  "apply": "Apply",
 
   "not-yet-implemented": "Not yet implemented",
 

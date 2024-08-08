@@ -9,11 +9,11 @@ import unittest
 
 from fastapi import Depends, Header, Query
 import fastapi.params
-from pydantic import BaseModel
 from starlette import status
 
 from .annotations import Computed, Constant
 from .testing import ApiTestCase
+from mydantic import PydanticBase
 
 
 def make_wrapper_ast(parameters):
@@ -205,7 +205,7 @@ class DependenciesApiTestCase(ApiTestCase):
 
         default_page_size = 2
 
-        class Model(BaseModel):
+        class Model(PydanticBase):
             foo: str
             bar: str
             host: str
@@ -270,16 +270,16 @@ class DependenciesApiTestCase(ApiTestCase):
         })
 
 
-class ComputedModel(BaseModel):
+class ComputedModel(PydanticBase):
     foo: str
 
-class ConstantModel(BaseModel):
+class ConstantModel(PydanticBase):
     baz: str
 
-class WritableModel(BaseModel):
+class WritableModel(PydanticBase):
     bar: str
 
-class ResourceModel(BaseModel):
+class ResourceModel(PydanticBase):
     computed: Annotated[ComputedModel, Computed()]
     constant: Annotated[ConstantModel, Constant()]
     writable: WritableModel

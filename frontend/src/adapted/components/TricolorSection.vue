@@ -16,7 +16,7 @@ const model = defineModel<{
   required: true,
 })
 
-const tricolorLines = ref<typeof TricolorLines | null>(null)
+const tricolorLines = ref<InstanceType<typeof TricolorLines> | null>(null)
 </script>
 
 <template>

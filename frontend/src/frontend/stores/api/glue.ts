@@ -1,5 +1,7 @@
 import { ref } from 'vue'
 import type { Ref } from 'vue'
+import { pauseTracking, resetTracking } from '@vue/reactivity'
+
 
 import { makeItems } from './items'
 import { makeLists } from './lists'
@@ -7,7 +9,7 @@ import { makeRequester } from './requester'
 import type { InclusionOptions, SelectionOptions, InclusionAndSelectionOptions, Operations } from './interface'
 import type { Items } from './items'
 import type { Lists } from './lists'
-import type { ItemTypes } from './interface'
+import type { ItemTypes, List, Item, InCache } from './interface'
 
 
 function makeAuth(baseUrl: string, token: Ref<string | null>, items: Items, lists: Lists) {
@@ -87,11 +89,11 @@ function makeAuth(baseUrl: string, token: Ref<string | null>, items: Items, list
 
 function makeCache(items: Items, lists: Lists) {
   return {
-    getOne<ItemType extends ItemTypes>(type: ItemType, id: string) {
-      return items.get(type, id)
+    getOne<ItemType extends ItemTypes>(type: ItemType, id: string, inclusionOptions?: InclusionOptions) {
+      return items.get(type, id, inclusionOptions || {})[0]
     },
     getAll(type: string, selectionOptions?: SelectionOptions) {
-      return lists.get(type, selectionOptions || {})
+      return lists.get(type, selectionOptions || {})[0]
     },
   }
 }
@@ -99,13 +101,23 @@ function makeCache(items: Items, lists: Lists) {
 function makeAuto(items: Items, lists: Lists) {
   return {
     getOne<ItemType extends ItemTypes>(type: ItemType, id: string, inclusionOptions?: InclusionOptions) {
-      const item = items.get(type, id)
-      item.refresh(inclusionOptions)
+      const [item, needsRefresh] = items.get(type, id, inclusionOptions || {})
+      pauseTracking()
+      const needsLoad = !item.inCache && !item.loading
+      resetTracking()
+      if (needsLoad || needsRefresh) {
+        item.refresh()
+      }
       return item
     },
     getAll(type: string, inclusionAndSelectionOptions?: InclusionAndSelectionOptions) {
-      const list = lists.get(type, inclusionAndSelectionOptions || {})
-      list.refresh(inclusionAndSelectionOptions)
+      const [list, needsRefresh] = lists.get(type, inclusionAndSelectionOptions || {})
+      pauseTracking()
+      const needsLoad = !list.inCache && !list.loading
+      resetTracking()
+      if (needsLoad || needsRefresh) {
+        list.refresh()
+      }
       return list
     },
   }
@@ -115,17 +127,17 @@ function makeClient(items: Items, lists: Lists) {
   return {
     async createOne<ItemType extends ItemTypes>(type: ItemType, attributes: Operations<ItemType>['creatableAttributes'], relationships: Operations<ItemType>['creatableRelationships'], inclusionOptions?: InclusionOptions) {
       const item = await items.create(type, attributes, relationships, inclusionOptions)
-      return item
+      return item as Item<ItemType> & InCache
     },
     async getOne<ItemType extends ItemTypes>(type: ItemType, id: string, inclusionOptions?: InclusionOptions) {
-      const item = items.get(type, id)
-      await item.refresh(inclusionOptions)
-      return item
+      const item = items.get(type, id, inclusionOptions || {})[0]
+      await item.refresh()
+      return item as Item<ItemType> & InCache
     },
-    async getAll(type: string, inclusionAndSelectionOptions?: InclusionAndSelectionOptions) {
-      const list = lists.get(type, inclusionAndSelectionOptions || {})
-      await list.refresh(inclusionAndSelectionOptions)
-      return list
+    async getAll<ItemType extends ItemTypes>(type: ItemType, inclusionAndSelectionOptions?: InclusionAndSelectionOptions) {
+      const list = lists.get(type, inclusionAndSelectionOptions || {})[0]
+      await list.refresh()
+      return list as List<ItemType> & InCache
     },
     async batch(...operations: any/* @todo Type */) {
       return items.batch(operations)

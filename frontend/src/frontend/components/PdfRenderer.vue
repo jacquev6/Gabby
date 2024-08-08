@@ -81,9 +81,8 @@ async function draw() {
   }
 }
 
-onMounted(() => {
-  // @todo Triple-check if we are double-drawing the same thing
-  draw()
+onMounted(async () => {
+  await draw()
   watch(() => props.page, draw)
   watchDebounced(containerWidth, draw, {debounce: 250})
 })

@@ -17,12 +17,20 @@ async function loadPdf(source: File) {
   await pdfs.open(source)
   busy.value = false
 }
+
+function change(event: Event) {
+  console.assert(event.target !== null)
+  const input = event.target as HTMLInputElement
+  if (input.files !== null && input.files.length !== 0) {
+    loadPdf(input.files[0])
+  }
+}
 </script>
 
 <template>
   <!-- @todo Display all names known for this PDF -->
   <p>{{ $t('pdfNotLoaded', {name}) }}</p>
   <BBusy :busy>
-    <BLabeledInput :label="$t('inputFile')" type="file" accept=".pdf" @change="(e: any/* @todo Type */) => loadPdf(e.target.files[0])" />
+    <BLabeledInput :label="$t('inputFile')" type="file" accept=".pdf" @change="change" />
   </BBusy>
 </template>

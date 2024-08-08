@@ -1,5 +1,9 @@
 import { useApiStore } from '../frontend/src/frontend/stores/api'
 
+function setLocale() {
+  cy.get('select[data-cy="language"]').last().select('fr')
+  cy.focused().blur()
+}
 
 describe('Gabby', () => {
   before(console.clear)
@@ -9,12 +13,11 @@ describe('Gabby', () => {
     cy.wrap(useApiStore()).then(api => api.auth.login('admin', 'password'))
 
     cy.visit('/')
-    cy.get('select').select('fr')
-    cy.focused().blur()
+    setLocale()
     cy.get('div.busy').should('not.exist')
 
     cy.get('label:contains("Titre")').next().type('Projet de test')
-    cy.get('button:contains("Créer")').click()
+    cy.get('button:contains("Créer le projet")').click()
     cy.get('div.busy').should('not.exist')
 
     cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
@@ -22,7 +25,7 @@ describe('Gabby', () => {
     cy.get('label:contains("Éditeur")').next().type('Slabeuf')
     cy.get('label:contains("Année")').next().type('2021')
     cy.get('label:contains("ISBN")').next().type('01234567890123')
-    cy.get('button:contains("Créer")').click()
+    cy.get('button:contains("Créer le manuel")').click()
     cy.get('div.busy').should('not.exist')
 
     cy.get('button').contains('⚙').click()
@@ -38,12 +41,6 @@ describe('Gabby', () => {
     cy.get('label').contains('Numéro').next().type(5).blur()
 
     const canvas = cy.get('canvas[style="position: absolute; top: 0px; left: 0px;"]').last()
-
-    canvas.trigger('pointermove', 5, 5)
-    canvas.trigger('pointerdown', 15, 15, { pointerId: 1 })
-    canvas.trigger('pointermove', 140, 105)
-    canvas.screenshot('project-textbook-page-exercise/create-exercise-tracing-bounding-rectangle', {clip: {x: 0, y: 0, width: 1000, height: 200}})
-    canvas.trigger('pointerup', 140, 105, { pointerId: 1 })
 
     cy.screenshot('project-textbook-page-exercise/create-exercise', {clip: {x: 0, y: 50, width: 575, height: 750}})
 
@@ -78,8 +75,7 @@ describe('Gabby', () => {
     cy.wrap(useApiStore()).then(api => api.auth.login('admin', 'password'))
 
     cy.visit('/')
-    cy.get('select').select('fr')
-    cy.focused().blur()
+    setLocale()
     cy.get('div.busy').should('not.exist')
 
     cy.screenshot('index/index', {clip: {x: 0, y: 0, width: 1000, height: 350}})
@@ -132,8 +128,7 @@ describe('Gabby', () => {
     cy.wrap(useApiStore()).then(api => api.auth.login('admin', 'password'))
 
     cy.visit('/project-xkopqm/textbook-klxufv/page-6/exercise-wbqloc')
-    cy.get('select').select('fr')
-    cy.focused().blur()
+    setLocale()
     cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
     cy.get('div.busy').should('not.exist')
 
@@ -142,8 +137,6 @@ describe('Gabby', () => {
     cy.get('label:contains("Énoncé")').next().should('have.value', '... vide\n... vident')
     cy.screenshot('project-textbook-page-exercise/modify-exercise', {clip: {x: 0, y: 50, width: 575, height: 1000}})
 
-    cy.get('label:contains("Remplacer")').next().type('{selectAll}{backspace}')
-    cy.get('label:contains("dans")').next().select('everywhere').blur()
     cy.screenshot('project-textbook-page-exercise/tools', {clip: {x: 560, y: 0, width: 210, height: 500}})
 
     cy.get('label:contains("Type d\'adaptation")').next().select('selectThingsAdaptation')

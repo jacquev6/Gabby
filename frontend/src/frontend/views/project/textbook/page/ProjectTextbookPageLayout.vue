@@ -1,73 +1,129 @@
-<script setup lang="ts">
-import { ref, computed } from 'vue'
-import { computedAsync } from '@vueuse/core'
+<script lang="ts">
+import { computed, type Ref } from 'vue'
 
-import { usePdfsStore } from '$frontend/stores/pdfs'
-import { BBusy, BButton } from '$frontend/components/opinion/bootstrap'
-import PdfNavigationControls from '$frontend/components/PdfNavigationControls.vue'
+import { useApiStore } from '$frontend/stores/api'
+
+
+const api = useApiStore()
+
+export function useProjectTextbookPageData(
+  projectId: Ref<string>,
+  textbookId: Ref<string>,
+  page: Ref<number>,
+) {
+  const project = computed(() => api.auto.getOne('project', projectId.value))
+
+  const textbook = computed(() => api.auto.getOne('textbook', textbookId.value, {include: ['sections.pdfFile.namings']}))
+
+  const exercises = computed(() => api.auto.getAll('exercise', {filters: {textbook: textbookId.value, textbookPage: page.value.toString()}}))
+
+  return {
+    project,
+    textbook,
+    exercises,
+  }
+}
+</script>
+
+<script setup lang="ts">
+import { computedAsync } from '@vueuse/core'
+import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+import { BBusy, BButton } from '$/frontend/components/opinion/bootstrap'
+import { useGloballyBusyStore } from '$frontend/stores/globallyBusy'
+import { usePdfsStore } from '$/frontend/stores/pdfs'
+import bc, { type Breadcrumbs } from '$frontend/components/breadcrumbs'
 import PdfNotLoaded from './PdfNotLoaded.vue'
 import PdfRenderer from '$frontend/components/PdfRenderer.vue'
+import ProjectLayout from '../../ProjectLayout.vue'
 import SectionEditor from './SectionEditor.vue'
-import TextPicker from './TextPicker.vue'
-import RectanglesHighlighter from './RectanglesHighlighter.vue'
 import TwoResizableColumns from '$frontend/components/TwoResizableColumns.vue'
-import { useApiStore, type Project, type Textbook } from '$frontend/stores/api'
-import { makeExerciseCreationHistory } from './ExerciseCreationHistory'
-import type { Rectangle } from './RectanglesHighlighter.vue'
+import type { Project, Textbook } from '$frontend/stores/api'
+import PdfNavigationControls from '$frontend/components/PdfNavigationControls.vue'
 
 
 const props = defineProps<{
-  project: Project,
-  refreshProject(): void,
-  textbook: Textbook,
-  refreshTextbook(): void,
-  page: number,
+  project: Project
+  textbook: Textbook
+  page: number
+  title: string[]
+  breadcrumbs: Breadcrumbs
 }>()
 
-const pdfs = usePdfsStore()
-const api = useApiStore()
+const displayPage = defineModel<number>('displayPage', {required: true})
 
-const component = ref<{
-  changePage?: any/* @todo Type */,
-  greyRectangles: Rectangle[],
-  surroundedRectangles: Rectangle[],
-  textSelected?: any/* @todo Type */,
-  handlesScrolling: boolean,
-} | null>(null)
-const sectionEditor = ref<typeof SectionEditor | null>(null)
-const pdfRenderer = ref<typeof PdfRenderer | null>(null)
+const i18n = useI18n()
+const globallyBusy = useGloballyBusyStore()
+const pdfs = usePdfsStore()
+
+globallyBusy.register('loading textbook', computed(() => props.textbook.loading))
+
+const textbookBelongsToProject = computed(() => 
+  props.textbook.inCache && props.textbook.exists && props.textbook.relationships.project === props.project
+)
+
+const title = computed(() => {
+  if (props.textbook.loading) {
+    return []
+  } else if (props.textbook.inCache && props.textbook.exists && textbookBelongsToProject.value) {
+    return [props.textbook.attributes.title, `Page ${props.page}`, ...props.title]
+  } else {
+    return [i18n.t('textbookNotFound')]
+  }
+})
+
+const breadcrumbs = computed(() => {
+  if (props.textbook.loading) {
+    return bc.empty
+  } else if (props.textbook.inCache && props.textbook.exists) {
+    return bc.prepend(
+      `${props.textbook.attributes.title}, page ${props.page}`,
+      {name: 'project-textbook-page'},
+      props.breadcrumbs,
+    )
+  } else {
+    return bc.last(i18n.t('textbookNotFound'))
+  }
+})
 
 // @todo(Feature, soon) Get the number of pages from the textbook itself
 const textbookPagesCount = computed(() => {
-  console.assert(props.textbook.relationships !== undefined)
-
   let c = 1
-  for (const section of props.textbook.relationships.sections) {
-    console.assert(section.attributes !== undefined)
-    c = Math.max(c, section.attributes.textbookStartPage + section.attributes.pagesCount - 1)
+  if (props.textbook.inCache && props.textbook.exists) {
+    for (const section of props.textbook.relationships.sections) {
+      if(section.inCache && section.exists) {
+        c = Math.max(c, section.attributes.textbookStartPage + section.attributes.pagesCount - 1)
+      }
+    }
   }
   return c
 })
 
-const section = computed(() => {
-  console.assert(props.textbook.relationships !== undefined)
+const sectionEditor = ref<InstanceType<typeof SectionEditor> | null>(null)
 
-  for (const section of props.textbook.relationships.sections) {
-    console.assert(section.attributes !== undefined)
-    if (props.page >= section.attributes.textbookStartPage && props.page < section.attributes.textbookStartPage + section.attributes.pagesCount) {
-      return section
+const section = computed(() => {
+  if (props.textbook.inCache && props.textbook.exists) {
+    for (const section of props.textbook.relationships.sections) {
+      if(section.inCache && section.exists) {
+        if (displayPage.value >= section.attributes.textbookStartPage && displayPage.value < section.attributes.textbookStartPage + section.attributes.pagesCount) {
+          return section
+        }
+      }
     }
   }
   return null
 })
 
+const pdfRenderer = ref<InstanceType<typeof PdfRenderer> | null>(null)
+
 const pdfLoading = ref(false)
 const pdf = computedAsync(
   async () => {
     if (section.value) {
-      const pageNumber = section.value.attributes!.pdfFileStartPage + props.page - section.value.attributes!.textbookStartPage
-      if (pdfs.getInfo(section.value.relationships!.pdfFile.id)) {
-        const document = await pdfs.getDocument(section.value.relationships!.pdfFile.id)
+      const pageNumber = section.value.attributes.pdfFileStartPage + displayPage.value - section.value.attributes.textbookStartPage
+      if (pdfs.getInfo(section.value.relationships.pdfFile.id)) {
+        const document = await pdfs.getDocument(section.value.relationships.pdfFile.id)
         // WARNING: no reactivity to dependencies accessed after this first await (https://vueuse.org/core/computedAsync/#caveats)
         const page = await document?.getPage(pageNumber)
         const textContent = []
@@ -97,73 +153,73 @@ const pdf = computedAsync(
   null,
   pdfLoading,
 )
-
-const exercises = computed(() => api.auto.getAll(
-  'exercise',
-  {filters: {'textbook': props.textbook.id, 'textbookPage': props.page.toString()}}
-))
-
-const componentHandlesScrolling = computed(() => component.value?.handlesScrolling ?? false)
-
-const class_ = computed(() => componentHandlesScrolling.value ? 'overflow-hidden' : 'overflow-auto')
-
-const exerciseCreationHistory = makeExerciseCreationHistory()
-
-defineExpose({
-  title: computed(() => [`Page ${props.page}`]),
-  breadcrumbs: computed(() => []),
-  handlesScrolling: true,
-})
 </script>
 
 <template>
-  <TwoResizableColumns saveKey="projectTextbookPage-1" rightWidth="2fr" :snap="250" class="h-100 overflow-hidden">
-    <template #left>
-      <div class="h-100 overflow-hidden d-flex flex-column">
-        <PdfNavigationControls :page @update:page="component?.changePage" :disabled="!component?.changePage" :pagesCount="textbookPagesCount">
-          <BButton secondary sm :disabled="!section" @click="sectionEditor!.show(section!.id)">&#9881;</BButton>
-        </PdfNavigationControls>
-        <SectionEditor ref="sectionEditor" />
-        <template v-if="section">
-          <BBusy size="7rem" :busy="pdfLoading" class="flex-fill overflow-auto" data-cy="pdf-container">
-            <template v-if="pdf?.page">
-              <div style="border: 1px solid black">
-                <PdfRenderer
-                  ref="pdfRenderer"
-                  :page="pdf.page"
-                  class="img w-100"
-                />
-                <RectanglesHighlighter
-                  v-if="pdfRenderer?.transform && component"
-                  class="img w-100" style="position: absolute; top: 0; left: 0"
-                  :width="pdfRenderer.width" :height="pdfRenderer.height" :transform="pdfRenderer.transform"
-                  :greyRectangles="component.greyRectangles" :surroundedRectangles="component.surroundedRectangles"
-                />
-                <TextPicker
-                  v-if="pdfRenderer?.transform && component?.textSelected"
-                  class="img w-100" style="position: absolute; top: 0; left: 0"
-                  :width="pdfRenderer.width" :height="pdfRenderer.height" :transform="pdfRenderer.transform"
-                  :textContent="pdf.textContent"
-                  @text-selected="component?.textSelected"
-                />
-              </div>
-            </template>
-            <template v-else>
-              <PdfNotLoaded :name="section.relationships!.pdfFile.relationships!.namings[0].attributes!.name" />
-            </template>
-          </BBusy>
-        </template>
-        <template v-else>
-          <p>{{ $t('pageNoKnown') }}</p>
-        </template>
-      </div>
+  <ProjectLayout
+    :project
+    :title :breadcrumbs :slotHandlesScrolling="true"
+    #="{ project }"
+  >
+    <template v-if="textbook.inCache">
+      <template v-if="textbook.exists && textbookBelongsToProject">
+        <TwoResizableColumns saveKey="projectTextbookPage-1" rightWidth="2fr" :snap="250" class="h-100 overflow-hidden">
+          <template #left>
+            <div class="h-100 overflow-hidden d-flex flex-column">
+              <PdfNavigationControls v-model:page="displayPage" :pagesCount="textbookPagesCount">
+                <BButton secondary sm :disabled="section === null" @click="console.assert(section !== null); sectionEditor?.show(section.id)">&#9881;</BButton>
+              </PdfNavigationControls>
+              <SectionEditor ref="sectionEditor" />
+              <template v-if="section?.inCache && section.exists">
+                <BBusy size="7rem" :busy="pdfLoading" showWhileBusy="afterNotBusy" class="flex-fill overflow-auto" data-cy="pdf-container">
+                  <template v-if="pdf !== null">
+                    <div style="border: 1px solid black">
+                      <!--
+                        @todo Fix the PdfRenderer. Form the console logs:
+                        - it renders each page twice
+                        - it fails an assertion when one changes the displayed page several times quickly
+                      -->
+                      <PdfRenderer
+                        ref="pdfRenderer"
+                        :page="pdf.page"
+                        class="img w-100"
+                      />
+                      <template v-if="pdfRenderer">
+                        <slot
+                          name="pdfOverlay"
+                          :project :textbook
+                          :pdfFile="section.relationships.pdfFile" :pdf
+                          :width="pdfRenderer.width" :height="pdfRenderer.height" :transform="pdfRenderer.transform"
+                        ></slot>
+                      </template>
+                    </div>
+                  </template>
+                  <template v-else>
+                    <PdfNotLoaded :name="
+                      section.relationships.pdfFile.inCache
+                      && section.relationships.pdfFile.exists
+                      && section.relationships.pdfFile.relationships.namings.length > 0
+                      && section.relationships.pdfFile.relationships.namings[0].inCache
+                      && section.relationships.pdfFile.relationships.namings[0].exists
+                      ? section.relationships.pdfFile.relationships.namings[0].attributes.name : ''" />
+                  </template>
+                </BBusy>
+              </template>
+              <template v-else>
+                <p>{{ $t('pageNoKnown') }}</p>
+              </template>
+            </div>
+          </template>
+          <template #right>
+            <div class="h-100 overflow-auto" data-cy="right-col-1">
+              <slot :project :textbook :pdf></slot>
+            </div>
+          </template>
+        </TwoResizableColumns>
+      </template>
+      <template v-else>
+        <h1>{{ i18n.t('textbookNotFound') }}</h1>
+      </template>
     </template>
-    <template #right>
-      <div class="h-100" :class="class_" data-cy="right-col-1">
-        <RouterView v-slot="{ Component }">
-          <component :is="Component" ref="component" :project :textbook :pdf :section :page :exercises :exerciseCreationHistory></component>
-        </RouterView>
-      </div>
-    </template>
-  </TwoResizableColumns>
+  </ProjectLayout>
 </template>

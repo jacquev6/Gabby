@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { useApiStore } from '../stores/api'
+import bc from '$frontend/components/breadcrumbs'
+import RootLayout from './RootLayout.vue'
 
 
 const api = useApiStore()
@@ -19,10 +21,8 @@ const errors: [string, () => void][] = [
   ['Generate a 500 response', () => api.client.getOne('syntheticError', '500')],
 ]
 
-defineExpose({
-  title: ["Errors"],
-  breadcrumbs: [{title: "Errors", to: "/errors"}],
-})
+const title = ['Errors']
+const breadcrumbs = bc.last('Errors', '/errors')
 
 if (window.location.search.includes('reject')) {
   Promise.reject('This is the reason')
@@ -30,5 +30,7 @@ if (window.location.search.includes('reject')) {
 </script>
 
 <template>
-  <p v-for="[title, f] of errors"><button @click="f">{{ title }}</button></p>
+  <RootLayout :title :breadcrumbs>
+    <p v-for="[title, f] of errors"><button @click="f">{{ title }}</button></p>
+  </RootLayout>
 </template>

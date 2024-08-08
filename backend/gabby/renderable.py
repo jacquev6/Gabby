@@ -1,15 +1,10 @@
 from typing import Literal
 
-import pydantic
-
 from . import settings
+from mydantic import PydanticBase
 
 
-class BaseModel(pydantic.BaseModel):
-    model_config = pydantic.ConfigDict(extra="forbid")
-
-
-class _PlainText(BaseModel):
+class _PlainText(PydanticBase):
     type: Literal["plainText"]
     text: str
 
@@ -17,10 +12,11 @@ class _PlainText(BaseModel):
         return self.text
 
 def PlainText(text: str):
+    assert text.__class__ == str, text.__class__
     return _PlainText(type="plainText", text=text)
 
 
-class _BoxedText(BaseModel):
+class _BoxedText(PydanticBase):
     type: Literal["boxedText"]
     text: str
 
@@ -28,10 +24,35 @@ class _BoxedText(BaseModel):
         return f"{{boxed-text|{self.text}}}"
 
 def BoxedText(text: str):
+    assert text.__class__ == str, text.__class__
     return _BoxedText(type="boxedText", text=text)
 
 
-class _SelectableText(BaseModel):
+class _BoldText(PydanticBase):
+    type: Literal["boldText"]
+    text: str
+
+    def to_generic(self):
+        return f"{{bold-text|{self.text}}}"
+
+def BoldText(text: str):
+    assert text.__class__ == str, text.__class__
+    return _BoldText(type="boldText", text=text)
+
+
+class _ItalicText(PydanticBase):
+    type: Literal["italicText"]
+    text: str
+
+    def to_generic(self):
+        return f"{{italic-text|{self.text}}}"
+
+def ItalicText(text: str):
+    assert text.__class__ == str, text.__class__
+    return _ItalicText(type="italicText", text=text)
+
+
+class _SelectableText(PydanticBase):
     type: Literal["selectableText"]
     text: str
     colors: int
@@ -40,10 +61,11 @@ class _SelectableText(BaseModel):
         return f"{{selectable-text|{self.colors}|{self.text}}}"
 
 def SelectableText(text: str, colors: int):
+    assert text.__class__ == str, text.__class__
     return _SelectableText(type="selectableText", text=text, colors=colors)
 
 
-class _SelectedText(BaseModel):
+class _SelectedText(PydanticBase):
     type: Literal["selectedText"]
     text: str
     color: int
@@ -53,10 +75,11 @@ class _SelectedText(BaseModel):
         return f"{{selected-text|{self.color}|{self.colors}|{self.text}}}"
 
 def SelectedText(text: str, color: int, colors: int):
+    assert text.__class__ == str, text.__class__
     return _SelectedText(type="selectedText", text=text, color=color, colors=colors)
 
 
-class _SelectedClicks(BaseModel):
+class _SelectedClicks(PydanticBase):
     type: Literal["selectedClicks"]
     color: int
     colors: int
@@ -68,7 +91,7 @@ def SelectedClicks(color: int, colors: int):
     return _SelectedClicks(type="selectedClicks", color=color, colors=colors)
 
 
-class _FreeTextInput(BaseModel):
+class _FreeTextInput(PydanticBase):
     type: Literal["freeTextInput"]
 
     def to_generic(self):
@@ -78,7 +101,7 @@ def FreeTextInput():
     return _FreeTextInput(type="freeTextInput")
 
 
-class _MultipleChoicesInput(BaseModel):
+class _MultipleChoicesInput(PydanticBase):
     type: Literal["multipleChoicesInput"]
     choices: list[str]
 
@@ -89,7 +112,7 @@ def MultipleChoicesInput(choices: list[str]):
     return _MultipleChoicesInput(type="multipleChoicesInput", choices=choices)
 
 
-class _Whitespace(BaseModel):
+class _Whitespace(PydanticBase):
     type: Literal["whitespace"]
 
     def to_generic(self):
@@ -99,39 +122,39 @@ def Whitespace():
     return _Whitespace(type="whitespace")
 
 
-SentenceToken = _PlainText | _BoxedText | _SelectableText | _SelectedText | _SelectedClicks | _FreeTextInput | _MultipleChoicesInput | _Whitespace
+SentenceToken = _PlainText | _BoxedText | _BoldText | _ItalicText | _SelectableText | _SelectedText | _SelectedClicks | _FreeTextInput | _MultipleChoicesInput | _Whitespace
 
 
-class Sentence(BaseModel):
+class Sentence(PydanticBase):
     tokens: list[SentenceToken]
 
     def to_generic(self):
         return "".join(token.to_generic() for token in self.tokens)
 
 
-class Paragraph(BaseModel):
+class Paragraph(PydanticBase):
     sentences: list[Sentence]
 
     def to_generic(self):
         return " ".join(sentence.to_generic() for sentence in self.sentences)
 
 
-class Section(BaseModel):
+class Section(PydanticBase):
     paragraphs: list[Paragraph]
 
     def to_generic(self):
         generic = "\n\n".join(p.to_generic() for p in self.paragraphs)
         if settings.DEBUG:
             from . import parsing
-            reparsed = parsing.parse_generic_wording_section(generic)
-            if reparsed != self:
+            adapted_again = parsing.adapt_generic_wording_section(generic)
+            if adapted_again != self:
                 print("Expected:", generic)
-                print("Got:", reparsed.to_generic())
+                print("Got:", adapted_again.to_generic())
                 assert False
         return generic
 
 
-class AdaptedExercise(BaseModel):
+class Exercise(PydanticBase):
     number: str
     textbook_page: int | None
     instructions: Section

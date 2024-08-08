@@ -16,7 +16,7 @@ const props = defineProps<{
 const api = useApiStore()
 const router = useRouter()
 
-const modal = ref<typeof BModal | null>(null)
+const modal = ref<InstanceType<typeof BModal> | null>(null)
 
 const busy = ref(false)
 

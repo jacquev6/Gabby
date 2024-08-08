@@ -50,16 +50,18 @@ class PdfFilesResource:
             pages_count=pages_count,
             created_by=authenticated_user,
         )
-        session.add(pdf_file)
-        try:
-            session.flush()
-        except sql.exc.IntegrityError as e:
-            if e.orig.diag.constraint_name == "pdf_files_pkey":
-                session.rollback()
-                return get_item(session, PdfFile, sha256)
+        with session.begin_nested() as nested:
+            session.add(pdf_file)
+            try:
+                session.flush()
+            except sql.exc.IntegrityError as e:
+                if e.orig.diag.constraint_name == "pdf_files_pkey":
+                    nested.rollback()
+                else:
+                    raise HTTPException(status_code=400, detail=e.orig.diag.constraint_name)
             else:
-                raise HTTPException(status_code=400, detail=e.orig.diag.constraint_name)
-        return wrap(pdf_file)
+                return wrap(pdf_file)
+        return get_item(session, PdfFile, sha256)
 
     def get_item(
         self,

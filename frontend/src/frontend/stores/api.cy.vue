@@ -19,12 +19,12 @@ const pings = api.auto.getAll('ping')
     </b-col>
   </b-row>
   <b-busy :busy="pings.loading">
-    <ul v-if="pings.items.length">
-      <li v-for="ping in pings.items" :key="ping.id">
+    <ul v-if="pings.allItems.length">
+      <li v-for="ping in pings.allItems" :key="ping.id">
         <template v-if="ping.exists">
-          {{ ping.id }} - {{ ping.attributes!.createdAt }}<span v-if="ping.attributes!.message">: {{ ping.attributes!.message }}</span>
-          <template v-if="ping.relationships!.prev">Prev: {{ ping.relationships!.prev.id }}</template>
-          <template v-if="ping.relationships!.next.length">Next:<template v-for="next in ping.relationships!.next">&nbsp;{{ next.id }}</template></template>
+          {{ ping.id }} - {{ ping.attributes.createdAt }}<span v-if="ping.attributes.message">: {{ ping.attributes.message }}</span>
+          <template v-if="ping.relationships.prev">Prev: {{ ping.relationships.prev.id }}</template>
+          <template v-if="ping.relationships.next.length">Next:<template v-for="next in ping.relationships.next">&nbsp;{{ next.id }}</template></template>
         </template>
         <template v-else>
           {{ ping.id }} - Deleted
