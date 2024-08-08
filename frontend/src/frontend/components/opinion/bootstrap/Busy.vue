@@ -14,11 +14,15 @@ const props = withDefaults(defineProps<{
 })
 
 const hasEverBeenNotBusy = ref(false)
-watch(() => props.busy, (busy) => {
-  if (!busy) {
-    hasEverBeenNotBusy.value = true
-  }
-})
+watch(
+  () => props.busy,
+  (busy) => {
+    if (!busy) {
+      hasEverBeenNotBusy.value = true
+    }
+  },
+  {immediate: true}
+)
 
 const show = computed(() => {
   if (props.showWhileBusy === 'always') {
