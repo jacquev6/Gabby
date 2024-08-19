@@ -1,10 +1,41 @@
+<script lang="ts">
+import { ChoiceBlot, BoldBlot, ItalicBlot } from './Quill.vue'
+
+
+export const basicFormats = {
+  bold: {
+    make: (text: string) => `{bold|${text}}`,
+    blot: BoldBlot,
+  },
+  italic: {
+    make: (text: string) => `{italic|${text}}`,
+    blot: ItalicBlot,
+  },
+}
+
+export const instructionsFormats = {
+  ...basicFormats,
+  choice: {
+    make: (text: string) => `{choice|${text}}`,
+    blot: ChoiceBlot,
+  },
+}
+</script>
+
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 
-import Quill, { type Model as QuillModel, BoldBlot, ChoiceBlot, ItalicBlot } from './Quill.vue'
+import Quill, { type Model as QuillModel } from './Quill.vue'
 
+
+export interface Format {
+  make: (text: string) => string
+  blot: typeof BoldBlot
+}
 
 const props = defineProps<{
+  label: string
+  formats: Record<string, Format>
   delta: QuillModel
 }>()
 
@@ -45,22 +76,19 @@ watch(quillModel, quillModel => {
 function makeModel(quillModel: QuillModel): string {
   let model = ''
   for (const delta of quillModel) {
-    if (delta.attributes?.choice) {
-      model += `{choice|${delta.insert}}`
-    } else if (delta.attributes?.bold) {
-      model += `{bold|${delta.insert}}`
-    } else if (delta.attributes?.italic) {
-      model += `{italic|${delta.insert}}`
-    } else {
+    const keys = Object.keys(delta.attributes ?? {})
+    if (keys.length === 0) {
       model += delta.insert
+    } else {
+      console.assert(keys.length === 1)
+      const format = props.formats[keys[0]]
+      model += format.make(delta.insert)
     }
   }
   return model
 }
 
-// This variable is required: passing ':blots="[ChoiceBlot]"' to the 'Quill' component
-// changes its 'props.blots' on every update, triggering unwanted re-computations.
-const blots = [ChoiceBlot, BoldBlot, ItalicBlot]
+const blots = computed(() => Object.values(props.formats).map(format => format.blot))
 
 defineExpose({
   // Could we automate these? They all forward to 'quill.value'.
@@ -85,5 +113,8 @@ defineExpose({
 </script>
 
 <template>
-  <Quill ref="quill" v-model="quillModel" :blots />
+  <div class="mb-3">
+    <label class="form-label" @click="quill?.focus()">{{ label }}</label>
+    <Quill ref="quill" v-model="quillModel" :blots />
+  </div>
 </template>

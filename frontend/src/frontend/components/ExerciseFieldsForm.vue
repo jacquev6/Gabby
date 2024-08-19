@@ -201,7 +201,8 @@ import { ref, computed } from 'vue'
 
 import { BLabeledInput, BLabeledTextarea, BLabeledSelect } from './opinion/bootstrap'
 import OptionalTextarea from './OptionalTextarea.vue'
-import WysiwygInstructionsEditor from './WysiwygInstructionsEditor.vue'
+import WysiwygEditor from './WysiwygEditor.vue'
+import { instructionsFormats } from './WysiwygEditor.vue'
 
 
 const props = defineProps<{
@@ -223,7 +224,7 @@ const textAreas = {
   clue: clueTextArea,
 }
 
-const instructionsEditor = ref<InstanceType<typeof WysiwygInstructionsEditor> | null>(null)
+const instructionsEditor = ref<InstanceType<typeof WysiwygEditor> | null>(null)
 
 const noClueNoExample = computed(() => !exampleTextArea.value?.expanded && !clueTextArea.value?.expanded)
 
@@ -268,12 +269,13 @@ defineExpose({
       :label="$t('adaptationType')" v-model="model.adaptationType"
       :options="['-', ...adaptationTypes.map(kind => ({value: kind, label: $t(kind)}))]"
     />
-    <template v-if="wysiwyg && model.adaptationType === 'multipleChoicesInInstructionsAdaptation'">
-      <div class="mb-3">
-        <label class="form-label" @click="instructionsEditor?.focus()">{{ $t('exerciseInstructions') }}</label>
-        <WysiwygInstructionsEditor ref="instructionsEditor" v-model="model.instructions" :delta="deltas === null ? [] : deltas.instructions" />
-      </div>
-    </template>
+    <WysiwygEditor
+      v-if="wysiwyg && model.adaptationType === 'multipleChoicesInInstructionsAdaptation'"
+      ref="instructionsEditor"
+      :label="$t('exerciseInstructions')"
+      :formats="instructionsFormats"
+      v-model="model.instructions" :delta="deltas === null ? [] : deltas.instructions"
+    />
     <BLabeledTextarea
       v-else
       ref="instructionsTextArea"
