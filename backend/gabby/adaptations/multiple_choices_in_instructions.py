@@ -124,6 +124,9 @@ class MultipleChoicesInInstructionsAdaptation(Adaptation):
             self.exercise.wording.replace(self.placeholder, "{placeholder}")
         )
 
+    def make_wording_delta(self):
+        return parsing.make_plain_wording_section_delta(self.exercise.wording)
+
     def make_adapted_example(self):
         return parsing.adapt_plain_instructions_section(self.exercise.example)
 

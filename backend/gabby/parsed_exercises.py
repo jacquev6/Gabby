@@ -27,6 +27,9 @@ class NullAdaptation(Adaptation):
     def make_adapted_instructions(self):
         return parsing.adapt_plain_instructions_section(self.exercise.instructions)
 
+    def make_wording_delta(self):
+        return parsing.make_plain_wording_section_delta(self.exercise.wording)
+
     def make_adapted_wording(self):
         return parsing.adapt_plain_wording_section(self.exercise.wording)
 

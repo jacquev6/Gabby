@@ -1644,10 +1644,18 @@
             },
             "title": "Instructions",
             "type": "array"
+          },
+          "wording": {
+            "items": {
+              "$ref": "#/components/schemas/InsertOp"
+            },
+            "title": "Wording",
+            "type": "array"
           }
         },
         "required": [
           "instructions",
+          "wording",
           "example",
           "clue"
         ],

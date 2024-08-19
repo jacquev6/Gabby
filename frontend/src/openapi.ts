@@ -810,6 +810,8 @@ export interface components {
       example: components["schemas"]["InsertOp"][];
       /** Instructions */
       instructions: components["schemas"]["InsertOp"][];
+      /** Wording */
+      wording: components["schemas"]["InsertOp"][];
     };
     /** Exercise */
     gabby__renderable__Exercise: {

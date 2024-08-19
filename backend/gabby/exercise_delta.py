@@ -10,5 +10,6 @@ class InsertOp(PydanticBase):
 
 class Exercise(PydanticBase):
     instructions: list[InsertOp]
+    wording: list[InsertOp]
     example: list[InsertOp]
     clue: list[InsertOp]

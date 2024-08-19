@@ -228,10 +228,12 @@ const textAreas = {
 const actuallyWysiwyg = computed(() => props.wysiwyg && model.value.adaptationType === 'multipleChoicesInInstructionsAdaptation')
 
 const instructionsEditor = ref<InstanceType<typeof WysiwygEditor> | null>(null)
+const wordingEditor = ref<InstanceType<typeof WysiwygEditor> | null>(null)
 const exampleEditor = ref<InstanceType<typeof OptionalWysiwygEditor> | null>(null)
 const clueEditor = ref<InstanceType<typeof OptionalWysiwygEditor> | null>(null)
 const editors = {
   instructions: instructionsEditor,
+  wording: wordingEditor,
   example: exampleEditor,
   clue: clueEditor,
 }
@@ -249,8 +251,7 @@ const saveDisabled = computed(() => model.value.number === '')
 function highlightSuffix(fieldName: TextualFieldName, suffix: string) {
   const text = model.value[fieldName]
   console.assert(text.endsWith(suffix))
-  // @todo Implement for WYSIWYG wording
-  if (actuallyWysiwyg.value && fieldName !== 'wording') {
+  if (actuallyWysiwyg.value) {
     const editor = editors[fieldName].value
     console.assert(editor !== null)
     editor.focus()
@@ -275,6 +276,8 @@ const focusedWysiwygField = computed(() => {
   if (actuallyWysiwyg.value) {
     if (instructionsEditor.value?.hasFocus) {
       return 'instructions'
+    } else if (wordingEditor.value?.hasFocus) {
+      return 'wording'
     } else if (exampleEditor.value?.hasFocus) {
       return 'example'
     } else if (clueEditor.value?.hasFocus) {
@@ -315,7 +318,15 @@ defineExpose({
       :label="$t('exerciseInstructions')"
       v-model="model.instructions"
     />
+    <WysiwygEditor
+      v-if="actuallyWysiwyg"
+      ref="wordingEditor"
+      :label="$t('exerciseWording')"
+      :formats="basicFormats"
+      v-model="model.wording" :delta="deltas === null ? [] : deltas.wording"
+    />
     <BLabeledTextarea
+      v-else
       ref="wordingTextArea"
       :label="$t('exerciseWording')"
       v-model="model.wording"
