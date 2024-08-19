@@ -46,12 +46,37 @@ const emit = defineEmits<{
   blur: []
 }>()
 
+// We do not detect if the model (or delta) has a trailing line end.
+// We just add one for Quill and remove it for the model.
+// This will match the behavior of 'textarea' elements.
+const modelWithAdditionalLineEnd = computed({
+  get() {
+    return model.value + '\n'
+  },
+  set(value) {
+    console.assert(value.endsWith('\n'))
+    model.value = value.slice(0, -1)
+  },
+})
+
+const deltaWithAdditionalLineEnd = computed(() => {
+  if (props.delta.length === 0) {
+    return [{insert: '\n'}]
+  } else {
+    const lastOp = props.delta[props.delta.length - 1]
+    if (Object.keys(lastOp.attributes ?? {}).length === 0) {
+      return [...props.delta.slice(0, -1), {insert: lastOp.insert + '\n'}]
+    } else {
+      return [...props.delta, {insert: '\n'}]
+    }
+  }
+})
+
 const quillModel = ref<QuillModel>([])
 const quill = ref<InstanceType<typeof Quill> | null>(null)
 
-// @todo Consider using a writable 'computed' instead of this two-way 'watch' (https://vuejs.org/api/reactivity-core.html#computed)
 watch(
-  () => props.delta,
+  deltaWithAdditionalLineEnd,
   delta => {
     if (homogenizeDelta(quillModel.value) !== homogenizeDelta(delta)) {
       quillModel.value = delta
@@ -73,8 +98,8 @@ function homogenizeDelta(delta: QuillModel): string {
 
 watch(quillModel, quillModel => {
   const expectedModel = makeModel(quillModel)
-  if (model.value !== expectedModel) {
-    model.value = expectedModel
+  if (modelWithAdditionalLineEnd.value !== expectedModel) {
+    modelWithAdditionalLineEnd.value = expectedModel
   }
 })
 
@@ -90,6 +115,7 @@ function makeModel(quillModel: QuillModel): string {
       model += format.make(delta.insert)
     }
   }
+  console.assert(model.endsWith('\n'))  // The Quill model always ends with a line end. (Unlike 'props.delta')
   return model
 }
 

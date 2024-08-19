@@ -27,8 +27,7 @@ function unforce() {
   forced.value = false
 }
 
-// @todo Normalize model: choose if empty string is '' or '\n' and apply this decision to *all* cases.
-const expanded = computed(() => model.value !== '' && model.value !== '\n' || forced.value)
+const expanded = computed(() => model.value !== '' || forced.value)
 
 defineExpose({
   expanded,
