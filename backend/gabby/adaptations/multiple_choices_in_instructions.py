@@ -127,8 +127,14 @@ class MultipleChoicesInInstructionsAdaptation(Adaptation):
     def make_adapted_example(self):
         return parsing.adapt_plain_instructions_section(self.exercise.example)
 
+    def make_example_delta(self):
+        return parsing.make_plain_instructions_section_delta(self.exercise.example)
+
     def make_adapted_clue(self):
         return parsing.adapt_plain_instructions_section(self.exercise.clue)
+
+    def make_clue_delta(self):
+        return parsing.make_plain_instructions_section_delta(self.exercise.clue)
 
 
 class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):

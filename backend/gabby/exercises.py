@@ -50,6 +50,8 @@ class Adaptation(OrmBase, CreatedUpdatedByAtMixin):
     def make_delta(self):
         return exercise_delta.Exercise(
             instructions=self.make_instructions_delta(),
+            example=self.make_example_delta(),
+            clue=self.make_clue_delta(),
         )
 
     def to_generic_adaptation(self):

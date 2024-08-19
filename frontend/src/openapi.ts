@@ -804,6 +804,10 @@ export interface components {
     };
     /** Exercise */
     gabby__exercise_delta__Exercise: {
+      /** Clue */
+      clue: components["schemas"]["InsertOp"][];
+      /** Example */
+      example: components["schemas"]["InsertOp"][];
       /** Instructions */
       instructions: components["schemas"]["InsertOp"][];
     };

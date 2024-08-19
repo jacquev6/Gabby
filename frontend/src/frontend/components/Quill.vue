@@ -94,6 +94,11 @@ const props = defineProps<{
   blots: Blot[]
 }>()
 
+const emit = defineEmits<{
+  focus: []
+  blur: []
+}>()
+
 const registry = computed(() => makeRegistryWithBlots(props.blots))
 
 const model = defineModel<Model>({required: true})
@@ -126,7 +131,15 @@ const quill = computed(() => {
       }
     })
     quill.on('selection-change', (range: object | null, _oldRange: object | null, _source: string) => {
+      const hadFocus = hasFocus.value
       hasFocus.value = range !== null
+      if (hasFocus.value != hadFocus) {
+        if (hasFocus.value) {
+          emit('focus')
+        } else {
+          emit('blur')
+        }
+      }
     })
     return quill
   }

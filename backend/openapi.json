@@ -1624,6 +1624,20 @@
       "gabby__exercise_delta__Exercise": {
         "additionalProperties": false,
         "properties": {
+          "clue": {
+            "items": {
+              "$ref": "#/components/schemas/InsertOp"
+            },
+            "title": "Clue",
+            "type": "array"
+          },
+          "example": {
+            "items": {
+              "$ref": "#/components/schemas/InsertOp"
+            },
+            "title": "Example",
+            "type": "array"
+          },
           "instructions": {
             "items": {
               "$ref": "#/components/schemas/InsertOp"
@@ -1633,7 +1647,9 @@
           }
         },
         "required": [
-          "instructions"
+          "instructions",
+          "example",
+          "clue"
         ],
         "title": "Exercise",
         "type": "object"

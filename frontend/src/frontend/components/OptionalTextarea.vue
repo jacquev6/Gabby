@@ -24,7 +24,7 @@ function unforce() {
   forced.value = false
 }
 
-const expanded = computed(() => model.value || forced.value)
+const expanded = computed(() => model.value !== '' || forced.value)
 
 defineExpose({
   expanded,

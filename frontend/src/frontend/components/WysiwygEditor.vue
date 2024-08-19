@@ -41,6 +41,11 @@ const props = defineProps<{
 
 const model = defineModel<string>({required: true})
 
+const emit = defineEmits<{
+  focus: []
+  blur: []
+}>()
+
 const quillModel = ref<QuillModel>([])
 const quill = ref<InstanceType<typeof Quill> | null>(null)
 
@@ -115,6 +120,6 @@ defineExpose({
 <template>
   <div class="mb-3">
     <label class="form-label" @click="quill?.focus()">{{ label }}</label>
-    <Quill ref="quill" v-model="quillModel" :blots />
+    <Quill ref="quill" v-model="quillModel" :blots @focus="emit('focus')" @blur="emit('blur')" />
   </div>
 </template>

@@ -41,7 +41,7 @@ const model = defineModel<Model>({required: true})
   </template>
   <template v-else-if="model.adaptationType === 'multipleChoicesInInstructionsAdaptation'">
     <template v-if="wysiwyg">
-      <p><BButton sm primary @click="fields.toggle('choice')">{{ $t('choiceButton') }}</BButton></p>
+      <p><BButton sm primary :disabled="fields.focusedWysiwygField !== 'instructions'" @click="fields.toggle('choice')">{{ $t('choiceButton') }}</BButton></p>
     </template>
     <p v-else class="alert alert-secondary">
       <i18n-t keypath="useChoice">
