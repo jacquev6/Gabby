@@ -13,11 +13,6 @@ export type AdaptationType = '-' | typeof adaptationTypes[number]
 export const textualFieldNames = ['instructions', 'wording', 'example', 'clue'] as const
 export type TextualFieldName = typeof textualFieldNames[number]
 
-export interface Selection {
-  fieldName: TextualFieldName
-  text: string
-}
-
 export interface Model {
   number: string
   adaptationType: AdaptationType
@@ -215,10 +210,6 @@ const props = defineProps<{
   deltas: (ParsedExercise & InCache & Exists)['attributes']['delta'] | null
 }>()
 
-const emit = defineEmits<{
-  selected: [Selection]
-}>()
-
 const model = defineModel<Model>({required: true})
 
 const instructionsTextArea = ref<InstanceType<typeof BLabeledTextarea> | null>(null)
@@ -238,16 +229,6 @@ const noClueNoExample = computed(() => !exampleTextArea.value?.expanded && !clue
 
 const saveDisabled = computed(() => model.value.number === '')
 
-const settingSelectionRange = ref(false)
-function emitSelected(fieldName: TextualFieldName, e: Event) {
-  if (!settingSelectionRange.value) {
-    const textArea = e.target as HTMLTextAreaElement
-    const text = textArea.value.substring(textArea.selectionStart, textArea.selectionEnd)
-    emit('selected', {fieldName, text})
-  }
-  settingSelectionRange.value = false
-}
-
 function highlightSuffix(fieldName: TextualFieldName, suffix: string) {
   const text = model.value[fieldName]
   console.assert(text.endsWith(suffix))
@@ -256,12 +237,10 @@ function highlightSuffix(fieldName: TextualFieldName, suffix: string) {
     if (fieldName === 'instructions' && props.wysiwyg) {
       console.assert(instructionsEditor.value !== null)
       instructionsEditor.value.focus()
-      settingSelectionRange.value = true
       instructionsEditor.value.setSelection(instructionsEditor.value.getLength() - suffix.length - 1, suffix.length)
     }
   } else {
     textArea.focus()
-    settingSelectionRange.value = true
     textArea.setSelectionRange(text.length - suffix.length, text.length)
   }
 }
@@ -300,13 +279,11 @@ defineExpose({
       ref="instructionsTextArea"
       :label="$t('exerciseInstructions')"
       v-model="model.instructions"
-      @select="(e: Event) => emitSelected('instructions', e)"
     />
     <BLabeledTextarea
       ref="wordingTextArea"
       :label="$t('exerciseWording')"
       v-model="model.wording"
-      @select="(e: Event) => emitSelected('wording', e)"
     />
     <div :class="{'container-fluid': noClueNoExample}">
       <div :class="{row: noClueNoExample}">
@@ -315,7 +292,6 @@ defineExpose({
             ref="exampleTextArea"
             :label="$t('exerciseExample')"
             v-model="model.example"
-            @select="(e: Event) => emitSelected('example', e)"
           />
         </div>
         <div :class="{col: noClueNoExample}" style="padding: 0;">
@@ -323,7 +299,6 @@ defineExpose({
             ref="clueTextArea"
             :label="$t('exerciseClue')"
             v-model="model.clue"
-            @select="(e: Event) => emitSelected('clue', e)"
           />
         </div>
       </div>

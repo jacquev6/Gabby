@@ -19,7 +19,7 @@ import type { PdfFile } from '$/frontend/stores/api'
 import AdaptedExercise from './AdaptedExercise.vue'
 import ToolsGutter from './ToolsGutter.vue'
 import UndoRedoTool from './UndoRedoTool.vue'
-import type { TextualFieldName, Selection } from '$/frontend/components/ExerciseFieldsForm.vue'
+import type { TextualFieldName } from '$/frontend/components/ExerciseFieldsForm.vue'
 import AdaptationDetailsFieldsForm from '$/frontend/components/AdaptationDetailsFieldsForm.vue'
 import TextSelectionModal from './TextSelectionModal.vue'
 import { makeModel, resetModel, getParsed, create, suggestNextNumber } from '$frontend/components/ExerciseFieldsForm.vue'
@@ -113,8 +113,6 @@ function textSelected(pdfFile: PdfFile, pdf: {page: PDFPageProxy}, selectedText:
     rectangle,
   })
 }
-
-const lastSelection = ref<Selection | null>(null)
 
 function skip() {
   const suggestedNextNumber = suggestNextNumber(model.number)
@@ -238,7 +236,6 @@ const toolSlotNames = computed(() => {
               <ExerciseFieldsForm ref="fields"
                 v-model="model"
                 :fixedNumber="false" :wysiwyg :deltas
-                @selected="selection => { lastSelection = selection }"
               >
                 <template #overlay>
                   <div v-if="alreadyExists" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8);" class="text-center">

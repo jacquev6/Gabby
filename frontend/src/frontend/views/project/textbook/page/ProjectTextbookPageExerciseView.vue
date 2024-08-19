@@ -18,7 +18,7 @@ import UndoRedoTool from './UndoRedoTool.vue'
 import { useExerciseCreationHistoryStore } from './ExerciseCreationHistoryStore'
 import { makeModel, assignModelFrom, getParsed, save } from '$frontend/components/ExerciseFieldsForm.vue'
 import TextSelectionModal from './TextSelectionModal.vue'
-import type { TextualFieldName, Selection } from '$/frontend/components/ExerciseFieldsForm.vue'
+import type { TextualFieldName } from '$/frontend/components/ExerciseFieldsForm.vue'
 import AdaptationDetailsFieldsForm from '$/frontend/components/AdaptationDetailsFieldsForm.vue'
 import TextPicker from './TextPicker.vue'
 import type { PdfFile } from '$/frontend/stores/api'
@@ -138,8 +138,6 @@ function textSelected(pdfFile: PdfFile, pdf: {page: PDFPageProxy}, selectedText:
     rectangle,
   })
 }
-
-const lastSelection = ref<Selection | null>(null)
 
 function goToPrevious() {
   const exerciseId = exerciseCreationHistory.previous
@@ -270,7 +268,6 @@ const toolSlotNames = computed(() => {
                 <ExerciseFieldsForm ref="fields"
                   v-model="model"
                   :fixedNumber="true" :wysiwyg :deltas
-                  @selected="selection => { lastSelection = selection }"
                 />
                 <template v-if="exerciseCreationHistory.current === null">
                   <p>
