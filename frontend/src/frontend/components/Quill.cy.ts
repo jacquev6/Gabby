@@ -32,7 +32,7 @@ describe('Quill', () => {
     cy.mount(Quill, {props: {
       blots: [BoldBlot, ItalicBlot],
       modelValue,
-      'onUpdate:modelValue': (m: Model) => { modelValue = m},
+      'onUpdate:modelValue': (m: Model) => { modelValue = m },
     }})
     cy.get('div.ql-editor').type('plain text with spaces').then(() => {
       expect(modelValue).to.deep.equal([{insert: 'plain text with spaces\n', attributes: undefined}])
@@ -55,7 +55,7 @@ describe('Quill', () => {
     cy.mount(Quill, {props: {
       blots: [BoldBlot, ItalicBlot],
       modelValue,
-      'onUpdate:modelValue': (m: Model) => { modelValue = m},
+      'onUpdate:modelValue': (m: Model) => { modelValue = m },
     }})
     cy.get('div.ql-editor').focus()
     cy.get('div.ql-editor > p').then($el => {
@@ -79,7 +79,7 @@ describe('Quill', () => {
     cy.mount(Quill, {props: {
       blots: [BoldBlot, ItalicBlot],
       modelValue,
-      'onUpdate:modelValue': (m: Model) => { modelValue = m},
+      'onUpdate:modelValue': (m: Model) => { modelValue = m },
     }})
     cy.get('div.ql-editor').focus()
     cy.get('div.ql-editor > p > bold-blot').then($el => {
@@ -104,7 +104,7 @@ describe('Quill', () => {
     cy.mount(Quill, {props: {
       blots: [BoldBlot, ItalicBlot],
       modelValue,
-      'onUpdate:modelValue': (m: Model) => { modelValue = m},
+      'onUpdate:modelValue': (m: Model) => { modelValue = m },
     }})
     cy.get('div.ql-editor').focus()
     cy.get('div.ql-editor > p > bold-blot').then($el => {
@@ -129,7 +129,7 @@ describe('Quill', () => {
     cy.mount(Quill, {props: {
       blots: [BoldBlot, ItalicBlot],
       modelValue,
-      'onUpdate:modelValue': (m: Model) => { modelValue = m},
+      'onUpdate:modelValue': (m: Model) => { modelValue = m },
     }})
     cy.get('div.ql-editor > p').then($el => {
       selectRange($el[0].firstChild!, 3, $el[0].firstChild!.nextSibling!.nextSibling!, 1)
@@ -151,7 +151,7 @@ describe('Quill', () => {
     cy.mount(Quill, {props: {
       blots: [BoldBlot, ItalicBlot],
       modelValue,
-      'onUpdate:modelValue': (m: Model) => { modelValue = m},
+      'onUpdate:modelValue': (m: Model) => { modelValue = m },
     }})
     cy.get('div.ql-editor').focus().type('{rightarrow}{rightarrow}{rightarrow}')
     cy.vue<typeof Quill>().then(w => w.componentVM.toggle('bold'))
