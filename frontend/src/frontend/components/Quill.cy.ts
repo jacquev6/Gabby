@@ -1,7 +1,7 @@
 import Quill, { type Model, InlineBlot, BoldBlot, ItalicBlot } from './Quill.vue'
 
 
-class StringBlot extends InlineBlot {
+class StrBlot extends InlineBlot {
   static override blotName = 'string'
   static override tagName = 'string-blot'
 
@@ -188,7 +188,7 @@ describe('Quill', () => {
   it('adds a string format to the selection', () => {
     let modelValue: Model = [{insert: 'abcdefghi'}]
     cy.mount(Quill, {props: {
-      blots: [StringBlot],
+      blots: [StrBlot],
       modelValue,
       'onUpdate:modelValue': (m: Model) => { modelValue = m },
     }})
@@ -212,7 +212,7 @@ describe('Quill', () => {
   it('removes a string format from the selection', () => {
     let modelValue: Model = [{insert: 'abcdefghi', attributes: {string: 'A'}}]
     cy.mount(Quill, {props: {
-      blots: [StringBlot],
+      blots: [StrBlot],
       modelValue,
       'onUpdate:modelValue': (m: Model) => { modelValue = m },
     }})
@@ -237,7 +237,7 @@ describe('Quill', () => {
   it('changes a string format from the selection', () => {
     let modelValue: Model = [{insert: 'abcdefghi', attributes: {string: 'A'}}]
     cy.mount(Quill, {props: {
-      blots: [StringBlot],
+      blots: [StrBlot],
       modelValue,
       'onUpdate:modelValue': (m: Model) => { modelValue = m },
     }})
@@ -262,7 +262,7 @@ describe('Quill', () => {
   it.only('adds, changes and removes a string format to/from the caret', () => {
     let modelValue: Model = [{insert: 'abc'}]
     cy.mount(Quill, {props: {
-      blots: [StringBlot],
+      blots: [StrBlot],
       modelValue,
       'onUpdate:modelValue': (m: Model) => { modelValue = m },
     }})
