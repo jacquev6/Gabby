@@ -2,20 +2,12 @@
 import type AttributeMap from 'quill-delta/dist/AttributeMap'
 import Quill, { Parchment } from 'quill/core'
 import Block from 'quill/blots/block'
-// import { BlockEmbed } from 'quill/blots/block'
 import Break from 'quill/blots/break'
-// import Container from 'quill/blots/container'
 import Cursor from 'quill/blots/cursor'
-// import Embed from 'quill/blots/embed'
 import Inline from 'quill/blots/inline'
 import Scroll from 'quill/blots/scroll'
 import TextBlot from 'quill/blots/text'
-// import Clipboard from 'quill/modules/clipboard'
-// import History from 'quill/modules/history'
 import Keyboard from 'quill/modules/keyboard'
-// import Uploader from 'quill/modules/uploader'
-// import Input from 'quill/modules/input'
-// import UINode from 'quill/modules/uiNode'
 
 
 // Monkey-patching Quill to remove some default bindings, until I learn how to do it properly.
@@ -34,20 +26,11 @@ export type Model = InsertOp[]
 function makeMinimalRegistry() {
   const registry = new Parchment.Registry()
   registry.register(Block)
-  // registry.register(BlockEmbed)
   registry.register(Break)
-  // registry.register(Container)
   registry.register(Cursor)
-  // registry.register(Embed)
   registry.register(Inline)
   registry.register(Scroll)
   registry.register(TextBlot)
-  // registry.register(Clipboard)
-  // registry.register(History)
-  // registry.register(Keyboard)
-  // registry.register(Uploader)
-  // registry.register(Input)
-  // registry.register(UINode)
   return registry
 }
 
