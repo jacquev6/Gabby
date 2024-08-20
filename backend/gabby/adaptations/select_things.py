@@ -5,6 +5,7 @@ import sqlalchemy as sql
 
 from .. import api_models
 from .. import exercise_delta
+from .. import exercise_delta as d
 from .. import parsing
 from .. import renderable
 from .. import renderable as r
@@ -182,6 +183,16 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 example=r.Section(paragraphs=[]),
                 clue=r.Section(paragraphs=[]),
             ),
+            d.Exercise(
+                instructions=[
+                    d.InsertOp(insert="instructions"),
+                ],
+                wording=[
+                    d.InsertOp(insert="The wording of this exercise is a single sentence."),
+                ],
+                example=[],
+                clue=[],
+            ),
         )
 
     def test_sel_tags(self):
@@ -236,6 +247,21 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 example=r.Section(paragraphs=[]),
                 clue=r.Section(paragraphs=[]),
             ),
+            d.Exercise(
+                instructions=[
+                    d.InsertOp(insert="abc", attributes={"sel": 1}),
+                    d.InsertOp(insert=" "),
+                    d.InsertOp(insert="def", attributes={"sel": 2}),
+                    d.InsertOp(insert=" "),
+                    d.InsertOp(insert="ghi", attributes={"sel": 3}),
+                    d.InsertOp(insert=" {sel4|jkl}"),
+                ],
+                wording=[
+                    d.InsertOp(insert="wording"),
+                ],
+                example=[],
+                clue=[],
+            ),
         )
 
     def test_single_color(self):
@@ -270,6 +296,16 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 ]),
                 example=r.Section(paragraphs=[]),
                 clue=r.Section(paragraphs=[]),
+            ),
+            d.Exercise(
+                instructions=[
+                    d.InsertOp(insert="abc", attributes={"sel": 1}),
+                ],
+                wording=[
+                    d.InsertOp(insert="wording"),
+                ],
+                example=[],
+                clue=[],
             ),
         )
 
@@ -320,6 +356,16 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 example=r.Section(paragraphs=[]),
                 clue=r.Section(paragraphs=[]),
             ),
+            d.Exercise(
+                instructions=[
+                    d.InsertOp(insert="instructions\nare\n\non\n\nmultiple\nlines"),
+                ],
+                wording=[
+                    d.InsertOp(insert="wording"),
+                ],
+                example=[],
+                clue=[],
+            ),
         )
 
     def test_multiple_lines_in_wording(self):
@@ -369,6 +415,16 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 example=r.Section(paragraphs=[]),
                 clue=r.Section(paragraphs=[]),
             ),
+            d.Exercise(
+                instructions=[
+                    d.InsertOp(insert="instructions"),
+                ],
+                wording=[
+                    d.InsertOp(insert="wording is\n\non\n\nmultiple lines"),
+                ],
+                example=[],
+                clue=[],
+            ),
         )
 
     def test_unknown_tags(self):
@@ -412,6 +468,16 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 example=r.Section(paragraphs=[]),
                 clue=r.Section(paragraphs=[]),
             ),
+            d.Exercise(
+                instructions=[
+                    d.InsertOp(insert="{tag|abc}"),
+                ],
+                wording=[
+                    d.InsertOp(insert="{tag|def}"),
+                ],
+                example=[],
+                clue=[],
+            ),
         )
 
     def test_strip_whitespace(self):
@@ -446,6 +512,16 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 ]),
                 example=r.Section(paragraphs=[]),
                 clue=r.Section(paragraphs=[]),
+            ),
+            d.Exercise(
+                instructions=[
+                    d.InsertOp(insert="   abc   "),
+                ],
+                wording=[
+                    d.InsertOp(insert="   def   "),
+                ],
+                example=[],
+                clue=[],
             ),
         )
 
@@ -507,6 +583,20 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                         ]),
                     ]),
                 ]),
+            ),
+            d.Exercise(
+                instructions=[
+                    d.InsertOp(insert="instructions"),
+                ],
+                wording=[
+                    d.InsertOp(insert="wording"),
+                ],
+                example=[
+                    d.InsertOp(insert="This is the example."),
+                ],
+                clue=[
+                    d.InsertOp(insert="This is the clue."),
+                ],
             ),
         )
 
@@ -571,6 +661,23 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                         ]),
                     ]),
                 ]),
+            ),
+            d.Exercise(
+                instructions=[
+                    d.InsertOp(insert="instructions"),
+                ],
+                wording=[
+                    d.InsertOp(insert="wording"),
+                ],
+                example=[
+                    d.InsertOp(insert="abc", attributes={"sel": 1}),
+                    d.InsertOp(insert=" "),
+                    d.InsertOp(insert="def", attributes={"sel": 2}),
+                ],
+                clue=[
+                    d.InsertOp(insert="ghi", attributes={"sel": 3}),
+                    d.InsertOp(insert=" {sel4|jkl}"),
+                ],
             ),
         )
 
