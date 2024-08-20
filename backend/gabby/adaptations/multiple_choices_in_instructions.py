@@ -195,6 +195,11 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                     d.InsertOp(insert="b", attributes={"choice": True}),
                     d.InsertOp(insert="."),
                 ],
+                wording=[
+                    d.InsertOp(insert="A ... B ..."),
+                ],
+                example=[],
+                clue=[],
             ),
         )
 
@@ -282,6 +287,24 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                     ]),
                 ]),
             ),
+            d.Exercise(
+                instructions=[
+                    d.InsertOp(insert="Choose "),
+                    d.InsertOp(insert="a", attributes={"choice": True}),
+                    d.InsertOp(insert=" or "),
+                    d.InsertOp(insert="b", attributes={"choice": True}),
+                    d.InsertOp(insert="."),
+                ],
+                wording=[
+                    d.InsertOp(insert="A @ B @"),
+                ],
+                example=[
+                    d.InsertOp(insert="This {choice|is} the @ example."),
+                ],
+                clue=[
+                    d.InsertOp(insert="This is {choice|the} @ clue."),
+                ],
+            ),
         )
 
     def test_lenient_paragraphs(self):
@@ -338,6 +361,11 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                     d.InsertOp(insert="b", attributes={"choice": True}),
                     d.InsertOp(insert="\n\n c #\nd."),
                 ],
+                wording=[
+                    d.InsertOp(insert="..."),
+                ],
+                example=[],
+                clue=[],
             ),
         )
 
@@ -394,6 +422,11 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                     d.InsertOp(insert="b", attributes={"choice": True}),
                     d.InsertOp(insert=" .   \t\n   "),
                 ],
+                wording=[
+                    d.InsertOp(insert="..."),
+                ],
+                example=[],
+                clue=[],
             ),
         )
 

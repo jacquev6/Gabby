@@ -97,8 +97,16 @@ class SelectThingsAdaptation(Adaptation):
         return self.adapt_instructions(self.exercise.clue)
 
     def make_instructions_delta(self):
-        # @todo Implement
         return parsing.make_plain_instructions_section_delta(self.exercise.instructions)
+
+    def make_wording_delta(self):
+        return parsing.make_plain_wording_section_delta(self.exercise.wording)
+
+    def make_example_delta(self):
+        return parsing.make_plain_instructions_section_delta(self.exercise.example)
+
+    def make_clue_delta(self):
+        return parsing.make_plain_instructions_section_delta(self.exercise.clue)
 
 
 class SelectThingsAdaptationTestCase(AdaptationTestCase):

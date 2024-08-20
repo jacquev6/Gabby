@@ -45,6 +45,15 @@ class MultipleChoicesInWordingAdaptation(Adaptation):
     def make_instructions_delta(self):
         return parsing.make_plain_instructions_section_delta(self.exercise.instructions)
 
+    def make_wording_delta(self):
+        return parsing.make_plain_wording_section_delta(self.exercise.wording)
+
+    def make_example_delta(self):
+        return parsing.make_plain_instructions_section_delta(self.exercise.example)
+
+    def make_clue_delta(self):
+        return parsing.make_plain_instructions_section_delta(self.exercise.clue)
+
 
 class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
     def test_simple(self):
