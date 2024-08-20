@@ -61,7 +61,7 @@ function makeRegistryWithBlots(blots: Blot[]) {
   return registry
 }
 
-const InlineBlot = Quill.import('blots/inline') as Blot
+export const InlineBlot = Quill.import('blots/inline') as Blot
 
 export class BoldBlot extends InlineBlot {
   static override blotName = 'bold'
@@ -151,7 +151,7 @@ watch([quill, model], ([quill, model]) => {
   }
 })
 
-function toggle(formatting: string) {
+function toggle(formatting: string, value: unknown = true) {
   console.assert(quill.value !== null)
 
   // Clear formatting of the caret, in case selection is empty.
@@ -166,8 +166,8 @@ function toggle(formatting: string) {
   quill.value.removeFormat(index, length)
 
   // Toggle the requested formatting, either for the caret, or for the selected range.
-  if (!previousFormat[formatting]) {
-    quill.value.format(formatting, true, 'user')
+  if (previousFormat[formatting] !== value) {
+    quill.value.format(formatting, value, 'user')
   }
 }
 

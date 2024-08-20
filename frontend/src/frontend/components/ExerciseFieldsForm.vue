@@ -264,11 +264,11 @@ function highlightSuffix(fieldName: TextualFieldName, suffix: string) {
   }
 }
 
-function toggle(format: string) {
+function toggle(format: string, value: unknown = true) {
   if (focusedWysiwygField.value !== null) {
     const editor = editors[focusedWysiwygField.value]
     console.assert(editor.value !== null)
-    editor.value.toggle(format)
+    editor.value.toggle(format, value)
   }
 }
 

@@ -100,13 +100,6 @@
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "additionalProperties": {
-              "const": true,
-              "enum": [
-                true
-              ],
-              "type": "boolean"
-            },
             "default": {},
             "title": "Attributes",
             "type": "object"

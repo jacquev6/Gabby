@@ -31,9 +31,9 @@ const expanded = computed(() => model.value !== '' || forced.value)
 
 defineExpose({
   expanded,
-  toggle(format: string) {
+  toggle(format: string, value: unknown = true) {
     console.assert(editor.value !== null)
-    editor.value.toggle(format)
+    editor.value.toggle(format, value)
   },
   focus: () => editor.value?.focus(),
   setSelection(index: number, length: number) {

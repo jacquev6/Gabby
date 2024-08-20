@@ -29,7 +29,7 @@ import Quill, { type Model as QuillModel } from './Quill.vue'
 
 
 export interface Format {
-  make: (text: string) => string
+  make: (text: string, value: unknown) => string
   blot: typeof BoldBlot
 }
 
@@ -111,8 +111,9 @@ function makeModel(quillModel: QuillModel): string {
       model += delta.insert
     } else {
       console.assert(keys.length === 1)
+      console.assert(delta.attributes !== undefined)
       const format = props.formats[keys[0]]
-      model += format.make(delta.insert)
+      model += format.make(delta.insert, delta.attributes[keys[0]])
     }
   }
   console.assert(model.endsWith('\n'))  // The Quill model always ends with a line end. (Unlike 'props.delta')
@@ -123,9 +124,9 @@ const blots = computed(() => Object.values(props.formats).map(format => format.b
 
 defineExpose({
   // Could we automate these? They all forward to 'quill.value'.
-  toggle(format: string) {
+  toggle(format: string, value: unknown = true) {
     console.assert(quill.value !== null)
-    quill.value.toggle(format)
+    quill.value.toggle(format, value)
   },
   focus() {
     console.assert(quill.value !== null)

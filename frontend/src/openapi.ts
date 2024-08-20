@@ -239,9 +239,7 @@ export interface components {
        * Attributes
        * @default {}
        */
-      attributes?: {
-        [key: string]: true;
-      };
+      attributes?: Record<string, never>;
       /** Insert */
       insert: string;
     };
