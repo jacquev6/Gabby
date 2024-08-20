@@ -72,11 +72,6 @@ export class ItalicBlot extends InlineBlot {
   static override blotName = 'italic'
   static override tagName = 'italic-blot'
 }
-
-export class ChoiceBlot extends InlineBlot {
-  static override blotName = 'choice'
-  static override tagName = 'choice-blot'
-}
 </script>
 
 <script setup lang="ts">
@@ -204,12 +199,6 @@ div.ql-editor bold-blot {
 
 div.ql-editor italic-blot {
   font-style: italic;
-}
-
-div.ql-editor choice-blot {
-  margin: 0;
-  padding: 0 0.4em;
-  border: 2px solid black;
 }
 
 /* Fight against 'quill/dist/quill.core.css' to achieve formatting close to Bootstrap's.

@@ -291,8 +291,6 @@ describe('Quill', () => {
     cy.get(':contains("changed")').should('exist')
   })
 
-  // This reactivity is not used in the project but common implementation patterns make it cheap,
-  // and make the component more reliable overall.
   it("reacts to 'props.blots' changes", () => {
     cy.mount(Quill, {props: {blots: [BoldBlot], modelValue: [{insert: 'bold', attributes: {bold: true}}]}})
     cy.get(':contains("bold")').last().should('have.css', 'font-weight', '700')

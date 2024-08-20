@@ -74,9 +74,7 @@ const title = computed(() => [i18n.t('create')])
 const breadcrumbs = computed(() => bc.last(i18n.t('create')))
 
 const model = reactive(makeModel())
-const canWysiwyg = computed(() => model.adaptationType === 'multipleChoicesInInstructionsAdaptation')
-const wantWysiwyg = ref(true)
-const wysiwyg = computed(() => canWysiwyg.value && wantWysiwyg.value)
+const wysiwyg = ref(true)
 
 const resetUndoRedo = ref(0)
 
@@ -231,7 +229,7 @@ const toolSlotNames = computed(() => {
       <TwoResizableColumns saveKey="projectTextbookPage-2" :snap="150" class="h-100" gutterWidth="200px">
         <template #left>
           <div class="h-100 overflow-auto" data-cy="left-col-2">
-            <h1>{{ $t('edition') }}<template v-if="canWysiwyg"> <span style="font-size: small">(<label>WYSIWYG: <input type="checkbox" v-model="wantWysiwyg" /></label>)</span></template></h1>
+            <h1>{{ $t('edition') }} <span style="font-size: small">(<label>WYSIWYG: <input type="checkbox" v-model="wysiwyg" /></label>)</span></h1>
             <BBusy :busy>
               <ExerciseFieldsForm ref="fields"
                 v-model="model"

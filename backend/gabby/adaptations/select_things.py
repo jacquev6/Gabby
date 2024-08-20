@@ -4,6 +4,7 @@ from sqlalchemy import orm
 import sqlalchemy as sql
 
 from .. import api_models
+from .. import exercise_delta
 from .. import parsing
 from .. import renderable
 from .. import renderable as r
@@ -96,17 +97,31 @@ class SelectThingsAdaptation(Adaptation):
     def make_adapted_clue(self):
         return self.adapt_instructions(self.exercise.clue)
 
+    def _make_delta_maker_type(self):
+        return type("InstructionsDeltaMaker", (parsing.InstructionsSectionDeltaMaker,), {
+            f"sel{color_index}_tag": (lambda color: staticmethod(lambda args: exercise_delta.InsertOp(insert=args[0], attributes={"sel": color})))(color_index)
+            for color_index in self.color_indexes
+        })
+
+    def _make_instructions_delta(self, section):
+        return parsing.InstructionsSectionParser(
+            self._make_tags(),
+            self._make_delta_maker_type()(),
+        )(
+            section,
+        )
+
     def make_instructions_delta(self):
-        return parsing.make_plain_instructions_section_delta(self.exercise.instructions)
+        return self._make_instructions_delta(self.exercise.instructions)
 
     def make_wording_delta(self):
         return parsing.make_plain_wording_section_delta(self.exercise.wording)
 
     def make_example_delta(self):
-        return parsing.make_plain_instructions_section_delta(self.exercise.example)
+        return self._make_instructions_delta(self.exercise.example)
 
     def make_clue_delta(self):
-        return parsing.make_plain_instructions_section_delta(self.exercise.clue)
+        return self._make_instructions_delta(self.exercise.clue)
 
 
 class SelectThingsAdaptationTestCase(AdaptationTestCase):

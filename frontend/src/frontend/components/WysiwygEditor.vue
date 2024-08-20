@@ -1,5 +1,5 @@
 <script lang="ts">
-import { ChoiceBlot, BoldBlot, ItalicBlot } from './Quill.vue'
+import { BoldBlot, ItalicBlot } from './Quill.vue'
 
 
 export const basicFormats = {
@@ -10,14 +10,6 @@ export const basicFormats = {
   italic: {
     make: (text: string) => `{italic|${text}}`,
     blot: ItalicBlot,
-  },
-}
-
-export const instructionsFormats = {
-  ...basicFormats,
-  choice: {
-    make: (text: string) => `{choice|${text}}`,
-    blot: ChoiceBlot,
   },
 }
 </script>
