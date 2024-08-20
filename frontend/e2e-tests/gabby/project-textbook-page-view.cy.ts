@@ -1,4 +1,4 @@
-import { useApiStore } from '../../frontend/src/frontend/stores/api'
+import { useApiStore } from '../../src/frontend/stores/api'
 
 function setLocale(locale = 'en') {
   cy.get('select[data-cy="language"]').last().select(locale)
@@ -198,13 +198,6 @@ describe('Gabby\'s project\'s textbook page view', () => {
     cy.get('div.busy').should('not.exist')
     cy.get('li:contains("Défis")').should('exist')
   })
-
-  const prevWidth = 309
-  const prevHeight = 436
-  const newWidth = 322
-  const newHeight = 454
-  const xRatio = newWidth / prevWidth
-  const yRatio = newHeight / prevHeight
 
   // @todo Add test showing we can delete and recreate an exercise (hunt possible bug in deletion)
 

@@ -1,4 +1,4 @@
-import { useApiStore } from '../frontend/src/frontend/stores/api'
+import { useApiStore } from '../src/frontend/stores/api'
 
 function setLocale() {
   cy.get('select[data-cy="language"]').last().select('fr')
@@ -38,7 +38,7 @@ describe('Gabby', () => {
     cy.get('div.busy').should('not.exist')
 
     cy.get('a:contains("Nouvel exercice")').click()
-    cy.get('label').contains('Numéro').next().type(5).blur()
+    cy.get('label').contains('Numéro').next().type('5').blur()
 
     const canvas = cy.get('canvas[style="position: absolute; top: 0px; left: 0px;"]').last()
 

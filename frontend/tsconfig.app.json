@@ -1,6 +1,6 @@
 {
   "extends": "@vue/tsconfig/tsconfig.dom.json",
-  "include": ["cypress/support/commands.d.ts", "env.d.ts", "src/**/*.ts", "src/**/*.vue"],
+  "include": ["cypress/support/commands.d.ts", "env.d.ts", "src/**/*.ts", "src/**/*.vue", "e2e-tests/**/*.ts"],
   "exclude": [],
   "compilerOptions": {
     "strict": true,
