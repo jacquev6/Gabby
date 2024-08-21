@@ -27,11 +27,20 @@ class NullAdaptation(Adaptation):
     def make_adapted_instructions(self):
         return parsing.adapt_plain_instructions_section(self.exercise.instructions)
 
+    def make_wording_delta(self):
+        return parsing.make_plain_wording_section_delta(self.exercise.wording)
+
     def make_adapted_wording(self):
         return parsing.adapt_plain_wording_section(self.exercise.wording)
 
+    def make_example_delta(self):
+        return parsing.make_plain_instructions_section_delta(self.exercise.example)
+
     def make_adapted_example(self):
         return parsing.adapt_plain_instructions_section(self.exercise.example)
+
+    def make_clue_delta(self):
+        return parsing.make_plain_instructions_section_delta(self.exercise.clue)
 
     def make_adapted_clue(self):
         return parsing.adapt_plain_instructions_section(self.exercise.clue)

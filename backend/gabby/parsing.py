@@ -44,7 +44,7 @@ def make_grammar(tags, whitespace):
             WHITESPACE_IN_SENTENCE: NON_PARAGRAPH_SEPARATING_WHITESPACE
 
             PUNCTUATION_IN_LENIENT_PARAGRAPH: /\.\.\.|[^\w \t\n\r]/
-            PUNCTUATION_IN_SENTENCE: /[,;:]/
+            PUNCTUATION_IN_SENTENCE: /[-,;:–]/
             PUNCTUATION_AT_END_OF_SENTENCE: /\.\.\.|[.!?…]/
 
             # Terminals usable in tags
@@ -138,7 +138,7 @@ class InstructionsGrammarWithTagsTestCase(GrammarTestCase(make_instructions_gram
                 )
 
     def test_punctuation_in_sentence(self):
-        for punctuation in [",", ";", ":"]:
+        for punctuation in [",", ";", ":", "-", "–"]:
             with self.subTest(punctuation=punctuation):
                 self.do_test(
                     f"Strict{punctuation} sentence.",
@@ -1022,6 +1022,83 @@ class WordingSectionParser:
             return self.transformer.transform(parsed)
         except lark.exceptions.VisitError as e:
             raise ValueError(f"Error transforming wording section {section}: {e}")
+
+
+class WordingSectionDeltaMaker(Transformer):
+    def _merge(self, args):
+        return [
+            exercise_delta.InsertOp(
+                insert="".join(item.insert for item in group),
+                attributes=attributes
+            )
+            for attributes, group in
+            itertools.groupby(args, key=lambda arg: arg.attributes)
+        ]
+
+    def _flatten(self, args):
+        items = []
+        for arg in args:
+            if isinstance(arg, list):
+                items.extend(arg)
+            else:
+                items.append(arg)
+        return items
+
+    def section(self, args):
+        return self._merge(self._flatten(args))
+
+    def strict_paragraph(self, args):
+        return self._flatten(args)
+
+    def sentence(self, args):
+        return args
+
+    def lenient_paragraph(self, args):
+        return args
+
+    def WORD(self, arg):
+        return exercise_delta.InsertOp(insert=arg.value)
+
+    def LEADING_WHITESPACE(self, arg):
+        return exercise_delta.InsertOp(insert=arg.value)
+
+    def TRAILING_WHITESPACE(self, arg):
+        return exercise_delta.InsertOp(insert=arg.value)
+
+    def PARAGRAPH_SEPARATOR(self, arg):
+        return exercise_delta.InsertOp(insert=arg.value)
+
+    def SENTENCE_SEPARATOR(self, arg):
+        return exercise_delta.InsertOp(insert=arg.value)
+
+    def WHITESPACE_IN_SENTENCE(self, arg):
+        return exercise_delta.InsertOp(insert=arg.value)
+
+    def PUNCTUATION_IN_SENTENCE(self, arg):
+        return exercise_delta.InsertOp(insert=arg.value)
+
+    def PUNCTUATION_AT_END_OF_SENTENCE(self, arg):
+        return exercise_delta.InsertOp(insert=arg.value)
+
+    def PUNCTUATION_IN_LENIENT_PARAGRAPH(self, arg):
+        return exercise_delta.InsertOp(insert=arg.value)
+
+    def INT(self, arg):
+        return arg.value
+
+    def STR(self, arg):
+        return arg.value
+
+    def bold_tag(self, args):
+        assert len(args) == 1
+        return exercise_delta.InsertOp(insert=args[0], attributes={"bold": True})
+
+    def italic_tag(self, args):
+        assert len(args) == 1
+        return exercise_delta.InsertOp(insert=args[0], attributes={"italic": True})
+
+
+make_plain_wording_section_delta = WordingSectionParser({}, WordingSectionDeltaMaker())
 
 
 class WordingSectionAdapter(Transformer):

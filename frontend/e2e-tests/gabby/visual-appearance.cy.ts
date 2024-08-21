@@ -1,11 +1,11 @@
-import { useApiStore } from '../../frontend/src/frontend/stores/api'
+import { useApiStore } from '../../src/frontend/stores/api'
 
 function setLocale() {
   cy.get('select[data-cy="language"]').last().select('fr')
   cy.focused().blur()
 }
 
-function test(path, title, f = () => {}, it_ = it) {
+function test(path: string, title: string, f = () => {}, it_: Mocha.ExclusiveTestFunction = it) {
   it_(`${title} looks like this`, () => {
     cy.visit(path)
     setLocale()
@@ -16,9 +16,9 @@ function test(path, title, f = () => {}, it_ = it) {
   })
 }
 
-test['only'] = (path, title, f) => test(path, title, f, it['only'])
+test['only'] = (path: string, title: string, f: () => void) => test(path, title, f, it['only'])
 
-function loadPdf(name) {
+function loadPdf(name: string) {
   return () => cy.get('input[type=file]').selectFile(`../pdf-examples/${name}.pdf`)
 }
 

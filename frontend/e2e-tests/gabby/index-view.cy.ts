@@ -1,4 +1,4 @@
-import { useApiStore } from '../../frontend/src/frontend/stores/api'
+import { useApiStore } from '../../src/frontend/stores/api'
 
 
 function setLocale() {

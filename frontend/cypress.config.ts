@@ -4,8 +4,8 @@ import { defineConfig } from 'cypress'
 export default defineConfig({
   e2e: {
     baseUrl: 'http://fanout:8080/',
-    specPattern: '../tests/**/*.{cy,spec}.{js,jsx,ts,tsx}',
-    screenshotsFolder: '../tests/screenshots',
+    specPattern: 'e2e-tests/**/*.cy.{js,ts}',
+    screenshotsFolder: 'e2e-tests/screenshots',
     async setupNodeEvents(on) {
       on('before:browser:launch', (browser, launchOptions) => {
         console.assert(browser.family === 'chromium')
@@ -30,7 +30,7 @@ export default defineConfig({
     },
   },
   component: {
-    specPattern: 'src/**/*.{cy,spec}.{js,ts,jsx,tsx}',
+    specPattern: 'src/**/*.cy.{js,ts}',
     devServer: {
       framework: 'vue',
       bundler: 'vite',

@@ -1,3 +1,78 @@
+<script lang="ts">
+import { InlineBlot } from './Quill.vue'
+import { basicFormats } from './WysiwygEditor.vue'
+
+
+class ChoiceBlot extends InlineBlot {
+  static override blotName = 'choice'
+  static override tagName = 'choice-blot'
+}
+
+class SelBlot extends InlineBlot {
+  static override blotName = 'sel'
+  static override tagName = 'sel-blot'
+
+  static override create(s: number) {
+    let node = super.create()
+    node.setAttribute('data-sel', s.toString())
+    return node
+  }
+
+  static override formats(node: HTMLElement) {
+    const data = node.getAttribute('data-sel')
+    console.assert(data !== null)
+    return Number.parseInt(data)
+  }
+}
+
+const selectThingsFormats = {
+  ...basicFormats,
+  sel: {
+    make: (text: string, value: unknown) => `{sel${value}|${text}}`,
+    blot: SelBlot,
+  },
+}
+
+export const wysiwygFormats = {
+  '-': {
+    instructions: basicFormats,
+    wording: basicFormats,
+    example: basicFormats,
+    clue: basicFormats,
+  },
+  fillWithFreeTextAdaptation: {
+    instructions: basicFormats,
+    wording: basicFormats,
+    example: basicFormats,
+    clue: basicFormats,
+  },
+  selectThingsAdaptation: {
+    instructions: selectThingsFormats,
+    wording: basicFormats,
+    example: selectThingsFormats,
+    clue: selectThingsFormats,
+  },
+  multipleChoicesInInstructionsAdaptation: {
+    instructions: {
+      ...basicFormats,
+      choice: {
+        make: (text: string) => `{choice|${text}}`,
+        blot: ChoiceBlot,
+      },
+    },
+    wording: basicFormats,
+    example: basicFormats,
+    clue: basicFormats,
+  },
+  multipleChoicesInWordingAdaptation: {
+    instructions: basicFormats,
+    wording: basicFormats,
+    example: basicFormats,
+    clue: basicFormats,
+  },
+}
+</script>
+
 <script setup lang="ts">
 import { BLabeledInput, BLabeledCheckbox } from './opinion/bootstrap'
 
@@ -22,7 +97,13 @@ const model = defineModel<Model>({required: true})
   </template>
   <template v-else-if="model.adaptationType === 'selectThingsAdaptation'">
     <BLabeledInput :label="$t('colorsCount')" type="number" min="1" v-model="model.selectThingsAdaptationOptions.colors" />
-    <p class="alert alert-secondary">
+    <template v-if="wysiwyg">
+      <p><template v-for="i in model.selectThingsAdaptationOptions.colors">
+        <BButton sm primary :disabled="fields.focusedWysiwygField === null || fields.focusedWysiwygField === 'wording'" @click="fields.toggle('sel', i)">{{ i }}</BButton>
+        <wbr>
+      </template></p>
+    </template>
+    <p v-else class="alert alert-secondary">
       <i18n-t keypath="useSel1ToSelN" v-if="model.selectThingsAdaptationOptions.colors > 1">
         <template v-slot:first>
           <code>{sel1|<em>text</em>}</code>
@@ -41,7 +122,7 @@ const model = defineModel<Model>({required: true})
   </template>
   <template v-else-if="model.adaptationType === 'multipleChoicesInInstructionsAdaptation'">
     <template v-if="wysiwyg">
-      <p><BButton sm primary @click="fields.toggle('choice')">{{ $t('choiceButton') }}</BButton></p>
+      <p><BButton sm primary :disabled="fields.focusedWysiwygField !== 'instructions'" @click="fields.toggle('choice')">{{ $t('choiceButton') }}</BButton></p>
     </template>
     <p v-else class="alert alert-secondary">
       <i18n-t keypath="useChoice">
@@ -65,3 +146,41 @@ const model = defineModel<Model>({required: true})
     <span>{{ ((t: never) => t)(model.adaptationType) }}</span>
   </template>
 </template>
+
+<style>
+div.ql-editor choice-blot {
+  margin: 0;
+  padding: 0 0.4em;
+  border: 2px solid black;
+}
+
+/* Keep this section consistent with the 'colors' array in 'SeletctedText.vue' */
+/* @todo Could I generate this section? I've not found how Vue could let me do that. */
+div.ql-editor sel-blot[data-sel="1"] {
+  background: #ffff00;
+}
+
+div.ql-editor sel-blot[data-sel="2"] {
+  background: #ffc0cb;
+}
+
+div.ql-editor sel-blot[data-sel="3"] {
+  background: #bbbbff;
+}
+
+div.ql-editor sel-blot[data-sel="4"] {
+  background: #bbffbb;
+}
+
+div.ql-editor sel-blot[data-sel="5"] {
+  background: #bbbbbb;
+}
+
+div.ql-editor sel-blot[data-sel="6"] {
+  background: #bbffff;
+}
+
+div.ql-editor sel-blot[data-sel="7"] {
+  background: #ffbbff;
+}
+</style>

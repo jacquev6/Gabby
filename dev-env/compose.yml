@@ -30,6 +30,17 @@ services:
       - frontend-cache:/root/.cache
     working_dir: /app/frontend
     command: ["npm", "install"]
+  cypress-installer:
+    image: gabby-dev_frontend
+    pull_policy: never
+    volumes:
+      - ..:/app
+      - frontend-cache:/root/.cache
+    working_dir: /app/frontend
+    command: ["npx", "cypress", "install"]
+    depends_on:
+      npm-installer:
+        condition: service_completed_successfully
   pdf-worker-copier:
     image: gabby-dev_frontend
     pull_policy: never

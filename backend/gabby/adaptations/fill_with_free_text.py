@@ -4,6 +4,7 @@ from sqlalchemy import orm
 import sqlalchemy as sql
 
 from .. import api_models
+from .. import exercise_delta as d
 from .. import parsing
 from .. import renderable
 from .. import renderable as r
@@ -46,6 +47,15 @@ class FillWithFreeTextAdaptation(Adaptation):
 
     def make_instructions_delta(self):
         return parsing.make_plain_instructions_section_delta(self.exercise.instructions)
+
+    def make_wording_delta(self):
+        return parsing.make_plain_wording_section_delta(self.exercise.wording)
+
+    def make_example_delta(self):
+        return parsing.make_plain_instructions_section_delta(self.exercise.example)
+
+    def make_clue_delta(self):
+        return parsing.make_plain_instructions_section_delta(self.exercise.clue)
 
 
 class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
@@ -99,6 +109,16 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 example=r.Section(paragraphs=[]),
                 clue=r.Section(paragraphs=[]),
             ),
+            d.Exercise(
+                instructions=[
+                    d.InsertOp(insert="instructions"),
+                ],
+                wording=[
+                    d.InsertOp(insert="The wording of this ... is a ... sentence."),
+                ],
+                example=[],
+                clue=[],
+            ),
         )
 
     def test_start_and_end_with_placeholder(self):
@@ -137,6 +157,16 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 ]),
                 example=r.Section(paragraphs=[]),
                 clue=r.Section(paragraphs=[]),
+            ),
+            d.Exercise(
+                instructions=[
+                    d.InsertOp(insert="instructions"),
+                ],
+                wording=[
+                    d.InsertOp(insert="@ a @"),
+                ],
+                example=[],
+                clue=[],
             ),
         )
 
@@ -186,6 +216,16 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 ]),
                 example=r.Section(paragraphs=[]),
                 clue=r.Section(paragraphs=[]),
+            ),
+            d.Exercise(
+                instructions=[
+                    d.InsertOp(insert="instructions\nare\n\non\n\nmultiple\nlines"),
+                ],
+                wording=[
+                    d.InsertOp(insert="wording"),
+                ],
+                example=[],
+                clue=[],
             ),
         )
 
@@ -246,6 +286,16 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 example=r.Section(paragraphs=[]),
                 clue=r.Section(paragraphs=[]),
             ),
+            d.Exercise(
+                instructions=[
+                    d.InsertOp(insert="instructions"),
+                ],
+                wording=[
+                    d.InsertOp(insert="foo toto : ...\n\nbar : ...\n\nbaz : ..."),
+                ],
+                example=[],
+                clue=[],
+            ),
         )
 
     def test_unknown_tags(self):
@@ -289,6 +339,16 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 example=r.Section(paragraphs=[]),
                 clue=r.Section(paragraphs=[]),
             ),
+            d.Exercise(
+                instructions=[
+                    d.InsertOp(insert="{tag|abc}"),
+                ],
+                wording=[
+                    d.InsertOp(insert="{tag|def}"),
+                ],
+                example=[],
+                clue=[],
+            ),
         )
 
     def test_strip_whitespace(self):
@@ -323,6 +383,16 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 ]),
                 example=r.Section(paragraphs=[]),
                 clue=r.Section(paragraphs=[]),
+            ),
+            d.Exercise(
+                instructions=[
+                    d.InsertOp(insert="   abc   "),
+                ],
+                wording=[
+                    d.InsertOp(insert="   def   "),
+                ],
+                example=[],
+                clue=[],
             ),
         )
 
@@ -397,6 +467,20 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                         ]),
                     ]),
                 ]),
+            ),
+            d.Exercise(
+                instructions=[
+                    d.InsertOp(insert="instructions"),
+                ],
+                wording=[
+                    d.InsertOp(insert="This @ is the wording."),
+                ],
+                example=[
+                    d.InsertOp(insert="This @ is the example."),
+                ],
+                clue=[
+                    d.InsertOp(insert="This @ is the clue."),
+                ],
             ),
         )
 

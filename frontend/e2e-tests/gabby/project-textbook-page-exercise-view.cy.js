@@ -1,8 +1,22 @@
-import { useApiStore } from '../../frontend/src/frontend/stores/api'
+import { useApiStore } from '../../src/frontend/stores/api'
 
 
 function setLocale() {
   cy.get('select[data-cy="language"]').last().select('en')
+}
+
+function visit(url, options = {}) {
+  const {locale, wysiwyg, pdf} = Object.assign({locale: 'en', wysiwyg: true, pdf: null}, options)
+  cy.visit(url)
+  cy.get('select[data-cy="language"]').last().select(locale)
+  cy.get('div.busy').should('not.exist')
+  if (!wysiwyg) {
+    cy.get('span:contains("WYSIWYG") input').uncheck()
+  }
+  if (pdf !== null) {
+    cy.get('input[type=file]').selectFile(`../pdf-examples/${pdf}.pdf`)
+    cy.get('div.busy').should('not.exist')
+  }
 }
 
 describe('Gabby\'s project\'s textbook page exercise view', () => {
@@ -36,8 +50,7 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
   }
 
   it('has "undo/redo" on new exercise', () => {
-    cy.visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
-    setLocale()
+    visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise', {wysiwyg: false})
 
     cy.get('button:contains("Undo")').as('undo')
     cy.get('button:contains("Redo")').as('redo')
@@ -99,8 +112,7 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
   }
 
   it('has "undo/redo" using Ctrl+Z/Ctrl+Y', () => {
-    cy.visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
-    setLocale()
+    visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
 
     cy.get('button:contains("Undo")').as('undo')
     cy.get('button:contains("Redo")').as('redo')
@@ -120,8 +132,7 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
   })
 
   it('clears "undo/redo" history on skip', () => {
-    cy.visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
-    setLocale()
+    visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise', {wysiwyg: false})
 
     cy.get('button:contains("Undo")').as('undo')
     cy.get('button:contains("Redo")').as('redo')
@@ -146,8 +157,7 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
   })
 
   it('clears "undo/redo" history on save', () => {
-    cy.visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
-    setLocale()
+    visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise', {wysiwyg: false})
 
     cy.get('button:contains("Undo")').as('undo')
     cy.get('button:contains("Redo")').as('redo')
@@ -174,8 +184,7 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
   it('clears "undo/redo" history when navigating exercise creation history', () => {
     cy.viewport(1000, 800)
 
-    cy.visit('/project-xkopqm/textbook-klxufv/page-5/new-exercise')
-    setLocale()
+    visit('/project-xkopqm/textbook-klxufv/page-5/new-exercise', {wysiwyg: false})
 
     cy.get('button:contains("Undo")').as('undo')
     cy.get('button:contains("Redo")').as('redo')
@@ -218,9 +227,7 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
   })
 
   it('has "undo/redo" on existing exercise', () => {
-    cy.visit('/project-xkopqm/textbook-klxufv/page-7/exercise-dymwin')
-    setLocale()
-    cy.get('div.busy').should('not.exist')
+    visit('/project-xkopqm/textbook-klxufv/page-7/exercise-dymwin', {wysiwyg: false})
 
     expectStableUndoRedoHistory(0, 0)
 
@@ -234,8 +241,7 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
   })
 
   it('has a *single* "undo/redo" history even for WYSIWYG fields', () => {
-    cy.visit('/project-xkopqm/textbook-klxufv/page-7/exercise-xnyegk')
-    setLocale()
+    visit('/project-xkopqm/textbook-klxufv/page-7/exercise-xnyegk')
 
     cy.get('button:contains("Undo")').as('undo')
     cy.get('button:contains("Redo")').as('redo')
@@ -255,32 +261,32 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
     cy.get('@editor').should('contain.text', 'Réponds par vrai ou faux.')
   })
 
-  it('handles adaptation type changes from non-WYSIWYG to WYSIWYG', () => {
-    cy.visit('/project-xkopqm/textbook-klxufv/page-7/exercise-jkrudc')
-    setLocale()
+  it('handles switching from non-WYSIWYG to WYSIWYG', () => {
+    visit('/project-xkopqm/textbook-klxufv/page-7/exercise-jkrudc', {wysiwyg: false})
 
-    cy.get('label:contains("Instructions")').next().type('{selectall}Réponds par {{}choice|vrai} ou {{}choice|faux}.')
+    cy.get('label:contains("Instructions")').next().type('{selectall}Réponds par {{}choice|vrai} ou {{}choice|faux}.', {delay: 0})
     cy.get('div.busy').should('not.exist')
     cy.get('label:contains("Adaptation type")').next().select('multipleChoicesInInstructionsAdaptation')
     cy.get('div.busy').should('not.exist')
+
+    cy.get('span:contains("WYSIWYG") input').check()
 
     cy.get(':has(>label:contains("Instructions")) .ql-editor').should('contain.text', 'Réponds par vrai ou faux.')
   })
 
   it('creates an exercise with a WYSIWYG field', () => {
-    cy.visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
-    setLocale()
+    visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
 
     cy.get('label:contains("Number")').next().type('6')
     cy.get('label:contains("Adaptation type")').next().select('multipleChoicesInInstructionsAdaptation')
-    cy.get(':has(>label:contains("Instructions")) .ql-editor').as('instructions')
-    cy.get('@instructions').focus().type('Choix : ')
+    cy.get('label:contains("Instructions") + .ql-container .ql-editor').as('instructions')
+    cy.get('@instructions').click().type('Choix : ')
     cy.get('button:contains("Choice")').click()
-    cy.get('@instructions').focus().type('vrai')
+    cy.get('@instructions').type('vrai')
     cy.get('button:contains("Choice")').click()
-    cy.get('@instructions').focus().type(' ou ')
+    cy.get('@instructions').type(' ou ')
     cy.get('button:contains("Choice")').click()
-    cy.get('@instructions').focus().type('faux')
+    cy.get('@instructions').type('faux')
 
     cy.get('choice-blot').should('have.length', 2)
 
@@ -290,9 +296,7 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
   })
 
   it('saves an exercise after setting its adaptation', () => {
-    cy.visit('/project-xkopqm/textbook-klxufv/page-7/exercise-jkrudc')
-    setLocale()
-    cy.get('div.busy').should('not.exist')
+    visit('/project-xkopqm/textbook-klxufv/page-7/exercise-jkrudc', {wysiwyg: false})
 
     cy.get('label:contains("Adaptation type")').next().should('have.value', '-')
 
@@ -305,17 +309,13 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
 
     cy.get('li:contains("Instructions!"):contains("Select words")').should('exist')
 
-    cy.visit('/project-xkopqm/textbook-klxufv/page-7/exercise-jkrudc')
-    setLocale()
-    cy.get('div.busy').should('not.exist')
+    visit('/project-xkopqm/textbook-klxufv/page-7/exercise-jkrudc', {wysiwyg: false})
     cy.get('label:contains("Adaptation type")').next().should('have.value', 'selectThingsAdaptation')
     cy.get('label:contains("Instructions")').next().should('have.value', 'Instructions!')
   })
 
   it('saves an exercise after resetting its pre-existing adaptation', () => {
-    cy.visit('/project-xkopqm/textbook-klxufv/page-7/exercise-dymwin')
-    setLocale()
-    cy.get('div.busy').should('not.exist')
+    visit('/project-xkopqm/textbook-klxufv/page-7/exercise-dymwin', {wysiwyg: false})
 
     cy.get('label:contains("Adaptation type")').next().should('have.value', 'fillWithFreeTextAdaptation')
 
@@ -327,17 +327,13 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
 
     cy.get('li:contains("Instructions!")').should('exist').should('not.contain', 'Fill with free text')
 
-    cy.visit('/project-xkopqm/textbook-klxufv/page-7/exercise-dymwin')
-    setLocale()
-    cy.get('div.busy').should('not.exist')
+    visit('/project-xkopqm/textbook-klxufv/page-7/exercise-dymwin', {wysiwyg: false})
     cy.get('label:contains("Adaptation type")').next().should('have.value', '-')
     cy.get('label:contains("Instructions")').next().should('have.value', 'Instructions!')
   })
 
   it('saves an exercise without changing its pre-existing adaptation', () => {
-    cy.visit('/project-xkopqm/textbook-klxufv/page-7/exercise-dymwin')
-    setLocale()
-    cy.get('div.busy').should('not.exist')
+    visit('/project-xkopqm/textbook-klxufv/page-7/exercise-dymwin', {wysiwyg: false})
 
     cy.get('label:contains("Adaptation type")').next().should('have.value', 'fillWithFreeTextAdaptation')
 
@@ -349,17 +345,13 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
 
     cy.get('li:contains("Instructions!"):contains("Fill with free text")').should('exist')
 
-    cy.visit('/project-xkopqm/textbook-klxufv/page-7/exercise-dymwin')
-    setLocale()
-    cy.get('div.busy').should('not.exist')
+    visit('/project-xkopqm/textbook-klxufv/page-7/exercise-dymwin', {wysiwyg: false})
     cy.get('label:contains("Adaptation type")').next().should('have.value', 'fillWithFreeTextAdaptation')
     cy.get('label:contains("Instructions")').next().should('have.value', 'Instructions!')
   })
 
   it('saves an exercise after changing the type of its pre-existing adaptation', () => {
-    cy.visit('/project-xkopqm/textbook-klxufv/page-7/exercise-dymwin')
-    setLocale()
-    cy.get('div.busy').should('not.exist')
+    visit('/project-xkopqm/textbook-klxufv/page-7/exercise-dymwin', {wysiwyg: false})
 
     cy.get('label:contains("Adaptation type")').next().should('have.value', 'fillWithFreeTextAdaptation')
 
@@ -371,23 +363,20 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
 
     cy.get('li:contains("Instructions!"):contains("Select words")').should('exist')
 
-    cy.visit('/project-xkopqm/textbook-klxufv/page-7/exercise-dymwin')
-    setLocale()
-    cy.get('div.busy').should('not.exist')
+    visit('/project-xkopqm/textbook-klxufv/page-7/exercise-dymwin', {wysiwyg: false})
     cy.get('label:contains("Adaptation type")').next().should('have.value', 'selectThingsAdaptation')
     cy.get('label:contains("Instructions")').next().should('have.value', 'Instructions!')
   })
 
   it("keeps what's been typed in WYSIWYG fields regardless of the typing speed and server response time", () => {
-    cy.visit('/project-xkopqm/textbook-klxufv/page-7/exercise-xnyegk')
-    setLocale()
+    visit('/project-xkopqm/textbook-klxufv/page-7/exercise-xnyegk')
 
     cy.intercept('POST', '/api/parsedExercises', (req) => {
       const throttle = req.body.data.attributes.instructions === "Foo\n" ? 1000 : 0
       req.on('response', (res) => { res.delay = throttle })
     })
 
-    cy.get(':has(>label:contains("Instructions")) .ql-editor').as('editor')
+    cy.get('label:contains("Instructions") + .ql-container .ql-editor').as('editor')
 
     cy.get('@editor').focus().type('{selectall}Foo')
     cy.get('@editor').focus().type('{selectall}Bar')
@@ -418,10 +407,7 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
     const isProdPreview = Cypress.env('IS_PROD_PREVIEW')
     cy.viewport(1600, 1000)
 
-    cy.visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
-    setLocale()
-    cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
-    cy.get('div.busy').should('not.exist')
+    visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise', {wysiwyg: false, pdf: 'test'})
 
     cy.get('label:contains("Number")').next().type('5')
 
@@ -486,10 +472,7 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
 
     cy.intercept('GET', '/api/exercises/pghtfo?include=adaptation').as('getExercise')
 
-    cy.visit('/project-xkopqm/textbook-klxufv/page-7/exercise-pghtfo')
-    setLocale()
-    cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
-    cy.get('div.busy').should('not.exist')
+    visit('/project-xkopqm/textbook-klxufv/page-7/exercise-pghtfo', {wysiwyg: false, pdf: 'test'})
 
     cy.get('@getExercise').its('response.body.data.attributes.rectangles').should('deep.equal', [
       {
@@ -583,7 +566,7 @@ describe('Gabby\'s project\'s textbook page exercise view', () => {
     cy.location('pathname').should('equal', '/project-xkopqm/textbook-klxufv/page-7')
     cy.get('div.busy', {timeout: 10000}).should('not.exist')
 
-    cy.visit('/project-xkopqm/textbook-klxufv/page-7/exercise-pghtfo')
+    visit('/project-xkopqm/textbook-klxufv/page-7/exercise-pghtfo')
 
     cy.get('@getExercise').its('response.body.data.attributes.rectangles').should('deep.equal', [
       {

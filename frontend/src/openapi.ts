@@ -239,9 +239,7 @@ export interface components {
        * Attributes
        * @default {}
        */
-      attributes?: {
-        [key: string]: true;
-      };
+      attributes?: Record<string, never>;
       /** Insert */
       insert: string;
     };
@@ -804,8 +802,14 @@ export interface components {
     };
     /** Exercise */
     gabby__exercise_delta__Exercise: {
+      /** Clue */
+      clue: components["schemas"]["InsertOp"][];
+      /** Example */
+      example: components["schemas"]["InsertOp"][];
       /** Instructions */
       instructions: components["schemas"]["InsertOp"][];
+      /** Wording */
+      wording: components["schemas"]["InsertOp"][];
     };
     /** Exercise */
     gabby__renderable__Exercise: {
