@@ -12,6 +12,12 @@ Les améliorations techniques ne figurent que dans le `log git <https://github.c
 Les titres des sections de ce document correspondent au champ ``Gabby version`` dans le "À propos".
 Les versions sont nommées selon leur date de publication, au format ``YYYYMMDD-HHMMSS`` (année, mois, jour, tiret, heure, minute, seconde).
 
+20240821-113528
+---------------
+
+- l'identification est valide pendant 1 an (sera réduit pour la production)
+- les identifiants d'un utilisateur de démo sont affichés dans le dialogue d'identificaiton
+
 20240808-133707
 ---------------
 
