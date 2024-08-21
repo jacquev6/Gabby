@@ -1,39 +1,27 @@
-import { useApiStore } from '../src/frontend/stores/api'
+import { loadFixtures, login, loadPdf, visit } from './utils'
 
-
-function setLocale() {
-  cy.get('select[data-cy="language"]').last().select('fr')
-  cy.focused().blur()
-}
 
 function test(path: string, title: string, f = () => {}, it_: Mocha.ExclusiveTestFunction = it) {
   it_(`${title} looks like this`, () => {
-    cy.visit(path)
-    setLocale()
-    cy.get('.busy').should('not.exist')
+    visit(path, {locale: 'fr'})
     f()
-    cy.get('.busy').should('not.exist')
     cy.screenshot(title)
   })
 }
 
-test['only'] = (path: string, title: string, f: () => void) => test(path, title, f, it['only'])
+test['only'] = (path: string, title: string, f = () => {}) => test(path, title, f, it['only'])
 
-function loadPdf(name: string) {
-  return () => cy.get('input[type=file]').selectFile(`../pdf-examples/${name}.pdf`)
-}
-
-const loadTestPdf = loadPdf('test')
+const loadTestPdf = () => loadPdf('test')
 
 describe('Gabby', () => {
   before(() => {
-    console.clear
-    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=more-test-exercises,empty-project')
+    console.clear()
+    loadFixtures('more-test-exercises', 'empty-project')
   })
 
   beforeEach(() => {
     cy.viewport(1600, 1200)
-    cy.wrap(useApiStore()).then(api => api.auth.login('admin', 'password'))
+    login()
   })
 
   test('/', 'home')

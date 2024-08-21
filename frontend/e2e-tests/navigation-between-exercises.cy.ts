@@ -1,21 +1,16 @@
-import { useApiStore } from '../src/frontend/stores/api'
+import { loadFixtures, login, visit } from './utils'
 
-
-function setLocale() {
-  cy.get('select[data-cy="language"]').last().select('en')
-}
 
 describe('Gabby\'s new exercise view', () => {
   before(console.clear)
 
   beforeEach(() => {
-    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=admin-user,more-test-exercises')
-    cy.wrap(useApiStore()).then(api => api.auth.login('admin', 'password'))
+    loadFixtures('more-test-exercises')
+    login()
   })
 
   it('navigates using "Save then next" and "Previous" buttons', () => {
-    cy.visit('/project-xkopqm/textbook-klxufv/page-1/new-exercise')
-    setLocale()
+    visit('/project-xkopqm/textbook-klxufv/page-1/new-exercise')
 
     cy.get('label:contains("Number")').next().type('1')
 
@@ -61,8 +56,7 @@ describe('Gabby\'s new exercise view', () => {
   })
 
   it('resets history when going back to list', () => {
-    cy.visit('/project-xkopqm/textbook-klxufv/page-1/new-exercise')
-    setLocale()
+    visit('/project-xkopqm/textbook-klxufv/page-1/new-exercise')
 
     cy.get('label:contains("Number")').next().type('1')
 

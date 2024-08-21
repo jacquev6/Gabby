@@ -39,8 +39,8 @@ then
   false
 fi
 
-# @todo Migrate all .cy.js to TypeScript, remove hte execption below
-if git ls-files '../../frontend/*.js' | grep -v -e '\.cy\.js$' -e 'cypress/support' -e 'promise-with-resolvers-polyfill.js'
+# @todo Migrate all .cy.js to TypeScript, remove the exception below
+if git ls-files '../../frontend/*.js' | grep -v -e '\.\./\.\./frontend/src/.*\.cy\.js$' -e '\.\./\.\./frontend/cypress/support' -e '\.\./\.\./frontend/src/promise-with-resolvers-polyfill\.js'
 then
   false
 fi

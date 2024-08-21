@@ -1,35 +1,28 @@
-import { useApiStore } from '../src/frontend/stores/api'
+import { loadFixtures, login, visit } from './utils'
 
-
-function setLocale() {
-  cy.get('select[data-cy="language"]').last().select('en')
-}
 
 describe('Gabby has routes that', () => {
   before(() => {
     console.clear
-    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=admin-user,test-exercises')
+    loadFixtures('test-exercises')
   })
 
   beforeEach(() => {
-    cy.wrap(useApiStore()).then(api => api.auth.login('admin', 'password'))
+    login()
   })
 
   it('can access the default Vue Router view', () => {
-    cy.visit('/')
-    setLocale()
+    visit('/')
     cy.contains('h1', 'Existing projects')
   })
 
   it('can access a Vue Router view without trailing /', () => {
-    cy.visit('/project-xkopqm/textbook-klxufv/page-6')
-    setLocale()
+    visit('/project-xkopqm/textbook-klxufv/page-6')
     cy.contains('h1', 'Existing exercises')
   })
 
   it('can access a Vue Router view with trailing /', () => {
-    cy.visit('/project-xkopqm/textbook-klxufv/page-6/')
-    setLocale()
+    visit('/project-xkopqm/textbook-klxufv/page-6/')
     cy.contains('h1', 'Existing exercises')
   })
 

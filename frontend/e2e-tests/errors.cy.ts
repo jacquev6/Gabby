@@ -1,25 +1,21 @@
-import { useApiStore } from '../src/frontend/stores/api'
+import { loadFixtures, login, visit } from './utils'
 
-
-function setLocale() {
-  cy.get('select[data-cy="language"]').last().select('en')
-}
 
 describe("Gabby's error catcher", () => {
   before(() => {
     console.clear()
-    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=admin-user')
+    loadFixtures('admin-user')
   })
 
   beforeEach(() => {
-    cy.wrap(useApiStore()).then(api => api.auth.login('admin', 'password'))
+    login()
   })
 
   // @todo Find an error caught by 'window.onerror'
 
   it('catches dereferencing undefined', () => {
-    cy.visit('/errors')
-    setLocale()
+    visit('/errors')
+
     cy.get('button:contains("Dereference undefined")').click()
 
     cy.get('h1:contains("There was a bug")').should('exist')
@@ -30,8 +26,8 @@ describe("Gabby's error catcher", () => {
   })
 
   it('catches dereferencing null', () => {
-    cy.visit('/errors')
-    setLocale()
+    visit('/errors')
+
     cy.get('button:contains("Dereference null")').click()
 
     cy.get('h1:contains("There was a bug")').should('exist')
@@ -42,8 +38,8 @@ describe("Gabby's error catcher", () => {
   })
 
   it('catches unhandled rejection', () => {
-    cy.visit('/errors')
-    setLocale()
+    visit('/errors')
+
     cy.get('button:contains("Unhandled rejection")').click()
 
     cy.get('h1:contains("There was a bug")').should('exist')
@@ -66,8 +62,8 @@ describe("Gabby's error catcher", () => {
   })
 
   it('catches thrown exception', () => {
-    cy.visit('/errors')
-    setLocale()
+    visit('/errors')
+
     cy.get('button:contains("Throw exception")').click()
 
     cy.get('h1:contains("There was a bug")').should('exist')
@@ -78,8 +74,8 @@ describe("Gabby's error catcher", () => {
   })
 
   it('catches 422', () => {
-    cy.visit('/errors')
-    setLocale()
+    visit('/errors')
+
     cy.get('button:contains("Generate a 422 response")').click()
 
     cy.get('h1:contains("There was a bug")').should('exist')
@@ -90,8 +86,8 @@ describe("Gabby's error catcher", () => {
   })
 
   it('catches 500', () => {
-    cy.visit('/errors')
-    setLocale()
+    visit('/errors')
+
     cy.get('button:contains("Generate a 500 response")').click()
 
     cy.get('h1:contains("There was a bug")').should('exist')

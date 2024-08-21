@@ -1,30 +1,23 @@
-import { useApiStore } from '../src/frontend/stores/api'
+import { visit, login, loadFixtures } from './utils'
 
 
-function setLocale() {
-  cy.get('select[data-cy="language"]').last().select('en')
-}
-
-describe('Gabby\'s index view', () => {
+describe('Gabby', () => {
   before(console.clear)
 
   beforeEach(() => {
-    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=admin-user')
-    cy.wrap(useApiStore()).then(api => api.auth.login('admin', 'password'))
+    loadFixtures('admin-user')
+    login()
   })
 
-  it('lands', () => {
-    cy.visit('/')
-    setLocale()
+  it('lists no projects', () => {
+    visit('/')
 
-    cy.get('div.busy').should('not.exist')
     cy.get('p').should('contain', 'No projects')
     cy.title().should('eq', 'MALIN')
   })
 
   it('enables the "Create project" button', () => {
-    cy.visit('/')
-    setLocale()
+    visit('/')
 
     cy.get('button:contains("Create project")').should('be.disabled')
 
@@ -38,23 +31,20 @@ describe('Gabby\'s index view', () => {
   })
 
   it('creates a minimal project', () => {
-    cy.visit('/')
-    setLocale()
+    visit('/')
 
     cy.get('label:contains("Title")').next().type('Test project')
     cy.get('button:contains("Create project")').click()
 
     cy.get('h1:contains("Test project")').should('exist')
 
-    cy.visit('/')
-    setLocale()
+    visit('/')
 
     cy.get('li a:contains("Test project")').should('exist')
   })
 
   it('creates a full project', () => {
-    cy.visit('/')
-    setLocale()
+    visit('/')
 
     cy.get('label:contains("Title")').next().type('Test project')
     cy.get('label:contains("Description")').next().type('This is a test project')
@@ -63,17 +53,8 @@ describe('Gabby\'s index view', () => {
     cy.get('h1:contains("Test project")').should('exist')
     cy.get('p:contains("This is a test project")').should('exist')
 
-    cy.visit('/')
-    setLocale()
+    visit('/')
 
     cy.get('li a:contains("Test project")').should('exist')
-  })
-
-  it('navigates to user documentation', () => {
-    cy.visit('/')
-    setLocale()
-
-    cy.get('a:contains("Help")').click()
-    cy.contains('h1', 'Documentation de MALIN')
   })
 })

@@ -1,16 +1,14 @@
-function setLocale() {
-  cy.get('select[data-cy="language"]').last().select('en')
-}
+import { loadFixtures, notBusy, visit } from './utils'
+
 
 describe('Gabby\'s authentication system', () => {
   before(() => {
     console.clear()
-    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=test-users')
+    loadFixtures('test-users')
   })
 
   it('logs in and out', () => {
-    cy.visit('/')
-    setLocale()
+    visit('/')
 
     cy.get('h1:contains("Existing projects")').should('not.exist')
     cy.get('h1:contains("Please log in")').should('exist')
@@ -21,7 +19,7 @@ describe('Gabby\'s authentication system', () => {
     cy.get('[name=username]').should('have.value', 'jacquev6+gabby-dev-alice@gmail.com')
     cy.get('button:contains("Log in")').click()
 
-    cy.get('div.busy').should('not.exist')
+    notBusy()
 
     cy.get('h1:contains("Please log in")').should('not.exist')
     cy.get('h1:contains("Existing projects")').should('exist')
@@ -33,15 +31,14 @@ describe('Gabby\'s authentication system', () => {
   })
 
   it('warns about wrong credentials', () => {
-    cy.visit('/')
-    setLocale()
+    visit('/')
 
     cy.get('[name=username]').type('jacquev6+gabby-dev-alice@gmail.com', {delay: 0})
     cy.get('[name=password]').type('not-alice-password', {delay: 0})
     cy.get('[name=username]').type('{selectall}jacquev6+gabby-dev-alice@gmail.com', {delay: 0})
     cy.get('button:contains("Log in")').click()
 
-    cy.get('div.busy').should('not.exist')
+    notBusy()
 
     cy.get('h1:contains("Please log in")').should('exist')
     cy.get('p:contains("Login failed. Please check your credentials.")').should('exist')
@@ -49,8 +46,7 @@ describe('Gabby\'s authentication system', () => {
   })
 
   it('does not request a password recovery link', () => {
-    cy.visit('/')
-    setLocale()
+    visit('/')
 
     cy.get('h1:contains("Please log in")').should('exist')
 
@@ -66,8 +62,7 @@ describe('Gabby\'s authentication system', () => {
   })
 
   it('requests a password recovery link', () => {
-    cy.visit('/')
-    setLocale()
+    visit('/')
 
     cy.get('h1:contains("Please log in")').should('exist')
 
@@ -104,9 +99,8 @@ describe('Gabby\'s authentication system', () => {
   })
 
   // Get a token (hack for testing, not the usual flow)
-  function getTokenThen(f) {
-    cy.visit('/')
-    setLocale()
+  function getTokenThen(f: (token: string) => void) {
+    visit('/')
     cy.get('[name=username]').type('jacquev6+gabby-dev-alice@gmail.com', {delay: 0})
     cy.get('[name=password]').type('alice-password', {delay: 0})
     cy.get('[name=username]').type('{selectall}jacquev6+gabby-dev-alice@gmail.com', {delay: 0})
@@ -114,15 +108,14 @@ describe('Gabby\'s authentication system', () => {
     cy.get('[name=password]').should('have.value', 'alice-password')
     cy.intercept('POST', '/api/token').as('tokenRequest')
     cy.get('button:contains("Log in")').click()
-    cy.get('div.busy').should('not.exist')
+    notBusy()
     cy.get('a:contains("Log out")').click()
     cy.wait('@tokenRequest').its('response.body.access_token').then(f)
   }
 
   it('resets a password', () => {
     getTokenThen((token) => {
-      cy.visit(`/reset-password/jacquev6+gabby-dev-alice@gmail.com/${token}`)
-      setLocale()
+      visit(`/reset-password/jacquev6+gabby-dev-alice@gmail.com/${token}`)
 
       cy.get('h1:contains("Reset password")').should('exist')
       cy.get('label:contains("New password")').first().next().type('new-alice-password', {delay: 0})
@@ -132,7 +125,7 @@ describe('Gabby\'s authentication system', () => {
       cy.get('label:contains("New password")').last().next().should('have.value', 'new-alice-password')
       cy.get('button:contains("Reset password")').click()
 
-      cy.get('div.busy').should('not.exist')
+      notBusy()
 
       cy.get('h1:contains("Reset password")').should('not.exist')
       cy.get('h1:contains("Please log in")').should('not.exist')
@@ -146,7 +139,7 @@ describe('Gabby\'s authentication system', () => {
       cy.get('[name=password]').type('{selectall}alice-password', {delay: 0})
       cy.get('button:contains("Log in")').click()
 
-      cy.get('div.busy').should('not.exist')
+      notBusy()
       cy.get('h1:contains("Please log in")').should('exist')
       cy.get('p:contains("Login failed. Please check your credentials.")').should('exist')
 
@@ -159,8 +152,7 @@ describe('Gabby\'s authentication system', () => {
   })
 
   it('warns about passwords being different', () => {
-    cy.visit('/reset-password/jacquev6+gabby-dev-alice@gmail.com/unused-json-web-token')
-    setLocale()
+    visit('/reset-password/jacquev6+gabby-dev-alice@gmail.com/unused-json-web-token')
 
     cy.get('button:contains("Reset password")').should('be.disabled')
     cy.get('p:contains("Passwords are different.")').should('not.exist')

@@ -1,11 +1,7 @@
-import { useApiStore } from '../src/frontend/stores/api'
+import { loadFixtures, login, notBusy, visit as visit } from './utils'
 
 
-function visit(url: string) {
-  cy.visit(url)
-  cy.get('select[data-cy="language"]').last().select('en')
-  cy.get('div.busy').should('not.exist')
-
+function setAliases() {
   cy.get('label:contains("Number") + input').as('number')
   cy.get('label:contains("Adaptation type") + select').as('adaptationType')
   cy.get('label:contains("Instructions") + .ql-container > .ql-editor').as('instructions')
@@ -26,13 +22,14 @@ describe('Gabby', () => {
   before(console.clear)
 
   beforeEach(() => {
-    cy.request('POST', '/reset-for-tests/yes-im-sure?fixtures=more-test-exercises')
-    cy.wrap(useApiStore()).then(api => api.auth.login('admin', 'password'))
+    loadFixtures('more-test-exercises')
+    login()
     cy.viewport(1000, 1000)
   })
 
   it('enables basic formatting buttons', () => {
     visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
+    setAliases()
 
     cy.get('@bold').should('be.disabled')
     cy.get('@italic').should('be.disabled')
@@ -70,6 +67,7 @@ describe('Gabby', () => {
 
   it('allows bold and italic in all fields for all adaptation types', () => {
     visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
+    setAliases()
     cy.get('@number').type('test')
     cy.get('@exampleHeader').click()
     cy.get('@example').type('X')
@@ -99,6 +97,7 @@ describe('Gabby', () => {
 
   it('enables the "Choice" button', () => {
     visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
+    setAliases()
     cy.get('@number').type('test')
     cy.get('@adaptationType').select('multipleChoicesInInstructionsAdaptation')
 
@@ -127,6 +126,7 @@ describe('Gabby', () => {
 
   it('enables the "Sel" buttons', () => {
     visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
+    setAliases()
     cy.get('@number').type('test')
     cy.get('@adaptationType').select('selectThingsAdaptation')
     cy.get('label:contains("Number of colors") + input').type('{selectAll}2')
@@ -177,5 +177,59 @@ describe('Gabby', () => {
     cy.get('sel-blot[data-sel="2"]:contains("sel2")').should('exist')
     cy.get('@clue').type('{selectAll}{del}')
     cy.get('sel-blot').should('not.exist')
+  })
+
+  it("keeps what's been typed in WYSIWYG fields regardless of the typing speed and server response time", () => {
+    visit('/project-xkopqm/textbook-klxufv/page-7/exercise-xnyegk')
+
+    cy.intercept('POST', '/api/parsedExercises', (req) => {
+      const throttle = req.body.data.attributes.instructions === "Foo\n" ? 1000 : 0
+      req.on('response', (res) => { res.delay = throttle })
+    })
+
+    cy.get('label:contains("Instructions") + .ql-container .ql-editor').as('editor')
+
+    cy.get('@editor').focus().type('{selectall}Foo')
+    cy.get('@editor').focus().type('{selectall}Bar')
+    cy.get('@editor').should('contain.text', 'Bar')
+
+    notBusy()
+
+    // The response for 'Foo' reaches the frontend after the response for 'Bar', but is discarded and 'Bar' is kept.
+    cy.get('@editor').should('not.contain.text', 'Foo')
+    cy.get('@editor').should('contain.text', 'Bar')
+  })
+
+  it('handles switching from non-WYSIWYG to WYSIWYG', () => {
+    visit('/project-xkopqm/textbook-klxufv/page-7/exercise-jkrudc', {wysiwyg: false})
+
+    cy.get('label:contains("Instructions")').next().type('{selectall}Réponds par {{}choice|vrai} ou {{}choice|faux}.', {delay: 0})
+    cy.get('label:contains("Adaptation type")').next().select('multipleChoicesInInstructionsAdaptation')
+    notBusy()
+
+    cy.get('span:contains("WYSIWYG") input').check()
+
+    cy.get(':has(>label:contains("Instructions")) .ql-editor').should('contain.text', 'Réponds par vrai ou faux.')
+  })
+
+  it('creates an exercise with a WYSIWYG field', () => {
+    visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
+
+    cy.get('label:contains("Number")').next().type('6')
+    cy.get('label:contains("Adaptation type")').next().select('multipleChoicesInInstructionsAdaptation')
+    cy.get('label:contains("Instructions") + .ql-container .ql-editor').as('instructions')
+    cy.get('@instructions').click().type('Choix : ')
+    cy.get('button:contains("Choice")').click()
+    cy.get('@instructions').type('vrai')
+    cy.get('button:contains("Choice")').click()
+    cy.get('@instructions').type(' ou ')
+    cy.get('button:contains("Choice")').click()
+    cy.get('@instructions').type('faux')
+
+    cy.get('choice-blot').should('have.length', 2)
+
+    cy.get('button:contains("Save then back to list")').click()
+
+    cy.get('li:contains("Choix : {choice|vrai} ou")').should('exist')
   })
 })
