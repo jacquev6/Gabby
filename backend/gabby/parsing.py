@@ -44,7 +44,7 @@ def make_grammar(tags, whitespace):
             WHITESPACE_IN_SENTENCE: NON_PARAGRAPH_SEPARATING_WHITESPACE
 
             PUNCTUATION_IN_LENIENT_PARAGRAPH: /\.\.\.|[^\w \t\n\r]/
-            PUNCTUATION_IN_SENTENCE: /[,;:-–]/
+            PUNCTUATION_IN_SENTENCE: /[-,;:–]/
             PUNCTUATION_AT_END_OF_SENTENCE: /\.\.\.|[.!?…]/
 
             # Terminals usable in tags

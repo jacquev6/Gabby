@@ -132,14 +132,12 @@ describe('Gabby', () => {
     cy.get('input[type=file]').selectFile('../pdf-examples/test.pdf')
     cy.get('div.busy').should('not.exist')
 
-    cy.get('label:contains("Énoncé")').next().type('{selectAll}... vide\n... vident')
-    cy.get('label:contains("Énoncé")').next().type('{selectAll}... vide\n... vident')
-    cy.get('label:contains("Énoncé")').next().should('have.value', '... vide\n... vident')
+    cy.get('label:contains("Énoncé") + div.ql-container > div.ql-editor').type('{selectAll}... vide\n... vident')
     cy.screenshot('project-textbook-page-exercise/modify-exercise', {clip: {x: 0, y: 50, width: 575, height: 1000}})
 
     cy.screenshot('project-textbook-page-exercise/tools', {clip: {x: 560, y: 0, width: 210, height: 500}})
 
-    cy.get('label:contains("Type d\'adaptation")').next().select('selectThingsAdaptation')
+    cy.get('label:contains("Type d\'adaptation") + select').select('selectThingsAdaptation')
     cy.get('div.busy').should('exist')  // This may fail (race condition) but is required because the 'div.busy' is not displayed quickly enough.
     cy.get('div.busy').should('not.exist')
     cy.screenshot('project-textbook-page-exercise/project-textbook-page-exercise', {clip: {x: 0, y: 0, width: 1000, height: 330}})

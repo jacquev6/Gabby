@@ -55,6 +55,7 @@ describe('Gabby\'s project\'s textbook page view', () => {
   it('adjusts textarea heights', () => {
     cy.visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise')
     setLocale()
+    cy.get('span:contains("WYSIWYG") input').uncheck()
 
     for (const label of ['Instructions', 'Wording']) {
       cy.get(`label:contains("${label}")`).next().should('have.attr', 'rows', '2')

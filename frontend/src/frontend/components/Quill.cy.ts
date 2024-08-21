@@ -259,7 +259,7 @@ describe('Quill', () => {
       })
   })
 
-  it.only('adds, changes and removes a string format to/from the caret', () => {
+  it('adds, changes and removes a string format to/from the caret', () => {
     let modelValue: Model = [{insert: 'abc'}]
     cy.mount(Quill, {props: {
       blots: [StrBlot],
