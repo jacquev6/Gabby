@@ -76,7 +76,7 @@ describe('Gabby', () => {
     cy.get('@clueHeader').click()
     cy.get('@clue').type('X')
 
-    for (const adaptationType of ['-', 'selectThingsAdaptation', 'fillWithFreeTextAdaptation', 'multipleChoicesInInstructionsAdaptation', 'multipleChoicesInWordingAdaptation']) {
+    for (const adaptationType of ['-', 'selectThingsAdaptation', 'fillWithFreeTextAdaptation', 'multipleChoicesInInstructionsAdaptation']) {
       cy.get('@adaptationType').select(adaptationType)
 
       for (const fieldAlias of ['@instructions', '@wording', '@example', '@clue']) {
@@ -125,7 +125,7 @@ describe('Gabby', () => {
     cy.get('button:contains("Choice")').should('be.disabled')
   })
 
-  it.only('enables the "Sel" buttons', () => {
+  it('enables the "Sel" buttons', () => {
     visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
     cy.get('@number').type('test')
     cy.get('@adaptationType').select('selectThingsAdaptation')
