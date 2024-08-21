@@ -17,6 +17,7 @@
   "loginButton": "Log in",
   "emailAddress": "e-mail address",
   "password": "Password",
+  "demoCredentials": "For this demo, if you have not yet asked Vincent to create credentials for you, you can use the following:",
   "logoutButton": "Log out",
   "loginFailed": "Login failed. Please check your credentials.",
   "lostPasswordQuestion": "Lost password?",

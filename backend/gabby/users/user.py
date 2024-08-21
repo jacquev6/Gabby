@@ -126,7 +126,7 @@ def authentication_dependable(
     if user is None:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Incorrect username or password")
 
-    default_validity = datetime.timedelta(hours=20)  # Require login every morning, and token expires during the night
+    default_validity = datetime.timedelta(days=365)  # @todo Reduce validity (long validity requested by client during development to ease testing)
     class Options(PydanticBase):
         validity: Annotated[datetime.timedelta, PydanticField(strict=False)] = default_validity
 
