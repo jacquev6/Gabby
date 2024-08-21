@@ -27,7 +27,10 @@ expected=$(expr $defined + $imported + $inherited)
 echo "Expecting to run $expected tests"
 
 rm -f ../../backend/.coverage
-sudo rm -rf ../backend/unit-tests-coverage
+docker compose exec \
+  --env GABBY_UNITTESTING=true \
+  backend-shell \
+    rm -rf /app/dev-env/backend/unit-tests-coverage
 
 docker compose exec \
   --env GABBY_UNITTESTING=true \

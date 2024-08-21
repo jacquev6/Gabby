@@ -40,7 +40,6 @@ docker compose exec \
 
 if [ -d ../$test_dir/screenshots/gabby.cy.ts ]
 then
-  echo "Copying screenshots to doc/user"
   find ../doc/user -name '*.png' -delete
   find ../$test_dir/screenshots/gabby.cy.ts -name '*.png' | while read line; do
     cp $line ../doc/user/${line#../$test_dir/screenshots/gabby.cy.ts/}
@@ -51,5 +50,5 @@ fi
 if [ -d ../$test_dir/screenshots/visual-appearance.cy.ts ]
 then
   mkdir -p ../$test_dir/screenshots/gabby
-  sudo mv ../$test_dir/screenshots/visual-appearance.cy.ts ../$test_dir/screenshots/gabby
+  mv ../$test_dir/screenshots/visual-appearance.cy.ts ../$test_dir/screenshots/gabby/visual-appearance.cy.ts
 fi
