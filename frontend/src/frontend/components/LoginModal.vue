@@ -77,6 +77,7 @@ async function sendRecoveryMail() {
         </BBusy>
       </template>
       <template v-else>
+        <p class="alert alert-secondary">{{ $t('demoCredentials') }} "demo@gabby.vincent-jacques.net" / "demo".</p>
         <BBusy :busy>
           <BLabeledInput :label="$t('emailAddress')" name="username" v-model="username" />
           <BLabeledInput :label="$t('password')" name="password" type="password" v-model="password" />

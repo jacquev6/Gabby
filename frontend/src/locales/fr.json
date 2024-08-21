@@ -17,6 +17,7 @@
   "loginButton": "Se connecter",
   "emailAddress": "Adresse e-mail",
   "password": "Mot de passe",
+  "demoCredentials": "Pour cette démo, si vous n'avez pas encore demandé à Vincent de vous créer un identifiant, vous pouver utiliser :",
   "logoutButton": "Déconnexion",
   "loginFailed": "Connexion échouée. Merci de vérifiez vos identifiants.",
   "lostPasswordQuestion": "Mot de passe perdu ?",
