@@ -1,5 +1,6 @@
 import { useApiStore } from '../src/frontend/stores/api'
 
+
 function setLocale() {
   cy.get('select[data-cy="language"]').last().select('fr')
   cy.focused().blur()

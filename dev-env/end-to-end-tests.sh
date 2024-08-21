@@ -38,17 +38,10 @@ docker compose exec \
   frontend-shell \
     chown -R "$(id -u):$(id -g)" ../$test_dir/screenshots
 
-if [ -d ../$test_dir/screenshots/gabby.cy.ts ]
+if [ -d ../$test_dir/screenshots/user-doc.cy.ts ]
 then
   find ../doc/user -name '*.png' -delete
-  find ../$test_dir/screenshots/gabby.cy.ts -name '*.png' | while read line; do
-    cp $line ../doc/user/${line#../$test_dir/screenshots/gabby.cy.ts/}
+  find ../$test_dir/screenshots/user-doc.cy.ts -name '*.png' | while read line; do
+    cp $line ../doc/user/${line#../$test_dir/screenshots/user-doc.cy.ts/}
   done
-fi
-
-# Happens when using --spec .../visual-appearance.cy.ts
-if [ -d ../$test_dir/screenshots/visual-appearance.cy.ts ]
-then
-  mkdir -p ../$test_dir/screenshots/gabby
-  mv ../$test_dir/screenshots/visual-appearance.cy.ts ../$test_dir/screenshots/gabby/visual-appearance.cy.ts
 fi
