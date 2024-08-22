@@ -116,6 +116,8 @@
   "includePunctuation": "Also select punctuation",
   "useSel1ToSelN": "Use {first} to {last} in instructions, example or clue to format text as if selected.",
   "useSel1": "Use {first} in instructions, example or clue to format text as if selected.",
+  "usableColors": "Usable colors",
+  "formatWithColor": "Format with color",
   "useChoice": "Use {choice} in instructions to indicate a possible choice.",
   "useChoices": "Use {choices} in wording to indicate a choice to make.",
   "choiceButton": "Choice",

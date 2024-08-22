@@ -79,6 +79,7 @@ import { BLabeledInput, BLabeledCheckbox } from './opinion/bootstrap'
 import { BButton } from './opinion/bootstrap'
 import type { Model } from './ExerciseFieldsForm.vue'
 import type ExerciseFieldsForm from './ExerciseFieldsForm.vue'
+import { colors } from '$adapted/components/SelectedText.vue'
 
 
 defineProps<{
@@ -96,28 +97,54 @@ const model = defineModel<Model>({required: true})
     <BLabeledInput :label="$t('placeholderText')" type="text" v-model="model.fillWithFreeTextAdaptationOptions.placeholder" />
   </template>
   <template v-else-if="model.adaptationType === 'selectThingsAdaptation'">
-    <BLabeledInput :label="$t('colorsCount')" type="number" min="1" v-model="model.selectThingsAdaptationOptions.colors" />
     <template v-if="wysiwyg">
-      <p><template v-for="i in model.selectThingsAdaptationOptions.colors">
-        <BButton sm primary :disabled="fields.focusedWysiwygField === null || fields.focusedWysiwygField === 'wording'" @click="fields.toggle('sel', i)">{{ i }}</BButton>
-        <wbr>
-      </template></p>
+      <div class="mb-3">
+        <label class="form-label" for="blah">{{ $t('usableColors' )}}</label>
+        <span class="maybe-usable-colors-container">
+          <template v-for="i in colors.length">
+            <span :class="i <= model.selectThingsAdaptationOptions.colors ? 'usable-colors-container' : 'unusable-colors-container'">
+              <span
+                class="usable-colors-button"
+                :style="{backgroundColor: colors[i - 1]}"
+                :data-cy-colors="i"
+                @click="model.selectThingsAdaptationOptions.colors = i"
+              ></span>
+            </span>
+          </template>
+        </span>
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="blah">{{ $t('formatWithColor' )}}</label>
+        <p><template v-for="i in model.selectThingsAdaptationOptions.colors">
+          <BButton
+            sm primary
+            :disabled="fields.focusedWysiwygField === null || fields.focusedWysiwygField === 'wording'"
+            @click="fields.toggle('sel', i)" :style="{lineHeight: 0, padding: '2px'}"
+          >
+            <span class="usable-colors-button" :data-cy-colors="i" :style="{backgroundColor: colors[i - 1]}"></span>
+          </BButton>
+          <wbr>
+        </template></p>
+      </div>
     </template>
-    <p v-else class="alert alert-secondary">
-      <i18n-t keypath="useSel1ToSelN" v-if="model.selectThingsAdaptationOptions.colors > 1">
-        <template v-slot:first>
-          <code>{sel1|<em>text</em>}</code>
-        </template>
-        <template v-slot:last>
-          <code>{sel{{ model.selectThingsAdaptationOptions.colors }}|<em>text</em>}</code>
-        </template>
-      </i18n-t>
-      <i18n-t keypath="useSel1" v-else>
-        <template v-slot:first>
-          <code>{sel1|<em>text</em>}</code>
-        </template>
-      </i18n-t>
-    </p>
+    <template v-else>
+      <BLabeledInput :label="$t('colorsCount')" type="number" min="1" v-model="model.selectThingsAdaptationOptions.colors" />
+      <p class="alert alert-secondary">
+        <i18n-t keypath="useSel1ToSelN" v-if="model.selectThingsAdaptationOptions.colors > 1">
+          <template v-slot:first>
+            <code>{sel1|<em>text</em>}</code>
+          </template>
+          <template v-slot:last>
+            <code>{sel{{ model.selectThingsAdaptationOptions.colors }}|<em>text</em>}</code>
+          </template>
+        </i18n-t>
+        <i18n-t keypath="useSel1" v-else>
+          <template v-slot:first>
+            <code>{sel1|<em>text</em>}</code>
+          </template>
+        </i18n-t>
+      </p>
+    </template>
     <BLabeledCheckbox :label="$t('includePunctuation')" v-model="model.selectThingsAdaptationOptions.punctuation" />
   </template>
   <template v-else-if="model.adaptationType === 'multipleChoicesInInstructionsAdaptation'">
@@ -146,6 +173,31 @@ const model = defineModel<Model>({required: true})
     <span>{{ ((t: never) => t)(model.adaptationType) }}</span>
   </template>
 </template>
+
+<style scoped>
+span.maybe-usable-colors-container {
+  display: block flow-root;
+  line-height: 0;
+}
+
+span.usable-colors-container {
+  display: inline flow-root;
+  background-color: var(--bs-primary);
+}
+
+span.unusable-colors-container {
+  display: inline flow-root;
+  background-color: var(--bs-secondary);
+}
+
+span.usable-colors-button {
+  display: inline flow-root;
+  margin: 0.25em;
+  width: 1.25em;
+  height: 1.25em;
+  cursor: pointer;
+}
+</style>
 
 <style>
 div.ql-editor choice-blot {

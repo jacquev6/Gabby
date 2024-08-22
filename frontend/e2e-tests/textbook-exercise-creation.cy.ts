@@ -56,7 +56,7 @@ describe('Gabby', () => {
   })
 
   it('creates a full exercise', () => {
-    visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise')
+    visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise', {wysiwyg: false})
 
     cy.get('label:contains("Number")').next().type('Défis')
     cy.get('label:contains("Instructions")').next().type('Do the smartest thing ever.')
