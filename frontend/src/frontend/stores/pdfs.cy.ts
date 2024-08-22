@@ -1,9 +1,14 @@
 import { setActivePinia, createPinia } from 'pinia'
-import * as pdfjs from 'pdfjs-dist/build/pdf'
+// @ts-ignore/* Temporary untyped */
+import * as untypedPdfjs from 'pdfjs-dist/build/pdf'
+import type PdfjsType from 'pdfjs-dist/types/src/pdf'
+import type { PDFDocumentProxy } from 'pdfjs-dist/types/src/display/api'
 
 import { definePdfsStore, usePdfsStore } from './pdfs'
 import '$/promise-with-resolvers-polyfill.js'
 
+
+const pdfjs = untypedPdfjs as typeof PdfjsType
 
 pdfjs.GlobalWorkerOptions.workerSrc = 'http://frontend/pdf.worker.min.js'
 
@@ -61,7 +66,9 @@ describe('PdfsStore', () => {
     await pdfs.open({url})
 
     expect(pdfs.getInfo(sha256)).to.deep.equal({sha256, name: url, size: 484714})
-    expect((await pdfs.getDocument(sha256)).numPages).to.equal(2)
+    const document = await pdfs.getDocument(sha256)
+    console.assert(document !== null)
+    expect(document.numPages).to.equal(2)
   })
 
   it('cannot get a closed PDF', async () => {
@@ -82,14 +89,14 @@ describe('PdfsStore', () => {
     let weak_refs_created = 0
     let weak_refs_derefed = 0
 
-    function weak_ref(o) {
+    function weak_ref(o: PDFDocumentProxy) {
       const garbage_collections_on_creation = garbage_collections
       ++weak_refs_created
       return {
         deref() {
           ++weak_refs_derefed
           if (garbage_collections !== garbage_collections_on_creation) {
-            return null
+            return undefined
           } else {
             return o
           }
@@ -104,19 +111,25 @@ describe('PdfsStore', () => {
     expect(weak_refs_created).to.equal(1)
     expect(weak_refs_derefed).to.equal(0)
 
-    expect((await pdfs.getDocument(sha256)).numPages).to.equal(2)
+    let document = await pdfs.getDocument(sha256)
+    console.assert(document !== null)
+    expect(document.numPages).to.equal(2)
 
     expect(weak_refs_created).to.equal(1)
     expect(weak_refs_derefed).to.equal(1)
 
-    expect((await pdfs.getDocument(sha256)).numPages).to.equal(2)
+    document = await pdfs.getDocument(sha256)
+    console.assert(document !== null)
+    expect(document.numPages).to.equal(2)
 
     expect(weak_refs_created).to.equal(1)
     expect(weak_refs_derefed).to.equal(2)
 
     ++garbage_collections
 
-    expect((await pdfs.getDocument(sha256)).numPages).to.equal(2)
+    document = await pdfs.getDocument(sha256)
+    console.assert(document !== null)
+    expect(document.numPages).to.equal(2)
 
     expect(weak_refs_created).to.equal(2)
     expect(weak_refs_derefed).to.equal(3)
@@ -127,7 +140,9 @@ describe('PdfsStore', () => {
     const doc2Promise = pdfs.getDocument(sha256)
 
     const doc1 = await doc1Promise
+    console.assert(doc1 !== null)
     const doc2 = await doc2Promise
+    console.assert(doc2 !== null)
 
     expect(doc1).to.equal(doc2)
     expect(doc1.numPages).to.equal(2)
@@ -145,7 +160,9 @@ describe('PdfsStore', () => {
     const pdfs2 = usePdfsStore()
 
     expect(await pdfs2.getInfo(sha256)).to.deep.equal({sha256, name: url, size: 484714})
-    expect((await pdfs2.getDocument(sha256)).numPages).to.equal(2)
+    const doc = await pdfs2.getDocument(sha256)
+    console.assert(doc !== null)
+    expect(doc.numPages).to.equal(2)
     pdfs2.close(sha256)
     expect(await pdfs2.getInfo(sha256)).to.be.null
     expect(await pdfs2.getDocument(sha256)).to.be.null
@@ -168,7 +185,9 @@ describe('PdfsStore', () => {
         const pdfs2 = usePdfsStore()
 
         expect(await pdfs2.getInfo(sha256)).to.deep.equal({sha256, name: 'large.pdf', size})
-        expect((await pdfs2.getDocument(sha256)).numPages).to.equal(64)
+        const doc = await pdfs2.getDocument(sha256)
+        console.assert(doc !== null)
+        expect(doc.numPages).to.equal(64)
         pdfs2.close(sha256)
         expect(await pdfs2.getInfo(sha256)).to.be.null
         expect(await pdfs2.getDocument(sha256)).to.be.null

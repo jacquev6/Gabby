@@ -7,27 +7,33 @@ describe('Bootstrap Modal', () => {
     cy.viewport(1000, 500)
   })
 
+  function component(el: JQuery): InstanceType<typeof BModal> {
+    return (el as any/* Work around Cypress typing limitations */).component
+  }
+
   it('shows and hides', () => {
+    // @ts-ignore// Work around Cypress typing limitations
     cy.mount(BModal).as('modal')
 
     cy.get('.modal').should('not.exist')
 
-    cy.get('@modal').then(({component}) => component.show())
+    cy.get('@modal').then(el => component(el).show())
     
     cy.get('.modal').should('exist')
     cy.get('@modal').its('component.active').should('be.true')
     cy.get('.modal-backdrop').should('exist')
 
-    cy.get('@modal').then(({component}) => component.hide())
+    cy.get('@modal').then(el => component(el).hide())
 
     cy.get('.modal-backdrop').should('not.exist')
     cy.get('@modal').its('component.active').should('be.false')
     cy.get('.modal').should('not.exist')
   })
 
-  function mountAndShowFloating(at, options = {}) {
+  function mountAndShowFloating(at: {x: number, y: number} | null, options = {}) {
+    // @ts-ignore// Work around Cypress typing limitations
     cy.mount(BModal, options).as('modal')
-    cy.get('@modal').then(({component}) => component.show({at}))
+    cy.get('@modal').then(el => component(el).show({at}))
     shouldExist()
   }
 
@@ -43,7 +49,7 @@ describe('Bootstrap Modal', () => {
   }
 
   function hide() {
-    cy.get('@modal').then(({component}) => component.hide())
+    cy.get('@modal').then(el => component(el).hide())
     shouldNotExist()
   }
 
@@ -56,28 +62,29 @@ describe('Bootstrap Modal', () => {
   it('tolerates being hidden multiple times', () => {
     mountAndShow()
 
-    cy.get('@modal').then(({component}) => component.hide())
-    cy.get('@modal').then(({component}) => component.hide())
-    cy.get('@modal').then(({component}) => component.hide())
+    cy.get('@modal').then(el => component(el).hide())
+    cy.get('@modal').then(el => component(el).hide())
+    cy.get('@modal').then(el => component(el).hide())
 
     cy.get('.modal').should('not.exist')
 
-    cy.get('@modal').then(({component}) => component.hide())
-    cy.get('@modal').then(({component}) => component.hide())
-    cy.get('@modal').then(({component}) => component.hide())
+    cy.get('@modal').then(el => component(el).hide())
+    cy.get('@modal').then(el => component(el).hide())
+    cy.get('@modal').then(el => component(el).hide())
   })
 
   it('tolerates being shown multiple times', () => {
+    // @ts-ignore// Work around Cypress typing limitations
     cy.mount(BModal).as('modal')
-    cy.get('@modal').then(({component}) => component.show())
-    cy.get('@modal').then(({component}) => component.show())
-    cy.get('@modal').then(({component}) => component.show())
+    cy.get('@modal').then(el => component(el).show())
+    cy.get('@modal').then(el => component(el).show())
+    cy.get('@modal').then(el => component(el).show())
 
     cy.get('@modal').its('component.active').should('be.true')
 
-    cy.get('@modal').then(({component}) => component.show())
-    cy.get('@modal').then(({component}) => component.show())
-    cy.get('@modal').then(({component}) => component.show())
+    cy.get('@modal').then(el => component(el).show())
+    cy.get('@modal').then(el => component(el).show())
+    cy.get('@modal').then(el => component(el).show())
 
     hide()
   })

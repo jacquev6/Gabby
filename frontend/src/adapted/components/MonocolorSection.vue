@@ -13,9 +13,7 @@ defineProps<{
   paragraphIndexOffset: number,
 }>()
 
-const models = defineModel<{
-  [index: string]: any/* @todo Type */
-}>({
+const models = defineModel<Record<string, any/* @todo Type */>>({
   required: true,
 })
 

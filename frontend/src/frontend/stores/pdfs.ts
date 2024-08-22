@@ -22,17 +22,15 @@ export interface InfoDoc {
   document: PDFDocumentProxy,
 }
 
-function make_weak_ref<T extends WeakKey>(o: T) {
+function make_weak_ref<T extends object>(o: T) {
   return new WeakRef(o)
 }
 
-interface PseudoWeakRef<T extends WeakKey> {
+interface PseudoWeakRef<T extends object> {
   deref(): T | undefined
 }
 
-declare function make_pseudo_weak_ref<T extends WeakKey>(o: T): PseudoWeakRef<T>
-
-export function definePdfsStore(name: string, options: {weak_ref?: typeof make_pseudo_weak_ref}) {
+export function definePdfsStore(name: string, options: {weak_ref?: (o: PDFDocumentProxy) => PseudoWeakRef<PDFDocumentProxy>}) {
   const weak_ref = options?.weak_ref ?? make_weak_ref
 
   async function loadDocument(name: string, arg: DocumentInitParameters) {

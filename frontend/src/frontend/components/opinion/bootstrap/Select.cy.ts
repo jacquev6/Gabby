@@ -27,16 +27,16 @@ describe('BSelect', () => {
 
   it('reacts to options', () => {
     cy.mount(BSelect, {props: {options: [
-      {value: 1, label: 'One'},
-      {value: 2, label: 'Two'},
+      {value: '1', label: 'One'},
+      {value: '2', label: 'Two'},
     ]}})
 
     cy.get('option').should('have.length', 2)
 
     cy.vue().then((w) => w.setProps({options: [
-      {value: 1, label: 'One'},
-      {value: 2, label: 'Two'},
-      {value: 3, label: 'Three'},
+      {value: '1', label: 'One'},
+      {value: '2', label: 'Two'},
+      {value: '3', label: 'Three'},
     ]}))
 
     cy.get('option').should('have.length', 3)
@@ -64,10 +64,12 @@ describe('BSelect', () => {
 
     cy.get('select').select('Three')
     cy.get('select').should('have.value', 'Three')
+    // @ts-ignore// @todo Type '.emitted' or test in another way
     cy.vue().then((w) => w.emitted('update:modelValue')[0]).should('deep.eq', ['Three'])
 
     cy.get('select').select('Two')
     cy.get('select').should('have.value', 'Two')
+    // @ts-ignore// @todo Type '.emitted' or test in another way
     cy.vue().then((w) => w.emitted('update:modelValue')[1]).should('deep.eq', ['Two'])
   })
 })

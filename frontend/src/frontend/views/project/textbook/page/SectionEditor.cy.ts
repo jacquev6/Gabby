@@ -18,12 +18,12 @@ describe('SectionEditor', () => {
     cy.viewport(1000, 500)
 
     cy.mount(SectionEditor).as('editor')
-    cy.get('@editor').then(({component}) => component.show('eyjahd'))
+    cy.get('@editor').then((({component}: {component: InstanceType<typeof SectionEditor>}) => component.show('eyjahd')) as any/* Work around Cypress typing limitation */)
     cy.get('@editor').its('component.active').should('be.true')
   })
 
   afterEach(() => {
-    cy.get('@editor').then(({component}) => component.hide())
+    cy.get('@editor').then((({component}: {component: InstanceType<typeof SectionEditor>}) => component.hide()) as any/* Work around Cypress typing limitation */)
     cy.get('@editor').its('component.active').should('be.false')
   })
 

@@ -5,12 +5,12 @@ describe('MultipleChoicesInput', () => {
   before(console.clear)
 
   it('works', () => {
-    let value = undefined
+    let value: string | undefined = undefined
 
     cy.mount(MultipleChoicesInput, {props: {
       choices: ['alpha', 'beta'],
       modelValue: value,
-      'onUpdate:modelValue': (v) => {
+      'onUpdate:modelValue': (v: string | undefined) => {
         value = v
         Cypress.vueWrapper.setProps({ modelValue: v })
       }
@@ -39,7 +39,7 @@ describe('MultipleChoicesInput', () => {
     cy.get('span.choice:contains("....")').should('exist')
 
     cy.get('span.choice:contains("alpha")').click().then(() => {
-      cy.expect(value).to.equal("alpha")
+      expect(value).to.equal("alpha")
     })
 
     cy.get('span.main:contains("....")').should('not.exist')
@@ -55,7 +55,7 @@ describe('MultipleChoicesInput', () => {
     cy.get('span.choice:contains("....")').should('exist')
 
     cy.get('span.choice:contains("beta")').click().then(() => {
-      cy.expect(value).to.equal("beta")
+      expect(value).to.equal("beta")
     })
 
     cy.get('span.main:contains("alpha")').should('not.exist')

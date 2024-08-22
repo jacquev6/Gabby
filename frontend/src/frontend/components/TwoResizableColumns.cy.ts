@@ -1,8 +1,8 @@
 import TwoResizableColumns from './TwoResizableColumns.vue'
 
 
-function haveWidth(w) {
-  return function(el) {
+function haveWidth(w: number) {
+  return function(el: JQuery) {
     expect(el.width()).to.be.within(w - 0.05, w + 0.05)
   }
 }
@@ -18,6 +18,7 @@ describe('TwoResizableColumns', () => {
   it('reacts to props', () => {
     cy.viewport(320, 200)
     cy.mount(
+      // @ts-ignore// Work around Cypress typing limitations
       TwoResizableColumns,
       {
         props: {
@@ -51,6 +52,7 @@ describe('TwoResizableColumns', () => {
   it('resizes columns', () => {
     cy.viewport(410, 200)
     cy.mount(
+      // @ts-ignore// Work around Cypress typing limitations
       TwoResizableColumns,
       {
         slots,
@@ -89,6 +91,7 @@ describe('TwoResizableColumns', () => {
   it('snaps and unsnaps left column', () => {
     cy.viewport(410, 200)
     cy.mount(
+      // @ts-ignore// Work around Cypress typing limitations
       TwoResizableColumns,
       {
         props: {
@@ -135,6 +138,7 @@ describe('TwoResizableColumns', () => {
   it('does not snap left column', () => {
     cy.viewport(410, 200)
     cy.mount(
+      // @ts-ignore// Work around Cypress typing limitations
       TwoResizableColumns,
       {
         props: {
@@ -168,6 +172,7 @@ describe('TwoResizableColumns', () => {
   it('does not display button on zero-width left column', () => {
     cy.viewport(410, 200)
     cy.mount(
+      // @ts-ignore// Work around Cypress typing limitations
       TwoResizableColumns,
       {
         slots,
@@ -194,6 +199,7 @@ describe('TwoResizableColumns', () => {
   it('snaps then unsnaps left column', () => {
     cy.viewport(410, 200)
     cy.mount(
+      // @ts-ignore// Work around Cypress typing limitations
       TwoResizableColumns,
       {
         props: {
@@ -244,6 +250,7 @@ describe('TwoResizableColumns', () => {
   it('snaps and unsnaps right column', () => {
     cy.viewport(410, 200)
     cy.mount(
+      // @ts-ignore// Work around Cypress typing limitations
       TwoResizableColumns,
       {
         props: {
@@ -290,6 +297,7 @@ describe('TwoResizableColumns', () => {
   it('does not snap right column', () => {
     cy.viewport(410, 200)
     cy.mount(
+      // @ts-ignore// Work around Cypress typing limitations
       TwoResizableColumns,
       {
         props: {
@@ -323,6 +331,7 @@ describe('TwoResizableColumns', () => {
   it('does not display button on zero-width right column', () => {
     cy.viewport(410, 200)
     cy.mount(
+      // @ts-ignore// Work around Cypress typing limitations
       TwoResizableColumns,
       {
         slots,
@@ -349,6 +358,7 @@ describe('TwoResizableColumns', () => {
   it('snaps then unsnaps right column', () => {
     cy.viewport(410, 200)
     cy.mount(
+      // @ts-ignore// Work around Cypress typing limitations
       TwoResizableColumns,
       {
         props: {
@@ -407,6 +417,7 @@ describe('TwoResizableColumns', () => {
     }
 
     cy.viewport(410, 200)
+    // @ts-ignore// Work around Cypress typing limitations
     cy.mount(TwoResizableColumns, options)
 
     cy.get('div:contains("Left")').last().as('left')
@@ -421,9 +432,11 @@ describe('TwoResizableColumns', () => {
 
     cy.get('@left').should(haveWidth(100))
 
+    // @ts-ignore// Work around Cypress typing limitations
     cy.mount(TwoResizableColumns, {/* No 'props.saveKey' */ slots})
     cy.get('@left').should(haveWidth(200))
 
+    // @ts-ignore// Work around Cypress typing limitations
     cy.mount(TwoResizableColumns, options)
     cy.get('@left').should(haveWidth(100))
   })
@@ -440,6 +453,7 @@ describe('TwoResizableColumns', () => {
     }
 
     cy.viewport(410, 200)
+    // @ts-ignore// Work around Cypress typing limitations
     cy.mount(TwoResizableColumns, options)
 
     cy.get('div:contains("Left")').last().as('left')
@@ -455,17 +469,21 @@ describe('TwoResizableColumns', () => {
     cy.get('@left').should('not.be.visible')
     cy.get('button:contains(">>")').should('exist')
 
+    // @ts-ignore// Work around Cypress typing limitations
     cy.mount(TwoResizableColumns, {/* No 'props.saveKey' */ slots})
     cy.get('@left').should(haveWidth(200))
 
+    // @ts-ignore// Work around Cypress typing limitations
     cy.mount(TwoResizableColumns, options)
     cy.get('@left').should('not.be.visible')
 
     cy.get('button:contains(">>")').click()
     cy.get('@left').should(haveWidth(200))
 
+    // @ts-ignore// Work around Cypress typing limitations
     cy.mount(TwoResizableColumns, {/* No 'props.saveKey' */ slots})
 
+    // @ts-ignore// Work around Cypress typing limitations
     cy.mount(TwoResizableColumns, options)
     cy.get('@left').should(haveWidth(200))
   })

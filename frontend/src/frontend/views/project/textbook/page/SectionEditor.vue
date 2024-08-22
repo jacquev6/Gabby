@@ -72,6 +72,7 @@ const active = computed(() => modal.value?.active)
 
 defineExpose({
   show,
+  hide,
   active,
 })
 </script>

@@ -1,7 +1,7 @@
 import TricolorLines from './TricolorLines.vue'
 
 
-function makeSentence(prefix, length=26) {
+function makeSentence(prefix: string, length=26) {
   let sentence = `<span>${prefix}A</span>`
   for (let i = 1; i < length; i++) {
     sentence += `<span><wbr/> <wbr/></span><span>${prefix}${String.fromCharCode('A'.charCodeAt(0) + i)}</span>`

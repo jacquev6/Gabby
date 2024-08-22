@@ -1,14 +1,13 @@
-import { h } from 'vue'
-
 import TricolorSection from './TricolorSection.vue'
+import type { Paragraph } from '$adapted/types'
 
 
-function makeToken(text) {
-  return {type: 'plainText', text}
+function makeToken(text: string) {
+  return {type: 'plainText' as const, text}
 }
 
-function makeSentence(prefix, length=26) {
-  const tokens = [
+function makeSentence(prefix: string, length=26) {
+  const tokens: Paragraph['sentences'][number]['tokens'] = [
     makeToken(prefix + 'A')
   ]
   for (let i = 1; i < length; i++) {
@@ -27,9 +26,9 @@ const props = {
   paragraphs: [
     {sentences: [makeSentence('A'), makeSentence('B'), makeSentence('C')]},
     {sentences: [makeSentence('D'), makeSentence('E'), makeSentence('F')]},
-  ],
+  ] as Paragraph[],
   paragraphIndexOffset: 0,
-  modelValue: [],
+  modelValue: {} as Record<string, any/* @todo Type */>,
 }
 
 const mountOptions = {props}
@@ -38,6 +37,7 @@ describe('TricolorSection', () => {
   before(console.clear)
 
   it('renders lines in alternating colors', () => {
+    // @ts-ignore// Work around Cypress typing limitations
     cy.mount(TricolorSection, mountOptions)
 
     cy.get('span:contains("AA")').last().should('have.css', 'color', color1)
@@ -61,6 +61,7 @@ describe('TricolorSection', () => {
   })
 
   it('reacts to window size changes', () => {
+    // @ts-ignore// Work around Cypress typing limitations
     cy.mount(TricolorSection, mountOptions)
 
     cy.viewport(400, 600)
@@ -75,6 +76,7 @@ describe('TricolorSection', () => {
   })
 
   it('reacts to text changes', () => {
+    // @ts-ignore// Work around Cypress typing limitations
     cy.mount(TricolorSection, mountOptions)
 
     cy.vue().then((w) => w.setProps({paragraphs: [{sentences: [
@@ -105,6 +107,7 @@ describe('TricolorSection', () => {
     cy.viewport(width, 600)
     
     cy.mount(
+      // @ts-ignore// Work around Cypress typing limitations
       TricolorSection,
       {
         props: {
@@ -130,6 +133,7 @@ describe('TricolorSection', () => {
     cy.viewport(200, 600)
 
     cy.mount(
+      // @ts-ignore// Work around Cypress typing limitations
       TricolorSection,
       {
         props: {
