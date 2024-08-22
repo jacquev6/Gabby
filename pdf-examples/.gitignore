@@ -3,3 +3,5 @@
 /manual_CE2_FRANCAIS_HACHETTE.*
 # Made using make_large.sh
 /large.pdf
+# Actually ignored
+/.~lock.*
