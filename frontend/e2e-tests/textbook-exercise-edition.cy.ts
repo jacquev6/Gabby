@@ -46,6 +46,23 @@ describe('Gabby', () => {
     cy.get('label:contains("Instructions")').next().should('have.value', 'Instructions!')
   })
 
+  it('saves an exercise after deleting its adaptation', () => {
+    visit('/project-xkopqm/textbook-klxufv/page-7')
+    cy.get('a[href*="exercise-dymwin"]').click()
+    notBusy()
+
+    cy.get('label:contains("Adaptation type")').next().should('have.value', 'fillWithFreeTextAdaptation')
+
+    cy.get('label:contains("Adaptation type")').next().select('-')
+    notBusy()
+    cy.get('button:contains("Save then back to list")').click()
+    notBusy()
+
+    cy.get('a[href*="exercise-dymwin"]').click()
+    notBusy()
+    cy.get('label:contains("Adaptation type")').next().should('have.value', '-')
+  })
+
   it('saves an exercise without changing its pre-existing adaptation', () => {
     visit('/project-xkopqm/textbook-klxufv/page-7/exercise-dymwin', {wysiwyg: false})
 
@@ -62,6 +79,46 @@ describe('Gabby', () => {
     visit('/project-xkopqm/textbook-klxufv/page-7/exercise-dymwin', {wysiwyg: false})
     cy.get('label:contains("Adaptation type")').next().should('have.value', 'fillWithFreeTextAdaptation')
     cy.get('label:contains("Instructions")').next().should('have.value', 'Instructions!')
+  })
+
+  it('saves an exercise after changing details of its adaptation', () => {
+    visit('/project-xkopqm/textbook-klxufv/page-7')  // Trigger a bug where the exercise's cached adaptation was not updated. Did not happen when going directly to the exercise page.
+    cy.get('li:contains("Select words") a:contains("Edit")').click()
+    notBusy()
+
+    cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="4"]').should('have.css', 'background-color', 'rgb(187, 255, 187)')
+
+    cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="4"]').rightclick()
+    cy.get('.colour-area-mask').click(100, 100)
+    notBusy()
+    cy.get('sel-blot[data-sel="4"]').should('have.css', 'background-color', 'rgb(45, 75, 45)')
+    cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="4"]').should('have.css', 'background-color', 'rgb(45, 75, 45)')
+    cy.get('button span.usable-colors-button[data-cy-colors="4"]').should('have.css', 'background-color', 'rgb(45, 75, 45)')
+    cy.get('span:contains("verbes")').last().should('have.css', 'background-color', 'rgb(45, 75, 45)')
+    cy.get('span:contains("4 clicks")').last().should('have.css', 'background-color', 'rgb(45, 75, 45)')
+    cy.get('button:contains("OK")').click()
+    cy.get('span:contains("Afrique")').last().click()
+    cy.get('span:contains("Afrique")').last().click()
+    cy.get('span:contains("Afrique")').last().click()
+    cy.get('span:contains("Afrique")').last().click()
+    cy.get('span:contains("Afrique")').last().should('have.css', 'background-color', 'rgb(45, 75, 45)')
+
+    cy.get('button:contains("Save then back to list")').click()
+    notBusy()
+
+    cy.get('li:contains("Select words") a:contains("Edit")').click()
+    notBusy()
+
+    cy.get('sel-blot[data-sel="4"]').should('have.css', 'background-color', 'rgb(45, 75, 45)')
+    cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="4"]').should('have.css', 'background-color', 'rgb(45, 75, 45)')
+    cy.get('button span.usable-colors-button[data-cy-colors="4"]').should('have.css', 'background-color', 'rgb(45, 75, 45)')
+    cy.get('span:contains("verbes")').last().should('have.css', 'background-color', 'rgb(45, 75, 45)')
+    cy.get('span:contains("4 clicks")').last().should('have.css', 'background-color', 'rgb(45, 75, 45)')
+    cy.get('span:contains("Afrique")').last().click()
+    cy.get('span:contains("Afrique")').last().click()
+    cy.get('span:contains("Afrique")').last().click()
+    cy.get('span:contains("Afrique")').last().click()
+    cy.get('span:contains("Afrique")').last().should('have.css', 'background-color', 'rgb(45, 75, 45)')
   })
 
   it('saves an exercise after changing the type of its pre-existing adaptation', () => {

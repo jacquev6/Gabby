@@ -164,6 +164,10 @@ export async function create(project: Project, textbook: Textbook | null, textbo
 
 export async function save(exercise: Exercise & InCache & Exists, model: Model) {
   // @todo Use a *single* batch request (when batch requests support 'update' and 'delete' operations)
+  const relationships: {adaptation?: null} = {}
+  if (model.adaptationType === '-') {
+    relationships.adaptation = null
+  }
   await exercise.patch(
     {
       instructions: model.instructions,
@@ -172,17 +176,14 @@ export async function save(exercise: Exercise & InCache & Exists, model: Model) 
       clue: model.clue,
       rectangles: model.rectangles,
     },
-    {},
+    relationships,
   )
-  if (model.adaptationType === '-') {
-    if (exercise.relationships.adaptation !== null) {
-      await exercise.relationships.adaptation.delete()
-    }
-  } else {
+  if (model.adaptationType !== '-') {
     await api.client.createOne(
       model.adaptationType,
       getAdaptationOptions(model),
       {exercise},
+      {include: ['exercise']},  // To update the cached exercise to relate to the new adaptation
     )
   }
 }
