@@ -2,6 +2,7 @@
 import { useApiStore } from '$frontend/stores/api'
 import type { Project, Textbook, Exercise, InCache, Exists, SelectThingsAdaptation, FillWithFreeTextAdaptation, MultipleChoicesInInstructionsAdaptation, MultipleChoicesInWordingAdaptation, ParsedExercise } from '$frontend/stores/api'
 import type { SelectThingsAdaptationOptions, FillWithFreeTextAdaptationOptions, MultipleChoicesInInstructionsAdaptationOptions, MultipleChoicesInWordingAdaptationOptions, PdfRectangle } from '$frontend/stores/api'
+import { defaultColors } from './AdaptationDetailsFieldsForm.vue'
 
 
 const api = useApiStore()
@@ -32,7 +33,7 @@ export function makeModel(): Model {
     number: '',
     adaptationType: '-',
     selectThingsAdaptationOptions: {
-      colors: 1,
+      colors: [defaultColors[0]],
       words: true,
       punctuation: false,
     },
@@ -59,7 +60,7 @@ export function assignModelFrom(model: Model, exercise: Exercise & InCache & Exi
       case 'selectThingsAdaptation':
         {
           const options = (exercise.relationships.adaptation as SelectThingsAdaptation & InCache & Exists).attributes
-          model.selectThingsAdaptationOptions.colors = options.colors
+          model.selectThingsAdaptationOptions.colors = [...options.colors]
           model.selectThingsAdaptationOptions.words = options.words
           model.selectThingsAdaptationOptions.punctuation = options.punctuation
         }
@@ -288,6 +289,8 @@ const focusedWysiwygField = computed(() => {
   }
 })
 
+const selBlotColors = computed(() => Object.fromEntries(model.value.selectThingsAdaptationOptions.colors.map((color, i) => [`--sel-blot-color-${i + 1}`, color])))
+
 defineExpose({
   saveDisabled,
   highlightSuffix,
@@ -298,7 +301,7 @@ defineExpose({
 
 <template>
   <BLabeledInput :label="$t('exerciseNumber')" v-model="model.number" :disabled="fixedNumber" />
-  <div style="position: relative">
+  <div :style="{position: 'relative', ...selBlotColors}">
     <BLabeledSelect
       :label="$t('adaptationType')" v-model="model.adaptationType"
       :options="['-', ...adaptationTypes.map(kind => ({value: kind, label: $t(kind)}))]"

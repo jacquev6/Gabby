@@ -129,11 +129,11 @@ describe('Gabby', () => {
     setAliases()
     cy.get('@number').type('test')
     cy.get('@adaptationType').select('selectThingsAdaptation')
-    cy.get('maybe-usable-colors-container usable-colors-button[data-cy-colors="2"]').click()
+    cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="2"]').click()
 
-    cy.get('button:has(usable-colors-button[data-cy-colors="1"])').as("button1").should('be.disabled')
-    cy.get('button:has(usable-colors-button[data-cy-colors="2"])').as("button2").should('be.disabled')
-    cy.get('button:has(usable-colors-button[data-cy-colors="3"])').should('not.exist')
+    cy.get('button:has(span.usable-colors-button[data-cy-colors="1"])').as("button1").should('be.disabled')
+    cy.get('button:has(span.usable-colors-button[data-cy-colors="2"])').as("button2").should('be.disabled')
+    cy.get('button:has(span.usable-colors-button[data-cy-colors="3"])').should('not.exist')
 
     cy.get('@instructions').click()
     cy.get('@button1').should('be.enabled')

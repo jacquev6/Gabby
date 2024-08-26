@@ -325,7 +325,7 @@ export interface components {
     /** SelectThingsAdaptationOptions */
     SelectThingsAdaptationOptions: {
       /** Colors */
-      colors: number;
+      colors: string[];
       /** Punctuation */
       punctuation: boolean;
       /** Words */
@@ -412,7 +412,7 @@ export interface components {
     /** _SelectableText */
     _SelectableText: {
       /** Colors */
-      colors: number;
+      colors: string[];
       /** Text */
       text: string;
       /**
@@ -424,10 +424,10 @@ export interface components {
     };
     /** _SelectedClicks */
     _SelectedClicks: {
+      /** Clicks */
+      clicks: number;
       /** Color */
-      color: number;
-      /** Colors */
-      colors: number;
+      color: string;
       /**
        * Type
        * @constant
@@ -438,9 +438,7 @@ export interface components {
     /** _SelectedText */
     _SelectedText: {
       /** Color */
-      color: number;
-      /** Colors */
-      colors: number;
+      color: string;
       /** Text */
       text: string;
       /**
@@ -1917,7 +1915,7 @@ export interface components {
     /** selectThingsAdaptationCreateInputDataAttributes */
     selectThingsAdaptationCreateInputDataAttributes: {
       /** Colors */
-      colors: number;
+      colors: string[];
       /** Punctuation */
       punctuation: boolean;
       /** Words */
@@ -1946,7 +1944,7 @@ export interface components {
     /** selectThingsAdaptationOutputItemAttributes */
     selectThingsAdaptationOutputItemAttributes: {
       /** Colors */
-      colors: number;
+      colors: string[];
       /**
        * Createdat
        * Format: date-time
@@ -1986,7 +1984,7 @@ export interface components {
     /** selectThingsAdaptationUpdateInputDataAttributes */
     selectThingsAdaptationUpdateInputDataAttributes: {
       /** Colors */
-      colors?: number;
+      colors?: string[];
       /** Punctuation */
       punctuation?: boolean;
       /** Words */

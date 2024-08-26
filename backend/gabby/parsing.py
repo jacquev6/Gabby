@@ -578,43 +578,25 @@ class InstructionsSectionAdapter(Transformer):
 adapt_plain_instructions_section = InstructionsSectionParser({}, InstructionsSectionAdapter())
 
 
-class GenericSectionAdapterMixin:
+class GenericInstructionsSectionAdapter(InstructionsSectionAdapter):
     def boxed_text_tag(self, args):
         text, = args
         return renderable.BoxedText(text=text)
 
-    def selectable_text_tag(self, args):
-        colors, text = args
-        return renderable.SelectableText(colors=colors, text=text)
-
     def selected_text_tag(self, args):
-        color, colors, text = args
-        return renderable.SelectedText(color=color, colors=colors, text=text)
+        text, color = args
+        return renderable.SelectedText(text=text, color=color)
 
     def selected_clicks_tag(self, args):
-        color, colors = args
-        return renderable.SelectedClicks(color=color, colors=colors)
-
-    def multiple_choices_input_tag(self, args):
-        choices = args
-        return renderable.MultipleChoicesInput(choices=[choice for choice in choices])
-
-    def free_text_input_tag(self, args):
-        return renderable.FreeTextInput()
-
-
-class GenericInstructionsSectionAdapter(InstructionsSectionAdapter, GenericSectionAdapterMixin):
-    pass
+        clicks, color = args
+        return renderable.SelectedClicks(clicks=clicks, color=color)
 
 
 adapt_generic_instructions_section = InstructionsSectionParser(
     {
         "boxed_text": r""" "|" STR """,
-        "selectable_text": r""" "|" INT "|" STR """,
-        "selected_text": r""" "|" INT "|" INT "|" STR """,
-        "selected_clicks": r""" "|" INT "|" INT """,
-        "multiple_choices_input": r""" ("|" STR)+ """,
-        "free_text_input": "",
+        "selected_text": r""" "|" STR "|" STR """,
+        "selected_clicks": r""" "|" INT "|" STR """,
     },
     GenericInstructionsSectionAdapter(),
 )
@@ -800,61 +782,26 @@ class AdaptGenericInstructionsSectionTestCase(TestCase):
             ])])]),
         )
 
-    def test_selectable_text_tag(self):
-        self.do_test(
-            "This is {selectable-text|3|selectable}.",
-            renderable.Section(paragraphs=[renderable.Paragraph(sentences=[renderable.Sentence(tokens=[
-                renderable.PlainText(text="This"),
-                renderable.Whitespace(),
-                renderable.PlainText(text="is"),
-                renderable.Whitespace(),
-                renderable.SelectableText(colors=3, text="selectable"),
-                renderable.PlainText(text="."),
-            ])])]),
-        )
-
     def test_selected_text_tag(self):
         self.do_test(
-            "This is {selected-text|2|5|selected}.",
+            "This is {selected-text|selected|red}.",
             renderable.Section(paragraphs=[renderable.Paragraph(sentences=[renderable.Sentence(tokens=[
                 renderable.PlainText(text="This"),
                 renderable.Whitespace(),
                 renderable.PlainText(text="is"),
                 renderable.Whitespace(),
-                renderable.SelectedText(color=2, colors=5, text="selected"),
+                renderable.SelectedText(text="selected", color="red"),
                 renderable.PlainText(text="."),
             ])])]),
         )
 
     def test_selected_clicks_tag(self):
         self.do_test(
-            "A {selected-clicks|2|5}.",
+            "A {selected-clicks|2|green}.",
             renderable.Section(paragraphs=[renderable.Paragraph(sentences=[renderable.Sentence(tokens=[
                 renderable.PlainText(text="A"),
                 renderable.Whitespace(),
-                renderable.SelectedClicks(color=2, colors=5),
-                renderable.PlainText(text="."),
-            ])])]),
-        )
-
-    def test_multiple_choices_input_tag(self):
-        self.do_test(
-            "A {multiple-choices-input|one|two|three}.",
-            renderable.Section(paragraphs=[renderable.Paragraph(sentences=[renderable.Sentence(tokens=[
-                renderable.PlainText(text="A"),
-                renderable.Whitespace(),
-                renderable.MultipleChoicesInput(choices=["one", "two", "three"]),
-                renderable.PlainText(text="."),
-            ])])]),
-        )
-
-    def test_free_text_input_tag(self):
-        self.do_test(
-            "Input {free-text-input}.",
-            renderable.Section(paragraphs=[renderable.Paragraph(sentences=[renderable.Sentence(tokens=[
-                renderable.PlainText(text="Input"),
-                renderable.Whitespace(),
-                renderable.FreeTextInput(),
+                renderable.SelectedClicks(clicks=2, color="green"),
                 renderable.PlainText(text="."),
             ])])]),
         )
@@ -1165,16 +1112,23 @@ def parse_wording_section(tags, transformer, section):
 adapt_plain_wording_section = WordingSectionParser({}, WordingSectionAdapter())
 
 
-class GenericWordingSectionAdapter(WordingSectionAdapter, GenericSectionAdapterMixin):
-    pass
+class GenericWordingSectionAdapter(WordingSectionAdapter):
+    def selectable_text_tag(self, args):
+        text = args[0]
+        colors = list(args[1:])
+        return renderable.SelectableText(text=text, colors=colors)
+
+    def multiple_choices_input_tag(self, args):
+        choices = args
+        return renderable.MultipleChoicesInput(choices=[choice for choice in choices])
+
+    def free_text_input_tag(self, args):
+        return renderable.FreeTextInput()
 
 
 adapt_generic_wording_section = WordingSectionParser(
     {
-        "boxed_text": r""" "|" STR """,
-        "selectable_text": r""" "|" INT "|" STR """,
-        "selected_text": r""" "|" INT "|" INT "|" STR """,
-        "selected_clicks": r""" "|" INT "|" INT """,
+        "selectable_text": r""" ("|" STR)+ """,
         "multiple_choices_input": r""" ("|" STR)+ """,
         "free_text_input": "",
     },
@@ -1227,7 +1181,7 @@ class AdaptGenericWordingSectionTestCase(TestCase):
 
     def test_one_paragraph_with_strict_sentences(self):
         self.do_test(
-            "This is: a   sentence.   And, {boxed-text|another}; one. Again... Again… \t Another? Yes! Une autre ? Oui !",
+            "This is: a   sentence.   And, another; one. Again... Again… \t Another? Yes! Une autre ? Oui !",
             renderable.Section(paragraphs=[renderable.Paragraph(sentences=[
                 renderable.Sentence(tokens=[
                     renderable.PlainText(text="This"),
@@ -1244,7 +1198,7 @@ class AdaptGenericWordingSectionTestCase(TestCase):
                     renderable.PlainText(text="And"),
                     renderable.PlainText(text=","),
                     renderable.Whitespace(),
-                    renderable.BoxedText(text="another"),
+                    renderable.PlainText(text="another"),
                     renderable.PlainText(text=";"),
                     renderable.Whitespace(),
                     renderable.PlainText(text="one"),
@@ -1312,4 +1266,54 @@ class AdaptGenericWordingSectionTestCase(TestCase):
                     renderable.PlainText(text="dot"),
                 ])]),
             ]),
+        )
+
+    def test_selectable_text_tag(self):
+        self.do_test(
+            "This is {selectable-text|selectable|red|green|blue}.",
+            renderable.Section(paragraphs=[renderable.Paragraph(sentences=[renderable.Sentence(tokens=[
+                renderable.PlainText(text="This"),
+                renderable.Whitespace(),
+                renderable.PlainText(text="is"),
+                renderable.Whitespace(),
+                renderable.SelectableText(text="selectable", colors=["red", "green", "blue"]),
+                renderable.PlainText(text="."),
+            ])])]),
+        )
+
+    def test_free_text_input_tag(self):
+        self.do_test(
+            "Input {free-text-input}.",
+            renderable.Section(paragraphs=[renderable.Paragraph(sentences=[renderable.Sentence(tokens=[
+                renderable.PlainText(text="Input"),
+                renderable.Whitespace(),
+                renderable.FreeTextInput(),
+                renderable.PlainText(text="."),
+            ])])]),
+        )
+
+    def test_multiple_choices_input_tag(self):
+        self.do_test(
+            "A {multiple-choices-input|one|two|three}.",
+            renderable.Section(paragraphs=[renderable.Paragraph(sentences=[renderable.Sentence(tokens=[
+                renderable.PlainText(text="A"),
+                renderable.Whitespace(),
+                renderable.MultipleChoicesInput(choices=["one", "two", "three"]),
+                renderable.PlainText(text="."),
+            ])])]),
+        )
+
+    def test_unknown_tag(self):
+        self.do_test(
+            "This is {unknown}.",
+            renderable.Section(paragraphs=[renderable.Paragraph(sentences=[renderable.Sentence(tokens=[
+                renderable.PlainText(text="This"),
+                renderable.Whitespace(),
+                renderable.PlainText(text="is"),
+                renderable.Whitespace(),
+                renderable.PlainText(text="{"),
+                renderable.PlainText(text="unknown"),
+                renderable.PlainText(text="}"),
+                renderable.PlainText(text="."),
+            ])])]),
         )

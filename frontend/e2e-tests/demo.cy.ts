@@ -71,7 +71,7 @@ describe('Gabby', () => {
     setupAliases()
 
     cy.get('@adaptationType').select('selectThingsAdaptation').blur()
-    cy.get('maybe-usable-colors-container usable-colors-button[data-cy-colors="2"]').click()
+    cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="2"]').click()
 
     traceRectangle('@canvas', 8, 5, 60, 9)
     cy.get('button:contains("Instructions")').click()
@@ -81,13 +81,13 @@ describe('Gabby', () => {
       console.assert(node !== null)
       selectRange(node, 39, node, 51)
     })
-    cy.get('button:has(usable-colors-button[data-cy-colors="2"])').click()
+    cy.get('button:has(span.usable-colors-button[data-cy-colors="2"])').click()
     cy.get('@instructions').find('p').then($el => {
       const node = $el[0].firstChild
       console.assert(node !== null)
       selectRange(node, 25, node, 31)
     })
-    cy.get('button:has(usable-colors-button[data-cy-colors="1"])').click()
+    cy.get('button:has(span.usable-colors-button[data-cy-colors="1"])').click()
     notBusy()
 
     traceRectangle('@canvas', 7, 9.5, 92, 19)

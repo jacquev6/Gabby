@@ -8,6 +8,19 @@ class ChoiceBlot extends InlineBlot {
   static override tagName = 'choice-blot'
 }
 
+// Keep the 'style' section below consistent with the length of this array
+export const defaultColors = [
+  // Colors provided by the client
+  "#ffff00",  // yellow
+  "#ffc0cb",  // pink (light red)
+  "#bbbbff",  // light blue
+  "#bbffbb",  // light green
+  "#bbbbbb",  // grey
+  // Colors suggested by Vincent Jacques on the same pattern
+  // "#bbffff",  // light cyan
+  // "#ffbbff",  // light magenta
+]
+
 class SelBlot extends InlineBlot {
   static override blotName = 'sel'
   static override tagName = 'sel-blot'
@@ -74,12 +87,12 @@ export const wysiwygFormats = {
 </script>
 
 <script setup lang="ts">
-import { BLabeledInput, BLabeledCheckbox } from './opinion/bootstrap'
+import { computed, ref } from 'vue'
 
-import { BButton } from './opinion/bootstrap'
+import { BLabeledInput, BLabeledCheckbox, BButton } from './opinion/bootstrap'
 import type { Model } from './ExerciseFieldsForm.vue'
 import type ExerciseFieldsForm from './ExerciseFieldsForm.vue'
-import { colors } from '$adapted/components/SelectedText.vue'
+import FloatingColorPicker from './FloatingColorPicker.vue'
 
 
 defineProps<{
@@ -88,6 +101,22 @@ defineProps<{
 }>()
 
 const model = defineModel<Model>({required: true})
+
+const colorPickers = ref<InstanceType<typeof FloatingColorPicker>[]>([])
+
+const colorsCount = computed({
+  get: () => model.value.selectThingsAdaptationOptions.colors.length,
+  set: (value) => {
+    const prev = model.value.selectThingsAdaptationOptions.colors.length
+    if (value > prev) {
+      for (let k = prev; k !== value; ++k) {
+        model.value.selectThingsAdaptationOptions.colors.push(defaultColors[k])
+      }
+    } else {
+      model.value.selectThingsAdaptationOptions.colors.length = value
+    }
+  },
+})
 </script>
 
 <template>
@@ -98,44 +127,56 @@ const model = defineModel<Model>({required: true})
   </template>
   <template v-else-if="model.adaptationType === 'selectThingsAdaptation'">
     <template v-if="wysiwyg">
+      <FloatingColorPicker
+        v-for="i in model.selectThingsAdaptationOptions.colors.length"
+        ref="colorPickers"
+        v-model="model.selectThingsAdaptationOptions.colors[i - 1]"
+        :default="defaultColors[i - 1]"
+      />
       <div class="mb-3">
         <label class="form-label" for="blah">{{ $t('usableColors' )}}</label>
         <span class="maybe-usable-colors-container">
-          <template v-for="i in colors.length">
-            <span :class="i <= model.selectThingsAdaptationOptions.colors ? 'usable-colors-container' : 'unusable-colors-container'">
-              <span
-                class="usable-colors-button"
-                :style="{backgroundColor: colors[i - 1]}"
-                :data-cy-colors="i"
-                @click="model.selectThingsAdaptationOptions.colors = i"
-              ></span>
-            </span>
-          </template>
+          <span v-for="i in model.selectThingsAdaptationOptions.colors.length" class="usable-colors-container">
+            <span
+              class="usable-colors-button"
+              :style="{backgroundColor: model.selectThingsAdaptationOptions.colors[i - 1]}"
+              :data-cy-colors="i"
+              @click="colorsCount = i"
+              @contextmenu.prevent="(event) => colorPickers[i - 1].show(event.target as HTMLElement)"
+            ></span>
+          </span><span v-for="i in defaultColors.length - model.selectThingsAdaptationOptions.colors.length" class="unusable-colors-container">
+            <span
+              class="usable-colors-button"
+              :style="{backgroundColor: defaultColors[model.selectThingsAdaptationOptions.colors.length + i - 1]}"
+              :data-cy-colors="model.selectThingsAdaptationOptions.colors.length + i"
+              @click="colorsCount = model.selectThingsAdaptationOptions.colors.length + i"
+            ></span>
+          </span>
         </span>
       </div>
       <div class="mb-3">
         <label class="form-label" for="blah">{{ $t('formatWithColor' )}}</label>
-        <p><template v-for="i in model.selectThingsAdaptationOptions.colors">
+        <p><template v-for="i in model.selectThingsAdaptationOptions.colors.length">
           <BButton
             sm primary
             :disabled="fields.focusedWysiwygField === null || fields.focusedWysiwygField === 'wording'"
             @click="fields.toggle('sel', i)" :style="{lineHeight: 0, padding: '2px'}"
           >
-            <span class="usable-colors-button" :data-cy-colors="i" :style="{backgroundColor: colors[i - 1]}"></span>
+            <span class="usable-colors-button" :data-cy-colors="i" :style="{backgroundColor: model.selectThingsAdaptationOptions.colors[i - 1]}"></span>
           </BButton>
           <wbr>
         </template></p>
       </div>
     </template>
     <template v-else>
-      <BLabeledInput :label="$t('colorsCount')" type="number" min="1" v-model="model.selectThingsAdaptationOptions.colors" />
+      <BLabeledInput :label="$t('colorsCount')" type="number" min="1" v-model="colorsCount" />
       <p class="alert alert-secondary">
-        <i18n-t keypath="useSel1ToSelN" v-if="model.selectThingsAdaptationOptions.colors > 1">
+        <i18n-t keypath="useSel1ToSelN" v-if="model.selectThingsAdaptationOptions.colors.length > 1">
           <template v-slot:first>
             <code>{sel1|<em>text</em>}</code>
           </template>
           <template v-slot:last>
-            <code>{sel{{ model.selectThingsAdaptationOptions.colors }}|<em>text</em>}</code>
+            <code>{sel{{ model.selectThingsAdaptationOptions.colors.length }}|<em>text</em>}</code>
           </template>
         </i18n-t>
         <i18n-t keypath="useSel1" v-else>
@@ -206,33 +247,25 @@ div.ql-editor choice-blot {
   border: 2px solid black;
 }
 
-/* Keep this section consistent with the 'colors' array in 'SeletctedText.vue' */
+/* Keep this section consistent with the length of 'defaultColors' array above */
 /* @todo Could I generate this section? I've not found how Vue could let me do that. */
 div.ql-editor sel-blot[data-sel="1"] {
-  background: #ffff00;
+  background: var(--sel-blot-color-1);
 }
 
 div.ql-editor sel-blot[data-sel="2"] {
-  background: #ffc0cb;
+  background: var(--sel-blot-color-2);
 }
 
 div.ql-editor sel-blot[data-sel="3"] {
-  background: #bbbbff;
+  background: var(--sel-blot-color-3);
 }
 
 div.ql-editor sel-blot[data-sel="4"] {
-  background: #bbffbb;
+  background: var(--sel-blot-color-4);
 }
 
 div.ql-editor sel-blot[data-sel="5"] {
-  background: #bbbbbb;
-}
-
-div.ql-editor sel-blot[data-sel="6"] {
-  background: #bbffff;
-}
-
-div.ql-editor sel-blot[data-sel="7"] {
-  background: #ffbbff;
+  background: var(--sel-blot-color-5);
 }
 </style>

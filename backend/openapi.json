@@ -360,8 +360,11 @@
         "additionalProperties": false,
         "properties": {
           "colors": {
+            "items": {
+              "type": "string"
+            },
             "title": "Colors",
-            "type": "integer"
+            "type": "array"
           },
           "punctuation": {
             "title": "Punctuation",
@@ -601,8 +604,11 @@
         "additionalProperties": false,
         "properties": {
           "colors": {
+            "items": {
+              "type": "string"
+            },
             "title": "Colors",
-            "type": "integer"
+            "type": "array"
           },
           "text": {
             "title": "Text",
@@ -628,13 +634,13 @@
       "_SelectedClicks": {
         "additionalProperties": false,
         "properties": {
-          "color": {
-            "title": "Color",
+          "clicks": {
+            "title": "Clicks",
             "type": "integer"
           },
-          "colors": {
-            "title": "Colors",
-            "type": "integer"
+          "color": {
+            "title": "Color",
+            "type": "string"
           },
           "type": {
             "const": "selectedClicks",
@@ -647,8 +653,8 @@
         },
         "required": [
           "type",
-          "color",
-          "colors"
+          "clicks",
+          "color"
         ],
         "title": "_SelectedClicks",
         "type": "object"
@@ -658,11 +664,7 @@
         "properties": {
           "color": {
             "title": "Color",
-            "type": "integer"
-          },
-          "colors": {
-            "title": "Colors",
-            "type": "integer"
+            "type": "string"
           },
           "text": {
             "title": "Text",
@@ -680,8 +682,7 @@
         "required": [
           "type",
           "text",
-          "color",
-          "colors"
+          "color"
         ],
         "title": "_SelectedText",
         "type": "object"
@@ -4735,8 +4736,11 @@
         "additionalProperties": false,
         "properties": {
           "colors": {
+            "items": {
+              "type": "string"
+            },
             "title": "Colors",
-            "type": "integer"
+            "type": "array"
           },
           "punctuation": {
             "title": "Punctuation",
@@ -4821,8 +4825,11 @@
         "additionalProperties": false,
         "properties": {
           "colors": {
+            "items": {
+              "type": "string"
+            },
             "title": "Colors",
-            "type": "integer"
+            "type": "array"
           },
           "createdAt": {
             "format": "date-time",
@@ -4926,8 +4933,11 @@
         "additionalProperties": false,
         "properties": {
           "colors": {
+            "items": {
+              "type": "string"
+            },
             "title": "Colors",
-            "type": "integer"
+            "type": "array"
           },
           "punctuation": {
             "title": "Punctuation",
