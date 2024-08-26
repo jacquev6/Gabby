@@ -97,6 +97,48 @@ describe('Gabby', () => {
     screenshot('select-words')
   })
 
+  it('drafts a "Select words" exercise with custom colors', () => {
+    cy.viewport(1200, 1000)
+    visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise', {pdf: 'demo'})
+    setupAliases()
+
+    cy.get('@adaptationType').select('selectThingsAdaptation').blur()
+    cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="2"]').click()
+
+    traceRectangle('@canvas', 8, 5, 60, 9)
+    cy.get('button:contains("Instructions")').click()
+    notBusy()
+
+    cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="1"]').rightclick()
+    cy.get('.picker-hue-range-slider').invoke('val', 320).trigger('input')
+    cy.get('button:contains("OK")').click()
+    cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="2"]').rightclick()
+    cy.get('.picker-hue-range-slider').invoke('val', 180).trigger('input')
+    cy.get('.colour-area-mask').click(240, 10)
+    cy.get('button:contains("OK")').click()
+    notBusy()
+
+    cy.get('@instructions').find('p').then($el => {
+      const node = $el[0].firstChild
+      console.assert(node !== null)
+      selectRange(node, 49, node, 58)
+    })
+    cy.get('button:has(span.usable-colors-button[data-cy-colors="2"])').click()
+    cy.get('@instructions').find('p').then($el => {
+      const node = $el[0].firstChild
+      console.assert(node !== null)
+      selectRange(node, 24, node, 29)
+    })
+    cy.get('button:has(span.usable-colors-button[data-cy-colors="1"])').click()
+    notBusy()
+
+    traceRectangle('@canvas', 7, 9.25, 92, 18)
+    cy.get('button:contains("Wording")').click()
+    notBusy()
+
+    screenshot('select-words-with-custom-colors')
+  })
+
   it('drafts a "Multiple choices (in instructions)" exercise', () => {
     cy.viewport(1200, 850)
     visit('/project-xkopqm/textbook-klxufv/page-3/new-exercise', {pdf: 'demo'})

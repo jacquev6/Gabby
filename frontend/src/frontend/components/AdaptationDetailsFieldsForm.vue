@@ -87,7 +87,7 @@ export const wysiwygFormats = {
 </script>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
 
 import { BLabeledInput, BLabeledCheckbox, BButton } from './opinion/bootstrap'
 import type { Model } from './ExerciseFieldsForm.vue'
@@ -104,13 +104,30 @@ const model = defineModel<Model>({required: true})
 
 const colorPickers = ref<InstanceType<typeof FloatingColorPicker>[]>([])
 
+const allColors = reactive([...defaultColors])
+const colors = allColors.map((_color, i) => computed({
+  get() {
+    if (i < model.value.selectThingsAdaptationOptions.colors.length) {
+      return model.value.selectThingsAdaptationOptions.colors[i]
+    } else {
+      return allColors[i]
+    }
+  },
+  set(value) {
+    allColors[i] = value
+    if (i < model.value.selectThingsAdaptationOptions.colors.length) {
+      model.value.selectThingsAdaptationOptions.colors[i] = value
+    }
+  },
+}))
+
 const colorsCount = computed({
   get: () => model.value.selectThingsAdaptationOptions.colors.length,
   set: (value) => {
     const prev = model.value.selectThingsAdaptationOptions.colors.length
     if (value > prev) {
       for (let k = prev; k !== value; ++k) {
-        model.value.selectThingsAdaptationOptions.colors.push(defaultColors[k])
+        model.value.selectThingsAdaptationOptions.colors.push(allColors[k])
       }
     } else {
       model.value.selectThingsAdaptationOptions.colors.length = value
@@ -128,28 +145,21 @@ const colorsCount = computed({
   <template v-else-if="model.adaptationType === 'selectThingsAdaptation'">
     <template v-if="wysiwyg">
       <FloatingColorPicker
-        v-for="i in model.selectThingsAdaptationOptions.colors.length"
+        v-for="i in colors.length"
         ref="colorPickers"
-        v-model="model.selectThingsAdaptationOptions.colors[i - 1]"
+        v-model="colors[i - 1].value"
         :default="defaultColors[i - 1]"
       />
       <div class="mb-3">
         <label class="form-label" for="blah">{{ $t('usableColors' )}}</label>
         <span class="maybe-usable-colors-container">
-          <span v-for="i in model.selectThingsAdaptationOptions.colors.length" class="usable-colors-container">
+          <span v-for="i in colors.length" :class="i - 1 < model.selectThingsAdaptationOptions.colors.length ? 'usable-colors-container' : 'unusable-colors-container'">
             <span
               class="usable-colors-button"
-              :style="{backgroundColor: model.selectThingsAdaptationOptions.colors[i - 1]}"
+              :style="{backgroundColor: colors[i - 1].value}"
               :data-cy-colors="i"
               @click="colorsCount = i"
               @contextmenu.prevent="(event) => colorPickers[i - 1].show(event.target as HTMLElement)"
-            ></span>
-          </span><span v-for="i in defaultColors.length - model.selectThingsAdaptationOptions.colors.length" class="unusable-colors-container">
-            <span
-              class="usable-colors-button"
-              :style="{backgroundColor: defaultColors[model.selectThingsAdaptationOptions.colors.length + i - 1]}"
-              :data-cy-colors="model.selectThingsAdaptationOptions.colors.length + i"
-              @click="colorsCount = model.selectThingsAdaptationOptions.colors.length + i"
             ></span>
           </span>
         </span>
