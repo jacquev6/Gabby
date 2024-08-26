@@ -3,7 +3,7 @@ import { ref, computed, reactive, watch, nextTick } from 'vue'
 import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { computedAsync } from '@vueuse/core'
+import { computedAsync, watchThrottled } from '@vueuse/core'
 
 import { BButton, BBusy } from '$/frontend/components/opinion/bootstrap'
 import bc from '$frontend/components/breadcrumbs'
@@ -22,7 +22,7 @@ import UndoRedoTool from './UndoRedoTool.vue'
 import type { TextualFieldName } from '$/frontend/components/ExerciseFieldsForm.vue'
 import AdaptationDetailsFieldsForm from '$/frontend/components/AdaptationDetailsFieldsForm.vue'
 import TextSelectionModal from './TextSelectionModal.vue'
-import { makeModel, resetModel, getParsed, create, suggestNextNumber } from '$frontend/components/ExerciseFieldsForm.vue'
+import { type Model, makeModel, resetModel, getParsed, create, suggestNextNumber } from '$frontend/components/ExerciseFieldsForm.vue'
 import type { PDFPageProxy } from 'pdfjs-dist'
 import BasicFormattingTools from './BasicFormattingTools.vue'
 
@@ -156,12 +156,27 @@ function goToPrevious() {
   })
 }
 
-const parsedExerciseLoading = ref(false)
-const parsedExercise = computedAsync(
-  () => getParsed(model),
-  null,
-  parsedExerciseLoading,
+const throttledModelLateness = ref(0)
+watch(model, () => throttledModelLateness.value++)
+const parsedExerciseWillLoadSoon = computed(() => throttledModelLateness.value > 0)
+const throttledModel = ref<Model>(JSON.parse(JSON.stringify(model)))
+watchThrottled(
+  model,
+  () => {
+    throttledModel.value = JSON.parse(JSON.stringify(model))
+    nextTick(() => {  // To ensure there is no brief moment where 'lateness' is zero but 'isLoading' is not yet true.
+      throttledModelLateness.value = 0
+    })
+  },
+  {throttle: 500},
 )
+const parsedExerciseIsLoading = ref(false)
+const parsedExercise = computedAsync(
+  () => getParsed(throttledModel.value),
+  null,
+  parsedExerciseIsLoading,
+)
+const parsedExerciseBusy = computed(() => parsedExerciseWillLoadSoon.value || parsedExerciseIsLoading.value)
 
 const adaptedExercise = computed(() => {
   if (parsedExercise.value === null) {
@@ -283,7 +298,7 @@ const toolSlotNames = computed(() => {
         <template #right>
           <div class="h-100 overflow-auto" data-cy="right-col-2">
             <h1>{{ $t('adaptation') }}</h1>
-            <BBusy :busy="parsedExerciseLoading">
+            <BBusy :busy="parsedExerciseBusy">
               <AdaptedExercise
                 v-if="adaptedExercise !== null"
                 :projectId="projectId"

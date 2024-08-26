@@ -138,4 +138,19 @@ describe('Gabby', () => {
     cy.get('label:contains("Adaptation type")').next().should('have.value', 'selectThingsAdaptation')
     cy.get('label:contains("Instructions")').next().should('have.value', 'Instructions!')
   })
+
+  it('throttles updates of the preview', () => {
+    visit('/project-xkopqm/textbook-klxufv/page-7/exercise-vodhqn', {wysiwyg: false})
+
+    cy.get('label:contains("Wording")').next().type('{selectAll}{del}', {delay: 0})
+    notBusy()
+
+    cy.intercept('POST', '/api/parsedExercises').as('parsedExercises')
+    for (let i = 0; i !== 20; i += 1) {
+      cy.get('label:contains("Wording")').next().type(' a', {delay: 0})
+    }
+    notBusy()
+
+    cy.get('@parsedExercises.all').its('length').should('be.lessThan', 15)
+  })
 })
