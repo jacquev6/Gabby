@@ -93,7 +93,7 @@ defineExpose({show})
           :showInputSet="false"
           :showPickerMode="false"
         />
-        <BButton sm secondary @click="reset">Reset to <span class="default-color" :style="{background: props.default}"></span></BButton>
+        <BButton sm secondary @click="reset">{{ $t('resetColorToDefault') }} <span class="default-color" :style="{background: props.default}"></span></BButton>
         <BButton sm primary @click="commit">OK</BButton>
       </div>
     </div>
