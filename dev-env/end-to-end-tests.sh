@@ -23,8 +23,14 @@ done
 test_dir=frontend/e2e-tests
 
 # @todo Do this conversion in a Docker container (for repeatability)
-libreoffice --convert-to pdf ../pdf-examples/demo.odt --outdir ../pdf-examples
-# sed -i "s#^const demoPdfSha256 = '.*'\$#const demoPdfSha256 = '$(sha256sum ../pdf-examples/demo.pdf | cut -d ' ' -f 1)'#" ../frontend/e2e-tests/demo.cy.ts
+(
+  cd ../pdf-examples
+  if ! md5sum --quiet --check demo.odt.md5
+  then
+    md5sum demo.odt >demo.odt.md5
+    libreoffice --convert-to pdf demo.odt
+  fi
+)
 
 if (cd ..; git grep -n '\.only' -- $test_dir)
 then
