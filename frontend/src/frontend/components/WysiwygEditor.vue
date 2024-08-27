@@ -133,6 +133,7 @@ defineExpose({
     return quill.value.getLength()
   },
   hasFocus: computed(() => quill.value !== null && quill.value.hasFocus),
+  currentFormat: computed(() => quill.value === null ? {} : quill.value.currentFormat),
 })
 </script>
 

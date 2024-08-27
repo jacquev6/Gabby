@@ -91,6 +91,7 @@ function getContents(quill: Quill): Model {
 }
 
 const hasFocus = ref(false)
+const currentFormat = ref<Record<string, unknown>>({})
 
 const quill = computed(() => {
   if (container.value === null) {
@@ -111,10 +112,14 @@ const quill = computed(() => {
     quill.on('selection-change', (range: object | null, _oldRange: object | null, _source: string) => {
       const hadFocus = hasFocus.value
       hasFocus.value = range !== null
-      if (hasFocus.value != hadFocus) {
-        if (hasFocus.value) {
+      if (hasFocus.value) {
+        currentFormat.value = quill.getFormat()
+        if (!hadFocus) {
           emit('focus')
-        } else {
+        }
+      } else {
+        currentFormat.value = {}
+        if (hadFocus) {
           emit('blur')
         }
       }
@@ -132,6 +137,8 @@ watch([quill, model], ([quill, model]) => {
 function toggle(formatting: string, value: unknown = true) {
   console.assert(quill.value !== null)
 
+  currentFormat.value = {}
+
   // Clear formatting of the caret, in case selection is empty.
   // Incidentally, this also clears the formatting of the selected range in whole.
   const previousFormat = quill.value.getFormat()
@@ -146,12 +153,14 @@ function toggle(formatting: string, value: unknown = true) {
   // Toggle the requested formatting, either for the caret, or for the selected range.
   if (previousFormat[formatting] !== value) {
     quill.value.format(formatting, value, 'user')
+    currentFormat.value = {[formatting]: value}
   }
 }
 
 defineExpose({
   toggle,
   hasFocus,
+  currentFormat,
   focus() {
     console.assert(quill.value !== null)
     quill.value.focus()

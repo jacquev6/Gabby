@@ -290,6 +290,24 @@ const focusedWysiwygField = computed(() => {
   }
 })
 
+const currentWysiwygFormat = computed(() => {
+  if (props.wysiwyg) {
+    if (instructionsEditor.value?.hasFocus) {
+      return instructionsEditor.value.currentFormat
+    } else if (wordingEditor.value?.hasFocus) {
+      return wordingEditor.value.currentFormat
+    } else if (exampleEditor.value?.hasFocus) {
+      return exampleEditor.value.currentFormat
+    } else if (clueEditor.value?.hasFocus) {
+      return clueEditor.value.currentFormat
+    } else {
+      return {}
+    }
+  } else {
+    return {}
+  }
+})
+
 const instructionsDeltas = computed(() => props.deltas === null ? [] : props.deltas.instructions)
 const wordingDeltas = computed(() => props.deltas === null ? [] : props.deltas.wording)
 const exampleDeltas = computed(() => props.deltas === null ? [] : props.deltas.example)
@@ -303,6 +321,7 @@ defineExpose({
   highlightSuffix,
   toggle,
   focusedWysiwygField,
+  currentWysiwygFormat,
 })
 </script>
 

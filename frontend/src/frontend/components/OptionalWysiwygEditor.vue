@@ -43,6 +43,7 @@ defineExpose({
     return editor.value?.getLength() ?? 0
   },
   hasFocus: computed(() => editor.value !== null && editor.value.hasFocus),
+  currentFormat: computed(() => editor.value === null ? {} : editor.value.currentFormat),
 })
 </script>
 
