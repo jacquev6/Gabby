@@ -231,11 +231,11 @@ watch(parsedExercise, () => {
 
 const toolSlotNames = computed(() => {
   const names = ['undoRedo']
-  if (wysiwyg.value) {
-    names.push('basicFormatting')
-  }
   if (model.adaptationType !== '-') {
     names.push('adaptationDetails')
+  }
+  if (wysiwyg.value) {
+    names.push('basicFormatting')
   }
   return names
 })
@@ -300,11 +300,11 @@ const toolSlotNames = computed(() => {
                   <template #undoRedo>
                     <UndoRedoTool v-model="model" :reset="resetUndoRedo" />
                   </template>
-                  <template #basicFormatting>
-                    <BasicFormattingTools v-if="fields !== null" :fields />
-                  </template>
                   <template #adaptationDetails>
                     <AdaptationDetailsFieldsForm v-if="fields !== null" v-model="model" :wysiwyg :fields />
+                  </template>
+                  <template #basicFormatting>
+                    <BasicFormattingTools v-if="fields !== null" v-model="model" :fields />
                   </template>
                 </ToolsGutter>
               </div>

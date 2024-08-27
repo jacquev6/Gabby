@@ -81,13 +81,13 @@ describe('Gabby', () => {
       console.assert(node !== null)
       selectRange(node, 39, node, 51)
     })
-    cy.get('button:has(span.usable-colors-button[data-cy-colors="2"])').click()
+    cy.get('button[data-cy="format-color-2"]').click()
     cy.get('@instructions').find('p').then($el => {
       const node = $el[0].firstChild
       console.assert(node !== null)
       selectRange(node, 25, node, 31)
     })
-    cy.get('button:has(span.usable-colors-button[data-cy-colors="1"])').click()
+    cy.get('button[data-cy="format-color-1"]').click()
     notBusy()
 
     traceRectangle('@canvas', 7, 9.5, 92, 19)
@@ -123,13 +123,13 @@ describe('Gabby', () => {
       console.assert(node !== null)
       selectRange(node, 49, node, 58)
     })
-    cy.get('button:has(span.usable-colors-button[data-cy-colors="2"])').click()
+    cy.get('button[data-cy="format-color-2"]').click()
     cy.get('@instructions').find('p').then($el => {
       const node = $el[0].firstChild
       console.assert(node !== null)
       selectRange(node, 24, node, 29)
     })
-    cy.get('button:has(span.usable-colors-button[data-cy-colors="1"])').click()
+    cy.get('button[data-cy="format-color-1"]').click()
     notBusy()
 
     traceRectangle('@canvas', 7, 9.25, 92, 18)

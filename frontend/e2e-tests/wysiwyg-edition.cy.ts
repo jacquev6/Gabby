@@ -14,8 +14,8 @@ function setAliases() {
   cy.get('label:contains("Clue") + .ql-container > .ql-editor').as('clue')
   cy.get('@number').focus().blur()
 
-  cy.get('button:contains("Bold")').as('bold')
-  cy.get('button:contains("Italic")').as('italic')
+  cy.get('button[data-cy="format-bold"]').as('bold')
+  cy.get('button[data-cy="format-italic"]').as('italic')
 }
 
 describe('Gabby', () => {
@@ -116,27 +116,27 @@ describe('Gabby', () => {
     cy.get('@number').type('test')
     cy.get('@adaptationType').select('multipleChoicesInInstructionsAdaptation')
 
-    cy.get('button:contains("Choice")').should('be.disabled')
+    cy.get('button[data-cy="format-choice"]').should('be.disabled')
 
     cy.get('@instructions').click()
-    cy.get('button:contains("Choice")').should('be.enabled')
+    cy.get('button[data-cy="format-choice"]').should('be.enabled')
     cy.get('@instructions').type('plain')
-    cy.get('button:contains("Choice")').click()
+    cy.get('button[data-cy="format-choice"]').click()
     cy.get('@instructions').type('choice')
     cy.get('choice-blot:contains("choice")').should('exist')
     cy.get('@number').focus()
-    cy.get('button:contains("Choice")').should('be.disabled')
+    cy.get('button[data-cy="format-choice"]').should('be.disabled')
 
     cy.get('@wording').click()
-    cy.get('button:contains("Choice")').should('be.disabled')
+    cy.get('button[data-cy="format-choice"]').should('be.disabled')
 
     cy.get('@exampleHeader').click()
     cy.get('@example').should('exist')
-    cy.get('button:contains("Choice")').should('be.disabled')
+    cy.get('button[data-cy="format-choice"]').should('be.disabled')
 
     cy.get('@clueHeader').click()
     cy.get('@clue').should('exist')
-    cy.get('button:contains("Choice")').should('be.disabled')
+    cy.get('button[data-cy="format-choice"]').should('be.disabled')
   })
 
   it('enables the "Sel" buttons', () => {
@@ -146,9 +146,9 @@ describe('Gabby', () => {
     cy.get('@adaptationType').select('selectThingsAdaptation')
     cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="2"]').click()
 
-    cy.get('button:has(span.usable-colors-button[data-cy-colors="1"])').as("button1").should('be.disabled')
-    cy.get('button:has(span.usable-colors-button[data-cy-colors="2"])').as("button2").should('be.disabled')
-    cy.get('button:has(span.usable-colors-button[data-cy-colors="3"])').should('not.exist')
+    cy.get('button[data-cy="format-color-1"]').as("button1").should('be.disabled')
+    cy.get('button[data-cy="format-color-2"]').as("button2").should('be.disabled')
+    cy.get('button[data-cy="format-color-3"]').should('not.exist')
 
     cy.get('@instructions').click()
     cy.get('@button1').should('be.enabled')
@@ -234,11 +234,11 @@ describe('Gabby', () => {
     cy.get('label:contains("Adaptation type")').next().select('multipleChoicesInInstructionsAdaptation')
     cy.get('label:contains("Instructions") + .ql-container .ql-editor').as('instructions')
     cy.get('@instructions').click().type('Choix : ')
-    cy.get('button:contains("Choice")').click()
+    cy.get('button[data-cy="format-choice"]').click()
     cy.get('@instructions').type('vrai')
-    cy.get('button:contains("Choice")').click()
+    cy.get('button[data-cy="format-choice"]').click()
     cy.get('@instructions').type(' ou ')
-    cy.get('button:contains("Choice")').click()
+    cy.get('button[data-cy="format-choice"]').click()
     cy.get('@instructions').type('faux')
 
     cy.get('choice-blot').should('have.length', 2)

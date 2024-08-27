@@ -89,7 +89,7 @@ export const wysiwygFormats = {
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue'
 
-import { BLabeledInput, BLabeledCheckbox, BButton } from './opinion/bootstrap'
+import { BLabeledInput, BLabeledCheckbox } from './opinion/bootstrap'
 import type { Model } from './ExerciseFieldsForm.vue'
 import type ExerciseFieldsForm from './ExerciseFieldsForm.vue'
 import FloatingColorPicker from './FloatingColorPicker.vue'
@@ -164,22 +164,11 @@ const colorsCount = computed({
           </span>
         </span>
       </div>
-      <div class="mb-3">
-        <label class="form-label" for="blah">{{ $t('formatWithColor' )}}</label>
-        <p><template v-for="i in model.selectThingsAdaptationOptions.colors.length">
-          <BButton
-            sm primary
-            :disabled="fields.focusedWysiwygField === null || fields.focusedWysiwygField === 'wording'"
-            @click="fields.toggle('sel', i)" :style="{lineHeight: 0, padding: '2px'}"
-          >
-            <span class="usable-colors-button" :data-cy-colors="i" :style="{backgroundColor: model.selectThingsAdaptationOptions.colors[i - 1]}"></span>
-          </BButton>
-          <wbr>
-        </template></p>
-      </div>
+      <BLabeledCheckbox :label="$t('includePunctuation')" v-model="model.selectThingsAdaptationOptions.punctuation" />
     </template>
     <template v-else>
       <BLabeledInput :label="$t('colorsCount')" type="number" min="1" v-model="colorsCount" />
+      <BLabeledCheckbox :label="$t('includePunctuation')" v-model="model.selectThingsAdaptationOptions.punctuation" />
       <p class="alert alert-secondary">
         <i18n-t keypath="useSel1ToSelN" v-if="model.selectThingsAdaptationOptions.colors.length > 1">
           <template v-slot:first>
@@ -196,20 +185,16 @@ const colorsCount = computed({
         </i18n-t>
       </p>
     </template>
-    <BLabeledCheckbox :label="$t('includePunctuation')" v-model="model.selectThingsAdaptationOptions.punctuation" />
   </template>
   <template v-else-if="model.adaptationType === 'multipleChoicesInInstructionsAdaptation'">
-    <template v-if="wysiwyg">
-      <p><BButton sm primary :disabled="fields.focusedWysiwygField !== 'instructions'" @click="fields.toggle('choice')">{{ $t('choiceButton') }}</BButton></p>
-    </template>
-    <p v-else class="alert alert-secondary">
+    <BLabeledInput :label="$t('placeholderText')" type="text" v-model="model.multipleChoicesInInstructionsAdaptationOptions.placeholder" />
+    <p v-if="!wysiwyg" class="alert alert-secondary">
       <i18n-t keypath="useChoice">
         <template v-slot:choice>
           <code>{choice|<em>text</em>}</code>
         </template>
       </i18n-t>
     </p>
-    <BLabeledInput :label="$t('placeholderText')" type="text" v-model="model.multipleChoicesInInstructionsAdaptationOptions.placeholder" />
   </template>
   <template v-else-if="model.adaptationType === 'multipleChoicesInWordingAdaptation'">
     <p class="alert alert-secondary">
