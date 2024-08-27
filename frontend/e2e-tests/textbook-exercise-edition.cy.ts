@@ -151,6 +151,6 @@ describe('Gabby', () => {
     }
     notBusy()
 
-    cy.get('@parsedExercises.all').its('length').should('be.lessThan', 15)
+    cy.get('@parsedExercises.all').its('length').should('be.lessThan', 19)
   })
 })

@@ -122,6 +122,7 @@ describe('Gabby', () => {
     visit('/project-xkopqm/textbook-klxufv/page-6/exercise-wbqloc', {locale: 'fr', pdf: 'test'})
 
     cy.get('label:contains("Énoncé") + div.ql-container > div.ql-editor').type('{selectAll}... vide\n... vident')
+    notBusy()
     cy.screenshot('project-textbook-page-exercise/modify-exercise', {clip: {x: 0, y: 50, width: 575, height: 1000}})
 
     cy.screenshot('project-textbook-page-exercise/tools', {clip: {x: 560, y: 0, width: 210, height: 500}})

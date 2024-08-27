@@ -78,19 +78,34 @@ describe('Gabby', () => {
       cy.get('@adaptationType').select(adaptationType)
 
       for (const fieldAlias of ['@instructions', '@wording', '@example', '@clue']) {
-        cy.get(fieldAlias).click().type('plain')
+        cy.get(fieldAlias).click().type('{selectAll}plain', {delay: 0})
         cy.get('@bold').click()
-        cy.get(fieldAlias).type('bold')
+        cy.get(fieldAlias).type('bold', {delay: 0})
         cy.get('@italic').click()
-        cy.get(fieldAlias).type('italic')
+        cy.get(fieldAlias).type('italic', {delay: 0})
 
+        cy.get(fieldAlias).should('contain.text', 'plainbolditalic')
         cy.get('bold-blot:contains("bold")').should('exist')
         cy.get('italic-blot:contains("italic")').should('exist')
+        notBusy()
+        cy.get(fieldAlias).should('contain.text', 'plainbolditalic')
+        cy.get('bold-blot:contains("bold")').should('exist')
+        cy.get('italic-blot:contains("italic")').should('exist')
+        // cy.get('div:has(>h1:contains("Adapted exercise"))').its('length').should('eq', 1)
+        cy.get('div:has(>h1:contains("Adapted exercise")) i:contains("italic")').should('exist')
+        cy.get('div:has(>h1:contains("Adapted exercise")) b:contains("bold")').should('exist')
 
-        cy.get(fieldAlias).type('{selectAll}{del}X')
+        cy.get(fieldAlias).type('{selectAll}X', {delay: 0})
 
+        cy.get(fieldAlias).should('contain.text', 'X')
         cy.get('bold-blot:contains("bold")').should('not.exist')
         cy.get('italic-blot:contains("italic")').should('not.exist')
+        notBusy()
+        cy.get(fieldAlias).should('contain.text', 'X')
+        cy.get('bold-blot:contains("bold")').should('not.exist')
+        cy.get('italic-blot:contains("italic")').should('not.exist')
+        cy.get('div:has(>h1:contains("Adapted exercise")) i:contains("italic")').should('not.exist')
+        cy.get('div:has(>h1:contains("Adapted exercise")) b:contains("bold")').should('not.exist')
       }
     }
   })

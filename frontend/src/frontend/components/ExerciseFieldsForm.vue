@@ -290,6 +290,12 @@ const focusedWysiwygField = computed(() => {
   }
 })
 
+const instructionsDeltas = computed(() => props.deltas === null ? [] : props.deltas.instructions)
+const wordingDeltas = computed(() => props.deltas === null ? [] : props.deltas.wording)
+const exampleDeltas = computed(() => props.deltas === null ? [] : props.deltas.example)
+const clueDeltas = computed(() => props.deltas === null ? [] : props.deltas.clue)
+
+
 const selBlotColors = computed(() => Object.fromEntries(model.value.selectThingsAdaptationOptions.colors.map((color, i) => [`--sel-blot-color-${i + 1}`, color])))
 
 defineExpose({
@@ -312,7 +318,7 @@ defineExpose({
       ref="instructionsEditor"
       :label="$t('exerciseInstructions')"
       :formats="wysiwygFormats[model.adaptationType].instructions"
-      v-model="model.instructions" :delta="deltas === null ? [] : deltas.instructions"
+      v-model="model.instructions" :delta="instructionsDeltas"
     />
     <BLabeledTextarea
       v-else
@@ -325,7 +331,7 @@ defineExpose({
       ref="wordingEditor"
       :label="$t('exerciseWording')"
       :formats="wysiwygFormats[model.adaptationType].wording"
-      v-model="model.wording" :delta="deltas === null ? [] : deltas.wording"
+      v-model="model.wording" :delta="wordingDeltas"
     />
     <BLabeledTextarea
       v-else
@@ -341,7 +347,7 @@ defineExpose({
             ref="exampleEditor"
             :label="$t('exerciseExample')"
             :formats="wysiwygFormats[model.adaptationType].example"
-            :delta="deltas === null ? [] : deltas.example"
+            :delta="exampleDeltas"
             v-model="model.example"
           />
           <OptionalTextarea
@@ -357,7 +363,7 @@ defineExpose({
             ref="clueEditor"
             :label="$t('exerciseClue')"
             :formats="wysiwygFormats[model.adaptationType].clue"
-            :delta="deltas === null ? [] : deltas.clue"
+            :delta="clueDeltas"
             v-model="model.clue"
           />
           <OptionalTextarea
