@@ -12,14 +12,14 @@ const pdfjs = untypedPdfjs as typeof PdfjsType
 type Sha256 = string
 
 interface Info {
-  sha256: Sha256,
-  name: string,
-  size: number,
+  sha256: Sha256
+  name: string
+  size: number
 }
 
 export interface InfoDoc {
-  info: Info,
-  document: PDFDocumentProxy,
+  info: Info
+  document: PDFDocumentProxy
 }
 
 function make_weak_ref<T extends object>(o: T) {
