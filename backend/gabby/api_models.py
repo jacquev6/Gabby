@@ -128,7 +128,7 @@ class Exercise(PydanticBase, CreatedUpdatedByAtMixin):
 
 
 class SelectThingsAdaptationOptions(PydanticBase):
-    colors: int
+    colors: list[str]
     words: bool
     punctuation: bool
 

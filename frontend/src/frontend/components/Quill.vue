@@ -2,20 +2,12 @@
 import type AttributeMap from 'quill-delta/dist/AttributeMap'
 import Quill, { Parchment } from 'quill/core'
 import Block from 'quill/blots/block'
-// import { BlockEmbed } from 'quill/blots/block'
 import Break from 'quill/blots/break'
-// import Container from 'quill/blots/container'
 import Cursor from 'quill/blots/cursor'
-// import Embed from 'quill/blots/embed'
 import Inline from 'quill/blots/inline'
 import Scroll from 'quill/blots/scroll'
 import TextBlot from 'quill/blots/text'
-// import Clipboard from 'quill/modules/clipboard'
-// import History from 'quill/modules/history'
 import Keyboard from 'quill/modules/keyboard'
-// import Uploader from 'quill/modules/uploader'
-// import Input from 'quill/modules/input'
-// import UINode from 'quill/modules/uiNode'
 
 
 // Monkey-patching Quill to remove some default bindings, until I learn how to do it properly.
@@ -34,20 +26,11 @@ export type Model = InsertOp[]
 function makeMinimalRegistry() {
   const registry = new Parchment.Registry()
   registry.register(Block)
-  // registry.register(BlockEmbed)
   registry.register(Break)
-  // registry.register(Container)
   registry.register(Cursor)
-  // registry.register(Embed)
   registry.register(Inline)
   registry.register(Scroll)
   registry.register(TextBlot)
-  // registry.register(Clipboard)
-  // registry.register(History)
-  // registry.register(Keyboard)
-  // registry.register(Uploader)
-  // registry.register(Input)
-  // registry.register(UINode)
   return registry
 }
 
@@ -61,7 +44,7 @@ function makeRegistryWithBlots(blots: Blot[]) {
   return registry
 }
 
-const InlineBlot = Quill.import('blots/inline') as Blot
+export const InlineBlot = Quill.import('blots/inline') as Blot
 
 export class BoldBlot extends InlineBlot {
   static override blotName = 'bold'
@@ -71,11 +54,6 @@ export class BoldBlot extends InlineBlot {
 export class ItalicBlot extends InlineBlot {
   static override blotName = 'italic'
   static override tagName = 'italic-blot'
-}
-
-export class ChoiceBlot extends InlineBlot {
-  static override blotName = 'choice'
-  static override tagName = 'choice-blot'
 }
 </script>
 
@@ -94,6 +72,11 @@ const props = defineProps<{
   blots: Blot[]
 }>()
 
+const emit = defineEmits<{
+  focus: []
+  blur: []
+}>()
+
 const registry = computed(() => makeRegistryWithBlots(props.blots))
 
 const model = defineModel<Model>({required: true})
@@ -108,6 +91,7 @@ function getContents(quill: Quill): Model {
 }
 
 const hasFocus = ref(false)
+const currentFormat = ref<Record<string, unknown>>({})
 
 const quill = computed(() => {
   if (container.value === null) {
@@ -126,7 +110,19 @@ const quill = computed(() => {
       }
     })
     quill.on('selection-change', (range: object | null, _oldRange: object | null, _source: string) => {
+      const hadFocus = hasFocus.value
       hasFocus.value = range !== null
+      if (hasFocus.value) {
+        currentFormat.value = quill.getFormat()
+        if (!hadFocus) {
+          emit('focus')
+        }
+      } else {
+        currentFormat.value = {}
+        if (hadFocus) {
+          emit('blur')
+        }
+      }
     })
     return quill
   }
@@ -138,8 +134,10 @@ watch([quill, model], ([quill, model]) => {
   }
 })
 
-function toggle(formatting: string) {
+function toggle(formatting: string, value: unknown = true) {
   console.assert(quill.value !== null)
+
+  currentFormat.value = {}
 
   // Clear formatting of the caret, in case selection is empty.
   // Incidentally, this also clears the formatting of the selected range in whole.
@@ -153,14 +151,16 @@ function toggle(formatting: string) {
   quill.value.removeFormat(index, length)
 
   // Toggle the requested formatting, either for the caret, or for the selected range.
-  if (!previousFormat[formatting]) {
-    quill.value.format(formatting, true, 'user')
+  if (previousFormat[formatting] !== value) {
+    quill.value.format(formatting, value, 'user')
+    currentFormat.value = {[formatting]: value}
   }
 }
 
 defineExpose({
   toggle,
   hasFocus,
+  currentFormat,
   focus() {
     console.assert(quill.value !== null)
     quill.value.focus()
@@ -191,12 +191,6 @@ div.ql-editor bold-blot {
 
 div.ql-editor italic-blot {
   font-style: italic;
-}
-
-div.ql-editor choice-blot {
-  margin: 0;
-  padding: 0 0.4em;
-  border: 2px solid black;
 }
 
 /* Fight against 'quill/dist/quill.core.css' to achieve formatting close to Bootstrap's.

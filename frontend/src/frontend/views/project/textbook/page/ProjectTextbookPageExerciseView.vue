@@ -2,7 +2,6 @@
 import { ref, computed, reactive, watch, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { computedAsync } from '@vueuse/core'
 
 import { BButton, BBusy } from '$/frontend/components/opinion/bootstrap'
 import { useApiStore } from '$frontend/stores/api'
@@ -18,10 +17,10 @@ import UndoRedoTool from './UndoRedoTool.vue'
 import { useExerciseCreationHistoryStore } from './ExerciseCreationHistoryStore'
 import { makeModel, assignModelFrom, getParsed, save } from '$frontend/components/ExerciseFieldsForm.vue'
 import TextSelectionModal from './TextSelectionModal.vue'
-import type { TextualFieldName, Selection } from '$/frontend/components/ExerciseFieldsForm.vue'
+import type { TextualFieldName } from '$/frontend/components/ExerciseFieldsForm.vue'
 import AdaptationDetailsFieldsForm from '$/frontend/components/AdaptationDetailsFieldsForm.vue'
 import TextPicker from './TextPicker.vue'
-import type { PdfFile } from '$/frontend/stores/api'
+import type { Exists, InCache, ParsedExercise, PdfFile } from '$/frontend/stores/api'
 import type { PDFPageProxy } from 'pdfjs-dist'
 import BasicFormattingTools from './BasicFormattingTools.vue'
 
@@ -101,7 +100,7 @@ const breadcrumbs = computed(() => {
 })
 
 const model = reactive(makeModel())
-const canWysiwyg = computed(() => model.adaptationType === 'multipleChoicesInInstructionsAdaptation')
+const canWysiwyg = computed(() => model.adaptationType !== 'multipleChoicesInWordingAdaptation')
 const wantWysiwyg = ref(true)
 const wysiwyg = computed(() => canWysiwyg.value && wantWysiwyg.value)
 
@@ -138,8 +137,6 @@ function textSelected(pdfFile: PdfFile, pdf: {page: PDFPageProxy}, selectedText:
     rectangle,
   })
 }
-
-const lastSelection = ref<Selection | null>(null)
 
 function goToPrevious() {
   const exerciseId = exerciseCreationHistory.previous
@@ -183,18 +180,22 @@ async function saveThenNext() {
   }
 }
 
-const parsedExerciseLoading = ref(false)
-// This 'computedAsync' gets cancelled when the user types faster than the server can respond,
-// and only the last response is actually assigned to 'parsedExercise' by VueUse.
-// Thus, 'adaptedExercise' and 'deltas' are -recomputed only when they correspond to the current value of the field.
-// This is the expected behavior, but is very difficult to test. An attempt to test it has been made in
-//   it("keeps what's been typed in WYSIWYG fields regardless of the typing speed and server response time"
-// but is arguably fragile. So... don't mess this up, future me!
-const parsedExercise = computedAsync(
-  () => getParsed(model),
-  null,
-  parsedExerciseLoading,
-)
+const parsedExercise = ref<ParsedExercise & InCache & Exists | null>(null)
+const parsedExerciseIsLoading = ref(false)
+const parsedExerciseNeedsLoading = ref(true)
+watch(model, () => { parsedExerciseNeedsLoading.value = true })
+watch(parsedExerciseNeedsLoading, async () => {
+  while (parsedExerciseNeedsLoading.value) {
+    const modelBefore = JSON.stringify(model)
+    parsedExerciseIsLoading.value = true
+    const parsed = await getParsed(model)
+    if (JSON.stringify(model) === modelBefore) {
+      parsedExercise.value = parsed
+      parsedExerciseIsLoading.value = false
+      parsedExerciseNeedsLoading.value = false
+    }
+  }
+}, {immediate: true})
 
 const adaptedExercise = computed(() => {
   if (parsedExercise.value === null) {
@@ -230,11 +231,11 @@ watch(parsedExercise, () => {
 
 const toolSlotNames = computed(() => {
   const names = ['undoRedo']
-  if (wysiwyg.value) {
-    names.push('basicFormatting')
-  }
   if (model.adaptationType !== '-') {
     names.push('adaptationDetails')
+  }
+  if (wysiwyg.value) {
+    names.push('basicFormatting')
   }
   return names
 })
@@ -265,12 +266,11 @@ const toolSlotNames = computed(() => {
         <TwoResizableColumns saveKey="projectTextbookPage-2" :snap="150" class="h-100" gutterWidth="200px">
           <template #left>
             <div class="h-100 overflow-auto" data-cy="left-col-2">
-              <h1>{{ $t('edition') }}<template v-if="canWysiwyg"> <span style="font-size: small">(<label>WYSIWYG: <input type="checkbox" v-model="wantWysiwyg" /></label>)</span></template></h1>
+              <h1>{{ $t('edition') }}<template v-if="canWysiwyg">  <span style="font-size: small">(<label>WYSIWYG: <input type="checkbox" v-model="wantWysiwyg" /></label>)</span></template></h1>
               <BBusy :busy>
                 <ExerciseFieldsForm ref="fields"
                   v-model="model"
                   :fixedNumber="true" :wysiwyg :deltas
-                  @selected="selection => { lastSelection = selection }"
                 />
                 <template v-if="exerciseCreationHistory.current === null">
                   <p>
@@ -300,11 +300,11 @@ const toolSlotNames = computed(() => {
                   <template #undoRedo>
                     <UndoRedoTool v-model="model" :reset="resetUndoRedo" />
                   </template>
-                  <template #basicFormatting>
-                    <BasicFormattingTools v-if="fields !== null" :fields />
-                  </template>
                   <template #adaptationDetails>
                     <AdaptationDetailsFieldsForm v-if="fields !== null" v-model="model" :wysiwyg :fields />
+                  </template>
+                  <template #basicFormatting>
+                    <BasicFormattingTools v-if="fields !== null" v-model="model" :fields />
                   </template>
                 </ToolsGutter>
               </div>
@@ -315,7 +315,7 @@ const toolSlotNames = computed(() => {
           <template #right>
             <div class="h-100 overflow-auto" data-cy="right-col-2">
               <h1>{{ $t('adaptation') }}</h1>
-              <BBusy :busy="parsedExerciseLoading">
+              <BBusy :busy="parsedExerciseIsLoading">
                 <AdaptedExercise
                   v-if="adaptedExercise !== null"
                   :projectId="projectId"

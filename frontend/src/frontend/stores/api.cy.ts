@@ -1627,7 +1627,7 @@ describe('ApiStore - Application - 2', () => {
     const typed_adaptation = exercise.relationships.adaptation as SelectThingsAdaptation
     expectToBeTrue(typed_adaptation.inCache)
     expectToBeTrue(typed_adaptation.exists)
-    expect(typed_adaptation.attributes.colors).to.equal(4)
+    expect(typed_adaptation.attributes.colors).to.deep.equal(["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"])
   })
 
   it('gets an exercise with "fill with free text" adaptation', async () => {
@@ -1667,7 +1667,7 @@ describe('ApiStore - Application - 2', () => {
         'add',
         'selectThingsAdaptation', null,
         {
-          'colors': 5,
+          'colors': ['red', 'green', 'blue', 'purple'],
           'words': true,
           'punctuation': true,
         },
@@ -1683,18 +1683,18 @@ describe('ApiStore - Application - 2', () => {
     await exercise.refresh()
 
     expect(exercise.relationships.adaptation.type).to.equal('selectThingsAdaptation')
-    expect(exercise.relationships.adaptation.attributes.colors).to.equal(5)
+    expect(exercise.relationships.adaptation.attributes.colors).to.deep.equal(['red', 'green', 'blue', 'purple'])
   })
 
   it('updates an adaptation', async () => {
     const api = useApiStore()
 
     const adaptation = api.cache.getOne('selectThingsAdaptation', 'fojjim')
-    await adaptation.patch({colors: 17}, {})
+    await adaptation.patch({colors: ['red', 'green', 'blue']}, {})
 
     expectToBeTrue(adaptation.inCache)
     expectToBeTrue(adaptation.exists)
-    expect(adaptation.attributes.colors).to.equal(17)
+    expect(adaptation.attributes.colors).to.deep.equal(['red', 'green', 'blue'])
   })
 
   it('changes the type of an adaptation', async () => {

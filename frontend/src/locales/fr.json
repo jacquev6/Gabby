@@ -116,6 +116,8 @@
   "includePunctuation": "Sélectionner aussi la ponctuation",
   "useSel1ToSelN": "Utilisez {first} à {last} dans la consigne, l'exemple ou l'indice pour formatter du texte comme s'il était sélectionné.",
   "useSel1": "Utilisez {first} dans la consigne, l'exemple ou l'indice pour formatter du texte comme s'il était sélectionné.",
+  "usableColors": "Couleurs utilisables",
+  "resetColorToDefault": "Restaurer à",
   "useChoice": "Utilisez {choice} dans la consigne pour indiquer un choix possible.",
   "useChoices": "Utilisez {choices} dans l'énoncé pour indiquer choix à faire.",
   "choiceButton": "Choix",

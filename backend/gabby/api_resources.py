@@ -2198,7 +2198,7 @@ class AdaptationsApiTestCase(LoggedInApiTestCase):
             "data": {
                 "type": "selectThingsAdaptation",
                 "attributes": {
-                    "colors": 3,
+                    "colors": ["red", "green", "blue"],
                     "words": True,
                     "punctuation": True,
                 },
@@ -2215,7 +2215,7 @@ class AdaptationsApiTestCase(LoggedInApiTestCase):
                 "id": "ugrfkh",
                 "links": {"self": "http://server/selectThingsAdaptations/ugrfkh"},
                 "attributes": {
-                    "colors": 3,
+                    "colors": ["red", "green", "blue"],
                     "words": True,
                     "punctuation": True,
                     "createdAt": response.json()["data"]["attributes"]["createdAt"],
@@ -2231,7 +2231,7 @@ class AdaptationsApiTestCase(LoggedInApiTestCase):
 
         exercise = self.get_model(Exercise, 1)
         self.assertIsInstance(exercise.adaptation, SelectThingsAdaptation)
-        self.assertEqual(exercise.adaptation.colors, 3)
+        self.assertEqual(exercise.adaptation.colors, ["red", "green", "blue"])
         self.assertTrue(exercise.adaptation.words)
         self.assertTrue(exercise.adaptation.punctuation)
 
@@ -2272,7 +2272,7 @@ class AdaptationsApiTestCase(LoggedInApiTestCase):
         self.assertEqual(exercise.adaptation.placeholder, "...")
 
     def test_dont_update_adaptation(self):
-        self.exercise.adaptation = self.create_model(SelectThingsAdaptation, colors=3, words=True, punctuation=True)
+        self.exercise.adaptation = self.create_model(SelectThingsAdaptation, old_colors_count=3, colors=["red", "green", "blue"], words=True, punctuation=True)
         self._TransactionTestCase__session.commit()
 
         payload = {
@@ -2313,7 +2313,7 @@ class AdaptationsApiTestCase(LoggedInApiTestCase):
         self.assertEqual(exercise.adaptation, self.get_model(SelectThingsAdaptation, 1))
 
     def test_update_adaptation__none(self):
-        self.exercise.adaptation = self.create_model(SelectThingsAdaptation, colors=3, words=True, punctuation=True)
+        self.exercise.adaptation = self.create_model(SelectThingsAdaptation, old_colors_count=3, colors=["red", "green", "blue"], words=True, punctuation=True)
         self._TransactionTestCase__session.commit()
 
         payload = {
@@ -2355,7 +2355,7 @@ class AdaptationsApiTestCase(LoggedInApiTestCase):
         self.assertEqual(self.count_models(SelectThingsAdaptation), 0)
 
     def test_update_adaptation__other_type(self):
-        self.exercise.adaptation = self.create_model(SelectThingsAdaptation, colors=3, words=True, punctuation=True)
+        self.exercise.adaptation = self.create_model(SelectThingsAdaptation, old_colors_count=3, colors=["red", "green", "blue"], words=True, punctuation=True)
         self._TransactionTestCase__session.commit()
 
         payload = {

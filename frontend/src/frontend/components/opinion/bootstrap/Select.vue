@@ -1,7 +1,7 @@
 <script setup lang="ts">
 interface Option {
-  value: string,
-  label: string,
+  value: string
+  label: string
 }
 
 defineProps<{

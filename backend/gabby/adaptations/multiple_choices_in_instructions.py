@@ -124,11 +124,20 @@ class MultipleChoicesInInstructionsAdaptation(Adaptation):
             self.exercise.wording.replace(self.placeholder, "{placeholder}")
         )
 
+    def make_wording_delta(self):
+        return parsing.make_plain_wording_section_delta(self.exercise.wording)
+
     def make_adapted_example(self):
         return parsing.adapt_plain_instructions_section(self.exercise.example)
 
+    def make_example_delta(self):
+        return parsing.make_plain_instructions_section_delta(self.exercise.example)
+
     def make_adapted_clue(self):
         return parsing.adapt_plain_instructions_section(self.exercise.clue)
+
+    def make_clue_delta(self):
+        return parsing.make_plain_instructions_section_delta(self.exercise.clue)
 
 
 class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
@@ -186,6 +195,11 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                     d.InsertOp(insert="b", attributes={"choice": True}),
                     d.InsertOp(insert="."),
                 ],
+                wording=[
+                    d.InsertOp(insert="A ... B ..."),
+                ],
+                example=[],
+                clue=[],
             ),
         )
 
@@ -273,6 +287,24 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                     ]),
                 ]),
             ),
+            d.Exercise(
+                instructions=[
+                    d.InsertOp(insert="Choose "),
+                    d.InsertOp(insert="a", attributes={"choice": True}),
+                    d.InsertOp(insert=" or "),
+                    d.InsertOp(insert="b", attributes={"choice": True}),
+                    d.InsertOp(insert="."),
+                ],
+                wording=[
+                    d.InsertOp(insert="A @ B @"),
+                ],
+                example=[
+                    d.InsertOp(insert="This {choice|is} the @ example."),
+                ],
+                clue=[
+                    d.InsertOp(insert="This is {choice|the} @ clue."),
+                ],
+            ),
         )
 
     def test_lenient_paragraphs(self):
@@ -329,6 +361,11 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                     d.InsertOp(insert="b", attributes={"choice": True}),
                     d.InsertOp(insert="\n\n c #\nd."),
                 ],
+                wording=[
+                    d.InsertOp(insert="..."),
+                ],
+                example=[],
+                clue=[],
             ),
         )
 
@@ -385,6 +422,11 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                     d.InsertOp(insert="b", attributes={"choice": True}),
                     d.InsertOp(insert=" .   \t\n   "),
                 ],
+                wording=[
+                    d.InsertOp(insert="..."),
+                ],
+                example=[],
+                clue=[],
             ),
         )
 

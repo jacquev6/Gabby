@@ -53,8 +53,3 @@ Ajout d'un exercice indépendant
 -------------------------------
 
 Cette fonctionnalité n'est pas finalisée.
-
-Téléchargement du rapport d'extraction
---------------------------------------
-
-Un lien permet de télécharger ce rapport destinées aux équipes "machine learning" du projet MALIN.

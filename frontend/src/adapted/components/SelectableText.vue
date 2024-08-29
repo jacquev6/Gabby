@@ -3,19 +3,19 @@ import SelectedText from './SelectedText.vue'
 
 
 const props = defineProps<{
-  colors: number,
+  colors: string[],
 }>()
 
-const color = defineModel<number>({default: 0})
+const colorIndex = defineModel<number>({default: 0})
 
 function increment() {
-  color.value = (color.value + 1) % (props.colors + 1)
+  colorIndex.value = (colorIndex.value + 1) % (props.colors.length + 1)
 }
 </script>
 
 <template>
-  <span v-if="color === 0" @click="increment"><slot></slot></span>
-  <SelectedText v-else @click="increment" :colors :color><slot></slot></SelectedText>
+  <span v-if="colorIndex === 0" @click="increment"><slot></slot></span>
+  <SelectedText v-else @click="increment" :color="colors[colorIndex - 1]"><slot></slot></SelectedText>
 </template>
 
 <style scoped>

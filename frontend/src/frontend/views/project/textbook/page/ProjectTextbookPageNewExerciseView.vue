@@ -3,7 +3,6 @@ import { ref, computed, reactive, watch, nextTick } from 'vue'
 import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { computedAsync } from '@vueuse/core'
 
 import { BButton, BBusy } from '$/frontend/components/opinion/bootstrap'
 import bc from '$frontend/components/breadcrumbs'
@@ -15,11 +14,11 @@ import TwoResizableColumns from '$frontend/components/TwoResizableColumns.vue'
 import ExerciseFieldsForm from '$/frontend/components/ExerciseFieldsForm.vue'
 import { useExerciseCreationHistoryStore } from './ExerciseCreationHistoryStore'
 import { useApiStore } from '$/frontend/stores/api'
-import type { PdfFile } from '$/frontend/stores/api'
+import type { Exists, InCache, ParsedExercise, PdfFile } from '$/frontend/stores/api'
 import AdaptedExercise from './AdaptedExercise.vue'
 import ToolsGutter from './ToolsGutter.vue'
 import UndoRedoTool from './UndoRedoTool.vue'
-import type { TextualFieldName, Selection } from '$/frontend/components/ExerciseFieldsForm.vue'
+import type { TextualFieldName } from '$/frontend/components/ExerciseFieldsForm.vue'
 import AdaptationDetailsFieldsForm from '$/frontend/components/AdaptationDetailsFieldsForm.vue'
 import TextSelectionModal from './TextSelectionModal.vue'
 import { makeModel, resetModel, getParsed, create, suggestNextNumber } from '$frontend/components/ExerciseFieldsForm.vue'
@@ -74,7 +73,7 @@ const title = computed(() => [i18n.t('create')])
 const breadcrumbs = computed(() => bc.last(i18n.t('create')))
 
 const model = reactive(makeModel())
-const canWysiwyg = computed(() => model.adaptationType === 'multipleChoicesInInstructionsAdaptation')
+const canWysiwyg = computed(() => model.adaptationType !== 'multipleChoicesInWordingAdaptation')
 const wantWysiwyg = ref(true)
 const wysiwyg = computed(() => canWysiwyg.value && wantWysiwyg.value)
 
@@ -113,8 +112,6 @@ function textSelected(pdfFile: PdfFile, pdf: {page: PDFPageProxy}, selectedText:
     rectangle,
   })
 }
-
-const lastSelection = ref<Selection | null>(null)
 
 function skip() {
   const suggestedNextNumber = suggestNextNumber(model.number)
@@ -158,12 +155,22 @@ function goToPrevious() {
   })
 }
 
-const parsedExerciseLoading = ref(false)
-const parsedExercise = computedAsync(
-  () => getParsed(model),
-  null,
-  parsedExerciseLoading,
-)
+const parsedExercise = ref<ParsedExercise & InCache & Exists | null>(null)
+const parsedExerciseIsLoading = ref(false)
+const parsedExerciseNeedsLoading = ref(true)
+watch(model, () => { parsedExerciseNeedsLoading.value = true })
+watch(parsedExerciseNeedsLoading, async () => {
+  while (parsedExerciseNeedsLoading.value) {
+    const modelBefore = JSON.stringify(model)
+    parsedExerciseIsLoading.value = true
+    const parsed = await getParsed(model)
+    if (JSON.stringify(model) === modelBefore) {
+      parsedExercise.value = parsed
+      parsedExerciseIsLoading.value = false
+      parsedExerciseNeedsLoading.value = false
+    }
+  }
+}, {immediate: true})
 
 const adaptedExercise = computed(() => {
   if (parsedExercise.value === null) {
@@ -199,11 +206,11 @@ watch(parsedExercise, () => {
 
 const toolSlotNames = computed(() => {
   const names = ['undoRedo']
-  if (wysiwyg.value) {
-    names.push('basicFormatting')
-  }
   if (model.adaptationType !== '-') {
     names.push('adaptationDetails')
+  }
+  if (wysiwyg.value) {
+    names.push('basicFormatting')
   }
   return names
 })
@@ -233,12 +240,11 @@ const toolSlotNames = computed(() => {
       <TwoResizableColumns saveKey="projectTextbookPage-2" :snap="150" class="h-100" gutterWidth="200px">
         <template #left>
           <div class="h-100 overflow-auto" data-cy="left-col-2">
-            <h1>{{ $t('edition') }}<template v-if="canWysiwyg"> <span style="font-size: small">(<label>WYSIWYG: <input type="checkbox" v-model="wantWysiwyg" /></label>)</span></template></h1>
+            <h1>{{ $t('edition') }}<template v-if="canWysiwyg">  <span style="font-size: small">(<label>WYSIWYG: <input type="checkbox" v-model="wantWysiwyg" /></label>)</span></template></h1>
             <BBusy :busy>
               <ExerciseFieldsForm ref="fields"
                 v-model="model"
                 :fixedNumber="false" :wysiwyg :deltas
-                @selected="selection => { lastSelection = selection }"
               >
                 <template #overlay>
                   <div v-if="alreadyExists" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8);" class="text-center">
@@ -271,11 +277,11 @@ const toolSlotNames = computed(() => {
                 <template #undoRedo>
                   <UndoRedoTool v-model="model" :reset="resetUndoRedo" />
                 </template>
-                <template #basicFormatting>
-                  <BasicFormattingTools v-if="fields !== null" :fields />
-                </template>
                 <template #adaptationDetails>
                   <AdaptationDetailsFieldsForm v-if="fields !== null" v-model="model" :wysiwyg :fields/>
+                </template>
+                <template #basicFormatting>
+                  <BasicFormattingTools v-if="fields !== null" v-model="model" :fields />
                 </template>
               </ToolsGutter>
             </div>
@@ -286,7 +292,7 @@ const toolSlotNames = computed(() => {
         <template #right>
           <div class="h-100 overflow-auto" data-cy="right-col-2">
             <h1>{{ $t('adaptation') }}</h1>
-            <BBusy :busy="parsedExerciseLoading">
+            <BBusy :busy="parsedExerciseIsLoading">
               <AdaptedExercise
                 v-if="adaptedExercise !== null"
                 :projectId="projectId"

@@ -100,13 +100,6 @@
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "additionalProperties": {
-              "const": true,
-              "enum": [
-                true
-              ],
-              "type": "boolean"
-            },
             "default": {},
             "title": "Attributes",
             "type": "object"
@@ -367,8 +360,11 @@
         "additionalProperties": false,
         "properties": {
           "colors": {
+            "items": {
+              "type": "string"
+            },
             "title": "Colors",
-            "type": "integer"
+            "type": "array"
           },
           "punctuation": {
             "title": "Punctuation",
@@ -608,8 +604,11 @@
         "additionalProperties": false,
         "properties": {
           "colors": {
+            "items": {
+              "type": "string"
+            },
             "title": "Colors",
-            "type": "integer"
+            "type": "array"
           },
           "text": {
             "title": "Text",
@@ -635,13 +634,13 @@
       "_SelectedClicks": {
         "additionalProperties": false,
         "properties": {
-          "color": {
-            "title": "Color",
+          "clicks": {
+            "title": "Clicks",
             "type": "integer"
           },
-          "colors": {
-            "title": "Colors",
-            "type": "integer"
+          "color": {
+            "title": "Color",
+            "type": "string"
           },
           "type": {
             "const": "selectedClicks",
@@ -654,8 +653,8 @@
         },
         "required": [
           "type",
-          "color",
-          "colors"
+          "clicks",
+          "color"
         ],
         "title": "_SelectedClicks",
         "type": "object"
@@ -665,11 +664,7 @@
         "properties": {
           "color": {
             "title": "Color",
-            "type": "integer"
-          },
-          "colors": {
-            "title": "Colors",
-            "type": "integer"
+            "type": "string"
           },
           "text": {
             "title": "Text",
@@ -687,8 +682,7 @@
         "required": [
           "type",
           "text",
-          "color",
-          "colors"
+          "color"
         ],
         "title": "_SelectedText",
         "type": "object"
@@ -1624,16 +1618,40 @@
       "gabby__exercise_delta__Exercise": {
         "additionalProperties": false,
         "properties": {
+          "clue": {
+            "items": {
+              "$ref": "#/components/schemas/InsertOp"
+            },
+            "title": "Clue",
+            "type": "array"
+          },
+          "example": {
+            "items": {
+              "$ref": "#/components/schemas/InsertOp"
+            },
+            "title": "Example",
+            "type": "array"
+          },
           "instructions": {
             "items": {
               "$ref": "#/components/schemas/InsertOp"
             },
             "title": "Instructions",
             "type": "array"
+          },
+          "wording": {
+            "items": {
+              "$ref": "#/components/schemas/InsertOp"
+            },
+            "title": "Wording",
+            "type": "array"
           }
         },
         "required": [
-          "instructions"
+          "instructions",
+          "wording",
+          "example",
+          "clue"
         ],
         "title": "Exercise",
         "type": "object"
@@ -4718,8 +4736,11 @@
         "additionalProperties": false,
         "properties": {
           "colors": {
+            "items": {
+              "type": "string"
+            },
             "title": "Colors",
-            "type": "integer"
+            "type": "array"
           },
           "punctuation": {
             "title": "Punctuation",
@@ -4804,8 +4825,11 @@
         "additionalProperties": false,
         "properties": {
           "colors": {
+            "items": {
+              "type": "string"
+            },
             "title": "Colors",
-            "type": "integer"
+            "type": "array"
           },
           "createdAt": {
             "format": "date-time",
@@ -4909,8 +4933,11 @@
         "additionalProperties": false,
         "properties": {
           "colors": {
+            "items": {
+              "type": "string"
+            },
             "title": "Colors",
-            "type": "integer"
+            "type": "array"
           },
           "punctuation": {
             "title": "Punctuation",

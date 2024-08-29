@@ -17,7 +17,7 @@ defineOptions({
 })
 
 const props = defineProps<{
-  page: PDFPageProxy,
+  page: PDFPageProxy
 }>()
 
 const container = ref<HTMLDivElement | null>(null)

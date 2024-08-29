@@ -4,6 +4,8 @@ from sqlalchemy import orm
 import sqlalchemy as sql
 
 from .. import api_models
+from .. import exercise_delta
+from .. import exercise_delta as d
 from .. import parsing
 from .. import renderable
 from .. import renderable as r
@@ -26,19 +28,20 @@ class SelectThingsAdaptation(Adaptation):
 
     punctuation: orm.Mapped[bool]
     words: orm.Mapped[bool]
-    colors: orm.Mapped[int]
+    old_colors_count: orm.Mapped[int]
+    colors: orm.Mapped[list[str]] = orm.mapped_column(sql.JSON, name="colors")
 
     @property
-    def color_indexes(self):
-        return range(1, self.colors + 1)
+    def _color_indexes(self):
+        return range(1, len(self.colors) + 1)
 
     def _make_tags(self):
-        return {f"sel{color_index}": r""" "|" STR """ for color_index in self.color_indexes}
+        return {f"sel{color_index}": r""" "|" STR """ for color_index in self._color_indexes}
 
     def _make_adapter_type(self):
         return type("InstructionsAdapter", (parsing.InstructionsSectionAdapter,), {
-            f"sel{color_index}_tag": (lambda color: staticmethod(lambda args: renderable.SelectedText(text=args[0], color=color, colors=self.colors)))(color_index)
-            for color_index in self.color_indexes
+            f"sel{color_index}_tag": (lambda color_index: staticmethod(lambda args: renderable.SelectedText(text=args[0], color=self.colors[color_index - 1])))(color_index)
+            for color_index in self._color_indexes
         })
 
     def adapt_instructions(self, section):
@@ -52,12 +55,12 @@ class SelectThingsAdaptation(Adaptation):
     def make_adapted_instructions(self):
         section = self.adapt_instructions(self.exercise.instructions)
 
-        if self.colors > 1:
+        if len(self.colors) > 1:
             tokens = []
-            for color in self.color_indexes:
-                if color != 1:
+            for i, color in enumerate(self.colors):
+                if i != 0:
                     tokens.append(renderable.Whitespace())
-                tokens.append(renderable.SelectedClicks(color=color, colors=self.colors))
+                tokens.append(renderable.SelectedClicks(clicks=i + 1, color=color))
             section.paragraphs.append(renderable.Paragraph(sentences=[renderable.Sentence(tokens=tokens)]))
 
         return section
@@ -96,9 +99,31 @@ class SelectThingsAdaptation(Adaptation):
     def make_adapted_clue(self):
         return self.adapt_instructions(self.exercise.clue)
 
+    def _make_delta_maker_type(self):
+        return type("InstructionsDeltaMaker", (parsing.InstructionsSectionDeltaMaker,), {
+            f"sel{color_index}_tag": (lambda color: staticmethod(lambda args: exercise_delta.InsertOp(insert=args[0], attributes={"sel": color})))(color_index)
+            for color_index in self._color_indexes
+        })
+
+    def _make_instructions_delta(self, section):
+        return parsing.InstructionsSectionParser(
+            self._make_tags(),
+            self._make_delta_maker_type()(),
+        )(
+            section,
+        )
+
     def make_instructions_delta(self):
-        # @todo Implement
-        return parsing.make_plain_instructions_section_delta(self.exercise.instructions)
+        return self._make_instructions_delta(self.exercise.instructions)
+
+    def make_wording_delta(self):
+        return parsing.make_plain_wording_section_delta(self.exercise.wording)
+
+    def make_example_delta(self):
+        return self._make_instructions_delta(self.exercise.example)
+
+    def make_clue_delta(self):
+        return self._make_instructions_delta(self.exercise.clue)
 
 
 class SelectThingsAdaptationTestCase(AdaptationTestCase):
@@ -111,7 +136,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             example="",
             clue="",
         )
-        adaptation = SelectThingsAdaptation(exercise=exercise, colors=2, words=True, punctuation=False)
+        adaptation = SelectThingsAdaptation(exercise=exercise, old_colors_count=2, colors=["red", "blue"], words=True, punctuation=False)
 
         self.do_test(
             adaptation,
@@ -126,38 +151,48 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                     ]),
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.SelectedClicks(color=1, colors=2),
+                            r.SelectedClicks(clicks=1, color="red"),
                             r.Whitespace(),
-                            r.SelectedClicks(color=2, colors=2),
+                            r.SelectedClicks(clicks=2, color="blue"),
                         ]),
                     ]),
                 ]),
                 wording=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.SelectableText(text="The", colors=2),
+                            r.SelectableText(text="The", colors=["red", "blue"]),
                             r.Whitespace(),
-                            r.SelectableText(text="wording", colors=2),
+                            r.SelectableText(text="wording", colors=["red", "blue"]),
                             r.Whitespace(),
-                            r.SelectableText(text="of", colors=2),
+                            r.SelectableText(text="of", colors=["red", "blue"]),
                             r.Whitespace(),
-                            r.SelectableText(text="this", colors=2),
+                            r.SelectableText(text="this", colors=["red", "blue"]),
                             r.Whitespace(),
-                            r.SelectableText(text="exercise", colors=2),
+                            r.SelectableText(text="exercise", colors=["red", "blue"]),
                             r.Whitespace(),
-                            r.SelectableText(text="is", colors=2),
+                            r.SelectableText(text="is", colors=["red", "blue"]),
                             r.Whitespace(),
-                            r.SelectableText(text="a", colors=2),
+                            r.SelectableText(text="a", colors=["red", "blue"]),
                             r.Whitespace(),
-                            r.SelectableText(text="single", colors=2),
+                            r.SelectableText(text="single", colors=["red", "blue"]),
                             r.Whitespace(),
-                            r.SelectableText(text="sentence", colors=2),
+                            r.SelectableText(text="sentence", colors=["red", "blue"]),
                             r.PlainText(text="."),
                         ]),
                     ]),
                 ]),
                 example=r.Section(paragraphs=[]),
                 clue=r.Section(paragraphs=[]),
+            ),
+            d.Exercise(
+                instructions=[
+                    d.InsertOp(insert="instructions"),
+                ],
+                wording=[
+                    d.InsertOp(insert="The wording of this exercise is a single sentence."),
+                ],
+                example=[],
+                clue=[],
             ),
         )
 
@@ -170,7 +205,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             example="",
             clue="",
         )
-        adaptation = SelectThingsAdaptation(exercise=exercise, colors=3, words=True, punctuation=False)
+        adaptation = SelectThingsAdaptation(exercise=exercise, colors=["red", "green", "blue"], words=True, punctuation=False)
 
         self.do_test(
             adaptation,
@@ -180,11 +215,11 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 instructions=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.SelectedText(text="abc", color=1, colors=3),
+                            r.SelectedText(text="abc", color="red"),
                             r.Whitespace(),
-                            r.SelectedText(text="def", color=2, colors=3),
+                            r.SelectedText(text="def", color="green"),
                             r.Whitespace(),
-                            r.SelectedText(text="ghi", color=3, colors=3),
+                            r.SelectedText(text="ghi", color="blue"),
                             r.Whitespace(),
                             r.PlainText(text="{"),
                             r.PlainText(text="sel4"),
@@ -195,23 +230,38 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                     ]),
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.SelectedClicks(color=1, colors=3),
+                            r.SelectedClicks(clicks=1, color="red"),
                             r.Whitespace(),
-                            r.SelectedClicks(color=2, colors=3),
+                            r.SelectedClicks(clicks=2, color="green"),
                             r.Whitespace(),
-                            r.SelectedClicks(color=3, colors=3),
+                            r.SelectedClicks(clicks=3, color="blue"),
                         ]),
                     ]),
                 ]),
                 wording=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.SelectableText(text="wording", colors=3),
+                            r.SelectableText(text="wording", colors=["red", "green", "blue"]),
                         ]),
                     ]),
                 ]),
                 example=r.Section(paragraphs=[]),
                 clue=r.Section(paragraphs=[]),
+            ),
+            d.Exercise(
+                instructions=[
+                    d.InsertOp(insert="abc", attributes={"sel": 1}),
+                    d.InsertOp(insert=" "),
+                    d.InsertOp(insert="def", attributes={"sel": 2}),
+                    d.InsertOp(insert=" "),
+                    d.InsertOp(insert="ghi", attributes={"sel": 3}),
+                    d.InsertOp(insert=" {sel4|jkl}"),
+                ],
+                wording=[
+                    d.InsertOp(insert="wording"),
+                ],
+                example=[],
+                clue=[],
             ),
         )
 
@@ -224,7 +274,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             example="",
             clue="",
         )
-        adaptation = SelectThingsAdaptation(exercise=exercise, colors=1, words=True, punctuation=False)
+        adaptation = SelectThingsAdaptation(exercise=exercise, old_colors_count=1, colors=["red"], words=True, punctuation=False)
 
         self.do_test(
             adaptation,
@@ -234,19 +284,29 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 instructions=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.SelectedText(text="abc", color=1, colors=1),
+                            r.SelectedText(text="abc", color="red"),
                         ]),
                     ]),
                 ]),
                 wording=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.SelectableText(text="wording", colors=1),
+                            r.SelectableText(text="wording", colors=["red"]),
                         ]),
                     ]),
                 ]),
                 example=r.Section(paragraphs=[]),
                 clue=r.Section(paragraphs=[]),
+            ),
+            d.Exercise(
+                instructions=[
+                    d.InsertOp(insert="abc", attributes={"sel": 1}),
+                ],
+                wording=[
+                    d.InsertOp(insert="wording"),
+                ],
+                example=[],
+                clue=[],
             ),
         )
 
@@ -259,7 +319,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             example="",
             clue="",
         )
-        adaptation = SelectThingsAdaptation(exercise=exercise, colors=1, words=True, punctuation=False)
+        adaptation = SelectThingsAdaptation(exercise=exercise, old_colors_count=1, colors=["red"], words=True, punctuation=False)
 
         self.do_test(
             adaptation,
@@ -290,12 +350,22 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 wording=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.SelectableText(text="wording", colors=1),
+                            r.SelectableText(text="wording", colors=["red"]),
                         ]),
                     ]),
                 ]),
                 example=r.Section(paragraphs=[]),
                 clue=r.Section(paragraphs=[]),
+            ),
+            d.Exercise(
+                instructions=[
+                    d.InsertOp(insert="instructions\nare\n\non\n\nmultiple\nlines"),
+                ],
+                wording=[
+                    d.InsertOp(insert="wording"),
+                ],
+                example=[],
+                clue=[],
             ),
         )
 
@@ -308,7 +378,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             example="",
             clue="",
         )
-        adaptation = SelectThingsAdaptation(exercise=exercise, colors=1, words=True, punctuation=False)
+        adaptation = SelectThingsAdaptation(exercise=exercise, old_colors_count=1, colors=["red"], words=True, punctuation=False)
 
         self.do_test(
             adaptation,
@@ -325,26 +395,36 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 wording=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.SelectableText(text="wording", colors=1),
+                            r.SelectableText(text="wording", colors=["red"]),
                             r.Whitespace(),
-                            r.SelectableText(text="is", colors=1),
+                            r.SelectableText(text="is", colors=["red"]),
                         ]),
                     ]),
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.SelectableText(text="on", colors=1),
+                            r.SelectableText(text="on", colors=["red"]),
                         ]),
                     ]),
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.SelectableText(text="multiple", colors=1),
+                            r.SelectableText(text="multiple", colors=["red"]),
                             r.Whitespace(),
-                            r.SelectableText(text="lines", colors=1),
+                            r.SelectableText(text="lines", colors=["red"]),
                         ]),
                     ]),
                 ]),
                 example=r.Section(paragraphs=[]),
                 clue=r.Section(paragraphs=[]),
+            ),
+            d.Exercise(
+                instructions=[
+                    d.InsertOp(insert="instructions"),
+                ],
+                wording=[
+                    d.InsertOp(insert="wording is\n\non\n\nmultiple lines"),
+                ],
+                example=[],
+                clue=[],
             ),
         )
 
@@ -357,7 +437,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             example="",
             clue="",
         )
-        adaptation = SelectThingsAdaptation(exercise=exercise, colors=1, words=True, punctuation=False)
+        adaptation = SelectThingsAdaptation(exercise=exercise, old_colors_count=1, colors=["red"], words=True, punctuation=False)
 
         self.do_test(
             adaptation,
@@ -379,15 +459,25 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
                             r.PlainText(text="{"),
-                            r.SelectableText(text="tag", colors=1),
+                            r.SelectableText(text="tag", colors=["red"]),
                             r.PlainText(text="|"),
-                            r.SelectableText(text="def", colors=1),
+                            r.SelectableText(text="def", colors=["red"]),
                             r.PlainText(text="}"),
                         ]),
                     ]),
                 ]),
                 example=r.Section(paragraphs=[]),
                 clue=r.Section(paragraphs=[]),
+            ),
+            d.Exercise(
+                instructions=[
+                    d.InsertOp(insert="{tag|abc}"),
+                ],
+                wording=[
+                    d.InsertOp(insert="{tag|def}"),
+                ],
+                example=[],
+                clue=[],
             ),
         )
 
@@ -400,7 +490,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             example="",
             clue="",
         )
-        adaptation = SelectThingsAdaptation(exercise=exercise, colors=1, words=True, punctuation=False)
+        adaptation = SelectThingsAdaptation(exercise=exercise, old_colors_count=1, colors=["red"], words=True, punctuation=False)
 
         self.do_test(
             adaptation,
@@ -417,12 +507,22 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 wording=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.SelectableText(text="def", colors=1),
+                            r.SelectableText(text="def", colors=["red"]),
                         ]),
                     ]),
                 ]),
                 example=r.Section(paragraphs=[]),
                 clue=r.Section(paragraphs=[]),
+            ),
+            d.Exercise(
+                instructions=[
+                    d.InsertOp(insert="   abc   "),
+                ],
+                wording=[
+                    d.InsertOp(insert="   def   "),
+                ],
+                example=[],
+                clue=[],
             ),
         )
 
@@ -435,7 +535,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             example="This is the example.",
             clue="This is the clue.",
         )
-        adaptation = SelectThingsAdaptation(exercise=exercise, colors=1, words=True, punctuation=False)
+        adaptation = SelectThingsAdaptation(exercise=exercise, old_colors_count=1, colors=["red"], words=True, punctuation=False)
 
         self.do_test(
             adaptation,
@@ -452,7 +552,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 wording=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.SelectableText(text="wording", colors=1),
+                            r.SelectableText(text="wording", colors=["red"]),
                         ]),
                     ]),
                 ]),
@@ -485,6 +585,20 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                     ]),
                 ]),
             ),
+            d.Exercise(
+                instructions=[
+                    d.InsertOp(insert="instructions"),
+                ],
+                wording=[
+                    d.InsertOp(insert="wording"),
+                ],
+                example=[
+                    d.InsertOp(insert="This is the example."),
+                ],
+                clue=[
+                    d.InsertOp(insert="This is the clue."),
+                ],
+            ),
         )
 
     def test_example_and_clue_with_sel_tags(self):
@@ -496,7 +610,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             example="{sel1|abc} {sel2|def}",
             clue="{sel3|ghi} {sel4|jkl}",
         )
-        adaptation = SelectThingsAdaptation(exercise=exercise, colors=3, words=True, punctuation=False)
+        adaptation = SelectThingsAdaptation(exercise=exercise, colors=["red", "green", "blue"], words=True, punctuation=False)
 
         self.do_test(
             adaptation,
@@ -511,34 +625,34 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                     ]),
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.SelectedClicks(color=1, colors=3),
+                            r.SelectedClicks(clicks=1, color="red"),
                             r.Whitespace(),
-                            r.SelectedClicks(color=2, colors=3),
+                            r.SelectedClicks(clicks=2, color="green"),
                             r.Whitespace(),
-                            r.SelectedClicks(color=3, colors=3),
+                            r.SelectedClicks(clicks=3, color="blue"),
                         ]),
                     ]),
                 ]),
                 wording=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.SelectableText(text="wording", colors=3),
+                            r.SelectableText(text="wording", colors=["red", "green", "blue"]),
                         ]),
                     ]),
                 ]),
                 example=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.SelectedText(text="abc", color=1, colors=3),
+                            r.SelectedText(text="abc", color="red"),
                             r.Whitespace(),
-                            r.SelectedText(text="def", color=2, colors=3),
+                            r.SelectedText(text="def", color="green"),
                         ]),
                     ]),
                 ]),
                 clue=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.SelectedText(text="ghi", color=3, colors=3),
+                            r.SelectedText(text="ghi", color="blue"),
                             r.Whitespace(),
                             r.PlainText(text="{"),
                             r.PlainText(text="sel4"),
@@ -548,6 +662,23 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                         ]),
                     ]),
                 ]),
+            ),
+            d.Exercise(
+                instructions=[
+                    d.InsertOp(insert="instructions"),
+                ],
+                wording=[
+                    d.InsertOp(insert="wording"),
+                ],
+                example=[
+                    d.InsertOp(insert="abc", attributes={"sel": 1}),
+                    d.InsertOp(insert=" "),
+                    d.InsertOp(insert="def", attributes={"sel": 2}),
+                ],
+                clue=[
+                    d.InsertOp(insert="ghi", attributes={"sel": 3}),
+                    d.InsertOp(insert=" {sel4|jkl}"),
+                ],
             ),
         )
 
@@ -578,6 +709,7 @@ class SelectThingsAdaptationsResource:
             exercise=exercise,
             punctuation=punctuation,
             words=words,
+            old_colors_count=len(colors),
             colors=colors,
             created_by=authenticated_user,
             updated_by=authenticated_user,
@@ -594,12 +726,13 @@ class SelectThingsAdaptationsResource:
     @contextmanager
     def save_item(
         self,
-        item,
+        item: SelectThingsAdaptation,
         session: SessionDependable,
         authenticated_user: MandatoryAuthBearerDependable,
     ):
         yield
         item.updated_by = authenticated_user
+        item.old_colors_count = len(item.colors)
         save_item(session, item)
 
     def delete_item(

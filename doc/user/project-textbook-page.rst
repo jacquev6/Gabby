@@ -41,7 +41,7 @@ Des boutons "Modifier" et "Supprimer" sont associés aux exercices existants.
     :alt: Screenshot
     :align: center
 
-Les exercices existants sont également mis en valeur dans le pdf:
+Les exercices existants sont aussi grisés dans le pdf:
 
 .. image:: project-textbook-page/existing-exercises-in-pdf.png
     :alt: Screenshot

@@ -12,6 +12,16 @@ Les améliorations techniques ne figurent que dans le `log git <https://github.c
 Les titres des sections de ce document correspondent au champ ``Gabby version`` dans le "À propos".
 Les versions sont nommées selon leur date de publication, au format ``YYYYMMDD-HHMMSS`` (année, mois, jour, tiret, heure, minute, seconde).
 
+20240829-??????
+---------------
+
+- l'éditeur WYSIWYG est utilisable sur tous les champs
+- l'éditeur WYSIWYG est utilisable sur les exercices de type "Remplissage par texte libre", "Sélection de mots" et "Choix multiples (dans la consigne)"
+- un PDF contenant des examples d'exercices est utilisé pour les tests automatisés
+- pour les "Sélection de mots":
+    - le nombre de couleurs utilisables est choisi visuellement en cliquant sur la dernière couleur
+    - les couleurs peuvent être personnalisées avec un clic droit
+
 20240821-114939
 ---------------
 

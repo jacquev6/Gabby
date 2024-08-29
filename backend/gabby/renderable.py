@@ -55,12 +55,12 @@ def ItalicText(text: str):
 class _SelectableText(PydanticBase):
     type: Literal["selectableText"]
     text: str
-    colors: int
+    colors: list[str]
 
     def to_generic(self):
-        return f"{{selectable-text|{self.colors}|{self.text}}}"
+        return f"{{selectable-text|{self.text}|{'|'.join(self.colors)}}}"
 
-def SelectableText(text: str, colors: int):
+def SelectableText(text: str, colors: list[str]):
     assert text.__class__ == str, text.__class__
     return _SelectableText(type="selectableText", text=text, colors=colors)
 
@@ -68,27 +68,26 @@ def SelectableText(text: str, colors: int):
 class _SelectedText(PydanticBase):
     type: Literal["selectedText"]
     text: str
-    color: int
-    colors: int
+    color: str
 
     def to_generic(self):
-        return f"{{selected-text|{self.color}|{self.colors}|{self.text}}}"
+        return f"{{selected-text|{self.text}|{self.color}}}"
 
-def SelectedText(text: str, color: int, colors: int):
+def SelectedText(text: str, color: str):
     assert text.__class__ == str, text.__class__
-    return _SelectedText(type="selectedText", text=text, color=color, colors=colors)
+    return _SelectedText(type="selectedText", text=text, color=color)
 
 
 class _SelectedClicks(PydanticBase):
     type: Literal["selectedClicks"]
-    color: int
-    colors: int
+    clicks: int
+    color: str
 
     def to_generic(self):
-        return f"{{selected-clicks|{self.color}|{self.colors}}}"
+        return f"{{selected-clicks|{self.clicks}|{self.color}}}"
 
-def SelectedClicks(color: int, colors: int):
-    return _SelectedClicks(type="selectedClicks", color=color, colors=colors)
+def SelectedClicks(clicks: int, color: str):
+    return _SelectedClicks(type="selectedClicks", clicks=clicks, color=color)
 
 
 class _FreeTextInput(PydanticBase):
@@ -146,10 +145,18 @@ class Section(PydanticBase):
         generic = "\n\n".join(p.to_generic() for p in self.paragraphs)
         if settings.DEBUG:
             from . import parsing
-            adapted_again = parsing.adapt_generic_wording_section(generic)
-            if adapted_again != self:
-                print("Expected:", generic)
-                print("Got:", adapted_again.to_generic())
+            adapted_again_as_instructions = parsing.adapt_generic_instructions_section(generic)
+            adapted_again_as_wording = parsing.adapt_generic_wording_section(generic)
+            if self not in (adapted_again_as_wording, adapted_again_as_instructions):
+                print("Expected:")
+                print(self)
+                print(generic)
+                print("Got:")
+                print(adapted_again_as_instructions)
+                print(adapted_again_as_instructions.to_generic(), flush=True)
+                print("And:")
+                print(adapted_again_as_wording)
+                print(adapted_again_as_wording.to_generic(), flush=True)
                 assert False
         return generic
 

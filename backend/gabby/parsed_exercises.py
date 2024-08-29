@@ -27,11 +27,20 @@ class NullAdaptation(Adaptation):
     def make_adapted_instructions(self):
         return parsing.adapt_plain_instructions_section(self.exercise.instructions)
 
+    def make_wording_delta(self):
+        return parsing.make_plain_wording_section_delta(self.exercise.wording)
+
     def make_adapted_wording(self):
         return parsing.adapt_plain_wording_section(self.exercise.wording)
 
+    def make_example_delta(self):
+        return parsing.make_plain_instructions_section_delta(self.exercise.example)
+
     def make_adapted_example(self):
         return parsing.adapt_plain_instructions_section(self.exercise.example)
+
+    def make_clue_delta(self):
+        return parsing.make_plain_instructions_section_delta(self.exercise.clue)
 
     def make_adapted_clue(self):
         return parsing.adapt_plain_instructions_section(self.exercise.clue)
@@ -178,7 +187,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     "clue": "",
                     "type": "selectThingsAdaptation",
                     "adaptationOptions": {
-                        "colors": 3,
+                        "colors": ["red", "green", "blue"],
                         "words": True,
                         "punctuation": False,
                     },
@@ -202,21 +211,21 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     {"type": "plainText", "text": "."},
                 ]}]},
                 {"sentences": [{"tokens": [
-                    {"type": "selectedClicks", "color": 1, "colors": 3},
+                    {"type": "selectedClicks", "clicks": 1, "color": "red"},
                     {"type": "whitespace"},
-                    {"type": "selectedClicks", "color": 2, "colors": 3},
+                    {"type": "selectedClicks", "clicks": 2, "color": "green"},
                     {"type": "whitespace"},
-                    {"type": "selectedClicks", "color": 3, "colors": 3},
+                    {"type": "selectedClicks", "clicks": 3, "color": "blue"},
                 ]}]},
             ]},
             "wording": {"paragraphs": [{"sentences": [{"tokens": [
-                {"type": "selectableText", "text": "This", "colors": 3},
+                {"type": "selectableText", "text": "This", "colors": ["red", "green", "blue"]},
                 {"type": "whitespace"},
-                {"type": "selectableText", "text": "is", "colors": 3},
+                {"type": "selectableText", "text": "is", "colors": ["red", "green", "blue"]},
                 {"type": "whitespace"},
-                {"type": "selectableText", "text": "the", "colors": 3},
+                {"type": "selectableText", "text": "the", "colors": ["red", "green", "blue"]},
                 {"type": "whitespace"},
-                {"type": "selectableText", "text": "wording", "colors": 3},
+                {"type": "selectableText", "text": "wording", "colors": ["red", "green", "blue"]},
                 {"type": "plainText", "text": "."},
             ]}]}]},
             "example": {"paragraphs": []},
@@ -235,7 +244,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     "clue": "This is the clue.",
                     "type": "selectThingsAdaptation",
                     "adaptationOptions": {
-                        "colors": 3,
+                        "colors": ["red", "green", "blue"],
                         "words": True,
                         "punctuation": False,
                     },
@@ -259,21 +268,21 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     {"type": "plainText", "text": "."},
                 ]}]},
                 {"sentences": [{"tokens": [
-                    {"type": "selectedClicks", "color": 1, "colors": 3},
+                    {"type": "selectedClicks", "clicks": 1, "color": "red"},
                     {"type": "whitespace"},
-                    {"type": "selectedClicks", "color": 2, "colors": 3},
+                    {"type": "selectedClicks", "clicks": 2, "color": "green"},
                     {"type": "whitespace"},
-                    {"type": "selectedClicks", "color": 3, "colors": 3},
+                    {"type": "selectedClicks", "clicks": 3, "color": "blue"},
                 ]}]},
             ]},
             "wording": {"paragraphs": [{"sentences": [{"tokens": [
-                {"type": "selectableText", "text": "This", "colors": 3},
+                {"type": "selectableText", "text": "This", "colors": ["red", "green", "blue"]},
                 {"type": "whitespace"},
-                {"type": "selectableText", "text": "is", "colors": 3},
+                {"type": "selectableText", "text": "is", "colors": ["red", "green", "blue"]},
                 {"type": "whitespace"},
-                {"type": "selectableText", "text": "the", "colors": 3},
+                {"type": "selectableText", "text": "the", "colors": ["red", "green", "blue"]},
                 {"type": "whitespace"},
-                {"type": "selectableText", "text": "wording", "colors": 3},
+                {"type": "selectableText", "text": "wording", "colors": ["red", "green", "blue"]},
                 {"type": "plainText", "text": "."},
             ]}]}]},
             "example": {"paragraphs": [{"sentences": [{"tokens": [
