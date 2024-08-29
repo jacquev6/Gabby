@@ -7,6 +7,7 @@ describe('Gabby', () => {
   it('performs extraction from scratch', () => {
     loadFixtures('admin-user')
     login()
+    cy.viewport(1000, 1000)
 
     visit('/', {locale: 'fr'})
 
@@ -36,7 +37,7 @@ describe('Gabby', () => {
 
     const canvas = cy.get('canvas[style="position: absolute; top: 0px; left: 0px;"]').last()
 
-    cy.screenshot('project-textbook-page-exercise/create-exercise', {clip: {x: 0, y: 50, width: 575, height: 750}})
+    cy.screenshot('project-textbook-page-exercise/create-exercise', {clip: {x: 0, y: 50, width: 575, height: 740}})
 
     canvas.trigger('pointermove', 5, 5)
     canvas.trigger('pointerdown', 20, 20, { pointerId: 1 })
@@ -47,7 +48,7 @@ describe('Gabby', () => {
     canvas.trigger('pointermove', 135, 55)
     canvas.screenshot('project-textbook-page-exercise/selecting-in-pdf', {clip: {x: 0, y: 0, width: 190, height: 75}})
     canvas.trigger('pointerup', 135, 55, { pointerId: 1 })
-    cy.screenshot('project-textbook-page-exercise/selected-in-pdf', {clip: {x: 0, y: 0, width: 500, height: 660}})
+    cy.screenshot('project-textbook-page-exercise/selected-in-pdf', {clip: {x: 0, y: 0, width: 415, height: 395}})
     cy.get('button').contains('Consigne').click()
 
     canvas.trigger('pointerdown', 15, 45, { pointerId: 1 })
@@ -91,12 +92,12 @@ describe('Gabby', () => {
     cy.get('label:contains("ISBN")').next().type('01234567890123')
 
     notBusy()
-    cy.screenshot('project/new-textbook', {clip: {x: 0, y: 220, width: 660, height: 600}})
+    cy.screenshot('project/new-textbook', {clip: {x: 0, y: 220, width: 660, height: 510}})
 
     cy.get('a').contains('Page 6').click()
 
     notBusy()
-    cy.screenshot('project-textbook-page/pdf-not-loaded', {clip: {x: 0, y: 0, width: 330, height: 330}})
+    cy.screenshot('project-textbook-page/pdf-not-loaded', {clip: {x: 0, y: 0, width: 340, height: 310}})
     loadPdf('test')
 
     notBusy()
@@ -109,7 +110,7 @@ describe('Gabby', () => {
 
     notBusy()
     cy.screenshot('project-textbook-page/project-textbook-page', {clip: {x: 0, y: 0, width: 1000, height: 400}})
-    cy.screenshot('project-textbook-page/existing-exercises', {clip: {x: 330, y: 50, width: 500, height: 250}})
+    cy.screenshot('project-textbook-page/existing-exercises', {clip: {x: 330, y: 50, width: 480, height: 230}})
     cy.get('canvas').last().screenshot('project-textbook-page/existing-exercises-in-pdf', {clip: {x: 0, y: 233, width: 1000, height: 1000}})
   })
 
@@ -123,13 +124,21 @@ describe('Gabby', () => {
 
     cy.get('label:contains("Énoncé") + div.ql-container > div.ql-editor').type('{selectAll}... vide\n... vident')
     notBusy()
-    cy.screenshot('project-textbook-page-exercise/modify-exercise', {clip: {x: 0, y: 50, width: 575, height: 1000}})
+    cy.screenshot('project-textbook-page-exercise/modify-exercise', {clip: {x: 0, y: 50, width: 575, height: 800}})
 
-    cy.screenshot('project-textbook-page-exercise/tools', {clip: {x: 560, y: 0, width: 210, height: 500}})
+    cy.screenshot('project-textbook-page-exercise/tools', {clip: {x: 560, y: 40, width: 210, height: 260}})
 
     cy.get('label:contains("Type d\'adaptation") + select').select('selectThingsAdaptation')
     cy.get('div.busy').should('exist')  // This may fail (race condition) but is required because the 'div.busy' is not displayed quickly enough.
     notBusy()
     cy.screenshot('project-textbook-page-exercise/project-textbook-page-exercise', {clip: {x: 0, y: 0, width: 1000, height: 330}})
+
+    cy.get('span[data-cy-colors="3"]').click()
+    notBusy()
+    cy.get('span.maybe-usable-colors-container').screenshot('project-textbook-page-exercise/select-things-usable-colors')
+    cy.get('label:contains("Consigne") + div.ql-container > div.ql-editor').click()
+    cy.screenshot('project-textbook-page-exercise/select-things-color-formatting-button', {clip: {x: 560, y: 370, width: 140, height: 100}})
+    cy.get('span[data-cy-colors="2"]').rightclick()
+    cy.screenshot('project-textbook-page-exercise/select-things-color-customization', {clip: {x: 450, y: 250, width: 340, height: 300}})
   })
 })

@@ -21,20 +21,14 @@ Chaque colonne dispose de sa propre barre de défilement verticale sur les écra
 Création d'un exercice
 ----------------------
 
-Le bouton "Annuler" permet de retourner à la liste des exercices existant sans enregistrer le nouvel exercice.
+Le bouton "Précédent (sans enregistrer)" permet de retourner à l'exercice créé juste avant.
 
-Il faut commencer par tracer un rectangle autour de l'exercice entier.
-
-.. image:: project-textbook-page-exercise/create-exercise-tracing-bounding-rectangle.png
-    :alt: Screenshot
-    :align: center
-
-Après cela, l'exercice est mis en valeur dans le PDF.
-Cette mise en valeur est purement indicative et ne contraint en rien les selections ultérieures.
-
-Le bouton "Enregistrer puis créer le suivant" est désactivé jusqu'à ce que le numéro de l'exercice soit renseigné.
+Le bouton "Enregistrer puis suivant" est désactivé jusqu'à ce que le numéro de l'exercice soit renseigné.
 Ce bouton permet ensuite d'enregistrer l'exercice et de vider le formulaire pour en créer un autre.
 Le numéro de l'exercice suivant est automatiquement incrémenté, mais peut être modifié.
+
+Le bouton "Retour à la liste (sans enregistrer)" permet de retourner à la liste des exercices existants sans enregistrer le nouvel exercice.
+Le bouton "Enregistrer et retourner à la liste" permet de sauvegarder le nouvel exercice et de retourner à la liste des exercices existants.
 
 .. image:: project-textbook-page-exercise/create-exercise.png
     :alt: Screenshot
@@ -62,8 +56,13 @@ On peut alors cliquer sur un des boutons de ce dialogue pour ajouter le texte da
 Lignes et paragraphes
 ---------------------
 
-Dans tous les champs de l'exercice, un simple retour à la ligne est ignoré : les deux lignes feront partie du même paragraphe.
-Il faut insérer un double retour à la ligne pour marquer la fin d'un paragraphe.
+Dans les champs "consigne", "indice" et "example":
+
+- les lignes de texte séparées par un unique retour à la ligne sont jointes dans le même paragraphe ;
+- il est possible de créer un nouveau paragraphe explicitement en insérant un double retour à la ligne ;
+- les phrases détectées sont séparées chacune dans leur propre paragraphe.
+
+Dans le champ "énoncé", chaque ligne de texte constitue un paragraphe.
 
 Adaptation de l'exercices
 -------------------------
@@ -74,9 +73,24 @@ Il n'y a pour l'instant que quelques types d'adaptation disponibles, décrits ci
 "Selection de mots"
 ~~~~~~~~~~~~~~~~~~~
 
-Chaque mot devient "clickable" pour le surligner d'une couleurs parmi un nombre de couleurs configurable par le champ "Nombre de couleurs".
+Chaque mot devient "clickable" pour le surligner d'une couleurs parmi un ensemble de couleurs configurables.
+Un clic (gauche) sur la dernière couleur souhaitée permet de rendre utilisables cette couleurs et les couleurs précédentes.
 
-Dans la consigne, il est possible d'utiliser les balises ``{selN|texte}`` pour surligner le texte ``texte`` avec la couleur numéro ``N``.
+.. image:: project-textbook-page-exercise/select-things-usable-colors.png
+    :alt: Screenshot
+    :align: center
+
+Un clic droit sur chaque couleur permet de la personnaliser.
+
+.. image:: project-textbook-page-exercise/select-things-color-customization.png
+    :alt: Screenshot
+    :align: center
+
+Des boutons de formatage permettent d'utiliser les couleurs de l'exercice pour formatter certains mots de la consigne.
+
+.. image:: project-textbook-page-exercise/select-things-color-formatting-button.png
+    :alt: Screenshot
+    :align: center
 
 La case à cocher "Sélectionner aussi la ponctuation" permet de rendre la ponctuation sélectionnable ou non.
 
@@ -85,18 +99,17 @@ La case à cocher "Sélectionner aussi la ponctuation" permet de rendre la ponct
 
 Après saisie du champ "Trou à remplir", le contenu de ce champ est remplacé dans l'énoncé par un champ de saisie texte.
 
-"Choix multiples"
-~~~~~~~~~~~~~~~~~
+"Choix multiples (dans la consigne)"
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Note: pour l'instant il n'est possible de définir les choix que dans la consigne.
-Les choix dans l'énoncé seront supportés dans une version ultérieure.
+Le bouton "Choix" permet de mettre en forme chaque choix utilisable pour répondre à l'exercice.
 
-Les choix doivent être définis dans la consigne en utilisant les balises ``{choice|texte}``.
+Après saisie du champ "Trou à remplir", le contenu de ce champ est remplacé dans l'énoncé par un champ proposant les choix configurés.
 
-Note: le formatage de l'exercice adapté n'est pas encore conforme.
-Les choix possibles ne sont pas encore mis en valeur par un cadre dans la consigne,
-et les réponse se font via une liste déroulante plutôt qu'un affichage *ad hoc*.
-Ces limitations sont explicités dans la :doc:`roadmap <../changes>`.
+"Choix multiples (dans l'énoncé)"
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+En cours d'implémentation.
 
 Modification d'un exercice
 --------------------------
@@ -106,9 +119,9 @@ Vous pouvez toutefois supprimer un exercice mal numéroté et le recréer avec l
 
 Les fonctionnalités d'extraction depuis le PDF sont les mêmes que lors de l'ajout d'un nouvel exercice.
 
-Le bouton "Annuler" permet de retourner à la liste des exercices existant sans enregistrer les modifications.
+Le bouton "Retour à la liste (sans enregistrer)" permet de retourner à la liste des exercices existant sans enregistrer les modifications.
 
-Le bouton "Enregistrer" permet de sauvegarder les modifications apportées à l'exercice et de retourner à la liste des exercices existant.
+Le bouton "Enregistrer et retourner à la liste" permet de sauvegarder les modifications apportées à l'exercice et de retourner à la liste des exercices existant.
 
 .. image:: project-textbook-page-exercise/modify-exercise.png
     :alt: Screenshot
@@ -137,22 +150,9 @@ Annuler et refaire
 
 Les boutons "Annuler" et "Refaire" permettent de revenir en arrière ou de retourner en avant dans l'historique des modifications apportées à l'exercice.
 
-Note: cette fonctionnalité n'est encore qu'expérimentale. Les bugs connus sont listés dans la :doc:`roadmap <../changes>`.
-
-Remplacer
+Formatage
 ~~~~~~~~~
 
-Cet outil permet de remplacer toutes les occurrences d'une suite caractères par une autre dans les différents champs de l'exercice.
-
-Il peut s'appliquer à tous les champs d'un coup ou à chaque champ individuellement en fonction du choix fait dans le menu déroulant "dans".
-
-Dans les deux champs "Remplacer" et "par", il est possible d'utiliser certains marqueurs spéciaux:
-
-- ``{line-end}`` : pour remplacer ou insérer des retours à la ligne
-- ``{paragraph-end}`` : pour remplacer ou insérer des double retours à la ligne, marquant des fins de paragraphe
-
-Ces marqueurs sont suggérés lors de la saisie d'un ``{`` ou d'un double-clic dans l'un de ces champs.
-Ils peuvent être utilisés au sein d'une suite de caractères plus longue.
-
-Les champs "Remplacer" et "dans" prennent automatiquement une valeur appropriée lors d'une sélection de texte dans un champ de l'exercice,
-permettant ainsi de n'avoir à remplir que le champ "par".
+Les boutons de formatage permettent de mettre en forme le texte sélectionné.
+Le gras et l'italique sont disponibles en permanence.
+D'autres boutons de formatage sont spécifiques à certains types d'exercice.
