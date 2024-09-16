@@ -47,7 +47,7 @@ services:
     volumes:
       - ..:/app
     working_dir: /app/frontend
-    command: ["bash", "-c", "cat src/promise-with-resolvers-polyfill.js node_modules/pdfjs-dist/build/pdf.worker.min.mjs) >src/frontend/public/pdf.worker.min.js"]
+    command: ["bash", "-c", "cat src/promise-with-resolvers-polyfill.js node_modules/pdfjs-dist/build/pdf.worker.min.mjs >src/frontend/public/pdf.worker.min.js"]
     depends_on:
       npm-installer:
         condition: service_completed_successfully
@@ -219,7 +219,7 @@ services:
     environment:
       GABBY_VERSION: dev
     init: true
-    command: ["sphinx-autobuild", ".", "/tmp/doc", "--host", "0.0.0.0", "--port", "80"]
+    command: ["sphinx-autobuild", ".", "/doc", "--host", "0.0.0.0", "--port", "80"]
 
   fanout:
     image: nginx:latest

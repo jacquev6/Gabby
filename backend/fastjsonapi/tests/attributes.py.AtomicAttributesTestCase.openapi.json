@@ -161,11 +161,7 @@
             "$ref": "#/components/schemas/resourceCreateInputDataAttributes"
           },
           "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/resourceCreateInputDataRelationships"
-              }
-            ],
+            "$ref": "#/components/schemas/resourceCreateInputDataRelationships",
             "default": {}
           },
           "type": {
@@ -348,11 +344,7 @@
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/resourceUpdateInputDataAttributes"
-              }
-            ],
+            "$ref": "#/components/schemas/resourceUpdateInputDataAttributes",
             "default": {}
           },
           "id": {
@@ -360,11 +352,7 @@
             "type": "string"
           },
           "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/resourceUpdateInputDataRelationships"
-              }
-            ],
+            "$ref": "#/components/schemas/resourceUpdateInputDataRelationships",
             "default": {}
           },
           "type": {
