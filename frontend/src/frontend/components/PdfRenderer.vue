@@ -30,6 +30,8 @@ const width = ref(210)
 const height = ref(297)
 const transform = ref<number[]>([1, 0, 0, 1, 0, 0])
 
+const renderedPage = ref<number | null>(null)
+
 var renderTask: RenderTask | null = null
 const busy = ref(false)
 async function draw() {
@@ -71,6 +73,7 @@ async function draw() {
           throw e
         }
       }
+      renderedPage.value = props.page.pageNumber
       console.info('Rendered page', props.page.pageNumber, 'at', width.value, 'x', height.value, 'in', Math.round(performance.now() - startTime), 'ms')
     } finally {
       if (resetOnExit) {
@@ -93,7 +96,7 @@ defineExpose({width, height, transform})
 <template>
   <BBusy size="7rem" :busy>
     <div ref="container">
-      <canvas ref="canvas" :width :height v-bind="$attrs"></canvas>
+      <canvas ref="canvas" :width :height v-bind="$attrs" :data-cy-rendered-page="renderedPage"></canvas>
     </div>
   </BBusy>
 </template>

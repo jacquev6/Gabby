@@ -10,17 +10,21 @@ export function useProjectTextbookPageData(
   projectId: Ref<string>,
   textbookId: Ref<string>,
   page: Ref<number>,
+  displayPage: Ref<number>,
 ) {
   const project = computed(() => api.auto.getOne('project', projectId.value))
 
   const textbook = computed(() => api.auto.getOne('textbook', textbookId.value, {include: ['sections.pdfFile.namings']}))
 
-  const exercises = computed(() => api.auto.getAll('exercise', {filters: {textbook: textbookId.value, textbookPage: page.value.toString()}}))
+  const exercisesOnPage = computed(() => api.auto.getAll('exercise', {filters: {textbook: textbookId.value, textbookPage: page.value.toString()}}))
+
+  const exercisesOnDisplayPage = computed(() => api.auto.getAll('exercise', {filters: {textbook: textbookId.value, textbookPage: displayPage.value.toString()}}))
 
   return {
     project,
     textbook,
-    exercises,
+    exercisesOnPage,
+    exercisesOnDisplayPage,
   }
 }
 </script>

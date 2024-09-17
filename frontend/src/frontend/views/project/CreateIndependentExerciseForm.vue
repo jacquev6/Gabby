@@ -4,7 +4,7 @@ import { ref, reactive } from 'vue'
 import { BBusy, BButton } from '$frontend/components/opinion/bootstrap'
 import ExerciseFieldsForm from '$frontend/components/ExerciseFieldsForm.vue'
 import type { Project, InCache, Exists } from '$frontend/stores/api'
-import { makeModel, resetModel, create as createExercise, suggestNextNumber } from '$frontend/components/ExerciseFieldsForm.vue'
+import { makeModelNotInTextbook, resetModelNotInTextbook, create as createExercise, suggestNextNumber } from '$frontend/components/ExerciseFieldsForm.vue'
 
 
 const props = defineProps<{
@@ -13,15 +13,15 @@ const props = defineProps<{
 
 const fields = ref<InstanceType<typeof ExerciseFieldsForm> | null>(null)
 
-const model = reactive(makeModel())
+const model = reactive(makeModelNotInTextbook())
 
 const busy = ref(false)
 async function create() {
   const suggestedNextNumber = suggestNextNumber(model.number)
   busy.value = true
-  await createExercise(props.project, null, null, model)
+  await createExercise(props.project, null, model)
   busy.value = false
-  resetModel(model)
+  resetModelNotInTextbook(model)
   model.number = suggestedNextNumber
   /* no await */ props.project.refresh()
 }

@@ -3,26 +3,27 @@ import { ref, computed, reactive, watch, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
-import { BButton, BBusy } from '$/frontend/components/opinion/bootstrap'
+import { BButton, BBusy } from '$frontend/components/opinion/bootstrap'
 import { useApiStore } from '$frontend/stores/api'
 import bc from '$frontend/components/breadcrumbs'
 import ProjectTextbookPageLayout from './ProjectTextbookPageLayout.vue'
 import RectanglesHighlighter, { makeBoundingRectangle, makeBoundingRectangles, type Rectangle } from './RectanglesHighlighter.vue'
 import { useProjectTextbookPageData } from './ProjectTextbookPageLayout.vue'
 import TwoResizableColumns from '$frontend/components/TwoResizableColumns.vue'
-import ExerciseFieldsForm from '$/frontend/components/ExerciseFieldsForm.vue'
+import ExerciseFieldsForm from '$frontend/components/ExerciseFieldsForm.vue'
 import AdaptedExercise from './AdaptedExercise.vue'
 import ToolsGutter from './ToolsGutter.vue'
 import UndoRedoTool from './UndoRedoTool.vue'
 import { useExerciseCreationHistoryStore } from './ExerciseCreationHistoryStore'
-import { makeModel, assignModelFrom, getParsed, save } from '$frontend/components/ExerciseFieldsForm.vue'
+import { makeModelInTextbook, assignModelFrom, getParsed, save } from '$frontend/components/ExerciseFieldsForm.vue'
 import TextSelectionModal from './TextSelectionModal.vue'
-import type { TextualFieldName } from '$/frontend/components/ExerciseFieldsForm.vue'
-import AdaptationDetailsFieldsForm from '$/frontend/components/AdaptationDetailsFieldsForm.vue'
+import type { TextualFieldName } from '$frontend/components/ExerciseFieldsForm.vue'
+import AdaptationDetailsFieldsForm from '$frontend/components/AdaptationDetailsFieldsForm.vue'
 import TextPicker from './TextPicker.vue'
-import type { Exists, InCache, ParsedExercise, PdfFile } from '$/frontend/stores/api'
+import type { Exists, InCache, ParsedExercise, PdfFile } from '$frontend/stores/api'
 import type { PDFPageProxy } from 'pdfjs-dist'
 import BasicFormattingTools from './BasicFormattingTools.vue'
+import { useGloballyBusyStore } from '$frontend/stores/globallyBusy'
 
 
 const props = defineProps<{
@@ -40,6 +41,7 @@ const displayPage = computed(() => props.displayPage ?? props.page)
 const api = useApiStore()
 const router = useRouter()
 const i18n = useI18n()
+const globallyBusy = useGloballyBusyStore()
 const exerciseCreationHistory = useExerciseCreationHistoryStore()
 
 
@@ -58,10 +60,11 @@ function changeDisplayPage(newDisplayPage: number) {
   }
 }
 
-const { project, textbook, exercises } = useProjectTextbookPageData(projectId, textbookId, displayPage)
+const { project, textbook, exercisesOnDisplayPage } = useProjectTextbookPageData(projectId, textbookId, page, displayPage)
+globallyBusy.register('loading exercises on page', computed(() => exercisesOnDisplayPage.value.loading))
 
 const greyRectangles = computed(() => {
-  const otherExercises = exercises.value.existingItems.filter(exercise => exercise.id !== props.exerciseId)
+  const otherExercises = exercisesOnDisplayPage.value.existingItems.filter(exercise => exercise.id !== props.exerciseId)
   return makeBoundingRectangles(otherExercises)
 })
 
@@ -99,7 +102,7 @@ const breadcrumbs = computed(() => {
   }
 })
 
-const model = reactive(makeModel())
+const model = reactive(makeModelInTextbook(props.page))
 const canWysiwyg = computed(() => model.adaptationType !== 'multipleChoicesInWordingAdaptation')
 const wantWysiwyg = ref(true)
 const wysiwyg = computed(() => canWysiwyg.value && wantWysiwyg.value)

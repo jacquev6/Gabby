@@ -88,10 +88,12 @@ const router = createRouter({
                     console.assert(typeof(route.params.projectId) === 'string')
                     console.assert(typeof(route.params.textbookId) === 'string')
                     console.assert(typeof(route.params.page) === 'string')
+                    console.assert(route.query.displayPage === undefined || typeof(route.query.displayPage) === 'string')
                     return {
                       projectId: route.params.projectId,
                       textbookId: route.params.textbookId,
                       page: Number.parseInt(route.params.page),
+                      displayPage: route.query.displayPage === undefined ? undefined : Number.parseInt(route.query.displayPage),
                     }
                   },
                 },

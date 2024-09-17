@@ -9,6 +9,7 @@ import RectanglesHighlighter, { makeBoundingRectangles } from './RectanglesHighl
 import { useProjectTextbookPageData } from './ProjectTextbookPageLayout.vue'
 import ExercisesList from './ExercisesList.vue'
 import { useExerciseCreationHistoryStore } from './ExerciseCreationHistoryStore'
+import { useGloballyBusyStore } from '$frontend/stores/globallyBusy'
 
 
 const props = defineProps<{
@@ -19,6 +20,7 @@ const props = defineProps<{
 const projectId = computed(() => props.projectId)
 const textbookId = computed(() => props.textbookId)
 const page = computed(() => props.page)
+const globallyBusy = useGloballyBusyStore()
 
 const router = useRouter()
 const exerciseCreationHistory = useExerciseCreationHistoryStore()
@@ -27,9 +29,10 @@ onMounted(() => {
   exerciseCreationHistory.reset()
 })
 
-const { project, textbook, exercises } = useProjectTextbookPageData(projectId, textbookId, page)
+const { project, textbook, exercisesOnPage } = useProjectTextbookPageData(projectId, textbookId, page, page)
+globallyBusy.register('loading exercises on page', computed(() => exercisesOnPage.value.loading))
 
-const greyRectangles = computed(() => makeBoundingRectangles(exercises.value.existingItems))
+const greyRectangles = computed(() => makeBoundingRectangles(exercisesOnPage.value.existingItems))
 
 function changePage(page: number) {
   router.push({name: 'project-textbook-page', params: {page}})
@@ -55,6 +58,6 @@ function changePage(page: number) {
         {{ $t('create') }}
       </RouterLink>
     </p>
-    <ExercisesList :exercises />
+    <ExercisesList :exercises="exercisesOnPage" />
   </ProjectTextbookPageLayout>
 </template>

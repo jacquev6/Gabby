@@ -4,45 +4,50 @@ import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
-import { BButton, BBusy } from '$/frontend/components/opinion/bootstrap'
+import { BButton, BBusy } from '$frontend/components/opinion/bootstrap'
 import bc from '$frontend/components/breadcrumbs'
 import ProjectTextbookPageLayout from './ProjectTextbookPageLayout.vue'
 import RectanglesHighlighter, { makeBoundingRectangle, makeBoundingRectangles, type Rectangle } from './RectanglesHighlighter.vue'
 import TextPicker from './TextPicker.vue'
 import { useProjectTextbookPageData } from './ProjectTextbookPageLayout.vue'
 import TwoResizableColumns from '$frontend/components/TwoResizableColumns.vue'
-import ExerciseFieldsForm from '$/frontend/components/ExerciseFieldsForm.vue'
+import ExerciseFieldsForm from '$frontend/components/ExerciseFieldsForm.vue'
 import { useExerciseCreationHistoryStore } from './ExerciseCreationHistoryStore'
-import { useApiStore } from '$/frontend/stores/api'
-import type { Exists, InCache, ParsedExercise, PdfFile } from '$/frontend/stores/api'
+import { useApiStore } from '$frontend/stores/api'
+import type { Exists, InCache, ParsedExercise, PdfFile } from '$frontend/stores/api'
 import AdaptedExercise from './AdaptedExercise.vue'
 import ToolsGutter from './ToolsGutter.vue'
 import UndoRedoTool from './UndoRedoTool.vue'
-import type { TextualFieldName } from '$/frontend/components/ExerciseFieldsForm.vue'
-import AdaptationDetailsFieldsForm from '$/frontend/components/AdaptationDetailsFieldsForm.vue'
+import type { TextualFieldName } from '$frontend/components/ExerciseFieldsForm.vue'
+import AdaptationDetailsFieldsForm from '$frontend/components/AdaptationDetailsFieldsForm.vue'
 import TextSelectionModal from './TextSelectionModal.vue'
-import { makeModel, resetModel, getParsed, create, suggestNextNumber } from '$frontend/components/ExerciseFieldsForm.vue'
+import { makeModelInTextbook, resetModelInTextbook, modelIsEmpty, getParsed, create, suggestNextNumber } from '$frontend/components/ExerciseFieldsForm.vue'
 import type { PDFPageProxy } from 'pdfjs-dist'
 import BasicFormattingTools from './BasicFormattingTools.vue'
+import { useGloballyBusyStore } from '$frontend/stores/globallyBusy'
 
 
 const props = defineProps<{
   projectId: string
   textbookId: string
   page: number
+  displayPage?: number
 }>()
 const projectId = computed(() => props.projectId)
 const textbookId = computed(() => props.textbookId)
 const page = computed(() => props.page)
+const displayPage = computed(() => props.displayPage ?? props.page)
 
 const router = useRouter()
 const api = useApiStore()
 const i18n = useI18n()
+const globallyBusy = useGloballyBusyStore()
 const exerciseCreationHistory = useExerciseCreationHistoryStore()
 
-const { project, textbook, exercises } = useProjectTextbookPageData(projectId, textbookId, page)
+const { project, textbook, exercisesOnPage, exercisesOnDisplayPage } = useProjectTextbookPageData(projectId, textbookId, page, displayPage)
+globallyBusy.register('loading exercises on page', computed(() => exercisesOnDisplayPage.value.loading))
 
-const greyRectangles = computed(() => makeBoundingRectangles(exercises.value.existingItems))
+const greyRectangles = computed(() => makeBoundingRectangles(exercisesOnDisplayPage.value.existingItems))
 
 const matchingExercises = computed(() => {
   if (model.number === '') {
@@ -63,16 +68,26 @@ const matchingExercises = computed(() => {
 
 const alreadyExists = computed(() => matchingExercises.value !== null && matchingExercises.value.existingItems.length === 1)
 
-function changePage(page: number) {
-  exerciseCreationHistory.reset()
-  router.push({name: 'project-textbook-page-new-exercise', params: {page}})
+function changeDisplayPage(newDisplayPage: number) {
+  console.log('changeDisplayPage', newDisplayPage)
+  if (modelIsEmpty(model)) {
+    exerciseCreationHistory.reset()
+    router.push({name: 'project-textbook-page-new-exercise', params: {page: newDisplayPage}})
+    model.textbookPage = newDisplayPage
+  } else {
+    router.replace({
+      name: 'project-textbook-page-new-exercise',
+      params: {},
+      query: {displayPage: newDisplayPage},
+    })
+  }
 }
 
 const title = computed(() => [i18n.t('create')])
 
 const breadcrumbs = computed(() => bc.last(i18n.t('create')))
 
-const model = reactive(makeModel())
+const model = reactive(makeModelInTextbook(page.value))
 const canWysiwyg = computed(() => model.adaptationType !== 'multipleChoicesInWordingAdaptation')
 const wantWysiwyg = ref(true)
 const wysiwyg = computed(() => canWysiwyg.value && wantWysiwyg.value)
@@ -115,7 +130,7 @@ function textSelected(pdfFile: PdfFile, pdf: {page: PDFPageProxy}, selectedText:
 
 function skip() {
   const suggestedNextNumber = suggestNextNumber(model.number)
-  resetModel(model)
+  resetModelInTextbook(model, page.value)
   model.number = suggestedNextNumber
   resetUndoRedo.value++
 }
@@ -124,24 +139,25 @@ const busy = ref(false)
 async function createThenNext() {
   const suggestedNextNumber = suggestNextNumber(model.number)
   busy.value = true
-  const exercise = await create(project.value, textbook.value, page.value, model)
+  const exercise = await create(project.value, textbook.value, model)
   busy.value = false
 
   exerciseCreationHistory.push(exercise.id)
 
-  /* no await */ exercises.value.refresh()
+  /* no await */ exercisesOnPage.value.refresh()
 
-  resetModel(model)
+  resetModelInTextbook(model, page.value)
   model.number = suggestedNextNumber
   exerciseCreationHistory.suggestedNumber = suggestedNextNumber
   resetUndoRedo.value++
+  router.push({name: 'project-textbook-page-new-exercise', params: {page: displayPage.value}})
 }
 
 async function createThenBack() {
   busy.value = true
-  await create(project.value, textbook.value, page.value, model)
+  await create(project.value, textbook.value, model)
   busy.value = false
-  /* no await */ exercises.value.refresh()
+  /* no await */ exercisesOnPage.value.refresh()
   router.push({name: 'project-textbook-page'})
 }
 
@@ -219,7 +235,7 @@ const toolSlotNames = computed(() => {
 <template>
   <TextSelectionModal ref="textSelectionModal" v-model="model" @textAdded="highlightSuffix" />
   <ProjectTextbookPageLayout
-    :project :textbook :page :displayPage="page" @update:displayPage="changePage"
+    :project :textbook :page :displayPage @update:displayPage="changeDisplayPage"
     :title :breadcrumbs
   >
     <template #pdfOverlay="{ pdfFile, pdf, width, height, transform }">
