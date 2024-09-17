@@ -23,7 +23,7 @@ describe('Gabby', () => {
     traceRectangle('@canvas', 5, 4, 45, 12)
     cy.get('textarea').first().should('have.value', 'Recopie les mots suivants, puis\nentoure les pronoms personnels.\nIndique la classe des autres mots.')
     cy.get('button:contains("Instructions")').click()
-    cy.get('@highlighter').should('have.attr', 'data-cy-drawnrectangles').then(JSON.parse as any/* Work around Cypress typing limitations */).its('surrounded').should('deep.equal', [{
+    cy.get('@highlighter').should('have.attr', 'data-cy-drawn-rectangles').then(JSON.parse as any/* Work around Cypress typing limitations */).its('surrounded').should('deep.equal', [{
       'left': 56.26098090252517,
       'top': isProdPreview ? 726.5359457228192 : 725.8392892267519,
       'width': 226.18785085087657,
@@ -33,7 +33,7 @@ describe('Gabby', () => {
     traceRectangle('@canvas', 6, 13, 44, 15.5)
     cy.get('textarea').first().should('have.value', 'b. vous ◆ un ◆ arbre ◆ ce')
     cy.get('button:contains("Wording")').click()
-    cy.get('@highlighter').should('have.attr', 'data-cy-drawnrectangles').then(JSON.parse as any/* Work around Cypress typing limitations */).its('surrounded').should('deep.equal', [{
+    cy.get('@highlighter').should('have.attr', 'data-cy-drawn-rectangles').then(JSON.parse as any/* Work around Cypress typing limitations */).its('surrounded').should('deep.equal', [{
       'left': 56.26098090252517,
       'top': isProdPreview ? 698.2618869556034 : 698.6526942582752,
       'width': 226.18785085087657,
@@ -43,7 +43,7 @@ describe('Gabby', () => {
     traceRectangle('@canvas', 6, 15, 38, 17.5)
     cy.get('textarea').first().should('have.value', 'c. ils ◆ des ◆ grandir ◆ port')
     cy.get('button:contains("Wording")').click()
-    cy.get('@highlighter').should('have.attr', 'data-cy-drawnrectangles').then(JSON.parse as any/* Work around Cypress typing limitations */).its('surrounded').should('deep.equal', [{
+    cy.get('@highlighter').should('have.attr', 'data-cy-drawn-rectangles').then(JSON.parse as any/* Work around Cypress typing limitations */).its('surrounded').should('deep.equal', [{
       'left': 56.26098090252517,
       'top': isProdPreview ? 683.0373937732564 : 682.3407372771892,
       'width': 226.18785085087657,
@@ -53,7 +53,7 @@ describe('Gabby', () => {
     traceRectangle('@canvas', 6, 17, 35, 19.5)
     cy.get('textarea').first().should('have.value', 'd. dessin ◆ tu ◆ aller ◆ mon')
     cy.get('button:contains("Example")').click()
-    cy.get('@highlighter').should('have.attr', 'data-cy-drawnrectangles').then(JSON.parse as any/* Work around Cypress typing limitations */).its('surrounded').should('deep.equal', [{
+    cy.get('@highlighter').should('have.attr', 'data-cy-drawn-rectangles').then(JSON.parse as any/* Work around Cypress typing limitations */).its('surrounded').should('deep.equal', [{
       'left': 56.26098090252517,
       'top': isProdPreview ? 666.7254367921705 : 667.1162440948424,
       'width': 226.18785085087657,
@@ -63,7 +63,7 @@ describe('Gabby', () => {
     traceRectangle('@canvas', 6, 19, 37, 21.5)
     cy.get('textarea').first().should('have.value', 'e. elle ◆ gomme ◆ peindre ◆ ces')
     cy.get('button:contains("Clue")').click()
-    cy.get('@highlighter').should('have.attr', 'data-cy-drawnrectangles').then(JSON.parse as any/* Work around Cypress typing limitations */).its('surrounded').should('deep.equal', [{
+    cy.get('@highlighter').should('have.attr', 'data-cy-drawn-rectangles').then(JSON.parse as any/* Work around Cypress typing limitations */).its('surrounded').should('deep.equal', [{
       'left': 56.26098090252517,
       'top': isProdPreview ? 651.5009436098235 : 650.8042871137563,
       'width': 226.18785085087657,
@@ -161,7 +161,7 @@ describe('Gabby', () => {
     traceRectangle('@canvas', 6, 21, 37, 23.5)
     cy.get('textarea').first().should('have.value', 'f. histoire ◆ nous ◆ gentil ◆ la')
     cy.get('button:contains("Wording")').click()
-    cy.get('@highlighter').should('have.attr', 'data-cy-drawnrectangles').then(JSON.parse as any/* Work around Cypress typing limitations */).its('surrounded').should('deep.equal', [{
+    cy.get('@highlighter').should('have.attr', 'data-cy-drawn-rectangles').then(JSON.parse as any/* Work around Cypress typing limitations */).its('surrounded').should('deep.equal', [{
       'left': 56.26098090252517,
       'top': isProdPreview ? 635.1889866287376 : 635.5797939314094,
       'width': 226.18785085087657,

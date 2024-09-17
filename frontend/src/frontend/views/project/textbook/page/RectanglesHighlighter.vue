@@ -101,5 +101,5 @@ watch([props, context], () => {
 </script>
 
 <template>
-  <canvas ref="canvas" :data-cy-drawnRectangles="JSON.stringify(drawnRectangles)"></canvas>
+  <canvas ref="canvas" :data-cy-drawn-rectangles="JSON.stringify(drawnRectangles)"></canvas>
 </template>
