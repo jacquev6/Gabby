@@ -363,6 +363,7 @@ defineExpose({
       <BLabeledInput :label="$t('exerciseNumber')" v-model="model.number" data-cy-exercise-field="number" :disabled="fixedNumber" />
     </BCol>
     <BCol v-if="model.inTextbook">
+      <!-- @todo Add warning icon when different from displayed page -->
       <BLabeledInput :label="$t('exercisePage')" v-model="model.textbookPage" data-cy-exercise-field="page" :disabled="fixedNumber" />
     </BCol>
   </BRow>

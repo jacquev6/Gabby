@@ -482,6 +482,7 @@ class ExercisesResource:
         session: SessionDependable,
         authenticated_user: MandatoryAuthBearerDependable,
     ):
+        # @todo Add logs when modifying all resources. Give them a unique request identifier to be able te regroup logs from the same batch request.
         return create_item(
             session, Exercise,
             project=project,
