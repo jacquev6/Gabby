@@ -17,7 +17,7 @@ describe('Gabby', () => {
 
     cy.get('p:contains("Page"):contains("(on 7)") :contains(">")').click()
     cy.get('p:contains("Page"):contains("(on 7)") input').should('have.value', '7')
-    cy.url().should('eq', `${Cypress.config().baseUrl}project-xkopqm/textbook-klxufv/page-7`)
+    cy.location('pathname').should('eq', '/project-xkopqm/textbook-klxufv/page-7')
     cy.get('p:contains("Page"):contains("(on 7)") :contains(">")').should('be.disabled')
     cy.get('p:contains("The PDF that contains this page (test.pdf) has not been loaded yet.")').should('exist')
 
@@ -26,24 +26,24 @@ describe('Gabby', () => {
 
     cy.get('p:contains("Page"):contains("(on 7)") :contains("<")').click()
     cy.get('p:contains("Page"):contains("(on 7)") input').should('have.value', '5')
-    cy.url().should('eq', `${Cypress.config().baseUrl}project-xkopqm/textbook-klxufv/page-5`)
+    cy.location('pathname').should('eq', '/project-xkopqm/textbook-klxufv/page-5')
     cy.get('p:contains("No known PDF contains this page.")').should('exist')
     cy.get('p:contains("The PDF that contains this page (test.pdf) has not been loaded yet.")').should('not.exist')
 
     cy.get('p:contains("Page"):contains("(on 7)") input').clear().type('1')
-    cy.url().should('eq', `${Cypress.config().baseUrl}project-xkopqm/textbook-klxufv/page-1`)
+    cy.location('pathname').should('eq', '/project-xkopqm/textbook-klxufv/page-1')
     cy.get('p:contains("Page"):contains("(on 7)") :contains("<")').should('be.disabled')
     cy.get('p:contains("No known PDF contains this page.")').should('exist')
 
     cy.get('p:contains("Page"):contains("(on 7)") input').clear().type('100').blur()
     notBusy()
     cy.get('p:contains("Page"):contains("(on 7)") input').should('have.value', '1')
-    cy.url().should('eq', `${Cypress.config().baseUrl}project-xkopqm/textbook-klxufv/page-1`)
+    cy.location('pathname').should('eq', '/project-xkopqm/textbook-klxufv/page-1')
 
     cy.get('p:contains("Page"):contains("(on 7)") input').clear().type('200').blur()
     notBusy()
     cy.get('p:contains("Page"):contains("(on 7)") input').should('have.value', '2')
-    cy.url().should('eq', `${Cypress.config().baseUrl}project-xkopqm/textbook-klxufv/page-2`)
+    cy.location('pathname').should('eq', '/project-xkopqm/textbook-klxufv/page-2')
   })
 
   it('loads a PDF', () => {
