@@ -31,7 +31,7 @@ async function create() {
   <BBusy :busy>
     <ExerciseFieldsForm
       ref="fields"
-      v-model="model"
+      v-model="model" :displayedPage="null"
       :fixedNumber="false" :wysiwyg="false" :deltas="{instructions: [], wording: [], example: [], clue: []}"
     />
     <BButton primary :disabled="fields === null || fields.saveDisabled" @click="create" data-cy="create-exercise">{{ $t('createExercise' )}}</BButton>

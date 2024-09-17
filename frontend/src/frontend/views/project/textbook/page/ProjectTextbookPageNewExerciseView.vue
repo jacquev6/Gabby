@@ -31,12 +31,12 @@ const props = defineProps<{
   projectId: string
   textbookId: string
   page: number
-  displayPage?: number
+  displayedPage?: number
 }>()
 const projectId = computed(() => props.projectId)
 const textbookId = computed(() => props.textbookId)
 const page = computed(() => props.page)
-const displayPage = computed(() => props.displayPage ?? props.page)
+const displayedPage = computed(() => props.displayedPage ?? props.page)
 
 const router = useRouter()
 const api = useApiStore()
@@ -44,10 +44,10 @@ const i18n = useI18n()
 const globallyBusy = useGloballyBusyStore()
 const exerciseCreationHistory = useExerciseCreationHistoryStore()
 
-const { project, textbook, exercisesOnPage, exercisesOnDisplayPage } = useProjectTextbookPageData(projectId, textbookId, page, displayPage)
-globallyBusy.register('loading exercises on page', computed(() => exercisesOnDisplayPage.value.loading))
+const { project, textbook, exercisesOnPage, exercisesOnDisplayedPage } = useProjectTextbookPageData(projectId, textbookId, page, displayedPage)
+globallyBusy.register('loading exercises on page', computed(() => exercisesOnDisplayedPage.value.loading))
 
-const greyRectangles = computed(() => makeBoundingRectangles(exercisesOnDisplayPage.value.existingItems))
+const greyRectangles = computed(() => makeBoundingRectangles(exercisesOnDisplayedPage.value.existingItems))
 
 const matchingExercises = computed(() => {
   if (model.number === '') {
@@ -68,17 +68,17 @@ const matchingExercises = computed(() => {
 
 const alreadyExists = computed(() => matchingExercises.value !== null && matchingExercises.value.existingItems.length === 1)
 
-function changeDisplayPage(newDisplayPage: number) {
-  console.log('changeDisplayPage', newDisplayPage)
+function changeDisplayedPage(newDisplayedPage: number) {
+  console.log('changeDisplayedPage', newDisplayedPage)
   if (modelIsEmpty(model)) {
     exerciseCreationHistory.reset()
-    router.push({name: 'project-textbook-page-new-exercise', params: {page: newDisplayPage}})
-    model.textbookPage = newDisplayPage
+    router.push({name: 'project-textbook-page-new-exercise', params: {page: newDisplayedPage}})
+    model.textbookPage = newDisplayedPage
   } else {
     router.replace({
       name: 'project-textbook-page-new-exercise',
       params: {},
-      query: {displayPage: newDisplayPage},
+      query: {displayPage: newDisplayedPage},
     })
   }
 }
@@ -150,7 +150,7 @@ async function createThenNext() {
   model.number = suggestedNextNumber
   exerciseCreationHistory.suggestedNumber = suggestedNextNumber
   resetUndoRedo.value++
-  router.push({name: 'project-textbook-page-new-exercise', params: {page: displayPage.value}})
+  router.push({name: 'project-textbook-page-new-exercise', params: {page: displayedPage.value}})
 }
 
 async function createThenBack() {
@@ -235,7 +235,7 @@ const toolSlotNames = computed(() => {
 <template>
   <TextSelectionModal ref="textSelectionModal" v-model="model" @textAdded="highlightSuffix" />
   <ProjectTextbookPageLayout
-    :project :textbook :page :displayPage @update:displayPage="changeDisplayPage"
+    :project :textbook :page :displayedPage @update:displayedPage="changeDisplayedPage"
     :title :breadcrumbs
   >
     <template #pdfOverlay="{ pdfFile, pdf, width, height, transform }">
@@ -259,7 +259,7 @@ const toolSlotNames = computed(() => {
             <h1>{{ $t('edition') }}<template v-if="canWysiwyg">  <span style="font-size: small">(<label>WYSIWYG: <input type="checkbox" v-model="wantWysiwyg" /></label>)</span></template></h1>
             <BBusy :busy>
               <ExerciseFieldsForm ref="fields"
-                v-model="model"
+                v-model="model" :displayedPage
                 :fixedNumber="false" :wysiwyg :deltas
               >
                 <template #overlay>

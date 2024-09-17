@@ -41,7 +41,7 @@ function changePage(page: number) {
 
 <template>
   <ProjectTextbookPageLayout
-    :project :textbook :page :displayPage="page" @update:displayPage="changePage"
+    :project :textbook :page :displayedPage="page" @update:displayedPage="changePage"
     :title="[]" :breadcrumbs="bc.empty"
   >
     <template #pdfOverlay="{ width, height, transform }">

@@ -31,12 +31,12 @@ const props = defineProps<{
   textbookId: string
   page: number
   exerciseId: string
-  displayPage?: number
+  displayedPage?: number
 }>()
 const projectId = computed(() => props.projectId)
 const textbookId = computed(() => props.textbookId)
 const page = computed(() => props.page)
-const displayPage = computed(() => props.displayPage ?? props.page)
+const displayedPage = computed(() => props.displayedPage ?? props.page)
 
 const api = useApiStore()
 const router = useRouter()
@@ -45,8 +45,8 @@ const globallyBusy = useGloballyBusyStore()
 const exerciseCreationHistory = useExerciseCreationHistoryStore()
 
 
-function changeDisplayPage(newDisplayPage: number) {
-  if (newDisplayPage === props.page) {
+function changeDisplayedPage(newDisplayedPage: number) {
+  if (newDisplayedPage === props.page) {
     router.replace({
       name: 'project-textbook-page-exercise',
       params: {},
@@ -55,16 +55,16 @@ function changeDisplayPage(newDisplayPage: number) {
     router.replace({
       name: 'project-textbook-page-exercise',
       params: {},
-      query: {displayPage: newDisplayPage},
+      query: {displayPage: newDisplayedPage},
     })
   }
 }
 
-const { project, textbook, exercisesOnDisplayPage } = useProjectTextbookPageData(projectId, textbookId, page, displayPage)
-globallyBusy.register('loading exercises on page', computed(() => exercisesOnDisplayPage.value.loading))
+const { project, textbook, exercisesOnDisplayedPage } = useProjectTextbookPageData(projectId, textbookId, page, displayedPage)
+globallyBusy.register('loading exercises on page', computed(() => exercisesOnDisplayedPage.value.loading))
 
 const greyRectangles = computed(() => {
-  const otherExercises = exercisesOnDisplayPage.value.existingItems.filter(exercise => exercise.id !== props.exerciseId)
+  const otherExercises = exercisesOnDisplayedPage.value.existingItems.filter(exercise => exercise.id !== props.exerciseId)
   return makeBoundingRectangles(otherExercises)
 })
 
@@ -247,7 +247,7 @@ const toolSlotNames = computed(() => {
 <template>
   <TextSelectionModal ref="textSelectionModal" v-model="model" @textAdded="highlightSuffix" />
   <ProjectTextbookPageLayout
-    :project :textbook :page :displayPage @update:displayPage="changeDisplayPage"
+    :project :textbook :page :displayedPage @update:displayedPage="changeDisplayedPage"
     :title :breadcrumbs
   >
     <template #pdfOverlay="{ pdfFile, pdf, width, height, transform }">
@@ -272,7 +272,7 @@ const toolSlotNames = computed(() => {
               <h1>{{ $t('edition') }}<template v-if="canWysiwyg">  <span style="font-size: small">(<label>WYSIWYG: <input type="checkbox" v-model="wantWysiwyg" /></label>)</span></template></h1>
               <BBusy :busy>
                 <ExerciseFieldsForm ref="fields"
-                  v-model="model"
+                  v-model="model" :displayedPage
                   :fixedNumber="true" :wysiwyg :deltas
                 />
                 <template v-if="exerciseCreationHistory.current === null">

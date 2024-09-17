@@ -244,6 +244,7 @@ const props = defineProps<{
   fixedNumber: boolean
   wysiwyg: boolean
   deltas: (ParsedExercise & InCache & Exists)['attributes']['delta'] | null
+  displayedPage: number | null
 }>()
 
 const model = defineModel<Model>({required: true})
@@ -365,7 +366,7 @@ defineExpose({
       </BCol>
       <BCol v-if="model.inTextbook">
         <!-- @todo Add warning icon when different from displayed page -->
-        <BLabeledInput :label="$t('exercisePage')" v-model="model.textbookPage" data-cy-exercise-field="page" :disabled="fixedNumber" />
+        <BLabeledInput :label="$t( model.textbookPage === displayedPage ? 'exercisePage' : 'exercisePageWithWarning')" v-model="model.textbookPage" data-cy-exercise-field="page" :disabled="fixedNumber" />
       </BCol>
     </BRow>
   </div>

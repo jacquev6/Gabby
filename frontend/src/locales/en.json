@@ -64,6 +64,7 @@
   "newIndependentExercise": "New independent exercise",
   "exerciseNumber": "Number",
   "exercisePage": "Page",
+  "exercisePageWithWarning": "Page (⚠️ not the one displayed)",
   "exerciseInstructions": "Instructions",
   "exerciseExample": "Example",
   "exerciseClue": "Clue",

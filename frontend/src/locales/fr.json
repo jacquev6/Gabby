@@ -64,6 +64,7 @@
   "newIndependentExercise": "Nouvel exercice indépendant",
   "exerciseNumber": "Numéro",
   "exercisePage": "Page",
+  "exercisePageWithWarning": "Page (⚠️ pas celle affichée)",
   "exerciseInstructions": "Consigne",
   "exerciseExample": "Exemple",
   "exerciseClue": "Indice",

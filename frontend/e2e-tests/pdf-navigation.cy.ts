@@ -174,7 +174,7 @@ describe('Gabby', () => {
     cy.location('search').should('eq', '?displayPage=7')
     cy.get('[data-cy-exercise-field="number"]').should('have.value', '5')
     cy.get('[data-cy-exercise-field="page"]').should('have.value', 6)
-    // @todo Check the exercise's page is highlighted as different from the displayed page.
+    cy.get('label:contains("Page"):contains("not the one displayed")').should('exist')
     cy.get('@renderer').should('have.attr', 'data-cy-rendered-page', '2')
     cy.get('@highlighter').should('have.attr', 'data-cy-drawn-rectangles').then(JSON.parse as any/* Work around Cypress typing limitations */).should(
       'deep.equal',
@@ -260,7 +260,7 @@ describe('Gabby', () => {
     cy.location('search').should('eq', '?displayPage=7')
     cy.get('[data-cy-exercise-field="number"]').should('have.value', '5')
     cy.get('[data-cy-exercise-field="page"]').should('have.value', 6)
-    // @todo Check the exercise's page is highlighted as different from the displayed page.
+    cy.get('label:contains("Page"):contains("not the one displayed")').should('exist')
     cy.get('@renderer').should('have.attr', 'data-cy-rendered-page', '2')
     cy.get('@highlighter').should('have.attr', 'data-cy-drawn-rectangles').then(JSON.parse as any/* Work around Cypress typing limitations */).should(
       'deep.equal',
@@ -339,7 +339,7 @@ describe('Gabby', () => {
     cy.location('search').should('eq', '?displayPage=7')
     cy.get('[data-cy-exercise-field="number"]').should('have.value', '3')
     cy.get('[data-cy-exercise-field="page"]').should('have.value', 6)
-    // @todo Check the exercise's page is highlighted as different from the displayed page.
+    cy.get('label:contains("Page"):contains("not the one displayed")').should('exist')
     cy.get('@renderer').should('have.attr', 'data-cy-rendered-page', '2')
     // @todo Enable this check (after fixing the bug that the edited exercise's rectangle is drawn on the wrong page)
     // cy.get('@highlighter').should('have.attr', 'data-cy-drawn-rectangles').then(JSON.parse as any/* Work around Cypress typing limitations */).should(

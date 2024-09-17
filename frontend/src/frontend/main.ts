@@ -93,7 +93,7 @@ const router = createRouter({
                       projectId: route.params.projectId,
                       textbookId: route.params.textbookId,
                       page: Number.parseInt(route.params.page),
-                      displayPage: route.query.displayPage === undefined ? undefined : Number.parseInt(route.query.displayPage),
+                      displayedPage: route.query.displayPage === undefined ? undefined : Number.parseInt(route.query.displayPage),
                     }
                   },
                 },
@@ -112,7 +112,7 @@ const router = createRouter({
                       textbookId: route.params.textbookId,
                       page: Number.parseInt(route.params.page),
                       exerciseId: route.params.exerciseId,
-                      displayPage: route.query.displayPage === undefined ? undefined : Number.parseInt(route.query.displayPage),
+                      displayedPage: route.query.displayPage === undefined ? undefined : Number.parseInt(route.query.displayPage),
                     }
                   },
                 }
