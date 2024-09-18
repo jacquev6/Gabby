@@ -326,6 +326,7 @@ describe('Gabby', () => {
     }])
 
     cy.get('button:contains("Save then back to list")').click()
+    cy.get('button:contains("Confirm")').click()
     notBusy()
     expectRectangles('@highlighter', 'grey.0', {
       'left': 63.24492293708562,

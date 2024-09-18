@@ -79,6 +79,11 @@
   "multipleChoicesInInstructionsAdaptation": "Choix multiples (dans la consigne)",
   "multipleChoicesInWordingAdaptation": "Choix multiples (dans l'énoncé)",
 
+  "confirmTitle": "Confirmation",
+  "confirmNo": "Retour",
+  "confirmYes": "Confirmer",
+  "pageMismatchConfirmationMessage": "La page de l'exercice n'est pas celle affichée actuellement. C'est OK mais inhabituel. Êtes-vous sûr de vouloir continuer ?",
+
 
   "textbookNotFound": "Manuel introuvable",
   "pdfNotLoaded": "Le PDF contenant cette page ({name}) n'a pas encore été ouvert. Si vous en disposez d'une copie, vous pouvez l'ouvrir ci-dessous.",

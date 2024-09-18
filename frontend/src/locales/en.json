@@ -79,6 +79,11 @@
   "multipleChoicesInInstructionsAdaptation": "Multiple choices (in instructions)",
   "multipleChoicesInWordingAdaptation": "Multiple choices (in wording)",
 
+  "confirmTitle": "Confirm",
+  "confirmNo": "Go back",
+  "confirmYes": "Confirm",
+  "pageMismatchConfirmationMessage": "The exercise's page is not the one currently displayed. This is OK but unusual. Are you sure you want to proceed?",
+
 
   "textbookNotFound": "Textbook not found",
   "pdfNotLoaded": "The PDF that contains this page ({name}) has not been loaded yet. If you have a copy, you can open it.",

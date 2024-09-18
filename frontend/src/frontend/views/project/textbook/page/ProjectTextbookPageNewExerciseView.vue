@@ -25,6 +25,7 @@ import { makeModelInTextbook, resetModelInTextbook, modelIsEmpty, getParsed, cre
 import type { PDFPageProxy } from 'pdfjs-dist'
 import BasicFormattingTools from './BasicFormattingTools.vue'
 import { useGloballyBusyStore } from '$frontend/stores/globallyBusy'
+import ConfirmationModal from '$frontend/components/ConfirmationModal.vue'
 
 
 const props = defineProps<{
@@ -138,30 +139,43 @@ function skip() {
   resetUndoRedo.value++
 }
 
+const pageMismatchConfirmationModal = ref<InstanceType<typeof ConfirmationModal> | null>(null)
+
+async function confirmCreationInCaseOfPageMismatch() {
+  const skipConfirmation = model.textbookPage === displayedPage.value
+  console.assert(pageMismatchConfirmationModal.value !== null)
+  return skipConfirmation || await pageMismatchConfirmationModal.value.show()
+}
+
 const busy = ref(false)
 async function createThenNext() {
-  const suggestedNextNumber = suggestNextNumber(model.number)
-  busy.value = true
-  const exercise = await create(project.value, textbook.value, model)
-  busy.value = false
+  if (await confirmCreationInCaseOfPageMismatch()) {
+    const suggestedNextNumber = suggestNextNumber(model.number)
+    busy.value = true
+    const exercise = await create(project.value, textbook.value, model)
+    busy.value = false
 
-  exerciseCreationHistory.push(exercise.id)
+    exerciseCreationHistory.push(exercise.id)
 
-  /* no await */ exercisesOnPage.value.refresh()
+    /* no await */ exercisesOnPage.value.refresh()
 
-  resetModelInTextbook(model, page.value)
-  model.number = suggestedNextNumber
-  exerciseCreationHistory.suggestedNumber = suggestedNextNumber
-  resetUndoRedo.value++
-  router.push({name: 'project-textbook-page-new-exercise', params: {page: displayedPage.value}})
+    resetModelInTextbook(model, page.value)
+    model.number = suggestedNextNumber
+    model.textbookPage = displayedPage.value
+    exerciseCreationHistory.suggestedNumber = suggestedNextNumber
+    resetUndoRedo.value++
+    router.push({name: 'project-textbook-page-new-exercise', params: {page: displayedPage.value}})
+  }
 }
 
 async function createThenBack() {
-  busy.value = true
-  await create(project.value, textbook.value, model)
-  busy.value = false
-  /* no await */ exercisesOnPage.value.refresh()
-  router.push({name: 'project-textbook-page'})
+  if (await confirmCreationInCaseOfPageMismatch()) {
+    busy.value = true
+    await create(project.value, textbook.value, model)
+    busy.value = false
+    /* no await */ exercisesOnPage.value.refresh()
+    router.push({name: 'project-textbook-page'})
+  }
 }
 
 function goToPrevious() {
@@ -237,6 +251,7 @@ const toolSlotNames = computed(() => {
 
 <template>
   <TextSelectionModal ref="textSelectionModal" v-model="model" @textAdded="highlightSuffix" />
+  <ConfirmationModal ref="pageMismatchConfirmationModal">{{ $t('pageMismatchConfirmationMessage') }}</ConfirmationModal>
   <ProjectTextbookPageLayout
     :project :textbook :page :displayedPage @update:displayedPage="changeDisplayedPage"
     :title :breadcrumbs

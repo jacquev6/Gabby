@@ -211,6 +211,7 @@ describe('Gabby', () => {
     cy.get('[data-cy-exercise-field="instructions"]').should('have.value', 'Do that')
 
     cy.get('button:contains("Save then next")').click()
+    cy.get('button:contains("Confirm")').click()
     notBusy()
     cy.location('pathname').should('eq', '/project-xkopqm/textbook-klxufv/page-7/new-exercise')
 
@@ -297,6 +298,7 @@ describe('Gabby', () => {
     cy.get('[data-cy-exercise-field="instructions"]').should('have.value', 'Do that')
 
     cy.get('button:contains("Save then back to list")').click()
+    cy.get('button:contains("Confirm")').click()
     notBusy()
     cy.location('pathname').should('eq', '/project-xkopqm/textbook-klxufv/page-6')
     cy.get('li:contains("5"):contains("Do that")').should('exist')

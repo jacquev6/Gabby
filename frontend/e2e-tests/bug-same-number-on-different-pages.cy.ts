@@ -19,6 +19,7 @@ describe('Gabby', () => {
     cy.get('p:contains("Page"):contains("(on 7)") :contains(">")').click()
     // Then saved.
     cy.get('button:contains("Save then back to list")').click()  // Created exercise on page 7 as specified, but not as intended by user. This was fixed and now creates the exercise on page 6.
+    cy.get('button:contains("Confirm")').click()
     notBusy()
     // User did not notice this was page 7 instead of page 6. (Now on page 6)
     cy.location('pathname').should('eq', '/project-xkopqm/textbook-klxufv/page-6')
