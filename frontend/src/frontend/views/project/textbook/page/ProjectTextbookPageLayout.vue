@@ -20,11 +20,14 @@ export function useProjectTextbookPageData(
 
   const exercisesOnDisplayedPage = computed(() => api.auto.getAll('exercise', {filters: {textbook: textbookId.value, textbookPage: displayedPage.value.toString()}}))
 
+  const exercisesOnPageBeforeDisplayed = computed(() => api.auto.getAll('exercise', {filters: {textbook: textbookId.value, textbookPage: (displayedPage.value - 1).toString()}}))
+
   return {
     project,
     textbook,
     exercisesOnPage,
     exercisesOnDisplayedPage,
+    exercisesOnPageBeforeDisplayed,
   }
 }
 </script>

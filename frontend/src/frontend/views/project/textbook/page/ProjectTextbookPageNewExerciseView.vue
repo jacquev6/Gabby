@@ -44,10 +44,13 @@ const i18n = useI18n()
 const globallyBusy = useGloballyBusyStore()
 const exerciseCreationHistory = useExerciseCreationHistoryStore()
 
-const { project, textbook, exercisesOnPage, exercisesOnDisplayedPage } = useProjectTextbookPageData(projectId, textbookId, page, displayedPage)
+const { project, textbook, exercisesOnPage, exercisesOnDisplayedPage, exercisesOnPageBeforeDisplayed } = useProjectTextbookPageData(projectId, textbookId, page, displayedPage)
 globallyBusy.register('loading exercises on page', computed(() => exercisesOnDisplayedPage.value.loading))
+globallyBusy.register('loading exercises on previous page', computed(() => exercisesOnPageBeforeDisplayed.value.loading))
 
-const greyRectangles = computed(() => makeBoundingRectangles(exercisesOnDisplayedPage.value.existingItems))
+function makeGreyRectangles(pdfSha256: string, pdfPage: number) {
+  return makeBoundingRectangles(pdfSha256, pdfPage, [...exercisesOnPageBeforeDisplayed.value.existingItems, ...exercisesOnDisplayedPage.value.existingItems])
+}
 
 const matchingExercises = computed(() => {
   if (model.number === '') {
@@ -101,14 +104,14 @@ onMounted(() => {
   }
 })
 
-const surroundedRectangles = computed(() => {
-  const boundingRectangle = makeBoundingRectangle(model.rectangles)
+function makeSurroundedRectangles(pdfSha256: string, pdfPage: number) {
+  const boundingRectangle = makeBoundingRectangle(pdfSha256, pdfPage, model.rectangles)
   if (boundingRectangle === null) {
     return []
   } else {
     return [boundingRectangle]
   }
-})
+}
 
 const fields = ref<InstanceType<typeof ExerciseFieldsForm> | null>(null)
 
@@ -240,9 +243,11 @@ const toolSlotNames = computed(() => {
   >
     <template #pdfOverlay="{ pdfFile, pdf, width, height, transform }">
       <RectanglesHighlighter
+        v-if="pdfFile.inCache && pdfFile.exists"
         class="img w-100" style="position: absolute; top: 0; left: 0"
         :width :height :transform
-        :greyRectangles :surroundedRectangles
+        :greyRectangles="makeGreyRectangles(pdfFile.attributes.sha256, pdf.page.pageNumber)"
+        :surroundedRectangles="makeSurroundedRectangles(pdfFile.attributes.sha256, pdf.page.pageNumber)"
       />
       <TextPicker
         class="img w-100" style="position: absolute; top: 0; left: 0"

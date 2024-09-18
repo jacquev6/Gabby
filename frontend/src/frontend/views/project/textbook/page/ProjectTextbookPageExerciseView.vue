@@ -60,13 +60,14 @@ function changeDisplayedPage(newDisplayedPage: number) {
   }
 }
 
-const { project, textbook, exercisesOnDisplayedPage } = useProjectTextbookPageData(projectId, textbookId, page, displayedPage)
+const { project, textbook, exercisesOnDisplayedPage, exercisesOnPageBeforeDisplayed } = useProjectTextbookPageData(projectId, textbookId, page, displayedPage)
 globallyBusy.register('loading exercises on page', computed(() => exercisesOnDisplayedPage.value.loading))
+globallyBusy.register('loading exercises on previous page', computed(() => exercisesOnPageBeforeDisplayed.value.loading))
 
-const greyRectangles = computed(() => {
-  const otherExercises = exercisesOnDisplayedPage.value.existingItems.filter(exercise => exercise.id !== props.exerciseId)
-  return makeBoundingRectangles(otherExercises)
-})
+function makeGreyRectangles(pdfSha256: string, pdfPage: number) {
+  const otherExercises = [...exercisesOnPageBeforeDisplayed.value.existingItems,  ...exercisesOnDisplayedPage.value.existingItems].filter(exercise => exercise.id !== props.exerciseId)
+  return makeBoundingRectangles(pdfSha256, pdfPage, otherExercises)
+}
 
 const exercise = computed(() => api.auto.getOne('exercise', props.exerciseId, {include: ['adaptation']}))
 
@@ -74,14 +75,14 @@ const exerciseBelongsToTextbookPage = computed(() =>
   exercise.value.inCache && exercise.value.exists && exercise.value.relationships.textbook === textbook.value && exercise.value.attributes.textbookPage === props.page
 )
 
-const surroundedRectangles = computed(() => {
-  const boundingRectangle = makeBoundingRectangle(model.rectangles)
+function makeSurroundedRectangles(pdfSha256: string, pdfPage: number) {
+  const boundingRectangle = makeBoundingRectangle(pdfSha256, pdfPage, model.rectangles)
   if (boundingRectangle === null) {
     return []
   } else {
     return [boundingRectangle]
   }
-})
+}
 
 const title = computed(() => {
   if (exercise.value.inCache && exercise.value.exists) {
@@ -252,9 +253,11 @@ const toolSlotNames = computed(() => {
   >
     <template #pdfOverlay="{ pdfFile, pdf, width, height, transform }">
       <RectanglesHighlighter
+        v-if="pdfFile.inCache && pdfFile.exists"
         class="img w-100" style="position: absolute; top: 0; left: 0"
         :width :height :transform
-        :greyRectangles :surroundedRectangles
+        :greyRectangles="makeGreyRectangles(pdfFile.attributes.sha256, pdf.page.pageNumber)"
+        :surroundedRectangles="makeSurroundedRectangles(pdfFile.attributes.sha256, pdf.page.pageNumber)"
       />
       <TextPicker
         class="img w-100" style="position: absolute; top: 0; left: 0"
