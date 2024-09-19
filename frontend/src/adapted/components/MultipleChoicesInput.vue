@@ -8,7 +8,6 @@ const props = withDefaults(defineProps<{
   choices: string[],
   placeholder?: string,
   // @todo alwaysShowChoices?: boolean = false
-  // @todo allowReset?: boolean = true
 }>(), {
   placeholder: '........',
 })
@@ -52,7 +51,6 @@ const { floatingStyles } = useFloating(
           {{ choice }}
         </span>
       </template>
-      <span class="choice" @click="set(undefined)">{{ props.placeholder }}</span>
     </div>
   </Teleport>
 </template>

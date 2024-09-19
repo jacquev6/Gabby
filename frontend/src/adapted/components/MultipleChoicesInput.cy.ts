@@ -24,7 +24,6 @@ describe('MultipleChoicesInput', () => {
     cy.get('span.main:contains("....")').should('exist')
     cy.get('span.choice:contains("alpha")').should('exist')
     cy.get('span.choice:contains("beta")').should('exist')
-    cy.get('span.choice:contains("....")').should('exist')
 
     cy.get('div.backdrop').click()
 
@@ -36,7 +35,6 @@ describe('MultipleChoicesInput', () => {
     cy.get('span.main:contains("....")').should('exist')
     cy.get('span.choice:contains("alpha")').should('exist')
     cy.get('span.choice:contains("beta")').should('exist')
-    cy.get('span.choice:contains("....")').should('exist')
 
     cy.get('span.choice:contains("alpha")').click().then(() => {
       expect(value).to.equal("alpha")
@@ -52,7 +50,6 @@ describe('MultipleChoicesInput', () => {
     cy.get('span.main:contains("alpha")').should('exist')
     cy.get('span.choice:contains("alpha")').should('exist')
     cy.get('span.choice:contains("beta")').should('exist')
-    cy.get('span.choice:contains("....")').should('exist')
 
     cy.get('span.choice:contains("beta")').click().then(() => {
       expect(value).to.equal("beta")
