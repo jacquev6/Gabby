@@ -1,8 +1,12 @@
+import datetime
 import json
+import logging
+import os
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
+import fastapi
 
 from fastjsonapi import make_jsonapi_router
 import fastjsonapi.openapi_utils
@@ -11,10 +15,18 @@ from . import api_resources
 from . import database_utils
 from . import settings
 from .database_utils import SessionDependable
-from .exercises import Exercise
 from .fixtures import load as load_fixtures
 from .projects import Project, ProjectsResource
 from .users import AuthenticationDependable, MandatoryAuthTokenDependable
+from .users.user import get_optional_user_id_from_token
+
+
+if os.environ.get("GABBY_UNITTESTING", "false") != "true":
+    logging.basicConfig(level=settings.LOGGING_LEVEL)
+
+logger = logging.getLogger(__name__)
+logger.info("Gabby API starting up")
+logger.debug("Debug logs are enabled")
 
 
 app = FastAPI(
@@ -43,6 +55,30 @@ app.include_router(
     ),
     prefix="/api",
 )
+
+@app.middleware("http")
+async def log_requests_and_responses(
+    request: fastapi.Request,
+    call_next
+):
+    if (request.method, request.url.path) in [
+        ("POST", "/api/token"),  # Don't log clear-text passwords
+        ("POST", "/api/parsedExercises"),  # Reduce volumes of logs of low interest
+    ]:
+        return await call_next(request)
+    else:
+        authorization_header = request.headers.get("authorization")
+        if authorization_header is not None and authorization_header.startswith("Bearer "):
+            user = get_optional_user_id_from_token(authorization_header[len("Bearer "):])
+        else:
+            user = None
+        body = await request.body()
+        response = await call_next(request)
+        # @todo Learn about log formatting (to add date automatically)
+        # @todo Learn about structured logging (to keep fields structured)
+        logger.info(f"{datetime.datetime.now()} user_id={user} {request.method} {request.url} {body} -> {response.status_code}")
+        return response
+
 
 # @todo Require authentication (but keep it working: it's not an API call, so authentication must come through the browser)
 @app.get("/api/project-{project_id}-extraction-report.json")
