@@ -408,9 +408,6 @@
                   "$ref": "#/components/schemas/_SelectedText"
                 },
                 {
-                  "$ref": "#/components/schemas/_SelectedClicks"
-                },
-                {
                   "$ref": "#/components/schemas/_FreeTextInput"
                 },
                 {
@@ -629,34 +626,6 @@
           "colors"
         ],
         "title": "_SelectableText",
-        "type": "object"
-      },
-      "_SelectedClicks": {
-        "additionalProperties": false,
-        "properties": {
-          "clicks": {
-            "title": "Clicks",
-            "type": "integer"
-          },
-          "color": {
-            "title": "Color",
-            "type": "string"
-          },
-          "type": {
-            "const": "selectedClicks",
-            "enum": [
-              "selectedClicks"
-            ],
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "clicks",
-          "color"
-        ],
-        "title": "_SelectedClicks",
         "type": "object"
       },
       "_SelectedText": {

@@ -210,13 +210,6 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     {"type": "plainText", "text": "instructions"},
                     {"type": "plainText", "text": "."},
                 ]}]},
-                {"sentences": [{"tokens": [
-                    {"type": "selectedClicks", "clicks": 1, "color": "red"},
-                    {"type": "whitespace"},
-                    {"type": "selectedClicks", "clicks": 2, "color": "green"},
-                    {"type": "whitespace"},
-                    {"type": "selectedClicks", "clicks": 3, "color": "blue"},
-                ]}]},
             ]},
             "wording": {"paragraphs": [{"sentences": [{"tokens": [
                 {"type": "selectableText", "text": "This", "colors": ["red", "green", "blue"]},
@@ -266,13 +259,6 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     {"type": "whitespace"},
                     {"type": "plainText", "text": "instructions"},
                     {"type": "plainText", "text": "."},
-                ]}]},
-                {"sentences": [{"tokens": [
-                    {"type": "selectedClicks", "clicks": 1, "color": "red"},
-                    {"type": "whitespace"},
-                    {"type": "selectedClicks", "clicks": 2, "color": "green"},
-                    {"type": "whitespace"},
-                    {"type": "selectedClicks", "clicks": 3, "color": "blue"},
                 ]}]},
             ]},
             "wording": {"paragraphs": [{"sentences": [{"tokens": [

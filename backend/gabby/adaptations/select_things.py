@@ -53,17 +53,7 @@ class SelectThingsAdaptation(Adaptation):
         )
 
     def make_adapted_instructions(self):
-        section = self.adapt_instructions(self.exercise.instructions)
-
-        if len(self.colors) > 1:
-            tokens = []
-            for i, color in enumerate(self.colors):
-                if i != 0:
-                    tokens.append(renderable.Whitespace())
-                tokens.append(renderable.SelectedClicks(clicks=i + 1, color=color))
-            section.paragraphs.append(renderable.Paragraph(sentences=[renderable.Sentence(tokens=tokens)]))
-
-        return section
+        return self.adapt_instructions(self.exercise.instructions)
 
     class WordingAdapter(parsing.WordingSectionAdapter):
         def __init__(self, words, punctuation, colors):
@@ -149,13 +139,6 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                             r.PlainText(text="instructions"),
                         ]),
                     ]),
-                    r.Paragraph(sentences=[
-                        r.Sentence(tokens=[
-                            r.SelectedClicks(clicks=1, color="red"),
-                            r.Whitespace(),
-                            r.SelectedClicks(clicks=2, color="blue"),
-                        ]),
-                    ]),
                 ]),
                 wording=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
@@ -226,15 +209,6 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                             r.PlainText(text="|"),
                             r.PlainText(text="jkl"),
                             r.PlainText(text="}"),
-                        ]),
-                    ]),
-                    r.Paragraph(sentences=[
-                        r.Sentence(tokens=[
-                            r.SelectedClicks(clicks=1, color="red"),
-                            r.Whitespace(),
-                            r.SelectedClicks(clicks=2, color="green"),
-                            r.Whitespace(),
-                            r.SelectedClicks(clicks=3, color="blue"),
                         ]),
                     ]),
                 ]),
@@ -621,15 +595,6 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
                             r.PlainText(text="instructions"),
-                        ]),
-                    ]),
-                    r.Paragraph(sentences=[
-                        r.Sentence(tokens=[
-                            r.SelectedClicks(clicks=1, color="red"),
-                            r.Whitespace(),
-                            r.SelectedClicks(clicks=2, color="green"),
-                            r.Whitespace(),
-                            r.SelectedClicks(clicks=3, color="blue"),
                         ]),
                     ]),
                 ]),

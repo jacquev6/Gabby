@@ -587,16 +587,11 @@ class GenericInstructionsSectionAdapter(InstructionsSectionAdapter):
         text, color = args
         return renderable.SelectedText(text=text, color=color)
 
-    def selected_clicks_tag(self, args):
-        clicks, color = args
-        return renderable.SelectedClicks(clicks=clicks, color=color)
-
 
 adapt_generic_instructions_section = InstructionsSectionParser(
     {
         "boxed_text": r""" "|" STR """,
         "selected_text": r""" "|" STR "|" STR """,
-        "selected_clicks": r""" "|" INT "|" STR """,
     },
     GenericInstructionsSectionAdapter(),
 )
@@ -791,17 +786,6 @@ class AdaptGenericInstructionsSectionTestCase(TestCase):
                 renderable.PlainText(text="is"),
                 renderable.Whitespace(),
                 renderable.SelectedText(text="selected", color="red"),
-                renderable.PlainText(text="."),
-            ])])]),
-        )
-
-    def test_selected_clicks_tag(self):
-        self.do_test(
-            "A {selected-clicks|2|green}.",
-            renderable.Section(paragraphs=[renderable.Paragraph(sentences=[renderable.Sentence(tokens=[
-                renderable.PlainText(text="A"),
-                renderable.Whitespace(),
-                renderable.SelectedClicks(clicks=2, color="green"),
                 renderable.PlainText(text="."),
             ])])]),
         )

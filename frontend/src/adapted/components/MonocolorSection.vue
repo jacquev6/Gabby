@@ -44,9 +44,6 @@ watch(models, () => emit('layoutChanged'), { deep: true })
             <template v-else-if="token.type === 'selectedText'">
               <SelectedText :color="token.color">{{ token.text }}</SelectedText>
             </template>
-            <template v-else-if="token.type === 'selectedClicks'">
-              <SelectedText :color="token.color">{{ token.clicks }} {{ $t('nClicks', token.clicks) }}</SelectedText>
-            </template>
             <template v-else-if="token.type === 'multipleChoicesInput'">
               <MultipleChoicesInput :choices="token.choices" v-model="models[modelKey]" />
             </template>

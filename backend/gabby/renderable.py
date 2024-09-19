@@ -78,18 +78,6 @@ def SelectedText(text: str, color: str):
     return _SelectedText(type="selectedText", text=text, color=color)
 
 
-class _SelectedClicks(PydanticBase):
-    type: Literal["selectedClicks"]
-    clicks: int
-    color: str
-
-    def to_generic(self):
-        return f"{{selected-clicks|{self.clicks}|{self.color}}}"
-
-def SelectedClicks(clicks: int, color: str):
-    return _SelectedClicks(type="selectedClicks", clicks=clicks, color=color)
-
-
 class _FreeTextInput(PydanticBase):
     type: Literal["freeTextInput"]
 
@@ -121,7 +109,7 @@ def Whitespace():
     return _Whitespace(type="whitespace")
 
 
-SentenceToken = _PlainText | _BoxedText | _BoldText | _ItalicText | _SelectableText | _SelectedText | _SelectedClicks | _FreeTextInput | _MultipleChoicesInput | _Whitespace
+SentenceToken = _PlainText | _BoxedText | _BoldText | _ItalicText | _SelectableText | _SelectedText | _FreeTextInput | _MultipleChoicesInput | _Whitespace
 
 
 class Sentence(PydanticBase):

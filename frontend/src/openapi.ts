@@ -334,7 +334,7 @@ export interface components {
     /** Sentence */
     Sentence: {
       /** Tokens */
-      tokens: (components["schemas"]["_PlainText"] | components["schemas"]["_BoxedText"] | components["schemas"]["_BoldText"] | components["schemas"]["_ItalicText"] | components["schemas"]["_SelectableText"] | components["schemas"]["_SelectedText"] | components["schemas"]["_SelectedClicks"] | components["schemas"]["_FreeTextInput"] | components["schemas"]["_MultipleChoicesInput"] | components["schemas"]["_Whitespace"])[];
+      tokens: (components["schemas"]["_PlainText"] | components["schemas"]["_BoxedText"] | components["schemas"]["_BoldText"] | components["schemas"]["_ItalicText"] | components["schemas"]["_SelectableText"] | components["schemas"]["_SelectedText"] | components["schemas"]["_FreeTextInput"] | components["schemas"]["_MultipleChoicesInput"] | components["schemas"]["_Whitespace"])[];
     };
     /** ValidationError */
     ValidationError: {
@@ -421,19 +421,6 @@ export interface components {
        * @enum {string}
        */
       type: "selectableText";
-    };
-    /** _SelectedClicks */
-    _SelectedClicks: {
-      /** Clicks */
-      clicks: number;
-      /** Color */
-      color: string;
-      /**
-       * Type
-       * @constant
-       * @enum {string}
-       */
-      type: "selectedClicks";
     };
     /** _SelectedText */
     _SelectedText: {
