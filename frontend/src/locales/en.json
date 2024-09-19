@@ -63,6 +63,8 @@
   "createTextbook": "Create textbook",
   "newIndependentExercise": "New independent exercise",
   "exerciseNumber": "Number",
+  "exercisePage": "Page",
+  "exercisePageWithWarning": "Page (⚠️ not the one displayed)",
   "exerciseInstructions": "Instructions",
   "exerciseExample": "Example",
   "exerciseClue": "Clue",
@@ -76,6 +78,11 @@
   "fillWithFreeTextAdaptation": "Fill with free text",
   "multipleChoicesInInstructionsAdaptation": "Multiple choices (in instructions)",
   "multipleChoicesInWordingAdaptation": "Multiple choices (in wording)",
+
+  "confirmTitle": "Confirm",
+  "confirmNo": "Go back",
+  "confirmYes": "Confirm",
+  "pageMismatchConfirmationMessage": "The exercise's page is not the one currently displayed. This is OK but unusual. Are you sure you want to proceed?",
 
 
   "textbookNotFound": "Textbook not found",

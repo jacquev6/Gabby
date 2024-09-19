@@ -63,6 +63,8 @@
   "createTextbook": "Créer le manuel",
   "newIndependentExercise": "Nouvel exercice indépendant",
   "exerciseNumber": "Numéro",
+  "exercisePage": "Page",
+  "exercisePageWithWarning": "Page (⚠️ pas celle affichée)",
   "exerciseInstructions": "Consigne",
   "exerciseExample": "Exemple",
   "exerciseClue": "Indice",
@@ -76,6 +78,11 @@
   "fillWithFreeTextAdaptation": "Remplissage par texte libre",
   "multipleChoicesInInstructionsAdaptation": "Choix multiples (dans la consigne)",
   "multipleChoicesInWordingAdaptation": "Choix multiples (dans l'énoncé)",
+
+  "confirmTitle": "Confirmation",
+  "confirmNo": "Retour",
+  "confirmYes": "Confirmer",
+  "pageMismatchConfirmationMessage": "La page de l'exercice n'est pas celle affichée actuellement. C'est OK mais inhabituel. Êtes-vous sûr de vouloir continuer ?",
 
 
   "textbookNotFound": "Manuel introuvable",

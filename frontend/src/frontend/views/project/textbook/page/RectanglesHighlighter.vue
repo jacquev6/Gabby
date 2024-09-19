@@ -5,18 +5,20 @@ import type { PdfRectangle } from '$/frontend/stores/api'
 export type Point = { x: number, y: number }
 export type Rectangle = { start: Point, stop: Point }
 
-export function makeBoundingRectangle(/* @todo pdf_sha256: string, pdf_page: number,*/ rectangles: PdfRectangle[]) {
+export function makeBoundingRectangle(pdfSha256: string, pdfPage: number, rectangles: PdfRectangle[]) {
   console.assert(rectangles.every(r => r.coordinates === 'pdfjs'))
 
   let relevantRectangles = rectangles.filter(
-    r => /* @todo r.pdf_sha256 === pdf_sha256 && r.pdf_page === pdf_page
-    && */ r.role !== 'bounding'
+    r => r.pdf_sha256 === pdfSha256 && r.pdf_page === pdfPage
+    && r.role !== 'bounding'
     && r.coordinates === 'pdfjs'
   )
 
   // Special case where the exercise only has role='bounding' rectangle(s). Should only happen for test fixture 'test-exercises'.
   if (relevantRectangles.length === 0) {
-    relevantRectangles = rectangles
+    relevantRectangles = rectangles.filter(
+      r => r.pdf_sha256 === pdfSha256 && r.pdf_page === pdfPage
+    )
   }
 
   if (relevantRectangles.length === 0) {
@@ -30,9 +32,9 @@ export function makeBoundingRectangle(/* @todo pdf_sha256: string, pdf_page: num
   }
 }
 
-export function makeBoundingRectangles(/* @todo pdf_sha256: string, pdf_page: number,*/ exercises: readonly (Exercise & InCache & Exists)[]) {
+export function makeBoundingRectangles(pdfSha256: string, pdfPage: number, exercises: readonly (Exercise & InCache & Exists)[]) {
   return exercises
-    .map(exercise => makeBoundingRectangle(exercise.attributes.rectangles))
+    .map(exercise => makeBoundingRectangle(pdfSha256, pdfPage, exercise.attributes.rectangles))
     .filter((x): x is Rectangle => x !== null)
 }
 </script>
@@ -101,5 +103,5 @@ watch([props, context], () => {
 </script>
 
 <template>
-  <canvas ref="canvas" :data-cy-drawnRectangles="JSON.stringify(drawnRectangles)"></canvas>
+  <canvas ref="canvas" :data-cy-drawn-rectangles="JSON.stringify(drawnRectangles)"></canvas>
 </template>

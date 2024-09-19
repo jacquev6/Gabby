@@ -15,7 +15,9 @@ export const textualFieldNames = ['instructions', 'wording', 'example', 'clue'] 
 export type TextualFieldName = typeof textualFieldNames[number]
 
 export interface Model {
+  inTextbook: boolean
   number: string
+  textbookPage: number | null
   adaptationType: AdaptationType
   selectThingsAdaptationOptions: SelectThingsAdaptationOptions
   fillWithFreeTextAdaptationOptions: FillWithFreeTextAdaptationOptions
@@ -28,9 +30,19 @@ export interface Model {
   rectangles: PdfRectangle[]
 }
 
-export function makeModel(): Model {
+type MakeModelOptions  = {
+  inTextbook: true
+  textbookPage: number
+} | {
+  inTextbook: false
+  textbookPage: null
+}
+
+function makeModel({inTextbook, textbookPage}: MakeModelOptions): Model {
   return {
+    inTextbook,
     number: '',
+    textbookPage,
     adaptationType: '-',
     selectThingsAdaptationOptions: {
       colors: [defaultColors[0]],
@@ -50,6 +62,14 @@ export function makeModel(): Model {
     clue: '',
     rectangles: [],
   }
+}
+
+export function makeModelInTextbook(textbookPage: number): Model {
+  return makeModel({inTextbook: true, textbookPage})
+}
+
+export function makeModelNotInTextbook(): Model {
+  return makeModel({inTextbook: false, textbookPage: null})
 }
 
 export function assignModelFrom(model: Model, exercise: Exercise & InCache & Exists) {
@@ -94,8 +114,20 @@ export function assignModelFrom(model: Model, exercise: Exercise & InCache & Exi
   model.rectangles = exercise.attributes.rectangles
 }
 
-export function resetModel(model: Model) {
-  Object.assign(model, makeModel())
+function resetModel(model: Model, options: MakeModelOptions) {
+  Object.assign(model, makeModel(options))
+}
+
+export function resetModelInTextbook(model: Model, textbookPage: number) {
+  resetModel(model, {inTextbook: true, textbookPage})
+}
+
+export function resetModelNotInTextbook(model: Model) {
+  resetModel(model, {inTextbook: false, textbookPage: null})
+}
+
+export function modelIsEmpty(model: Model) {
+  return model.adaptationType === '-' && model.instructions === '' && model.wording === '' && model.example === '' && model.clue === ''
 }
 
 export function getAdaptationOptions(model: Model) {
@@ -132,12 +164,12 @@ export async function getParsed(model: Model) {
   return parsed
 }
 
-export async function create(project: Project, textbook: Textbook | null, textbookPage: number | null, model: Model) {
+export async function create(project: Project, textbook: Textbook | null, model: Model) {
   const operations: any/* @todo Type */[] = [
     [
       'add', 'exercise', 'ex',
       {
-        textbookPage,
+        textbookPage: model.textbookPage,
         number: model.number,
         instructions: model.instructions,
         wording: model.wording,
@@ -201,7 +233,7 @@ export function suggestNextNumber(number: string) {
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 
-import { BLabeledInput, BLabeledTextarea, BLabeledSelect } from './opinion/bootstrap'
+import { BRow, BCol, BLabeledInput, BLabeledTextarea, BLabeledSelect } from './opinion/bootstrap'
 import OptionalTextarea from './OptionalTextarea.vue'
 import WysiwygEditor from './WysiwygEditor.vue'
 import { wysiwygFormats } from './AdaptationDetailsFieldsForm.vue'
@@ -212,6 +244,7 @@ const props = defineProps<{
   fixedNumber: boolean
   wysiwyg: boolean
   deltas: (ParsedExercise & InCache & Exists)['attributes']['delta'] | null
+  displayedPage: number | null
 }>()
 
 const model = defineModel<Model>({required: true})
@@ -326,7 +359,17 @@ defineExpose({
 </script>
 
 <template>
-  <BLabeledInput :label="$t('exerciseNumber')" v-model="model.number" :disabled="fixedNumber" />
+  <div class="overflow-x-hidden">
+    <BRow>
+      <BCol>
+        <BLabeledInput :label="$t('exerciseNumber')" v-model="model.number" data-cy-exercise-field="number" :disabled="fixedNumber" />
+      </BCol>
+      <BCol v-if="model.inTextbook">
+        <!-- @todo Add warning icon when different from displayed page -->
+        <BLabeledInput :label="$t( model.textbookPage === displayedPage ? 'exercisePage' : 'exercisePageWithWarning')" v-model="model.textbookPage" data-cy-exercise-field="page" :disabled="fixedNumber" />
+      </BCol>
+    </BRow>
+  </div>
   <div :style="{position: 'relative', ...selBlotColors}">
     <BLabeledSelect
       :label="$t('adaptationType')" v-model="model.adaptationType"
@@ -344,6 +387,7 @@ defineExpose({
       ref="instructionsTextArea"
       :label="$t('exerciseInstructions')"
       v-model="model.instructions"
+      data-cy-exercise-field="instructions"
     />
     <WysiwygEditor
       v-if="wysiwyg"

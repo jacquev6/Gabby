@@ -9,6 +9,7 @@ import RectanglesHighlighter, { makeBoundingRectangles } from './RectanglesHighl
 import { useProjectTextbookPageData } from './ProjectTextbookPageLayout.vue'
 import ExercisesList from './ExercisesList.vue'
 import { useExerciseCreationHistoryStore } from './ExerciseCreationHistoryStore'
+import { useGloballyBusyStore } from '$frontend/stores/globallyBusy'
 
 
 const props = defineProps<{
@@ -19,6 +20,7 @@ const props = defineProps<{
 const projectId = computed(() => props.projectId)
 const textbookId = computed(() => props.textbookId)
 const page = computed(() => props.page)
+const globallyBusy = useGloballyBusyStore()
 
 const router = useRouter()
 const exerciseCreationHistory = useExerciseCreationHistoryStore()
@@ -27,9 +29,13 @@ onMounted(() => {
   exerciseCreationHistory.reset()
 })
 
-const { project, textbook, exercises } = useProjectTextbookPageData(projectId, textbookId, page)
+const { project, textbook, exercisesOnDisplayedPage, exercisesOnPageBeforeDisplayed } = useProjectTextbookPageData(projectId, textbookId, page, page)
+globallyBusy.register('loading exercises on page', computed(() => exercisesOnDisplayedPage.value.loading))
+globallyBusy.register('loading exercises on previous page', computed(() => exercisesOnPageBeforeDisplayed.value.loading))
 
-const greyRectangles = computed(() => makeBoundingRectangles(exercises.value.existingItems))
+function makeGreyRectangles(pdfSha256: string, pdfPage: number) {
+  return makeBoundingRectangles(pdfSha256, pdfPage, [...exercisesOnPageBeforeDisplayed.value.existingItems, ...exercisesOnDisplayedPage.value.existingItems])
+}
 
 function changePage(page: number) {
   router.push({name: 'project-textbook-page', params: {page}})
@@ -38,14 +44,16 @@ function changePage(page: number) {
 
 <template>
   <ProjectTextbookPageLayout
-    :project :textbook :page :displayPage="page" @update:displayPage="changePage"
+    :project :textbook :page :displayedPage="page" @update:displayedPage="changePage"
     :title="[]" :breadcrumbs="bc.empty"
   >
-    <template #pdfOverlay="{ width, height, transform }">
+    <template #pdfOverlay="{ pdfFile, pdf, width, height, transform }">
       <RectanglesHighlighter
+        v-if="pdfFile.inCache && pdfFile.exists"
         class="img w-100" style="position: absolute; top: 0; left: 0"
         :width :height :transform
-        :greyRectangles :surroundedRectangles="[]"
+        :greyRectangles="makeGreyRectangles(pdfFile.attributes.sha256, pdf.page.pageNumber)"
+        :surroundedRectangles="[]"
       />
     </template>
 
@@ -55,6 +63,6 @@ function changePage(page: number) {
         {{ $t('create') }}
       </RouterLink>
     </p>
-    <ExercisesList :exercises />
+    <ExercisesList :exercises="exercisesOnDisplayedPage" />
   </ProjectTextbookPageLayout>
 </template>
