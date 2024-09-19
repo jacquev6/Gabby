@@ -103,6 +103,7 @@
   "noExercises": "No exercises yet.",
   "create": "New exercise",
   "delete": "Delete",
+  "exerciseDeletionConfirmationMessage": "Are you sure you want to delete this exercise?",
   "save": "Save",
   "exerciseAlreadyExists": "Exercise {number} already exists.",
   "skipExercise": "Skip to next exercise",

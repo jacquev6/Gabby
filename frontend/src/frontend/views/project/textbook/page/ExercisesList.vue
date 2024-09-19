@@ -1,6 +1,9 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+
 import type { List, Exercise } from '$frontend/stores/api'
 import { BBusy, BButton } from '$frontend/components/opinion/bootstrap'
+import ConfirmationModal from '$frontend/components/ConfirmationModal.vue'
 
 
 const props = defineProps<{
@@ -11,13 +14,18 @@ function ellipsis(s: string) {
   return s.length > 25 ? s.slice(0, 25) + '…' : s
 }
 
+const exerciseDeletionConfirmationModal = ref<InstanceType<typeof ConfirmationModal> | null>(null)
 async function delete_(exercise: Exercise) {
-  await exercise.delete()
-  await props.exercises.refresh()
+  console.assert(exerciseDeletionConfirmationModal.value !== null)
+  if (await exerciseDeletionConfirmationModal.value.show()) {
+    await exercise.delete()
+    await props.exercises.refresh()
+  }
 }
 </script>
 
 <template>
+  <ConfirmationModal ref="exerciseDeletionConfirmationModal">{{ $t('exerciseDeletionConfirmationMessage') }}</ConfirmationModal>
   <BBusy :busy="exercises.loading">
     <ul v-if="exercises.existingItems.length">
       <template v-for="exercise in exercises.existingItems">

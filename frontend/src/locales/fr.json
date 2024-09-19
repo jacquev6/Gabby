@@ -103,6 +103,7 @@
   "noExercises": "Pas encore d'exercices.",
   "create": "Nouvel exercice",
   "delete": "Supprimer",
+  "exerciseDeletionConfirmationMessage": "Êtes-vous sûr de vouloir supprimer cet exercice ?",
   "save": "Enregistrer",
   "exerciseAlreadyExists": "L'exercice {number} existe déjà.",
   "skipExercise": "Passer au suivant",
