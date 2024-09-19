@@ -94,15 +94,16 @@ span.choice {
   border: 1px solid black;
 }
 
+/* Colors provided by client */
 span.choice0 {
-  color: red;
+  color: #F00;
 }
 
 span.choice1 {
-  color: blue;
+  color: #00F;
 }
 
 span.choice2 {
-  color: green;
+  color: #0C0;
 }
 </style>
