@@ -87,6 +87,7 @@
 
   "textbookNotFound": "Manuel introuvable",
   "pdfNotLoaded": "Le PDF contenant cette page ({name}) n'a pas encore été ouvert. Si vous en disposez d'une copie, vous pouvez l'ouvrir ci-dessous.",
+  "wrongPdfLoaded": "Le PDF que vous venez d'ouvrir ({loaded}) n'est pas le PDF connu pour contenir cette page ({name}). Si vous disposez d'une copie de {name}, vous pouvez l'ouvrir ci-dessous.",
   "pageNoKnown": "Aucun PDF enregistré ne contient cette page.",
 
 

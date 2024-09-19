@@ -46,11 +46,14 @@ describe('Gabby', () => {
     cy.location('pathname').should('eq', '/project-xkopqm/textbook-klxufv/page-2')
   })
 
-  it('loads a PDF', () => {
+  it('loads the wrong PDF then the right one', () => {
     visit('/project-xkopqm/textbook-klxufv/page-6')
 
     notBusy()
     cy.get('p:contains("The PDF that contains this page (test.pdf) has not been loaded yet.")').should('exist')
+
+    loadPdf('large')
+    cy.get('p:contains("The PDF you\'ve just loaded (large.pdf) is not the PDF known to contain this page (test.pdf).")').should('exist')
 
     loadPdf('test')
     cy.get('p:contains("The PDF that contains this page (test.pdf) has not been loaded yet.")').should('not.exist')

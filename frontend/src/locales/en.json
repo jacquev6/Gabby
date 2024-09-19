@@ -87,6 +87,7 @@
 
   "textbookNotFound": "Textbook not found",
   "pdfNotLoaded": "The PDF that contains this page ({name}) has not been loaded yet. If you have a copy, you can open it.",
+  "wrongPdfLoaded": "The PDF you've just loaded ({loaded}) is not the PDF known to contain this page ({name}). If you have a copy of {name}, you can open it.",
   "pageNoKnown": "No known PDF contains this page.",
 
 

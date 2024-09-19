@@ -201,14 +201,17 @@ const pdf = computedAsync(
                       </template>
                     </div>
                   </template>
-                  <template v-else>
-                    <PdfNotLoaded :name="
-                      section.relationships.pdfFile.inCache
-                      && section.relationships.pdfFile.exists
-                      && section.relationships.pdfFile.relationships.namings.length > 0
-                      && section.relationships.pdfFile.relationships.namings[0].inCache
-                      && section.relationships.pdfFile.relationships.namings[0].exists
-                      ? section.relationships.pdfFile.relationships.namings[0].attributes.name : ''" />
+                  <template v-else-if="
+                    section.relationships.pdfFile.inCache
+                    && section.relationships.pdfFile.exists
+                    && section.relationships.pdfFile.relationships.namings.length > 0
+                    && section.relationships.pdfFile.relationships.namings[0].inCache
+                    && section.relationships.pdfFile.relationships.namings[0].exists
+                  ">
+                    <PdfNotLoaded
+                      :name="section.relationships.pdfFile.relationships.namings[0].attributes.name"
+                      :sha256="section.relationships.pdfFile.attributes.sha256"
+                    />
                   </template>
                 </BBusy>
               </template>
