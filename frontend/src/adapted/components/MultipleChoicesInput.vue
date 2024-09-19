@@ -90,6 +90,7 @@ div.choices {
 }
 
 span.choice {
+  display: block;
   border: 1px solid black;
 }
 
