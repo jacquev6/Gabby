@@ -44,7 +44,9 @@ const props = withDefaults(defineProps<{
   widths?: Record<string, string>
   collapsed?: Record<string, boolean>
 }>(), {
+  // @ts-ignore/* @todo Understand and fix typing issue */
   widths: {},
+  // @ts-ignore/* @todo Understand and fix typing issue */
   collapsed: {},
 })
 
