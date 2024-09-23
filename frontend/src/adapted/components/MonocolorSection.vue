@@ -60,7 +60,10 @@ watch(models, () => emit('layoutChanged'), { deep: true })
 
 <style scoped>
 p {
-  line-height: 2.5em;
+  /* CSS provided by client. I think we'll run into issues with sizes specified in px, but let's go with it for now. */
+  font-family: Arial;
+  font-size: 32px;
+  line-height: 112px;
 }
 
 span.boxed {

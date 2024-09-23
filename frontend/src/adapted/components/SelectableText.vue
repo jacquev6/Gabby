@@ -20,17 +20,12 @@ function increment() {
 
 <style scoped>
 span {
-  border: none;
-  border-top: 2px solid transparent;
-  border-bottom: 2px solid transparent;
-  margin: 0;
-  padding: 0;
-  background: none;
   cursor: pointer;
   user-select: none;
+  padding: 3.2px 16px;
 }
 
 span:hover {
-  border-color: grey;
+  outline: rgb(238, 238, 238) dotted 3px;
 }
 </style>
