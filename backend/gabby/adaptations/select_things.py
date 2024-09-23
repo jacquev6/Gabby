@@ -125,6 +125,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             wording="The wording of this exercise is a single sentence.",
             example="",
             clue="",
+            wording_paragraphs_per_pagelet=3,
         )
         adaptation = SelectThingsAdaptation(exercise=exercise, old_colors_count=2, colors=["red", "blue"], words=True, punctuation=False)
 
@@ -166,6 +167,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 ]),
                 example=r.Section(paragraphs=[]),
                 clue=r.Section(paragraphs=[]),
+                wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
                 instructions=[
@@ -187,6 +189,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             wording="wording",
             example="",
             clue="",
+            wording_paragraphs_per_pagelet=3,
         )
         adaptation = SelectThingsAdaptation(exercise=exercise, colors=["red", "green", "blue"], words=True, punctuation=False)
 
@@ -221,6 +224,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 ]),
                 example=r.Section(paragraphs=[]),
                 clue=r.Section(paragraphs=[]),
+                wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
                 instructions=[
@@ -247,6 +251,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             wording="wording",
             example="",
             clue="",
+            wording_paragraphs_per_pagelet=3,
         )
         adaptation = SelectThingsAdaptation(exercise=exercise, old_colors_count=1, colors=["red"], words=True, punctuation=False)
 
@@ -271,6 +276,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 ]),
                 example=r.Section(paragraphs=[]),
                 clue=r.Section(paragraphs=[]),
+                wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
                 instructions=[
@@ -292,6 +298,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             wording="wording",
             example="",
             clue="",
+            wording_paragraphs_per_pagelet=3,
         )
         adaptation = SelectThingsAdaptation(exercise=exercise, old_colors_count=1, colors=["red"], words=True, punctuation=False)
 
@@ -330,6 +337,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 ]),
                 example=r.Section(paragraphs=[]),
                 clue=r.Section(paragraphs=[]),
+                wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
                 instructions=[
@@ -351,6 +359,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             wording="wording is\n\non\n\nmultiple lines",
             example="",
             clue="",
+            wording_paragraphs_per_pagelet=3,
         )
         adaptation = SelectThingsAdaptation(exercise=exercise, old_colors_count=1, colors=["red"], words=True, punctuation=False)
 
@@ -389,6 +398,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 ]),
                 example=r.Section(paragraphs=[]),
                 clue=r.Section(paragraphs=[]),
+                wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
                 instructions=[
@@ -410,6 +420,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             wording="{tag|def}",
             example="",
             clue="",
+            wording_paragraphs_per_pagelet=3,
         )
         adaptation = SelectThingsAdaptation(exercise=exercise, old_colors_count=1, colors=["red"], words=True, punctuation=False)
 
@@ -442,6 +453,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 ]),
                 example=r.Section(paragraphs=[]),
                 clue=r.Section(paragraphs=[]),
+                wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
                 instructions=[
@@ -463,6 +475,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             wording="   def   ",
             example="",
             clue="",
+            wording_paragraphs_per_pagelet=3,
         )
         adaptation = SelectThingsAdaptation(exercise=exercise, old_colors_count=1, colors=["red"], words=True, punctuation=False)
 
@@ -487,6 +500,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 ]),
                 example=r.Section(paragraphs=[]),
                 clue=r.Section(paragraphs=[]),
+                wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
                 instructions=[
@@ -508,6 +522,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             wording="wording",
             example="This is the example.",
             clue="This is the clue.",
+            wording_paragraphs_per_pagelet=3,
         )
         adaptation = SelectThingsAdaptation(exercise=exercise, old_colors_count=1, colors=["red"], words=True, punctuation=False)
 
@@ -558,6 +573,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                         ]),
                     ]),
                 ]),
+                wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
                 instructions=[
@@ -583,6 +599,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             wording="wording",
             example="{sel1|abc} {sel2|def}",
             clue="{sel3|ghi} {sel4|jkl}",
+            wording_paragraphs_per_pagelet=3,
         )
         adaptation = SelectThingsAdaptation(exercise=exercise, colors=["red", "green", "blue"], words=True, punctuation=False)
 
@@ -627,6 +644,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                         ]),
                     ]),
                 ]),
+                wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
                 instructions=[

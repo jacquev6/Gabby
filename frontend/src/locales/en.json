@@ -133,6 +133,7 @@
   "placeholderText": "Placeholder to fill",
   "boldButton": "Bold",
   "italicButton": "Italic",
+  "exerciseLinesParPage": "Lines per page",
 
   "tools": "Tools",
   "undo": "Undo",

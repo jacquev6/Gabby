@@ -3,7 +3,6 @@ import type { paths } from '$/openapi'
 
 export interface Settings {
   tricolorWording: boolean,
-  wordingParagraphsPerPagelet: number | null,
 }
 
 

@@ -486,6 +486,11 @@ export interface components {
        * @default
        */
       wording?: string;
+      /**
+       * Wordingparagraphsperpagelet
+       * @default 3
+       */
+      wordingParagraphsPerPagelet?: number;
     };
     /** exerciseCreateInputDataRelationships */
     exerciseCreateInputDataRelationships: {
@@ -537,6 +542,8 @@ export interface components {
       updatedAt: string;
       /** Wording */
       wording: string;
+      /** Wordingparagraphsperpagelet */
+      wordingParagraphsPerPagelet: number;
     };
     /** exerciseOutputItemRelationships */
     exerciseOutputItemRelationships: {
@@ -582,6 +589,8 @@ export interface components {
       rectangles?: components["schemas"]["PdfRectangle"][];
       /** Wording */
       wording?: string;
+      /** Wordingparagraphsperpagelet */
+      wordingParagraphsPerPagelet?: number;
     };
     /** exerciseUpdateInputDataRelationships */
     exerciseUpdateInputDataRelationships: {
@@ -806,6 +815,8 @@ export interface components {
       /** Textbook Page */
       textbook_page: number | null;
       wording: components["schemas"]["Section"];
+      /** Wording Paragraphs Per Pagelet */
+      wording_paragraphs_per_pagelet: number;
     };
     /** multipleChoicesInInstructionsAdaptationCreateInput */
     multipleChoicesInInstructionsAdaptationCreateInput: {
@@ -1076,6 +1087,8 @@ export interface components {
       type: string;
       /** Wording */
       wording: string;
+      /** Wordingparagraphsperpagelet */
+      wordingParagraphsPerPagelet: number;
     };
     /** parsedExerciseCreateInputDataRelationships */
     parsedExerciseCreateInputDataRelationships: Record<string, never>;

@@ -3,7 +3,7 @@ import { ref, computed, reactive, watch, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
-import { BButton, BBusy } from '$frontend/components/opinion/bootstrap'
+import { BButton, BBusy, BLabeledSelect } from '$frontend/components/opinion/bootstrap'
 import { useApiStore } from '$frontend/stores/api'
 import bc from '$frontend/components/breadcrumbs'
 import ProjectTextbookPageLayout from './ProjectTextbookPageLayout.vue'
@@ -234,13 +234,15 @@ watch(parsedExercise, () => {
 })
 
 const toolSlotNames = computed(() => {
-  const names = ['undoRedo']
+  const names = []
+  names.push('undoRedo')
   if (model.adaptationType !== '-') {
     names.push('adaptationDetails')
   }
   if (wysiwyg.value) {
     names.push('basicFormatting')
   }
+  names.push('repartition')
   return names
 })
 </script>
@@ -311,6 +313,9 @@ const toolSlotNames = computed(() => {
                   </template>
                   <template #basicFormatting>
                     <BasicFormattingTools v-if="fields !== null" v-model="model" :fields />
+                  </template>
+                  <template #repartition>
+                    <BLabeledSelect :label="$t('exerciseLinesParPage')" v-model="model.wordingParagraphsPerPagelet" :options="[{label: '1', value: 1}, {label: '2', value: 2}, {label: '3', value: 3}, {label: '4', value: 4}, {label: '5', value: 5}]" />
                   </template>
                 </ToolsGutter>
               </div>

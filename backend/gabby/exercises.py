@@ -45,6 +45,7 @@ class Adaptation(OrmBase, CreatedUpdatedByAtMixin):
             wording=self.make_adapted_wording(),
             example=self.make_adapted_example(),
             clue=self.make_adapted_clue(),
+            wording_paragraphs_per_pagelet=self.exercise.wording_paragraphs_per_pagelet,
         )
 
     def make_delta(self):
@@ -72,6 +73,7 @@ class Adaptation(OrmBase, CreatedUpdatedByAtMixin):
                 wording=self.make_adapted_wording().to_generic(),
                 example=to_generic_or_empty(self.make_adapted_example()),
                 clue=to_generic_or_empty(self.make_adapted_clue()),
+                wording_paragraphs_per_pagelet=self.exercise.wording_paragraphs_per_pagelet,
             ),
         )
 
@@ -122,6 +124,8 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
     wording: orm.Mapped[str]
     example: orm.Mapped[str]
     clue: orm.Mapped[str]
+
+    wording_paragraphs_per_pagelet: orm.Mapped[int] = orm.mapped_column(default=3, server_default="3")
 
     _rectangles: orm.Mapped[list] = orm.mapped_column(sql.JSON, name="rectangles", default=[], server_default="[]")
 
@@ -477,6 +481,7 @@ class ExercisesResource:
         wording,
         example,
         clue,
+        wording_paragraphs_per_pagelet,
         rectangles,
         adaptation,
         session: SessionDependable,
@@ -493,6 +498,7 @@ class ExercisesResource:
             wording=wording,
             example=example,
             clue=clue,
+            wording_paragraphs_per_pagelet=wording_paragraphs_per_pagelet,
             rectangles=rectangles,
             adaptation=adaptation,
             created_by=authenticated_user,

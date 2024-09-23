@@ -19,7 +19,7 @@ const exercise = computed(() => {
 })
 
 const { firstWordingParagraph, lastWordingParagraph, pageletsCount } = useExercisePagelets(
-  computed(() => props.settings.wordingParagraphsPerPagelet),
+  computed(() => exercise.value.wording_paragraphs_per_pagelet),  // @todo Rename to wordingParagraphsPerPagelet
   computed(() => exercise.value.wording.paragraphs.length),
   computed(() => props.pageletIndex),
 )

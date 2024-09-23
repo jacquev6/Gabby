@@ -754,6 +754,11 @@
             "default": "",
             "title": "Wording",
             "type": "string"
+          },
+          "wordingParagraphsPerPagelet": {
+            "default": 3,
+            "title": "Wordingparagraphsperpagelet",
+            "type": "integer"
           }
         },
         "required": [
@@ -882,6 +887,10 @@
           "wording": {
             "title": "Wording",
             "type": "string"
+          },
+          "wordingParagraphsPerPagelet": {
+            "title": "Wordingparagraphsperpagelet",
+            "type": "integer"
           }
         },
         "required": [
@@ -893,6 +902,7 @@
           "wording",
           "example",
           "clue",
+          "wordingParagraphsPerPagelet",
           "rectangles"
         ],
         "title": "exerciseOutputItemAttributes",
@@ -1022,6 +1032,10 @@
           "wording": {
             "title": "Wording",
             "type": "string"
+          },
+          "wordingParagraphsPerPagelet": {
+            "title": "Wordingparagraphsperpagelet",
+            "type": "integer"
           }
         },
         "title": "exerciseUpdateInputDataAttributes",
@@ -1626,6 +1640,10 @@
           },
           "wording": {
             "$ref": "#/components/schemas/Section"
+          },
+          "wording_paragraphs_per_pagelet": {
+            "title": "Wording Paragraphs Per Pagelet",
+            "type": "integer"
           }
         },
         "required": [
@@ -1634,7 +1652,8 @@
           "instructions",
           "wording",
           "example",
-          "clue"
+          "clue",
+          "wording_paragraphs_per_pagelet"
         ],
         "title": "Exercise",
         "type": "object"
@@ -2345,6 +2364,10 @@
           "wording": {
             "title": "Wording",
             "type": "string"
+          },
+          "wordingParagraphsPerPagelet": {
+            "title": "Wordingparagraphsperpagelet",
+            "type": "integer"
           }
         },
         "required": [
@@ -2353,6 +2376,7 @@
           "wording",
           "example",
           "clue",
+          "wordingParagraphsPerPagelet",
           "type",
           "adaptationOptions"
         ],

@@ -10,7 +10,7 @@ set -x
 
 docker compose exec backend-shell python -m gabby \
   restore-database \
-    s3://jacquev6/gabby/prod/backups/gabby-backup-20240826-044207.tar.gz \
+    s3://jacquev6/gabby/prod/backups/gabby-backup-20240923-124206.tar.gz \
     --patch-according-to-settings \
     --yes
 
@@ -22,15 +22,15 @@ docker compose exec backend-shell python -m gabby \
     --username admin \
     --password password
 
-# rev_id_arg=
-# if [ -e ../../backend/gabby/migrations/versions/*_dev.py ]
-# then
-#   rev_id_arg="--rev-id $(find ../../backend/gabby/migrations/versions/*_dev.py | sed -E 's#../../backend/gabby/migrations/versions/(.*)_dev\.py#\1#')"
-#   docker compose exec --workdir /app/backend/gabby backend-shell alembic downgrade head-1
-#   rm -f ../../backend/gabby/migrations/versions/*_dev.py
-# fi
+rev_id_arg=
+if [ -e ../../backend/gabby/migrations/versions/*_dev.py ]
+then
+  rev_id_arg="--rev-id $(find ../../backend/gabby/migrations/versions/*_dev.py | sed -E 's#../../backend/gabby/migrations/versions/(.*)_dev\.py#\1#')"
+  docker compose exec --workdir /app/backend/gabby backend-shell alembic downgrade head-1
+  rm -f ../../backend/gabby/migrations/versions/*_dev.py
+fi
 
-# docker compose exec --workdir /app/backend/gabby backend-shell alembic revision --autogenerate $rev_id_arg -m dev
+docker compose exec --workdir /app/backend/gabby backend-shell alembic revision --autogenerate $rev_id_arg -m dev
 
 # Check the new revision can be applied and rollbacked
 docker compose exec --workdir /app/backend/gabby backend-shell alembic upgrade head

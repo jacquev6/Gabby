@@ -149,6 +149,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
             wording="A ... B ...",
             example="",
             clue="",
+            wording_paragraphs_per_pagelet=3,
         )
         adaptation = MultipleChoicesInInstructionsAdaptation(exercise=exercise, placeholder="...")
 
@@ -186,6 +187,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                 ]),
                 example=r.Section(paragraphs=[]),
                 clue=r.Section(paragraphs=[]),
+                wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
                 instructions=[
@@ -211,6 +213,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
             wording="A @ B @",
             example="This {choice|is} the @ example.",
             clue="This is {choice|the} @ clue.",
+            wording_paragraphs_per_pagelet=3,
         )
         adaptation = MultipleChoicesInInstructionsAdaptation(exercise=exercise, placeholder="@")
 
@@ -286,6 +289,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                         ]),
                     ]),
                 ]),
+                wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
                 instructions=[
@@ -315,6 +319,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
             wording="...",
             example="",
             clue="",
+            wording_paragraphs_per_pagelet=3,
         )
         adaptation = MultipleChoicesInInstructionsAdaptation(exercise=exercise, placeholder="...")
 
@@ -353,6 +358,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                 ]),
                 example=r.Section(paragraphs=[]),
                 clue=r.Section(paragraphs=[]),
+                wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
                 instructions=[
@@ -377,6 +383,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
             wording="...",
             example="",
             clue="",
+            wording_paragraphs_per_pagelet=3,
         )
         adaptation = MultipleChoicesInInstructionsAdaptation(exercise=exercise, placeholder="...")
 
@@ -413,6 +420,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                 ]),
                 example=r.Section(paragraphs=[]),
                 clue=r.Section(paragraphs=[]),
+                wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
                 instructions=[

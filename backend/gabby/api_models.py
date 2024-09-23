@@ -116,6 +116,8 @@ class Exercise(PydanticBase, CreatedUpdatedByAtMixin):
     example: str = ""
     clue: str = ""
 
+    wording_paragraphs_per_pagelet: int = 3
+
     rectangles: list[PdfRectangle] = []
 
     adaptation: (
@@ -163,6 +165,7 @@ class ParsedExercise(PydanticBase):
     wording: Annotated[str, WriteOnly()]
     example: Annotated[str, WriteOnly()]
     clue: Annotated[str, WriteOnly()]
+    wording_paragraphs_per_pagelet: Annotated[int, WriteOnly()]
     type: Annotated[str, WriteOnly()]
     adaptation_options: Annotated[
         (

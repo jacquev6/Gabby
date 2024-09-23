@@ -15,13 +15,12 @@ const props = defineProps<{
 
 const settings = {
   tricolorWording: true,
-  wordingParagraphsPerPagelet: 3,
 }
 
 const pageletIndex = ref(0)
 
 const { firstWordingParagraph, lastWordingParagraph, pageletsCount } = useExercisePagelets(
-  computed(() => settings.wordingParagraphsPerPagelet),
+  computed(() => props.exercise.wording_paragraphs_per_pagelet),  // @todo Rename to wordingParagraphsPerPagelet
   computed(() => props.exercise.wording.paragraphs.length),
   pageletIndex,
 )

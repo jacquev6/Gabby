@@ -67,6 +67,7 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
             wording="The wording of this ... is a ... sentence.",
             example="",
             clue="",
+            wording_paragraphs_per_pagelet=3,
         )
         adaptation = FillWithFreeTextAdaptation(exercise=exercise, placeholder="...")
 
@@ -108,6 +109,7 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 ]),
                 example=r.Section(paragraphs=[]),
                 clue=r.Section(paragraphs=[]),
+                wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
                 instructions=[
@@ -129,6 +131,7 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
             wording="@ a @",
             example="",
             clue="",
+            wording_paragraphs_per_pagelet=3,
         )
         adaptation = FillWithFreeTextAdaptation(exercise=exercise, placeholder="@")
 
@@ -157,6 +160,7 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 ]),
                 example=r.Section(paragraphs=[]),
                 clue=r.Section(paragraphs=[]),
+                wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
                 instructions=[
@@ -178,6 +182,7 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
             wording="wording",
             example="",
             clue="",
+            wording_paragraphs_per_pagelet=3,
         )
         adaptation = FillWithFreeTextAdaptation(exercise=exercise, placeholder="...")
 
@@ -216,6 +221,7 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 ]),
                 example=r.Section(paragraphs=[]),
                 clue=r.Section(paragraphs=[]),
+                wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
                 instructions=[
@@ -237,6 +243,7 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
             wording="foo toto : ...\n\nbar : ...\n\nbaz : ...",
             example="",
             clue="",
+            wording_paragraphs_per_pagelet=3,
         )
         adaptation = FillWithFreeTextAdaptation(exercise=exercise, placeholder="...")
 
@@ -285,6 +292,7 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 ]),
                 example=r.Section(paragraphs=[]),
                 clue=r.Section(paragraphs=[]),
+                wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
                 instructions=[
@@ -306,6 +314,7 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
             wording="{tag|def}",
             example="",
             clue="",
+            wording_paragraphs_per_pagelet=3,
         )
         adaptation = FillWithFreeTextAdaptation(exercise=exercise, placeholder="...")
 
@@ -338,6 +347,7 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 ]),
                 example=r.Section(paragraphs=[]),
                 clue=r.Section(paragraphs=[]),
+                wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
                 instructions=[
@@ -359,6 +369,7 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
             wording="   def   ",
             example="",
             clue="",
+            wording_paragraphs_per_pagelet=3,
         )
         adaptation = FillWithFreeTextAdaptation(exercise=exercise, placeholder="...")
 
@@ -383,6 +394,7 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 ]),
                 example=r.Section(paragraphs=[]),
                 clue=r.Section(paragraphs=[]),
+                wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
                 instructions=[
@@ -404,6 +416,7 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
             wording="This @ is the wording.",
             example="This @ is the example.",
             clue="This @ is the clue.",
+            wording_paragraphs_per_pagelet=3,
         )
         adaptation = FillWithFreeTextAdaptation(exercise=exercise, placeholder="@")
 
@@ -467,6 +480,7 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                         ]),
                     ]),
                 ]),
+                wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
                 instructions=[

@@ -64,6 +64,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
             wording="A {choices|a|b|c} B {choices|d|e}.",
             example="",
             clue="",
+            wording_paragraphs_per_pagelet=3,
         )
         adaptation = MultipleChoicesInWordingAdaptation(exercise=exercise)
 
@@ -98,6 +99,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 ]),
                 example=r.Section(paragraphs=[]),
                 clue=r.Section(paragraphs=[]),
+                wording_paragraphs_per_pagelet=3,
             ),
         )
 

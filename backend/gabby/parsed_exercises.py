@@ -68,6 +68,7 @@ class ParsedExercisesResource:
         wording,
         example,
         clue,
+        wording_paragraphs_per_pagelet,
         type,
         adaptation_options,
         authenticated_user: MandatoryAuthBearerDependable,
@@ -78,6 +79,7 @@ class ParsedExercisesResource:
             wording=wording,
             example=example,
             clue=clue,
+            wording_paragraphs_per_pagelet=wording_paragraphs_per_pagelet,
         )
         if type == "-":
             adaptation = NullAdaptation(
@@ -133,6 +135,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     "wording": "This is the wording.",
                     "example": "",
                     "clue": "",
+                    "wordingParagraphsPerPagelet": 3,
                     "type": "-",
                     "adaptationOptions": {},
                 },
@@ -173,6 +176,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
             ]}]}]},
             "example": {"paragraphs": []},
             "clue": {"paragraphs": []},
+            "wording_paragraphs_per_pagelet": 3,
         })
 
     def test_select_things(self):
@@ -185,6 +189,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     "wording": "This is the wording.",
                     "example": "",
                     "clue": "",
+                    "wordingParagraphsPerPagelet": 3,
                     "type": "selectThingsAdaptation",
                     "adaptationOptions": {
                         "colors": ["red", "green", "blue"],
@@ -223,6 +228,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
             ]}]}]},
             "example": {"paragraphs": []},
             "clue": {"paragraphs": []},
+            "wording_paragraphs_per_pagelet": 3,
         })
 
     def test_select_things_with_example_and_clue(self):
@@ -235,6 +241,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     "wording": "This is the wording.",
                     "example": "This is the example.",
                     "clue": "This is the clue.",
+                    "wordingParagraphsPerPagelet": 3,
                     "type": "selectThingsAdaptation",
                     "adaptationOptions": {
                         "colors": ["red", "green", "blue"],
@@ -291,6 +298,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                 {"type": "plainText", "text": "clue"},
                 {"type": "plainText", "text": "."},
             ]}]}]},
+            "wording_paragraphs_per_pagelet": 3,
         })
 
     def test_fill_with_free_text(self):
@@ -303,6 +311,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     "wording": "Fill @",
                     "example": "",
                     "clue": "",
+                    "wordingParagraphsPerPagelet": 3,
                     "type": "fillWithFreeTextAdaptation",
                     "adaptationOptions": {
                         "placeholder": "@",
@@ -332,6 +341,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
             ]}]}]},
             "example": {"paragraphs": []},
             "clue": {"paragraphs": []},
+            "wording_paragraphs_per_pagelet": 3,
         })
 
     def test_multiple_choices_in_instructions(self):
@@ -344,6 +354,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     "wording": "A @\n\nB @",
                     "example": "",
                     "clue": "",
+                    "wordingParagraphsPerPagelet": 3,
                     "type": "multipleChoicesInInstructionsAdaptation",
                     "adaptationOptions": {
                         "placeholder": "@",
@@ -377,6 +388,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
             ]},
             "example": {"paragraphs": []},
             "clue": {"paragraphs": []},
+            "wording_paragraphs_per_pagelet": 3,
         })
 
     def test_multiple_choices_in_wording(self):
@@ -389,6 +401,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     "wording": "A {choices|alpha|beta}.",
                     "example": "",
                     "clue": "",
+                    "wordingParagraphsPerPagelet": 3,
                     "type": "multipleChoicesInWordingAdaptation",
                     "adaptationOptions": {},
                 },
@@ -411,4 +424,5 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
             ]}]}]},
             "example": {"paragraphs": []},
             "clue": {"paragraphs": []},
+            "wording_paragraphs_per_pagelet": 3,
         })

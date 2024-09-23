@@ -156,3 +156,4 @@ class Exercise(PydanticBase):
     wording: Section
     example: Section
     clue: Section
+    wording_paragraphs_per_pagelet: int

@@ -27,6 +27,7 @@ export interface Model {
   wording: string
   example: string
   clue: string
+  wordingParagraphsPerPagelet: number
   rectangles: PdfRectangle[]
 }
 
@@ -60,6 +61,7 @@ function makeModel({inTextbook, textbookPage}: MakeModelOptions): Model {
     wording: '',
     example: '',
     clue: '',
+    wordingParagraphsPerPagelet: 3,
     rectangles: [],
   }
 }
@@ -111,6 +113,7 @@ export function assignModelFrom(model: Model, exercise: Exercise & InCache & Exi
   model.wording = exercise.attributes.wording
   model.example = exercise.attributes.example
   model.clue = exercise.attributes.clue
+  model.wordingParagraphsPerPagelet = exercise.attributes.wordingParagraphsPerPagelet
   model.rectangles = exercise.attributes.rectangles
 }
 
@@ -156,6 +159,7 @@ export async function getParsed(model: Model) {
     wording: model.wording,
     example: model.example,
     clue: model.clue,
+    wordingParagraphsPerPagelet: model.wordingParagraphsPerPagelet,
     type: model.adaptationType,
     adaptationOptions: getAdaptationOptions(model),
   }
@@ -175,6 +179,7 @@ export async function create(project: Project, textbook: Textbook | null, model:
         wording: model.wording,
         example: model.example,
         clue: model.clue,
+        wordingParagraphsPerPagelet: model.wordingParagraphsPerPagelet,
         rectangles: model.rectangles,
       },
       {
@@ -206,6 +211,7 @@ export async function save(exercise: Exercise & InCache & Exists, model: Model) 
       wording: model.wording,
       example: model.example,
       clue: model.clue,
+      wordingParagraphsPerPagelet: model.wordingParagraphsPerPagelet,
       rectangles: model.rectangles,
     },
     relationships,
