@@ -3,7 +3,7 @@ import { ref, computed, reactive, watch, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
-import { BButton, BBusy, BLabeledSelect } from '$frontend/components/opinion/bootstrap'
+import { BButton, BBusy, BLabeledRadios } from '$frontend/components/opinion/bootstrap'
 import { useApiStore } from '$frontend/stores/api'
 import bc from '$frontend/components/breadcrumbs'
 import ProjectTextbookPageLayout from './ProjectTextbookPageLayout.vue'
@@ -245,6 +245,11 @@ const toolSlotNames = computed(() => {
   names.push('repartition')
   return names
 })
+
+const wordingParagraphsPerPageletOptions = [1, 2, 3, 4, 5].map(value => ({
+  label: i18n.t('exerciseLinesPerPage', {lines: value}),
+  value,
+}))
 </script>
 
 <template>
@@ -315,7 +320,7 @@ const toolSlotNames = computed(() => {
                     <BasicFormattingTools v-if="fields !== null" v-model="model" :fields />
                   </template>
                   <template #repartition>
-                    <BLabeledSelect :label="$t('exerciseLinesParPage')" v-model="model.wordingParagraphsPerPagelet" :options="[{label: '1', value: 1}, {label: '2', value: 2}, {label: '3', value: 3}, {label: '4', value: 4}, {label: '5', value: 5}]" />
+                    <BLabeledRadios :label="$t('exerciseRepartition')" v-model="model.wordingParagraphsPerPagelet" :options="wordingParagraphsPerPageletOptions" />
                   </template>
                 </ToolsGutter>
               </div>

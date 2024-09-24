@@ -133,7 +133,8 @@
   "placeholderText": "Trou à remplir",
   "boldButton": "Gras",
   "italicButton": "Italique",
-  "exerciseLinesParPage": "Lignes par page",
+  "exerciseRepartition": "Répartition",
+  "exerciseLinesPerPage": "{lines} lignes par page",
 
   "tools": "Outils",
   "undo": "Annuler",

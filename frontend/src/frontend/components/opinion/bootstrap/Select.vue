@@ -1,16 +1,10 @@
-<script setup lang="ts" generic="T">
+<script lang="ts">
 export interface Option<T> {
   value: T
   label: string
 }
 
-defineProps<{
-  options: (string | Option<T>)[],
-}>()
-
-const model = defineModel<T>()
-
-function value(option: string | Option<T>) {
+export function value<T>(option: string | Option<T>) {
   if (typeof option === 'string') {
     return option
   } else {
@@ -18,13 +12,21 @@ function value(option: string | Option<T>) {
   }
 }
 
-function label(option: string | Option<T>) {
+export function label<T>(option: string | Option<T>) {
   if (typeof option === 'string') {
     return option
   } else {
     return option.label
   }
 }
+</script>
+
+<script setup lang="ts" generic="T">
+defineProps<{
+  options: (string | Option<T>)[],
+}>()
+
+const model = defineModel<T>()
 </script>
 
 <template>
