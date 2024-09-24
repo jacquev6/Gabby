@@ -27,6 +27,7 @@ export type { Item, List, InCache, Exists }
 export type ParsedExercise = Item<'parsedExercise'>
 export type Exercise = Item<'exercise'>
 export type FillWithFreeTextAdaptation = Item<'fillWithFreeTextAdaptation'>
+export type ItemsAndEffectsAttempt1Adaptation = Item<'itemsAndEffectsAttempt1Adaptation'>
 export type MultipleChoicesInInstructionsAdaptation = Item<'multipleChoicesInInstructionsAdaptation'>
 export type MultipleChoicesInWordingAdaptation = Item<'multipleChoicesInWordingAdaptation'>
 export type PdfFile = Item<'pdfFile'>
@@ -43,6 +44,7 @@ type schemas = components["schemas"]
 
 export type SelectThingsAdaptationOptions = schemas["SelectThingsAdaptationOptions"]
 export type FillWithFreeTextAdaptationOptions = schemas["FillWithFreeTextAdaptationOptions"]
+export type ItemsAndEffectsAttempt1AdaptationOptions = schemas["ItemsAndEffectsAttempt1AdaptationOptions"]
 export type MultipleChoicesInInstructionsAdaptationOptions = schemas["MultipleChoicesInInstructionsAdaptationOptions"]
 export type MultipleChoicesInWordingAdaptationOptions = schemas["MultipleChoicesInWordingAdaptationOptions"]
 

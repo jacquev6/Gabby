@@ -1,4 +1,5 @@
 from .adaptations.fill_with_free_text import FillWithFreeTextAdaptation
+from .adaptations.items_and_effects__attempt_1 import ItemsAndEffectsAttempt1Adaptation
 from .adaptations.multiple_choices_in_instructions import MultipleChoicesInInstructionsAdaptation
 from .adaptations.multiple_choices_in_wording import MultipleChoicesInWordingAdaptation
 from .adaptations.select_things import SelectThingsAdaptation
@@ -16,6 +17,7 @@ all_models = [
     ExtractionEvent,
     FillWithFreeTextAdaptation,
     GenericAdaptation,
+    ItemsAndEffectsAttempt1Adaptation,
     MultipleChoicesInInstructionsAdaptation,
     MultipleChoicesInWordingAdaptation,
     PdfFile,

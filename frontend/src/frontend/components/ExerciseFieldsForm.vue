@@ -1,14 +1,14 @@
 <script lang="ts">
 import { useApiStore } from '$frontend/stores/api'
-import type { Project, Textbook, Exercise, InCache, Exists, SelectThingsAdaptation, FillWithFreeTextAdaptation, MultipleChoicesInInstructionsAdaptation, MultipleChoicesInWordingAdaptation, ParsedExercise } from '$frontend/stores/api'
-import type { SelectThingsAdaptationOptions, FillWithFreeTextAdaptationOptions, MultipleChoicesInInstructionsAdaptationOptions, MultipleChoicesInWordingAdaptationOptions, PdfRectangle } from '$frontend/stores/api'
+import type { Project, Textbook, Exercise, InCache, Exists, SelectThingsAdaptation, FillWithFreeTextAdaptation, ItemsAndEffectsAttempt1Adaptation, MultipleChoicesInInstructionsAdaptation, MultipleChoicesInWordingAdaptation, ParsedExercise } from '$frontend/stores/api'
+import type { SelectThingsAdaptationOptions, FillWithFreeTextAdaptationOptions, ItemsAndEffectsAttempt1AdaptationOptions, MultipleChoicesInInstructionsAdaptationOptions, MultipleChoicesInWordingAdaptationOptions, PdfRectangle } from '$frontend/stores/api'
 import { defaultColors } from './AdaptationDetailsFieldsForm.vue'
 
 
 const api = useApiStore()
 
 // @todo Automate updating this type when a new adaptation type is added
-export const adaptationTypes = ['selectThingsAdaptation', 'fillWithFreeTextAdaptation', 'multipleChoicesInInstructionsAdaptation', 'multipleChoicesInWordingAdaptation'] as const
+export const adaptationTypes = ['selectThingsAdaptation', 'fillWithFreeTextAdaptation', 'itemsAndEffectsAttempt1Adaptation', 'multipleChoicesInInstructionsAdaptation', 'multipleChoicesInWordingAdaptation'] as const
 export type AdaptationType = '-' | typeof adaptationTypes[number]
 
 export const textualFieldNames = ['instructions', 'wording', 'example', 'clue'] as const
@@ -21,6 +21,7 @@ export interface Model {
   adaptationType: AdaptationType
   selectThingsAdaptationOptions: SelectThingsAdaptationOptions
   fillWithFreeTextAdaptationOptions: FillWithFreeTextAdaptationOptions
+  itemsAndEffectsAttempt1AdaptationOptions: ItemsAndEffectsAttempt1AdaptationOptions
   multipleChoicesInInstructionsAdaptationOptions: MultipleChoicesInInstructionsAdaptationOptions
   multipleChoicesInWordingAdaptationOptions: MultipleChoicesInWordingAdaptationOptions
   instructions: string
@@ -53,6 +54,7 @@ function makeModel({inTextbook, textbookPage}: MakeModelOptions): Model {
     fillWithFreeTextAdaptationOptions: {
       placeholder: '...',
     },
+    itemsAndEffectsAttempt1AdaptationOptions: {},
     multipleChoicesInInstructionsAdaptationOptions: {
       placeholder: '...',
     },
@@ -91,6 +93,12 @@ export function assignModelFrom(model: Model, exercise: Exercise & InCache & Exi
         {
           const options = (exercise.relationships.adaptation as FillWithFreeTextAdaptation & InCache & Exists).attributes
           model.fillWithFreeTextAdaptationOptions.placeholder = options.placeholder
+        }
+        break
+      case 'itemsAndEffectsAttempt1Adaptation':
+        {
+          /* const options = */ (exercise.relationships.adaptation as ItemsAndEffectsAttempt1Adaptation & InCache & Exists).attributes
+          // Nothing to do
         }
         break
       case 'multipleChoicesInInstructionsAdaptation':
@@ -139,6 +147,8 @@ export function getAdaptationOptions(model: Model) {
       return {}
     case 'selectThingsAdaptation':
       return model.selectThingsAdaptationOptions
+    case 'itemsAndEffectsAttempt1Adaptation':
+      return model.itemsAndEffectsAttempt1AdaptationOptions
     case 'fillWithFreeTextAdaptation':
       return model.fillWithFreeTextAdaptationOptions
     case 'multipleChoicesInInstructionsAdaptation':

@@ -59,6 +59,12 @@ export const wysiwygFormats = {
     example: basicFormats,
     clue: basicFormats,
   },
+  itemsAndEffectsAttempt1Adaptation: {
+    instructions: basicFormats,
+    wording: basicFormats,
+    example: basicFormats,
+    clue: basicFormats,
+  },
   selectThingsAdaptation: {
     instructions: selectThingsFormats,
     wording: basicFormats,
@@ -141,6 +147,8 @@ const colorsCount = computed({
   </template>
   <template v-else-if="model.adaptationType === 'fillWithFreeTextAdaptation'">
     <BLabeledInput :label="$t('placeholderText')" type="text" v-model="model.fillWithFreeTextAdaptationOptions.placeholder" />
+  </template>
+  <template v-else-if="model.adaptationType === 'itemsAndEffectsAttempt1Adaptation'">
   </template>
   <template v-else-if="model.adaptationType === 'selectThingsAdaptation'">
     <template v-if="wysiwyg">

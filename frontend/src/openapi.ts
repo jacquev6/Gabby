@@ -35,6 +35,18 @@ export interface paths {
     /** Update Fill With Free Text Adaptation */
     patch: operations["update_fill_with_free_text_adaptation_api_fillWithFreeTextAdaptations__id__patch"];
   };
+  "/api/itemsAndEffectsAttempt1Adaptations": {
+    /** Create Items And Effects Attempt 1 Adaptation */
+    post: operations["create_items_and_effects_attempt_1_adaptation_api_itemsAndEffectsAttempt1Adaptations_post"];
+  };
+  "/api/itemsAndEffectsAttempt1Adaptations/{id}": {
+    /** Get Items And Effects Attempt 1 Adaptation */
+    get: operations["get_items_and_effects_attempt_1_adaptation_api_itemsAndEffectsAttempt1Adaptations__id__get"];
+    /** Delete Items And Effects Attempt 1 Adaptation */
+    delete: operations["delete_items_and_effects_attempt_1_adaptation_api_itemsAndEffectsAttempt1Adaptations__id__delete"];
+    /** Update Items And Effects Attempt 1 Adaptation */
+    patch: operations["update_items_and_effects_attempt_1_adaptation_api_itemsAndEffectsAttempt1Adaptations__id__patch"];
+  };
   "/api/multipleChoicesInInstructionsAdaptations": {
     /** Create Multiple Choices In Instructions Adaptation */
     post: operations["create_multiple_choices_in_instructions_adaptation_api_multipleChoicesInInstructionsAdaptations_post"];
@@ -244,6 +256,8 @@ export interface components {
       /** Self */
       self: string;
     };
+    /** ItemsAndEffectsAttempt1AdaptationOptions */
+    ItemsAndEffectsAttempt1AdaptationOptions: Record<string, never>;
     /** MultipleChoicesInInstructionsAdaptationOptions */
     MultipleChoicesInInstructionsAdaptationOptions: {
       /** Placeholder */
@@ -604,7 +618,7 @@ export interface components {
        * Type
        * @enum {string}
        */
-      type: "selectThingsAdaptation" | "fillWithFreeTextAdaptation" | "multipleChoicesInInstructionsAdaptation" | "multipleChoicesInWordingAdaptation";
+      type: "selectThingsAdaptation" | "fillWithFreeTextAdaptation" | "itemsAndEffectsAttempt1Adaptation" | "multipleChoicesInInstructionsAdaptation" | "multipleChoicesInWordingAdaptation";
     };
     /** exercise_createdBy_Relationship */
     exercise_createdBy_Relationship: {
@@ -813,6 +827,123 @@ export interface components {
       wording: components["schemas"]["Section"];
       /** Wording Paragraphs Per Pagelet */
       wording_paragraphs_per_pagelet: number;
+    };
+    /** itemsAndEffectsAttempt1AdaptationCreateInput */
+    itemsAndEffectsAttempt1AdaptationCreateInput: {
+      data: components["schemas"]["itemsAndEffectsAttempt1AdaptationCreateInputData"];
+    };
+    /** itemsAndEffectsAttempt1AdaptationCreateInputData */
+    itemsAndEffectsAttempt1AdaptationCreateInputData: {
+      /** @default {} */
+      attributes?: components["schemas"]["itemsAndEffectsAttempt1AdaptationCreateInputDataAttributes"];
+      relationships: components["schemas"]["itemsAndEffectsAttempt1AdaptationCreateInputDataRelationships"];
+      /** Type */
+      type: string;
+    };
+    /** itemsAndEffectsAttempt1AdaptationCreateInputDataAttributes */
+    itemsAndEffectsAttempt1AdaptationCreateInputDataAttributes: Record<string, never>;
+    /** itemsAndEffectsAttempt1AdaptationCreateInputDataRelationships */
+    itemsAndEffectsAttempt1AdaptationCreateInputDataRelationships: {
+      exercise: components["schemas"]["itemsAndEffectsAttempt1Adaptation_exercise_Relationship"];
+    };
+    /** itemsAndEffectsAttempt1AdaptationItemOutput */
+    itemsAndEffectsAttempt1AdaptationItemOutput: {
+      data: components["schemas"]["itemsAndEffectsAttempt1AdaptationOutputItem"];
+      /** Included */
+      included?: unknown[];
+    };
+    /** itemsAndEffectsAttempt1AdaptationOutputItem */
+    itemsAndEffectsAttempt1AdaptationOutputItem: {
+      attributes: components["schemas"]["itemsAndEffectsAttempt1AdaptationOutputItemAttributes"];
+      /** Id */
+      id: string;
+      links: components["schemas"]["ItemLinks"];
+      relationships: components["schemas"]["itemsAndEffectsAttempt1AdaptationOutputItemRelationships"];
+      /** Type */
+      type: string;
+    };
+    /** itemsAndEffectsAttempt1AdaptationOutputItemAttributes */
+    itemsAndEffectsAttempt1AdaptationOutputItemAttributes: {
+      /**
+       * Createdat
+       * Format: date-time
+       */
+      createdAt: string;
+      /**
+       * Updatedat
+       * Format: date-time
+       */
+      updatedAt: string;
+    };
+    /** itemsAndEffectsAttempt1AdaptationOutputItemRelationships */
+    itemsAndEffectsAttempt1AdaptationOutputItemRelationships: {
+      createdBy: components["schemas"]["itemsAndEffectsAttempt1Adaptation_createdBy_Relationship"];
+      exercise: components["schemas"]["itemsAndEffectsAttempt1Adaptation_exercise_Relationship"];
+      updatedBy: components["schemas"]["itemsAndEffectsAttempt1Adaptation_updatedBy_Relationship"];
+    };
+    /** itemsAndEffectsAttempt1AdaptationUpdateInput */
+    itemsAndEffectsAttempt1AdaptationUpdateInput: {
+      data: components["schemas"]["itemsAndEffectsAttempt1AdaptationUpdateInputData"];
+    };
+    /** itemsAndEffectsAttempt1AdaptationUpdateInputData */
+    itemsAndEffectsAttempt1AdaptationUpdateInputData: {
+      /** @default {} */
+      attributes?: components["schemas"]["itemsAndEffectsAttempt1AdaptationUpdateInputDataAttributes"];
+      /** Id */
+      id: string;
+      /** @default {} */
+      relationships?: components["schemas"]["itemsAndEffectsAttempt1AdaptationUpdateInputDataRelationships"];
+      /** Type */
+      type: string;
+    };
+    /** itemsAndEffectsAttempt1AdaptationUpdateInputDataAttributes */
+    itemsAndEffectsAttempt1AdaptationUpdateInputDataAttributes: Record<string, never>;
+    /** itemsAndEffectsAttempt1AdaptationUpdateInputDataRelationships */
+    itemsAndEffectsAttempt1AdaptationUpdateInputDataRelationships: Record<string, never>;
+    /** itemsAndEffectsAttempt1Adaptation_createdBy_Relationship */
+    itemsAndEffectsAttempt1Adaptation_createdBy_Relationship: {
+      data: components["schemas"]["itemsAndEffectsAttempt1Adaptation_createdBy_Relationship_ObjectId"];
+    };
+    /** itemsAndEffectsAttempt1Adaptation_createdBy_Relationship_ObjectId */
+    itemsAndEffectsAttempt1Adaptation_createdBy_Relationship_ObjectId: {
+      /** Id */
+      id: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "user";
+    };
+    /** itemsAndEffectsAttempt1Adaptation_exercise_Relationship */
+    itemsAndEffectsAttempt1Adaptation_exercise_Relationship: {
+      data: components["schemas"]["itemsAndEffectsAttempt1Adaptation_exercise_Relationship_ObjectId"];
+    };
+    /** itemsAndEffectsAttempt1Adaptation_exercise_Relationship_ObjectId */
+    itemsAndEffectsAttempt1Adaptation_exercise_Relationship_ObjectId: {
+      /** Id */
+      id: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "exercise";
+    };
+    /** itemsAndEffectsAttempt1Adaptation_updatedBy_Relationship */
+    itemsAndEffectsAttempt1Adaptation_updatedBy_Relationship: {
+      data: components["schemas"]["itemsAndEffectsAttempt1Adaptation_updatedBy_Relationship_ObjectId"];
+    };
+    /** itemsAndEffectsAttempt1Adaptation_updatedBy_Relationship_ObjectId */
+    itemsAndEffectsAttempt1Adaptation_updatedBy_Relationship_ObjectId: {
+      /** Id */
+      id: string;
+      /**
+       * Type
+       * @constant
+       * @enum {string}
+       */
+      type: "user";
     };
     /** multipleChoicesInInstructionsAdaptationCreateInput */
     multipleChoicesInInstructionsAdaptationCreateInput: {
@@ -1070,7 +1201,7 @@ export interface components {
     /** parsedExerciseCreateInputDataAttributes */
     parsedExerciseCreateInputDataAttributes: {
       /** Adaptationoptions */
-      adaptationOptions: components["schemas"]["SelectThingsAdaptationOptions"] | components["schemas"]["FillWithFreeTextAdaptationOptions"] | components["schemas"]["MultipleChoicesInInstructionsAdaptationOptions"] | components["schemas"]["MultipleChoicesInWordingAdaptationOptions"];
+      adaptationOptions: components["schemas"]["SelectThingsAdaptationOptions"] | components["schemas"]["FillWithFreeTextAdaptationOptions"] | components["schemas"]["ItemsAndEffectsAttempt1AdaptationOptions"] | components["schemas"]["MultipleChoicesInInstructionsAdaptationOptions"] | components["schemas"]["MultipleChoicesInWordingAdaptationOptions"];
       /** Clue */
       clue: string;
       /** Example */
@@ -2581,6 +2712,108 @@ export interface operations {
       200: {
         content: {
           "application/vnd.api+json": components["schemas"]["fillWithFreeTextAdaptationItemOutput"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  /** Create Items And Effects Attempt 1 Adaptation */
+  create_items_and_effects_attempt_1_adaptation_api_itemsAndEffectsAttempt1Adaptations_post: {
+    parameters: {
+      query?: {
+        include?: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["itemsAndEffectsAttempt1AdaptationCreateInput"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      201: {
+        content: {
+          "application/vnd.api+json": components["schemas"]["itemsAndEffectsAttempt1AdaptationItemOutput"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  /** Get Items And Effects Attempt 1 Adaptation */
+  get_items_and_effects_attempt_1_adaptation_api_itemsAndEffectsAttempt1Adaptations__id__get: {
+    parameters: {
+      query?: {
+        include?: string;
+      };
+      path: {
+        id: string;
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        content: {
+          "application/vnd.api+json": components["schemas"]["itemsAndEffectsAttempt1AdaptationItemOutput"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  /** Delete Items And Effects Attempt 1 Adaptation */
+  delete_items_and_effects_attempt_1_adaptation_api_itemsAndEffectsAttempt1Adaptations__id__delete: {
+    parameters: {
+      path: {
+        id: string;
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      204: {
+        content: never;
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  /** Update Items And Effects Attempt 1 Adaptation */
+  update_items_and_effects_attempt_1_adaptation_api_itemsAndEffectsAttempt1Adaptations__id__patch: {
+    parameters: {
+      query?: {
+        include?: string;
+      };
+      path: {
+        id: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["itemsAndEffectsAttempt1AdaptationUpdateInput"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        content: {
+          "application/vnd.api+json": components["schemas"]["itemsAndEffectsAttempt1AdaptationItemOutput"];
         };
       };
       /** @description Validation Error */

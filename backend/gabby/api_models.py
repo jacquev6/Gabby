@@ -123,6 +123,7 @@ class Exercise(PydanticBase, CreatedUpdatedByAtMixin):
     adaptation: (
         SelectThingsAdaptation
         | FillWithFreeTextAdaptation
+        | ItemsAndEffectsAttempt1Adaptation
         | MultipleChoicesInInstructionsAdaptation
         | MultipleChoicesInWordingAdaptation
         | None
@@ -159,6 +160,13 @@ class MultipleChoicesInWordingAdaptation(MultipleChoicesInWordingAdaptationOptio
     exercise: Annotated[Exercise, Constant()]
 
 
+class ItemsAndEffectsAttempt1AdaptationOptions(PydanticBase):
+    pass
+
+class ItemsAndEffectsAttempt1Adaptation(ItemsAndEffectsAttempt1AdaptationOptions, CreatedUpdatedByAtMixin):
+    exercise: Annotated[Exercise, Constant()]
+
+
 class ParsedExercise(PydanticBase):
     number: Annotated[str, WriteOnly()]
     instructions: Annotated[str, WriteOnly()]
@@ -171,6 +179,7 @@ class ParsedExercise(PydanticBase):
         (
             SelectThingsAdaptationOptions
             | FillWithFreeTextAdaptationOptions
+            | ItemsAndEffectsAttempt1AdaptationOptions
             | MultipleChoicesInInstructionsAdaptationOptions
             | MultipleChoicesInWordingAdaptationOptions
         ),

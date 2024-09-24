@@ -2,6 +2,7 @@ from fastapi import HTTPException
 from starlette import status
 
 from .adaptations.fill_with_free_text import FillWithFreeTextAdaptation, FillWithFreeTextAdaptationsResource
+from .adaptations.items_and_effects__attempt_1 import ItemsAndEffectsAttempt1Adaptation, ItemsAndEffectsAttempt1AdaptationsResource
 from .adaptations.multiple_choices_in_instructions import MultipleChoicesInInstructionsAdaptation, MultipleChoicesInInstructionsAdaptationsResource
 from .adaptations.multiple_choices_in_wording import MultipleChoicesInWordingAdaptation, MultipleChoicesInWordingAdaptationsResource
 from .adaptations.select_things import SelectThingsAdaptation, SelectThingsAdaptationsResource
@@ -42,6 +43,7 @@ resources = [
     ExercisesResource(),
     SelectThingsAdaptationsResource(),
     FillWithFreeTextAdaptationsResource(),
+    ItemsAndEffectsAttempt1AdaptationsResource(),
     MultipleChoicesInInstructionsAdaptationsResource(),
     MultipleChoicesInWordingAdaptationsResource(),
     ParsedExercisesResource(),
@@ -52,6 +54,7 @@ resources = [
 polymorphism = {
     get_wrapper(SelectThingsAdaptation): "select_things_adaptation",
     get_wrapper(FillWithFreeTextAdaptation): "fill_with_free_text_adaptation",
+    get_wrapper(ItemsAndEffectsAttempt1Adaptation): "items_and_effects_attempt_1_adaptation",
     get_wrapper(MultipleChoicesInInstructionsAdaptation): "multiple_choices_in_instructions_adaptation",
     get_wrapper(MultipleChoicesInWordingAdaptation): "multiple_choices_in_wording_adaptation",
 }

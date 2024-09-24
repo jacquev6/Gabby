@@ -10,6 +10,7 @@ from . import parsing
 from . import renderable
 from . import settings
 from .adaptations.fill_with_free_text import FillWithFreeTextAdaptation
+from .adaptations.items_and_effects__attempt_1 import ItemsAndEffectsAttempt1Adaptation
 from .adaptations.multiple_choices_in_instructions import MultipleChoicesInInstructionsAdaptation
 from .adaptations.multiple_choices_in_wording import MultipleChoicesInWordingAdaptation
 from .adaptations.select_things import SelectThingsAdaptation
@@ -92,6 +93,11 @@ class ParsedExercisesResource:
             )
         elif type == "fillWithFreeTextAdaptation":
             adaptation = FillWithFreeTextAdaptation(
+                exercise=exercise,
+                **adaptation_options.model_dump(),
+            )
+        elif type == "itemsAndEffectsAttempt1Adaptation":
+            adaptation = ItemsAndEffectsAttempt1Adaptation(
                 exercise=exercise,
                 **adaptation_options.model_dump(),
             )

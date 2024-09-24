@@ -21,6 +21,7 @@ export const itemTypes = [
   'parsedExercise',
   'exercise',
   'fillWithFreeTextAdaptation',
+  'itemsAndEffectsAttempt1Adaptation',
   'multipleChoicesInInstructionsAdaptation',
   'multipleChoicesInWordingAdaptation',
   'pdfFile',

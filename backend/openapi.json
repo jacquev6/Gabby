@@ -129,6 +129,12 @@
         "title": "ItemLinks",
         "type": "object"
       },
+      "ItemsAndEffectsAttempt1AdaptationOptions": {
+        "additionalProperties": false,
+        "properties": {},
+        "title": "ItemsAndEffectsAttempt1AdaptationOptions",
+        "type": "object"
+      },
       "MultipleChoicesInInstructionsAdaptationOptions": {
         "additionalProperties": false,
         "properties": {
@@ -1082,6 +1088,7 @@
             "enum": [
               "selectThingsAdaptation",
               "fillWithFreeTextAdaptation",
+              "itemsAndEffectsAttempt1Adaptation",
               "multipleChoicesInInstructionsAdaptation",
               "multipleChoicesInWordingAdaptation"
             ],
@@ -1656,6 +1663,311 @@
           "wording_paragraphs_per_pagelet"
         ],
         "title": "Exercise",
+        "type": "object"
+      },
+      "itemsAndEffectsAttempt1AdaptationCreateInput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/itemsAndEffectsAttempt1AdaptationCreateInputData"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "itemsAndEffectsAttempt1AdaptationCreateInput",
+        "type": "object"
+      },
+      "itemsAndEffectsAttempt1AdaptationCreateInputData": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "$ref": "#/components/schemas/itemsAndEffectsAttempt1AdaptationCreateInputDataAttributes",
+            "default": {}
+          },
+          "relationships": {
+            "$ref": "#/components/schemas/itemsAndEffectsAttempt1AdaptationCreateInputDataRelationships"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "relationships"
+        ],
+        "title": "itemsAndEffectsAttempt1AdaptationCreateInputData",
+        "type": "object"
+      },
+      "itemsAndEffectsAttempt1AdaptationCreateInputDataAttributes": {
+        "additionalProperties": false,
+        "properties": {},
+        "title": "itemsAndEffectsAttempt1AdaptationCreateInputDataAttributes",
+        "type": "object"
+      },
+      "itemsAndEffectsAttempt1AdaptationCreateInputDataRelationships": {
+        "additionalProperties": false,
+        "properties": {
+          "exercise": {
+            "$ref": "#/components/schemas/itemsAndEffectsAttempt1Adaptation_exercise_Relationship"
+          }
+        },
+        "required": [
+          "exercise"
+        ],
+        "title": "itemsAndEffectsAttempt1AdaptationCreateInputDataRelationships",
+        "type": "object"
+      },
+      "itemsAndEffectsAttempt1AdaptationItemOutput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/itemsAndEffectsAttempt1AdaptationOutputItem"
+          },
+          "included": {
+            "items": {},
+            "title": "Included",
+            "type": "array"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "itemsAndEffectsAttempt1AdaptationItemOutput",
+        "type": "object"
+      },
+      "itemsAndEffectsAttempt1AdaptationOutputItem": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "$ref": "#/components/schemas/itemsAndEffectsAttempt1AdaptationOutputItemAttributes"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "links": {
+            "$ref": "#/components/schemas/ItemLinks"
+          },
+          "relationships": {
+            "$ref": "#/components/schemas/itemsAndEffectsAttempt1AdaptationOutputItemRelationships"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "links",
+          "attributes",
+          "relationships"
+        ],
+        "title": "itemsAndEffectsAttempt1AdaptationOutputItem",
+        "type": "object"
+      },
+      "itemsAndEffectsAttempt1AdaptationOutputItemAttributes": {
+        "additionalProperties": false,
+        "properties": {
+          "createdAt": {
+            "format": "date-time",
+            "title": "Createdat",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "title": "Updatedat",
+            "type": "string"
+          }
+        },
+        "required": [
+          "updatedAt",
+          "createdAt"
+        ],
+        "title": "itemsAndEffectsAttempt1AdaptationOutputItemAttributes",
+        "type": "object"
+      },
+      "itemsAndEffectsAttempt1AdaptationOutputItemRelationships": {
+        "additionalProperties": false,
+        "properties": {
+          "createdBy": {
+            "$ref": "#/components/schemas/itemsAndEffectsAttempt1Adaptation_createdBy_Relationship"
+          },
+          "exercise": {
+            "$ref": "#/components/schemas/itemsAndEffectsAttempt1Adaptation_exercise_Relationship"
+          },
+          "updatedBy": {
+            "$ref": "#/components/schemas/itemsAndEffectsAttempt1Adaptation_updatedBy_Relationship"
+          }
+        },
+        "required": [
+          "updatedBy",
+          "createdBy",
+          "exercise"
+        ],
+        "title": "itemsAndEffectsAttempt1AdaptationOutputItemRelationships",
+        "type": "object"
+      },
+      "itemsAndEffectsAttempt1AdaptationUpdateInput": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/itemsAndEffectsAttempt1AdaptationUpdateInputData"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "itemsAndEffectsAttempt1AdaptationUpdateInput",
+        "type": "object"
+      },
+      "itemsAndEffectsAttempt1AdaptationUpdateInputData": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "$ref": "#/components/schemas/itemsAndEffectsAttempt1AdaptationUpdateInputDataAttributes",
+            "default": {}
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "relationships": {
+            "$ref": "#/components/schemas/itemsAndEffectsAttempt1AdaptationUpdateInputDataRelationships",
+            "default": {}
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "itemsAndEffectsAttempt1AdaptationUpdateInputData",
+        "type": "object"
+      },
+      "itemsAndEffectsAttempt1AdaptationUpdateInputDataAttributes": {
+        "additionalProperties": false,
+        "properties": {},
+        "title": "itemsAndEffectsAttempt1AdaptationUpdateInputDataAttributes",
+        "type": "object"
+      },
+      "itemsAndEffectsAttempt1AdaptationUpdateInputDataRelationships": {
+        "additionalProperties": false,
+        "properties": {},
+        "title": "itemsAndEffectsAttempt1AdaptationUpdateInputDataRelationships",
+        "type": "object"
+      },
+      "itemsAndEffectsAttempt1Adaptation_createdBy_Relationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/itemsAndEffectsAttempt1Adaptation_createdBy_Relationship_ObjectId"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "itemsAndEffectsAttempt1Adaptation_createdBy_Relationship",
+        "type": "object"
+      },
+      "itemsAndEffectsAttempt1Adaptation_createdBy_Relationship_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "user",
+            "enum": [
+              "user"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "itemsAndEffectsAttempt1Adaptation_createdBy_Relationship_ObjectId",
+        "type": "object"
+      },
+      "itemsAndEffectsAttempt1Adaptation_exercise_Relationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/itemsAndEffectsAttempt1Adaptation_exercise_Relationship_ObjectId"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "itemsAndEffectsAttempt1Adaptation_exercise_Relationship",
+        "type": "object"
+      },
+      "itemsAndEffectsAttempt1Adaptation_exercise_Relationship_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "exercise",
+            "enum": [
+              "exercise"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "itemsAndEffectsAttempt1Adaptation_exercise_Relationship_ObjectId",
+        "type": "object"
+      },
+      "itemsAndEffectsAttempt1Adaptation_updatedBy_Relationship": {
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/itemsAndEffectsAttempt1Adaptation_updatedBy_Relationship_ObjectId"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "itemsAndEffectsAttempt1Adaptation_updatedBy_Relationship",
+        "type": "object"
+      },
+      "itemsAndEffectsAttempt1Adaptation_updatedBy_Relationship_ObjectId": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "user",
+            "enum": [
+              "user"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "title": "itemsAndEffectsAttempt1Adaptation_updatedBy_Relationship_ObjectId",
         "type": "object"
       },
       "multipleChoicesInInstructionsAdaptationCreateInput": {
@@ -2331,6 +2643,9 @@
               },
               {
                 "$ref": "#/components/schemas/FillWithFreeTextAdaptationOptions"
+              },
+              {
+                "$ref": "#/components/schemas/ItemsAndEffectsAttempt1AdaptationOptions"
               },
               {
                 "$ref": "#/components/schemas/MultipleChoicesInInstructionsAdaptationOptions"
@@ -6307,6 +6622,209 @@
           }
         ],
         "summary": "Update Fill With Free Text Adaptation"
+      }
+    },
+    "/api/itemsAndEffectsAttempt1Adaptations": {
+      "post": {
+        "operationId": "create_items_and_effects_attempt_1_adaptation_api_itemsAndEffectsAttempt1Adaptations_post",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/itemsAndEffectsAttempt1AdaptationCreateInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/itemsAndEffectsAttempt1AdaptationItemOutput"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "summary": "Create Items And Effects Attempt 1 Adaptation"
+      }
+    },
+    "/api/itemsAndEffectsAttempt1Adaptations/{id}": {
+      "delete": {
+        "operationId": "delete_items_and_effects_attempt_1_adaptation_api_itemsAndEffectsAttempt1Adaptations__id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "summary": "Delete Items And Effects Attempt 1 Adaptation"
+      },
+      "get": {
+        "operationId": "get_items_and_effects_attempt_1_adaptation_api_itemsAndEffectsAttempt1Adaptations__id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/itemsAndEffectsAttempt1AdaptationItemOutput"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "summary": "Get Items And Effects Attempt 1 Adaptation"
+      },
+      "patch": {
+        "operationId": "update_items_and_effects_attempt_1_adaptation_api_itemsAndEffectsAttempt1Adaptations__id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/itemsAndEffectsAttempt1AdaptationUpdateInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/itemsAndEffectsAttempt1AdaptationItemOutput"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "summary": "Update Items And Effects Attempt 1 Adaptation"
       }
     },
     "/api/multipleChoicesInInstructionsAdaptations": {
