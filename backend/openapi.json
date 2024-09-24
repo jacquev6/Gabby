@@ -7625,52 +7625,6 @@
         "summary": "Update Ping"
       }
     },
-    "/api/project-{project_id}-extraction-report.json": {
-      "get": {
-        "operationId": "extraction_report_api_project__project_id__extraction_report_json_get",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "project_id",
-            "required": true,
-            "schema": {
-              "title": "Project Id",
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "token",
-            "required": true,
-            "schema": {
-              "title": "Token",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Extraction Report"
-      }
-    },
     "/api/project-{project_id}.html": {
       "get": {
         "operationId": "export_project_api_project__project_id__html_get",

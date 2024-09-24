@@ -56,6 +56,7 @@ app.include_router(
     prefix="/api",
 )
 
+
 @app.middleware("http")
 async def log_requests_and_responses(
     request: fastapi.Request,
@@ -80,38 +81,6 @@ async def log_requests_and_responses(
         return response
 
 
-# @todo Require authentication (but keep it working: it's not an API call, so authentication must come through the browser)
-@app.get("/api/project-{project_id}-extraction-report.json")
-def extraction_report(
-    project_id: str,
-    session: SessionDependable,
-    authenticated_user: MandatoryAuthTokenDependable,
-):
-    project = session.get(Project, ProjectsResource.sqids.decode(project_id)[0])
-    return {
-        "project": {
-            "title": project.title,
-            "textbooks": [
-                {
-                    "title": textbook.title,
-                    "exercises": [
-                        {
-                            "page": exercise.textbook_page,
-                            "number": exercise.number,
-                            "events": [
-                                json.loads(event.event)
-                                for event in exercise.extraction_events
-                            ],
-                        }
-                        for exercise in textbook.exercises
-                    ],
-                }
-                for textbook in project.textbooks
-            ],
-        },
-    }
-
-# @todo Require authentication (but keep it working: it's not an API call, so authentication must come through the browser)
 @app.get("/api/project-{project_id}.html")
 def export_project(
     project_id: str,
@@ -136,6 +105,7 @@ def export_project(
             "Content-Disposition": f'attachment; filename="{project.title}.html"',
         },
     )
+
 
 @app.post("/api/token")
 def login(authentication: AuthenticationDependable):

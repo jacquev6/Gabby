@@ -109,10 +109,6 @@ export interface paths {
     /** Update Ping */
     patch: operations["update_ping_api_pings__id__patch"];
   };
-  "/api/project-{project_id}-extraction-report.json": {
-    /** Extraction Report */
-    get: operations["extraction_report_api_project__project_id__extraction_report_json_get"];
-  };
   "/api/project-{project_id}.html": {
     /** Export Project */
     get: operations["export_project_api_project__project_id__html_get"];
@@ -3221,31 +3217,6 @@ export interface operations {
       200: {
         content: {
           "application/vnd.api+json": components["schemas"]["pingItemOutput"];
-        };
-      };
-      /** @description Validation Error */
-      422: {
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
-    };
-  };
-  /** Extraction Report */
-  extraction_report_api_project__project_id__extraction_report_json_get: {
-    parameters: {
-      query: {
-        token: string;
-      };
-      path: {
-        project_id: string;
-      };
-    };
-    responses: {
-      /** @description Successful Response */
-      200: {
-        content: {
-          "application/json": unknown;
         };
       };
       /** @description Validation Error */
