@@ -89,27 +89,27 @@ class ParsedExercisesResource:
         elif type == "selectThingsAdaptation":
             adaptation = SelectThingsAdaptation(
                 exercise=exercise,
-                **adaptation_options.model_dump(),
+                **dict(adaptation_options),
             )
         elif type == "fillWithFreeTextAdaptation":
             adaptation = FillWithFreeTextAdaptation(
                 exercise=exercise,
-                **adaptation_options.model_dump(),
+                **dict(adaptation_options),
             )
         elif type == "itemsAndEffectsAttempt1Adaptation":
             adaptation = ItemsAndEffectsAttempt1Adaptation(
                 exercise=exercise,
-                **adaptation_options.model_dump(),
+                **dict(adaptation_options),
             )
         elif type == "multipleChoicesInInstructionsAdaptation":
             adaptation = MultipleChoicesInInstructionsAdaptation(
                 exercise=exercise,
-                **adaptation_options.model_dump(),
+                **dict(adaptation_options),
             )
         elif type == "multipleChoicesInWordingAdaptation":
             adaptation = MultipleChoicesInWordingAdaptation(
                 exercise=exercise,
-                **adaptation_options.model_dump(),
+                **dict(adaptation_options),
             )
         else:
             raise HTTPException(status_code=400, detail="Unknown type")

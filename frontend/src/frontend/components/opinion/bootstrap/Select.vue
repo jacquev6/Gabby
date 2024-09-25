@@ -2,6 +2,7 @@
 export interface Option<T> {
   value: T
   label: string
+  disabled?: boolean
 }
 
 export function value<T>(option: string | Option<T>) {
@@ -17,6 +18,14 @@ export function label<T>(option: string | Option<T>) {
     return option
   } else {
     return option.label
+  }
+}
+
+export function disabled<T>(option: string | Option<T>) {
+  if (typeof option === 'string') {
+    return false
+  } else {
+    return option.disabled
   }
 }
 </script>

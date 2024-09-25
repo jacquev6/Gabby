@@ -257,7 +257,46 @@ export interface components {
       self: string;
     };
     /** ItemsAndEffectsAttempt1AdaptationOptions */
-    ItemsAndEffectsAttempt1AdaptationOptions: Record<string, never>;
+    ItemsAndEffectsAttempt1AdaptationOptions: {
+      effects: components["schemas"]["ItemsAndEffectsAttempt1AdaptationOptionsEffects"];
+      /** Items */
+      items: components["schemas"]["ItemsAndEffectsAttempt1AdaptationOptionsWordsItems"] | components["schemas"]["ItemsAndEffectsAttempt1AdaptationOptionsSentencesItems"] | components["schemas"]["ItemsAndEffectsAttempt1AdaptationOptionsManualItems"];
+    };
+    /** ItemsAndEffectsAttempt1AdaptationOptionsEffects */
+    ItemsAndEffectsAttempt1AdaptationOptionsEffects: {
+      /** Boxed */
+      boxed: boolean;
+      selectable: components["schemas"]["Selectable"] | null;
+    };
+    /** ItemsAndEffectsAttempt1AdaptationOptionsManualItems */
+    ItemsAndEffectsAttempt1AdaptationOptionsManualItems: {
+      /**
+       * Kind
+       * @constant
+       * @enum {string}
+       */
+      kind: "manual";
+    };
+    /** ItemsAndEffectsAttempt1AdaptationOptionsSentencesItems */
+    ItemsAndEffectsAttempt1AdaptationOptionsSentencesItems: {
+      /**
+       * Kind
+       * @constant
+       * @enum {string}
+       */
+      kind: "sentences";
+    };
+    /** ItemsAndEffectsAttempt1AdaptationOptionsWordsItems */
+    ItemsAndEffectsAttempt1AdaptationOptionsWordsItems: {
+      /**
+       * Kind
+       * @constant
+       * @enum {string}
+       */
+      kind: "words";
+      /** Punctuation */
+      punctuation: boolean;
+    };
     /** MultipleChoicesInInstructionsAdaptationOptions */
     MultipleChoicesInInstructionsAdaptationOptions: {
       /** Placeholder */
@@ -340,6 +379,11 @@ export interface components {
       punctuation: boolean;
       /** Words */
       words: boolean;
+    };
+    /** Selectable */
+    Selectable: {
+      /** Colors */
+      colors: string[];
     };
     /** Sentence */
     Sentence: {
@@ -834,14 +878,17 @@ export interface components {
     };
     /** itemsAndEffectsAttempt1AdaptationCreateInputData */
     itemsAndEffectsAttempt1AdaptationCreateInputData: {
-      /** @default {} */
-      attributes?: components["schemas"]["itemsAndEffectsAttempt1AdaptationCreateInputDataAttributes"];
+      attributes: components["schemas"]["itemsAndEffectsAttempt1AdaptationCreateInputDataAttributes"];
       relationships: components["schemas"]["itemsAndEffectsAttempt1AdaptationCreateInputDataRelationships"];
       /** Type */
       type: string;
     };
     /** itemsAndEffectsAttempt1AdaptationCreateInputDataAttributes */
-    itemsAndEffectsAttempt1AdaptationCreateInputDataAttributes: Record<string, never>;
+    itemsAndEffectsAttempt1AdaptationCreateInputDataAttributes: {
+      effects: components["schemas"]["ItemsAndEffectsAttempt1AdaptationOptionsEffects"];
+      /** Items */
+      items: components["schemas"]["ItemsAndEffectsAttempt1AdaptationOptionsWordsItems"] | components["schemas"]["ItemsAndEffectsAttempt1AdaptationOptionsSentencesItems"] | components["schemas"]["ItemsAndEffectsAttempt1AdaptationOptionsManualItems"];
+    };
     /** itemsAndEffectsAttempt1AdaptationCreateInputDataRelationships */
     itemsAndEffectsAttempt1AdaptationCreateInputDataRelationships: {
       exercise: components["schemas"]["itemsAndEffectsAttempt1Adaptation_exercise_Relationship"];
@@ -869,6 +916,9 @@ export interface components {
        * Format: date-time
        */
       createdAt: string;
+      effects: components["schemas"]["ItemsAndEffectsAttempt1AdaptationOptionsEffects"];
+      /** Items */
+      items: components["schemas"]["ItemsAndEffectsAttempt1AdaptationOptionsWordsItems"] | components["schemas"]["ItemsAndEffectsAttempt1AdaptationOptionsSentencesItems"] | components["schemas"]["ItemsAndEffectsAttempt1AdaptationOptionsManualItems"];
       /**
        * Updatedat
        * Format: date-time
@@ -897,7 +947,11 @@ export interface components {
       type: string;
     };
     /** itemsAndEffectsAttempt1AdaptationUpdateInputDataAttributes */
-    itemsAndEffectsAttempt1AdaptationUpdateInputDataAttributes: Record<string, never>;
+    itemsAndEffectsAttempt1AdaptationUpdateInputDataAttributes: {
+      effects?: components["schemas"]["ItemsAndEffectsAttempt1AdaptationOptionsEffects"];
+      /** Items */
+      items?: components["schemas"]["ItemsAndEffectsAttempt1AdaptationOptionsWordsItems"] | components["schemas"]["ItemsAndEffectsAttempt1AdaptationOptionsSentencesItems"] | components["schemas"]["ItemsAndEffectsAttempt1AdaptationOptionsManualItems"];
+    };
     /** itemsAndEffectsAttempt1AdaptationUpdateInputDataRelationships */
     itemsAndEffectsAttempt1AdaptationUpdateInputDataRelationships: Record<string, never>;
     /** itemsAndEffectsAttempt1Adaptation_createdBy_Relationship */

@@ -54,7 +54,13 @@ function makeModel({inTextbook, textbookPage}: MakeModelOptions): Model {
     fillWithFreeTextAdaptationOptions: {
       placeholder: '...',
     },
-    itemsAndEffectsAttempt1AdaptationOptions: {},
+    itemsAndEffectsAttempt1AdaptationOptions: {
+      items: {kind: 'words', punctuation: false},
+      effects: {
+        selectable: null,
+        boxed: false,
+      },
+    },
     multipleChoicesInInstructionsAdaptationOptions: {
       placeholder: '...',
     },
@@ -84,7 +90,7 @@ export function assignModelFrom(model: Model, exercise: Exercise & InCache & Exi
       case 'selectThingsAdaptation':
         {
           const options = (exercise.relationships.adaptation as SelectThingsAdaptation & InCache & Exists).attributes
-          model.selectThingsAdaptationOptions.colors = [...options.colors]
+          model.selectThingsAdaptationOptions.colors = JSON.parse(JSON.stringify(options.colors))
           model.selectThingsAdaptationOptions.words = options.words
           model.selectThingsAdaptationOptions.punctuation = options.punctuation
         }
@@ -97,8 +103,9 @@ export function assignModelFrom(model: Model, exercise: Exercise & InCache & Exi
         break
       case 'itemsAndEffectsAttempt1Adaptation':
         {
-          /* const options = */ (exercise.relationships.adaptation as ItemsAndEffectsAttempt1Adaptation & InCache & Exists).attributes
-          // Nothing to do
+          const options = (exercise.relationships.adaptation as ItemsAndEffectsAttempt1Adaptation & InCache & Exists).attributes
+          model.itemsAndEffectsAttempt1AdaptationOptions.items = JSON.parse(JSON.stringify(options.items))
+          model.itemsAndEffectsAttempt1AdaptationOptions.effects = JSON.parse(JSON.stringify(options.effects))
         }
         break
       case 'multipleChoicesInInstructionsAdaptation':
@@ -363,7 +370,15 @@ const exampleDeltas = computed(() => props.deltas === null ? [] : props.deltas.e
 const clueDeltas = computed(() => props.deltas === null ? [] : props.deltas.clue)
 
 
-const selBlotColors = computed(() => Object.fromEntries(model.value.selectThingsAdaptationOptions.colors.map((color, i) => [`--sel-blot-color-${i + 1}`, color])))
+const selBlotColors = computed(() => {
+  if (model.value.adaptationType === 'selectThingsAdaptation') {
+    return Object.fromEntries(model.value.selectThingsAdaptationOptions.colors.map((color, i) => [`--sel-blot-color-${i + 1}`, color]))
+  } else if (model.value.adaptationType === 'itemsAndEffectsAttempt1Adaptation' && model.value.itemsAndEffectsAttempt1AdaptationOptions.effects.selectable !== null) {
+    return Object.fromEntries(model.value.itemsAndEffectsAttempt1AdaptationOptions.effects.selectable.colors.map((color, i) => [`--sel-blot-color-${i + 1}`, color]))
+  } else {
+    return {}
+  }
+})
 
 defineExpose({
   saveDisabled,

@@ -131,8 +131,114 @@
       },
       "ItemsAndEffectsAttempt1AdaptationOptions": {
         "additionalProperties": false,
-        "properties": {},
+        "properties": {
+          "effects": {
+            "$ref": "#/components/schemas/ItemsAndEffectsAttempt1AdaptationOptionsEffects"
+          },
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ItemsAndEffectsAttempt1AdaptationOptionsWordsItems"
+              },
+              {
+                "$ref": "#/components/schemas/ItemsAndEffectsAttempt1AdaptationOptionsSentencesItems"
+              },
+              {
+                "$ref": "#/components/schemas/ItemsAndEffectsAttempt1AdaptationOptionsManualItems"
+              }
+            ],
+            "title": "Items"
+          }
+        },
+        "required": [
+          "items",
+          "effects"
+        ],
         "title": "ItemsAndEffectsAttempt1AdaptationOptions",
+        "type": "object"
+      },
+      "ItemsAndEffectsAttempt1AdaptationOptionsEffects": {
+        "additionalProperties": false,
+        "properties": {
+          "boxed": {
+            "title": "Boxed",
+            "type": "boolean"
+          },
+          "selectable": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Selectable"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "selectable",
+          "boxed"
+        ],
+        "title": "ItemsAndEffectsAttempt1AdaptationOptionsEffects",
+        "type": "object"
+      },
+      "ItemsAndEffectsAttempt1AdaptationOptionsManualItems": {
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "const": "manual",
+            "enum": [
+              "manual"
+            ],
+            "title": "Kind",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind"
+        ],
+        "title": "ItemsAndEffectsAttempt1AdaptationOptionsManualItems",
+        "type": "object"
+      },
+      "ItemsAndEffectsAttempt1AdaptationOptionsSentencesItems": {
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "const": "sentences",
+            "enum": [
+              "sentences"
+            ],
+            "title": "Kind",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind"
+        ],
+        "title": "ItemsAndEffectsAttempt1AdaptationOptionsSentencesItems",
+        "type": "object"
+      },
+      "ItemsAndEffectsAttempt1AdaptationOptionsWordsItems": {
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "const": "words",
+            "enum": [
+              "words"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "punctuation": {
+            "title": "Punctuation",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "kind",
+          "punctuation"
+        ],
+        "title": "ItemsAndEffectsAttempt1AdaptationOptionsWordsItems",
         "type": "object"
       },
       "MultipleChoicesInInstructionsAdaptationOptions": {
@@ -387,6 +493,23 @@
           "punctuation"
         ],
         "title": "SelectThingsAdaptationOptions",
+        "type": "object"
+      },
+      "Selectable": {
+        "additionalProperties": false,
+        "properties": {
+          "colors": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Colors",
+            "type": "array"
+          }
+        },
+        "required": [
+          "colors"
+        ],
+        "title": "Selectable",
         "type": "object"
       },
       "Sentence": {
@@ -1682,8 +1805,7 @@
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "$ref": "#/components/schemas/itemsAndEffectsAttempt1AdaptationCreateInputDataAttributes",
-            "default": {}
+            "$ref": "#/components/schemas/itemsAndEffectsAttempt1AdaptationCreateInputDataAttributes"
           },
           "relationships": {
             "$ref": "#/components/schemas/itemsAndEffectsAttempt1AdaptationCreateInputDataRelationships"
@@ -1695,6 +1817,7 @@
         },
         "required": [
           "type",
+          "attributes",
           "relationships"
         ],
         "title": "itemsAndEffectsAttempt1AdaptationCreateInputData",
@@ -1702,7 +1825,29 @@
       },
       "itemsAndEffectsAttempt1AdaptationCreateInputDataAttributes": {
         "additionalProperties": false,
-        "properties": {},
+        "properties": {
+          "effects": {
+            "$ref": "#/components/schemas/ItemsAndEffectsAttempt1AdaptationOptionsEffects"
+          },
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ItemsAndEffectsAttempt1AdaptationOptionsWordsItems"
+              },
+              {
+                "$ref": "#/components/schemas/ItemsAndEffectsAttempt1AdaptationOptionsSentencesItems"
+              },
+              {
+                "$ref": "#/components/schemas/ItemsAndEffectsAttempt1AdaptationOptionsManualItems"
+              }
+            ],
+            "title": "Items"
+          }
+        },
+        "required": [
+          "items",
+          "effects"
+        ],
         "title": "itemsAndEffectsAttempt1AdaptationCreateInputDataAttributes",
         "type": "object"
       },
@@ -1776,6 +1921,23 @@
             "title": "Createdat",
             "type": "string"
           },
+          "effects": {
+            "$ref": "#/components/schemas/ItemsAndEffectsAttempt1AdaptationOptionsEffects"
+          },
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ItemsAndEffectsAttempt1AdaptationOptionsWordsItems"
+              },
+              {
+                "$ref": "#/components/schemas/ItemsAndEffectsAttempt1AdaptationOptionsSentencesItems"
+              },
+              {
+                "$ref": "#/components/schemas/ItemsAndEffectsAttempt1AdaptationOptionsManualItems"
+              }
+            ],
+            "title": "Items"
+          },
           "updatedAt": {
             "format": "date-time",
             "title": "Updatedat",
@@ -1784,7 +1946,9 @@
         },
         "required": [
           "updatedAt",
-          "createdAt"
+          "createdAt",
+          "items",
+          "effects"
         ],
         "title": "itemsAndEffectsAttempt1AdaptationOutputItemAttributes",
         "type": "object"
@@ -1852,7 +2016,25 @@
       },
       "itemsAndEffectsAttempt1AdaptationUpdateInputDataAttributes": {
         "additionalProperties": false,
-        "properties": {},
+        "properties": {
+          "effects": {
+            "$ref": "#/components/schemas/ItemsAndEffectsAttempt1AdaptationOptionsEffects"
+          },
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ItemsAndEffectsAttempt1AdaptationOptionsWordsItems"
+              },
+              {
+                "$ref": "#/components/schemas/ItemsAndEffectsAttempt1AdaptationOptionsSentencesItems"
+              },
+              {
+                "$ref": "#/components/schemas/ItemsAndEffectsAttempt1AdaptationOptionsManualItems"
+              }
+            ],
+            "title": "Items"
+          }
+        },
         "title": "itemsAndEffectsAttempt1AdaptationUpdateInputDataAttributes",
         "type": "object"
       },

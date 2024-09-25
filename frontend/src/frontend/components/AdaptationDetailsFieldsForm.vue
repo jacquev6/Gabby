@@ -60,10 +60,10 @@ export const wysiwygFormats = {
     clue: basicFormats,
   },
   itemsAndEffectsAttempt1Adaptation: {
-    instructions: basicFormats,
+    instructions: selectThingsFormats,
     wording: basicFormats,
-    example: basicFormats,
-    clue: basicFormats,
+    example: selectThingsFormats,
+    clue: selectThingsFormats,
   },
   selectThingsAdaptation: {
     instructions: selectThingsFormats,
@@ -99,6 +99,7 @@ import { BLabeledInput, BLabeledCheckbox } from './opinion/bootstrap'
 import type { Model } from './ExerciseFieldsForm.vue'
 import type ExerciseFieldsForm from './ExerciseFieldsForm.vue'
 import FloatingColorPicker from './FloatingColorPicker.vue'
+import AdaptationDetailsFieldsFormForItemsAndEffectsAttempt1 from './AdaptationDetailsFieldsFormForItemsAndEffectsAttempt1.vue'
 
 
 defineProps<{
@@ -149,6 +150,7 @@ const colorsCount = computed({
     <BLabeledInput :label="$t('placeholderText')" type="text" v-model="model.fillWithFreeTextAdaptationOptions.placeholder" />
   </template>
   <template v-else-if="model.adaptationType === 'itemsAndEffectsAttempt1Adaptation'">
+    <AdaptationDetailsFieldsFormForItemsAndEffectsAttempt1 v-model="model" />
   </template>
   <template v-else-if="model.adaptationType === 'selectThingsAdaptation'">
     <template v-if="wysiwyg">

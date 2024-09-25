@@ -9,6 +9,7 @@ import BLabeledRadios from './LabeledRadios.vue'
 import BLabeledSelect from './LabeledSelect.vue'
 import BLabeledTextarea from './LabeledTextarea.vue'
 import BModal from './Modal.vue'
+import BRadio from './Radio.vue'
 import BRow from './Row.vue'
 import BSelect from './Select.vue'
 
@@ -23,6 +24,7 @@ export {
   BLabeledSelect,
   BLabeledTextarea,
   BModal,
+  BRadio,
   BRow,
   BSelect,
 }

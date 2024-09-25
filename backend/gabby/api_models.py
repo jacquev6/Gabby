@@ -3,6 +3,7 @@ from typing import Annotated, Literal
 import datetime
 
 from fastjsonapi import Constant, Computed, Secret, WriteOnly
+import pydantic
 
 from . import exercise_delta
 from . import renderable
@@ -160,8 +161,29 @@ class MultipleChoicesInWordingAdaptation(MultipleChoicesInWordingAdaptationOptio
     exercise: Annotated[Exercise, Constant()]
 
 
+class ItemsAndEffectsAttempt1AdaptationOptionsWordsItems(PydanticBase):
+    kind: Literal["words"]
+    punctuation: bool
+
+class ItemsAndEffectsAttempt1AdaptationOptionsSentencesItems(PydanticBase):
+    kind: Literal["sentences"]
+
+class ItemsAndEffectsAttempt1AdaptationOptionsManualItems(PydanticBase):
+    kind: Literal["manual"]
+
+ItemsAndEffectsAttempt1AdaptationOptionsItems = ItemsAndEffectsAttempt1AdaptationOptionsWordsItems | ItemsAndEffectsAttempt1AdaptationOptionsSentencesItems | ItemsAndEffectsAttempt1AdaptationOptionsManualItems
+
+class ItemsAndEffectsAttempt1AdaptationOptionsEffects(PydanticBase):
+    class Selectable(PydanticBase):
+        colors: list[str]
+
+    selectable: Selectable | None
+    boxed: bool
+
 class ItemsAndEffectsAttempt1AdaptationOptions(PydanticBase):
-    pass
+    items: ItemsAndEffectsAttempt1AdaptationOptionsItems
+    effects: ItemsAndEffectsAttempt1AdaptationOptionsEffects
+
 
 class ItemsAndEffectsAttempt1Adaptation(ItemsAndEffectsAttempt1AdaptationOptions, CreatedUpdatedByAtMixin):
     exercise: Annotated[Exercise, Constant()]

@@ -13,6 +13,8 @@ def upgrade():
     op.create_table(
         "adaptations__iae1",
         sa.Column("id", sa.Integer(), nullable=False),
+        sa.Column("items", sa.JSON(), nullable=False),
+        sa.Column("effects", sa.JSON(), nullable=False),
         sa.ForeignKeyConstraint(
             ["id"],
             ["adaptations.id"],

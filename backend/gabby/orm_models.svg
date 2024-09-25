@@ -905,51 +905,63 @@
 <g id="node9" class="node">
 <title>ItemsAndEffectsAttempt1Adaptation</title>
 <g id="a_node9"><a xlink:href="http://ItemsAndEffectsAttempt1Adaptation_details.html" xlink:title="&lt;TABLE&gt;">
-<polygon fill="#3f51b5" stroke="transparent" points="870.5,-2170 870.5,-2189 1096.5,-2189 1096.5,-2170 870.5,-2170"/>
-<polygon fill="none" stroke="black" points="870.5,-2170 870.5,-2189 1096.5,-2189 1096.5,-2170 870.5,-2170"/>
-<text text-anchor="start" x="873.5" y="-2176.4" font-family="Roboto" font-size="12.00" fill="white">ItemsAndEffectsAttempt1Adaptation</text>
+<polygon fill="#3f51b5" stroke="transparent" points="870.5,-2189 870.5,-2208 1096.5,-2208 1096.5,-2189 870.5,-2189"/>
+<polygon fill="none" stroke="black" points="870.5,-2189 870.5,-2208 1096.5,-2208 1096.5,-2189 870.5,-2189"/>
+<text text-anchor="start" x="873.5" y="-2195.4" font-family="Roboto" font-size="12.00" fill="white">ItemsAndEffectsAttempt1Adaptation</text>
+<polygon fill="#bbdefb" stroke="transparent" points="870.5,-2170 870.5,-2189 979.5,-2189 979.5,-2170 870.5,-2170"/>
+<polygon fill="none" stroke="black" points="870.5,-2170 870.5,-2189 979.5,-2189 979.5,-2170 870.5,-2170"/>
+<text text-anchor="start" x="919.5" y="-2176.4" font-family="Roboto" font-size="12.00">id</text>
+<polygon fill="#bbdefb" stroke="transparent" points="979.5,-2170 979.5,-2189 1096.5,-2189 1096.5,-2170 979.5,-2170"/>
+<polygon fill="none" stroke="black" points="979.5,-2170 979.5,-2189 1096.5,-2189 1096.5,-2170 979.5,-2170"/>
+<text text-anchor="start" x="997.5" y="-2176.4" font-family="Roboto" font-size="12.00">INTEGER (PK)</text>
 <polygon fill="#bbdefb" stroke="transparent" points="870.5,-2151 870.5,-2170 979.5,-2170 979.5,-2151 870.5,-2151"/>
 <polygon fill="none" stroke="black" points="870.5,-2151 870.5,-2170 979.5,-2170 979.5,-2151 870.5,-2151"/>
-<text text-anchor="start" x="919.5" y="-2157.4" font-family="Roboto" font-size="12.00">id</text>
+<text text-anchor="start" x="912.5" y="-2157.4" font-family="Roboto" font-size="12.00">kind</text>
 <polygon fill="#bbdefb" stroke="transparent" points="979.5,-2151 979.5,-2170 1096.5,-2170 1096.5,-2151 979.5,-2151"/>
 <polygon fill="none" stroke="black" points="979.5,-2151 979.5,-2170 1096.5,-2170 1096.5,-2151 979.5,-2151"/>
-<text text-anchor="start" x="997.5" y="-2157.4" font-family="Roboto" font-size="12.00">INTEGER (PK)</text>
+<text text-anchor="start" x="991" y="-2157.4" font-family="Roboto" font-size="12.00">VARCHAR(16) ()</text>
 <polygon fill="#bbdefb" stroke="transparent" points="870.5,-2132 870.5,-2151 979.5,-2151 979.5,-2132 870.5,-2132"/>
 <polygon fill="none" stroke="black" points="870.5,-2132 870.5,-2151 979.5,-2151 979.5,-2132 870.5,-2132"/>
-<text text-anchor="start" x="912.5" y="-2138.4" font-family="Roboto" font-size="12.00">kind</text>
+<text text-anchor="start" x="893" y="-2138.4" font-family="Roboto" font-size="12.00">created_at</text>
 <polygon fill="#bbdefb" stroke="transparent" points="979.5,-2132 979.5,-2151 1096.5,-2151 1096.5,-2132 979.5,-2132"/>
 <polygon fill="none" stroke="black" points="979.5,-2132 979.5,-2151 1096.5,-2151 1096.5,-2132 979.5,-2132"/>
-<text text-anchor="start" x="991" y="-2138.4" font-family="Roboto" font-size="12.00">VARCHAR(16) ()</text>
+<text text-anchor="start" x="1001" y="-2138.4" font-family="Roboto" font-size="12.00">DATETIME ()</text>
 <polygon fill="#bbdefb" stroke="transparent" points="870.5,-2113 870.5,-2132 979.5,-2132 979.5,-2113 870.5,-2113"/>
 <polygon fill="none" stroke="black" points="870.5,-2113 870.5,-2132 979.5,-2132 979.5,-2113 870.5,-2113"/>
-<text text-anchor="start" x="893" y="-2119.4" font-family="Roboto" font-size="12.00">created_at</text>
+<text text-anchor="start" x="883.5" y="-2119.4" font-family="Roboto" font-size="12.00">created_by_id</text>
 <polygon fill="#bbdefb" stroke="transparent" points="979.5,-2113 979.5,-2132 1096.5,-2132 1096.5,-2113 979.5,-2113"/>
 <polygon fill="none" stroke="black" points="979.5,-2113 979.5,-2132 1096.5,-2132 1096.5,-2113 979.5,-2113"/>
-<text text-anchor="start" x="1001" y="-2119.4" font-family="Roboto" font-size="12.00">DATETIME ()</text>
+<text text-anchor="start" x="1005" y="-2119.4" font-family="Roboto" font-size="12.00">INTEGER ()</text>
 <polygon fill="#bbdefb" stroke="transparent" points="870.5,-2094 870.5,-2113 979.5,-2113 979.5,-2094 870.5,-2094"/>
 <polygon fill="none" stroke="black" points="870.5,-2094 870.5,-2113 979.5,-2113 979.5,-2094 870.5,-2094"/>
-<text text-anchor="start" x="883.5" y="-2100.4" font-family="Roboto" font-size="12.00">created_by_id</text>
+<text text-anchor="start" x="891" y="-2100.4" font-family="Roboto" font-size="12.00">updated_at</text>
 <polygon fill="#bbdefb" stroke="transparent" points="979.5,-2094 979.5,-2113 1096.5,-2113 1096.5,-2094 979.5,-2094"/>
 <polygon fill="none" stroke="black" points="979.5,-2094 979.5,-2113 1096.5,-2113 1096.5,-2094 979.5,-2094"/>
-<text text-anchor="start" x="1005" y="-2100.4" font-family="Roboto" font-size="12.00">INTEGER ()</text>
+<text text-anchor="start" x="1001" y="-2100.4" font-family="Roboto" font-size="12.00">DATETIME ()</text>
 <polygon fill="#bbdefb" stroke="transparent" points="870.5,-2075 870.5,-2094 979.5,-2094 979.5,-2075 870.5,-2075"/>
 <polygon fill="none" stroke="black" points="870.5,-2075 870.5,-2094 979.5,-2094 979.5,-2075 870.5,-2075"/>
-<text text-anchor="start" x="891" y="-2081.4" font-family="Roboto" font-size="12.00">updated_at</text>
+<text text-anchor="start" x="881.5" y="-2081.4" font-family="Roboto" font-size="12.00">updated_by_id</text>
 <polygon fill="#bbdefb" stroke="transparent" points="979.5,-2075 979.5,-2094 1096.5,-2094 1096.5,-2075 979.5,-2075"/>
 <polygon fill="none" stroke="black" points="979.5,-2075 979.5,-2094 1096.5,-2094 1096.5,-2075 979.5,-2075"/>
-<text text-anchor="start" x="1001" y="-2081.4" font-family="Roboto" font-size="12.00">DATETIME ()</text>
+<text text-anchor="start" x="1005" y="-2081.4" font-family="Roboto" font-size="12.00">INTEGER ()</text>
 <polygon fill="#bbdefb" stroke="transparent" points="870.5,-2056 870.5,-2075 979.5,-2075 979.5,-2056 870.5,-2056"/>
 <polygon fill="none" stroke="black" points="870.5,-2056 870.5,-2075 979.5,-2075 979.5,-2056 870.5,-2056"/>
-<text text-anchor="start" x="881.5" y="-2062.4" font-family="Roboto" font-size="12.00">updated_by_id</text>
+<text text-anchor="start" x="919.5" y="-2062.4" font-family="Roboto" font-size="12.00">id</text>
 <polygon fill="#bbdefb" stroke="transparent" points="979.5,-2056 979.5,-2075 1096.5,-2075 1096.5,-2056 979.5,-2056"/>
 <polygon fill="none" stroke="black" points="979.5,-2056 979.5,-2075 1096.5,-2075 1096.5,-2056 979.5,-2056"/>
-<text text-anchor="start" x="1005" y="-2062.4" font-family="Roboto" font-size="12.00">INTEGER ()</text>
+<text text-anchor="start" x="997.5" y="-2062.4" font-family="Roboto" font-size="12.00">INTEGER (PK)</text>
 <polygon fill="#bbdefb" stroke="transparent" points="870.5,-2037 870.5,-2056 979.5,-2056 979.5,-2037 870.5,-2037"/>
 <polygon fill="none" stroke="black" points="870.5,-2037 870.5,-2056 979.5,-2056 979.5,-2037 870.5,-2037"/>
-<text text-anchor="start" x="919.5" y="-2043.4" font-family="Roboto" font-size="12.00">id</text>
+<text text-anchor="start" x="908" y="-2043.4" font-family="Roboto" font-size="12.00">items</text>
 <polygon fill="#bbdefb" stroke="transparent" points="979.5,-2037 979.5,-2056 1096.5,-2056 1096.5,-2037 979.5,-2037"/>
 <polygon fill="none" stroke="black" points="979.5,-2037 979.5,-2056 1096.5,-2056 1096.5,-2037 979.5,-2037"/>
-<text text-anchor="start" x="997.5" y="-2043.4" font-family="Roboto" font-size="12.00">INTEGER (PK)</text>
+<text text-anchor="start" x="1016.5" y="-2043.4" font-family="Roboto" font-size="12.00">JSON ()</text>
+<polygon fill="#bbdefb" stroke="transparent" points="870.5,-2018 870.5,-2037 979.5,-2037 979.5,-2018 870.5,-2018"/>
+<polygon fill="none" stroke="black" points="870.5,-2018 870.5,-2037 979.5,-2037 979.5,-2018 870.5,-2018"/>
+<text text-anchor="start" x="904.5" y="-2024.4" font-family="Roboto" font-size="12.00">effects</text>
+<polygon fill="#bbdefb" stroke="transparent" points="979.5,-2018 979.5,-2037 1096.5,-2037 1096.5,-2018 979.5,-2018"/>
+<polygon fill="none" stroke="black" points="979.5,-2018 979.5,-2037 1096.5,-2037 1096.5,-2018 979.5,-2018"/>
+<text text-anchor="start" x="1016.5" y="-2024.4" font-family="Roboto" font-size="12.00">JSON ()</text>
 </a>
 </g>
 </g>
@@ -967,7 +979,7 @@
 <g id="edge20" class="edge">
 <title>ItemsAndEffectsAttempt1Adaptation&#45;&gt;User</title>
 <g id="a_edge20"><a xlink:title="Relation between ItemsAndEffectsAttempt1Adaptation and User">
-<path fill="none" stroke="#1e88e5" stroke-dasharray="5,2" d="M1067.48,-2032.87C1082.45,-2019.8 1098.17,-2006.7 1113.5,-1995 1125.26,-1986.02 1132.44,-1988.7 1141.5,-1977 1199.69,-1901.89 1208.5,-1869.01 1208.5,-1774 1208.5,-1774 1208.5,-1774 1208.5,-1085.5 1208.5,-1063.93 1215.1,-327.18 1203.5,-309 1183.72,-278 1151.04,-256.68 1117.61,-242.11"/>
+<path fill="none" stroke="#1e88e5" stroke-dasharray="5,2" d="M1089.81,-2013.87C1097.71,-2007.34 1105.66,-2000.99 1113.5,-1995 1125.26,-1986.02 1132.44,-1988.7 1141.5,-1977 1199.69,-1901.89 1208.5,-1869.01 1208.5,-1774 1208.5,-1774 1208.5,-1774 1208.5,-1085.5 1208.5,-1063.93 1215.1,-327.18 1203.5,-309 1183.72,-278 1151.04,-256.68 1117.61,-242.11"/>
 <polygon fill="#1e88e5" stroke="#1e88e5" points="1118.75,-238.8 1108.17,-238.18 1116.06,-245.26 1118.75,-238.8"/>
 </a>
 </g>
@@ -977,7 +989,7 @@
 <g id="edge21" class="edge">
 <title>ItemsAndEffectsAttempt1Adaptation&#45;&gt;User</title>
 <g id="a_edge21"><a xlink:title="Relation between ItemsAndEffectsAttempt1Adaptation and User">
-<path fill="none" stroke="#1e88e5" stroke-dasharray="5,2" d="M1076.66,-2032.86C1091.34,-2015.95 1104.59,-1997.07 1113.5,-1977 1150.19,-1894.34 1127.5,-1864.44 1127.5,-1774 1127.5,-1774 1127.5,-1774 1127.5,-1085.5 1127.5,-752.87 1273.85,-652.14 1164.5,-338 1155.51,-312.18 1137.36,-290.57 1116.29,-272.95"/>
+<path fill="none" stroke="#1e88e5" stroke-dasharray="5,2" d="M1091.94,-2013.71C1100.39,-2002.09 1107.82,-1989.79 1113.5,-1977 1150.19,-1894.34 1127.5,-1864.44 1127.5,-1774 1127.5,-1774 1127.5,-1774 1127.5,-1085.5 1127.5,-752.87 1273.85,-652.14 1164.5,-338 1155.51,-312.18 1137.36,-290.57 1116.29,-272.95"/>
 <polygon fill="#1e88e5" stroke="#1e88e5" points="1118.4,-270.16 1108.41,-266.64 1114.03,-275.62 1118.4,-270.16"/>
 </a>
 </g>
