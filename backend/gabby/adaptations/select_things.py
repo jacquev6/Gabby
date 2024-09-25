@@ -63,13 +63,13 @@ class SelectThingsAdaptation(Adaptation):
 
         def WORD(self, arg):
             if self.select_words:
-                return renderable.SelectableText(text=arg.value, colors=self.colors)
+                return renderable.SelectableText(text=arg.value, colors=self.colors, boxed=False)
             else:
                 return renderable.PlainText(text=arg.value)
 
         def PUNCTUATION_IN_SENTENCE(self, arg):
             if self.select_punctuation:
-                return renderable.SelectableText(text=arg.value, colors=self.colors)
+                return renderable.SelectableText(text=arg.value, colors=self.colors, boxed=False)
             else:
                 return renderable.PlainText(text=arg.value)
 

@@ -729,6 +729,10 @@
       "_SelectableText": {
         "additionalProperties": false,
         "properties": {
+          "boxed": {
+            "title": "Boxed",
+            "type": "boolean"
+          },
           "colors": {
             "items": {
               "type": "string"
@@ -752,7 +756,8 @@
         "required": [
           "type",
           "text",
-          "colors"
+          "colors",
+          "boxed"
         ],
         "title": "_SelectableText",
         "type": "object"

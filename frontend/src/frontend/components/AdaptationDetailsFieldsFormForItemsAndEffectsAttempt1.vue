@@ -135,7 +135,7 @@ const itemsKind = computed({
       ></span>
     </span>
   </span>
-  <BLabeledCheckbox :label="$t('effectsBoxed')" v-model="model.itemsAndEffectsAttempt1AdaptationOptions.effects.boxed" disabled />
+  <BLabeledCheckbox :label="$t('effectsBoxed')" v-model="model.itemsAndEffectsAttempt1AdaptationOptions.effects.boxed" />
   <!-- <p>{{ model.itemsAndEffectsAttempt1AdaptationOptions }}</p> -->
 </template>
 

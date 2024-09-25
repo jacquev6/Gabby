@@ -465,6 +465,8 @@ export interface components {
     };
     /** _SelectableText */
     _SelectableText: {
+      /** Boxed */
+      boxed: boolean;
       /** Colors */
       colors: string[];
       /** Text */

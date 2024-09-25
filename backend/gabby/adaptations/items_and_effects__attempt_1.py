@@ -87,16 +87,17 @@ class ItemsAndEffectsAttempt1Adaptation(Adaptation):
         return self.adapt_instructions(self.exercise.instructions)
 
     class WordingAdapter(parsing.WordingSectionAdapter):
-        def __init__(self, punctuation, colors):
+        def __init__(self, punctuation, colors, boxed):
             self.select_punctuation = punctuation
             self.colors = colors
+            self.boxed = boxed
 
         def WORD(self, arg):
-            return renderable.SelectableText(text=arg.value, colors=self.colors)
+            return renderable.SelectableText(text=arg.value, colors=self.colors, boxed=self.boxed)
 
         def PUNCTUATION_IN_SENTENCE(self, arg):
             if self.select_punctuation:
-                return renderable.SelectableText(text=arg.value, colors=self.colors)
+                return renderable.SelectableText(text=arg.value, colors=self.colors, boxed=self.boxed)
             else:
                 return renderable.PlainText(text=arg.value)
 
@@ -104,14 +105,13 @@ class ItemsAndEffectsAttempt1Adaptation(Adaptation):
         PUNCTUATION_IN_LENIENT_PARAGRAPH = PUNCTUATION_IN_SENTENCE
 
     def make_adapted_wording(self):
-        assert not self.effects.boxed
         if self.effects.selectable is None:
             return parsing.adapt_plain_wording_section(self.exercise.wording)
         else:
             assert self.items.kind == "words"
             return parsing.parse_wording_section(
                 {},
-                self.WordingAdapter(self.items.punctuation, self.effects.selectable.colors),
+                self.WordingAdapter(self.items.punctuation, self.effects.selectable.colors, self.effects.boxed),
                 self.exercise.wording,
             )
 
