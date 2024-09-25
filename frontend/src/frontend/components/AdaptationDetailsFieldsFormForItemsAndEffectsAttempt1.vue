@@ -120,7 +120,7 @@ const itemsKind = computed({
     <BRadio v-model="itemsKind" :label="$t('itemsWords')" value="words" />
     <BLabeledCheckbox :label="$t('itemsPunctuation')" v-model="wordsItemsSettings.punctuation" :disabled="itemsKind !== 'words'" />
     <BRadio v-model="itemsKind" :label="$t('itemsSentences')" value="sentences" disabled />
-    <BRadio v-model="itemsKind" :label="$t('itemsManual')" value="manual" disabled />
+    <BRadio v-model="itemsKind" :label="$t('itemsManual')" value="manual" />
   </div>
   <p>{{ $t('effects') }}</p>
   <BLabeledCheckbox :label="$t('effectsSelectable')" v-model="hasSelectableEffect" />

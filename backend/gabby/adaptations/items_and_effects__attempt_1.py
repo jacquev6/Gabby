@@ -59,13 +59,13 @@ class ItemsAndEffectsAttempt1Adaptation(Adaptation):
         else:
             return range(1, len(self.effects.selectable.colors) + 1)
 
-    def _make_tags(self):
+    def _make_instructions_tags(self):
         tags = {}
         if self.effects.selectable is not None:
             tags.update({f"sel{color_index}": r""" "|" STR """ for color_index in self._color_indexes})
         return tags
 
-    def _make_adapter_type(self):
+    def _make_instructions_adapter_type(self):
         tag_functions = {}
         if self.effects.selectable is not None:
             colors = self.effects.selectable.colors
@@ -77,8 +77,8 @@ class ItemsAndEffectsAttempt1Adaptation(Adaptation):
 
     def adapt_instructions(self, section):
         return parsing.InstructionsSectionParser(
-            self._make_tags(),
-            self._make_adapter_type()(),
+            self._make_instructions_tags(),
+            self._make_instructions_adapter_type()(),
         )(
             section,
         )
@@ -86,7 +86,7 @@ class ItemsAndEffectsAttempt1Adaptation(Adaptation):
     def make_adapted_instructions(self):
         return self.adapt_instructions(self.exercise.instructions)
 
-    class WordingAdapter(parsing.WordingSectionAdapter):
+    class WordsItemsWordingAdapter(parsing.WordingSectionAdapter):
         def __init__(self, punctuation, colors, boxed):
             self.select_punctuation = punctuation
             self.colors = colors
@@ -104,16 +104,33 @@ class ItemsAndEffectsAttempt1Adaptation(Adaptation):
         PUNCTUATION_AT_END_OF_SENTENCE = PUNCTUATION_IN_SENTENCE
         PUNCTUATION_IN_LENIENT_PARAGRAPH = PUNCTUATION_IN_SENTENCE
 
+    class ManualItemsWordingAdapter(parsing.WordingSectionAdapter):
+        def __init__(self, colors, boxed):
+            self.colors = colors
+            self.boxed = boxed
+
+        def selectable_tag(self, args):
+            assert len(args) == 1
+            return renderable.SelectableText(text=args[0], colors=self.colors, boxed=self.boxed)
+
     def make_adapted_wording(self):
         if self.effects.selectable is None:
             return parsing.adapt_plain_wording_section(self.exercise.wording)
         else:
-            assert self.items.kind == "words"
-            return parsing.parse_wording_section(
-                {},
-                self.WordingAdapter(self.items.punctuation, self.effects.selectable.colors, self.effects.boxed),
-                self.exercise.wording,
-            )
+            if self.items.kind == "words":
+                return parsing.parse_wording_section(
+                    {},
+                    self.WordsItemsWordingAdapter(self.items.punctuation, self.effects.selectable.colors, self.effects.boxed),
+                    self.exercise.wording,
+                )
+            elif self.items.kind == "manual":
+                return parsing.parse_wording_section(
+                    {"selectable": r""" "|" STR """},
+                    self.ManualItemsWordingAdapter(self.effects.selectable.colors, self.effects.boxed),
+                    self.exercise.wording,
+                )
+            else:
+                assert False, f"Unknown items kind: {self.items.kind}"
 
     def make_adapted_example(self):
         return self.adapt_instructions(self.exercise.example)
@@ -121,7 +138,7 @@ class ItemsAndEffectsAttempt1Adaptation(Adaptation):
     def make_adapted_clue(self):
         return self.adapt_instructions(self.exercise.clue)
 
-    def _make_delta_maker_type(self):
+    def _make_instructions_delta_maker_type(self):
         tag_functions = {}
         if self.effects.selectable is not None:
             tag_functions.update({
@@ -132,8 +149,8 @@ class ItemsAndEffectsAttempt1Adaptation(Adaptation):
 
     def _make_instructions_delta(self, section):
         return parsing.InstructionsSectionParser(
-            self._make_tags(),
-            self._make_delta_maker_type()(),
+            self._make_instructions_tags(),
+            self._make_instructions_delta_maker_type()(),
         )(
             section,
         )
@@ -141,8 +158,26 @@ class ItemsAndEffectsAttempt1Adaptation(Adaptation):
     def make_instructions_delta(self):
         return self._make_instructions_delta(self.exercise.instructions)
 
+    class ManualItemsWordingDeltaMaker(parsing.WordingSectionDeltaMaker):
+        def selectable_tag(self, args):
+            assert len(args) == 1
+            return exercise_delta.InsertOp(insert=args[0], attributes={"selectable": True})
+
     def make_wording_delta(self):
-        return parsing.make_plain_wording_section_delta(self.exercise.wording)
+        if self.effects.selectable is None:
+            return parsing.make_plain_wording_section_delta(self.exercise.wording)
+        else:
+            if self.items.kind == "words":
+                return parsing.make_plain_wording_section_delta(self.exercise.wording)
+            elif self.items.kind == "manual":
+                return parsing.WordingSectionParser(
+                    {"selectable": r""" "|" STR """},
+                    self.ManualItemsWordingDeltaMaker(),
+                )(
+                    self.exercise.wording,
+                )
+            else:
+                assert False, f"Unknown items kind: {self.items.kind}"
 
     def make_example_delta(self):
         return self._make_instructions_delta(self.exercise.example)
@@ -174,8 +209,8 @@ class ItemsAndEffectsAttempt1AdaptationsResource:
         return create_item(
             session, ItemsAndEffectsAttempt1Adaptation,
             exercise=exercise,
-            items=items.model_dump(),
-            effects=effects.model_dump(),
+            items=items,
+            effects=effects,
             created_by=authenticated_user,
             updated_by=authenticated_user,
         )

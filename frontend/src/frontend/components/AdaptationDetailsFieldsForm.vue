@@ -46,6 +46,19 @@ const selectThingsFormats = {
   },
 }
 
+class SelectableBlot extends InlineBlot {
+  static override blotName = 'selectable'
+  static override tagName = 'selectable-blot'
+}
+
+const itemsAndEffectsWordingFormats = {
+  ...basicFormats,
+  selectable: {
+    make: (text: string) => `{selectable|${text}}`,
+    blot: SelectableBlot,
+  },
+}
+
 export const wysiwygFormats = {
   '-': {
     instructions: basicFormats,
@@ -61,7 +74,7 @@ export const wysiwygFormats = {
   },
   itemsAndEffectsAttempt1Adaptation: {
     instructions: selectThingsFormats,
-    wording: basicFormats,
+    wording: itemsAndEffectsWordingFormats,
     example: selectThingsFormats,
     clue: selectThingsFormats,
   },
@@ -250,6 +263,12 @@ div.ql-editor choice-blot {
   margin: 0;
   padding: 0 0.4em;
   border: 2px solid black;
+}
+
+div.ql-editor selectable-blot {
+  margin: 0;
+  padding: 0 0.4em;
+  border: 2px dotted black;
 }
 
 /* Keep this section consistent with the length of 'defaultColors' array above */
