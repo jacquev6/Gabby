@@ -19,7 +19,7 @@ class FillWithFreeTextAdaptation(OldAdaptation):
     placeholder: orm.Mapped[str]
 
     def to_new_adaptation(self):
-        return api_models.FillWithFreeTextAdaptation_(
+        return api_models.FillWithFreeTextAdaptation(
             kind="fill-with-free-text",
             placeholder=self.placeholder,
         )

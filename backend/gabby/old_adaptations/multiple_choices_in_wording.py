@@ -16,7 +16,7 @@ class MultipleChoicesInWordingAdaptation(OldAdaptation):
     id: orm.Mapped[int] = orm.mapped_column(sql.ForeignKey(OldAdaptation.id), primary_key=True)
 
     def to_new_adaptation(self):
-        return api_models.MultipleChoicesInWordingAdaptation_(
+        return api_models.MultipleChoicesInWordingAdaptation(
             kind="multiple-choices-in-wording",
         )
 

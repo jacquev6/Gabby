@@ -20,7 +20,7 @@ class MultipleChoicesInInstructionsAdaptation(OldAdaptation):
     placeholder: orm.Mapped[str]
 
     def to_new_adaptation(self):
-        return api_models.MultipleChoicesInInstructionsAdaptation_(
+        return api_models.MultipleChoicesInInstructionsAdaptation(
             kind="multiple-choices-in-instructions",
             placeholder=self.placeholder,
         )

@@ -16,27 +16,27 @@ class ItemsAndEffectsAttempt1Adaptation(OldAdaptation):
     _items: orm.Mapped[dict] = orm.mapped_column(sql.JSON, name="items")
 
     @property
-    def items(self) -> api_models.ItemsAndEffectsAttempt1Adaptation_.Items:
+    def items(self) -> api_models.ItemsAndEffectsAttempt1Adaptation.Items:
         match self._items["kind"]:
             case "words":
-                return api_models.ItemsAndEffectsAttempt1Adaptation_.WordsItems(**self._items)
+                return api_models.ItemsAndEffectsAttempt1Adaptation.WordsItems(**self._items)
             case "sentences":
-                return api_models.ItemsAndEffectsAttempt1Adaptation_.SentencesItems(**self._items)
+                return api_models.ItemsAndEffectsAttempt1Adaptation.SentencesItems(**self._items)
             case "manual":
-                return api_models.ItemsAndEffectsAttempt1Adaptation_.ManualItems(**self._items)
+                return api_models.ItemsAndEffectsAttempt1Adaptation.ManualItems(**self._items)
             case _:
                 assert False, f"Unknown items kind: {self._items['kind']}"
 
     @items.setter
-    def items(self, items: api_models.ItemsAndEffectsAttempt1Adaptation_.Items):
+    def items(self, items: api_models.ItemsAndEffectsAttempt1Adaptation.Items):
         self._items = items.model_dump()
 
     _effects: orm.Mapped[dict] = orm.mapped_column(sql.JSON, name="effects")
 
     @property
-    def effects(self) -> api_models.ItemsAndEffectsAttempt1Adaptation_.Effects:
-        return api_models.ItemsAndEffectsAttempt1Adaptation_.Effects(**self._effects)
+    def effects(self) -> api_models.ItemsAndEffectsAttempt1Adaptation.Effects:
+        return api_models.ItemsAndEffectsAttempt1Adaptation.Effects(**self._effects)
 
     @effects.setter
-    def effects(self, effects: api_models.ItemsAndEffectsAttempt1Adaptation_.Effects):
+    def effects(self, effects: api_models.ItemsAndEffectsAttempt1Adaptation.Effects):
         self._effects = effects.model_dump()

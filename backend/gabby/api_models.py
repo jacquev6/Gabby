@@ -109,7 +109,7 @@ class PdfRectangle(PydanticBase):
 # @todo Move These 'Adaptation' classes near the 'Exercise' class.
 # They have two responsibilities: API and behavior. Not SOLID, but so convenient for now.
 
-class FillWithFreeTextAdaptation_(PydanticBase):
+class FillWithFreeTextAdaptation(PydanticBase):
     kind: Literal["fill-with-free-text"]
 
     placeholder: str
@@ -144,7 +144,7 @@ class FillWithFreeTextAdaptation_(PydanticBase):
     def make_clue_delta(self, exercise):
         return parsing.make_plain_instructions_section_delta(exercise.clue)
 
-class ItemsAndEffectsAttempt1Adaptation_(PydanticBase):
+class ItemsAndEffectsAttempt1Adaptation(PydanticBase):
     kind: Literal["items-and-effects-attempt-1"]
 
     class WordsItems(PydanticBase):
@@ -303,7 +303,7 @@ class ItemsAndEffectsAttempt1Adaptation_(PydanticBase):
     def make_clue_delta(self, exercise):
         return self._make_instructions_delta(exercise.clue)
 
-class MultipleChoicesInInstructionsAdaptation_(PydanticBase):
+class MultipleChoicesInInstructionsAdaptation(PydanticBase):
     kind: Literal["multiple-choices-in-instructions"]
 
     placeholder: str
@@ -417,7 +417,7 @@ class MultipleChoicesInInstructionsAdaptation_(PydanticBase):
     def make_clue_delta(self, exercise):
         return parsing.make_plain_instructions_section_delta(exercise.clue)
 
-class MultipleChoicesInWordingAdaptation_(PydanticBase):
+class MultipleChoicesInWordingAdaptation(PydanticBase):
     kind: Literal["multiple-choices-in-wording"]
 
     def make_adapted_instructions(self, exercise):
@@ -450,7 +450,7 @@ class MultipleChoicesInWordingAdaptation_(PydanticBase):
     def make_clue_delta(self, exercise):
         return parsing.make_plain_instructions_section_delta(exercise.clue)
 
-class NullAdaptation_(PydanticBase):
+class NullAdaptation(PydanticBase):
     kind: Literal["null"]
 
     def make_instructions_delta(self, exercise):
@@ -477,7 +477,7 @@ class NullAdaptation_(PydanticBase):
     def make_adapted_clue(self, exercise):
         return parsing.adapt_plain_instructions_section(exercise.clue)
 
-class SelectThingsAdaptation_(PydanticBase):
+class SelectThingsAdaptation(PydanticBase):
     kind: Literal["select-things"]
 
     colors: list[str]
@@ -568,7 +568,7 @@ class SelectThingsAdaptation_(PydanticBase):
     def make_clue_delta(self, exercise):
         return self._make_instructions_delta(exercise.clue)
 
-Adaptation: TypeAlias = FillWithFreeTextAdaptation_ | ItemsAndEffectsAttempt1Adaptation_ | MultipleChoicesInInstructionsAdaptation_ | MultipleChoicesInWordingAdaptation_ | NullAdaptation_ | SelectThingsAdaptation_
+Adaptation: TypeAlias = FillWithFreeTextAdaptation | ItemsAndEffectsAttempt1Adaptation | MultipleChoicesInInstructionsAdaptation | MultipleChoicesInWordingAdaptation | NullAdaptation | SelectThingsAdaptation
 
 class Exercise(PydanticBase, CreatedUpdatedByAtMixin):
     project: Annotated[Project, Constant()]
@@ -587,7 +587,7 @@ class Exercise(PydanticBase, CreatedUpdatedByAtMixin):
 
     rectangles: list[PdfRectangle] = []
 
-    adaptation: Adaptation = NullAdaptation_(kind="null")
+    adaptation: Adaptation = NullAdaptation(kind="null")
 
 class ParsedExercise(PydanticBase):
     number: Annotated[str, WriteOnly()]

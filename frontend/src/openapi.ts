@@ -177,8 +177,8 @@ export interface components {
       boxed: boolean;
       selectable: components["schemas"]["Selectable"] | null;
     };
-    /** FillWithFreeTextAdaptation_ */
-    FillWithFreeTextAdaptation_: {
+    /** FillWithFreeTextAdaptation */
+    FillWithFreeTextAdaptation: {
       /**
        * Kind
        * @constant
@@ -208,8 +208,8 @@ export interface components {
       /** Self */
       self: string;
     };
-    /** ItemsAndEffectsAttempt1Adaptation_ */
-    "ItemsAndEffectsAttempt1Adaptation_-Input": {
+    /** ItemsAndEffectsAttempt1Adaptation */
+    "ItemsAndEffectsAttempt1Adaptation-Input": {
       effects: components["schemas"]["Effects"];
       /** Items */
       items: components["schemas"]["WordsItems"] | components["schemas"]["SentencesItems"] | components["schemas"]["ManualItems"];
@@ -220,8 +220,8 @@ export interface components {
        */
       kind: "items-and-effects-attempt-1";
     };
-    /** ItemsAndEffectsAttempt1Adaptation_ */
-    "ItemsAndEffectsAttempt1Adaptation_-Output": {
+    /** ItemsAndEffectsAttempt1Adaptation */
+    "ItemsAndEffectsAttempt1Adaptation-Output": {
       effects: components["schemas"]["Effects"];
       /** Items */
       items: components["schemas"]["WordsItems"] | components["schemas"]["SentencesItems"] | components["schemas"]["ManualItems"];
@@ -241,8 +241,8 @@ export interface components {
        */
       kind: "manual";
     };
-    /** MultipleChoicesInInstructionsAdaptation_ */
-    MultipleChoicesInInstructionsAdaptation_: {
+    /** MultipleChoicesInInstructionsAdaptation */
+    MultipleChoicesInInstructionsAdaptation: {
       /**
        * Kind
        * @constant
@@ -252,8 +252,8 @@ export interface components {
       /** Placeholder */
       placeholder: string;
     };
-    /** MultipleChoicesInWordingAdaptation_ */
-    MultipleChoicesInWordingAdaptation_: {
+    /** MultipleChoicesInWordingAdaptation */
+    MultipleChoicesInWordingAdaptation: {
       /**
        * Kind
        * @constant
@@ -261,8 +261,8 @@ export interface components {
        */
       kind: "multiple-choices-in-wording";
     };
-    /** NullAdaptation_ */
-    NullAdaptation_: {
+    /** NullAdaptation */
+    NullAdaptation: {
       /**
        * Kind
        * @constant
@@ -337,8 +337,8 @@ export interface components {
       /** Paragraphs */
       paragraphs: components["schemas"]["Paragraph"][];
     };
-    /** SelectThingsAdaptation_ */
-    SelectThingsAdaptation_: {
+    /** SelectThingsAdaptation */
+    SelectThingsAdaptation: {
       /** Colors */
       colors: string[];
       /**
@@ -511,7 +511,7 @@ export interface components {
        *   "kind": "null"
        * }
        */
-      adaptation?: components["schemas"]["FillWithFreeTextAdaptation_"] | components["schemas"]["ItemsAndEffectsAttempt1Adaptation_-Input"] | components["schemas"]["MultipleChoicesInInstructionsAdaptation_"] | components["schemas"]["MultipleChoicesInWordingAdaptation_"] | components["schemas"]["NullAdaptation_"] | components["schemas"]["SelectThingsAdaptation_"];
+      adaptation?: components["schemas"]["FillWithFreeTextAdaptation"] | components["schemas"]["ItemsAndEffectsAttempt1Adaptation-Input"] | components["schemas"]["MultipleChoicesInInstructionsAdaptation"] | components["schemas"]["MultipleChoicesInWordingAdaptation"] | components["schemas"]["NullAdaptation"] | components["schemas"]["SelectThingsAdaptation"];
       /**
        * Clue
        * @default
@@ -572,7 +572,7 @@ export interface components {
     /** exerciseOutputItemAttributes */
     exerciseOutputItemAttributes: {
       /** Adaptation */
-      adaptation: components["schemas"]["FillWithFreeTextAdaptation_"] | components["schemas"]["ItemsAndEffectsAttempt1Adaptation_-Output"] | components["schemas"]["MultipleChoicesInInstructionsAdaptation_"] | components["schemas"]["MultipleChoicesInWordingAdaptation_"] | components["schemas"]["NullAdaptation_"] | components["schemas"]["SelectThingsAdaptation_"];
+      adaptation: components["schemas"]["FillWithFreeTextAdaptation"] | components["schemas"]["ItemsAndEffectsAttempt1Adaptation-Output"] | components["schemas"]["MultipleChoicesInInstructionsAdaptation"] | components["schemas"]["MultipleChoicesInWordingAdaptation"] | components["schemas"]["NullAdaptation"] | components["schemas"]["SelectThingsAdaptation"];
       /** Clue */
       clue: string;
       /**
@@ -634,7 +634,7 @@ export interface components {
     /** exerciseUpdateInputDataAttributes */
     exerciseUpdateInputDataAttributes: {
       /** Adaptation */
-      adaptation?: components["schemas"]["FillWithFreeTextAdaptation_"] | components["schemas"]["ItemsAndEffectsAttempt1Adaptation_-Input"] | components["schemas"]["MultipleChoicesInInstructionsAdaptation_"] | components["schemas"]["MultipleChoicesInWordingAdaptation_"] | components["schemas"]["NullAdaptation_"] | components["schemas"]["SelectThingsAdaptation_"];
+      adaptation?: components["schemas"]["FillWithFreeTextAdaptation"] | components["schemas"]["ItemsAndEffectsAttempt1Adaptation-Input"] | components["schemas"]["MultipleChoicesInInstructionsAdaptation"] | components["schemas"]["MultipleChoicesInWordingAdaptation"] | components["schemas"]["NullAdaptation"] | components["schemas"]["SelectThingsAdaptation"];
       /** Clue */
       clue?: string;
       /** Example */
@@ -749,7 +749,7 @@ export interface components {
     /** parsedExerciseCreateInputDataAttributes */
     parsedExerciseCreateInputDataAttributes: {
       /** Adaptation */
-      adaptation: components["schemas"]["FillWithFreeTextAdaptation_"] | components["schemas"]["ItemsAndEffectsAttempt1Adaptation_-Input"] | components["schemas"]["MultipleChoicesInInstructionsAdaptation_"] | components["schemas"]["MultipleChoicesInWordingAdaptation_"] | components["schemas"]["NullAdaptation_"] | components["schemas"]["SelectThingsAdaptation_"];
+      adaptation: components["schemas"]["FillWithFreeTextAdaptation"] | components["schemas"]["ItemsAndEffectsAttempt1Adaptation-Input"] | components["schemas"]["MultipleChoicesInInstructionsAdaptation"] | components["schemas"]["MultipleChoicesInWordingAdaptation"] | components["schemas"]["NullAdaptation"] | components["schemas"]["SelectThingsAdaptation"];
       /** Clue */
       clue: string;
       /** Example */

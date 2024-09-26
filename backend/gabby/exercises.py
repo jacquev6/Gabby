@@ -145,7 +145,7 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
         match self._adaptation["format"]:
             case 0:
                 if self.old_adaptation is None:
-                    return api_models.NullAdaptation_(kind="null")
+                    return api_models.NullAdaptation(kind="null")
                 else:
                     return self.old_adaptation.to_new_adaptation()
             case 1:

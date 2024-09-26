@@ -94,7 +94,7 @@
         "title": "Effects",
         "type": "object"
       },
-      "FillWithFreeTextAdaptation_": {
+      "FillWithFreeTextAdaptation": {
         "additionalProperties": false,
         "properties": {
           "kind": {
@@ -114,7 +114,7 @@
           "kind",
           "placeholder"
         ],
-        "title": "FillWithFreeTextAdaptation_",
+        "title": "FillWithFreeTextAdaptation",
         "type": "object"
       },
       "HTTPValidationError": {
@@ -163,7 +163,7 @@
         "title": "ItemLinks",
         "type": "object"
       },
-      "ItemsAndEffectsAttempt1Adaptation_-Input": {
+      "ItemsAndEffectsAttempt1Adaptation-Input": {
         "additionalProperties": false,
         "properties": {
           "effects": {
@@ -197,10 +197,10 @@
           "items",
           "effects"
         ],
-        "title": "ItemsAndEffectsAttempt1Adaptation_",
+        "title": "ItemsAndEffectsAttempt1Adaptation",
         "type": "object"
       },
-      "ItemsAndEffectsAttempt1Adaptation_-Output": {
+      "ItemsAndEffectsAttempt1Adaptation-Output": {
         "additionalProperties": false,
         "properties": {
           "effects": {
@@ -234,7 +234,7 @@
           "items",
           "effects"
         ],
-        "title": "ItemsAndEffectsAttempt1Adaptation_",
+        "title": "ItemsAndEffectsAttempt1Adaptation",
         "type": "object"
       },
       "ManualItems": {
@@ -255,7 +255,7 @@
         "title": "ManualItems",
         "type": "object"
       },
-      "MultipleChoicesInInstructionsAdaptation_": {
+      "MultipleChoicesInInstructionsAdaptation": {
         "additionalProperties": false,
         "properties": {
           "kind": {
@@ -275,10 +275,10 @@
           "kind",
           "placeholder"
         ],
-        "title": "MultipleChoicesInInstructionsAdaptation_",
+        "title": "MultipleChoicesInInstructionsAdaptation",
         "type": "object"
       },
-      "MultipleChoicesInWordingAdaptation_": {
+      "MultipleChoicesInWordingAdaptation": {
         "additionalProperties": false,
         "properties": {
           "kind": {
@@ -293,10 +293,10 @@
         "required": [
           "kind"
         ],
-        "title": "MultipleChoicesInWordingAdaptation_",
+        "title": "MultipleChoicesInWordingAdaptation",
         "type": "object"
       },
-      "NullAdaptation_": {
+      "NullAdaptation": {
         "additionalProperties": false,
         "properties": {
           "kind": {
@@ -311,7 +311,7 @@
         "required": [
           "kind"
         ],
-        "title": "NullAdaptation_",
+        "title": "NullAdaptation",
         "type": "object"
       },
       "OutputListRelationShipMeta": {
@@ -521,7 +521,7 @@
         "title": "Section",
         "type": "object"
       },
-      "SelectThingsAdaptation_": {
+      "SelectThingsAdaptation": {
         "additionalProperties": false,
         "properties": {
           "colors": {
@@ -554,7 +554,7 @@
           "words",
           "punctuation"
         ],
-        "title": "SelectThingsAdaptation_",
+        "title": "SelectThingsAdaptation",
         "type": "object"
       },
       "Selectable": {
@@ -952,22 +952,22 @@
           "adaptation": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/FillWithFreeTextAdaptation_"
+                "$ref": "#/components/schemas/FillWithFreeTextAdaptation"
               },
               {
-                "$ref": "#/components/schemas/ItemsAndEffectsAttempt1Adaptation_-Input"
+                "$ref": "#/components/schemas/ItemsAndEffectsAttempt1Adaptation-Input"
               },
               {
-                "$ref": "#/components/schemas/MultipleChoicesInInstructionsAdaptation_"
+                "$ref": "#/components/schemas/MultipleChoicesInInstructionsAdaptation"
               },
               {
-                "$ref": "#/components/schemas/MultipleChoicesInWordingAdaptation_"
+                "$ref": "#/components/schemas/MultipleChoicesInWordingAdaptation"
               },
               {
-                "$ref": "#/components/schemas/NullAdaptation_"
+                "$ref": "#/components/schemas/NullAdaptation"
               },
               {
-                "$ref": "#/components/schemas/SelectThingsAdaptation_"
+                "$ref": "#/components/schemas/SelectThingsAdaptation"
               }
             ],
             "default": {
@@ -1102,22 +1102,22 @@
           "adaptation": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/FillWithFreeTextAdaptation_"
+                "$ref": "#/components/schemas/FillWithFreeTextAdaptation"
               },
               {
-                "$ref": "#/components/schemas/ItemsAndEffectsAttempt1Adaptation_-Output"
+                "$ref": "#/components/schemas/ItemsAndEffectsAttempt1Adaptation-Output"
               },
               {
-                "$ref": "#/components/schemas/MultipleChoicesInInstructionsAdaptation_"
+                "$ref": "#/components/schemas/MultipleChoicesInInstructionsAdaptation"
               },
               {
-                "$ref": "#/components/schemas/MultipleChoicesInWordingAdaptation_"
+                "$ref": "#/components/schemas/MultipleChoicesInWordingAdaptation"
               },
               {
-                "$ref": "#/components/schemas/NullAdaptation_"
+                "$ref": "#/components/schemas/NullAdaptation"
               },
               {
-                "$ref": "#/components/schemas/SelectThingsAdaptation_"
+                "$ref": "#/components/schemas/SelectThingsAdaptation"
               }
             ],
             "title": "Adaptation"
@@ -1292,22 +1292,22 @@
           "adaptation": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/FillWithFreeTextAdaptation_"
+                "$ref": "#/components/schemas/FillWithFreeTextAdaptation"
               },
               {
-                "$ref": "#/components/schemas/ItemsAndEffectsAttempt1Adaptation_-Input"
+                "$ref": "#/components/schemas/ItemsAndEffectsAttempt1Adaptation-Input"
               },
               {
-                "$ref": "#/components/schemas/MultipleChoicesInInstructionsAdaptation_"
+                "$ref": "#/components/schemas/MultipleChoicesInInstructionsAdaptation"
               },
               {
-                "$ref": "#/components/schemas/MultipleChoicesInWordingAdaptation_"
+                "$ref": "#/components/schemas/MultipleChoicesInWordingAdaptation"
               },
               {
-                "$ref": "#/components/schemas/NullAdaptation_"
+                "$ref": "#/components/schemas/NullAdaptation"
               },
               {
-                "$ref": "#/components/schemas/SelectThingsAdaptation_"
+                "$ref": "#/components/schemas/SelectThingsAdaptation"
               }
             ],
             "title": "Adaptation"
@@ -1629,22 +1629,22 @@
           "adaptation": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/FillWithFreeTextAdaptation_"
+                "$ref": "#/components/schemas/FillWithFreeTextAdaptation"
               },
               {
-                "$ref": "#/components/schemas/ItemsAndEffectsAttempt1Adaptation_-Input"
+                "$ref": "#/components/schemas/ItemsAndEffectsAttempt1Adaptation-Input"
               },
               {
-                "$ref": "#/components/schemas/MultipleChoicesInInstructionsAdaptation_"
+                "$ref": "#/components/schemas/MultipleChoicesInInstructionsAdaptation"
               },
               {
-                "$ref": "#/components/schemas/MultipleChoicesInWordingAdaptation_"
+                "$ref": "#/components/schemas/MultipleChoicesInWordingAdaptation"
               },
               {
-                "$ref": "#/components/schemas/NullAdaptation_"
+                "$ref": "#/components/schemas/NullAdaptation"
               },
               {
-                "$ref": "#/components/schemas/SelectThingsAdaptation_"
+                "$ref": "#/components/schemas/SelectThingsAdaptation"
               }
             ],
             "title": "Adaptation"

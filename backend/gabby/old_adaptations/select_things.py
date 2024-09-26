@@ -22,7 +22,7 @@ class SelectThingsAdaptation(OldAdaptation):
     colors: orm.Mapped[list[str]] = orm.mapped_column(sql.JSON, name="colors")
     
     def to_new_adaptation(self):
-        return api_models.SelectThingsAdaptation_(
+        return api_models.SelectThingsAdaptation(
             kind="select-things",
             punctuation=self.punctuation,
             words=self.words,
