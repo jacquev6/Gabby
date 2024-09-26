@@ -29,8 +29,8 @@ const model = defineModel<Model>({required: true})
     ><img :style="{height: '1.25em'}" src="/italic.svg" /></BButton>
   </p>
 
-  <p v-if="model.adaptationType === 'selectThingsAdaptation'">
-    <template v-for="i in model.selectThingsAdaptationOptions.colors.length">
+  <p v-if="model.adaptationKind === 'select-things'">
+    <template v-for="i in model.adaptations['select-things'].colors.length">
       <BButton
         class="format-color"
         sm secondary
@@ -40,15 +40,15 @@ const model = defineModel<Model>({required: true})
         :style="{lineHeight: 0, padding: '2px'}"
         :data-cy="`format-color-${i}`"
       >
-        <span :style="{backgroundColor: model.selectThingsAdaptationOptions.colors[i - 1]}"></span>
+        <span :style="{backgroundColor: model.adaptations['select-things'].colors[i - 1]}"></span>
       </BButton>
       <wbr />
     </template>
   </p>
 
-  <template v-if="model.adaptationType === 'itemsAndEffectsAttempt1Adaptation' && model.itemsAndEffectsAttempt1AdaptationOptions.effects.selectable !== null">
+  <template v-if="model.adaptationKind === 'items-and-effects-attempt-1' && model.adaptations['items-and-effects-attempt-1'].effects.selectable !== null">
     <p>
-      <template v-for="i in model.itemsAndEffectsAttempt1AdaptationOptions.effects.selectable.colors.length">
+      <template v-for="i in model.adaptations['items-and-effects-attempt-1'].effects.selectable.colors.length">
         <BButton
           class="format-color"
           sm secondary
@@ -58,13 +58,13 @@ const model = defineModel<Model>({required: true})
           :style="{lineHeight: 0, padding: '2px'}"
           :data-cy="`format-color-${i}`"
         >
-          <span :style="{backgroundColor: model.itemsAndEffectsAttempt1AdaptationOptions.effects.selectable.colors[i - 1]}"></span>
+          <span :style="{backgroundColor: model.adaptations['items-and-effects-attempt-1'].effects.selectable.colors[i - 1]}"></span>
         </BButton>
         <wbr />
       </template>
     </p>
 
-    <p v-if="model.itemsAndEffectsAttempt1AdaptationOptions.items.kind === 'manual'">
+    <p v-if="model.adaptations['items-and-effects-attempt-1'].items.kind === 'manual'">
       <BButton
         sm secondary
         :disabled="fields.focusedWysiwygField !== 'wording'"
@@ -75,7 +75,7 @@ const model = defineModel<Model>({required: true})
     </p>
   </template>
 
-  <p v-if="model.adaptationType === 'multipleChoicesInInstructionsAdaptation'">
+  <p v-if="model.adaptationKind === 'multiple-choices-in-instructions'">
     <BButton
       sm secondary
       :disabled="fields.focusedWysiwygField === null || fields.focusedWysiwygField !== 'instructions'"

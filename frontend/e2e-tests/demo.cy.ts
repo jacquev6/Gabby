@@ -70,7 +70,7 @@ describe('Gabby', () => {
     visit('/project-xkopqm/textbook-klxufv/page-2/new-exercise', {pdf: 'demo'})
     setupAliases()
 
-    cy.get('@adaptationType').select('selectThingsAdaptation').blur()
+    cy.get('@adaptationType').select('select-things').blur()
     cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="2"]').click()
 
     traceRectangle('@canvas', 8, 5, 60, 9)
@@ -102,7 +102,7 @@ describe('Gabby', () => {
     visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise', {pdf: 'demo'})
     setupAliases()
 
-    cy.get('@adaptationType').select('selectThingsAdaptation').blur()
+    cy.get('@adaptationType').select('select-things').blur()
     cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="2"]').click()
 
     traceRectangle('@canvas', 8, 5, 60, 9)
@@ -144,7 +144,7 @@ describe('Gabby', () => {
     visit('/project-xkopqm/textbook-klxufv/page-3/new-exercise', {pdf: 'demo'})
     setupAliases()
 
-    cy.get('@adaptationType').select('multipleChoicesInInstructionsAdaptation').blur()
+    cy.get('@adaptationType').select('multiple-choices-in-instructions').blur()
     cy.get('label:contains("Placeholder") + input').type('{selectAll}...', {delay: 0})
 
     traceRectangle('@canvas', 8, 5, 48, 9)
@@ -181,7 +181,7 @@ describe('Gabby', () => {
     visit('/project-xkopqm/textbook-klxufv/page-4/new-exercise', {pdf: 'demo'})
     setupAliases()
 
-    cy.get('@adaptationType').select('fillWithFreeTextAdaptation').blur()
+    cy.get('@adaptationType').select('fill-with-free-text').blur()
     cy.get('label:contains("Placeholder") + input').type('{selectAll}…', {delay: 0})
 
     traceRectangle('@canvas', 8, 5, 60, 9)

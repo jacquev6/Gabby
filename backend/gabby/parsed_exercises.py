@@ -1,20 +1,13 @@
 import dataclasses
 import uuid
 
-from fastapi import HTTPException
 from starlette import status
 
 from . import api_models
 from . import exercise_delta
-from . import parsing
 from . import renderable
 from . import settings
-from .old_adaptations.fill_with_free_text import FillWithFreeTextAdaptation
-from .old_adaptations.items_and_effects__attempt_1 import ItemsAndEffectsAttempt1Adaptation
-from .old_adaptations.multiple_choices_in_instructions import MultipleChoicesInInstructionsAdaptation
-from .old_adaptations.multiple_choices_in_wording import MultipleChoicesInWordingAdaptation
-from .old_adaptations.select_things import SelectThingsAdaptation
-from .exercises import Exercise, OldAdaptation
+from .exercises import Exercise
 from .testing import LoggedInApiTestCase
 from .users import MandatoryAuthBearerDependable
 

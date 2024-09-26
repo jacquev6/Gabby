@@ -1,5 +1,3 @@
-import type { components } from '../../../openapi'
-
 import { makeStore } from "./glue"
 import type { ApiStore, Item, List, InCache, Exists } from "./interface"
 
@@ -26,26 +24,11 @@ export type { Item, List, InCache, Exists }
 
 export type ParsedExercise = Item<'parsedExercise'>
 export type Exercise = Item<'exercise'>
-export type FillWithFreeTextAdaptation = Item<'fillWithFreeTextAdaptation'>
-export type ItemsAndEffectsAttempt1Adaptation = Item<'itemsAndEffectsAttempt1Adaptation'>
-export type MultipleChoicesInInstructionsAdaptation = Item<'multipleChoicesInInstructionsAdaptation'>
-export type MultipleChoicesInWordingAdaptation = Item<'multipleChoicesInWordingAdaptation'>
 export type PdfFile = Item<'pdfFile'>
 export type PdfFileNaming = Item<'pdfFileNaming'>
 export type Ping = Item<'ping'>
 export type Project = Item<'project'>
 export type RecoveryEmailRequest = Item<'recoveryEmailRequest'>
 export type Section = Item<'section'>
-export type SelectThingsAdaptation = Item<'selectThingsAdaptation'>
 export type Textbook = Item<'textbook'>
 export type User = Item<'user'>
-
-type schemas = components["schemas"]
-
-export type SelectThingsAdaptationOptions = schemas["SelectThingsAdaptationOptions"]
-export type FillWithFreeTextAdaptationOptions = schemas["FillWithFreeTextAdaptationOptions"]
-export type ItemsAndEffectsAttempt1AdaptationOptions = schemas["ItemsAndEffectsAttempt1AdaptationOptions"]
-export type MultipleChoicesInInstructionsAdaptationOptions = schemas["MultipleChoicesInInstructionsAdaptationOptions"]
-export type MultipleChoicesInWordingAdaptationOptions = schemas["MultipleChoicesInWordingAdaptationOptions"]
-
-export type PdfRectangle = (Exercise & InCache & Exists)['attributes']['rectangles'][number]

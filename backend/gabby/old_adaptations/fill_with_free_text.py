@@ -1,18 +1,11 @@
-from contextlib import contextmanager
-
 from sqlalchemy import orm
 import sqlalchemy as sql
 
 from .. import api_models
 from .. import exercise_delta as d
 from .. import renderable as r
-from .. import settings
-from ..api_utils import create_item, get_item, save_item, delete_item
-from ..database_utils import SessionDependable
 from ..exercises import OldAdaptation, Exercise
 from ..testing import AdaptationTestCase
-from ..users import MandatoryAuthBearerDependable
-from ..wrapping import set_wrapper, make_sqids, orm_wrapper_with_sqids
 
 
 class FillWithFreeTextAdaptation(OldAdaptation):
@@ -471,61 +464,3 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 ],
             ),
         )
-
-
-class FillWithFreeTextAdaptationsResource:
-    singular_name = "fill_with_free_text_adaptation"
-    plural_name = "fill_with_free_text_adaptations"
-
-    Model = api_models.FillWithFreeTextAdaptation
-
-    default_page_size = settings.GENERIC_DEFAULT_API_PAGE_SIZE
-
-    sqids = make_sqids(singular_name)
-
-    def create_item(
-        self,
-        exercise,
-        placeholder,
-        session: SessionDependable,
-        authenticated_user: MandatoryAuthBearerDependable,
-    ):
-        if exercise.old_adaptation is not None:
-            session.delete(exercise.old_adaptation)
-        return create_item(
-            session, FillWithFreeTextAdaptation,
-            exercise=exercise,
-            placeholder=placeholder,
-            created_by=authenticated_user,
-            updated_by=authenticated_user,
-        )
-
-    def get_item(
-        self,
-        id,
-        session: SessionDependable,
-        authenticated_user: MandatoryAuthBearerDependable,
-    ):
-        return get_item(session, FillWithFreeTextAdaptation, FillWithFreeTextAdaptationsResource.sqids.decode(id)[0])
-
-    @contextmanager
-    def save_item(
-        self,
-        item,
-        session: SessionDependable,
-        authenticated_user: MandatoryAuthBearerDependable,
-    ):
-        yield
-        item.updated_by = authenticated_user
-        save_item(session, item)
-
-    def delete_item(
-        self,
-        item,
-        session: SessionDependable,
-        authenticated_user: MandatoryAuthBearerDependable,
-    ):
-        delete_item(session, item)
-
-
-set_wrapper(FillWithFreeTextAdaptation, orm_wrapper_with_sqids(FillWithFreeTextAdaptationsResource.sqids))

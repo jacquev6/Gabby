@@ -60,31 +60,31 @@ const itemsAndEffectsWordingFormats = {
 }
 
 export const wysiwygFormats = {
-  '-': {
+  'null': {
     instructions: basicFormats,
     wording: basicFormats,
     example: basicFormats,
     clue: basicFormats,
   },
-  fillWithFreeTextAdaptation: {
+  'fill-with-free-text': {
     instructions: basicFormats,
     wording: basicFormats,
     example: basicFormats,
     clue: basicFormats,
   },
-  itemsAndEffectsAttempt1Adaptation: {
+  'items-and-effects-attempt-1': {
     instructions: selectThingsFormats,
     wording: itemsAndEffectsWordingFormats,
     example: selectThingsFormats,
     clue: selectThingsFormats,
   },
-  selectThingsAdaptation: {
+  'select-things': {
     instructions: selectThingsFormats,
     wording: basicFormats,
     example: selectThingsFormats,
     clue: selectThingsFormats,
   },
-  multipleChoicesInInstructionsAdaptation: {
+  'multiple-choices-in-instructions': {
     instructions: {
       ...basicFormats,
       choice: {
@@ -96,7 +96,7 @@ export const wysiwygFormats = {
     example: basicFormats,
     clue: basicFormats,
   },
-  multipleChoicesInWordingAdaptation: {
+  'multiple-choices-in-wording': {
     instructions: basicFormats,
     wording: basicFormats,
     example: basicFormats,
@@ -127,45 +127,45 @@ const colorPickers = ref<InstanceType<typeof FloatingColorPicker>[]>([])
 const allColors = reactive([...defaultColors])
 const colors = allColors.map((_color, i) => computed({
   get() {
-    if (i < model.value.selectThingsAdaptationOptions.colors.length) {
-      return model.value.selectThingsAdaptationOptions.colors[i]
+    if (i < model.value.adaptations['select-things'].colors.length) {
+      return model.value.adaptations['select-things'].colors[i]
     } else {
       return allColors[i]
     }
   },
   set(value) {
     allColors[i] = value
-    if (i < model.value.selectThingsAdaptationOptions.colors.length) {
-      model.value.selectThingsAdaptationOptions.colors[i] = value
+    if (i < model.value.adaptations['select-things'].colors.length) {
+      model.value.adaptations['select-things'].colors[i] = value
     }
   },
 }))
 
 const colorsCount = computed({
-  get: () => model.value.selectThingsAdaptationOptions.colors.length,
+  get: () => model.value.adaptations['select-things'].colors.length,
   set: (value) => {
-    const prev = model.value.selectThingsAdaptationOptions.colors.length
+    const prev = model.value.adaptations['select-things'].colors.length
     if (value > prev) {
       for (let k = prev; k !== value; ++k) {
-        model.value.selectThingsAdaptationOptions.colors.push(allColors[k])
+        model.value.adaptations['select-things'].colors.push(allColors[k])
       }
     } else {
-      model.value.selectThingsAdaptationOptions.colors.length = value
+      model.value.adaptations['select-things'].colors.length = value
     }
   },
 })
 </script>
 
 <template>
-  <template v-if="model.adaptationType === '-'">
+  <template v-if="model.adaptationKind === 'null'">
   </template>
-  <template v-else-if="model.adaptationType === 'fillWithFreeTextAdaptation'">
-    <BLabeledInput :label="$t('placeholderText')" type="text" v-model="model.fillWithFreeTextAdaptationOptions.placeholder" />
+  <template v-else-if="model.adaptationKind === 'fill-with-free-text'">
+    <BLabeledInput :label="$t('placeholderText')" type="text" v-model="model.adaptations['fill-with-free-text'].placeholder" />
   </template>
-  <template v-else-if="model.adaptationType === 'itemsAndEffectsAttempt1Adaptation'">
+  <template v-else-if="model.adaptationKind === 'items-and-effects-attempt-1'">
     <AdaptationDetailsFieldsFormForItemsAndEffectsAttempt1 v-model="model" />
   </template>
-  <template v-else-if="model.adaptationType === 'selectThingsAdaptation'">
+  <template v-else-if="model.adaptationKind === 'select-things'">
     <template v-if="wysiwyg">
       <FloatingColorPicker
         v-for="i in colors.length"
@@ -176,7 +176,7 @@ const colorsCount = computed({
       <div class="mb-3">
         <label class="form-label" for="blah">{{ $t('usableColors' )}}</label>
         <span class="maybe-usable-colors-container">
-          <span v-for="i in colors.length" :class="i - 1 < model.selectThingsAdaptationOptions.colors.length ? 'usable-colors-container' : 'unusable-colors-container'">
+          <span v-for="i in colors.length" :class="i - 1 < model.adaptations['select-things'].colors.length ? 'usable-colors-container' : 'unusable-colors-container'">
             <span
               class="usable-colors-button"
               :style="{backgroundColor: colors[i - 1].value}"
@@ -187,18 +187,18 @@ const colorsCount = computed({
           </span>
         </span>
       </div>
-      <BLabeledCheckbox :label="$t('includePunctuation')" v-model="model.selectThingsAdaptationOptions.punctuation" />
+      <BLabeledCheckbox :label="$t('includePunctuation')" v-model="model.adaptations['select-things'].punctuation" />
     </template>
     <template v-else>
       <BLabeledInput :label="$t('colorsCount')" type="number" min="1" v-model="colorsCount" />
-      <BLabeledCheckbox :label="$t('includePunctuation')" v-model="model.selectThingsAdaptationOptions.punctuation" />
+      <BLabeledCheckbox :label="$t('includePunctuation')" v-model="model.adaptations['select-things'].punctuation" />
       <p class="alert alert-secondary">
-        <i18n-t keypath="useSel1ToSelN" v-if="model.selectThingsAdaptationOptions.colors.length > 1">
+        <i18n-t keypath="useSel1ToSelN" v-if="model.adaptations['select-things'].colors.length > 1">
           <template v-slot:first>
             <code>{sel1|<em>text</em>}</code>
           </template>
           <template v-slot:last>
-            <code>{sel{{ model.selectThingsAdaptationOptions.colors.length }}|<em>text</em>}</code>
+            <code>{sel{{ model.adaptations['select-things'].colors.length }}|<em>text</em>}</code>
           </template>
         </i18n-t>
         <i18n-t keypath="useSel1" v-else>
@@ -209,8 +209,8 @@ const colorsCount = computed({
       </p>
     </template>
   </template>
-  <template v-else-if="model.adaptationType === 'multipleChoicesInInstructionsAdaptation'">
-    <BLabeledInput :label="$t('placeholderText')" type="text" v-model="model.multipleChoicesInInstructionsAdaptationOptions.placeholder" />
+  <template v-else-if="model.adaptationKind === 'multiple-choices-in-instructions'">
+    <BLabeledInput :label="$t('placeholderText')" type="text" v-model="model.adaptations['multiple-choices-in-instructions'].placeholder" />
     <p v-if="!wysiwyg" class="alert alert-secondary">
       <i18n-t keypath="useChoice">
         <template v-slot:choice>
@@ -219,7 +219,7 @@ const colorsCount = computed({
       </i18n-t>
     </p>
   </template>
-  <template v-else-if="model.adaptationType === 'multipleChoicesInWordingAdaptation'">
+  <template v-else-if="model.adaptationKind === 'multiple-choices-in-wording'">
     <p class="alert alert-secondary">
       <i18n-t keypath="useChoices">
         <template v-slot:choices>
@@ -229,7 +229,7 @@ const colorsCount = computed({
     </p>
   </template>
   <template v-else>
-    <span>{{ ((t: never) => t)(model.adaptationType) }}</span>
+    <span>{{ ((t: never) => t)(model.adaptationKind) }}</span>
   </template>
 </template>
 

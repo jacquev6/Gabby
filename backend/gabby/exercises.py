@@ -435,57 +435,6 @@ class ExerciseTestCase(TransactionTestCase):
                 ],
             )
 
-    def test_share_adaptation(self):
-        project = self.create_model(Project, title="Project", description="")
-        adaptation = self.create_model(GenericOldAdaptation)
-        exercise_1 = self.create_model(Exercise, project=project, number="Exercise 1", instructions="", wording="", example="", clue="", adaptation=adaptation)
-        exercise_2 = self.create_model(Exercise, project=project, number="Exercise 2", instructions="", wording="", example="", clue="")
-
-        with self.make_session() as session:
-            with self.assertRaises(sql.exc.IntegrityError) as cm:
-                session.execute(sql.update(Exercise).where(Exercise.id == exercise_2.id).values(adaptation_id=adaptation.id))
-        self.assertEqual(cm.exception.orig.diag.constraint_name, "exercises_adaptation_id_key")
-
-    def test_share_adaptation__fixed_by_orm(self):
-        self.expect_rollback()
-
-        with self.make_session() as session:
-            user_for_create = session.get(User, self.user_for_create.id)
-
-            session.add(project := Project(title="Project", description="", created_by=user_for_create, updated_by=user_for_create))
-            session.add(adaptation := GenericOldAdaptation(created_by=user_for_create, updated_by=user_for_create))
-            session.flush()
-            session.add(exercise_1 := Exercise(project=project, number="Exercise 1", instructions="", wording="", example="", clue="", adaptation=adaptation, created_by=user_for_create, updated_by=user_for_create))
-            session.flush()
-            session.add(exercise_2 := Exercise(project=project, number="Exercise 2", instructions="", wording="", example="", clue="", adaptation=adaptation, created_by=user_for_create, updated_by=user_for_create))
-            session.flush()
-
-            self.assertIs(exercise_1.old_adaptation, exercise_2.old_adaptation)
-
-            session.refresh(exercise_1)
-
-            self.assertIsNone(exercise_1.old_adaptation)
-
-            session.rollback()
-
-    def test_share_adaptation__not_fixed_by_orm(self):
-        self.expect_rollback()
-
-        with self.make_session() as session:
-            user_for_create = session.get(User, self.user_for_create.id)
-
-            session.add(project := Project(title="Project", description="", created_by=user_for_create, updated_by=user_for_create))
-            session.add(adaptation := GenericOldAdaptation(created_by=user_for_create, updated_by=user_for_create))
-            session.flush()
-            session.add(Exercise(project=project, number="Exercise 1", instructions="", wording="", example="", clue="", adaptation=adaptation, created_by=user_for_create, updated_by=user_for_create))
-            session.add(Exercise(project=project, number="Exercise 2", instructions="", wording="", example="", clue="", adaptation=adaptation, created_by=user_for_create, updated_by=user_for_create))
-
-            with self.assertRaises(sql.exc.IntegrityError) as cm:
-                session.flush()
-
-            session.rollback()
-        self.assertEqual(cm.exception.orig.diag.constraint_name, "exercises_adaptation_id_key")
-
     def test_delete_with_extraction_events(self):
         exercise = self.create_model(Exercise, project=self.project, textbook=None, textbook_page=None, number="5.b", instructions="", wording="", example="", clue="")
         self.create_model(ExtractionEvent, exercise=exercise, event="{}")

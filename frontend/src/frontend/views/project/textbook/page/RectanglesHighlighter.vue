@@ -1,6 +1,8 @@
 <script lang="ts">
 import type { Exercise, Exists, InCache } from '$/frontend/stores/api'
-import type { PdfRectangle } from '$/frontend/stores/api'
+
+
+type PdfRectangle = (Exercise & InCache & Exists)['attributes']['rectangles'][number]
 
 export type Point = { x: number, y: number }
 export type Rectangle = { start: Point, stop: Point }

@@ -106,92 +106,8 @@ class PdfRectangle(PydanticBase):
     text: str | None
     role: Literal["bounding", "instructions", "wording", "example", "clue"]
 
-class Exercise(PydanticBase, CreatedUpdatedByAtMixin):
-    project: Annotated[Project, Constant()]
-
-    textbook: Annotated[Textbook | None, Constant()] = None
-    textbook_page: Annotated[int | None, Constant()] = None
-
-    number: Annotated[str, Constant()]
-
-    instructions: str = ""
-    wording: str = ""
-    example: str = ""
-    clue: str = ""
-
-    wording_paragraphs_per_pagelet: int = 3
-
-    rectangles: list[PdfRectangle] = []
-
-    adaptation: (
-        SelectThingsAdaptation
-        | FillWithFreeTextAdaptation
-        | ItemsAndEffectsAttempt1Adaptation
-        | MultipleChoicesInInstructionsAdaptation
-        | MultipleChoicesInWordingAdaptation
-        | None
-    ) = None
-
-
-class SelectThingsAdaptationOptions(PydanticBase):
-    colors: list[str]
-    words: bool
-    punctuation: bool
-
-class SelectThingsAdaptation(SelectThingsAdaptationOptions, CreatedUpdatedByAtMixin):
-    exercise: Annotated[Exercise, Constant()]
-
-
-class FillWithFreeTextAdaptationOptions(PydanticBase):
-    placeholder: str
-
-class FillWithFreeTextAdaptation(FillWithFreeTextAdaptationOptions, CreatedUpdatedByAtMixin):
-    exercise: Annotated[Exercise, Constant()]
-
-
-class MultipleChoicesInInstructionsAdaptationOptions(PydanticBase):
-    placeholder: str
-
-class MultipleChoicesInInstructionsAdaptation(MultipleChoicesInInstructionsAdaptationOptions, CreatedUpdatedByAtMixin):
-    exercise: Annotated[Exercise, Constant()]
-
-
-class MultipleChoicesInWordingAdaptationOptions(PydanticBase):
-    pass
-
-class MultipleChoicesInWordingAdaptation(MultipleChoicesInWordingAdaptationOptions, CreatedUpdatedByAtMixin):
-    exercise: Annotated[Exercise, Constant()]
-
-
-class ItemsAndEffectsAttempt1AdaptationOptionsWordsItems(PydanticBase):
-    kind: Literal["words"]
-    punctuation: bool
-
-class ItemsAndEffectsAttempt1AdaptationOptionsSentencesItems(PydanticBase):
-    kind: Literal["sentences"]
-
-class ItemsAndEffectsAttempt1AdaptationOptionsManualItems(PydanticBase):
-    kind: Literal["manual"]
-
-ItemsAndEffectsAttempt1AdaptationOptionsItems = ItemsAndEffectsAttempt1AdaptationOptionsWordsItems | ItemsAndEffectsAttempt1AdaptationOptionsSentencesItems | ItemsAndEffectsAttempt1AdaptationOptionsManualItems
-
-class ItemsAndEffectsAttempt1AdaptationOptionsEffects(PydanticBase):
-    class Selectable(PydanticBase):
-        colors: list[str]
-
-    selectable: Selectable | None
-    boxed: bool
-
-class ItemsAndEffectsAttempt1AdaptationOptions(PydanticBase):
-    items: ItemsAndEffectsAttempt1AdaptationOptionsItems
-    effects: ItemsAndEffectsAttempt1AdaptationOptionsEffects
-
-
-class ItemsAndEffectsAttempt1Adaptation(ItemsAndEffectsAttempt1AdaptationOptions, CreatedUpdatedByAtMixin):
-    exercise: Annotated[Exercise, Constant()]
-
-
-# These 'Adaptation' classes have two responsibilities: API and behavior. Not SOLID, but so convenient.
+# @todo Move These 'Adaptation' classes near the 'Exercise' class.
+# They have two responsibilities: API and behavior. Not SOLID, but so convenient for now.
 
 class FillWithFreeTextAdaptation_(PydanticBase):
     kind: Literal["fill-with-free-text"]
@@ -652,8 +568,26 @@ class SelectThingsAdaptation_(PydanticBase):
     def make_clue_delta(self, exercise):
         return self._make_instructions_delta(exercise.clue)
 
-
 Adaptation: TypeAlias = FillWithFreeTextAdaptation_ | ItemsAndEffectsAttempt1Adaptation_ | MultipleChoicesInInstructionsAdaptation_ | MultipleChoicesInWordingAdaptation_ | NullAdaptation_ | SelectThingsAdaptation_
+
+class Exercise(PydanticBase, CreatedUpdatedByAtMixin):
+    project: Annotated[Project, Constant()]
+
+    textbook: Annotated[Textbook | None, Constant()] = None
+    textbook_page: Annotated[int | None, Constant()] = None
+
+    number: Annotated[str, Constant()]
+
+    instructions: str = ""
+    wording: str = ""
+    example: str = ""
+    clue: str = ""
+
+    wording_paragraphs_per_pagelet: int = 3
+
+    rectangles: list[PdfRectangle] = []
+
+    adaptation: Adaptation = NullAdaptation_(kind="null")
 
 class ParsedExercise(PydanticBase):
     number: Annotated[str, WriteOnly()]

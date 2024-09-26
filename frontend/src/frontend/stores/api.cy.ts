@@ -1,5 +1,4 @@
 import { defineApiStore, resetApiStores } from './api'
-import type { FillWithFreeTextAdaptation, SelectThingsAdaptation } from './api'
 import TestComponent from './api.cy.vue'
 import { computed, watch } from 'vue'
 
@@ -1606,113 +1605,63 @@ describe('ApiStore - Application - 2', () => {
   it('gets an exercise without an adaptation', async () => {
     const api = useApiStore()
 
-    const exercise = await api.client.getOne('exercise', 'bylced', {include: ['adaptation']})
+    const exercise = await api.client.getOne('exercise', 'bylced')
 
     expectToBeTrue(exercise.exists)
     expect(exercise.attributes.instructions).to.equal('Écris une phrase en respectant l\'ordre des classes grammaticales indiquées.')
-    expect(exercise.relationships.adaptation).to.be.null
+    expect(exercise.attributes.adaptation.kind).to.equal('null')
   })
 
   it('gets an exercise with "select things" adaptation', async () => {
     const api = useApiStore()
 
-    const exercise = await api.client.getOne('exercise', 'vodhqn', {include: ['adaptation']})
+    const exercise = await api.client.getOne('exercise', 'vodhqn')
 
     expectToBeTrue(exercise.exists)
     expect(exercise.attributes.instructions).to.equal('Relève dans le texte trois\n{sel1|déterminants}, un {sel2|nom propre}, quatre\n{sel3|noms communs} et trois {sel4|verbes}.')
-    expectToNotBeNull(exercise.relationships.adaptation)
-    expect(exercise.relationships.adaptation.type).to.equal('selectThingsAdaptation')
-    expect(exercise.relationships.adaptation.id).to.equal('fojjim')
-    console.assert(exercise.relationships.adaptation.type === 'selectThingsAdaptation')
-    const typed_adaptation = exercise.relationships.adaptation as SelectThingsAdaptation
-    expectToBeTrue(typed_adaptation.inCache)
-    expectToBeTrue(typed_adaptation.exists)
-    expect(typed_adaptation.attributes.colors).to.deep.equal(["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"])
+    expect(exercise.attributes.adaptation.kind).to.equal('select-things')
+    console.assert(exercise.attributes.adaptation.kind === 'select-things')
+    expect(exercise.attributes.adaptation.colors).to.deep.equal(["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"])
   })
 
   it('gets an exercise with "fill with free text" adaptation', async () => {
     const api = useApiStore()
 
-    const exercise = await api.client.getOne('exercise', 'dymwin', {include: ['adaptation']})
+    const exercise = await api.client.getOne('exercise', 'dymwin')
 
     expectToBeTrue(exercise.exists)
     expect(exercise.attributes.instructions).to.equal('Ajoute le suffixe –eur aux verbes.\nIndique la classe des mots fabriqués.')
-    expectToNotBeNull(exercise.relationships.adaptation)
-    expect(exercise.relationships.adaptation.type).to.equal('fillWithFreeTextAdaptation')
-    const typed_adaptation = exercise.relationships.adaptation as FillWithFreeTextAdaptation
-    expectToBeTrue(typed_adaptation.inCache)
-    expectToBeTrue(typed_adaptation.exists)
-    expect(typed_adaptation.attributes.placeholder).to.equal('…')
+    expect(exercise.attributes.adaptation.kind).to.equal('fill-with-free-text')
+    console.assert(exercise.attributes.adaptation.kind === 'fill-with-free-text')
+    expect(exercise.attributes.adaptation.placeholder).to.equal('…')
   })
 
   it('creates an exercise and its adaptation at once', async () => {
     const api = useApiStore()
     await api.auth.login('admin', 'password')
 
-    const response = await api.client.batch(
-      [
-        'add',
-        'exercise', 'exo',
-        {
-          'textbookPage': 7,
-          'number': '12',
-          'instructions': 'Do this',
+    const exercise = await api.client.createOne(
+      'exercise',
+      {
+        textbookPage: 7,
+        number: '12',
+        instructions: 'Do this',
+        adaptation: {
+          kind: 'select-things',
+          colors: ['red', 'green', 'blue', 'purple'],
+          words: true,
+          punctuation: true,
         },
-        {
-          'project': {type: 'project', id: 'xkopqm'},
-          'textbook': {type: 'textbook', id: 'klxufv'},
-        },
-      ],
-      [
-        'add',
-        'selectThingsAdaptation', null,
-        {
-          'colors': ['red', 'green', 'blue', 'purple'],
-          'words': true,
-          'punctuation': true,
-        },
-        {
-          'exercise': {type: 'exercise', lid: 'exo'},
-        },
-      ],
+      },
+      {
+        project: api.cache.getOne('project', 'xkopqm'),
+        textbook: api.cache.getOne('textbook', 'klxufv'),
+      },
     )
 
-    const exercise = response[0]
-
-    // @todo Return up-to-date objects in batch response, then remove next line
-    await exercise.refresh()
-
-    expect(exercise.relationships.adaptation.type).to.equal('selectThingsAdaptation')
-    expect(exercise.relationships.adaptation.attributes.colors).to.deep.equal(['red', 'green', 'blue', 'purple'])
-  })
-
-  it('updates an adaptation', async () => {
-    const api = useApiStore()
-
-    const adaptation = api.cache.getOne('selectThingsAdaptation', 'fojjim')
-    await adaptation.patch({colors: ['red', 'green', 'blue']}, {})
-
-    expectToBeTrue(adaptation.inCache)
-    expectToBeTrue(adaptation.exists)
-    expect(adaptation.attributes.colors).to.deep.equal(['red', 'green', 'blue'])
-  })
-
-  it('changes the type of an adaptation', async () => {
-    const api = useApiStore()
-
-    const previous = await api.client.getOne('selectThingsAdaptation', 'fojjim')
-    expectToBeTrue(previous.exists)
-    expect(previous.relationships.exercise.id).to.equal('vodhqn')
-
-    const adaptation = await api.client.createOne('fillWithFreeTextAdaptation', {placeholder: '...'}, {exercise: previous.relationships.exercise}, {include: ['exercise']})
-
-    expectToBeTrue(adaptation.exists)
-    expect(adaptation.attributes.placeholder).to.equal('...')
-    expectToBeTrue(adaptation.relationships.exercise.inCache)
-    expectToBeTrue(adaptation.relationships.exercise.exists)
-    expect(adaptation.relationships.exercise.attributes.instructions).to.equal('Relève dans le texte trois\n{sel1|déterminants}, un {sel2|nom propre}, quatre\n{sel3|noms communs} et trois {sel4|verbes}.')
-
-    await previous.refresh()
-    expect(previous.exists).to.be.false
+    console.assert(exercise.inCache && exercise.exists)
+    expect(exercise.attributes.adaptation.kind).to.equal('select-things')
+    console.assert(exercise.attributes.adaptation.kind === 'select-things')
+    expect(exercise.attributes.adaptation.colors).to.deep.equal(['red', 'green', 'blue', 'purple'])
   })
 })

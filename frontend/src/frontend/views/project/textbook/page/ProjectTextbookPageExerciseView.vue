@@ -69,7 +69,7 @@ function makeGreyRectangles(pdfSha256: string, pdfPage: number) {
   return makeBoundingRectangles(pdfSha256, pdfPage, otherExercises)
 }
 
-const exercise = computed(() => api.auto.getOne('exercise', props.exerciseId, {include: ['adaptation']}))
+const exercise = computed(() => api.auto.getOne('exercise', props.exerciseId))
 
 const exerciseBelongsToTextbookPage = computed(() =>
   exercise.value.inCache && exercise.value.exists && exercise.value.relationships.textbook === textbook.value && exercise.value.attributes.textbookPage === props.page
@@ -104,7 +104,7 @@ const breadcrumbs = computed(() => {
 })
 
 const model = reactive(makeModelInTextbook(props.page))
-const canWysiwyg = computed(() => model.adaptationType !== 'multipleChoicesInWordingAdaptation')
+const canWysiwyg = computed(() => model.adaptationKind !== 'multiple-choices-in-wording')
 const wantWysiwyg = ref(true)
 const wysiwyg = computed(() => canWysiwyg.value && wantWysiwyg.value)
 
@@ -113,7 +113,6 @@ const resetUndoRedo = ref(0)
 watch(
   [
     computed(() => exercise.value.inCache && exercise.value.exists ? exercise.value.attributes.number : null),
-    computed(() => exercise.value.inCache && exercise.value.exists && exercise.value.relationships.adaptation !== null && exercise.value.relationships.adaptation.inCache),
   ],
   () => {
     if (exercise.value.inCache && exercise.value.exists) {
@@ -236,7 +235,7 @@ watch(parsedExercise, () => {
 const toolSlotNames = computed(() => {
   const names = []
   names.push('undoRedo')
-  if (model.adaptationType !== '-') {
+  if (model.adaptationKind !== 'null') {
     names.push('adaptationDetails')
   }
   if (wysiwyg.value) {

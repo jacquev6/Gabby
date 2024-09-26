@@ -1099,7 +1099,7 @@ class GenericWordingSectionAdapter(WordingSectionAdapter):
     def selectable_text_tag(self, args):
         text = args[0]
         colors = list(args[1:])
-        return renderable.SelectableText(text=text, colors=colors)
+        return renderable.SelectableText(text=text, colors=colors, boxed=False)
 
     def multiple_choices_input_tag(self, args):
         choices = args
@@ -1259,7 +1259,7 @@ class AdaptGenericWordingSectionTestCase(unittest.TestCase):
                 renderable.Whitespace(),
                 renderable.PlainText(text="is"),
                 renderable.Whitespace(),
-                renderable.SelectableText(text="selectable", colors=["red", "green", "blue"]),
+                renderable.SelectableText(text="selectable", colors=["red", "green", "blue"], boxed=False),
                 renderable.PlainText(text="."),
             ])])]),
         )
