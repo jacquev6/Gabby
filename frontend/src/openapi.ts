@@ -231,6 +231,12 @@ export interface components {
       /** Username */
       username: string;
     };
+    /** Effects */
+    Effects: {
+      /** Boxed */
+      boxed: boolean;
+      selectable: components["schemas"]["Selectable"] | null;
+    };
     /** FillWithFreeTextAdaptation_ */
     FillWithFreeTextAdaptation_: {
       /**
@@ -297,6 +303,27 @@ export interface components {
       /** Punctuation */
       punctuation: boolean;
     };
+    /** ItemsAndEffectsAttempt1Adaptation_ */
+    ItemsAndEffectsAttempt1Adaptation_: {
+      effects: components["schemas"]["Effects"];
+      /** Items */
+      items: components["schemas"]["WordsItems"] | components["schemas"]["SentencesItems"] | components["schemas"]["ManualItems"];
+      /**
+       * Kind
+       * @constant
+       * @enum {string}
+       */
+      kind: "items-and-effects-attempt-1";
+    };
+    /** ManualItems */
+    ManualItems: {
+      /**
+       * Kind
+       * @constant
+       * @enum {string}
+       */
+      kind: "manual";
+    };
     /** MultipleChoicesInInstructionsAdaptation_ */
     MultipleChoicesInInstructionsAdaptation_: {
       /**
@@ -317,8 +344,8 @@ export interface components {
        */
       kind: "multiple-choices-in-wording";
     };
-    /** NullAdaptation */
-    NullAdaptation: {
+    /** NullAdaptation_ */
+    NullAdaptation_: {
       /**
        * Kind
        * @constant
@@ -418,6 +445,15 @@ export interface components {
       /** Tokens */
       tokens: (components["schemas"]["_PlainText"] | components["schemas"]["_BoxedText"] | components["schemas"]["_BoldText"] | components["schemas"]["_ItalicText"] | components["schemas"]["_SelectableText"] | components["schemas"]["_SelectedText"] | components["schemas"]["_FreeTextInput"] | components["schemas"]["_MultipleChoicesInput"] | components["schemas"]["_Whitespace"])[];
     };
+    /** SentencesItems */
+    SentencesItems: {
+      /**
+       * Kind
+       * @constant
+       * @enum {string}
+       */
+      kind: "sentences";
+    };
     /** ValidationError */
     ValidationError: {
       /** Location */
@@ -426,6 +462,17 @@ export interface components {
       msg: string;
       /** Error Type */
       type: string;
+    };
+    /** WordsItems */
+    WordsItems: {
+      /**
+       * Kind
+       * @constant
+       * @enum {string}
+       */
+      kind: "words";
+      /** Punctuation */
+      punctuation: boolean;
     };
     /** _BoldText */
     _BoldText: {
@@ -1285,7 +1332,7 @@ export interface components {
     /** parsedExerciseCreateInputDataAttributes */
     parsedExerciseCreateInputDataAttributes: {
       /** Adaptation */
-      adaptation: components["schemas"]["FillWithFreeTextAdaptation_"] | components["schemas"]["MultipleChoicesInInstructionsAdaptation_"] | components["schemas"]["MultipleChoicesInWordingAdaptation_"] | components["schemas"]["NullAdaptation"] | components["schemas"]["SelectThingsAdaptation_"];
+      adaptation: components["schemas"]["FillWithFreeTextAdaptation_"] | components["schemas"]["ItemsAndEffectsAttempt1Adaptation_"] | components["schemas"]["MultipleChoicesInInstructionsAdaptation_"] | components["schemas"]["MultipleChoicesInWordingAdaptation_"] | components["schemas"]["NullAdaptation_"] | components["schemas"]["SelectThingsAdaptation_"];
       /** Clue */
       clue: string;
       /** Example */

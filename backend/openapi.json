@@ -69,6 +69,31 @@
         "title": "Body_login_api_token_post",
         "type": "object"
       },
+      "Effects": {
+        "additionalProperties": false,
+        "properties": {
+          "boxed": {
+            "title": "Boxed",
+            "type": "boolean"
+          },
+          "selectable": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Selectable"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "selectable",
+          "boxed"
+        ],
+        "title": "Effects",
+        "type": "object"
+      },
       "FillWithFreeTextAdaptation_": {
         "additionalProperties": false,
         "properties": {
@@ -222,6 +247,61 @@
         "title": "ItemsAndEffectsAttempt1AdaptationOptionsWordsItems",
         "type": "object"
       },
+      "ItemsAndEffectsAttempt1Adaptation_": {
+        "additionalProperties": false,
+        "properties": {
+          "effects": {
+            "$ref": "#/components/schemas/Effects"
+          },
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/WordsItems"
+              },
+              {
+                "$ref": "#/components/schemas/SentencesItems"
+              },
+              {
+                "$ref": "#/components/schemas/ManualItems"
+              }
+            ],
+            "title": "Items"
+          },
+          "kind": {
+            "const": "items-and-effects-attempt-1",
+            "enum": [
+              "items-and-effects-attempt-1"
+            ],
+            "title": "Kind",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "items",
+          "effects"
+        ],
+        "title": "ItemsAndEffectsAttempt1Adaptation_",
+        "type": "object"
+      },
+      "ManualItems": {
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "const": "manual",
+            "enum": [
+              "manual"
+            ],
+            "title": "Kind",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind"
+        ],
+        "title": "ManualItems",
+        "type": "object"
+      },
       "MultipleChoicesInInstructionsAdaptation_": {
         "additionalProperties": false,
         "properties": {
@@ -263,7 +343,7 @@
         "title": "MultipleChoicesInWordingAdaptation_",
         "type": "object"
       },
-      "NullAdaptation": {
+      "NullAdaptation_": {
         "additionalProperties": false,
         "properties": {
           "kind": {
@@ -278,7 +358,7 @@
         "required": [
           "kind"
         ],
-        "title": "NullAdaptation",
+        "title": "NullAdaptation_",
         "type": "object"
       },
       "OutputListRelationShipMeta": {
@@ -586,6 +666,24 @@
         "title": "Sentence",
         "type": "object"
       },
+      "SentencesItems": {
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "const": "sentences",
+            "enum": [
+              "sentences"
+            ],
+            "title": "Kind",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind"
+        ],
+        "title": "SentencesItems",
+        "type": "object"
+      },
       "ValidationError": {
         "properties": {
           "loc": {
@@ -617,6 +715,29 @@
           "type"
         ],
         "title": "ValidationError",
+        "type": "object"
+      },
+      "WordsItems": {
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "const": "words",
+            "enum": [
+              "words"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "punctuation": {
+            "title": "Punctuation",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "kind",
+          "punctuation"
+        ],
+        "title": "WordsItems",
         "type": "object"
       },
       "_BoldText": {
@@ -2858,13 +2979,16 @@
                 "$ref": "#/components/schemas/FillWithFreeTextAdaptation_"
               },
               {
+                "$ref": "#/components/schemas/ItemsAndEffectsAttempt1Adaptation_"
+              },
+              {
                 "$ref": "#/components/schemas/MultipleChoicesInInstructionsAdaptation_"
               },
               {
                 "$ref": "#/components/schemas/MultipleChoicesInWordingAdaptation_"
               },
               {
-                "$ref": "#/components/schemas/NullAdaptation"
+                "$ref": "#/components/schemas/NullAdaptation_"
               },
               {
                 "$ref": "#/components/schemas/SelectThingsAdaptation_"
