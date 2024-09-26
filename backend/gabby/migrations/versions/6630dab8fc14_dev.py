@@ -1,5 +1,9 @@
 from alembic import op
 import sqlalchemy as sa
+from sqlalchemy import orm
+
+
+from gabby.exercises import Exercise
 
 
 revision = "6630dab8fc14"
@@ -24,8 +28,13 @@ def upgrade():
     op.add_column(
         "exercises", sa.Column("wording_paragraphs_per_pagelet", sa.Integer(), server_default="3", nullable=False)
     )
-    op.add_column("exercises", sa.Column("adaptation", sa.JSON(), server_default='{"kind": "null"}', nullable=False))
+    op.add_column("exercises", sa.Column("adaptation", sa.JSON(), server_default='{"format": 0}', nullable=False))
     # ### end Alembic commands ###
+    with orm.Session(op.get_bind()) as session:
+        for exercise in session.query(Exercise).all():
+            exercise.adaptation = exercise.adaptation
+            # exercise.old_adaptation = None
+        session.commit()
 
 
 def downgrade():
