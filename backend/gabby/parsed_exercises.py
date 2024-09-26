@@ -9,17 +9,17 @@ from . import exercise_delta
 from . import parsing
 from . import renderable
 from . import settings
-from .adaptations.fill_with_free_text import FillWithFreeTextAdaptation
-from .adaptations.items_and_effects__attempt_1 import ItemsAndEffectsAttempt1Adaptation
-from .adaptations.multiple_choices_in_instructions import MultipleChoicesInInstructionsAdaptation
-from .adaptations.multiple_choices_in_wording import MultipleChoicesInWordingAdaptation
-from .adaptations.select_things import SelectThingsAdaptation
-from .exercises import Exercise, Adaptation
+from .old_adaptations.fill_with_free_text import FillWithFreeTextAdaptation
+from .old_adaptations.items_and_effects__attempt_1 import ItemsAndEffectsAttempt1Adaptation
+from .old_adaptations.multiple_choices_in_instructions import MultipleChoicesInInstructionsAdaptation
+from .old_adaptations.multiple_choices_in_wording import MultipleChoicesInWordingAdaptation
+from .old_adaptations.select_things import SelectThingsAdaptation
+from .exercises import Exercise, OldAdaptation
 from .testing import LoggedInApiTestCase
 from .users import MandatoryAuthBearerDependable
 
 
-class NullAdaptation(Adaptation):
+class NullAdaptation(OldAdaptation):
     __abstract__ = True  # Abstract with regards to SQL tables, but instantiable in Python
 
     def make_instructions_delta(self):

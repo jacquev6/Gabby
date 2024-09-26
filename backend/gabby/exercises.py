@@ -24,7 +24,7 @@ from .wrapping import unwrap, set_wrapper, make_sqids, orm_wrapper_with_sqids
 from mydantic import PydanticBase
 
 
-class Adaptation(OrmBase, CreatedUpdatedByAtMixin):
+class OldAdaptation(OrmBase, CreatedUpdatedByAtMixin):
     __tablename__ = "adaptations"
 
     __mapper_args__ = {
@@ -35,7 +35,7 @@ class Adaptation(OrmBase, CreatedUpdatedByAtMixin):
     id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
     kind: orm.Mapped[str] = orm.mapped_column(sql.String(16))
 
-    exercise: orm.Mapped["Exercise"] = orm.relationship(back_populates="adaptation")
+    exercise: orm.Mapped["Exercise"] = orm.relationship(back_populates="old_adaptation")
 
     def make_adapted(self):
         return renderable.Exercise(
@@ -63,7 +63,7 @@ class Adaptation(OrmBase, CreatedUpdatedByAtMixin):
             else:
                 return adapted.to_generic()
 
-        return GenericAdaptation(
+        return GenericOldAdaptation(
             exercise=Exercise(
                 project=None,
                 textbook=self.exercise.textbook,
@@ -78,13 +78,13 @@ class Adaptation(OrmBase, CreatedUpdatedByAtMixin):
         )
 
 
-class GenericAdaptation(Adaptation):
+class GenericOldAdaptation(OldAdaptation):
     __tablename__ = "adaptations__g"
     __mapper_args__ = {
         "polymorphic_identity": "g",
     }
 
-    id: orm.Mapped[int] = orm.mapped_column(sql.ForeignKey(Adaptation.id), primary_key=True)
+    id: orm.Mapped[int] = orm.mapped_column(sql.ForeignKey(OldAdaptation.id), primary_key=True)
 
     def make_adapted_instructions(self):
         return parsing.adapt_generic_instructions_section(self.exercise.instructions)
@@ -137,8 +137,8 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
     def rectangles(self, rectangles: list[api_models.PdfRectangle]):
         self._rectangles = [rectangle.model_dump() for rectangle in rectangles]
 
-    adaptation_id: orm.Mapped[int | None] = orm.mapped_column(sql.ForeignKey(Adaptation.id), unique=True)
-    adaptation: orm.Mapped[Adaptation | None] = orm.relationship(
+    old_adaptation_id: orm.Mapped[int | None] = orm.mapped_column(sql.ForeignKey(OldAdaptation.id), name="adaptation_id", unique=True)
+    old_adaptation: orm.Mapped[OldAdaptation | None] = orm.relationship(
         back_populates="exercise",
         lazy="joined",
     )
@@ -401,7 +401,7 @@ class ExerciseTestCase(TransactionTestCase):
 
     def test_share_adaptation(self):
         project = self.create_model(Project, title="Project", description="")
-        adaptation = self.create_model(GenericAdaptation)
+        adaptation = self.create_model(GenericOldAdaptation)
         exercise_1 = self.create_model(Exercise, project=project, number="Exercise 1", instructions="", wording="", example="", clue="", adaptation=adaptation)
         exercise_2 = self.create_model(Exercise, project=project, number="Exercise 2", instructions="", wording="", example="", clue="")
 
@@ -417,18 +417,18 @@ class ExerciseTestCase(TransactionTestCase):
             user_for_create = session.get(User, self.user_for_create.id)
 
             session.add(project := Project(title="Project", description="", created_by=user_for_create, updated_by=user_for_create))
-            session.add(adaptation := GenericAdaptation(created_by=user_for_create, updated_by=user_for_create))
+            session.add(adaptation := GenericOldAdaptation(created_by=user_for_create, updated_by=user_for_create))
             session.flush()
             session.add(exercise_1 := Exercise(project=project, number="Exercise 1", instructions="", wording="", example="", clue="", adaptation=adaptation, created_by=user_for_create, updated_by=user_for_create))
             session.flush()
             session.add(exercise_2 := Exercise(project=project, number="Exercise 2", instructions="", wording="", example="", clue="", adaptation=adaptation, created_by=user_for_create, updated_by=user_for_create))
             session.flush()
 
-            self.assertIs(exercise_1.adaptation, exercise_2.adaptation)
+            self.assertIs(exercise_1.old_adaptation, exercise_2.old_adaptation)
 
             session.refresh(exercise_1)
 
-            self.assertIsNone(exercise_1.adaptation)
+            self.assertIsNone(exercise_1.old_adaptation)
 
             session.rollback()
 
@@ -439,7 +439,7 @@ class ExerciseTestCase(TransactionTestCase):
             user_for_create = session.get(User, self.user_for_create.id)
 
             session.add(project := Project(title="Project", description="", created_by=user_for_create, updated_by=user_for_create))
-            session.add(adaptation := GenericAdaptation(created_by=user_for_create, updated_by=user_for_create))
+            session.add(adaptation := GenericOldAdaptation(created_by=user_for_create, updated_by=user_for_create))
             session.flush()
             session.add(Exercise(project=project, number="Exercise 1", instructions="", wording="", example="", clue="", adaptation=adaptation, created_by=user_for_create, updated_by=user_for_create))
             session.add(Exercise(project=project, number="Exercise 2", instructions="", wording="", example="", clue="", adaptation=adaptation, created_by=user_for_create, updated_by=user_for_create))

@@ -12,19 +12,19 @@ from .. import renderable as r
 from .. import settings
 from ..api_utils import create_item, get_item, save_item, delete_item
 from ..database_utils import SessionDependable
-from ..exercises import Adaptation, Exercise
+from ..exercises import OldAdaptation, Exercise
 from ..testing import AdaptationTestCase
 from ..users import MandatoryAuthBearerDependable
 from ..wrapping import set_wrapper, make_sqids, orm_wrapper_with_sqids
 
 
-class SelectThingsAdaptation(Adaptation):
+class SelectThingsAdaptation(OldAdaptation):
     __tablename__ = "adaptations__st"
     __mapper_args__ = {
         "polymorphic_identity": "st",
     }
 
-    id: orm.Mapped[int] = orm.mapped_column(sql.ForeignKey(Adaptation.id), primary_key=True)
+    id: orm.Mapped[int] = orm.mapped_column(sql.ForeignKey(OldAdaptation.id), primary_key=True)
 
     punctuation: orm.Mapped[bool]
     words: orm.Mapped[bool]
