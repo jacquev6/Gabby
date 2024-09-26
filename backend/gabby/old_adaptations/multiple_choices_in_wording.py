@@ -4,8 +4,6 @@ from sqlalchemy import orm
 import sqlalchemy as sql
 
 from .. import api_models
-from .. import parsing
-from .. import renderable
 from .. import renderable as r
 from .. import settings
 from ..api_utils import create_item, get_item, save_item, delete_item
@@ -24,35 +22,10 @@ class MultipleChoicesInWordingAdaptation(OldAdaptation):
 
     id: orm.Mapped[int] = orm.mapped_column(sql.ForeignKey(OldAdaptation.id), primary_key=True)
 
-    def make_adapted_instructions(self):
-        return parsing.adapt_plain_instructions_section(self.exercise.instructions)
-
-    class WordingAdapter(parsing.WordingSectionAdapter):
-        def choices_tag(self, args):
-            return renderable.MultipleChoicesInput(choices=[arg for arg in args])
-
-    adapt_wording = parsing.WordingSectionParser({"choices": r""" ("|" STR)+ """}, WordingAdapter())
-
-    def make_adapted_wording(self):
-        return self.adapt_wording(self.exercise.wording)
-
-    def make_adapted_example(self):
-        return parsing.adapt_plain_instructions_section(self.exercise.example)
-
-    def make_adapted_clue(self):
-        return parsing.adapt_plain_instructions_section(self.exercise.clue)
-
-    def make_instructions_delta(self):
-        return parsing.make_plain_instructions_section_delta(self.exercise.instructions)
-
-    def make_wording_delta(self):
-        return parsing.make_plain_wording_section_delta(self.exercise.wording)
-
-    def make_example_delta(self):
-        return parsing.make_plain_instructions_section_delta(self.exercise.example)
-
-    def make_clue_delta(self):
-        return parsing.make_plain_instructions_section_delta(self.exercise.clue)
+    def to_new_adaptation(self):
+        return api_models.MultipleChoicesInWordingAdaptation_(
+            kind="multiple-choices-in-wording",
+        )
 
 
 class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
@@ -123,8 +96,8 @@ class MultipleChoicesInWordingAdaptationsResource:
         session: SessionDependable,
         authenticated_user: MandatoryAuthBearerDependable,
     ):
-        if exercise.adaptation is not None:
-            session.delete(exercise.adaptation)
+        if exercise.old_adaptation is not None:
+            session.delete(exercise.old_adaptation)
         return create_item(
             session, MultipleChoicesInWordingAdaptation,
             exercise=exercise,

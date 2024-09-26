@@ -2263,10 +2263,10 @@ class AdaptationsApiTestCase(LoggedInApiTestCase):
         })
 
         exercise = self.get_model(Exercise, 1)
-        self.assertIsInstance(exercise.adaptation, SelectThingsAdaptation)
-        self.assertEqual(exercise.adaptation.colors, ["red", "green", "blue"])
-        self.assertTrue(exercise.adaptation.words)
-        self.assertTrue(exercise.adaptation.punctuation)
+        self.assertIsInstance(exercise.old_adaptation, SelectThingsAdaptation)
+        self.assertEqual(exercise.old_adaptation.colors, ["red", "green", "blue"])
+        self.assertTrue(exercise.old_adaptation.words)
+        self.assertTrue(exercise.old_adaptation.punctuation)
 
     def test_create_fill_with_free_text_adaptation(self):
         payload = {
@@ -2301,11 +2301,11 @@ class AdaptationsApiTestCase(LoggedInApiTestCase):
         })
 
         exercise = self.get_model(Exercise, 1)
-        self.assertIsInstance(exercise.adaptation, FillWithFreeTextAdaptation)
-        self.assertEqual(exercise.adaptation.placeholder, "...")
+        self.assertIsInstance(exercise.old_adaptation, FillWithFreeTextAdaptation)
+        self.assertEqual(exercise.old_adaptation.placeholder, "...")
 
     def test_dont_update_adaptation(self):
-        self.exercise.adaptation = self.create_model(SelectThingsAdaptation, old_colors_count=3, colors=["red", "green", "blue"], words=True, punctuation=True)
+        self.exercise.old_adaptation = self.create_model(SelectThingsAdaptation, old_colors_count=3, colors=["red", "green", "blue"], words=True, punctuation=True)
         self._TransactionTestCase__session.commit()
 
         payload = {
@@ -2344,10 +2344,10 @@ class AdaptationsApiTestCase(LoggedInApiTestCase):
 
         self.assertEqual(self.count_models(SelectThingsAdaptation), 1)
         exercise = self.get_model(Exercise, 1)
-        self.assertEqual(exercise.adaptation, self.get_model(SelectThingsAdaptation, 1))
+        self.assertEqual(exercise.old_adaptation, self.get_model(SelectThingsAdaptation, 1))
 
     def test_update_adaptation__none(self):
-        self.exercise.adaptation = self.create_model(SelectThingsAdaptation, old_colors_count=3, colors=["red", "green", "blue"], words=True, punctuation=True)
+        self.exercise.old_adaptation = self.create_model(SelectThingsAdaptation, old_colors_count=3, colors=["red", "green", "blue"], words=True, punctuation=True)
         self._TransactionTestCase__session.commit()
 
         payload = {
@@ -2385,12 +2385,12 @@ class AdaptationsApiTestCase(LoggedInApiTestCase):
         })
 
         exercise = self.get_model(Exercise, 1)
-        self.assertIsNone(exercise.adaptation)
+        self.assertIsNone(exercise.old_adaptation)
 
         self.assertEqual(self.count_models(SelectThingsAdaptation), 0)
 
     def test_update_adaptation__other_type(self):
-        self.exercise.adaptation = self.create_model(SelectThingsAdaptation, old_colors_count=3, colors=["red", "green", "blue"], words=True, punctuation=True)
+        self.exercise.old_adaptation = self.create_model(SelectThingsAdaptation, old_colors_count=3, colors=["red", "green", "blue"], words=True, punctuation=True)
         self._TransactionTestCase__session.commit()
 
         payload = {
@@ -2425,8 +2425,8 @@ class AdaptationsApiTestCase(LoggedInApiTestCase):
         })
 
         exercise = self.get_model(Exercise, 1)
-        self.assertIsInstance(exercise.adaptation, FillWithFreeTextAdaptation)
-        self.assertEqual(exercise.adaptation.placeholder, "...")
+        self.assertIsInstance(exercise.old_adaptation, FillWithFreeTextAdaptation)
+        self.assertEqual(exercise.old_adaptation.placeholder, "...")
 
         self.assertEqual(self.count_models(SelectThingsAdaptation), 0)
 

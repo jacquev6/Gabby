@@ -231,8 +231,14 @@ export interface components {
       /** Username */
       username: string;
     };
-    /** FillWithFreeTextAdaptationOptions */
-    FillWithFreeTextAdaptationOptions: {
+    /** FillWithFreeTextAdaptation_ */
+    FillWithFreeTextAdaptation_: {
+      /**
+       * Kind
+       * @constant
+       * @enum {string}
+       */
+      kind: "fill-with-free-text";
       /** Placeholder */
       placeholder: string;
     };
@@ -255,12 +261,6 @@ export interface components {
     ItemLinks: {
       /** Self */
       self: string;
-    };
-    /** ItemsAndEffectsAttempt1AdaptationOptions */
-    ItemsAndEffectsAttempt1AdaptationOptions: {
-      effects: components["schemas"]["ItemsAndEffectsAttempt1AdaptationOptionsEffects"];
-      /** Items */
-      items: components["schemas"]["ItemsAndEffectsAttempt1AdaptationOptionsWordsItems"] | components["schemas"]["ItemsAndEffectsAttempt1AdaptationOptionsSentencesItems"] | components["schemas"]["ItemsAndEffectsAttempt1AdaptationOptionsManualItems"];
     };
     /** ItemsAndEffectsAttempt1AdaptationOptionsEffects */
     ItemsAndEffectsAttempt1AdaptationOptionsEffects: {
@@ -297,13 +297,35 @@ export interface components {
       /** Punctuation */
       punctuation: boolean;
     };
-    /** MultipleChoicesInInstructionsAdaptationOptions */
-    MultipleChoicesInInstructionsAdaptationOptions: {
+    /** MultipleChoicesInInstructionsAdaptation_ */
+    MultipleChoicesInInstructionsAdaptation_: {
+      /**
+       * Kind
+       * @constant
+       * @enum {string}
+       */
+      kind: "multiple-choices-in-instructions";
       /** Placeholder */
       placeholder: string;
     };
-    /** MultipleChoicesInWordingAdaptationOptions */
-    MultipleChoicesInWordingAdaptationOptions: Record<string, never>;
+    /** MultipleChoicesInWordingAdaptation_ */
+    MultipleChoicesInWordingAdaptation_: {
+      /**
+       * Kind
+       * @constant
+       * @enum {string}
+       */
+      kind: "multiple-choices-in-wording";
+    };
+    /** NullAdaptation */
+    NullAdaptation: {
+      /**
+       * Kind
+       * @constant
+       * @enum {string}
+       */
+      kind: "null";
+    };
     /** OutputListRelationShipMeta */
     OutputListRelationShipMeta: {
       /** Count */
@@ -371,10 +393,16 @@ export interface components {
       /** Paragraphs */
       paragraphs: components["schemas"]["Paragraph"][];
     };
-    /** SelectThingsAdaptationOptions */
-    SelectThingsAdaptationOptions: {
+    /** SelectThingsAdaptation_ */
+    SelectThingsAdaptation_: {
       /** Colors */
       colors: string[];
+      /**
+       * Kind
+       * @constant
+       * @enum {string}
+       */
+      kind: "select-things";
       /** Punctuation */
       punctuation: boolean;
       /** Words */
@@ -1256,8 +1284,8 @@ export interface components {
     };
     /** parsedExerciseCreateInputDataAttributes */
     parsedExerciseCreateInputDataAttributes: {
-      /** Adaptationoptions */
-      adaptationOptions: components["schemas"]["SelectThingsAdaptationOptions"] | components["schemas"]["FillWithFreeTextAdaptationOptions"] | components["schemas"]["ItemsAndEffectsAttempt1AdaptationOptions"] | components["schemas"]["MultipleChoicesInInstructionsAdaptationOptions"] | components["schemas"]["MultipleChoicesInWordingAdaptationOptions"];
+      /** Adaptation */
+      adaptation: components["schemas"]["FillWithFreeTextAdaptation_"] | components["schemas"]["MultipleChoicesInInstructionsAdaptation_"] | components["schemas"]["MultipleChoicesInWordingAdaptation_"] | components["schemas"]["NullAdaptation"] | components["schemas"]["SelectThingsAdaptation_"];
       /** Clue */
       clue: string;
       /** Example */
@@ -1266,8 +1294,6 @@ export interface components {
       instructions: string;
       /** Number */
       number: string;
-      /** Type */
-      type: string;
       /** Wording */
       wording: string;
       /** Wordingparagraphsperpagelet */

@@ -210,6 +210,5 @@ class AdaptationTestCase(TestCase):
     # @todo Remove default value, enforce testing the delta
     def do_test(self, adaptation, expected_adapted, expected_delta=None):
         self.assertEqual(adaptation.make_adapted(), expected_adapted)
-        self.assertEqual(adaptation.to_generic_adaptation().make_adapted(), expected_adapted)
         if expected_delta is not None:
             self.assertEqual(adaptation.make_delta(), expected_delta)

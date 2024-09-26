@@ -5,8 +5,6 @@ import sqlalchemy as sql
 
 from .. import api_models
 from .. import exercise_delta as d
-from .. import parsing
-from .. import renderable
 from .. import renderable as r
 from .. import settings
 from ..api_utils import create_item, get_item, save_item, delete_item
@@ -27,35 +25,11 @@ class FillWithFreeTextAdaptation(OldAdaptation):
 
     placeholder: orm.Mapped[str]
 
-    def make_adapted_instructions(self):
-        return parsing.adapt_plain_instructions_section(self.exercise.instructions)
-
-    class WordingAdapter(parsing.WordingSectionAdapter):
-        def placeholder_tag(self, args):
-            return renderable.FreeTextInput()
-
-    adapt_wording = parsing.WordingSectionParser({"placeholder": ""}, WordingAdapter())
-
-    def make_adapted_wording(self):
-        return self.adapt_wording(self.exercise.wording.replace(self.placeholder, "{placeholder}"))
-
-    def make_adapted_example(self):
-        return parsing.adapt_plain_instructions_section(self.exercise.example)
-
-    def make_adapted_clue(self):
-        return parsing.adapt_plain_instructions_section(self.exercise.clue)
-
-    def make_instructions_delta(self):
-        return parsing.make_plain_instructions_section_delta(self.exercise.instructions)
-
-    def make_wording_delta(self):
-        return parsing.make_plain_wording_section_delta(self.exercise.wording)
-
-    def make_example_delta(self):
-        return parsing.make_plain_instructions_section_delta(self.exercise.example)
-
-    def make_clue_delta(self):
-        return parsing.make_plain_instructions_section_delta(self.exercise.clue)
+    def to_new_adaptation(self):
+        return api_models.FillWithFreeTextAdaptation_(
+            kind="fill-with-free-text",
+            placeholder=self.placeholder,
+        )
 
 
 class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
@@ -516,8 +490,8 @@ class FillWithFreeTextAdaptationsResource:
         session: SessionDependable,
         authenticated_user: MandatoryAuthBearerDependable,
     ):
-        if exercise.adaptation is not None:
-            session.delete(exercise.adaptation)
+        if exercise.old_adaptation is not None:
+            session.delete(exercise.old_adaptation)
         return create_item(
             session, FillWithFreeTextAdaptation,
             exercise=exercise,

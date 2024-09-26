@@ -2,6 +2,7 @@ from contextlib import contextmanager
 from typing import Annotated
 import json
 
+import pydantic
 from sqlalchemy import orm
 import Levenshtein
 import sqlalchemy as sql
@@ -38,23 +39,10 @@ class OldAdaptation(OrmBase, CreatedUpdatedByAtMixin):
     exercise: orm.Mapped["Exercise"] = orm.relationship(back_populates="old_adaptation")
 
     def make_adapted(self):
-        return renderable.Exercise(
-            number=self.exercise.number,
-            textbook_page=self.exercise.textbook_page,
-            instructions=self.make_adapted_instructions(),
-            wording=self.make_adapted_wording(),
-            example=self.make_adapted_example(),
-            clue=self.make_adapted_clue(),
-            wording_paragraphs_per_pagelet=self.exercise.wording_paragraphs_per_pagelet,
-        )
+        return self.exercise.make_adapted()
 
     def make_delta(self):
-        return exercise_delta.Exercise(
-            instructions=self.make_instructions_delta(),
-            wording=self.make_wording_delta(),
-            example=self.make_example_delta(),
-            clue=self.make_clue_delta(),
-        )
+        return self.exercise.make_delta()
 
     def to_generic_adaptation(self):
         def to_generic_or_empty(adapted):
@@ -143,11 +131,59 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
         lazy="joined",
     )
 
+    _adaptation: orm.Mapped[dict] = orm.mapped_column(sql.JSON, name="adaptation", default={"format": 0}, server_default="{\"format\": 0}")
+
+    class AdaptationContainer(PydanticBase):
+        # Thin wrapper to use Pydantic's discriminated unions
+        adaptation: api_models.Adaptation = pydantic.Field(discriminator="kind")
+
+    @property
+    def adaptation(self) -> api_models.Adaptation:
+        if self._adaptation is None:  # Before the first flush to DB if not set in constructor.
+            self._adaptation = {"format": 0}
+
+        match self._adaptation["format"]:
+            case 0:
+                if self.old_adaptation is None:
+                    return api_models.NullAdaptation(kind="null")
+                else:
+                    return self.old_adaptation.to_new_adaptation()
+            case 1:
+                return self.AdaptationContainer(adaptation=self._adaptation["settings"]).adaptation
+            case format:
+                raise ValueError(f"Unknown format {format}")
+
+    @adaptation.setter
+    def adaptation(self, adaptation: api_models.Adaptation):
+        self._adaptation = {
+            "format": 1,
+            "settings": adaptation.model_dump()
+        }
+
     extraction_events: orm.Mapped[list["ExtractionEvent"]] = orm.relationship(
         back_populates="exercise",
         cascade="all, delete-orphan",
         order_by="ExtractionEvent.id",
     )
+
+    def make_adapted(self):
+        return renderable.Exercise(
+            number=self.number,
+            textbook_page=self.textbook_page,
+            instructions=self.adaptation.make_adapted_instructions(self),
+            wording=self.adaptation.make_adapted_wording(self),
+            example=self.adaptation.make_adapted_example(self),
+            clue=self.adaptation.make_adapted_clue(self),
+            wording_paragraphs_per_pagelet=self.wording_paragraphs_per_pagelet,
+        )
+
+    def make_delta(self):
+        return exercise_delta.Exercise(
+            instructions=self.adaptation.make_instructions_delta(self),
+            wording=self.adaptation.make_wording_delta(self),
+            example=self.adaptation.make_example_delta(self),
+            clue=self.adaptation.make_clue_delta(self),
+        )
 
 
 def populate_rectangles_from_extraction_events(session: orm.Session):
@@ -542,9 +578,9 @@ class ExercisesResource:
         session: SessionDependable,
         authenticated_user: MandatoryAuthBearerDependable,
     ):
-        previous_adaptation = item.adaptation
+        previous_adaptation = item.old_adaptation
         yield
-        if previous_adaptation is not None and unwrap(item.adaptation) != unwrap(previous_adaptation):
+        if previous_adaptation is not None and unwrap(item.old_adaptation) != unwrap(previous_adaptation):
             session.delete(previous_adaptation)
         item.updated_by = authenticated_user
         save_item(session, item)

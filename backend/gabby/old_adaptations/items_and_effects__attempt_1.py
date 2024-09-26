@@ -204,8 +204,8 @@ class ItemsAndEffectsAttempt1AdaptationsResource:
         session: SessionDependable,
         authenticated_user: MandatoryAuthBearerDependable,
     ):
-        if exercise.adaptation is not None:
-            session.delete(exercise.adaptation)
+        if exercise.old_adaptation is not None:
+            session.delete(exercise.old_adaptation)
         return create_item(
             session, ItemsAndEffectsAttempt1Adaptation,
             exercise=exercise,

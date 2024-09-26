@@ -4,10 +4,7 @@ from sqlalchemy import orm
 import sqlalchemy as sql
 
 from .. import api_models
-from .. import exercise_delta
 from .. import exercise_delta as d
-from .. import parsing
-from .. import renderable
 from .. import renderable as r
 from .. import settings
 from ..api_utils import create_item, get_item, save_item, delete_item
@@ -30,90 +27,14 @@ class SelectThingsAdaptation(OldAdaptation):
     words: orm.Mapped[bool]
     old_colors_count: orm.Mapped[int]
     colors: orm.Mapped[list[str]] = orm.mapped_column(sql.JSON, name="colors")
-
-    @property
-    def _color_indexes(self):
-        return range(1, len(self.colors) + 1)
-
-    def _make_tags(self):
-        return {f"sel{color_index}": r""" "|" STR """ for color_index in self._color_indexes}
-
-    def _make_adapter_type(self):
-        return type("InstructionsAdapter", (parsing.InstructionsSectionAdapter,), {
-            f"sel{color_index}_tag": (lambda color_index: staticmethod(lambda args: renderable.SelectedText(text=args[0], color=self.colors[color_index - 1])))(color_index)
-            for color_index in self._color_indexes
-        })
-
-    def adapt_instructions(self, section):
-        return parsing.InstructionsSectionParser(
-            self._make_tags(),
-            self._make_adapter_type()(),
-        )(
-            section,
+    
+    def to_new_adaptation(self):
+        return api_models.SelectThingsAdaptation_(
+            kind="select-things",
+            punctuation=self.punctuation,
+            words=self.words,
+            colors=self.colors,
         )
-
-    def make_adapted_instructions(self):
-        return self.adapt_instructions(self.exercise.instructions)
-
-    class WordingAdapter(parsing.WordingSectionAdapter):
-        def __init__(self, words, punctuation, colors):
-            self.select_words = words
-            self.select_punctuation = punctuation
-            self.colors = colors
-
-        def WORD(self, arg):
-            if self.select_words:
-                return renderable.SelectableText(text=arg.value, colors=self.colors, boxed=False)
-            else:
-                return renderable.PlainText(text=arg.value)
-
-        def PUNCTUATION_IN_SENTENCE(self, arg):
-            if self.select_punctuation:
-                return renderable.SelectableText(text=arg.value, colors=self.colors, boxed=False)
-            else:
-                return renderable.PlainText(text=arg.value)
-
-        PUNCTUATION_AT_END_OF_SENTENCE = PUNCTUATION_IN_SENTENCE
-        PUNCTUATION_IN_LENIENT_PARAGRAPH = PUNCTUATION_IN_SENTENCE
-
-    def make_adapted_wording(self):
-        return parsing.parse_wording_section(
-            {},
-            self.WordingAdapter(self.words, self.punctuation, self.colors),
-            self.exercise.wording,
-        )
-
-    def make_adapted_example(self):
-        return self.adapt_instructions(self.exercise.example)
-
-    def make_adapted_clue(self):
-        return self.adapt_instructions(self.exercise.clue)
-
-    def _make_delta_maker_type(self):
-        return type("InstructionsDeltaMaker", (parsing.InstructionsSectionDeltaMaker,), {
-            f"sel{color_index}_tag": (lambda color: staticmethod(lambda args: exercise_delta.InsertOp(insert=args[0], attributes={"sel": color})))(color_index)
-            for color_index in self._color_indexes
-        })
-
-    def _make_instructions_delta(self, section):
-        return parsing.InstructionsSectionParser(
-            self._make_tags(),
-            self._make_delta_maker_type()(),
-        )(
-            section,
-        )
-
-    def make_instructions_delta(self):
-        return self._make_instructions_delta(self.exercise.instructions)
-
-    def make_wording_delta(self):
-        return parsing.make_plain_wording_section_delta(self.exercise.wording)
-
-    def make_example_delta(self):
-        return self._make_instructions_delta(self.exercise.example)
-
-    def make_clue_delta(self):
-        return self._make_instructions_delta(self.exercise.clue)
 
 
 class SelectThingsAdaptationTestCase(AdaptationTestCase):
@@ -144,23 +65,23 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 wording=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.SelectableText(text="The", colors=["red", "blue"]),
+                            r.SelectableText(text="The", colors=["red", "blue"], boxed=False),
                             r.Whitespace(),
-                            r.SelectableText(text="wording", colors=["red", "blue"]),
+                            r.SelectableText(text="wording", colors=["red", "blue"], boxed=False),
                             r.Whitespace(),
-                            r.SelectableText(text="of", colors=["red", "blue"]),
+                            r.SelectableText(text="of", colors=["red", "blue"], boxed=False),
                             r.Whitespace(),
-                            r.SelectableText(text="this", colors=["red", "blue"]),
+                            r.SelectableText(text="this", colors=["red", "blue"], boxed=False),
                             r.Whitespace(),
-                            r.SelectableText(text="exercise", colors=["red", "blue"]),
+                            r.SelectableText(text="exercise", colors=["red", "blue"], boxed=False),
                             r.Whitespace(),
-                            r.SelectableText(text="is", colors=["red", "blue"]),
+                            r.SelectableText(text="is", colors=["red", "blue"], boxed=False),
                             r.Whitespace(),
-                            r.SelectableText(text="a", colors=["red", "blue"]),
+                            r.SelectableText(text="a", colors=["red", "blue"], boxed=False),
                             r.Whitespace(),
-                            r.SelectableText(text="single", colors=["red", "blue"]),
+                            r.SelectableText(text="single", colors=["red", "blue"], boxed=False),
                             r.Whitespace(),
-                            r.SelectableText(text="sentence", colors=["red", "blue"]),
+                            r.SelectableText(text="sentence", colors=["red", "blue"], boxed=False),
                             r.PlainText(text="."),
                         ]),
                     ]),
@@ -218,7 +139,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 wording=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.SelectableText(text="wording", colors=["red", "green", "blue"]),
+                            r.SelectableText(text="wording", colors=["red", "green", "blue"], boxed=False),
                         ]),
                     ]),
                 ]),
@@ -270,7 +191,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 wording=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.SelectableText(text="wording", colors=["red"]),
+                            r.SelectableText(text="wording", colors=["red"], boxed=False),
                         ]),
                     ]),
                 ]),
@@ -331,7 +252,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 wording=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.SelectableText(text="wording", colors=["red"]),
+                            r.SelectableText(text="wording", colors=["red"], boxed=False),
                         ]),
                     ]),
                 ]),
@@ -378,21 +299,21 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 wording=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.SelectableText(text="wording", colors=["red"]),
+                            r.SelectableText(text="wording", colors=["red"], boxed=False),
                             r.Whitespace(),
-                            r.SelectableText(text="is", colors=["red"]),
+                            r.SelectableText(text="is", colors=["red"], boxed=False),
                         ]),
                     ]),
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.SelectableText(text="on", colors=["red"]),
+                            r.SelectableText(text="on", colors=["red"], boxed=False),
                         ]),
                     ]),
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.SelectableText(text="multiple", colors=["red"]),
+                            r.SelectableText(text="multiple", colors=["red"], boxed=False),
                             r.Whitespace(),
-                            r.SelectableText(text="lines", colors=["red"]),
+                            r.SelectableText(text="lines", colors=["red"], boxed=False),
                         ]),
                     ]),
                 ]),
@@ -444,9 +365,9 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
                             r.PlainText(text="{"),
-                            r.SelectableText(text="tag", colors=["red"]),
+                            r.SelectableText(text="tag", colors=["red"], boxed=False),
                             r.PlainText(text="|"),
-                            r.SelectableText(text="def", colors=["red"]),
+                            r.SelectableText(text="def", colors=["red"], boxed=False),
                             r.PlainText(text="}"),
                         ]),
                     ]),
@@ -494,7 +415,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 wording=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.SelectableText(text="def", colors=["red"]),
+                            r.SelectableText(text="def", colors=["red"], boxed=False),
                         ]),
                     ]),
                 ]),
@@ -541,7 +462,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 wording=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.SelectableText(text="wording", colors=["red"]),
+                            r.SelectableText(text="wording", colors=["red"], boxed=False),
                         ]),
                     ]),
                 ]),
@@ -618,7 +539,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 wording=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.SelectableText(text="wording", colors=["red", "green", "blue"]),
+                            r.SelectableText(text="wording", colors=["red", "green", "blue"], boxed=False),
                         ]),
                     ]),
                 ]),
@@ -685,8 +606,8 @@ class SelectThingsAdaptationsResource:
         session: SessionDependable,
         authenticated_user: MandatoryAuthBearerDependable,
     ):
-        if exercise.adaptation is not None:
-            session.delete(exercise.adaptation)
+        if exercise.old_adaptation is not None:
+            session.delete(exercise.old_adaptation)
         return create_item(
             session, SelectThingsAdaptation,
             exercise=exercise,

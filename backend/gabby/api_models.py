@@ -1,5 +1,6 @@
 from __future__ import annotations
-from typing import Annotated, Literal
+import itertools
+from typing import Annotated, ClassVar, Literal, TypeAlias
 import datetime
 
 from fastjsonapi import Constant, Computed, Secret, WriteOnly
@@ -7,6 +8,7 @@ import pydantic
 
 from . import exercise_delta
 from . import renderable
+from . import parsing
 from mydantic import PydanticBase
 
 
@@ -189,6 +191,311 @@ class ItemsAndEffectsAttempt1Adaptation(ItemsAndEffectsAttempt1AdaptationOptions
     exercise: Annotated[Exercise, Constant()]
 
 
+# These 'Adaptation' classes have two responsibilities: API and behavior. Not SOLID, but so convenient.
+
+class FillWithFreeTextAdaptation_(PydanticBase):
+    kind: Literal["fill-with-free-text"]
+
+    placeholder: str
+
+    def make_adapted_instructions(self, exercise):
+        return parsing.adapt_plain_instructions_section(exercise.instructions)
+
+    class WordingAdapter(parsing.WordingSectionAdapter):
+        def placeholder_tag(self, args):
+            return renderable.FreeTextInput()
+
+    adapt_wording: ClassVar = parsing.WordingSectionParser({"placeholder": ""}, WordingAdapter())
+
+    def make_adapted_wording(self, exercise):
+        return self.adapt_wording(exercise.wording.replace(self.placeholder, "{placeholder}"))
+
+    def make_adapted_example(self, exercise):
+        return parsing.adapt_plain_instructions_section(exercise.example)
+
+    def make_adapted_clue(self, exercise):
+        return parsing.adapt_plain_instructions_section(exercise.clue)
+
+    def make_instructions_delta(self, exercise):
+        return parsing.make_plain_instructions_section_delta(exercise.instructions)
+
+    def make_wording_delta(self, exercise):
+        return parsing.make_plain_wording_section_delta(exercise.wording)
+
+    def make_example_delta(self, exercise):
+        return parsing.make_plain_instructions_section_delta(exercise.example)
+
+    def make_clue_delta(self, exercise):
+        return parsing.make_plain_instructions_section_delta(exercise.clue)
+
+class MultipleChoicesInInstructionsAdaptation_(PydanticBase):
+    kind: Literal["multiple-choices-in-instructions"]
+
+    placeholder: str
+
+    class InstructionsAdapter(parsing.InstructionsSectionAdapter):
+        def choice_tag(self, args):
+            assert len(args) == 1
+            return renderable.BoxedText(text=args[0])
+
+    instructions_tags: ClassVar = {"choice": r""" "|" STR """}
+
+    adapt_instructions: ClassVar = parsing.InstructionsSectionParser(instructions_tags, InstructionsAdapter())
+
+    def make_adapted_instructions(self, exercise):
+        return self.adapt_instructions(exercise.instructions)
+
+    class InstructionsDeltaMaker(parsing.InstructionsSectionDeltaMaker):
+        def choice_tag(self, args):
+            return exercise_delta.InsertOp(insert=args[0], attributes={"choice": True})
+
+    make_instructions_delta_: ClassVar = parsing.InstructionsSectionParser(instructions_tags, InstructionsDeltaMaker())
+
+    def make_instructions_delta(self, exercise):
+        return self.make_instructions_delta_(exercise.instructions)
+
+    class ChoicesGatherer(parsing.Transformer):
+        def section(self, args):
+            return list(itertools.chain(*args))
+
+        def strict_paragraph(self, args):
+            return list(itertools.chain(*args))
+
+        def sentence(self, args):
+            return list(itertools.chain(*args))
+
+        def lenient_paragraph(self, args):
+            return list(itertools.chain(*args))
+
+        def choice_tag(self, args):
+            assert len(args) == 1
+            return [args[0]]
+
+        def WORD(self, arg):
+            return []
+
+        def LEADING_WHITESPACE(self, arg):
+            return []
+
+        def TRAILING_WHITESPACE(self, arg):
+            return []
+
+        def PARAGRAPH_SEPARATOR(self, arg):
+            return []
+
+        def SENTENCE_SEPARATOR(self, arg):
+            return []
+
+        def WHITESPACE_IN_SENTENCE(self, arg):
+            return []
+
+        def PUNCTUATION_IN_SENTENCE(self, arg):
+            return []
+
+        def PUNCTUATION_AT_END_OF_SENTENCE(self, arg):
+            return []
+
+        def PUNCTUATION_IN_LENIENT_PARAGRAPH(self, arg):
+            return []
+
+        def INT(self, arg):
+            return None
+
+        def STR(self, arg):
+            return arg.value
+
+        def bold_tag(self, args):
+            return []
+
+        def italic_tag(self, args):
+            return []
+
+    gather_choices: ClassVar = parsing.InstructionsSectionParser(instructions_tags, ChoicesGatherer())
+
+    class WordingAdapter(parsing.WordingSectionAdapter):
+        def __init__(self, choices):
+            self.choices = choices
+
+        def placeholder_tag(self, args):
+            return renderable.MultipleChoicesInput(choices=self.choices)
+
+    def make_adapted_wording(self, exercise):
+        choices = self.gather_choices(exercise.instructions)
+        return parsing.parse_wording_section(
+            {"placeholder": ""},
+            self.WordingAdapter(choices),
+            exercise.wording.replace(self.placeholder, "{placeholder}")
+        )
+
+    def make_wording_delta(self, exercise):
+        return parsing.make_plain_wording_section_delta(exercise.wording)
+
+    def make_adapted_example(self, exercise):
+        return parsing.adapt_plain_instructions_section(exercise.example)
+
+    def make_example_delta(self, exercise):
+        return parsing.make_plain_instructions_section_delta(exercise.example)
+
+    def make_adapted_clue(self, exercise):
+        return parsing.adapt_plain_instructions_section(exercise.clue)
+
+    def make_clue_delta(self, exercise):
+        return parsing.make_plain_instructions_section_delta(exercise.clue)
+
+class MultipleChoicesInWordingAdaptation_(PydanticBase):
+    kind: Literal["multiple-choices-in-wording"]
+
+    def make_adapted_instructions(self, exercise):
+        return parsing.adapt_plain_instructions_section(exercise.instructions)
+
+    class WordingAdapter(parsing.WordingSectionAdapter):
+        def choices_tag(self, args):
+            return renderable.MultipleChoicesInput(choices=[arg for arg in args])
+
+    adapt_wording: ClassVar = parsing.WordingSectionParser({"choices": r""" ("|" STR)+ """}, WordingAdapter())
+
+    def make_adapted_wording(self, exercise):
+        return self.adapt_wording(exercise.wording)
+
+    def make_adapted_example(self, exercise):
+        return parsing.adapt_plain_instructions_section(exercise.example)
+
+    def make_adapted_clue(self, exercise):
+        return parsing.adapt_plain_instructions_section(exercise.clue)
+
+    def make_instructions_delta(self, exercise):
+        return parsing.make_plain_instructions_section_delta(exercise.instructions)
+
+    def make_wording_delta(self, exercise):
+        return parsing.make_plain_wording_section_delta(exercise.wording)
+
+    def make_example_delta(self, exercise):
+        return parsing.make_plain_instructions_section_delta(exercise.example)
+
+    def make_clue_delta(self, exercise):
+        return parsing.make_plain_instructions_section_delta(exercise.clue)
+
+class NullAdaptation(PydanticBase):
+    kind: Literal["null"]
+
+    def make_instructions_delta(self, exercise):
+        return parsing.make_plain_instructions_section_delta(exercise.instructions)
+
+    def make_adapted_instructions(self, exercise):
+        return parsing.adapt_plain_instructions_section(exercise.instructions)
+
+    def make_wording_delta(self, exercise):
+        return parsing.make_plain_wording_section_delta(exercise.wording)
+
+    def make_adapted_wording(self, exercise):
+        return parsing.adapt_plain_wording_section(exercise.wording)
+
+    def make_example_delta(self, exercise):
+        return parsing.make_plain_instructions_section_delta(exercise.example)
+
+    def make_adapted_example(self, exercise):
+        return parsing.adapt_plain_instructions_section(exercise.example)
+
+    def make_clue_delta(self, exercise):
+        return parsing.make_plain_instructions_section_delta(exercise.clue)
+
+    def make_adapted_clue(self, exercise):
+        return parsing.adapt_plain_instructions_section(exercise.clue)
+
+class SelectThingsAdaptation_(PydanticBase):
+    kind: Literal["select-things"]
+
+    colors: list[str]
+    words: bool
+    punctuation: bool
+
+    @property
+    def _color_indexes(self):
+        return range(1, len(self.colors) + 1)
+
+    def _make_tags(self):
+        return {f"sel{color_index}": r""" "|" STR """ for color_index in self._color_indexes}
+
+    def _make_adapter_type(self):
+        return type("InstructionsAdapter", (parsing.InstructionsSectionAdapter,), {
+            f"sel{color_index}_tag": (lambda color_index: staticmethod(lambda args: renderable.SelectedText(text=args[0], color=self.colors[color_index - 1])))(color_index)
+            for color_index in self._color_indexes
+        })
+
+    def _adapt_instructions(self, section):
+        return parsing.InstructionsSectionParser(
+            self._make_tags(),
+            self._make_adapter_type()(),
+        )(
+            section,
+        )
+
+    def make_adapted_instructions(self, exercise):
+        return self._adapt_instructions(exercise.instructions)
+
+    class WordingAdapter(parsing.WordingSectionAdapter):
+        def __init__(self, words, punctuation, colors):
+            self.select_words = words
+            self.select_punctuation = punctuation
+            self.colors = colors
+
+        def WORD(self, arg):
+            if self.select_words:
+                return renderable.SelectableText(text=arg.value, colors=self.colors, boxed=False)
+            else:
+                return renderable.PlainText(text=arg.value)
+
+        def PUNCTUATION_IN_SENTENCE(self, arg):
+            if self.select_punctuation:
+                return renderable.SelectableText(text=arg.value, colors=self.colors, boxed=False)
+            else:
+                return renderable.PlainText(text=arg.value)
+
+        PUNCTUATION_AT_END_OF_SENTENCE = PUNCTUATION_IN_SENTENCE
+        PUNCTUATION_IN_LENIENT_PARAGRAPH = PUNCTUATION_IN_SENTENCE
+
+    def make_adapted_wording(self, exercise):
+        return parsing.parse_wording_section(
+            {},
+            self.WordingAdapter(self.words, self.punctuation, self.colors),
+            exercise.wording,
+        )
+
+    def make_adapted_example(self, exercise):
+        return self._adapt_instructions(exercise.example)
+
+    def make_adapted_clue(self, exercise):
+        return self._adapt_instructions(exercise.clue)
+
+    def _make_delta_maker_type(self):
+        return type("InstructionsDeltaMaker", (parsing.InstructionsSectionDeltaMaker,), {
+            f"sel{color_index}_tag": (lambda color: staticmethod(lambda args: exercise_delta.InsertOp(insert=args[0], attributes={"sel": color})))(color_index)
+            for color_index in self._color_indexes
+        })
+
+    def _make_instructions_delta(self, section):
+        return parsing.InstructionsSectionParser(
+            self._make_tags(),
+            self._make_delta_maker_type()(),
+        )(
+            section,
+        )
+
+    def make_instructions_delta(self, exercise):
+        return self._make_instructions_delta(exercise.instructions)
+
+    def make_wording_delta(self, exercise):
+        return parsing.make_plain_wording_section_delta(exercise.wording)
+
+    def make_example_delta(self, exercise):
+        return self._make_instructions_delta(exercise.example)
+
+    def make_clue_delta(self, exercise):
+        return self._make_instructions_delta(exercise.clue)
+
+
+Adaptation: TypeAlias = FillWithFreeTextAdaptation_ | MultipleChoicesInInstructionsAdaptation_ | MultipleChoicesInWordingAdaptation_ | NullAdaptation | SelectThingsAdaptation_
+
 class ParsedExercise(PydanticBase):
     number: Annotated[str, WriteOnly()]
     instructions: Annotated[str, WriteOnly()]
@@ -196,17 +503,7 @@ class ParsedExercise(PydanticBase):
     example: Annotated[str, WriteOnly()]
     clue: Annotated[str, WriteOnly()]
     wording_paragraphs_per_pagelet: Annotated[int, WriteOnly()]
-    type: Annotated[str, WriteOnly()]
-    adaptation_options: Annotated[
-        (
-            SelectThingsAdaptationOptions
-            | FillWithFreeTextAdaptationOptions
-            | ItemsAndEffectsAttempt1AdaptationOptions
-            | MultipleChoicesInInstructionsAdaptationOptions
-            | MultipleChoicesInWordingAdaptationOptions
-        ),
-        WriteOnly(),
-    ]
+    adaptation: Annotated[Adaptation, WriteOnly()] = pydantic.Field(discriminator="kind")
     adapted: Annotated[renderable.Exercise, Computed()]
     delta: Annotated[exercise_delta.Exercise, Computed()]
 
