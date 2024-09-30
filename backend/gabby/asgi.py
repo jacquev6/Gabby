@@ -88,13 +88,13 @@ def export_project(
     authenticated_user: MandatoryAuthTokenDependable,
 ):
     project = session.get(Project, ProjectsResource.sqids.decode(project_id)[0])
-    exercises = []
-    for exercise in project.exercises:
-        if exercise.adaptation is not None:
-            exercises.append(exercise.adaptation.make_adapted().model_dump())
     data = json.dumps(dict(
         projectId=project.id,
-        exercises=exercises,
+        exercises=[
+            exercise.make_adapted().model_dump()
+            for exercise in project.exercises
+            if exercise.adaptation.kind != "null"
+        ],
     )).replace("\\", "\\\\").replace('"', "\\\"")
     with open("gabby/templates/adapted/index.html") as f:
         template = f.read()
