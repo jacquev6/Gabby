@@ -56,13 +56,14 @@ class _SelectableText(PydanticBase):
     type: Literal["selectableText"]
     text: str
     colors: list[str]
+    boxed: bool
 
     def to_generic(self):
         return f"{{selectable-text|{self.text}|{'|'.join(self.colors)}}}"
 
-def SelectableText(text: str, colors: list[str]):
+def SelectableText(text: str, colors: list[str], boxed: bool):
     assert text.__class__ == str, text.__class__
-    return _SelectableText(type="selectableText", text=text, colors=colors)
+    return _SelectableText(type="selectableText", text=text, colors=colors, boxed=boxed)
 
 
 class _SelectedText(PydanticBase):

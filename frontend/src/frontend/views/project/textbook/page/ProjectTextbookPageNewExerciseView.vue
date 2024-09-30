@@ -92,7 +92,7 @@ const title = computed(() => [i18n.t('create')])
 const breadcrumbs = computed(() => bc.last(i18n.t('create')))
 
 const model = reactive(makeModelInTextbook(page.value))
-const canWysiwyg = computed(() => model.adaptationType !== 'multipleChoicesInWordingAdaptation')
+const canWysiwyg = computed(() => model.adaptationKind !== 'multiple-choices-in-wording')
 const wantWysiwyg = ref(true)
 const wysiwyg = computed(() => canWysiwyg.value && wantWysiwyg.value)
 
@@ -240,7 +240,7 @@ watch(parsedExercise, () => {
 const toolSlotNames = computed(() => {
   const names = []
   names.push('undoRedo')
-  if (model.adaptationType !== '-') {
+  if (model.adaptationKind !== 'null') {
     names.push('adaptationDetails')
   }
   if (wysiwyg.value) {

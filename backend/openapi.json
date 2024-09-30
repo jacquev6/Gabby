@@ -69,18 +69,52 @@
         "title": "Body_login_api_token_post",
         "type": "object"
       },
-      "FillWithFreeTextAdaptationOptions": {
+      "Effects": {
         "additionalProperties": false,
         "properties": {
+          "boxed": {
+            "title": "Boxed",
+            "type": "boolean"
+          },
+          "selectable": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Selectable"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "selectable",
+          "boxed"
+        ],
+        "title": "Effects",
+        "type": "object"
+      },
+      "FillWithFreeTextAdaptation": {
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "const": "fill-with-free-text",
+            "enum": [
+              "fill-with-free-text"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
           "placeholder": {
             "title": "Placeholder",
             "type": "string"
           }
         },
         "required": [
+          "kind",
           "placeholder"
         ],
-        "title": "FillWithFreeTextAdaptationOptions",
+        "title": "FillWithFreeTextAdaptation",
         "type": "object"
       },
       "HTTPValidationError": {
@@ -129,24 +163,155 @@
         "title": "ItemLinks",
         "type": "object"
       },
-      "MultipleChoicesInInstructionsAdaptationOptions": {
+      "ItemsAndEffectsAttempt1Adaptation-Input": {
         "additionalProperties": false,
         "properties": {
+          "effects": {
+            "$ref": "#/components/schemas/Effects"
+          },
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/WordsItems"
+              },
+              {
+                "$ref": "#/components/schemas/SentencesItems"
+              },
+              {
+                "$ref": "#/components/schemas/ManualItems"
+              }
+            ],
+            "title": "Items"
+          },
+          "kind": {
+            "const": "items-and-effects-attempt-1",
+            "enum": [
+              "items-and-effects-attempt-1"
+            ],
+            "title": "Kind",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "items",
+          "effects"
+        ],
+        "title": "ItemsAndEffectsAttempt1Adaptation",
+        "type": "object"
+      },
+      "ItemsAndEffectsAttempt1Adaptation-Output": {
+        "additionalProperties": false,
+        "properties": {
+          "effects": {
+            "$ref": "#/components/schemas/Effects"
+          },
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/WordsItems"
+              },
+              {
+                "$ref": "#/components/schemas/SentencesItems"
+              },
+              {
+                "$ref": "#/components/schemas/ManualItems"
+              }
+            ],
+            "title": "Items"
+          },
+          "kind": {
+            "const": "items-and-effects-attempt-1",
+            "enum": [
+              "items-and-effects-attempt-1"
+            ],
+            "title": "Kind",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "items",
+          "effects"
+        ],
+        "title": "ItemsAndEffectsAttempt1Adaptation",
+        "type": "object"
+      },
+      "ManualItems": {
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "const": "manual",
+            "enum": [
+              "manual"
+            ],
+            "title": "Kind",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind"
+        ],
+        "title": "ManualItems",
+        "type": "object"
+      },
+      "MultipleChoicesInInstructionsAdaptation": {
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "const": "multiple-choices-in-instructions",
+            "enum": [
+              "multiple-choices-in-instructions"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
           "placeholder": {
             "title": "Placeholder",
             "type": "string"
           }
         },
         "required": [
+          "kind",
           "placeholder"
         ],
-        "title": "MultipleChoicesInInstructionsAdaptationOptions",
+        "title": "MultipleChoicesInInstructionsAdaptation",
         "type": "object"
       },
-      "MultipleChoicesInWordingAdaptationOptions": {
+      "MultipleChoicesInWordingAdaptation": {
         "additionalProperties": false,
-        "properties": {},
-        "title": "MultipleChoicesInWordingAdaptationOptions",
+        "properties": {
+          "kind": {
+            "const": "multiple-choices-in-wording",
+            "enum": [
+              "multiple-choices-in-wording"
+            ],
+            "title": "Kind",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind"
+        ],
+        "title": "MultipleChoicesInWordingAdaptation",
+        "type": "object"
+      },
+      "NullAdaptation": {
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "const": "null",
+            "enum": [
+              "null"
+            ],
+            "title": "Kind",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind"
+        ],
+        "title": "NullAdaptation",
         "type": "object"
       },
       "OutputListRelationShipMeta": {
@@ -356,7 +521,7 @@
         "title": "Section",
         "type": "object"
       },
-      "SelectThingsAdaptationOptions": {
+      "SelectThingsAdaptation": {
         "additionalProperties": false,
         "properties": {
           "colors": {
@@ -365,6 +530,14 @@
             },
             "title": "Colors",
             "type": "array"
+          },
+          "kind": {
+            "const": "select-things",
+            "enum": [
+              "select-things"
+            ],
+            "title": "Kind",
+            "type": "string"
           },
           "punctuation": {
             "title": "Punctuation",
@@ -376,11 +549,29 @@
           }
         },
         "required": [
+          "kind",
           "colors",
           "words",
           "punctuation"
         ],
-        "title": "SelectThingsAdaptationOptions",
+        "title": "SelectThingsAdaptation",
+        "type": "object"
+      },
+      "Selectable": {
+        "additionalProperties": false,
+        "properties": {
+          "colors": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Colors",
+            "type": "array"
+          }
+        },
+        "required": [
+          "colors"
+        ],
+        "title": "Selectable",
         "type": "object"
       },
       "Sentence": {
@@ -428,6 +619,24 @@
         "title": "Sentence",
         "type": "object"
       },
+      "SentencesItems": {
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "const": "sentences",
+            "enum": [
+              "sentences"
+            ],
+            "title": "Kind",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind"
+        ],
+        "title": "SentencesItems",
+        "type": "object"
+      },
       "ValidationError": {
         "properties": {
           "loc": {
@@ -459,6 +668,29 @@
           "type"
         ],
         "title": "ValidationError",
+        "type": "object"
+      },
+      "WordsItems": {
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "const": "words",
+            "enum": [
+              "words"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "punctuation": {
+            "title": "Punctuation",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "kind",
+          "punctuation"
+        ],
+        "title": "WordsItems",
         "type": "object"
       },
       "_BoldText": {
@@ -600,6 +832,10 @@
       "_SelectableText": {
         "additionalProperties": false,
         "properties": {
+          "boxed": {
+            "title": "Boxed",
+            "type": "boolean"
+          },
           "colors": {
             "items": {
               "type": "string"
@@ -623,7 +859,8 @@
         "required": [
           "type",
           "text",
-          "colors"
+          "colors",
+          "boxed"
         ],
         "title": "_SelectableText",
         "type": "object"
@@ -712,6 +949,32 @@
       "exerciseCreateInputDataAttributes": {
         "additionalProperties": false,
         "properties": {
+          "adaptation": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/FillWithFreeTextAdaptation"
+              },
+              {
+                "$ref": "#/components/schemas/ItemsAndEffectsAttempt1Adaptation-Input"
+              },
+              {
+                "$ref": "#/components/schemas/MultipleChoicesInInstructionsAdaptation"
+              },
+              {
+                "$ref": "#/components/schemas/MultipleChoicesInWordingAdaptation"
+              },
+              {
+                "$ref": "#/components/schemas/NullAdaptation"
+              },
+              {
+                "$ref": "#/components/schemas/SelectThingsAdaptation"
+              }
+            ],
+            "default": {
+              "kind": "null"
+            },
+            "title": "Adaptation"
+          },
           "clue": {
             "default": "",
             "title": "Clue",
@@ -770,10 +1033,6 @@
       "exerciseCreateInputDataRelationships": {
         "additionalProperties": false,
         "properties": {
-          "adaptation": {
-            "$ref": "#/components/schemas/exercise_adaptation_Relationship",
-            "default": {}
-          },
           "project": {
             "$ref": "#/components/schemas/exercise_project_Relationship"
           },
@@ -840,6 +1099,29 @@
       "exerciseOutputItemAttributes": {
         "additionalProperties": false,
         "properties": {
+          "adaptation": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/FillWithFreeTextAdaptation"
+              },
+              {
+                "$ref": "#/components/schemas/ItemsAndEffectsAttempt1Adaptation-Output"
+              },
+              {
+                "$ref": "#/components/schemas/MultipleChoicesInInstructionsAdaptation"
+              },
+              {
+                "$ref": "#/components/schemas/MultipleChoicesInWordingAdaptation"
+              },
+              {
+                "$ref": "#/components/schemas/NullAdaptation"
+              },
+              {
+                "$ref": "#/components/schemas/SelectThingsAdaptation"
+              }
+            ],
+            "title": "Adaptation"
+          },
           "clue": {
             "title": "Clue",
             "type": "string"
@@ -903,7 +1185,8 @@
           "example",
           "clue",
           "wordingParagraphsPerPagelet",
-          "rectangles"
+          "rectangles",
+          "adaptation"
         ],
         "title": "exerciseOutputItemAttributes",
         "type": "object"
@@ -911,9 +1194,6 @@
       "exerciseOutputItemRelationships": {
         "additionalProperties": false,
         "properties": {
-          "adaptation": {
-            "$ref": "#/components/schemas/exercise_adaptation_Relationship"
-          },
           "createdBy": {
             "$ref": "#/components/schemas/exercise_createdBy_Relationship"
           },
@@ -931,8 +1211,7 @@
           "updatedBy",
           "createdBy",
           "project",
-          "textbook",
-          "adaptation"
+          "textbook"
         ],
         "title": "exerciseOutputItemRelationships",
         "type": "object"
@@ -1010,6 +1289,29 @@
       "exerciseUpdateInputDataAttributes": {
         "additionalProperties": false,
         "properties": {
+          "adaptation": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/FillWithFreeTextAdaptation"
+              },
+              {
+                "$ref": "#/components/schemas/ItemsAndEffectsAttempt1Adaptation-Input"
+              },
+              {
+                "$ref": "#/components/schemas/MultipleChoicesInInstructionsAdaptation"
+              },
+              {
+                "$ref": "#/components/schemas/MultipleChoicesInWordingAdaptation"
+              },
+              {
+                "$ref": "#/components/schemas/NullAdaptation"
+              },
+              {
+                "$ref": "#/components/schemas/SelectThingsAdaptation"
+              }
+            ],
+            "title": "Adaptation"
+          },
           "clue": {
             "title": "Clue",
             "type": "string"
@@ -1043,57 +1345,8 @@
       },
       "exerciseUpdateInputDataRelationships": {
         "additionalProperties": false,
-        "properties": {
-          "adaptation": {
-            "$ref": "#/components/schemas/exercise_adaptation_Relationship"
-          }
-        },
+        "properties": {},
         "title": "exerciseUpdateInputDataRelationships",
-        "type": "object"
-      },
-      "exercise_adaptation_Relationship": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/exercise_adaptation_Relationship_ObjectId"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "exercise_adaptation_Relationship",
-        "type": "object"
-      },
-      "exercise_adaptation_Relationship_ObjectId": {
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "type": {
-            "enum": [
-              "selectThingsAdaptation",
-              "fillWithFreeTextAdaptation",
-              "multipleChoicesInInstructionsAdaptation",
-              "multipleChoicesInWordingAdaptation"
-            ],
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "id"
-        ],
-        "title": "exercise_adaptation_Relationship_ObjectId",
         "type": "object"
       },
       "exercise_createdBy_Relationship": {
@@ -1247,329 +1500,6 @@
         "title": "exercise_updatedBy_Relationship_ObjectId",
         "type": "object"
       },
-      "fillWithFreeTextAdaptationCreateInput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/fillWithFreeTextAdaptationCreateInputData"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "fillWithFreeTextAdaptationCreateInput",
-        "type": "object"
-      },
-      "fillWithFreeTextAdaptationCreateInputData": {
-        "additionalProperties": false,
-        "properties": {
-          "attributes": {
-            "$ref": "#/components/schemas/fillWithFreeTextAdaptationCreateInputDataAttributes"
-          },
-          "relationships": {
-            "$ref": "#/components/schemas/fillWithFreeTextAdaptationCreateInputDataRelationships"
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "attributes",
-          "relationships"
-        ],
-        "title": "fillWithFreeTextAdaptationCreateInputData",
-        "type": "object"
-      },
-      "fillWithFreeTextAdaptationCreateInputDataAttributes": {
-        "additionalProperties": false,
-        "properties": {
-          "placeholder": {
-            "title": "Placeholder",
-            "type": "string"
-          }
-        },
-        "required": [
-          "placeholder"
-        ],
-        "title": "fillWithFreeTextAdaptationCreateInputDataAttributes",
-        "type": "object"
-      },
-      "fillWithFreeTextAdaptationCreateInputDataRelationships": {
-        "additionalProperties": false,
-        "properties": {
-          "exercise": {
-            "$ref": "#/components/schemas/fillWithFreeTextAdaptation_exercise_Relationship"
-          }
-        },
-        "required": [
-          "exercise"
-        ],
-        "title": "fillWithFreeTextAdaptationCreateInputDataRelationships",
-        "type": "object"
-      },
-      "fillWithFreeTextAdaptationItemOutput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/fillWithFreeTextAdaptationOutputItem"
-          },
-          "included": {
-            "items": {},
-            "title": "Included",
-            "type": "array"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "fillWithFreeTextAdaptationItemOutput",
-        "type": "object"
-      },
-      "fillWithFreeTextAdaptationOutputItem": {
-        "additionalProperties": false,
-        "properties": {
-          "attributes": {
-            "$ref": "#/components/schemas/fillWithFreeTextAdaptationOutputItemAttributes"
-          },
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "links": {
-            "$ref": "#/components/schemas/ItemLinks"
-          },
-          "relationships": {
-            "$ref": "#/components/schemas/fillWithFreeTextAdaptationOutputItemRelationships"
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "id",
-          "links",
-          "attributes",
-          "relationships"
-        ],
-        "title": "fillWithFreeTextAdaptationOutputItem",
-        "type": "object"
-      },
-      "fillWithFreeTextAdaptationOutputItemAttributes": {
-        "additionalProperties": false,
-        "properties": {
-          "createdAt": {
-            "format": "date-time",
-            "title": "Createdat",
-            "type": "string"
-          },
-          "placeholder": {
-            "title": "Placeholder",
-            "type": "string"
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "title": "Updatedat",
-            "type": "string"
-          }
-        },
-        "required": [
-          "updatedAt",
-          "createdAt",
-          "placeholder"
-        ],
-        "title": "fillWithFreeTextAdaptationOutputItemAttributes",
-        "type": "object"
-      },
-      "fillWithFreeTextAdaptationOutputItemRelationships": {
-        "additionalProperties": false,
-        "properties": {
-          "createdBy": {
-            "$ref": "#/components/schemas/fillWithFreeTextAdaptation_createdBy_Relationship"
-          },
-          "exercise": {
-            "$ref": "#/components/schemas/fillWithFreeTextAdaptation_exercise_Relationship"
-          },
-          "updatedBy": {
-            "$ref": "#/components/schemas/fillWithFreeTextAdaptation_updatedBy_Relationship"
-          }
-        },
-        "required": [
-          "updatedBy",
-          "createdBy",
-          "exercise"
-        ],
-        "title": "fillWithFreeTextAdaptationOutputItemRelationships",
-        "type": "object"
-      },
-      "fillWithFreeTextAdaptationUpdateInput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/fillWithFreeTextAdaptationUpdateInputData"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "fillWithFreeTextAdaptationUpdateInput",
-        "type": "object"
-      },
-      "fillWithFreeTextAdaptationUpdateInputData": {
-        "additionalProperties": false,
-        "properties": {
-          "attributes": {
-            "$ref": "#/components/schemas/fillWithFreeTextAdaptationUpdateInputDataAttributes",
-            "default": {}
-          },
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "relationships": {
-            "$ref": "#/components/schemas/fillWithFreeTextAdaptationUpdateInputDataRelationships",
-            "default": {}
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "id"
-        ],
-        "title": "fillWithFreeTextAdaptationUpdateInputData",
-        "type": "object"
-      },
-      "fillWithFreeTextAdaptationUpdateInputDataAttributes": {
-        "additionalProperties": false,
-        "properties": {
-          "placeholder": {
-            "title": "Placeholder",
-            "type": "string"
-          }
-        },
-        "title": "fillWithFreeTextAdaptationUpdateInputDataAttributes",
-        "type": "object"
-      },
-      "fillWithFreeTextAdaptationUpdateInputDataRelationships": {
-        "additionalProperties": false,
-        "properties": {},
-        "title": "fillWithFreeTextAdaptationUpdateInputDataRelationships",
-        "type": "object"
-      },
-      "fillWithFreeTextAdaptation_createdBy_Relationship": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/fillWithFreeTextAdaptation_createdBy_Relationship_ObjectId"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "fillWithFreeTextAdaptation_createdBy_Relationship",
-        "type": "object"
-      },
-      "fillWithFreeTextAdaptation_createdBy_Relationship_ObjectId": {
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "type": {
-            "const": "user",
-            "enum": [
-              "user"
-            ],
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "id"
-        ],
-        "title": "fillWithFreeTextAdaptation_createdBy_Relationship_ObjectId",
-        "type": "object"
-      },
-      "fillWithFreeTextAdaptation_exercise_Relationship": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/fillWithFreeTextAdaptation_exercise_Relationship_ObjectId"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "fillWithFreeTextAdaptation_exercise_Relationship",
-        "type": "object"
-      },
-      "fillWithFreeTextAdaptation_exercise_Relationship_ObjectId": {
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "type": {
-            "const": "exercise",
-            "enum": [
-              "exercise"
-            ],
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "id"
-        ],
-        "title": "fillWithFreeTextAdaptation_exercise_Relationship_ObjectId",
-        "type": "object"
-      },
-      "fillWithFreeTextAdaptation_updatedBy_Relationship": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/fillWithFreeTextAdaptation_updatedBy_Relationship_ObjectId"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "fillWithFreeTextAdaptation_updatedBy_Relationship",
-        "type": "object"
-      },
-      "fillWithFreeTextAdaptation_updatedBy_Relationship_ObjectId": {
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "type": {
-            "const": "user",
-            "enum": [
-              "user"
-            ],
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "id"
-        ],
-        "title": "fillWithFreeTextAdaptation_updatedBy_Relationship_ObjectId",
-        "type": "object"
-      },
       "gabby__exercise_delta__Exercise": {
         "additionalProperties": false,
         "properties": {
@@ -1658,634 +1588,6 @@
         "title": "Exercise",
         "type": "object"
       },
-      "multipleChoicesInInstructionsAdaptationCreateInput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptationCreateInputData"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "multipleChoicesInInstructionsAdaptationCreateInput",
-        "type": "object"
-      },
-      "multipleChoicesInInstructionsAdaptationCreateInputData": {
-        "additionalProperties": false,
-        "properties": {
-          "attributes": {
-            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptationCreateInputDataAttributes"
-          },
-          "relationships": {
-            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptationCreateInputDataRelationships"
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "attributes",
-          "relationships"
-        ],
-        "title": "multipleChoicesInInstructionsAdaptationCreateInputData",
-        "type": "object"
-      },
-      "multipleChoicesInInstructionsAdaptationCreateInputDataAttributes": {
-        "additionalProperties": false,
-        "properties": {
-          "placeholder": {
-            "title": "Placeholder",
-            "type": "string"
-          }
-        },
-        "required": [
-          "placeholder"
-        ],
-        "title": "multipleChoicesInInstructionsAdaptationCreateInputDataAttributes",
-        "type": "object"
-      },
-      "multipleChoicesInInstructionsAdaptationCreateInputDataRelationships": {
-        "additionalProperties": false,
-        "properties": {
-          "exercise": {
-            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation_exercise_Relationship"
-          }
-        },
-        "required": [
-          "exercise"
-        ],
-        "title": "multipleChoicesInInstructionsAdaptationCreateInputDataRelationships",
-        "type": "object"
-      },
-      "multipleChoicesInInstructionsAdaptationItemOutput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptationOutputItem"
-          },
-          "included": {
-            "items": {},
-            "title": "Included",
-            "type": "array"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "multipleChoicesInInstructionsAdaptationItemOutput",
-        "type": "object"
-      },
-      "multipleChoicesInInstructionsAdaptationOutputItem": {
-        "additionalProperties": false,
-        "properties": {
-          "attributes": {
-            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptationOutputItemAttributes"
-          },
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "links": {
-            "$ref": "#/components/schemas/ItemLinks"
-          },
-          "relationships": {
-            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptationOutputItemRelationships"
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "id",
-          "links",
-          "attributes",
-          "relationships"
-        ],
-        "title": "multipleChoicesInInstructionsAdaptationOutputItem",
-        "type": "object"
-      },
-      "multipleChoicesInInstructionsAdaptationOutputItemAttributes": {
-        "additionalProperties": false,
-        "properties": {
-          "createdAt": {
-            "format": "date-time",
-            "title": "Createdat",
-            "type": "string"
-          },
-          "placeholder": {
-            "title": "Placeholder",
-            "type": "string"
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "title": "Updatedat",
-            "type": "string"
-          }
-        },
-        "required": [
-          "updatedAt",
-          "createdAt",
-          "placeholder"
-        ],
-        "title": "multipleChoicesInInstructionsAdaptationOutputItemAttributes",
-        "type": "object"
-      },
-      "multipleChoicesInInstructionsAdaptationOutputItemRelationships": {
-        "additionalProperties": false,
-        "properties": {
-          "createdBy": {
-            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation_createdBy_Relationship"
-          },
-          "exercise": {
-            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation_exercise_Relationship"
-          },
-          "updatedBy": {
-            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation_updatedBy_Relationship"
-          }
-        },
-        "required": [
-          "updatedBy",
-          "createdBy",
-          "exercise"
-        ],
-        "title": "multipleChoicesInInstructionsAdaptationOutputItemRelationships",
-        "type": "object"
-      },
-      "multipleChoicesInInstructionsAdaptationUpdateInput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptationUpdateInputData"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "multipleChoicesInInstructionsAdaptationUpdateInput",
-        "type": "object"
-      },
-      "multipleChoicesInInstructionsAdaptationUpdateInputData": {
-        "additionalProperties": false,
-        "properties": {
-          "attributes": {
-            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptationUpdateInputDataAttributes",
-            "default": {}
-          },
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "relationships": {
-            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptationUpdateInputDataRelationships",
-            "default": {}
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "id"
-        ],
-        "title": "multipleChoicesInInstructionsAdaptationUpdateInputData",
-        "type": "object"
-      },
-      "multipleChoicesInInstructionsAdaptationUpdateInputDataAttributes": {
-        "additionalProperties": false,
-        "properties": {
-          "placeholder": {
-            "title": "Placeholder",
-            "type": "string"
-          }
-        },
-        "title": "multipleChoicesInInstructionsAdaptationUpdateInputDataAttributes",
-        "type": "object"
-      },
-      "multipleChoicesInInstructionsAdaptationUpdateInputDataRelationships": {
-        "additionalProperties": false,
-        "properties": {},
-        "title": "multipleChoicesInInstructionsAdaptationUpdateInputDataRelationships",
-        "type": "object"
-      },
-      "multipleChoicesInInstructionsAdaptation_createdBy_Relationship": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation_createdBy_Relationship_ObjectId"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "multipleChoicesInInstructionsAdaptation_createdBy_Relationship",
-        "type": "object"
-      },
-      "multipleChoicesInInstructionsAdaptation_createdBy_Relationship_ObjectId": {
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "type": {
-            "const": "user",
-            "enum": [
-              "user"
-            ],
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "id"
-        ],
-        "title": "multipleChoicesInInstructionsAdaptation_createdBy_Relationship_ObjectId",
-        "type": "object"
-      },
-      "multipleChoicesInInstructionsAdaptation_exercise_Relationship": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation_exercise_Relationship_ObjectId"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "multipleChoicesInInstructionsAdaptation_exercise_Relationship",
-        "type": "object"
-      },
-      "multipleChoicesInInstructionsAdaptation_exercise_Relationship_ObjectId": {
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "type": {
-            "const": "exercise",
-            "enum": [
-              "exercise"
-            ],
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "id"
-        ],
-        "title": "multipleChoicesInInstructionsAdaptation_exercise_Relationship_ObjectId",
-        "type": "object"
-      },
-      "multipleChoicesInInstructionsAdaptation_updatedBy_Relationship": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptation_updatedBy_Relationship_ObjectId"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "multipleChoicesInInstructionsAdaptation_updatedBy_Relationship",
-        "type": "object"
-      },
-      "multipleChoicesInInstructionsAdaptation_updatedBy_Relationship_ObjectId": {
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "type": {
-            "const": "user",
-            "enum": [
-              "user"
-            ],
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "id"
-        ],
-        "title": "multipleChoicesInInstructionsAdaptation_updatedBy_Relationship_ObjectId",
-        "type": "object"
-      },
-      "multipleChoicesInWordingAdaptationCreateInput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/multipleChoicesInWordingAdaptationCreateInputData"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "multipleChoicesInWordingAdaptationCreateInput",
-        "type": "object"
-      },
-      "multipleChoicesInWordingAdaptationCreateInputData": {
-        "additionalProperties": false,
-        "properties": {
-          "attributes": {
-            "$ref": "#/components/schemas/multipleChoicesInWordingAdaptationCreateInputDataAttributes",
-            "default": {}
-          },
-          "relationships": {
-            "$ref": "#/components/schemas/multipleChoicesInWordingAdaptationCreateInputDataRelationships"
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "relationships"
-        ],
-        "title": "multipleChoicesInWordingAdaptationCreateInputData",
-        "type": "object"
-      },
-      "multipleChoicesInWordingAdaptationCreateInputDataAttributes": {
-        "additionalProperties": false,
-        "properties": {},
-        "title": "multipleChoicesInWordingAdaptationCreateInputDataAttributes",
-        "type": "object"
-      },
-      "multipleChoicesInWordingAdaptationCreateInputDataRelationships": {
-        "additionalProperties": false,
-        "properties": {
-          "exercise": {
-            "$ref": "#/components/schemas/multipleChoicesInWordingAdaptation_exercise_Relationship"
-          }
-        },
-        "required": [
-          "exercise"
-        ],
-        "title": "multipleChoicesInWordingAdaptationCreateInputDataRelationships",
-        "type": "object"
-      },
-      "multipleChoicesInWordingAdaptationItemOutput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/multipleChoicesInWordingAdaptationOutputItem"
-          },
-          "included": {
-            "items": {},
-            "title": "Included",
-            "type": "array"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "multipleChoicesInWordingAdaptationItemOutput",
-        "type": "object"
-      },
-      "multipleChoicesInWordingAdaptationOutputItem": {
-        "additionalProperties": false,
-        "properties": {
-          "attributes": {
-            "$ref": "#/components/schemas/multipleChoicesInWordingAdaptationOutputItemAttributes"
-          },
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "links": {
-            "$ref": "#/components/schemas/ItemLinks"
-          },
-          "relationships": {
-            "$ref": "#/components/schemas/multipleChoicesInWordingAdaptationOutputItemRelationships"
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "id",
-          "links",
-          "attributes",
-          "relationships"
-        ],
-        "title": "multipleChoicesInWordingAdaptationOutputItem",
-        "type": "object"
-      },
-      "multipleChoicesInWordingAdaptationOutputItemAttributes": {
-        "additionalProperties": false,
-        "properties": {
-          "createdAt": {
-            "format": "date-time",
-            "title": "Createdat",
-            "type": "string"
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "title": "Updatedat",
-            "type": "string"
-          }
-        },
-        "required": [
-          "updatedAt",
-          "createdAt"
-        ],
-        "title": "multipleChoicesInWordingAdaptationOutputItemAttributes",
-        "type": "object"
-      },
-      "multipleChoicesInWordingAdaptationOutputItemRelationships": {
-        "additionalProperties": false,
-        "properties": {
-          "createdBy": {
-            "$ref": "#/components/schemas/multipleChoicesInWordingAdaptation_createdBy_Relationship"
-          },
-          "exercise": {
-            "$ref": "#/components/schemas/multipleChoicesInWordingAdaptation_exercise_Relationship"
-          },
-          "updatedBy": {
-            "$ref": "#/components/schemas/multipleChoicesInWordingAdaptation_updatedBy_Relationship"
-          }
-        },
-        "required": [
-          "updatedBy",
-          "createdBy",
-          "exercise"
-        ],
-        "title": "multipleChoicesInWordingAdaptationOutputItemRelationships",
-        "type": "object"
-      },
-      "multipleChoicesInWordingAdaptationUpdateInput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/multipleChoicesInWordingAdaptationUpdateInputData"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "multipleChoicesInWordingAdaptationUpdateInput",
-        "type": "object"
-      },
-      "multipleChoicesInWordingAdaptationUpdateInputData": {
-        "additionalProperties": false,
-        "properties": {
-          "attributes": {
-            "$ref": "#/components/schemas/multipleChoicesInWordingAdaptationUpdateInputDataAttributes",
-            "default": {}
-          },
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "relationships": {
-            "$ref": "#/components/schemas/multipleChoicesInWordingAdaptationUpdateInputDataRelationships",
-            "default": {}
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "id"
-        ],
-        "title": "multipleChoicesInWordingAdaptationUpdateInputData",
-        "type": "object"
-      },
-      "multipleChoicesInWordingAdaptationUpdateInputDataAttributes": {
-        "additionalProperties": false,
-        "properties": {},
-        "title": "multipleChoicesInWordingAdaptationUpdateInputDataAttributes",
-        "type": "object"
-      },
-      "multipleChoicesInWordingAdaptationUpdateInputDataRelationships": {
-        "additionalProperties": false,
-        "properties": {},
-        "title": "multipleChoicesInWordingAdaptationUpdateInputDataRelationships",
-        "type": "object"
-      },
-      "multipleChoicesInWordingAdaptation_createdBy_Relationship": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/multipleChoicesInWordingAdaptation_createdBy_Relationship_ObjectId"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "multipleChoicesInWordingAdaptation_createdBy_Relationship",
-        "type": "object"
-      },
-      "multipleChoicesInWordingAdaptation_createdBy_Relationship_ObjectId": {
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "type": {
-            "const": "user",
-            "enum": [
-              "user"
-            ],
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "id"
-        ],
-        "title": "multipleChoicesInWordingAdaptation_createdBy_Relationship_ObjectId",
-        "type": "object"
-      },
-      "multipleChoicesInWordingAdaptation_exercise_Relationship": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/multipleChoicesInWordingAdaptation_exercise_Relationship_ObjectId"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "multipleChoicesInWordingAdaptation_exercise_Relationship",
-        "type": "object"
-      },
-      "multipleChoicesInWordingAdaptation_exercise_Relationship_ObjectId": {
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "type": {
-            "const": "exercise",
-            "enum": [
-              "exercise"
-            ],
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "id"
-        ],
-        "title": "multipleChoicesInWordingAdaptation_exercise_Relationship_ObjectId",
-        "type": "object"
-      },
-      "multipleChoicesInWordingAdaptation_updatedBy_Relationship": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/multipleChoicesInWordingAdaptation_updatedBy_Relationship_ObjectId"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "multipleChoicesInWordingAdaptation_updatedBy_Relationship",
-        "type": "object"
-      },
-      "multipleChoicesInWordingAdaptation_updatedBy_Relationship_ObjectId": {
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "type": {
-            "const": "user",
-            "enum": [
-              "user"
-            ],
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "id"
-        ],
-        "title": "multipleChoicesInWordingAdaptation_updatedBy_Relationship_ObjectId",
-        "type": "object"
-      },
       "parsedExerciseCreateInput": {
         "additionalProperties": false,
         "properties": {
@@ -2324,22 +1626,28 @@
       "parsedExerciseCreateInputDataAttributes": {
         "additionalProperties": false,
         "properties": {
-          "adaptationOptions": {
+          "adaptation": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/SelectThingsAdaptationOptions"
+                "$ref": "#/components/schemas/FillWithFreeTextAdaptation"
               },
               {
-                "$ref": "#/components/schemas/FillWithFreeTextAdaptationOptions"
+                "$ref": "#/components/schemas/ItemsAndEffectsAttempt1Adaptation-Input"
               },
               {
-                "$ref": "#/components/schemas/MultipleChoicesInInstructionsAdaptationOptions"
+                "$ref": "#/components/schemas/MultipleChoicesInInstructionsAdaptation"
               },
               {
-                "$ref": "#/components/schemas/MultipleChoicesInWordingAdaptationOptions"
+                "$ref": "#/components/schemas/MultipleChoicesInWordingAdaptation"
+              },
+              {
+                "$ref": "#/components/schemas/NullAdaptation"
+              },
+              {
+                "$ref": "#/components/schemas/SelectThingsAdaptation"
               }
             ],
-            "title": "Adaptationoptions"
+            "title": "Adaptation"
           },
           "clue": {
             "title": "Clue",
@@ -2355,10 +1663,6 @@
           },
           "number": {
             "title": "Number",
-            "type": "string"
-          },
-          "type": {
-            "title": "Type",
             "type": "string"
           },
           "wording": {
@@ -2377,8 +1681,7 @@
           "example",
           "clue",
           "wordingParagraphsPerPagelet",
-          "type",
-          "adaptationOptions"
+          "adaptation"
         ],
         "title": "parsedExerciseCreateInputDataAttributes",
         "type": "object"
@@ -4562,366 +3865,6 @@
         "title": "section_updatedBy_Relationship_ObjectId",
         "type": "object"
       },
-      "selectThingsAdaptationCreateInput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/selectThingsAdaptationCreateInputData"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "selectThingsAdaptationCreateInput",
-        "type": "object"
-      },
-      "selectThingsAdaptationCreateInputData": {
-        "additionalProperties": false,
-        "properties": {
-          "attributes": {
-            "$ref": "#/components/schemas/selectThingsAdaptationCreateInputDataAttributes"
-          },
-          "relationships": {
-            "$ref": "#/components/schemas/selectThingsAdaptationCreateInputDataRelationships"
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "attributes",
-          "relationships"
-        ],
-        "title": "selectThingsAdaptationCreateInputData",
-        "type": "object"
-      },
-      "selectThingsAdaptationCreateInputDataAttributes": {
-        "additionalProperties": false,
-        "properties": {
-          "colors": {
-            "items": {
-              "type": "string"
-            },
-            "title": "Colors",
-            "type": "array"
-          },
-          "punctuation": {
-            "title": "Punctuation",
-            "type": "boolean"
-          },
-          "words": {
-            "title": "Words",
-            "type": "boolean"
-          }
-        },
-        "required": [
-          "colors",
-          "words",
-          "punctuation"
-        ],
-        "title": "selectThingsAdaptationCreateInputDataAttributes",
-        "type": "object"
-      },
-      "selectThingsAdaptationCreateInputDataRelationships": {
-        "additionalProperties": false,
-        "properties": {
-          "exercise": {
-            "$ref": "#/components/schemas/selectThingsAdaptation_exercise_Relationship"
-          }
-        },
-        "required": [
-          "exercise"
-        ],
-        "title": "selectThingsAdaptationCreateInputDataRelationships",
-        "type": "object"
-      },
-      "selectThingsAdaptationItemOutput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/selectThingsAdaptationOutputItem"
-          },
-          "included": {
-            "items": {},
-            "title": "Included",
-            "type": "array"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "selectThingsAdaptationItemOutput",
-        "type": "object"
-      },
-      "selectThingsAdaptationOutputItem": {
-        "additionalProperties": false,
-        "properties": {
-          "attributes": {
-            "$ref": "#/components/schemas/selectThingsAdaptationOutputItemAttributes"
-          },
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "links": {
-            "$ref": "#/components/schemas/ItemLinks"
-          },
-          "relationships": {
-            "$ref": "#/components/schemas/selectThingsAdaptationOutputItemRelationships"
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "id",
-          "links",
-          "attributes",
-          "relationships"
-        ],
-        "title": "selectThingsAdaptationOutputItem",
-        "type": "object"
-      },
-      "selectThingsAdaptationOutputItemAttributes": {
-        "additionalProperties": false,
-        "properties": {
-          "colors": {
-            "items": {
-              "type": "string"
-            },
-            "title": "Colors",
-            "type": "array"
-          },
-          "createdAt": {
-            "format": "date-time",
-            "title": "Createdat",
-            "type": "string"
-          },
-          "punctuation": {
-            "title": "Punctuation",
-            "type": "boolean"
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "title": "Updatedat",
-            "type": "string"
-          },
-          "words": {
-            "title": "Words",
-            "type": "boolean"
-          }
-        },
-        "required": [
-          "updatedAt",
-          "createdAt",
-          "colors",
-          "words",
-          "punctuation"
-        ],
-        "title": "selectThingsAdaptationOutputItemAttributes",
-        "type": "object"
-      },
-      "selectThingsAdaptationOutputItemRelationships": {
-        "additionalProperties": false,
-        "properties": {
-          "createdBy": {
-            "$ref": "#/components/schemas/selectThingsAdaptation_createdBy_Relationship"
-          },
-          "exercise": {
-            "$ref": "#/components/schemas/selectThingsAdaptation_exercise_Relationship"
-          },
-          "updatedBy": {
-            "$ref": "#/components/schemas/selectThingsAdaptation_updatedBy_Relationship"
-          }
-        },
-        "required": [
-          "updatedBy",
-          "createdBy",
-          "exercise"
-        ],
-        "title": "selectThingsAdaptationOutputItemRelationships",
-        "type": "object"
-      },
-      "selectThingsAdaptationUpdateInput": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/selectThingsAdaptationUpdateInputData"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "selectThingsAdaptationUpdateInput",
-        "type": "object"
-      },
-      "selectThingsAdaptationUpdateInputData": {
-        "additionalProperties": false,
-        "properties": {
-          "attributes": {
-            "$ref": "#/components/schemas/selectThingsAdaptationUpdateInputDataAttributes",
-            "default": {}
-          },
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "relationships": {
-            "$ref": "#/components/schemas/selectThingsAdaptationUpdateInputDataRelationships",
-            "default": {}
-          },
-          "type": {
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "id"
-        ],
-        "title": "selectThingsAdaptationUpdateInputData",
-        "type": "object"
-      },
-      "selectThingsAdaptationUpdateInputDataAttributes": {
-        "additionalProperties": false,
-        "properties": {
-          "colors": {
-            "items": {
-              "type": "string"
-            },
-            "title": "Colors",
-            "type": "array"
-          },
-          "punctuation": {
-            "title": "Punctuation",
-            "type": "boolean"
-          },
-          "words": {
-            "title": "Words",
-            "type": "boolean"
-          }
-        },
-        "title": "selectThingsAdaptationUpdateInputDataAttributes",
-        "type": "object"
-      },
-      "selectThingsAdaptationUpdateInputDataRelationships": {
-        "additionalProperties": false,
-        "properties": {},
-        "title": "selectThingsAdaptationUpdateInputDataRelationships",
-        "type": "object"
-      },
-      "selectThingsAdaptation_createdBy_Relationship": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/selectThingsAdaptation_createdBy_Relationship_ObjectId"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "selectThingsAdaptation_createdBy_Relationship",
-        "type": "object"
-      },
-      "selectThingsAdaptation_createdBy_Relationship_ObjectId": {
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "type": {
-            "const": "user",
-            "enum": [
-              "user"
-            ],
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "id"
-        ],
-        "title": "selectThingsAdaptation_createdBy_Relationship_ObjectId",
-        "type": "object"
-      },
-      "selectThingsAdaptation_exercise_Relationship": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/selectThingsAdaptation_exercise_Relationship_ObjectId"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "selectThingsAdaptation_exercise_Relationship",
-        "type": "object"
-      },
-      "selectThingsAdaptation_exercise_Relationship_ObjectId": {
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "type": {
-            "const": "exercise",
-            "enum": [
-              "exercise"
-            ],
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "id"
-        ],
-        "title": "selectThingsAdaptation_exercise_Relationship_ObjectId",
-        "type": "object"
-      },
-      "selectThingsAdaptation_updatedBy_Relationship": {
-        "additionalProperties": false,
-        "properties": {
-          "data": {
-            "$ref": "#/components/schemas/selectThingsAdaptation_updatedBy_Relationship_ObjectId"
-          }
-        },
-        "required": [
-          "data"
-        ],
-        "title": "selectThingsAdaptation_updatedBy_Relationship",
-        "type": "object"
-      },
-      "selectThingsAdaptation_updatedBy_Relationship_ObjectId": {
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "type": {
-            "const": "user",
-            "enum": [
-              "user"
-            ],
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "id"
-        ],
-        "title": "selectThingsAdaptation_updatedBy_Relationship_ObjectId",
-        "type": "object"
-      },
       "syntheticErrorItemOutput": {
         "additionalProperties": false,
         "properties": {
@@ -6104,615 +5047,6 @@
           }
         ],
         "summary": "Update Exercise"
-      }
-    },
-    "/api/fillWithFreeTextAdaptations": {
-      "post": {
-        "operationId": "create_fill_with_free_text_adaptation_api_fillWithFreeTextAdaptations_post",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "include",
-            "required": false,
-            "schema": {
-              "title": "Include",
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/fillWithFreeTextAdaptationCreateInput"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "201": {
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/fillWithFreeTextAdaptationItemOutput"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "summary": "Create Fill With Free Text Adaptation"
-      }
-    },
-    "/api/fillWithFreeTextAdaptations/{id}": {
-      "delete": {
-        "operationId": "delete_fill_with_free_text_adaptation_api_fillWithFreeTextAdaptations__id__delete",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "title": "Id",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "summary": "Delete Fill With Free Text Adaptation"
-      },
-      "get": {
-        "operationId": "get_fill_with_free_text_adaptation_api_fillWithFreeTextAdaptations__id__get",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "title": "Id",
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "include",
-            "required": false,
-            "schema": {
-              "title": "Include",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/fillWithFreeTextAdaptationItemOutput"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "summary": "Get Fill With Free Text Adaptation"
-      },
-      "patch": {
-        "operationId": "update_fill_with_free_text_adaptation_api_fillWithFreeTextAdaptations__id__patch",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "title": "Id",
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "include",
-            "required": false,
-            "schema": {
-              "title": "Include",
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/fillWithFreeTextAdaptationUpdateInput"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/fillWithFreeTextAdaptationItemOutput"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "summary": "Update Fill With Free Text Adaptation"
-      }
-    },
-    "/api/multipleChoicesInInstructionsAdaptations": {
-      "post": {
-        "operationId": "create_multiple_choices_in_instructions_adaptation_api_multipleChoicesInInstructionsAdaptations_post",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "include",
-            "required": false,
-            "schema": {
-              "title": "Include",
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptationCreateInput"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "201": {
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptationItemOutput"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "summary": "Create Multiple Choices In Instructions Adaptation"
-      }
-    },
-    "/api/multipleChoicesInInstructionsAdaptations/{id}": {
-      "delete": {
-        "operationId": "delete_multiple_choices_in_instructions_adaptation_api_multipleChoicesInInstructionsAdaptations__id__delete",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "title": "Id",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "summary": "Delete Multiple Choices In Instructions Adaptation"
-      },
-      "get": {
-        "operationId": "get_multiple_choices_in_instructions_adaptation_api_multipleChoicesInInstructionsAdaptations__id__get",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "title": "Id",
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "include",
-            "required": false,
-            "schema": {
-              "title": "Include",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptationItemOutput"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "summary": "Get Multiple Choices In Instructions Adaptation"
-      },
-      "patch": {
-        "operationId": "update_multiple_choices_in_instructions_adaptation_api_multipleChoicesInInstructionsAdaptations__id__patch",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "title": "Id",
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "include",
-            "required": false,
-            "schema": {
-              "title": "Include",
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptationUpdateInput"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/multipleChoicesInInstructionsAdaptationItemOutput"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "summary": "Update Multiple Choices In Instructions Adaptation"
-      }
-    },
-    "/api/multipleChoicesInWordingAdaptations": {
-      "post": {
-        "operationId": "create_multiple_choices_in_wording_adaptation_api_multipleChoicesInWordingAdaptations_post",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "include",
-            "required": false,
-            "schema": {
-              "title": "Include",
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/multipleChoicesInWordingAdaptationCreateInput"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "201": {
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/multipleChoicesInWordingAdaptationItemOutput"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "summary": "Create Multiple Choices In Wording Adaptation"
-      }
-    },
-    "/api/multipleChoicesInWordingAdaptations/{id}": {
-      "delete": {
-        "operationId": "delete_multiple_choices_in_wording_adaptation_api_multipleChoicesInWordingAdaptations__id__delete",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "title": "Id",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "summary": "Delete Multiple Choices In Wording Adaptation"
-      },
-      "get": {
-        "operationId": "get_multiple_choices_in_wording_adaptation_api_multipleChoicesInWordingAdaptations__id__get",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "title": "Id",
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "include",
-            "required": false,
-            "schema": {
-              "title": "Include",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/multipleChoicesInWordingAdaptationItemOutput"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "summary": "Get Multiple Choices In Wording Adaptation"
-      },
-      "patch": {
-        "operationId": "update_multiple_choices_in_wording_adaptation_api_multipleChoicesInWordingAdaptations__id__patch",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "title": "Id",
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "include",
-            "required": false,
-            "schema": {
-              "title": "Include",
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/multipleChoicesInWordingAdaptationUpdateInput"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/multipleChoicesInWordingAdaptationItemOutput"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "summary": "Update Multiple Choices In Wording Adaptation"
       }
     },
     "/api/parsedExercises": {
@@ -8301,209 +6635,6 @@
           }
         ],
         "summary": "Update Section"
-      }
-    },
-    "/api/selectThingsAdaptations": {
-      "post": {
-        "operationId": "create_select_things_adaptation_api_selectThingsAdaptations_post",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "include",
-            "required": false,
-            "schema": {
-              "title": "Include",
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/selectThingsAdaptationCreateInput"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "201": {
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/selectThingsAdaptationItemOutput"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "summary": "Create Select Things Adaptation"
-      }
-    },
-    "/api/selectThingsAdaptations/{id}": {
-      "delete": {
-        "operationId": "delete_select_things_adaptation_api_selectThingsAdaptations__id__delete",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "title": "Id",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "summary": "Delete Select Things Adaptation"
-      },
-      "get": {
-        "operationId": "get_select_things_adaptation_api_selectThingsAdaptations__id__get",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "title": "Id",
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "include",
-            "required": false,
-            "schema": {
-              "title": "Include",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/selectThingsAdaptationItemOutput"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "summary": "Get Select Things Adaptation"
-      },
-      "patch": {
-        "operationId": "update_select_things_adaptation_api_selectThingsAdaptations__id__patch",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "title": "Id",
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "include",
-            "required": false,
-            "schema": {
-              "title": "Include",
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/selectThingsAdaptationUpdateInput"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/selectThingsAdaptationItemOutput"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "security": [
-          {
-            "OAuth2PasswordBearer": []
-          }
-        ],
-        "summary": "Update Select Things Adaptation"
       }
     },
     "/api/syntheticErrors/{id}": {

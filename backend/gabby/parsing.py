@@ -1,10 +1,9 @@
 import abc
 import functools
 import itertools
+import unittest
 
 import lark
-
-from .testing import TestCase
 
 from . import exercise_delta
 from . import renderable
@@ -86,7 +85,7 @@ def GrammarTestCase(grammar):
     parser = lark.Lark(grammar, start="section")
     transformer = Transformer()
 
-    class GrammarTestCase(TestCase):
+    class GrammarTestCase(unittest.TestCase):
         def do_test(self, test, expected_ast):
             parse_tree = parser.parse(test)
             actual_ast = transformer.transform(parse_tree)
@@ -597,7 +596,7 @@ adapt_generic_instructions_section = InstructionsSectionParser(
 )
 
 
-class AdaptGenericInstructionsSectionTestCase(TestCase):
+class AdaptGenericInstructionsSectionTestCase(unittest.TestCase):
     def do_test(self, input, expected_section):
         actual_section = adapt_generic_instructions_section(input)
         for paragraph_index, (actual_paragraph, expected_paragraph) in enumerate(zip(actual_section.paragraphs, expected_section.paragraphs, strict=True)):
@@ -1100,7 +1099,7 @@ class GenericWordingSectionAdapter(WordingSectionAdapter):
     def selectable_text_tag(self, args):
         text = args[0]
         colors = list(args[1:])
-        return renderable.SelectableText(text=text, colors=colors)
+        return renderable.SelectableText(text=text, colors=colors, boxed=False)
 
     def multiple_choices_input_tag(self, args):
         choices = args
@@ -1120,7 +1119,7 @@ adapt_generic_wording_section = WordingSectionParser(
 )
 
 
-class AdaptGenericWordingSectionTestCase(TestCase):
+class AdaptGenericWordingSectionTestCase(unittest.TestCase):
     def do_test(self, input, expected_section):
         actual_section = adapt_generic_wording_section(input)
         for paragraph_index, (actual_paragraph, expected_paragraph) in enumerate(zip(actual_section.paragraphs, expected_section.paragraphs, strict=True)):
@@ -1260,7 +1259,7 @@ class AdaptGenericWordingSectionTestCase(TestCase):
                 renderable.Whitespace(),
                 renderable.PlainText(text="is"),
                 renderable.Whitespace(),
-                renderable.SelectableText(text="selectable", colors=["red", "green", "blue"]),
+                renderable.SelectableText(text="selectable", colors=["red", "green", "blue"], boxed=False),
                 renderable.PlainText(text="."),
             ])])]),
         )

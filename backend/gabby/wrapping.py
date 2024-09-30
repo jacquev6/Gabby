@@ -56,6 +56,7 @@ def make_sqids(name):
 # IDs of the first few exercises: wbqloc bylced jkrudc ufefwu orxbzq ahbwey vodhqn dymwin xnyegk
 # IDs of the first few extraction_events: stzemo mkgilf dskyis yotcht axwgxv jusflx gyvtgb omqipm fqjjte
 # IDs of the first few fill_with_free_text_adaptations: ljpupg vahdwa udaorb zqltqi ylstuq dlymea rzmwsn fczoca xiqxfv
+# IDs of the first few items_and_effects_attempt_1_adaptations: rucejk blhvyl yvmxwv sqjkxi ltxkjf uafqbk ntdcdv gsrsrq okejkh
 # IDs of the first few multiple_choices_in_instructions_adaptations: zqwpae bopxey lavpnb wcdrmo hpzlba jlkmxy gqezrb cyxsei knsznf
 # IDs of the first few multiple_choices_in_wording_adaptations: vhjtbd liditc rvkfty qihgyl matkce zwnpmz greflc orgncm jgqfzd
 # IDs of the first few pdf_file_namings: tnahml wmyxrm yogtxq oexfhs bnqavf rhjojh pdbrtv uqodzk jgtoux

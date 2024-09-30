@@ -3,7 +3,8 @@ import { computed } from 'vue'
 
 
 const props = defineProps<{
-  color: string,
+  color: string
+  boxed: boolean
 }>()
 
 const style = computed(() => ({
@@ -12,5 +13,11 @@ const style = computed(() => ({
 </script>
 
 <template>
-  <span :style><slot></slot></span>
+  <span :style :class="{boxed_: boxed}"><slot></slot></span>
 </template>
+
+<style scoped>
+span.boxed_ {
+  outline: black solid 3px;
+}
+</style>

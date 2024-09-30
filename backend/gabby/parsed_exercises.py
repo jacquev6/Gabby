@@ -1,49 +1,15 @@
 import dataclasses
 import uuid
 
-from fastapi import HTTPException
 from starlette import status
 
 from . import api_models
 from . import exercise_delta
-from . import parsing
 from . import renderable
 from . import settings
-from .adaptations.fill_with_free_text import FillWithFreeTextAdaptation
-from .adaptations.multiple_choices_in_instructions import MultipleChoicesInInstructionsAdaptation
-from .adaptations.multiple_choices_in_wording import MultipleChoicesInWordingAdaptation
-from .adaptations.select_things import SelectThingsAdaptation
-from .exercises import Exercise, Adaptation
+from .exercises import Exercise
 from .testing import LoggedInApiTestCase
 from .users import MandatoryAuthBearerDependable
-
-
-class NullAdaptation(Adaptation):
-    __abstract__ = True  # Abstract with regards to SQL tables, but instantiable in Python
-
-    def make_instructions_delta(self):
-        return parsing.make_plain_instructions_section_delta(self.exercise.instructions)
-
-    def make_adapted_instructions(self):
-        return parsing.adapt_plain_instructions_section(self.exercise.instructions)
-
-    def make_wording_delta(self):
-        return parsing.make_plain_wording_section_delta(self.exercise.wording)
-
-    def make_adapted_wording(self):
-        return parsing.adapt_plain_wording_section(self.exercise.wording)
-
-    def make_example_delta(self):
-        return parsing.make_plain_instructions_section_delta(self.exercise.example)
-
-    def make_adapted_example(self):
-        return parsing.adapt_plain_instructions_section(self.exercise.example)
-
-    def make_clue_delta(self):
-        return parsing.make_plain_instructions_section_delta(self.exercise.clue)
-
-    def make_adapted_clue(self):
-        return parsing.adapt_plain_instructions_section(self.exercise.clue)
 
 
 @dataclasses.dataclass
@@ -69,8 +35,7 @@ class ParsedExercisesResource:
         example,
         clue,
         wording_paragraphs_per_pagelet,
-        type,
-        adaptation_options,
+        adaptation,
         authenticated_user: MandatoryAuthBearerDependable,
     ):
         exercise = Exercise(
@@ -80,37 +45,12 @@ class ParsedExercisesResource:
             example=example,
             clue=clue,
             wording_paragraphs_per_pagelet=wording_paragraphs_per_pagelet,
+            adaptation=adaptation,
         )
-        if type == "-":
-            adaptation = NullAdaptation(
-                exercise=exercise,
-            )
-        elif type == "selectThingsAdaptation":
-            adaptation = SelectThingsAdaptation(
-                exercise=exercise,
-                **adaptation_options.model_dump(),
-            )
-        elif type == "fillWithFreeTextAdaptation":
-            adaptation = FillWithFreeTextAdaptation(
-                exercise=exercise,
-                **adaptation_options.model_dump(),
-            )
-        elif type == "multipleChoicesInInstructionsAdaptation":
-            adaptation = MultipleChoicesInInstructionsAdaptation(
-                exercise=exercise,
-                **adaptation_options.model_dump(),
-            )
-        elif type == "multipleChoicesInWordingAdaptation":
-            adaptation = MultipleChoicesInWordingAdaptation(
-                exercise=exercise,
-                **adaptation_options.model_dump(),
-            )
-        else:
-            raise HTTPException(status_code=400, detail="Unknown type")
         return ParsedExerciseItem(
             id=uuid.uuid4().hex,
-            adapted=adaptation.make_adapted(),
-            delta=adaptation.make_delta(),
+            adapted=exercise.make_adapted(),
+            delta=exercise.make_delta(),
         )
 
     def get_item(
@@ -136,8 +76,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     "example": "",
                     "clue": "",
                     "wordingParagraphsPerPagelet": 3,
-                    "type": "-",
-                    "adaptationOptions": {},
+                    "adaptation": {"kind": "null"},
                 },
             },
         }
@@ -190,8 +129,8 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     "example": "",
                     "clue": "",
                     "wordingParagraphsPerPagelet": 3,
-                    "type": "selectThingsAdaptation",
-                    "adaptationOptions": {
+                    "adaptation": {
+                        "kind": "select-things",
                         "colors": ["red", "green", "blue"],
                         "words": True,
                         "punctuation": False,
@@ -217,13 +156,13 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                 ]}]},
             ]},
             "wording": {"paragraphs": [{"sentences": [{"tokens": [
-                {"type": "selectableText", "text": "This", "colors": ["red", "green", "blue"]},
+                {"type": "selectableText", "text": "This", "colors": ["red", "green", "blue"], "boxed": False},
                 {"type": "whitespace"},
-                {"type": "selectableText", "text": "is", "colors": ["red", "green", "blue"]},
+                {"type": "selectableText", "text": "is", "colors": ["red", "green", "blue"], "boxed": False},
                 {"type": "whitespace"},
-                {"type": "selectableText", "text": "the", "colors": ["red", "green", "blue"]},
+                {"type": "selectableText", "text": "the", "colors": ["red", "green", "blue"], "boxed": False},
                 {"type": "whitespace"},
-                {"type": "selectableText", "text": "wording", "colors": ["red", "green", "blue"]},
+                {"type": "selectableText", "text": "wording", "colors": ["red", "green", "blue"], "boxed": False},
                 {"type": "plainText", "text": "."},
             ]}]}]},
             "example": {"paragraphs": []},
@@ -242,8 +181,8 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     "example": "This is the example.",
                     "clue": "This is the clue.",
                     "wordingParagraphsPerPagelet": 3,
-                    "type": "selectThingsAdaptation",
-                    "adaptationOptions": {
+                    "adaptation": {
+                        "kind": "select-things",
                         "colors": ["red", "green", "blue"],
                         "words": True,
                         "punctuation": False,
@@ -269,13 +208,13 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                 ]}]},
             ]},
             "wording": {"paragraphs": [{"sentences": [{"tokens": [
-                {"type": "selectableText", "text": "This", "colors": ["red", "green", "blue"]},
+                {"type": "selectableText", "text": "This", "colors": ["red", "green", "blue"], "boxed": False},
                 {"type": "whitespace"},
-                {"type": "selectableText", "text": "is", "colors": ["red", "green", "blue"]},
+                {"type": "selectableText", "text": "is", "colors": ["red", "green", "blue"], "boxed": False},
                 {"type": "whitespace"},
-                {"type": "selectableText", "text": "the", "colors": ["red", "green", "blue"]},
+                {"type": "selectableText", "text": "the", "colors": ["red", "green", "blue"], "boxed": False},
                 {"type": "whitespace"},
-                {"type": "selectableText", "text": "wording", "colors": ["red", "green", "blue"]},
+                {"type": "selectableText", "text": "wording", "colors": ["red", "green", "blue"], "boxed": False},
                 {"type": "plainText", "text": "."},
             ]}]}]},
             "example": {"paragraphs": [{"sentences": [{"tokens": [
@@ -312,8 +251,8 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     "example": "",
                     "clue": "",
                     "wordingParagraphsPerPagelet": 3,
-                    "type": "fillWithFreeTextAdaptation",
-                    "adaptationOptions": {
+                    "adaptation": {
+                        "kind": "fill-with-free-text",
                         "placeholder": "@",
                     },
                 },
@@ -355,8 +294,8 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     "example": "",
                     "clue": "",
                     "wordingParagraphsPerPagelet": 3,
-                    "type": "multipleChoicesInInstructionsAdaptation",
-                    "adaptationOptions": {
+                    "adaptation": {
+                        "kind": "multiple-choices-in-instructions",
                         "placeholder": "@",
                     },
                 },
@@ -402,8 +341,9 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     "example": "",
                     "clue": "",
                     "wordingParagraphsPerPagelet": 3,
-                    "type": "multipleChoicesInWordingAdaptation",
-                    "adaptationOptions": {},
+                    "adaptation": {
+                        "kind": "multiple-choices-in-wording",
+                    },
                 },
             },
         }

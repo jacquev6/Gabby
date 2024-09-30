@@ -3,7 +3,8 @@ import SelectedText from './SelectedText.vue'
 
 
 const props = defineProps<{
-  colors: string[],
+  colors: string[]
+  boxed: boolean
 }>()
 
 const colorIndex = defineModel<number>({default: 0})
@@ -14,8 +15,8 @@ function increment() {
 </script>
 
 <template>
-  <span v-if="colorIndex === 0" @click="increment"><slot></slot></span>
-  <SelectedText v-else @click="increment" :color="colors[colorIndex - 1]"><slot></slot></SelectedText>
+  <span v-if="colorIndex === 0" @click="increment" :class="{boxed_: boxed}"><slot></slot></span>
+  <SelectedText v-else @click="increment" :color="colors[colorIndex - 1]" :boxed><slot></slot></SelectedText>
 </template>
 
 <style scoped>
@@ -28,4 +29,12 @@ span {
 span:hover {
   outline: rgb(238, 238, 238) dotted 3px;
 }
+
+span.boxed_ {
+  outline: black solid 3px;
+}
+
+/* span.boxed:hover {
+  outline: black dotted 5px;
+} */
 </style>

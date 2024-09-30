@@ -1,11 +1,18 @@
 from __future__ import annotations
-from typing import Annotated, Literal
+from typing import Annotated, Literal, TypeAlias
 import datetime
 
 from fastjsonapi import Constant, Computed, Secret, WriteOnly
+import pydantic
 
 from . import exercise_delta
 from . import renderable
+from .adaptations.fill_with_free_text import FillWithFreeTextAdaptation
+from .adaptations.items_and_effects_attempt_1 import ItemsAndEffectsAttempt1Adaptation
+from .adaptations.multiple_choices_in_instructions import MultipleChoicesInInstructionsAdaptation
+from .adaptations.multiple_choices_in_wording import MultipleChoicesInWordingAdaptation
+from .adaptations.null import NullAdaptation
+from .adaptations.select_things import SelectThingsAdaptation
 from mydantic import PydanticBase
 
 
@@ -103,6 +110,10 @@ class PdfRectangle(PydanticBase):
     text: str | None
     role: Literal["bounding", "instructions", "wording", "example", "clue"]
 
+# Move These 'Adaptation' classes have two responsibilities: API and behavior. Not SOLID, but so convenient for now.
+
+Adaptation: TypeAlias = FillWithFreeTextAdaptation | ItemsAndEffectsAttempt1Adaptation | MultipleChoicesInInstructionsAdaptation | MultipleChoicesInWordingAdaptation | NullAdaptation | SelectThingsAdaptation
+
 class Exercise(PydanticBase, CreatedUpdatedByAtMixin):
     project: Annotated[Project, Constant()]
 
@@ -120,44 +131,7 @@ class Exercise(PydanticBase, CreatedUpdatedByAtMixin):
 
     rectangles: list[PdfRectangle] = []
 
-    adaptation: (
-        SelectThingsAdaptation
-        | FillWithFreeTextAdaptation
-        | MultipleChoicesInInstructionsAdaptation
-        | MultipleChoicesInWordingAdaptation
-        | None
-    ) = None
-
-
-class SelectThingsAdaptationOptions(PydanticBase):
-    colors: list[str]
-    words: bool
-    punctuation: bool
-
-class SelectThingsAdaptation(SelectThingsAdaptationOptions, CreatedUpdatedByAtMixin):
-    exercise: Annotated[Exercise, Constant()]
-
-
-class FillWithFreeTextAdaptationOptions(PydanticBase):
-    placeholder: str
-
-class FillWithFreeTextAdaptation(FillWithFreeTextAdaptationOptions, CreatedUpdatedByAtMixin):
-    exercise: Annotated[Exercise, Constant()]
-
-
-class MultipleChoicesInInstructionsAdaptationOptions(PydanticBase):
-    placeholder: str
-
-class MultipleChoicesInInstructionsAdaptation(MultipleChoicesInInstructionsAdaptationOptions, CreatedUpdatedByAtMixin):
-    exercise: Annotated[Exercise, Constant()]
-
-
-class MultipleChoicesInWordingAdaptationOptions(PydanticBase):
-    pass
-
-class MultipleChoicesInWordingAdaptation(MultipleChoicesInWordingAdaptationOptions, CreatedUpdatedByAtMixin):
-    exercise: Annotated[Exercise, Constant()]
-
+    adaptation: Adaptation = NullAdaptation(kind="null")
 
 class ParsedExercise(PydanticBase):
     number: Annotated[str, WriteOnly()]
@@ -166,16 +140,7 @@ class ParsedExercise(PydanticBase):
     example: Annotated[str, WriteOnly()]
     clue: Annotated[str, WriteOnly()]
     wording_paragraphs_per_pagelet: Annotated[int, WriteOnly()]
-    type: Annotated[str, WriteOnly()]
-    adaptation_options: Annotated[
-        (
-            SelectThingsAdaptationOptions
-            | FillWithFreeTextAdaptationOptions
-            | MultipleChoicesInInstructionsAdaptationOptions
-            | MultipleChoicesInWordingAdaptationOptions
-        ),
-        WriteOnly(),
-    ]
+    adaptation: Annotated[Adaptation, WriteOnly()] = pydantic.Field(discriminator="kind")
     adapted: Annotated[renderable.Exercise, Computed()]
     delta: Annotated[exercise_delta.Exercise, Computed()]
 

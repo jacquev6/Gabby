@@ -81,7 +81,7 @@ describe('Gabby', () => {
     cy.location('pathname').should('equal', '/project-xkopqm/textbook-klxufv/page-7')
     notBusy()
 
-    cy.intercept('GET', '/api/exercises/pghtfo?include=adaptation').as('getExercise')
+    cy.intercept('GET', '/api/exercises/pghtfo').as('getExercise')
 
     visit('/project-xkopqm/textbook-klxufv/page-7/exercise-pghtfo', {wysiwyg: false, pdf: 'test'})
 

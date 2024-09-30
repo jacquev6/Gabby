@@ -2,7 +2,7 @@ from alembic import op
 import sqlalchemy as sa
 from sqlalchemy import orm
 
-from gabby.adaptations.select_things import SelectThingsAdaptation
+from gabby.old_adaptations.select_things import SelectThingsAdaptation
 
 
 revision = "466912d2351b"
