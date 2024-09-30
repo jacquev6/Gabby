@@ -10,6 +10,7 @@ import type { Data } from './types'
 const data = JSON.parse('{{ data }}') as Data
 
 const settings = {
+  centeredInstructions: true,
   tricolorWording: true,
 }
 

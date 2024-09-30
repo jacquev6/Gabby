@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { watch } from 'vue'
+import { computed, watch } from 'vue'
 
 import type { Paragraph } from '$adapted/types'
 import MultipleChoicesInput from './MultipleChoicesInput.vue'
@@ -8,10 +8,13 @@ import SelectedText from './SelectedText.vue'
 import FreeTextInput from './FreeTextInput.vue'
 
 
-defineProps<{
-  paragraphs: Paragraph[],
-  paragraphIndexOffset: number,
-}>()
+const props = withDefaults(defineProps<{
+  paragraphs: Paragraph[]
+  paragraphIndexOffset: number
+  centered?: boolean
+}>(), {
+  centered: false,
+})
 
 const models = defineModel<Record<string, any/* @todo Type */>>({
   required: true,
@@ -22,10 +25,14 @@ const emit = defineEmits<{
 }>()
 
 watch(models, () => emit('layoutChanged'), { deep: true })
+
+const style = computed(() => ({
+  textAlign: props.centered ? 'center' : 'left',
+}))
 </script>
 
 <template>
-  <p v-for="(paragraph, paragraphIndex) in paragraphs">
+  <p :style v-for="(paragraph, paragraphIndex) in paragraphs">
     <template v-for="(sentence, sentenceIndex) in paragraph.sentences">
       <template v-for="(token, tokenIndex) in sentence.tokens">
         <template v-for="modelKey in [`${paragraphIndex + paragraphIndexOffset}-${sentenceIndex}-${tokenIndex}`]">

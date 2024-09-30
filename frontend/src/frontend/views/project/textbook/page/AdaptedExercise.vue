@@ -13,6 +13,7 @@ const props = defineProps<{
 }>()
 
 const settings = {
+  centeredInstructions: true,
   tricolorWording: true,
 }
 

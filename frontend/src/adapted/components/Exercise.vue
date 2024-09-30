@@ -137,9 +137,9 @@ defineExpose({
 
 <template>
   <div :id="id" style="position: relative">
-    <MonocolorSection :paragraphs="exercise.instructions.paragraphs" :paragraphIndexOffset="0" v-model="models.instructions" />
-    <MonocolorSection :paragraphs="exercise.example.paragraphs" :paragraphIndexOffset="0" v-model="models.example" />
-    <MonocolorSection :paragraphs="exercise.clue.paragraphs" :paragraphIndexOffset="0" v-model="models.clue" />
+    <MonocolorSection :paragraphs="exercise.instructions.paragraphs" :paragraphIndexOffset="0" :centered="settings.centeredInstructions" v-model="models.instructions" />
+    <MonocolorSection :paragraphs="exercise.example.paragraphs" :paragraphIndexOffset="0" :centered="settings.centeredInstructions" v-model="models.example" />
+    <MonocolorSection :paragraphs="exercise.clue.paragraphs" :paragraphIndexOffset="0" :centered="settings.centeredInstructions" v-model="models.clue" />
     <hr />
     <TricolorSection v-if="settings.tricolorWording" :paragraphs="wordingParagraphs" :paragraphIndexOffset="wordingParagraphIndexOffset" v-model="models.wording" />
     <MonocolorSection v-else :paragraphs="wordingParagraphs" :paragraphIndexOffset="wordingParagraphIndexOffset" v-model="models.wording" />
