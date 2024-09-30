@@ -3,8 +3,7 @@ import { ref, computed } from 'vue'
 
 import { BButton } from '$frontend/components/opinion/bootstrap'
 import type { Data, Settings } from '$adapted/types'
-import Exercise from '$adapted/components/Exercise.vue'
-import { useExercisePagelets } from '$adapted/composables/exercisePagelets'
+import Exercise, { useExercisePagelets } from '$adapted/components/Exercise.vue'
 
 
 const props = defineProps<{

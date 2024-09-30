@@ -3,8 +3,7 @@ import { ref, computed, watch } from 'vue'
 
 import type { Exercise } from '$adapted/types'
 import { BButton } from '$frontend/components/opinion/bootstrap'
-import ExerciseComponent from '$adapted/components/Exercise.vue'
-import { useExercisePagelets } from '$/adapted/composables/exercisePagelets'
+import ExerciseComponent, { useExercisePagelets } from '$adapted/components/Exercise.vue'
 
 
 const props = defineProps<{

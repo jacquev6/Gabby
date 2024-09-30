@@ -1,5 +1,43 @@
+<script lang="ts">
+import { computed, type Ref } from 'vue'
+
+
+export function useExercisePagelets(
+  paragraphsCountPerPagelet: Ref<number>,
+  totalParagraphsCount: Ref<number>,
+  pageletIndex: Ref<number>,
+) {
+  const degenerate = computed(() => totalParagraphsCount.value === 0)
+
+  return {
+    firstWordingParagraph: computed(() => {
+      if (degenerate.value) {
+        return null
+      } else {
+        return pageletIndex.value * paragraphsCountPerPagelet.value!
+      }
+    }),
+    lastWordingParagraph: computed(() => {
+      if (degenerate.value) {
+        return null
+      } else {
+        return (pageletIndex.value + 1) * paragraphsCountPerPagelet.value!
+      }
+    }),
+    pageletsCount: computed(() => {
+      if (degenerate.value) {
+        return 1
+      } else {
+        console.assert(paragraphsCountPerPagelet.value! > 0)
+        return Math.ceil(totalParagraphsCount.value / paragraphsCountPerPagelet.value!)
+      }
+    })
+  }
+}
+</script>
+
 <script setup lang="ts">
-import { computed, reactive, watch } from 'vue'
+import { reactive, watch } from 'vue'
 import { provide } from 'vue'
 
 import type { Settings, Exercise } from '$adapted/types'
