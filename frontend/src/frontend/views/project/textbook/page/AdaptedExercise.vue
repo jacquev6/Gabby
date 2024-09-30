@@ -48,6 +48,7 @@ const exerciseComponent = ref<InstanceType<typeof ExerciseComponent> | null>(nul
         :settings
         :isPreview="true"
       />
+      <div style="height: 10em"></div>
     </PageletsNavigationControls>
   </div>
   <p>

@@ -18,8 +18,8 @@ function makeSentence(prefix: string, length=26) {
   return {tokens}
 }
 
-const color1 = 'rgb(255, 0, 0)'
-const color2 = 'rgb(0, 0, 255)'
+const color1 = 'rgb(0, 0, 255)'
+const color2 = 'rgb(255, 0, 0)'
 const color3 = 'rgb(0, 204, 0)'
 
 const props = {
@@ -40,16 +40,17 @@ describe('TricolorSection', () => {
     // @ts-ignore// Work around Cypress typing limitations
     cy.mount(TricolorSection, mountOptions)
 
-    cy.viewport(990, 1200)
+    cy.viewport(1152, 1200)
 
     cy.get('span:contains("AA")').last().should('have.css', 'color', color1)
-    cy.get('span:contains("AT")').last().should('have.css', 'color', color1)
-    cy.get('span:contains("AU")').last().should('have.css', 'color', color2)
-    cy.get('span:contains("BM")').last().should('have.css', 'color', color2)
-    cy.get('span:contains("BN")').last().should('have.css', 'color', color3)
-    cy.get('span:contains("CF")').last().should('have.css', 'color', color3)
-    cy.get('span:contains("CG")').last().should('have.css', 'color', color1)
-    cy.get('span:contains("CY")').last().should('have.css', 'color', color1)
+    cy.get('span:contains("AS")').last().should('have.css', 'color', color1)
+    cy.get('span:contains("AT")').last().should('have.css', 'color', color2)
+    cy.get('span:contains("BL")').last().should('have.css', 'color', color2)
+    cy.get('span:contains("BM")').last().should('have.css', 'color', color3)
+    cy.get('span:contains("CE")').last().should('have.css', 'color', color3)
+    cy.get('span:contains("CF")').last().should('have.css', 'color', color1)
+    cy.get('span:contains("CX")').last().should('have.css', 'color', color1)
+    cy.get('span:contains("CY")').last().should('have.css', 'color', color2)
     cy.get('span:contains("CZ")').last().should('have.css', 'color', color2)
 
     cy.get('span:contains("DA")').last().should('have.css', 'color', color3)
@@ -66,7 +67,16 @@ describe('TricolorSection', () => {
     // @ts-ignore// Work around Cypress typing limitations
     cy.mount(TricolorSection, mountOptions)
 
-    cy.viewport(780, 1400)
+    cy.viewport(700, 1400)
+
+    cy.get('span:contains("AA")').last().should('have.css', 'color', color1)
+    cy.get('span:contains("AL")').last().should('have.css', 'color', color1)
+    cy.get('span:contains("AM")').last().should('have.css', 'color', color2)
+    cy.get('span:contains("AW")').last().should('have.css', 'color', color2)
+    cy.get('span:contains("AX")').last().should('have.css', 'color', color3)
+    cy.get('span:contains("BI")').last().should('have.css', 'color', color3)
+
+    cy.viewport(880, 1400)
 
     cy.get('span:contains("AA")').last().should('have.css', 'color', color1)
     cy.get('span:contains("AO")').last().should('have.css', 'color', color1)
@@ -80,7 +90,7 @@ describe('TricolorSection', () => {
   it('reacts to text changes', () => {
     // @ts-ignore// Work around Cypress typing limitations
     cy.mount(TricolorSection, mountOptions)
-    cy.viewport(995, 600)
+    cy.viewport(1140, 600)
 
     cy.vue().then((w) => w.setProps({paragraphs: [{sentences: [
       makeSentence('A', 10),
@@ -106,7 +116,7 @@ describe('TricolorSection', () => {
   })
 
   it('keeps full stop with last word', () => {
-    const width = 491
+    const width = 566
     cy.viewport(width, 600)
     
     cy.mount(

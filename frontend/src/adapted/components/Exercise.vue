@@ -38,7 +38,6 @@ export function useExercisePagelets(
 
 <script setup lang="ts">
 import { reactive, watch } from 'vue'
-import { provide } from 'vue'
 
 import type { Settings, Exercise } from '$adapted/types'
 import TricolorSection from './TricolorSection.vue'
@@ -107,10 +106,6 @@ watch(
   {immediate: true},
 )
 
-const id = `adaptedExercise-${ Math.floor(Math.random() * 4000000000) }`
-
-provide('adaptedExerciseTeleportPoint', `#${id}`)
-
 const wordingParagraphs = computed(() => {
   if (props.firstWordingParagraph === null || props.lastWordingParagraph === null) {
     return props.exercise.wording.paragraphs
@@ -136,13 +131,13 @@ defineExpose({
 </script>
 
 <template>
-  <div :id="id" style="position: relative">
-    <MonocolorSection :paragraphs="exercise.instructions.paragraphs" :paragraphIndexOffset="0" :centered="settings.centeredInstructions" v-model="models.instructions" />
+  <div style="position: relative; font-family: Arial, sans-serif;">
+    <MonocolorSection :paragraphs="exercise.instructions.paragraphs" :paragraphIndexOffset="0" :centered="settings.centeredInstructions" :first="true" v-model="models.instructions" />
     <MonocolorSection :paragraphs="exercise.example.paragraphs" :paragraphIndexOffset="0" :centered="settings.centeredInstructions" v-model="models.example" />
     <MonocolorSection :paragraphs="exercise.clue.paragraphs" :paragraphIndexOffset="0" :centered="settings.centeredInstructions" v-model="models.clue" />
-    <hr />
-    <TricolorSection v-if="settings.tricolorWording" :paragraphs="wordingParagraphs" :paragraphIndexOffset="wordingParagraphIndexOffset" v-model="models.wording" />
-    <MonocolorSection v-else :paragraphs="wordingParagraphs" :paragraphIndexOffset="wordingParagraphIndexOffset" v-model="models.wording" />
-    <hr />
+    <div style="padding: 6px">
+      <TricolorSection v-if="settings.tricolorWording" :paragraphs="wordingParagraphs" :paragraphIndexOffset="wordingParagraphIndexOffset" v-model="models.wording" />
+      <MonocolorSection v-else :paragraphs="wordingParagraphs" :paragraphIndexOffset="wordingParagraphIndexOffset" v-model="models.wording" />
+    </div>
   </div>
 </template>

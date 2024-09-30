@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-
-
 defineProps<{
   pageletsCount: number,
 }>()
@@ -13,7 +10,7 @@ const model = defineModel<number>({required: true})
 <template>
   <div class="root">
     <div class="control" :class="{disabled: model === 0}" @click="model = Math.max(0, model - 1)"><div class="arrow arrowLeft"><div>🡸</div></div></div>
-    <div><slot></slot></div>
+    <div style="overflow-x: hidden;"><slot></slot></div>
     <div class="control" :class="{disabled: model === pageletsCount - 1}" @click="model = Math.min(pageletsCount - 1, model + 1)"><div class="arrow arrowRight"><div :style="model === 0 ? {} : {}">🡺</div></div></div>
   </div>
 </template>
