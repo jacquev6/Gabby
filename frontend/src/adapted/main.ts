@@ -5,6 +5,7 @@ import { i18n } from '$/locales'
 import ExerciseView from './views/ExerciseView.vue'
 import IndexView from './views/IndexView.vue'
 import type { Data } from './types'
+import './main.css'
 
 
 const data = JSON.parse('{{ data }}') as Data

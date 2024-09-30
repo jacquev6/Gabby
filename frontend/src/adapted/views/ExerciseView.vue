@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
 
-import { BButton } from '$frontend/components/opinion/bootstrap'
 import type { Data, Settings } from '$adapted/types'
 import Exercise, { useExercisePagelets } from '$adapted/components/Exercise.vue'
+import PageletsNavigationControls from '$adapted/components/PageletsNavigationControls.vue'
 
 
 const props = defineProps<{
@@ -12,6 +13,8 @@ const props = defineProps<{
   exerciseId: string,
   pageletIndex: number,
 }>()
+
+const router = useRouter()
 
 const exercise = computed(() => {
   return props.data.exercises[props.exerciseId]
@@ -24,38 +27,24 @@ const { firstWordingParagraph, lastWordingParagraph, pageletsCount } = useExerci
 )
 
 const exerciseComponent = ref<InstanceType<typeof Exercise> | null>(null)
+
+function changePagelet(newPageletIndex: number) {
+  if (newPageletIndex >= 0 && newPageletIndex < pageletsCount.value) {
+    router.push({name: 'exercise', params: {exerciseId: props.exerciseId, pageletIndex: newPageletIndex.toString()}})
+  }
+}
 </script>
 
 <template>
-  <Exercise
-    ref="exerciseComponent"
-    :projectId="data.projectId"
-    :exerciseId
-    :exercise
-    :firstWordingParagraph
-    :lastWordingParagraph
-    :settings
-  />
-  <p>
-    <template v-if="pageletsCount !== 1">
-      <RouterLink custom :to="{name: 'exercise', params: {pageletIndex: pageletIndex - 1}}" v-slot="{ navigate }">
-        <BButton secondary sm @click="navigate" :disabled="pageletIndex === 0">&lt;&lt;</BButton>
-      </RouterLink>
-      <span>{{ pageletIndex + 1 }} / {{ pageletsCount }}</span>
-      <RouterLink custom :to="{name: 'exercise', params: {pageletIndex: pageletIndex + 1}}" v-slot="{ navigate }">
-        <BButton secondary sm @click="navigate" :disabled="pageletIndex === pageletsCount - 1">&gt;&gt;</BButton>
-      </RouterLink>
-    </template>
-    <RouterLink custom :to="{name: 'index'}" v-slot="{ navigate }">
-      <BButton secondary sm @click="navigate">{{ $t('back') }}</BButton>
-    </RouterLink>
-    <BButton
-      data-cy="erase-responses"
-      secondary sm
-      @click="exerciseComponent?.reinitModels"
-      :disabled="exerciseComponent?.disabledReinitModels"
-    >
-      {{ $t('eraseAnswers') }}
-    </BButton>
-  </p>
+  <PageletsNavigationControls :pageletsCount :modelValue="pageletIndex" @update:modelValue="changePagelet">
+    <Exercise
+      ref="exerciseComponent"
+      :projectId="data.projectId"
+      :exerciseId
+      :exercise
+      :firstWordingParagraph
+      :lastWordingParagraph
+      :settings
+    />
+  </PageletsNavigationControls>
 </template>
