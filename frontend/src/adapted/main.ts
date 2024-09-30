@@ -1,11 +1,19 @@
 import { createApp } from 'vue'
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHashHistory, RouterView } from 'vue-router'
+import 'bootstrap/dist/css/bootstrap-reboot.min.css'
 
 import { i18n } from '$/locales'
 import ExerciseView from './views/ExerciseView.vue'
 import IndexView from './views/IndexView.vue'
-import RootLayout from './RootLayout.vue'
+import type { Data } from './types'
 
+
+const data = JSON.parse('{{ data }}') as Data
+
+const settings = {
+  centeredInstructions: true,
+  tricolorWording: true,
+}
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -14,6 +22,7 @@ const router = createRouter({
       path: '/',
       name: 'index',
       component: IndexView,
+      props: () => ({ data, settings }),
     },
     {
       path: '/exercise-:exerciseId/:pageletIndex',
@@ -22,6 +31,8 @@ const router = createRouter({
       props: (route) => {
         console.assert(typeof(route.params.pageletIndex) === 'string')
         return {
+          data,
+          settings,
           exerciseId: route.params.exerciseId,
           pageletIndex: Number.parseInt(route.params.pageletIndex, 10),
         }
@@ -30,7 +41,7 @@ const router = createRouter({
   ],
 })
 
-createApp(RootLayout)
+createApp(RouterView)
   .use(i18n)
   .use(router)
   .mount('#app')

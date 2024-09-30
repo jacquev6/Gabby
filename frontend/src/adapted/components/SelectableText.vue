@@ -27,7 +27,7 @@ span {
 }
 
 span:hover {
-  outline: rgb(238, 238, 238) dotted 3px;
+  outline: 3px dotted #EEE;
 }
 
 span.boxed_ {

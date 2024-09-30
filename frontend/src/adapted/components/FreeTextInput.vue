@@ -32,7 +32,7 @@ function forbidNewlines(event: KeyboardEvent) {
 </script>
 
 <template>
-  <span ref="span" contenteditable @input="updateModel" @keypress="forbidNewlines"></span>
+  <span ref="span" :class="{empty: model === '' || model === undefined}" contenteditable @input="updateModel" @keypress="forbidNewlines"></span>
 </template>
 
 <style scoped>
@@ -40,7 +40,16 @@ function forbidNewlines(event: KeyboardEvent) {
 
 span {
   line-height: 1em;  /* Fix caret position on Chrome */
-  padding: 0 1ch;
-  border: 2px solid #555;
+  padding: 4px;
+  border: 2px outset black;
+}
+
+.empty {
+  padding-left: 1ch;
+  padding-right: 1ch;
+}
+
+span:hover {
+  background-color: #FFFDD4;
 }
 </style>

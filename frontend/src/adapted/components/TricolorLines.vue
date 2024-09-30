@@ -11,7 +11,7 @@ onMounted(recolor)
 onUpdated(recolor)
 
 /* Colors provided by client */
-const colors = ['#F00', '#00F', '#0C0']
+const colors = ['#00F', '#F00', '#0C0']
 
 function recolor() {
   if (container.value !== null) {
