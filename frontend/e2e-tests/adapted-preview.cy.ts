@@ -16,18 +16,18 @@ describe('Gabby', () => {
 
     cy.get('span[contenteditable]').first().type('Abcd')
 
-    cy.get('label:contains("Adaptation type")').next().select('selectThingsAdaptation')
+    cy.get('label:contains("Adaptation type")').next().select('select-things')
     notBusy()
 
     cy.get('span:contains("tracter")').eq(1).click()
     cy.get('span:contains("tracter")').eq(1).should('have.css', 'background-color', 'rgb(255, 255, 0)')
 
-    cy.get('label:contains("Adaptation type")').next().select('fillWithFreeTextAdaptation')
+    cy.get('label:contains("Adaptation type")').next().select('fill-with-free-text')
     notBusy()
 
     cy.get('span[contenteditable]').first().should('have.value', '')
 
-    cy.get('label:contains("Adaptation type")').next().select('selectThingsAdaptation')
+    cy.get('label:contains("Adaptation type")').next().select('select-things')
     notBusy()
 
     cy.get('span:contains("tracter")').eq(1).should('have.css', 'background-color', 'rgba(0, 0, 0, 0)')

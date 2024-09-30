@@ -66,7 +66,7 @@ describe('Gabby', () => {
     cy.get('p:contains("Clue")').click()
     cy.focused().type('The clue')
 
-    cy.get('label:contains("Adaptation type")').next().select('selectThingsAdaptation')
+    cy.get('label:contains("Adaptation type")').next().select('select-things')
     cy.get('label:contains("Number of colors")').next().type('{selectAll}2')
 
     cy.get('span:contains("artificial")').last().click()

@@ -74,7 +74,7 @@ describe('Gabby', () => {
     cy.get('@clueHeader').click()
     cy.get('@clue').type('X')
 
-    for (const adaptationType of ['-', 'selectThingsAdaptation', 'fillWithFreeTextAdaptation', 'multipleChoicesInInstructionsAdaptation']) {
+    for (const adaptationType of ['-', 'select-things', 'fill-with-free-text', 'multiple-choices-in-instructions']) {
       cy.get('@adaptationType').select(adaptationType)
 
       for (const fieldAlias of ['@instructions', '@wording', '@example', '@clue']) {
@@ -114,7 +114,7 @@ describe('Gabby', () => {
     visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
     setAliases()
     cy.get('@number').type('test')
-    cy.get('@adaptationType').select('multipleChoicesInInstructionsAdaptation')
+    cy.get('@adaptationType').select('multiple-choices-in-instructions')
 
     cy.get('button[data-cy="format-choice"]').should('be.disabled')
 
@@ -143,7 +143,7 @@ describe('Gabby', () => {
     visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
     setAliases()
     cy.get('@number').type('test')
-    cy.get('@adaptationType').select('selectThingsAdaptation')
+    cy.get('@adaptationType').select('select-things')
     cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="2"]').click()
 
     cy.get('button[data-cy="format-color-1"]').as("button1").should('be.disabled')
@@ -219,7 +219,7 @@ describe('Gabby', () => {
     visit('/project-xkopqm/textbook-klxufv/page-7/exercise-jkrudc', {wysiwyg: false})
 
     cy.get('label:contains("Instructions")').next().type('{selectall}Réponds par {{}choice|vrai} ou {{}choice|faux}.', {delay: 0})
-    cy.get('label:contains("Adaptation type")').next().select('multipleChoicesInInstructionsAdaptation')
+    cy.get('label:contains("Adaptation type")').next().select('multiple-choices-in-instructions')
     notBusy()
 
     cy.get('span:contains("WYSIWYG") input').check()
@@ -231,7 +231,7 @@ describe('Gabby', () => {
     visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
 
     cy.get('label:contains("Number")').next().type('6')
-    cy.get('label:contains("Adaptation type")').next().select('multipleChoicesInInstructionsAdaptation')
+    cy.get('label:contains("Adaptation type")').next().select('multiple-choices-in-instructions')
     cy.get('label:contains("Instructions") + .ql-container .ql-editor').as('instructions')
     cy.get('@instructions').click().type('Choix : ')
     cy.get('button[data-cy="format-choice"]').click()

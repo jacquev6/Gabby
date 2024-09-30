@@ -1,13 +1,8 @@
 from fastapi import HTTPException
 from starlette import status
 
-from .adaptations.fill_with_free_text import FillWithFreeTextAdaptation, FillWithFreeTextAdaptationsResource
-from .adaptations.items_and_effects__attempt_1 import ItemsAndEffectsAttempt1Adaptation, ItemsAndEffectsAttempt1AdaptationsResource
-from .adaptations.multiple_choices_in_instructions import MultipleChoicesInInstructionsAdaptation, MultipleChoicesInInstructionsAdaptationsResource
-from .adaptations.multiple_choices_in_wording import MultipleChoicesInWordingAdaptation, MultipleChoicesInWordingAdaptationsResource
-from .adaptations.select_things import SelectThingsAdaptation, SelectThingsAdaptationsResource
 from .parsed_exercises import ParsedExercisesResource
-from .api_models import PdfRectangle, Point, SyntheticError
+from .api_models import PdfRectangle, Point, SyntheticError, FillWithFreeTextAdaptation
 from .exercises import Exercise, ExercisesResource
 from .pdfs import PdfFile, PdfFileNaming, PdfFilesResource, PdfFileNamingsResource
 from .pings import PingsResource
@@ -16,7 +11,6 @@ from .testing import ApiTestCase, LoggedInApiTestCase
 from .textbooks import Textbook, Section, TextbooksResource, SectionsResource
 from .users import UsersResource
 from .users.recovery import RecoveryEmailRequestsResource
-from .wrapping import get_wrapper
 
 
 class SyntheticErrorsResource:
@@ -41,22 +35,12 @@ resources = [
     TextbooksResource(),
     SectionsResource(),
     ExercisesResource(),
-    SelectThingsAdaptationsResource(),
-    FillWithFreeTextAdaptationsResource(),
-    ItemsAndEffectsAttempt1AdaptationsResource(),
-    MultipleChoicesInInstructionsAdaptationsResource(),
-    MultipleChoicesInWordingAdaptationsResource(),
     ParsedExercisesResource(),
     SyntheticErrorsResource(),
 ]
 
 
 polymorphism = {
-    get_wrapper(SelectThingsAdaptation): "select_things_adaptation",
-    get_wrapper(FillWithFreeTextAdaptation): "fill_with_free_text_adaptation",
-    get_wrapper(ItemsAndEffectsAttempt1Adaptation): "items_and_effects_attempt_1_adaptation",
-    get_wrapper(MultipleChoicesInInstructionsAdaptation): "multiple_choices_in_instructions_adaptation",
-    get_wrapper(MultipleChoicesInWordingAdaptation): "multiple_choices_in_wording_adaptation",
 }
 
 
@@ -467,13 +451,13 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                         "rectangles": [],
                         "instructions": "", "example": "", "clue": "", "wording": "",
                         "wordingParagraphsPerPagelet": 3,
+                        "adaptation": {"kind": "null"},
                         "createdAt": response.json()["included"][0]["attributes"]["createdAt"],
                         "updatedAt": response.json()["included"][0]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
                         "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
-                        "adaptation": {"data": None},
                         "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
                         "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
@@ -487,13 +471,13 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                         "rectangles": [],
                         "instructions": "", "example": "", "clue": "", "wording": "",
                         "wordingParagraphsPerPagelet": 3,
+                        "adaptation": {"kind": "null"},
                         "createdAt": response.json()["included"][1]["attributes"]["createdAt"],
                         "updatedAt": response.json()["included"][1]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
                         "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
-                        "adaptation": {"data": None},
                         "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
                         "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
@@ -676,13 +660,13 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                         "rectangles": [],
                         "instructions": "", "example": "", "clue": "", "wording": "",
                         "wordingParagraphsPerPagelet": 3,
+                        "adaptation": {"kind": "null"},
                         "createdAt": response.json()["included"][0]["attributes"]["createdAt"],
                         "updatedAt": response.json()["included"][0]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
                         "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
-                        "adaptation": {"data": None},
                         "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
                         "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
@@ -696,13 +680,13 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                         "rectangles": [],
                         "instructions": "", "example": "", "clue": "", "wording": "",
                         "wordingParagraphsPerPagelet": 3,
+                        "adaptation": {"kind": "null"},
                         "createdAt": response.json()["included"][1]["attributes"]["createdAt"],
                         "updatedAt": response.json()["included"][1]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
                         "textbook": {"data": {"type": "textbook", "id": "ojsbmy"}},
-                        "adaptation": {"data": None},
                         "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
                         "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
@@ -716,13 +700,13 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                         "rectangles": [],
                         "instructions": "", "example": "", "clue": "", "wording": "",
                         "wordingParagraphsPerPagelet": 3,
+                        "adaptation": {"kind": "null"},
                         "createdAt": response.json()["included"][2]["attributes"]["createdAt"],
                         "updatedAt": response.json()["included"][2]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
                         "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
-                        "adaptation": {"data": None},
                         "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
                         "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
@@ -780,13 +764,13 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                         "rectangles": [],
                         "instructions": "", "example": "", "clue": "", "wording": "",
                         "wordingParagraphsPerPagelet": 3,
+                        "adaptation": {"kind": "null"},
                         "createdAt": response.json()["included"][0]["attributes"]["createdAt"],
                         "updatedAt": response.json()["included"][0]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
                         "textbook": {"data": {"type": "textbook", "id": "pkdksv"}},
-                        "adaptation": {"data": None},
                         "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
                         "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
@@ -800,13 +784,13 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                         "rectangles": [],
                         "instructions": "", "example": "", "clue": "", "wording": "",
                         "wordingParagraphsPerPagelet": 3,
+                        "adaptation": {"kind": "null"},
                         "createdAt": response.json()["included"][1]["attributes"]["createdAt"],
                         "updatedAt": response.json()["included"][1]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
                         "textbook": {"data": {"type": "textbook", "id": "pkdksv"}},
-                        "adaptation": {"data": None},
                         "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
                         "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
@@ -820,13 +804,13 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                         "rectangles": [],
                         "instructions": "", "example": "", "clue": "", "wording": "",
                         "wordingParagraphsPerPagelet": 3,
+                        "adaptation": {"kind": "null"},
                         "createdAt": response.json()["included"][2]["attributes"]["createdAt"],
                         "updatedAt": response.json()["included"][2]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
                         "textbook": {"data": {"type": "textbook", "id": "pkdksv"}},
-                        "adaptation": {"data": None},
                         "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
                         "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
@@ -1017,13 +1001,13 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     "rectangles": [],
                     "instructions": "", "example": "", "clue": "", "wording": "",
                     "wordingParagraphsPerPagelet": 3,
+                    "adaptation": {"kind": "null"},
                     "createdAt": response.json()["data"]["attributes"]["createdAt"],
                     "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
                 },
                 "relationships": {
                     "project": {"data": {"type": "project", "id": "xkopqm"}},
                     "textbook": {"data": None},
-                    "adaptation": {"data": None},
                     "createdBy": {"data": {"type": "user", "id": "ckylfa"}},
                     "updatedBy": {"data": {"type": "user", "id": "ckylfa"}},
                 },
@@ -1068,13 +1052,13 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     "rectangles": [],
                     "instructions": "", "example": "", "clue": "", "wording": "",
                     "wordingParagraphsPerPagelet": 3,
+                    "adaptation": {"kind": "null"},
                     "createdAt": response.json()["data"]["attributes"]["createdAt"],
                     "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
                 },
                 "relationships": {
                     "project": {"data": {"type": "project", "id": "xkopqm"}},
                     "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
-                    "adaptation": {"data": None},
                     "createdBy": {"data": {"type": "user", "id": "ckylfa"}},
                     "updatedBy": {"data": {"type": "user", "id": "ckylfa"}},
                 },
@@ -1130,6 +1114,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     "textbookPage": 14, "number": "1",
                     "instructions": "instructions", "example": "example", "clue": "clue", "wording": "wording",
                     "wordingParagraphsPerPagelet": 2,
+                    "adaptation": {"kind": "null"},
                     "rectangles": [
                         {
                             "pdf_sha256": "sha256",  # @todo Rename to 'pdfSha256'
@@ -1147,7 +1132,6 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                 "relationships": {
                     "project": {"data": {"type": "project", "id": "xkopqm"}},
                     "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
-                    "adaptation": {"data": None},
                     "createdBy": {"data": {"type": "user", "id": "ckylfa"}},
                     "updatedBy": {"data": {"type": "user", "id": "ckylfa"}},
                 },
@@ -1205,13 +1189,13 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     "rectangles": [],
                     "instructions": "instructions", "example": "example", "clue": "clue", "wording": "wording",
                     "wordingParagraphsPerPagelet": 3,
+                    "adaptation": {"kind": "null"},
                     "createdAt": response.json()["data"]["attributes"]["createdAt"],
                     "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
                 },
                 "relationships": {
                     "project": {"data": {"type": "project", "id": "xkopqm"}},
                     "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
-                    "adaptation": {"data": None},
                     "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
                     "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                 },
@@ -1243,13 +1227,13 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     "rectangles": [],
                     "instructions": "instructions", "example": "example", "clue": "clue", "wording": "wording",
                     "wordingParagraphsPerPagelet": 3,
+                    "adaptation": {"kind": "null"},
                     "createdAt": response.json()["data"]["attributes"]["createdAt"],
                     "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
                 },
                 "relationships": {
                     "project": {"data": {"type": "project", "id": "xkopqm"}},
                     "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
-                    "adaptation": {"data": None},
                     "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
                     "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                 },
@@ -1276,7 +1260,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
             ],
         })
 
-    def test_get__include_adaptation(self):
+    def test_get__with_adaptation(self):
         exercise = self.create_model(
             Exercise,
             textbook=self.textbook,
@@ -1287,14 +1271,10 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
             example="example",
             clue="clue",
             wording="wording",
-        )
-        self.create_model(
-            FillWithFreeTextAdaptation,
-            exercise=exercise,
-            placeholder="...",
+            adaptation=FillWithFreeTextAdaptation(kind="fill-with-free-text", placeholder="..."),
         )
 
-        response = self.get("http://server/exercises/wbqloc?include=adaptation")
+        response = self.get("http://server/exercises/wbqloc")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         self.assertEqual(response.json(), {
             "data": {
@@ -1306,34 +1286,17 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     "rectangles": [],
                     "instructions": "instructions", "example": "example", "clue": "clue", "wording": "wording",
                     "wordingParagraphsPerPagelet": 3,
+                    "adaptation": {"kind": "fill-with-free-text", "placeholder": "..."},
                     "createdAt": response.json()["data"]["attributes"]["createdAt"],
                     "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
                 },
                 "relationships": {
                     "project": {"data": {"type": "project", "id": "xkopqm"}},
                     "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
-                    "adaptation": {"data": {"type": "fillWithFreeTextAdaptation", "id": "ljpupg"}},
                     "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
                     "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                 },
             },
-            "included": [
-                {
-                    "type": "fillWithFreeTextAdaptation",
-                    "id": "ljpupg",
-                    "links": {"self": "http://server/fillWithFreeTextAdaptations/ljpupg"},
-                    "attributes": {
-                        "createdAt": response.json()["included"][0]["attributes"]["createdAt"],
-                        "placeholder": "...",
-                        "updatedAt": response.json()["included"][0]["attributes"]["updatedAt"],
-                    },
-                    "relationships": {
-                        "exercise": {"data": {"id": "wbqloc", "type": "exercise"}},
-                        "createdBy": {"data": {"id": "fvirvd", "type": "user"}},
-                        "updatedBy": {"data": {"id": "fvirvd", "type": "user"}},
-                    },
-                },
-            ],
         })
 
     # @todo Add test_get__include_adaptation_exercise(self) with include=adaptation.exercise,
@@ -1359,13 +1322,13 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                         "rectangles": [],
                         "instructions": "", "example": "", "clue": "", "wording": "",
                         "wordingParagraphsPerPagelet": 3,
+                        "adaptation": {"kind": "null"},
                         "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
                         "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
                         "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
-                        "adaptation": {"data": None},
                         "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
                         "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
@@ -1379,13 +1342,13 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                         "rectangles": [],
                         "instructions": "", "example": "", "clue": "", "wording": "",
                         "wordingParagraphsPerPagelet": 3,
+                        "adaptation": {"kind": "null"},
                         "createdAt": response.json()["data"][1]["attributes"]["createdAt"],
                         "updatedAt": response.json()["data"][1]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
                         "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
-                        "adaptation": {"data": None},
                         "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
                         "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
@@ -1413,13 +1376,13 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                         "rectangles": [],
                         "instructions": "", "example": "", "clue": "", "wording": "",
                         "wordingParagraphsPerPagelet": 3,
+                        "adaptation": {"kind": "null"},
                         "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
                         "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
                         "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
-                        "adaptation": {"data": None},
                         "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
                         "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
@@ -1454,13 +1417,13 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                         "rectangles": [],
                         "instructions": "", "example": "", "clue": "", "wording": "",
                         "wordingParagraphsPerPagelet": 3,
+                        "adaptation": {"kind": "null"},
                         "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
                         "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
                         "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
-                        "adaptation": {"data": None},
                         "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
                         "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
@@ -1474,13 +1437,13 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                         "rectangles": [],
                         "instructions": "", "example": "", "clue": "", "wording": "",
                         "wordingParagraphsPerPagelet": 3,
+                        "adaptation": {"kind": "null"},
                         "createdAt": response.json()["data"][1]["attributes"]["createdAt"],
                         "updatedAt": response.json()["data"][1]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
                         "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
-                        "adaptation": {"data": None},
                         "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
                         "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
@@ -1508,13 +1471,13 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                         "rectangles": [],
                         "instructions": "", "example": "", "clue": "", "wording": "",
                         "wordingParagraphsPerPagelet": 3,
+                        "adaptation": {"kind": "null"},
                         "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
                         "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
                         "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
-                        "adaptation": {"data": None},
                         "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
                         "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
@@ -1551,13 +1514,13 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                         "rectangles": [],
                         "instructions": "", "example": "", "clue": "", "wording": "",
                         "wordingParagraphsPerPagelet": 3,
+                        "adaptation": {"kind": "null"},
                         "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
                         "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
                         "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
-                        "adaptation": {"data": None},
                         "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
                         "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
@@ -1571,13 +1534,13 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                         "rectangles": [],
                         "instructions": "", "example": "", "clue": "", "wording": "",
                         "wordingParagraphsPerPagelet": 3,
+                        "adaptation": {"kind": "null"},
                         "createdAt": response.json()["data"][1]["attributes"]["createdAt"],
                         "updatedAt": response.json()["data"][1]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
                         "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
-                        "adaptation": {"data": None},
                         "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
                         "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
@@ -1632,13 +1595,13 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                         "rectangles": [],
                         "instructions": "", "example": "", "clue": "", "wording": "",
                         "wordingParagraphsPerPagelet": 3,
+                        "adaptation": {"kind": "null"},
                         "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
                         "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
                         "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
-                        "adaptation": {"data": None},
                         "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
                         "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
@@ -1652,13 +1615,13 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                         "rectangles": [],
                         "instructions": "", "example": "", "clue": "", "wording": "",
                         "wordingParagraphsPerPagelet": 3,
+                        "adaptation": {"kind": "null"},
                         "createdAt": response.json()["data"][1]["attributes"]["createdAt"],
                         "updatedAt": response.json()["data"][1]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
                         "textbook": {"data": {"type": "textbook", "id": "ojsbmy"}},
-                        "adaptation": {"data": None},
                         "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
                         "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
@@ -1745,13 +1708,13 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                         "rectangles": [],
                         "instructions": "", "example": "", "clue": "", "wording": "",
                         "wordingParagraphsPerPagelet": 3,
+                        "adaptation": {"kind": "null"},
                         "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
                         "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
                         "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
-                        "adaptation": {"data": None},
                         "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
                         "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
@@ -1765,13 +1728,13 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                         "rectangles": [],
                         "instructions": "", "example": "", "clue": "", "wording": "",
                         "wordingParagraphsPerPagelet": 3,
+                        "adaptation": {"kind": "null"},
                         "createdAt": response.json()["data"][1]["attributes"]["createdAt"],
                         "updatedAt": response.json()["data"][1]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
                         "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
-                        "adaptation": {"data": None},
                         "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
                         "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
@@ -1799,13 +1762,13 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                         "rectangles": [],
                         "instructions": "", "example": "", "clue": "", "wording": "",
                         "wordingParagraphsPerPagelet": 3,
+                        "adaptation": {"kind": "null"},
                         "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
                         "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
                         "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
-                        "adaptation": {"data": None},
                         "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
                         "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
                     },
@@ -1906,6 +1869,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     "textbookPage": 16, "number": "11",
                     "instructions": "INSTRUCTIONS", "example": "EXAMPLE", "clue": "CLUE", "wording": "WORDING",
                     "wordingParagraphsPerPagelet": 3,
+                    "adaptation": {"kind": "null"},
                     "createdAt": response.json()["data"]["attributes"]["createdAt"],
                     "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
                     "rectangles": [
@@ -1932,7 +1896,6 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                 "relationships": {
                     "project": {"data": {"type": "project", "id": "xkopqm"}},
                     "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
-                    "adaptation": {"data": None},
                     "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
                     "updatedBy": {"data": {"type": "user", "id": "ckylfa"}},
                 },
@@ -2008,13 +1971,13 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     "rectangles": [],
                     "instructions": "INSTRUCTIONS", "example": "example", "clue": "clue", "wording": "wording",
                     "wordingParagraphsPerPagelet": 3,
+                    "adaptation": {"kind": "null"},
                     "createdAt": response.json()["data"]["attributes"]["createdAt"],
                     "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
                 },
                 "relationships": {
                     "project": {"data": {"type": "project", "id": "xkopqm"}},
                     "textbook": {"data": {"type": "textbook", "id": "klxufv"}},
-                    "adaptation": {"data": None},
                     "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
                     "updatedBy": {"data": {"type": "user", "id": "ckylfa"}},
                 },
@@ -2215,220 +2178,6 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
         self.assertEqual(response.content, b"")
 
         self.assertEqual(self.count_models(Exercise), 0)
-
-
-class AdaptationsApiTestCase(LoggedInApiTestCase):
-    resources = resources
-    polymorphism = polymorphism
-
-    def setUp(self):
-        super().setUp()
-        self.project = self.create_model(Project, title="The project", description="Description")
-        self.exercise = self.create_model(Exercise, project=self.project, number="Exercise", textbook=None, textbook_page=None, instructions="", wording="", example="", clue="")
-
-    def test_create_select_things_adaptation(self):
-        payload = {
-            "data": {
-                "type": "selectThingsAdaptation",
-                "attributes": {
-                    "colors": ["red", "green", "blue"],
-                    "words": True,
-                    "punctuation": True,
-                },
-                "relationships": {
-                    "exercise": {"data": {"type": "exercise", "id": "wbqloc"}},
-                },
-            },
-        }
-        response = self.post("http://server/selectThingsAdaptations", payload)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
-        self.assertEqual(response.json(), {
-            "data": {
-                "type": "selectThingsAdaptation",
-                "id": "ugrfkh",
-                "links": {"self": "http://server/selectThingsAdaptations/ugrfkh"},
-                "attributes": {
-                    "colors": ["red", "green", "blue"],
-                    "words": True,
-                    "punctuation": True,
-                    "createdAt": response.json()["data"]["attributes"]["createdAt"],
-                    "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
-                },
-                "relationships": {
-                    "exercise": {"data": {"type": "exercise", "id": "wbqloc"}},
-                    "createdBy": {"data": {"type": "user", "id": "ckylfa"}},
-                    "updatedBy": {"data": {"type": "user", "id": "ckylfa"}},
-                },
-            },
-        })
-
-        exercise = self.get_model(Exercise, 1)
-        self.assertIsInstance(exercise.adaptation, SelectThingsAdaptation)
-        self.assertEqual(exercise.adaptation.colors, ["red", "green", "blue"])
-        self.assertTrue(exercise.adaptation.words)
-        self.assertTrue(exercise.adaptation.punctuation)
-
-    def test_create_fill_with_free_text_adaptation(self):
-        payload = {
-            "data": {
-                "type": "fillWithFreeTextAdaptation",
-                "attributes": {
-                    "placeholder": "...",
-                },
-                "relationships": {
-                    "exercise": {"data": {"type": "exercise", "id": "wbqloc"}},
-                },
-            },
-        }
-        response = self.post("http://server/fillWithFreeTextAdaptations", payload)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
-        self.assertEqual(response.json(), {
-            "data": {
-                "type": "fillWithFreeTextAdaptation",
-                "id": "ljpupg",
-                "links": {"self": "http://server/fillWithFreeTextAdaptations/ljpupg"},
-                "attributes": {
-                    "placeholder": "...",
-                    "createdAt": response.json()["data"]["attributes"]["createdAt"],
-                    "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
-                },
-                "relationships": {
-                    "exercise": {"data": {"type": "exercise", "id": "wbqloc"}},
-                    "createdBy": {"data": {"type": "user", "id": "ckylfa"}},
-                    "updatedBy": {"data": {"type": "user", "id": "ckylfa"}},
-                },
-            },
-        })
-
-        exercise = self.get_model(Exercise, 1)
-        self.assertIsInstance(exercise.adaptation, FillWithFreeTextAdaptation)
-        self.assertEqual(exercise.adaptation.placeholder, "...")
-
-    def test_dont_update_adaptation(self):
-        self.exercise.adaptation = self.create_model(SelectThingsAdaptation, old_colors_count=3, colors=["red", "green", "blue"], words=True, punctuation=True)
-        self._TransactionTestCase__session.commit()
-
-        payload = {
-            "data": {
-                "type": "exercise",
-                "id": "wbqloc",
-                "attributes": {
-                    "instructions": "INSTRUCTIONS",
-                },
-            },
-        }
-        response = self.patch("http://server/exercises/wbqloc", payload)
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
-        self.assertEqual(response.json(), {
-            "data": {
-                "type": "exercise",
-                "id": "wbqloc",
-                "links": {"self": "http://server/exercises/wbqloc"},
-                "attributes": {
-                    "textbookPage": None, "number": "Exercise",
-                    "rectangles": [],
-                    "instructions": "INSTRUCTIONS", "example": "", "clue": "", "wording": "",
-                    "wordingParagraphsPerPagelet": 3,
-                    "createdAt": response.json()["data"]["attributes"]["createdAt"],
-                    "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
-                },
-                "relationships": {
-                    "project": {"data": {"type": "project", "id": "xkopqm"}},
-                    "textbook": {"data": None},
-                    "adaptation": {"data": {"type": "selectThingsAdaptation", "id": "ugrfkh"}},
-                    "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
-                    "updatedBy": {"data": {"type": "user", "id": "ckylfa"}},
-                },
-            },
-        })
-
-        self.assertEqual(self.count_models(SelectThingsAdaptation), 1)
-        exercise = self.get_model(Exercise, 1)
-        self.assertEqual(exercise.adaptation, self.get_model(SelectThingsAdaptation, 1))
-
-    def test_update_adaptation__none(self):
-        self.exercise.adaptation = self.create_model(SelectThingsAdaptation, old_colors_count=3, colors=["red", "green", "blue"], words=True, punctuation=True)
-        self._TransactionTestCase__session.commit()
-
-        payload = {
-            "data": {
-                "type": "exercise",
-                "id": "wbqloc",
-                "relationships": {
-                    "adaptation": {"data": None},
-                },
-            },
-        }
-        response = self.patch("http://server/exercises/wbqloc", payload)
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
-        self.assertEqual(response.json(), {
-            "data": {
-                "type": "exercise",
-                "id": "wbqloc",
-                "links": {"self": "http://server/exercises/wbqloc"},
-                "attributes": {
-                    "textbookPage": None, "number": "Exercise",
-                    "rectangles": [],
-                    "instructions": "", "example": "", "clue": "", "wording": "",
-                    "wordingParagraphsPerPagelet": 3,
-                    "createdAt": response.json()["data"]["attributes"]["createdAt"],
-                    "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
-                },
-                "relationships": {
-                    "project": {"data": {"type": "project", "id": "xkopqm"}},
-                    "textbook": {"data": None},
-                    "adaptation": {"data": None},
-                    "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
-                    "updatedBy": {"data": {"type": "user", "id": "ckylfa"}},
-                },
-            },
-        })
-
-        exercise = self.get_model(Exercise, 1)
-        self.assertIsNone(exercise.adaptation)
-
-        self.assertEqual(self.count_models(SelectThingsAdaptation), 0)
-
-    def test_update_adaptation__other_type(self):
-        self.exercise.adaptation = self.create_model(SelectThingsAdaptation, old_colors_count=3, colors=["red", "green", "blue"], words=True, punctuation=True)
-        self._TransactionTestCase__session.commit()
-
-        payload = {
-            "data": {
-                "type": "fillWithFreeTextAdaptation",
-                "attributes": {
-                    "placeholder": "...",
-                },
-                "relationships": {
-                    "exercise": {"data": {"type": "exercise", "id": "wbqloc"}},
-                },
-            },
-        }
-        response = self.post("http://server/fillWithFreeTextAdaptations", payload)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
-        self.assertEqual(response.json(), {
-            "data": {
-                "type": "fillWithFreeTextAdaptation",
-                "id": "vahdwa",
-                "links": {"self": "http://server/fillWithFreeTextAdaptations/vahdwa"},
-                "attributes": {
-                    "placeholder": "...",
-                    "createdAt": response.json()["data"]["attributes"]["createdAt"],
-                    "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
-                },
-                "relationships": {
-                    "exercise": {"data": {"type": "exercise", "id": "wbqloc"}},
-                    "createdBy": {"data": {"type": "user", "id": "ckylfa"}},
-                    "updatedBy": {"data": {"type": "user", "id": "ckylfa"}},
-                },
-            },
-        })
-
-        exercise = self.get_model(Exercise, 1)
-        self.assertIsInstance(exercise.adaptation, FillWithFreeTextAdaptation)
-        self.assertEqual(exercise.adaptation.placeholder, "...")
-
-        self.assertEqual(self.count_models(SelectThingsAdaptation), 0)
 
 
 class BatchingApiTestCase(LoggedInApiTestCase):
