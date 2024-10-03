@@ -12,6 +12,32 @@ Les améliorations techniques ne figurent que dans le `log git <https://github.c
 Les titres des sections de ce document correspondent au champ ``Gabby version`` dans le "À propos".
 Les versions sont nommées selon leur date de publication, au format ``YYYYMMDD-HHMMSS`` (année, mois, jour, tiret, heure, minute, seconde).
 
+20241003-153035
+---------------
+
+- Expérience utilisateur:
+    - le numéro de page de l'exercice est affiché dans un champ dédié
+        - un message de confirmation est affiché si l'utilisateur a changé de page et que l'exercice va être créé sur une autre page que celle affichée actuellement
+        - cela explicite un comportement fortement contre-intuitif où l'exercice était toujours créé sur la page affichée, même si l'utilisateur avait changé de page de puis le début de la création de l'exercice
+    - un message est affiché si l'utilisateur charge un PDF qui n'est pas exactement identique au PDF utilisé lors de la création du manuel
+    - un message de confirmation est affiché lors de la suppression d'un exercice
+
+- Adaptation :
+    - le nombre de lignes d'énoncé par page d'exercice adapté est maintenant paramétré lors de l'adaptation
+    - un nouveau type d'adaptation "Items et effets (essai n°1)" a été ajouté pour expérimenter avec les sections "Items" et "Effets" de la colonne "Outils"
+        - ce type d'adaptation est temporaire; tous les types d'adaptation actuels seront bientôt unifiés
+        - ce type d'adaptation permet déjà de faire tout ce que fait "Selection de mots"
+        - et ajoute la possibilité d'ajouter un effet "cadre" aux items
+        - et ajoute la possibilité de sélectionner manuellement les items
+
+- Exercices adaptés:
+    - QCM: la réponse "...." a été enlevée. Il n'est plus possible de vider un champ qui a été rempli
+    - le document "CSS.pdf" du 24/09 a été appliqué autant que faire se peut. En particulier:
+        - QCM: les choix sont affichés sur deux lignes, en colonnes alignées à gauche
+        - mots cochables: les "1 clic", "2 clics", etc. ont été enlevés de la consigne
+        - les couleurs alternées des lignes de l'énoncé ont été mise à jour
+        - les couleurs alternées des choix de QCM également
+
 20240829-151537
 ---------------
 
