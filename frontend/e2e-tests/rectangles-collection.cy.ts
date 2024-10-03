@@ -288,9 +288,9 @@ describe('Gabby', () => {
     cy.get('button:contains("Instructions")').click()
     expectRectangles('@highlighter', 'surrounded', [{
       'left': 63.24492293708562,
-      'top': isProdPreview ? 0 : 199.1302780207111,
+      'top': isProdPreview ? 197.6152685232629 : 199.1302780207111,
       'width': 218.59602260325397,
-      'height': isProdPreview ? 0 : 54.650524417037445,
+      'height': isProdPreview ? 56.41344455952253 : 54.650524417037445,
     }])
 
     cy.get('p:contains("Page"):contains("(on 7)") :contains(">")').click()
@@ -302,27 +302,27 @@ describe('Gabby', () => {
     cy.get('button:contains("Wording")').click()
     expectRectangles('@highlighter', 'surrounded', [{
       'left': 63.24492293708562,
-      'top': isProdPreview ? 0 : 631.045712929555,
+      'top': isProdPreview ? 631.293623574592 : 631.045712929555,
       'width': 179.81285730267666,
-      'height': isProdPreview ? 0 : 102.24936826413443,
+      'height': isProdPreview ? 102.24936826413443 : 102.24936826413443,
     }])
 
     cy.get('p:contains("Page"):contains("(on 7)") :contains("<")').click()
     notBusy()
     expectRectangles('@highlighter', 'surrounded', [{
       'left': 63.24492293708562,
-      'top': isProdPreview ? 0 : 199.1302780207111,
+      'top': isProdPreview ? 197.6152685232629 : 199.1302780207111,
       'width': 218.59602260325397,
-      'height': isProdPreview ? 0 : 54.650524417037445,
+      'height': isProdPreview ? 56.41344455952253 : 54.650524417037445,
     }])
 
     cy.get('p:contains("Page"):contains("(on 7)") :contains(">")').click()
     notBusy()
     expectRectangles('@highlighter', 'surrounded', [{
       'left': 63.24492293708562,
-      'top': isProdPreview ? 0 : 631.045712929555,
+      'top': isProdPreview ? 631.293623574592 : 631.045712929555,
       'width': 179.81285730267666,
-      'height': isProdPreview ? 0 : 102.24936826413443,
+      'height': isProdPreview ? 102.24936826413443 : 102.24936826413443,
     }])
 
     cy.get('button:contains("Save then back to list")').click()
@@ -330,18 +330,18 @@ describe('Gabby', () => {
     notBusy()
     expectRectangles('@highlighter', 'grey.0', {
       'left': 63.24492293708562,
-      'top': isProdPreview ? 0 : 199.1302780207111,
+      'top': isProdPreview ? 197.6152685232629 : 199.1302780207111,
       'width': 218.59602260325397,
-      'height': isProdPreview ? 0 : 54.650524417037445,
+      'height': isProdPreview ? 56.41344455952253 : 54.650524417037445,
     })
 
     cy.get('p:contains("Page"):contains("(on 7)") :contains(">")').click()
     notBusy()
     expectRectangles('@highlighter', 'grey.0', {
       'left': 63.24492293708562,
-      'top': isProdPreview ? 0 : 631.045712929555,
+      'top': isProdPreview ? 631.293623574592 : 631.045712929555,
       'width': 179.81285730267666,
-      'height': isProdPreview ? 0 : 102.24936826413443,
+      'height': isProdPreview ? 102.24936826413443 : 102.24936826413443,
     })
 
     cy.get('p:contains("Page"):contains("(on 7)") :contains("<")').click()
@@ -351,9 +351,9 @@ describe('Gabby', () => {
     notBusy()
     expectRectangles('@highlighter', 'surrounded', [{
       'left': 63.24492293708562,
-      'top': isProdPreview ? 0 : 199.1302780207111,
+      'top': isProdPreview ? 197.6152685232629 : 199.1302780207111,
       'width': 218.59602260325397,
-      'height': isProdPreview ? 0 : 54.650524417037445,
+      'height': isProdPreview ? 56.41344455952253 : 54.650524417037445,
     }])
 
     traceRectangle('@canvas', 6, 78, 22, 85)
@@ -361,18 +361,18 @@ describe('Gabby', () => {
     cy.get('button:contains("Wording")').click()
     expectRectangles('@highlighter', 'surrounded', [{
       'left': 63.24492293708562,
-      'top': isProdPreview ? 0 : 151.531434173614,
+      'top': isProdPreview ? 151.779344818651 : 151.531434173614,
       'width': 218.59602260325397,
-      'height': isProdPreview ? 0 : 102.24936826413455,
+      'height': isProdPreview ? 102.24936826413443 : 102.24936826413455,
     }])
 
     cy.get('p:contains("Page"):contains("(on 7)") :contains(">")').click()
     notBusy()
     expectRectangles('@highlighter', 'surrounded', [{
       'left': 63.24492293708562,
-      'top': isProdPreview ? 0 : 631.045712929555,
+      'top': isProdPreview ? 631.293623574592 : 631.045712929555,
       'width': 179.81285730267666,
-      'height': isProdPreview ? 0 : 102.24936826413443,
+      'height': isProdPreview ? 102.24936826413443 : 102.24936826413443,
     }])
 
     traceRectangle('@canvas', 6, 5, 45, 10)
@@ -380,27 +380,27 @@ describe('Gabby', () => {
     cy.get('button:contains("Instructions")').click()
     expectRectangles('@highlighter', 'surrounded', [{
       'left': 63.24492293708562,
-      'top': isProdPreview ? 0 : 631.045712929555,
+      'top': isProdPreview ? 631.293623574592 : 631.045712929555,
       'width': 218.59602260325397,
-      'height': isProdPreview ? 0 : 149.84821211123153,
+      'height': isProdPreview ? 149.84821211123153 : 149.84821211123153,
     }])
 
     cy.get('button:contains("Save then back to list")').click()
     notBusy()
     expectRectangles('@highlighter', 'grey.0', {
       'left': 63.24492293708562,
-      'top': isProdPreview ? 0 : 151.531434173614,
+      'top': isProdPreview ? 151.779344818651 : 151.531434173614,
       'width': 218.59602260325397,
-      'height': isProdPreview ? 0 : 102.24936826413455,
+      'height': isProdPreview ? 102.24936826413443 : 102.24936826413455,
     })
 
     cy.get('p:contains("Page"):contains("(on 7)") :contains(">")').click()
     notBusy()
     expectRectangles('@highlighter', 'grey.0', {
       'left': 63.24492293708562,
-      'top': isProdPreview ? 0 : 631.045712929555,
+      'top': isProdPreview ? 631.293623574592 : 631.045712929555,
       'width': 218.59602260325397,
-      'height': isProdPreview ? 0 : 149.84821211123153,
+      'height': isProdPreview ? 149.84821211123153 : 149.84821211123153,
     })
   })
 })

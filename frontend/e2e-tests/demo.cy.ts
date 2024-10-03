@@ -100,7 +100,7 @@ describe('Gabby', () => {
     screenshot('select-words', 'edit-1')
 
     cy.get('button:contains("Save then back")').click()
-    cy.visit('/project-xkopqm')
+    visit('/project-xkopqm')
     cy.get('a:contains("the exported HTML")').should('have.attr', 'href').then(url => {
       cy.visit(url + '&download=false')
       cy.get('a').click()
@@ -157,7 +157,7 @@ describe('Gabby', () => {
     screenshot('select-words-with-custom-colors', 'edit-1')
 
     cy.get('button:contains("Save then back")').click()
-    cy.visit('/project-xkopqm')
+    visit('/project-xkopqm')
     cy.get('a:contains("the exported HTML")').should('have.attr', 'href').then(url => {
       cy.visit(url + '&download=false')
       cy.get('a').click()
@@ -209,7 +209,7 @@ describe('Gabby', () => {
     screenshot('multiple-choices-in-instructions', 'edit-1')
 
     cy.get('button:contains("Save then back")').click()
-    cy.visit('/project-xkopqm')
+    visit('/project-xkopqm')
     cy.get('a:contains("the exported HTML")').should('have.attr', 'href').then(url => {
       cy.visit(url + '&download=false')
       cy.get('a').click()
@@ -242,7 +242,7 @@ describe('Gabby', () => {
     screenshot('fill-with-free-text', 'edit-1')
 
     cy.get('button:contains("Save then back")').click()
-    cy.visit('/project-xkopqm')
+    visit('/project-xkopqm')
     cy.get('a:contains("the exported HTML")').should('have.attr', 'href').then(url => {
       cy.visit(url + '&download=false')
       cy.get('a').click()

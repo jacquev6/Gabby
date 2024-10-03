@@ -32,6 +32,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    volumes:
+      - ../pdf-examples:/pdf-examples
 
   adminer:
     image: adminer:4

@@ -164,11 +164,12 @@ def create_even_more_test_exercises_fixture(session):
 
 
 def create_empty_demo_textbook_fixture(session):
-    with open('../pdf-examples/demo.pdf', 'rb') as f:
+    demo_pdf_path = "../pdf-examples/demo.pdf"
+    with open(demo_pdf_path, "rb") as f:
         pdf_bytes = f.read()
         bytes_count = len(pdf_bytes)
         sha256 = hashlib.sha256(pdf_bytes).hexdigest()
-    with open('../pdf-examples/demo.pdf', 'rb') as f:
+    with open(demo_pdf_path, "rb") as f:
         pages_count = len(PyPDF2.PdfReader(f).pages)
     admin = get_or_create_admin(session)
     pdffile1 = add(session, PdfFile, bytes_count=bytes_count, pages_count=pages_count, sha256=sha256, created_by=admin)
