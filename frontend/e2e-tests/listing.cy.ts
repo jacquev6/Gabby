@@ -33,6 +33,7 @@ describe('Gabby', () => {
     visit('/project-xkopqm/textbook-klxufv/page-7')
 
     cy.get('button:contains("Delete")').click()
+    cy.get('button:contains("Confirm")').click()
     notBusy()
     cy.get('p:contains("No exercises yet.")').should('exist')
 

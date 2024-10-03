@@ -2,6 +2,7 @@ from contextlib import contextmanager
 from typing import Annotated
 import json
 
+import pydantic
 from sqlalchemy import orm
 import Levenshtein
 import sqlalchemy as sql
@@ -24,7 +25,7 @@ from .wrapping import unwrap, set_wrapper, make_sqids, orm_wrapper_with_sqids
 from mydantic import PydanticBase
 
 
-class Adaptation(OrmBase, CreatedUpdatedByAtMixin):
+class OldAdaptation(OrmBase, CreatedUpdatedByAtMixin):
     __tablename__ = "adaptations"
 
     __mapper_args__ = {
@@ -35,25 +36,13 @@ class Adaptation(OrmBase, CreatedUpdatedByAtMixin):
     id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
     kind: orm.Mapped[str] = orm.mapped_column(sql.String(16))
 
-    exercise: orm.Mapped["Exercise"] = orm.relationship(back_populates="adaptation")
+    exercise: orm.Mapped["Exercise"] = orm.relationship(back_populates="old_adaptation")
 
     def make_adapted(self):
-        return renderable.Exercise(
-            number=self.exercise.number,
-            textbook_page=self.exercise.textbook_page,
-            instructions=self.make_adapted_instructions(),
-            wording=self.make_adapted_wording(),
-            example=self.make_adapted_example(),
-            clue=self.make_adapted_clue(),
-        )
+        return self.exercise.make_adapted()
 
     def make_delta(self):
-        return exercise_delta.Exercise(
-            instructions=self.make_instructions_delta(),
-            wording=self.make_wording_delta(),
-            example=self.make_example_delta(),
-            clue=self.make_clue_delta(),
-        )
+        return self.exercise.make_delta()
 
     def to_generic_adaptation(self):
         def to_generic_or_empty(adapted):
@@ -62,7 +51,7 @@ class Adaptation(OrmBase, CreatedUpdatedByAtMixin):
             else:
                 return adapted.to_generic()
 
-        return GenericAdaptation(
+        return GenericOldAdaptation(
             exercise=Exercise(
                 project=None,
                 textbook=self.exercise.textbook,
@@ -72,17 +61,18 @@ class Adaptation(OrmBase, CreatedUpdatedByAtMixin):
                 wording=self.make_adapted_wording().to_generic(),
                 example=to_generic_or_empty(self.make_adapted_example()),
                 clue=to_generic_or_empty(self.make_adapted_clue()),
+                wording_paragraphs_per_pagelet=self.exercise.wording_paragraphs_per_pagelet,
             ),
         )
 
 
-class GenericAdaptation(Adaptation):
+class GenericOldAdaptation(OldAdaptation):
     __tablename__ = "adaptations__g"
     __mapper_args__ = {
         "polymorphic_identity": "g",
     }
 
-    id: orm.Mapped[int] = orm.mapped_column(sql.ForeignKey(Adaptation.id), primary_key=True)
+    id: orm.Mapped[int] = orm.mapped_column(sql.ForeignKey(OldAdaptation.id), primary_key=True)
 
     def make_adapted_instructions(self):
         return parsing.adapt_generic_instructions_section(self.exercise.instructions)
@@ -123,6 +113,8 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
     example: orm.Mapped[str]
     clue: orm.Mapped[str]
 
+    wording_paragraphs_per_pagelet: orm.Mapped[int] = orm.mapped_column(default=3, server_default="3")
+
     _rectangles: orm.Mapped[list] = orm.mapped_column(sql.JSON, name="rectangles", default=[], server_default="[]")
 
     @property
@@ -133,17 +125,65 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
     def rectangles(self, rectangles: list[api_models.PdfRectangle]):
         self._rectangles = [rectangle.model_dump() for rectangle in rectangles]
 
-    adaptation_id: orm.Mapped[int | None] = orm.mapped_column(sql.ForeignKey(Adaptation.id), unique=True)
-    adaptation: orm.Mapped[Adaptation | None] = orm.relationship(
+    old_adaptation_id: orm.Mapped[int | None] = orm.mapped_column(sql.ForeignKey(OldAdaptation.id), name="adaptation_id", unique=True)
+    old_adaptation: orm.Mapped[OldAdaptation | None] = orm.relationship(
         back_populates="exercise",
         lazy="joined",
     )
+
+    _adaptation: orm.Mapped[dict] = orm.mapped_column(sql.JSON, name="adaptation", default={"format": 0}, server_default="{\"format\": 0}")
+
+    class AdaptationContainer(PydanticBase):
+        # Thin wrapper to use Pydantic's discriminated unions
+        adaptation: api_models.Adaptation = pydantic.Field(discriminator="kind")
+
+    @property
+    def adaptation(self) -> api_models.Adaptation:
+        if self._adaptation is None:  # Before the first flush to DB if not set in constructor.
+            self._adaptation = {"format": 0}
+
+        match self._adaptation["format"]:
+            case 0:
+                if self.old_adaptation is None:
+                    return api_models.NullAdaptation(kind="null")
+                else:
+                    return self.old_adaptation.to_new_adaptation()
+            case 1:
+                return self.AdaptationContainer(adaptation=self._adaptation["settings"]).adaptation
+            case format:
+                raise ValueError(f"Unknown format {format}")
+
+    @adaptation.setter
+    def adaptation(self, adaptation: api_models.Adaptation):
+        self._adaptation = {
+            "format": 1,
+            "settings": adaptation.model_dump()
+        }
 
     extraction_events: orm.Mapped[list["ExtractionEvent"]] = orm.relationship(
         back_populates="exercise",
         cascade="all, delete-orphan",
         order_by="ExtractionEvent.id",
     )
+
+    def make_adapted(self):
+        return renderable.Exercise(
+            number=self.number,
+            textbook_page=self.textbook_page,
+            instructions=self.adaptation.make_adapted_instructions(self),
+            wording=self.adaptation.make_adapted_wording(self),
+            example=self.adaptation.make_adapted_example(self),
+            clue=self.adaptation.make_adapted_clue(self),
+            wording_paragraphs_per_pagelet=self.wording_paragraphs_per_pagelet,
+        )
+
+    def make_delta(self):
+        return exercise_delta.Exercise(
+            instructions=self.adaptation.make_instructions_delta(self),
+            wording=self.adaptation.make_wording_delta(self),
+            example=self.adaptation.make_example_delta(self),
+            clue=self.adaptation.make_clue_delta(self),
+        )
 
 
 def populate_rectangles_from_extraction_events(session: orm.Session):
@@ -395,57 +435,6 @@ class ExerciseTestCase(TransactionTestCase):
                 ],
             )
 
-    def test_share_adaptation(self):
-        project = self.create_model(Project, title="Project", description="")
-        adaptation = self.create_model(GenericAdaptation)
-        exercise_1 = self.create_model(Exercise, project=project, number="Exercise 1", instructions="", wording="", example="", clue="", adaptation=adaptation)
-        exercise_2 = self.create_model(Exercise, project=project, number="Exercise 2", instructions="", wording="", example="", clue="")
-
-        with self.make_session() as session:
-            with self.assertRaises(sql.exc.IntegrityError) as cm:
-                session.execute(sql.update(Exercise).where(Exercise.id == exercise_2.id).values(adaptation_id=adaptation.id))
-        self.assertEqual(cm.exception.orig.diag.constraint_name, "exercises_adaptation_id_key")
-
-    def test_share_adaptation__fixed_by_orm(self):
-        self.expect_rollback()
-
-        with self.make_session() as session:
-            user_for_create = session.get(User, self.user_for_create.id)
-
-            session.add(project := Project(title="Project", description="", created_by=user_for_create, updated_by=user_for_create))
-            session.add(adaptation := GenericAdaptation(created_by=user_for_create, updated_by=user_for_create))
-            session.flush()
-            session.add(exercise_1 := Exercise(project=project, number="Exercise 1", instructions="", wording="", example="", clue="", adaptation=adaptation, created_by=user_for_create, updated_by=user_for_create))
-            session.flush()
-            session.add(exercise_2 := Exercise(project=project, number="Exercise 2", instructions="", wording="", example="", clue="", adaptation=adaptation, created_by=user_for_create, updated_by=user_for_create))
-            session.flush()
-
-            self.assertIs(exercise_1.adaptation, exercise_2.adaptation)
-
-            session.refresh(exercise_1)
-
-            self.assertIsNone(exercise_1.adaptation)
-
-            session.rollback()
-
-    def test_share_adaptation__not_fixed_by_orm(self):
-        self.expect_rollback()
-
-        with self.make_session() as session:
-            user_for_create = session.get(User, self.user_for_create.id)
-
-            session.add(project := Project(title="Project", description="", created_by=user_for_create, updated_by=user_for_create))
-            session.add(adaptation := GenericAdaptation(created_by=user_for_create, updated_by=user_for_create))
-            session.flush()
-            session.add(Exercise(project=project, number="Exercise 1", instructions="", wording="", example="", clue="", adaptation=adaptation, created_by=user_for_create, updated_by=user_for_create))
-            session.add(Exercise(project=project, number="Exercise 2", instructions="", wording="", example="", clue="", adaptation=adaptation, created_by=user_for_create, updated_by=user_for_create))
-
-            with self.assertRaises(sql.exc.IntegrityError) as cm:
-                session.flush()
-
-            session.rollback()
-        self.assertEqual(cm.exception.orig.diag.constraint_name, "exercises_adaptation_id_key")
-
     def test_delete_with_extraction_events(self):
         exercise = self.create_model(Exercise, project=self.project, textbook=None, textbook_page=None, number="5.b", instructions="", wording="", example="", clue="")
         self.create_model(ExtractionEvent, exercise=exercise, event="{}")
@@ -477,11 +466,13 @@ class ExercisesResource:
         wording,
         example,
         clue,
+        wording_paragraphs_per_pagelet,
         rectangles,
         adaptation,
         session: SessionDependable,
         authenticated_user: MandatoryAuthBearerDependable,
     ):
+        # @todo Add logs when modifying all resources. Give them a unique request identifier to be able te regroup logs from the same batch request.
         return create_item(
             session, Exercise,
             project=project,
@@ -492,6 +483,7 @@ class ExercisesResource:
             wording=wording,
             example=example,
             clue=clue,
+            wording_paragraphs_per_pagelet=wording_paragraphs_per_pagelet,
             rectangles=rectangles,
             adaptation=adaptation,
             created_by=authenticated_user,
@@ -535,9 +527,9 @@ class ExercisesResource:
         session: SessionDependable,
         authenticated_user: MandatoryAuthBearerDependable,
     ):
-        previous_adaptation = item.adaptation
+        previous_adaptation = item.old_adaptation
         yield
-        if previous_adaptation is not None and unwrap(item.adaptation) != unwrap(previous_adaptation):
+        if previous_adaptation is not None and unwrap(item.old_adaptation) != unwrap(previous_adaptation):
             session.delete(previous_adaptation)
         item.updated_by = authenticated_user
         save_item(session, item)

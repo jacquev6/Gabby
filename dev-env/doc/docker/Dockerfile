@@ -6,3 +6,5 @@ RUN --mount=type=cache,target=/root/.cache/pip,sharing=locked \
       sphinx-autobuild \
       watchfiles \
  && true
+
+RUN mkdir -p /doc

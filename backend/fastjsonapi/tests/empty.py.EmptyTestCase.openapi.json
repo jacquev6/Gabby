@@ -78,19 +78,11 @@
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/emptyResourceCreateInputDataAttributes"
-              }
-            ],
+            "$ref": "#/components/schemas/emptyResourceCreateInputDataAttributes",
             "default": {}
           },
           "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/emptyResourceCreateInputDataRelationships"
-              }
-            ],
+            "$ref": "#/components/schemas/emptyResourceCreateInputDataRelationships",
             "default": {}
           },
           "type": {

@@ -10,7 +10,8 @@ watch(width, () => nextTick(recolor))
 onMounted(recolor)
 onUpdated(recolor)
 
-const colors = ['red', 'green', 'blue']
+/* Colors provided by client */
+const colors = ['#00F', '#F00', '#0C0']
 
 function recolor() {
   if (container.value !== null) {

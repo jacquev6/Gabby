@@ -1,21 +1,16 @@
-<script setup lang="ts">
-import BSelect from './Select.vue'
+<script setup lang="ts" generic="T">
+import BSelect, { type Option } from './Select.vue'
 
 defineOptions({
   inheritAttrs: false
 })
 
-interface Option {
-  value: string,
-  label: string,
-}
-
 defineProps<{
   label: string,
-  options: (string | Option)[],
+  options: (string | Option<T>)[],
 }>()
 
-const model = defineModel<string>()
+const model = defineModel<T>()
 
 const id = `input-${ Math.floor(Math.random() * 4000000000) }`
 </script>

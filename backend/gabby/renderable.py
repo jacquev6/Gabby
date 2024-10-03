@@ -56,13 +56,14 @@ class _SelectableText(PydanticBase):
     type: Literal["selectableText"]
     text: str
     colors: list[str]
+    boxed: bool
 
     def to_generic(self):
         return f"{{selectable-text|{self.text}|{'|'.join(self.colors)}}}"
 
-def SelectableText(text: str, colors: list[str]):
+def SelectableText(text: str, colors: list[str], boxed: bool):
     assert text.__class__ == str, text.__class__
-    return _SelectableText(type="selectableText", text=text, colors=colors)
+    return _SelectableText(type="selectableText", text=text, colors=colors, boxed=boxed)
 
 
 class _SelectedText(PydanticBase):
@@ -76,18 +77,6 @@ class _SelectedText(PydanticBase):
 def SelectedText(text: str, color: str):
     assert text.__class__ == str, text.__class__
     return _SelectedText(type="selectedText", text=text, color=color)
-
-
-class _SelectedClicks(PydanticBase):
-    type: Literal["selectedClicks"]
-    clicks: int
-    color: str
-
-    def to_generic(self):
-        return f"{{selected-clicks|{self.clicks}|{self.color}}}"
-
-def SelectedClicks(clicks: int, color: str):
-    return _SelectedClicks(type="selectedClicks", clicks=clicks, color=color)
 
 
 class _FreeTextInput(PydanticBase):
@@ -121,7 +110,7 @@ def Whitespace():
     return _Whitespace(type="whitespace")
 
 
-SentenceToken = _PlainText | _BoxedText | _BoldText | _ItalicText | _SelectableText | _SelectedText | _SelectedClicks | _FreeTextInput | _MultipleChoicesInput | _Whitespace
+SentenceToken = _PlainText | _BoxedText | _BoldText | _ItalicText | _SelectableText | _SelectedText | _FreeTextInput | _MultipleChoicesInput | _Whitespace
 
 
 class Sentence(PydanticBase):
@@ -168,3 +157,4 @@ class Exercise(PydanticBase):
     wording: Section
     example: Section
     clue: Section
+    wording_paragraphs_per_pagelet: int

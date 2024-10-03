@@ -3,26 +3,27 @@ import { ref, computed, reactive, watch, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
-import { BButton, BBusy } from '$/frontend/components/opinion/bootstrap'
+import { BButton, BBusy, BLabeledRadios } from '$frontend/components/opinion/bootstrap'
 import { useApiStore } from '$frontend/stores/api'
 import bc from '$frontend/components/breadcrumbs'
 import ProjectTextbookPageLayout from './ProjectTextbookPageLayout.vue'
 import RectanglesHighlighter, { makeBoundingRectangle, makeBoundingRectangles, type Rectangle } from './RectanglesHighlighter.vue'
 import { useProjectTextbookPageData } from './ProjectTextbookPageLayout.vue'
 import TwoResizableColumns from '$frontend/components/TwoResizableColumns.vue'
-import ExerciseFieldsForm from '$/frontend/components/ExerciseFieldsForm.vue'
+import ExerciseFieldsForm from '$frontend/components/ExerciseFieldsForm.vue'
 import AdaptedExercise from './AdaptedExercise.vue'
 import ToolsGutter from './ToolsGutter.vue'
 import UndoRedoTool from './UndoRedoTool.vue'
 import { useExerciseCreationHistoryStore } from './ExerciseCreationHistoryStore'
-import { makeModel, assignModelFrom, getParsed, save } from '$frontend/components/ExerciseFieldsForm.vue'
+import { makeModelInTextbook, assignModelFrom, getParsed, save } from '$frontend/components/ExerciseFieldsForm.vue'
 import TextSelectionModal from './TextSelectionModal.vue'
-import type { TextualFieldName } from '$/frontend/components/ExerciseFieldsForm.vue'
-import AdaptationDetailsFieldsForm from '$/frontend/components/AdaptationDetailsFieldsForm.vue'
+import type { TextualFieldName } from '$frontend/components/ExerciseFieldsForm.vue'
+import AdaptationDetailsFieldsForm from '$frontend/components/AdaptationDetailsFieldsForm.vue'
 import TextPicker from './TextPicker.vue'
-import type { Exists, InCache, ParsedExercise, PdfFile } from '$/frontend/stores/api'
+import type { Exists, InCache, ParsedExercise, PdfFile } from '$frontend/stores/api'
 import type { PDFPageProxy } from 'pdfjs-dist'
 import BasicFormattingTools from './BasicFormattingTools.vue'
+import { useGloballyBusyStore } from '$frontend/stores/globallyBusy'
 
 
 const props = defineProps<{
@@ -30,21 +31,22 @@ const props = defineProps<{
   textbookId: string
   page: number
   exerciseId: string
-  displayPage?: number
+  displayedPage?: number
 }>()
 const projectId = computed(() => props.projectId)
 const textbookId = computed(() => props.textbookId)
 const page = computed(() => props.page)
-const displayPage = computed(() => props.displayPage ?? props.page)
+const displayedPage = computed(() => props.displayedPage ?? props.page)
 
 const api = useApiStore()
 const router = useRouter()
 const i18n = useI18n()
+const globallyBusy = useGloballyBusyStore()
 const exerciseCreationHistory = useExerciseCreationHistoryStore()
 
 
-function changeDisplayPage(newDisplayPage: number) {
-  if (newDisplayPage === props.page) {
+function changeDisplayedPage(newDisplayedPage: number) {
+  if (newDisplayedPage === props.page) {
     router.replace({
       name: 'project-textbook-page-exercise',
       params: {},
@@ -53,32 +55,34 @@ function changeDisplayPage(newDisplayPage: number) {
     router.replace({
       name: 'project-textbook-page-exercise',
       params: {},
-      query: {displayPage: newDisplayPage},
+      query: {displayPage: newDisplayedPage},
     })
   }
 }
 
-const { project, textbook, exercises } = useProjectTextbookPageData(projectId, textbookId, displayPage)
+const { project, textbook, exercisesOnDisplayedPage, exercisesOnPageBeforeDisplayed } = useProjectTextbookPageData(projectId, textbookId, page, displayedPage)
+globallyBusy.register('loading exercises on page', computed(() => exercisesOnDisplayedPage.value.loading))
+globallyBusy.register('loading exercises on previous page', computed(() => exercisesOnPageBeforeDisplayed.value.loading))
 
-const greyRectangles = computed(() => {
-  const otherExercises = exercises.value.existingItems.filter(exercise => exercise.id !== props.exerciseId)
-  return makeBoundingRectangles(otherExercises)
-})
+function makeGreyRectangles(pdfSha256: string, pdfPage: number) {
+  const otherExercises = [...exercisesOnPageBeforeDisplayed.value.existingItems,  ...exercisesOnDisplayedPage.value.existingItems].filter(exercise => exercise.id !== props.exerciseId)
+  return makeBoundingRectangles(pdfSha256, pdfPage, otherExercises)
+}
 
-const exercise = computed(() => api.auto.getOne('exercise', props.exerciseId, {include: ['adaptation']}))
+const exercise = computed(() => api.auto.getOne('exercise', props.exerciseId))
 
 const exerciseBelongsToTextbookPage = computed(() =>
   exercise.value.inCache && exercise.value.exists && exercise.value.relationships.textbook === textbook.value && exercise.value.attributes.textbookPage === props.page
 )
 
-const surroundedRectangles = computed(() => {
-  const boundingRectangle = makeBoundingRectangle(model.rectangles)
+function makeSurroundedRectangles(pdfSha256: string, pdfPage: number) {
+  const boundingRectangle = makeBoundingRectangle(pdfSha256, pdfPage, model.rectangles)
   if (boundingRectangle === null) {
     return []
   } else {
     return [boundingRectangle]
   }
-})
+}
 
 const title = computed(() => {
   if (exercise.value.inCache && exercise.value.exists) {
@@ -99,8 +103,8 @@ const breadcrumbs = computed(() => {
   }
 })
 
-const model = reactive(makeModel())
-const canWysiwyg = computed(() => model.adaptationType !== 'multipleChoicesInWordingAdaptation')
+const model = reactive(makeModelInTextbook(props.page))
+const canWysiwyg = computed(() => model.adaptationKind !== 'multiple-choices-in-wording')
 const wantWysiwyg = ref(true)
 const wysiwyg = computed(() => canWysiwyg.value && wantWysiwyg.value)
 
@@ -109,7 +113,6 @@ const resetUndoRedo = ref(0)
 watch(
   [
     computed(() => exercise.value.inCache && exercise.value.exists ? exercise.value.attributes.number : null),
-    computed(() => exercise.value.inCache && exercise.value.exists && exercise.value.relationships.adaptation !== null && exercise.value.relationships.adaptation.inCache),
   ],
   () => {
     if (exercise.value.inCache && exercise.value.exists) {
@@ -230,28 +233,37 @@ watch(parsedExercise, () => {
 })
 
 const toolSlotNames = computed(() => {
-  const names = ['undoRedo']
-  if (model.adaptationType !== '-') {
+  const names = []
+  names.push('undoRedo')
+  if (model.adaptationKind !== 'null') {
     names.push('adaptationDetails')
   }
   if (wysiwyg.value) {
     names.push('basicFormatting')
   }
+  names.push('repartition')
   return names
 })
+
+const wordingParagraphsPerPageletOptions = [1, 2, 3, 4, 5].map(value => ({
+  label: i18n.t('exerciseLinesPerPage', {lines: value}),
+  value,
+}))
 </script>
 
 <template>
   <TextSelectionModal ref="textSelectionModal" v-model="model" @textAdded="highlightSuffix" />
   <ProjectTextbookPageLayout
-    :project :textbook :page :displayPage @update:displayPage="changeDisplayPage"
+    :project :textbook :page :displayedPage @update:displayedPage="changeDisplayedPage"
     :title :breadcrumbs
   >
     <template #pdfOverlay="{ pdfFile, pdf, width, height, transform }">
       <RectanglesHighlighter
+        v-if="pdfFile.inCache && pdfFile.exists"
         class="img w-100" style="position: absolute; top: 0; left: 0"
         :width :height :transform
-        :greyRectangles :surroundedRectangles
+        :greyRectangles="makeGreyRectangles(pdfFile.attributes.sha256, pdf.page.pageNumber)"
+        :surroundedRectangles="makeSurroundedRectangles(pdfFile.attributes.sha256, pdf.page.pageNumber)"
       />
       <TextPicker
         class="img w-100" style="position: absolute; top: 0; left: 0"
@@ -269,7 +281,7 @@ const toolSlotNames = computed(() => {
               <h1>{{ $t('edition') }}<template v-if="canWysiwyg">  <span style="font-size: small">(<label>WYSIWYG: <input type="checkbox" v-model="wantWysiwyg" /></label>)</span></template></h1>
               <BBusy :busy>
                 <ExerciseFieldsForm ref="fields"
-                  v-model="model"
+                  v-model="model" :displayedPage
                   :fixedNumber="true" :wysiwyg :deltas
                 />
                 <template v-if="exerciseCreationHistory.current === null">
@@ -305,6 +317,9 @@ const toolSlotNames = computed(() => {
                   </template>
                   <template #basicFormatting>
                     <BasicFormattingTools v-if="fields !== null" v-model="model" :fields />
+                  </template>
+                  <template #repartition>
+                    <BLabeledRadios :label="$t('exerciseRepartition')" v-model="model.wordingParagraphsPerPagelet" :options="wordingParagraphsPerPageletOptions" />
                   </template>
                 </ToolsGutter>
               </div>

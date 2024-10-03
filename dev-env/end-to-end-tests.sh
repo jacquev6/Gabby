@@ -23,6 +23,8 @@ done
 test_dir=frontend/e2e-tests
 
 # @todo Do this conversion in a Docker container (for repeatability)
+# e.g. md5sum is named md5 and doesn't use the same file format on macOS
+# e.g. I don't have LibreOffice installed on my laptop
 (
   cd ../pdf-examples
   if ! md5sum --quiet --check demo.odt.md5

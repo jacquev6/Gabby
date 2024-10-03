@@ -10,9 +10,9 @@ function makeSentence(prefix: string, length=26) {
   return sentence
 }
 
-const color1 = 'rgb(255, 0, 0)'
-const color2 = 'rgb(0, 128, 0)'
-const color3 = 'rgb(0, 0, 255)'
+const color1 = 'rgb(0, 0, 255)'
+const color2 = 'rgb(255, 0, 0)'
+const color3 = 'rgb(0, 204, 0)'
 
 const slots = {
   default: `<p>${makeSentence('A')}${makeSentence('B')}${makeSentence('C')}</p><p>${makeSentence('D')}${makeSentence('E')}${makeSentence('F')}</p>`,

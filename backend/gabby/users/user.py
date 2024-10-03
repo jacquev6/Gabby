@@ -143,7 +143,7 @@ def authentication_dependable(
 AuthenticationDependable = Annotated[dict, Depends(authentication_dependable)]
 
 
-def get_optional_user_from_token(session: Session, token: str | None):
+def get_optional_user_id_from_token(token: str | None):
     if token is None:
         # No token => unauthenticated
         return None
@@ -158,12 +158,20 @@ def get_optional_user_from_token(session: Session, token: str | None):
                 # Expired token => silently unauthenticated
                 return None
             else:
-                user = session.get(User, token["userId"])
-                if user is None:
-                    # User not found despite having a valid token: user was deleted => silently unauthenticated
-                    return None
-                else:
-                    return user
+                return token["userId"]
+
+def get_optional_user_from_token(session: Session, token: str | None):
+    user_id = get_optional_user_id_from_token(token)
+
+    if user_id is None:
+        return None
+    else:
+        user = session.get(User, user_id)
+        if user is None:
+            # User not found despite having a valid token: user was deleted => silently unauthenticated
+            return None
+        else:
+            return user
 
 
 def optional_auth_bearer_dependable(

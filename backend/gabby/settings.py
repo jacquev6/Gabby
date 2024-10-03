@@ -1,3 +1,4 @@
+import logging
 import os
 
 
@@ -16,6 +17,8 @@ GENERIC_DEFAULT_API_PAGE_SIZE = int(os.environ.get("GABBY_GENERIC_DEFAULT_API_PA
 
 if not DEBUG:
     assert len(SECRET_KEY) > 50
+
+LOGGING_LEVEL = logging.DEBUG if DEBUG else logging.INFO
 
 MAIL_SENDER = os.environ["GABBY_MAIL_SENDER"]
 SMTP_HOST = os.environ["GABBY_SMTP_HOST"]

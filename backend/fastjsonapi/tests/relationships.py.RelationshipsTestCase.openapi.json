@@ -172,11 +172,7 @@
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/leftCreateInputDataAttributes"
-              }
-            ],
+            "$ref": "#/components/schemas/leftCreateInputDataAttributes",
             "default": {}
           },
           "relationships": {
@@ -204,11 +200,7 @@
         "additionalProperties": false,
         "properties": {
           "rightOrNone": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/left_rightOrNone_Relationship"
-              }
-            ],
+            "$ref": "#/components/schemas/left_rightOrNone_Relationship",
             "default": {}
           },
           "top": {
@@ -300,11 +292,7 @@
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/leftUpdateInputDataAttributes"
-              }
-            ],
+            "$ref": "#/components/schemas/leftUpdateInputDataAttributes",
             "default": {}
           },
           "id": {
@@ -312,11 +300,7 @@
             "type": "string"
           },
           "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/leftUpdateInputDataRelationships"
-              }
-            ],
+            "$ref": "#/components/schemas/leftUpdateInputDataRelationships",
             "default": {}
           },
           "type": {
@@ -341,18 +325,10 @@
         "additionalProperties": false,
         "properties": {
           "rightOrNone": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/left_rightOrNone_Relationship"
-              }
-            ]
+            "$ref": "#/components/schemas/left_rightOrNone_Relationship"
           },
           "top": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/left_top_Relationship"
-              }
-            ]
+            "$ref": "#/components/schemas/left_top_Relationship"
           }
         },
         "title": "leftUpdateInputDataRelationships",
@@ -595,19 +571,11 @@
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/topCreateInputDataAttributes"
-              }
-            ],
+            "$ref": "#/components/schemas/topCreateInputDataAttributes",
             "default": {}
           },
           "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/topCreateInputDataRelationships"
-              }
-            ],
+            "$ref": "#/components/schemas/topCreateInputDataRelationships",
             "default": {
               "lefts": {
                 "data": []
@@ -638,21 +606,13 @@
         "additionalProperties": false,
         "properties": {
           "lefts": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/top_lefts_RelationshipInput"
-              }
-            ],
+            "$ref": "#/components/schemas/top_lefts_RelationshipInput",
             "default": {
               "data": []
             }
           },
           "rights": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/top_rights_RelationshipInput"
-              }
-            ],
+            "$ref": "#/components/schemas/top_rights_RelationshipInput",
             "default": {
               "data": []
             }
@@ -770,11 +730,7 @@
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/topUpdateInputDataAttributes"
-              }
-            ],
+            "$ref": "#/components/schemas/topUpdateInputDataAttributes",
             "default": {}
           },
           "id": {
@@ -782,11 +738,7 @@
             "type": "string"
           },
           "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/topUpdateInputDataRelationships"
-              }
-            ],
+            "$ref": "#/components/schemas/topUpdateInputDataRelationships",
             "default": {}
           },
           "type": {
@@ -811,18 +763,10 @@
         "additionalProperties": false,
         "properties": {
           "lefts": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/top_lefts_RelationshipInput"
-              }
-            ]
+            "$ref": "#/components/schemas/top_lefts_RelationshipInput"
           },
           "rights": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/top_rights_RelationshipInput"
-              }
-            ]
+            "$ref": "#/components/schemas/top_rights_RelationshipInput"
           }
         },
         "title": "topUpdateInputDataRelationships",

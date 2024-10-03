@@ -1,6 +1,43 @@
+<script lang="ts">
+import { computed, type Ref } from 'vue'
+
+
+export function useExercisePagelets(
+  paragraphsCountPerPagelet: Ref<number>,
+  totalParagraphsCount: Ref<number>,
+  pageletIndex: Ref<number>,
+) {
+  const degenerate = computed(() => totalParagraphsCount.value === 0)
+
+  return {
+    firstWordingParagraph: computed(() => {
+      if (degenerate.value) {
+        return null
+      } else {
+        return pageletIndex.value * paragraphsCountPerPagelet.value!
+      }
+    }),
+    lastWordingParagraph: computed(() => {
+      if (degenerate.value) {
+        return null
+      } else {
+        return (pageletIndex.value + 1) * paragraphsCountPerPagelet.value!
+      }
+    }),
+    pageletsCount: computed(() => {
+      if (degenerate.value) {
+        return 1
+      } else {
+        console.assert(paragraphsCountPerPagelet.value! > 0)
+        return Math.ceil(totalParagraphsCount.value / paragraphsCountPerPagelet.value!)
+      }
+    })
+  }
+}
+</script>
+
 <script setup lang="ts">
-import { computed, reactive, watch } from 'vue'
-import { provide } from 'vue'
+import { reactive, watch } from 'vue'
 
 import type { Settings, Exercise } from '$adapted/types'
 import TricolorSection from './TricolorSection.vue'
@@ -69,10 +106,6 @@ watch(
   {immediate: true},
 )
 
-const id = `adaptedExercise-${ Math.floor(Math.random() * 4000000000) }`
-
-provide('adaptedExerciseTeleportPoint', `#${id}`)
-
 const wordingParagraphs = computed(() => {
   if (props.firstWordingParagraph === null || props.lastWordingParagraph === null) {
     return props.exercise.wording.paragraphs
@@ -98,13 +131,13 @@ defineExpose({
 </script>
 
 <template>
-  <div :id="id" style="position: relative">
-    <MonocolorSection :paragraphs="exercise.instructions.paragraphs" :paragraphIndexOffset="0" v-model="models.instructions" />
-    <MonocolorSection :paragraphs="exercise.example.paragraphs" :paragraphIndexOffset="0" v-model="models.example" />
-    <MonocolorSection :paragraphs="exercise.clue.paragraphs" :paragraphIndexOffset="0" v-model="models.clue" />
-    <hr />
-    <TricolorSection v-if="settings.tricolorWording" :paragraphs="wordingParagraphs" :paragraphIndexOffset="wordingParagraphIndexOffset" v-model="models.wording" />
-    <MonocolorSection v-else :paragraphs="wordingParagraphs" :paragraphIndexOffset="wordingParagraphIndexOffset" v-model="models.wording" />
-    <hr />
+  <div style="position: relative; font-family: Arial, sans-serif;">
+    <MonocolorSection :paragraphs="exercise.instructions.paragraphs" :paragraphIndexOffset="0" :centered="settings.centeredInstructions" :first="true" v-model="models.instructions" />
+    <MonocolorSection :paragraphs="exercise.example.paragraphs" :paragraphIndexOffset="0" :centered="settings.centeredInstructions" v-model="models.example" />
+    <MonocolorSection :paragraphs="exercise.clue.paragraphs" :paragraphIndexOffset="0" :centered="settings.centeredInstructions" v-model="models.clue" />
+    <div style="padding: 6px">
+      <TricolorSection v-if="settings.tricolorWording" :paragraphs="wordingParagraphs" :paragraphIndexOffset="wordingParagraphIndexOffset" v-model="models.wording" />
+      <MonocolorSection v-else :paragraphs="wordingParagraphs" :paragraphIndexOffset="wordingParagraphIndexOffset" v-model="models.wording" />
+    </div>
   </div>
 </template>

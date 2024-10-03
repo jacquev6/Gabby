@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { watch } from 'vue'
+import { computed, watch } from 'vue'
 
 import type { Paragraph } from '$adapted/types'
 import MultipleChoicesInput from './MultipleChoicesInput.vue'
@@ -8,10 +8,15 @@ import SelectedText from './SelectedText.vue'
 import FreeTextInput from './FreeTextInput.vue'
 
 
-defineProps<{
-  paragraphs: Paragraph[],
-  paragraphIndexOffset: number,
-}>()
+const props = withDefaults(defineProps<{
+  paragraphs: Paragraph[]
+  paragraphIndexOffset: number
+  centered?: boolean
+  first?: boolean
+}>(), {
+  centered: false,
+  first: false,
+})
 
 const models = defineModel<Record<string, any/* @todo Type */>>({
   required: true,
@@ -22,16 +27,20 @@ const emit = defineEmits<{
 }>()
 
 watch(models, () => emit('layoutChanged'), { deep: true })
+
+const style = computed(() => ({
+  textAlign: props.centered ? 'center' as const : 'left' as const,
+}))
 </script>
 
 <template>
-  <p v-for="(paragraph, paragraphIndex) in paragraphs">
+  <p v-for="(paragraph, paragraphIndex) in paragraphs" :style :class="{first: first && paragraphIndex === 0}">
     <template v-for="(sentence, sentenceIndex) in paragraph.sentences">
       <template v-for="(token, tokenIndex) in sentence.tokens">
         <template v-for="modelKey in [`${paragraphIndex + paragraphIndexOffset}-${sentenceIndex}-${tokenIndex}`]">
           <span>
             <template v-if="token.type === 'plainText'">{{ token.text }}</template>
-            <template v-else-if="token.type === 'whitespace'"><wbr />&nbsp;<wbr /></template>
+            <template v-else-if="token.type === 'whitespace'">&nbsp;&nbsp;<wbr /></template>
             <template v-else-if="token.type === 'boxedText'"><span class="boxed">{{ token.text }}</span></template>
             <template v-else-if="token.type === 'boldText'"><b>{{ token.text }}</b></template>
             <template v-else-if="token.type === 'italicText'"><i>{{ token.text }}</i></template>
@@ -39,13 +48,10 @@ watch(models, () => emit('layoutChanged'), { deep: true })
               <FreeTextInput v-model="models[modelKey]" />
             </template>
             <template v-else-if="token.type === 'selectableText'">
-              <SelectableText :colors="token.colors" v-model="models[modelKey]">{{ token.text }}</SelectableText>
+              <SelectableText :colors="token.colors" :boxed="token.boxed" v-model="models[modelKey]">{{ token.text }}</SelectableText>
             </template>
             <template v-else-if="token.type === 'selectedText'">
-              <SelectedText :color="token.color">{{ token.text }}</SelectedText>
-            </template>
-            <template v-else-if="token.type === 'selectedClicks'">
-              <SelectedText :color="token.color">{{ token.clicks }} {{ $t('nClicks', token.clicks) }}</SelectedText>
+              <SelectedText :color="token.color" :boxed="false">{{ token.text }}</SelectedText>
             </template>
             <template v-else-if="token.type === 'multipleChoicesInput'">
               <MultipleChoicesInput :choices="token.choices" v-model="models[modelKey]" />
@@ -63,12 +69,17 @@ watch(models, () => emit('layoutChanged'), { deep: true })
 
 <style scoped>
 p {
-  line-height: 2.5em;
+  font-size: 32px;
+  line-height: 3;
+  margin: 0px;
+}
+
+p.first {
+  margin-top: -24px;
 }
 
 span.boxed {
-  margin: 0;
-  padding: 0 0.4em;
-  border: 2px solid black;
+  padding: 0 0.2em;
+  outline: 2px solid black;
 }
 </style>

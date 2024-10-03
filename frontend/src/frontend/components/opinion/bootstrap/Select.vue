@@ -1,16 +1,11 @@
-<script setup lang="ts">
-interface Option {
-  value: string
+<script lang="ts">
+export interface Option<T> {
+  value: T
   label: string
+  disabled?: boolean
 }
 
-defineProps<{
-  options: (string | Option)[],
-}>()
-
-const model = defineModel<string>()
-
-function value(option: string | Option) {
+export function value<T>(option: string | Option<T>) {
   if (typeof option === 'string') {
     return option
   } else {
@@ -18,13 +13,29 @@ function value(option: string | Option) {
   }
 }
 
-function label(option: string | Option) {
+export function label<T>(option: string | Option<T>) {
   if (typeof option === 'string') {
     return option
   } else {
     return option.label
   }
 }
+
+export function disabled<T>(option: string | Option<T>) {
+  if (typeof option === 'string') {
+    return false
+  } else {
+    return option.disabled
+  }
+}
+</script>
+
+<script setup lang="ts" generic="T">
+defineProps<{
+  options: (string | Option<T>)[],
+}>()
+
+const model = defineModel<T>()
 </script>
 
 <template>

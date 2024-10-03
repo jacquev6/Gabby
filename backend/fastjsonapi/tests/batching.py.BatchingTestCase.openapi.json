@@ -175,11 +175,7 @@
             "$ref": "#/components/schemas/resourceCreateInputDataAttributes"
           },
           "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/resourceCreateInputDataRelationships"
-              }
-            ],
+            "$ref": "#/components/schemas/resourceCreateInputDataRelationships",
             "default": {
               "several": {
                 "data": []
@@ -217,21 +213,13 @@
         "additionalProperties": false,
         "properties": {
           "several": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/resource_several_RelationshipInput"
-              }
-            ],
+            "$ref": "#/components/schemas/resource_several_RelationshipInput",
             "default": {
               "data": []
             }
           },
           "single": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/resource_single_Relationship"
-              }
-            ],
+            "$ref": "#/components/schemas/resource_single_Relationship",
             "default": {}
           }
         },
@@ -365,11 +353,7 @@
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/resourceUpdateInputDataAttributes"
-              }
-            ],
+            "$ref": "#/components/schemas/resourceUpdateInputDataAttributes",
             "default": {}
           },
           "id": {
@@ -377,11 +361,7 @@
             "type": "string"
           },
           "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/resourceUpdateInputDataRelationships"
-              }
-            ],
+            "$ref": "#/components/schemas/resourceUpdateInputDataRelationships",
             "default": {}
           },
           "type": {
@@ -411,18 +391,10 @@
         "additionalProperties": false,
         "properties": {
           "several": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/resource_several_RelationshipInput"
-              }
-            ]
+            "$ref": "#/components/schemas/resource_several_RelationshipInput"
           },
           "single": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/resource_single_Relationship"
-              }
-            ]
+            "$ref": "#/components/schemas/resource_single_Relationship"
           }
         },
         "title": "resourceUpdateInputDataRelationships",

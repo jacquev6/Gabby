@@ -4,45 +4,54 @@ import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
-import { BButton, BBusy } from '$/frontend/components/opinion/bootstrap'
+import { BButton, BBusy, BLabeledRadios } from '$frontend/components/opinion/bootstrap'
 import bc from '$frontend/components/breadcrumbs'
 import ProjectTextbookPageLayout from './ProjectTextbookPageLayout.vue'
 import RectanglesHighlighter, { makeBoundingRectangle, makeBoundingRectangles, type Rectangle } from './RectanglesHighlighter.vue'
 import TextPicker from './TextPicker.vue'
 import { useProjectTextbookPageData } from './ProjectTextbookPageLayout.vue'
 import TwoResizableColumns from '$frontend/components/TwoResizableColumns.vue'
-import ExerciseFieldsForm from '$/frontend/components/ExerciseFieldsForm.vue'
+import ExerciseFieldsForm from '$frontend/components/ExerciseFieldsForm.vue'
 import { useExerciseCreationHistoryStore } from './ExerciseCreationHistoryStore'
-import { useApiStore } from '$/frontend/stores/api'
-import type { Exists, InCache, ParsedExercise, PdfFile } from '$/frontend/stores/api'
+import { useApiStore } from '$frontend/stores/api'
+import type { Exists, InCache, ParsedExercise, PdfFile } from '$frontend/stores/api'
 import AdaptedExercise from './AdaptedExercise.vue'
 import ToolsGutter from './ToolsGutter.vue'
 import UndoRedoTool from './UndoRedoTool.vue'
-import type { TextualFieldName } from '$/frontend/components/ExerciseFieldsForm.vue'
-import AdaptationDetailsFieldsForm from '$/frontend/components/AdaptationDetailsFieldsForm.vue'
+import type { TextualFieldName } from '$frontend/components/ExerciseFieldsForm.vue'
+import AdaptationDetailsFieldsForm from '$frontend/components/AdaptationDetailsFieldsForm.vue'
 import TextSelectionModal from './TextSelectionModal.vue'
-import { makeModel, resetModel, getParsed, create, suggestNextNumber } from '$frontend/components/ExerciseFieldsForm.vue'
+import { makeModelInTextbook, resetModelInTextbook, modelIsEmpty, getParsed, create, suggestNextNumber } from '$frontend/components/ExerciseFieldsForm.vue'
 import type { PDFPageProxy } from 'pdfjs-dist'
 import BasicFormattingTools from './BasicFormattingTools.vue'
+import { useGloballyBusyStore } from '$frontend/stores/globallyBusy'
+import ConfirmationModal from '$frontend/components/ConfirmationModal.vue'
 
 
 const props = defineProps<{
   projectId: string
   textbookId: string
   page: number
+  displayedPage?: number
 }>()
 const projectId = computed(() => props.projectId)
 const textbookId = computed(() => props.textbookId)
 const page = computed(() => props.page)
+const displayedPage = computed(() => props.displayedPage ?? props.page)
 
 const router = useRouter()
 const api = useApiStore()
 const i18n = useI18n()
+const globallyBusy = useGloballyBusyStore()
 const exerciseCreationHistory = useExerciseCreationHistoryStore()
 
-const { project, textbook, exercises } = useProjectTextbookPageData(projectId, textbookId, page)
+const { project, textbook, exercisesOnPage, exercisesOnDisplayedPage, exercisesOnPageBeforeDisplayed } = useProjectTextbookPageData(projectId, textbookId, page, displayedPage)
+globallyBusy.register('loading exercises on page', computed(() => exercisesOnDisplayedPage.value.loading))
+globallyBusy.register('loading exercises on previous page', computed(() => exercisesOnPageBeforeDisplayed.value.loading))
 
-const greyRectangles = computed(() => makeBoundingRectangles(exercises.value.existingItems))
+function makeGreyRectangles(pdfSha256: string, pdfPage: number) {
+  return makeBoundingRectangles(pdfSha256, pdfPage, [...exercisesOnPageBeforeDisplayed.value.existingItems, ...exercisesOnDisplayedPage.value.existingItems])
+}
 
 const matchingExercises = computed(() => {
   if (model.number === '') {
@@ -63,17 +72,27 @@ const matchingExercises = computed(() => {
 
 const alreadyExists = computed(() => matchingExercises.value !== null && matchingExercises.value.existingItems.length === 1)
 
-function changePage(page: number) {
-  exerciseCreationHistory.reset()
-  router.push({name: 'project-textbook-page-new-exercise', params: {page}})
+function changeDisplayedPage(newDisplayedPage: number) {
+  console.log('changeDisplayedPage', newDisplayedPage)
+  if (modelIsEmpty(model)) {
+    exerciseCreationHistory.reset()
+    router.push({name: 'project-textbook-page-new-exercise', params: {page: newDisplayedPage}})
+    model.textbookPage = newDisplayedPage
+  } else {
+    router.replace({
+      name: 'project-textbook-page-new-exercise',
+      params: {},
+      query: {displayPage: newDisplayedPage},
+    })
+  }
 }
 
 const title = computed(() => [i18n.t('create')])
 
 const breadcrumbs = computed(() => bc.last(i18n.t('create')))
 
-const model = reactive(makeModel())
-const canWysiwyg = computed(() => model.adaptationType !== 'multipleChoicesInWordingAdaptation')
+const model = reactive(makeModelInTextbook(page.value))
+const canWysiwyg = computed(() => model.adaptationKind !== 'multiple-choices-in-wording')
 const wantWysiwyg = ref(true)
 const wysiwyg = computed(() => canWysiwyg.value && wantWysiwyg.value)
 
@@ -86,14 +105,14 @@ onMounted(() => {
   }
 })
 
-const surroundedRectangles = computed(() => {
-  const boundingRectangle = makeBoundingRectangle(model.rectangles)
+function makeSurroundedRectangles(pdfSha256: string, pdfPage: number) {
+  const boundingRectangle = makeBoundingRectangle(pdfSha256, pdfPage, model.rectangles)
   if (boundingRectangle === null) {
     return []
   } else {
     return [boundingRectangle]
   }
-})
+}
 
 const fields = ref<InstanceType<typeof ExerciseFieldsForm> | null>(null)
 
@@ -115,34 +134,48 @@ function textSelected(pdfFile: PdfFile, pdf: {page: PDFPageProxy}, selectedText:
 
 function skip() {
   const suggestedNextNumber = suggestNextNumber(model.number)
-  resetModel(model)
+  resetModelInTextbook(model, page.value)
   model.number = suggestedNextNumber
   resetUndoRedo.value++
+}
+
+const pageMismatchConfirmationModal = ref<InstanceType<typeof ConfirmationModal> | null>(null)
+
+async function confirmCreationInCaseOfPageMismatch() {
+  const skipConfirmation = model.textbookPage === displayedPage.value
+  console.assert(pageMismatchConfirmationModal.value !== null)
+  return skipConfirmation || await pageMismatchConfirmationModal.value.show()
 }
 
 const busy = ref(false)
 async function createThenNext() {
-  const suggestedNextNumber = suggestNextNumber(model.number)
-  busy.value = true
-  const exercise = await create(project.value, textbook.value, page.value, model)
-  busy.value = false
+  if (await confirmCreationInCaseOfPageMismatch()) {
+    const suggestedNextNumber = suggestNextNumber(model.number)
+    busy.value = true
+    const exercise = await create(project.value, textbook.value, model)
+    busy.value = false
 
-  exerciseCreationHistory.push(exercise.id)
+    exerciseCreationHistory.push(exercise.id)
 
-  /* no await */ exercises.value.refresh()
+    /* no await */ exercisesOnPage.value.refresh()
 
-  resetModel(model)
-  model.number = suggestedNextNumber
-  exerciseCreationHistory.suggestedNumber = suggestedNextNumber
-  resetUndoRedo.value++
+    resetModelInTextbook(model, page.value)
+    model.number = suggestedNextNumber
+    model.textbookPage = displayedPage.value
+    exerciseCreationHistory.suggestedNumber = suggestedNextNumber
+    resetUndoRedo.value++
+    router.push({name: 'project-textbook-page-new-exercise', params: {page: displayedPage.value}})
+  }
 }
 
 async function createThenBack() {
-  busy.value = true
-  await create(project.value, textbook.value, page.value, model)
-  busy.value = false
-  /* no await */ exercises.value.refresh()
-  router.push({name: 'project-textbook-page'})
+  if (await confirmCreationInCaseOfPageMismatch()) {
+    busy.value = true
+    await create(project.value, textbook.value, model)
+    busy.value = false
+    /* no await */ exercisesOnPage.value.refresh()
+    router.push({name: 'project-textbook-page'})
+  }
 }
 
 function goToPrevious() {
@@ -205,28 +238,38 @@ watch(parsedExercise, () => {
 })
 
 const toolSlotNames = computed(() => {
-  const names = ['undoRedo']
-  if (model.adaptationType !== '-') {
+  const names = []
+  names.push('undoRedo')
+  if (model.adaptationKind !== 'null') {
     names.push('adaptationDetails')
   }
   if (wysiwyg.value) {
     names.push('basicFormatting')
   }
+  names.push('repartition')
   return names
 })
+
+const wordingParagraphsPerPageletOptions = [1, 2, 3, 4, 5].map(value => ({
+  label: i18n.t('exerciseLinesPerPage', {lines: value}),
+  value,
+}))
 </script>
 
 <template>
   <TextSelectionModal ref="textSelectionModal" v-model="model" @textAdded="highlightSuffix" />
+  <ConfirmationModal ref="pageMismatchConfirmationModal">{{ $t('pageMismatchConfirmationMessage') }}</ConfirmationModal>
   <ProjectTextbookPageLayout
-    :project :textbook :page :displayPage="page" @update:displayPage="changePage"
+    :project :textbook :page :displayedPage @update:displayedPage="changeDisplayedPage"
     :title :breadcrumbs
   >
     <template #pdfOverlay="{ pdfFile, pdf, width, height, transform }">
       <RectanglesHighlighter
+        v-if="pdfFile.inCache && pdfFile.exists"
         class="img w-100" style="position: absolute; top: 0; left: 0"
         :width :height :transform
-        :greyRectangles :surroundedRectangles
+        :greyRectangles="makeGreyRectangles(pdfFile.attributes.sha256, pdf.page.pageNumber)"
+        :surroundedRectangles="makeSurroundedRectangles(pdfFile.attributes.sha256, pdf.page.pageNumber)"
       />
       <TextPicker
         class="img w-100" style="position: absolute; top: 0; left: 0"
@@ -243,7 +286,7 @@ const toolSlotNames = computed(() => {
             <h1>{{ $t('edition') }}<template v-if="canWysiwyg">  <span style="font-size: small">(<label>WYSIWYG: <input type="checkbox" v-model="wantWysiwyg" /></label>)</span></template></h1>
             <BBusy :busy>
               <ExerciseFieldsForm ref="fields"
-                v-model="model"
+                v-model="model" :displayedPage
                 :fixedNumber="false" :wysiwyg :deltas
               >
                 <template #overlay>
@@ -282,6 +325,9 @@ const toolSlotNames = computed(() => {
                 </template>
                 <template #basicFormatting>
                   <BasicFormattingTools v-if="fields !== null" v-model="model" :fields />
+                </template>
+                <template #repartition>
+                  <BLabeledRadios :label="$t('exerciseRepartition')" v-model="model.wordingParagraphsPerPagelet" :options="wordingParagraphsPerPageletOptions" />
                 </template>
               </ToolsGutter>
             </div>

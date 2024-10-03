@@ -1,119 +1,125 @@
 <script lang="ts">
 import { useApiStore } from '$frontend/stores/api'
-import type { Project, Textbook, Exercise, InCache, Exists, SelectThingsAdaptation, FillWithFreeTextAdaptation, MultipleChoicesInInstructionsAdaptation, MultipleChoicesInWordingAdaptation, ParsedExercise } from '$frontend/stores/api'
-import type { SelectThingsAdaptationOptions, FillWithFreeTextAdaptationOptions, MultipleChoicesInInstructionsAdaptationOptions, MultipleChoicesInWordingAdaptationOptions, PdfRectangle } from '$frontend/stores/api'
+import type { Project, Textbook, Exercise, InCache, Exists, ParsedExercise } from '$frontend/stores/api'
 import { defaultColors } from './AdaptationDetailsFieldsForm.vue'
 
 
 const api = useApiStore()
 
+type Adaptation = (Exercise & InCache & Exists)['attributes']['adaptation']
+type PdfRectangle = (Exercise & InCache & Exists)['attributes']['rectangles'][number]
+
 // @todo Automate updating this type when a new adaptation type is added
-export const adaptationTypes = ['selectThingsAdaptation', 'fillWithFreeTextAdaptation', 'multipleChoicesInInstructionsAdaptation', 'multipleChoicesInWordingAdaptation'] as const
-export type AdaptationType = '-' | typeof adaptationTypes[number]
+export const adaptationKinds = ['null', 'fill-with-free-text', 'items-and-effects-attempt-1', 'select-things', 'multiple-choices-in-instructions', 'multiple-choices-in-wording'] as const
+export type AdaptationKind =  typeof adaptationKinds[number]
 
 export const textualFieldNames = ['instructions', 'wording', 'example', 'clue'] as const
 export type TextualFieldName = typeof textualFieldNames[number]
 
-export interface Model {
+export type Model = {
+  inTextbook: boolean
   number: string
-  adaptationType: AdaptationType
-  selectThingsAdaptationOptions: SelectThingsAdaptationOptions
-  fillWithFreeTextAdaptationOptions: FillWithFreeTextAdaptationOptions
-  multipleChoicesInInstructionsAdaptationOptions: MultipleChoicesInInstructionsAdaptationOptions
-  multipleChoicesInWordingAdaptationOptions: MultipleChoicesInWordingAdaptationOptions
+  textbookPage: number | null
   instructions: string
   wording: string
   example: string
   clue: string
+  wordingParagraphsPerPagelet: number
   rectangles: PdfRectangle[]
+  adaptationKind: AdaptationKind
+  adaptations: {[Kind in AdaptationKind]: Adaptation & {kind: Kind}}
 }
 
-export function makeModel(): Model {
+type MakeModelOptions  = {
+  inTextbook: true
+  textbookPage: number
+} | {
+  inTextbook: false
+  textbookPage: null
+}
+
+function makeModel({inTextbook, textbookPage}: MakeModelOptions): Model {
   return {
+    inTextbook,
     number: '',
-    adaptationType: '-',
-    selectThingsAdaptationOptions: {
-      colors: [defaultColors[0]],
-      words: true,
-      punctuation: false,
-    },
-    fillWithFreeTextAdaptationOptions: {
-      placeholder: '...',
-    },
-    multipleChoicesInInstructionsAdaptationOptions: {
-      placeholder: '...',
-    },
-    multipleChoicesInWordingAdaptationOptions: {},
+    textbookPage,
     instructions: '',
     wording: '',
     example: '',
     clue: '',
+    wordingParagraphsPerPagelet: 3,
     rectangles: [],
+    adaptationKind: 'null',
+    adaptations: {
+      'fill-with-free-text': {
+        kind: 'fill-with-free-text' as const,
+        placeholder: '...',
+      },
+      'items-and-effects-attempt-1': {
+        kind: 'items-and-effects-attempt-1' as const,
+        items: {
+          kind: 'words' as const,
+          punctuation: false,
+        },
+        effects: {
+          selectable: null,
+          boxed: false,
+        },
+      },
+      'null': {
+        kind: 'null' as const,
+      },
+      'select-things': {
+        kind: 'select-things' as const,
+        words: true,
+        punctuation: false,
+        colors: [defaultColors[0]],
+      },
+      'multiple-choices-in-instructions': {
+        kind: 'multiple-choices-in-instructions' as const,
+        placeholder: '...',
+      },
+      'multiple-choices-in-wording': {
+        kind: 'multiple-choices-in-wording' as const,
+      },
+    },
   }
+}
+
+export function makeModelInTextbook(textbookPage: number): Model {
+  return makeModel({inTextbook: true, textbookPage})
+}
+
+export function makeModelNotInTextbook(): Model {
+  return makeModel({inTextbook: false, textbookPage: null})
 }
 
 export function assignModelFrom(model: Model, exercise: Exercise & InCache & Exists) {
   model.number = exercise.attributes.number
-  model.adaptationType = exercise.relationships.adaptation === null ? '-' : exercise.relationships.adaptation.type
-  if (exercise.relationships.adaptation !== null && exercise.relationships.adaptation.inCache && exercise.relationships.adaptation.exists) {
-    switch (exercise.relationships.adaptation.type) {
-      case 'selectThingsAdaptation':
-        {
-          const options = (exercise.relationships.adaptation as SelectThingsAdaptation & InCache & Exists).attributes
-          model.selectThingsAdaptationOptions.colors = [...options.colors]
-          model.selectThingsAdaptationOptions.words = options.words
-          model.selectThingsAdaptationOptions.punctuation = options.punctuation
-        }
-        break
-      case 'fillWithFreeTextAdaptation':
-        {
-          const options = (exercise.relationships.adaptation as FillWithFreeTextAdaptation & InCache & Exists).attributes
-          model.fillWithFreeTextAdaptationOptions.placeholder = options.placeholder
-        }
-        break
-      case 'multipleChoicesInInstructionsAdaptation':
-        {
-          const options = (exercise.relationships.adaptation as MultipleChoicesInInstructionsAdaptation & InCache & Exists).attributes
-          model.multipleChoicesInInstructionsAdaptationOptions.placeholder = options.placeholder
-        }
-        break
-      case 'multipleChoicesInWordingAdaptation':
-        {
-          /* const options = */ (exercise.relationships.adaptation as MultipleChoicesInWordingAdaptation & InCache & Exists).attributes
-          // Nothing to do
-        }
-        break
-      default:
-        ((t: never) => console.assert(false, t))(exercise.relationships.adaptation.type)
-    }
-  }
   model.instructions = exercise.attributes.instructions
   model.wording = exercise.attributes.wording
   model.example = exercise.attributes.example
   model.clue = exercise.attributes.clue
-  model.rectangles = exercise.attributes.rectangles
+  model.wordingParagraphsPerPagelet = exercise.attributes.wordingParagraphsPerPagelet
+  model.adaptationKind = exercise.attributes.adaptation.kind
+  model.adaptations[model.adaptationKind] = JSON.parse(JSON.stringify(exercise.attributes.adaptation))
+  model.rectangles = JSON.parse(JSON.stringify(exercise.attributes.rectangles))
 }
 
-export function resetModel(model: Model) {
-  Object.assign(model, makeModel())
+function resetModel(model: Model, options: MakeModelOptions) {
+  Object.assign(model, makeModel(options))
 }
 
-export function getAdaptationOptions(model: Model) {
-  switch (model.adaptationType) {
-    case '-':
-      return {}
-    case 'selectThingsAdaptation':
-      return model.selectThingsAdaptationOptions
-    case 'fillWithFreeTextAdaptation':
-      return model.fillWithFreeTextAdaptationOptions
-    case 'multipleChoicesInInstructionsAdaptation':
-      return model.multipleChoicesInInstructionsAdaptationOptions
-    case 'multipleChoicesInWordingAdaptation':
-      return model.multipleChoicesInWordingAdaptationOptions
-    default:
-      ((t: never) => console.assert(false, t))(model.adaptationType)
-      return null as never
-  }
+export function resetModelInTextbook(model: Model, textbookPage: number) {
+  resetModel(model, {inTextbook: true, textbookPage})
+}
+
+export function resetModelNotInTextbook(model: Model) {
+  resetModel(model, {inTextbook: false, textbookPage: null})
+}
+
+export function modelIsEmpty(model: Model) {
+  return model.adaptationKind === 'null' && model.instructions === '' && model.wording === '' && model.example === '' && model.clue === ''
 }
 
 export async function getParsed(model: Model) {
@@ -124,68 +130,48 @@ export async function getParsed(model: Model) {
     wording: model.wording,
     example: model.example,
     clue: model.clue,
-    type: model.adaptationType,
-    adaptationOptions: getAdaptationOptions(model),
+    wordingParagraphsPerPagelet: model.wordingParagraphsPerPagelet,
+    adaptation: model.adaptations[model.adaptationKind],
   }
   const parsed = await api.client.createOne('parsedExercise', attributes, {})
   console.assert(parsed.exists)
   return parsed
 }
 
-export async function create(project: Project, textbook: Textbook | null, textbookPage: number | null, model: Model) {
-  const operations: any/* @todo Type */[] = [
-    [
-      'add', 'exercise', 'ex',
-      {
-        textbookPage,
-        number: model.number,
-        instructions: model.instructions,
-        wording: model.wording,
-        example: model.example,
-        clue: model.clue,
-        rectangles: model.rectangles,
-      },
-      {
-        project,
-        textbook,
-      },
-    ],
-  ]
-  if (model.adaptationType !== '-') {
-    operations.push([
-      'add', model.adaptationType, null,
-      getAdaptationOptions(model),
-      {exercise: {type: 'exercise', lid: 'ex'}},
-    ])
-  }
-  const results = await api.client.batch(...operations)
-  return results[0] as Exercise & InCache & Exists  // @todo Remove type assertion when batch is typed
+export async function create(project: Project, textbook: Textbook | null, model: Model) {
+  return await api.client.createOne(
+    'exercise',
+    {
+      number: model.number,
+      textbookPage: model.textbookPage,
+      instructions: model.instructions,
+      wording: model.wording,
+      example: model.example,
+      clue: model.clue,
+      wordingParagraphsPerPagelet: model.wordingParagraphsPerPagelet,
+      adaptation: model.adaptations[model.adaptationKind],
+      rectangles: model.rectangles,
+    },
+    {
+      project,
+      textbook,
+    },
+  )
 }
 
 export async function save(exercise: Exercise & InCache & Exists, model: Model) {
-  // @todo Use a *single* batch request (when batch requests support 'update' and 'delete' operations)
-  const relationships: {adaptation?: null} = {}
-  if (model.adaptationType === '-') {
-    relationships.adaptation = null
-  }
   await exercise.patch(
     {
       instructions: model.instructions,
       wording: model.wording,
       example: model.example,
       clue: model.clue,
+      wordingParagraphsPerPagelet: model.wordingParagraphsPerPagelet,
+      adaptation: model.adaptations[model.adaptationKind],
       rectangles: model.rectangles,
     },
-    relationships,
+    {},
   )
-  if (model.adaptationType !== '-') {
-    await api.client.createOne(
-      model.adaptationType,
-      getAdaptationOptions(model),
-      {exercise},
-      {include: ['exercise']},  // To update the cached exercise to relate to the new adaptation
-    )
-  }
 }
 
 export function suggestNextNumber(number: string) {
@@ -201,7 +187,7 @@ export function suggestNextNumber(number: string) {
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 
-import { BLabeledInput, BLabeledTextarea, BLabeledSelect } from './opinion/bootstrap'
+import { BRow, BCol, BLabeledInput, BLabeledTextarea, BLabeledSelect } from './opinion/bootstrap'
 import OptionalTextarea from './OptionalTextarea.vue'
 import WysiwygEditor from './WysiwygEditor.vue'
 import { wysiwygFormats } from './AdaptationDetailsFieldsForm.vue'
@@ -212,6 +198,7 @@ const props = defineProps<{
   fixedNumber: boolean
   wysiwyg: boolean
   deltas: (ParsedExercise & InCache & Exists)['attributes']['delta'] | null
+  displayedPage: number | null
 }>()
 
 const model = defineModel<Model>({required: true})
@@ -314,7 +301,16 @@ const exampleDeltas = computed(() => props.deltas === null ? [] : props.deltas.e
 const clueDeltas = computed(() => props.deltas === null ? [] : props.deltas.clue)
 
 
-const selBlotColors = computed(() => Object.fromEntries(model.value.selectThingsAdaptationOptions.colors.map((color, i) => [`--sel-blot-color-${i + 1}`, color])))
+const selBlotColors = computed(() => {
+  const adaptation = model.value.adaptations[model.value.adaptationKind]
+  if (adaptation.kind === 'select-things') {
+    return Object.fromEntries(adaptation.colors.map((color, i) => [`--sel-blot-color-${i + 1}`, color]))
+  } else if (adaptation.kind === 'items-and-effects-attempt-1' && adaptation.effects.selectable !== null) {
+    return Object.fromEntries(adaptation.effects.selectable.colors.map((color, i) => [`--sel-blot-color-${i + 1}`, color]))
+  } else {
+    return {}
+  }
+})
 
 defineExpose({
   saveDisabled,
@@ -326,17 +322,27 @@ defineExpose({
 </script>
 
 <template>
-  <BLabeledInput :label="$t('exerciseNumber')" v-model="model.number" :disabled="fixedNumber" />
+  <div class="overflow-x-hidden">
+    <BRow>
+      <BCol>
+        <BLabeledInput :label="$t('exerciseNumber')" v-model="model.number" data-cy-exercise-field="number" :disabled="fixedNumber" />
+      </BCol>
+      <BCol v-if="model.inTextbook">
+        <!-- @todo Add warning icon when different from displayed page -->
+        <BLabeledInput :label="$t( model.textbookPage === displayedPage ? 'exercisePage' : 'exercisePageWithWarning')" v-model="model.textbookPage" data-cy-exercise-field="page" :disabled="fixedNumber" />
+      </BCol>
+    </BRow>
+  </div>
   <div :style="{position: 'relative', ...selBlotColors}">
     <BLabeledSelect
-      :label="$t('adaptationType')" v-model="model.adaptationType"
-      :options="['-', ...adaptationTypes.map(kind => ({value: kind, label: $t(kind)}))]"
+      :label="$t('adaptationType')" v-model="model.adaptationKind"
+      :options="adaptationKinds.map(kind => ({value: kind, label: $t(kind)}))"
     />
     <WysiwygEditor
       v-if="wysiwyg"
       ref="instructionsEditor"
       :label="$t('exerciseInstructions')"
-      :formats="wysiwygFormats[model.adaptationType].instructions"
+      :formats="wysiwygFormats[model.adaptationKind].instructions"
       v-model="model.instructions" :delta="instructionsDeltas"
     />
     <BLabeledTextarea
@@ -344,12 +350,13 @@ defineExpose({
       ref="instructionsTextArea"
       :label="$t('exerciseInstructions')"
       v-model="model.instructions"
+      data-cy-exercise-field="instructions"
     />
     <WysiwygEditor
       v-if="wysiwyg"
       ref="wordingEditor"
       :label="$t('exerciseWording')"
-      :formats="wysiwygFormats[model.adaptationType].wording"
+      :formats="wysiwygFormats[model.adaptationKind].wording"
       v-model="model.wording" :delta="wordingDeltas"
     />
     <BLabeledTextarea
@@ -365,7 +372,7 @@ defineExpose({
             v-if="wysiwyg"
             ref="exampleEditor"
             :label="$t('exerciseExample')"
-            :formats="wysiwygFormats[model.adaptationType].example"
+            :formats="wysiwygFormats[model.adaptationKind].example"
             :delta="exampleDeltas"
             v-model="model.example"
           />
@@ -381,7 +388,7 @@ defineExpose({
             v-if="wysiwyg"
             ref="clueEditor"
             :label="$t('exerciseClue')"
-            :formats="wysiwygFormats[model.adaptationType].clue"
+            :formats="wysiwygFormats[model.adaptationKind].clue"
             :delta="clueDeltas"
             v-model="model.clue"
           />

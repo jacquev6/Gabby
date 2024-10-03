@@ -63,6 +63,8 @@
   "createTextbook": "Créer le manuel",
   "newIndependentExercise": "Nouvel exercice indépendant",
   "exerciseNumber": "Numéro",
+  "exercisePage": "Page",
+  "exercisePageWithWarning": "Page (⚠️ pas celle affichée)",
   "exerciseInstructions": "Consigne",
   "exerciseExample": "Exemple",
   "exerciseClue": "Indice",
@@ -72,14 +74,22 @@
   "noExercisesForNow": "Aucun exercice pour le moment.",
   "independentExercises": "Exercices indépendants",
   "adaptationType": "Type d'adaptation",
-  "selectThingsAdaptation": "Selection de mots",
-  "fillWithFreeTextAdaptation": "Remplissage par texte libre",
-  "multipleChoicesInInstructionsAdaptation": "Choix multiples (dans la consigne)",
-  "multipleChoicesInWordingAdaptation": "Choix multiples (dans l'énoncé)",
+  "null": "-",
+  "select-things": "Selection de mots",
+  "fill-with-free-text": "Remplissage par texte libre",
+  "items-and-effects-attempt-1": "Items et effets (essai n°1)",
+  "multiple-choices-in-instructions": "Choix multiples (dans la consigne)",
+  "multiple-choices-in-wording": "Choix multiples (dans l'énoncé)",
+
+  "confirmTitle": "Confirmation",
+  "confirmNo": "Retour",
+  "confirmYes": "Confirmer",
+  "pageMismatchConfirmationMessage": "La page de l'exercice n'est pas celle affichée actuellement. C'est OK mais inhabituel. Êtes-vous sûr de vouloir continuer ?",
 
 
   "textbookNotFound": "Manuel introuvable",
   "pdfNotLoaded": "Le PDF contenant cette page ({name}) n'a pas encore été ouvert. Si vous en disposez d'une copie, vous pouvez l'ouvrir ci-dessous.",
+  "wrongPdfLoaded": "Le PDF que vous venez d'ouvrir ({loaded}) n'est pas le PDF connu pour contenir cette page ({name}). Si vous disposez d'une copie de {name}, vous pouvez l'ouvrir ci-dessous.",
   "pageNoKnown": "Aucun PDF enregistré ne contient cette page.",
 
 
@@ -95,6 +105,7 @@
   "noExercises": "Pas encore d'exercices.",
   "create": "Nouvel exercice",
   "delete": "Supprimer",
+  "exerciseDeletionConfirmationMessage": "Êtes-vous sûr de vouloir supprimer cet exercice ?",
   "save": "Enregistrer",
   "exerciseAlreadyExists": "L'exercice {number} existe déjà.",
   "skipExercise": "Passer au suivant",
@@ -124,6 +135,17 @@
   "placeholderText": "Trou à remplir",
   "boldButton": "Gras",
   "italicButton": "Italique",
+  "exerciseRepartition": "Répartition",
+  "exerciseLinesPerPage": "{lines} lignes par page",
+  "items": "Items",
+  "itemsWords": "Mots",
+  "itemsPunctuation": "Ponctuation",
+  "itemsSentences": "Phrases",
+  "itemsManual": "Sélection manuelle",
+  "effects": "Effets",
+  "effectsSelectable": "Cochable",
+  "effectsBoxed": "Cadre",
+  "selectableButton": "Cochable",
 
   "tools": "Outils",
   "undo": "Annuler",
@@ -132,6 +154,5 @@
   "not-yet-implemented": "Pas encore implémenté",
 
   "back": "Retour",
-  "eraseAnswers": "Effacer les réponses",
-  "nClicks": "clic | clics"
+  "eraseAnswers": "Effacer les réponses"
 }

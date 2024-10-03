@@ -1,10 +1,9 @@
 import abc
 import functools
 import itertools
+import unittest
 
 import lark
-
-from .testing import TestCase
 
 from . import exercise_delta
 from . import renderable
@@ -86,7 +85,7 @@ def GrammarTestCase(grammar):
     parser = lark.Lark(grammar, start="section")
     transformer = Transformer()
 
-    class GrammarTestCase(TestCase):
+    class GrammarTestCase(unittest.TestCase):
         def do_test(self, test, expected_ast):
             parse_tree = parser.parse(test)
             actual_ast = transformer.transform(parse_tree)
@@ -587,22 +586,17 @@ class GenericInstructionsSectionAdapter(InstructionsSectionAdapter):
         text, color = args
         return renderable.SelectedText(text=text, color=color)
 
-    def selected_clicks_tag(self, args):
-        clicks, color = args
-        return renderable.SelectedClicks(clicks=clicks, color=color)
-
 
 adapt_generic_instructions_section = InstructionsSectionParser(
     {
         "boxed_text": r""" "|" STR """,
         "selected_text": r""" "|" STR "|" STR """,
-        "selected_clicks": r""" "|" INT "|" STR """,
     },
     GenericInstructionsSectionAdapter(),
 )
 
 
-class AdaptGenericInstructionsSectionTestCase(TestCase):
+class AdaptGenericInstructionsSectionTestCase(unittest.TestCase):
     def do_test(self, input, expected_section):
         actual_section = adapt_generic_instructions_section(input)
         for paragraph_index, (actual_paragraph, expected_paragraph) in enumerate(zip(actual_section.paragraphs, expected_section.paragraphs, strict=True)):
@@ -791,17 +785,6 @@ class AdaptGenericInstructionsSectionTestCase(TestCase):
                 renderable.PlainText(text="is"),
                 renderable.Whitespace(),
                 renderable.SelectedText(text="selected", color="red"),
-                renderable.PlainText(text="."),
-            ])])]),
-        )
-
-    def test_selected_clicks_tag(self):
-        self.do_test(
-            "A {selected-clicks|2|green}.",
-            renderable.Section(paragraphs=[renderable.Paragraph(sentences=[renderable.Sentence(tokens=[
-                renderable.PlainText(text="A"),
-                renderable.Whitespace(),
-                renderable.SelectedClicks(clicks=2, color="green"),
                 renderable.PlainText(text="."),
             ])])]),
         )
@@ -1116,7 +1099,7 @@ class GenericWordingSectionAdapter(WordingSectionAdapter):
     def selectable_text_tag(self, args):
         text = args[0]
         colors = list(args[1:])
-        return renderable.SelectableText(text=text, colors=colors)
+        return renderable.SelectableText(text=text, colors=colors, boxed=False)
 
     def multiple_choices_input_tag(self, args):
         choices = args
@@ -1136,7 +1119,7 @@ adapt_generic_wording_section = WordingSectionParser(
 )
 
 
-class AdaptGenericWordingSectionTestCase(TestCase):
+class AdaptGenericWordingSectionTestCase(unittest.TestCase):
     def do_test(self, input, expected_section):
         actual_section = adapt_generic_wording_section(input)
         for paragraph_index, (actual_paragraph, expected_paragraph) in enumerate(zip(actual_section.paragraphs, expected_section.paragraphs, strict=True)):
@@ -1276,7 +1259,7 @@ class AdaptGenericWordingSectionTestCase(TestCase):
                 renderable.Whitespace(),
                 renderable.PlainText(text="is"),
                 renderable.Whitespace(),
-                renderable.SelectableText(text="selectable", colors=["red", "green", "blue"]),
+                renderable.SelectableText(text="selectable", colors=["red", "green", "blue"], boxed=False),
                 renderable.PlainText(text="."),
             ])])]),
         )

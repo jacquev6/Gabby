@@ -10,17 +10,24 @@ export function useProjectTextbookPageData(
   projectId: Ref<string>,
   textbookId: Ref<string>,
   page: Ref<number>,
+  displayedPage: Ref<number>,
 ) {
   const project = computed(() => api.auto.getOne('project', projectId.value))
 
   const textbook = computed(() => api.auto.getOne('textbook', textbookId.value, {include: ['sections.pdfFile.namings']}))
 
-  const exercises = computed(() => api.auto.getAll('exercise', {filters: {textbook: textbookId.value, textbookPage: page.value.toString()}}))
+  const exercisesOnPage = computed(() => api.auto.getAll('exercise', {filters: {textbook: textbookId.value, textbookPage: page.value.toString()}}))
+
+  const exercisesOnDisplayedPage = computed(() => api.auto.getAll('exercise', {filters: {textbook: textbookId.value, textbookPage: displayedPage.value.toString()}}))
+
+  const exercisesOnPageBeforeDisplayed = computed(() => api.auto.getAll('exercise', {filters: {textbook: textbookId.value, textbookPage: (displayedPage.value - 1).toString()}}))
 
   return {
     project,
     textbook,
-    exercises,
+    exercisesOnPage,
+    exercisesOnDisplayedPage,
+    exercisesOnPageBeforeDisplayed,
   }
 }
 </script>
@@ -51,7 +58,7 @@ const props = defineProps<{
   breadcrumbs: Breadcrumbs
 }>()
 
-const displayPage = defineModel<number>('displayPage', {required: true})
+const displayedPage = defineModel<number>('displayedPage', {required: true})
 
 const i18n = useI18n()
 const globallyBusy = useGloballyBusyStore()
@@ -106,7 +113,7 @@ const section = computed(() => {
   if (props.textbook.inCache && props.textbook.exists) {
     for (const section of props.textbook.relationships.sections) {
       if(section.inCache && section.exists) {
-        if (displayPage.value >= section.attributes.textbookStartPage && displayPage.value < section.attributes.textbookStartPage + section.attributes.pagesCount) {
+        if (displayedPage.value >= section.attributes.textbookStartPage && displayedPage.value < section.attributes.textbookStartPage + section.attributes.pagesCount) {
           return section
         }
       }
@@ -121,7 +128,7 @@ const pdfLoading = ref(false)
 const pdf = computedAsync(
   async () => {
     if (section.value) {
-      const pageNumber = section.value.attributes.pdfFileStartPage + displayPage.value - section.value.attributes.textbookStartPage
+      const pageNumber = section.value.attributes.pdfFileStartPage + displayedPage.value - section.value.attributes.textbookStartPage
       if (pdfs.getInfo(section.value.relationships.pdfFile.id)) {
         const document = await pdfs.getDocument(section.value.relationships.pdfFile.id)
         // WARNING: no reactivity to dependencies accessed after this first await (https://vueuse.org/core/computedAsync/#caveats)
@@ -166,7 +173,7 @@ const pdf = computedAsync(
         <TwoResizableColumns saveKey="projectTextbookPage-1" rightWidth="2fr" :snap="250" class="h-100 overflow-hidden">
           <template #left>
             <div class="h-100 overflow-hidden d-flex flex-column">
-              <PdfNavigationControls v-model:page="displayPage" :pagesCount="textbookPagesCount">
+              <PdfNavigationControls v-model:page="displayedPage" :pagesCount="textbookPagesCount">
                 <BButton secondary sm :disabled="section === null" @click="console.assert(section !== null); sectionEditor?.show(section.id)">&#9881;</BButton>
               </PdfNavigationControls>
               <SectionEditor ref="sectionEditor" />
@@ -194,14 +201,17 @@ const pdf = computedAsync(
                       </template>
                     </div>
                   </template>
-                  <template v-else>
-                    <PdfNotLoaded :name="
-                      section.relationships.pdfFile.inCache
-                      && section.relationships.pdfFile.exists
-                      && section.relationships.pdfFile.relationships.namings.length > 0
-                      && section.relationships.pdfFile.relationships.namings[0].inCache
-                      && section.relationships.pdfFile.relationships.namings[0].exists
-                      ? section.relationships.pdfFile.relationships.namings[0].attributes.name : ''" />
+                  <template v-else-if="
+                    section.relationships.pdfFile.inCache
+                    && section.relationships.pdfFile.exists
+                    && section.relationships.pdfFile.relationships.namings.length > 0
+                    && section.relationships.pdfFile.relationships.namings[0].inCache
+                    && section.relationships.pdfFile.relationships.namings[0].exists
+                  ">
+                    <PdfNotLoaded
+                      :name="section.relationships.pdfFile.relationships.namings[0].attributes.name"
+                      :sha256="section.relationships.pdfFile.attributes.sha256"
+                    />
                   </template>
                 </BBusy>
               </template>

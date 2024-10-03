@@ -3,8 +3,8 @@ import { ref, computed, watch } from 'vue'
 
 import type { Exercise } from '$adapted/types'
 import { BButton } from '$frontend/components/opinion/bootstrap'
-import ExerciseComponent from '$adapted/components/Exercise.vue'
-import { useExercisePagelets } from '$/adapted/composables/exercisePagelets'
+import ExerciseComponent, { useExercisePagelets } from '$adapted/components/Exercise.vue'
+import PageletsNavigationControls from '$adapted/components/PageletsNavigationControls.vue'
 
 
 const props = defineProps<{
@@ -14,14 +14,14 @@ const props = defineProps<{
 }>()
 
 const settings = {
+  centeredInstructions: true,
   tricolorWording: true,
-  wordingParagraphsPerPagelet: 3,
 }
 
 const pageletIndex = ref(0)
 
 const { firstWordingParagraph, lastWordingParagraph, pageletsCount } = useExercisePagelets(
-  computed(() => settings.wordingParagraphsPerPagelet),
+  computed(() => props.exercise.wording_paragraphs_per_pagelet),  // @todo Rename to wordingParagraphsPerPagelet
   computed(() => props.exercise.wording.paragraphs.length),
   pageletIndex,
 )
@@ -36,22 +36,23 @@ const exerciseComponent = ref<InstanceType<typeof ExerciseComponent> | null>(nul
 </script>
 
 <template>
-  <ExerciseComponent
-    ref="exerciseComponent"
-    :projectId="props.projectId"
-    :exerciseId="props.exerciseId"
-    :exercise
-    :firstWordingParagraph
-    :lastWordingParagraph
-    :settings
-    :isPreview="true"
-  />
+  <div style="border: 1px solid black">
+    <PageletsNavigationControls :pageletsCount v-model="pageletIndex">
+      <ExerciseComponent
+        ref="exerciseComponent"
+        :projectId="props.projectId"
+        :exerciseId="props.exerciseId"
+        :exercise
+        :firstWordingParagraph
+        :lastWordingParagraph
+        :settings
+        :isPreview="true"
+      />
+      <div style="height: 10em"></div>
+    </PageletsNavigationControls>
+  </div>
   <p>
-    <template v-if="pageletsCount !== 1">
-      <BButton secondary sm @click="pageletIndex -= 1" :disabled="pageletIndex === 0">&lt;&lt;</BButton>
-      <span>{{ pageletIndex + 1 }} / {{ pageletsCount }}</span>
-      <BButton secondary sm @click="pageletIndex += 1" :disabled="pageletIndex === pageletsCount - 1">&gt;&gt;</BButton>
-    </template>
+    Page {{ pageletIndex + 1 }} / {{ pageletsCount }}
     <BButton
       data-cy="erase-responses"
       secondary sm

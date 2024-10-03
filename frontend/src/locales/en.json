@@ -63,6 +63,8 @@
   "createTextbook": "Create textbook",
   "newIndependentExercise": "New independent exercise",
   "exerciseNumber": "Number",
+  "exercisePage": "Page",
+  "exercisePageWithWarning": "Page (⚠️ not the one displayed)",
   "exerciseInstructions": "Instructions",
   "exerciseExample": "Example",
   "exerciseClue": "Clue",
@@ -72,14 +74,22 @@
   "noExercisesForNow": "No exercises for now.",
   "independentExercises": "Independent exercises",
   "adaptationType": "Adaptation type",
-  "selectThingsAdaptation": "Select words",
-  "fillWithFreeTextAdaptation": "Fill with free text",
-  "multipleChoicesInInstructionsAdaptation": "Multiple choices (in instructions)",
-  "multipleChoicesInWordingAdaptation": "Multiple choices (in wording)",
+  "null": "-",
+  "select-things": "Select words",
+  "fill-with-free-text": "Fill with free text",
+  "items-and-effects-attempt-1": "Items and effects (attempt 1)",
+  "multiple-choices-in-instructions": "Multiple choices (in instructions)",
+  "multiple-choices-in-wording": "Multiple choices (in wording)",
+
+  "confirmTitle": "Confirm",
+  "confirmNo": "Go back",
+  "confirmYes": "Confirm",
+  "pageMismatchConfirmationMessage": "The exercise's page is not the one currently displayed. This is OK but unusual. Are you sure you want to proceed?",
 
 
   "textbookNotFound": "Textbook not found",
   "pdfNotLoaded": "The PDF that contains this page ({name}) has not been loaded yet. If you have a copy, you can open it.",
+  "wrongPdfLoaded": "The PDF you've just loaded ({loaded}) is not the PDF known to contain this page ({name}). If you have a copy of {name}, you can open it.",
   "pageNoKnown": "No known PDF contains this page.",
 
 
@@ -95,6 +105,7 @@
   "noExercises": "No exercises yet.",
   "create": "New exercise",
   "delete": "Delete",
+  "exerciseDeletionConfirmationMessage": "Are you sure you want to delete this exercise?",
   "save": "Save",
   "exerciseAlreadyExists": "Exercise {number} already exists.",
   "skipExercise": "Skip to next exercise",
@@ -124,6 +135,17 @@
   "placeholderText": "Placeholder to fill",
   "boldButton": "Bold",
   "italicButton": "Italic",
+  "exerciseRepartition": "Repartition",
+  "exerciseLinesPerPage": "{lines} lines per page",
+  "items": "Items",
+  "itemsWords": "Words",
+  "itemsPunctuation": "Punctuation",
+  "itemsSentences": "Sentences",
+  "itemsManual": "Manual selection",
+  "effects": "Effects",
+  "effectsSelectable": "Selectable",
+  "effectsBoxed": "Boxed",
+  "selectableButton": "Selectable",
 
   "tools": "Tools",
   "undo": "Undo",
@@ -132,6 +154,5 @@
   "not-yet-implemented": "Not yet implemented",
 
   "back": "Back",
-  "eraseAnswers": "Erase answers",
-  "nClicks": "click | clicks"
+  "eraseAnswers": "Erase answers"
 }

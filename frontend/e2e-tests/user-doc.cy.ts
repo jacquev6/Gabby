@@ -128,7 +128,7 @@ describe('Gabby', () => {
 
     cy.screenshot('project-textbook-page-exercise/tools', {clip: {x: 560, y: 40, width: 210, height: 260}})
 
-    cy.get('label:contains("Type d\'adaptation") + select').select('selectThingsAdaptation')
+    cy.get('label:contains("Type d\'adaptation") + select').select('select-things')
     cy.get('div.busy').should('exist')  // This may fail (race condition) but is required because the 'div.busy' is not displayed quickly enough.
     notBusy()
     cy.screenshot('project-textbook-page-exercise/project-textbook-page-exercise', {clip: {x: 0, y: 0, width: 1000, height: 330}})
