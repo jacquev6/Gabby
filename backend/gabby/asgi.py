@@ -86,6 +86,7 @@ def export_project(
     project_id: str,
     session: SessionDependable,
     authenticated_user: MandatoryAuthTokenDependable,
+    download: bool = True,
 ):
     project = session.get(Project, ProjectsResource.sqids.decode(project_id)[0])
     data = json.dumps(dict(
@@ -98,12 +99,16 @@ def export_project(
     )).replace("\\", "\\\\").replace('"', "\\\"")
     with open("gabby/templates/adapted/index.html") as f:
         template = f.read()
+
+    headers = {
+        "Content-Type": "text/html",
+    }
+    if download:
+        headers["Content-Disposition"] = f'attachment; filename="{project.title}.html"',
+
     return HTMLResponse(
         content=template.replace("{{ data }}", data),
-        headers={
-            "Content-Type": "text/html",
-            "Content-Disposition": f'attachment; filename="{project.title}.html"',
-        },
+        headers=headers,
     )
 
 

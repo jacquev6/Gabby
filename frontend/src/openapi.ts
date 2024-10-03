@@ -2466,6 +2466,7 @@ export interface operations {
   export_project_api_project__project_id__html_get: {
     parameters: {
       query: {
+        download?: boolean;
         token: string;
       };
       path: {

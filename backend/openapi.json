@@ -5974,6 +5974,16 @@
           },
           {
             "in": "query",
+            "name": "download",
+            "required": false,
+            "schema": {
+              "default": true,
+              "title": "Download",
+              "type": "boolean"
+            }
+          },
+          {
+            "in": "query",
             "name": "token",
             "required": true,
             "schema": {

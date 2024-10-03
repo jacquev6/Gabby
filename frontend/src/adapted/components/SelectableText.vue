@@ -15,8 +15,8 @@ function increment() {
 </script>
 
 <template>
-  <span v-if="colorIndex === 0" @click="increment" :class="{boxed_: boxed}"><slot></slot></span>
-  <SelectedText v-else @click="increment" :color="colors[colorIndex - 1]" :boxed><slot></slot></SelectedText>
+  <span v-if="colorIndex === 0" data-cy="selectable" @click="increment" :class="{boxed_: boxed}"><slot></slot></span>
+  <SelectedText v-else data-cy="selectable" @click="increment" :color="colors[colorIndex - 1]" :boxed><slot></slot></SelectedText>
 </template>
 
 <style scoped>

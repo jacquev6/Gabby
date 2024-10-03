@@ -1,4 +1,7 @@
 import datetime
+import hashlib
+
+import PyPDF2
 
 from . import database_utils
 from .orm_models import Exercise, ExtractionEvent
@@ -160,6 +163,21 @@ def create_even_more_test_exercises_fixture(session):
     populate_rectangles_from_extraction_events(session)
 
 
+def create_empty_demo_textbook_fixture(session):
+    with open('../pdf-examples/demo.pdf', 'rb') as f:
+        pdf_bytes = f.read()
+        bytes_count = len(pdf_bytes)
+        sha256 = hashlib.sha256(pdf_bytes).hexdigest()
+    with open('../pdf-examples/demo.pdf', 'rb') as f:
+        pages_count = len(PyPDF2.PdfReader(f).pages)
+    admin = get_or_create_admin(session)
+    pdffile1 = add(session, PdfFile, bytes_count=bytes_count, pages_count=pages_count, sha256=sha256, created_by=admin)
+    pdffilenaming1 = add(session, PdfFileNaming, pdf_file=pdffile1, name='demo.pdf', created_by=admin)
+    project1 = add(session, Project, title='Projet de démonstration', description="", created_by=admin, updated_by=admin)
+    textbook1 = add(session, Textbook, project=project1, title='Demo', publisher='Gabby', year=2024, isbn='9783161484100', created_by=admin, updated_by=admin)
+    section1 = add(session, Section, textbook=textbook1, pdf_file=pdffile1, textbook_start_page=1, pdf_file_start_page=1, pages_count=8, created_by=admin, updated_by=admin)
+
+
 available_fixtures = {
     "admin-user": create_admin_user_fixture,
     "test-users": create_test_users_fixture,
@@ -168,6 +186,7 @@ available_fixtures = {
     "test-exercises": create_test_exercises_fixture,
     "more-test-exercises": create_more_test_exercises_fixture,
     "even-more-test-exercises": create_even_more_test_exercises_fixture,
+    "empty-demo-textbook": create_empty_demo_textbook_fixture,
 }
 
 def load(session, fixtures):

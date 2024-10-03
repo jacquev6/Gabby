@@ -8,6 +8,7 @@ describe('Gabby', () => {
 
   beforeEach(() => {
     login()
+    loadFixtures('empty-demo-textbook')
   })
 
   it('creates a project with the demo PDF as a textbook', () => {
@@ -55,20 +56,21 @@ describe('Gabby', () => {
     })
   }
 
-  function screenshot(name: string) {
+  function screenshot(testName: string, screenshotName: string) {
     cy.window().then(window => {
       var sel = window.getSelection()
       console.assert(sel !== null)
       sel.removeAllRanges()
     })
-    cy.focused().blur()
-    cy.screenshot(name)
+    cy.screenshot(`${testName}--${screenshotName}`)
   }
 
-  it('drafts a "Select words" exercise', () => {
+  it('creates a "Select words" exercise', () => {
     cy.viewport(1200, 1200)
     visit('/project-xkopqm/textbook-klxufv/page-2/new-exercise', {pdf: 'demo'})
     setupAliases()
+
+    cy.get('@number').type('1')
 
     cy.get('@adaptationType').select('select-things').blur()
     cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="2"]').click()
@@ -94,13 +96,28 @@ describe('Gabby', () => {
     cy.get('button:contains("Wording")').click()
     notBusy()
 
-    screenshot('select-words')
+    cy.focused().blur()
+    screenshot('select-words', 'edit-1')
+
+    cy.get('button:contains("Save then back")').click()
+    cy.visit('/project-xkopqm')
+    cy.get('a:contains("the exported HTML")').should('have.attr', 'href').then(url => {
+      cy.visit(url + '&download=false')
+      cy.get('a').click()
+      screenshot('select-words', 'export-1')
+      cy.get('span[data-cy=selectable]').eq(5).click()
+      cy.get('span[data-cy=selectable]').eq(7).click()
+      cy.get('span[data-cy=selectable]').eq(7).click()
+      screenshot('select-words', 'export-2')
+    })
   })
 
-  it('drafts a "Select words" exercise with custom colors', () => {
+  it('creates a "Select words" exercise with custom colors', () => {
     cy.viewport(1200, 1000)
     visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise', {pdf: 'demo'})
     setupAliases()
+
+    cy.get('@number').type('1')
 
     cy.get('@adaptationType').select('select-things').blur()
     cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="2"]').click()
@@ -136,13 +153,28 @@ describe('Gabby', () => {
     cy.get('button:contains("Wording")').click()
     notBusy()
 
-    screenshot('select-words-with-custom-colors')
+    cy.focused().blur()
+    screenshot('select-words-with-custom-colors', 'edit-1')
+
+    cy.get('button:contains("Save then back")').click()
+    cy.visit('/project-xkopqm')
+    cy.get('a:contains("the exported HTML")').should('have.attr', 'href').then(url => {
+      cy.visit(url + '&download=false')
+      cy.get('a').click()
+      screenshot('select-words-with-custom-colors', 'export-1')
+      cy.get('span[data-cy=selectable]').eq(5).click()
+      cy.get('span[data-cy=selectable]').eq(7).click()
+      cy.get('span[data-cy=selectable]').eq(7).click()
+      screenshot('select-words-with-custom-colors', 'export-2')
+    })
   })
 
-  it('drafts a "Multiple choices (in instructions)" exercise', () => {
+  it('creates a "Multiple choices (in instructions)" exercise', () => {
     cy.viewport(1200, 850)
     visit('/project-xkopqm/textbook-klxufv/page-3/new-exercise', {pdf: 'demo'})
     setupAliases()
+
+    cy.get('@number').type('1')
 
     cy.get('@adaptationType').select('multiple-choices-in-instructions').blur()
     cy.get('label:contains("Placeholder") + input').type('{selectAll}...', {delay: 0})
@@ -173,13 +205,28 @@ describe('Gabby', () => {
     cy.get('button:contains("Wording")').click()
     notBusy()
 
-    screenshot('multiple-choices-in-instructions')
+    cy.focused().blur()
+    screenshot('multiple-choices-in-instructions', 'edit-1')
+
+    cy.get('button:contains("Save then back")').click()
+    cy.visit('/project-xkopqm')
+    cy.get('a:contains("the exported HTML")').should('have.attr', 'href').then(url => {
+      cy.visit(url + '&download=false')
+      cy.get('a').click()
+      screenshot('multiple-choices-in-instructions', 'export-1')
+      cy.get('span.main').eq(1).click()
+      screenshot('multiple-choices-in-instructions', 'export-2')
+      cy.get('span.choice0').click()
+      screenshot('multiple-choices-in-instructions', 'export-3')
+    })
   })
 
-  it('drafts a "Fill with free text" exercise', () => {
+  it('creates a "Fill with free text" exercise', () => {
     cy.viewport(1200, 850)
     visit('/project-xkopqm/textbook-klxufv/page-4/new-exercise', {pdf: 'demo'})
     setupAliases()
+
+    cy.get('@number').type('1')
 
     cy.get('@adaptationType').select('fill-with-free-text').blur()
     cy.get('label:contains("Placeholder") + input').type('{selectAll}…', {delay: 0})
@@ -191,6 +238,17 @@ describe('Gabby', () => {
     cy.get('button:contains("Wording")').click()
     notBusy()
 
-    screenshot('fill-with-free-text')
+    cy.focused().blur()
+    screenshot('fill-with-free-text', 'edit-1')
+
+    cy.get('button:contains("Save then back")').click()
+    cy.visit('/project-xkopqm')
+    cy.get('a:contains("the exported HTML")').should('have.attr', 'href').then(url => {
+      cy.visit(url + '&download=false')
+      cy.get('a').click()
+      screenshot('fill-with-free-text', 'export-1')
+      cy.get('[contenteditable]').eq(1).type('coureuse')
+      screenshot('fill-with-free-text', 'export-2')
+    })
   })
 })
