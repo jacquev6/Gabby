@@ -356,14 +356,8 @@ class InstructionsSectionParser:
         self.transformer = transformer
 
     def __call__(self, section: str):
-        try:
-            parsed = self.parser.parse(section)
-        except lark.exceptions.ParseError as e:
-            raise ValueError(f"Error parsing instructions section {section}: {e}")
-        try:
-            return self.transformer.transform(parsed)
-        except lark.exceptions.VisitError as e:
-            raise ValueError(f"Error transforming instructions section {section}: {e}")
+        parsed = self.parser.parse(section)
+        return self.transformer.transform(parsed)
 
 
 class Transformer(lark.Transformer, abc.ABC):
@@ -944,14 +938,8 @@ class WordingSectionParser:
         self.transformer = transformer
 
     def __call__(self, section: str):
-        try:
-            parsed = self.parser.parse(section)
-        except lark.exceptions.ParseError as e:
-            raise ValueError(f"Error parsing wording section {section}: {e}")
-        try:
-            return self.transformer.transform(parsed)
-        except lark.exceptions.VisitError as e:
-            raise ValueError(f"Error transforming wording section {section}: {e}")
+        parsed = self.parser.parse(section)
+        return self.transformer.transform(parsed)
 
 
 class WordingSectionDeltaMaker(Transformer):
