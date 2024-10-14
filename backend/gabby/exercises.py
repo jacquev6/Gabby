@@ -157,12 +157,6 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
             "settings": adaptation.model_dump()
         }
 
-    extraction_events: orm.Mapped[list["ExtractionEvent"]] = orm.relationship(
-        back_populates="exercise",
-        cascade="all, delete-orphan",
-        order_by="ExtractionEvent.id",
-    )
-
     def make_adapted(self):
         return renderable.Exercise(
             number=self.number,
@@ -335,16 +329,6 @@ class ExerciseTestCase(TransactionTestCase):
                 ],
             )
 
-    def test_delete_with_extraction_events(self):
-        exercise = self.create_model(Exercise, project=self.project, textbook=None, textbook_page=None, number="5.b", instructions="", wording="", example="", clue="")
-        self.create_model(ExtractionEvent, exercise=exercise, event="{}")
-        self.create_model(ExtractionEvent, exercise=exercise, event="{}")
-
-        self.delete_item(exercise)
-
-        self.assertEqual(self.count_models(Exercise), 0)
-        self.assertEqual(self.count_models(ExtractionEvent), 0)
-
 
 class ExercisesResource:
     singular_name = "exercise"
@@ -441,14 +425,3 @@ class ExercisesResource:
 
 
 set_wrapper(Exercise, orm_wrapper_with_sqids(ExercisesResource.sqids))
-
-
-class ExtractionEvent(OrmBase, CreatedUpdatedByAtMixin):
-    __tablename__ = "extraction_events"
-
-    id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
-
-    exercise_id: orm.Mapped[int] = orm.mapped_column(sql.ForeignKey(Exercise.id , ondelete="CASCADE"))
-    exercise: orm.Mapped[Exercise] = orm.relationship(back_populates="extraction_events")
-
-    event: orm.Mapped[str]
