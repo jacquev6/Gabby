@@ -9,6 +9,11 @@ import TextBlot from 'quill/blots/text'
 import Keyboard from 'quill/modules/keyboard'
 
 
+export interface SelectionRange {
+  index: number
+  length: number
+}
+
 // Monkey-patching Quill to remove some default bindings, until I learn how to do it properly.
 delete Keyboard.DEFAULTS.bindings.bold
 delete Keyboard.DEFAULTS.bindings.italic
@@ -76,6 +81,7 @@ const props = defineProps<{
 const emit = defineEmits<{
   focus: []
   blur: []
+  selectionChange: [SelectionRange]
 }>()
 
 const registry = computed(() => makeRegistryWithBlots(props.blots))
@@ -114,15 +120,17 @@ const quill = computed(() => {
         model.value = getContents(quill)
       }
     })
-    quill.on('selection-change', (range: object | null, _oldRange: object | null, _source: string) => {
+    quill.on('selection-change', (range: SelectionRange | null, _oldRange: SelectionRange | null, _source: string) => {
       const hadFocus = hasFocus.value
-      hasFocus.value = range !== null
-      if (hasFocus.value) {
+      if (range !== null) {
+        hasFocus.value = true
         currentFormat.value = quill.getFormat()
         if (!hadFocus) {
           emit('focus')
         }
+        emit('selectionChange', range)
       } else {
+        hasFocus.value = false
         currentFormat.value = {}
         if (hadFocus) {
           emit('blur')

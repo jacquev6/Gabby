@@ -58,12 +58,112 @@ function makeModelPart(formats: Record<string, Format>, delta: QuillModel[number
     return format.make(delta.insert[keys[0]])
   }
 }
+
+export function makeRange(formats: Record<string, Format>, quillModel: QuillModel, quillRange: SelectionRange): SelectionRange {
+  const ops = JSON.parse(JSON.stringify(quillModel)) as QuillModel
+
+  let quillIndex = quillRange.index
+  let index = 0
+  let quillLength = quillRange.length
+  let length = 0
+
+  // let model = makeModel(formats, quillModel)
+
+  // console.clear()
+  // console.log('Init:', quillIndex, quillLength, JSON.stringify(ops), index, length, model, '[' + model.slice(index, index + length) + ']')
+
+  // Skip ops before quillIndex
+  while (true) {
+    const opLength = 'attributes' in ops[0] ? ops[0].insert.length : 1
+    if (quillIndex >= opLength) {
+      quillIndex -= opLength
+      index += makeModelPart(formats, ops[0]).length
+      // console.log('Skipping', JSON.stringify(ops[0]))
+      ops.shift()
+    } else {
+      break
+    }
+  }
+
+  // console.log('Starts in:', quillIndex, quillLength, JSON.stringify(ops), index, length, '[' + model.slice(index, index + length) + ']')
+
+  // Range starts at the start of, or in, ops[0]
+  if ('attributes' in ops[0]) {
+    if (Object.keys(ops[0].attributes).length === 0) {
+      // It's a plain text op, we can start in the middle of it
+      index += quillIndex
+    } else {
+      // It's a formatted text op, we need to start at the beginning (lengthening the range by the left)
+      if (quillLength > 0) {
+        quillLength += quillIndex
+        quillIndex = 0
+      }
+    }
+  } else {
+    // It's an embed op, of length 1
+    quillLength += quillIndex
+    quillIndex = 0
+  }
+
+  if (quillLength === 0) {
+    return {index, length}
+  }
+
+  // console.log('C', quillIndex, quillLength, JSON.stringify(ops), index, length, '[' + model.slice(index, index + length) + ']')
+
+  // Accumulate ops until quillLength
+  while (quillLength > 0) {
+    const opLength = 'attributes' in ops[0] ? ops[0].insert.length : 1
+    if (quillIndex + quillLength > opLength) {
+      if ('attributes' in ops[0]) {
+        if (Object.keys(ops[0].attributes).length === 0) {
+          // Plain text op: include its suffix
+          length += opLength - quillIndex
+        } else {
+          console.assert(quillIndex === 0)
+          length += makeModelPart(formats, ops[0]).length
+        }
+      } else {
+        // Embed op: include it
+        length += makeModelPart(formats, ops[0]).length
+      }
+      quillLength -= opLength - quillIndex
+      quillIndex = 0
+      // console.log('Including', JSON.stringify(ops[0]), 'to', length)
+      ops.shift()
+    } else {
+      break
+    }
+  }
+
+  // console.log('Stops in', quillIndex, quillLength, JSON.stringify(ops), index, length, '[' + model.slice(index, index + length) + ']')
+
+  // Range stops at the start of, or in, ops[0]
+  if (quillLength > 0) {
+    if ('attributes' in ops[0]) {
+      if (Object.keys(ops[0].attributes).length === 0) {
+        // It's a plain text op, we can stop in the middle of it
+        length += quillLength
+      } else {
+        // It's a formatted text op, we need to stop at the end (lengthening the range by the right)
+        length += makeModelPart(formats, ops[0]).length
+      }
+    } else {
+      // It's an embed op, of length 1
+      length += makeModelPart(formats, ops[0]).length
+    }
+  }
+
+  // console.log('E', quillIndex, quillLength, JSON.stringify(ops), index, length, '[' + model.slice(index, index + length) + ']')
+
+  return {index, length}
+}
 </script>
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 
-import Quill, { type Model as QuillModel } from './Quill.vue'
+import Quill, { type Model as QuillModel, type SelectionRange } from './Quill.vue'
 
 const props = defineProps<{
   label: string
@@ -159,6 +259,7 @@ defineExpose({
       :blots
       @focus="emit('focus')"
       @blur="emit('blur')"
+      @selectionChange="range => emit('selectionChange', makeRange(formats, quillModel, range))"
     />
   </div>
 </template>
