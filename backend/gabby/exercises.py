@@ -19,9 +19,9 @@ from .database_utils import OrmBase, SessionDependable
 from .projects import Project
 from .testing import TransactionTestCase
 from .textbooks import Textbook, TextbooksResource
-from .users import User, MandatoryAuthBearerDependable
+from .users import MandatoryAuthBearerDependable
 from .users.mixins import CreatedUpdatedByAtMixin
-from .wrapping import unwrap, set_wrapper, make_sqids, orm_wrapper_with_sqids
+from .wrapping import set_wrapper, make_sqids, orm_wrapper_with_sqids
 from mydantic import PydanticBase
 
 
