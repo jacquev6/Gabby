@@ -12,6 +12,13 @@ Les améliorations techniques ne figurent que dans le `log git <https://github.c
 Les titres des sections de ce document correspondent au champ ``Gabby version`` dans le "À propos".
 Les versions sont nommées selon leur date de publication, au format ``YYYYMMDD-HHMMSS`` (année, mois, jour, tiret, heure, minute, seconde).
 
+20241014-090349
+---------------
+
+- Correction de bugs:
+    - il est à nouveau possible de télécharger le HTML exporté
+    - il est à nouveau possible de modifier un exercice ayant été crée avec une adaptation avant la version 20241003-153035
+
 20241003-153035
 ---------------
 
