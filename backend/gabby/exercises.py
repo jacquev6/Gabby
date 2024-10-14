@@ -527,10 +527,7 @@ class ExercisesResource:
         session: SessionDependable,
         authenticated_user: MandatoryAuthBearerDependable,
     ):
-        previous_adaptation = item.old_adaptation
         yield
-        if previous_adaptation is not None and unwrap(item.old_adaptation) != unwrap(previous_adaptation):
-            session.delete(previous_adaptation)
         item.updated_by = authenticated_user
         save_item(session, item)
 
