@@ -121,6 +121,13 @@ services:
     init: true
     # @todo Understand why this container doesn't exit quickly on 'docker compose down'
     command: ["sleep", "infinity"]
+  demo-pdf-maker:
+    image: gabby-dev_backend
+    pull_policy: never
+    volumes:
+      - ..:/app
+    working_dir: /app/pdf-examples
+    command: ["watchfiles", "libreoffice --convert-to pdf demo.odt", "demo.odt"]
   large-maker:
     image: gabby-dev_backend
     pull_policy: never
