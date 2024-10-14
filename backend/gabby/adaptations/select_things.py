@@ -80,7 +80,7 @@ class SelectThingsAdaptation(PydanticBase):
 
     def _make_delta_maker_type(self):
         return type("InstructionsDeltaMaker", (parsing.InstructionsSectionDeltaMaker,), {
-            f"sel{color_index}_tag": (lambda color: staticmethod(lambda args: exercise_delta.InsertOp(insert=args[0], attributes={"sel": color})))(color_index)
+            f"sel{color_index}_tag": (lambda color: staticmethod(lambda args: exercise_delta.TextInsertOp(insert=args[0], attributes={"sel": color})))(color_index)
             for color_index in self._color_indexes
         })
 
@@ -160,10 +160,10 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             ),
             d.Exercise(
                 instructions=[
-                    d.InsertOp(insert="instructions"),
+                    d.TextInsertOp(insert="instructions", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="The wording of this exercise is a single sentence."),
+                    d.TextInsertOp(insert="The wording of this exercise is a single sentence.", attributes={}),
                 ],
                 example=[],
                 clue=[],
@@ -217,15 +217,15 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             ),
             d.Exercise(
                 instructions=[
-                    d.InsertOp(insert="abc", attributes={"sel": 1}),
-                    d.InsertOp(insert=" "),
-                    d.InsertOp(insert="def", attributes={"sel": 2}),
-                    d.InsertOp(insert=" "),
-                    d.InsertOp(insert="ghi", attributes={"sel": 3}),
-                    d.InsertOp(insert=" {sel4|jkl}"),
+                    d.TextInsertOp(insert="abc", attributes={"sel": 1}),
+                    d.TextInsertOp(insert=" ", attributes={}),
+                    d.TextInsertOp(insert="def", attributes={"sel": 2}),
+                    d.TextInsertOp(insert=" ", attributes={}),
+                    d.TextInsertOp(insert="ghi", attributes={"sel": 3}),
+                    d.TextInsertOp(insert=" {sel4|jkl}", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="wording"),
+                    d.TextInsertOp(insert="wording", attributes={}),
                 ],
                 example=[],
                 clue=[],
@@ -269,10 +269,10 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             ),
             d.Exercise(
                 instructions=[
-                    d.InsertOp(insert="abc", attributes={"sel": 1}),
+                    d.TextInsertOp(insert="abc", attributes={"sel": 1}),
                 ],
                 wording=[
-                    d.InsertOp(insert="wording"),
+                    d.TextInsertOp(insert="wording", attributes={}),
                 ],
                 example=[],
                 clue=[],
@@ -330,10 +330,10 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             ),
             d.Exercise(
                 instructions=[
-                    d.InsertOp(insert="instructions\nare\n\non\n\nmultiple\nlines"),
+                    d.TextInsertOp(insert="instructions\nare\n\non\n\nmultiple\nlines", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="wording"),
+                    d.TextInsertOp(insert="wording", attributes={}),
                 ],
                 example=[],
                 clue=[],
@@ -391,10 +391,10 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             ),
             d.Exercise(
                 instructions=[
-                    d.InsertOp(insert="instructions"),
+                    d.TextInsertOp(insert="instructions", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="wording is\n\non\n\nmultiple lines"),
+                    d.TextInsertOp(insert="wording is\n\non\n\nmultiple lines", attributes={}),
                 ],
                 example=[],
                 clue=[],
@@ -446,10 +446,10 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             ),
             d.Exercise(
                 instructions=[
-                    d.InsertOp(insert="{tag|abc}"),
+                    d.TextInsertOp(insert="{tag|abc}", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="{tag|def}"),
+                    d.TextInsertOp(insert="{tag|def}", attributes={}),
                 ],
                 example=[],
                 clue=[],
@@ -493,10 +493,10 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             ),
             d.Exercise(
                 instructions=[
-                    d.InsertOp(insert="   abc   "),
+                    d.TextInsertOp(insert="   abc   ", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="   def   "),
+                    d.TextInsertOp(insert="   def   ", attributes={}),
                 ],
                 example=[],
                 clue=[],
@@ -566,16 +566,16 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             ),
             d.Exercise(
                 instructions=[
-                    d.InsertOp(insert="instructions"),
+                    d.TextInsertOp(insert="instructions", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="wording"),
+                    d.TextInsertOp(insert="wording", attributes={}),
                 ],
                 example=[
-                    d.InsertOp(insert="This is the example."),
+                    d.TextInsertOp(insert="This is the example.", attributes={}),
                 ],
                 clue=[
-                    d.InsertOp(insert="This is the clue."),
+                    d.TextInsertOp(insert="This is the clue.", attributes={}),
                 ],
             ),
         )
@@ -637,19 +637,19 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             ),
             d.Exercise(
                 instructions=[
-                    d.InsertOp(insert="instructions"),
+                    d.TextInsertOp(insert="instructions", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="wording"),
+                    d.TextInsertOp(insert="wording", attributes={}),
                 ],
                 example=[
-                    d.InsertOp(insert="abc", attributes={"sel": 1}),
-                    d.InsertOp(insert=" "),
-                    d.InsertOp(insert="def", attributes={"sel": 2}),
+                    d.TextInsertOp(insert="abc", attributes={"sel": 1}),
+                    d.TextInsertOp(insert=" ", attributes={}),
+                    d.TextInsertOp(insert="def", attributes={"sel": 2}),
                 ],
                 clue=[
-                    d.InsertOp(insert="ghi", attributes={"sel": 3}),
-                    d.InsertOp(insert=" {sel4|jkl}"),
+                    d.TextInsertOp(insert="ghi", attributes={"sel": 3}),
+                    d.TextInsertOp(insert=" {sel4|jkl}", attributes={}),
                 ],
             ),
         )

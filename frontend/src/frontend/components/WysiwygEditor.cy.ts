@@ -1,5 +1,28 @@
-import WysiwygEditor from './WysiwygEditor.vue'
+import { type Model as QuillModel } from './Quill.vue'
+import WysiwygEditor, { basicFormats, makeModel } from './WysiwygEditor.vue'
 
+
+describe("WysiwygEditor's makeModel", () => {
+  before(console.clear)
+
+  function test(delta: QuillModel, expected: string) {
+    expect(makeModel(basicFormats, delta)).to.equal(expected)
+  }
+
+  it('makes a simple model', () => {
+    test(
+      [{insert: 'hello world\n', attributes: {}}],
+      'hello world\n',
+    )
+  })
+
+  it('makes a model with a bold word', () => {
+    test(
+      [{insert: 'hello', attributes: {bold: true}}, {insert: ' world\n', attributes: {}}],
+      '{bold|hello} world\n',
+    )
+  })
+})
 
 describe('WysiwygEditor', () => {
   before(console.clear)
@@ -11,7 +34,7 @@ describe('WysiwygEditor', () => {
       formats: {},
       modelValue,
       'onUpdate:modelValue': (m: string) => {modelValue = m},
-      delta: [{insert: modelValue}],
+      delta: [{insert: modelValue, attributes: {}}],
     }})
     cy.get('div.ql-editor').type('o').then(() => {
       expect(modelValue).to.equal('hell\no')
@@ -25,7 +48,7 @@ describe('WysiwygEditor', () => {
       formats: {},
       modelValue,
       'onUpdate:modelValue': (m: string) => {modelValue = m},
-      delta: [{insert: modelValue}],
+      delta: [{insert: modelValue, attributes: {}}],
     }})
     cy.get('div.ql-editor').type('o')
     cy.wait(0).then(() => {
@@ -40,7 +63,7 @@ describe('WysiwygEditor', () => {
       formats: {},
       modelValue,
       'onUpdate:modelValue': (m: string) => {modelValue = m},
-      delta: [{insert: modelValue}],
+      delta: [{insert: modelValue, attributes: {}}],
     }})
     cy.get('div.ql-editor').type('{moveToStart}h').then(() => {
       expect(modelValue).to.equal('hello')
@@ -54,7 +77,7 @@ describe('WysiwygEditor', () => {
       formats: {},
       modelValue,
       'onUpdate:modelValue': (m: string) => {modelValue = m},
-      delta: [{insert: modelValue}],
+      delta: [{insert: modelValue, attributes: {}}],
     }})
     cy.get('div.ql-editor').type('\n').then(() => {
       expect(modelValue).to.equal('hello\n')
@@ -68,7 +91,7 @@ describe('WysiwygEditor', () => {
       formats: {},
       modelValue,
       'onUpdate:modelValue': (m: string) => {modelValue = m},
-      delta: [{insert: modelValue}],
+      delta: [{insert: modelValue, attributes: {}}],
     }})
     cy.get('div.ql-editor').type('{moveToStart}h').then(() => {
       expect(modelValue).to.equal('hello\n')
@@ -82,7 +105,7 @@ describe('WysiwygEditor', () => {
       formats: {},
       modelValue,
       'onUpdate:modelValue': (m: string) => {modelValue = m},
-      delta: [{insert: modelValue}],
+      delta: [{insert: modelValue, attributes: {}}],
     }})
     cy.get('div.ql-editor').type('{selectAll}{del}').then(() => {
       expect(modelValue).to.equal('')
@@ -96,7 +119,7 @@ describe('WysiwygEditor', () => {
       formats: {},
       modelValue,
       'onUpdate:modelValue': (m: string) => {modelValue = m},
-      delta: [{insert: modelValue}],
+      delta: [{insert: modelValue, attributes: {}}],
     }})
     cy.vue<typeof WysiwygEditor>().then(w => { w.setProps({delta: []}) })
     cy.wait(0).then(() => { expect(modelValue).to.equal('') })
@@ -109,9 +132,9 @@ describe('WysiwygEditor', () => {
       formats: {},
       modelValue,
       'onUpdate:modelValue': (m: string) => {modelValue = m},
-      delta: [{insert: modelValue}],
+      delta: [{insert: modelValue, attributes: {}}],
     }})
-    cy.vue<typeof WysiwygEditor>().then(w => { w.setProps({delta: [{insert: 'changed'}]}) })
+    cy.vue<typeof WysiwygEditor>().then(w => { w.setProps({delta: [{insert: 'changed', attributes: {}}]}) })
     cy.wait(0).then(() => { expect(modelValue).to.equal('changed') })
   })
 })

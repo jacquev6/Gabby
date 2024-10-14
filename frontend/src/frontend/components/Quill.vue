@@ -1,5 +1,4 @@
 <script lang="ts">
-import type AttributeMap from 'quill-delta/dist/AttributeMap'
 import Quill, { Parchment } from 'quill/core'
 import Block from 'quill/blots/block'
 import Break from 'quill/blots/break'
@@ -16,12 +15,12 @@ delete Keyboard.DEFAULTS.bindings.italic
 
 // Partial of node_modules/quill-delta/dist/Op.d.ts, more readable than using TypeScript's 'Omit',
 // but slightly more fragile in the unlikely case quill-delta changes its interface. OK.
-interface InsertOp {
+export type Model = ({
   insert: string
-  attributes?: AttributeMap
-}
-
-export type Model = InsertOp[]
+  attributes: Record<string, unknown>
+} | {
+  insert: Record<string, unknown>
+})[]
 
 function makeMinimalRegistry() {
   const registry = new Parchment.Registry()
@@ -45,6 +44,8 @@ function makeRegistryWithBlots(blots: Blot[]) {
 }
 
 export const InlineBlot = Quill.import('blots/inline') as Blot
+export const BlockEmbed = Quill.import('blots/block/embed') as Blot
+export const InlineEmbed = Quill.import('blots/embed') as Blot
 
 export class BoldBlot extends InlineBlot {
   static override blotName = 'bold'
@@ -85,8 +86,12 @@ const container = ref<HTMLDivElement | null>(null)
 
 function getContents(quill: Quill): Model {
   return quill.getContents().ops.map(op => {
-    console.assert(typeof op.insert === 'string')
-    return {insert: op.insert, attributes: op.attributes}
+    console.assert(op.insert !== undefined)
+    if (typeof op.insert === 'string') {
+      return {insert: op.insert, attributes: op.attributes ?? {}}
+    } else {
+      return {insert: op.insert}
+    }
   })
 }
 

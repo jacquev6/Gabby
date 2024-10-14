@@ -122,7 +122,7 @@ class ItemsAndEffectsAttempt1Adaptation(PydanticBase):
         tag_functions = {}
         if self.effects.selectable is not None:
             tag_functions.update({
-                f"sel{color_index}_tag": (lambda color_index: staticmethod(lambda args: exercise_delta.InsertOp(insert=args[0], attributes={"sel": color_index})))(color_index)
+                f"sel{color_index}_tag": (lambda color_index: staticmethod(lambda args: exercise_delta.TextInsertOp(insert=args[0], attributes={"sel": color_index})))(color_index)
                 for color_index in self._color_indexes
             })
         return type("InstructionsDeltaMaker", (parsing.InstructionsSectionDeltaMaker,), tag_functions)
@@ -141,7 +141,7 @@ class ItemsAndEffectsAttempt1Adaptation(PydanticBase):
     class ManualItemsWordingDeltaMaker(parsing.WordingSectionDeltaMaker):
         def selectable_tag(self, args):
             assert len(args) == 1
-            return exercise_delta.InsertOp(insert=args[0], attributes={"selectable": True})
+            return exercise_delta.TextInsertOp(insert=args[0], attributes={"selectable": True})
 
     def make_wording_delta(self, exercise):
         if self.effects.selectable is None:

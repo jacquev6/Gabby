@@ -41,6 +41,7 @@ class SelBlot extends InlineBlot {
 const selectThingsFormats = {
   ...basicFormats,
   sel: {
+    kind: 'text' as const,
     make: (text: string, value: unknown) => `{sel${value}|${text}}`,
     blot: SelBlot,
   },
@@ -54,6 +55,7 @@ class SelectableBlot extends InlineBlot {
 const itemsAndEffectsWordingFormats = {
   ...basicFormats,
   selectable: {
+    kind: 'text' as const,
     make: (text: string) => `{selectable|${text}}`,
     blot: SelectableBlot,
   },
@@ -88,6 +90,7 @@ export const wysiwygFormats = {
     instructions: {
       ...basicFormats,
       choice: {
+        kind: 'text' as const,
         make: (text: string) => `{choice|${text}}`,
         blot: ChoiceBlot,
       },
