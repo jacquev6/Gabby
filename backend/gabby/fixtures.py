@@ -10,13 +10,15 @@ from .api_models import (
     ItemsAndEffectsAttempt1Adaptation,
     MultipleChoicesInInstructionsAdaptation,
     MultipleChoicesInWordingAdaptation,
+    PdfRectangle,
+    Point,
     SelectThingsAdaptation,
 )
 from .orm_models import PdfFile, PdfFileNaming, Section
 from .orm_models import Ping
 from .orm_models import Project, Textbook
 from .orm_models import User, UserEmailAddress
-from .exercises import populate_rectangles_from_extraction_events
+from .exercises import check_rectangles_are_consistent_with_extraction_events
 
 
 def add(session, class_, **kwds):
@@ -194,7 +196,7 @@ def create_test_exercises_fixture(session):
     admin = get_or_create_admin(session)
     create_test_exercises_1(session, admin)
     # @todo Set .rectangles explicitly
-    populate_rectangles_from_extraction_events(session)
+    check_rectangles_are_consistent_with_extraction_events(session)
 
 
 def create_test_exercises_1(session, admin):
@@ -255,6 +257,17 @@ def create_test_exercises_1(session, admin):
             "stop": {"x": 563.0859853571111, "y": 165.01653324025676},
             "start": {"x": 321.7851195562453, "y": 298.5614176476993},
         },
+        rectangles=[
+            PdfRectangle(
+                pdf_sha256="f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c",
+                pdf_page=1,
+                coordinates="pdfjs",
+                start=Point(x=321.7851195562453, y=298.5614176476993),
+                stop=Point(x=563.0859853571111, y=165.01653324025676),
+                text=None,
+                role="bounding",
+            )
+        ],
         number="3",
         instructions="Complète avec : le, une, un, des, tu, elles, ils.\r\nPuis, souligne les verbes.",
         example="",
@@ -276,6 +289,17 @@ def create_test_exercises_1(session, admin):
             "stop": {"x": 565.8489723700982, "y": 59.10162491711276},
             "start": {"x": 321.7851195562453, "y": 165.93753244306663},
         },
+        rectangles=[
+            PdfRectangle(
+                pdf_sha256="f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c",
+                pdf_page=1,
+                coordinates="pdfjs",
+                start=Point(x=321.7851195562453, y=165.93753244306663),
+                stop=Point(x=565.8489723700982, y=59.10162491711276),
+                text=None,
+                role="bounding",
+            )
+        ],
         number="4",
         instructions="Écris une phrase en respectant l'ordre des classes grammaticales indiquées.",
         example="pronom personnel / verbe / déterminant / nom commun :\r\nJe mange une pomme.",
@@ -294,6 +318,17 @@ def create_test_exercises_1(session, admin):
             "stop": {"x": 537.2981065692323, "y": 689.0650796391174},
             "start": {"x": 313.4961585172843, "y": 790.3749919482118},
         },
+        rectangles=[
+            PdfRectangle(
+                pdf_sha256="f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c",
+                pdf_page=2,
+                coordinates="pdfjs",
+                start=Point(x=313.4961585172843, y=790.3749919482118),
+                stop=Point(x=537.2981065692323, y=689.0650796391174),
+                text=None,
+                role="bounding",
+            )
+        ],
         number="9",
         instructions="Recopie l’intrus qui se cache dans chaque liste et écris sa classe.",
         example="",
@@ -351,7 +386,7 @@ def create_more_test_exercises_fixture(session):
     admin = get_or_create_admin(session)
     create_test_exercises_2(session, admin)
     # @todo Set .rectangles explicitly
-    populate_rectangles_from_extraction_events(session)
+    check_rectangles_are_consistent_with_extraction_events(session)
 
 
 def create_test_exercises_2(session, admin):
@@ -366,6 +401,35 @@ def create_test_exercises_2(session, admin):
             "stop": {"x": 303.3652061363319, "y": 311.45540648703854},
             "start": {"x": 57.45936198048777, "y": 508.54923588836755},
         },
+        rectangles=[
+            PdfRectangle(
+                pdf_sha256="f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c",
+                pdf_page=2,
+                coordinates="pdfjs",
+                start=Point(x=57.45936198048777, y=508.54923588836755),
+                stop=Point(x=303.3652061363319, y=311.45540648703854),
+                text=None,
+                role="bounding",
+            ),
+            PdfRectangle(
+                pdf_sha256="f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c",
+                pdf_page=2,
+                coordinates="pdfjs",
+                start=Point(x=41.81553087016726, y=512.8599582877939),
+                stop=Point(x=299.93876428559844, y=444.8714829639081),
+                text="7\nRelève dans le texte trois\ndéterminants, un nom propre, quatre\nnoms communs et trois verbes.",
+                role="instructions",
+            ),
+            PdfRectangle(
+                pdf_sha256="f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c",
+                pdf_page=2,
+                coordinates="pdfjs",
+                start=Point(x=51.03421777786123, y=465.61372967289014),
+                stop=Point(x=308.00511532983063, y=340.0079023796095),
+                text="Les Touaregs sont des Berbères, un peuple\nqui habite en Afrique du Nord depuis la\npréhistoire. Ils vivent dans le désert du Sahara\n(Algérie, Libye, Mali, Niger, Burkina Faso…). En\nété, les températures y montent à plus de 50 °C\net elles descendent en dessous de zéro durant\nles nuits d’hiver.",
+                role="wording",
+            ),
+        ],
         number="7",
         instructions="Relève dans le texte trois\n{sel1|déterminants}, un {sel2|nom propre}, quatre\n{sel3|noms communs} et trois {sel4|verbes}.",
         example="",
@@ -390,6 +454,35 @@ def create_test_exercises_2(session, admin):
             "stop": {"x": 556.6390156601415, "y": 462.4992757478701},
             "start": {"x": 317.18014120126696, "y": 538.0212103782859},
         },
+        rectangles=[
+            PdfRectangle(
+                pdf_sha256="f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c",
+                pdf_page=2,
+                coordinates="pdfjs",
+                start=Point(x=317.18014120126696, y=538.0212103782859),
+                stop=Point(x=556.6390156601415, y=462.4992757478701),
+                text=None,
+                role="bounding",
+            ),
+            PdfRectangle(
+                pdf_sha256="f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c",
+                pdf_page=2,
+                coordinates="pdfjs",
+                start=Point(x=312.61445878367766, y=537.0592461149397),
+                stop=Point(x=556.9096618375679, y=493.27005861819964),
+                text="11\nAjoute le suffixe –eur aux verbes.\nIndique la classe des mots fabriqués.",
+                role="instructions",
+            ),
+            PdfRectangle(
+                pdf_sha256="f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c",
+                pdf_page=2,
+                coordinates="pdfjs",
+                start=Point(x=314.9191305106011, y=503.64118197269073),
+                stop=Point(x=555.7573259741062, y=452.9379122396233),
+                text="nager ➞ … ◆ tracter ➞ … ◆ manger ➞ … ◆\ninventer ➞ … ◆ livrer ➞ …",
+                role="wording",
+            ),
+        ],
         number="11",
         instructions="Ajoute le suffixe –eur aux verbes.\nIndique la classe des mots fabriqués.",
         example="",
@@ -408,6 +501,17 @@ def create_test_exercises_2(session, admin):
         textbook=textbook1,
         textbook_page=7,
         bounding_rectangle={"start": {"x": 60, "y": 180}, "stop": {"x": 250, "y": 320}},
+        rectangles=[
+            PdfRectangle(
+                pdf_sha256="f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c",
+                pdf_page=2,
+                coordinates="pdfjs",
+                start=Point(x=60.0, y=180.0),
+                stop=Point(x=250.0, y=320.0),
+                text=None,
+                role="bounding",
+            )
+        ],
         number="8",
         instructions="Réponds par {choice|vrai} ou {choice|faux}.",
         example="",
@@ -506,7 +610,7 @@ def create_even_more_test_exercises_fixture(session):
     admin = get_or_create_admin(session)
     create_test_exercises_3(session, admin)
     # @todo Set .rectangles explicitly
-    populate_rectangles_from_extraction_events(session)
+    check_rectangles_are_consistent_with_extraction_events(session)
 
 
 def create_test_exercises_3(session, admin):
@@ -521,6 +625,17 @@ def create_test_exercises_3(session, admin):
             "stop": {"x": 303.3652061363319, "y": 311.45540648703854},
             "start": {"x": 57.45936198048777, "y": 508.54923588836755},
         },
+        rectangles=[
+            PdfRectangle(
+                pdf_sha256="f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c",
+                pdf_page=2,
+                coordinates="pdfjs",
+                start=Point(x=57.45936198048777, y=508.54923588836755),
+                stop=Point(x=303.3652061363319, y=311.45540648703854),
+                text=None,
+                role="bounding",
+            )
+        ],
         number="7b",
         instructions="Relève dans le texte trois\n{sel1|déterminants}, un {sel2|nom propre}, quatre\n{sel3|noms communs} et trois {sel4|verbes}.",
         example="",

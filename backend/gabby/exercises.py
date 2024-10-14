@@ -186,7 +186,7 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
         )
 
 
-def populate_rectangles_from_extraction_events(session: orm.Session):
+def check_rectangles_are_consistent_with_extraction_events(session: orm.Session):
     extraction_events_by_exercise_id = {}
     for extraction_event in session.execute(sql.select(ExtractionEvent)):
         event = json.loads(extraction_event[0].event)
@@ -228,7 +228,6 @@ def populate_rectangles_from_extraction_events(session: orm.Session):
                         best_distance = distance
                         text_selected_events_by_text[event["value"]] = text_selected_events
 
-        assert exercise.rectangles == []
         rectangles = []
 
         for event in events:
@@ -280,7 +279,8 @@ def populate_rectangles_from_extraction_events(session: orm.Session):
                     role=event["kind"][len("SelectedTextAddedTo"):].lower(),
                 ))
 
-        exercise.rectangles = rectangles
+        if exercise.rectangles != rectangles:
+            print(f"Exercise {exercise.number} page {exercise.textbook_page}: rectangles={rectangles}")
 
 
 class ExerciseTestCase(TransactionTestCase):
