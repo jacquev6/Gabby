@@ -4,23 +4,18 @@ import sqlalchemy as sql
 from .. import api_models
 from .. import exercise_delta as d
 from .. import renderable as r
-from ..exercises import OldAdaptation, Exercise
+from ..exercises import Exercise
 from ..testing import AdaptationTestCase
+from .base import OldAdaptation
 
 
 class SelectThingsAdaptation(OldAdaptation):
-    __tablename__ = "adaptations__st"
-    __mapper_args__ = {
-        "polymorphic_identity": "st",
-    }
+    def __init__(self, exercise: Exercise, colors, words, punctuation):
+        super().__init__(exercise)
+        self.colors = colors
+        self.words = words
+        self.punctuation = punctuation
 
-    id: orm.Mapped[int] = orm.mapped_column(sql.ForeignKey(OldAdaptation.id), primary_key=True)
-
-    punctuation: orm.Mapped[bool]
-    words: orm.Mapped[bool]
-    old_colors_count: orm.Mapped[int]
-    colors: orm.Mapped[list[str]] = orm.mapped_column(sql.JSON, name="colors")
-    
     def to_new_adaptation(self):
         return api_models.SelectThingsAdaptation(
             kind="select-things",
@@ -41,7 +36,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             clue="",
             wording_paragraphs_per_pagelet=3,
         )
-        adaptation = SelectThingsAdaptation(exercise=exercise, old_colors_count=2, colors=["red", "blue"], words=True, punctuation=False)
+        adaptation = SelectThingsAdaptation(exercise=exercise, colors=["red", "blue"], words=True, punctuation=False)
 
         self.do_test(
             adaptation,
@@ -167,7 +162,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             clue="",
             wording_paragraphs_per_pagelet=3,
         )
-        adaptation = SelectThingsAdaptation(exercise=exercise, old_colors_count=1, colors=["red"], words=True, punctuation=False)
+        adaptation = SelectThingsAdaptation(exercise=exercise, colors=["red"], words=True, punctuation=False)
 
         self.do_test(
             adaptation,
@@ -214,7 +209,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             clue="",
             wording_paragraphs_per_pagelet=3,
         )
-        adaptation = SelectThingsAdaptation(exercise=exercise, old_colors_count=1, colors=["red"], words=True, punctuation=False)
+        adaptation = SelectThingsAdaptation(exercise=exercise, colors=["red"], words=True, punctuation=False)
 
         self.do_test(
             adaptation,
@@ -275,7 +270,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             clue="",
             wording_paragraphs_per_pagelet=3,
         )
-        adaptation = SelectThingsAdaptation(exercise=exercise, old_colors_count=1, colors=["red"], words=True, punctuation=False)
+        adaptation = SelectThingsAdaptation(exercise=exercise, colors=["red"], words=True, punctuation=False)
 
         self.do_test(
             adaptation,
@@ -336,7 +331,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             clue="",
             wording_paragraphs_per_pagelet=3,
         )
-        adaptation = SelectThingsAdaptation(exercise=exercise, old_colors_count=1, colors=["red"], words=True, punctuation=False)
+        adaptation = SelectThingsAdaptation(exercise=exercise, colors=["red"], words=True, punctuation=False)
 
         self.do_test(
             adaptation,
@@ -391,7 +386,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             clue="",
             wording_paragraphs_per_pagelet=3,
         )
-        adaptation = SelectThingsAdaptation(exercise=exercise, old_colors_count=1, colors=["red"], words=True, punctuation=False)
+        adaptation = SelectThingsAdaptation(exercise=exercise, colors=["red"], words=True, punctuation=False)
 
         self.do_test(
             adaptation,
@@ -438,7 +433,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             clue="This is the clue.",
             wording_paragraphs_per_pagelet=3,
         )
-        adaptation = SelectThingsAdaptation(exercise=exercise, old_colors_count=1, colors=["red"], words=True, punctuation=False)
+        adaptation = SelectThingsAdaptation(exercise=exercise, colors=["red"], words=True, punctuation=False)
 
         self.do_test(
             adaptation,

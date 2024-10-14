@@ -9,7 +9,6 @@ from fastjsonapi import make_filters
 
 from . import api_models
 from . import exercise_delta
-from . import parsing
 from . import renderable
 from . import settings
 from .api_utils import create_item, get_item, get_page, save_item, delete_item
@@ -21,68 +20,6 @@ from .users import MandatoryAuthBearerDependable
 from .users.mixins import CreatedUpdatedByAtMixin
 from .wrapping import set_wrapper, make_sqids, orm_wrapper_with_sqids
 from mydantic import PydanticBase
-
-
-class OldAdaptation(OrmBase, CreatedUpdatedByAtMixin):
-    __tablename__ = "adaptations"
-
-    __mapper_args__ = {
-        "polymorphic_on": "kind",
-        "with_polymorphic": "*",
-    }
-
-    id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
-    kind: orm.Mapped[str] = orm.mapped_column(sql.String(16))
-
-    exercise: orm.Mapped["Exercise"] = orm.relationship(back_populates="old_adaptation")
-
-    def make_adapted(self):
-        return self.exercise.make_adapted()
-
-    def make_delta(self):
-        return self.exercise.make_delta()
-
-    def to_generic_adaptation(self):
-        def to_generic_or_empty(adapted):
-            if adapted is None:
-                return ""
-            else:
-                return adapted.to_generic()
-
-        return GenericOldAdaptation(
-            exercise=Exercise(
-                project=None,
-                textbook=self.exercise.textbook,
-                textbook_page=self.exercise.textbook_page,
-                number=self.exercise.number,
-                instructions=self.make_adapted_instructions().to_generic(),
-                wording=self.make_adapted_wording().to_generic(),
-                example=to_generic_or_empty(self.make_adapted_example()),
-                clue=to_generic_or_empty(self.make_adapted_clue()),
-                wording_paragraphs_per_pagelet=self.exercise.wording_paragraphs_per_pagelet,
-            ),
-        )
-
-
-class GenericOldAdaptation(OldAdaptation):
-    __tablename__ = "adaptations__g"
-    __mapper_args__ = {
-        "polymorphic_identity": "g",
-    }
-
-    id: orm.Mapped[int] = orm.mapped_column(sql.ForeignKey(OldAdaptation.id), primary_key=True)
-
-    def make_adapted_instructions(self):
-        return parsing.adapt_generic_instructions_section(self.exercise.instructions)
-
-    def make_adapted_wording(self):
-        return parsing.adapt_generic_wording_section(self.exercise.wording)
-
-    def make_adapted_example(self):
-        return parsing.adapt_generic_instructions_section(self.exercise.example)
-
-    def make_adapted_clue(self):
-        return parsing.adapt_generic_instructions_section(self.exercise.clue)
 
 
 class Exercise(OrmBase, CreatedUpdatedByAtMixin):
@@ -122,12 +59,6 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
     def rectangles(self, rectangles: list[api_models.PdfRectangle]):
         self._rectangles = [rectangle.model_dump() for rectangle in rectangles]
 
-    old_adaptation_id: orm.Mapped[int | None] = orm.mapped_column(sql.ForeignKey(OldAdaptation.id), name="adaptation_id", unique=True)
-    old_adaptation: orm.Mapped[OldAdaptation | None] = orm.relationship(
-        back_populates="exercise",
-        lazy="joined",
-    )
-
     _adaptation: orm.Mapped[dict] = orm.mapped_column(sql.JSON, name="adaptation", default={"format": 0}, server_default="{\"format\": 0}")
 
     class AdaptationContainer(PydanticBase):
@@ -141,10 +72,7 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
 
         match self._adaptation["format"]:
             case 0:
-                if self.old_adaptation is None:
-                    return api_models.NullAdaptation(kind="null")
-                else:
-                    return self.old_adaptation.to_new_adaptation()
+                return api_models.NullAdaptation(kind="null")
             case 1:
                 return self.AdaptationContainer(adaptation=self._adaptation["settings"]).adaptation
             case format:

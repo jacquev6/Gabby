@@ -3,18 +3,12 @@ import sqlalchemy as sql
 
 from .. import api_models
 from .. import renderable as r
-from ..exercises import OldAdaptation, Exercise
+from ..exercises import Exercise
 from ..testing import AdaptationTestCase
+from .base import OldAdaptation
 
 
 class MultipleChoicesInWordingAdaptation(OldAdaptation):
-    __tablename__ = "adaptations__mciw"
-    __mapper_args__ = {
-        "polymorphic_identity": "mciw",
-    }
-
-    id: orm.Mapped[int] = orm.mapped_column(sql.ForeignKey(OldAdaptation.id), primary_key=True)
-
     def to_new_adaptation(self):
         return api_models.MultipleChoicesInWordingAdaptation(
             kind="multiple-choices-in-wording",

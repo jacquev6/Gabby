@@ -4,20 +4,15 @@ import sqlalchemy as sql
 from .. import api_models
 from .. import exercise_delta as d
 from .. import renderable as r
-from ..exercises import OldAdaptation
-from ..exercises import OldAdaptation, Exercise
+from ..exercises import Exercise
 from ..testing import AdaptationTestCase
+from .base import OldAdaptation
 
 
 class MultipleChoicesInInstructionsAdaptation(OldAdaptation):
-    __tablename__ = "adaptations__mcii"
-    __mapper_args__ = {
-        "polymorphic_identity": "mcii",
-    }
-
-    id: orm.Mapped[int] = orm.mapped_column(sql.ForeignKey(OldAdaptation.id), primary_key=True)
-
-    placeholder: orm.Mapped[str]
+    def __init__(self, exercise: Exercise, placeholder: str):
+        super().__init__(exercise)
+        self.placeholder = placeholder
 
     def to_new_adaptation(self):
         return api_models.MultipleChoicesInInstructionsAdaptation(
