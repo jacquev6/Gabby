@@ -1,10 +1,8 @@
 from contextlib import contextmanager
 from typing import Annotated
-import json
 
 import pydantic
 from sqlalchemy import orm
-import Levenshtein
 import sqlalchemy as sql
 
 from fastjsonapi import make_filters
@@ -184,103 +182,6 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
             example=self.adaptation.make_example_delta(self),
             clue=self.adaptation.make_clue_delta(self),
         )
-
-
-def check_rectangles_are_consistent_with_extraction_events(session: orm.Session):
-    extraction_events_by_exercise_id = {}
-    for extraction_event in session.execute(sql.select(ExtractionEvent)):
-        event = json.loads(extraction_event[0].event)
-        extraction_events_by_exercise_id.setdefault(extraction_event[0].exercise_id, []).append(event)
-
-    for exercise_ in session.execute(sql.select(Exercise)):
-        exercise: Exercise = exercise_[0]
-        events = extraction_events_by_exercise_id.get(exercise.id, [])
-
-        for event in events:
-            assert event["kind"] in {
-                "ExerciseNumberSetAutomatically",
-                "ExerciseNumberSetManually",
-                "InstructionsSetManually",
-                "WordingSetManually",
-                "ExampleSetManually",
-                "ClueSetManually",
-                "TextSelectedInPdf",
-                "SelectedTextEdited",
-                "SelectedTextAddedToInstructions",
-                "SelectedTextAddedToWording",
-                "SelectedTextAddedToExample",
-                "SelectedTextAddedToClue",
-                "BoundingRectangleSelectedInPdf",
-            }
-
-        text_selected_events_by_text = dict()
-        for event in events:
-            if event["kind"] == "TextSelectedInPdf":
-                text_selected_events_by_text[event["value"]] = event
-                if event["value"].startswith(exercise.number):
-                    text_selected_events_by_text[event["value"][len(exercise.number):].lstrip()] = event
-        for event in events:
-            if event["kind"] == "SelectedTextEdited":
-                best_distance = None
-                for text, text_selected_events in list(text_selected_events_by_text.items()):
-                    distance = Levenshtein.distance(event["value"], text)
-                    if best_distance is None or distance < best_distance:
-                        best_distance = distance
-                        text_selected_events_by_text[event["value"]] = text_selected_events
-
-        rectangles = []
-
-        for event in events:
-            if event["kind"] == "BoundingRectangleSelectedInPdf":
-                rectangles.append(api_models.PdfRectangle(
-                    pdf_sha256=event["pdf"]["sha256"],
-                    pdf_page=event["pdf"]["page"],
-                    coordinates="pdfjs",
-                    start=api_models.Point(**event["pdf"]["rectangle"]["start"]),
-                    stop=api_models.Point(**event["pdf"]["rectangle"]["stop"]),
-                    text=None,
-                    role="bounding",
-                ))
-
-        if len(rectangles) == 0 and exercise.bounding_rectangle is not None:
-            textbook = exercise.textbook
-            if textbook is not None:
-                textbook_page = exercise.textbook_page
-                sections = textbook.sections
-                if sections:
-                    section = sections[0]
-                    pdf_file = section.pdf_file
-                    rectangles.append(api_models.PdfRectangle(
-                        pdf_sha256=pdf_file.sha256,
-                        pdf_page=textbook_page + section.pdf_file_start_page - section.textbook_start_page,
-                        coordinates="pdfjs",
-                        start=exercise.bounding_rectangle["start"],
-                        stop=exercise.bounding_rectangle["stop"],
-                        text=None,
-                        role="bounding",
-                    ))
-
-        for event in events:
-            if event["kind"].startswith("SelectedTextAddedTo"):
-                if event["valueBefore"] == "":
-                    text_added = event["valueAfter"]
-                elif event["valueBefore"].endswith("\n"):
-                    text_added = event["valueAfter"][len(event["valueBefore"]):]
-                else:
-                    text_added = event["valueAfter"][len(event["valueBefore"]) + 1:]
-                text_selected_event = text_selected_events_by_text[text_added]  # No .get: the text *has* been seen.
-                rectangles.append(api_models.PdfRectangle(
-                    pdf_sha256=text_selected_event["pdf"]["sha256"],
-                    pdf_page=text_selected_event["pdf"]["page"],
-                    coordinates="pdfjs",
-                    start=api_models.Point(**text_selected_event["pdf"]["rectangle"]["start"]),
-                    stop=api_models.Point(**text_selected_event["pdf"]["rectangle"]["stop"]),
-                    text=text_selected_event["value"],
-                    role=event["kind"][len("SelectedTextAddedTo"):].lower(),
-                ))
-
-        if exercise.rectangles != rectangles:
-            print(f"Exercise {exercise.number} page {exercise.textbook_page}: rectangles={rectangles}")
 
 
 class ExerciseTestCase(TransactionTestCase):
