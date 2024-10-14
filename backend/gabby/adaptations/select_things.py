@@ -1,13 +1,16 @@
 from typing import Literal
+import os
 
 from .. import exercise_delta
 from .. import exercise_delta as d
-from .. import exercises
 from .. import parsing
 from .. import renderable
 from .. import renderable as r
 from .testing import AdaptationTestCase
 from mydantic import PydanticBase
+
+if os.environ.get("GABBY_UNITTESTING", "false") == "true":
+    from .. import exercises
 
 
 class SelectThingsAdaptation(PydanticBase):

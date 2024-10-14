@@ -1,14 +1,17 @@
 from typing import ClassVar, Literal
 import itertools
+import os
 
 from .. import exercise_delta
+from .. import exercise_delta as d
 from .. import parsing
 from .. import renderable
-from .. import exercises
 from .. import renderable as r
-from .. import exercise_delta as d
 from .testing import AdaptationTestCase
 from mydantic import PydanticBase
+
+if os.environ.get("GABBY_UNITTESTING", "false") == "true":
+    from .. import exercises
 
 
 class MultipleChoicesInInstructionsAdaptation(PydanticBase):
