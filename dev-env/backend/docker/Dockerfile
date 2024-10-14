@@ -13,6 +13,14 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     graphviz `# For 'python -m gabby graph-models'` \
     jq \
     postgresql-client `# For DB backup` \
+    poppler-utils  `# For 'pdfunite', to make 'pdf-examples/large.pdf'` \
  && true
 
-ENV PATH=$PATH:/root/.local/bin
+ARG USER_ID
+ARG GROUP_ID
+RUN set -x \
+ && groupadd --gid $GROUP_ID gabby \
+ && useradd --uid $USER_ID --gid $GROUP_ID --create-home --shell /bin/bash gabby
+
+USER gabby
+ENV PATH=$PATH:/home/gabby/.local/bin

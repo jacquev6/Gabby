@@ -3,7 +3,7 @@
 set -o errexit
 set -o nounset
 set -o pipefail
-cd "$(dirname "${BASH_SOURCE[0]}")/."
+cd "$(dirname "${BASH_SOURCE[0]}")"
 
 
 console_options="--env ELECTRON_ENABLE_LOGGING=1"
@@ -25,7 +25,7 @@ then
   false
 fi
 
-docker compose exec \
+../docker-compose.sh exec \
   $console_options \
   frontend-shell \
     npx cypress run \

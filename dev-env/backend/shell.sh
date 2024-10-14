@@ -6,4 +6,4 @@ set -o pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
 
-docker compose exec backend-shell bash "$@"
+./docker-compose.sh exec backend-shell bash "$@"

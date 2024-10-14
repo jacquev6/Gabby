@@ -38,16 +38,16 @@ cd dev-env
 if $do_build
 then
   echo "Gabby dev-env: build"
-  docker compose build --builder default || docker compose build
+  ./docker-compose.sh build --builder default || ./docker-compose.sh build
   echo "Gabby dev-env: pull"
-  docker compose pull --ignore-buildable
+  ./docker-compose.sh pull --ignore-buildable
 fi
 
 echo "Gabby dev-env: start"
-docker compose up --no-build --pull never --remove-orphans --detach
+./docker-compose.sh up --no-build --pull never --remove-orphans --detach
 echo "Gabby dev-env: started (close with Ctrl+C)"
-docker compose logs --follow || true
+./docker-compose.sh logs --follow || true
 
 echo "Gabby dev-env: clean-up"
-docker compose down --remove-orphans
-docker compose rm --stop --volumes --force
+./docker-compose.sh down --remove-orphans
+./docker-compose.sh rm --stop --volumes --force

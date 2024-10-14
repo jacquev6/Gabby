@@ -6,4 +6,4 @@ set -o pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
 
-docker compose exec fanout nginx -s reload
+./docker-compose.sh exec fanout nginx -s reload

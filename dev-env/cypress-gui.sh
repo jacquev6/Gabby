@@ -2,7 +2,7 @@
 
 set -o errexit
 set -o pipefail
-cd "$(dirname "${BASH_SOURCE[0]}")/."
+cd "$(dirname "${BASH_SOURCE[0]}")"
 
 
 if [ -z $DISPLAY ]
@@ -14,7 +14,7 @@ else
   display_option="--env DISPLAY"
 fi
 
-docker compose exec \
+./docker-compose.sh exec \
   $display_option \
   frontend-shell \
     npx cypress open
