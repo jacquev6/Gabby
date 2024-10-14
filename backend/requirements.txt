@@ -16,5 +16,4 @@ sqlalchemy-data-model-visualizer  # Draw database schema
 sqlalchemy-utils  # Database utilities
 uvicorn[standard]  # ASGI server
 
-levenshtein  # Temporary, to find the best match during migration of Exercise.extraction_events to Exercise.rectangles
 PyPDF2  # Only for test fixtures for now

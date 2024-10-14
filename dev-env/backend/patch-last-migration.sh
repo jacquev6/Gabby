@@ -31,6 +31,8 @@ then
 fi
 
 docker compose exec --workdir /app/backend/gabby backend-shell alembic revision --autogenerate $rev_id_arg -m dev
+echo "Check the new revision. Press enter to continue, Ctrl+C to abort."
+read
 
 # Check the new revision can be applied and rollbacked
 docker compose exec --workdir /app/backend/gabby backend-shell alembic upgrade head

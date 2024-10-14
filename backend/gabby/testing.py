@@ -204,11 +204,3 @@ class LoggedInApiTestCase(ApiTestCase):
     def tearDown(self):
         self.expect_one_more_commit()
         super().tearDown()
-
-
-class AdaptationTestCase(TestCase):
-    # @todo Remove default value, enforce testing the delta
-    def do_test(self, adaptation, expected_adapted, expected_delta=None):
-        self.assertEqual(adaptation.make_adapted(), expected_adapted)
-        if expected_delta is not None:
-            self.assertEqual(adaptation.make_delta(), expected_delta)

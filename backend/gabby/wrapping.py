@@ -54,7 +54,6 @@ def make_sqids(name):
     # @todo Return a wrapper that checks if the sqid is "canonical" (cf. https://sqids.org/faq#valid-ids)
     return sqids
 # IDs of the first few exercises: wbqloc bylced jkrudc ufefwu orxbzq ahbwey vodhqn dymwin xnyegk
-# IDs of the first few extraction_events: stzemo mkgilf dskyis yotcht axwgxv jusflx gyvtgb omqipm fqjjte
 # IDs of the first few fill_with_free_text_adaptations: ljpupg vahdwa udaorb zqltqi ylstuq dlymea rzmwsn fczoca xiqxfv
 # IDs of the first few items_and_effects_attempt_1_adaptations: rucejk blhvyl yvmxwv sqjkxi ltxkjf uafqbk ntdcdv gsrsrq okejkh
 # IDs of the first few multiple_choices_in_instructions_adaptations: zqwpae bopxey lavpnb wcdrmo hpzlba jlkmxy gqezrb cyxsei knsznf
