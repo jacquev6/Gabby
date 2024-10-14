@@ -104,7 +104,7 @@ def export_project(
         "Content-Type": "text/html",
     }
     if download:
-        headers["Content-Disposition"] = f'attachment; filename="{project.title}.html"',
+        headers["Content-Disposition"] = f'attachment; filename="{project.title}.html"'
 
     return HTMLResponse(
         content=template.replace("{{ data }}", data),
