@@ -102,7 +102,6 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
     textbook_id: orm.Mapped[int | None] = orm.mapped_column()
     textbook: orm.Mapped[Textbook | None] = orm.relationship(back_populates="exercises", foreign_keys=[textbook_id])
     textbook_page: orm.Mapped[int | None]
-    bounding_rectangle: orm.Mapped[dict | None] = orm.mapped_column(sql.JSON)
 
     # Custom collation: https://dba.stackexchange.com/a/285230
     number: orm.Mapped[str] = orm.mapped_column(sql.String(None, collation="exercise_number"))
