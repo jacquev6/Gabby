@@ -556,7 +556,7 @@ def create_test_exercises_3(session, admin):
         instructions="...",
         example="",
         clue="",
-        wording="a. {bold|Aujourd'hui} il fait {italic|gris} et (il pleuvra / il pleut / il pleuvait).\nb. {bold|Aujourd'hui} il fait {italic|gris} et {choices2|(|/|)||(il pleuvra / il pleut / il pleuvait)}.\nc. {bold|Aujourd'hui} il fait {italic|gris} et {choices|il pleuvra|il pleut|il pleuvait}.",
+        wording="a. {bold|Aujourd'hui} il fait {italic|gris} et (il pleuvra / il pleut / il pleuvait).\nb. {bold|Aujourd'hui} il fait {italic|gris} et {choices2|(|/|)||(il pleuvra / il pleut / il pleuvait)}.\nc. Aujourd'hui il fait @1 et il @2. {choices2|(|/|)|@1|(gris / beau)} {choices2|[|*|]|@2|[pleut * pleuvra]}\nd. {bold|Aujourd'hui} il fait {italic|gris} et {choices|il pleuvra|il pleut|il pleuvait}.",
         wording_paragraphs_per_pagelet=3,
         adaptation=MultipleChoicesInWordingAdaptation(
             kind="multiple-choices-in-wording"

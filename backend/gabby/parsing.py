@@ -430,18 +430,18 @@ class Transformer(lark.Transformer, abc.ABC):
         pass
 
 
-class InstructionsSectionDeltaMaker(Transformer):
+class DeltaMaker(Transformer):
     def _merge(self, args):
-        def join_group(attributes, items):
+        def join_group(key, items):
             items = list(items)
             if len(items) == 1:
                 return items[0]
             else:
-                assert attributes is not None
+                assert key is not None
                 assert all(isinstance(item.insert, str) for item in items)
                 return exercise_delta.TextInsertOp(
                     insert="".join(item.insert for item in items),
-                    attributes=attributes,
+                    attributes=key,
                 )
 
         def key(arg):
@@ -449,7 +449,7 @@ class InstructionsSectionDeltaMaker(Transformer):
                 return arg.attributes
             else:
                 assert isinstance(arg.insert, dict)
-                return None
+                return arg.insert
 
         return [
             join_group(group_key, group_items)
@@ -466,6 +466,8 @@ class InstructionsSectionDeltaMaker(Transformer):
                 items.append(arg)
         return items
 
+
+class InstructionsSectionDeltaMaker(DeltaMaker):
     def section(self, args):
         return self._merge(self._flatten(args))
 
@@ -958,42 +960,7 @@ class WordingSectionParser:
         return self.transformer.transform(parsed)
 
 
-class WordingSectionDeltaMaker(Transformer):
-    def _merge(self, args):
-        def join_group(attributes, items):
-            items = list(items)
-            if len(items) == 1:
-                return items[0]
-            else:
-                assert attributes is not None
-                assert all(isinstance(item.insert, str) for item in items)
-                return exercise_delta.TextInsertOp(
-                    insert="".join(item.insert for item in items),
-                    attributes=attributes,
-                )
-
-        def key(arg):
-            if isinstance(arg.insert, str):
-                return arg.attributes
-            else:
-                assert isinstance(arg.insert, dict)
-                return None
-
-        return [
-            join_group(group_key, group_items)
-            for group_key, group_items in
-            itertools.groupby(args, key=key)
-        ]
-
-    def _flatten(self, args):
-        items = []
-        for arg in args:
-            if isinstance(arg, list):
-                items.extend(arg)
-            else:
-                items.append(arg)
-        return items
-
+class WordingSectionDeltaMaker(DeltaMaker):
     def section(self, args):
         return self._merge(self._flatten(args))
 
