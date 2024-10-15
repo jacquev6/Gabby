@@ -1,6 +1,7 @@
 from typing import ClassVar, Literal
 import os
 
+from .. import exercise_delta
 from .. import parsing
 from .. import renderable
 from .. import renderable as r
@@ -21,7 +22,22 @@ class MultipleChoicesInWordingAdaptation(PydanticBase):
         def choices_tag(self, args):
             return renderable.MultipleChoicesInput(choices=[arg for arg in args])
 
-    adapt_wording: ClassVar = parsing.WordingSectionParser({"choices": r""" ("|" STR)+ """}, WordingAdapter())
+        def choices2_tag(self, args):
+            assert len(args) == 4  # @todo Handle the optional placeholder
+            (start, separator, stop, text) = args
+            if text.startswith(start) and text.endswith(stop):
+                text = text[len(start) : -len(stop)]
+            choices = text.split(separator)
+            choices = [choice.strip() for choice in choices]
+            return renderable.MultipleChoicesInput(choices=choices)
+
+    adapt_wording: ClassVar = parsing.WordingSectionParser(
+        {
+            "choices": r""" ("|" STR)+ """,
+            "choices2": r""" "|" STR "|" STR "|" STR "|" STR? "|" STR """,
+        },
+        WordingAdapter(),
+    )
 
     def make_adapted_wording(self, exercise):
         return self.adapt_wording(exercise.wording)
@@ -35,8 +51,31 @@ class MultipleChoicesInWordingAdaptation(PydanticBase):
     def make_instructions_delta(self, exercise):
         return parsing.make_plain_instructions_section_delta(exercise.instructions)
 
+    class WordingDeltaMaker(parsing.WordingSectionDeltaMaker):
+        def choices2_tag(self, args):
+            assert len(args) == 4  # @todo Handle the optional placeholder
+            (start, separator, stop, text) = args
+            return exercise_delta.EmbedInsertOp(
+                insert={
+                    "choices2": {
+                        "start": start,
+                        "separator": separator,
+                        "stop": stop,
+                        "placeholder": "",
+                        "text": text,
+                    },
+                },
+            )
+
     def make_wording_delta(self, exercise):
-        return parsing.make_plain_wording_section_delta(exercise.wording)
+        return parsing.WordingSectionParser(
+            {
+                "choices2": r""" "|" STR "|" STR "|" STR "|" STR? "|" STR """,
+            },
+            self.WordingDeltaMaker(),
+        )(
+            exercise.wording,
+        )
 
     def make_example_delta(self, exercise):
         return parsing.make_plain_instructions_section_delta(exercise.example)

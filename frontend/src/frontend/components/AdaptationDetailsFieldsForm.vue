@@ -1,5 +1,5 @@
 <script lang="ts">
-import { InlineBlot } from './Quill.vue'
+import { InlineBlot, InlineEmbed } from './Quill.vue'
 import { basicFormats } from './WysiwygEditor.vue'
 
 
@@ -44,6 +44,36 @@ const selectThingsFormats = {
     kind: 'text' as const,
     make: (text: string, value: unknown) => `{sel${value}|${text}}`,
     blot: SelBlot,
+  },
+}
+
+class Choices2Blot extends InlineEmbed {
+  static override blotName = 'choices2'
+  static override tagName = 'choices2-blot'
+
+  static override create(settings: {start: string, separator: string, stop: string, placeholder: string, text: string}) {
+    const node = super.create()
+    node.setAttribute('data-gabby-settings', JSON.stringify(settings))
+
+    return node
+  }
+
+  static value(node: HTMLElement) {
+    const settings = node.getAttribute('data-gabby-settings')
+    console.assert(settings !== null)
+    return JSON.parse(settings)
+  }
+}
+
+const multipleChoicesInWordingWordingFormats = {
+  ...basicFormats,
+  choices2: {
+    kind: 'embed' as const,
+    make(settings_: unknown) {
+      const settings = settings_ as {start: string, separator: string, stop: string, placeholder: string, text: string}
+      return `{choices2|${settings.start}|${settings.separator}|${settings.stop}|${settings.placeholder}|${settings.text}}`
+    },
+    blot: Choices2Blot,
   },
 }
 
@@ -101,7 +131,7 @@ export const wysiwygFormats = {
   },
   'multiple-choices-in-wording': {
     instructions: basicFormats,
-    wording: basicFormats,
+    wording: multipleChoicesInWordingWordingFormats,
     example: basicFormats,
     clue: basicFormats,
   },
@@ -116,6 +146,7 @@ import type { Model } from './ExerciseFieldsForm.vue'
 import type ExerciseFieldsForm from './ExerciseFieldsForm.vue'
 import FloatingColorPicker from './FloatingColorPicker.vue'
 import AdaptationDetailsFieldsFormForItemsAndEffectsAttempt1 from './AdaptationDetailsFieldsFormForItemsAndEffectsAttempt1.vue'
+import AdaptationDetailsFieldsFormForMultipleChoicesInWording from './AdaptationDetailsFieldsFormForMultipleChoicesInWording.vue'
 
 
 defineProps<{
@@ -223,13 +254,7 @@ const colorsCount = computed({
     </p>
   </template>
   <template v-else-if="model.adaptationKind === 'multiple-choices-in-wording'">
-    <p class="alert alert-secondary">
-      <i18n-t keypath="useChoices">
-        <template v-slot:choices>
-          <code>{choices|<em>text</em>|<em>text</em>|<em>...</em>}</code>
-        </template>
-      </i18n-t>
-    </p>
+    <AdaptationDetailsFieldsFormForMultipleChoicesInWording v-model="model" :wysiwyg />
   </template>
   <template v-else>
     <span>{{ ((t: never) => t)(model.adaptationKind) }}</span>
@@ -294,5 +319,15 @@ div.ql-editor sel-blot[data-sel="4"] {
 
 div.ql-editor sel-blot[data-sel="5"] {
   background: var(--sel-blot-color-5);
+}
+
+div.ql-editor choices2-blot {
+  margin: 0;
+  padding: 0 0.4em;
+  border: 2px solid black;
+}
+
+div.ql-editor choices2-blot::before {
+  content: "....";
 }
 </style>

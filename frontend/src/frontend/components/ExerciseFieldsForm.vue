@@ -28,6 +28,19 @@ export type Model = {
   rectangles: PdfRectangle[]
   adaptationKind: AdaptationKind
   adaptations: {[Kind in AdaptationKind]: Adaptation & {kind: Kind}}
+  awaiting: {
+    multipleChoices: {
+      globalSelection: boolean
+      confirmation: boolean
+      range: {index: number, length: number} | null
+      settings: {
+        start: string
+        stop: string
+        separator: string
+        placeholder: string
+      } | null
+    } | null
+  }
 }
 
 type MakeModelOptions  = {
@@ -83,6 +96,9 @@ function makeModel({inTextbook, textbookPage}: MakeModelOptions): Model {
         kind: 'multiple-choices-in-wording' as const,
       },
     },
+    awaiting: {
+      multipleChoices: null,
+    },
   }
 }
 
@@ -104,6 +120,7 @@ export function assignModelFrom(model: Model, exercise: Exercise & InCache & Exi
   model.adaptationKind = exercise.attributes.adaptation.kind
   model.adaptations[model.adaptationKind] = JSON.parse(JSON.stringify(exercise.attributes.adaptation))
   model.rectangles = JSON.parse(JSON.stringify(exercise.attributes.rectangles))
+  model.awaiting.multipleChoices = null
 }
 
 function resetModel(model: Model, options: MakeModelOptions) {
@@ -312,6 +329,22 @@ const selBlotColors = computed(() => {
   }
 })
 
+function selectionChangeInWording(range: {index: number, length: number}) {
+  if (model.value.awaiting.multipleChoices !== null) {
+    // console.log('selectionChangeInWording', range, model.value.wording.substring(range.index, range.index + range.length))
+    model.value.awaiting.multipleChoices.globalSelection = false
+    model.value.awaiting.multipleChoices.confirmation = true
+    model.value.awaiting.multipleChoices.range = range
+    // @todo Automagically detect these settings?
+    model.value.awaiting.multipleChoices.settings = {
+      start: '(',
+      stop: ')',
+      separator: '/',
+      placeholder: '',
+    }
+  }
+}
+
 defineExpose({
   saveDisabled,
   highlightSuffix,
@@ -358,6 +391,7 @@ defineExpose({
       :label="$t('exerciseWording')"
       :formats="wysiwygFormats[model.adaptationKind].wording"
       v-model="model.wording" :delta="wordingDeltas"
+      @selectionChange="selectionChangeInWording"
     />
     <BLabeledTextarea
       v-else
