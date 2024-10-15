@@ -1,6 +1,6 @@
 <script lang="ts">
 import { InlineBlot, InlineEmbed } from './Quill.vue'
-import { basicFormats } from './WysiwygEditor.vue'
+import { basicFormats, escapeForTag } from './WysiwygEditor.vue'
 
 
 class ChoiceBlot extends InlineBlot {
@@ -42,7 +42,7 @@ const selectThingsFormats = {
   ...basicFormats,
   sel: {
     kind: 'text' as const,
-    make: (text: string, value: unknown) => `{sel${value}|${text}}`,
+    make: (text: string, value: unknown) => `{sel${value}|${escapeForTag(text)}}`,
     blot: SelBlot,
   },
 }
@@ -71,7 +71,7 @@ const multipleChoicesInWordingWordingFormats = {
     kind: 'embed' as const,
     make(settings_: unknown) {
       const settings = settings_ as {start: string, separator: string, stop: string, placeholder: string, text: string}
-      return `{choices2|${settings.start}|${settings.separator}|${settings.stop}|${settings.placeholder}|${settings.text}}`
+      return `{choices2|${escapeForTag(settings.start)}|${escapeForTag(settings.separator)}|${escapeForTag(settings.stop)}|${escapeForTag(settings.placeholder)}|${escapeForTag(settings.text)}}`
     },
     blot: Choices2Blot,
   },
@@ -86,7 +86,7 @@ const itemsAndEffectsWordingFormats = {
   ...basicFormats,
   selectable: {
     kind: 'text' as const,
-    make: (text: string) => `{selectable|${text}}`,
+    make: (text: string) => `{selectable|${escapeForTag(text)}}`,
     blot: SelectableBlot,
   },
 }
@@ -121,7 +121,7 @@ export const wysiwygFormats = {
       ...basicFormats,
       choice: {
         kind: 'text' as const,
-        make: (text: string) => `{choice|${text}}`,
+        make: (text: string) => `{choice|${escapeForTag(text)}}`,
         blot: ChoiceBlot,
       },
     },

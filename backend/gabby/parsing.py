@@ -47,7 +47,7 @@ def make_grammar(tags, whitespace):
             PUNCTUATION_AT_END_OF_SENTENCE: /\.\.\.|[.!?…]/
 
             # Terminals usable in tags
-            STR: /[^}|]+/
+            STR: /(\\\\|\\{|\\\||\\}|[^\\{|}])+/
             INT: /[0-9]+/
         """
         + whitespace
@@ -90,7 +90,7 @@ def GrammarTestCase(grammar):
             parse_tree = parser.parse(test)
             actual_ast = transformer.transform(parse_tree)
             if actual_ast != expected_ast:
-                print(actual_ast)
+                print("Actual AST:", actual_ast)
             self.assertEqual(actual_ast, expected_ast)
 
     return GrammarTestCase
@@ -315,6 +315,14 @@ class InstructionsGrammarWithTagsTestCase(GrammarTestCase(make_instructions_gram
             ("section", [("lenient_paragraph", [("single_str_tag", [("STR", "foo")])])])
         )
 
+    def test_single_str_tag_with_escaped_characters(self):
+        escaped = r"\}\|\\\}"
+        self.assertEqual(len(escaped), 8)
+        self.do_test(
+            "{single-str|" + escaped + "}",
+            ("section", [("lenient_paragraph", [("single_str_tag", [("STR", escaped)])])]),
+        )
+
     def test_int_and_str_tag_in_strict_paragraph(self):
         self.do_test(
             "{int-and-str|12|bar baz}.",
@@ -511,7 +519,7 @@ class InstructionsSectionDeltaMaker(DeltaMaker):
         return arg.value
 
     def STR(self, arg):
-        return arg.value
+        return arg.value.replace(r"\\", "\\").replace(r"\{", "{").replace(r"\}", "}").replace(r"\|", "|")
 
     def bold_tag(self, args):
         assert len(args) == 1
@@ -575,7 +583,7 @@ class InstructionsSectionAdapter(Transformer):
         return int(arg.value)
 
     def STR(self, arg):
-        return arg.value
+        return arg.value.replace(r"\\", "\\").replace(r"\{", "{").replace(r"\}", "}").replace(r"\|", "|")
 
     def bold_tag(self, args):
         assert len(args) == 1
@@ -1004,7 +1012,7 @@ class WordingSectionDeltaMaker(DeltaMaker):
         return arg.value
 
     def STR(self, arg):
-        return arg.value
+        return arg.value.replace(r"\\", "\\").replace(r"\{", "{").replace(r"\}", "}").replace(r"\|", "|")
 
     def bold_tag(self, args):
         assert len(args) == 1
@@ -1064,7 +1072,7 @@ class WordingSectionAdapter(Transformer):
         return int(arg.value)
 
     def STR(self, arg):
-        return arg.value
+        return arg.value.replace(r"\\", "\\").replace(r"\{", "{").replace(r"\}", "}").replace(r"\|", "|")
 
     def bold_tag(self, args):
         assert len(args) == 1

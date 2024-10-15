@@ -2,15 +2,19 @@
 import { BoldBlot, ItalicBlot } from './Quill.vue'
 
 
+export function escapeForTag(text: string) {
+  return text.replaceAll('\\', '\\\\').replaceAll('|', '\\|').replaceAll('{', '\\{').replaceAll('}', '\\}')
+}
+
 export const basicFormats = {
   bold: {
     kind: 'text' as const,
-    make: (text: string) => `{bold|${text}}`,
+    make: (text: string) => `{bold|${escapeForTag(text)}}`,
     blot: BoldBlot,
   },
   italic: {
     kind: 'text' as const,
-    make: (text: string) => `{italic|${text}}`,
+    make: (text: string) => `{italic|${escapeForTag(text)}}`,
     blot: ItalicBlot,
   },
 }

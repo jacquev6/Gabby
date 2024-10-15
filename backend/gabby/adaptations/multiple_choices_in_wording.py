@@ -462,6 +462,71 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
             ),
         )
 
+    def test_choices2_with_escaped_separators(self):
+        exercise = exercises.Exercise(
+            number="number",
+            textbook_page=42,
+            instructions="Choose wisely.",
+            wording=r"A {choices2|\{|\||\}||\{blah\|blih\}}.",
+            example="",
+            clue="",
+            wording_paragraphs_per_pagelet=3,
+            adaptation=MultipleChoicesInWordingAdaptation(kind="multiple-choices-in-wording"),
+        )
+
+        self.do_test(
+            exercise,
+            r.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(text="Choose"),
+                            r.Whitespace(),
+                            r.PlainText(text="wisely"),
+                            r.PlainText(text="."),
+                        ]),
+                    ]),
+                ]),
+                wording=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(text="A"),
+                            r.Whitespace(),
+                            r.MultipleChoicesInput(choices=["blah", "blih"]),
+                            r.PlainText(text="."),
+                        ]),
+                    ]),
+                ]),
+                example=r.Section(paragraphs=[]),
+                clue=r.Section(paragraphs=[]),
+                wording_paragraphs_per_pagelet=3,
+            ),
+            d.Exercise(
+                instructions=[
+                    d.TextInsertOp(insert="Choose wisely.", attributes={}),
+                ],
+                wording=[
+                    d.TextInsertOp(insert="A ", attributes={}),
+                    d.EmbedInsertOp(
+                        insert={
+                            "choices2": {
+                                "start": "{",
+                                "separator": "|",
+                                "stop": "}",
+                                "placeholder": "",
+                                "text": "{blah|blih}",
+                            },
+                        },
+                    ),
+                    d.TextInsertOp(insert=".", attributes={}),
+                ],
+                example=[],
+                clue=[],
+            ),
+        )
+
     def test_choices2_with_placeholder_before(self):
         exercise = exercises.Exercise(
             number="number",
