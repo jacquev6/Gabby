@@ -2,6 +2,7 @@ from typing import ClassVar, Literal
 import os
 
 from .. import exercise_delta
+from .. import exercise_delta as d
 from .. import parsing
 from .. import renderable
 from .. import renderable as r
@@ -25,6 +26,7 @@ class MultipleChoicesInWordingAdaptation(PydanticBase):
         def choices2_tag(self, args):
             assert len(args) == 4  # @todo Handle the optional placeholder
             (start, separator, stop, text) = args
+            text = text.strip()
             if text.startswith(start) and text.endswith(stop):
                 text = text[len(start) : -len(stop)]
             choices = text.split(separator)
@@ -132,5 +134,132 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
             ),
         )
 
-    def test_example_and_clue(self):
-        pass  # @todo Implement this test
+    def test_choices2_without_placeholder(self):
+        exercise = exercises.Exercise(
+            number="number",
+            textbook_page=42,
+            instructions="Choose wisely.",
+            wording="A {choices2|(|/|)||(blah/blih)}.",
+            example="",
+            clue="",
+            wording_paragraphs_per_pagelet=3,
+            adaptation=MultipleChoicesInWordingAdaptation(kind="multiple-choices-in-wording"),
+        )
+
+        self.do_test(
+            exercise,
+            r.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(text="Choose"),
+                            r.Whitespace(),
+                            r.PlainText(text="wisely"),
+                            r.PlainText(text="."),
+                        ]),
+                    ]),
+                ]),
+                wording=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(text="A"),
+                            r.Whitespace(),
+                            r.MultipleChoicesInput(choices=["blah", "blih"]),
+                            r.PlainText(text="."),
+                        ]),
+                    ]),
+                ]),
+                example=r.Section(paragraphs=[]),
+                clue=r.Section(paragraphs=[]),
+                wording_paragraphs_per_pagelet=3,
+            ),
+            d.Exercise(
+                instructions=[
+                    d.TextInsertOp(insert="Choose wisely.", attributes={}),
+                ],
+                wording=[
+                    d.TextInsertOp(insert="A ", attributes={}),
+                    d.EmbedInsertOp(
+                        insert={
+                            "choices2": {
+                                "start": "(",
+                                "separator": "/",
+                                "stop": ")",
+                                "placeholder": "",
+                                "text": "(blah/blih)",
+                            },
+                        },
+                    ),
+                    d.TextInsertOp(insert=".", attributes={}),
+                ],
+                example=[],
+                clue=[],
+            ),
+        )
+
+    def test_choices2_with_spaces(self):
+        exercise = exercises.Exercise(
+            number="number",
+            textbook_page=42,
+            instructions="Choose wisely.",
+            wording="A {choices2|(|/|)||  (  blah  /  blih  )  }.",
+            example="",
+            clue="",
+            wording_paragraphs_per_pagelet=3,
+            adaptation=MultipleChoicesInWordingAdaptation(kind="multiple-choices-in-wording"),
+        )
+
+        self.do_test(
+            exercise,
+            r.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(text="Choose"),
+                            r.Whitespace(),
+                            r.PlainText(text="wisely"),
+                            r.PlainText(text="."),
+                        ]),
+                    ]),
+                ]),
+                wording=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(text="A"),
+                            r.Whitespace(),
+                            r.MultipleChoicesInput(choices=["blah", "blih"]),
+                            r.PlainText(text="."),
+                        ]),
+                    ]),
+                ]),
+                example=r.Section(paragraphs=[]),
+                clue=r.Section(paragraphs=[]),
+                wording_paragraphs_per_pagelet=3,
+            ),
+            d.Exercise(
+                instructions=[
+                    d.TextInsertOp(insert="Choose wisely.", attributes={}),
+                ],
+                wording=[
+                    d.TextInsertOp(insert="A ", attributes={}),
+                    d.EmbedInsertOp(
+                        insert={
+                            "choices2": {
+                                "start": "(",
+                                "separator": "/",
+                                "stop": ")",
+                                "placeholder": "",
+                                "text": "  (  blah  /  blih  )  ",
+                            },
+                        },
+                    ),
+                    d.TextInsertOp(insert=".", attributes={}),
+                ],
+                example=[],
+                clue=[],
+            ),
+        )
