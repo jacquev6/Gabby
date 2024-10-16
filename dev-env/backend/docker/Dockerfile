@@ -12,7 +12,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
  && DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends \
       graphviz  `# For 'python -m gabby graph-models'` \
       jq \
-      libreoffice-writer-nogui  `# To convert 'pdf-examples/demo.odt' to PDF` \
+      libreoffice-writer-nogui fonts-liberation  `# To convert 'pdf-examples/demo.odt' to PDF` \
       poppler-utils  `# For 'pdfunite', to make 'pdf-examples/large.pdf'` \
       postgresql-client  `# For DB backup` \
  && true
