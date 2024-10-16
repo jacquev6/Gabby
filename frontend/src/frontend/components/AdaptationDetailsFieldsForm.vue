@@ -1,6 +1,7 @@
 <script lang="ts">
 import { InlineBlot } from './Quill.vue'
 import { basicFormats, escapeForTag } from './WysiwygEditor.vue'
+import ContextMenu from './ContextMenu.vue'
 
 
 class ChoiceBlot extends InlineBlot {
@@ -47,13 +48,40 @@ const selectThingsFormats = {
   },
 }
 
+let model = ref<Model>(null as any/* OK: 'model' is assigned a value in "script setup" below */ as Model)
+const choices2ContextMenu = ref<InstanceType<typeof ContextMenu> | null>(null)
+
 class Choices2Blot extends InlineBlot {
   static override blotName = 'choices2'
   static override tagName = 'choices2-blot'
 
   static override create(settings: {start: string, separator: string, stop: string, placeholder: string}) {
     const node = super.create()
+    console.log('Creating choices2', node.textContent, settings)
     node.setAttribute('data-gabby-settings', JSON.stringify(settings))
+    node.addEventListener('contextmenu', event => {
+      event.preventDefault()
+
+      model.value.awaiting.multipleChoices = {
+        globalSelection: false,
+        confirmation: false,
+        editing: true,
+        range: null,
+        settings: JSON.parse(node.getAttribute('data-gabby-settings')!),
+        editionWatch: watch(
+          () => model.value.awaiting.multipleChoices?.settings,
+          s => {
+            if (s !== null && s !== undefined) {
+              node.setAttribute('data-gabby-settings', JSON.stringify(s))
+            }
+          },
+          {deep: true},
+        ),
+      }
+
+      console.assert(choices2ContextMenu.value !== null)
+      choices2ContextMenu.value.show(node)
+    })
 
     return node
   }
@@ -63,6 +91,12 @@ class Choices2Blot extends InlineBlot {
     console.assert(settings !== null)
     return JSON.parse(settings)
   }
+}
+
+function doneEditingChoices2() {
+  console.assert(model.value.awaiting.multipleChoices !== null)
+  model.value.awaiting.multipleChoices.editionWatch()
+  model.value.awaiting.multipleChoices = null
 }
 
 const multipleChoicesInWordingWordingFormats = {
@@ -139,9 +173,9 @@ export const wysiwygFormats = {
 </script>
 
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 
-import { BLabeledInput, BLabeledCheckbox } from './opinion/bootstrap'
+import { BRow, BCol, BLabeledInput, BLabeledCheckbox } from './opinion/bootstrap'
 import type { Model } from './ExerciseFieldsForm.vue'
 import type ExerciseFieldsForm from './ExerciseFieldsForm.vue'
 import FloatingColorPicker from './FloatingColorPicker.vue'
@@ -154,7 +188,8 @@ defineProps<{
   fields: InstanceType<typeof ExerciseFieldsForm>
 }>()
 
-const model = defineModel<Model>({required: true})
+const model_ = defineModel<Model>({required: true})
+model = model_
 
 const colorPickers = ref<InstanceType<typeof FloatingColorPicker>[]>([])
 
@@ -191,6 +226,18 @@ const colorsCount = computed({
 </script>
 
 <template>
+  <ContextMenu ref="choices2ContextMenu" @hidden="doneEditingChoices2">
+    <template v-if="model.awaiting.multipleChoices !== null && model.awaiting.multipleChoices.editing && model.awaiting.multipleChoices.settings !== null">
+      <div class="container-fluid">
+        <BLabeledInput :label="$t('choicesSettingsSeparator')" v-model="model.awaiting.multipleChoices.settings.separator" />
+        <BRow>
+          <BCol><BLabeledInput :label="$t('choicesSettingsStart')" style="width: 8em" v-model="model.awaiting.multipleChoices.settings.start" /></BCol>
+          <BCol><BLabeledInput :label="$t('choicesSettingsStop')" style="width: 8em" v-model="model.awaiting.multipleChoices.settings.stop" /></BCol>
+        </BRow>
+        <BLabeledInput :label="$t('choicesSettingsPlaceholder')" v-model="model.awaiting.multipleChoices.settings.placeholder" />
+      </div>
+    </template>
+  </ContextMenu>
   <template v-if="model.adaptationKind === 'null'">
   </template>
   <template v-else-if="model.adaptationKind === 'fill-with-free-text'">

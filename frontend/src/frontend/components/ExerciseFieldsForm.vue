@@ -32,6 +32,8 @@ export type Model = {
     multipleChoices: {
       globalSelection: boolean
       confirmation: boolean
+      editing: boolean
+      editionWatch(): void
       range: {index: number, length: number} | null
       settings: {
         start: string
@@ -330,7 +332,7 @@ const selBlotColors = computed(() => {
 })
 
 function selectionChangeInWording(range: {index: number, length: number}) {
-  if (model.value.awaiting.multipleChoices !== null) {
+  if (model.value.awaiting.multipleChoices !== null && !model.value.awaiting.multipleChoices.editing) {
     // console.log('selectionChangeInWording', range, model.value.wording.substring(range.index, range.index + range.length))
     model.value.awaiting.multipleChoices.globalSelection = false
     model.value.awaiting.multipleChoices.confirmation = true

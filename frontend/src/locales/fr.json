@@ -147,6 +147,11 @@
   "effectsBoxed": "Cadre",
   "selectableButton": "Cochable",
 
+  "choicesSettingsSeparator": "Séparateur",
+  "choicesSettingsStart": "Début",
+  "choicesSettingsStop": "Fin",
+  "choicesSettingsPlaceholder": "Trou à remplir",
+
   "tools": "Outils",
   "undo": "Annuler",
   "redo": "Refaire",

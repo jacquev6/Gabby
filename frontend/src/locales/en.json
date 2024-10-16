@@ -147,6 +147,11 @@
   "effectsBoxed": "Boxed",
   "selectableButton": "Selectable",
 
+  "choicesSettingsSeparator": "Separator",
+  "choicesSettingsStart": "Start",
+  "choicesSettingsStop": "Stop",
+  "choicesSettingsPlaceholder": "Placeholder to fill",
+
   "tools": "Tools",
   "undo": "Undo",
   "redo": "Redo",

@@ -24,6 +24,7 @@ function show(ref: HTMLElement) {
   initialValue.value = model.value
 }
 
+// @todo Use 'ContextMenu' component
 const {floatingStyles, middlewareData} = useFloating(
   floatingReference,
   floatingContainer,
