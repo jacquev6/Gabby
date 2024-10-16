@@ -1,5 +1,5 @@
 <script lang="ts">
-import { InlineBlot, InlineEmbed } from './Quill.vue'
+import { InlineBlot } from './Quill.vue'
 import { basicFormats, escapeForTag } from './WysiwygEditor.vue'
 
 
@@ -47,18 +47,18 @@ const selectThingsFormats = {
   },
 }
 
-class Choices2Blot extends InlineEmbed {
+class Choices2Blot extends InlineBlot {
   static override blotName = 'choices2'
   static override tagName = 'choices2-blot'
 
-  static override create(settings: {start: string, separator: string, stop: string, placeholder: string, text: string}) {
+  static override create(settings: {start: string, separator: string, stop: string, placeholder: string}) {
     const node = super.create()
     node.setAttribute('data-gabby-settings', JSON.stringify(settings))
 
     return node
   }
 
-  static value(node: HTMLElement) {
+  static override formats(node: HTMLElement) {
     const settings = node.getAttribute('data-gabby-settings')
     console.assert(settings !== null)
     return JSON.parse(settings)
@@ -68,10 +68,10 @@ class Choices2Blot extends InlineEmbed {
 const multipleChoicesInWordingWordingFormats = {
   ...basicFormats,
   choices2: {
-    kind: 'embed' as const,
-    make(settings_: unknown) {
-      const settings = settings_ as {start: string, separator: string, stop: string, placeholder: string, text: string}
-      return `{choices2|${escapeForTag(settings.start)}|${escapeForTag(settings.separator)}|${escapeForTag(settings.stop)}|${escapeForTag(settings.placeholder)}|${escapeForTag(settings.text)}}`
+    kind: 'text' as const,
+    make(text: string, settings_: unknown) {
+      const settings = settings_ as {start: string, separator: string, stop: string, placeholder: string}
+      return `{choices2|${escapeForTag(settings.start)}|${escapeForTag(settings.separator)}|${escapeForTag(settings.stop)}|${escapeForTag(settings.placeholder)}|${escapeForTag(text)}}`
     },
     blot: Choices2Blot,
   },
@@ -325,9 +325,5 @@ div.ql-editor choices2-blot {
   margin: 0;
   padding: 0 0.4em;
   border: 2px solid black;
-}
-
-div.ql-editor choices2-blot::before {
-  content: "....";
 }
 </style>

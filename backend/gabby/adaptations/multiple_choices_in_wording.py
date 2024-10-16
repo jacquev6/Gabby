@@ -190,14 +190,14 @@ class MultipleChoicesInWordingAdaptation(PydanticBase):
             else:
                 assert len(args) == 5
                 (start, separator, stop, placeholder, text) = args
-            return exercise_delta.EmbedInsertOp(
-                insert={
+            return exercise_delta.TextInsertOp(
+                insert=text,
+                attributes={
                     "choices2": {
                         "start": start,
                         "separator": separator,
                         "stop": stop,
                         "placeholder": placeholder,
-                        "text": text,
                     },
                 },
             )
@@ -314,14 +314,14 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 ],
                 wording=[
                     d.TextInsertOp(insert="A ", attributes={}),
-                    d.EmbedInsertOp(
-                        insert={
+                    d.TextInsertOp(
+                        insert="(blah/blih)",
+                        attributes={
                             "choices2": {
                                 "start": "(",
                                 "separator": "/",
                                 "stop": ")",
                                 "placeholder": "",
-                                "text": "(blah/blih)",
                             },
                         },
                     ),
@@ -379,14 +379,14 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 ],
                 wording=[
                     d.TextInsertOp(insert="A ", attributes={}),
-                    d.EmbedInsertOp(
-                        insert={
+                    d.TextInsertOp(
+                        insert="  (  blah  /  blih  )  ",
+                        attributes={
                             "choices2": {
                                 "start": "(",
                                 "separator": "/",
                                 "stop": ")",
                                 "placeholder": "",
-                                "text": "  (  blah  /  blih  )  ",
                             },
                         },
                     ),
@@ -444,14 +444,14 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 ],
                 wording=[
                     d.TextInsertOp(insert="A ", attributes={}),
-                    d.EmbedInsertOp(
-                        insert={
+                    d.TextInsertOp(
+                        insert="((blah//blih))",
+                        attributes={
                             "choices2": {
                                 "start": "((",
                                 "separator": "//",
                                 "stop": "))",
                                 "placeholder": "",
-                                "text": "((blah//blih))",
                             },
                         },
                     ),
@@ -509,14 +509,14 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 ],
                 wording=[
                     d.TextInsertOp(insert="A ", attributes={}),
-                    d.EmbedInsertOp(
-                        insert={
+                    d.TextInsertOp(
+                        insert="{blah|blih}",
+                        attributes={
                             "choices2": {
                                 "start": "{",
                                 "separator": "|",
                                 "stop": "}",
                                 "placeholder": "",
-                                "text": "{blah|blih}",
                             },
                         },
                     ),
@@ -578,14 +578,14 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 ],
                 wording=[
                     d.TextInsertOp(insert="The sky is @@. ", attributes={}),
-                    d.EmbedInsertOp(
-                        insert={
+                    d.TextInsertOp(
+                        insert="(blue/red)",
+                        attributes={
                             "choices2": {
                                 "start": "(",
                                 "separator": "/",
                                 "stop": ")",
                                 "placeholder": "@@",
-                                "text": "(blue/red)",
                             },
                         },
                     ),
@@ -646,14 +646,14 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                     d.TextInsertOp(insert="Choose wisely.", attributes={}),
                 ],
                 wording=[
-                    d.EmbedInsertOp(
-                        insert={
+                    d.TextInsertOp(
+                        insert="(blue/red)",
+                        attributes={
                             "choices2": {
                                 "start": "(",
                                 "separator": "/",
                                 "stop": ")",
                                 "placeholder": "...",
-                                "text": "(blue/red)",
                             },
                         },
                     ),
@@ -723,14 +723,14 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                     d.TextInsertOp(insert="Choose wisely.", attributes={}),
                 ],
                 wording=[
-                    d.EmbedInsertOp(
-                        insert={
+                    d.TextInsertOp(
+                        insert="(blue/yellow)",
+                        attributes={
                             "choices2": {
                                 "start": "(",
                                 "separator": "/",
                                 "stop": ")",
                                 "placeholder": "...",
-                                "text": "(blue/yellow)",
                             },
                         },
                     ),
@@ -800,26 +800,26 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                     d.TextInsertOp(insert="Choose wisely.", attributes={}),
                 ],
                 wording=[
-                    d.EmbedInsertOp(
-                        insert={
+                    d.TextInsertOp(
+                        insert="(blue/red)",
+                        attributes={
                             "choices2": {
                                 "start": "(",
                                 "separator": "/",
                                 "stop": ")",
                                 "placeholder": "@1",
-                                "text": "(blue/red)",
                             },
                         },
                     ),
                     d.TextInsertOp(insert=" ", attributes={}),
-                    d.EmbedInsertOp(
-                        insert={
+                    d.TextInsertOp(
+                        insert="[green*yellow]",
+                        attributes={
                             "choices2": {
                                 "start": "[",
                                 "separator": "*",
                                 "stop": "]",
                                 "placeholder": "@2",
-                                "text": "[green*yellow]",
                             },
                         },
                     ),
@@ -893,26 +893,26 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 ],
                 wording=[
                     d.TextInsertOp(insert="The sky is @@. ", attributes={}),
-                    d.EmbedInsertOp(
-                        insert={
+                    d.TextInsertOp(
+                        insert="(blue/red)",
+                        attributes={
                             "choices2": {
                                 "start": "(",
                                 "separator": "/",
                                 "stop": ")",
                                 "placeholder": "@@",
-                                "text": "(blue/red)",
                             },
                         },
                     ),
                     d.TextInsertOp(insert="\n\nThe sun is @@. ", attributes={}),
-                    d.EmbedInsertOp(
-                        insert={
+                    d.TextInsertOp(
+                        insert="(green/yellow)",
+                        attributes={
                             "choices2": {
                                 "start": "(",
                                 "separator": "/",
                                 "stop": ")",
                                 "placeholder": "@@",
-                                "text": "(green/yellow)",
                             },
                         },
                     ),
@@ -982,26 +982,26 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 ],
                 wording=[
                     d.TextInsertOp(insert="The sky is @1, ", attributes={}),
-                    d.EmbedInsertOp(
-                        insert={
+                    d.TextInsertOp(
+                        insert="(blue/red)",
+                        attributes={
                             "choices2": {
                                 "start": "(",
                                 "separator": "/",
                                 "stop": ")",
                                 "placeholder": "@1",
-                                "text": "(blue/red)",
                             },
                         },
                     ),
                     d.TextInsertOp(insert=" ", attributes={}),
-                    d.EmbedInsertOp(
-                        insert={
+                    d.TextInsertOp(
+                        insert="[green*yellow]",
+                        attributes={
                             "choices2": {
                                 "start": "[",
                                 "separator": "*",
                                 "stop": "]",
                                 "placeholder": "@2",
-                                "text": "[green*yellow]",
                             },
                         },
                     ),
