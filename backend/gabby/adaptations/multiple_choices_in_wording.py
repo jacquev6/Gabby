@@ -34,10 +34,10 @@ class MultipleChoicesInWordingAdaptation(PydanticBase):
             return list(itertools.chain(*args))
 
         def choices2_tag(self, args):
-            if len(args) == 4:
+            assert len(args) == 5
+            if args[3] is None:
                 return []
             else:
-                assert len(args) == 5
                 return [args[3]]
 
         def WORD(self, arg):
@@ -81,7 +81,7 @@ class MultipleChoicesInWordingAdaptation(PydanticBase):
 
     gather_placeholders: ClassVar = parsing.InstructionsSectionParser(
         {
-            "choices2": r""" "|" STR "|" STR "|" STR "|" STR? "|" STR """,
+            "choices2": r""" "|" [STR] "|" STR "|" [STR] "|" [STR] "|" STR """,
         },
         PlaceholdersGatherer(),
     )
@@ -140,19 +140,15 @@ class MultipleChoicesInWordingAdaptation(PydanticBase):
             return ("placeholder", args[0])
 
         def choices2_tag(self, args):
-            if len(args) == 4:
-                (start, separator, stop, text) = args
-                placeholder = ""
-            else:
-                assert len(args) == 5
-                (start, separator, stop, placeholder, text) = args
+            assert len(args) == 5
+            (start, separator, stop, placeholder, text) = args
             text = text.strip()
-            if text.startswith(start) and text.endswith(stop):
+            if start is not None and stop is not None and text.startswith(start) and text.endswith(stop):
                 text = text[len(start) : -len(stop)]
             choices = text.split(separator)
             choices = [choice.strip() for choice in choices]
             input = renderable.MultipleChoicesInput(choices=choices)
-            if placeholder == "":
+            if placeholder is None:
                 return input
             else:
                 return ("input", placeholder, input)
@@ -160,7 +156,7 @@ class MultipleChoicesInWordingAdaptation(PydanticBase):
     adapt_wording: ClassVar = parsing.WordingSectionParser(
         {
             "choices": r""" ("|" STR)+ """,
-            "choices2": r""" "|" STR "|" STR "|" STR "|" STR? "|" STR """,
+            "choices2": r""" "|" [STR] "|" STR "|" [STR] "|" [STR] "|" STR """,
             "placeholder2": r""" "|" STR""",
         },
         WordingAdapter(),
@@ -184,12 +180,14 @@ class MultipleChoicesInWordingAdaptation(PydanticBase):
 
     class WordingDeltaMaker(parsing.WordingSectionDeltaMaker):
         def choices2_tag(self, args):
-            if len(args) == 4:
-                (start, separator, stop, text) = args
+            assert len(args) == 5
+            (start, separator, stop, placeholder, text) = args
+            if start is None:
+                start = ""
+            if stop is None:
+                stop = ""
+            if placeholder is None:
                 placeholder = ""
-            else:
-                assert len(args) == 5
-                (start, separator, stop, placeholder, text) = args
             return exercise_delta.TextInsertOp(
                 insert=text,
                 attributes={
@@ -205,7 +203,7 @@ class MultipleChoicesInWordingAdaptation(PydanticBase):
     def make_wording_delta(self, exercise):
         return parsing.WordingSectionParser(
             {
-                "choices2": r""" "|" STR "|" STR "|" STR "|" STR? "|" STR """,
+              "choices2": r""" "|" [STR] "|" STR "|" [STR] "|" [STR] "|" STR """,
             },
             self.WordingDeltaMaker(),
         )(
@@ -386,6 +384,71 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                                 "start": "(",
                                 "separator": "/",
                                 "stop": ")",
+                                "placeholder": "",
+                            },
+                        },
+                    ),
+                    d.TextInsertOp(insert=".", attributes={}),
+                ],
+                example=[],
+                clue=[],
+            ),
+        )
+
+    def test_choices2_without_start_or_stop(self):
+        exercise = exercises.Exercise(
+            number="number",
+            textbook_page=42,
+            instructions="Choose wisely.",
+            wording="A {choices2||/|||blah/blih}.",
+            example="",
+            clue="",
+            wording_paragraphs_per_pagelet=3,
+            adaptation=MultipleChoicesInWordingAdaptation(kind="multiple-choices-in-wording"),
+        )
+
+        self.do_test(
+            exercise,
+            r.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(text="Choose"),
+                            r.Whitespace(),
+                            r.PlainText(text="wisely"),
+                            r.PlainText(text="."),
+                        ]),
+                    ]),
+                ]),
+                wording=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(text="A"),
+                            r.Whitespace(),
+                            r.MultipleChoicesInput(choices=["blah", "blih"]),
+                            r.PlainText(text="."),
+                        ]),
+                    ]),
+                ]),
+                example=r.Section(paragraphs=[]),
+                clue=r.Section(paragraphs=[]),
+                wording_paragraphs_per_pagelet=3,
+            ),
+            d.Exercise(
+                instructions=[
+                    d.TextInsertOp(insert="Choose wisely.", attributes={}),
+                ],
+                wording=[
+                    d.TextInsertOp(insert="A ", attributes={}),
+                    d.TextInsertOp(
+                        insert="blah/blih",
+                        attributes={
+                            "choices2": {
+                                "start": "",
+                                "separator": "/",
+                                "stop": "",
                                 "placeholder": "",
                             },
                         },
