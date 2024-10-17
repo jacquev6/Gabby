@@ -3,7 +3,7 @@ FROM python:3.12
 ARG USER_ID
 ARG GROUP_ID
 RUN set -x \
- && groupadd --gid $GROUP_ID gabby \
+ && (groupadd --gid $GROUP_ID gabby || true) \
  && useradd --uid $USER_ID --gid $GROUP_ID --create-home --shell /bin/bash gabby
 
 USER gabby
@@ -16,4 +16,4 @@ RUN --mount=type=cache,target=/home/gabby/.cache/pip,sharing=locked \
       watchfiles \
  && true
 
- RUN mkdir -p /home/gabby/doc
+RUN mkdir -p /home/gabby/doc

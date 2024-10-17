@@ -29,7 +29,7 @@ RUN deluser --remove-all-files node
 ARG USER_ID
 ARG GROUP_ID
 RUN set -x \
- && groupadd --gid $GROUP_ID gabby || true \
+ && (groupadd --gid $GROUP_ID gabby || true) \
  && useradd --uid $USER_ID --gid $GROUP_ID --create-home --shell /bin/bash gabby
 
 USER gabby
