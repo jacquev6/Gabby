@@ -243,6 +243,8 @@ defineExpose({
     console.assert(quill.value !== null)
     quill.value.focus()
   },
+  // Warning, these two functions should translate from Wysiwyg selection range to Quill selection range.
+  // It just so happens that their errors compensate each other and that they are currently always used together.
   setSelection(index: number, length: number) {
     console.assert(quill.value !== null)
     quill.value.setSelection(index, length)
