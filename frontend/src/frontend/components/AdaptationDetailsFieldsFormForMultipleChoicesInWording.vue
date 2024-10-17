@@ -12,7 +12,7 @@ const model = defineModel<Model>({required: true})
 
 <template>
   <template v-if="wysiwyg">
-    <BButton primary sm @click="model.awaiting.multipleChoices = {globalSelection: true, confirmation: false, editing: false, editionWatch() {}, range: null, settings: null}">Multiple choices</BButton>
+    <BButton primary sm @click="model.inProgress = {kind: 'multipleChoicesCreation'}">Multiple choices</BButton>
   </template>
   <template v-else>
     <p class="alert alert-secondary">

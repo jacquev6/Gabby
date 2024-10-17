@@ -255,18 +255,6 @@ const wordingParagraphsPerPageletOptions = [1, 2, 3, 4, 5].map(value => ({
   label: i18n.t('exerciseLinesPerPage', {lines: value}),
   value,
 }))
-
-function confirmInProgressMultipleChoices() {
-  console.assert(model.awaiting.multipleChoices !== null)
-  const settings = model.awaiting.multipleChoices.settings
-  console.assert(settings !== null)
-  const prefix = `{choices2|${settings.start}|${settings.separator}|${settings.stop}|${settings.placeholder}|`
-  const suffix = '}'
-  const range = model.awaiting.multipleChoices.range
-  console.assert(range !== null)
-  model.wording = model.wording.slice(0, range.index) + prefix + model.wording.slice(range.index, range.index + range.length) + suffix + model.wording.slice(range.index + range.length)
-  model.awaiting.multipleChoices = null
-}
 </script>
 
 <template>
@@ -347,23 +335,13 @@ function confirmInProgressMultipleChoices() {
                   </ToolsGutter>
                 </div>
                 <div
-                  v-if="model.awaiting.multipleChoices !== null && !model.awaiting.multipleChoices.editing"
+                  v-if="model.inProgress.kind === 'multipleChoicesCreation'"
                   style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); cursor: initial;"
                   @mousedown="e => e.stopPropagation()" @touchstart="e => e.stopPropagation()"
                 >
                   <div style="position: absolute; top: 50%; left: 10%; width: 80%; transform: translate(0, -50%); background-color: white; padding: 1em;">
-                    <div v-if="model.awaiting.multipleChoices.globalSelection">
-                      Select a set of choices in the "Wording" field in the "Edition" column.
-                      Include start, stop and separator characters.
-                    </div>
-                    <div v-else-if="model.awaiting.multipleChoices.confirmation">
-                      Settings.
-                      <BButton primary sm @click="confirmInProgressMultipleChoices">Confirm</BButton>
-                    </div>
-                    <div v-else>
-                      This is a bug. Please let Vincent Jacques know you've seen this message.
-                    </div>
-                    <BButton secondary sm @click="model.awaiting.multipleChoices = null">Cancel</BButton>
+                    Select a set of choices in the "Wording" field in the "Edition" column. Include start, stop and separator characters.
+                    <BButton secondary sm @click="model.inProgress = {kind: 'nothing'}">Cancel</BButton>
                   </div>
                 </div>
               </div>

@@ -55,24 +55,22 @@ class Choices2Blot extends InlineBlot {
   static override blotName = 'choices2'
   static override tagName = 'choices2-blot'
 
-  static override create(settings: {start: string, separator: string, stop: string, placeholder: string}) {
-    const node = super.create()
-    console.log('Creating choices2', node.textContent, settings)
-    node.setAttribute('data-gabby-settings', JSON.stringify(settings))
-    node.addEventListener('contextmenu', event => {
-      event.preventDefault()
+  static override create(settings: {start: string, separator: string, stop: string, placeholder: string, justCreated?: boolean}) {
+    const needsInitialEdit = settings.justCreated
+    delete settings.justCreated
 
-      model.value.awaiting.multipleChoices = {
-        globalSelection: false,
-        confirmation: false,
-        editing: true,
-        range: null,
+    const node = super.create()
+    node.setAttribute('data-gabby-settings', JSON.stringify(settings))
+
+    function editSettings() {
+      model.value.inProgress = {
+        kind: 'multipleChoicesEdition',
         settings: JSON.parse(node.getAttribute('data-gabby-settings')!),
-        editionWatch: watch(
-          () => model.value.awaiting.multipleChoices?.settings,
-          s => {
-            if (s !== null && s !== undefined) {
-              node.setAttribute('data-gabby-settings', JSON.stringify(s))
+        stopWatching: watch(
+          () => model.value.inProgress.kind === 'multipleChoicesEdition' && model.value.inProgress.settings,
+          settings => {
+            if (settings !== false) {
+              node.setAttribute('data-gabby-settings', JSON.stringify(settings))
             }
           },
           {deep: true},
@@ -81,7 +79,16 @@ class Choices2Blot extends InlineBlot {
 
       console.assert(choices2ContextMenu.value !== null)
       choices2ContextMenu.value.show(node)
+    }
+
+    node.addEventListener('contextmenu', event => {
+      event.preventDefault()
+      editSettings()
     })
+
+    if (needsInitialEdit) {
+      editSettings()
+    }
 
     return node
   }
@@ -94,9 +101,9 @@ class Choices2Blot extends InlineBlot {
 }
 
 function doneEditingChoices2() {
-  console.assert(model.value.awaiting.multipleChoices !== null)
-  model.value.awaiting.multipleChoices.editionWatch()
-  model.value.awaiting.multipleChoices = null
+  console.assert(model.value.inProgress.kind === 'multipleChoicesEdition')
+  model.value.inProgress.stopWatching()
+  model.value.inProgress = {kind: 'nothing'}
 }
 
 const multipleChoicesInWordingWordingFormats = {
@@ -227,14 +234,14 @@ const colorsCount = computed({
 
 <template>
   <ContextMenu ref="choices2ContextMenu" @hidden="doneEditingChoices2">
-    <template v-if="model.awaiting.multipleChoices !== null && model.awaiting.multipleChoices.editing && model.awaiting.multipleChoices.settings !== null">
+    <template v-if="model.inProgress.kind === 'multipleChoicesEdition'">
       <div class="container-fluid">
-        <BLabeledInput :label="$t('choicesSettingsSeparator')" v-model="model.awaiting.multipleChoices.settings.separator" />
+        <BLabeledInput :label="$t('choicesSettingsSeparator')" v-model="model.inProgress.settings.separator" />
         <BRow>
-          <BCol><BLabeledInput :label="$t('choicesSettingsStart')" style="width: 8em" v-model="model.awaiting.multipleChoices.settings.start" /></BCol>
-          <BCol><BLabeledInput :label="$t('choicesSettingsStop')" style="width: 8em" v-model="model.awaiting.multipleChoices.settings.stop" /></BCol>
+          <BCol><BLabeledInput :label="$t('choicesSettingsStart')" style="width: 8em" v-model="model.inProgress.settings.start" /></BCol>
+          <BCol><BLabeledInput :label="$t('choicesSettingsStop')" style="width: 8em" v-model="model.inProgress.settings.stop" /></BCol>
         </BRow>
-        <BLabeledInput :label="$t('choicesSettingsPlaceholder')" v-model="model.awaiting.multipleChoices.settings.placeholder" />
+        <BLabeledInput :label="$t('choicesSettingsPlaceholder')" v-model="model.inProgress.settings.placeholder" />
       </div>
     </template>
   </ContextMenu>
