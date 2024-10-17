@@ -340,8 +340,8 @@ const wordingParagraphsPerPageletOptions = [1, 2, 3, 4, 5].map(value => ({
                   @mousedown="e => e.stopPropagation()" @touchstart="e => e.stopPropagation()"
                 >
                   <div style="position: absolute; top: 50%; left: 10%; width: 80%; transform: translate(0, -50%); background-color: white; padding: 1em;">
-                    Select a set of choices in the "Wording" field in the "Edition" column. Include start, stop and separator characters.
-                    <BButton secondary sm @click="model.inProgress = {kind: 'nothing'}">Cancel</BButton>
+                    {{ $t('multipleChoicesInstructions') }}
+                    <BButton secondary sm @click="model.inProgress = {kind: 'nothing'}">{{ $t('choicesSettingsCancel') }}</BButton>
                   </div>
                 </div>
               </div>

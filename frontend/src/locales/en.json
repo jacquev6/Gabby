@@ -147,6 +147,8 @@
   "effectsBoxed": "Boxed",
   "selectableButton": "Selectable",
 
+  "multipleChoicesButton": "Multiple choices",
+  "multipleChoicesInstructions": "Select a set of choices in the \"Wording\" field in the \"Edition\" column. Include start, stop and separator characters.",
   "choicesSettingsSeparator": "Separator",
   "choicesSettingsStart": "Start",
   "choicesSettingsStop": "Stop",

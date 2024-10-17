@@ -147,6 +147,8 @@
   "effectsBoxed": "Cadre",
   "selectableButton": "Cochable",
 
+  "multipleChoicesButton": "Choix multiples",
+  "multipleChoicesInstructions": "Sélectionnez un ensemble de choix dans le champ \"Énoncé\" de la colonne \"Édition\". Incluez les caractère de début, fin et séparation.",
   "choicesSettingsSeparator": "Séparateur",
   "choicesSettingsStart": "Début",
   "choicesSettingsStop": "Fin",
