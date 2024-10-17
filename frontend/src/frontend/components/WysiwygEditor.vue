@@ -1,5 +1,6 @@
 <script lang="ts">
 import { BoldBlot, ItalicBlot } from './Quill.vue'
+import deepCopy from 'deep-copy'
 
 
 export function escapeForTag(text: string) {
@@ -64,7 +65,7 @@ function makeModelPart(formats: Record<string, Format>, delta: QuillModel[number
 }
 
 export function makeRange(formats: Record<string, Format>, quillModel: QuillModel, quillRange: SelectionRange): SelectionRange {
-  const ops = JSON.parse(JSON.stringify(quillModel)) as QuillModel
+  const ops = deepCopy(quillModel)
 
   let quillIndex = quillRange.index
   let index = 0
@@ -166,6 +167,7 @@ export function makeRange(formats: Record<string, Format>, quillModel: QuillMode
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
+import deepEqual from 'deep-equal'
 
 import Quill, { type Model as QuillModel, type SelectionRange } from './Quill.vue'
 
@@ -215,7 +217,7 @@ const quill = ref<InstanceType<typeof Quill> | null>(null)
 watch(
   deltaWithAdditionalLineEnd,
   delta => {
-    if (JSON.stringify(quillModel.value) !== JSON.stringify(delta)) {
+    if (!deepEqual(quillModel.value, delta)) {
       quillModel.value = delta
     }
   },

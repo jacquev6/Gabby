@@ -11,7 +11,7 @@ type PdfRectangle = (Exercise & InCache & Exists)['attributes']['rectangles'][nu
 
 // @todo Automate updating this type when a new adaptation type is added
 export const adaptationKinds = ['null', 'fill-with-free-text', 'items-and-effects-attempt-1', 'select-things', 'multiple-choices-in-instructions', 'multiple-choices-in-wording'] as const
-export type AdaptationKind =  typeof adaptationKinds[number]
+export type AdaptationKind = typeof adaptationKinds[number]
 
 export const textualFieldNames = ['instructions', 'wording', 'example', 'clue'] as const
 export type TextualFieldName = typeof textualFieldNames[number]
@@ -120,8 +120,8 @@ export function assignModelFrom(model: Model, exercise: Exercise & InCache & Exi
   model.clue = exercise.attributes.clue
   model.wordingParagraphsPerPagelet = exercise.attributes.wordingParagraphsPerPagelet
   model.adaptationKind = exercise.attributes.adaptation.kind
-  model.adaptations[model.adaptationKind] = JSON.parse(JSON.stringify(exercise.attributes.adaptation))
-  model.rectangles = JSON.parse(JSON.stringify(exercise.attributes.rectangles))
+  model.adaptations[model.adaptationKind] = deepCopy(exercise.attributes.adaptation) as any/* @todo Fix typing issue */
+  model.rectangles = deepCopy(exercise.attributes.rectangles)
   model.awaiting.multipleChoices = null
 }
 
@@ -205,6 +205,7 @@ export function suggestNextNumber(number: string) {
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import deepCopy from 'deep-copy'
 
 import { BRow, BCol, BLabeledInput, BLabeledTextarea, BLabeledSelect } from './opinion/bootstrap'
 import OptionalTextarea from './OptionalTextarea.vue'

@@ -72,6 +72,7 @@ import 'quill/dist/quill.core.css'  // Removing this CSS causes a bug on Firefox
 // Adding this 'white-space: pre' style ourselves would prevent this very bug, but we don't know
 // about other bugs. Quill is designed to be used with its CSS. So we do import the css,
 // and re-style the typography.
+import deepEqual from 'deep-equal'
 
 
 const props = defineProps<{
@@ -142,7 +143,7 @@ const quill = computed(() => {
 })
 
 watch([quill, model], ([quill, model]) => {
-  if (quill !== null && JSON.stringify(getContents(quill)) !== JSON.stringify(model)) {
+  if (quill !== null && !deepEqual(getContents(quill), model)) {
     quill.setContents(model)
   }
 })

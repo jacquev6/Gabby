@@ -2,6 +2,8 @@
 import { ref, computed, reactive, watch, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import deepCopy from 'deep-copy'
+import deepEqual from 'deep-equal'
 
 import { BButton, BBusy, BLabeledRadios } from '$frontend/components/opinion/bootstrap'
 import { useApiStore } from '$frontend/stores/api'
@@ -188,10 +190,10 @@ const parsedExerciseNeedsLoading = ref(true)
 watch(model, () => { parsedExerciseNeedsLoading.value = true })
 watch(parsedExerciseNeedsLoading, async () => {
   while (parsedExerciseNeedsLoading.value) {
-    const modelBefore = JSON.stringify(model)
+    const modelBefore = deepCopy(model)
     parsedExerciseIsLoading.value = true
     const parsed = await getParsed(model)
-    if (JSON.stringify(model) === modelBefore) {
+    if (deepEqual(model, modelBefore)) {
       parsedExercise.value = parsed
       parsedExerciseIsLoading.value = false
       parsedExerciseNeedsLoading.value = false
