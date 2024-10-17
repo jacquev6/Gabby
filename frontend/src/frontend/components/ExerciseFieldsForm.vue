@@ -35,7 +35,9 @@ export type Model = {
       kind: 'multipleChoicesCreation'
     } | {
       kind: 'multipleChoicesEdition'
+      initial: boolean
       stopWatching(): void
+      delete(): void
       settings: {
         start: string
         stop: string

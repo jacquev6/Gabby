@@ -151,6 +151,8 @@
   "choicesSettingsStart": "Début",
   "choicesSettingsStop": "Fin",
   "choicesSettingsPlaceholder": "Trou à remplir",
+  "choicesSettingsCancel": "Annuler",
+  "choicesSettingsDelete": "Supprimer",
 
   "tools": "Outils",
   "undo": "Annuler",

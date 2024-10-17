@@ -1,4 +1,6 @@
 <script lang="ts">
+import Quill from 'quill/core'
+
 import { InlineBlot } from './Quill.vue'
 import { basicFormats, escapeForTag } from './WysiwygEditor.vue'
 import ContextMenu from './ContextMenu.vue'
@@ -62,10 +64,27 @@ class Choices2Blot extends InlineBlot {
     const node = super.create()
     node.setAttribute('data-gabby-settings', JSON.stringify(settings))
 
-    function editSettings() {
+    function editSettings(initial: boolean = false) {
       model.value.inProgress = {
         kind: 'multipleChoicesEdition',
         settings: JSON.parse(node.getAttribute('data-gabby-settings')!),
+        initial,
+        delete() {
+          const blot = Quill.find(node)
+          console.assert(blot !== null && !(blot instanceof Quill))
+          let root = blot
+          while (root.parent !== undefined) {
+            root = root.parent
+          }
+          const quillNode = root.domNode.parentElement
+          console.assert(quillNode !== null)
+          const quill = Quill.find(quillNode)
+          console.assert(quill instanceof Quill)
+          quill.removeFormat(blot.offset(root), blot.length(), 'user')
+
+          console.assert(choices2ContextMenu.value !== null)
+          choices2ContextMenu.value.hide()
+        },
         stopWatching: watch(
           () => model.value.inProgress.kind === 'multipleChoicesEdition' && model.value.inProgress.settings,
           settings => {
@@ -87,7 +106,7 @@ class Choices2Blot extends InlineBlot {
     })
 
     if (needsInitialEdit) {
-      editSettings()
+      editSettings(true)
     }
 
     return node
@@ -182,7 +201,7 @@ export const wysiwygFormats = {
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from 'vue'
 
-import { BRow, BCol, BLabeledInput, BLabeledCheckbox } from './opinion/bootstrap'
+import { BRow, BCol, BLabeledInput, BLabeledCheckbox, BButton } from './opinion/bootstrap'
 import type { Model } from './ExerciseFieldsForm.vue'
 import type ExerciseFieldsForm from './ExerciseFieldsForm.vue'
 import FloatingColorPicker from './FloatingColorPicker.vue'
@@ -242,6 +261,7 @@ const colorsCount = computed({
           <BCol><BLabeledInput :label="$t('choicesSettingsStop')" style="width: 8em" v-model="model.inProgress.settings.stop" /></BCol>
         </BRow>
         <BLabeledInput :label="$t('choicesSettingsPlaceholder')" v-model="model.inProgress.settings.placeholder" />
+        <BButton sm secondary @click="model.inProgress.delete">{{ $t(model.inProgress.initial ? 'choicesSettingsCancel' : 'choicesSettingsDelete') }}</BButton>
       </div>
     </template>
   </ContextMenu>

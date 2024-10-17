@@ -151,6 +151,8 @@
   "choicesSettingsStart": "Start",
   "choicesSettingsStop": "Stop",
   "choicesSettingsPlaceholder": "Placeholder to fill",
+  "choicesSettingsCancel": "Cancel",
+  "choicesSettingsDelete": "Delete",
 
   "tools": "Tools",
   "undo": "Undo",
