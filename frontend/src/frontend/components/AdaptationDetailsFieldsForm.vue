@@ -122,6 +122,33 @@ class Choices2Blot extends InlineBlot {
 function doneEditingChoices2() {
   console.assert(model.value.inProgress.kind === 'multipleChoicesEdition')
   model.value.inProgress.stopWatching()
+  if (model.value.inProgress.initial && model.value.inProgress.settings.start !== '' && model.value.inProgress.settings.separator !== '' && model.value.inProgress.settings.stop !== '') {
+    let newWording = ''
+    const wording = model.value.wording
+    let lastProcessedIndex = -1
+    while (true) {
+      const startIndex = wording.indexOf(model.value.inProgress.settings.start, lastProcessedIndex + 1)
+      if (startIndex === -1) {
+        break
+      }
+      newWording += wording.slice(lastProcessedIndex + 1, startIndex)
+      if (wording[startIndex - 1] === '|') {
+        newWording += model.value.inProgress.settings.start
+        lastProcessedIndex = startIndex + model.value.inProgress.settings.start.length - 1
+      } else {
+        const stopIndex = wording.indexOf(model.value.inProgress.settings.stop, startIndex + model.value.inProgress.settings.start.length)
+        const separatorIndex = wording.indexOf(model.value.inProgress.settings.separator, startIndex + model.value.inProgress.settings.start.length)
+        if (stopIndex !== -1 && separatorIndex !== -1 && separatorIndex < stopIndex) {
+          console.log('Choice:', '#' + wording.slice(startIndex, stopIndex + model.value.inProgress.settings.stop.length) + '#')
+        }
+        newWording += `{choices2|${escapeForTag(model.value.inProgress.settings.start)}|${escapeForTag(model.value.inProgress.settings.separator)}|${escapeForTag(model.value.inProgress.settings.stop)}|${escapeForTag(model.value.inProgress.settings.placeholder)}|${escapeForTag(wording.slice(startIndex, stopIndex + model.value.inProgress.settings.stop.length))}}`
+        lastProcessedIndex = stopIndex + model.value.inProgress.settings.stop.length - 1
+      }
+    }
+    newWording += wording.slice(lastProcessedIndex + 1)
+    console.log(newWording)
+    model.value.wording = newWording
+  }
   model.value.inProgress = {kind: 'nothing'}
 }
 
