@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, reactive, watch, nextTick } from 'vue'
+import { ref, computed, reactive, watch, nextTick, provide } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import deepCopy from 'deep-copy'
@@ -250,6 +250,8 @@ const wordingParagraphsPerPageletOptions = [1, 2, 3, 4, 5].map(value => ({
   label: i18n.t('exerciseLinesPerPage', {lines: value}),
   value,
 }))
+
+provide('adaptedExerciseBackdropCovers', '#right-col-2')
 </script>
 
 <template>
@@ -278,7 +280,7 @@ const wordingParagraphsPerPageletOptions = [1, 2, 3, 4, 5].map(value => ({
       <template v-if="exercise.exists && exerciseBelongsToTextbookPage">
         <TwoResizableColumns saveKey="projectTextbookPage-2" :snap="150" class="h-100" gutterWidth="200px">
           <template #left>
-            <div class="h-100 overflow-auto" data-cy="left-col-2">
+            <div class="h-100 overflow-auto position-relative" id="left-col-2" data-cy="left-col-2">
               <h1>{{ $t('edition') }}  <span style="font-size: small">(<label>WYSIWYG: <input type="checkbox" v-model="wantWysiwyg" /></label>)</span></h1>
               <BBusy :busy>
                 <ExerciseFieldsForm ref="fields"
@@ -306,7 +308,7 @@ const wordingParagraphsPerPageletOptions = [1, 2, 3, 4, 5].map(value => ({
           </template>
 
           <template #gutter>
-            <div class="h-100 overflow-hidden d-flex flex-row">
+            <div class="h-100 overflow-hidden d-flex flex-row position-relative" id="gutter-2">
               <div class="handle"></div>
               <div class="h-100 overflow-auto flex-fill" data-cy="gutter-2">
                 <div style="position: relative">
@@ -343,7 +345,7 @@ const wordingParagraphsPerPageletOptions = [1, 2, 3, 4, 5].map(value => ({
           </template>
 
           <template #right>
-            <div class="h-100 overflow-auto" data-cy="right-col-2">
+            <div class="h-100 overflow-auto position-relative" data-cy="right-col-2" id="right-col-2">
               <h1>{{ $t('adaptation') }}</h1>
               <BBusy :busy="parsedExerciseIsLoading">
                 <AdaptedExercise

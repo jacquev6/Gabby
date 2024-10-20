@@ -252,7 +252,7 @@ const colorsCount = computed({
 </script>
 
 <template>
-  <ContextMenu ref="choices2ContextMenu" @hidden="doneEditingChoices2">
+  <ContextMenu ref="choices2ContextMenu" backdropCovers1="#left-col-2" backdropCovers2="#gutter-2" @hidden="doneEditingChoices2">
     <template v-if="model.inProgress.kind === 'multipleChoicesEdition'">
       <div class="container-fluid">
         <BLabeledInput :label="$t('choicesSettingsSeparator')" v-model="model.inProgress.settings.separator" />

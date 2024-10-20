@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, inject } from 'vue'
 import { useFloating, shift } from '@floating-ui/vue'
 
 
@@ -51,12 +51,13 @@ const choiceColumns = computed(() => {
   return columns
 })
 
+const backdropCovers = inject<string>('adaptedExerciseBackdropCovers', 'body')
 </script>
 
 <template>
   <span ref="reference" class="main" :class="{open: showChoices}" @click="showChoices = true">{{ value }}</span>
   <template v-if="showChoices">
-    <Teleport to="body">
+    <Teleport :to="backdropCovers">
       <div class="backdrop" @click="showChoices = false"></div>
     </Teleport>
     <div ref="floating" class="choices" :style="floatingStyles">

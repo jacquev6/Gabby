@@ -1,7 +1,13 @@
 <script setup lang="ts">
 import { useFloating, arrow, shift } from '@floating-ui/vue'
 import { computed, ref, watch } from 'vue'
+import { useElementBounding } from '@vueuse/core'
 
+
+const props = defineProps<{
+  backdropCovers1: string
+  backdropCovers2: string
+}>()
 
 const emit = defineEmits<{
   shown: []
@@ -64,6 +70,41 @@ const floatingArrowStyles = computed(() => {
   }
 })
 
+
+const backdropCovers1 = computed(() => {
+  const element = document.querySelector(props.backdropCovers1)
+  console.assert(element !== null)
+  return element as HTMLElement
+})
+
+const backdropCoversBoundingRect1 = useElementBounding(backdropCovers1)
+
+const backdropCovers2 = computed(() => {
+  const element = document.querySelector(props.backdropCovers2)
+  console.assert(element !== null)
+  return element as HTMLElement
+})
+
+const backdropCoversBoundingRect2 = useElementBounding(backdropCovers2)
+
+const backdropStyles = computed(() => {
+  const boundingRects = [backdropCoversBoundingRect1, backdropCoversBoundingRect2]
+
+  const top = Math.min(...boundingRects.map(rect => rect.top.value))
+  const bottom = Math.max(...boundingRects.map(rect => rect.bottom.value))
+  const left = Math.min(...boundingRects.map(rect => rect.left.value))
+  const right = Math.max(...boundingRects.map(rect => rect.right.value))
+
+  const styles = {
+    top: `${top}px`,
+    bottom: `${window.innerHeight - bottom}px`,
+    left: `${left}px`,
+    right: `${window.innerWidth - right}px`,
+  }
+
+  return styles
+})
+
 defineExpose({show, hide})
 </script>
 
@@ -72,6 +113,7 @@ defineExpose({show, hide})
     <template v-if="inDom">
       <div
         class="floating-backdrop"
+        :style="backdropStyles"
         @click="hide" @contextmenu.prevent="hide"
       ></div>
       <div
@@ -105,10 +147,6 @@ span.default-color {
 div.floating-backdrop {
   position: fixed;
   z-index: 1000;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
   background: #00000022;
 }
 
