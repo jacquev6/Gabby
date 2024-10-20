@@ -262,6 +262,7 @@ const colorsCount = computed({
         </BRow>
         <BLabeledInput :label="$t('choicesSettingsPlaceholder')" v-model="model.inProgress.settings.placeholder" />
         <BButton sm secondary @click="model.inProgress.delete">{{ $t(model.inProgress.initial ? 'choicesSettingsCancel' : 'choicesSettingsDelete') }}</BButton>
+        <BButton sm primary v-if="choices2ContextMenu !== null" @click="choices2ContextMenu.hide()">OK</BButton>
       </div>
     </template>
   </ContextMenu>
