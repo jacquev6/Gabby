@@ -100,7 +100,7 @@ div.backdrop {
 div.choices {
   border: 1px dashed green;
   background: white;
-  z-index: 10000;  /* Arbitrary z-order is fragile but used only in preview */
+  z-index: 10;  /* Arbitrary z-order is fragile but used only in preview */
 }
 
 div.choiceColumn {

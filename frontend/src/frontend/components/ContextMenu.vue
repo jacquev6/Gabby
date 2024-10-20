@@ -146,12 +146,12 @@ span.default-color {
 
 div.floating-backdrop {
   position: fixed;
-  z-index: 1000;
+  z-index: 10;
   background: #00000022;
 }
 
 div.floating-container {
-  z-index: 1001;
+  z-index: 11;
 }
 
 div.floating-content {

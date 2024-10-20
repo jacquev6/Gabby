@@ -51,7 +51,7 @@ const style = computed(() => {
     <template v-if="show">
       <slot v-bind="$attrs"></slot>
     </template>
-    <div v-if="busy" class="busy d-flex justify-content-center align-items-center" style="position: absolute; top: 0; left: 0; height: 100%; width: 100%; background: rgba(0, 0, 0, 0.5)">
+    <div v-if="busy" class="busy d-flex justify-content-center align-items-center" style="position: absolute; top: 0; left: 0; height: 100%; width: 100%; background: rgba(0, 0, 0, 0.5); z-index: 20;">
       <div class="spinner-border" :style="{width: size, height: size}" role="status">
         <span class="visually-hidden">Loading...</span>
       </div>
