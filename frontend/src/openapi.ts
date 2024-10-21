@@ -177,6 +177,11 @@ export interface components {
       boxed: boolean;
       selectable: components["schemas"]["Selectable"] | null;
     };
+    /** EmbedInsertOp */
+    EmbedInsertOp: {
+      /** Insert */
+      insert: Record<string, never>;
+    };
     /** FillWithFreeTextAdaptation */
     FillWithFreeTextAdaptation: {
       /**
@@ -192,16 +197,6 @@ export interface components {
     HTTPValidationError: {
       /** Detail */
       detail?: components["schemas"]["ValidationError"][];
-    };
-    /** InsertOp */
-    InsertOp: {
-      /**
-       * Attributes
-       * @default {}
-       */
-      attributes?: Record<string, never>;
-      /** Insert */
-      insert: string;
     };
     /** ItemLinks */
     ItemLinks: {
@@ -370,6 +365,13 @@ export interface components {
        * @enum {string}
        */
       kind: "sentences";
+    };
+    /** TextInsertOp */
+    TextInsertOp: {
+      /** Attributes */
+      attributes: Record<string, never>;
+      /** Insert */
+      insert: string;
     };
     /** ValidationError */
     ValidationError: {
@@ -713,13 +715,13 @@ export interface components {
     /** Exercise */
     gabby__exercise_delta__Exercise: {
       /** Clue */
-      clue: components["schemas"]["InsertOp"][];
+      clue: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
       /** Example */
-      example: components["schemas"]["InsertOp"][];
+      example: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
       /** Instructions */
-      instructions: components["schemas"]["InsertOp"][];
+      instructions: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
       /** Wording */
-      wording: components["schemas"]["InsertOp"][];
+      wording: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
     };
     /** Exercise */
     gabby__renderable__Exercise: {

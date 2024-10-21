@@ -33,7 +33,7 @@ class MultipleChoicesInInstructionsAdaptation(PydanticBase):
 
     class InstructionsDeltaMaker(parsing.InstructionsSectionDeltaMaker):
         def choice_tag(self, args):
-            return exercise_delta.InsertOp(insert=args[0], attributes={"choice": True})
+            return exercise_delta.TextInsertOp(insert=args[0], attributes={"choice": True})
 
     make_instructions_delta_: ClassVar = parsing.InstructionsSectionParser(instructions_tags, InstructionsDeltaMaker())
 
@@ -180,14 +180,14 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
             ),
             d.Exercise(
                 instructions=[
-                    d.InsertOp(insert="Choose "),
-                    d.InsertOp(insert="a", attributes={"choice": True}),
-                    d.InsertOp(insert=" or "),
-                    d.InsertOp(insert="b", attributes={"choice": True}),
-                    d.InsertOp(insert="."),
+                    d.TextInsertOp(insert="Choose ", attributes={}),
+                    d.TextInsertOp(insert="a", attributes={"choice": True}),
+                    d.TextInsertOp(insert=" or ", attributes={}),
+                    d.TextInsertOp(insert="b", attributes={"choice": True}),
+                    d.TextInsertOp(insert=".", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="A ... B ..."),
+                    d.TextInsertOp(insert="A ... B ...", attributes={}),
                 ],
                 example=[],
                 clue=[],
@@ -282,20 +282,20 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
             ),
             d.Exercise(
                 instructions=[
-                    d.InsertOp(insert="Choose "),
-                    d.InsertOp(insert="a", attributes={"choice": True}),
-                    d.InsertOp(insert=" or "),
-                    d.InsertOp(insert="b", attributes={"choice": True}),
-                    d.InsertOp(insert="."),
+                    d.TextInsertOp(insert="Choose ", attributes={}),
+                    d.TextInsertOp(insert="a", attributes={"choice": True}),
+                    d.TextInsertOp(insert=" or ", attributes={}),
+                    d.TextInsertOp(insert="b", attributes={"choice": True}),
+                    d.TextInsertOp(insert=".", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="A @ B @"),
+                    d.TextInsertOp(insert="A @ B @", attributes={}),
                 ],
                 example=[
-                    d.InsertOp(insert="This {choice|is} the @ example."),
+                    d.TextInsertOp(insert="This {choice|is} the @ example.", attributes={}),
                 ],
                 clue=[
-                    d.InsertOp(insert="This is {choice|the} @ clue."),
+                    d.TextInsertOp(insert="This is {choice|the} @ clue.", attributes={}),
                 ],
             ),
         )
@@ -351,13 +351,13 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
             ),
             d.Exercise(
                 instructions=[
-                    d.InsertOp(insert="a", attributes={"choice": True}),
-                    d.InsertOp(insert=" # "),
-                    d.InsertOp(insert="b", attributes={"choice": True}),
-                    d.InsertOp(insert="\n\n c #\nd."),
+                    d.TextInsertOp(insert="a", attributes={"choice": True}),
+                    d.TextInsertOp(insert=" # ", attributes={}),
+                    d.TextInsertOp(insert="b", attributes={"choice": True}),
+                    d.TextInsertOp(insert="\n\n c #\nd.", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="..."),
+                    d.TextInsertOp(insert="...", attributes={}),
                 ],
                 example=[],
                 clue=[],
@@ -413,14 +413,14 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
             ),
             d.Exercise(
                 instructions=[
-                    d.InsertOp(insert=" \t  Choose  \t\n  "),
-                    d.InsertOp(insert="a", attributes={"choice": True}),
-                    d.InsertOp(insert=".   Or "),
-                    d.InsertOp(insert="b", attributes={"choice": True}),
-                    d.InsertOp(insert=" .   \t\n   "),
+                    d.TextInsertOp(insert=" \t  Choose  \t\n  ", attributes={}),
+                    d.TextInsertOp(insert="a", attributes={"choice": True}),
+                    d.TextInsertOp(insert=".   Or ", attributes={}),
+                    d.TextInsertOp(insert="b", attributes={"choice": True}),
+                    d.TextInsertOp(insert=" .   \t\n   ", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="..."),
+                    d.TextInsertOp(insert="...", attributes={}),
                 ],
                 example=[],
                 clue=[],

@@ -187,7 +187,7 @@ services:
     env_file:
       - backend/env
       - secrets.env
-    command: ["python", "-m", "gabby", "load-fixtures", "admin-user", "more-test-exercises"]
+    command: ["python", "-m", "gabby", "load-fixtures", "admin-user", "even-more-test-exercises"]
     depends_on:
       migrator:
         condition: service_completed_successfully

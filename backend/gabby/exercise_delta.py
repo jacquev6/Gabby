@@ -3,9 +3,14 @@ from typing import Any
 from mydantic import PydanticBase
 
 
-class InsertOp(PydanticBase):
+class TextInsertOp(PydanticBase):
     insert: str
-    attributes: dict[str, Any] = {}
+    attributes: dict[str, Any]
+
+class EmbedInsertOp(PydanticBase):
+    insert: dict[str, Any]
+
+InsertOp = TextInsertOp | EmbedInsertOp
 
 
 class Exercise(PydanticBase):

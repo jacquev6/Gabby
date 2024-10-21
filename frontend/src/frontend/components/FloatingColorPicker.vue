@@ -24,6 +24,7 @@ function show(ref: HTMLElement) {
   initialValue.value = model.value
 }
 
+// @todo Use 'ContextMenu' component
 const {floatingStyles, middlewareData} = useFloating(
   floatingReference,
   floatingContainer,
@@ -109,7 +110,7 @@ span.default-color {
 
 div.floating-backdrop {
   position: fixed;
-  z-index: 1000;
+  z-index: 10;
   top: 0;
   left: 0;
   width: 100%;
@@ -118,7 +119,7 @@ div.floating-backdrop {
 }
 
 div.floating-container {
-  z-index: 1001;
+  z-index: 11;
 }
 
 div.floating-content {

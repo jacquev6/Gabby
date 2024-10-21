@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { ref, computed, reactive, watch, nextTick } from 'vue'
+import { ref, computed, reactive, watch, nextTick, provide } from 'vue'
 import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import deepCopy from 'deep-copy'
+import deepEqual from 'deep-equal'
 
 import { BButton, BBusy, BLabeledRadios } from '$frontend/components/opinion/bootstrap'
 import bc from '$frontend/components/breadcrumbs'
@@ -92,9 +94,8 @@ const title = computed(() => [i18n.t('create')])
 const breadcrumbs = computed(() => bc.last(i18n.t('create')))
 
 const model = reactive(makeModelInTextbook(page.value))
-const canWysiwyg = computed(() => model.adaptationKind !== 'multiple-choices-in-wording')
 const wantWysiwyg = ref(true)
-const wysiwyg = computed(() => canWysiwyg.value && wantWysiwyg.value)
+const wysiwyg = computed(() => wantWysiwyg.value)
 
 const resetUndoRedo = ref(0)
 
@@ -194,10 +195,10 @@ const parsedExerciseNeedsLoading = ref(true)
 watch(model, () => { parsedExerciseNeedsLoading.value = true })
 watch(parsedExerciseNeedsLoading, async () => {
   while (parsedExerciseNeedsLoading.value) {
-    const modelBefore = JSON.stringify(model)
+    const modelBefore = deepCopy(model)
     parsedExerciseIsLoading.value = true
     const parsed = await getParsed(model)
-    if (JSON.stringify(model) === modelBefore) {
+    if (deepEqual(model, modelBefore)) {
       parsedExercise.value = parsed
       parsedExerciseIsLoading.value = false
       parsedExerciseNeedsLoading.value = false
@@ -254,6 +255,8 @@ const wordingParagraphsPerPageletOptions = [1, 2, 3, 4, 5].map(value => ({
   label: i18n.t('exerciseLinesPerPage', {lines: value}),
   value,
 }))
+
+provide('adaptedExerciseBackdropCovers', '#right-col-2')
 </script>
 
 <template>
@@ -282,8 +285,8 @@ const wordingParagraphsPerPageletOptions = [1, 2, 3, 4, 5].map(value => ({
     <template #>
       <TwoResizableColumns saveKey="projectTextbookPage-2" :snap="150" class="h-100" gutterWidth="200px">
         <template #left>
-          <div class="h-100 overflow-auto" data-cy="left-col-2">
-            <h1>{{ $t('edition') }}<template v-if="canWysiwyg">  <span style="font-size: small">(<label>WYSIWYG: <input type="checkbox" v-model="wantWysiwyg" /></label>)</span></template></h1>
+          <div class="h-100 overflow-auto position-relative" id="left-col-2" data-cy="left-col-2">
+            <h1>{{ $t('edition') }} <span style="font-size: small">(<label>WYSIWYG: <input type="checkbox" v-model="wantWysiwyg" /></label>)</span></h1>
             <BBusy :busy>
               <ExerciseFieldsForm ref="fields"
                 v-model="model" :displayedPage
@@ -313,30 +316,44 @@ const wordingParagraphsPerPageletOptions = [1, 2, 3, 4, 5].map(value => ({
         </template>
 
         <template #gutter>
-          <div class="h-100 overflow-hidden d-flex flex-row">
+          <div class="h-100 overflow-hidden d-flex flex-row position-relative" id="gutter-2">
             <div class="handle"></div>
             <div class="h-100 overflow-auto flex-fill" data-cy="gutter-2">
-              <ToolsGutter :slotNames="toolSlotNames">
-                <template #undoRedo>
-                  <UndoRedoTool v-model="model" :reset="resetUndoRedo" />
-                </template>
-                <template #adaptationDetails>
-                  <AdaptationDetailsFieldsForm v-if="fields !== null" v-model="model" :wysiwyg :fields/>
-                </template>
-                <template #basicFormatting>
-                  <BasicFormattingTools v-if="fields !== null" v-model="model" :fields />
-                </template>
-                <template #repartition>
-                  <BLabeledRadios :label="$t('exerciseRepartition')" v-model="model.wordingParagraphsPerPagelet" :options="wordingParagraphsPerPageletOptions" />
-                </template>
-              </ToolsGutter>
+              <div style="position: relative">
+                <div>
+                  <ToolsGutter :slotNames="toolSlotNames">
+                    <template #undoRedo>
+                      <UndoRedoTool v-model="model" :reset="resetUndoRedo" />
+                    </template>
+                    <template #adaptationDetails>
+                      <AdaptationDetailsFieldsForm v-if="fields !== null" v-model="model" :wysiwyg :fields/>
+                    </template>
+                    <template #basicFormatting>
+                      <BasicFormattingTools v-if="fields !== null" v-model="model" :fields />
+                    </template>
+                    <template #repartition>
+                      <BLabeledRadios :label="$t('exerciseRepartition')" v-model="model.wordingParagraphsPerPagelet" :options="wordingParagraphsPerPageletOptions" />
+                    </template>
+                  </ToolsGutter>
+                </div>
+                <div
+                  v-if="model.inProgress.kind === 'multipleChoicesCreation'"
+                  style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); cursor: initial;"
+                  @mousedown="e => e.stopPropagation()" @touchstart="e => e.stopPropagation()"
+                >
+                  <div style="position: absolute; top: 50%; left: 10%; width: 80%; transform: translate(0, -50%); background-color: white; padding: 1em;">
+                    {{ $t('multipleChoicesInstructions') }}
+                    <BButton secondary sm @click="model.inProgress = {kind: 'nothing'}">{{ $t('choicesSettingsCancel') }}</BButton>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="handle"></div>
           </div>
         </template>
 
         <template #right>
-          <div class="h-100 overflow-auto" data-cy="right-col-2">
+          <div class="h-100 overflow-auto position-relative" data-cy="right-col-2" id="right-col-2">
             <h1>{{ $t('adaptation') }}</h1>
             <BBusy :busy="parsedExerciseIsLoading">
               <AdaptedExercise

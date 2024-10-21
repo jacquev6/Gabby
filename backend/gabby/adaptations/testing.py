@@ -6,6 +6,12 @@ class AdaptationTestCase(unittest.TestCase):
 
     # @todo Remove default value, enforce testing the delta
     def do_test(self, exercise, expected_adapted, expected_delta=None):
-        self.assertEqual(exercise.make_adapted(), expected_adapted)
+        actual_adapted = exercise.make_adapted()
+        if actual_adapted != expected_adapted:
+            print("actual_adapted:", actual_adapted)
+        self.assertEqual(actual_adapted, expected_adapted)
         if expected_delta is not None:
-            self.assertEqual(exercise.make_delta(), expected_delta)
+            actual_delta = exercise.make_delta()
+            if actual_delta != expected_delta:
+                print("actual_delta:", actual_delta)
+            self.assertEqual(actual_delta, expected_delta)

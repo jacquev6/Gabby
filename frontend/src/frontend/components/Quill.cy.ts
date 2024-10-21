@@ -1,4 +1,4 @@
-import Quill, { type Model, InlineBlot, BoldBlot, ItalicBlot } from './Quill.vue'
+import Quill, { type Model, InlineBlot, BoldBlot, ItalicBlot, BlockEmbed, InlineEmbed } from './Quill.vue'
 
 
 class StrBlot extends InlineBlot {
@@ -16,6 +16,29 @@ class StrBlot extends InlineBlot {
   }
 }
 
+class DividerBlot extends BlockEmbed {
+  static override blotName = 'divider'
+  static override tagName = 'hr'
+}
+
+class InlEmbBlot extends InlineEmbed {
+  static override blotName = 'inl-emb'
+  static override tagName = 'inl-emb-blot'
+
+  static override create(settings: {color: string}) {
+    let node = super.create()
+    node.setAttribute('style', `border: 1px solid ${settings.color}; `)
+    node.setAttribute('data-settings', JSON.stringify(settings))
+    return node
+  }
+
+  static value(node: HTMLElement) {
+    const settings = node.getAttribute('data-settings')
+    console.assert(settings !== null)
+    return JSON.parse(settings)
+  }
+}
+
 describe('Quill', () => {
   before(console.clear)
 
@@ -23,11 +46,11 @@ describe('Quill', () => {
     cy.mount(Quill, {props: {
       blots: [BoldBlot, ItalicBlot],
       modelValue: [
-        {insert: '1-plain'},
+        {insert: '1-plain', attributes: {}},
         {insert: '2-bold', attributes: {bold: true}},
         {insert: '3-italic', attributes: {italic: true}},
         {insert: '4-bold-italic', attributes: {bold: true, italic: true}},
-        {insert: '\n'},
+        {insert: '\n', attributes: {}},
       ],
     }})
 
@@ -50,7 +73,7 @@ describe('Quill', () => {
       'onUpdate:modelValue': (m: Model) => { modelValue = m },
     }})
     cy.get('div.ql-editor').type('plain text with spaces').then(() => {
-      expect(modelValue).to.deep.equal([{insert: 'plain text with spaces\n', attributes: undefined}])
+      expect(modelValue).to.deep.equal([{insert: 'plain text with spaces\n', attributes: {}}])
     })
   })
 
@@ -66,7 +89,7 @@ describe('Quill', () => {
   }
 
   it('adds a boolean format to the selection', () => {
-    let modelValue: Model = [{insert: 'abcdefghi'}]
+    let modelValue: Model = [{insert: 'abcdefghi', attributes: {}}]
     cy.mount(Quill, {props: {
       blots: [BoldBlot, ItalicBlot],
       modelValue,
@@ -82,9 +105,9 @@ describe('Quill', () => {
       .then(w => w.componentVM.toggle('bold'))
       .then(() => {
         expect(modelValue).to.deep.equal([
-          {insert: 'abc', attributes: undefined},
+          {insert: 'abc', attributes: {}},
           {insert: 'def', attributes: {bold: true}},
-          {insert: 'ghi\n', attributes: undefined},
+          {insert: 'ghi\n', attributes: {}},
         ])
       })
   })
@@ -107,9 +130,9 @@ describe('Quill', () => {
       .then(() => {
         expect(modelValue).to.deep.equal([
           {insert: 'abc', attributes: {bold: true}},
-          {insert: 'def', attributes: undefined},
+          {insert: 'def', attributes: {}},
           {insert: 'ghi', attributes: {bold: true}},
-          {insert: '\n', attributes: undefined},
+          {insert: '\n', attributes: {}},
         ])
       })
   })
@@ -134,13 +157,13 @@ describe('Quill', () => {
           {insert: 'abc', attributes: {bold: true}},
           {insert: 'def', attributes: {italic: true}},
           {insert: 'ghi', attributes: {bold: true}},
-          {insert: '\n', attributes: undefined},
+          {insert: '\n', attributes: {}},
         ])
       })
   })
 
   it('removes a boolean format from a part of the selection before adding another', () => {
-    let modelValue: Model = [{insert: 'abcd'}, {insert: 'e', attributes: {bold: true}}, {insert: 'fghi'}]
+    let modelValue: Model = [{insert: 'abcd', attributes: {}}, {insert: 'e', attributes: {bold: true}}, {insert: 'fghi', attributes: {}}]
     cy.mount(Quill, {props: {
       blots: [BoldBlot, ItalicBlot],
       modelValue,
@@ -154,15 +177,15 @@ describe('Quill', () => {
       .then(w => w.componentVM.toggle('italic'))
       .then(() => {
         expect(modelValue).to.deep.equal([
-          {insert: 'abc', attributes: undefined},
+          {insert: 'abc', attributes: {}},
           {insert: 'def', attributes: {italic: true}},
-          {insert: 'ghi\n', attributes: undefined},
+          {insert: 'ghi\n', attributes: {}},
         ])
       })
   })
 
   it('adds, changes and removes a boolean format to/from the caret', () => {
-    let modelValue: Model = [{insert: 'abc'}]
+    let modelValue: Model = [{insert: 'abc', attributes: {}}]
     cy.mount(Quill, {props: {
       blots: [BoldBlot, ItalicBlot],
       modelValue,
@@ -177,16 +200,16 @@ describe('Quill', () => {
     cy.get('div.ql-editor').type('jkl')
       .then(() => {
         expect(modelValue).to.deep.equal([
-          {insert: 'abc', attributes: undefined},
+          {insert: 'abc', attributes: {}},
           {insert: 'def', attributes: {bold: true}},
           {insert: 'ghi', attributes: {italic: true}},
-          {insert: 'jkl\n', attributes: undefined},
+          {insert: 'jkl\n', attributes: {}},
         ])
       })
   })
 
   it('adds a string format to the selection', () => {
-    let modelValue: Model = [{insert: 'abcdefghi'}]
+    let modelValue: Model = [{insert: 'abcdefghi', attributes: {}}]
     cy.mount(Quill, {props: {
       blots: [StrBlot],
       modelValue,
@@ -202,9 +225,9 @@ describe('Quill', () => {
       .then(w => w.componentVM.toggle('string', 'A'))
       .then(() => {
         expect(modelValue).to.deep.equal([
-          {insert: 'abc', attributes: undefined},
+          {insert: 'abc', attributes: {}},
           {insert: 'def', attributes: {string: 'A'}},
-          {insert: 'ghi\n', attributes: undefined},
+          {insert: 'ghi\n', attributes: {}},
         ])
       })
   })
@@ -227,9 +250,9 @@ describe('Quill', () => {
       .then(() => {
         expect(modelValue).to.deep.equal([
           {insert: 'abc', attributes: {string: 'A'}},
-          {insert: 'def', attributes: undefined},
+          {insert: 'def', attributes: {}},
           {insert: 'ghi', attributes: {string: 'A'}},
-          {insert: '\n', attributes: undefined},
+          {insert: '\n', attributes: {}},
         ])
       })
   })
@@ -254,13 +277,13 @@ describe('Quill', () => {
           {insert: 'abc', attributes: {string: 'A'}},
           {insert: 'def', attributes: {string: 'B'}},
           {insert: 'ghi', attributes: {string: 'A'}},
-          {insert: '\n', attributes: undefined},
+          {insert: '\n', attributes: {}},
         ])
       })
   })
 
   it('adds, changes and removes a string format to/from the caret', () => {
-    let modelValue: Model = [{insert: 'abc'}]
+    let modelValue: Model = [{insert: 'abc', attributes: {}}]
     cy.mount(Quill, {props: {
       blots: [StrBlot],
       modelValue,
@@ -275,16 +298,16 @@ describe('Quill', () => {
     cy.get('div.ql-editor').type('jkl')
       .then(() => {
         expect(modelValue).to.deep.equal([
-          {insert: 'abc', attributes: undefined},
+          {insert: 'abc', attributes: {}},
           {insert: 'def', attributes: {string: 'A'}},
           {insert: 'ghi', attributes: {string: 'B'}},
-          {insert: 'jkl\n', attributes: undefined},
+          {insert: 'jkl\n', attributes: {}},
         ])
       })
   })
 
   it('reacts to model changes', () => {
-    cy.mount(Quill, {props: {blots: [BoldBlot, ItalicBlot], modelValue: [{insert: 'initial'}]}})
+    cy.mount(Quill, {props: {blots: [BoldBlot, ItalicBlot], modelValue: [{insert: 'initial', attributes: {}}]}})
     cy.get(':contains("initial")').should('exist')
     cy.vue<typeof Quill>().then(w => {w.setProps({modelValue: [{insert: 'changed'}]})})
     cy.get(':contains("initial")').should('not.exist')
@@ -298,5 +321,37 @@ describe('Quill', () => {
     cy.get(':contains("bold")').last().should('have.css', 'font-weight', '400')
     cy.vue<typeof Quill>().then(w => {w.setProps({blots: [BoldBlot]})})
     cy.get(':contains("bold")').last().should('have.css', 'font-weight', '700')
+  })
+
+  it('preserves a block embed in the model', () => {
+    let modelValue: Model = [{insert: 'a\n', attributes: {}}, {insert: {divider: true}}, {insert: 'b\n', attributes: {}}]
+    cy.mount(Quill, {props: {
+      blots: [StrBlot, DividerBlot],
+      modelValue,
+      'onUpdate:modelValue': (m: Model) => { modelValue = m },
+    }})
+    cy.get('div.ql-editor').type('A').then(() => {
+      expect(modelValue).to.deep.equal([
+        {insert: 'a\n', attributes: {}},
+        {insert: {divider: true}},
+        {insert: 'bA\n', attributes: {}},
+      ])
+    })
+  })
+
+  it('preserves an inline embed in the model', () => {
+    let modelValue: Model = [{insert: 'a', attributes: {}}, {insert: {'inl-emb': {color: 'green'}}}, {insert: 'b\n', attributes: {}}]
+    cy.mount(Quill, {props: {
+      blots: [StrBlot, InlEmbBlot],
+      modelValue,
+      'onUpdate:modelValue': (m: Model) => { modelValue = m },
+    }})
+    cy.get('div.ql-editor').type('A').then(() => {
+      expect(modelValue).to.deep.equal([
+        {insert: 'a', attributes: {}},
+        {insert: {'inl-emb': {color: 'green'}}},
+        {insert: 'bA\n', attributes: {}},
+      ])
+    })
   })
 })

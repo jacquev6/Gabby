@@ -47,7 +47,7 @@ def make_grammar(tags, whitespace):
             PUNCTUATION_AT_END_OF_SENTENCE: /\.\.\.|[.!?…]/
 
             # Terminals usable in tags
-            STR: /[^}|]+/
+            STR: /(\\\\|\\{|\\\||\\}|[^\\{|}])+/
             INT: /[0-9]+/
         """
         + whitespace
@@ -90,7 +90,7 @@ def GrammarTestCase(grammar):
             parse_tree = parser.parse(test)
             actual_ast = transformer.transform(parse_tree)
             if actual_ast != expected_ast:
-                print(actual_ast)
+                print("Actual AST:", actual_ast)
             self.assertEqual(actual_ast, expected_ast)
 
     return GrammarTestCase
@@ -315,6 +315,14 @@ class InstructionsGrammarWithTagsTestCase(GrammarTestCase(make_instructions_gram
             ("section", [("lenient_paragraph", [("single_str_tag", [("STR", "foo")])])])
         )
 
+    def test_single_str_tag_with_escaped_characters(self):
+        escaped = r"\}\|\\\}"
+        self.assertEqual(len(escaped), 8)
+        self.do_test(
+            "{single-str|" + escaped + "}",
+            ("section", [("lenient_paragraph", [("single_str_tag", [("STR", escaped)])])]),
+        )
+
     def test_int_and_str_tag_in_strict_paragraph(self):
         self.do_test(
             "{int-and-str|12|bar baz}.",
@@ -430,15 +438,31 @@ class Transformer(lark.Transformer, abc.ABC):
         pass
 
 
-class InstructionsSectionDeltaMaker(Transformer):
+class DeltaMaker(Transformer):
     def _merge(self, args):
+        def join_group(key, items):
+            items = list(items)
+            if len(items) == 1:
+                return items[0]
+            else:
+                assert key is not None
+                assert all(isinstance(item.insert, str) for item in items)
+                return exercise_delta.TextInsertOp(
+                    insert="".join(item.insert for item in items),
+                    attributes=key,
+                )
+
+        def key(arg):
+            if isinstance(arg.insert, str):
+                return arg.attributes
+            else:
+                assert isinstance(arg.insert, dict)
+                return arg.insert
+
         return [
-            exercise_delta.InsertOp(
-                insert="".join(item.insert for item in group),
-                attributes=attributes
-            )
-            for attributes, group in
-            itertools.groupby(args, key=lambda arg: arg.attributes)
+            join_group(group_key, group_items)
+            for group_key, group_items in
+            itertools.groupby(args, key=key)
         ]
 
     def _flatten(self, args):
@@ -450,6 +474,8 @@ class InstructionsSectionDeltaMaker(Transformer):
                 items.append(arg)
         return items
 
+
+class InstructionsSectionDeltaMaker(DeltaMaker):
     def section(self, args):
         return self._merge(self._flatten(args))
 
@@ -463,45 +489,45 @@ class InstructionsSectionDeltaMaker(Transformer):
         return args
 
     def WORD(self, arg):
-        return exercise_delta.InsertOp(insert=arg.value)
+        return exercise_delta.TextInsertOp(insert=arg.value, attributes={})
 
     def LEADING_WHITESPACE(self, arg):
-        return exercise_delta.InsertOp(insert=arg.value)
+        return exercise_delta.TextInsertOp(insert=arg.value, attributes={})
 
     def TRAILING_WHITESPACE(self, arg):
-        return exercise_delta.InsertOp(insert=arg.value)
+        return exercise_delta.TextInsertOp(insert=arg.value, attributes={})
 
     def PARAGRAPH_SEPARATOR(self, arg):
-        return exercise_delta.InsertOp(insert=arg.value)
+        return exercise_delta.TextInsertOp(insert=arg.value, attributes={})
 
     def SENTENCE_SEPARATOR(self, arg):
-        return exercise_delta.InsertOp(insert=arg.value)
+        return exercise_delta.TextInsertOp(insert=arg.value, attributes={})
 
     def WHITESPACE_IN_SENTENCE(self, arg):
-        return exercise_delta.InsertOp(insert=arg.value)
+        return exercise_delta.TextInsertOp(insert=arg.value, attributes={})
 
     def PUNCTUATION_IN_SENTENCE(self, arg):
-        return exercise_delta.InsertOp(insert=arg.value)
+        return exercise_delta.TextInsertOp(insert=arg.value, attributes={})
 
     def PUNCTUATION_AT_END_OF_SENTENCE(self, arg):
-        return exercise_delta.InsertOp(insert=arg.value)
+        return exercise_delta.TextInsertOp(insert=arg.value, attributes={})
 
     def PUNCTUATION_IN_LENIENT_PARAGRAPH(self, arg):
-        return exercise_delta.InsertOp(insert=arg.value)
+        return exercise_delta.TextInsertOp(insert=arg.value, attributes={})
 
     def INT(self, arg):
         return arg.value
 
     def STR(self, arg):
-        return arg.value
+        return arg.value.replace(r"\\", "\\").replace(r"\{", "{").replace(r"\}", "}").replace(r"\|", "|")
 
     def bold_tag(self, args):
         assert len(args) == 1
-        return exercise_delta.InsertOp(insert=args[0], attributes={"bold": True})
+        return exercise_delta.TextInsertOp(insert=args[0], attributes={"bold": True})
 
     def italic_tag(self, args):
         assert len(args) == 1
-        return exercise_delta.InsertOp(insert=args[0], attributes={"italic": True})
+        return exercise_delta.TextInsertOp(insert=args[0], attributes={"italic": True})
 
 
 make_plain_instructions_section_delta = InstructionsSectionParser({}, InstructionsSectionDeltaMaker())
@@ -557,7 +583,7 @@ class InstructionsSectionAdapter(Transformer):
         return int(arg.value)
 
     def STR(self, arg):
-        return arg.value
+        return arg.value.replace(r"\\", "\\").replace(r"\{", "{").replace(r"\}", "}").replace(r"\|", "|")
 
     def bold_tag(self, args):
         assert len(args) == 1
@@ -942,26 +968,7 @@ class WordingSectionParser:
         return self.transformer.transform(parsed)
 
 
-class WordingSectionDeltaMaker(Transformer):
-    def _merge(self, args):
-        return [
-            exercise_delta.InsertOp(
-                insert="".join(item.insert for item in group),
-                attributes=attributes
-            )
-            for attributes, group in
-            itertools.groupby(args, key=lambda arg: arg.attributes)
-        ]
-
-    def _flatten(self, args):
-        items = []
-        for arg in args:
-            if isinstance(arg, list):
-                items.extend(arg)
-            else:
-                items.append(arg)
-        return items
-
+class WordingSectionDeltaMaker(DeltaMaker):
     def section(self, args):
         return self._merge(self._flatten(args))
 
@@ -975,45 +982,45 @@ class WordingSectionDeltaMaker(Transformer):
         return args
 
     def WORD(self, arg):
-        return exercise_delta.InsertOp(insert=arg.value)
+        return exercise_delta.TextInsertOp(insert=arg.value, attributes={})
 
     def LEADING_WHITESPACE(self, arg):
-        return exercise_delta.InsertOp(insert=arg.value)
+        return exercise_delta.TextInsertOp(insert=arg.value, attributes={})
 
     def TRAILING_WHITESPACE(self, arg):
-        return exercise_delta.InsertOp(insert=arg.value)
+        return exercise_delta.TextInsertOp(insert=arg.value, attributes={})
 
     def PARAGRAPH_SEPARATOR(self, arg):
-        return exercise_delta.InsertOp(insert=arg.value)
+        return exercise_delta.TextInsertOp(insert=arg.value, attributes={})
 
     def SENTENCE_SEPARATOR(self, arg):
-        return exercise_delta.InsertOp(insert=arg.value)
+        return exercise_delta.TextInsertOp(insert=arg.value, attributes={})
 
     def WHITESPACE_IN_SENTENCE(self, arg):
-        return exercise_delta.InsertOp(insert=arg.value)
+        return exercise_delta.TextInsertOp(insert=arg.value, attributes={})
 
     def PUNCTUATION_IN_SENTENCE(self, arg):
-        return exercise_delta.InsertOp(insert=arg.value)
+        return exercise_delta.TextInsertOp(insert=arg.value, attributes={})
 
     def PUNCTUATION_AT_END_OF_SENTENCE(self, arg):
-        return exercise_delta.InsertOp(insert=arg.value)
+        return exercise_delta.TextInsertOp(insert=arg.value, attributes={})
 
     def PUNCTUATION_IN_LENIENT_PARAGRAPH(self, arg):
-        return exercise_delta.InsertOp(insert=arg.value)
+        return exercise_delta.TextInsertOp(insert=arg.value, attributes={})
 
     def INT(self, arg):
         return arg.value
 
     def STR(self, arg):
-        return arg.value
+        return arg.value.replace(r"\\", "\\").replace(r"\{", "{").replace(r"\}", "}").replace(r"\|", "|")
 
     def bold_tag(self, args):
         assert len(args) == 1
-        return exercise_delta.InsertOp(insert=args[0], attributes={"bold": True})
+        return exercise_delta.TextInsertOp(insert=args[0], attributes={"bold": True})
 
     def italic_tag(self, args):
         assert len(args) == 1
-        return exercise_delta.InsertOp(insert=args[0], attributes={"italic": True})
+        return exercise_delta.TextInsertOp(insert=args[0], attributes={"italic": True})
 
 
 make_plain_wording_section_delta = WordingSectionParser({}, WordingSectionDeltaMaker())
@@ -1065,7 +1072,7 @@ class WordingSectionAdapter(Transformer):
         return int(arg.value)
 
     def STR(self, arg):
-        return arg.value
+        return arg.value.replace(r"\\", "\\").replace(r"\{", "{").replace(r"\}", "}").replace(r"\|", "|")
 
     def bold_tag(self, args):
         assert len(args) == 1

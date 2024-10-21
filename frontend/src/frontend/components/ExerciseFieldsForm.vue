@@ -11,7 +11,7 @@ type PdfRectangle = (Exercise & InCache & Exists)['attributes']['rectangles'][nu
 
 // @todo Automate updating this type when a new adaptation type is added
 export const adaptationKinds = ['null', 'fill-with-free-text', 'items-and-effects-attempt-1', 'select-things', 'multiple-choices-in-instructions', 'multiple-choices-in-wording'] as const
-export type AdaptationKind =  typeof adaptationKinds[number]
+export type AdaptationKind = typeof adaptationKinds[number]
 
 export const textualFieldNames = ['instructions', 'wording', 'example', 'clue'] as const
 export type TextualFieldName = typeof textualFieldNames[number]
@@ -28,6 +28,23 @@ export type Model = {
   rectangles: PdfRectangle[]
   adaptationKind: AdaptationKind
   adaptations: {[Kind in AdaptationKind]: Adaptation & {kind: Kind}}
+  inProgress:
+    {
+      kind: 'nothing'
+    } | {
+      kind: 'multipleChoicesCreation'
+    } | {
+      kind: 'multipleChoicesEdition'
+      initial: boolean
+      stopWatching(): void
+      delete(): void
+      settings: {
+        start: string
+        stop: string
+        separator: string
+        placeholder: string
+      }
+    }
 }
 
 type MakeModelOptions  = {
@@ -83,6 +100,9 @@ function makeModel({inTextbook, textbookPage}: MakeModelOptions): Model {
         kind: 'multiple-choices-in-wording' as const,
       },
     },
+    inProgress: {
+      kind: 'nothing',
+    },
   }
 }
 
@@ -102,8 +122,11 @@ export function assignModelFrom(model: Model, exercise: Exercise & InCache & Exi
   model.clue = exercise.attributes.clue
   model.wordingParagraphsPerPagelet = exercise.attributes.wordingParagraphsPerPagelet
   model.adaptationKind = exercise.attributes.adaptation.kind
-  model.adaptations[model.adaptationKind] = JSON.parse(JSON.stringify(exercise.attributes.adaptation))
-  model.rectangles = JSON.parse(JSON.stringify(exercise.attributes.rectangles))
+  model.adaptations[model.adaptationKind] = deepCopy(exercise.attributes.adaptation) as any/* @todo Fix typing issue */
+  model.rectangles = deepCopy(exercise.attributes.rectangles)
+  model.inProgress = {
+    kind: 'nothing',
+  }
 }
 
 function resetModel(model: Model, options: MakeModelOptions) {
@@ -186,6 +209,7 @@ export function suggestNextNumber(number: string) {
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import deepCopy from 'deep-copy'
 
 import { BRow, BCol, BLabeledInput, BLabeledTextarea, BLabeledSelect } from './opinion/bootstrap'
 import OptionalTextarea from './OptionalTextarea.vue'
@@ -312,6 +336,21 @@ const selBlotColors = computed(() => {
   }
 })
 
+function selectionChangeInWording(_range: {index: number, length: number}) {
+  if (model.value.inProgress.kind === 'multipleChoicesCreation') {
+    // @todo Automatically detect these settings. How? Ask client for spec.
+    const settings = {
+      start: '(',
+      stop: ')',
+      separator: '/',
+      placeholder: '',
+      justCreated: true,
+    }
+
+    toggle('choices2', settings)
+  }
+}
+
 defineExpose({
   saveDisabled,
   highlightSuffix,
@@ -358,6 +397,7 @@ defineExpose({
       :label="$t('exerciseWording')"
       :formats="wysiwygFormats[model.adaptationKind].wording"
       v-model="model.wording" :delta="wordingDeltas"
+      @selectionChange="selectionChangeInWording"
     />
     <BLabeledTextarea
       v-else

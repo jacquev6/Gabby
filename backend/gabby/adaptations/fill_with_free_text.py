@@ -103,10 +103,10 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
             ),
             d.Exercise(
                 instructions=[
-                    d.InsertOp(insert="instructions"),
+                    d.TextInsertOp(insert="instructions", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="The wording of this ... is a ... sentence."),
+                    d.TextInsertOp(insert="The wording of this ... is a ... sentence.", attributes={}),
                 ],
                 example=[],
                 clue=[],
@@ -154,10 +154,10 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
             ),
             d.Exercise(
                 instructions=[
-                    d.InsertOp(insert="instructions"),
+                    d.TextInsertOp(insert="instructions", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="@ a @"),
+                    d.TextInsertOp(insert="@ a @", attributes={}),
                 ],
                 example=[],
                 clue=[],
@@ -215,10 +215,10 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
             ),
             d.Exercise(
                 instructions=[
-                    d.InsertOp(insert="instructions\nare\n\non\n\nmultiple\nlines"),
+                    d.TextInsertOp(insert="instructions\nare\n\non\n\nmultiple\nlines", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="wording"),
+                    d.TextInsertOp(insert="wording", attributes={}),
                 ],
                 example=[],
                 clue=[],
@@ -286,10 +286,10 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
             ),
             d.Exercise(
                 instructions=[
-                    d.InsertOp(insert="instructions"),
+                    d.TextInsertOp(insert="instructions", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="foo toto : ...\n\nbar : ...\n\nbaz : ..."),
+                    d.TextInsertOp(insert="foo toto : ...\n\nbar : ...\n\nbaz : ...", attributes={}),
                 ],
                 example=[],
                 clue=[],
@@ -341,10 +341,10 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
             ),
             d.Exercise(
                 instructions=[
-                    d.InsertOp(insert="{tag|abc}"),
+                    d.TextInsertOp(insert="{tag|abc}", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="{tag|def}"),
+                    d.TextInsertOp(insert="{tag|def}", attributes={}),
                 ],
                 example=[],
                 clue=[],
@@ -388,10 +388,10 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
             ),
             d.Exercise(
                 instructions=[
-                    d.InsertOp(insert="   abc   "),
+                    d.TextInsertOp(insert="   abc   ", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="   def   "),
+                    d.TextInsertOp(insert="   def   ", attributes={}),
                 ],
                 example=[],
                 clue=[],
@@ -474,16 +474,16 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
             ),
             d.Exercise(
                 instructions=[
-                    d.InsertOp(insert="instructions"),
+                    d.TextInsertOp(insert="instructions", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="This @ is the wording."),
+                    d.TextInsertOp(insert="This @ is the wording.", attributes={}),
                 ],
                 example=[
-                    d.InsertOp(insert="This @ is the example."),
+                    d.TextInsertOp(insert="This @ is the example.", attributes={}),
                 ],
                 clue=[
-                    d.InsertOp(insert="This @ is the clue."),
+                    d.TextInsertOp(insert="This @ is the clue.", attributes={}),
                 ],
             ),
         )
