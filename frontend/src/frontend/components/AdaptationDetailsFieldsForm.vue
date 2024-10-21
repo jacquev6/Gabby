@@ -308,6 +308,8 @@ const colorsCount = computed({
         ref="colorPickers"
         v-model="colors[i - 1].value"
         :default="defaultColors[i - 1]"
+        backdropCovers1="#left-col-2"
+        backdropCovers2="#gutter-2"
       />
       <div class="mb-3">
         <label class="form-label" for="blah">{{ $t('usableColors' )}}</label>
