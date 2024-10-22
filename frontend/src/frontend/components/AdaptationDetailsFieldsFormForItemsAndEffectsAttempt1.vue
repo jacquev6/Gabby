@@ -113,6 +113,8 @@ const itemsKind = computed({
     ref="colorPickers"
     v-model="colorsProxyForSelectableEffect[i - 1].value"
     :default="defaultColorsForSelectableEffect[i - 1]"
+    backdropCovers1="#left-col-2"
+    backdropCovers2="#gutter-2"
   />
 
   <div class="mb-3">

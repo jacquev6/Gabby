@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { useFloating, arrow, shift } from '@floating-ui/vue'
 import { Vue3ColorPicker as ColorPicker } from '@cyhnkckali/vue3-color-picker'
 import '@cyhnkckali/vue3-color-picker/dist/style.css'
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 
 import { BButton } from './opinion/bootstrap'
 import ContextMenu from './ContextMenu.vue'
@@ -28,11 +27,6 @@ function show(ref: HTMLElement) {
 
 function reset() {
   model.value = props.default
-  commit()
-}
-
-function rollback() {
-  model.value = initialValue.value
   commit()
 }
 
