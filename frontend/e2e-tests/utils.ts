@@ -26,6 +26,16 @@ export function visit(
     pdf?: string
   } = {}
 ) {
+  Cypress.on('uncaught:exception', error => {
+    if (error.message.includes('ResizeObserver loop completed with undelivered notifications.')) {
+      // @todo Deep dive into this issue: avoid the error instead of ignoring it.
+      // https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver#observation_errors
+      return false
+    } else {
+      return true
+    }
+  })
+
   cy.visit(url)
   cy.get('select[data-cy="language"]').last().select(options.locale ?? 'en')
   notBusy()

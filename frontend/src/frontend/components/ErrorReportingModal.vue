@@ -32,10 +32,16 @@ function shortenStack(stack: string | undefined) {
 
 // Never seen an error reach this handler, but it doesn't hurt, and it may catch something one day
 window.onerror = (message, source, lineno, colno, _error) => {
-  globalError.value ||= {
-    caughtBy: 'window.onerror',
-    message: `${message}`,
-    codeLocation: `${source}:${lineno}:${colno}`,
+  // @todo Deep dive into this issue: avoid the error instead of ignoring it.
+  // Error probably introduced in bc76dfdb2 because we resize the preview based on its own width.
+  const ignored =
+    message === 'ResizeObserver loop completed with undelivered notifications.'  // https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver#observation_errors
+  if (!ignored) {
+    globalError.value ||= {
+      caughtBy: 'window.onerror',
+      message: `${message}`,
+      codeLocation: `${source}:${lineno}:${colno}`,
+    }
   }
   return false
 }
