@@ -1,4 +1,4 @@
-import { loadFixtures, login, notBusy, visit as visit } from './utils'
+import { loadFixtures, login, notBusy, visit } from './utils'
 
 
 function setAliases() {
