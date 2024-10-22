@@ -163,5 +163,7 @@
   "not-yet-implemented": "Pas encore implémenté",
 
   "back": "Retour",
-  "eraseAnswers": "Effacer les réponses"
+  "eraseAnswers": "Effacer les réponses",
+  "fullScreen": "Plein écran",
+  "exitFullScreen": "Sortir du plein écran"
 }

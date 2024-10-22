@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, reactive, watch, nextTick, provide } from 'vue'
+import { ref, computed, reactive, watch, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import deepCopy from 'deep-copy'
@@ -250,8 +250,6 @@ const wordingParagraphsPerPageletOptions = [1, 2, 3, 4, 5].map(value => ({
   label: i18n.t('exerciseLinesPerPage', {lines: value}),
   value,
 }))
-
-provide('adaptedExerciseBackdropCovers', '#right-col-2')
 </script>
 
 <template>
