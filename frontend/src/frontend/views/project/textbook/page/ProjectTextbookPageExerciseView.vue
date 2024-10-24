@@ -11,7 +11,6 @@ import ProjectTextbookPageLayout from './ProjectTextbookPageLayout.vue'
 import RectanglesHighlighter, { makeBoundingRectangle, makeBoundingRectangles, type Rectangle } from './RectanglesHighlighter.vue'
 import TextPicker from './TextPicker.vue'
 import { useProjectTextbookPageData } from './ProjectTextbookPageLayout.vue'
-import TwoResizableColumns from '$frontend/components/TwoResizableColumns.vue'
 import ExerciseFieldsForm from '$frontend/components/ExerciseFieldsForm.vue'
 import { useExerciseCreationHistoryStore } from './ExerciseCreationHistoryStore'
 import { useApiStore } from '$frontend/stores/api'
@@ -26,6 +25,7 @@ import { makeModelInTextbook, assignModelFrom, getParsed, save } from '$frontend
 import type { PDFPageProxy } from 'pdfjs-dist'
 import BasicFormattingTools from './BasicFormattingTools.vue'
 import { useGloballyBusyStore } from '$frontend/stores/globallyBusy'
+import ExerciseColumns from './ExerciseColumns.vue'
 
 
 const props = defineProps<{
@@ -275,7 +275,7 @@ const wordingParagraphsPerPageletOptions = [1, 2, 3, 4, 5].map(value => ({
 
     <template # v-if="exercise.inCache">
       <template v-if="exercise.exists && exerciseBelongsToTextbookPage">
-        <TwoResizableColumns saveKey="projectTextbookPage-2" :snap="150" class="h-100" gutterWidth="200px">
+        <ExerciseColumns ref="exerciseColumns" :projectId v-model="model">
           <template #left>
             <div class="h-100 overflow-auto position-relative" id="left-col-2" data-cy="left-col-2">
               <h1>{{ $t('edition') }}  <span style="font-size: small">(<label>WYSIWYG: <input type="checkbox" v-model="wantWysiwyg" /></label>)</span></h1>
@@ -355,7 +355,7 @@ const wordingParagraphsPerPageletOptions = [1, 2, 3, 4, 5].map(value => ({
               </BBusy>
             </div>
           </template>
-        </TwoResizableColumns>
+        </ExerciseColumns>
       </template>
       <template v-else>
         <h1>{{ $t('exerciseNotFound') }}</h1>
