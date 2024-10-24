@@ -75,7 +75,6 @@ const matchingExercises = computed(() => {
 const alreadyExists = computed(() => matchingExercises.value !== null && matchingExercises.value.existingItems.length === 1)
 
 function changeDisplayedPage(newDisplayedPage: number) {
-  console.log('changeDisplayedPage', newDisplayedPage)
   if (modelIsEmpty(model)) {
     exerciseCreationHistory.reset()
     router.push({name: 'project-textbook-page-new-exercise', params: {page: newDisplayedPage}})
@@ -99,13 +98,6 @@ const wysiwyg = computed(() => wantWysiwyg.value)
 
 const resetUndoRedo = ref(0)
 
-onMounted(() => {
-  if (exerciseCreationHistory.suggestedNumber !== null) {
-    model.number = exerciseCreationHistory.suggestedNumber
-    resetUndoRedo.value++
-  }
-})
-
 function makeSurroundedRectangles(pdfSha256: string, pdfPage: number) {
   const boundingRectangle = makeBoundingRectangle(pdfSha256, pdfPage, model.rectangles)
   if (boundingRectangle === null) {
@@ -114,6 +106,13 @@ function makeSurroundedRectangles(pdfSha256: string, pdfPage: number) {
     return [boundingRectangle]
   }
 }
+
+onMounted(() => {
+  if (exerciseCreationHistory.suggestedNumber !== null) {
+    model.number = exerciseCreationHistory.suggestedNumber
+    resetUndoRedo.value++
+  }
+})
 
 const fields = ref<InstanceType<typeof ExerciseFieldsForm> | null>(null)
 

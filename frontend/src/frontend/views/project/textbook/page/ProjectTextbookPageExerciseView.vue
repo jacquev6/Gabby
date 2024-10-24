@@ -6,23 +6,23 @@ import deepCopy from 'deep-copy'
 import deepEqual from 'deep-equal'
 
 import { BButton, BBusy, BLabeledRadios } from '$frontend/components/opinion/bootstrap'
-import { useApiStore } from '$frontend/stores/api'
 import bc from '$frontend/components/breadcrumbs'
 import ProjectTextbookPageLayout from './ProjectTextbookPageLayout.vue'
 import RectanglesHighlighter, { makeBoundingRectangle, makeBoundingRectangles, type Rectangle } from './RectanglesHighlighter.vue'
+import TextPicker from './TextPicker.vue'
 import { useProjectTextbookPageData } from './ProjectTextbookPageLayout.vue'
 import TwoResizableColumns from '$frontend/components/TwoResizableColumns.vue'
 import ExerciseFieldsForm from '$frontend/components/ExerciseFieldsForm.vue'
+import { useExerciseCreationHistoryStore } from './ExerciseCreationHistoryStore'
+import { useApiStore } from '$frontend/stores/api'
+import type { Exists, InCache, ParsedExercise, PdfFile } from '$frontend/stores/api'
 import AdaptedExercise from './AdaptedExercise.vue'
 import ToolsGutter from './ToolsGutter.vue'
 import UndoRedoTool from './UndoRedoTool.vue'
-import { useExerciseCreationHistoryStore } from './ExerciseCreationHistoryStore'
-import { makeModelInTextbook, assignModelFrom, getParsed, save } from '$frontend/components/ExerciseFieldsForm.vue'
-import TextSelectionModal from './TextSelectionModal.vue'
 import type { TextualFieldName } from '$frontend/components/ExerciseFieldsForm.vue'
 import AdaptationDetailsFieldsForm from '$frontend/components/AdaptationDetailsFieldsForm.vue'
-import TextPicker from './TextPicker.vue'
-import type { Exists, InCache, ParsedExercise, PdfFile } from '$frontend/stores/api'
+import TextSelectionModal from './TextSelectionModal.vue'
+import { makeModelInTextbook, assignModelFrom, getParsed, save } from '$frontend/components/ExerciseFieldsForm.vue'
 import type { PDFPageProxy } from 'pdfjs-dist'
 import BasicFormattingTools from './BasicFormattingTools.vue'
 import { useGloballyBusyStore } from '$frontend/stores/globallyBusy'
@@ -40,12 +40,20 @@ const textbookId = computed(() => props.textbookId)
 const page = computed(() => props.page)
 const displayedPage = computed(() => props.displayedPage ?? props.page)
 
-const api = useApiStore()
 const router = useRouter()
+const api = useApiStore()
 const i18n = useI18n()
 const globallyBusy = useGloballyBusyStore()
 const exerciseCreationHistory = useExerciseCreationHistoryStore()
 
+const { project, textbook, exercisesOnDisplayedPage, exercisesOnPageBeforeDisplayed } = useProjectTextbookPageData(projectId, textbookId, page, displayedPage)
+globallyBusy.register('loading exercises on page', computed(() => exercisesOnDisplayedPage.value.loading))
+globallyBusy.register('loading exercises on previous page', computed(() => exercisesOnPageBeforeDisplayed.value.loading))
+
+function makeGreyRectangles(pdfSha256: string, pdfPage: number) {
+  const otherExercises = [...exercisesOnPageBeforeDisplayed.value.existingItems,  ...exercisesOnDisplayedPage.value.existingItems].filter(exercise => exercise.id !== props.exerciseId)
+  return makeBoundingRectangles(pdfSha256, pdfPage, otherExercises)
+}
 
 function changeDisplayedPage(newDisplayedPage: number) {
   if (newDisplayedPage === props.page) {
@@ -59,30 +67,6 @@ function changeDisplayedPage(newDisplayedPage: number) {
       params: {},
       query: {displayPage: newDisplayedPage},
     })
-  }
-}
-
-const { project, textbook, exercisesOnDisplayedPage, exercisesOnPageBeforeDisplayed } = useProjectTextbookPageData(projectId, textbookId, page, displayedPage)
-globallyBusy.register('loading exercises on page', computed(() => exercisesOnDisplayedPage.value.loading))
-globallyBusy.register('loading exercises on previous page', computed(() => exercisesOnPageBeforeDisplayed.value.loading))
-
-function makeGreyRectangles(pdfSha256: string, pdfPage: number) {
-  const otherExercises = [...exercisesOnPageBeforeDisplayed.value.existingItems,  ...exercisesOnDisplayedPage.value.existingItems].filter(exercise => exercise.id !== props.exerciseId)
-  return makeBoundingRectangles(pdfSha256, pdfPage, otherExercises)
-}
-
-const exercise = computed(() => api.auto.getOne('exercise', props.exerciseId))
-
-const exerciseBelongsToTextbookPage = computed(() =>
-  exercise.value.inCache && exercise.value.exists && exercise.value.relationships.textbook === textbook.value && exercise.value.attributes.textbookPage === props.page
-)
-
-function makeSurroundedRectangles(pdfSha256: string, pdfPage: number) {
-  const boundingRectangle = makeBoundingRectangle(pdfSha256, pdfPage, model.rectangles)
-  if (boundingRectangle === null) {
-    return []
-  } else {
-    return [boundingRectangle]
   }
 }
 
@@ -110,6 +94,21 @@ const wantWysiwyg = ref(true)
 const wysiwyg = computed(() => wantWysiwyg.value)
 
 const resetUndoRedo = ref(0)
+
+const exercise = computed(() => api.auto.getOne('exercise', props.exerciseId))
+
+const exerciseBelongsToTextbookPage = computed(() =>
+  exercise.value.inCache && exercise.value.exists && exercise.value.relationships.textbook === textbook.value && exercise.value.attributes.textbookPage === props.page
+)
+
+function makeSurroundedRectangles(pdfSha256: string, pdfPage: number) {
+  const boundingRectangle = makeBoundingRectangle(pdfSha256, pdfPage, model.rectangles)
+  if (boundingRectangle === null) {
+    return []
+  } else {
+    return [boundingRectangle]
+  }
+}
 
 watch(
   [
@@ -274,7 +273,7 @@ const wordingParagraphsPerPageletOptions = [1, 2, 3, 4, 5].map(value => ({
       />
     </template>
 
-    <template v-if="exercise.inCache">
+    <template # v-if="exercise.inCache">
       <template v-if="exercise.exists && exerciseBelongsToTextbookPage">
         <TwoResizableColumns saveKey="projectTextbookPage-2" :snap="150" class="h-100" gutterWidth="200px">
           <template #left>
@@ -284,7 +283,8 @@ const wordingParagraphsPerPageletOptions = [1, 2, 3, 4, 5].map(value => ({
                 <ExerciseFieldsForm ref="fields"
                   v-model="model" :displayedPage
                   :fixedNumber="true" :wysiwyg :deltas
-                />
+                >
+                </ExerciseFieldsForm>
                 <template v-if="exerciseCreationHistory.current === null">
                   <p>
                     <RouterLink class="btn btn-secondary" :to="{name: 'project-textbook-page'}">{{ $t('backToList') }}</RouterLink>
