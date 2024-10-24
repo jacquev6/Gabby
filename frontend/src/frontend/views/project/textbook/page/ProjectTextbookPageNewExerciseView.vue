@@ -3,8 +3,6 @@ import { ref, computed, reactive, watch, nextTick } from 'vue'
 import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import deepCopy from 'deep-copy'
-import deepEqual from 'deep-equal'
 
 import { BButton, BBusy, BLabeledRadios } from '$frontend/components/opinion/bootstrap'
 import bc from '$frontend/components/breadcrumbs'
@@ -15,14 +13,13 @@ import { useProjectTextbookPageData } from './ProjectTextbookPageLayout.vue'
 import ExerciseFieldsForm from '$frontend/components/ExerciseFieldsForm.vue'
 import { useExerciseCreationHistoryStore } from './ExerciseCreationHistoryStore'
 import { useApiStore } from '$frontend/stores/api'
-import type { Exists, InCache, ParsedExercise, PdfFile } from '$frontend/stores/api'
-import AdaptedExercise from './AdaptedExercise.vue'
+import type { PdfFile } from '$frontend/stores/api'
 import ToolsGutter from './ToolsGutter.vue'
 import UndoRedoTool from './UndoRedoTool.vue'
 import type { TextualFieldName } from '$frontend/components/ExerciseFieldsForm.vue'
 import AdaptationDetailsFieldsForm from '$frontend/components/AdaptationDetailsFieldsForm.vue'
 import TextSelectionModal from './TextSelectionModal.vue'
-import { makeModelInTextbook, resetModelInTextbook, modelIsEmpty, getParsed, create, suggestNextNumber } from '$frontend/components/ExerciseFieldsForm.vue'
+import { makeModelInTextbook, resetModelInTextbook, modelIsEmpty, create, suggestNextNumber } from '$frontend/components/ExerciseFieldsForm.vue'
 import type { PDFPageProxy } from 'pdfjs-dist'
 import BasicFormattingTools from './BasicFormattingTools.vue'
 import { useGloballyBusyStore } from '$frontend/stores/globallyBusy'
@@ -188,36 +185,20 @@ function goToPrevious() {
   })
 }
 
-const parsedExercise = ref<ParsedExercise & InCache & Exists | null>(null)
-const parsedExerciseIsLoading = ref(false)
-const parsedExerciseNeedsLoading = ref(true)
-watch(model, () => { parsedExerciseNeedsLoading.value = true })
-watch(parsedExerciseNeedsLoading, async () => {
-  while (parsedExerciseNeedsLoading.value) {
-    const modelBefore = deepCopy(model)
-    parsedExerciseIsLoading.value = true
-    const parsed = await getParsed(model)
-    if (deepEqual(model, modelBefore)) {
-      parsedExercise.value = parsed
-      parsedExerciseIsLoading.value = false
-      parsedExerciseNeedsLoading.value = false
-    }
-  }
-}, {immediate: true})
-
-const adaptedExercise = computed(() => {
-  if (parsedExercise.value === null) {
+const exerciseColumns = ref<InstanceType<typeof ExerciseColumns> | null>(null)
+const parsedExercise = computed(() => {
+  if (exerciseColumns.value === null) {
     return null
   } else {
-    return parsedExercise.value.attributes.adapted
+    return exerciseColumns.value.parsedExercise
   }
 })
 
 const deltas = computed(() => {
-  if (parsedExercise.value === null) {
+  if (exerciseColumns.value === null) {
     return null
   } else {
-    return parsedExercise.value.attributes.delta
+    return exerciseColumns.value.deltas
   }
 })
 
@@ -280,7 +261,7 @@ const wordingParagraphsPerPageletOptions = [1, 2, 3, 4, 5].map(value => ({
     </template>
 
     <template #>
-      <ExerciseColumns :projectId v-model="model">
+      <ExerciseColumns ref="exerciseColumns" :projectId v-model="model">
         <template #left>
           <div class="h-100 overflow-auto position-relative" id="left-col-2" data-cy="left-col-2">
             <h1>{{ $t('edition') }} <span style="font-size: small">(<label>WYSIWYG: <input type="checkbox" v-model="wantWysiwyg" /></label>)</span></h1>
@@ -346,19 +327,6 @@ const wordingParagraphsPerPageletOptions = [1, 2, 3, 4, 5].map(value => ({
               </div>
             </div>
             <div class="handle"></div>
-          </div>
-        </template>
-        <template #right>
-          <div class="h-100 overflow-auto position-relative" data-cy="right-col-2" id="right-col-2">
-            <h1>{{ $t('adaptation') }}</h1>
-            <BBusy :busy="parsedExerciseIsLoading">
-              <AdaptedExercise
-                v-if="adaptedExercise !== null"
-                :projectId="projectId"
-                exerciseId="unused @todo Compute storageKey in an independent composable, and let AdaptedExercise load and save iif the key is not null"
-                :exercise="adaptedExercise"
-              />
-            </BBusy>
           </div>
         </template>
       </ExerciseColumns>
