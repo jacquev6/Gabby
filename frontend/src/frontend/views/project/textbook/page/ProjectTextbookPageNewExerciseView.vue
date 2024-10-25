@@ -4,18 +4,14 @@ import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
-import { BButton, BLabeledRadios } from '$frontend/components/opinion/bootstrap'
+import { BButton } from '$frontend/components/opinion/bootstrap'
 import bc from '$frontend/components/breadcrumbs'
 import ProjectTextbookPageLayout from './ProjectTextbookPageLayout.vue'
 import { makeBoundingRectangle, makeBoundingRectangles } from './RectanglesHighlighter.vue'
 import { useProjectTextbookPageData } from './ProjectTextbookPageLayout.vue'
 import { useExerciseCreationHistoryStore } from './ExerciseCreationHistoryStore'
 import { useApiStore } from '$frontend/stores/api'
-import ToolsGutter from './ToolsGutter.vue'
-import UndoRedoTool from './UndoRedoTool.vue'
-import AdaptationDetailsFieldsForm from '$frontend/components/AdaptationDetailsFieldsForm.vue'
 import { makeModelInTextbook, resetModelInTextbook, modelIsEmpty, create, suggestNextNumber } from '$frontend/components/ExerciseFieldsForm.vue'
-import BasicFormattingTools from './BasicFormattingTools.vue'
 import { useGloballyBusyStore } from '$frontend/stores/globallyBusy'
 import ConfirmationModal from '$frontend/components/ConfirmationModal.vue'
 import ExerciseColumns from './ExerciseColumns.vue'
@@ -85,15 +81,6 @@ const title = computed(() => [i18n.t('create')])
 const breadcrumbs = computed(() => bc.last(i18n.t('create')))
 
 const model = reactive(makeModelInTextbook(page.value))
-const wysiwyg = computed(() => {
-  if (exerciseColumns.value === null) {
-    return false
-  } else {
-    return exerciseColumns.value.wysiwyg
-  }
-})
-
-const resetUndoRedo = ref(0)
 
 function makeSurroundedRectangles(pdfSha256: string, pdfPage: number) {
   const boundingRectangle = makeBoundingRectangle(pdfSha256, pdfPage, model.rectangles)
@@ -107,7 +94,8 @@ function makeSurroundedRectangles(pdfSha256: string, pdfPage: number) {
 onMounted(() => {
   if (exerciseCreationHistory.suggestedNumber !== null) {
     model.number = exerciseCreationHistory.suggestedNumber
-    resetUndoRedo.value++
+    console.assert(exerciseColumns.value !== null)
+    exerciseColumns.value.resetUndoRedo()
   }
 })
 
@@ -123,7 +111,8 @@ function skip() {
   const suggestedNextNumber = suggestNextNumber(model.number)
   resetModelInTextbook(model, page.value)
   model.number = suggestedNextNumber
-  resetUndoRedo.value++
+  console.assert(exerciseColumns.value !== null)
+  exerciseColumns.value.resetUndoRedo()
 }
 
 const pageMismatchConfirmationModal = ref<InstanceType<typeof ConfirmationModal> | null>(null)
@@ -150,7 +139,8 @@ async function createThenNext() {
     model.number = suggestedNextNumber
     model.textbookPage = displayedPage.value
     exerciseCreationHistory.suggestedNumber = suggestedNextNumber
-    resetUndoRedo.value++
+    console.assert(exerciseColumns.value !== null)
+    exerciseColumns.value.resetUndoRedo()
     router.push({name: 'project-textbook-page-new-exercise', params: {page: displayedPage.value}})
   }
 }
@@ -183,24 +173,6 @@ const parsedExercise = computed(() => {
     return exerciseColumns.value.parsedExercise
   }
 })
-
-const toolSlotNames = computed(() => {
-  const names = []
-  names.push('undoRedo')
-  if (model.adaptationKind !== 'null') {
-    names.push('adaptationDetails')
-  }
-  if (wysiwyg.value) {
-    names.push('basicFormatting')
-  }
-  names.push('repartition')
-  return names
-})
-
-const wordingParagraphsPerPageletOptions = [1, 2, 3, 4, 5].map(value => ({
-  label: i18n.t('exerciseLinesPerPage', {lines: value}),
-  value,
-}))
 </script>
 
 <template>
@@ -242,43 +214,6 @@ const wordingParagraphsPerPageletOptions = [1, 2, 3, 4, 5].map(value => ({
             <RouterLink class="btn btn-secondary" :to="{name: 'project-textbook-page'}">{{ $t('backToList') }}</RouterLink>
             <BButton secondary :disabled="fields === null || fields.saveDisabled || alreadyExists" @click="createThenBack" data-cy="create-then-back">{{ $t('saveThenBack') }}</BButton>
           </p>
-        </template>
-
-        <template #gutter>
-          <div class="h-100 overflow-hidden d-flex flex-row position-relative" id="gutter-2">
-            <div class="handle"></div>
-            <div class="h-100 overflow-auto flex-fill" data-cy="gutter-2">
-              <div style="position: relative">
-                <div>
-                  <ToolsGutter :slotNames="toolSlotNames">
-                    <template #undoRedo>
-                      <UndoRedoTool v-model="model" :reset="resetUndoRedo" />
-                    </template>
-                    <template #adaptationDetails>
-                      <AdaptationDetailsFieldsForm v-if="fields !== null" v-model="model" :wysiwyg :fields/>
-                    </template>
-                    <template #basicFormatting>
-                      <BasicFormattingTools v-if="fields !== null" v-model="model" :fields />
-                    </template>
-                    <template #repartition>
-                      <BLabeledRadios :label="$t('exerciseRepartition')" v-model="model.wordingParagraphsPerPagelet" :options="wordingParagraphsPerPageletOptions" />
-                    </template>
-                  </ToolsGutter>
-                </div>
-                <div
-                  v-if="model.inProgress.kind === 'multipleChoicesCreation'"
-                  style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); cursor: initial;"
-                  @mousedown="e => e.stopPropagation()" @touchstart="e => e.stopPropagation()"
-                >
-                  <div style="position: absolute; top: 50%; left: 10%; width: 80%; transform: translate(0, -50%); background-color: white; padding: 1em;">
-                    {{ $t('multipleChoicesInstructions') }}
-                    <BButton secondary sm @click="model.inProgress = {kind: 'nothing'}">{{ $t('choicesSettingsCancel') }}</BButton>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="handle"></div>
-          </div>
         </template>
       </ExerciseColumns>
     </template>
