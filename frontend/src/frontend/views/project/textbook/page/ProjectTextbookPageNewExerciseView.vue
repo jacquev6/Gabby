@@ -4,12 +4,11 @@ import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
-import { BButton, BBusy, BLabeledRadios } from '$frontend/components/opinion/bootstrap'
+import { BButton, BLabeledRadios } from '$frontend/components/opinion/bootstrap'
 import bc from '$frontend/components/breadcrumbs'
 import ProjectTextbookPageLayout from './ProjectTextbookPageLayout.vue'
 import { makeBoundingRectangle, makeBoundingRectangles } from './RectanglesHighlighter.vue'
 import { useProjectTextbookPageData } from './ProjectTextbookPageLayout.vue'
-import ExerciseFieldsForm from '$frontend/components/ExerciseFieldsForm.vue'
 import { useExerciseCreationHistoryStore } from './ExerciseCreationHistoryStore'
 import { useApiStore } from '$frontend/stores/api'
 import ToolsGutter from './ToolsGutter.vue'
@@ -86,8 +85,13 @@ const title = computed(() => [i18n.t('create')])
 const breadcrumbs = computed(() => bc.last(i18n.t('create')))
 
 const model = reactive(makeModelInTextbook(page.value))
-const wantWysiwyg = ref(true)
-const wysiwyg = computed(() => wantWysiwyg.value)
+const wysiwyg = computed(() => {
+  if (exerciseColumns.value === null) {
+    return false
+  } else {
+    return exerciseColumns.value.wysiwyg
+  }
+})
 
 const resetUndoRedo = ref(0)
 
@@ -107,7 +111,13 @@ onMounted(() => {
   }
 })
 
-const fields = ref<InstanceType<typeof ExerciseFieldsForm> | null>(null)
+const fields = computed(() => {
+  if (exerciseColumns.value === null) {
+    return null
+  } else {
+    return exerciseColumns.value.fields
+  }
+})
 
 function skip() {
   const suggestedNextNumber = suggestNextNumber(model.number)
@@ -174,14 +184,6 @@ const parsedExercise = computed(() => {
   }
 })
 
-const deltas = computed(() => {
-  if (exerciseColumns.value === null) {
-    return null
-  } else {
-    return exerciseColumns.value.deltas
-  }
-})
-
 const toolSlotNames = computed(() => {
   const names = []
   names.push('undoRedo')
@@ -219,36 +221,27 @@ const wordingParagraphsPerPageletOptions = [1, 2, 3, 4, 5].map(value => ({
     </template>
 
     <template #>
-      <ExerciseColumns ref="exerciseColumns" :projectId v-model="model">
-        <template #left>
-          <div class="h-100 overflow-auto position-relative" id="left-col-2" data-cy="left-col-2">
-            <h1>{{ $t('edition') }} <span style="font-size: small">(<label>WYSIWYG: <input type="checkbox" v-model="wantWysiwyg" /></label>)</span></h1>
-            <BBusy :busy>
-              <ExerciseFieldsForm ref="fields"
-                v-model="model" :displayedPage
-                :fixedNumber="false" :wysiwyg :deltas
-              >
-                <template #overlay>
-                  <div v-if="alreadyExists" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8);" class="text-center">
-                    <div style="position: absolute; left: 25%; top: 25%; width: 50%; height: 50%; background-color: white">
-                      <p>{{ $t('exerciseAlreadyExists', {number: model.number}) }}</p>
-                      <p>
-                        <BButton primary @click="skip">{{ $t('skipExercise') }}</BButton>
-                      </p>
-                    </div>
-                  </div>
-                </template>
-              </ExerciseFieldsForm>
+      <ExerciseColumns ref="exerciseColumns" mode="create" :projectId :displayedPage :busy v-model="model">
+        <template #exerciseFieldsOverlay>
+          <div v-if="alreadyExists" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8);" class="text-center">
+            <div style="position: absolute; left: 25%; top: 25%; width: 50%; height: 50%; background-color: white">
+              <p>{{ $t('exerciseAlreadyExists', {number: model.number}) }}</p>
               <p>
-                <BButton secondary :disabled="exerciseCreationHistory.previous === null" @click="goToPrevious">{{ $t('previous') }}</BButton>
-                <BButton primary :disabled="fields === null || fields.saveDisabled || alreadyExists" @click="createThenNext" data-cy="create-then-next">{{ $t('saveThenNext') }}</BButton>
+                <BButton primary @click="skip">{{ $t('skipExercise') }}</BButton>
               </p>
-              <p>
-                <RouterLink class="btn btn-secondary" :to="{name: 'project-textbook-page'}">{{ $t('backToList') }}</RouterLink>
-                <BButton secondary :disabled="fields === null || fields.saveDisabled || alreadyExists" @click="createThenBack" data-cy="create-then-back">{{ $t('saveThenBack') }}</BButton>
-              </p>
-            </BBusy>
+            </div>
           </div>
+        </template>
+
+        <template #exerciseFieldsButtons>
+          <p>
+            <BButton secondary :disabled="exerciseCreationHistory.previous === null" @click="goToPrevious">{{ $t('previous') }}</BButton>
+            <BButton primary :disabled="fields === null || fields.saveDisabled || alreadyExists" @click="createThenNext" data-cy="create-then-next">{{ $t('saveThenNext') }}</BButton>
+          </p>
+          <p>
+            <RouterLink class="btn btn-secondary" :to="{name: 'project-textbook-page'}">{{ $t('backToList') }}</RouterLink>
+            <BButton secondary :disabled="fields === null || fields.saveDisabled || alreadyExists" @click="createThenBack" data-cy="create-then-back">{{ $t('saveThenBack') }}</BButton>
+          </p>
         </template>
 
         <template #gutter>

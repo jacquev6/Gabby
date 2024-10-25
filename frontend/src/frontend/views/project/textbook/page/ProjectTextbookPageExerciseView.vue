@@ -3,12 +3,11 @@ import { ref, computed, reactive, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
-import { BButton, BBusy, BLabeledRadios } from '$frontend/components/opinion/bootstrap'
+import { BButton, BLabeledRadios } from '$frontend/components/opinion/bootstrap'
 import bc from '$frontend/components/breadcrumbs'
 import ProjectTextbookPageLayout from './ProjectTextbookPageLayout.vue'
 import { makeBoundingRectangle, makeBoundingRectangles } from './RectanglesHighlighter.vue'
 import { useProjectTextbookPageData } from './ProjectTextbookPageLayout.vue'
-import ExerciseFieldsForm from '$frontend/components/ExerciseFieldsForm.vue'
 import { useExerciseCreationHistoryStore } from './ExerciseCreationHistoryStore'
 import { useApiStore } from '$frontend/stores/api'
 import ToolsGutter from './ToolsGutter.vue'
@@ -83,8 +82,13 @@ const breadcrumbs = computed(() => {
 })
 
 const model = reactive(makeModelInTextbook(props.page))
-const wantWysiwyg = ref(true)
-const wysiwyg = computed(() => wantWysiwyg.value)
+const wysiwyg = computed(() => {
+  if (exerciseColumns.value === null) {
+    return false
+  } else {
+    return exerciseColumns.value.wysiwyg
+  }
+})
 
 const resetUndoRedo = ref(0)
 
@@ -116,7 +120,13 @@ watch(
   {immediate: true},
 )
 
-const fields = ref<InstanceType<typeof ExerciseFieldsForm> | null>(null)
+const fields = computed(() => {
+  if (exerciseColumns.value === null) {
+    return null
+  } else {
+    return exerciseColumns.value.fields
+  }
+})
 
 function goToPrevious() {
   const exerciseId = exerciseCreationHistory.previous
@@ -169,14 +179,6 @@ const parsedExercise = computed(() => {
   }
 })
 
-const deltas = computed(() => {
-  if (exerciseColumns.value === null) {
-    return null
-  } else {
-    return exerciseColumns.value.deltas
-  }
-})
-
 const toolSlotNames = computed(() => {
   const names = []
   names.push('undoRedo')
@@ -214,34 +216,24 @@ const wordingParagraphsPerPageletOptions = [1, 2, 3, 4, 5].map(value => ({
 
     <template # v-if="exercise.inCache">
       <template v-if="exercise.exists && exerciseBelongsToTextbookPage">
-        <ExerciseColumns ref="exerciseColumns" :projectId v-model="model">
-          <template #left>
-            <div class="h-100 overflow-auto position-relative" id="left-col-2" data-cy="left-col-2">
-              <h1>{{ $t('edition') }}  <span style="font-size: small">(<label>WYSIWYG: <input type="checkbox" v-model="wantWysiwyg" /></label>)</span></h1>
-              <BBusy :busy>
-                <ExerciseFieldsForm ref="fields"
-                  v-model="model" :displayedPage
-                  :fixedNumber="true" :wysiwyg :deltas
-                >
-                </ExerciseFieldsForm>
-                <template v-if="exerciseCreationHistory.current === null">
-                  <p>
-                    <RouterLink class="btn btn-secondary" :to="{name: 'project-textbook-page'}">{{ $t('backToList') }}</RouterLink>
-                    <BButton primary :disabled="fields === null || fields.saveDisabled" @click="saveThenBack" data-cy="save-then-back">{{ $t('saveThenBack') }}</BButton>
-                  </p>
-                </template>
-                <template v-else>
-                  <p>
-                    <BButton secondary :disabled="exerciseCreationHistory.previous === null" @click="goToPrevious">{{ $t('previous') }}</BButton>
-                    <BButton primary :disabled="fields === null || fields.saveDisabled" @click="saveThenNext" data-cy="save-then-next">{{ $t('saveThenNext') }}</BButton>
-                  </p>
-                  <p>
-                    <RouterLink class="btn btn-secondary" :to="{name: 'project-textbook-page'}">{{ $t('backToList') }}</RouterLink>
-                    <BButton secondary :disabled="fields === null || fields.saveDisabled" @click="saveThenBack" data-cy="save-then-back">{{ $t('saveThenBack') }}</BButton>
-                  </p>
-                </template>
-              </BBusy>
-            </div>
+        <ExerciseColumns ref="exerciseColumns" mode="edit" :projectId :displayedPage :busy v-model="model">
+          <template #exerciseFieldsButtons>
+            <template v-if="exerciseCreationHistory.current === null">
+              <p>
+                <RouterLink class="btn btn-secondary" :to="{name: 'project-textbook-page'}">{{ $t('backToList') }}</RouterLink>
+                <BButton primary :disabled="fields === null || fields.saveDisabled" @click="saveThenBack" data-cy="save-then-back">{{ $t('saveThenBack') }}</BButton>
+              </p>
+            </template>
+            <template v-else>
+              <p>
+                <BButton secondary :disabled="exerciseCreationHistory.previous === null" @click="goToPrevious">{{ $t('previous') }}</BButton>
+                <BButton primary :disabled="fields === null || fields.saveDisabled" @click="saveThenNext" data-cy="save-then-next">{{ $t('saveThenNext') }}</BButton>
+              </p>
+              <p>
+                <RouterLink class="btn btn-secondary" :to="{name: 'project-textbook-page'}">{{ $t('backToList') }}</RouterLink>
+                <BButton secondary :disabled="fields === null || fields.saveDisabled" @click="saveThenBack" data-cy="save-then-back">{{ $t('saveThenBack') }}</BButton>
+              </p>
+            </template>
           </template>
 
           <template #gutter>

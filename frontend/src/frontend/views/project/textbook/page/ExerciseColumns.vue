@@ -8,13 +8,19 @@ import TwoResizableColumns from '$frontend/components/TwoResizableColumns.vue'
 import type { Exists, InCache, ParsedExercise } from '$frontend/stores/api'
 import { type Model, getParsed } from '$frontend/components/ExerciseFieldsForm.vue'
 import AdaptedExercise from './AdaptedExercise.vue'
+import ExerciseFieldsForm from '$frontend/components/ExerciseFieldsForm.vue'
 
 
 defineProps<{
+  mode: 'edit' | 'create'
   projectId: string
+  displayedPage: number
+  busy: boolean
 }>()
 
 const model = defineModel<Model>({required: true})
+
+const fields = ref<InstanceType<typeof ExerciseFieldsForm> | null>(null)
 
 const parsedExercise = ref<ParsedExercise & InCache & Exists | null>(null)
 const parsedExerciseIsLoading = ref(false)
@@ -49,16 +55,34 @@ const deltas = computed(() => {
   }
 })
 
+const wantWysiwyg = ref(true)
+const wysiwyg = computed(() => wantWysiwyg.value)
+
 defineExpose({
   parsedExercise,
   deltas,
+  fields,
+  wysiwyg,
 })
 </script>
 
 <template>
   <TwoResizableColumns saveKey="projectTextbookPage-2" :snap="150" class="h-100" gutterWidth="200px">
     <template #left>
-      <slot name="left"></slot>
+      <div class="h-100 overflow-auto position-relative" id="left-col-2" data-cy="left-col-2">
+        <h1>{{ $t('edition') }} <span style="font-size: small">(<label>WYSIWYG: <input type="checkbox" v-model="wantWysiwyg" /></label>)</span></h1>
+        <BBusy :busy>
+          <ExerciseFieldsForm ref="fields"
+            v-model="model" :displayedPage
+            :fixedNumber="mode === 'edit'" :wysiwyg :deltas
+          >
+            <template #overlay>
+              <slot name="exerciseFieldsOverlay"></slot>
+            </template>
+          </ExerciseFieldsForm>
+          <slot name="exerciseFieldsButtons"></slot>
+        </BBusy>
+      </div>
     </template>
 
     <template #gutter>
