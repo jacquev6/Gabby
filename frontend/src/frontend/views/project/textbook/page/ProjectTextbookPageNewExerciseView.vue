@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, reactive, watch, nextTick } from 'vue'
+import { ref, computed, reactive } from 'vue'
 import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -7,24 +7,20 @@ import { useI18n } from 'vue-i18n'
 import { BButton, BBusy, BLabeledRadios } from '$frontend/components/opinion/bootstrap'
 import bc from '$frontend/components/breadcrumbs'
 import ProjectTextbookPageLayout from './ProjectTextbookPageLayout.vue'
-import RectanglesHighlighter, { makeBoundingRectangle, makeBoundingRectangles, type Rectangle } from './RectanglesHighlighter.vue'
-import TextPicker from './TextPicker.vue'
+import { makeBoundingRectangle, makeBoundingRectangles } from './RectanglesHighlighter.vue'
 import { useProjectTextbookPageData } from './ProjectTextbookPageLayout.vue'
 import ExerciseFieldsForm from '$frontend/components/ExerciseFieldsForm.vue'
 import { useExerciseCreationHistoryStore } from './ExerciseCreationHistoryStore'
 import { useApiStore } from '$frontend/stores/api'
-import type { PdfFile } from '$frontend/stores/api'
 import ToolsGutter from './ToolsGutter.vue'
 import UndoRedoTool from './UndoRedoTool.vue'
-import type { TextualFieldName } from '$frontend/components/ExerciseFieldsForm.vue'
 import AdaptationDetailsFieldsForm from '$frontend/components/AdaptationDetailsFieldsForm.vue'
-import TextSelectionModal from './TextSelectionModal.vue'
 import { makeModelInTextbook, resetModelInTextbook, modelIsEmpty, create, suggestNextNumber } from '$frontend/components/ExerciseFieldsForm.vue'
-import type { PDFPageProxy } from 'pdfjs-dist'
 import BasicFormattingTools from './BasicFormattingTools.vue'
 import { useGloballyBusyStore } from '$frontend/stores/globallyBusy'
 import ConfirmationModal from '$frontend/components/ConfirmationModal.vue'
 import ExerciseColumns from './ExerciseColumns.vue'
+import ExercisePdfOverlay from './ExercisePdfOverlay.vue'
 
 
 const props = defineProps<{
@@ -113,22 +109,6 @@ onMounted(() => {
 
 const fields = ref<InstanceType<typeof ExerciseFieldsForm> | null>(null)
 
-const textSelectionModal = ref<InstanceType<typeof TextSelectionModal> | null>(null)
-
-function textSelected(pdfFile: PdfFile, pdf: {page: PDFPageProxy}, selectedText: string, point: {clientX: number, clientY: number}, rectangle: Rectangle) {
-  console.assert(pdfFile.inCache && pdfFile.exists)
-  console.assert(pdfFile.relationships.namings.length > 0)
-  console.assert(pdfFile.relationships.namings[0].inCache && pdfFile.relationships.namings[0].exists)
-  console.assert(textSelectionModal.value !== null)
-  textSelectionModal.value.show({
-    selectedText,
-    at: {x: point.clientX, y: point.clientY},
-    pdfSha256: pdfFile.attributes.sha256,
-    pdfPage: pdf.page.pageNumber,
-    rectangle,
-  })
-}
-
 function skip() {
   const suggestedNextNumber = suggestNextNumber(model.number)
   resetModelInTextbook(model, page.value)
@@ -202,22 +182,6 @@ const deltas = computed(() => {
   }
 })
 
-const suffixToHighlight = ref<{fieldName: TextualFieldName, text: string} | null>(null)
-function highlightSuffix(fieldName: TextualFieldName, text: string) {
-  suffixToHighlight.value = {fieldName, text}
-}
-
-watch(parsedExercise, () => {
-  if (suffixToHighlight.value !== null) {
-    const {fieldName, text} = suffixToHighlight.value
-    suffixToHighlight.value = null
-    nextTick(() => {
-      console.assert(fields.value !== null)
-      fields.value.highlightSuffix(fieldName, text)
-    })
-  }
-})
-
 const toolSlotNames = computed(() => {
   const names = []
   names.push('undoRedo')
@@ -238,25 +202,19 @@ const wordingParagraphsPerPageletOptions = [1, 2, 3, 4, 5].map(value => ({
 </script>
 
 <template>
-  <TextSelectionModal ref="textSelectionModal" v-model="model" @textAdded="highlightSuffix" />
   <ConfirmationModal ref="pageMismatchConfirmationModal">{{ $t('pageMismatchConfirmationMessage') }}</ConfirmationModal>
   <ProjectTextbookPageLayout
     :project :textbook :page :displayedPage @update:displayedPage="changeDisplayedPage"
     :title :breadcrumbs
   >
     <template #pdfOverlay="{ pdfFile, pdf, width, height, transform }">
-      <RectanglesHighlighter
-        v-if="pdfFile.inCache && pdfFile.exists"
-        class="img w-100" style="position: absolute; top: 0; left: 0"
-        :width :height :transform
+      <ExercisePdfOverlay
+        v-if="pdfFile.inCache && pdfFile.exists && fields !== null && parsedExercise !== null"
+        :pdfFile :width :height :transform
         :greyRectangles="makeGreyRectangles(pdfFile.attributes.sha256, pdf.page.pageNumber)"
         :surroundedRectangles="makeSurroundedRectangles(pdfFile.attributes.sha256, pdf.page.pageNumber)"
-      />
-      <TextPicker
-        class="img w-100" style="position: absolute; top: 0; left: 0"
-        :width :height :transform
-        :textContent="pdf.textContent"
-        @textSelected="(text, point, rectangle) => textSelected(pdfFile, pdf, text, point, rectangle)"
+        :pdf :fields :parsedExercise
+        v-model="model"
       />
     </template>
 
