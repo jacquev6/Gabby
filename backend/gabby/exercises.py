@@ -8,6 +8,7 @@ import sqlalchemy as sql
 from fastjsonapi import make_filters
 
 from . import api_models
+from . import parsing
 from . import exercise_delta
 from . import renderable
 from . import settings
@@ -86,22 +87,36 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
         }
 
     def make_adapted(self):
+        adapter = parsing.EffectsBasedAdapter(
+            self.adaptation.make_effects(),
+            self.instructions,
+            self.wording,
+            self.example,
+            self.clue,
+        )
         return renderable.Exercise(
             number=self.number,
             textbook_page=self.textbook_page,
-            instructions=self.adaptation.make_adapted_instructions(self),
-            wording=self.adaptation.make_adapted_wording(self),
-            example=self.adaptation.make_adapted_example(self),
-            clue=self.adaptation.make_adapted_clue(self),
+            instructions=adapter.instructions,
+            wording=adapter.wording,
+            example=adapter.example,
+            clue=adapter.clue,
             wording_paragraphs_per_pagelet=self.wording_paragraphs_per_pagelet,
         )
 
     def make_delta(self):
+        delta_maker = parsing.EffectsBasedDeltaMaker(
+            self.adaptation.make_effects(),
+            self.instructions,
+            self.wording,
+            self.example,
+            self.clue,
+        )
         return exercise_delta.Exercise(
-            instructions=self.adaptation.make_instructions_delta(self),
-            wording=self.adaptation.make_wording_delta(self),
-            example=self.adaptation.make_example_delta(self),
-            clue=self.adaptation.make_clue_delta(self),
+            instructions=delta_maker.instructions,
+            wording=delta_maker.wording,
+            example=delta_maker.example,
+            clue=delta_maker.clue,
         )
 
 

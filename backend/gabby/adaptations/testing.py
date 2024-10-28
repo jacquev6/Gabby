@@ -7,7 +7,11 @@ class AdaptationTestCase(unittest.TestCase):
     def do_test(self, exercise, expected_adapted, expected_delta):
         actual_adapted = exercise.make_adapted()
         if actual_adapted != expected_adapted:
-            print("actual_adapted:", actual_adapted)
+            print("actual_adapted:")
+            print("  instructions:", actual_adapted.instructions)
+            print("  wording:", actual_adapted.wording)
+            print("  example:", actual_adapted.example)
+            print("  clue:", actual_adapted.clue)
         self.assertEqual(actual_adapted, expected_adapted)
         if expected_delta is not None:
             actual_delta = exercise.make_delta()

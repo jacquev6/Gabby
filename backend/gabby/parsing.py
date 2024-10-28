@@ -1,3 +1,4 @@
+from typing import Literal
 import abc
 import functools
 import itertools
@@ -7,6 +8,7 @@ import lark
 
 from . import exercise_delta
 from . import renderable
+from mydantic import PydanticBase
 
 
 # Might be premature optimization, but we'll have a reasonable number of distinct grammars,
@@ -592,9 +594,6 @@ class InstructionsSectionAdapter(Transformer):
     def italic_tag(self, args):
         assert len(args) == 1
         return renderable.ItalicText(text=args[0])
-
-
-adapt_plain_instructions_section = InstructionsSectionParser({}, InstructionsSectionAdapter())
 
 
 class GenericInstructionsSectionAdapter(InstructionsSectionAdapter):
@@ -1292,3 +1291,674 @@ class AdaptGenericWordingSectionTestCase(unittest.TestCase):
                 renderable.PlainText(text="."),
             ])])]),
         )
+
+
+
+class Effect(abc.ABC):
+    @abc.abstractmethod
+    def preprocess(self, instructions, wording, example, clue):
+        pass
+
+
+class FillWithFreeText(Effect):
+    def __init__(self, placeholder: str):
+        self.__placeholder = placeholder
+
+    def preprocess(self, instructions, wording, example, clue):
+        wording = wording.replace(self.__placeholder, "{fill-with-free-text}")
+        return (instructions, wording, example, clue)
+
+    def make_instructions_adapter_constructor_kwds(self):
+        return {}
+
+    def make_wording_adapter_constructor_kwds(self):
+        return {}
+
+    def make_example_adapter_constructor_kwds(self):
+        return {}
+
+    def make_clue_adapter_constructor_kwds(self):
+        return {}
+
+
+class MultipleChoicesInInstructions(Effect):
+    def __init__(self, placeholder: str):
+        self.__placeholder = placeholder
+
+    def preprocess(self, instructions, wording, example, clue):
+        choices = self.gather_choices(instructions)
+        wording = wording.replace(self.__placeholder, f"{{choices2||/|||{'/'.join(choices)}}}")  # @todo Escape '{', '|' and '}' in choices
+        return (instructions, wording, example, clue)
+
+    class ChoicesGatherer(Transformer):
+        def section(self, args):
+            return list(itertools.chain(*args))
+
+        def strict_paragraph(self, args):
+            return list(itertools.chain(*args))
+
+        def sentence(self, args):
+            return list(itertools.chain(*args))
+
+        def lenient_paragraph(self, args):
+            return list(itertools.chain(*args))
+
+        def choice_tag(self, args):
+            assert len(args) == 1
+            return [args[0]]
+
+        def WORD(self, arg):
+            return []
+
+        def LEADING_WHITESPACE(self, arg):
+            return []
+
+        def TRAILING_WHITESPACE(self, arg):
+            return []
+
+        def PARAGRAPH_SEPARATOR(self, arg):
+            return []
+
+        def SENTENCE_SEPARATOR(self, arg):
+            return []
+
+        def WHITESPACE_IN_SENTENCE(self, arg):
+            return []
+
+        def PUNCTUATION_IN_SENTENCE(self, arg):
+            return []
+
+        def PUNCTUATION_AT_END_OF_SENTENCE(self, arg):
+            return []
+
+        def PUNCTUATION_IN_LENIENT_PARAGRAPH(self, arg):
+            return []
+
+        def INT(self, arg):
+            return None
+
+        def STR(self, arg):
+            return arg.value
+
+        def bold_tag(self, args):
+            return []
+
+        def italic_tag(self, args):
+            return []
+
+    gather_choices = InstructionsSectionParser({"choice": r""" "|" STR """}, ChoicesGatherer())
+
+
+    def make_instructions_adapter_constructor_kwds(self):
+        return {}
+
+    def make_wording_adapter_constructor_kwds(self):
+        return {}
+
+    def make_example_adapter_constructor_kwds(self):
+        return {}
+
+    def make_clue_adapter_constructor_kwds(self):
+        return {}
+
+
+class SelectThings(Effect):
+    def __init__(self, colors: list[str], words: bool, punctuation: bool):
+        self.__colors = colors
+        self.__words = words
+        self.__punctuation = punctuation
+
+    def preprocess(self, instructions, wording, example, clue):
+        return (instructions, wording, example, clue)
+
+    def make_instructions_adapter_constructor_kwds(self):
+        return {
+            "selection_colors": self.__colors,
+        }
+
+    def make_wording_adapter_constructor_kwds(self):
+        return {
+            "select_words": self.__words,
+            "select_punctuation": self.__punctuation,
+            "selection_colors": self.__colors,
+        }
+
+    def make_example_adapter_constructor_kwds(self):
+        return {
+            "selection_colors": self.__colors,
+        }
+
+    def make_clue_adapter_constructor_kwds(self):
+        return {
+            "selection_colors": self.__colors,
+        }
+
+
+class ItemsAndEffectsAttempt1(Effect):
+    class WordsItems(PydanticBase):
+        kind: Literal["words"]
+        punctuation: bool
+
+    class SentencesItems(PydanticBase):
+        kind: Literal["sentences"]
+
+    class ManualItems(PydanticBase):
+        kind: Literal["manual"]
+
+    Items = WordsItems | SentencesItems | ManualItems
+
+    class Effects(PydanticBase):
+        class Selectable(PydanticBase):
+            colors: list[str]
+
+        selectable: Selectable | None
+        boxed: bool
+
+    def __init__(self, items: Items, effects: Effects):
+        self.__items = items
+        self.__effects = effects
+
+    def preprocess(self, instructions, wording, example, clue):
+        return (instructions, wording, example, clue)
+
+    def make_instructions_adapter_constructor_kwds(self):
+        if self.__effects.selectable is None:
+            return {}
+        else:
+            return {
+                "selection_colors": self.__effects.selectable.colors,
+            }
+
+    def make_wording_adapter_constructor_kwds(self):
+        if self.__effects.selectable is None:
+            return {}
+        else:
+            if self.__items.kind == "words":
+                return {
+                    "select_words": True,
+                    "select_punctuation": self.__items.punctuation,
+                    "selection_colors": self.__effects.selectable.colors,
+                    "selectables_are_boxed": self.__effects.boxed,
+                }
+            elif self.__items.kind == "manual":
+                return {
+                    "selection_colors": self.__effects.selectable.colors,
+                    "selectables_are_boxed": self.__effects.boxed,
+                }
+            else:
+                assert False, f"Unknown items kind: {self.__items.kind}"
+
+    def make_example_adapter_constructor_kwds(self):
+        if self.__effects.selectable is None:
+            return {}
+        else:
+            return {
+                "selection_colors": self.__effects.selectable.colors,
+            }
+
+    def make_clue_adapter_constructor_kwds(self):
+        if self.__effects.selectable is None:
+            return {}
+        else:
+            return {
+                "selection_colors": self.__effects.selectable.colors,
+            }
+
+
+class EffectsBasedAdapter:
+    def __init__(
+        self,
+        effects: list[Effect],
+        instructions: str,
+        wording: str,
+        example: str,
+        clue: str,
+    ):
+        for effect in effects:
+            (instructions, wording, example, clue) = effect.preprocess(instructions, wording, example, clue)
+
+        (instructions, wording, example, clue) = self.preprocess(instructions, wording, example, clue)
+
+        instructions_adapter_constructor_kwds = {}
+        wording_adapter_constructor_kwds = {}
+        example_adapter_constructor_kwds = {}
+        clue_adapter_constructor_kwds = {}
+        for effect in effects:
+            instructions_adapter_constructor_kwds.update(effect.make_instructions_adapter_constructor_kwds())
+            wording_adapter_constructor_kwds.update(effect.make_wording_adapter_constructor_kwds())
+            example_adapter_constructor_kwds.update(effect.make_example_adapter_constructor_kwds())
+            clue_adapter_constructor_kwds.update(effect.make_clue_adapter_constructor_kwds())
+
+        self.instructions = self.adapt_instructions(instructions, **instructions_adapter_constructor_kwds)
+        self.wording = self.adapt_wording(wording, **wording_adapter_constructor_kwds)
+        self.example = self.adapt_example(example, **example_adapter_constructor_kwds)
+        self.clue = self.adapt_clue(clue, **clue_adapter_constructor_kwds)
+
+    def preprocess(self, instructions, wording, example, clue):
+        placeholders = set(self.gather_placeholders(wording))
+        for placeholder in placeholders:
+            wording = wording.replace(placeholder, f"{{placeholder2|{placeholder}}}").replace(f"|{{placeholder2|{placeholder}}}|", f"|{placeholder}|")
+        return (instructions, wording, example, clue)
+
+    class PlaceholdersGatherer(Transformer):
+        def section(self, args):
+            return list(itertools.chain(*args))
+
+        def strict_paragraph(self, args):
+            return list(itertools.chain(*args))
+
+        def sentence(self, args):
+            return list(itertools.chain(*args))
+
+        def lenient_paragraph(self, args):
+            return list(itertools.chain(*args))
+
+        def choices2_tag(self, args):
+            assert len(args) == 5
+            if args[3] is None:
+                return []
+            else:
+                return [args[3]]
+
+        def WORD(self, arg):
+            return []
+
+        def LEADING_WHITESPACE(self, arg):
+            return []
+
+        def TRAILING_WHITESPACE(self, arg):
+            return []
+
+        def PARAGRAPH_SEPARATOR(self, arg):
+            return []
+
+        def SENTENCE_SEPARATOR(self, arg):
+            return []
+
+        def WHITESPACE_IN_SENTENCE(self, arg):
+            return []
+
+        def PUNCTUATION_IN_SENTENCE(self, arg):
+            return []
+
+        def PUNCTUATION_AT_END_OF_SENTENCE(self, arg):
+            return []
+
+        def PUNCTUATION_IN_LENIENT_PARAGRAPH(self, arg):
+            return []
+
+        def INT(self, arg):
+            return None
+
+        def STR(self, arg):
+            return arg.value
+
+        def bold_tag(self, args):
+            return []
+
+        def italic_tag(self, args):
+            return []
+
+    gather_placeholders = InstructionsSectionParser(
+        {
+            "choices2": r""" "|" [STR] "|" [STR] "|" [STR] "|" [STR] "|" STR """,
+        },
+        PlaceholdersGatherer(),
+    )
+
+    class InstructionsAdapter(InstructionsSectionAdapter):
+        def __init__(self, *, selection_colors: list[str]=[]):
+            super().__init__()
+            self.selection_colors = selection_colors
+
+        def choice_tag(self, args):
+            text, = args
+            return renderable.BoxedText(text=text)
+
+        def sel1_tag(self, args):
+            if len(self.selection_colors) > 0:
+                return renderable.SelectedText(text=args[0], color=self.selection_colors[0])
+            else:
+                return renderable.PlainText(text=args[0])
+
+        def sel2_tag(self, args):
+            if len(self.selection_colors) > 1:
+                return renderable.SelectedText(text=args[0], color=self.selection_colors[1])
+            else:
+                return renderable.PlainText(text=args[0])
+
+        def sel3_tag(self, args):
+            if len(self.selection_colors) > 2:
+                return renderable.SelectedText(text=args[0], color=self.selection_colors[2])
+            else:
+                return renderable.PlainText(text=args[0])
+
+        def sel4_tag(self, args):
+            if len(self.selection_colors) > 3:
+                return renderable.SelectedText(text=args[0], color=self.selection_colors[3])
+            else:
+                return renderable.PlainText(text=args[0])
+
+        def sel5_tag(self, args):
+            if len(self.selection_colors) > 4:
+                return renderable.SelectedText(text=args[0], color=self.selection_colors[4])
+            else:
+                return renderable.PlainText(text=args[0])
+
+    def adapt_instructions(self, instructions, **kwds):
+        return InstructionsSectionParser(
+            {
+                "choice": r""" "|" STR """,
+                "sel1": r""" "|" STR """,
+                "sel2": r""" "|" STR """,
+                "sel3": r""" "|" STR """,
+                "sel4": r""" "|" STR """,
+                "sel5": r""" "|" STR """,
+            },
+            self.InstructionsAdapter(**kwds),
+        )(instructions)
+
+    def adapt_example(self, example, **kwds):
+        return InstructionsSectionParser(
+            {
+                "sel1": r""" "|" STR """,
+                "sel2": r""" "|" STR """,
+                "sel3": r""" "|" STR """,
+                "sel4": r""" "|" STR """,
+                "sel5": r""" "|" STR """,
+            },
+            self.InstructionsAdapter(**kwds),
+        )(example)
+
+    def adapt_clue(self, clue, **kwds):
+        return InstructionsSectionParser(
+            {
+                "sel1": r""" "|" STR """,
+                "sel2": r""" "|" STR """,
+                "sel3": r""" "|" STR """,
+                "sel4": r""" "|" STR """,
+                "sel5": r""" "|" STR """,
+            },
+            self.InstructionsAdapter(**kwds),
+        )(clue)
+
+    class WordingAdapter(WordingSectionAdapter):
+        def __init__(
+                self,
+                *,
+                select_words: bool=False,
+                select_punctuation: bool=False,
+                selection_colors: list[str]=[],
+                selectables_are_boxed: bool=False,
+            ):
+            super().__init__()
+            self.select_words = select_words
+            self.select_punctuation = select_punctuation
+            self.selection_colors = selection_colors
+            self.selectables_are_boxed = selectables_are_boxed
+
+        def fill_with_free_text_tag(self, args):
+            assert len(args) == 0
+            return renderable.FreeTextInput()
+
+        def choices_tag(self, args):
+            return renderable.MultipleChoicesInput(choices=[arg for arg in args])
+
+        def sentence(self, args):
+            return self._make_sentence(args)
+
+        def lenient_paragraph(self, args):
+            return renderable.Paragraph(sentences=[self._make_sentence(args)])
+
+        def _make_sentence(self, tokens):
+            placeholder_indexes_by_placeholder = {}
+            input_index_by_placeholder = {}
+            new_tokens = []
+            for token in tokens:
+                if isinstance(token, tuple):
+                    if token[0] == "placeholder":
+                        placeholder_indexes_by_placeholder.setdefault(token[1], []).append(len(new_tokens))
+                    else:
+                        assert token[0] == "input"
+                        input_index_by_placeholder[token[1]] = len(new_tokens)
+                new_tokens.append(token)
+            for placeholder in set(itertools.chain(placeholder_indexes_by_placeholder.keys(), input_index_by_placeholder.keys())):
+                placeholder_indexes = placeholder_indexes_by_placeholder.get(placeholder)
+                input_index = input_index_by_placeholder.get(placeholder)
+                if placeholder_indexes is None:
+                    if input_index is None:
+                        assert False
+                    else:
+                        new_tokens[input_index] = new_tokens[input_index][2]
+                else:
+                    if input_index is None:
+                        for placeholder_index in placeholder_indexes:
+                            new_tokens[placeholder_index] = renderable.PlainText(text=new_tokens[placeholder_index][1])
+                    else:
+                        for placeholder_index in placeholder_indexes:
+                            new_tokens[placeholder_index] = new_tokens[input_index][2]
+                        new_tokens[input_index] = None
+            new_tokens = list(filter(None, new_tokens))
+            while new_tokens[0].type == "whitespace":
+                del new_tokens[0]
+            while new_tokens[-1].type == "whitespace":
+                del new_tokens[-1]
+            for i in range(len(new_tokens) - 1):
+                if new_tokens[i].type == "whitespace" and new_tokens[i + 1].type == "whitespace":
+                    new_tokens[i] = None
+            new_tokens = list(filter(None, new_tokens))
+            return renderable.Sentence(tokens=new_tokens)
+
+        def placeholder2_tag(self, args):
+            assert len(args) == 1
+            return ("placeholder", args[0])
+
+        def choices2_tag(self, args):
+            assert len(args) == 5
+            (start, separator, stop, placeholder, text) = args
+            text = text.strip()
+            if start is not None and stop is not None and text.startswith(start) and text.endswith(stop):
+                text = text[len(start) : -len(stop)]
+            if separator is None:
+                choices = [text]
+            else:
+                choices = text.split(separator)
+            choices = [choice.strip() for choice in choices]
+            input = renderable.MultipleChoicesInput(choices=choices)
+            if placeholder is None:
+                return input
+            else:
+                return ("input", placeholder, input)
+
+        def selectable_tag(self, args):
+            assert len(args) == 1
+            return renderable.SelectableText(text=args[0], colors=self.selection_colors, boxed=self.selectables_are_boxed)
+
+        def WORD(self, arg):
+            if self.select_words:
+                return renderable.SelectableText(text=arg.value, colors=self.selection_colors, boxed=self.selectables_are_boxed)
+            else:
+                return renderable.PlainText(text=arg.value)
+
+        def PUNCTUATION_IN_SENTENCE(self, arg):
+            if self.select_punctuation:
+                return renderable.SelectableText(text=arg.value, colors=self.selection_colors, boxed=self.selectables_are_boxed)
+            else:
+                return renderable.PlainText(text=arg.value)
+
+        def PUNCTUATION_AT_END_OF_SENTENCE(self, arg):
+            if self.select_punctuation:
+                return renderable.SelectableText(text=arg.value, colors=self.selection_colors, boxed=self.selectables_are_boxed)
+            else:
+                return renderable.PlainText(text=arg.value)
+
+    def adapt_wording(self, wording, **kwds):
+        return WordingSectionParser(
+        {
+            "fill_with_free_text": "",
+            "choices": r""" ("|" STR)+ """,
+            "choices2": r""" "|" [STR] "|" [STR] "|" [STR] "|" [STR] "|" STR """,
+            "placeholder2": r""" "|" STR""",
+            "selectable": r""" "|" STR """,
+        },
+        self.WordingAdapter(**kwds),
+    )(wording)
+
+
+class EffectsBasedDeltaMaker:
+    def __init__(
+        self,
+        effects: list[Effect],
+        instructions: str,
+        wording: str,
+        example: str,
+        clue: str,
+    ):
+        instructions_adapter_constructor_kwds = {}
+        wording_adapter_constructor_kwds = {}
+        example_adapter_constructor_kwds = {}
+        clue_adapter_constructor_kwds = {}
+        for effect in effects:
+            instructions_adapter_constructor_kwds.update(effect.make_instructions_adapter_constructor_kwds())
+            wording_adapter_constructor_kwds.update(effect.make_wording_adapter_constructor_kwds())
+            example_adapter_constructor_kwds.update(effect.make_example_adapter_constructor_kwds())
+            clue_adapter_constructor_kwds.update(effect.make_clue_adapter_constructor_kwds())
+
+        self.instructions = self.make_deltas_for_instructions(instructions, **instructions_adapter_constructor_kwds)
+        self.wording = self.make_deltas_for_wording(wording, **wording_adapter_constructor_kwds)
+        self.example = self.make_deltas_for_example(example, **example_adapter_constructor_kwds)
+        self.clue = self.make_deltas_for_clue(clue, **clue_adapter_constructor_kwds)
+
+    class InstructionsDeltaMaker(InstructionsSectionDeltaMaker):
+        def __init__(self, *, selection_colors: list[str]=[]):
+            super().__init__()
+            self.selection_colors = selection_colors
+
+        def choice_tag(self, args):
+            return exercise_delta.TextInsertOp(insert=args[0], attributes={"choice": True})
+
+        def sel1_tag(self, args):
+            if len(self.selection_colors) > 0:
+                return exercise_delta.TextInsertOp(insert=args[0], attributes={"sel": 1})
+            else:
+                return exercise_delta.TextInsertOp(insert=args[0], attributes={})
+
+        def sel2_tag(self, args):
+            if len(self.selection_colors) > 1:
+                return exercise_delta.TextInsertOp(insert=args[0], attributes={"sel": 2})
+            else:
+                return exercise_delta.TextInsertOp(insert=args[0], attributes={})
+
+        def sel3_tag(self, args):
+            if len(self.selection_colors) > 2:
+                return exercise_delta.TextInsertOp(insert=args[0], attributes={"sel": 3})
+            else:
+                return exercise_delta.TextInsertOp(insert=args[0], attributes={})
+
+        def sel4_tag(self, args):
+            if len(self.selection_colors) > 3:
+                return exercise_delta.TextInsertOp(insert=args[0], attributes={"sel": 4})
+            else:
+                return exercise_delta.TextInsertOp(insert=args[0], attributes={})
+
+        def sel5_tag(self, args):
+            if len(self.selection_colors) > 4:
+                return exercise_delta.TextInsertOp(insert=args[0], attributes={"sel": 5})
+            else:
+                return exercise_delta.TextInsertOp(insert=args[0], attributes={})
+
+    def make_deltas_for_instructions(self, instructions, **kwds):
+        return InstructionsSectionParser(
+            {
+                "choice": r""" "|" STR """,
+                "sel1": r""" "|" STR """,
+                "sel2": r""" "|" STR """,
+                "sel3": r""" "|" STR """,
+                "sel4": r""" "|" STR """,
+                "sel5": r""" "|" STR """,
+            },
+            self.InstructionsDeltaMaker(**kwds),
+        )(instructions)
+
+    def make_deltas_for_example(self, example, **kwds):
+        return InstructionsSectionParser(
+            {
+                "sel1": r""" "|" STR """,
+                "sel2": r""" "|" STR """,
+                "sel3": r""" "|" STR """,
+                "sel4": r""" "|" STR """,
+                "sel5": r""" "|" STR """,
+            },
+            self.InstructionsDeltaMaker(**kwds),
+        )(example)
+
+    def make_deltas_for_clue(self, clue, **kwds):
+        return InstructionsSectionParser(
+            {
+                "sel1": r""" "|" STR """,
+                "sel2": r""" "|" STR """,
+                "sel3": r""" "|" STR """,
+                "sel4": r""" "|" STR """,
+                "sel5": r""" "|" STR """,
+            },
+            self.InstructionsDeltaMaker(**kwds),
+        )(clue)
+
+    class WordingDeltaMaker(WordingSectionDeltaMaker):
+        def __init__(
+            self,
+            *,
+            select_words: bool=False,
+            select_punctuation: bool=False,
+            selection_colors: list[str]=[],
+            selectables_are_boxed: bool=False,
+        ):
+            super().__init__()
+            self.select_words = select_words
+            self.select_punctuation = select_punctuation
+            self.selection_colors = selection_colors
+            self.selectables_are_boxed = selectables_are_boxed
+
+        def choices_tag(self, args):
+            # Legacy behavior: not WYSIWYG
+            return exercise_delta.TextInsertOp(
+                insert=f"{{choices|{'|'.join(args)}}}",
+                attributes={},
+            )
+
+        def choices2_tag(self, args):
+            assert len(args) == 5
+            (start, separator, stop, placeholder, text) = args
+            if start is None:
+                start = ""
+            if separator is None:
+                separator = ""
+            if stop is None:
+                stop = ""
+            if placeholder is None:
+                placeholder = ""
+            return exercise_delta.TextInsertOp(
+                insert=text,
+                attributes={
+                    "choices2": {
+                        "start": start,
+                        "separator": separator,
+                        "stop": stop,
+                        "placeholder": placeholder,
+                    },
+                },
+            )
+
+        def selectable_tag(self, args):
+            assert len(args) == 1
+            return exercise_delta.TextInsertOp(insert=args[0], attributes={"selectable": True})
+
+    def make_deltas_for_wording(self, wording, **kwds):
+        return WordingSectionParser(
+            {
+                "choices": r""" ("|" STR)+ """,
+                "choices2": r""" "|" [STR] "|" [STR] "|" [STR] "|" [STR] "|" STR """,
+                "selectable": r""" "|" STR """,
+            },
+            self.WordingDeltaMaker(**kwds),
+        )(wording)

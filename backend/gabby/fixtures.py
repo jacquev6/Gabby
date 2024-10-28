@@ -4,6 +4,7 @@ import hashlib
 import PyPDF2
 
 from . import database_utils
+from . import parsing
 from .orm_models import Exercise
 from .api_models import (
     FillWithFreeTextAdaptation,
@@ -532,11 +533,11 @@ def create_test_exercises_3(session, admin):
         wording_paragraphs_per_pagelet=1,
         adaptation=ItemsAndEffectsAttempt1Adaptation(
             kind="items-and-effects-attempt-1",
-            items=ItemsAndEffectsAttempt1Adaptation.WordsItems(
+            items=parsing.ItemsAndEffectsAttempt1.WordsItems(
                 kind="words", punctuation=False
             ),
-            effects=ItemsAndEffectsAttempt1Adaptation.Effects(
-                selectable=ItemsAndEffectsAttempt1Adaptation.Effects.Selectable(
+            effects=parsing.ItemsAndEffectsAttempt1.Effects(
+                selectable=parsing.ItemsAndEffectsAttempt1.Effects.Selectable(
                     colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"]
                 ),
                 boxed=False,
