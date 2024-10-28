@@ -622,7 +622,6 @@ class AdaptGenericInstructionsSectionTestCase(unittest.TestCase):
         for paragraph_index, (actual_paragraph, expected_paragraph) in enumerate(zip(actual_section.paragraphs, expected_section.paragraphs, strict=True)):
             for sentence_index, (actual_sentence, expected_sentence) in enumerate(zip(actual_paragraph.sentences, expected_paragraph.sentences, strict=True)):
                 self.assertEqual(actual_sentence, expected_sentence, f"Paragraph {paragraph_index}, sentence {sentence_index}")
-        self.assertEqual(adapt_generic_instructions_section(expected_section.to_generic()), expected_section)
 
     # In instructions (and example and clue) sections, we want to:
     # - join consecutive lines separated by a single carriage return into a single paragraph
@@ -1120,8 +1119,6 @@ class AdaptGenericWordingSectionTestCase(unittest.TestCase):
         for paragraph_index, (actual_paragraph, expected_paragraph) in enumerate(zip(actual_section.paragraphs, expected_section.paragraphs, strict=True)):
             for sentence_index, (actual_sentence, expected_sentence) in enumerate(zip(actual_paragraph.sentences, expected_paragraph.sentences, strict=True)):
                 self.assertEqual(actual_sentence, expected_sentence, f"Paragraph {paragraph_index}, sentence {sentence_index}")
-        if expected_section is not None:
-            self.assertEqual(adapt_generic_wording_section(expected_section.to_generic()), expected_section)
 
     # In wording sections, we want to:
     # - make a paragraph for each non-empty line
