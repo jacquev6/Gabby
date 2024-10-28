@@ -268,6 +268,16 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 clue=r.Section(paragraphs=[]),
                 wording_paragraphs_per_pagelet=3,
             ),
+            d.Exercise(
+                instructions=[
+                    d.TextInsertOp(insert="Choose wisely.", attributes={}),
+                ],
+                wording=[
+                    d.TextInsertOp(insert="A {choices|a|b|c} B {choices|d|e}.", attributes={}),
+                ],
+                example=[],
+                clue=[],
+            ),
         )
 
     def test_choices2_without_placeholder(self):

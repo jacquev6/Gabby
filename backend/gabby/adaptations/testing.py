@@ -4,8 +4,7 @@ import unittest
 class AdaptationTestCase(unittest.TestCase):
     maxDiff = None
 
-    # @todo Remove default value, enforce testing the delta
-    def do_test(self, exercise, expected_adapted, expected_delta=None):
+    def do_test(self, exercise, expected_adapted, expected_delta):
         actual_adapted = exercise.make_adapted()
         if actual_adapted != expected_adapted:
             print("actual_adapted:", actual_adapted)
