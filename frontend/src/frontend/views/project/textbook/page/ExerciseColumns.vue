@@ -78,10 +78,10 @@ const toolSlotNames = computed(() => {
   return names
 })
 
-const wordingParagraphsPerPageletOptions = [1, 2, 3, 4, 5].map(value => ({
+const wordingParagraphsPerPageletOptions = computed(() => [1, 2, 3, 4, 5].map(value => ({
   label: i18n.t('exerciseLinesPerPage', {lines: value}),
   value,
-}))
+})))
 
 const doResetUndoRedo = ref(0)
 function resetUndoRedo() {
