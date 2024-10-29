@@ -533,11 +533,11 @@ def create_test_exercises_3(session, admin):
         wording_paragraphs_per_pagelet=1,
         adaptation=ItemsAndEffectsAttempt1Adaptation(
             kind="items-and-effects-attempt-1",
-            items=parsing.ItemsAndEffectsAttempt1.WordsItems(
+            items=parsing.ItemsAndEffectsAttempt1AdaptationEffect.WordsItems(
                 kind="words", punctuation=False
             ),
-            effects=parsing.ItemsAndEffectsAttempt1.Effects(
-                selectable=parsing.ItemsAndEffectsAttempt1.Effects.Selectable(
+            effects=parsing.ItemsAndEffectsAttempt1AdaptationEffect.Effects(
+                selectable=parsing.ItemsAndEffectsAttempt1AdaptationEffect.Effects.Selectable(
                     colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"]
                 ),
                 boxed=False,

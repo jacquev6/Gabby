@@ -1,10 +1,11 @@
-from typing import Literal
+from typing import Annotated, ClassVar, Literal
 import abc
 import functools
 import itertools
 import unittest
 
 import lark
+import pydantic
 
 from . import exercise_delta
 from . import renderable
@@ -1293,19 +1294,13 @@ class AdaptGenericWordingSectionTestCase(unittest.TestCase):
         )
 
 
+class FillWithFreeTextAdaptationEffect(PydanticBase):
+    kind: Literal["fill-with-free-text"]
 
-class Effect(abc.ABC):
-    @abc.abstractmethod
-    def preprocess(self, instructions, wording, example, clue):
-        pass
-
-
-class FillWithFreeText(Effect):
-    def __init__(self, placeholder: str):
-        self.__placeholder = placeholder
+    placeholder: str
 
     def preprocess(self, instructions, wording, example, clue):
-        wording = wording.replace(self.__placeholder, "{fill-with-free-text}")
+        wording = wording.replace(self.placeholder, "{fill-with-free-text}")
         return (instructions, wording, example, clue)
 
     def make_instructions_adapter_constructor_kwds(self):
@@ -1321,13 +1316,14 @@ class FillWithFreeText(Effect):
         return {}
 
 
-class MultipleChoicesInInstructions(Effect):
-    def __init__(self, placeholder: str):
-        self.__placeholder = placeholder
+class MultipleChoicesInInstructionsAdaptationEffect(PydanticBase):
+    kind: Literal["multiple-choices-in-instructions"]
+
+    placeholder: str
 
     def preprocess(self, instructions, wording, example, clue):
         choices = self.gather_choices(instructions)
-        wording = wording.replace(self.__placeholder, f"{{choices2||/|||{'/'.join(choices)}}}")  # @todo Escape '{', '|' and '}' in choices
+        wording = wording.replace(self.placeholder, f"{{choices2||/|||{'/'.join(choices)}}}")  # @todo Escape '{', '|' and '}' in choices
         return (instructions, wording, example, clue)
 
     class ChoicesGatherer(Transformer):
@@ -1386,8 +1382,7 @@ class MultipleChoicesInInstructions(Effect):
         def italic_tag(self, args):
             return []
 
-    gather_choices = InstructionsSectionParser({"choice": r""" "|" STR """}, ChoicesGatherer())
-
+    gather_choices: ClassVar = InstructionsSectionParser({"choice": r""" "|" STR """}, ChoicesGatherer())
 
     def make_instructions_adapter_constructor_kwds(self):
         return {}
@@ -1402,39 +1397,42 @@ class MultipleChoicesInInstructions(Effect):
         return {}
 
 
-class SelectThings(Effect):
-    def __init__(self, colors: list[str], words: bool, punctuation: bool):
-        self.__colors = colors
-        self.__words = words
-        self.__punctuation = punctuation
+class SelectThingsAdaptationEffect(PydanticBase):
+    kind: Literal["select-things"]
+
+    colors: list[str]
+    words: bool
+    punctuation: bool
 
     def preprocess(self, instructions, wording, example, clue):
         return (instructions, wording, example, clue)
 
     def make_instructions_adapter_constructor_kwds(self):
         return {
-            "selection_colors": self.__colors,
+            "selection_colors": self.colors,
         }
 
     def make_wording_adapter_constructor_kwds(self):
         return {
-            "select_words": self.__words,
-            "select_punctuation": self.__punctuation,
-            "selection_colors": self.__colors,
+            "select_words": self.words,
+            "select_punctuation": self.punctuation,
+            "selection_colors": self.colors,
         }
 
     def make_example_adapter_constructor_kwds(self):
         return {
-            "selection_colors": self.__colors,
+            "selection_colors": self.colors,
         }
 
     def make_clue_adapter_constructor_kwds(self):
         return {
-            "selection_colors": self.__colors,
+            "selection_colors": self.colors,
         }
 
 
-class ItemsAndEffectsAttempt1(Effect):
+class ItemsAndEffectsAttempt1AdaptationEffect(PydanticBase):
+    kind: Literal["items-and-effects-attempt-1"]
+
     class WordsItems(PydanticBase):
         kind: Literal["words"]
         punctuation: bool
@@ -1445,7 +1443,7 @@ class ItemsAndEffectsAttempt1(Effect):
     class ManualItems(PydanticBase):
         kind: Literal["manual"]
 
-    Items = WordsItems | SentencesItems | ManualItems
+    Items: ClassVar = WordsItems | SentencesItems | ManualItems
 
     class Effects(PydanticBase):
         class Selectable(PydanticBase):
@@ -1454,61 +1452,66 @@ class ItemsAndEffectsAttempt1(Effect):
         selectable: Selectable | None
         boxed: bool
 
-    def __init__(self, items: Items, effects: Effects):
-        self.__items = items
-        self.__effects = effects
+    items: Items
+    effects: Effects
 
     def preprocess(self, instructions, wording, example, clue):
         return (instructions, wording, example, clue)
 
     def make_instructions_adapter_constructor_kwds(self):
-        if self.__effects.selectable is None:
+        if self.effects.selectable is None:
             return {}
         else:
             return {
-                "selection_colors": self.__effects.selectable.colors,
+                "selection_colors": self.effects.selectable.colors,
             }
 
     def make_wording_adapter_constructor_kwds(self):
-        if self.__effects.selectable is None:
+        if self.effects.selectable is None:
             return {}
         else:
-            if self.__items.kind == "words":
+            if self.items.kind == "words":
                 return {
                     "select_words": True,
-                    "select_punctuation": self.__items.punctuation,
-                    "selection_colors": self.__effects.selectable.colors,
-                    "selectables_are_boxed": self.__effects.boxed,
+                    "select_punctuation": self.items.punctuation,
+                    "selection_colors": self.effects.selectable.colors,
+                    "selectables_are_boxed": self.effects.boxed,
                 }
-            elif self.__items.kind == "manual":
+            elif self.items.kind == "manual":
                 return {
-                    "selection_colors": self.__effects.selectable.colors,
-                    "selectables_are_boxed": self.__effects.boxed,
+                    "selection_colors": self.effects.selectable.colors,
+                    "selectables_are_boxed": self.effects.boxed,
                 }
             else:
-                assert False, f"Unknown items kind: {self.__items.kind}"
+                assert False, f"Unknown items kind: {self.items.kind}"
 
     def make_example_adapter_constructor_kwds(self):
-        if self.__effects.selectable is None:
+        if self.effects.selectable is None:
             return {}
         else:
             return {
-                "selection_colors": self.__effects.selectable.colors,
+                "selection_colors": self.effects.selectable.colors,
             }
 
     def make_clue_adapter_constructor_kwds(self):
-        if self.__effects.selectable is None:
+        if self.effects.selectable is None:
             return {}
         else:
             return {
-                "selection_colors": self.__effects.selectable.colors,
+                "selection_colors": self.effects.selectable.colors,
             }
+
+
+AdaptationEffect = Annotated[
+    FillWithFreeTextAdaptationEffect | MultipleChoicesInInstructionsAdaptationEffect | SelectThingsAdaptationEffect | ItemsAndEffectsAttempt1AdaptationEffect,
+    pydantic.Field(discriminator="kind"),
+]
 
 
 class EffectsBasedAdapter:
     def __init__(
         self,
-        effects: list[Effect],
+        effects: list[AdaptationEffect],
         instructions: str,
         wording: str,
         example: str,
@@ -1808,7 +1811,7 @@ class EffectsBasedAdapter:
 class EffectsBasedDeltaMaker:
     def __init__(
         self,
-        effects: list[Effect],
+        effects: list[AdaptationEffect],
         instructions: str,
         wording: str,
         example: str,

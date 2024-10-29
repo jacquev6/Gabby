@@ -17,7 +17,10 @@ class FillWithFreeTextAdaptation(PydanticBase):
     placeholder: str
 
     def make_effects(self):
-        return [parsing.FillWithFreeText(placeholder=self.placeholder)]
+        return [parsing.FillWithFreeTextAdaptationEffect(
+            kind="fill-with-free-text",
+            placeholder=self.placeholder,
+        )]
 
 
 class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):

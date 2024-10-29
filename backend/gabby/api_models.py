@@ -112,7 +112,7 @@ class PdfRectangle(PydanticBase):
 
 # Move These 'Adaptation' classes have two responsibilities: API and behavior. Not SOLID, but so convenient for now.
 
-Adaptation: TypeAlias = FillWithFreeTextAdaptation | ItemsAndEffectsAttempt1Adaptation | MultipleChoicesInInstructionsAdaptation | MultipleChoicesInWordingAdaptation | NullAdaptation | SelectThingsAdaptation
+AdaptationV1: TypeAlias = FillWithFreeTextAdaptation | ItemsAndEffectsAttempt1Adaptation | MultipleChoicesInInstructionsAdaptation | MultipleChoicesInWordingAdaptation | NullAdaptation | SelectThingsAdaptation
 
 class Exercise(PydanticBase, CreatedUpdatedByAtMixin):
     project: Annotated[Project, Constant()]
@@ -131,7 +131,7 @@ class Exercise(PydanticBase, CreatedUpdatedByAtMixin):
 
     rectangles: list[PdfRectangle] = []
 
-    adaptation: Adaptation = NullAdaptation(kind="null")
+    adaptation: AdaptationV1 = NullAdaptation(kind="null")
 
 class ParsedExercise(PydanticBase):
     number: Annotated[str, WriteOnly()]
@@ -140,7 +140,7 @@ class ParsedExercise(PydanticBase):
     example: Annotated[str, WriteOnly()]
     clue: Annotated[str, WriteOnly()]
     wording_paragraphs_per_pagelet: Annotated[int, WriteOnly()]
-    adaptation: Annotated[Adaptation, WriteOnly()] = pydantic.Field(discriminator="kind")
+    adaptation: Annotated[AdaptationV1, WriteOnly()] = pydantic.Field(discriminator="kind")
     adapted: Annotated[renderable.Exercise, Computed()]
     delta: Annotated[exercise_delta.Exercise, Computed()]
 

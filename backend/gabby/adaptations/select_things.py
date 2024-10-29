@@ -19,7 +19,12 @@ class SelectThingsAdaptation(PydanticBase):
     punctuation: bool
 
     def make_effects(self):
-        return [parsing.SelectThings(colors=self.colors, words=self.words, punctuation=self.punctuation)]
+        return [parsing.SelectThingsAdaptationEffect(
+            kind="select-things",
+            colors=self.colors,
+            words=self.words,
+            punctuation=self.punctuation,
+        )]
 
 
 class SelectThingsAdaptationTestCase(AdaptationTestCase):

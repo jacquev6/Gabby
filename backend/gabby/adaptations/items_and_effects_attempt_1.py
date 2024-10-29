@@ -14,11 +14,15 @@ if os.environ.get("GABBY_UNITTESTING", "false") == "true":
 class ItemsAndEffectsAttempt1Adaptation(PydanticBase):
     kind: Literal["items-and-effects-attempt-1"]
 
-    items: parsing.ItemsAndEffectsAttempt1.Items
-    effects: parsing.ItemsAndEffectsAttempt1.Effects
+    items: parsing.ItemsAndEffectsAttempt1AdaptationEffect.Items
+    effects: parsing.ItemsAndEffectsAttempt1AdaptationEffect.Effects
 
     def make_effects(self):
-        return [parsing.ItemsAndEffectsAttempt1(items=self.items, effects=self.effects)]
+        return [parsing.ItemsAndEffectsAttempt1AdaptationEffect(
+            kind="items-and-effects-attempt-1",
+            items=self.items,
+            effects=self.effects,
+        )]
 
 
 class ItemsAndEffectsAttempt1AdaptationTestCase(AdaptationTestCase):

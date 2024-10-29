@@ -62,12 +62,12 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
 
     _adaptation: orm.Mapped[dict] = orm.mapped_column(sql.JSON, name="adaptation", default={"format": 0}, server_default="{\"format\": 0}")
 
-    class AdaptationContainer(PydanticBase):
+    class AdaptationV1Container(PydanticBase):
         # Thin wrapper to use Pydantic's discriminated unions
-        adaptation: api_models.Adaptation = pydantic.Field(discriminator="kind")
+        adaptation: api_models.AdaptationV1 = pydantic.Field(discriminator="kind")
 
     @property
-    def adaptation(self) -> api_models.Adaptation:
+    def adaptation(self) -> api_models.AdaptationV1:
         if self._adaptation is None:  # Before the first flush to DB if not set in constructor.
             self._adaptation = {"format": 0}
 
@@ -75,12 +75,12 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
             case 0:
                 return api_models.NullAdaptation(kind="null")
             case 1:
-                return self.AdaptationContainer(adaptation=self._adaptation["settings"]).adaptation
+                return self.AdaptationV1Container(adaptation=self._adaptation["settings"]).adaptation
             case format:
                 raise ValueError(f"Unknown format {format}")
 
     @adaptation.setter
-    def adaptation(self, adaptation: api_models.Adaptation):
+    def adaptation(self, adaptation: api_models.AdaptationV1):
         self._adaptation = {
             "format": 1,
             "settings": adaptation.model_dump()

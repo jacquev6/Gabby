@@ -17,7 +17,10 @@ class MultipleChoicesInInstructionsAdaptation(PydanticBase):
     placeholder: str
 
     def make_effects(self):
-        return [parsing.MultipleChoicesInInstructions(placeholder=self.placeholder)]
+        return [parsing.MultipleChoicesInInstructionsAdaptationEffect(
+            kind="multiple-choices-in-instructions",
+            placeholder=self.placeholder,
+        )]
 
 
 class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
