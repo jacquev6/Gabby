@@ -1114,7 +1114,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 example="",
                 clue="",
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="multiple-choices-in-wording", effects=[]),
+                adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
             ),
             r.Exercise(
                 number="number",
@@ -1169,7 +1169,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 example="",
                 clue="",
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="multiple-choices-in-wording", effects=[]),
+                adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
             ),
             r.Exercise(
                 number="number",
@@ -1232,7 +1232,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 example="",
                 clue="",
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="multiple-choices-in-wording", effects=[]),
+                adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
             ),
             r.Exercise(
                 number="number",
@@ -1295,7 +1295,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 example="",
                 clue="",
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="multiple-choices-in-wording", effects=[]),
+                adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
             ),
             r.Exercise(
                 number="number",
@@ -1358,7 +1358,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 example="",
                 clue="",
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="multiple-choices-in-wording", effects=[]),
+                adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
             ),
             r.Exercise(
                 number="number",
@@ -1421,7 +1421,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 example="",
                 clue="",
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="multiple-choices-in-wording", effects=[]),
+                adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
             ),
             r.Exercise(
                 number="number",
@@ -1484,7 +1484,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 example="",
                 clue="",
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="multiple-choices-in-wording", effects=[]),
+                adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
             ),
             r.Exercise(
                 number="number",
@@ -1547,7 +1547,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 example="",
                 clue="",
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="multiple-choices-in-wording", effects=[]),
+                adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
             ),
             r.Exercise(
                 number="number",
@@ -1614,7 +1614,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 example="",
                 clue="",
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="multiple-choices-in-wording", effects=[]),
+                adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
             ),
             r.Exercise(
                 number="number",
@@ -1680,7 +1680,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 example="",
                 clue="",
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="multiple-choices-in-wording", effects=[]),
+                adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
             ),
             r.Exercise(
                 number="number",
@@ -1755,7 +1755,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 example="",
                 clue="",
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="multiple-choices-in-wording", effects=[]),
+                adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
             ),
             r.Exercise(
                 number="number",
@@ -1842,7 +1842,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 example="",
                 clue="",
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="multiple-choices-in-wording", effects=[]),
+                adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
             ),
             r.Exercise(
                 number="number",
@@ -1932,7 +1932,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 example="",
                 clue="",
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="multiple-choices-in-wording", effects=[]),
+                adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
             ),
             r.Exercise(
                 number="number",

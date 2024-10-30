@@ -7,11 +7,11 @@ import { defaultColors } from './AdaptationDetailsFieldsForm.vue'
 const api = useApiStore()
 
 type Adaptation = (Exercise & InCache & Exists)['attributes']['adaptation']
-type AdaptationEffect = (Adaptation['effects'][number] & {kind: string}) | {kind: 'null'} | {kind: 'multiple-choices-in-wording'} | {kind: 'multiple-choices'}
+type AdaptationEffect = (Adaptation['effects'][number] & {kind: string}) | {kind: 'null'} | {kind: 'multiple-choices'}
 type PdfRectangle = (Exercise & InCache & Exists)['attributes']['rectangles'][number]
 
 // @todo Automate updating this type when a new adaptation type is added
-export const adaptationKinds = ['null', 'fill-with-free-text', 'items-and-effects-attempt-1', 'select-things', 'multiple-choices-in-instructions', 'multiple-choices-in-wording', 'multiple-choices'] as const
+export const adaptationKinds = ['null', 'fill-with-free-text', 'items-and-effects-attempt-1', 'select-things', 'multiple-choices-in-instructions', 'multiple-choices'] as const
 export type AdaptationKind = typeof adaptationKinds[number]
 
 export const textualFieldNames = ['instructions', 'wording', 'example', 'clue'] as const
@@ -97,9 +97,6 @@ function makeModel({inTextbook, textbookPage}: MakeModelOptions): Model {
         kind: 'multiple-choices-in-instructions' as const,
         placeholder: '...',
       },
-      'multiple-choices-in-wording': {
-        kind: 'multiple-choices-in-wording' as const,
-      },
       'multiple-choices': {
         kind: 'multiple-choices' as const,
       },
@@ -125,6 +122,7 @@ export function assignModelFrom(model: Model, exercise: Exercise & InCache & Exi
   model.example = exercise.attributes.example
   model.clue = exercise.attributes.clue
   model.wordingParagraphsPerPagelet = exercise.attributes.wordingParagraphsPerPagelet
+  console.assert(exercise.attributes.adaptation.kind !== 'multiple-choices-in-wording')  // @todo(When the production data is migrated) Remove this line
   model.adaptationKind = exercise.attributes.adaptation.kind === null ? 'null' : exercise.attributes.adaptation.kind
   const adaptation = exercise.attributes.adaptation
   const kind = adaptation.kind
@@ -132,9 +130,6 @@ export function assignModelFrom(model: Model, exercise: Exercise & InCache & Exi
   if (kind === null) {
     console.assert(effects.length === 0)
     model.adaptationEffects['null'] = {kind: 'null'}
-  } else if (kind === 'multiple-choices-in-wording') {
-    console.assert(effects.length === 0)
-    model.adaptationEffects[kind] = {kind}
   } else if (kind === 'multiple-choices') {
     console.assert(effects.length === 0)
     model.adaptationEffects[kind] = {kind}
@@ -171,7 +166,7 @@ function makeAdaptation(model: Model): Adaptation {
   const kind = effect.kind
   if (kind === 'null') {
     return {kind: null, effects: []}
-  } else if (kind === 'multiple-choices-in-wording' || kind === 'multiple-choices') {
+  } else if (kind === 'multiple-choices') {
     return {kind, effects: []}
   } else {
     return {kind, effects: [effect]}
@@ -409,7 +404,7 @@ defineExpose({
   <div :style="{position: 'relative', ...selBlotColors}">
     <BLabeledSelect
       :label="$t('adaptationType')" v-model="model.adaptationKind"
-      :options="adaptationKinds.map(kind => ({value: kind, label: $t(kind)}))"
+      :options="adaptationKinds.map(kind => ({value: kind, label: $t(kind), disabled: kind === 'multiple-choices-in-instructions'}))"
     />
     <WysiwygEditor
       v-if="wysiwyg"

@@ -361,7 +361,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     "example": "",
                     "clue": "",
                     "wordingParagraphsPerPagelet": 3,
-                    "adaptation": {"kind": "multiple-choices-in-wording", "effects": []},
+                    "adaptation": {"kind": "multiple-choices", "effects": []},
                 },
             },
         }

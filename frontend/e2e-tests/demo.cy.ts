@@ -173,58 +173,6 @@ describe('Gabby', () => {
     })
   })
 
-  it('creates a "Multiple choices (in instructions)" exercise', () => {
-    cy.viewport(1200, 850)
-    visit('/project-xkopqm/textbook-klxufv/page-3/new-exercise', {pdf: 'demo'})
-    setupAliases()
-
-    cy.get('@number').type('1')
-
-    cy.get('@adaptationType').select('multiple-choices-in-instructions').blur()
-    cy.get('label:contains("Placeholder") + input').type('{selectAll}...', {delay: 0})
-
-    traceRectangle('@canvas', 8, 5, 48, 9)
-    cy.get('button:contains("Instructions")').click()
-    notBusy()
-    cy.get('@instructions').find('p').then($el => {
-      const node = $el[0].firstChild
-      console.assert(node !== null)
-      selectRange(node, 30, node, 37)
-    })
-    cy.get('button:contains("Choice")').click()
-    cy.get('@instructions').find('p').then($el => {
-      const node = $el[0].firstChild
-      console.assert(node !== null)
-      selectRange(node, 21, node, 26)
-    })
-    cy.get('button:contains("Choice")').click()
-    cy.get('@instructions').find('p').then($el => {
-      const node = $el[0].firstChild
-      console.assert(node !== null)
-      selectRange(node, 14, node, 19)
-    })
-    cy.get('button:contains("Choice")').click()
-
-    traceRectangle('@canvas', 7, 9.5, 62, 13)
-    cy.get('button:contains("Wording")').click()
-    notBusy()
-
-    cy.focused().blur()
-    screenshot('multiple-choices-in-instructions', 'edit-1')
-
-    cy.get('button:contains("Save then back")').click()
-    visit('/project-xkopqm')
-    cy.get('a:contains("the exported HTML")').should('have.attr', 'href').then(url => {
-      cy.visit(url + '&download=false')
-      cy.get('a').click()
-      screenshot('multiple-choices-in-instructions', 'export-1')
-      cy.get('span.main').eq(1).click()
-      screenshot('multiple-choices-in-instructions', 'export-2')
-      cy.get('span.choice0').click()
-      screenshot('multiple-choices-in-instructions', 'export-3')
-    })
-  })
-
   it('creates a "Multiple choices" exercise with choices in instructions', () => {
     cy.viewport(1200, 850)
     visit('/project-xkopqm/textbook-klxufv/page-3/new-exercise', {pdf: 'demo'})
@@ -265,47 +213,6 @@ describe('Gabby', () => {
       screenshot('multiple-choices-with-choices-in-instructions', 'export-2')
       cy.get('span.choice0').click()
       screenshot('multiple-choices-with-choices-in-instructions', 'export-3')
-    })
-  })
-
-  it('creates a "Multiple choices (in wording)" exercise', () => {
-    cy.viewport(1200, 850)
-    visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise', {pdf: 'demo'})
-    setupAliases()
-
-    cy.get('@number').type('1')
-
-    cy.get('@adaptationType').select('multiple-choices-in-wording').blur()
-
-    traceRectangle('@canvas', 8, 5, 54, 9)
-    cy.get('button:contains("Instructions")').click()
-    notBusy()
-    traceRectangle('@canvas', 7, 9.25, 49, 15)
-    cy.get('button:contains("Wording")').click()
-    notBusy()
-
-    cy.get('button:contains("Multiple choices")').click()
-    screenshot('multiple-choices-in-wording', 'edit-1')
-    cy.get('@wording').find('p').then($el => {
-      const node = $el[0].firstChild
-      console.assert(node !== null)
-      selectRange(node, 8, node, 31)
-    })
-    cy.get('button:contains("OK")').should('exist')
-    screenshot('multiple-choices-in-wording', 'edit-2', {clearSel: false})
-    cy.get('button:contains("OK")').click()
-    screenshot('multiple-choices-in-wording', 'edit-3')
-
-    cy.get('button:contains("Save then back")').click()
-    visit('/project-xkopqm')
-    cy.get('a:contains("the exported HTML")').should('have.attr', 'href').then(url => {
-      cy.visit(url + '&download=false')
-      cy.get('a').click()
-      screenshot('multiple-choices-in-wording', 'export-1')
-      cy.get('span.main').eq(1).click()
-      screenshot('multiple-choices-in-wording', 'export-2')
-      cy.get('span.choice0').click()
-      screenshot('multiple-choices-in-wording', 'export-3')
     })
   })
 

@@ -216,12 +216,6 @@ export const wysiwygFormats = {
     example: basicFormats,
     clue: basicFormats,
   },
-  'multiple-choices-in-wording': {
-    instructions: basicFormats,
-    wording: multipleChoicesFormats,
-    example: basicFormats,
-    clue: basicFormats,
-  },
   'multiple-choices': {
     instructions: multipleChoicesFormats,
     wording: multipleChoicesFormats,
@@ -239,7 +233,7 @@ import type { Model } from './ExerciseFieldsForm.vue'
 import type ExerciseFieldsForm from './ExerciseFieldsForm.vue'
 import FloatingColorPicker from './FloatingColorPicker.vue'
 import AdaptationDetailsFieldsFormForItemsAndEffectsAttempt1 from './AdaptationDetailsFieldsFormForItemsAndEffectsAttempt1.vue'
-import AdaptationDetailsFieldsFormForMultipleChoicesInWording from './AdaptationDetailsFieldsFormForMultipleChoicesInWording.vue'
+import AdaptationDetailsFieldsFormForMultipleChoices from './AdaptationDetailsFieldsFormForMultipleChoices.vue'
 
 
 defineProps<{
@@ -363,11 +357,8 @@ const colorsCount = computed({
       </i18n-t>
     </p>
   </template>
-  <template v-else-if="model.adaptationKind === 'multiple-choices-in-wording'">
-    <AdaptationDetailsFieldsFormForMultipleChoicesInWording v-model="model" :wysiwyg />
-  </template>
   <template v-else-if="model.adaptationKind === 'multiple-choices'">
-    <AdaptationDetailsFieldsFormForMultipleChoicesInWording v-model="model" :wysiwyg />
+    <AdaptationDetailsFieldsFormForMultipleChoices v-model="model" :wysiwyg />
   </template>
   <template v-else>
     <span>{{ ((t: never) => t)(model.adaptationKind) }}</span>

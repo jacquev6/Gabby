@@ -32,7 +32,10 @@ def upgrade():
     # Update stored adaptations to new format
     with orm.Session(op.get_bind()) as session:
         for exercise in session.query(Exercise).all():
-            exercise.adaptation = exercise.adaptation
+            adaptation = exercise.adaptation  # Convert the adaptation to the new format
+            if adaptation.kind == "multiple-choices-in-wording":
+                adaptation.kind = "multiple-choices"
+            exercise.adaptation = adaptation  # Store the adaptation with the new format
         session.commit()
 
 
