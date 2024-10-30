@@ -80,15 +80,40 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
                 raise ValueError(f"Unknown format {format}")
 
     @adaptation.setter
-    def adaptation(self, adaptation: api_models.AdaptationV1):
-        self._adaptation = {
-            "format": 1,
-            "settings": adaptation.model_dump()
-        }
+    def adaptation(self, adaptation: api_models.AdaptationV1 | api_models.AdaptationV2):
+        if isinstance(adaptation, api_models.AdaptationV1):
+            self._adaptation = {
+                "format": 1,
+                "settings": adaptation.model_dump()
+            }
+        else:
+            assert isinstance(adaptation, api_models.AdaptationV2)
+            self._adaptation = {
+                "format": 2,
+                "settings": adaptation.model_dump(),
+            }
+
+    @property
+    def adaptation_v2(self) -> api_models.AdaptationV2:
+        if self._adaptation is None:  # Before the first flush to DB if not set in constructor.
+            self._adaptation = {"format": 0}
+
+        match self._adaptation["format"]:
+            case 0:
+                return api_models.AdaptationV2(kind=None, effects=[])
+            case 1:
+                adaptation_v1 = self.AdaptationV1Container(adaptation=self._adaptation["settings"]).adaptation
+                kind = None if adaptation_v1.kind == "null" else adaptation_v1.kind
+                effects = adaptation_v1.make_effects()
+                return api_models.AdaptationV2(kind=kind, effects=effects)
+            case 2:
+                return api_models.AdaptationV2(**self._adaptation["settings"])
+            case format:
+                raise ValueError(f"Unknown adaptation format {format}")
 
     def make_adapted(self):
         adapter = parsing.EffectsBasedAdapter(
-            self.adaptation.make_effects(),
+            self.adaptation_v2.effects,
             self.instructions,
             self.wording,
             self.example,
@@ -106,7 +131,7 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
 
     def make_delta(self):
         delta_maker = parsing.EffectsBasedDeltaMaker(
-            self.adaptation.make_effects(),
+            self.adaptation_v2.effects,
             self.instructions,
             self.wording,
             self.example,

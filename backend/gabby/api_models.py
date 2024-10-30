@@ -6,6 +6,7 @@ from fastjsonapi import Constant, Computed, Secret, WriteOnly
 import pydantic
 
 from . import exercise_delta
+from . import parsing
 from . import renderable
 from .adaptations.fill_with_free_text import FillWithFreeTextAdaptation
 from .adaptations.items_and_effects_attempt_1 import ItemsAndEffectsAttempt1Adaptation
@@ -113,6 +114,10 @@ class PdfRectangle(PydanticBase):
 # Move These 'Adaptation' classes have two responsibilities: API and behavior. Not SOLID, but so convenient for now.
 
 AdaptationV1: TypeAlias = FillWithFreeTextAdaptation | ItemsAndEffectsAttempt1Adaptation | MultipleChoicesInInstructionsAdaptation | MultipleChoicesInWordingAdaptation | NullAdaptation | SelectThingsAdaptation
+
+class AdaptationV2(PydanticBase):
+    kind: Literal["fill-with-free-text", "items-and-effects-attempt-1", "select-things", "multiple-choices-in-instructions", "multiple-choices-in-wording"] | None
+    effects: list[parsing.AdaptationEffect]
 
 class Exercise(PydanticBase, CreatedUpdatedByAtMixin):
     project: Annotated[Project, Constant()]
