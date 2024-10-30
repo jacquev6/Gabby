@@ -1102,6 +1102,145 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
             ),
         )
 
+    def test_choices2_with_start_and_stop(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions="Choose {choices2|(|or|)|...|(a or b)}.",
+                wording="A ... B ...",
+                example="",
+                clue="",
+                wording_paragraphs_per_pagelet=3,
+                adaptation=AdaptationV2(kind="multiple-choices-in-instructions", effects=[]),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(text="Choose"),
+                            r.Whitespace(),
+                            r.PlainText(text="("),
+                            r.BoxedText(text="a"),
+                            r.Whitespace(),
+                            r.PlainText(text="or"),
+                            r.Whitespace(),
+                            r.BoxedText(text="b"),
+                            r.PlainText(text=")"),
+                            r.PlainText(text="."),
+                        ]),
+                    ]),
+                ]),
+                wording=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(text="A"),
+                            r.Whitespace(),
+                            r.MultipleChoicesInput(choices=["a", "b"]),
+                            r.Whitespace(),
+                            r.PlainText(text="B"),
+                            r.Whitespace(),
+                            r.MultipleChoicesInput(choices=["a", "b"]),
+                        ]),
+                    ]),
+                ]),
+                example=r.Section(paragraphs=[]),
+                clue=r.Section(paragraphs=[]),
+                wording_paragraphs_per_pagelet=3,
+            ),
+            d.Exercise(
+                instructions=[
+                    d.TextInsertOp(insert="Choose ", attributes={}),
+                    d.TextInsertOp(insert="(a or b)", attributes={"choices2": {"start": "(", "separator": "or", "stop": ")", "placeholder": "..."}}),
+                    d.TextInsertOp(insert=".", attributes={}),
+                ],
+                wording=[
+                    d.TextInsertOp(insert="A ... B ...", attributes={}),
+                ],
+                example=[],
+                clue=[],
+            ),
+        )
+
+    def test_two_choices2(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions="Choose {choices2||or||...|a or b} and {choices2||or||@@@|c or d}.",
+                wording="A ... @@@\nB ... @@@",
+                example="",
+                clue="",
+                wording_paragraphs_per_pagelet=3,
+                adaptation=AdaptationV2(kind="multiple-choices-in-instructions", effects=[]),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(text="Choose"),
+                            r.Whitespace(),
+                            r.BoxedText(text="a"),
+                            r.Whitespace(),
+                            r.PlainText(text="or"),
+                            r.Whitespace(),
+                            r.BoxedText(text="b"),
+                            r.Whitespace(),
+                            r.PlainText(text="and"),
+                            r.Whitespace(),
+                            r.BoxedText(text="c"),
+                            r.Whitespace(),
+                            r.PlainText(text="or"),
+                            r.Whitespace(),
+                            r.BoxedText(text="d"),
+                            r.PlainText(text="."),
+                        ]),
+                    ]),
+                ]),
+                wording=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(text="A"),
+                            r.Whitespace(),
+                            r.MultipleChoicesInput(choices=["a", "b"]),
+                            r.Whitespace(),
+                            r.MultipleChoicesInput(choices=["c", "d"]),
+                        ]),
+                    ]),
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(text="B"),
+                            r.Whitespace(),
+                            r.MultipleChoicesInput(choices=["a", "b"]),
+                            r.Whitespace(),
+                            r.MultipleChoicesInput(choices=["c", "d"]),
+                        ]),
+                    ]),
+                ]),
+                example=r.Section(paragraphs=[]),
+                clue=r.Section(paragraphs=[]),
+                wording_paragraphs_per_pagelet=3,
+            ),
+            d.Exercise(
+                instructions=[
+                    d.TextInsertOp(insert="Choose ", attributes={}),
+                    d.TextInsertOp(insert="a or b", attributes={"choices2": {"start": "", "separator": "or", "stop": "", "placeholder": "..."}}),
+                    d.TextInsertOp(insert=" and ", attributes={}),
+                    d.TextInsertOp(insert="c or d", attributes={"choices2": {"start": "", "separator": "or", "stop": "", "placeholder": "@@@"}}),
+                    d.TextInsertOp(insert=".", attributes={}),
+                ],
+                wording=[
+                    d.TextInsertOp(insert="A ... @@@\nB ... @@@", attributes={}),
+                ],
+                example=[],
+                clue=[],
+            ),
+        )
+
 
 class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
     def test_simple(self):

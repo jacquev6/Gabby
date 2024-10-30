@@ -1651,19 +1651,26 @@ class EffectsBasedAdapter:
             (start, separator, stop, placeholder, text) = args
             # @todo De-duplicate this code (also in WordingAdapter.choices2_tag)
             text = text.strip()
+            add_start_and_stop = False
             if start is not None and stop is not None and text.startswith(start) and text.endswith(stop):
+                add_start_and_stop = True
                 text = text[len(start) : -len(stop)]
             if separator is None:
                 choices = [text]
             else:
                 choices = text.split(separator)
             choices = [choice.strip() for choice in choices]
-            ret = [renderable.BoxedText(text=choices[0])]
+            ret = []
+            if add_start_and_stop:
+                ret.append(renderable.PlainText(text=start))
+            ret.append(renderable.BoxedText(text=choices[0]))
             for choice in choices[1:]:
                 ret.append(renderable.Whitespace())
                 ret.append(renderable.PlainText(text=separator))
                 ret.append(renderable.Whitespace())
                 ret.append(renderable.BoxedText(text=choice))
+            if add_start_and_stop:
+                ret.append(renderable.PlainText(text=stop))
             return ret
 
         def sel1_tag(self, args):

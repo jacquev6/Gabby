@@ -216,6 +216,85 @@ describe('Gabby', () => {
     })
   })
 
+  it('creates a "Multiple choices" exercise with two sets of choices in instructions', () => {
+    cy.viewport(1200, 850)
+    visit('/project-xkopqm/textbook-klxufv/page-5/new-exercise', {pdf: 'demo'})
+    setupAliases()
+
+    cy.get('@number').type('1')
+
+    cy.get('@adaptationType').select('multiple-choices').blur()
+
+    traceRectangle('@canvas', 8, 5, 83, 9)
+    cy.get('button:contains("Instructions")').click()
+    notBusy()
+    traceRectangle('@canvas', 7, 9.2, 52, 12)
+    cy.get('button:contains("Wording")').click()
+    notBusy()
+
+    cy.get('@wording').find('p').then($el => {
+      const node = $el[0].firstChild
+      console.assert(node !== null)
+      selectRange(node, 11, node, 14)
+    })
+    cy.get('@wording').find('p').eq(0).type(' ... @@@\n')
+    cy.get('@wording').find('p').then($el => {
+      const node = $el[1].firstChild
+      console.assert(node !== null)
+      selectRange(node, 11, node, 14)
+    })
+    cy.get('@wording').find('p').eq(1).type(' ... @@@\n')
+    cy.get('@wording').find('p').then($el => {
+      const node = $el[2].firstChild
+      console.assert(node !== null)
+      selectRange(node, 8, node, 11)
+    })
+    cy.get('@wording').find('p').eq(2).type(' ... @@@\n')
+    cy.get('@wording').find('p').eq(3).type('{end} ... @@@')
+
+    cy.get('button:contains("Multiple choices")').click()
+    screenshot('multiple-choices-with-two-set-of-choices-in-instructions', 'edit-1')
+    cy.get('@instructions').find('p').then($el => {
+      const node = $el[0].firstChild
+      console.assert(node !== null)
+      selectRange(node, 17, node, 35)
+    })
+    cy.get('button:contains("OK")').should('exist')
+    cy.get('label:contains("Placeholder") + input').should('be.enabled').type('...', {delay: 0})
+    screenshot('multiple-choices-with-two-set-of-choices-in-instructions', 'edit-2', {clearSel: false})
+    cy.get('button:contains("OK")').click()
+    screenshot('multiple-choices-with-two-set-of-choices-in-instructions', 'edit-3')
+
+    cy.get('button:contains("Multiple choices")').click()
+    screenshot('multiple-choices-with-two-set-of-choices-in-instructions', 'edit-4')
+    cy.get('@instructions').find('p').then($el => {
+      const node = $el[0].firstChild!.nextSibling!.nextSibling
+      console.assert(node !== null)
+      selectRange(node, 14, node, 33)
+    })
+    cy.get('button:contains("OK")').should('exist')
+    cy.get('label:contains("Placeholder") + input').should('be.enabled').type('@@@', {delay: 0})
+    screenshot('multiple-choices-with-two-set-of-choices-in-instructions', 'edit-5', {clearSel: false})
+    cy.get('button:contains("OK")').click()
+    screenshot('multiple-choices-with-two-set-of-choices-in-instructions', 'edit-6')
+
+    cy.get('button:contains("Save then back")').click()
+    visit('/project-xkopqm')
+    cy.get('a:contains("the exported HTML")').should('have.attr', 'href').then(url => {
+      cy.visit(url + '&download=false')
+      cy.get('a').click()
+      screenshot('multiple-choices-with-two-set-of-choices-in-instructions', 'export-1')
+      cy.get('span.main').eq(1).click()
+      screenshot('multiple-choices-with-two-set-of-choices-in-instructions', 'export-2')
+      cy.get('span.choice0').click()
+      screenshot('multiple-choices-with-two-set-of-choices-in-instructions', 'export-3')
+      cy.get('span.main').eq(2).click()
+      screenshot('multiple-choices-with-two-set-of-choices-in-instructions', 'export-4')
+      cy.get('span.choice0').click()
+      screenshot('multiple-choices-with-two-set-of-choices-in-instructions', 'export-5')
+    })
+  })
+
   it('creates a "Multiple choices" exercise with choices in wording', () => {
     cy.viewport(1200, 850)
     visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise', {pdf: 'demo'})
