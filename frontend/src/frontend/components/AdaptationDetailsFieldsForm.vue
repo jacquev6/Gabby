@@ -249,30 +249,30 @@ const colorPickers = ref<InstanceType<typeof FloatingColorPicker>[]>([])
 const allColors = reactive([...defaultColors])
 const colors = allColors.map((_color, i) => computed({
   get() {
-    if (i < model.value.adaptations['select-things'].colors.length) {
-      return model.value.adaptations['select-things'].colors[i]
+    if (i < model.value.adaptationEffects['select-things'].colors.length) {
+      return model.value.adaptationEffects['select-things'].colors[i]
     } else {
       return allColors[i]
     }
   },
   set(value) {
     allColors[i] = value
-    if (i < model.value.adaptations['select-things'].colors.length) {
-      model.value.adaptations['select-things'].colors[i] = value
+    if (i < model.value.adaptationEffects['select-things'].colors.length) {
+      model.value.adaptationEffects['select-things'].colors[i] = value
     }
   },
 }))
 
 const colorsCount = computed({
-  get: () => model.value.adaptations['select-things'].colors.length,
+  get: () => model.value.adaptationEffects['select-things'].colors.length,
   set: (value) => {
-    const prev = model.value.adaptations['select-things'].colors.length
+    const prev = model.value.adaptationEffects['select-things'].colors.length
     if (value > prev) {
       for (let k = prev; k !== value; ++k) {
-        model.value.adaptations['select-things'].colors.push(allColors[k])
+        model.value.adaptationEffects['select-things'].colors.push(allColors[k])
       }
     } else {
-      model.value.adaptations['select-things'].colors.length = value
+      model.value.adaptationEffects['select-things'].colors.length = value
     }
   },
 })
@@ -296,7 +296,7 @@ const colorsCount = computed({
   <template v-if="model.adaptationKind === 'null'">
   </template>
   <template v-else-if="model.adaptationKind === 'fill-with-free-text'">
-    <BLabeledInput :label="$t('placeholderText')" type="text" v-model="model.adaptations['fill-with-free-text'].placeholder" />
+    <BLabeledInput :label="$t('placeholderText')" type="text" v-model="model.adaptationEffects['fill-with-free-text'].placeholder" />
   </template>
   <template v-else-if="model.adaptationKind === 'items-and-effects-attempt-1'">
     <AdaptationDetailsFieldsFormForItemsAndEffectsAttempt1 v-model="model" />
@@ -314,7 +314,7 @@ const colorsCount = computed({
       <div class="mb-3">
         <label class="form-label" for="blah">{{ $t('usableColors' )}}</label>
         <span class="maybe-usable-colors-container">
-          <span v-for="i in colors.length" :class="i - 1 < model.adaptations['select-things'].colors.length ? 'usable-colors-container' : 'unusable-colors-container'">
+          <span v-for="i in colors.length" :class="i - 1 < model.adaptationEffects['select-things'].colors.length ? 'usable-colors-container' : 'unusable-colors-container'">
             <span
               class="usable-colors-button"
               :style="{backgroundColor: colors[i - 1].value}"
@@ -325,18 +325,18 @@ const colorsCount = computed({
           </span>
         </span>
       </div>
-      <BLabeledCheckbox :label="$t('includePunctuation')" v-model="model.adaptations['select-things'].punctuation" />
+      <BLabeledCheckbox :label="$t('includePunctuation')" v-model="model.adaptationEffects['select-things'].punctuation" />
     </template>
     <template v-else>
       <BLabeledInput :label="$t('colorsCount')" type="number" min="1" v-model="colorsCount" />
-      <BLabeledCheckbox :label="$t('includePunctuation')" v-model="model.adaptations['select-things'].punctuation" />
+      <BLabeledCheckbox :label="$t('includePunctuation')" v-model="model.adaptationEffects['select-things'].punctuation" />
       <p class="alert alert-secondary">
-        <i18n-t keypath="useSel1ToSelN" v-if="model.adaptations['select-things'].colors.length > 1">
+        <i18n-t keypath="useSel1ToSelN" v-if="model.adaptationEffects['select-things'].colors.length > 1">
           <template v-slot:first>
             <code>{sel1|<em>text</em>}</code>
           </template>
           <template v-slot:last>
-            <code>{sel{{ model.adaptations['select-things'].colors.length }}|<em>text</em>}</code>
+            <code>{sel{{ model.adaptationEffects['select-things'].colors.length }}|<em>text</em>}</code>
           </template>
         </i18n-t>
         <i18n-t keypath="useSel1" v-else>
@@ -348,7 +348,7 @@ const colorsCount = computed({
     </template>
   </template>
   <template v-else-if="model.adaptationKind === 'multiple-choices-in-instructions'">
-    <BLabeledInput :label="$t('placeholderText')" type="text" v-model="model.adaptations['multiple-choices-in-instructions'].placeholder" />
+    <BLabeledInput :label="$t('placeholderText')" type="text" v-model="model.adaptationEffects['multiple-choices-in-instructions'].placeholder" />
     <p v-if="!wysiwyg" class="alert alert-secondary">
       <i18n-t keypath="useChoice">
         <template v-slot:choice>

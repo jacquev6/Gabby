@@ -136,7 +136,7 @@ class Exercise(PydanticBase, CreatedUpdatedByAtMixin):
 
     rectangles: list[PdfRectangle] = []
 
-    adaptation: AdaptationV1 = NullAdaptation(kind="null")
+    adaptation: AdaptationV2 = AdaptationV2(kind=None, effects=[])
 
 class ParsedExercise(PydanticBase):
     number: Annotated[str, WriteOnly()]
@@ -145,7 +145,7 @@ class ParsedExercise(PydanticBase):
     example: Annotated[str, WriteOnly()]
     clue: Annotated[str, WriteOnly()]
     wording_paragraphs_per_pagelet: Annotated[int, WriteOnly()]
-    adaptation: Annotated[AdaptationV1, WriteOnly()] = pydantic.Field(discriminator="kind")
+    adaptation: Annotated[AdaptationV2, WriteOnly()]
     adapted: Annotated[renderable.Exercise, Computed()]
     delta: Annotated[exercise_delta.Exercise, Computed()]
 

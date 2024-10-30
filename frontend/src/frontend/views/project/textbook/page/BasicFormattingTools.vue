@@ -30,7 +30,7 @@ const model = defineModel<Model>({required: true})
   </p>
 
   <p v-if="model.adaptationKind === 'select-things'">
-    <template v-for="i in model.adaptations['select-things'].colors.length">
+    <template v-for="i in model.adaptationEffects['select-things'].colors.length">
       <BButton
         class="format-color"
         sm secondary
@@ -40,15 +40,15 @@ const model = defineModel<Model>({required: true})
         :style="{lineHeight: 0, padding: '2px'}"
         :data-cy="`format-color-${i}`"
       >
-        <span :style="{backgroundColor: model.adaptations['select-things'].colors[i - 1]}"></span>
+        <span :style="{backgroundColor: model.adaptationEffects['select-things'].colors[i - 1]}"></span>
       </BButton>
       <wbr />
     </template>
   </p>
 
-  <template v-if="model.adaptationKind === 'items-and-effects-attempt-1' && model.adaptations['items-and-effects-attempt-1'].effects.selectable !== null">
+  <template v-if="model.adaptationKind === 'items-and-effects-attempt-1' && model.adaptationEffects['items-and-effects-attempt-1'].effects.selectable !== null">
     <p>
-      <template v-for="i in model.adaptations['items-and-effects-attempt-1'].effects.selectable.colors.length">
+      <template v-for="i in model.adaptationEffects['items-and-effects-attempt-1'].effects.selectable.colors.length">
         <BButton
           class="format-color"
           sm secondary
@@ -58,13 +58,13 @@ const model = defineModel<Model>({required: true})
           :style="{lineHeight: 0, padding: '2px'}"
           :data-cy="`format-color-${i}`"
         >
-          <span :style="{backgroundColor: model.adaptations['items-and-effects-attempt-1'].effects.selectable.colors[i - 1]}"></span>
+          <span :style="{backgroundColor: model.adaptationEffects['items-and-effects-attempt-1'].effects.selectable.colors[i - 1]}"></span>
         </BButton>
         <wbr />
       </template>
     </p>
 
-    <p v-if="model.adaptations['items-and-effects-attempt-1'].items.kind === 'manual'">
+    <p v-if="model.adaptationEffects['items-and-effects-attempt-1'].items.kind === 'manual'">
       <BButton
         sm secondary
         :disabled="fields.focusedWysiwygField !== 'wording'"

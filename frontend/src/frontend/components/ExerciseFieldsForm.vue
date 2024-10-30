@@ -7,6 +7,7 @@ import { defaultColors } from './AdaptationDetailsFieldsForm.vue'
 const api = useApiStore()
 
 type Adaptation = (Exercise & InCache & Exists)['attributes']['adaptation']
+type AdaptationEffect = (Adaptation['effects'][number] & {kind: string}) | {kind: 'null'} | {kind: 'multiple-choices-in-wording'}
 type PdfRectangle = (Exercise & InCache & Exists)['attributes']['rectangles'][number]
 
 // @todo Automate updating this type when a new adaptation type is added
@@ -27,7 +28,7 @@ export type Model = {
   wordingParagraphsPerPagelet: number
   rectangles: PdfRectangle[]
   adaptationKind: AdaptationKind
-  adaptations: {[Kind in AdaptationKind]: Adaptation & {kind: Kind}}
+  adaptationEffects: {[Kind in AdaptationKind]: AdaptationEffect & {kind: Kind}}
   inProgress:
     {
       kind: 'nothing'
@@ -67,7 +68,7 @@ function makeModel({inTextbook, textbookPage}: MakeModelOptions): Model {
     wordingParagraphsPerPagelet: 3,
     rectangles: [],
     adaptationKind: 'null',
-    adaptations: {
+    adaptationEffects: {
       'fill-with-free-text': {
         kind: 'fill-with-free-text' as const,
         placeholder: '...',
@@ -121,8 +122,22 @@ export function assignModelFrom(model: Model, exercise: Exercise & InCache & Exi
   model.example = exercise.attributes.example
   model.clue = exercise.attributes.clue
   model.wordingParagraphsPerPagelet = exercise.attributes.wordingParagraphsPerPagelet
-  model.adaptationKind = exercise.attributes.adaptation.kind
-  model.adaptations[model.adaptationKind] = deepCopy(exercise.attributes.adaptation) as any/* @todo Fix typing issue */
+  model.adaptationKind = exercise.attributes.adaptation.kind === null ? 'null' : exercise.attributes.adaptation.kind
+  const adaptation = exercise.attributes.adaptation
+  const kind = adaptation.kind
+  const effects = adaptation.effects
+  if (kind === null) {
+    console.assert(effects.length === 0)
+    model.adaptationEffects['null'] = {kind: 'null'}
+  } else if (kind === 'multiple-choices-in-wording') {
+    console.assert(effects.length === 0)
+    model.adaptationEffects['multiple-choices-in-wording'] = {kind: 'multiple-choices-in-wording'}
+  } else {
+    console.assert(effects.length === 1)
+    const effect: AdaptationEffect = deepCopy(effects[0])
+    console.assert(effect.kind === kind)
+    model.adaptationEffects[kind] = effect as any/* @todo Fix typing issue */
+  }
   model.rectangles = deepCopy(exercise.attributes.rectangles)
   model.inProgress = {
     kind: 'nothing',
@@ -145,18 +160,31 @@ export function modelIsEmpty(model: Model) {
   return model.adaptationKind === 'null' && model.instructions === '' && model.wording === '' && model.example === '' && model.clue === ''
 }
 
-export async function getParsed(model: Model) {
-  const attributes = {
-    number: model.number,
-    // textbookPage: props.page,
-    instructions: model.instructions,
-    wording: model.wording,
-    example: model.example,
-    clue: model.clue,
-    wordingParagraphsPerPagelet: model.wordingParagraphsPerPagelet,
-    adaptation: model.adaptations[model.adaptationKind],
+function makeAdaptation(model: Model): Adaptation {
+  const effect = model.adaptationEffects[model.adaptationKind]
+  const kind = effect.kind
+  if (kind === 'null') {
+    return {kind: null, effects: []}
+  } else if (kind === 'multiple-choices-in-wording') {
+    return {kind, effects: []}
+  } else {
+    return {kind, effects: [effect]}
   }
-  const parsed = await api.client.createOne('parsedExercise', attributes, {})
+}
+
+export async function getParsed(model: Model) {
+  const parsed = await api.client.createOne(
+    'parsedExercise', {
+      number: model.number,
+      instructions: model.instructions,
+      wording: model.wording,
+      example: model.example,
+      clue: model.clue,
+      wordingParagraphsPerPagelet: model.wordingParagraphsPerPagelet,
+      adaptation: makeAdaptation(model),
+    },
+    {},
+  )
   console.assert(parsed.exists)
   return parsed
 }
@@ -172,7 +200,7 @@ export async function create(project: Project, textbook: Textbook | null, model:
       example: model.example,
       clue: model.clue,
       wordingParagraphsPerPagelet: model.wordingParagraphsPerPagelet,
-      adaptation: model.adaptations[model.adaptationKind],
+      adaptation: makeAdaptation(model),
       rectangles: model.rectangles,
     },
     {
@@ -190,7 +218,7 @@ export async function save(exercise: Exercise & InCache & Exists, model: Model) 
       example: model.example,
       clue: model.clue,
       wordingParagraphsPerPagelet: model.wordingParagraphsPerPagelet,
-      adaptation: model.adaptations[model.adaptationKind],
+      adaptation: makeAdaptation(model),
       rectangles: model.rectangles,
     },
     {},
@@ -326,11 +354,11 @@ const clueDeltas = computed(() => props.deltas === null ? [] : props.deltas.clue
 
 
 const selBlotColors = computed(() => {
-  const adaptation = model.value.adaptations[model.value.adaptationKind]
-  if (adaptation.kind === 'select-things') {
-    return Object.fromEntries(adaptation.colors.map((color, i) => [`--sel-blot-color-${i + 1}`, color]))
-  } else if (adaptation.kind === 'items-and-effects-attempt-1' && adaptation.effects.selectable !== null) {
-    return Object.fromEntries(adaptation.effects.selectable.colors.map((color, i) => [`--sel-blot-color-${i + 1}`, color]))
+  const effect = model.value.adaptationEffects[model.value.adaptationKind]
+  if (effect.kind === 'select-things') {
+    return Object.fromEntries(effect.colors.map((color, i) => [`--sel-blot-color-${i + 1}`, color]))
+  } else if (effect.kind === 'items-and-effects-attempt-1' && effect.effects.selectable !== null) {
+    return Object.fromEntries(effect.effects.selectable.colors.map((color, i) => [`--sel-blot-color-${i + 1}`, color]))
   } else {
     return {}
   }
