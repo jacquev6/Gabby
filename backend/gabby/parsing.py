@@ -1475,12 +1475,12 @@ class ItemsAndEffectsAttempt1AdaptationEffect(PydanticBase):
                     "select_words": True,
                     "select_punctuation": self.items.punctuation,
                     "selection_colors": self.effects.selectable.colors,
-                    "selectables_are_boxed": self.effects.boxed,
+                    "selectable_are_boxed": self.effects.boxed,
                 }
             elif self.items.kind == "manual":
                 return {
                     "selection_colors": self.effects.selectable.colors,
-                    "selectables_are_boxed": self.effects.boxed,
+                    "selectable_are_boxed": self.effects.boxed,
                 }
             else:
                 assert False, f"Unknown items kind: {self.items.kind}"
@@ -1692,13 +1692,13 @@ class EffectsBasedAdapter:
                 select_words: bool=False,
                 select_punctuation: bool=False,
                 selection_colors: list[str]=[],
-                selectables_are_boxed: bool=False,
+                selectable_are_boxed: bool=False,
             ):
             super().__init__()
             self.select_words = select_words
             self.select_punctuation = select_punctuation
             self.selection_colors = selection_colors
-            self.selectables_are_boxed = selectables_are_boxed
+            self.selectable_are_boxed = selectable_are_boxed
 
         def fill_with_free_text_tag(self, args):
             assert len(args) == 0
@@ -1775,23 +1775,23 @@ class EffectsBasedAdapter:
 
         def selectable_tag(self, args):
             assert len(args) == 1
-            return renderable.SelectableText(text=args[0], colors=self.selection_colors, boxed=self.selectables_are_boxed)
+            return renderable.SelectableText(text=args[0], colors=self.selection_colors, boxed=self.selectable_are_boxed)
 
         def WORD(self, arg):
             if self.select_words:
-                return renderable.SelectableText(text=arg.value, colors=self.selection_colors, boxed=self.selectables_are_boxed)
+                return renderable.SelectableText(text=arg.value, colors=self.selection_colors, boxed=self.selectable_are_boxed)
             else:
                 return renderable.PlainText(text=arg.value)
 
         def PUNCTUATION_IN_SENTENCE(self, arg):
             if self.select_punctuation:
-                return renderable.SelectableText(text=arg.value, colors=self.selection_colors, boxed=self.selectables_are_boxed)
+                return renderable.SelectableText(text=arg.value, colors=self.selection_colors, boxed=self.selectable_are_boxed)
             else:
                 return renderable.PlainText(text=arg.value)
 
         def PUNCTUATION_AT_END_OF_SENTENCE(self, arg):
             if self.select_punctuation:
-                return renderable.SelectableText(text=arg.value, colors=self.selection_colors, boxed=self.selectables_are_boxed)
+                return renderable.SelectableText(text=arg.value, colors=self.selection_colors, boxed=self.selectable_are_boxed)
             else:
                 return renderable.PlainText(text=arg.value)
 
@@ -1914,13 +1914,13 @@ class EffectsBasedDeltaMaker:
             select_words: bool=False,
             select_punctuation: bool=False,
             selection_colors: list[str]=[],
-            selectables_are_boxed: bool=False,
+            selectable_are_boxed: bool=False,
         ):
             super().__init__()
             self.select_words = select_words
             self.select_punctuation = select_punctuation
             self.selection_colors = selection_colors
-            self.selectables_are_boxed = selectables_are_boxed
+            self.selectable_are_boxed = selectable_are_boxed
 
         def choices_tag(self, args):
             # Legacy behavior: not WYSIWYG
