@@ -3,7 +3,6 @@ from typing import Annotated, Literal, TypeAlias
 import datetime
 
 from fastjsonapi import Constant, Computed, Secret, WriteOnly
-import pydantic
 
 from . import exercise_delta
 from . import parsing
@@ -111,8 +110,8 @@ class PdfRectangle(PydanticBase):
     text: str | None
     role: Literal["bounding", "instructions", "wording", "example", "clue"]
 
-# Move These 'Adaptation' classes have two responsibilities: API and behavior. Not SOLID, but so convenient for now.
 
+# @todo(After production data is migrated) Remove this type alias
 AdaptationV1: TypeAlias = FillWithFreeTextAdaptation | ItemsAndEffectsAttempt1Adaptation | MultipleChoicesInInstructionsAdaptation | MultipleChoicesInWordingAdaptation | NullAdaptation | SelectThingsAdaptation
 
 class AdaptationV2(PydanticBase):

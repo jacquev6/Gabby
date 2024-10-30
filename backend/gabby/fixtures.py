@@ -6,15 +6,7 @@ import PyPDF2
 from . import database_utils
 from . import parsing
 from .orm_models import Exercise
-from .api_models import (
-    FillWithFreeTextAdaptation,
-    ItemsAndEffectsAttempt1Adaptation,
-    MultipleChoicesInInstructionsAdaptation,
-    MultipleChoicesInWordingAdaptation,
-    PdfRectangle,
-    Point,
-    SelectThingsAdaptation,
-)
+from .api_models import AdaptationV2, PdfRectangle, Point
 from .orm_models import PdfFile, PdfFileNaming, Section
 from .orm_models import Ping
 from .orm_models import Project, Textbook
@@ -267,9 +259,7 @@ def create_test_exercises_1(session, admin):
         example="",
         clue="Il peut y avoir plusieurs solutions.",
         wording="{choices|le|une|un|des|tu|elles|ils} vide\r\n{choices|le|une|un|des|tu|elles|ils} vident\r\n{choices|le|une|un|des|tu|elles|ils} dépenses\r\n{choices|le|une|un|des|tu|elles|ils} dépensent\r\n{choices|le|une|un|des|tu|elles|ils} savon\r\n{choices|le|une|un|des|tu|elles|ils} savons\r\n{choices|le|une|un|des|tu|elles|ils} commande",
-        adaptation=MultipleChoicesInWordingAdaptation(
-            kind="multiple-choices-in-wording"
-        ),
+        adaptation=AdaptationV2(kind="multiple-choices-in-wording", effects=[]),
         created_by=admin,
         updated_by=admin,
     )
@@ -415,11 +405,14 @@ def create_test_exercises_2(session, admin):
         example="",
         clue="",
         wording="Les Touaregs sont des Berbères, un peuple qui habite en Afrique du Nord depuis la préhistoire.\nIls vivent dans le désert du Sahara (Algérie, Libye, Mali, Niger, Burkina Faso…).\nEn été, les températures y montent à plus de 50 °C et elles descendent en dessous de zéro durant les nuits d’hiver.",
-        adaptation=SelectThingsAdaptation(
+        adaptation=AdaptationV2(
             kind="select-things",
-            colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-            words=True,
-            punctuation=True,
+            effects=[parsing.SelectThingsAdaptationEffect(
+                kind="select-things",
+                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                words=True,
+                punctuation=True,
+            )],
         ),
         created_by=admin,
         updated_by=admin,
@@ -464,8 +457,11 @@ def create_test_exercises_2(session, admin):
         example="",
         clue="",
         wording="nager ➞ … ◆ tracter ➞ … ◆ manger ➞ … ◆\ninventer ➞ … ◆ livrer ➞ …",
-        adaptation=FillWithFreeTextAdaptation(
-            kind="fill-with-free-text", placeholder="…"
+        adaptation=AdaptationV2(
+            kind="fill-with-free-text",
+            effects=[parsing.FillWithFreeTextAdaptationEffect(
+                kind="fill-with-free-text", placeholder="…"
+            )],
         ),
         created_by=admin,
         updated_by=admin,
@@ -492,8 +488,11 @@ def create_test_exercises_2(session, admin):
         example="",
         clue="",
         wording="a. coccinelle est un adjectif. @\nb. bûche est un verbe. @\nc. cette est un déterminant. @\nd. dentier est un verbe. @\ne. respirer est un verbe. @\nf. aspiration est un nom. @",
-        adaptation=MultipleChoicesInInstructionsAdaptation(
-            kind="multiple-choices-in-instructions", placeholder="@"
+        adaptation=AdaptationV2(
+            kind="multiple-choices-in-instructions",
+            effects=[parsing.MultipleChoicesInInstructionsAdaptationEffect(
+                kind="multiple-choices-in-instructions", placeholder="@"
+            )],
         ),
         created_by=admin,
         updated_by=admin,
@@ -531,17 +530,20 @@ def create_test_exercises_3(session, admin):
         clue="",
         wording="Les Touaregs sont des Berbères, un peuple qui habite en Afrique du Nord depuis la préhistoire.\nIls vivent dans le désert du Sahara (Algérie, Libye, Mali, Niger, Burkina Faso…).\nEn été, les températures y montent à plus de 50 °C et elles descendent en dessous de zéro durant les nuits d’hiver.",
         wording_paragraphs_per_pagelet=1,
-        adaptation=ItemsAndEffectsAttempt1Adaptation(
+        adaptation=AdaptationV2(
             kind="items-and-effects-attempt-1",
-            items=parsing.ItemsAndEffectsAttempt1AdaptationEffect.WordsItems(
-                kind="words", punctuation=False
-            ),
-            effects=parsing.ItemsAndEffectsAttempt1AdaptationEffect.Effects(
-                selectable=parsing.ItemsAndEffectsAttempt1AdaptationEffect.Effects.Selectable(
-                    colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"]
+            effects=[parsing.ItemsAndEffectsAttempt1AdaptationEffect(
+                kind="items-and-effects-attempt-1",
+                items=parsing.ItemsAndEffectsAttempt1AdaptationEffect.WordsItems(
+                    kind="words", punctuation=False
                 ),
-                boxed=False,
-            ),
+                effects=parsing.ItemsAndEffectsAttempt1AdaptationEffect.Effects(
+                    selectable=parsing.ItemsAndEffectsAttempt1AdaptationEffect.Effects.Selectable(
+                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"]
+                    ),
+                    boxed=False,
+                ),
+            )],
         ),
         created_by=admin,
         updated_by=admin,
@@ -559,9 +561,7 @@ def create_test_exercises_3(session, admin):
         clue="",
         wording="a. {bold|Aujourd'hui} il fait {italic|gris} et (il pleuvra / il pleut / il pleuvait).\nb. {bold|Aujourd'hui} il fait {italic|gris} et {choices2|(|/|)||(il pleuvra / il pleut / il pleuvait)}.\nc. Aujourd'hui il fait @1 et il @2. {choices2|(|/|)|@1|(gris / beau)} {choices2|[|*|]|@2|[pleut * pleuvra]}\nd. {bold|Aujourd'hui} il fait {italic|gris} et {choices|il pleuvra|il pleut|il pleuvait}.",
         wording_paragraphs_per_pagelet=3,
-        adaptation=MultipleChoicesInWordingAdaptation(
-            kind="multiple-choices-in-wording"
-        ),
+        adaptation=AdaptationV2(kind="multiple-choices-in-wording", effects=[]),
         created_by=admin,
         updated_by=admin,
     )

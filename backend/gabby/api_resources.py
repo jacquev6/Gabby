@@ -1,9 +1,10 @@
 from fastapi import HTTPException
 from starlette import status
 
-from .parsed_exercises import ParsedExercisesResource
-from .api_models import PdfRectangle, Point, SyntheticError, FillWithFreeTextAdaptation
+from . import parsing
+from .api_models import PdfRectangle, Point, SyntheticError, AdaptationV2
 from .exercises import Exercise, ExercisesResource
+from .parsed_exercises import ParsedExercisesResource
 from .pdfs import PdfFile, PdfFileNaming, PdfFilesResource, PdfFileNamingsResource
 from .pings import PingsResource
 from .projects import Project, ProjectsResource
@@ -1271,7 +1272,10 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
             example="example",
             clue="clue",
             wording="wording",
-            adaptation=FillWithFreeTextAdaptation(kind="fill-with-free-text", placeholder="..."),
+            adaptation=AdaptationV2(
+                kind="fill-with-free-text",
+                effects=[parsing.FillWithFreeTextAdaptationEffect(kind="fill-with-free-text", placeholder="...")],
+            ),
         )
 
         response = self.get("http://server/exercises/wbqloc")

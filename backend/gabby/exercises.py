@@ -62,6 +62,7 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
 
     _adaptation: orm.Mapped[dict] = orm.mapped_column(sql.JSON, name="adaptation", default={"format": 0}, server_default="{\"format\": 0}")
 
+    # @todo(After production data is migrated) Remove this class
     class AdaptationV1Container(PydanticBase):
         # Thin wrapper to use Pydantic's discriminated unions
         adaptation: api_models.AdaptationV1 = pydantic.Field(discriminator="kind")
@@ -75,6 +76,7 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
             case 0:
                 return api_models.AdaptationV2(kind=None, effects=[])
             case 1:
+                # @todo(After production data is migrated) Remove this case
                 adaptation_v1 = self.AdaptationV1Container(adaptation=self._adaptation["settings"]).adaptation
                 kind = None if adaptation_v1.kind == "null" else adaptation_v1.kind
                 effects = adaptation_v1.make_effects()
@@ -85,18 +87,11 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
                 raise ValueError(f"Unknown adaptation format {format}")
 
     @adaptation.setter
-    def adaptation(self, adaptation: api_models.AdaptationV1 | api_models.AdaptationV2):
-        if isinstance(adaptation, api_models.AdaptationV1):  # For unit-tests still using V1
-            self._adaptation = {
-                "format": 1,
-                "settings": adaptation.model_dump()
-            }
-        else:
-            assert isinstance(adaptation, api_models.AdaptationV2)
-            self._adaptation = {
-                "format": 2,
-                "settings": adaptation.model_dump(),
-            }
+    def adaptation(self, adaptation: api_models.AdaptationV2):
+        self._adaptation = {
+            "format": 2,
+            "settings": adaptation.model_dump(),
+        }
 
     def make_adapted(self):
         adapter = parsing.EffectsBasedAdapter(

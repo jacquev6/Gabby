@@ -10,7 +10,7 @@ set -x
 
 ../docker-compose.sh exec backend-shell python -m gabby \
   restore-database \
-    s3://jacquev6/gabby/prod/backups/gabby-backup-20241014-054206.tar.gz \
+    s3://jacquev6/gabby/prod/backups/gabby-backup-20241030-074206.tar.gz \
     --patch-according-to-settings \
     --yes
 
