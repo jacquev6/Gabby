@@ -127,6 +127,7 @@ services:
     volumes:
       - ..:/app
     working_dir: /app/pdf-examples
+    # @todo Understand why this only works for the first change in the .odt and ignores subsequent changes. Then fix.
     command: ["watchfiles", "libreoffice --convert-to pdf demo.odt", "demo.odt"]
   large-maker:
     image: gabby-dev_backend
