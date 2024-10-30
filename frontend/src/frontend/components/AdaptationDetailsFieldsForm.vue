@@ -139,20 +139,20 @@ function doneEditingChoices2() {
         const stopIndex = wording.indexOf(model.value.inProgress.settings.stop, startIndex + model.value.inProgress.settings.start.length)
         const separatorIndex = wording.indexOf(model.value.inProgress.settings.separator, startIndex + model.value.inProgress.settings.start.length)
         if (stopIndex !== -1 && separatorIndex !== -1 && separatorIndex < stopIndex) {
-          console.log('Choice:', '#' + wording.slice(startIndex, stopIndex + model.value.inProgress.settings.stop.length) + '#')
+          // console.log('Choice:', '#' + wording.slice(startIndex, stopIndex + model.value.inProgress.settings.stop.length) + '#')
         }
         newWording += `{choices2|${escapeForTag(model.value.inProgress.settings.start)}|${escapeForTag(model.value.inProgress.settings.separator)}|${escapeForTag(model.value.inProgress.settings.stop)}|${escapeForTag(model.value.inProgress.settings.placeholder)}|${escapeForTag(wording.slice(startIndex, stopIndex + model.value.inProgress.settings.stop.length))}}`
         lastProcessedIndex = stopIndex + model.value.inProgress.settings.stop.length - 1
       }
     }
     newWording += wording.slice(lastProcessedIndex + 1)
-    console.log(newWording)
+    // console.log(newWording)
     model.value.wording = newWording
   }
   model.value.inProgress = {kind: 'nothing'}
 }
 
-const multipleChoicesInWordingWordingFormats = {
+const multipleChoicesFormats = {
   ...basicFormats,
   choices2: {
     kind: 'text' as const,
@@ -218,7 +218,13 @@ export const wysiwygFormats = {
   },
   'multiple-choices-in-wording': {
     instructions: basicFormats,
-    wording: multipleChoicesInWordingWordingFormats,
+    wording: multipleChoicesFormats,
+    example: basicFormats,
+    clue: basicFormats,
+  },
+  'multiple-choices': {
+    instructions: multipleChoicesFormats,
+    wording: multipleChoicesFormats,
     example: basicFormats,
     clue: basicFormats,
   },
@@ -358,6 +364,9 @@ const colorsCount = computed({
     </p>
   </template>
   <template v-else-if="model.adaptationKind === 'multiple-choices-in-wording'">
+    <AdaptationDetailsFieldsFormForMultipleChoicesInWording v-model="model" :wysiwyg />
+  </template>
+  <template v-else-if="model.adaptationKind === 'multiple-choices'">
     <AdaptationDetailsFieldsFormForMultipleChoicesInWording v-model="model" :wysiwyg />
   </template>
   <template v-else>

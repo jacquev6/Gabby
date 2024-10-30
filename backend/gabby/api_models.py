@@ -115,7 +115,7 @@ class PdfRectangle(PydanticBase):
 AdaptationV1: TypeAlias = FillWithFreeTextAdaptation | ItemsAndEffectsAttempt1Adaptation | MultipleChoicesInInstructionsAdaptation | MultipleChoicesInWordingAdaptation | NullAdaptation | SelectThingsAdaptation
 
 class AdaptationV2(PydanticBase):
-    kind: Literal["fill-with-free-text", "items-and-effects-attempt-1", "select-things", "multiple-choices-in-instructions", "multiple-choices-in-wording"] | None
+    kind: Literal["fill-with-free-text", "items-and-effects-attempt-1", "select-things", "multiple-choices-in-instructions", "multiple-choices-in-wording", "multiple-choices"] | None
     effects: list[parsing.AdaptationEffect]
 
 class Exercise(PydanticBase, CreatedUpdatedByAtMixin):

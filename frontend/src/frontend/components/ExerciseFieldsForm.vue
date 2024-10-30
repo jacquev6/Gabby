@@ -7,11 +7,11 @@ import { defaultColors } from './AdaptationDetailsFieldsForm.vue'
 const api = useApiStore()
 
 type Adaptation = (Exercise & InCache & Exists)['attributes']['adaptation']
-type AdaptationEffect = (Adaptation['effects'][number] & {kind: string}) | {kind: 'null'} | {kind: 'multiple-choices-in-wording'}
+type AdaptationEffect = (Adaptation['effects'][number] & {kind: string}) | {kind: 'null'} | {kind: 'multiple-choices-in-wording'} | {kind: 'multiple-choices'}
 type PdfRectangle = (Exercise & InCache & Exists)['attributes']['rectangles'][number]
 
 // @todo Automate updating this type when a new adaptation type is added
-export const adaptationKinds = ['null', 'fill-with-free-text', 'items-and-effects-attempt-1', 'select-things', 'multiple-choices-in-instructions', 'multiple-choices-in-wording'] as const
+export const adaptationKinds = ['null', 'fill-with-free-text', 'items-and-effects-attempt-1', 'select-things', 'multiple-choices-in-instructions', 'multiple-choices-in-wording', 'multiple-choices'] as const
 export type AdaptationKind = typeof adaptationKinds[number]
 
 export const textualFieldNames = ['instructions', 'wording', 'example', 'clue'] as const
@@ -100,6 +100,9 @@ function makeModel({inTextbook, textbookPage}: MakeModelOptions): Model {
       'multiple-choices-in-wording': {
         kind: 'multiple-choices-in-wording' as const,
       },
+      'multiple-choices': {
+        kind: 'multiple-choices' as const,
+      },
     },
     inProgress: {
       kind: 'nothing',
@@ -131,7 +134,10 @@ export function assignModelFrom(model: Model, exercise: Exercise & InCache & Exi
     model.adaptationEffects['null'] = {kind: 'null'}
   } else if (kind === 'multiple-choices-in-wording') {
     console.assert(effects.length === 0)
-    model.adaptationEffects['multiple-choices-in-wording'] = {kind: 'multiple-choices-in-wording'}
+    model.adaptationEffects[kind] = {kind}
+  } else if (kind === 'multiple-choices') {
+    console.assert(effects.length === 0)
+    model.adaptationEffects[kind] = {kind}
   } else {
     console.assert(effects.length === 1)
     const effect: AdaptationEffect = deepCopy(effects[0])
@@ -165,7 +171,7 @@ function makeAdaptation(model: Model): Adaptation {
   const kind = effect.kind
   if (kind === 'null') {
     return {kind: null, effects: []}
-  } else if (kind === 'multiple-choices-in-wording') {
+  } else if (kind === 'multiple-choices-in-wording' || kind === 'multiple-choices') {
     return {kind, effects: []}
   } else {
     return {kind, effects: [effect]}
@@ -364,7 +370,7 @@ const selBlotColors = computed(() => {
   }
 })
 
-function selectionChangeInWording(_range: {index: number, length: number}) {
+function selectionChangeInInstructionsOrWording(_range: {index: number, length: number}) {
   if (model.value.inProgress.kind === 'multipleChoicesCreation') {
     // @todo Automatically detect these settings. How? Ask client for spec.
     const settings = {
@@ -411,6 +417,7 @@ defineExpose({
       :label="$t('exerciseInstructions')"
       :formats="wysiwygFormats[model.adaptationKind].instructions"
       v-model="model.instructions" :delta="instructionsDeltas"
+      @selectionChange="selectionChangeInInstructionsOrWording"
     />
     <BLabeledTextarea
       v-else
@@ -425,7 +432,7 @@ defineExpose({
       :label="$t('exerciseWording')"
       :formats="wysiwygFormats[model.adaptationKind].wording"
       v-model="model.wording" :delta="wordingDeltas"
-      @selectionChange="selectionChangeInWording"
+      @selectionChange="selectionChangeInInstructionsOrWording"
     />
     <BLabeledTextarea
       v-else

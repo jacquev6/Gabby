@@ -484,16 +484,11 @@ def create_test_exercises_2(session, admin):
             )
         ],
         number="8",
-        instructions="Réponds par {choice|vrai} ou {choice|faux}.",
+        instructions="Réponds par {choices2||ou||@|vrai ou faux}.",
         example="",
         clue="",
         wording="a. coccinelle est un adjectif. @\nb. bûche est un verbe. @\nc. cette est un déterminant. @\nd. dentier est un verbe. @\ne. respirer est un verbe. @\nf. aspiration est un nom. @",
-        adaptation=AdaptationV2(
-            kind="multiple-choices-in-instructions",
-            effects=[parsing.MultipleChoicesInInstructionsAdaptationEffect(
-                kind="multiple-choices-in-instructions", placeholder="@"
-            )],
-        ),
+        adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
         created_by=admin,
         updated_by=admin,
     )

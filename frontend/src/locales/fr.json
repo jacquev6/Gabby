@@ -80,6 +80,7 @@
   "items-and-effects-attempt-1": "Items et effets (essai n°1)",
   "multiple-choices-in-instructions": "Choix multiples (dans la consigne)",
   "multiple-choices-in-wording": "Choix multiples (dans l'énoncé)",
+  "multiple-choices": "Choix multiples",
 
   "confirmTitle": "Confirmation",
   "confirmNo": "Retour",
@@ -148,7 +149,7 @@
   "selectableButton": "Cochable",
 
   "multipleChoicesButton": "Choix multiples",
-  "multipleChoicesInstructions": "Sélectionnez un ensemble de choix dans le champ \"Énoncé\" de la colonne \"Édition\". Incluez les caractère de début, fin et séparation.",
+  "multipleChoicesInstructions": "Sélectionnez un ensemble de choix dans le champ \"Consigne\" ou \"Énoncé\" de la colonne \"Édition\". Incluez les caractère de début, fin et séparation.",
   "choicesSettingsSeparator": "Séparateur",
   "choicesSettingsStart": "Début",
   "choicesSettingsStop": "Fin",
