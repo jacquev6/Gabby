@@ -79,7 +79,7 @@
   "fill-with-free-text": "Fill with free text",
   "items-and-effects-attempt-1": "Items and effects (attempt 1)",
   "multiple-choices-in-instructions": "Multiple choices (in instructions)",
-  "multiple-choices-in-wording": "Multiple choices (in wording)",
+  "multiple-choices": "Multiple choices",
 
   "confirmTitle": "Confirm",
   "confirmNo": "Go back",
@@ -148,7 +148,7 @@
   "selectableButton": "Selectable",
 
   "multipleChoicesButton": "Multiple choices",
-  "multipleChoicesInstructions": "Select a set of choices in the \"Wording\" field in the \"Edition\" column. Include start, stop and separator characters.",
+  "multipleChoicesInstructions": "Select a set of choices in the \"Instructions\" or \"Wording\" fields in the \"Edition\" column. Include start, stop and separator characters.",
   "choicesSettingsSeparator": "Separator",
   "choicesSettingsStart": "Start",
   "choicesSettingsStop": "Stop",

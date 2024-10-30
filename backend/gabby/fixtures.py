@@ -259,7 +259,7 @@ def create_test_exercises_1(session, admin):
         example="",
         clue="Il peut y avoir plusieurs solutions.",
         wording="{choices|le|une|un|des|tu|elles|ils} vide\r\n{choices|le|une|un|des|tu|elles|ils} vident\r\n{choices|le|une|un|des|tu|elles|ils} dépenses\r\n{choices|le|une|un|des|tu|elles|ils} dépensent\r\n{choices|le|une|un|des|tu|elles|ils} savon\r\n{choices|le|une|un|des|tu|elles|ils} savons\r\n{choices|le|une|un|des|tu|elles|ils} commande",
-        adaptation=AdaptationV2(kind="multiple-choices-in-wording", effects=[]),
+        adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
         created_by=admin,
         updated_by=admin,
     )
@@ -484,16 +484,11 @@ def create_test_exercises_2(session, admin):
             )
         ],
         number="8",
-        instructions="Réponds par {choice|vrai} ou {choice|faux}.",
+        instructions="Réponds par {choices2||ou||@|vrai ou faux}.",
         example="",
         clue="",
         wording="a. coccinelle est un adjectif. @\nb. bûche est un verbe. @\nc. cette est un déterminant. @\nd. dentier est un verbe. @\ne. respirer est un verbe. @\nf. aspiration est un nom. @",
-        adaptation=AdaptationV2(
-            kind="multiple-choices-in-instructions",
-            effects=[parsing.MultipleChoicesInInstructionsAdaptationEffect(
-                kind="multiple-choices-in-instructions", placeholder="@"
-            )],
-        ),
+        adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
         created_by=admin,
         updated_by=admin,
     )
@@ -561,7 +556,7 @@ def create_test_exercises_3(session, admin):
         clue="",
         wording="a. {bold|Aujourd'hui} il fait {italic|gris} et (il pleuvra / il pleut / il pleuvait).\nb. {bold|Aujourd'hui} il fait {italic|gris} et {choices2|(|/|)||(il pleuvra / il pleut / il pleuvait)}.\nc. Aujourd'hui il fait @1 et il @2. {choices2|(|/|)|@1|(gris / beau)} {choices2|[|*|]|@2|[pleut * pleuvra]}\nd. {bold|Aujourd'hui} il fait {italic|gris} et {choices|il pleuvra|il pleut|il pleuvait}.",
         wording_paragraphs_per_pagelet=3,
-        adaptation=AdaptationV2(kind="multiple-choices-in-wording", effects=[]),
+        adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
         created_by=admin,
         updated_by=admin,
     )

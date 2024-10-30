@@ -41,7 +41,7 @@ const model = defineModel<T>()
 <template>
   <select v-model="model" class="form-select">
     <template v-for="option in options" :key="value(option)">
-      <option :value="value(option)">{{ label(option) }}</option>
+      <option :value="value(option)" :disabled="disabled(option)">{{ label(option) }}</option>
     </template>
   </select>
 </template>

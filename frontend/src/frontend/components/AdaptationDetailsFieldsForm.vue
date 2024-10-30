@@ -139,20 +139,20 @@ function doneEditingChoices2() {
         const stopIndex = wording.indexOf(model.value.inProgress.settings.stop, startIndex + model.value.inProgress.settings.start.length)
         const separatorIndex = wording.indexOf(model.value.inProgress.settings.separator, startIndex + model.value.inProgress.settings.start.length)
         if (stopIndex !== -1 && separatorIndex !== -1 && separatorIndex < stopIndex) {
-          console.log('Choice:', '#' + wording.slice(startIndex, stopIndex + model.value.inProgress.settings.stop.length) + '#')
+          // console.log('Choice:', '#' + wording.slice(startIndex, stopIndex + model.value.inProgress.settings.stop.length) + '#')
         }
         newWording += `{choices2|${escapeForTag(model.value.inProgress.settings.start)}|${escapeForTag(model.value.inProgress.settings.separator)}|${escapeForTag(model.value.inProgress.settings.stop)}|${escapeForTag(model.value.inProgress.settings.placeholder)}|${escapeForTag(wording.slice(startIndex, stopIndex + model.value.inProgress.settings.stop.length))}}`
         lastProcessedIndex = stopIndex + model.value.inProgress.settings.stop.length - 1
       }
     }
     newWording += wording.slice(lastProcessedIndex + 1)
-    console.log(newWording)
+    // console.log(newWording)
     model.value.wording = newWording
   }
   model.value.inProgress = {kind: 'nothing'}
 }
 
-const multipleChoicesInWordingWordingFormats = {
+const multipleChoicesFormats = {
   ...basicFormats,
   choices2: {
     kind: 'text' as const,
@@ -216,9 +216,9 @@ export const wysiwygFormats = {
     example: basicFormats,
     clue: basicFormats,
   },
-  'multiple-choices-in-wording': {
-    instructions: basicFormats,
-    wording: multipleChoicesInWordingWordingFormats,
+  'multiple-choices': {
+    instructions: multipleChoicesFormats,
+    wording: multipleChoicesFormats,
     example: basicFormats,
     clue: basicFormats,
   },
@@ -233,7 +233,7 @@ import type { Model } from './ExerciseFieldsForm.vue'
 import type ExerciseFieldsForm from './ExerciseFieldsForm.vue'
 import FloatingColorPicker from './FloatingColorPicker.vue'
 import AdaptationDetailsFieldsFormForItemsAndEffectsAttempt1 from './AdaptationDetailsFieldsFormForItemsAndEffectsAttempt1.vue'
-import AdaptationDetailsFieldsFormForMultipleChoicesInWording from './AdaptationDetailsFieldsFormForMultipleChoicesInWording.vue'
+import AdaptationDetailsFieldsFormForMultipleChoices from './AdaptationDetailsFieldsFormForMultipleChoices.vue'
 
 
 defineProps<{
@@ -357,8 +357,8 @@ const colorsCount = computed({
       </i18n-t>
     </p>
   </template>
-  <template v-else-if="model.adaptationKind === 'multiple-choices-in-wording'">
-    <AdaptationDetailsFieldsFormForMultipleChoicesInWording v-model="model" :wysiwyg />
+  <template v-else-if="model.adaptationKind === 'multiple-choices'">
+    <AdaptationDetailsFieldsFormForMultipleChoices v-model="model" :wysiwyg />
   </template>
   <template v-else>
     <span>{{ ((t: never) => t)(model.adaptationKind) }}</span>
