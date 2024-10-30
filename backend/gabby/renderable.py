@@ -8,9 +8,6 @@ class _PlainText(PydanticBase):
     type: Literal["plainText"]
     text: str
 
-    def to_generic(self):
-        return self.text
-
 def PlainText(text: str):
     assert text.__class__ == str, text.__class__
     return _PlainText(type="plainText", text=text)
@@ -19,9 +16,6 @@ def PlainText(text: str):
 class _BoxedText(PydanticBase):
     type: Literal["boxedText"]
     text: str
-
-    def to_generic(self):
-        return f"{{boxed-text|{self.text}}}"
 
 def BoxedText(text: str):
     assert text.__class__ == str, text.__class__
@@ -32,9 +26,6 @@ class _BoldText(PydanticBase):
     type: Literal["boldText"]
     text: str
 
-    def to_generic(self):
-        return f"{{bold-text|{self.text}}}"
-
 def BoldText(text: str):
     assert text.__class__ == str, text.__class__
     return _BoldText(type="boldText", text=text)
@@ -43,9 +34,6 @@ def BoldText(text: str):
 class _ItalicText(PydanticBase):
     type: Literal["italicText"]
     text: str
-
-    def to_generic(self):
-        return f"{{italic-text|{self.text}}}"
 
 def ItalicText(text: str):
     assert text.__class__ == str, text.__class__
@@ -58,9 +46,6 @@ class _SelectableText(PydanticBase):
     colors: list[str]
     boxed: bool
 
-    def to_generic(self):
-        return f"{{selectable-text|{self.text}|{'|'.join(self.colors)}}}"
-
 def SelectableText(text: str, colors: list[str], boxed: bool):
     assert text.__class__ == str, text.__class__
     return _SelectableText(type="selectableText", text=text, colors=colors, boxed=boxed)
@@ -71,9 +56,6 @@ class _SelectedText(PydanticBase):
     text: str
     color: str
 
-    def to_generic(self):
-        return f"{{selected-text|{self.text}|{self.color}}}"
-
 def SelectedText(text: str, color: str):
     assert text.__class__ == str, text.__class__
     return _SelectedText(type="selectedText", text=text, color=color)
@@ -81,9 +63,6 @@ def SelectedText(text: str, color: str):
 
 class _FreeTextInput(PydanticBase):
     type: Literal["freeTextInput"]
-
-    def to_generic(self):
-        return "{free-text-input}"
 
 def FreeTextInput():
     return _FreeTextInput(type="freeTextInput")
@@ -93,18 +72,12 @@ class _MultipleChoicesInput(PydanticBase):
     type: Literal["multipleChoicesInput"]
     choices: list[str]
 
-    def to_generic(self):
-        return "{multiple-choices-input|" + "|".join(self.choices) + "}"
-
 def MultipleChoicesInput(choices: list[str]):
     return _MultipleChoicesInput(type="multipleChoicesInput", choices=choices)
 
 
 class _Whitespace(PydanticBase):
     type: Literal["whitespace"]
-
-    def to_generic(self):
-        return " "
 
 def Whitespace():
     return _Whitespace(type="whitespace")
@@ -116,38 +89,13 @@ SentenceToken = _PlainText | _BoxedText | _BoldText | _ItalicText | _SelectableT
 class Sentence(PydanticBase):
     tokens: list[SentenceToken]
 
-    def to_generic(self):
-        return "".join(token.to_generic() for token in self.tokens)
-
 
 class Paragraph(PydanticBase):
     sentences: list[Sentence]
 
-    def to_generic(self):
-        return " ".join(sentence.to_generic() for sentence in self.sentences)
-
 
 class Section(PydanticBase):
     paragraphs: list[Paragraph]
-
-    def to_generic(self):
-        generic = "\n\n".join(p.to_generic() for p in self.paragraphs)
-        if settings.DEBUG:
-            from . import parsing
-            adapted_again_as_instructions = parsing.adapt_generic_instructions_section(generic)
-            adapted_again_as_wording = parsing.adapt_generic_wording_section(generic)
-            if self not in (adapted_again_as_wording, adapted_again_as_instructions):
-                print("Expected:")
-                print(self)
-                print(generic)
-                print("Got:")
-                print(adapted_again_as_instructions)
-                print(adapted_again_as_instructions.to_generic(), flush=True)
-                print("And:")
-                print(adapted_again_as_wording)
-                print(adapted_again_as_wording.to_generic(), flush=True)
-                assert False
-        return generic
 
 
 class Exercise(PydanticBase):

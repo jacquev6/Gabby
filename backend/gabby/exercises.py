@@ -8,6 +8,7 @@ import sqlalchemy as sql
 from fastjsonapi import make_filters
 
 from . import api_models
+from . import parsing
 from . import exercise_delta
 from . import renderable
 from . import settings
@@ -61,47 +62,68 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
 
     _adaptation: orm.Mapped[dict] = orm.mapped_column(sql.JSON, name="adaptation", default={"format": 0}, server_default="{\"format\": 0}")
 
-    class AdaptationContainer(PydanticBase):
+    # @todo(After production data is migrated) Remove this class
+    class AdaptationV1Container(PydanticBase):
         # Thin wrapper to use Pydantic's discriminated unions
-        adaptation: api_models.Adaptation = pydantic.Field(discriminator="kind")
+        adaptation: api_models.AdaptationV1 = pydantic.Field(discriminator="kind")
 
     @property
-    def adaptation(self) -> api_models.Adaptation:
+    def adaptation(self) -> api_models.AdaptationV2:
         if self._adaptation is None:  # Before the first flush to DB if not set in constructor.
             self._adaptation = {"format": 0}
 
         match self._adaptation["format"]:
             case 0:
-                return api_models.NullAdaptation(kind="null")
+                return api_models.AdaptationV2(kind=None, effects=[])
             case 1:
-                return self.AdaptationContainer(adaptation=self._adaptation["settings"]).adaptation
+                # @todo(After production data is migrated) Remove this case
+                adaptation_v1 = self.AdaptationV1Container(adaptation=self._adaptation["settings"]).adaptation
+                kind = None if adaptation_v1.kind == "null" else adaptation_v1.kind
+                effects = adaptation_v1.make_effects()
+                return api_models.AdaptationV2(kind=kind, effects=effects)
+            case 2:
+                return api_models.AdaptationV2(**self._adaptation["settings"])
             case format:
-                raise ValueError(f"Unknown format {format}")
+                raise ValueError(f"Unknown adaptation format {format}")
 
     @adaptation.setter
-    def adaptation(self, adaptation: api_models.Adaptation):
+    def adaptation(self, adaptation: api_models.AdaptationV2):
         self._adaptation = {
-            "format": 1,
-            "settings": adaptation.model_dump()
+            "format": 2,
+            "settings": adaptation.model_dump(),
         }
 
     def make_adapted(self):
+        adapter = parsing.EffectsBasedAdapter(
+            self.adaptation.effects,
+            self.instructions,
+            self.wording,
+            self.example,
+            self.clue,
+        )
         return renderable.Exercise(
             number=self.number,
             textbook_page=self.textbook_page,
-            instructions=self.adaptation.make_adapted_instructions(self),
-            wording=self.adaptation.make_adapted_wording(self),
-            example=self.adaptation.make_adapted_example(self),
-            clue=self.adaptation.make_adapted_clue(self),
+            instructions=adapter.instructions,
+            wording=adapter.wording,
+            example=adapter.example,
+            clue=adapter.clue,
             wording_paragraphs_per_pagelet=self.wording_paragraphs_per_pagelet,
         )
 
     def make_delta(self):
+        delta_maker = parsing.EffectsBasedDeltaMaker(
+            self.adaptation.effects,
+            self.instructions,
+            self.wording,
+            self.example,
+            self.clue,
+        )
         return exercise_delta.Exercise(
-            instructions=self.adaptation.make_instructions_delta(self),
-            wording=self.adaptation.make_wording_delta(self),
-            example=self.adaptation.make_example_delta(self),
-            clue=self.adaptation.make_clue_delta(self),
+            instructions=delta_maker.instructions,
+            wording=delta_maker.wording,
+            example=delta_maker.example,
+            clue=delta_maker.clue,
         )
 
 

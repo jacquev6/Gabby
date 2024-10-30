@@ -1,6 +1,10 @@
 from alembic import op
 import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
+from sqlalchemy import orm
+
+
+from gabby.exercises import Exercise
 
 
 revision = "7ef48883e57b"
@@ -24,6 +28,12 @@ def upgrade():
     op.drop_column("exercises", "bounding_rectangle")
     op.drop_column("exercises", "adaptation_id")
     # ### end Alembic commands ###
+
+    # Update stored adaptations to new format
+    with orm.Session(op.get_bind()) as session:
+        for exercise in session.query(Exercise).all():
+            exercise.adaptation = exercise.adaptation
+        session.commit()
 
 
 def downgrade():

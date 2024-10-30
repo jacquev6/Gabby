@@ -18,8 +18,8 @@ const selectableEffectSettings = reactive({
 watch(
   model,
   () => {
-    if (model.value.adaptations['items-and-effects-attempt-1'].effects.selectable !== null) {
-      Object.assign(selectableEffectSettings, model.value.adaptations['items-and-effects-attempt-1'].effects.selectable)
+    if (model.value.adaptationEffects['items-and-effects-attempt-1'].effects.selectable !== null) {
+      Object.assign(selectableEffectSettings, model.value.adaptationEffects['items-and-effects-attempt-1'].effects.selectable)
     }
   },
   {immediate: true},
@@ -27,13 +27,13 @@ watch(
 
 const hasSelectableEffect = computed({
   get() {
-    return model.value.adaptations['items-and-effects-attempt-1'].effects.selectable !== null
+    return model.value.adaptationEffects['items-and-effects-attempt-1'].effects.selectable !== null
   },
   set(value) {
     if (value) {
-      model.value.adaptations['items-and-effects-attempt-1'].effects.selectable = selectableEffectSettings
+      model.value.adaptationEffects['items-and-effects-attempt-1'].effects.selectable = selectableEffectSettings
     } else {
-      model.value.adaptations['items-and-effects-attempt-1'].effects.selectable = null
+      model.value.adaptationEffects['items-and-effects-attempt-1'].effects.selectable = null
     }
   },
 })
@@ -49,8 +49,8 @@ const colorsProxyForSelectableEffect = allColorsForSelectableEffect.map((_color,
   },
   set(value) {
     allColorsForSelectableEffect[i] = value
-    if (model.value.adaptations['items-and-effects-attempt-1'].effects.selectable !== null && i < model.value.adaptations['items-and-effects-attempt-1'].effects.selectable.colors.length) {
-      model.value.adaptations['items-and-effects-attempt-1'].effects.selectable.colors[i] = value
+    if (model.value.adaptationEffects['items-and-effects-attempt-1'].effects.selectable !== null && i < model.value.adaptationEffects['items-and-effects-attempt-1'].effects.selectable.colors.length) {
+      model.value.adaptationEffects['items-and-effects-attempt-1'].effects.selectable.colors[i] = value
     }
   },
 }))
@@ -79,9 +79,9 @@ const wordsItemsSettings = reactive({
 watch(
   model,
   () => {
-    if (model.value.adaptations['items-and-effects-attempt-1'].items.kind === 'words') {
-      Object.assign(wordsItemsSettings, model.value.adaptations['items-and-effects-attempt-1'].items)
-      model.value.adaptations['items-and-effects-attempt-1'].items = wordsItemsSettings
+    if (model.value.adaptationEffects['items-and-effects-attempt-1'].items.kind === 'words') {
+      Object.assign(wordsItemsSettings, model.value.adaptationEffects['items-and-effects-attempt-1'].items)
+      model.value.adaptationEffects['items-and-effects-attempt-1'].items = wordsItemsSettings
     }
   },
   {immediate: true},
@@ -89,18 +89,18 @@ watch(
 
 const itemsKind = computed({
   get() {
-    return model.value.adaptations['items-and-effects-attempt-1'].items.kind
+    return model.value.adaptationEffects['items-and-effects-attempt-1'].items.kind
   },
   set(kind) {
     switch (kind) {
       case 'words':
-        model.value.adaptations['items-and-effects-attempt-1'].items = {kind, punctuation: false}
+        model.value.adaptationEffects['items-and-effects-attempt-1'].items = {kind, punctuation: false}
         break
       case 'sentences':
-        model.value.adaptations['items-and-effects-attempt-1'].items = {kind}
+        model.value.adaptationEffects['items-and-effects-attempt-1'].items = {kind}
         break
       case 'manual':
-        model.value.adaptations['items-and-effects-attempt-1'].items = {kind}
+        model.value.adaptationEffects['items-and-effects-attempt-1'].items = {kind}
         break
     }
   },
@@ -137,7 +137,7 @@ const itemsKind = computed({
       ></span>
     </span>
   </span>
-  <BLabeledCheckbox :label="$t('effectsBoxed')" v-model="model.adaptations['items-and-effects-attempt-1'].effects.boxed" />
+  <BLabeledCheckbox :label="$t('effectsBoxed')" v-model="model.adaptationEffects['items-and-effects-attempt-1'].effects.boxed" />
   <!-- <p>{{ model.adaptations['items-and-effects-attempt-1'] }}</p> -->
 </template>
 
