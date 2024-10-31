@@ -310,7 +310,7 @@ describe('Gabby', () => {
     traceRectangle('@canvas', 8, 5, 54, 9)
     cy.get('button:contains("Instructions")').click()
     notBusy()
-    traceRectangle('@canvas', 7, 9.25, 49, 15)
+    traceRectangle('@canvas', 7, 9, 49, 15)
     cy.get('button:contains("Wording")').click()
     notBusy()
 
