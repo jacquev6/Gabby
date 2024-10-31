@@ -1323,7 +1323,7 @@ class MultipleChoicesInInstructionsAdaptationEffect(PydanticBase):
 
     def preprocess(self, instructions, wording, example, clue):
         choices = self.gather_choices(instructions)
-        wording = wording.replace(self.placeholder, f"{{choices2||/|||{'/'.join(choices)}}}")  # @todo Escape '{', '|' and '}' in choices
+        wording = wording.replace(self.placeholder, f"{{choices2||/||||{'/'.join(choices)}}}")  # @todo Escape '{', '|' and '}' in choices
         return (instructions, wording, example, clue)
 
     class ChoicesGatherer(Transformer):
@@ -1508,6 +1508,21 @@ AdaptationEffect = Annotated[
 ]
 
 
+def separate_choices(start, separator1, separator2, stop, placeholder, text):
+    text = text.strip()
+    if start is not None and stop is not None and text.startswith(start) and text.endswith(stop):
+        text = text[len(start) : -len(stop)]
+    if separator1 is None:
+        choices = [text]
+    else:
+        # @todo Use separator2 as well
+        choices = text.split(separator1)
+    if separator2 is not None:
+        choices[-1:] = choices[-1].split(separator2)
+    # return [choice.strip() for choice in choices]
+    return list(filter(lambda c: c != "", [choice.strip() for choice in choices]))
+
+
 class EffectsBasedAdapter:
     def __init__(
         self,
@@ -1540,28 +1555,18 @@ class EffectsBasedAdapter:
         self.clue = self.adapt_clue(clue, **clue_adapter_constructor_kwds)
 
     def preprocess(self, instructions, wording, example, clue):
-        placeholders = set(choice[3] for choice in itertools.chain(self.gather_choices(instructions), self.gather_choices(wording)))
+        placeholders = set(choice[4] for choice in itertools.chain(self.gather_choices(instructions), self.gather_choices(wording)))
         for placeholder in placeholders:
             wording = wording.replace(placeholder, f"{{placeholder2|{placeholder}}}").replace(f"|{{placeholder2|{placeholder}}}|", f"|{placeholder}|")
         return (instructions, wording, example, clue)
 
     def make_wording_adapter_constructor_kwds(self, instructions):
         multiple_choices = {}
-        for (start, separator, stop, placeholder, text) in self.gather_choices(instructions):
-            # @todo De-duplicate this code (also in WordingAdapter.choices2_tag)
-            text = text.strip()
-            if start is not None and stop is not None and text.startswith(start) and text.endswith(stop):
-                text = text[len(start) : -len(stop)]
-            if separator is None:
-                choices = [text]
-            else:
-                choices = text.split(separator)
-            choices = [choice.strip() for choice in choices]
-            multiple_choices[placeholder] = choices
+        for (start, separator1, separator2, stop, placeholder, text) in self.gather_choices(instructions):
+            multiple_choices[placeholder] = separate_choices(start, separator1, separator2, stop, placeholder, text)
         return {
             "multiple_choices": multiple_choices,
         }
-
 
     class ChoicesGatherer(Transformer):
         def section(self, args):
@@ -1577,8 +1582,8 @@ class EffectsBasedAdapter:
             return list(itertools.chain(*args))
 
         def choices2_tag(self, args):
-            assert len(args) == 5
-            if args[3] is None:
+            assert len(args) == 6
+            if args[4] is None:
                 return []
             else:
                 return [args]
@@ -1624,7 +1629,7 @@ class EffectsBasedAdapter:
 
     gather_choices = InstructionsSectionParser(
         {
-            "choices2": r""" "|" [STR] "|" [STR] "|" [STR] "|" [STR] "|" STR """,
+            "choices2": r""" "|" [STR] "|" [STR] "|" [STR] "|" [STR] "|" [STR] "|" STR """,
         },
         ChoicesGatherer(),
     )
@@ -1647,28 +1652,29 @@ class EffectsBasedAdapter:
             return [renderable.BoxedText(text=text)]
 
         def choices2_tag(self, args):
-            assert len(args) == 5
-            (start, separator, stop, placeholder, text) = args
-            # @todo De-duplicate this code (also in WordingAdapter.choices2_tag)
-            text = text.strip()
-            add_start_and_stop = False
-            if start is not None and stop is not None and text.startswith(start) and text.endswith(stop):
-                add_start_and_stop = True
-                text = text[len(start) : -len(stop)]
-            if separator is None:
-                choices = [text]
-            else:
-                choices = text.split(separator)
-            choices = [choice.strip() for choice in choices]
+            assert len(args) == 6
+            (start, separator1, separator2, stop, placeholder, text) = args
+            add_start_and_stop = start is not None and stop is not None and text.startswith(start) and text.endswith(stop)
+            choices = separate_choices(start, separator1, separator2, stop, placeholder, text)
             ret = []
             if add_start_and_stop:
                 ret.append(renderable.PlainText(text=start))
             ret.append(renderable.BoxedText(text=choices[0]))
-            for choice in choices[1:]:
+            if separator2 is None:
+                for choice in choices[1:]:
+                    ret.append(renderable.Whitespace())
+                    ret.append(renderable.PlainText(text=separator1))
+                    ret.append(renderable.Whitespace())
+                    ret.append(renderable.BoxedText(text=choice))
+            else:
+                for choice in choices[1:-1]:
+                    ret.append(renderable.PlainText(text=separator1))
+                    ret.append(renderable.Whitespace())
+                    ret.append(renderable.BoxedText(text=choice))
                 ret.append(renderable.Whitespace())
-                ret.append(renderable.PlainText(text=separator))
+                ret.append(renderable.PlainText(text=separator2))
                 ret.append(renderable.Whitespace())
-                ret.append(renderable.BoxedText(text=choice))
+                ret.append(renderable.BoxedText(text=choices[-1]))
             if add_start_and_stop:
                 ret.append(renderable.PlainText(text=stop))
             return ret
@@ -1730,7 +1736,7 @@ class EffectsBasedAdapter:
         return InstructionsSectionParser(
             {
                 "choice": r""" "|" STR """,
-                "choices2": r""" "|" [STR] "|" [STR] "|" [STR] "|" [STR] "|" STR """,
+                "choices2": r""" "|" [STR] "|" [STR] "|" [STR] "|" [STR] "|" [STR] "|" STR """,
                 "sel1": r""" "|" STR """,
                 "sel2": r""" "|" STR """,
                 "sel3": r""" "|" STR """,
@@ -1842,16 +1848,9 @@ class EffectsBasedAdapter:
             return ("placeholder", args[0])
 
         def choices2_tag(self, args):
-            assert len(args) == 5
-            (start, separator, stop, placeholder, text) = args
-            text = text.strip()
-            if start is not None and stop is not None and text.startswith(start) and text.endswith(stop):
-                text = text[len(start) : -len(stop)]
-            if separator is None:
-                choices = [text]
-            else:
-                choices = text.split(separator)
-            choices = [choice.strip() for choice in choices]
+            assert len(args) == 6
+            (start, separator1, separator2, stop, placeholder, text) = args
+            choices = separate_choices(start, separator1, separator2, stop, placeholder, text)
             input = renderable.MultipleChoicesInput(choices=choices)
             if placeholder is None:
                 return input
@@ -1885,7 +1884,7 @@ class EffectsBasedAdapter:
         {
             "fill_with_free_text": "",
             "choices": r""" ("|" STR)+ """,
-            "choices2": r""" "|" [STR] "|" [STR] "|" [STR] "|" [STR] "|" STR """,
+            "choices2": r""" "|" [STR] "|" [STR] "|" [STR] "|" [STR] "|" [STR] "|" STR """,
             "placeholder2": r""" "|" STR""",
             "selectable": r""" "|" STR """,
         },
@@ -1926,12 +1925,14 @@ class EffectsBasedDeltaMaker:
             return exercise_delta.TextInsertOp(insert=args[0], attributes={"choice": True})
 
         def choices2_tag(self, args):
-            assert len(args) == 5
-            (start, separator, stop, placeholder, text) = args
+            assert len(args) == 6
+            (start, separator1, separator2, stop, placeholder, text) = args
             if start is None:
                 start = ""
-            if separator is None:
-                separator = ""
+            if separator1 is None:
+                separator1 = ""
+            if separator2 is None:
+                separator2 = ""
             if stop is None:
                 stop = ""
             if placeholder is None:
@@ -1941,7 +1942,8 @@ class EffectsBasedDeltaMaker:
                 attributes={
                     "choices2": {
                         "start": start,
-                        "separator": separator,
+                        "separator1": separator1,
+                        "separator2": separator2,
                         "stop": stop,
                         "placeholder": placeholder,
                     },
@@ -1982,7 +1984,7 @@ class EffectsBasedDeltaMaker:
         return InstructionsSectionParser(
             {
                 "choice": r""" "|" STR """,
-                "choices2": r""" "|" [STR] "|" [STR] "|" [STR] "|" [STR] "|" STR """,
+                "choices2": r""" "|" [STR] "|" [STR] "|" [STR] "|" [STR] "|" [STR] "|" STR """,
                 "sel1": r""" "|" STR """,
                 "sel2": r""" "|" STR """,
                 "sel3": r""" "|" STR """,
@@ -2039,12 +2041,14 @@ class EffectsBasedDeltaMaker:
             )
 
         def choices2_tag(self, args):
-            assert len(args) == 5
-            (start, separator, stop, placeholder, text) = args
+            assert len(args) == 6
+            (start, separator1, separator2, stop, placeholder, text) = args
             if start is None:
                 start = ""
-            if separator is None:
-                separator = ""
+            if separator1 is None:
+                separator1 = ""
+            if separator2 is None:
+                separator2 = ""
             if stop is None:
                 stop = ""
             if placeholder is None:
@@ -2054,7 +2058,8 @@ class EffectsBasedDeltaMaker:
                 attributes={
                     "choices2": {
                         "start": start,
-                        "separator": separator,
+                        "separator1": separator1,
+                        "separator2": separator2,
                         "stop": stop,
                         "placeholder": placeholder,
                     },
@@ -2069,7 +2074,7 @@ class EffectsBasedDeltaMaker:
         return WordingSectionParser(
             {
                 "choices": r""" ("|" STR)+ """,
-                "choices2": r""" "|" [STR] "|" [STR] "|" [STR] "|" [STR] "|" STR """,
+                "choices2": r""" "|" [STR] "|" [STR] "|" [STR] "|" [STR] "|" [STR] "|" STR """,
                 "selectable": r""" "|" STR """,
             },
             self.WordingDeltaMaker(**kwds),

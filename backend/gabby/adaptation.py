@@ -1047,7 +1047,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions="Choose {choices2||or||...|a or b}.",
+                instructions="Choose {choices2||or|||...|a or b}.",
                 wording="A ... B ...",
                 example="",
                 clue="",
@@ -1091,7 +1091,203 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
             d.Exercise(
                 instructions=[
                     d.TextInsertOp(insert="Choose ", attributes={}),
-                    d.TextInsertOp(insert="a or b", attributes={"choices2": {"start": "", "separator": "or", "stop": "", "placeholder": "..."}}),
+                    d.TextInsertOp(insert="a or b", attributes={"choices2": {"start": "", "separator1": "or", "separator2": "", "stop": "", "placeholder": "..."}}),
+                    d.TextInsertOp(insert=".", attributes={}),
+                ],
+                wording=[
+                    d.TextInsertOp(insert="A ... B ...", attributes={}),
+                ],
+                example=[],
+                clue=[],
+            ),
+        )
+
+    def test_choices2_with_two_separators(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions="Choose {choices2||,|or||...|a, b, c or d}.",
+                wording="A ... B ...",
+                example="",
+                clue="",
+                wording_paragraphs_per_pagelet=3,
+                adaptation=AdaptationV2(kind="multiple-choices-in-instructions", effects=[]),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(text="Choose"),
+                            r.Whitespace(),
+                            r.BoxedText(text="a"),
+                            r.PlainText(text=","),
+                            r.Whitespace(),
+                            r.BoxedText(text="b"),
+                            r.PlainText(text=","),
+                            r.Whitespace(),
+                            r.BoxedText(text="c"),
+                            r.Whitespace(),
+                            r.PlainText(text="or"),
+                            r.Whitespace(),
+                            r.BoxedText(text="d"),
+                            r.PlainText(text="."),
+                        ]),
+                    ]),
+                ]),
+                wording=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(text="A"),
+                            r.Whitespace(),
+                            r.MultipleChoicesInput(choices=["a", "b", "c", "d"]),
+                            r.Whitespace(),
+                            r.PlainText(text="B"),
+                            r.Whitespace(),
+                            r.MultipleChoicesInput(choices=["a", "b", "c", "d"]),
+                        ]),
+                    ]),
+                ]),
+                example=r.Section(paragraphs=[]),
+                clue=r.Section(paragraphs=[]),
+                wording_paragraphs_per_pagelet=3,
+            ),
+            d.Exercise(
+                instructions=[
+                    d.TextInsertOp(insert="Choose ", attributes={}),
+                    d.TextInsertOp(insert="a, b, c or d", attributes={"choices2": {"start": "", "separator1": ",", "separator2": "or", "stop": "", "placeholder": "..."}}),
+                    d.TextInsertOp(insert=".", attributes={}),
+                ],
+                wording=[
+                    d.TextInsertOp(insert="A ... B ...", attributes={}),
+                ],
+                example=[],
+                clue=[],
+            ),
+        )
+
+    def test_choices2_with_oxford_comma(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions="Choose {choices2||,|or||...|a, b, c, or d}.",
+                wording="A ... B ...",
+                example="",
+                clue="",
+                wording_paragraphs_per_pagelet=3,
+                adaptation=AdaptationV2(kind="multiple-choices-in-instructions", effects=[]),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(text="Choose"),
+                            r.Whitespace(),
+                            r.BoxedText(text="a"),
+                            r.PlainText(text=","),
+                            r.Whitespace(),
+                            r.BoxedText(text="b"),
+                            r.PlainText(text=","),
+                            r.Whitespace(),
+                            r.BoxedText(text="c"),
+                            r.Whitespace(),
+                            r.PlainText(text="or"),
+                            r.Whitespace(),
+                            r.BoxedText(text="d"),
+                            r.PlainText(text="."),
+                        ]),
+                    ]),
+                ]),
+                wording=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(text="A"),
+                            r.Whitespace(),
+                            r.MultipleChoicesInput(choices=["a", "b", "c", "d"]),
+                            r.Whitespace(),
+                            r.PlainText(text="B"),
+                            r.Whitespace(),
+                            r.MultipleChoicesInput(choices=["a", "b", "c", "d"]),
+                        ]),
+                    ]),
+                ]),
+                example=r.Section(paragraphs=[]),
+                clue=r.Section(paragraphs=[]),
+                wording_paragraphs_per_pagelet=3,
+            ),
+            d.Exercise(
+                instructions=[
+                    d.TextInsertOp(insert="Choose ", attributes={}),
+                    d.TextInsertOp(insert="a, b, c, or d", attributes={"choices2": {"start": "", "separator1": ",", "separator2": "or", "stop": "", "placeholder": "..."}}),
+                    d.TextInsertOp(insert=".", attributes={}),
+                ],
+                wording=[
+                    d.TextInsertOp(insert="A ... B ...", attributes={}),
+                ],
+                example=[],
+                clue=[],
+            ),
+        )
+
+    def test_choices2_with_successive_separators(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions="Choose {choices2||/|||...|a / b // c}.",
+                wording="A ... B ...",
+                example="",
+                clue="",
+                wording_paragraphs_per_pagelet=3,
+                adaptation=AdaptationV2(kind="multiple-choices-in-instructions", effects=[]),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(text="Choose"),
+                            r.Whitespace(),
+                            r.BoxedText(text="a"),
+                            r.Whitespace(),
+                            r.PlainText(text="/"),
+                            r.Whitespace(),
+                            r.BoxedText(text="b"),
+                            r.Whitespace(),
+                            r.PlainText(text="/"),
+                            r.Whitespace(),
+                            r.BoxedText(text="c"),
+                            r.PlainText(text="."),
+                        ]),
+                    ]),
+                ]),
+                wording=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(text="A"),
+                            r.Whitespace(),
+                            r.MultipleChoicesInput(choices=["a", "b", "c"]),
+                            r.Whitespace(),
+                            r.PlainText(text="B"),
+                            r.Whitespace(),
+                            r.MultipleChoicesInput(choices=["a", "b", "c"]),
+                        ]),
+                    ]),
+                ]),
+                example=r.Section(paragraphs=[]),
+                clue=r.Section(paragraphs=[]),
+                wording_paragraphs_per_pagelet=3,
+            ),
+            d.Exercise(
+                instructions=[
+                    d.TextInsertOp(insert="Choose ", attributes={}),
+                    d.TextInsertOp(insert="a / b // c", attributes={"choices2": {"start": "", "separator1": "/", "separator2": "", "stop": "", "placeholder": "..."}}),
                     d.TextInsertOp(insert=".", attributes={}),
                 ],
                 wording=[
@@ -1107,7 +1303,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions="Choose {choices2|(|or|)|...|(a or b)}.",
+                instructions="Choose {choices2|(|or||)|...|(a or b)}.",
                 wording="A ... B ...",
                 example="",
                 clue="",
@@ -1153,7 +1349,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
             d.Exercise(
                 instructions=[
                     d.TextInsertOp(insert="Choose ", attributes={}),
-                    d.TextInsertOp(insert="(a or b)", attributes={"choices2": {"start": "(", "separator": "or", "stop": ")", "placeholder": "..."}}),
+                    d.TextInsertOp(insert="(a or b)", attributes={"choices2": {"start": "(", "separator1": "or", "separator2": "", "stop": ")", "placeholder": "..."}}),
                     d.TextInsertOp(insert=".", attributes={}),
                 ],
                 wording=[
@@ -1169,7 +1365,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions="Choose {choices2||or||...|a or b} and {choices2||or||@@@|c or d}.",
+                instructions="Choose {choices2||or|||...|a or b} and {choices2||or|||@@@|c or d}.",
                 wording="A ... @@@\nB ... @@@",
                 example="",
                 clue="",
@@ -1228,9 +1424,9 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
             d.Exercise(
                 instructions=[
                     d.TextInsertOp(insert="Choose ", attributes={}),
-                    d.TextInsertOp(insert="a or b", attributes={"choices2": {"start": "", "separator": "or", "stop": "", "placeholder": "..."}}),
+                    d.TextInsertOp(insert="a or b", attributes={"choices2": {"start": "", "separator1": "or", "separator2": "", "stop": "", "placeholder": "..."}}),
                     d.TextInsertOp(insert=" and ", attributes={}),
-                    d.TextInsertOp(insert="c or d", attributes={"choices2": {"start": "", "separator": "or", "stop": "", "placeholder": "@@@"}}),
+                    d.TextInsertOp(insert="c or d", attributes={"choices2": {"start": "", "separator1": "or", "separator2": "", "stop": "", "placeholder": "@@@"}}),
                     d.TextInsertOp(insert=".", attributes={}),
                 ],
                 wording=[
@@ -1304,7 +1500,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions="Choose wisely.",
-                wording="A {choices2|(|/|)||(blah/blih)}.",
+                wording="A {choices2|(|/||)||(blah/blih)}.",
                 example="",
                 clue="",
                 wording_paragraphs_per_pagelet=3,
@@ -1348,7 +1544,8 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                         attributes={
                             "choices2": {
                                 "start": "(",
-                                "separator": "/",
+                                "separator1": "/",
+                                "separator2": "",
                                 "stop": ")",
                                 "placeholder": "",
                             },
@@ -1367,7 +1564,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions="Choose wisely.",
-                wording="A {choices2|(|/|)||  (  blah  /  blih  )  }.",
+                wording="A {choices2|(|/||)||  (  blah  /  blih  )  }.",
                 example="",
                 clue="",
                 wording_paragraphs_per_pagelet=3,
@@ -1411,7 +1608,8 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                         attributes={
                             "choices2": {
                                 "start": "(",
-                                "separator": "/",
+                                "separator1": "/",
+                                "separator2": "",
                                 "stop": ")",
                                 "placeholder": "",
                             },
@@ -1430,7 +1628,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions="Choose wisely.",
-                wording="A {choices2||/|||blah/blih}.",
+                wording="A {choices2||/||||blah/blih}.",
                 example="",
                 clue="",
                 wording_paragraphs_per_pagelet=3,
@@ -1474,7 +1672,8 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                         attributes={
                             "choices2": {
                                 "start": "",
-                                "separator": "/",
+                                "separator1": "/",
+                                "separator2": "",
                                 "stop": "",
                                 "placeholder": "",
                             },
@@ -1493,7 +1692,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions="Choose wisely.",
-                wording="A {choices2|||||blah / blih}.",
+                wording="A {choices2||||||blah / blih}.",
                 example="",
                 clue="",
                 wording_paragraphs_per_pagelet=3,
@@ -1537,7 +1736,8 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                         attributes={
                             "choices2": {
                                 "start": "",
-                                "separator": "",
+                                "separator1": "",
+                                "separator2": "",
                                 "stop": "",
                                 "placeholder": "",
                             },
@@ -1556,7 +1756,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions="Choose wisely.",
-                wording="A {choices2|((|//|))||((blah//blih))}.",
+                wording="A {choices2|((|//||))||((blah//blih))}.",
                 example="",
                 clue="",
                 wording_paragraphs_per_pagelet=3,
@@ -1600,7 +1800,8 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                         attributes={
                             "choices2": {
                                 "start": "((",
-                                "separator": "//",
+                                "separator1": "//",
+                                "separator2": "",
                                 "stop": "))",
                                 "placeholder": "",
                             },
@@ -1619,7 +1820,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions="Choose wisely.",
-                wording=r"A {choices2|\{|\||\}||\{blah\|blih\}}.",
+                wording=r"A {choices2|\{|\|||\}||\{blah\|blih\}}.",
                 example="",
                 clue="",
                 wording_paragraphs_per_pagelet=3,
@@ -1663,7 +1864,8 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                         attributes={
                             "choices2": {
                                 "start": "{",
-                                "separator": "|",
+                                "separator1": "|",
+                                "separator2": "",
                                 "stop": "}",
                                 "placeholder": "",
                             },
@@ -1682,7 +1884,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions="Choose wisely.",
-                wording="The sky is @@. {choices2|(|/|)|@@|(blue/red)} ",
+                wording="The sky is @@. {choices2|(|/||)|@@|(blue/red)} ",
                 example="",
                 clue="",
                 wording_paragraphs_per_pagelet=3,
@@ -1730,7 +1932,8 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                         attributes={
                             "choices2": {
                                 "start": "(",
-                                "separator": "/",
+                                "separator1": "/",
+                                "separator2": "",
                                 "stop": ")",
                                 "placeholder": "@@",
                             },
@@ -1749,7 +1952,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions="Choose wisely.",
-                wording="{choices2|(|/|)|...|(blue/red)} The sky is ....",
+                wording="{choices2|(|/||)|...|(blue/red)} The sky is ....",
                 example="",
                 clue="",
                 wording_paragraphs_per_pagelet=3,
@@ -1796,7 +1999,8 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                         attributes={
                             "choices2": {
                                 "start": "(",
-                                "separator": "/",
+                                "separator1": "/",
+                                "separator2": "",
                                 "stop": ")",
                                 "placeholder": "...",
                             },
@@ -1815,7 +2019,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions="Choose wisely.",
-                wording="{choices2|(|/|)|...|(blue/yellow)} The sky is ..., the sun is ....",
+                wording="{choices2|(|/||)|...|(blue/yellow)} The sky is ..., the sun is ....",
                 example="",
                 clue="",
                 wording_paragraphs_per_pagelet=3,
@@ -1871,7 +2075,8 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                         attributes={
                             "choices2": {
                                 "start": "(",
-                                "separator": "/",
+                                "separator1": "/",
+                                "separator2": "",
                                 "stop": ")",
                                 "placeholder": "...",
                             },
@@ -1890,7 +2095,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions="Choose wisely.",
-                wording="{choices2|(|/|)|@1|(blue/red)} {choices2|[|*|]|@2|[green*yellow]} The sky is @1, the sun is @2.",
+                wording="{choices2|(|/||)|@1|(blue/red)} {choices2|[|*||]|@2|[green*yellow]} The sky is @1, the sun is @2.",
                 example="",
                 clue="",
                 wording_paragraphs_per_pagelet=3,
@@ -1946,7 +2151,8 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                         attributes={
                             "choices2": {
                                 "start": "(",
-                                "separator": "/",
+                                "separator1": "/",
+                                "separator2": "",
                                 "stop": ")",
                                 "placeholder": "@1",
                             },
@@ -1958,7 +2164,8 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                         attributes={
                             "choices2": {
                                 "start": "[",
-                                "separator": "*",
+                                "separator1": "*",
+                                "separator2": "",
                                 "stop": "]",
                                 "placeholder": "@2",
                             },
@@ -1977,7 +2184,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions="Choose wisely.",
-                wording="The sky is @@. {choices2|(|/|)|@@|(blue/red)}\n\nThe sun is @@. {choices2|(|/|)|@@|(green/yellow)}",
+                wording="The sky is @@. {choices2|(|/||)|@@|(blue/red)}\n\nThe sun is @@. {choices2|(|/||)|@@|(green/yellow)}",
                 example="",
                 clue="",
                 wording_paragraphs_per_pagelet=3,
@@ -2037,7 +2244,8 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                         attributes={
                             "choices2": {
                                 "start": "(",
-                                "separator": "/",
+                                "separator1": "/",
+                                "separator2": "",
                                 "stop": ")",
                                 "placeholder": "@@",
                             },
@@ -2049,7 +2257,8 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                         attributes={
                             "choices2": {
                                 "start": "(",
-                                "separator": "/",
+                                "separator1": "/",
+                                "separator2": "",
                                 "stop": ")",
                                 "placeholder": "@@",
                             },
@@ -2067,7 +2276,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions="Choose wisely.",
-                wording="The sky is @1, {choices2|(|/|)|@1|(blue/red)} {choices2|[|*|]|@2|[green*yellow]} the sun is @2.",
+                wording="The sky is @1, {choices2|(|/||)|@1|(blue/red)} {choices2|[|*||]|@2|[green*yellow]} the sun is @2.",
                 example="",
                 clue="",
                 wording_paragraphs_per_pagelet=3,
@@ -2124,7 +2333,8 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                         attributes={
                             "choices2": {
                                 "start": "(",
-                                "separator": "/",
+                                "separator1": "/",
+                                "separator2": "",
                                 "stop": ")",
                                 "placeholder": "@1",
                             },
@@ -2136,7 +2346,8 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                         attributes={
                             "choices2": {
                                 "start": "[",
-                                "separator": "*",
+                                "separator1": "*",
+                                "separator2": "",
                                 "stop": "]",
                                 "placeholder": "@2",
                             },

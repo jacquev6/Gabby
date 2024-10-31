@@ -57,7 +57,7 @@ class Choices2Blot extends InlineBlot {
   static override blotName = 'choices2'
   static override tagName = 'choices2-blot'
 
-  static override create(settings: {start: string, separator: string, stop: string, placeholder: string, justCreated?: boolean}) {
+  static override create(settings: {start: string, separator1: string, separator2: string, stop: string, placeholder: string, justCreated?: boolean}) {
     const needsInitialEdit = settings.justCreated
     delete settings.justCreated
 
@@ -69,7 +69,9 @@ class Choices2Blot extends InlineBlot {
         kind: 'multipleChoicesEdition',
         settings: JSON.parse(node.getAttribute('data-gabby-settings')!),
         initial,
+        deleted: false,
         delete() {
+          this.deleted = true
           const blot = Quill.find(node)
           console.assert(blot !== null && !(blot instanceof Quill))
           let root = blot
@@ -122,7 +124,15 @@ class Choices2Blot extends InlineBlot {
 function doneEditingChoices2() {
   console.assert(model.value.inProgress.kind === 'multipleChoicesEdition')
   model.value.inProgress.stopWatching()
-  if (model.value.inProgress.initial && model.value.inProgress.settings.start !== '' && model.value.inProgress.settings.separator !== '' && model.value.inProgress.settings.stop !== '') {
+  const needsReplication =
+    model.value.inProgress.initial
+    && !model.value.inProgress.deleted
+    && model.value.inProgress.settings.start !== ''
+    && model.value.inProgress.settings.separator1 !== ''
+    && model.value.inProgress.settings.stop !== ''
+    // @todo Don't replicate if current selection doesn't match start separator and stop
+  if (needsReplication) {
+    console.log('Replicating choices')
     let newWording = ''
     const wording = model.value.wording
     let lastProcessedIndex = -1
@@ -137,17 +147,18 @@ function doneEditingChoices2() {
         lastProcessedIndex = startIndex + model.value.inProgress.settings.start.length - 1
       } else {
         const stopIndex = wording.indexOf(model.value.inProgress.settings.stop, startIndex + model.value.inProgress.settings.start.length)
-        const separatorIndex = wording.indexOf(model.value.inProgress.settings.separator, startIndex + model.value.inProgress.settings.start.length)
+        const separatorIndex = wording.indexOf(model.value.inProgress.settings.separator1, startIndex + model.value.inProgress.settings.start.length)
         if (stopIndex !== -1 && separatorIndex !== -1 && separatorIndex < stopIndex) {
-          // console.log('Choice:', '#' + wording.slice(startIndex, stopIndex + model.value.inProgress.settings.stop.length) + '#')
+          console.log('Replicating choices: found choice:', '#' + wording.slice(startIndex, stopIndex + model.value.inProgress.settings.stop.length) + '#')
         }
-        newWording += `{choices2|${escapeForTag(model.value.inProgress.settings.start)}|${escapeForTag(model.value.inProgress.settings.separator)}|${escapeForTag(model.value.inProgress.settings.stop)}|${escapeForTag(model.value.inProgress.settings.placeholder)}|${escapeForTag(wording.slice(startIndex, stopIndex + model.value.inProgress.settings.stop.length))}}`
+        newWording += `{choices2|${escapeForTag(model.value.inProgress.settings.start)}|${escapeForTag(model.value.inProgress.settings.separator1)}|${escapeForTag(model.value.inProgress.settings.separator2)}|${escapeForTag(model.value.inProgress.settings.stop)}|${escapeForTag(model.value.inProgress.settings.placeholder)}|${escapeForTag(wording.slice(startIndex, stopIndex + model.value.inProgress.settings.stop.length))}}`
         lastProcessedIndex = stopIndex + model.value.inProgress.settings.stop.length - 1
       }
     }
     newWording += wording.slice(lastProcessedIndex + 1)
-    // console.log(newWording)
+    console.log('Replicating choices: previous wording:', model.value.wording)
     model.value.wording = newWording
+    console.log('Replicating choices: new wording:', model.value.wording)
   }
   model.value.inProgress = {kind: 'nothing'}
 }
@@ -157,8 +168,8 @@ const multipleChoicesFormats = {
   choices2: {
     kind: 'text' as const,
     make(text: string, settings_: unknown) {
-      const settings = settings_ as {start: string, separator: string, stop: string, placeholder: string}
-      return `{choices2|${escapeForTag(settings.start)}|${escapeForTag(settings.separator)}|${escapeForTag(settings.stop)}|${escapeForTag(settings.placeholder)}|${escapeForTag(text)}}`
+      const settings = settings_ as {start: string, separator1: string, separator2: string, stop: string, placeholder: string}
+      return `{choices2|${escapeForTag(settings.start)}|${escapeForTag(settings.separator1)}|${escapeForTag(settings.separator2)}|${escapeForTag(settings.stop)}|${escapeForTag(settings.placeholder)}|${escapeForTag(text)}}`
     },
     blot: Choices2Blot,
   },
@@ -282,13 +293,16 @@ const colorsCount = computed({
   <ContextMenu ref="choices2ContextMenu" backdropCovers1="#left-col-2" backdropCovers2="#gutter-2" @hidden="doneEditingChoices2">
     <template v-if="model.inProgress.kind === 'multipleChoicesEdition'">
       <div class="container-fluid">
-        <BLabeledInput :label="$t('choicesSettingsSeparator')" v-model="model.inProgress.settings.separator" />
+        <BRow>
+          <BCol><BLabeledInput :label="$t('choicesSettingsSeparators')" style="width: 8em" v-model="model.inProgress.settings.separator1" /></BCol>
+          <BCol><BLabeledInput label="&nbsp;" style="width: 8em" v-model="model.inProgress.settings.separator2" /></BCol>
+        </BRow>
         <BRow>
           <BCol><BLabeledInput :label="$t('choicesSettingsStart')" style="width: 8em" v-model="model.inProgress.settings.start" /></BCol>
           <BCol><BLabeledInput :label="$t('choicesSettingsStop')" style="width: 8em" v-model="model.inProgress.settings.stop" /></BCol>
         </BRow>
         <BLabeledInput :label="$t('choicesSettingsPlaceholder')" v-model="model.inProgress.settings.placeholder" />
-        <BButton sm secondary @click="model.inProgress.delete">{{ $t(model.inProgress.initial ? 'choicesSettingsCancel' : 'choicesSettingsDelete') }}</BButton>
+        <BButton sm secondary @click="() => {console.assert(model.inProgress.kind === 'multipleChoicesEdition'); model.inProgress.delete()}">{{ $t(model.inProgress.initial ? 'choicesSettingsCancel' : 'choicesSettingsDelete') }}</BButton>
         <BButton sm primary v-if="choices2ContextMenu !== null" @click="choices2ContextMenu.hide()">OK</BButton>
       </div>
     </template>

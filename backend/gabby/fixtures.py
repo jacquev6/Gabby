@@ -484,7 +484,7 @@ def create_test_exercises_2(session, admin):
             )
         ],
         number="8",
-        instructions="Réponds par {choices2||ou||@|vrai ou faux}.",
+        instructions="Réponds par {choices2||ou|||@|vrai ou faux}.",
         example="",
         clue="",
         wording="a. coccinelle est un adjectif. @\nb. bûche est un verbe. @\nc. cette est un déterminant. @\nd. dentier est un verbe. @\ne. respirer est un verbe. @\nf. aspiration est un nom. @",
@@ -554,7 +554,7 @@ def create_test_exercises_3(session, admin):
         instructions="...",
         example="",
         clue="",
-        wording="a. {bold|Aujourd'hui} il fait {italic|gris} et (il pleuvra / il pleut / il pleuvait).\nb. {bold|Aujourd'hui} il fait {italic|gris} et {choices2|(|/|)||(il pleuvra / il pleut / il pleuvait)}.\nc. Aujourd'hui il fait @1 et il @2. {choices2|(|/|)|@1|(gris / beau)} {choices2|[|*|]|@2|[pleut * pleuvra]}\nd. {bold|Aujourd'hui} il fait {italic|gris} et {choices|il pleuvra|il pleut|il pleuvait}.",
+        wording="a. {bold|Aujourd'hui} il fait {italic|gris} et (il pleuvra / il pleut / il pleuvait).\nb. {bold|Aujourd'hui} il fait {italic|gris} et {choices2|(|/||)||(il pleuvra / il pleut / il pleuvait)}.\nc. Aujourd'hui il fait @1 et il @2. {choices2|(|/||)|@1|(gris / beau)} {choices2|[|*||]|@2|[pleut * pleuvra]}\nd. {bold|Aujourd'hui} il fait {italic|gris} et {choices|il pleuvra|il pleut|il pleuvait}.",
         wording_paragraphs_per_pagelet=3,
         adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
         created_by=admin,

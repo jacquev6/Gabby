@@ -38,11 +38,13 @@ export type Model = {
       kind: 'multipleChoicesEdition'
       initial: boolean
       stopWatching(): void
+      deleted: boolean
       delete(): void
       settings: {
         start: string
         stop: string
-        separator: string
+        separator1: string
+        separator2: string
         placeholder: string
       }
     }
@@ -239,6 +241,7 @@ export function suggestNextNumber(number: string) {
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import deepCopy from 'deep-copy'
+import { useI18n } from 'vue-i18n'
 
 import { BRow, BCol, BLabeledInput, BLabeledTextarea, BLabeledSelect } from './opinion/bootstrap'
 import OptionalTextarea from './OptionalTextarea.vue'
@@ -255,6 +258,8 @@ const props = defineProps<{
 }>()
 
 const model = defineModel<Model>({required: true})
+
+const i18n = useI18n()
 
 const instructionsTextArea = ref<InstanceType<typeof BLabeledTextarea> | null>(null)
 const wordingTextArea = ref<InstanceType<typeof BLabeledTextarea> | null>(null)
@@ -371,7 +376,8 @@ function selectionChangeInInstructionsOrWording(_range: {index: number, length: 
     const settings = {
       start: '(',
       stop: ')',
-      separator: '/',
+      separator1: '/',
+      separator2: i18n.t('multipleChoicesSeparator2'),
       placeholder: '',
       justCreated: true,
     }
