@@ -12,6 +12,20 @@ Les améliorations techniques ne figurent que dans le `log git <https://github.c
 Les titres des sections de ce document correspondent au champ ``Gabby version`` dans le "À propos".
 Les versions sont nommées selon leur date de publication, au format ``YYYYMMDD-HHMMSS`` (année, mois, jour, tiret, heure, minute, seconde).
 
+20241031-160526
+---------------
+
+- Interface d'adaptation :
+    - refonte de la création de QCM : implémentation du flow décrit par Léa
+        - le type "Choix multiples (dans l'énoncé)" a été supprimé
+        - le type "Choix multiples (dans la consigne)" n'est plus utilisable pour de nouveaux exercices
+        - le type "Choix multiples" a été ajouté couvrant les deux cas
+        - il maintenant possible d'avoir plusieurs QCMs dans un seul exercice
+    - la colonne de prévisualisation contient maintenant une version réduite de l'exercice, avec la possibilité de passer en plein écran
+
+- Exercices adaptés :
+    - dans les QCM, les choix ne recouvrent plus jamais la phrase du dessous
+
 20241014-090349
 ---------------
 
