@@ -33,7 +33,7 @@ async function delete_(exercise: Exercise) {
           <BBusy :busy="exercise.busy">
             <strong>{{ exercise.attributes.number }}</strong>
             {{ ellipsis(exercise.attributes.instructions) }}
-            <em>{{ exercise.attributes.adaptation.kind !== 'null' ? $t(exercise.attributes.adaptation.kind) : '' }}</em>
+            <em>{{ exercise.attributes.adaptation.kind !== null ? $t(exercise.attributes.adaptation.kind) : '' }}</em>
             <RouterLink class="btn btn-primary btn-sm" :to="{name: 'project-textbook-page-exercise', params: {exerciseId: exercise.id}}">{{ $t('edit') }}</RouterLink>
             <BButton secondary sm @click="delete_(exercise)">{{ $t('delete') }}</BButton>
           </BBusy>

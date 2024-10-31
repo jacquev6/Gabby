@@ -79,7 +79,7 @@
   "fill-with-free-text": "Remplissage par texte libre",
   "items-and-effects-attempt-1": "Items et effets (essai n°1)",
   "multiple-choices-in-instructions": "Choix multiples (dans la consigne)",
-  "multiple-choices-in-wording": "Choix multiples (dans l'énoncé)",
+  "multiple-choices": "Choix multiples",
 
   "confirmTitle": "Confirmation",
   "confirmNo": "Retour",
@@ -147,6 +147,16 @@
   "effectsBoxed": "Cadre",
   "selectableButton": "Cochable",
 
+  "multipleChoicesButton": "Choix multiples",
+  "multipleChoicesInstructions": "Sélectionnez un ensemble de choix dans le champ \"Consigne\" ou \"Énoncé\" de la colonne \"Édition\". Incluez les caractère de début, fin et séparation.",
+  "choicesSettingsSeparators": "Séparateurs",
+  "multipleChoicesSeparator2": "ou",
+  "choicesSettingsStart": "Début",
+  "choicesSettingsStop": "Fin",
+  "choicesSettingsPlaceholder": "Trou à remplir",
+  "choicesSettingsCancel": "Annuler",
+  "choicesSettingsDelete": "Supprimer",
+
   "tools": "Outils",
   "undo": "Annuler",
   "redo": "Refaire",
@@ -154,5 +164,7 @@
   "not-yet-implemented": "Pas encore implémenté",
 
   "back": "Retour",
-  "eraseAnswers": "Effacer les réponses"
+  "eraseAnswers": "Effacer les réponses",
+  "fullScreen": "Plein écran",
+  "exitFullScreen": "Sortir du plein écran"
 }

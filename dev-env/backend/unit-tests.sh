@@ -3,7 +3,7 @@
 set -o errexit
 set -o nounset
 set -o pipefail
-cd "$(dirname "${BASH_SOURCE[0]}")/."
+cd "$(dirname "${BASH_SOURCE[0]}")"
 
 
 coverage=false
@@ -27,19 +27,19 @@ expected=$(expr $defined + $imported + $inherited)
 echo "Expecting to run $expected tests"
 
 rm -f ../../backend/.coverage
-docker compose exec \
+../docker-compose.sh exec \
   --env GABBY_UNITTESTING=true \
   backend-shell \
     rm -rf /app/dev-env/backend/unit-tests-coverage
 
-docker compose exec \
+../docker-compose.sh exec \
   --env GABBY_UNITTESTING=true \
   backend-shell \
     $runner -m unittest discover --pattern '*.py' "$@"
 
 if $coverage
 then
-  docker compose exec \
+  ../docker-compose.sh exec \
     --env GABBY_UNITTESTING=true \
     backend-shell \
       python -m coverage html --quiet --dir /app/dev-env/backend/unit-tests-coverage

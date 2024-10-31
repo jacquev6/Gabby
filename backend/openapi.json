@@ -1,6 +1,124 @@
 {
   "components": {
     "schemas": {
+      "AdaptationV2-Input": {
+        "additionalProperties": false,
+        "properties": {
+          "effects": {
+            "items": {
+              "discriminator": {
+                "mapping": {
+                  "fill-with-free-text": "#/components/schemas/FillWithFreeTextAdaptationEffect",
+                  "items-and-effects-attempt-1": "#/components/schemas/ItemsAndEffectsAttempt1AdaptationEffect-Input",
+                  "multiple-choices-in-instructions": "#/components/schemas/MultipleChoicesInInstructionsAdaptationEffect",
+                  "select-things": "#/components/schemas/SelectThingsAdaptationEffect"
+                },
+                "propertyName": "kind"
+              },
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/FillWithFreeTextAdaptationEffect"
+                },
+                {
+                  "$ref": "#/components/schemas/MultipleChoicesInInstructionsAdaptationEffect"
+                },
+                {
+                  "$ref": "#/components/schemas/SelectThingsAdaptationEffect"
+                },
+                {
+                  "$ref": "#/components/schemas/ItemsAndEffectsAttempt1AdaptationEffect-Input"
+                }
+              ]
+            },
+            "title": "Effects",
+            "type": "array"
+          },
+          "kind": {
+            "anyOf": [
+              {
+                "enum": [
+                  "fill-with-free-text",
+                  "items-and-effects-attempt-1",
+                  "select-things",
+                  "multiple-choices-in-instructions",
+                  "multiple-choices-in-wording",
+                  "multiple-choices"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Kind"
+          }
+        },
+        "required": [
+          "kind",
+          "effects"
+        ],
+        "title": "AdaptationV2",
+        "type": "object"
+      },
+      "AdaptationV2-Output": {
+        "additionalProperties": false,
+        "properties": {
+          "effects": {
+            "items": {
+              "discriminator": {
+                "mapping": {
+                  "fill-with-free-text": "#/components/schemas/FillWithFreeTextAdaptationEffect",
+                  "items-and-effects-attempt-1": "#/components/schemas/ItemsAndEffectsAttempt1AdaptationEffect-Output",
+                  "multiple-choices-in-instructions": "#/components/schemas/MultipleChoicesInInstructionsAdaptationEffect",
+                  "select-things": "#/components/schemas/SelectThingsAdaptationEffect"
+                },
+                "propertyName": "kind"
+              },
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/FillWithFreeTextAdaptationEffect"
+                },
+                {
+                  "$ref": "#/components/schemas/MultipleChoicesInInstructionsAdaptationEffect"
+                },
+                {
+                  "$ref": "#/components/schemas/SelectThingsAdaptationEffect"
+                },
+                {
+                  "$ref": "#/components/schemas/ItemsAndEffectsAttempt1AdaptationEffect-Output"
+                }
+              ]
+            },
+            "title": "Effects",
+            "type": "array"
+          },
+          "kind": {
+            "anyOf": [
+              {
+                "enum": [
+                  "fill-with-free-text",
+                  "items-and-effects-attempt-1",
+                  "select-things",
+                  "multiple-choices-in-instructions",
+                  "multiple-choices-in-wording",
+                  "multiple-choices"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Kind"
+          }
+        },
+        "required": [
+          "kind",
+          "effects"
+        ],
+        "title": "AdaptationV2",
+        "type": "object"
+      },
       "Body_login_api_token_post": {
         "properties": {
           "client_id": {
@@ -94,7 +212,21 @@
         "title": "Effects",
         "type": "object"
       },
-      "FillWithFreeTextAdaptation": {
+      "EmbedInsertOp": {
+        "additionalProperties": false,
+        "properties": {
+          "insert": {
+            "title": "Insert",
+            "type": "object"
+          }
+        },
+        "required": [
+          "insert"
+        ],
+        "title": "EmbedInsertOp",
+        "type": "object"
+      },
+      "FillWithFreeTextAdaptationEffect": {
         "additionalProperties": false,
         "properties": {
           "kind": {
@@ -114,7 +246,7 @@
           "kind",
           "placeholder"
         ],
-        "title": "FillWithFreeTextAdaptation",
+        "title": "FillWithFreeTextAdaptationEffect",
         "type": "object"
       },
       "HTTPValidationError": {
@@ -128,25 +260,6 @@
           }
         },
         "title": "HTTPValidationError",
-        "type": "object"
-      },
-      "InsertOp": {
-        "additionalProperties": false,
-        "properties": {
-          "attributes": {
-            "default": {},
-            "title": "Attributes",
-            "type": "object"
-          },
-          "insert": {
-            "title": "Insert",
-            "type": "string"
-          }
-        },
-        "required": [
-          "insert"
-        ],
-        "title": "InsertOp",
         "type": "object"
       },
       "ItemLinks": {
@@ -163,7 +276,7 @@
         "title": "ItemLinks",
         "type": "object"
       },
-      "ItemsAndEffectsAttempt1Adaptation-Input": {
+      "ItemsAndEffectsAttempt1AdaptationEffect-Input": {
         "additionalProperties": false,
         "properties": {
           "effects": {
@@ -197,10 +310,10 @@
           "items",
           "effects"
         ],
-        "title": "ItemsAndEffectsAttempt1Adaptation",
+        "title": "ItemsAndEffectsAttempt1AdaptationEffect",
         "type": "object"
       },
-      "ItemsAndEffectsAttempt1Adaptation-Output": {
+      "ItemsAndEffectsAttempt1AdaptationEffect-Output": {
         "additionalProperties": false,
         "properties": {
           "effects": {
@@ -234,7 +347,7 @@
           "items",
           "effects"
         ],
-        "title": "ItemsAndEffectsAttempt1Adaptation",
+        "title": "ItemsAndEffectsAttempt1AdaptationEffect",
         "type": "object"
       },
       "ManualItems": {
@@ -255,7 +368,7 @@
         "title": "ManualItems",
         "type": "object"
       },
-      "MultipleChoicesInInstructionsAdaptation": {
+      "MultipleChoicesInInstructionsAdaptationEffect": {
         "additionalProperties": false,
         "properties": {
           "kind": {
@@ -275,43 +388,7 @@
           "kind",
           "placeholder"
         ],
-        "title": "MultipleChoicesInInstructionsAdaptation",
-        "type": "object"
-      },
-      "MultipleChoicesInWordingAdaptation": {
-        "additionalProperties": false,
-        "properties": {
-          "kind": {
-            "const": "multiple-choices-in-wording",
-            "enum": [
-              "multiple-choices-in-wording"
-            ],
-            "title": "Kind",
-            "type": "string"
-          }
-        },
-        "required": [
-          "kind"
-        ],
-        "title": "MultipleChoicesInWordingAdaptation",
-        "type": "object"
-      },
-      "NullAdaptation": {
-        "additionalProperties": false,
-        "properties": {
-          "kind": {
-            "const": "null",
-            "enum": [
-              "null"
-            ],
-            "title": "Kind",
-            "type": "string"
-          }
-        },
-        "required": [
-          "kind"
-        ],
-        "title": "NullAdaptation",
+        "title": "MultipleChoicesInInstructionsAdaptationEffect",
         "type": "object"
       },
       "OutputListRelationShipMeta": {
@@ -521,7 +598,7 @@
         "title": "Section",
         "type": "object"
       },
-      "SelectThingsAdaptation": {
+      "SelectThingsAdaptationEffect": {
         "additionalProperties": false,
         "properties": {
           "colors": {
@@ -554,7 +631,7 @@
           "words",
           "punctuation"
         ],
-        "title": "SelectThingsAdaptation",
+        "title": "SelectThingsAdaptationEffect",
         "type": "object"
       },
       "Selectable": {
@@ -635,6 +712,25 @@
           "kind"
         ],
         "title": "SentencesItems",
+        "type": "object"
+      },
+      "TextInsertOp": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "title": "Attributes",
+            "type": "object"
+          },
+          "insert": {
+            "title": "Insert",
+            "type": "string"
+          }
+        },
+        "required": [
+          "insert",
+          "attributes"
+        ],
+        "title": "TextInsertOp",
         "type": "object"
       },
       "ValidationError": {
@@ -950,30 +1046,10 @@
         "additionalProperties": false,
         "properties": {
           "adaptation": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/FillWithFreeTextAdaptation"
-              },
-              {
-                "$ref": "#/components/schemas/ItemsAndEffectsAttempt1Adaptation-Input"
-              },
-              {
-                "$ref": "#/components/schemas/MultipleChoicesInInstructionsAdaptation"
-              },
-              {
-                "$ref": "#/components/schemas/MultipleChoicesInWordingAdaptation"
-              },
-              {
-                "$ref": "#/components/schemas/NullAdaptation"
-              },
-              {
-                "$ref": "#/components/schemas/SelectThingsAdaptation"
-              }
-            ],
+            "$ref": "#/components/schemas/AdaptationV2-Input",
             "default": {
-              "kind": "null"
-            },
-            "title": "Adaptation"
+              "effects": []
+            }
           },
           "clue": {
             "default": "",
@@ -1100,27 +1176,7 @@
         "additionalProperties": false,
         "properties": {
           "adaptation": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/FillWithFreeTextAdaptation"
-              },
-              {
-                "$ref": "#/components/schemas/ItemsAndEffectsAttempt1Adaptation-Output"
-              },
-              {
-                "$ref": "#/components/schemas/MultipleChoicesInInstructionsAdaptation"
-              },
-              {
-                "$ref": "#/components/schemas/MultipleChoicesInWordingAdaptation"
-              },
-              {
-                "$ref": "#/components/schemas/NullAdaptation"
-              },
-              {
-                "$ref": "#/components/schemas/SelectThingsAdaptation"
-              }
-            ],
-            "title": "Adaptation"
+            "$ref": "#/components/schemas/AdaptationV2-Output"
           },
           "clue": {
             "title": "Clue",
@@ -1290,27 +1346,7 @@
         "additionalProperties": false,
         "properties": {
           "adaptation": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/FillWithFreeTextAdaptation"
-              },
-              {
-                "$ref": "#/components/schemas/ItemsAndEffectsAttempt1Adaptation-Input"
-              },
-              {
-                "$ref": "#/components/schemas/MultipleChoicesInInstructionsAdaptation"
-              },
-              {
-                "$ref": "#/components/schemas/MultipleChoicesInWordingAdaptation"
-              },
-              {
-                "$ref": "#/components/schemas/NullAdaptation"
-              },
-              {
-                "$ref": "#/components/schemas/SelectThingsAdaptation"
-              }
-            ],
-            "title": "Adaptation"
+            "$ref": "#/components/schemas/AdaptationV2-Input"
           },
           "clue": {
             "title": "Clue",
@@ -1505,28 +1541,56 @@
         "properties": {
           "clue": {
             "items": {
-              "$ref": "#/components/schemas/InsertOp"
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/TextInsertOp"
+                },
+                {
+                  "$ref": "#/components/schemas/EmbedInsertOp"
+                }
+              ]
             },
             "title": "Clue",
             "type": "array"
           },
           "example": {
             "items": {
-              "$ref": "#/components/schemas/InsertOp"
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/TextInsertOp"
+                },
+                {
+                  "$ref": "#/components/schemas/EmbedInsertOp"
+                }
+              ]
             },
             "title": "Example",
             "type": "array"
           },
           "instructions": {
             "items": {
-              "$ref": "#/components/schemas/InsertOp"
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/TextInsertOp"
+                },
+                {
+                  "$ref": "#/components/schemas/EmbedInsertOp"
+                }
+              ]
             },
             "title": "Instructions",
             "type": "array"
           },
           "wording": {
             "items": {
-              "$ref": "#/components/schemas/InsertOp"
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/TextInsertOp"
+                },
+                {
+                  "$ref": "#/components/schemas/EmbedInsertOp"
+                }
+              ]
             },
             "title": "Wording",
             "type": "array"
@@ -1627,27 +1691,7 @@
         "additionalProperties": false,
         "properties": {
           "adaptation": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/FillWithFreeTextAdaptation"
-              },
-              {
-                "$ref": "#/components/schemas/ItemsAndEffectsAttempt1Adaptation-Input"
-              },
-              {
-                "$ref": "#/components/schemas/MultipleChoicesInInstructionsAdaptation"
-              },
-              {
-                "$ref": "#/components/schemas/MultipleChoicesInWordingAdaptation"
-              },
-              {
-                "$ref": "#/components/schemas/NullAdaptation"
-              },
-              {
-                "$ref": "#/components/schemas/SelectThingsAdaptation"
-              }
-            ],
-            "title": "Adaptation"
+            "$ref": "#/components/schemas/AdaptationV2-Input"
           },
           "clue": {
             "title": "Clue",

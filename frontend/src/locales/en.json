@@ -79,7 +79,7 @@
   "fill-with-free-text": "Fill with free text",
   "items-and-effects-attempt-1": "Items and effects (attempt 1)",
   "multiple-choices-in-instructions": "Multiple choices (in instructions)",
-  "multiple-choices-in-wording": "Multiple choices (in wording)",
+  "multiple-choices": "Multiple choices",
 
   "confirmTitle": "Confirm",
   "confirmNo": "Go back",
@@ -147,6 +147,16 @@
   "effectsBoxed": "Boxed",
   "selectableButton": "Selectable",
 
+  "multipleChoicesButton": "Multiple choices",
+  "multipleChoicesInstructions": "Select a set of choices in the \"Instructions\" or \"Wording\" fields in the \"Edition\" column. Include start, stop and separator characters.",
+  "choicesSettingsSeparators": "Separators",
+  "multipleChoicesSeparator2": "or",
+  "choicesSettingsStart": "Start",
+  "choicesSettingsStop": "Stop",
+  "choicesSettingsPlaceholder": "Placeholder to fill",
+  "choicesSettingsCancel": "Cancel",
+  "choicesSettingsDelete": "Delete",
+
   "tools": "Tools",
   "undo": "Undo",
   "redo": "Redo",
@@ -154,5 +164,7 @@
   "not-yet-implemented": "Not yet implemented",
 
   "back": "Back",
-  "eraseAnswers": "Erase answers"
+  "eraseAnswers": "Erase answers",
+  "fullScreen": "Full screen",
+  "exitFullScreen": "Exit full screen"
 }

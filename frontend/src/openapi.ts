@@ -151,6 +151,20 @@ export type webhooks = Record<string, never>;
 
 export interface components {
   schemas: {
+    /** AdaptationV2 */
+    "AdaptationV2-Input": {
+      /** Effects */
+      effects: (components["schemas"]["FillWithFreeTextAdaptationEffect"] | components["schemas"]["MultipleChoicesInInstructionsAdaptationEffect"] | components["schemas"]["SelectThingsAdaptationEffect"] | components["schemas"]["ItemsAndEffectsAttempt1AdaptationEffect-Input"])[];
+      /** Kind */
+      kind: ("fill-with-free-text" | "items-and-effects-attempt-1" | "select-things" | "multiple-choices-in-instructions" | "multiple-choices-in-wording" | "multiple-choices") | null;
+    };
+    /** AdaptationV2 */
+    "AdaptationV2-Output": {
+      /** Effects */
+      effects: (components["schemas"]["FillWithFreeTextAdaptationEffect"] | components["schemas"]["MultipleChoicesInInstructionsAdaptationEffect"] | components["schemas"]["SelectThingsAdaptationEffect"] | components["schemas"]["ItemsAndEffectsAttempt1AdaptationEffect-Output"])[];
+      /** Kind */
+      kind: ("fill-with-free-text" | "items-and-effects-attempt-1" | "select-things" | "multiple-choices-in-instructions" | "multiple-choices-in-wording" | "multiple-choices") | null;
+    };
     /** Body_login_api_token_post */
     Body_login_api_token_post: {
       /** Client Id */
@@ -177,8 +191,13 @@ export interface components {
       boxed: boolean;
       selectable: components["schemas"]["Selectable"] | null;
     };
-    /** FillWithFreeTextAdaptation */
-    FillWithFreeTextAdaptation: {
+    /** EmbedInsertOp */
+    EmbedInsertOp: {
+      /** Insert */
+      insert: Record<string, never>;
+    };
+    /** FillWithFreeTextAdaptationEffect */
+    FillWithFreeTextAdaptationEffect: {
       /**
        * Kind
        * @constant
@@ -193,23 +212,13 @@ export interface components {
       /** Detail */
       detail?: components["schemas"]["ValidationError"][];
     };
-    /** InsertOp */
-    InsertOp: {
-      /**
-       * Attributes
-       * @default {}
-       */
-      attributes?: Record<string, never>;
-      /** Insert */
-      insert: string;
-    };
     /** ItemLinks */
     ItemLinks: {
       /** Self */
       self: string;
     };
-    /** ItemsAndEffectsAttempt1Adaptation */
-    "ItemsAndEffectsAttempt1Adaptation-Input": {
+    /** ItemsAndEffectsAttempt1AdaptationEffect */
+    "ItemsAndEffectsAttempt1AdaptationEffect-Input": {
       effects: components["schemas"]["Effects"];
       /** Items */
       items: components["schemas"]["WordsItems"] | components["schemas"]["SentencesItems"] | components["schemas"]["ManualItems"];
@@ -220,8 +229,8 @@ export interface components {
        */
       kind: "items-and-effects-attempt-1";
     };
-    /** ItemsAndEffectsAttempt1Adaptation */
-    "ItemsAndEffectsAttempt1Adaptation-Output": {
+    /** ItemsAndEffectsAttempt1AdaptationEffect */
+    "ItemsAndEffectsAttempt1AdaptationEffect-Output": {
       effects: components["schemas"]["Effects"];
       /** Items */
       items: components["schemas"]["WordsItems"] | components["schemas"]["SentencesItems"] | components["schemas"]["ManualItems"];
@@ -241,8 +250,8 @@ export interface components {
        */
       kind: "manual";
     };
-    /** MultipleChoicesInInstructionsAdaptation */
-    MultipleChoicesInInstructionsAdaptation: {
+    /** MultipleChoicesInInstructionsAdaptationEffect */
+    MultipleChoicesInInstructionsAdaptationEffect: {
       /**
        * Kind
        * @constant
@@ -251,24 +260,6 @@ export interface components {
       kind: "multiple-choices-in-instructions";
       /** Placeholder */
       placeholder: string;
-    };
-    /** MultipleChoicesInWordingAdaptation */
-    MultipleChoicesInWordingAdaptation: {
-      /**
-       * Kind
-       * @constant
-       * @enum {string}
-       */
-      kind: "multiple-choices-in-wording";
-    };
-    /** NullAdaptation */
-    NullAdaptation: {
-      /**
-       * Kind
-       * @constant
-       * @enum {string}
-       */
-      kind: "null";
     };
     /** OutputListRelationShipMeta */
     OutputListRelationShipMeta: {
@@ -337,8 +328,8 @@ export interface components {
       /** Paragraphs */
       paragraphs: components["schemas"]["Paragraph"][];
     };
-    /** SelectThingsAdaptation */
-    SelectThingsAdaptation: {
+    /** SelectThingsAdaptationEffect */
+    SelectThingsAdaptationEffect: {
       /** Colors */
       colors: string[];
       /**
@@ -370,6 +361,13 @@ export interface components {
        * @enum {string}
        */
       kind: "sentences";
+    };
+    /** TextInsertOp */
+    TextInsertOp: {
+      /** Attributes */
+      attributes: Record<string, never>;
+      /** Insert */
+      insert: string;
     };
     /** ValidationError */
     ValidationError: {
@@ -506,12 +504,11 @@ export interface components {
     /** exerciseCreateInputDataAttributes */
     exerciseCreateInputDataAttributes: {
       /**
-       * Adaptation
        * @default {
-       *   "kind": "null"
+       *   "effects": []
        * }
        */
-      adaptation?: components["schemas"]["FillWithFreeTextAdaptation"] | components["schemas"]["ItemsAndEffectsAttempt1Adaptation-Input"] | components["schemas"]["MultipleChoicesInInstructionsAdaptation"] | components["schemas"]["MultipleChoicesInWordingAdaptation"] | components["schemas"]["NullAdaptation"] | components["schemas"]["SelectThingsAdaptation"];
+      adaptation?: components["schemas"]["AdaptationV2-Input"];
       /**
        * Clue
        * @default
@@ -571,8 +568,7 @@ export interface components {
     };
     /** exerciseOutputItemAttributes */
     exerciseOutputItemAttributes: {
-      /** Adaptation */
-      adaptation: components["schemas"]["FillWithFreeTextAdaptation"] | components["schemas"]["ItemsAndEffectsAttempt1Adaptation-Output"] | components["schemas"]["MultipleChoicesInInstructionsAdaptation"] | components["schemas"]["MultipleChoicesInWordingAdaptation"] | components["schemas"]["NullAdaptation"] | components["schemas"]["SelectThingsAdaptation"];
+      adaptation: components["schemas"]["AdaptationV2-Output"];
       /** Clue */
       clue: string;
       /**
@@ -633,8 +629,7 @@ export interface components {
     };
     /** exerciseUpdateInputDataAttributes */
     exerciseUpdateInputDataAttributes: {
-      /** Adaptation */
-      adaptation?: components["schemas"]["FillWithFreeTextAdaptation"] | components["schemas"]["ItemsAndEffectsAttempt1Adaptation-Input"] | components["schemas"]["MultipleChoicesInInstructionsAdaptation"] | components["schemas"]["MultipleChoicesInWordingAdaptation"] | components["schemas"]["NullAdaptation"] | components["schemas"]["SelectThingsAdaptation"];
+      adaptation?: components["schemas"]["AdaptationV2-Input"];
       /** Clue */
       clue?: string;
       /** Example */
@@ -713,13 +708,13 @@ export interface components {
     /** Exercise */
     gabby__exercise_delta__Exercise: {
       /** Clue */
-      clue: components["schemas"]["InsertOp"][];
+      clue: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
       /** Example */
-      example: components["schemas"]["InsertOp"][];
+      example: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
       /** Instructions */
-      instructions: components["schemas"]["InsertOp"][];
+      instructions: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
       /** Wording */
-      wording: components["schemas"]["InsertOp"][];
+      wording: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
     };
     /** Exercise */
     gabby__renderable__Exercise: {
@@ -748,8 +743,7 @@ export interface components {
     };
     /** parsedExerciseCreateInputDataAttributes */
     parsedExerciseCreateInputDataAttributes: {
-      /** Adaptation */
-      adaptation: components["schemas"]["FillWithFreeTextAdaptation"] | components["schemas"]["ItemsAndEffectsAttempt1Adaptation-Input"] | components["schemas"]["MultipleChoicesInInstructionsAdaptation"] | components["schemas"]["MultipleChoicesInWordingAdaptation"] | components["schemas"]["NullAdaptation"] | components["schemas"]["SelectThingsAdaptation"];
+      adaptation: components["schemas"]["AdaptationV2-Input"];
       /** Clue */
       clue: string;
       /** Example */

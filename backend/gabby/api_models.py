@@ -3,9 +3,9 @@ from typing import Annotated, Literal, TypeAlias
 import datetime
 
 from fastjsonapi import Constant, Computed, Secret, WriteOnly
-import pydantic
 
 from . import exercise_delta
+from . import parsing
 from . import renderable
 from .adaptations.fill_with_free_text import FillWithFreeTextAdaptation
 from .adaptations.items_and_effects_attempt_1 import ItemsAndEffectsAttempt1Adaptation
@@ -110,9 +110,15 @@ class PdfRectangle(PydanticBase):
     text: str | None
     role: Literal["bounding", "instructions", "wording", "example", "clue"]
 
-# Move These 'Adaptation' classes have two responsibilities: API and behavior. Not SOLID, but so convenient for now.
 
-Adaptation: TypeAlias = FillWithFreeTextAdaptation | ItemsAndEffectsAttempt1Adaptation | MultipleChoicesInInstructionsAdaptation | MultipleChoicesInWordingAdaptation | NullAdaptation | SelectThingsAdaptation
+# @todo(After production data is migrated) Remove this type alias
+AdaptationV1: TypeAlias = FillWithFreeTextAdaptation | ItemsAndEffectsAttempt1Adaptation | MultipleChoicesInInstructionsAdaptation | MultipleChoicesInWordingAdaptation | NullAdaptation | SelectThingsAdaptation
+
+class AdaptationV2(PydanticBase):
+    # @todo(When production data has been manually fixed) Remove "multiple-choices-in-instructions"
+    # @todo(When production data is migrated) Remove "multiple-choices-in-wording"
+    kind: Literal["fill-with-free-text", "items-and-effects-attempt-1", "select-things", "multiple-choices-in-instructions", "multiple-choices-in-wording", "multiple-choices"] | None
+    effects: list[parsing.AdaptationEffect]
 
 class Exercise(PydanticBase, CreatedUpdatedByAtMixin):
     project: Annotated[Project, Constant()]
@@ -131,7 +137,7 @@ class Exercise(PydanticBase, CreatedUpdatedByAtMixin):
 
     rectangles: list[PdfRectangle] = []
 
-    adaptation: Adaptation = NullAdaptation(kind="null")
+    adaptation: AdaptationV2 = AdaptationV2(kind=None, effects=[])
 
 class ParsedExercise(PydanticBase):
     number: Annotated[str, WriteOnly()]
@@ -140,7 +146,7 @@ class ParsedExercise(PydanticBase):
     example: Annotated[str, WriteOnly()]
     clue: Annotated[str, WriteOnly()]
     wording_paragraphs_per_pagelet: Annotated[int, WriteOnly()]
-    adaptation: Annotated[Adaptation, WriteOnly()] = pydantic.Field(discriminator="kind")
+    adaptation: Annotated[AdaptationV2, WriteOnly()]
     adapted: Annotated[renderable.Exercise, Computed()]
     delta: Annotated[exercise_delta.Exercise, Computed()]
 

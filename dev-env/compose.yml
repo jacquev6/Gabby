@@ -1,20 +1,17 @@
 name: gabby-dev
 
-volumes:
-  frontend-cache:
-  backend-pip-packages:
-
 services:
-  # @todo Run all services with a user having the same UID:GID as the host user
-  # (so that files created by the container on the host filesystem are owned by the host user)
   frontend-shell:
     image: gabby-dev_frontend
     build:
       context: ..
       dockerfile: dev-env/frontend/docker/Dockerfile
+      args:
+        USER_ID: $USER_ID
+        GROUP_ID: $GROUP_ID
     volumes:
       - ..:/app
-      - frontend-cache:/root/.cache  # For Cypress
+      - ./frontend/cache:/home/gabby/.cache  # For Cypress
       - /tmp/.X11-unix:/tmp/.X11-unix  # Allow running GUI apps in container, displaying on host
     working_dir: /app/frontend
     environment:
@@ -27,7 +24,7 @@ services:
     pull_policy: never
     volumes:
       - ..:/app
-      - frontend-cache:/root/.cache
+      - ./frontend/cache:/home/gabby/.cache
     working_dir: /app/frontend
     command: ["npm", "install"]
   cypress-installer:
@@ -35,7 +32,7 @@ services:
     pull_policy: never
     volumes:
       - ..:/app
-      - frontend-cache:/root/.cache
+      - ./frontend/cache:/home/gabby/.cache
     working_dir: /app/frontend
     command: ["npx", "cypress", "install"]
     depends_on:
@@ -111,21 +108,47 @@ services:
     build:
       context: ..
       dockerfile: dev-env/backend/docker/Dockerfile
+      args:
+        USER_ID: $USER_ID
+        GROUP_ID: $GROUP_ID
     volumes:
       - ..:/app
-      - backend-pip-packages:/root/.local
+      - ./backend/pip-packages:/home/gabby/.local
     working_dir: /app/backend
     env_file:
       - backend/env
       - secrets.env
     init: true
+    # @todo Understand why this container doesn't exit quickly on 'docker compose down'
     command: ["sleep", "infinity"]
+  demo-pdf-maker:
+    image: gabby-dev_backend
+    pull_policy: never
+    volumes:
+      - ..:/app
+    working_dir: /app/pdf-examples
+    # @todo Understand why this only works for the first change in the .odt and ignores subsequent changes. Then fix.
+    command: ["watchfiles", "libreoffice --convert-to pdf demo.odt", "demo.odt"]
+  large-maker:
+    image: gabby-dev_backend
+    pull_policy: never
+    volumes:
+      - ..:/app
+    working_dir: /app/pdf-examples
+    command: [
+      "pdfunite",
+      "test.pdf", "test.pdf", "test.pdf", "test.pdf", "test.pdf", "test.pdf", "test.pdf", "test.pdf",
+      "test.pdf", "test.pdf", "test.pdf", "test.pdf", "test.pdf", "test.pdf", "test.pdf", "test.pdf",
+      "test.pdf", "test.pdf", "test.pdf", "test.pdf", "test.pdf", "test.pdf", "test.pdf", "test.pdf",
+      "test.pdf", "test.pdf", "test.pdf", "test.pdf", "test.pdf", "test.pdf", "test.pdf", "test.pdf",
+      "large.pdf",
+    ]
   pip-installer:
     image: gabby-dev_backend
     pull_policy: never
     volumes:
       - ..:/app
-      - backend-pip-packages:/root/.local
+      - ./backend/pip-packages:/home/gabby/.local
     working_dir: /app/backend
     command: ["pip", "install", "--user", "coverage", "-r", "requirements.txt"]
   sqlalchemy-data-model-visualizer-patcher:
@@ -133,9 +156,9 @@ services:
     pull_policy: never
     volumes:
       - ..:/app
-      - backend-pip-packages:/root/.local
+      - ./backend/pip-packages:/home/gabby/.local
     working_dir: /app/backend
-    command: ["sed", "-i", "s/dot.render(output_file, view=True)/dot.render(output_file, view=False)/", "/root/.local/lib/python3.12/site-packages/sqlalchemy_data_model_visualizer.py"]
+    command: ["sed", "-i", "s/dot.render(output_file, view=True)/dot.render(output_file, view=False)/", "/home/gabby/.local/lib/python3.12/site-packages/sqlalchemy_data_model_visualizer.py"]
     depends_on:
       pip-installer:
         condition: service_completed_successfully
@@ -144,7 +167,7 @@ services:
     pull_policy: never
     volumes:
       - ..:/app
-      - backend-pip-packages:/root/.local
+      - ./backend/pip-packages:/home/gabby/.local
     working_dir: /app/backend/gabby
     env_file:
       - backend/env
@@ -160,12 +183,12 @@ services:
     pull_policy: never
     volumes:
       - ..:/app
-      - backend-pip-packages:/root/.local
+      - ./backend/pip-packages:/home/gabby/.local
     working_dir: /app/backend
     env_file:
       - backend/env
       - secrets.env
-    command: ["python", "-m", "gabby", "load-fixtures", "admin-user", "more-test-exercises"]
+    command: ["python", "-m", "gabby", "load-fixtures", "admin-user", "even-more-test-exercises"]
     depends_on:
       migrator:
         condition: service_completed_successfully
@@ -174,7 +197,7 @@ services:
     pull_policy: never
     volumes:
       - ..:/app
-      - backend-pip-packages:/root/.local
+      - ./backend/pip-packages:/home/gabby/.local
     working_dir: /app/backend
     env_file:
       - backend/env
@@ -192,7 +215,7 @@ services:
     pull_policy: never
     volumes:
       - ..:/app
-      - backend-pip-packages:/root/.local
+      - ./backend/pip-packages:/home/gabby/.local
     working_dir: /app/backend
     env_file:
       - backend/env
@@ -213,13 +236,16 @@ services:
     build:
       context: ..
       dockerfile: dev-env/doc/docker/Dockerfile
+      args:
+        USER_ID: $USER_ID
+        GROUP_ID: $GROUP_ID
     volumes:
       - ..:/app
     working_dir: /app/doc
     environment:
       GABBY_VERSION: dev
     init: true
-    command: ["sphinx-autobuild", ".", "/doc", "--host", "0.0.0.0", "--port", "80"]
+    command: ["sphinx-autobuild", ".", "/home/gabby/doc", "--host", "0.0.0.0", "--port", "80"]
 
   fanout:
     image: nginx:latest

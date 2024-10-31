@@ -1,5 +1,4 @@
 <script lang="ts">
-import type AttributeMap from 'quill-delta/dist/AttributeMap'
 import Quill, { Parchment } from 'quill/core'
 import Block from 'quill/blots/block'
 import Break from 'quill/blots/break'
@@ -10,18 +9,23 @@ import TextBlot from 'quill/blots/text'
 import Keyboard from 'quill/modules/keyboard'
 
 
+export interface SelectionRange {
+  index: number
+  length: number
+}
+
 // Monkey-patching Quill to remove some default bindings, until I learn how to do it properly.
 delete Keyboard.DEFAULTS.bindings.bold
 delete Keyboard.DEFAULTS.bindings.italic
 
 // Partial of node_modules/quill-delta/dist/Op.d.ts, more readable than using TypeScript's 'Omit',
 // but slightly more fragile in the unlikely case quill-delta changes its interface. OK.
-interface InsertOp {
+export type Model = ({
   insert: string
-  attributes?: AttributeMap
-}
-
-export type Model = InsertOp[]
+  attributes: Record<string, unknown>
+} | {
+  insert: Record<string, unknown>
+})[]
 
 function makeMinimalRegistry() {
   const registry = new Parchment.Registry()
@@ -45,6 +49,8 @@ function makeRegistryWithBlots(blots: Blot[]) {
 }
 
 export const InlineBlot = Quill.import('blots/inline') as Blot
+export const BlockEmbed = Quill.import('blots/block/embed') as Blot
+export const InlineEmbed = Quill.import('blots/embed') as Blot
 
 export class BoldBlot extends InlineBlot {
   static override blotName = 'bold'
@@ -66,6 +72,7 @@ import 'quill/dist/quill.core.css'  // Removing this CSS causes a bug on Firefox
 // Adding this 'white-space: pre' style ourselves would prevent this very bug, but we don't know
 // about other bugs. Quill is designed to be used with its CSS. So we do import the css,
 // and re-style the typography.
+import deepEqual from 'deep-equal'
 
 
 const props = defineProps<{
@@ -75,6 +82,7 @@ const props = defineProps<{
 const emit = defineEmits<{
   focus: []
   blur: []
+  selectionChange: [SelectionRange]
 }>()
 
 const registry = computed(() => makeRegistryWithBlots(props.blots))
@@ -85,8 +93,12 @@ const container = ref<HTMLDivElement | null>(null)
 
 function getContents(quill: Quill): Model {
   return quill.getContents().ops.map(op => {
-    console.assert(typeof op.insert === 'string')
-    return {insert: op.insert, attributes: op.attributes}
+    console.assert(op.insert !== undefined)
+    if (typeof op.insert === 'string') {
+      return {insert: op.insert, attributes: op.attributes ?? {}}
+    } else {
+      return {insert: op.insert}
+    }
   })
 }
 
@@ -109,15 +121,17 @@ const quill = computed(() => {
         model.value = getContents(quill)
       }
     })
-    quill.on('selection-change', (range: object | null, _oldRange: object | null, _source: string) => {
+    quill.on('selection-change', (range: SelectionRange | null, _oldRange: SelectionRange | null, _source: string) => {
       const hadFocus = hasFocus.value
-      hasFocus.value = range !== null
-      if (hasFocus.value) {
+      if (range !== null) {
+        hasFocus.value = true
         currentFormat.value = quill.getFormat()
         if (!hadFocus) {
           emit('focus')
         }
+        emit('selectionChange', range)
       } else {
+        hasFocus.value = false
         currentFormat.value = {}
         if (hadFocus) {
           emit('blur')
@@ -129,7 +143,7 @@ const quill = computed(() => {
 })
 
 watch([quill, model], ([quill, model]) => {
-  if (quill !== null && JSON.stringify(getContents(quill)) !== JSON.stringify(model)) {
+  if (quill !== null && !deepEqual(getContents(quill), model)) {
     quill.setContents(model)
   }
 })

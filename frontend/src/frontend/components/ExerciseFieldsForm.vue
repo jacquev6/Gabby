@@ -7,11 +7,12 @@ import { defaultColors } from './AdaptationDetailsFieldsForm.vue'
 const api = useApiStore()
 
 type Adaptation = (Exercise & InCache & Exists)['attributes']['adaptation']
+type AdaptationEffect = (Adaptation['effects'][number] & {kind: string}) | {kind: 'null'} | {kind: 'multiple-choices'}
 type PdfRectangle = (Exercise & InCache & Exists)['attributes']['rectangles'][number]
 
 // @todo Automate updating this type when a new adaptation type is added
-export const adaptationKinds = ['null', 'fill-with-free-text', 'items-and-effects-attempt-1', 'select-things', 'multiple-choices-in-instructions', 'multiple-choices-in-wording'] as const
-export type AdaptationKind =  typeof adaptationKinds[number]
+export const adaptationKinds = ['null', 'fill-with-free-text', 'items-and-effects-attempt-1', 'select-things', 'multiple-choices-in-instructions', 'multiple-choices'] as const
+export type AdaptationKind = typeof adaptationKinds[number]
 
 export const textualFieldNames = ['instructions', 'wording', 'example', 'clue'] as const
 export type TextualFieldName = typeof textualFieldNames[number]
@@ -27,7 +28,26 @@ export type Model = {
   wordingParagraphsPerPagelet: number
   rectangles: PdfRectangle[]
   adaptationKind: AdaptationKind
-  adaptations: {[Kind in AdaptationKind]: Adaptation & {kind: Kind}}
+  adaptationEffects: {[Kind in AdaptationKind]: AdaptationEffect & {kind: Kind}}
+  inProgress:
+    {
+      kind: 'nothing'
+    } | {
+      kind: 'multipleChoicesCreation'
+    } | {
+      kind: 'multipleChoicesEdition'
+      initial: boolean
+      stopWatching(): void
+      deleted: boolean
+      delete(): void
+      settings: {
+        start: string
+        stop: string
+        separator1: string
+        separator2: string
+        placeholder: string
+      }
+    }
 }
 
 type MakeModelOptions  = {
@@ -50,7 +70,7 @@ function makeModel({inTextbook, textbookPage}: MakeModelOptions): Model {
     wordingParagraphsPerPagelet: 3,
     rectangles: [],
     adaptationKind: 'null',
-    adaptations: {
+    adaptationEffects: {
       'fill-with-free-text': {
         kind: 'fill-with-free-text' as const,
         placeholder: '...',
@@ -79,9 +99,12 @@ function makeModel({inTextbook, textbookPage}: MakeModelOptions): Model {
         kind: 'multiple-choices-in-instructions' as const,
         placeholder: '...',
       },
-      'multiple-choices-in-wording': {
-        kind: 'multiple-choices-in-wording' as const,
+      'multiple-choices': {
+        kind: 'multiple-choices' as const,
       },
+    },
+    inProgress: {
+      kind: 'nothing',
     },
   }
 }
@@ -101,9 +124,27 @@ export function assignModelFrom(model: Model, exercise: Exercise & InCache & Exi
   model.example = exercise.attributes.example
   model.clue = exercise.attributes.clue
   model.wordingParagraphsPerPagelet = exercise.attributes.wordingParagraphsPerPagelet
-  model.adaptationKind = exercise.attributes.adaptation.kind
-  model.adaptations[model.adaptationKind] = JSON.parse(JSON.stringify(exercise.attributes.adaptation))
-  model.rectangles = JSON.parse(JSON.stringify(exercise.attributes.rectangles))
+  console.assert(exercise.attributes.adaptation.kind !== 'multiple-choices-in-wording')  // @todo(When the production data is migrated) Remove this line
+  model.adaptationKind = exercise.attributes.adaptation.kind === null ? 'null' : exercise.attributes.adaptation.kind
+  const adaptation = exercise.attributes.adaptation
+  const kind = adaptation.kind
+  const effects = adaptation.effects
+  if (kind === null) {
+    console.assert(effects.length === 0)
+    model.adaptationEffects['null'] = {kind: 'null'}
+  } else if (kind === 'multiple-choices') {
+    console.assert(effects.length === 0)
+    model.adaptationEffects[kind] = {kind}
+  } else {
+    console.assert(effects.length === 1)
+    const effect: AdaptationEffect = deepCopy(effects[0])
+    console.assert(effect.kind === kind)
+    model.adaptationEffects[kind] = effect as any/* @todo Fix typing issue */
+  }
+  model.rectangles = deepCopy(exercise.attributes.rectangles)
+  model.inProgress = {
+    kind: 'nothing',
+  }
 }
 
 function resetModel(model: Model, options: MakeModelOptions) {
@@ -122,18 +163,31 @@ export function modelIsEmpty(model: Model) {
   return model.adaptationKind === 'null' && model.instructions === '' && model.wording === '' && model.example === '' && model.clue === ''
 }
 
-export async function getParsed(model: Model) {
-  const attributes = {
-    number: model.number,
-    // textbookPage: props.page,
-    instructions: model.instructions,
-    wording: model.wording,
-    example: model.example,
-    clue: model.clue,
-    wordingParagraphsPerPagelet: model.wordingParagraphsPerPagelet,
-    adaptation: model.adaptations[model.adaptationKind],
+function makeAdaptation(model: Model): Adaptation {
+  const effect = model.adaptationEffects[model.adaptationKind]
+  const kind = effect.kind
+  if (kind === 'null') {
+    return {kind: null, effects: []}
+  } else if (kind === 'multiple-choices') {
+    return {kind, effects: []}
+  } else {
+    return {kind, effects: [effect]}
   }
-  const parsed = await api.client.createOne('parsedExercise', attributes, {})
+}
+
+export async function getParsed(model: Model) {
+  const parsed = await api.client.createOne(
+    'parsedExercise', {
+      number: model.number,
+      instructions: model.instructions,
+      wording: model.wording,
+      example: model.example,
+      clue: model.clue,
+      wordingParagraphsPerPagelet: model.wordingParagraphsPerPagelet,
+      adaptation: makeAdaptation(model),
+    },
+    {},
+  )
   console.assert(parsed.exists)
   return parsed
 }
@@ -149,7 +203,7 @@ export async function create(project: Project, textbook: Textbook | null, model:
       example: model.example,
       clue: model.clue,
       wordingParagraphsPerPagelet: model.wordingParagraphsPerPagelet,
-      adaptation: model.adaptations[model.adaptationKind],
+      adaptation: makeAdaptation(model),
       rectangles: model.rectangles,
     },
     {
@@ -167,7 +221,7 @@ export async function save(exercise: Exercise & InCache & Exists, model: Model) 
       example: model.example,
       clue: model.clue,
       wordingParagraphsPerPagelet: model.wordingParagraphsPerPagelet,
-      adaptation: model.adaptations[model.adaptationKind],
+      adaptation: makeAdaptation(model),
       rectangles: model.rectangles,
     },
     {},
@@ -186,6 +240,8 @@ export function suggestNextNumber(number: string) {
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import deepCopy from 'deep-copy'
+import { useI18n } from 'vue-i18n'
 
 import { BRow, BCol, BLabeledInput, BLabeledTextarea, BLabeledSelect } from './opinion/bootstrap'
 import OptionalTextarea from './OptionalTextarea.vue'
@@ -202,6 +258,8 @@ const props = defineProps<{
 }>()
 
 const model = defineModel<Model>({required: true})
+
+const i18n = useI18n()
 
 const instructionsTextArea = ref<InstanceType<typeof BLabeledTextarea> | null>(null)
 const wordingTextArea = ref<InstanceType<typeof BLabeledTextarea> | null>(null)
@@ -302,15 +360,31 @@ const clueDeltas = computed(() => props.deltas === null ? [] : props.deltas.clue
 
 
 const selBlotColors = computed(() => {
-  const adaptation = model.value.adaptations[model.value.adaptationKind]
-  if (adaptation.kind === 'select-things') {
-    return Object.fromEntries(adaptation.colors.map((color, i) => [`--sel-blot-color-${i + 1}`, color]))
-  } else if (adaptation.kind === 'items-and-effects-attempt-1' && adaptation.effects.selectable !== null) {
-    return Object.fromEntries(adaptation.effects.selectable.colors.map((color, i) => [`--sel-blot-color-${i + 1}`, color]))
+  const effect = model.value.adaptationEffects[model.value.adaptationKind]
+  if (effect.kind === 'select-things') {
+    return Object.fromEntries(effect.colors.map((color, i) => [`--sel-blot-color-${i + 1}`, color]))
+  } else if (effect.kind === 'items-and-effects-attempt-1' && effect.effects.selectable !== null) {
+    return Object.fromEntries(effect.effects.selectable.colors.map((color, i) => [`--sel-blot-color-${i + 1}`, color]))
   } else {
     return {}
   }
 })
+
+function selectionChangeInInstructionsOrWording(_range: {index: number, length: number}) {
+  if (model.value.inProgress.kind === 'multipleChoicesCreation') {
+    // @todo Automatically detect these settings. How? Ask client for spec.
+    const settings = {
+      start: '(',
+      stop: ')',
+      separator1: '/',
+      separator2: i18n.t('multipleChoicesSeparator2'),
+      placeholder: '',
+      justCreated: true,
+    }
+
+    toggle('choices2', settings)
+  }
+}
 
 defineExpose({
   saveDisabled,
@@ -336,7 +410,7 @@ defineExpose({
   <div :style="{position: 'relative', ...selBlotColors}">
     <BLabeledSelect
       :label="$t('adaptationType')" v-model="model.adaptationKind"
-      :options="adaptationKinds.map(kind => ({value: kind, label: $t(kind)}))"
+      :options="adaptationKinds.map(kind => ({value: kind, label: $t(kind), disabled: kind === 'multiple-choices-in-instructions'}))"
     />
     <WysiwygEditor
       v-if="wysiwyg"
@@ -344,6 +418,7 @@ defineExpose({
       :label="$t('exerciseInstructions')"
       :formats="wysiwygFormats[model.adaptationKind].instructions"
       v-model="model.instructions" :delta="instructionsDeltas"
+      @selectionChange="selectionChangeInInstructionsOrWording"
     />
     <BLabeledTextarea
       v-else
@@ -358,6 +433,7 @@ defineExpose({
       :label="$t('exerciseWording')"
       :formats="wysiwygFormats[model.adaptationKind].wording"
       v-model="model.wording" :delta="wordingDeltas"
+      @selectionChange="selectionChangeInInstructionsOrWording"
     />
     <BLabeledTextarea
       v-else

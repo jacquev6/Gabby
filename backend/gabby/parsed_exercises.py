@@ -76,7 +76,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     "example": "",
                     "clue": "",
                     "wordingParagraphsPerPagelet": 3,
-                    "adaptation": {"kind": "null"},
+                    "adaptation": {"kind": None, "effects": []},
                 },
             },
         }
@@ -131,9 +131,14 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     "wordingParagraphsPerPagelet": 3,
                     "adaptation": {
                         "kind": "select-things",
-                        "colors": ["red", "green", "blue"],
-                        "words": True,
-                        "punctuation": False,
+                        "effects": [
+                            {
+                                "kind": "select-things",
+                                "colors": ["red", "green", "blue"],
+                                "words": True,
+                                "punctuation": False,
+                            },
+                        ],
                     },
                 },
             },
@@ -183,9 +188,14 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     "wordingParagraphsPerPagelet": 3,
                     "adaptation": {
                         "kind": "select-things",
-                        "colors": ["red", "green", "blue"],
-                        "words": True,
-                        "punctuation": False,
+                        "effects": [
+                            {
+                                "kind": "select-things",
+                                "colors": ["red", "green", "blue"],
+                                "words": True,
+                                "punctuation": False,
+                            },
+                        ],
                     },
                 },
             },
@@ -253,7 +263,12 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     "wordingParagraphsPerPagelet": 3,
                     "adaptation": {
                         "kind": "fill-with-free-text",
-                        "placeholder": "@",
+                        "effects": [
+                            {
+                                "kind": "fill-with-free-text",
+                                "placeholder": "@",
+                            },
+                        ],
                     },
                 },
             },
@@ -296,7 +311,12 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     "wordingParagraphsPerPagelet": 3,
                     "adaptation": {
                         "kind": "multiple-choices-in-instructions",
-                        "placeholder": "@",
+                        "effects": [
+                            {
+                                "kind": "multiple-choices-in-instructions",
+                                "placeholder": "@",
+                            },
+                        ],
                     },
                 },
             },
@@ -341,9 +361,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     "example": "",
                     "clue": "",
                     "wordingParagraphsPerPagelet": 3,
-                    "adaptation": {
-                        "kind": "multiple-choices-in-wording",
-                    },
+                    "adaptation": {"kind": "multiple-choices", "effects": []},
                 },
             },
         }

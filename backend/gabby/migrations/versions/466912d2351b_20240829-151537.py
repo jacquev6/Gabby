@@ -1,8 +1,5 @@
 from alembic import op
 import sqlalchemy as sa
-from sqlalchemy import orm
-
-from gabby.old_adaptations.select_things import SelectThingsAdaptation
 
 
 revision = "466912d2351b"
@@ -22,10 +19,6 @@ def upgrade():
             nullable=False,
         ),
     )
-    with orm.Session(op.get_bind()) as session:
-        for adaptation in session.query(SelectThingsAdaptation).all():
-            adaptation.colors = adaptation.colors[:adaptation.old_colors_count]
-        session.commit()
 
 
 def downgrade():

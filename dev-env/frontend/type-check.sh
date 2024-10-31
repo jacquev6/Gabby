@@ -3,7 +3,7 @@
 set -o errexit
 set -o nounset
 set -o pipefail
-cd "$(dirname "${BASH_SOURCE[0]}")/."
+cd "$(dirname "${BASH_SOURCE[0]}")"
 
 
 # Ugly workaround to re-type 'console.assert'
@@ -13,7 +13,7 @@ sed -i 's/assert(.*): void/assert(condition: any, message?: string, ...optionalP
 
 # @todo Enable 'false' properties in 'tsconfig.app.json'
 
-docker compose exec \
+../docker-compose.sh exec \
   frontend-shell \
     npx vue-tsc --build --force
 

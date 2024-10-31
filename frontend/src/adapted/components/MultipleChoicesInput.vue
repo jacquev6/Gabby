@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, inject } from 'vue'
 import { useFloating, shift } from '@floating-ui/vue'
 
 
@@ -51,12 +51,22 @@ const choiceColumns = computed(() => {
   return columns
 })
 
+const backdropCovers = inject<string>('adaptedExerciseBackdropCovers', 'body')
 </script>
 
 <template>
-  <span ref="reference" class="main" :class="{open: showChoices}" @click="showChoices = true">{{ value }}</span>
+  <span style="display: inline flow-root; vertical-align: top">
+    <span ref="reference" class="main" :class="{open: showChoices}" @click="showChoices = true">{{ value }}</span>
+    <!-- Insert hidden nodes in the DOM to ensure the floating choices does not cover any text. -->
+    <span class="choices" style="display: block; margin-top: -24px; max-width: 0; overflow: hidden; visibility: hidden;">
+      <span class="choiceColumn" style="display: block; min-width: 1000vw;">
+        <span class="choice" style="display: block;"><span>Option 1</span></span>
+        <span class="choice" style="display: block;"><span>Option 2</span></span>
+      </span>
+    </span>
+  </span>
   <template v-if="showChoices">
-    <Teleport to="body">
+    <Teleport :to="backdropCovers">
       <div class="backdrop" @click="showChoices = false"></div>
     </Teleport>
     <div ref="floating" class="choices" :style="floatingStyles">
@@ -96,18 +106,18 @@ div.backdrop {
   height: 100%;
 }
 
-div.choices {
+.choices {
   border: 1px dashed green;
   background: white;
-  z-index: 10000;  /* Arbitrary z-order is fragile but used only in preview */
+  z-index: 10;  /* Arbitrary z-order is fragile but used only in preview */
 }
 
-div.choiceColumn {
+.choiceColumn {
   float: left;
   margin: 15px 5px;
 }
 
-p.choice {
+.choice {
   font-family: Arial, sans-serif;
   font-size: 32px;
   line-height: 3;
@@ -115,7 +125,7 @@ p.choice {
   margin-bottom: -24px;
 }
 
-p.choice >span {
+.choice >span {
   border: 1px solid black;
   padding: 1px 4px;
 }
