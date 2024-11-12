@@ -94,7 +94,6 @@ def export_project(
         exercises=[
             exercise.make_adapted().model_dump()
             for exercise in project.exercises
-            if exercise.adaptation.kind != "null"
         ],
     )).replace("\\", "\\\\").replace('"', "\\\"")
     with open("gabby/templates/adapted/index.html") as f:
