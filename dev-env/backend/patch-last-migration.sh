@@ -8,11 +8,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
 
 set -x
 
-../docker-compose.sh exec backend-shell python -m gabby \
-  restore-database \
-    s3://jacquev6/gabby/prod/backups/gabby-backup-20241030-074206.tar.gz \
-    --patch-according-to-settings \
-    --yes
+../load-prod-db-backup.sh
 
 ../docker-compose.sh exec --workdir /app/backend/gabby backend-shell alembic upgrade head
 
