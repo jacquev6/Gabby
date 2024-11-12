@@ -11,7 +11,7 @@ type AdaptationEffect = (Adaptation['effects'][number] & {kind: string}) | {kind
 type PdfRectangle = (Exercise & InCache & Exists)['attributes']['rectangles'][number]
 
 // @todo Automate updating this type when a new adaptation type is added
-export const adaptationKinds = ['null', 'fill-with-free-text', 'items-and-effects-attempt-1', 'select-things', 'multiple-choices-in-instructions', 'multiple-choices'] as const
+export const adaptationKinds = ['null', 'fill-with-free-text', 'items-and-effects-attempt-1', 'select-things', 'multiple-choices'] as const
 export type AdaptationKind = typeof adaptationKinds[number]
 
 export const textualFieldNames = ['instructions', 'wording', 'example', 'clue'] as const
@@ -94,10 +94,6 @@ function makeModel({inTextbook, textbookPage}: MakeModelOptions): Model {
         words: true,
         punctuation: false,
         colors: [defaultColors[0]],
-      },
-      'multiple-choices-in-instructions': {
-        kind: 'multiple-choices-in-instructions' as const,
-        placeholder: '...',
       },
       'multiple-choices': {
         kind: 'multiple-choices' as const,
@@ -409,7 +405,7 @@ defineExpose({
   <div :style="{position: 'relative', ...selBlotColors}">
     <BLabeledSelect
       :label="$t('adaptationType')" v-model="model.adaptationKind"
-      :options="adaptationKinds.map(kind => ({value: kind, label: $t(kind), disabled: kind === 'multiple-choices-in-instructions'}))"
+      :options="adaptationKinds.map(kind => ({value: kind, label: $t(kind)}))"
     />
     <WysiwygEditor
       v-if="wysiwyg"

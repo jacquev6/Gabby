@@ -9,6 +9,6 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
 ./docker-compose.sh exec \
   backend-shell python -m gabby \
     restore-database \
-      s3://jacquev6/gabby/prod/backups/gabby-backup-20241112-074206.tar.gz \
+      s3://jacquev6/gabby/prod/backups/gabby-backup-20241112-144747.tar.gz \
       --patch-according-to-settings \
       --yes

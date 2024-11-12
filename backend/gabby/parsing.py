@@ -1316,87 +1316,6 @@ class FillWithFreeTextAdaptationEffect(PydanticBase):
         return {}
 
 
-class MultipleChoicesInInstructionsAdaptationEffect(PydanticBase):
-    kind: Literal["multiple-choices-in-instructions"]
-
-    placeholder: str
-
-    def preprocess(self, instructions, wording, example, clue):
-        choices = self.gather_choices(instructions)
-        wording = wording.replace(self.placeholder, f"{{choices2||/||||{'/'.join(choices)}}}")  # @todo Escape '{', '|' and '}' in choices
-        return (instructions, wording, example, clue)
-
-    class ChoicesGatherer(Transformer):
-        def section(self, args):
-            return list(itertools.chain(*args))
-
-        def strict_paragraph(self, args):
-            return list(itertools.chain(*args))
-
-        def sentence(self, args):
-            return list(itertools.chain(*args))
-
-        def lenient_paragraph(self, args):
-            return list(itertools.chain(*args))
-
-        def choice_tag(self, args):
-            assert len(args) == 1
-            return [args[0]]
-
-        def WORD(self, arg):
-            return []
-
-        def LEADING_WHITESPACE(self, arg):
-            return []
-
-        def TRAILING_WHITESPACE(self, arg):
-            return []
-
-        def PARAGRAPH_SEPARATOR(self, arg):
-            return []
-
-        def SENTENCE_SEPARATOR(self, arg):
-            return []
-
-        def WHITESPACE_IN_SENTENCE(self, arg):
-            return []
-
-        def PUNCTUATION_IN_SENTENCE(self, arg):
-            return []
-
-        def PUNCTUATION_AT_END_OF_SENTENCE(self, arg):
-            return []
-
-        def PUNCTUATION_IN_LENIENT_PARAGRAPH(self, arg):
-            return []
-
-        def INT(self, arg):
-            return None
-
-        def STR(self, arg):
-            return arg.value
-
-        def bold_tag(self, args):
-            return []
-
-        def italic_tag(self, args):
-            return []
-
-    gather_choices: ClassVar = InstructionsSectionParser({"choice": r""" "|" STR """}, ChoicesGatherer())
-
-    def make_instructions_adapter_constructor_kwds(self):
-        return {}
-
-    def make_wording_adapter_constructor_kwds(self):
-        return {}
-
-    def make_example_adapter_constructor_kwds(self):
-        return {}
-
-    def make_clue_adapter_constructor_kwds(self):
-        return {}
-
-
 class SelectThingsAdaptationEffect(PydanticBase):
     kind: Literal["select-things"]
 
@@ -1503,7 +1422,7 @@ class ItemsAndEffectsAttempt1AdaptationEffect(PydanticBase):
 
 
 AdaptationEffect = Annotated[
-    FillWithFreeTextAdaptationEffect | MultipleChoicesInInstructionsAdaptationEffect | SelectThingsAdaptationEffect | ItemsAndEffectsAttempt1AdaptationEffect,
+    FillWithFreeTextAdaptationEffect | SelectThingsAdaptationEffect | ItemsAndEffectsAttempt1AdaptationEffect,
     pydantic.Field(discriminator="kind"),
 ]
 
@@ -1647,10 +1566,6 @@ class EffectsBasedAdapter:
             args = list(itertools.chain.from_iterable(args))
             return renderable.Paragraph(sentences=[renderable.Sentence(tokens=args)])
 
-        def choice_tag(self, args):
-            text, = args
-            return [renderable.BoxedText(text=text)]
-
         def choices2_tag(self, args):
             assert len(args) == 6
             (start, separator1, separator2, stop, placeholder, text) = args
@@ -1735,7 +1650,6 @@ class EffectsBasedAdapter:
     def adapt_instructions(self, instructions, **kwds):
         return InstructionsSectionParser(
             {
-                "choice": r""" "|" STR """,
                 "choices2": r""" "|" [STR] "|" [STR] "|" [STR] "|" [STR] "|" [STR] "|" STR """,
                 "sel1": r""" "|" STR """,
                 "sel2": r""" "|" STR """,
@@ -1790,9 +1704,6 @@ class EffectsBasedAdapter:
         def fill_with_free_text_tag(self, args):
             assert len(args) == 0
             return renderable.FreeTextInput()
-
-        def choices_tag(self, args):
-            return renderable.MultipleChoicesInput(choices=[arg for arg in args])
 
         def sentence(self, args):
             return self._make_sentence(args)
@@ -1883,7 +1794,6 @@ class EffectsBasedAdapter:
         return WordingSectionParser(
         {
             "fill_with_free_text": "",
-            "choices": r""" ("|" STR)+ """,
             "choices2": r""" "|" [STR] "|" [STR] "|" [STR] "|" [STR] "|" [STR] "|" STR """,
             "placeholder2": r""" "|" STR""",
             "selectable": r""" "|" STR """,
@@ -1920,9 +1830,6 @@ class EffectsBasedDeltaMaker:
         def __init__(self, *, selection_colors: list[str]=[]):
             super().__init__()
             self.selection_colors = selection_colors
-
-        def choice_tag(self, args):
-            return exercise_delta.TextInsertOp(insert=args[0], attributes={"choice": True})
 
         def choices2_tag(self, args):
             assert len(args) == 6
@@ -1983,7 +1890,6 @@ class EffectsBasedDeltaMaker:
     def make_deltas_for_instructions(self, instructions, **kwds):
         return InstructionsSectionParser(
             {
-                "choice": r""" "|" STR """,
                 "choices2": r""" "|" [STR] "|" [STR] "|" [STR] "|" [STR] "|" [STR] "|" STR """,
                 "sel1": r""" "|" STR """,
                 "sel2": r""" "|" STR """,
@@ -2033,13 +1939,6 @@ class EffectsBasedDeltaMaker:
             self.selection_colors = selection_colors
             self.selectable_are_boxed = selectable_are_boxed
 
-        def choices_tag(self, args):
-            # Legacy behavior: not WYSIWYG
-            return exercise_delta.TextInsertOp(
-                insert=f"{{choices|{'|'.join(args)}}}",
-                attributes={},
-            )
-
         def choices2_tag(self, args):
             assert len(args) == 6
             (start, separator1, separator2, stop, placeholder, text) = args
@@ -2073,7 +1972,6 @@ class EffectsBasedDeltaMaker:
     def make_deltas_for_wording(self, wording, **kwds):
         return WordingSectionParser(
             {
-                "choices": r""" ("|" STR)+ """,
                 "choices2": r""" "|" [STR] "|" [STR] "|" [STR] "|" [STR] "|" [STR] "|" STR """,
                 "selectable": r""" "|" STR """,
             },

@@ -6,11 +6,6 @@ import { basicFormats, escapeForTag } from './WysiwygEditor.vue'
 import ContextMenu from './ContextMenu.vue'
 
 
-class ChoiceBlot extends InlineBlot {
-  static override blotName = 'choice'
-  static override tagName = 'choice-blot'
-}
-
 // Keep the 'style' section below consistent with the length of this array
 export const defaultColors = [
   // Colors provided by the client
@@ -214,19 +209,6 @@ export const wysiwygFormats = {
     example: selectThingsFormats,
     clue: selectThingsFormats,
   },
-  'multiple-choices-in-instructions': {
-    instructions: {
-      ...basicFormats,
-      choice: {
-        kind: 'text' as const,
-        make: (text: string) => `{choice|${escapeForTag(text)}}`,
-        blot: ChoiceBlot,
-      },
-    },
-    wording: basicFormats,
-    example: basicFormats,
-    clue: basicFormats,
-  },
   'multiple-choices': {
     instructions: multipleChoicesFormats,
     wording: multipleChoicesFormats,
@@ -360,16 +342,6 @@ const colorsCount = computed({
         </i18n-t>
       </p>
     </template>
-  </template>
-  <template v-else-if="model.adaptationKind === 'multiple-choices-in-instructions'">
-    <BLabeledInput :label="$t('placeholderText')" type="text" v-model="model.adaptationEffects['multiple-choices-in-instructions'].placeholder" />
-    <p v-if="!wysiwyg" class="alert alert-secondary">
-      <i18n-t keypath="useChoice">
-        <template v-slot:choice>
-          <code>{choice|<em>text</em>}</code>
-        </template>
-      </i18n-t>
-    </p>
   </template>
   <template v-else-if="model.adaptationKind === 'multiple-choices'">
     <AdaptationDetailsFieldsFormForMultipleChoices v-model="model" :wysiwyg />

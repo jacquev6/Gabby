@@ -154,16 +154,16 @@ export interface components {
     /** AdaptationV2 */
     "AdaptationV2-Input": {
       /** Effects */
-      effects: (components["schemas"]["FillWithFreeTextAdaptationEffect"] | components["schemas"]["MultipleChoicesInInstructionsAdaptationEffect"] | components["schemas"]["SelectThingsAdaptationEffect"] | components["schemas"]["ItemsAndEffectsAttempt1AdaptationEffect-Input"])[];
+      effects: (components["schemas"]["FillWithFreeTextAdaptationEffect"] | components["schemas"]["SelectThingsAdaptationEffect"] | components["schemas"]["ItemsAndEffectsAttempt1AdaptationEffect-Input"])[];
       /** Kind */
-      kind: ("fill-with-free-text" | "items-and-effects-attempt-1" | "select-things" | "multiple-choices-in-instructions" | "multiple-choices") | null;
+      kind: ("fill-with-free-text" | "items-and-effects-attempt-1" | "select-things" | "multiple-choices") | null;
     };
     /** AdaptationV2 */
     "AdaptationV2-Output": {
       /** Effects */
-      effects: (components["schemas"]["FillWithFreeTextAdaptationEffect"] | components["schemas"]["MultipleChoicesInInstructionsAdaptationEffect"] | components["schemas"]["SelectThingsAdaptationEffect"] | components["schemas"]["ItemsAndEffectsAttempt1AdaptationEffect-Output"])[];
+      effects: (components["schemas"]["FillWithFreeTextAdaptationEffect"] | components["schemas"]["SelectThingsAdaptationEffect"] | components["schemas"]["ItemsAndEffectsAttempt1AdaptationEffect-Output"])[];
       /** Kind */
-      kind: ("fill-with-free-text" | "items-and-effects-attempt-1" | "select-things" | "multiple-choices-in-instructions" | "multiple-choices") | null;
+      kind: ("fill-with-free-text" | "items-and-effects-attempt-1" | "select-things" | "multiple-choices") | null;
     };
     /** Body_login_api_token_post */
     Body_login_api_token_post: {
@@ -249,17 +249,6 @@ export interface components {
        * @enum {string}
        */
       kind: "manual";
-    };
-    /** MultipleChoicesInInstructionsAdaptationEffect */
-    MultipleChoicesInInstructionsAdaptationEffect: {
-      /**
-       * Kind
-       * @constant
-       * @enum {string}
-       */
-      kind: "multiple-choices-in-instructions";
-      /** Placeholder */
-      placeholder: string;
     };
     /** OutputListRelationShipMeta */
     OutputListRelationShipMeta: {

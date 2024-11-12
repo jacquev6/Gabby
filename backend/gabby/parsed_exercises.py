@@ -304,20 +304,12 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                 "type": "parsedExercise",
                 "attributes": {
                     "number": "A.1",
-                    "instructions": "{choice|a} or {choice|b}",
+                    "instructions": "{choices2||or|||@|a or b}",
                     "wording": "A @\n\nB @",
                     "example": "",
                     "clue": "",
                     "wordingParagraphsPerPagelet": 3,
-                    "adaptation": {
-                        "kind": "multiple-choices-in-instructions",
-                        "effects": [
-                            {
-                                "kind": "multiple-choices-in-instructions",
-                                "placeholder": "@",
-                            },
-                        ],
-                    },
+                    "adaptation": {"kind": "multiple-choices", "effects": []},
                 },
             },
         }
@@ -357,7 +349,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                 "attributes": {
                     "number": "A.1",
                     "instructions": "Instructions.",
-                    "wording": "A {choices|alpha|beta}.",
+                    "wording": "A {choices2||/||||alpha/beta}.",
                     "example": "",
                     "clue": "",
                     "wordingParagraphsPerPagelet": 3,

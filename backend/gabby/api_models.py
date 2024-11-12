@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Annotated, Literal, TypeAlias
+from typing import Annotated, Literal
 import datetime
 
 from fastjsonapi import Constant, Computed, Secret, WriteOnly
@@ -105,8 +105,7 @@ class PdfRectangle(PydanticBase):
     role: Literal["bounding", "instructions", "wording", "example", "clue"]
 
 class AdaptationV2(PydanticBase):
-    # @todo(When production data has been manually fixed) Remove "multiple-choices-in-instructions"
-    kind: Literal["fill-with-free-text", "items-and-effects-attempt-1", "select-things", "multiple-choices-in-instructions", "multiple-choices"] | None
+    kind: Literal["fill-with-free-text", "items-and-effects-attempt-1", "select-things", "multiple-choices"] | None
     effects: list[parsing.AdaptationEffect]
 
 class Exercise(PydanticBase, CreatedUpdatedByAtMixin):

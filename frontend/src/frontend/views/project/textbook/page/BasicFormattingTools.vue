@@ -74,16 +74,6 @@ const model = defineModel<Model>({required: true})
       >{{ $t('selectableButton') }}</BButton>
     </p>
   </template>
-
-  <p v-if="model.adaptationKind === 'multiple-choices-in-instructions'">
-    <BButton
-      sm secondary
-      :disabled="fields.focusedWysiwygField === null || fields.focusedWysiwygField !== 'instructions'"
-      :class="{active: fields.currentWysiwygFormat.choice}"
-      @click="fields.toggle('choice')"
-      data-cy="format-choice"
-    >{{ $t('choiceButton') }}</BButton>
-  </p>
 </template>
 
 <style scoped>

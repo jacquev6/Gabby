@@ -78,7 +78,6 @@
   "select-things": "Selection de mots",
   "fill-with-free-text": "Remplissage par texte libre",
   "items-and-effects-attempt-1": "Items et effets (essai n°1)",
-  "multiple-choices-in-instructions": "Choix multiples (dans la consigne)",
   "multiple-choices": "Choix multiples",
 
   "confirmTitle": "Confirmation",
@@ -129,8 +128,6 @@
   "useSel1": "Utilisez {first} dans la consigne, l'exemple ou l'indice pour formatter du texte comme s'il était sélectionné.",
   "usableColors": "Couleurs utilisables",
   "resetColorToDefault": "Restaurer à",
-  "useChoice": "Utilisez {choice} dans la consigne pour indiquer un choix possible.",
-  "useChoices": "Utilisez {choices} dans l'énoncé pour indiquer choix à faire.",
   "choiceButton": "Choix",
   "placeholderText": "Trou à remplir",
   "boldButton": "Gras",
