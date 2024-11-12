@@ -62,11 +62,6 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
 
     _adaptation: orm.Mapped[dict] = orm.mapped_column(sql.JSON, name="adaptation", default={"format": 0}, server_default="{\"format\": 0}")
 
-    # @todo(After production data is migrated) Remove this class
-    class AdaptationV1Container(PydanticBase):
-        # Thin wrapper to use Pydantic's discriminated unions
-        adaptation: api_models.AdaptationV1 = pydantic.Field(discriminator="kind")
-
     @property
     def adaptation(self) -> api_models.AdaptationV2:
         if self._adaptation is None:  # Before the first flush to DB if not set in constructor.
@@ -75,12 +70,6 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
         match self._adaptation["format"]:
             case 0:
                 return api_models.AdaptationV2(kind=None, effects=[])
-            case 1:
-                # @todo(After production data is migrated) Remove this case
-                adaptation_v1 = self.AdaptationV1Container(adaptation=self._adaptation["settings"]).adaptation
-                kind = None if adaptation_v1.kind == "null" else adaptation_v1.kind
-                effects = adaptation_v1.make_effects()
-                return api_models.AdaptationV2(kind=kind, effects=effects)
             case 2:
                 return api_models.AdaptationV2(**self._adaptation["settings"])
             case format:

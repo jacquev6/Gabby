@@ -7,12 +7,6 @@ from fastjsonapi import Constant, Computed, Secret, WriteOnly
 from . import exercise_delta
 from . import parsing
 from . import renderable
-from .adaptations.fill_with_free_text import FillWithFreeTextAdaptation
-from .adaptations.items_and_effects_attempt_1 import ItemsAndEffectsAttempt1Adaptation
-from .adaptations.multiple_choices_in_instructions import MultipleChoicesInInstructionsAdaptation
-from .adaptations.multiple_choices_in_wording import MultipleChoicesInWordingAdaptation
-from .adaptations.null import NullAdaptation
-from .adaptations.select_things import SelectThingsAdaptation
 from mydantic import PydanticBase
 
 
@@ -110,14 +104,9 @@ class PdfRectangle(PydanticBase):
     text: str | None
     role: Literal["bounding", "instructions", "wording", "example", "clue"]
 
-
-# @todo(After production data is migrated) Remove this type alias
-AdaptationV1: TypeAlias = FillWithFreeTextAdaptation | ItemsAndEffectsAttempt1Adaptation | MultipleChoicesInInstructionsAdaptation | MultipleChoicesInWordingAdaptation | NullAdaptation | SelectThingsAdaptation
-
 class AdaptationV2(PydanticBase):
     # @todo(When production data has been manually fixed) Remove "multiple-choices-in-instructions"
-    # @todo(When production data is migrated) Remove "multiple-choices-in-wording"
-    kind: Literal["fill-with-free-text", "items-and-effects-attempt-1", "select-things", "multiple-choices-in-instructions", "multiple-choices-in-wording", "multiple-choices"] | None
+    kind: Literal["fill-with-free-text", "items-and-effects-attempt-1", "select-things", "multiple-choices-in-instructions", "multiple-choices"] | None
     effects: list[parsing.AdaptationEffect]
 
 class Exercise(PydanticBase, CreatedUpdatedByAtMixin):

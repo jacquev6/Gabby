@@ -124,7 +124,6 @@ export function assignModelFrom(model: Model, exercise: Exercise & InCache & Exi
   model.example = exercise.attributes.example
   model.clue = exercise.attributes.clue
   model.wordingParagraphsPerPagelet = exercise.attributes.wordingParagraphsPerPagelet
-  console.assert(exercise.attributes.adaptation.kind !== 'multiple-choices-in-wording')  // @todo(When the production data is migrated) Remove this line
   model.adaptationKind = exercise.attributes.adaptation.kind === null ? 'null' : exercise.attributes.adaptation.kind
   const adaptation = exercise.attributes.adaptation
   const kind = adaptation.kind

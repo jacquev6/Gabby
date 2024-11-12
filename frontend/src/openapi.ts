@@ -156,14 +156,14 @@ export interface components {
       /** Effects */
       effects: (components["schemas"]["FillWithFreeTextAdaptationEffect"] | components["schemas"]["MultipleChoicesInInstructionsAdaptationEffect"] | components["schemas"]["SelectThingsAdaptationEffect"] | components["schemas"]["ItemsAndEffectsAttempt1AdaptationEffect-Input"])[];
       /** Kind */
-      kind: ("fill-with-free-text" | "items-and-effects-attempt-1" | "select-things" | "multiple-choices-in-instructions" | "multiple-choices-in-wording" | "multiple-choices") | null;
+      kind: ("fill-with-free-text" | "items-and-effects-attempt-1" | "select-things" | "multiple-choices-in-instructions" | "multiple-choices") | null;
     };
     /** AdaptationV2 */
     "AdaptationV2-Output": {
       /** Effects */
       effects: (components["schemas"]["FillWithFreeTextAdaptationEffect"] | components["schemas"]["MultipleChoicesInInstructionsAdaptationEffect"] | components["schemas"]["SelectThingsAdaptationEffect"] | components["schemas"]["ItemsAndEffectsAttempt1AdaptationEffect-Output"])[];
       /** Kind */
-      kind: ("fill-with-free-text" | "items-and-effects-attempt-1" | "select-things" | "multiple-choices-in-instructions" | "multiple-choices-in-wording" | "multiple-choices") | null;
+      kind: ("fill-with-free-text" | "items-and-effects-attempt-1" | "select-things" | "multiple-choices-in-instructions" | "multiple-choices") | null;
     };
     /** Body_login_api_token_post */
     Body_login_api_token_post: {

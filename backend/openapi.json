@@ -41,7 +41,6 @@
                   "items-and-effects-attempt-1",
                   "select-things",
                   "multiple-choices-in-instructions",
-                  "multiple-choices-in-wording",
                   "multiple-choices"
                 ],
                 "type": "string"
@@ -100,7 +99,6 @@
                   "items-and-effects-attempt-1",
                   "select-things",
                   "multiple-choices-in-instructions",
-                  "multiple-choices-in-wording",
                   "multiple-choices"
                 ],
                 "type": "string"
