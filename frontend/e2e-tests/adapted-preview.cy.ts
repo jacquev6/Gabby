@@ -16,7 +16,8 @@ describe('Gabby', () => {
 
     cy.get('span[contenteditable]').first().type('Abcd')
 
-    cy.get('label:contains("Adaptation type")').next().select('select-things')
+    cy.get('label:contains("Adaptation type")').next().select('items-and-effects-attempt-1')
+    cy.get('div:contains("Selectable") >input').check()
     notBusy()
 
     cy.get('span:contains("tracter")').eq(1).click()
@@ -27,7 +28,8 @@ describe('Gabby', () => {
 
     cy.get('span[contenteditable]').first().should('have.value', '')
 
-    cy.get('label:contains("Adaptation type")').next().select('select-things')
+    cy.get('label:contains("Adaptation type")').next().select('items-and-effects-attempt-1')
+    cy.get('div:contains("Selectable") >input').check()
     notBusy()
 
     cy.get('span:contains("tracter")').eq(1).should('have.css', 'background-color', 'rgba(0, 0, 0, 0)')

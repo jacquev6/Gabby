@@ -66,8 +66,9 @@ describe('Gabby', () => {
     cy.get('p:contains("Clue")').click()
     cy.focused().type('The clue')
 
-    cy.get('label:contains("Adaptation type")').next().select('select-things')
-    cy.get('label:contains("Number of colors")').next().type('{selectAll}2')
+    cy.get('label:contains("Adaptation type") + select').select('items-and-effects-attempt-1')
+    cy.get('div:contains("Selectable") >input').check()
+    cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="2"]').click()
 
     cy.get('span:contains("artificial")').last().click()
     cy.get('span:contains("artificial")').last().should('have.css', 'background-color', 'rgb(255, 255, 0)')

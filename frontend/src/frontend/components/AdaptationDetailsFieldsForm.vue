@@ -36,15 +36,6 @@ class SelBlot extends InlineBlot {
   }
 }
 
-const itemsAndEffectsInstructionsFormats = {
-  ...basicFormats,
-  sel: {
-    kind: 'text' as const,
-    make: (text: string, value: unknown) => `{sel${value}|${escapeForTag(text)}}`,
-    blot: SelBlot,
-  },
-}
-
 let model = ref<Model>(null as any/* OK: 'model' is assigned a value in "script setup" below */ as Model)
 const choices2ContextMenu = ref<InstanceType<typeof ContextMenu> | null>(null)
 
@@ -158,8 +149,18 @@ function doneEditingChoices2() {
   model.value.inProgress = {kind: 'nothing'}
 }
 
-const multipleChoicesFormats = {
+class SelectableBlot extends InlineBlot {
+  static override blotName = 'selectable'
+  static override tagName = 'selectable-blot'
+}
+
+export const wysiwygFormats = {
   ...basicFormats,
+  sel: {
+    kind: 'text' as const,
+    make: (text: string, value: unknown) => `{sel${value}|${escapeForTag(text)}}`,
+    blot: SelBlot,
+  },
   choices2: {
     kind: 'text' as const,
     make(text: string, settings_: unknown) {
@@ -168,46 +169,10 @@ const multipleChoicesFormats = {
     },
     blot: Choices2Blot,
   },
-}
-
-class SelectableBlot extends InlineBlot {
-  static override blotName = 'selectable'
-  static override tagName = 'selectable-blot'
-}
-
-const itemsAndEffectsWordingFormats = {
-  ...basicFormats,
   selectable: {
     kind: 'text' as const,
     make: (text: string) => `{selectable|${escapeForTag(text)}}`,
     blot: SelectableBlot,
-  },
-}
-
-export const wysiwygFormats = {
-  'null': {
-    instructions: basicFormats,
-    wording: basicFormats,
-    example: basicFormats,
-    clue: basicFormats,
-  },
-  'fill-with-free-text': {
-    instructions: basicFormats,
-    wording: basicFormats,
-    example: basicFormats,
-    clue: basicFormats,
-  },
-  'items-and-effects-attempt-1': {
-    instructions: itemsAndEffectsInstructionsFormats,
-    wording: itemsAndEffectsWordingFormats,
-    example: itemsAndEffectsInstructionsFormats,
-    clue: itemsAndEffectsInstructionsFormats,
-  },
-  'multiple-choices': {
-    instructions: multipleChoicesFormats,
-    wording: multipleChoicesFormats,
-    example: basicFormats,
-    clue: basicFormats,
   },
 }
 </script>

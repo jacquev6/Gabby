@@ -76,7 +76,8 @@ describe('Gabby', () => {
 
     cy.get('@number').type('1')
 
-    cy.get('@adaptationType').select('select-things').blur()
+    cy.get('@adaptationType').select('items-and-effects-attempt-1').blur()
+    cy.get('div:contains("Selectable") >input').check()
     cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="2"]').click()
 
     traceRectangle('@canvas', 8, 5, 60, 9)
@@ -123,7 +124,8 @@ describe('Gabby', () => {
 
     cy.get('@number').type('1')
 
-    cy.get('@adaptationType').select('select-things').blur()
+    cy.get('@adaptationType').select('items-and-effects-attempt-1')
+    cy.get('div:contains("Selectable") >input').check()
     cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="2"]').click()
 
     traceRectangle('@canvas', 8, 5, 60, 9)

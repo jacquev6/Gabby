@@ -402,7 +402,7 @@ defineExpose({
       v-if="wysiwyg"
       ref="instructionsEditor"
       :label="$t('exerciseInstructions')"
-      :formats="wysiwygFormats[model.adaptationKind].instructions"
+      :formats="wysiwygFormats"
       v-model="model.instructions" :delta="instructionsDeltas"
       @selectionChange="selectionChangeInInstructionsOrWording"
     />
@@ -417,7 +417,7 @@ defineExpose({
       v-if="wysiwyg"
       ref="wordingEditor"
       :label="$t('exerciseWording')"
-      :formats="wysiwygFormats[model.adaptationKind].wording"
+      :formats="wysiwygFormats"
       v-model="model.wording" :delta="wordingDeltas"
       @selectionChange="selectionChangeInInstructionsOrWording"
     />
@@ -434,7 +434,7 @@ defineExpose({
             v-if="wysiwyg"
             ref="exampleEditor"
             :label="$t('exerciseExample')"
-            :formats="wysiwygFormats[model.adaptationKind].example"
+            :formats="wysiwygFormats"
             :delta="exampleDeltas"
             v-model="model.example"
           />
@@ -450,7 +450,7 @@ defineExpose({
             v-if="wysiwyg"
             ref="clueEditor"
             :label="$t('exerciseClue')"
-            :formats="wysiwygFormats[model.adaptationKind].clue"
+            :formats="wysiwygFormats"
             :delta="clueDeltas"
             v-model="model.clue"
           />
