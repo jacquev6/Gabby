@@ -1,7 +1,6 @@
 <script lang="ts">
 import { useApiStore } from '$frontend/stores/api'
 import type { Project, Textbook, Exercise, InCache, Exists, ParsedExercise } from '$frontend/stores/api'
-import { defaultColors } from './AdaptationDetailsFieldsForm.vue'
 
 
 const api = useApiStore()
@@ -11,7 +10,7 @@ type AdaptationEffect = (Adaptation['effects'][number] & {kind: string}) | {kind
 type PdfRectangle = (Exercise & InCache & Exists)['attributes']['rectangles'][number]
 
 // @todo Automate updating this type when a new adaptation type is added
-export const adaptationKinds = ['null', 'fill-with-free-text', 'items-and-effects-attempt-1', 'select-things', 'multiple-choices'] as const
+export const adaptationKinds = ['null', 'fill-with-free-text', 'items-and-effects-attempt-1', 'multiple-choices'] as const
 export type AdaptationKind = typeof adaptationKinds[number]
 
 export const textualFieldNames = ['instructions', 'wording', 'example', 'clue'] as const
@@ -88,12 +87,6 @@ function makeModel({inTextbook, textbookPage}: MakeModelOptions): Model {
       },
       'null': {
         kind: 'null' as const,
-      },
-      'select-things': {
-        kind: 'select-things' as const,
-        words: true,
-        punctuation: false,
-        colors: [defaultColors[0]],
       },
       'multiple-choices': {
         kind: 'multiple-choices' as const,
@@ -356,9 +349,7 @@ const clueDeltas = computed(() => props.deltas === null ? [] : props.deltas.clue
 
 const selBlotColors = computed(() => {
   const effect = model.value.adaptationEffects[model.value.adaptationKind]
-  if (effect.kind === 'select-things') {
-    return Object.fromEntries(effect.colors.map((color, i) => [`--sel-blot-color-${i + 1}`, color]))
-  } else if (effect.kind === 'items-and-effects-attempt-1' && effect.effects.selectable !== null) {
+  if (effect.kind === 'items-and-effects-attempt-1' && effect.effects.selectable !== null) {
     return Object.fromEntries(effect.effects.selectable.colors.map((color, i) => [`--sel-blot-color-${i + 1}`, color]))
   } else {
     return {}

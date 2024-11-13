@@ -2286,7 +2286,19 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 example="",
                 clue="",
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="select-things", effects=[p.SelectThingsAdaptationEffect(kind="select-things", colors=["red", "blue"], words=True, punctuation=False)]),
+                adaptation=AdaptationV2(
+                    kind="items-and-effects-attempt-1",
+                    effects=[
+                        p.ItemsAndEffectsAttempt1AdaptationEffect(
+                            kind="items-and-effects-attempt-1",
+                            items=p.ItemsAndEffectsAttempt1AdaptationEffect.WordsItems(kind="words", punctuation=False),
+                            effects=p.ItemsAndEffectsAttempt1AdaptationEffect.Effects(
+                                selectable=p.ItemsAndEffectsAttempt1AdaptationEffect.Effects.Selectable(colors=["red", "blue"]),
+                                boxed=False,
+                            ),
+                        ),
+                    ],
+                ),
             ),
             r.Exercise(
                 number="number",
@@ -2348,7 +2360,19 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 example="",
                 clue="",
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="select-things", effects=[p.SelectThingsAdaptationEffect(kind="select-things", colors=["red", "green", "blue"], words=True, punctuation=False)]),
+                adaptation=AdaptationV2(
+                    kind="items-and-effects-attempt-1",
+                    effects=[
+                        p.ItemsAndEffectsAttempt1AdaptationEffect(
+                            kind="items-and-effects-attempt-1",
+                            items=p.ItemsAndEffectsAttempt1AdaptationEffect.WordsItems(kind="words", punctuation=False),
+                            effects=p.ItemsAndEffectsAttempt1AdaptationEffect.Effects(
+                                selectable=p.ItemsAndEffectsAttempt1AdaptationEffect.Effects.Selectable(colors=["red", "green", "blue"]),
+                                boxed=False,
+                            ),
+                        ),
+                    ],
+                ),
             ),
             r.Exercise(
                 number="number",
@@ -2404,7 +2428,19 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 example="",
                 clue="",
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="select-things", effects=[p.SelectThingsAdaptationEffect(kind="select-things", colors=["red"], words=True, punctuation=False)]),
+                adaptation=AdaptationV2(
+                    kind="items-and-effects-attempt-1",
+                    effects=[
+                        p.ItemsAndEffectsAttempt1AdaptationEffect(
+                            kind="items-and-effects-attempt-1",
+                            items=p.ItemsAndEffectsAttempt1AdaptationEffect.WordsItems(kind="words", punctuation=False),
+                            effects=p.ItemsAndEffectsAttempt1AdaptationEffect.Effects(
+                                selectable=p.ItemsAndEffectsAttempt1AdaptationEffect.Effects.Selectable(colors=["red"]),
+                                boxed=False,
+                            ),
+                        ),
+                    ],
+                ),
             ),
             r.Exercise(
                 number="number",
@@ -2449,7 +2485,19 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 example="",
                 clue="",
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="select-things", effects=[p.SelectThingsAdaptationEffect(kind="select-things", colors=["red"], words=True, punctuation=False)]),
+                adaptation=AdaptationV2(
+                    kind="items-and-effects-attempt-1",
+                    effects=[
+                        p.ItemsAndEffectsAttempt1AdaptationEffect(
+                            kind="items-and-effects-attempt-1",
+                            items=p.ItemsAndEffectsAttempt1AdaptationEffect.WordsItems(kind="words", punctuation=False),
+                            effects=p.ItemsAndEffectsAttempt1AdaptationEffect.Effects(
+                                selectable=p.ItemsAndEffectsAttempt1AdaptationEffect.Effects.Selectable(colors=["red"]),
+                                boxed=False,
+                            ),
+                        ),
+                    ],
+                ),
             ),
             r.Exercise(
                 number="number",
@@ -2508,7 +2556,19 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 example="",
                 clue="",
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="select-things", effects=[p.SelectThingsAdaptationEffect(kind="select-things", colors=["red"], words=True, punctuation=False)]),
+                adaptation=AdaptationV2(
+                    kind="items-and-effects-attempt-1",
+                    effects=[
+                        p.ItemsAndEffectsAttempt1AdaptationEffect(
+                            kind="items-and-effects-attempt-1",
+                            items=p.ItemsAndEffectsAttempt1AdaptationEffect.WordsItems(kind="words", punctuation=False),
+                            effects=p.ItemsAndEffectsAttempt1AdaptationEffect.Effects(
+                                selectable=p.ItemsAndEffectsAttempt1AdaptationEffect.Effects.Selectable(colors=["red"]),
+                                boxed=False,
+                            ),
+                        ),
+                    ],
+                ),
             ),
             r.Exercise(
                 number="number",
@@ -2567,7 +2627,19 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 example="",
                 clue="",
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="select-things", effects=[p.SelectThingsAdaptationEffect(kind="select-things", colors=["red"], words=True, punctuation=False)]),
+                adaptation=AdaptationV2(
+                    kind="items-and-effects-attempt-1",
+                    effects=[
+                        p.ItemsAndEffectsAttempt1AdaptationEffect(
+                            kind="items-and-effects-attempt-1",
+                            items=p.ItemsAndEffectsAttempt1AdaptationEffect.WordsItems(kind="words", punctuation=False),
+                            effects=p.ItemsAndEffectsAttempt1AdaptationEffect.Effects(
+                                selectable=p.ItemsAndEffectsAttempt1AdaptationEffect.Effects.Selectable(colors=["red"]),
+                                boxed=False,
+                            ),
+                        ),
+                    ],
+                ),
             ),
             r.Exercise(
                 number="number",
@@ -2620,7 +2692,19 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 example="",
                 clue="",
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="select-things", effects=[p.SelectThingsAdaptationEffect(kind="select-things", colors=["red"], words=True, punctuation=False)]),
+                adaptation=AdaptationV2(
+                    kind="items-and-effects-attempt-1",
+                    effects=[
+                        p.ItemsAndEffectsAttempt1AdaptationEffect(
+                            kind="items-and-effects-attempt-1",
+                            items=p.ItemsAndEffectsAttempt1AdaptationEffect.WordsItems(kind="words", punctuation=False),
+                            effects=p.ItemsAndEffectsAttempt1AdaptationEffect.Effects(
+                                selectable=p.ItemsAndEffectsAttempt1AdaptationEffect.Effects.Selectable(colors=["red"]),
+                                boxed=False,
+                            ),
+                        ),
+                    ],
+                ),
             ),
             r.Exercise(
                 number="number",
@@ -2665,7 +2749,19 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 example="This is the example.",
                 clue="This is the clue.",
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="select-things", effects=[p.SelectThingsAdaptationEffect(kind="select-things", colors=["red"], words=True, punctuation=False)]),
+                adaptation=AdaptationV2(
+                    kind="items-and-effects-attempt-1",
+                    effects=[
+                        p.ItemsAndEffectsAttempt1AdaptationEffect(
+                            kind="items-and-effects-attempt-1",
+                            items=p.ItemsAndEffectsAttempt1AdaptationEffect.WordsItems(kind="words", punctuation=False),
+                            effects=p.ItemsAndEffectsAttempt1AdaptationEffect.Effects(
+                                selectable=p.ItemsAndEffectsAttempt1AdaptationEffect.Effects.Selectable(colors=["red"]),
+                                boxed=False,
+                            ),
+                        ),
+                    ],
+                ),
             ),
             r.Exercise(
                 number="number",
@@ -2740,7 +2836,19 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 example="{sel1|abc} {sel2|def}",
                 clue="{sel3|ghi} {sel4|jkl}",
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="select-things", effects=[p.SelectThingsAdaptationEffect(kind="select-things", colors=["red", "green", "blue"], words=True, punctuation=False)]),
+                adaptation=AdaptationV2(
+                    kind="items-and-effects-attempt-1",
+                    effects=[
+                        p.ItemsAndEffectsAttempt1AdaptationEffect(
+                            kind="items-and-effects-attempt-1",
+                            items=p.ItemsAndEffectsAttempt1AdaptationEffect.WordsItems(kind="words", punctuation=False),
+                            effects=p.ItemsAndEffectsAttempt1AdaptationEffect.Effects(
+                                selectable=p.ItemsAndEffectsAttempt1AdaptationEffect.Effects.Selectable(colors=["red", "green", "blue"]),
+                                boxed=False,
+                            ),
+                        ),
+                    ],
+                ),
             ),
             r.Exercise(
                 number="number",

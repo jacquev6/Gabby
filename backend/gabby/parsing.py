@@ -1316,39 +1316,6 @@ class FillWithFreeTextAdaptationEffect(PydanticBase):
         return {}
 
 
-class SelectThingsAdaptationEffect(PydanticBase):
-    kind: Literal["select-things"]
-
-    colors: list[str]
-    words: bool
-    punctuation: bool
-
-    def preprocess(self, instructions, wording, example, clue):
-        return (instructions, wording, example, clue)
-
-    def make_instructions_adapter_constructor_kwds(self):
-        return {
-            "selection_colors": self.colors,
-        }
-
-    def make_wording_adapter_constructor_kwds(self):
-        return {
-            "select_words": self.words,
-            "select_punctuation": self.punctuation,
-            "selection_colors": self.colors,
-        }
-
-    def make_example_adapter_constructor_kwds(self):
-        return {
-            "selection_colors": self.colors,
-        }
-
-    def make_clue_adapter_constructor_kwds(self):
-        return {
-            "selection_colors": self.colors,
-        }
-
-
 class ItemsAndEffectsAttempt1AdaptationEffect(PydanticBase):
     kind: Literal["items-and-effects-attempt-1"]
 
@@ -1422,7 +1389,7 @@ class ItemsAndEffectsAttempt1AdaptationEffect(PydanticBase):
 
 
 AdaptationEffect = Annotated[
-    FillWithFreeTextAdaptationEffect | SelectThingsAdaptationEffect | ItemsAndEffectsAttempt1AdaptationEffect,
+    FillWithFreeTextAdaptationEffect | ItemsAndEffectsAttempt1AdaptationEffect,
     pydantic.Field(discriminator="kind"),
 ]
 

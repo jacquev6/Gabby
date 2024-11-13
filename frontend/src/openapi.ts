@@ -154,16 +154,16 @@ export interface components {
     /** AdaptationV2 */
     "AdaptationV2-Input": {
       /** Effects */
-      effects: (components["schemas"]["FillWithFreeTextAdaptationEffect"] | components["schemas"]["SelectThingsAdaptationEffect"] | components["schemas"]["ItemsAndEffectsAttempt1AdaptationEffect-Input"])[];
+      effects: (components["schemas"]["FillWithFreeTextAdaptationEffect"] | components["schemas"]["ItemsAndEffectsAttempt1AdaptationEffect-Input"])[];
       /** Kind */
-      kind: ("fill-with-free-text" | "items-and-effects-attempt-1" | "select-things" | "multiple-choices") | null;
+      kind: ("fill-with-free-text" | "items-and-effects-attempt-1" | "multiple-choices") | null;
     };
     /** AdaptationV2 */
     "AdaptationV2-Output": {
       /** Effects */
-      effects: (components["schemas"]["FillWithFreeTextAdaptationEffect"] | components["schemas"]["SelectThingsAdaptationEffect"] | components["schemas"]["ItemsAndEffectsAttempt1AdaptationEffect-Output"])[];
+      effects: (components["schemas"]["FillWithFreeTextAdaptationEffect"] | components["schemas"]["ItemsAndEffectsAttempt1AdaptationEffect-Output"])[];
       /** Kind */
-      kind: ("fill-with-free-text" | "items-and-effects-attempt-1" | "select-things" | "multiple-choices") | null;
+      kind: ("fill-with-free-text" | "items-and-effects-attempt-1" | "multiple-choices") | null;
     };
     /** Body_login_api_token_post */
     Body_login_api_token_post: {
@@ -316,21 +316,6 @@ export interface components {
     Section: {
       /** Paragraphs */
       paragraphs: components["schemas"]["Paragraph"][];
-    };
-    /** SelectThingsAdaptationEffect */
-    SelectThingsAdaptationEffect: {
-      /** Colors */
-      colors: string[];
-      /**
-       * Kind
-       * @constant
-       * @enum {string}
-       */
-      kind: "select-things";
-      /** Punctuation */
-      punctuation: boolean;
-      /** Words */
-      words: boolean;
     };
     /** Selectable */
     Selectable: {

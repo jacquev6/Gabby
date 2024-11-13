@@ -36,7 +36,7 @@ class SelBlot extends InlineBlot {
   }
 }
 
-const selectThingsFormats = {
+const itemsAndEffectsInstructionsFormats = {
   ...basicFormats,
   sel: {
     kind: 'text' as const,
@@ -198,16 +198,10 @@ export const wysiwygFormats = {
     clue: basicFormats,
   },
   'items-and-effects-attempt-1': {
-    instructions: selectThingsFormats,
+    instructions: itemsAndEffectsInstructionsFormats,
     wording: itemsAndEffectsWordingFormats,
-    example: selectThingsFormats,
-    clue: selectThingsFormats,
-  },
-  'select-things': {
-    instructions: selectThingsFormats,
-    wording: basicFormats,
-    example: selectThingsFormats,
-    clue: selectThingsFormats,
+    example: itemsAndEffectsInstructionsFormats,
+    clue: itemsAndEffectsInstructionsFormats,
   },
   'multiple-choices': {
     instructions: multipleChoicesFormats,
@@ -219,12 +213,11 @@ export const wysiwygFormats = {
 </script>
 
 <script setup lang="ts">
-import { computed, reactive, ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 
-import { BRow, BCol, BLabeledInput, BLabeledCheckbox, BButton } from './opinion/bootstrap'
+import { BRow, BCol, BLabeledInput, BButton } from './opinion/bootstrap'
 import type { Model } from './ExerciseFieldsForm.vue'
 import type ExerciseFieldsForm from './ExerciseFieldsForm.vue'
-import FloatingColorPicker from './FloatingColorPicker.vue'
 import AdaptationDetailsFieldsFormForItemsAndEffectsAttempt1 from './AdaptationDetailsFieldsFormForItemsAndEffectsAttempt1.vue'
 import AdaptationDetailsFieldsFormForMultipleChoices from './AdaptationDetailsFieldsFormForMultipleChoices.vue'
 
@@ -236,39 +229,6 @@ defineProps<{
 
 const model_ = defineModel<Model>({required: true})
 model = model_
-
-const colorPickers = ref<InstanceType<typeof FloatingColorPicker>[]>([])
-
-const allColors = reactive([...defaultColors])
-const colors = allColors.map((_color, i) => computed({
-  get() {
-    if (i < model.value.adaptationEffects['select-things'].colors.length) {
-      return model.value.adaptationEffects['select-things'].colors[i]
-    } else {
-      return allColors[i]
-    }
-  },
-  set(value) {
-    allColors[i] = value
-    if (i < model.value.adaptationEffects['select-things'].colors.length) {
-      model.value.adaptationEffects['select-things'].colors[i] = value
-    }
-  },
-}))
-
-const colorsCount = computed({
-  get: () => model.value.adaptationEffects['select-things'].colors.length,
-  set: (value) => {
-    const prev = model.value.adaptationEffects['select-things'].colors.length
-    if (value > prev) {
-      for (let k = prev; k !== value; ++k) {
-        model.value.adaptationEffects['select-things'].colors.push(allColors[k])
-      }
-    } else {
-      model.value.adaptationEffects['select-things'].colors.length = value
-    }
-  },
-})
 </script>
 
 <template>
@@ -296,52 +256,6 @@ const colorsCount = computed({
   </template>
   <template v-else-if="model.adaptationKind === 'items-and-effects-attempt-1'">
     <AdaptationDetailsFieldsFormForItemsAndEffectsAttempt1 v-model="model" />
-  </template>
-  <template v-else-if="model.adaptationKind === 'select-things'">
-    <template v-if="wysiwyg">
-      <FloatingColorPicker
-        v-for="i in colors.length"
-        ref="colorPickers"
-        v-model="colors[i - 1].value"
-        :default="defaultColors[i - 1]"
-        backdropCovers1="#left-col-2"
-        backdropCovers2="#gutter-2"
-      />
-      <div class="mb-3">
-        <label class="form-label" for="blah">{{ $t('usableColors' )}}</label>
-        <span class="maybe-usable-colors-container">
-          <span v-for="i in colors.length" :class="i - 1 < model.adaptationEffects['select-things'].colors.length ? 'usable-colors-container' : 'unusable-colors-container'">
-            <span
-              class="usable-colors-button"
-              :style="{backgroundColor: colors[i - 1].value}"
-              :data-cy-colors="i"
-              @click="colorsCount = i"
-              @contextmenu.prevent="(event) => colorPickers[i - 1].show(event.target as HTMLElement)"
-            ></span>
-          </span>
-        </span>
-      </div>
-      <BLabeledCheckbox :label="$t('includePunctuation')" v-model="model.adaptationEffects['select-things'].punctuation" />
-    </template>
-    <template v-else>
-      <BLabeledInput :label="$t('colorsCount')" type="number" min="1" v-model="colorsCount" />
-      <BLabeledCheckbox :label="$t('includePunctuation')" v-model="model.adaptationEffects['select-things'].punctuation" />
-      <p class="alert alert-secondary">
-        <i18n-t keypath="useSel1ToSelN" v-if="model.adaptationEffects['select-things'].colors.length > 1">
-          <template v-slot:first>
-            <code>{sel1|<em>text</em>}</code>
-          </template>
-          <template v-slot:last>
-            <code>{sel{{ model.adaptationEffects['select-things'].colors.length }}|<em>text</em>}</code>
-          </template>
-        </i18n-t>
-        <i18n-t keypath="useSel1" v-else>
-          <template v-slot:first>
-            <code>{sel1|<em>text</em>}</code>
-          </template>
-        </i18n-t>
-      </p>
-    </template>
   </template>
   <template v-else-if="model.adaptationKind === 'multiple-choices'">
     <AdaptationDetailsFieldsFormForMultipleChoices v-model="model" :wysiwyg />

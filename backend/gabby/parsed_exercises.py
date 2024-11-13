@@ -130,13 +130,20 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     "clue": "",
                     "wordingParagraphsPerPagelet": 3,
                     "adaptation": {
-                        "kind": "select-things",
+                        "kind": "items-and-effects-attempt-1",
                         "effects": [
                             {
-                                "kind": "select-things",
-                                "colors": ["red", "green", "blue"],
-                                "words": True,
-                                "punctuation": False,
+                                "kind": "items-and-effects-attempt-1",
+                                "items": {
+                                    "kind": "words",
+                                    "punctuation": False,
+                                },
+                                "effects": {
+                                    "selectable": {
+                                        "colors": ["red", "green", "blue"],
+                                    },
+                                    "boxed": False,
+                                },
                             },
                         ],
                     },
@@ -187,13 +194,20 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     "clue": "This is the clue.",
                     "wordingParagraphsPerPagelet": 3,
                     "adaptation": {
-                        "kind": "select-things",
+                        "kind": "items-and-effects-attempt-1",
                         "effects": [
                             {
-                                "kind": "select-things",
-                                "colors": ["red", "green", "blue"],
-                                "words": True,
-                                "punctuation": False,
+                                "kind": "items-and-effects-attempt-1",
+                                "items": {
+                                    "kind": "words",
+                                    "punctuation": False,
+                                },
+                                "effects": {
+                                    "selectable": {
+                                        "colors": ["red", "green", "blue"],
+                                    },
+                                    "boxed": False,
+                                }
                             },
                         ],
                     },

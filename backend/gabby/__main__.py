@@ -87,8 +87,7 @@ def backup_database():
 @click.argument("backup_url")
 @click.option("--yes", is_flag=True)
 @click.option("--patch-according-to-settings", is_flag=True)
-@click.option("--skip-checking-orm", is_flag=True)
-def restore_database(backup_url, yes, patch_according_to_settings, skip_checking_orm):
+def restore_database(backup_url, yes, patch_according_to_settings):
     parsed_backup_url = urlparse(backup_url)
 
     if parsed_backup_url.scheme == "file":
@@ -148,21 +147,23 @@ def restore_database(backup_url, yes, patch_according_to_settings, skip_checking
 
     sqlalchemy_utils.functions.drop_database(placeholder_database_url)
 
-    if not skip_checking_orm:
-        database_engine = database_utils.create_engine(settings.DATABASE_URL)
-        ok = True
-        with orm.Session(database_engine) as session:
-            for exercise in session.query(orm_models.Exercise):
-                try:
-                    exercise.adaptation
-                    exercise.make_adapted()
-                    exercise.make_delta()
-                    print("Exercise", exercise.id, "OK", file=sys.stderr)  # @todo Improve duration (currently 0.3s / exercise) and remove this progress log
-                except Exception as e:
-                    print(f"ERROR with exercise {exercise.id}: {e}", file=sys.stderr)
-                    ok = False
-        if not ok:
-            sys.exit(1)
+
+@main.command()
+def check_database_with_orm():
+    database_engine = database_utils.create_engine(settings.DATABASE_URL)
+    ok = True
+    with orm.Session(database_engine) as session:
+        for exercise in session.query(orm_models.Exercise):
+            try:
+                exercise.adaptation
+                exercise.make_adapted()
+                exercise.make_delta()
+                print("Exercise", exercise.id, "OK", file=sys.stderr)  # @todo Improve duration (currently 0.3s / exercise) and remove this progress log
+            except Exception as e:
+                print(f"ERROR with exercise {exercise.id}: {e}", file=sys.stderr)
+                ok = False
+    if not ok:
+        sys.exit(1)
 
 
 @main.command(name="load-fixtures")

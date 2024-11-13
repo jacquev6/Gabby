@@ -105,7 +105,7 @@ class PdfRectangle(PydanticBase):
     role: Literal["bounding", "instructions", "wording", "example", "clue"]
 
 class AdaptationV2(PydanticBase):
-    kind: Literal["fill-with-free-text", "items-and-effects-attempt-1", "select-things", "multiple-choices"] | None
+    kind: Literal["fill-with-free-text", "items-and-effects-attempt-1", "multiple-choices"] | None
     effects: list[parsing.AdaptationEffect]
 
 class Exercise(PydanticBase, CreatedUpdatedByAtMixin):

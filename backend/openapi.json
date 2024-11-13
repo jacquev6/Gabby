@@ -9,17 +9,13 @@
               "discriminator": {
                 "mapping": {
                   "fill-with-free-text": "#/components/schemas/FillWithFreeTextAdaptationEffect",
-                  "items-and-effects-attempt-1": "#/components/schemas/ItemsAndEffectsAttempt1AdaptationEffect-Input",
-                  "select-things": "#/components/schemas/SelectThingsAdaptationEffect"
+                  "items-and-effects-attempt-1": "#/components/schemas/ItemsAndEffectsAttempt1AdaptationEffect-Input"
                 },
                 "propertyName": "kind"
               },
               "oneOf": [
                 {
                   "$ref": "#/components/schemas/FillWithFreeTextAdaptationEffect"
-                },
-                {
-                  "$ref": "#/components/schemas/SelectThingsAdaptationEffect"
                 },
                 {
                   "$ref": "#/components/schemas/ItemsAndEffectsAttempt1AdaptationEffect-Input"
@@ -35,7 +31,6 @@
                 "enum": [
                   "fill-with-free-text",
                   "items-and-effects-attempt-1",
-                  "select-things",
                   "multiple-choices"
                 ],
                 "type": "string"
@@ -62,17 +57,13 @@
               "discriminator": {
                 "mapping": {
                   "fill-with-free-text": "#/components/schemas/FillWithFreeTextAdaptationEffect",
-                  "items-and-effects-attempt-1": "#/components/schemas/ItemsAndEffectsAttempt1AdaptationEffect-Output",
-                  "select-things": "#/components/schemas/SelectThingsAdaptationEffect"
+                  "items-and-effects-attempt-1": "#/components/schemas/ItemsAndEffectsAttempt1AdaptationEffect-Output"
                 },
                 "propertyName": "kind"
               },
               "oneOf": [
                 {
                   "$ref": "#/components/schemas/FillWithFreeTextAdaptationEffect"
-                },
-                {
-                  "$ref": "#/components/schemas/SelectThingsAdaptationEffect"
                 },
                 {
                   "$ref": "#/components/schemas/ItemsAndEffectsAttempt1AdaptationEffect-Output"
@@ -88,7 +79,6 @@
                 "enum": [
                   "fill-with-free-text",
                   "items-and-effects-attempt-1",
-                  "select-things",
                   "multiple-choices"
                 ],
                 "type": "string"
@@ -561,42 +551,6 @@
           "paragraphs"
         ],
         "title": "Section",
-        "type": "object"
-      },
-      "SelectThingsAdaptationEffect": {
-        "additionalProperties": false,
-        "properties": {
-          "colors": {
-            "items": {
-              "type": "string"
-            },
-            "title": "Colors",
-            "type": "array"
-          },
-          "kind": {
-            "const": "select-things",
-            "enum": [
-              "select-things"
-            ],
-            "title": "Kind",
-            "type": "string"
-          },
-          "punctuation": {
-            "title": "Punctuation",
-            "type": "boolean"
-          },
-          "words": {
-            "title": "Words",
-            "type": "boolean"
-          }
-        },
-        "required": [
-          "kind",
-          "colors",
-          "words",
-          "punctuation"
-        ],
-        "title": "SelectThingsAdaptationEffect",
         "type": "object"
       },
       "Selectable": {
