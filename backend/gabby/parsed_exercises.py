@@ -76,7 +76,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     "example": "",
                     "clue": "",
                     "wordingParagraphsPerPagelet": 3,
-                    "adaptation": {"kind": None, "effects": []},
+                    "adaptation": {"kind": "generic", "effects": []},
                 },
             },
         }
@@ -130,10 +130,10 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     "clue": "",
                     "wordingParagraphsPerPagelet": 3,
                     "adaptation": {
-                        "kind": "items-and-effects-attempt-1",
+                        "kind": "generic",
                         "effects": [
                             {
-                                "kind": "items-and-effects-attempt-1",
+                                "kind": "itemized",
                                 "items": {
                                     "kind": "words",
                                     "punctuation": False,
@@ -194,10 +194,10 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     "clue": "This is the clue.",
                     "wordingParagraphsPerPagelet": 3,
                     "adaptation": {
-                        "kind": "items-and-effects-attempt-1",
+                        "kind": "generic",
                         "effects": [
                             {
-                                "kind": "items-and-effects-attempt-1",
+                                "kind": "itemized",
                                 "items": {
                                     "kind": "words",
                                     "punctuation": False,
@@ -207,7 +207,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                                         "colors": ["red", "green", "blue"],
                                     },
                                     "boxed": False,
-                                }
+                                },
                             },
                         ],
                     },

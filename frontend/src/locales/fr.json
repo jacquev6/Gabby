@@ -74,9 +74,8 @@
   "noExercisesForNow": "Aucun exercice pour le moment.",
   "independentExercises": "Exercices indépendants",
   "adaptationType": "Type d'adaptation",
-  "null": "-",
+  "generic": "-",
   "fill-with-free-text": "Remplissage par texte libre",
-  "items-and-effects-attempt-1": "Items et effets (essai n°1)",
   "multiple-choices": "Choix multiples",
 
   "confirmTitle": "Confirmation",

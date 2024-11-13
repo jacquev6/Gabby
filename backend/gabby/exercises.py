@@ -69,7 +69,7 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
 
         match self._adaptation["format"]:
             case 0:
-                return api_models.AdaptationV2(kind=None, effects=[])
+                return api_models.AdaptationV2(kind="generic", effects=[])
             case 2:
                 return api_models.AdaptationV2(**self._adaptation["settings"])
             case format:

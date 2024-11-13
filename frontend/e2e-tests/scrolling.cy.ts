@@ -129,7 +129,7 @@ describe('Gabby', () => {
     cy.get('[data-cy="create-then-next"]').should('be.visible')
     cy.get('@container').should(beScrolledDown)
 
-    cy.get('label:contains("Adaptation type")').next().select('items-and-effects-attempt-1')
+    cy.get('label:contains("Adaptation type")').next().select('generic')
     cy.get('label:contains("Wording")').next().type('This is a quite long wording to ensure a scrollbar appears.', {delay: 0})
     cy.get('label:contains("Instructions")').next().type('Hello', {delay: 0})
 

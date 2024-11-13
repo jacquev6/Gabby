@@ -22,8 +22,8 @@ def upgrade():
             assert adaptation["format"] == 2
             settings = adaptation["settings"]
             kind = settings["kind"]
-            if kind == "select-things":
-                kind = "items-and-effects-attempt-1"
+            if kind is None or kind == "select-things":
+                kind = "generic"
             effects = []
             for effect in settings["effects"]:
                 if effect["kind"] == "select-things":
@@ -42,6 +42,8 @@ def upgrade():
                             boxed=False,
                         ),
                     )
+                if effect["kind"] == "items-and-effects-attempt-1":
+                    effect["kind"] = "itemized"
                 effects.append(effect)
             exercise._adaptation = dict(format=2, settings=dict(kind=kind, effects=effects))
         session.commit()

@@ -458,7 +458,7 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
         )
 
 
-class ItemsAndEffectsAttempt1AdaptationTestCase(AdaptationTestCase):
+class ItemizedAdaptationTestCase(AdaptationTestCase):
     def test_selectable_words__plain(self):
         self.do_test(
             e.Exercise(
@@ -469,8 +469,8 @@ class ItemsAndEffectsAttempt1AdaptationTestCase(AdaptationTestCase):
                 example="",
                 clue="",
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="items-and-effects-attempt-1", effects=[p.ItemsAndEffectsAttempt1AdaptationEffect(
-                    kind="items-and-effects-attempt-1",
+                adaptation=AdaptationV2(kind="generic", effects=[p.ItemizedAdaptationEffect(
+                    kind="itemized",
                     items={"kind": "words", "punctuation": False},
                     effects={"selectable": {"colors": ["red", "blue"]}, "boxed": False},
                 )]),
@@ -518,8 +518,8 @@ class ItemsAndEffectsAttempt1AdaptationTestCase(AdaptationTestCase):
                 example="",
                 clue="",
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="items-and-effects-attempt-1", effects=[p.ItemsAndEffectsAttempt1AdaptationEffect(
-                    kind="items-and-effects-attempt-1",
+                adaptation=AdaptationV2(kind="generic", effects=[p.ItemizedAdaptationEffect(
+                    kind="itemized",
                     items={"kind": "words", "punctuation": True},
                     effects={"selectable": {"colors": ["green", "yellow", "orange"]}, "boxed": False},
                 )]),
@@ -567,8 +567,8 @@ class ItemsAndEffectsAttempt1AdaptationTestCase(AdaptationTestCase):
                 example="",
                 clue="",
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="items-and-effects-attempt-1", effects=[p.ItemsAndEffectsAttempt1AdaptationEffect(
-                    kind="items-and-effects-attempt-1",
+                adaptation=AdaptationV2(kind="generic", effects=[p.ItemizedAdaptationEffect(
+                    kind="itemized",
                     items={"kind": "words", "punctuation": False},
                     effects={"selectable": {"colors": ["red", "blue"]}, "boxed": True},
                 )]),
@@ -616,8 +616,8 @@ class ItemsAndEffectsAttempt1AdaptationTestCase(AdaptationTestCase):
                 example="",
                 clue="",
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="items-and-effects-attempt-1", effects=[p.ItemsAndEffectsAttempt1AdaptationEffect(
-                    kind="items-and-effects-attempt-1",
+                adaptation=AdaptationV2(kind="generic", effects=[p.ItemizedAdaptationEffect(
+                    kind="itemized",
                     items={"kind": "manual"},
                     effects={"selectable": {"colors": ["red", "blue"]}, "boxed": False},
                 )]),
@@ -671,8 +671,8 @@ class ItemsAndEffectsAttempt1AdaptationTestCase(AdaptationTestCase):
                 example="",
                 clue="",
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="items-and-effects-attempt-1", effects=[p.ItemsAndEffectsAttempt1AdaptationEffect(
-                    kind="items-and-effects-attempt-1",
+                adaptation=AdaptationV2(kind="generic", effects=[p.ItemizedAdaptationEffect(
+                    kind="itemized",
                     items={"kind": "manual"},
                     effects={"selectable": {"colors": ["red", "blue"]}, "boxed": True},
                 )]),
@@ -726,8 +726,8 @@ class ItemsAndEffectsAttempt1AdaptationTestCase(AdaptationTestCase):
                 example="",
                 clue="",
                 wording_paragraphs_per_pagelet=3,
-                    adaptation=AdaptationV2(kind="items-and-effects-attempt-1", effects=[p.ItemsAndEffectsAttempt1AdaptationEffect(
-                        kind="items-and-effects-attempt-1",
+                    adaptation=AdaptationV2(kind="generic", effects=[p.ItemizedAdaptationEffect(
+                        kind="itemized",
                         items={"kind": "words", "punctuation": False},
                         effects={"selectable": {"colors": ["red", "green", "blue"]}, "boxed": False},
                     )]),
@@ -2287,13 +2287,13 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 clue="",
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(
-                    kind="items-and-effects-attempt-1",
+                    kind="generic",
                     effects=[
-                        p.ItemsAndEffectsAttempt1AdaptationEffect(
-                            kind="items-and-effects-attempt-1",
-                            items=p.ItemsAndEffectsAttempt1AdaptationEffect.WordsItems(kind="words", punctuation=False),
-                            effects=p.ItemsAndEffectsAttempt1AdaptationEffect.Effects(
-                                selectable=p.ItemsAndEffectsAttempt1AdaptationEffect.Effects.Selectable(colors=["red", "blue"]),
+                        p.ItemizedAdaptationEffect(
+                            kind="itemized",
+                            items=p.ItemizedAdaptationEffect.WordsItems(kind="words", punctuation=False),
+                            effects=p.ItemizedAdaptationEffect.Effects(
+                                selectable=p.ItemizedAdaptationEffect.Effects.Selectable(colors=["red", "blue"]),
                                 boxed=False,
                             ),
                         ),
@@ -2361,13 +2361,13 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 clue="",
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(
-                    kind="items-and-effects-attempt-1",
+                    kind="generic",
                     effects=[
-                        p.ItemsAndEffectsAttempt1AdaptationEffect(
-                            kind="items-and-effects-attempt-1",
-                            items=p.ItemsAndEffectsAttempt1AdaptationEffect.WordsItems(kind="words", punctuation=False),
-                            effects=p.ItemsAndEffectsAttempt1AdaptationEffect.Effects(
-                                selectable=p.ItemsAndEffectsAttempt1AdaptationEffect.Effects.Selectable(colors=["red", "green", "blue"]),
+                        p.ItemizedAdaptationEffect(
+                            kind="itemized",
+                            items=p.ItemizedAdaptationEffect.WordsItems(kind="words", punctuation=False),
+                            effects=p.ItemizedAdaptationEffect.Effects(
+                                selectable=p.ItemizedAdaptationEffect.Effects.Selectable(colors=["red", "green", "blue"]),
                                 boxed=False,
                             ),
                         ),
@@ -2429,13 +2429,13 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 clue="",
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(
-                    kind="items-and-effects-attempt-1",
+                    kind="generic",
                     effects=[
-                        p.ItemsAndEffectsAttempt1AdaptationEffect(
-                            kind="items-and-effects-attempt-1",
-                            items=p.ItemsAndEffectsAttempt1AdaptationEffect.WordsItems(kind="words", punctuation=False),
-                            effects=p.ItemsAndEffectsAttempt1AdaptationEffect.Effects(
-                                selectable=p.ItemsAndEffectsAttempt1AdaptationEffect.Effects.Selectable(colors=["red"]),
+                        p.ItemizedAdaptationEffect(
+                            kind="itemized",
+                            items=p.ItemizedAdaptationEffect.WordsItems(kind="words", punctuation=False),
+                            effects=p.ItemizedAdaptationEffect.Effects(
+                                selectable=p.ItemizedAdaptationEffect.Effects.Selectable(colors=["red"]),
                                 boxed=False,
                             ),
                         ),
@@ -2486,13 +2486,13 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 clue="",
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(
-                    kind="items-and-effects-attempt-1",
+                    kind="generic",
                     effects=[
-                        p.ItemsAndEffectsAttempt1AdaptationEffect(
-                            kind="items-and-effects-attempt-1",
-                            items=p.ItemsAndEffectsAttempt1AdaptationEffect.WordsItems(kind="words", punctuation=False),
-                            effects=p.ItemsAndEffectsAttempt1AdaptationEffect.Effects(
-                                selectable=p.ItemsAndEffectsAttempt1AdaptationEffect.Effects.Selectable(colors=["red"]),
+                        p.ItemizedAdaptationEffect(
+                            kind="itemized",
+                            items=p.ItemizedAdaptationEffect.WordsItems(kind="words", punctuation=False),
+                            effects=p.ItemizedAdaptationEffect.Effects(
+                                selectable=p.ItemizedAdaptationEffect.Effects.Selectable(colors=["red"]),
                                 boxed=False,
                             ),
                         ),
@@ -2557,13 +2557,13 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 clue="",
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(
-                    kind="items-and-effects-attempt-1",
+                    kind="generic",
                     effects=[
-                        p.ItemsAndEffectsAttempt1AdaptationEffect(
-                            kind="items-and-effects-attempt-1",
-                            items=p.ItemsAndEffectsAttempt1AdaptationEffect.WordsItems(kind="words", punctuation=False),
-                            effects=p.ItemsAndEffectsAttempt1AdaptationEffect.Effects(
-                                selectable=p.ItemsAndEffectsAttempt1AdaptationEffect.Effects.Selectable(colors=["red"]),
+                        p.ItemizedAdaptationEffect(
+                            kind="itemized",
+                            items=p.ItemizedAdaptationEffect.WordsItems(kind="words", punctuation=False),
+                            effects=p.ItemizedAdaptationEffect.Effects(
+                                selectable=p.ItemizedAdaptationEffect.Effects.Selectable(colors=["red"]),
                                 boxed=False,
                             ),
                         ),
@@ -2628,13 +2628,13 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 clue="",
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(
-                    kind="items-and-effects-attempt-1",
+                    kind="generic",
                     effects=[
-                        p.ItemsAndEffectsAttempt1AdaptationEffect(
-                            kind="items-and-effects-attempt-1",
-                            items=p.ItemsAndEffectsAttempt1AdaptationEffect.WordsItems(kind="words", punctuation=False),
-                            effects=p.ItemsAndEffectsAttempt1AdaptationEffect.Effects(
-                                selectable=p.ItemsAndEffectsAttempt1AdaptationEffect.Effects.Selectable(colors=["red"]),
+                        p.ItemizedAdaptationEffect(
+                            kind="itemized",
+                            items=p.ItemizedAdaptationEffect.WordsItems(kind="words", punctuation=False),
+                            effects=p.ItemizedAdaptationEffect.Effects(
+                                selectable=p.ItemizedAdaptationEffect.Effects.Selectable(colors=["red"]),
                                 boxed=False,
                             ),
                         ),
@@ -2693,13 +2693,13 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 clue="",
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(
-                    kind="items-and-effects-attempt-1",
+                    kind="generic",
                     effects=[
-                        p.ItemsAndEffectsAttempt1AdaptationEffect(
-                            kind="items-and-effects-attempt-1",
-                            items=p.ItemsAndEffectsAttempt1AdaptationEffect.WordsItems(kind="words", punctuation=False),
-                            effects=p.ItemsAndEffectsAttempt1AdaptationEffect.Effects(
-                                selectable=p.ItemsAndEffectsAttempt1AdaptationEffect.Effects.Selectable(colors=["red"]),
+                        p.ItemizedAdaptationEffect(
+                            kind="itemized",
+                            items=p.ItemizedAdaptationEffect.WordsItems(kind="words", punctuation=False),
+                            effects=p.ItemizedAdaptationEffect.Effects(
+                                selectable=p.ItemizedAdaptationEffect.Effects.Selectable(colors=["red"]),
                                 boxed=False,
                             ),
                         ),
@@ -2750,13 +2750,13 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 clue="This is the clue.",
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(
-                    kind="items-and-effects-attempt-1",
+                    kind="generic",
                     effects=[
-                        p.ItemsAndEffectsAttempt1AdaptationEffect(
-                            kind="items-and-effects-attempt-1",
-                            items=p.ItemsAndEffectsAttempt1AdaptationEffect.WordsItems(kind="words", punctuation=False),
-                            effects=p.ItemsAndEffectsAttempt1AdaptationEffect.Effects(
-                                selectable=p.ItemsAndEffectsAttempt1AdaptationEffect.Effects.Selectable(colors=["red"]),
+                        p.ItemizedAdaptationEffect(
+                            kind="itemized",
+                            items=p.ItemizedAdaptationEffect.WordsItems(kind="words", punctuation=False),
+                            effects=p.ItemizedAdaptationEffect.Effects(
+                                selectable=p.ItemizedAdaptationEffect.Effects.Selectable(colors=["red"]),
                                 boxed=False,
                             ),
                         ),
@@ -2837,13 +2837,13 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 clue="{sel3|ghi} {sel4|jkl}",
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(
-                    kind="items-and-effects-attempt-1",
+                    kind="generic",
                     effects=[
-                        p.ItemsAndEffectsAttempt1AdaptationEffect(
-                            kind="items-and-effects-attempt-1",
-                            items=p.ItemsAndEffectsAttempt1AdaptationEffect.WordsItems(kind="words", punctuation=False),
-                            effects=p.ItemsAndEffectsAttempt1AdaptationEffect.Effects(
-                                selectable=p.ItemsAndEffectsAttempt1AdaptationEffect.Effects.Selectable(colors=["red", "green", "blue"]),
+                        p.ItemizedAdaptationEffect(
+                            kind="itemized",
+                            items=p.ItemizedAdaptationEffect.WordsItems(kind="words", punctuation=False),
+                            effects=p.ItemizedAdaptationEffect.Effects(
+                                selectable=p.ItemizedAdaptationEffect.Effects.Selectable(colors=["red", "green", "blue"]),
                                 boxed=False,
                             ),
                         ),
@@ -2919,7 +2919,7 @@ class MultipleAdaptationEffectsTestCase(AdaptationTestCase):
                 example="",
                 clue="",
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind=None, effects=[
+                adaptation=AdaptationV2(kind="generic", effects=[
                     p.FillWithFreeTextAdaptationEffect(kind="fill-with-free-text", placeholder="..."),
                 ]),
             ),
@@ -2990,7 +2990,7 @@ class MultipleAdaptationEffectsTestCase(AdaptationTestCase):
                 example="",
                 clue="",
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind=None, effects=[]),
+                adaptation=AdaptationV2(kind="generic", effects=[]),
             ),
             r.Exercise(
                 number="number",

@@ -68,9 +68,7 @@ const wysiwyg = computed(() => wantWysiwyg.value)
 const toolSlotNames = computed(() => {
   const names = []
   names.push('undoRedo')
-  if (model.value.adaptationKind !== 'null') {
-    names.push('adaptationDetails')
-  }
+  names.push('adaptationDetails')
   if (wysiwyg.value) {
     names.push('basicFormatting')
   }

@@ -154,16 +154,22 @@ export interface components {
     /** AdaptationV2 */
     "AdaptationV2-Input": {
       /** Effects */
-      effects: (components["schemas"]["FillWithFreeTextAdaptationEffect"] | components["schemas"]["ItemsAndEffectsAttempt1AdaptationEffect-Input"])[];
-      /** Kind */
-      kind: ("fill-with-free-text" | "items-and-effects-attempt-1" | "multiple-choices") | null;
+      effects: (components["schemas"]["FillWithFreeTextAdaptationEffect"] | components["schemas"]["ItemizedAdaptationEffect-Input"])[];
+      /**
+       * Kind
+       * @enum {string}
+       */
+      kind: "generic" | "fill-with-free-text" | "multiple-choices";
     };
     /** AdaptationV2 */
     "AdaptationV2-Output": {
       /** Effects */
-      effects: (components["schemas"]["FillWithFreeTextAdaptationEffect"] | components["schemas"]["ItemsAndEffectsAttempt1AdaptationEffect-Output"])[];
-      /** Kind */
-      kind: ("fill-with-free-text" | "items-and-effects-attempt-1" | "multiple-choices") | null;
+      effects: (components["schemas"]["FillWithFreeTextAdaptationEffect"] | components["schemas"]["ItemizedAdaptationEffect-Output"])[];
+      /**
+       * Kind
+       * @enum {string}
+       */
+      kind: "generic" | "fill-with-free-text" | "multiple-choices";
     };
     /** Body_login_api_token_post */
     Body_login_api_token_post: {
@@ -217,8 +223,8 @@ export interface components {
       /** Self */
       self: string;
     };
-    /** ItemsAndEffectsAttempt1AdaptationEffect */
-    "ItemsAndEffectsAttempt1AdaptationEffect-Input": {
+    /** ItemizedAdaptationEffect */
+    "ItemizedAdaptationEffect-Input": {
       effects: components["schemas"]["Effects"];
       /** Items */
       items: components["schemas"]["WordsItems"] | components["schemas"]["SentencesItems"] | components["schemas"]["ManualItems"];
@@ -227,10 +233,10 @@ export interface components {
        * @constant
        * @enum {string}
        */
-      kind: "items-and-effects-attempt-1";
+      kind: "itemized";
     };
-    /** ItemsAndEffectsAttempt1AdaptationEffect */
-    "ItemsAndEffectsAttempt1AdaptationEffect-Output": {
+    /** ItemizedAdaptationEffect */
+    "ItemizedAdaptationEffect-Output": {
       effects: components["schemas"]["Effects"];
       /** Items */
       items: components["schemas"]["WordsItems"] | components["schemas"]["SentencesItems"] | components["schemas"]["ManualItems"];
@@ -239,7 +245,7 @@ export interface components {
        * @constant
        * @enum {string}
        */
-      kind: "items-and-effects-attempt-1";
+      kind: "itemized";
     };
     /** ManualItems */
     ManualItems: {
@@ -479,7 +485,8 @@ export interface components {
     exerciseCreateInputDataAttributes: {
       /**
        * @default {
-       *   "effects": []
+       *   "effects": [],
+       *   "kind": "generic"
        * }
        */
       adaptation?: components["schemas"]["AdaptationV2-Input"];

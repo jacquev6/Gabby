@@ -114,7 +114,7 @@ describe('Gabby', () => {
     visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
     setAliases()
     cy.get('@number').type('test')
-    cy.get('@adaptationType').select('items-and-effects-attempt-1')
+    cy.get('@adaptationType').select('generic')
     cy.get('div:contains("Selectable") >input').check()
     cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="2"]').click()
 

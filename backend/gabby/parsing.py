@@ -1316,8 +1316,8 @@ class FillWithFreeTextAdaptationEffect(PydanticBase):
         return {}
 
 
-class ItemsAndEffectsAttempt1AdaptationEffect(PydanticBase):
-    kind: Literal["items-and-effects-attempt-1"]
+class ItemizedAdaptationEffect(PydanticBase):
+    kind: Literal["itemized"]
 
     class WordsItems(PydanticBase):
         kind: Literal["words"]
@@ -1389,7 +1389,7 @@ class ItemsAndEffectsAttempt1AdaptationEffect(PydanticBase):
 
 
 AdaptationEffect = Annotated[
-    FillWithFreeTextAdaptationEffect | ItemsAndEffectsAttempt1AdaptationEffect,
+    FillWithFreeTextAdaptationEffect | ItemizedAdaptationEffect,
     pydantic.Field(discriminator="kind"),
 ]
 

@@ -9,14 +9,14 @@ describe('Gabby', () => {
     login()
     cy.viewport(1000, 1000)
   })
-  
+
   it('resets responses when changing adaptation type', () => {
     visit('/project-xkopqm/textbook-klxufv/page-7/exercise-dymwin')
     cy.get('label:contains("Number")').next().should('have.value', '11')
 
     cy.get('span[contenteditable]').first().type('Abcd')
 
-    cy.get('label:contains("Adaptation type")').next().select('items-and-effects-attempt-1')
+    cy.get('label:contains("Adaptation type")').next().select('generic')
     cy.get('div:contains("Selectable") >input').check()
     notBusy()
 
@@ -28,7 +28,7 @@ describe('Gabby', () => {
 
     cy.get('span[contenteditable]').first().should('have.value', '')
 
-    cy.get('label:contains("Adaptation type")').next().select('items-and-effects-attempt-1')
+    cy.get('label:contains("Adaptation type")').next().select('generic')
     cy.get('div:contains("Selectable") >input').check()
     notBusy()
 

@@ -129,7 +129,7 @@ describe('Gabby', () => {
 
     cy.screenshot('project-textbook-page-exercise/tools', {clip: {x: 560, y: 40, width: 210, height: 260}})
 
-    cy.get('label:contains("Type d\'adaptation") + select').select('items-and-effects-attempt-1')
+    cy.get('label:contains("Type d\'adaptation") + select').select('generic')
     cy.get('div:contains("Cochable") >input').check()
     cy.get('div.busy').should('exist')  // This may fail (race condition) but is required because the 'div.busy' is not displayed quickly enough.
     notBusy()
@@ -139,8 +139,8 @@ describe('Gabby', () => {
     notBusy()
     cy.get('span.maybe-usable-colors-container').screenshot('project-textbook-page-exercise/select-things-usable-colors')
     cy.get('label:contains("Consigne") + div.ql-container > div.ql-editor').click()
-    cy.screenshot('project-textbook-page-exercise/select-things-color-formatting-button', {clip: {x: 560, y: 510, width: 140, height: 100}})
+    cy.screenshot('project-textbook-page-exercise/select-things-color-formatting-button', {clip: {x: 560, y: 630, width: 140, height: 100}})
     cy.get('span[data-cy-colors="2"]').rightclick()
-    cy.screenshot('project-textbook-page-exercise/select-things-color-customization', {clip: {x: 450, y: 440, width: 340, height: 300}})
+    cy.screenshot('project-textbook-page-exercise/select-things-color-customization', {clip: {x: 450, y: 530, width: 340, height: 300}})
   })
 })

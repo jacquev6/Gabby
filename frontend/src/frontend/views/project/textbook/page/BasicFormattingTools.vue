@@ -2,6 +2,7 @@
 import { BButton } from '$frontend/components/opinion/bootstrap'
 import type ExerciseFieldsForm from '$frontend/components/ExerciseFieldsForm.vue'
 import type { Model } from '$frontend/components/ExerciseFieldsForm.vue'
+import { computed } from 'vue'
 
 
 defineProps<{
@@ -9,6 +10,16 @@ defineProps<{
 }>()
 
 const model = defineModel<Model>({required: true})
+
+const itemizedEffect = computed(() => {
+  const itemizedEffects = model.value.adaptation.effects.filter(effect => effect.kind === 'itemized')
+  console.assert(itemizedEffects.length <= 1)
+  if (itemizedEffects.length === 0) {
+    return null
+  } else {
+    return itemizedEffects[0]
+  }
+})
 </script>
 
 <template v-if="fields !== null">
@@ -29,9 +40,9 @@ const model = defineModel<Model>({required: true})
     ><img :style="{height: '1.25em'}" src="/italic.svg" /></BButton>
   </p>
 
-  <template v-if="model.adaptationKind === 'items-and-effects-attempt-1' && model.adaptationEffects['items-and-effects-attempt-1'].effects.selectable !== null">
+  <template v-if="itemizedEffect !== null && itemizedEffect.effects.selectable !== null">
     <p>
-      <template v-for="i in model.adaptationEffects['items-and-effects-attempt-1'].effects.selectable.colors.length">
+      <template v-for="i in itemizedEffect.effects.selectable.colors.length">
         <BButton
           class="format-color"
           sm secondary
@@ -41,13 +52,13 @@ const model = defineModel<Model>({required: true})
           :style="{lineHeight: 0, padding: '2px'}"
           :data-cy="`format-color-${i}`"
         >
-          <span :style="{backgroundColor: model.adaptationEffects['items-and-effects-attempt-1'].effects.selectable.colors[i - 1]}"></span>
+          <span :style="{backgroundColor: itemizedEffect.effects.selectable.colors[i - 1]}"></span>
         </BButton>
         <wbr />
       </template>
     </p>
 
-    <p v-if="model.adaptationEffects['items-and-effects-attempt-1'].items.kind === 'manual'">
+    <p v-if="itemizedEffect.items.kind === 'manual'">
       <BButton
         sm secondary
         :disabled="fields.focusedWysiwygField !== 'wording'"

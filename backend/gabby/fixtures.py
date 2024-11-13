@@ -406,14 +406,14 @@ def create_test_exercises_2(session, admin):
         clue="",
         wording="Les Touaregs sont des Berbères, un peuple qui habite en Afrique du Nord depuis la préhistoire.\nIls vivent dans le désert du Sahara (Algérie, Libye, Mali, Niger, Burkina Faso…).\nEn été, les températures y montent à plus de 50 °C et elles descendent en dessous de zéro durant les nuits d’hiver.",
         adaptation=AdaptationV2(
-            kind="items-and-effects-attempt-1",
-            effects=[parsing.ItemsAndEffectsAttempt1AdaptationEffect(
-                kind="items-and-effects-attempt-1",
-                items=parsing.ItemsAndEffectsAttempt1AdaptationEffect.WordsItems(
+            kind="generic",
+            effects=[parsing.ItemizedAdaptationEffect(
+                kind="itemized",
+                items=parsing.ItemizedAdaptationEffect.WordsItems(
                     kind="words", punctuation=True,
                 ),
-                effects=parsing.ItemsAndEffectsAttempt1AdaptationEffect.Effects(
-                    selectable=parsing.ItemsAndEffectsAttempt1AdaptationEffect.Effects.Selectable(
+                effects=parsing.ItemizedAdaptationEffect.Effects(
+                    selectable=parsing.ItemizedAdaptationEffect.Effects.Selectable(
                         colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
                     ),
                     boxed=False,
@@ -532,14 +532,14 @@ def create_test_exercises_3(session, admin):
         wording="Les Touaregs sont des Berbères, un peuple qui habite en Afrique du Nord depuis la préhistoire.\nIls vivent dans le désert du Sahara (Algérie, Libye, Mali, Niger, Burkina Faso…).\nEn été, les températures y montent à plus de 50 °C et elles descendent en dessous de zéro durant les nuits d’hiver.",
         wording_paragraphs_per_pagelet=1,
         adaptation=AdaptationV2(
-            kind="items-and-effects-attempt-1",
-            effects=[parsing.ItemsAndEffectsAttempt1AdaptationEffect(
-                kind="items-and-effects-attempt-1",
-                items=parsing.ItemsAndEffectsAttempt1AdaptationEffect.WordsItems(
+            kind="generic",
+            effects=[parsing.ItemizedAdaptationEffect(
+                kind="itemized",
+                items=parsing.ItemizedAdaptationEffect.WordsItems(
                     kind="words", punctuation=False
                 ),
-                effects=parsing.ItemsAndEffectsAttempt1AdaptationEffect.Effects(
-                    selectable=parsing.ItemsAndEffectsAttempt1AdaptationEffect.Effects.Selectable(
+                effects=parsing.ItemizedAdaptationEffect.Effects(
+                    selectable=parsing.ItemizedAdaptationEffect.Effects.Selectable(
                         colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"]
                     ),
                     boxed=False,
