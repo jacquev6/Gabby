@@ -176,7 +176,7 @@ describe('Gabby', () => {
   })
 
   it('creates a "Multiple choices" exercise with choices in instructions', () => {
-    cy.viewport(1200, 900)
+    cy.viewport(1200, 1000)
     visit('/project-xkopqm/textbook-klxufv/page-3/new-exercise', {pdf: 'demo'})
     setupAliases()
 
@@ -199,9 +199,9 @@ describe('Gabby', () => {
       selectRange(node, 14, node, 37)
     })
     cy.get('button:contains("OK")').should('exist')
-    cy.get('label + input').eq(4).should('be.enabled').type('{selectAll}ou', {delay: 0})  // Very fragile selector; sorry, future me!
+    cy.get('label + input').eq(3).should('be.enabled').type('{selectAll}ou', {delay: 0})  // Very fragile selector; sorry, future me!
     cy.get('label:contains("Separator") + input').should('be.enabled').type('{selectAll},', {delay: 0})
-    cy.get('label:contains("Placeholder") + input').eq(1).type('...', {delay: 0})
+    cy.get('label:contains("Placeholder") + input').type('...', {delay: 0})
     screenshot('multiple-choices-with-choices-in-instructions', 'edit-2', {clearSel: false})
     cy.get('button:contains("OK")').click()
     screenshot('multiple-choices-with-choices-in-instructions', 'edit-3')
@@ -220,7 +220,7 @@ describe('Gabby', () => {
   })
 
   it('creates a "Multiple choices" exercise with two sets of choices in instructions', () => {
-    cy.viewport(1200, 900)
+    cy.viewport(1200, 1000)
     visit('/project-xkopqm/textbook-klxufv/page-5/new-exercise', {pdf: 'demo'})
     setupAliases()
 
@@ -263,8 +263,8 @@ describe('Gabby', () => {
       selectRange(node, 17, node, 35)
     })
     cy.get('button:contains("OK")').should('exist')
-    cy.get('label + input').eq(4).should('be.enabled').type('{selectAll}{del}', {delay: 0})  // Very fragile selector; sorry, future me!
-    cy.get('label:contains("Placeholder") + input').eq(1).should('be.enabled').type('...', {delay: 0})
+    cy.get('label + input').eq(3).should('be.enabled').type('{selectAll}{del}', {delay: 0})  // Very fragile selector; sorry, future me!
+    cy.get('label:contains("Placeholder") + input').should('be.enabled').type('...', {delay: 0})
     screenshot('multiple-choices-with-two-set-of-choices-in-instructions', 'edit-2', {clearSel: false})
     cy.get('button:contains("OK")').click()
     screenshot('multiple-choices-with-two-set-of-choices-in-instructions', 'edit-3')
@@ -277,8 +277,8 @@ describe('Gabby', () => {
       selectRange(node, 14, node, 33)
     })
     cy.get('button:contains("OK")').should('exist')
-    cy.get('label + input').eq(4).should('be.enabled').type('{selectAll}{del}', {delay: 0})  // Very fragile selector; sorry, future me!
-    cy.get('label:contains("Placeholder") + input').eq(1).should('be.enabled').type('@@@', {delay: 0})
+    cy.get('label + input').eq(3).should('be.enabled').type('{selectAll}{del}', {delay: 0})  // Very fragile selector; sorry, future me!
+    cy.get('label:contains("Placeholder") + input').should('be.enabled').type('@@@', {delay: 0})
     screenshot('multiple-choices-with-two-set-of-choices-in-instructions', 'edit-5', {clearSel: false})
     cy.get('button:contains("OK")').click()
     screenshot('multiple-choices-with-two-set-of-choices-in-instructions', 'edit-6')
@@ -301,7 +301,7 @@ describe('Gabby', () => {
   })
 
   it('creates a "Multiple choices" exercise with choices in wording', () => {
-    cy.viewport(1200, 900)
+    cy.viewport(1200, 1000)
     visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise', {pdf: 'demo'})
     setupAliases()
 
@@ -324,7 +324,7 @@ describe('Gabby', () => {
       selectRange(node, 8, node, 31)
     })
     cy.get('button:contains("OK")').should('exist')
-    cy.get('label + input').eq(4).should('be.enabled').type('{selectAll}{del}', {delay: 0})  // Very fragile selector; sorry, future me!
+    cy.get('label + input').eq(3).should('be.enabled').type('{selectAll}{del}', {delay: 0})  // Very fragile selector; sorry, future me!
     screenshot('multiple-choices-with-choices-in-wording', 'edit-2', {clearSel: false})
     cy.get('button:contains("OK")').click()
     screenshot('multiple-choices-with-choices-in-wording', 'edit-3')
@@ -343,13 +343,14 @@ describe('Gabby', () => {
   })
 
   it('creates a "Fill with free text" exercise', () => {
-    cy.viewport(1200, 900)
+    cy.viewport(1200, 1000)
     visit('/project-xkopqm/textbook-klxufv/page-4/new-exercise', {pdf: 'demo'})
     setupAliases()
 
     cy.get('@number').type('1')
 
     cy.get('@adaptationType').select('fill-with-free-text').blur()
+    cy.get('p:contains("Placeholder") >button:contains("+")').click()
     cy.get('label:contains("Placeholder") + input').type('{selectAll}…', {delay: 0})
 
     traceRectangle('@canvas', 8, 5, 60, 9)

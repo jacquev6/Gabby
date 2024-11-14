@@ -186,6 +186,7 @@ import type { Model } from './ExerciseFieldsForm.vue'
 import type ExerciseFieldsForm from './ExerciseFieldsForm.vue'
 import { defaultColors as defaultColorsForSelectableEffect } from './AdaptationDetailsFieldsForm.vue'
 import FloatingColorPicker from './FloatingColorPicker.vue'
+import OptionalInput from './OptionalInput.vue'
 
 
 defineProps<{
@@ -349,6 +350,7 @@ const colorPickers = ref<InstanceType<typeof FloatingColorPicker>[]>([])
       </div>
     </template>
   </ContextMenu>
+
   <FloatingColorPicker
     v-for="i in settings.itemized.effects.selectable.allColors.length"
     ref="colorPickers"
@@ -358,7 +360,20 @@ const colorPickers = ref<InstanceType<typeof FloatingColorPicker>[]>([])
     backdropCovers2="#gutter-2"
   />
 
-  <BLabeledInput :label="$t('placeholderText')" type="text" v-model="fillWithFreeTextPlaceholder" />
+  <BButton primary sm @click="model.inProgress = {kind: 'multipleChoicesCreation'}">{{ $t('multipleChoicesButton') }}</BButton>
+
+  <hr />
+
+  <OptionalInput v-model="fillWithFreeTextPlaceholder" :label="$t('placeholderForFreeText')" />
+  <!-- <template v-if="fillWithFreeTextPlaceholder !== ''">
+    <BLabeledInput :label="$t('placeholderForFreeText')" type="text" v-model="fillWithFreeTextPlaceholder" />
+  </template>
+  <template v-else>
+    <p>{{ $t('placeholderForFreeText') }} <BButton sm primary>+</BButton></p>
+  </template> -->
+
+  <hr />
+
   <div class="mb-3">
     <p class="form-label">{{ $t('items') }}</p>
     <BRadio v-model="settings.itemized.items.kind" :label="$t('itemsWords')" value="words" />
@@ -380,7 +395,6 @@ const colorPickers = ref<InstanceType<typeof FloatingColorPicker>[]>([])
     </span>
   </span>
   <BLabeledCheckbox :label="$t('effectsBoxed')" v-model="settings.itemized.effects.isBoxed" />
-  <BButton primary sm @click="model.inProgress = {kind: 'multipleChoicesCreation'}">{{ $t('multipleChoicesButton') }}</BButton>
 </template>
 
 <style scoped>

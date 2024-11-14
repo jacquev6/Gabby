@@ -77,6 +77,7 @@
   "generic": "-",
   "fill-with-free-text": "Remplissage par texte libre",
   "multiple-choices": "Choix multiples",
+  "placeholderForFreeText": "Trou pour texte libre",
 
   "confirmTitle": "Confirmation",
   "confirmNo": "Retour",
@@ -127,7 +128,6 @@
   "usableColors": "Couleurs utilisables",
   "resetColorToDefault": "Restaurer à",
   "choiceButton": "Choix",
-  "placeholderText": "Trou à remplir",
   "boldButton": "Gras",
   "italicButton": "Italique",
   "exerciseRepartition": "Répartition",

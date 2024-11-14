@@ -77,6 +77,7 @@
   "generic": "-",
   "fill-with-free-text": "Fill with free text",
   "multiple-choices": "Multiple choices",
+  "placeholderForFreeText": "Placeholder for free text",
 
   "confirmTitle": "Confirm",
   "confirmNo": "Go back",
@@ -127,7 +128,6 @@
   "usableColors": "Usable colors",
   "resetColorToDefault": "Reset to",
   "choiceButton": "Choice",
-  "placeholderText": "Placeholder to fill",
   "boldButton": "Bold",
   "italicButton": "Italic",
   "exerciseRepartition": "Repartition",
