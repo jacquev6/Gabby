@@ -612,7 +612,7 @@ def create_empty_demo_textbook_fixture(session):
         pdf_file=pdffile1,
         textbook_start_page=1,
         pdf_file_start_page=1,
-        pages_count=8,
+        pages_count=pages_count,
         created_by=admin,
         updated_by=admin,
     )

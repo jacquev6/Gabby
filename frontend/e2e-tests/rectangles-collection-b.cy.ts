@@ -26,7 +26,7 @@ describe('Gabby', () => {
     cy.get('canvas[style="position: absolute; top: 0px; left: 0px;"]').first().as('highlighter')
 
     traceRectangle('@canvas', 5, 4, 45, 12)
-    cy.get('textarea').first().should('have.value', 'Recopie les mots suivants, puis\nentoure les pronoms personnels.\nIndique la classe des autres mots.')
+    cy.get('textarea').first().should('have.value', 'Recopie les mots suivants, puis entoure les pronoms personnels. Indique la classe des autres mots.')
     cy.get('button:contains("Instructions")').click()
     expectRectangles('@highlighter', 'surrounded', [{
       'left': 56.26098090252517,
@@ -98,7 +98,7 @@ describe('Gabby', () => {
           'x': 282.44883175340175,
           'y': isProdPreview ? 726.5359457228192 : 725.8392892267519
         },
-        'text': 'Recopie les mots suivants, puis\nentoure les pronoms personnels.\nIndique la classe des autres mots.',
+        'text': 'Recopie les mots suivants, puis entoure les pronoms personnels. Indique la classe des autres mots.',
         'role': 'instructions',
       },
       {
@@ -192,7 +192,7 @@ describe('Gabby', () => {
           'x': 282.44883175340175,
           'y': isProdPreview ? 726.5359457228192 : 725.8392892267519
         },
-        'text': 'Recopie les mots suivants, puis\nentoure les pronoms personnels.\nIndique la classe des autres mots.',
+        'text': 'Recopie les mots suivants, puis entoure les pronoms personnels. Indique la classe des autres mots.',
         'role': 'instructions',
       },
       {
