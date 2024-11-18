@@ -47,10 +47,11 @@ class ParsedExercisesResource:
             wording_paragraphs_per_pagelet=wording_paragraphs_per_pagelet,
             adaptation=adaptation,
         )
+        adapted, delta = exercise.make_adapted_and_delta()
         return ParsedExerciseItem(
             id=uuid.uuid4().hex,
-            adapted=exercise.make_adapted(),
-            delta=exercise.make_delta(),
+            adapted=adapted,
+            delta=delta,
         )
 
     def get_item(
@@ -76,7 +77,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     "example": "",
                     "clue": "",
                     "wordingParagraphsPerPagelet": 3,
-                    "adaptation": {"kind": None, "effects": []},
+                    "adaptation": {"kind": "generic", "effects": []},
                 },
             },
         }
@@ -130,13 +131,20 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     "clue": "",
                     "wordingParagraphsPerPagelet": 3,
                     "adaptation": {
-                        "kind": "select-things",
+                        "kind": "generic",
                         "effects": [
                             {
-                                "kind": "select-things",
-                                "colors": ["red", "green", "blue"],
-                                "words": True,
-                                "punctuation": False,
+                                "kind": "itemized",
+                                "items": {
+                                    "kind": "words",
+                                    "punctuation": False,
+                                },
+                                "effects": {
+                                    "selectable": {
+                                        "colors": ["red", "green", "blue"],
+                                    },
+                                    "boxed": False,
+                                },
                             },
                         ],
                     },
@@ -187,13 +195,20 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     "clue": "This is the clue.",
                     "wordingParagraphsPerPagelet": 3,
                     "adaptation": {
-                        "kind": "select-things",
+                        "kind": "generic",
                         "effects": [
                             {
-                                "kind": "select-things",
-                                "colors": ["red", "green", "blue"],
-                                "words": True,
-                                "punctuation": False,
+                                "kind": "itemized",
+                                "items": {
+                                    "kind": "words",
+                                    "punctuation": False,
+                                },
+                                "effects": {
+                                    "selectable": {
+                                        "colors": ["red", "green", "blue"],
+                                    },
+                                    "boxed": False,
+                                },
                             },
                         ],
                     },
@@ -304,20 +319,12 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                 "type": "parsedExercise",
                 "attributes": {
                     "number": "A.1",
-                    "instructions": "{choice|a} or {choice|b}",
+                    "instructions": "{choices2||or|||@|a or b}",
                     "wording": "A @\n\nB @",
                     "example": "",
                     "clue": "",
                     "wordingParagraphsPerPagelet": 3,
-                    "adaptation": {
-                        "kind": "multiple-choices-in-instructions",
-                        "effects": [
-                            {
-                                "kind": "multiple-choices-in-instructions",
-                                "placeholder": "@",
-                            },
-                        ],
-                    },
+                    "adaptation": {"kind": "multiple-choices", "effects": []},
                 },
             },
         }
@@ -357,7 +364,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                 "attributes": {
                     "number": "A.1",
                     "instructions": "Instructions.",
-                    "wording": "A {choices|alpha|beta}.",
+                    "wording": "A {choices2||/||||alpha/beta}.",
                     "example": "",
                     "clue": "",
                     "wordingParagraphsPerPagelet": 3,

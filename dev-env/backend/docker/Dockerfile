@@ -11,6 +11,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
  && apt-get update \
  && DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends \
       graphviz  `# For 'python -m gabby graph-models'` \
+      inotify-tools  `# To watch for changes in 'pdf-examples/demo.odt'` \
       jq \
       libreoffice-writer-nogui fonts-liberation  `# To convert 'pdf-examples/demo.odt' to PDF` \
       poppler-utils  `# For 'pdfunite', to make 'pdf-examples/large.pdf'` \
@@ -25,9 +26,3 @@ RUN set -x \
 
 USER gabby
 ENV PATH=$PATH:/home/gabby/.local/bin
-
-RUN --mount=type=cache,target=/home/gabby/.cache/pip,sharing=locked \
-    set -x \
- && pip3 install \
-      watchfiles \
- && true

@@ -76,8 +76,8 @@ describe('Gabby', () => {
 
     cy.get('@number').type('1')
 
-    cy.get('@adaptationType').select('select-things').blur()
     cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="2"]').click()
+    cy.get('div:contains("Selectable") >input').should('be.checked')
 
     traceRectangle('@canvas', 8, 5, 60, 9)
     cy.get('button:contains("Instructions")').click()
@@ -123,8 +123,8 @@ describe('Gabby', () => {
 
     cy.get('@number').type('1')
 
-    cy.get('@adaptationType').select('select-things').blur()
     cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="2"]').click()
+    cy.get('div:contains("Selectable") >input').should('be.checked')
 
     traceRectangle('@canvas', 8, 5, 60, 9)
     cy.get('button:contains("Instructions")').click()
@@ -174,13 +174,13 @@ describe('Gabby', () => {
   })
 
   it('creates a "Multiple choices" exercise with choices in instructions', () => {
-    cy.viewport(1200, 850)
+    cy.viewport(1200, 1000)
     visit('/project-xkopqm/textbook-klxufv/page-3/new-exercise', {pdf: 'demo'})
     setupAliases()
 
     cy.get('@number').type('1')
 
-    cy.get('@adaptationType').select('multiple-choices').blur()
+    cy.get('@adaptationType').select('multiple-choices')
 
     traceRectangle('@canvas', 8, 5, 48, 9)
     cy.get('button:contains("Instructions")').click()
@@ -218,7 +218,7 @@ describe('Gabby', () => {
   })
 
   it('creates a "Multiple choices" exercise with two sets of choices in instructions', () => {
-    cy.viewport(1200, 850)
+    cy.viewport(1200, 1000)
     visit('/project-xkopqm/textbook-klxufv/page-5/new-exercise', {pdf: 'demo'})
     setupAliases()
 
@@ -299,7 +299,7 @@ describe('Gabby', () => {
   })
 
   it('creates a "Multiple choices" exercise with choices in wording', () => {
-    cy.viewport(1200, 850)
+    cy.viewport(1200, 1000)
     visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise', {pdf: 'demo'})
     setupAliases()
 
@@ -341,13 +341,14 @@ describe('Gabby', () => {
   })
 
   it('creates a "Fill with free text" exercise', () => {
-    cy.viewport(1200, 850)
+    cy.viewport(1200, 1000)
     visit('/project-xkopqm/textbook-klxufv/page-4/new-exercise', {pdf: 'demo'})
     setupAliases()
 
     cy.get('@number').type('1')
 
     cy.get('@adaptationType').select('fill-with-free-text').blur()
+    cy.get('p:contains("Placeholder") >button:contains("+")').click()
     cy.get('label:contains("Placeholder") + input').type('{selectAll}…', {delay: 0})
 
     traceRectangle('@canvas', 8, 5, 60, 9)

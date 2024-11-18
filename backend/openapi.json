@@ -9,9 +9,7 @@
               "discriminator": {
                 "mapping": {
                   "fill-with-free-text": "#/components/schemas/FillWithFreeTextAdaptationEffect",
-                  "items-and-effects-attempt-1": "#/components/schemas/ItemsAndEffectsAttempt1AdaptationEffect-Input",
-                  "multiple-choices-in-instructions": "#/components/schemas/MultipleChoicesInInstructionsAdaptationEffect",
-                  "select-things": "#/components/schemas/SelectThingsAdaptationEffect"
+                  "itemized": "#/components/schemas/ItemizedAdaptationEffect-Input"
                 },
                 "propertyName": "kind"
               },
@@ -20,13 +18,7 @@
                   "$ref": "#/components/schemas/FillWithFreeTextAdaptationEffect"
                 },
                 {
-                  "$ref": "#/components/schemas/MultipleChoicesInInstructionsAdaptationEffect"
-                },
-                {
-                  "$ref": "#/components/schemas/SelectThingsAdaptationEffect"
-                },
-                {
-                  "$ref": "#/components/schemas/ItemsAndEffectsAttempt1AdaptationEffect-Input"
+                  "$ref": "#/components/schemas/ItemizedAdaptationEffect-Input"
                 }
               ]
             },
@@ -34,23 +26,13 @@
             "type": "array"
           },
           "kind": {
-            "anyOf": [
-              {
-                "enum": [
-                  "fill-with-free-text",
-                  "items-and-effects-attempt-1",
-                  "select-things",
-                  "multiple-choices-in-instructions",
-                  "multiple-choices-in-wording",
-                  "multiple-choices"
-                ],
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
+            "enum": [
+              "generic",
+              "fill-with-free-text",
+              "multiple-choices"
             ],
-            "title": "Kind"
+            "title": "Kind",
+            "type": "string"
           }
         },
         "required": [
@@ -68,9 +50,7 @@
               "discriminator": {
                 "mapping": {
                   "fill-with-free-text": "#/components/schemas/FillWithFreeTextAdaptationEffect",
-                  "items-and-effects-attempt-1": "#/components/schemas/ItemsAndEffectsAttempt1AdaptationEffect-Output",
-                  "multiple-choices-in-instructions": "#/components/schemas/MultipleChoicesInInstructionsAdaptationEffect",
-                  "select-things": "#/components/schemas/SelectThingsAdaptationEffect"
+                  "itemized": "#/components/schemas/ItemizedAdaptationEffect-Output"
                 },
                 "propertyName": "kind"
               },
@@ -79,13 +59,7 @@
                   "$ref": "#/components/schemas/FillWithFreeTextAdaptationEffect"
                 },
                 {
-                  "$ref": "#/components/schemas/MultipleChoicesInInstructionsAdaptationEffect"
-                },
-                {
-                  "$ref": "#/components/schemas/SelectThingsAdaptationEffect"
-                },
-                {
-                  "$ref": "#/components/schemas/ItemsAndEffectsAttempt1AdaptationEffect-Output"
+                  "$ref": "#/components/schemas/ItemizedAdaptationEffect-Output"
                 }
               ]
             },
@@ -93,23 +67,13 @@
             "type": "array"
           },
           "kind": {
-            "anyOf": [
-              {
-                "enum": [
-                  "fill-with-free-text",
-                  "items-and-effects-attempt-1",
-                  "select-things",
-                  "multiple-choices-in-instructions",
-                  "multiple-choices-in-wording",
-                  "multiple-choices"
-                ],
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
+            "enum": [
+              "generic",
+              "fill-with-free-text",
+              "multiple-choices"
             ],
-            "title": "Kind"
+            "title": "Kind",
+            "type": "string"
           }
         },
         "required": [
@@ -276,7 +240,7 @@
         "title": "ItemLinks",
         "type": "object"
       },
-      "ItemsAndEffectsAttempt1AdaptationEffect-Input": {
+      "ItemizedAdaptationEffect-Input": {
         "additionalProperties": false,
         "properties": {
           "effects": {
@@ -297,9 +261,9 @@
             "title": "Items"
           },
           "kind": {
-            "const": "items-and-effects-attempt-1",
+            "const": "itemized",
             "enum": [
-              "items-and-effects-attempt-1"
+              "itemized"
             ],
             "title": "Kind",
             "type": "string"
@@ -310,10 +274,10 @@
           "items",
           "effects"
         ],
-        "title": "ItemsAndEffectsAttempt1AdaptationEffect",
+        "title": "ItemizedAdaptationEffect",
         "type": "object"
       },
-      "ItemsAndEffectsAttempt1AdaptationEffect-Output": {
+      "ItemizedAdaptationEffect-Output": {
         "additionalProperties": false,
         "properties": {
           "effects": {
@@ -334,9 +298,9 @@
             "title": "Items"
           },
           "kind": {
-            "const": "items-and-effects-attempt-1",
+            "const": "itemized",
             "enum": [
-              "items-and-effects-attempt-1"
+              "itemized"
             ],
             "title": "Kind",
             "type": "string"
@@ -347,7 +311,7 @@
           "items",
           "effects"
         ],
-        "title": "ItemsAndEffectsAttempt1AdaptationEffect",
+        "title": "ItemizedAdaptationEffect",
         "type": "object"
       },
       "ManualItems": {
@@ -366,29 +330,6 @@
           "kind"
         ],
         "title": "ManualItems",
-        "type": "object"
-      },
-      "MultipleChoicesInInstructionsAdaptationEffect": {
-        "additionalProperties": false,
-        "properties": {
-          "kind": {
-            "const": "multiple-choices-in-instructions",
-            "enum": [
-              "multiple-choices-in-instructions"
-            ],
-            "title": "Kind",
-            "type": "string"
-          },
-          "placeholder": {
-            "title": "Placeholder",
-            "type": "string"
-          }
-        },
-        "required": [
-          "kind",
-          "placeholder"
-        ],
-        "title": "MultipleChoicesInInstructionsAdaptationEffect",
         "type": "object"
       },
       "OutputListRelationShipMeta": {
@@ -596,42 +537,6 @@
           "paragraphs"
         ],
         "title": "Section",
-        "type": "object"
-      },
-      "SelectThingsAdaptationEffect": {
-        "additionalProperties": false,
-        "properties": {
-          "colors": {
-            "items": {
-              "type": "string"
-            },
-            "title": "Colors",
-            "type": "array"
-          },
-          "kind": {
-            "const": "select-things",
-            "enum": [
-              "select-things"
-            ],
-            "title": "Kind",
-            "type": "string"
-          },
-          "punctuation": {
-            "title": "Punctuation",
-            "type": "boolean"
-          },
-          "words": {
-            "title": "Words",
-            "type": "boolean"
-          }
-        },
-        "required": [
-          "kind",
-          "colors",
-          "words",
-          "punctuation"
-        ],
-        "title": "SelectThingsAdaptationEffect",
         "type": "object"
       },
       "Selectable": {
@@ -1048,7 +953,8 @@
           "adaptation": {
             "$ref": "#/components/schemas/AdaptationV2-Input",
             "default": {
-              "effects": []
+              "effects": [],
+              "kind": "generic"
             }
           },
           "clue": {

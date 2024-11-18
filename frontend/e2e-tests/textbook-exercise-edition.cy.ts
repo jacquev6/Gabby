@@ -12,19 +12,19 @@ describe('Gabby', () => {
   it('saves an exercise after setting its adaptation', () => {
     visit('/project-xkopqm/textbook-klxufv/page-7/exercise-jkrudc', {wysiwyg: false})
 
-    cy.get('label:contains("Adaptation type")').next().should('have.value', 'null')
+    cy.get('label:contains("Adaptation type")').next().should('have.value', 'generic')
 
-    cy.get('label:contains("Adaptation type")').next().select('select-things')
+    cy.get('label:contains("Adaptation type")').next().select('multiple-choices')
     cy.get('label:contains("Instructions")').next().type('{selectAll}Instructions!')
     notBusy()
     // There was a bug with a 422 response from POST /api/fill-with-free-texts
     cy.get('button:contains("Save then back to list")').click()
     notBusy()
 
-    cy.get('li:contains("Instructions!"):contains("Select words")').should('exist')
+    cy.get('li:contains("Instructions!"):contains("Multiple choices")').should('exist')
 
     visit('/project-xkopqm/textbook-klxufv/page-7/exercise-jkrudc', {wysiwyg: false})
-    cy.get('label:contains("Adaptation type")').next().should('have.value', 'select-things')
+    cy.get('label:contains("Adaptation type")').next().should('have.value', 'multiple-choices')
     cy.get('label:contains("Instructions")').next().should('have.value', 'Instructions!')
   })
 
@@ -33,7 +33,7 @@ describe('Gabby', () => {
 
     cy.get('label:contains("Adaptation type")').next().should('have.value', 'fill-with-free-text')
 
-    cy.get('label:contains("Adaptation type")').next().select('null')
+    cy.get('label:contains("Adaptation type")').next().select('generic')
     cy.get('label:contains("Instructions")').next().type('{selectAll}Instructions!')
     notBusy()
     cy.get('button:contains("Save then back to list")').click()
@@ -42,7 +42,7 @@ describe('Gabby', () => {
     cy.get('li:contains("Instructions!")').should('exist').should('not.contain', 'Fill with free text')
 
     visit('/project-xkopqm/textbook-klxufv/page-7/exercise-dymwin', {wysiwyg: false})
-    cy.get('label:contains("Adaptation type")').next().should('have.value', 'null')
+    cy.get('label:contains("Adaptation type")').next().should('have.value', 'generic')
     cy.get('label:contains("Instructions")').next().should('have.value', 'Instructions!')
   })
 
@@ -53,14 +53,14 @@ describe('Gabby', () => {
 
     cy.get('label:contains("Adaptation type")').next().should('have.value', 'fill-with-free-text')
 
-    cy.get('label:contains("Adaptation type")').next().select('null')
+    cy.get('label:contains("Adaptation type")').next().select('generic')
     notBusy()
     cy.get('button:contains("Save then back to list")').click()
     notBusy()
 
     cy.get('a[href*="exercise-dymwin"]').click()
     notBusy()
-    cy.get('label:contains("Adaptation type")').next().should('have.value', 'null')
+    cy.get('label:contains("Adaptation type")').next().should('have.value', 'generic')
   })
 
   it('saves an exercise without changing its pre-existing adaptation', () => {
@@ -83,7 +83,7 @@ describe('Gabby', () => {
 
   it('saves an exercise after changing details of its adaptation', () => {
     visit('/project-xkopqm/textbook-klxufv/page-7')  // Trigger a bug where the exercise's cached adaptation was not updated. Did not happen when going directly to the exercise page.
-    cy.get('li:contains("Select words") a:contains("Edit")').click()
+    cy.get('li:contains("7 Relève") a:contains("Edit")').click()
     notBusy()
 
     cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="4"]').should('have.css', 'background-color', 'rgb(187, 255, 187)')
@@ -105,7 +105,7 @@ describe('Gabby', () => {
     cy.get('button:contains("Save then back to list")').click()
     notBusy()
 
-    cy.get('li:contains("Select words") a:contains("Edit")').click()
+    cy.get('li:contains("7 Relève") a:contains("Edit")').click()
     notBusy()
 
     cy.get('sel-blot[data-sel="4"]').should('have.css', 'background-color', 'rgb(45, 75, 45)')
@@ -124,16 +124,16 @@ describe('Gabby', () => {
 
     cy.get('label:contains("Adaptation type")').next().should('have.value', 'fill-with-free-text')
 
-    cy.get('label:contains("Adaptation type")').next().select('select-things')
+    cy.get('label:contains("Adaptation type")').next().select('multiple-choices')
     cy.get('label:contains("Instructions")').next().type('{selectAll}Instructions!')
     notBusy()
     cy.get('button:contains("Save then back to list")').click()
     notBusy()
 
-    cy.get('li:contains("Instructions!"):contains("Select words")').should('exist')
+    cy.get('li:contains("Instructions!"):contains("Multiple choices")').should('exist')
 
     visit('/project-xkopqm/textbook-klxufv/page-7/exercise-dymwin', {wysiwyg: false})
-    cy.get('label:contains("Adaptation type")').next().should('have.value', 'select-things')
+    cy.get('label:contains("Adaptation type")').next().should('have.value', 'multiple-choices')
     cy.get('label:contains("Instructions")').next().should('have.value', 'Instructions!')
   })
 

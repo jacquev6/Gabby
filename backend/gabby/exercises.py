@@ -62,11 +62,6 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
 
     _adaptation: orm.Mapped[dict] = orm.mapped_column(sql.JSON, name="adaptation", default={"format": 0}, server_default="{\"format\": 0}")
 
-    # @todo(After production data is migrated) Remove this class
-    class AdaptationV1Container(PydanticBase):
-        # Thin wrapper to use Pydantic's discriminated unions
-        adaptation: api_models.AdaptationV1 = pydantic.Field(discriminator="kind")
-
     @property
     def adaptation(self) -> api_models.AdaptationV2:
         if self._adaptation is None:  # Before the first flush to DB if not set in constructor.
@@ -74,13 +69,7 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
 
         match self._adaptation["format"]:
             case 0:
-                return api_models.AdaptationV2(kind=None, effects=[])
-            case 1:
-                # @todo(After production data is migrated) Remove this case
-                adaptation_v1 = self.AdaptationV1Container(adaptation=self._adaptation["settings"]).adaptation
-                kind = None if adaptation_v1.kind == "null" else adaptation_v1.kind
-                effects = adaptation_v1.make_effects()
-                return api_models.AdaptationV2(kind=kind, effects=effects)
+                return api_models.AdaptationV2(kind="generic", effects=[])
             case 2:
                 return api_models.AdaptationV2(**self._adaptation["settings"])
             case format:
@@ -93,37 +82,30 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
             "settings": adaptation.model_dump(),
         }
 
-    def make_adapted(self):
-        adapter = parsing.EffectsBasedAdapter(
+    def make_adapted_and_delta(self):
+        maker = parsing.EffectsBasedAdapterAndDeltaMaker(
             self.adaptation.effects,
             self.instructions,
             self.wording,
             self.example,
             self.clue,
         )
-        return renderable.Exercise(
-            number=self.number,
-            textbook_page=self.textbook_page,
-            instructions=adapter.instructions,
-            wording=adapter.wording,
-            example=adapter.example,
-            clue=adapter.clue,
-            wording_paragraphs_per_pagelet=self.wording_paragraphs_per_pagelet,
-        )
-
-    def make_delta(self):
-        delta_maker = parsing.EffectsBasedDeltaMaker(
-            self.adaptation.effects,
-            self.instructions,
-            self.wording,
-            self.example,
-            self.clue,
-        )
-        return exercise_delta.Exercise(
-            instructions=delta_maker.instructions,
-            wording=delta_maker.wording,
-            example=delta_maker.example,
-            clue=delta_maker.clue,
+        return (
+            renderable.Exercise(
+                number=self.number,
+                textbook_page=self.textbook_page,
+                instructions=maker.adapted_instructions,
+                wording=maker.adapted_wording,
+                example=maker.adapted_example,
+                clue=maker.adapted_clue,
+                wording_paragraphs_per_pagelet=self.wording_paragraphs_per_pagelet,
+            ),
+            exercise_delta.Exercise(
+                instructions=maker.instructions_delta,
+                wording=maker.wording_delta,
+                example=maker.example_delta,
+                clue=maker.clue_delta,
+            )
         )
 
 

@@ -6,11 +6,6 @@ import { basicFormats, escapeForTag } from './WysiwygEditor.vue'
 import ContextMenu from './ContextMenu.vue'
 
 
-class ChoiceBlot extends InlineBlot {
-  static override blotName = 'choice'
-  static override tagName = 'choice-blot'
-}
-
 // Keep the 'style' section below consistent with the length of this array
 export const defaultColors = [
   // Colors provided by the client
@@ -39,15 +34,6 @@ class SelBlot extends InlineBlot {
     console.assert(data !== null)
     return Number.parseInt(data)
   }
-}
-
-const selectThingsFormats = {
-  ...basicFormats,
-  sel: {
-    kind: 'text' as const,
-    make: (text: string, value: unknown) => `{sel${value}|${escapeForTag(text)}}`,
-    blot: SelBlot,
-  },
 }
 
 let model = ref<Model>(null as any/* OK: 'model' is assigned a value in "script setup" below */ as Model)
@@ -163,8 +149,18 @@ function doneEditingChoices2() {
   model.value.inProgress = {kind: 'nothing'}
 }
 
-const multipleChoicesFormats = {
+class SelectableBlot extends InlineBlot {
+  static override blotName = 'selectable'
+  static override tagName = 'selectable-blot'
+}
+
+export const wysiwygFormats = {
   ...basicFormats,
+  sel: {
+    kind: 'text' as const,
+    make: (text: string, value: unknown) => `{sel${value}|${escapeForTag(text)}}`,
+    blot: SelBlot,
+  },
   choices2: {
     kind: 'text' as const,
     make(text: string, settings_: unknown) {
@@ -173,78 +169,24 @@ const multipleChoicesFormats = {
     },
     blot: Choices2Blot,
   },
-}
-
-class SelectableBlot extends InlineBlot {
-  static override blotName = 'selectable'
-  static override tagName = 'selectable-blot'
-}
-
-const itemsAndEffectsWordingFormats = {
-  ...basicFormats,
   selectable: {
     kind: 'text' as const,
     make: (text: string) => `{selectable|${escapeForTag(text)}}`,
     blot: SelectableBlot,
   },
 }
-
-export const wysiwygFormats = {
-  'null': {
-    instructions: basicFormats,
-    wording: basicFormats,
-    example: basicFormats,
-    clue: basicFormats,
-  },
-  'fill-with-free-text': {
-    instructions: basicFormats,
-    wording: basicFormats,
-    example: basicFormats,
-    clue: basicFormats,
-  },
-  'items-and-effects-attempt-1': {
-    instructions: selectThingsFormats,
-    wording: itemsAndEffectsWordingFormats,
-    example: selectThingsFormats,
-    clue: selectThingsFormats,
-  },
-  'select-things': {
-    instructions: selectThingsFormats,
-    wording: basicFormats,
-    example: selectThingsFormats,
-    clue: selectThingsFormats,
-  },
-  'multiple-choices-in-instructions': {
-    instructions: {
-      ...basicFormats,
-      choice: {
-        kind: 'text' as const,
-        make: (text: string) => `{choice|${escapeForTag(text)}}`,
-        blot: ChoiceBlot,
-      },
-    },
-    wording: basicFormats,
-    example: basicFormats,
-    clue: basicFormats,
-  },
-  'multiple-choices': {
-    instructions: multipleChoicesFormats,
-    wording: multipleChoicesFormats,
-    example: basicFormats,
-    clue: basicFormats,
-  },
-}
 </script>
 
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from 'vue'
+import deepEqual from 'deep-equal'
 
-import { BRow, BCol, BLabeledInput, BLabeledCheckbox, BButton } from './opinion/bootstrap'
+import { BRow, BCol, BLabeledInput, BButton, BLabeledCheckbox, BRadio } from './opinion/bootstrap'
 import type { Model } from './ExerciseFieldsForm.vue'
 import type ExerciseFieldsForm from './ExerciseFieldsForm.vue'
+import { defaultColors as defaultColorsForSelectableEffect } from './AdaptationDetailsFieldsForm.vue'
 import FloatingColorPicker from './FloatingColorPicker.vue'
-import AdaptationDetailsFieldsFormForItemsAndEffectsAttempt1 from './AdaptationDetailsFieldsFormForItemsAndEffectsAttempt1.vue'
-import AdaptationDetailsFieldsFormForMultipleChoices from './AdaptationDetailsFieldsFormForMultipleChoices.vue'
+import OptionalInput from './OptionalInput.vue'
 
 
 defineProps<{
@@ -252,41 +194,142 @@ defineProps<{
   fields: InstanceType<typeof ExerciseFieldsForm>
 }>()
 
+type ItemizeEffect = Model['adaptation']['effects'][number] & {kind: 'itemized'}
+
 const model_ = defineModel<Model>({required: true})
 model = model_
 
-const colorPickers = ref<InstanceType<typeof FloatingColorPicker>[]>([])
-
-const allColors = reactive([...defaultColors])
-const colors = allColors.map((_color, i) => computed({
+const fillWithFreeTextPlaceholder = computed({
   get() {
-    if (i < model.value.adaptationEffects['select-things'].colors.length) {
-      return model.value.adaptationEffects['select-things'].colors[i]
+    const fillWithFreeTextEffects = model.value.adaptation.effects.filter(effect => effect.kind === 'fill-with-free-text')
+    console.assert(fillWithFreeTextEffects.length <= 1)
+    if (fillWithFreeTextEffects.length === 1) {
+      return fillWithFreeTextEffects[0].placeholder
     } else {
-      return allColors[i]
+      return ''
     }
   },
-  set(value) {
-    allColors[i] = value
-    if (i < model.value.adaptationEffects['select-things'].colors.length) {
-      model.value.adaptationEffects['select-things'].colors[i] = value
-    }
-  },
-}))
-
-const colorsCount = computed({
-  get: () => model.value.adaptationEffects['select-things'].colors.length,
-  set: (value) => {
-    const prev = model.value.adaptationEffects['select-things'].colors.length
-    if (value > prev) {
-      for (let k = prev; k !== value; ++k) {
-        model.value.adaptationEffects['select-things'].colors.push(allColors[k])
+  set(value: string) {
+    if (value === '') {
+      model.value.adaptation.effects = model.value.adaptation.effects.filter(effect => effect.kind !== 'fill-with-free-text')
+    } else {
+      const fillWithFreeTextEffects = model.value.adaptation.effects.filter(effect => effect.kind === 'fill-with-free-text')
+      console.assert(fillWithFreeTextEffects.length <= 1)
+      if (fillWithFreeTextEffects.length === 0) {
+        model.value.adaptation.effects.push({kind: 'fill-with-free-text', placeholder: value})
+      } else {
+        fillWithFreeTextEffects[0].placeholder = value
       }
-    } else {
-      model.value.adaptationEffects['select-things'].colors.length = value
     }
   },
 })
+
+// Keep settings in memory even when they are not used, so that they are not reset when used again.
+const settings = reactive({
+  itemized: {
+    items: {
+      kind: 'words' as ItemizeEffect['items']['kind'],
+      words: {punctuation: false},
+    },
+    effects: {
+      isSelectable: false,
+      selectable: {
+        colorsCount: 2,
+        allColors: [...defaultColorsForSelectableEffect],
+      },
+      isBoxed: false,
+    },
+  },
+})
+
+function makeEffect(): ItemizeEffect | null {
+  if (settings.itemized.effects.isSelectable || settings.itemized.effects.isBoxed) {
+    return {
+      kind: 'itemized',
+      items: settings.itemized.items.kind === 'words' ? {
+        kind: 'words',
+        punctuation: settings.itemized.items.words.punctuation,
+      } : {
+        kind: settings.itemized.items.kind,
+      },
+      effects: {
+        selectable: settings.itemized.effects.isSelectable ? {
+          colors: settings.itemized.effects.selectable.allColors.slice(0, settings.itemized.effects.selectable.colorsCount),
+        } : null,
+        boxed: settings.itemized.effects.isBoxed,
+      },
+    }
+  } else {
+    return null
+  }
+}
+
+watch(
+  model,
+  () => {
+    const itemizedEffects = model.value.adaptation.effects.filter(effect => effect.kind === 'itemized')
+    console.assert(itemizedEffects.length <= 1)
+
+    if (itemizedEffects.length === 0) {
+      settings.itemized.effects.isSelectable = false
+      settings.itemized.effects.isBoxed = false
+
+      console.assert(makeEffect() === null)
+    } else {
+      const itemizedEffect = itemizedEffects[0]
+      settings.itemized.items.kind = itemizedEffect.items.kind
+      if (itemizedEffect.items.kind === 'words') {
+        settings.itemized.items.words.punctuation = itemizedEffect.items.punctuation
+      }
+      if (itemizedEffect.effects.selectable !== null) {
+        settings.itemized.effects.isSelectable = true
+        settings.itemized.effects.selectable.colorsCount = itemizedEffect.effects.selectable.colors.length
+        settings.itemized.effects.selectable.allColors.splice(
+          0,
+          itemizedEffect.effects.selectable.colors.length,
+          ...itemizedEffect.effects.selectable.colors
+        )
+      }
+      settings.itemized.effects.isBoxed = itemizedEffect.effects.boxed
+
+      console.assert(deepEqual(makeEffect(), itemizedEffect))
+    }
+  },
+  {
+    deep: true,
+    immediate: true,
+  },
+)
+
+watch(
+  settings,
+  () => {
+    const itemizedEffects = model.value.adaptation.effects.filter(effect => effect.kind === 'itemized')
+    console.assert(itemizedEffects.length <= 1)
+    const effect = makeEffect()
+
+    // Break the infinite 'watch' loop by setting the model only if the value has actually changed.
+    if (effect === null) {
+      if (itemizedEffects.length === 1) {
+        model.value.adaptation.effects = model.value.adaptation.effects.filter(effect => effect.kind !== 'itemized')
+      }
+    } else {
+      if (itemizedEffects.length === 0) {
+        model.value.adaptation.effects.push(effect)
+      } else {
+        if (!deepEqual(effect, itemizedEffects[0])) {
+          model.value.adaptation.effects = model.value.adaptation.effects.filter(effect => effect.kind !== 'itemized')
+          model.value.adaptation.effects.push(effect)
+        }
+      }
+    }
+  },
+  {
+    deep: true,
+  },
+)
+
+const colorPickers = ref<InstanceType<typeof FloatingColorPicker>[]>([])
 </script>
 
 <template>
@@ -307,76 +350,51 @@ const colorsCount = computed({
       </div>
     </template>
   </ContextMenu>
-  <template v-if="model.adaptationKind === 'null'">
-  </template>
-  <template v-else-if="model.adaptationKind === 'fill-with-free-text'">
-    <BLabeledInput :label="$t('placeholderText')" type="text" v-model="model.adaptationEffects['fill-with-free-text'].placeholder" />
-  </template>
-  <template v-else-if="model.adaptationKind === 'items-and-effects-attempt-1'">
-    <AdaptationDetailsFieldsFormForItemsAndEffectsAttempt1 v-model="model" />
-  </template>
-  <template v-else-if="model.adaptationKind === 'select-things'">
-    <template v-if="wysiwyg">
-      <FloatingColorPicker
-        v-for="i in colors.length"
-        ref="colorPickers"
-        v-model="colors[i - 1].value"
-        :default="defaultColors[i - 1]"
-        backdropCovers1="#left-col-2"
-        backdropCovers2="#gutter-2"
-      />
-      <div class="mb-3">
-        <label class="form-label" for="blah">{{ $t('usableColors' )}}</label>
-        <span class="maybe-usable-colors-container">
-          <span v-for="i in colors.length" :class="i - 1 < model.adaptationEffects['select-things'].colors.length ? 'usable-colors-container' : 'unusable-colors-container'">
-            <span
-              class="usable-colors-button"
-              :style="{backgroundColor: colors[i - 1].value}"
-              :data-cy-colors="i"
-              @click="colorsCount = i"
-              @contextmenu.prevent="(event) => colorPickers[i - 1].show(event.target as HTMLElement)"
-            ></span>
-          </span>
-        </span>
-      </div>
-      <BLabeledCheckbox :label="$t('includePunctuation')" v-model="model.adaptationEffects['select-things'].punctuation" />
-    </template>
-    <template v-else>
-      <BLabeledInput :label="$t('colorsCount')" type="number" min="1" v-model="colorsCount" />
-      <BLabeledCheckbox :label="$t('includePunctuation')" v-model="model.adaptationEffects['select-things'].punctuation" />
-      <p class="alert alert-secondary">
-        <i18n-t keypath="useSel1ToSelN" v-if="model.adaptationEffects['select-things'].colors.length > 1">
-          <template v-slot:first>
-            <code>{sel1|<em>text</em>}</code>
-          </template>
-          <template v-slot:last>
-            <code>{sel{{ model.adaptationEffects['select-things'].colors.length }}|<em>text</em>}</code>
-          </template>
-        </i18n-t>
-        <i18n-t keypath="useSel1" v-else>
-          <template v-slot:first>
-            <code>{sel1|<em>text</em>}</code>
-          </template>
-        </i18n-t>
-      </p>
-    </template>
-  </template>
-  <template v-else-if="model.adaptationKind === 'multiple-choices-in-instructions'">
-    <BLabeledInput :label="$t('placeholderText')" type="text" v-model="model.adaptationEffects['multiple-choices-in-instructions'].placeholder" />
-    <p v-if="!wysiwyg" class="alert alert-secondary">
-      <i18n-t keypath="useChoice">
-        <template v-slot:choice>
-          <code>{choice|<em>text</em>}</code>
-        </template>
-      </i18n-t>
-    </p>
-  </template>
-  <template v-else-if="model.adaptationKind === 'multiple-choices'">
-    <AdaptationDetailsFieldsFormForMultipleChoices v-model="model" :wysiwyg />
+
+  <FloatingColorPicker
+    v-for="i in settings.itemized.effects.selectable.allColors.length"
+    ref="colorPickers"
+    v-model="settings.itemized.effects.selectable.allColors[i - 1]"
+    :default="defaultColorsForSelectableEffect[i - 1]"
+    backdropCovers1="#left-col-2"
+    backdropCovers2="#gutter-2"
+  />
+
+  <BButton primary sm @click="model.inProgress = {kind: 'multipleChoicesCreation'}">{{ $t('multipleChoicesButton') }}</BButton>
+
+  <hr />
+
+  <OptionalInput v-model="fillWithFreeTextPlaceholder" :label="$t('placeholderForFreeText')" />
+  <!-- <template v-if="fillWithFreeTextPlaceholder !== ''">
+    <BLabeledInput :label="$t('placeholderForFreeText')" type="text" v-model="fillWithFreeTextPlaceholder" />
   </template>
   <template v-else>
-    <span>{{ ((t: never) => t)(model.adaptationKind) }}</span>
-  </template>
+    <p>{{ $t('placeholderForFreeText') }} <BButton sm primary>+</BButton></p>
+  </template> -->
+
+  <hr />
+
+  <div class="mb-3">
+    <p class="form-label">{{ $t('items') }}</p>
+    <BRadio v-model="settings.itemized.items.kind" :label="$t('itemsWords')" value="words" />
+    <BLabeledCheckbox :label="$t('itemsPunctuation')" v-model="settings.itemized.items.words.punctuation" :disabled="settings.itemized.items.kind !== 'words'" />
+    <BRadio v-model="settings.itemized.items.kind" :label="$t('itemsSentences')" value="sentences" disabled />
+    <BRadio v-model="settings.itemized.items.kind" :label="$t('itemsManual')" value="manual" />
+  </div>
+  <p>{{ $t('effects') }}</p>
+  <BLabeledCheckbox :label="$t('effectsSelectable')" v-model="settings.itemized.effects.isSelectable" />
+  <span class="maybe-usable-colors-container">
+    <span v-for="i in settings.itemized.effects.selectable.allColors.length" :class="settings.itemized.effects.isSelectable && i - 1 < settings.itemized.effects.selectable.colorsCount ? 'usable-colors-container' : 'unusable-colors-container'">
+      <span
+        class="usable-colors-button"
+        :style="{backgroundColor: settings.itemized.effects.selectable.allColors[i - 1]}"
+        :data-cy-colors="i"
+        @click="settings.itemized.effects.isSelectable = true; settings.itemized.effects.selectable.colorsCount = i"
+        @contextmenu.prevent="(event) => colorPickers[i - 1].show(event.target as HTMLElement)"
+      ></span>
+    </span>
+  </span>
+  <BLabeledCheckbox :label="$t('effectsBoxed')" v-model="settings.itemized.effects.isBoxed" />
 </template>
 
 <style scoped>

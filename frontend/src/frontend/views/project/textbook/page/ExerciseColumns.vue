@@ -68,9 +68,7 @@ const wysiwyg = computed(() => wantWysiwyg.value)
 const toolSlotNames = computed(() => {
   const names = []
   names.push('undoRedo')
-  if (model.value.adaptationKind !== 'null') {
-    names.push('adaptationDetails')
-  }
+  names.push('adaptationDetails')
   if (wysiwyg.value) {
     names.push('basicFormatting')
   }
@@ -141,7 +139,7 @@ defineExpose({
                 style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); cursor: initial;"
                 @mousedown="e => e.stopPropagation()" @touchstart="e => e.stopPropagation()"
               >
-                <div style="position: absolute; top: 50%; left: 10%; width: 80%; transform: translate(0, -50%); background-color: white; padding: 1em;">
+                <div style="position: absolute; top: 50px; left: 10%; width: 80%; background-color: white; padding: 1em;">
                   {{ $t('multipleChoicesInstructions') }}
                   <BButton secondary sm @click="model.inProgress = {kind: 'nothing'}">{{ $t('choicesSettingsCancel') }}</BButton>
                 </div>

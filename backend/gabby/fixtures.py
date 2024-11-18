@@ -255,10 +255,10 @@ def create_test_exercises_1(session, admin):
             )
         ],
         number="3",
-        instructions="Complète avec : le, une, un, des, tu, elles, ils.\r\nPuis, souligne les verbes.",
+        instructions="Complète avec : {choices2||,|||...|le, une, un, des, tu, elles, ils}.\r\nPuis, souligne les verbes.",
         example="",
         clue="Il peut y avoir plusieurs solutions.",
-        wording="{choices|le|une|un|des|tu|elles|ils} vide\r\n{choices|le|une|un|des|tu|elles|ils} vident\r\n{choices|le|une|un|des|tu|elles|ils} dépenses\r\n{choices|le|une|un|des|tu|elles|ils} dépensent\r\n{choices|le|une|un|des|tu|elles|ils} savon\r\n{choices|le|une|un|des|tu|elles|ils} savons\r\n{choices|le|une|un|des|tu|elles|ils} commande",
+        wording="... vide\r\n... vident\r\n... dépenses\r\n... dépensent\r\n... savon\r\n... savons\r\n... commande",
         adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
         created_by=admin,
         updated_by=admin,
@@ -406,12 +406,18 @@ def create_test_exercises_2(session, admin):
         clue="",
         wording="Les Touaregs sont des Berbères, un peuple qui habite en Afrique du Nord depuis la préhistoire.\nIls vivent dans le désert du Sahara (Algérie, Libye, Mali, Niger, Burkina Faso…).\nEn été, les températures y montent à plus de 50 °C et elles descendent en dessous de zéro durant les nuits d’hiver.",
         adaptation=AdaptationV2(
-            kind="select-things",
-            effects=[parsing.SelectThingsAdaptationEffect(
-                kind="select-things",
-                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                words=True,
-                punctuation=True,
+            kind="generic",
+            effects=[parsing.ItemizedAdaptationEffect(
+                kind="itemized",
+                items=parsing.ItemizedAdaptationEffect.WordsItems(
+                    kind="words", punctuation=True,
+                ),
+                effects=parsing.ItemizedAdaptationEffect.Effects(
+                    selectable=parsing.ItemizedAdaptationEffect.Effects.Selectable(
+                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                    ),
+                    boxed=False,
+                ),
             )],
         ),
         created_by=admin,
@@ -526,14 +532,14 @@ def create_test_exercises_3(session, admin):
         wording="Les Touaregs sont des Berbères, un peuple qui habite en Afrique du Nord depuis la préhistoire.\nIls vivent dans le désert du Sahara (Algérie, Libye, Mali, Niger, Burkina Faso…).\nEn été, les températures y montent à plus de 50 °C et elles descendent en dessous de zéro durant les nuits d’hiver.",
         wording_paragraphs_per_pagelet=1,
         adaptation=AdaptationV2(
-            kind="items-and-effects-attempt-1",
-            effects=[parsing.ItemsAndEffectsAttempt1AdaptationEffect(
-                kind="items-and-effects-attempt-1",
-                items=parsing.ItemsAndEffectsAttempt1AdaptationEffect.WordsItems(
+            kind="generic",
+            effects=[parsing.ItemizedAdaptationEffect(
+                kind="itemized",
+                items=parsing.ItemizedAdaptationEffect.WordsItems(
                     kind="words", punctuation=False
                 ),
-                effects=parsing.ItemsAndEffectsAttempt1AdaptationEffect.Effects(
-                    selectable=parsing.ItemsAndEffectsAttempt1AdaptationEffect.Effects.Selectable(
+                effects=parsing.ItemizedAdaptationEffect.Effects(
+                    selectable=parsing.ItemizedAdaptationEffect.Effects.Selectable(
                         colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"]
                     ),
                     boxed=False,
@@ -554,7 +560,7 @@ def create_test_exercises_3(session, admin):
         instructions="...",
         example="",
         clue="",
-        wording="a. {bold|Aujourd'hui} il fait {italic|gris} et (il pleuvra / il pleut / il pleuvait).\nb. {bold|Aujourd'hui} il fait {italic|gris} et {choices2|(|/||)||(il pleuvra / il pleut / il pleuvait)}.\nc. Aujourd'hui il fait @1 et il @2. {choices2|(|/||)|@1|(gris / beau)} {choices2|[|*||]|@2|[pleut * pleuvra]}\nd. {bold|Aujourd'hui} il fait {italic|gris} et {choices|il pleuvra|il pleut|il pleuvait}.",
+        wording="a. {bold|Aujourd'hui} il fait {italic|gris} et (il pleuvra / il pleut / il pleuvait).\nb. {bold|Aujourd'hui} il fait {italic|gris} et {choices2|(|/||)||(il pleuvra / il pleut / il pleuvait)}.\nc. Aujourd'hui il fait @1 et il @2. {choices2|(|/||)|@1|(gris / beau)} {choices2|[|*||]|@2|[pleut * pleuvra]}\n",
         wording_paragraphs_per_pagelet=3,
         adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
         created_by=admin,

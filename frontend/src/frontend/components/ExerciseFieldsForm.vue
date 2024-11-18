@@ -1,18 +1,15 @@
 <script lang="ts">
 import { useApiStore } from '$frontend/stores/api'
 import type { Project, Textbook, Exercise, InCache, Exists, ParsedExercise } from '$frontend/stores/api'
-import { defaultColors } from './AdaptationDetailsFieldsForm.vue'
+import deepEqual from 'deep-equal'
 
 
 const api = useApiStore()
 
 type Adaptation = (Exercise & InCache & Exists)['attributes']['adaptation']
-type AdaptationEffect = (Adaptation['effects'][number] & {kind: string}) | {kind: 'null'} | {kind: 'multiple-choices'}
 type PdfRectangle = (Exercise & InCache & Exists)['attributes']['rectangles'][number]
 
-// @todo Automate updating this type when a new adaptation type is added
-export const adaptationKinds = ['null', 'fill-with-free-text', 'items-and-effects-attempt-1', 'select-things', 'multiple-choices-in-instructions', 'multiple-choices'] as const
-export type AdaptationKind = typeof adaptationKinds[number]
+export const adaptationKinds: Adaptation['kind'][] = ['generic', 'fill-with-free-text', 'multiple-choices']
 
 export const textualFieldNames = ['instructions', 'wording', 'example', 'clue'] as const
 export type TextualFieldName = typeof textualFieldNames[number]
@@ -27,8 +24,7 @@ export type Model = {
   clue: string
   wordingParagraphsPerPagelet: number
   rectangles: PdfRectangle[]
-  adaptationKind: AdaptationKind
-  adaptationEffects: {[Kind in AdaptationKind]: AdaptationEffect & {kind: Kind}}
+  adaptation: Adaptation
   inProgress:
     {
       kind: 'nothing'
@@ -69,40 +65,7 @@ function makeModel({inTextbook, textbookPage}: MakeModelOptions): Model {
     clue: '',
     wordingParagraphsPerPagelet: 3,
     rectangles: [],
-    adaptationKind: 'null',
-    adaptationEffects: {
-      'fill-with-free-text': {
-        kind: 'fill-with-free-text' as const,
-        placeholder: '...',
-      },
-      'items-and-effects-attempt-1': {
-        kind: 'items-and-effects-attempt-1' as const,
-        items: {
-          kind: 'words' as const,
-          punctuation: false,
-        },
-        effects: {
-          selectable: null,
-          boxed: false,
-        },
-      },
-      'null': {
-        kind: 'null' as const,
-      },
-      'select-things': {
-        kind: 'select-things' as const,
-        words: true,
-        punctuation: false,
-        colors: [defaultColors[0]],
-      },
-      'multiple-choices-in-instructions': {
-        kind: 'multiple-choices-in-instructions' as const,
-        placeholder: '...',
-      },
-      'multiple-choices': {
-        kind: 'multiple-choices' as const,
-      },
-    },
+    adaptation: {kind: 'generic', effects: []},
     inProgress: {
       kind: 'nothing',
     },
@@ -124,23 +87,7 @@ export function assignModelFrom(model: Model, exercise: Exercise & InCache & Exi
   model.example = exercise.attributes.example
   model.clue = exercise.attributes.clue
   model.wordingParagraphsPerPagelet = exercise.attributes.wordingParagraphsPerPagelet
-  console.assert(exercise.attributes.adaptation.kind !== 'multiple-choices-in-wording')  // @todo(When the production data is migrated) Remove this line
-  model.adaptationKind = exercise.attributes.adaptation.kind === null ? 'null' : exercise.attributes.adaptation.kind
-  const adaptation = exercise.attributes.adaptation
-  const kind = adaptation.kind
-  const effects = adaptation.effects
-  if (kind === null) {
-    console.assert(effects.length === 0)
-    model.adaptationEffects['null'] = {kind: 'null'}
-  } else if (kind === 'multiple-choices') {
-    console.assert(effects.length === 0)
-    model.adaptationEffects[kind] = {kind}
-  } else {
-    console.assert(effects.length === 1)
-    const effect: AdaptationEffect = deepCopy(effects[0])
-    console.assert(effect.kind === kind)
-    model.adaptationEffects[kind] = effect as any/* @todo Fix typing issue */
-  }
+  model.adaptation = deepCopy(exercise.attributes.adaptation)
   model.rectangles = deepCopy(exercise.attributes.rectangles)
   model.inProgress = {
     kind: 'nothing',
@@ -160,19 +107,11 @@ export function resetModelNotInTextbook(model: Model) {
 }
 
 export function modelIsEmpty(model: Model) {
-  return model.adaptationKind === 'null' && model.instructions === '' && model.wording === '' && model.example === '' && model.clue === ''
-}
-
-function makeAdaptation(model: Model): Adaptation {
-  const effect = model.adaptationEffects[model.adaptationKind]
-  const kind = effect.kind
-  if (kind === 'null') {
-    return {kind: null, effects: []}
-  } else if (kind === 'multiple-choices') {
-    return {kind, effects: []}
-  } else {
-    return {kind, effects: [effect]}
-  }
+  return  model.instructions === ''
+    && model.wording === ''
+    && model.example === ''
+    && model.clue === ''
+    && deepEqual(model.adaptation, {kind: 'generic', effects: []})
 }
 
 export async function getParsed(model: Model) {
@@ -184,7 +123,7 @@ export async function getParsed(model: Model) {
       example: model.example,
       clue: model.clue,
       wordingParagraphsPerPagelet: model.wordingParagraphsPerPagelet,
-      adaptation: makeAdaptation(model),
+      adaptation: model.adaptation,
     },
     {},
   )
@@ -203,7 +142,7 @@ export async function create(project: Project, textbook: Textbook | null, model:
       example: model.example,
       clue: model.clue,
       wordingParagraphsPerPagelet: model.wordingParagraphsPerPagelet,
-      adaptation: makeAdaptation(model),
+      adaptation: model.adaptation,
       rectangles: model.rectangles,
     },
     {
@@ -221,7 +160,7 @@ export async function save(exercise: Exercise & InCache & Exists, model: Model) 
       example: model.example,
       clue: model.clue,
       wordingParagraphsPerPagelet: model.wordingParagraphsPerPagelet,
-      adaptation: makeAdaptation(model),
+      adaptation: model.adaptation,
       rectangles: model.rectangles,
     },
     {},
@@ -360,13 +299,15 @@ const clueDeltas = computed(() => props.deltas === null ? [] : props.deltas.clue
 
 
 const selBlotColors = computed(() => {
-  const effect = model.value.adaptationEffects[model.value.adaptationKind]
-  if (effect.kind === 'select-things') {
-    return Object.fromEntries(effect.colors.map((color, i) => [`--sel-blot-color-${i + 1}`, color]))
-  } else if (effect.kind === 'items-and-effects-attempt-1' && effect.effects.selectable !== null) {
-    return Object.fromEntries(effect.effects.selectable.colors.map((color, i) => [`--sel-blot-color-${i + 1}`, color]))
-  } else {
+  const selectableEffects = model.value.adaptation.effects.filter(effect => effect.kind === 'itemized' && effect.effects.selectable !== null)
+  console.assert(selectableEffects.length <= 1)
+  if (selectableEffects.length === 0) {
     return {}
+  } else {
+    const effect = selectableEffects[0]
+    console.assert(effect.kind === 'itemized')
+    console.assert(effect.effects.selectable !== null)
+    return Object.fromEntries(effect.effects.selectable.colors.map((color, i) => [`--sel-blot-color-${i + 1}`, color]))
   }
 })
 
@@ -409,14 +350,14 @@ defineExpose({
   </div>
   <div :style="{position: 'relative', ...selBlotColors}">
     <BLabeledSelect
-      :label="$t('adaptationType')" v-model="model.adaptationKind"
-      :options="adaptationKinds.map(kind => ({value: kind, label: $t(kind), disabled: kind === 'multiple-choices-in-instructions'}))"
+      :label="$t('adaptationType')" v-model="model.adaptation.kind"
+      :options="adaptationKinds.map(kind => ({value: kind, label: $t(kind)}))"
     />
     <WysiwygEditor
       v-if="wysiwyg"
       ref="instructionsEditor"
       :label="$t('exerciseInstructions')"
-      :formats="wysiwygFormats[model.adaptationKind].instructions"
+      :formats="wysiwygFormats"
       v-model="model.instructions" :delta="instructionsDeltas"
       @selectionChange="selectionChangeInInstructionsOrWording"
     />
@@ -431,7 +372,7 @@ defineExpose({
       v-if="wysiwyg"
       ref="wordingEditor"
       :label="$t('exerciseWording')"
-      :formats="wysiwygFormats[model.adaptationKind].wording"
+      :formats="wysiwygFormats"
       v-model="model.wording" :delta="wordingDeltas"
       @selectionChange="selectionChangeInInstructionsOrWording"
     />
@@ -448,7 +389,7 @@ defineExpose({
             v-if="wysiwyg"
             ref="exampleEditor"
             :label="$t('exerciseExample')"
-            :formats="wysiwygFormats[model.adaptationKind].example"
+            :formats="wysiwygFormats"
             :delta="exampleDeltas"
             v-model="model.example"
           />
@@ -464,7 +405,7 @@ defineExpose({
             v-if="wysiwyg"
             ref="clueEditor"
             :label="$t('exerciseClue')"
-            :formats="wysiwygFormats[model.adaptationKind].clue"
+            :formats="wysiwygFormats"
             :delta="clueDeltas"
             v-model="model.clue"
           />

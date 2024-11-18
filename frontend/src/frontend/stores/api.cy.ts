@@ -1609,7 +1609,7 @@ describe('ApiStore - Application - 2', () => {
 
     expectToBeTrue(exercise.exists)
     expect(exercise.attributes.instructions).to.equal('Écris une phrase en respectant l\'ordre des classes grammaticales indiquées.')
-    expect(exercise.attributes.adaptation.kind).to.be.null
+    expect(exercise.attributes.adaptation.kind).to.equal('generic')
   })
 
   it('gets an exercise with "select things" adaptation', async () => {
@@ -1619,11 +1619,13 @@ describe('ApiStore - Application - 2', () => {
 
     expectToBeTrue(exercise.exists)
     expect(exercise.attributes.instructions).to.equal('Relève dans le texte trois\n{sel1|déterminants}, un {sel2|nom propre}, quatre\n{sel3|noms communs} et trois {sel4|verbes}.')
-    expect(exercise.attributes.adaptation.kind).to.equal('select-things')
+    expect(exercise.attributes.adaptation.kind).to.equal('generic')
     expect(exercise.attributes.adaptation.effects).to.have.length(1)
-    expect(exercise.attributes.adaptation.effects[0].kind).to.equal('select-things')
-    console.assert(exercise.attributes.adaptation.effects[0].kind === 'select-things')
-    expect(exercise.attributes.adaptation.effects[0].colors).to.deep.equal(["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"])
+    expect(exercise.attributes.adaptation.effects[0].kind).to.equal('itemized')
+    console.assert(exercise.attributes.adaptation.effects[0].kind === 'itemized')
+    expect(exercise.attributes.adaptation.effects[0].effects.selectable).to.not.be.null
+    console.assert(exercise.attributes.adaptation.effects[0].effects.selectable !== null)
+    expect(exercise.attributes.adaptation.effects[0].effects.selectable.colors).to.deep.equal(['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'])
   })
 
   it('gets an exercise with "fill with free text" adaptation', async () => {
@@ -1650,12 +1652,14 @@ describe('ApiStore - Application - 2', () => {
         number: '12',
         instructions: 'Do this',
         adaptation: {
-          kind: 'select-things',
+          kind: 'generic',
           effects: [{
-            kind: 'select-things',
-            colors: ['red', 'green', 'blue', 'purple'],
-            words: true,
-            punctuation: true,
+            kind: 'itemized',
+            items: {kind: 'words', punctuation: false},
+            effects: {
+              selectable: {colors: ['red', 'green', 'blue', 'purple']},
+              boxed: false,
+            },
           }],
         },
       },
@@ -1666,10 +1670,12 @@ describe('ApiStore - Application - 2', () => {
     )
 
     console.assert(exercise.inCache && exercise.exists)
-    expect(exercise.attributes.adaptation.kind).to.equal('select-things')
+    expect(exercise.attributes.adaptation.kind).to.equal('generic')
     expect(exercise.attributes.adaptation.effects).to.have.length(1)
-    expect(exercise.attributes.adaptation.effects[0].kind).to.equal('select-things')
-    console.assert(exercise.attributes.adaptation.effects[0].kind === 'select-things')
-    expect(exercise.attributes.adaptation.effects[0].colors).to.deep.equal(['red', 'green', 'blue', 'purple'])
+    expect(exercise.attributes.adaptation.effects[0].kind).to.equal('itemized')
+    console.assert(exercise.attributes.adaptation.effects[0].kind === 'itemized')
+    expect(exercise.attributes.adaptation.effects[0].effects.selectable).to.not.be.null
+    console.assert(exercise.attributes.adaptation.effects[0].effects.selectable !== null)
+    expect(exercise.attributes.adaptation.effects[0].effects.selectable.colors).to.deep.equal(['red', 'green', 'blue', 'purple'])
   })
 })

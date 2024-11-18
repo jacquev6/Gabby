@@ -92,9 +92,8 @@ def export_project(
     data = json.dumps(dict(
         projectId=project.id,
         exercises=[
-            exercise.make_adapted().model_dump()
+            exercise.make_adapted_and_delta()[0].model_dump()
             for exercise in project.exercises
-            if exercise.adaptation.kind != "null"
         ],
     )).replace("\\", "\\\\").replace('"', "\\\"")
     with open("gabby/templates/adapted/index.html") as f:

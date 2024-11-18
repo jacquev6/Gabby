@@ -129,16 +129,16 @@ describe('Gabby', () => {
     cy.get('[data-cy="create-then-next"]').should('be.visible')
     cy.get('@container').should(beScrolledDown)
 
-    cy.get('label:contains("Adaptation type")').next().select('select-things')
+    cy.get('label:contains("Adaptation type")').next().select('generic')
     cy.get('label:contains("Wording")').next().type('This is a quite long wording to ensure a scrollbar appears.', {delay: 0})
     cy.get('label:contains("Instructions")').next().type('Hello', {delay: 0})
 
     cy.get('[data-cy="gutter-2"]').should('have.length', 1).as('container')
     cy.get('@container').should(haveVerticalScrollbarOnly)
     cy.get('@container').should(beAtTop)
-    cy.get('label:contains("Also select punctuation")').should('not.be.visible')
-    cy.get('label:contains("Also select punctuation")').scrollIntoView()
-    cy.get('label:contains("Also select punctuation")').should('be.visible')
+    cy.get('label:contains("Punctuation")').should('not.be.visible')
+    cy.get('label:contains("Punctuation")').scrollIntoView()
+    cy.get('label:contains("Punctuation")').should('be.visible')
     cy.get('@container').should(beScrolledDown)
 
     cy.get('[data-cy="right-col-2"]').should('have.length', 1).as('container')
@@ -177,9 +177,9 @@ describe('Gabby', () => {
     cy.get('[data-cy="gutter-2"]').should('have.length', 1).as('container')
     cy.get('@container').should(haveVerticalScrollbarOnly)
     cy.get('@container').should(beAtTop)
-    cy.get('label:contains("Also select punctuation")').should('not.be.visible')
-    cy.get('label:contains("Also select punctuation")').scrollIntoView()
-    cy.get('label:contains("Also select punctuation")').should('be.visible')
+    cy.get('label:contains("Punctuation")').should('not.be.visible')
+    cy.get('label:contains("Punctuation")').scrollIntoView()
+    cy.get('label:contains("Punctuation")').should('be.visible')
     cy.get('@container').should(beScrolledDown)
 
     cy.get('[data-cy="right-col-2"]').should('have.length', 1).as('container')

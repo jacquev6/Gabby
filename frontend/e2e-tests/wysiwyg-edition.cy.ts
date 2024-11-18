@@ -74,7 +74,7 @@ describe('Gabby', () => {
     cy.get('@clueHeader').click()
     cy.get('@clue').type('X')
 
-    for (const adaptationType of ['-', 'select-things', 'fill-with-free-text', 'multiple-choices']) {
+    for (const adaptationType of ['-', 'fill-with-free-text', 'multiple-choices']) {
       cy.get('@adaptationType').select(adaptationType)
 
       for (const fieldAlias of ['@instructions', '@wording', '@example', '@clue']) {
@@ -114,7 +114,8 @@ describe('Gabby', () => {
     visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
     setAliases()
     cy.get('@number').type('test')
-    cy.get('@adaptationType').select('select-things')
+    cy.get('@adaptationType').select('generic')
+    cy.get('div:contains("Selectable") >input').check()
     cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="2"]').click()
 
     cy.get('button[data-cy="format-color-1"]').as("button1").should('be.disabled')
@@ -184,17 +185,5 @@ describe('Gabby', () => {
     // The response for 'Foo' reaches the frontend after the response for 'Bar', but is discarded and 'Bar' is kept.
     cy.get('@editor').should('not.contain.text', 'Foo')
     cy.get('@editor').should('contain.text', 'Bar')
-  })
-
-  it('handles switching from non-WYSIWYG to WYSIWYG', () => {
-    visit('/project-xkopqm/textbook-klxufv/page-7/exercise-jkrudc', {wysiwyg: false})
-
-    cy.get('label:contains("Instructions")').next().type('{selectall}Réponds par {{}choice|vrai} ou {{}choice|faux}.', {delay: 0})
-    cy.get('label:contains("Adaptation type")').next().select('multiple-choices')
-    notBusy()
-
-    cy.get('span:contains("WYSIWYG") input').check()
-
-    cy.get(':has(>label:contains("Instructions")) .ql-editor').should('contain.text', 'Réponds par vrai ou faux.')
   })
 })

@@ -15,7 +15,7 @@ describe('Gabby', () => {
     cy.get('h3:contains("Français CE2, Slabeuf (2021)")').should('exist')
     cy.get('a:contains("Français CE2")').should('exist')
     cy.get('li a:contains("Page 6")').should('exist')
-    cy.get('li:contains("Page 6") ul li:contains("3 Complète avec : le, une, …")').should('exist')
+    cy.get('li:contains("Page 6") ul li:contains("3 Complète avec : {choices2…")').should('exist')
     cy.get('li:contains("Page 6") ul li:contains("4 Écris une phrase en respe…")').should('exist')
     cy.get('li a:contains("Page 7")').should('exist')
     cy.get('li:contains("Page 7") ul li:contains("9 Recopie l’intrus qui se c…")').should('exist')
@@ -42,7 +42,7 @@ describe('Gabby', () => {
     cy.get('p:contains("No exercises yet.")').should('exist')
 
     cy.get('button:contains("<")').click()
-    cy.get('li:contains("3 Complète avec : le, une, …")').should('exist')
+    cy.get('li:contains("3 Complète avec : {choices2…")').should('exist')
     cy.get('li:contains("4 Écris une phrase en respe…")').should('exist')
   })
 })
