@@ -11,7 +11,8 @@ class AdaptationTestCase(unittest.TestCase):
     maxDiff = None
 
     def do_test(self, exercise, expected_adapted, expected_delta):
-        actual_adapted = exercise.make_adapted()
+        actual_adapted, actual_delta = exercise.make_adapted_and_delta()
+
         if actual_adapted != expected_adapted:
             print("actual_adapted:")
             print("  instructions:", actual_adapted.instructions)
@@ -19,11 +20,10 @@ class AdaptationTestCase(unittest.TestCase):
             print("  example:", actual_adapted.example)
             print("  clue:", actual_adapted.clue)
         self.assertEqual(actual_adapted, expected_adapted)
-        if expected_delta is not None:
-            actual_delta = exercise.make_delta()
-            if actual_delta != expected_delta:
-                print("actual_delta:", actual_delta)
-            self.assertEqual(actual_delta, expected_delta)
+
+        if actual_delta != expected_delta:
+            print("actual_delta:", actual_delta)
+        self.assertEqual(actual_delta, expected_delta)
 
 
 # Tests in this file follow a legacy organization, based on classes that have been deleted.
@@ -2906,6 +2906,443 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             ),
         )
 
+
+class LenientParagraphTestCase(AdaptationTestCase):
+    def test_bold_and_italic(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=None,
+                instructions="instructions",
+                wording="This is a {bold|strict} {italic|paragraph}.\n\nAnd this is a {bold|lenient} {italic|paragraph}",
+                example="",
+                clue="",
+                wording_paragraphs_per_pagelet=3,
+                adaptation=AdaptationV2(kind="generic", effects=[])
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=None,
+                instructions=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(text="instructions"),
+                        ]),
+                    ]),
+                ]),
+                wording=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(text="This"),
+                            r.Whitespace(),
+                            r.PlainText(text="is"),
+                            r.Whitespace(),
+                            r.PlainText(text="a"),
+                            r.Whitespace(),
+                            r.BoldText(text="strict"),
+                            r.Whitespace(),
+                            r.ItalicText(text="paragraph"),
+                            r.PlainText(text="."),
+                        ]),
+                    ]),
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(text="And"),
+                            r.Whitespace(),
+                            r.PlainText(text="this"),
+                            r.Whitespace(),
+                            r.PlainText(text="is"),
+                            r.Whitespace(),
+                            r.PlainText(text="a"),
+                            r.Whitespace(),
+                            r.BoldText(text="lenient"),
+                            r.Whitespace(),
+                            r.ItalicText(text="paragraph"),
+                        ]),
+                    ]),
+                ]),
+                example=r.Section(paragraphs=[]),
+                clue=r.Section(paragraphs=[]),
+                wording_paragraphs_per_pagelet=3,
+            ),
+            d.Exercise(
+                instructions=[
+                    d.TextInsertOp(insert="instructions", attributes={}),
+                ],
+                wording=[
+                    d.TextInsertOp(insert="This is a ", attributes={}),
+                    d.TextInsertOp(insert="strict", attributes={"bold": True}),
+                    d.TextInsertOp(insert=" ", attributes={}),
+                    d.TextInsertOp(insert="paragraph", attributes={"italic": True}),
+                    d.TextInsertOp(insert=".\n\nAnd this is a ", attributes={}),
+                    d.TextInsertOp(insert="lenient", attributes={"bold": True}),
+                    d.TextInsertOp(insert=" ", attributes={}),
+                    d.TextInsertOp(insert="paragraph", attributes={"italic": True}),
+                ],
+                example=[],
+                clue=[],
+            ),
+        )
+
+    def test_select_words_without_punctuation(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=None,
+                instructions="instructions",
+                wording="This is a strict paragraph, with... some punctuation.\n\nAnd this, is a... lenient paragraph",
+                example="",
+                clue="",
+                wording_paragraphs_per_pagelet=3,
+                adaptation=AdaptationV2(
+                    kind="generic",
+                    effects=[
+                        p.ItemizedAdaptationEffect(
+                            kind="itemized",
+                            items=p.ItemizedAdaptationEffect.WordsItems(kind="words", punctuation=False),
+                            effects=p.ItemizedAdaptationEffect.Effects(
+                                selectable=p.ItemizedAdaptationEffect.Effects.Selectable(colors=["red"]),
+                                boxed=False,
+                            ),
+                        ),
+                    ],
+                )
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=None,
+                instructions=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(text="instructions"),
+                        ]),
+                    ]),
+                ]),
+                wording=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.SelectableText(text="This", colors=["red"], boxed=False),
+                            r.Whitespace(),
+                            r.SelectableText(text="is", colors=["red"], boxed=False),
+                            r.Whitespace(),
+                            r.SelectableText(text="a", colors=["red"], boxed=False),
+                            r.Whitespace(),
+                            r.SelectableText(text="strict", colors=["red"], boxed=False),
+                            r.Whitespace(),
+                            r.SelectableText(text="paragraph", colors=["red"], boxed=False),
+                            r.PlainText(text=","),
+                            r.Whitespace(),
+                            r.SelectableText(text="with", colors=["red"], boxed=False),
+                            r.PlainText(text="..."),
+                        ]),
+                        r.Sentence(tokens=[
+                            r.SelectableText(text="some", colors=["red"], boxed=False),
+                            r.Whitespace(),
+                            r.SelectableText(text="punctuation", colors=["red"], boxed=False),
+                            r.PlainText(text="."),
+                        ])
+                    ]),
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.SelectableText(text="And", colors=["red"], boxed=False),
+                            r.Whitespace(),
+                            r.SelectableText(text="this", colors=["red"], boxed=False),
+                            r.PlainText(text=","),
+                            r.Whitespace(),
+                            r.SelectableText(text="is", colors=["red"], boxed=False),
+                            r.Whitespace(),
+                            r.SelectableText(text="a", colors=["red"], boxed=False),
+                            r.PlainText(text="..."),
+                            r.Whitespace(),
+                            r.SelectableText(text="lenient", colors=["red"], boxed=False),
+                            r.Whitespace(),
+                            r.SelectableText(text="paragraph", colors=["red"], boxed=False),
+                        ]),
+                    ]),
+                ]),
+                example=r.Section(paragraphs=[]),
+                clue=r.Section(paragraphs=[]),
+                wording_paragraphs_per_pagelet=3,
+            ),
+            d.Exercise(
+                instructions=[
+                    d.TextInsertOp(insert="instructions", attributes={}),
+                ],
+                wording=[
+                    d.TextInsertOp(insert="This is a strict paragraph, with... some punctuation.\n\nAnd this, is a... lenient paragraph", attributes={}),
+                ],
+                example=[],
+                clue=[],
+            ),
+        )
+
+    def test_select_words_with_punctuation(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=None,
+                instructions="instructions",
+                wording="This is a strict paragraph, with... some punctuation.\n\nAnd this, is a... lenient paragraph",
+                example="",
+                clue="",
+                wording_paragraphs_per_pagelet=3,
+                adaptation=AdaptationV2(
+                    kind="generic",
+                    effects=[
+                        p.ItemizedAdaptationEffect(
+                            kind="itemized",
+                            items=p.ItemizedAdaptationEffect.WordsItems(kind="words", punctuation=True),
+                            effects=p.ItemizedAdaptationEffect.Effects(
+                                selectable=p.ItemizedAdaptationEffect.Effects.Selectable(colors=["red"]),
+                                boxed=False,
+                            ),
+                        ),
+                    ],
+                )
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=None,
+                instructions=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(text="instructions"),
+                        ]),
+                    ]),
+                ]),
+                wording=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.SelectableText(text="This", colors=["red"], boxed=False),
+                            r.Whitespace(),
+                            r.SelectableText(text="is", colors=["red"], boxed=False),
+                            r.Whitespace(),
+                            r.SelectableText(text="a", colors=["red"], boxed=False),
+                            r.Whitespace(),
+                            r.SelectableText(text="strict", colors=["red"], boxed=False),
+                            r.Whitespace(),
+                            r.SelectableText(text="paragraph", colors=["red"], boxed=False),
+                            r.SelectableText(text=",", colors=["red"], boxed=False),
+                            r.Whitespace(),
+                            r.SelectableText(text="with", colors=["red"], boxed=False),
+                            r.SelectableText(text="...", colors=["red"], boxed=False),
+                        ]),
+                        r.Sentence(tokens=[
+                            r.SelectableText(text="some", colors=["red"], boxed=False),
+                            r.Whitespace(),
+                            r.SelectableText(text="punctuation", colors=["red"], boxed=False),
+                            r.SelectableText(text=".", colors=["red"], boxed=False),
+                        ])
+                    ]),
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.SelectableText(text="And", colors=["red"], boxed=False),
+                            r.Whitespace(),
+                            r.SelectableText(text="this", colors=["red"], boxed=False),
+                            r.SelectableText(text=",", colors=["red"], boxed=False),
+                            r.Whitespace(),
+                            r.SelectableText(text="is", colors=["red"], boxed=False),
+                            r.Whitespace(),
+                            r.SelectableText(text="a", colors=["red"], boxed=False),
+                            r.SelectableText(text="...", colors=["red"], boxed=False),
+                            r.Whitespace(),
+                            r.SelectableText(text="lenient", colors=["red"], boxed=False),
+                            r.Whitespace(),
+                            r.SelectableText(text="paragraph", colors=["red"], boxed=False),
+                        ]),
+                    ]),
+                ]),
+                example=r.Section(paragraphs=[]),
+                clue=r.Section(paragraphs=[]),
+                wording_paragraphs_per_pagelet=3,
+            ),
+            d.Exercise(
+                instructions=[
+                    d.TextInsertOp(insert="instructions", attributes={}),
+                ],
+                wording=[
+                    d.TextInsertOp(insert="This is a strict paragraph, with... some punctuation.\n\nAnd this, is a... lenient paragraph", attributes={}),
+                ],
+                example=[],
+                clue=[],
+            ),
+        )
+
+    def test_fill_with_free_text(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=None,
+                instructions="instructions",
+                wording="This is a ... strict paragraph. With some punctuation.\n\nAnd this, is a ... lenient paragraph",
+                example="",
+                clue="",
+                wording_paragraphs_per_pagelet=3,
+                adaptation=AdaptationV2(
+                    kind="generic",
+                    effects=[p.FillWithFreeTextAdaptationEffect(kind="fill-with-free-text", placeholder="...")],
+                ),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=None,
+                instructions=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(text="instructions"),
+                        ]),
+                    ]),
+                ]),
+                wording=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(text="This"),
+                            r.Whitespace(),
+                            r.PlainText(text="is"),
+                            r.Whitespace(),
+                            r.PlainText(text="a"),
+                            r.Whitespace(),
+                            r.FreeTextInput(),
+                            r.Whitespace(),
+                            r.PlainText(text="strict"),
+                            r.Whitespace(),
+                            r.PlainText(text="paragraph"),
+                            r.PlainText(text="."),
+                        ]),
+                        r.Sentence(tokens=[
+                            r.PlainText(text="With"),
+                            r.Whitespace(),
+                            r.PlainText(text="some"),
+                            r.Whitespace(),
+                            r.PlainText(text="punctuation"),
+                            r.PlainText(text="."),
+                        ])
+                    ]),
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(text="And"),
+                            r.Whitespace(),
+                            r.PlainText(text="this"),
+                            r.PlainText(text=","),
+                            r.Whitespace(),
+                            r.PlainText(text="is"),
+                            r.Whitespace(),
+                            r.PlainText(text="a"),
+                            r.Whitespace(),
+                            r.FreeTextInput(),
+                            r.Whitespace(),
+                            r.PlainText(text="lenient"),
+                            r.Whitespace(),
+                            r.PlainText(text="paragraph"),
+                        ]),
+                    ]),
+                ]),
+                example=r.Section(paragraphs=[]),
+                clue=r.Section(paragraphs=[]),
+                wording_paragraphs_per_pagelet=3,
+            ),
+            d.Exercise(
+                instructions=[
+                    d.TextInsertOp(insert="instructions", attributes={}),
+                ],
+                wording=[
+                    d.TextInsertOp(insert="This is a ... strict paragraph. With some punctuation.\n\nAnd this, is a ... lenient paragraph", attributes={}),
+                ],
+                example=[],
+                clue=[],
+            ),
+        )
+
+    def test_multiple_choices(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=None,
+                instructions="Choose {choices2||/|||...|alpha/bravo}.",
+                wording="This is a ... strict paragraph. With some punctuation.\n\nAnd this, is a ... lenient paragraph",
+                example="",
+                clue="",
+                wording_paragraphs_per_pagelet=3,
+                adaptation=AdaptationV2(kind="generic", effects=[]),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=None,
+                instructions=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(text="Choose"),
+                            r.Whitespace(),
+                            r.BoxedText(text="alpha"),
+                            r.Whitespace(),
+                            r.PlainText(text="/"),
+                            r.Whitespace(),
+                            r.BoxedText(text="bravo"),
+                            r.PlainText(text="."),
+                        ]),
+                    ]),
+                ]),
+                wording=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(text="This"),
+                            r.Whitespace(),
+                            r.PlainText(text="is"),
+                            r.Whitespace(),
+                            r.PlainText(text="a"),
+                            r.Whitespace(),
+                            r.MultipleChoicesInput(choices=["alpha", "bravo"]),
+                            r.Whitespace(),
+                            r.PlainText(text="strict"),
+                            r.Whitespace(),
+                            r.PlainText(text="paragraph"),
+                            r.PlainText(text="."),
+                        ]),
+                        r.Sentence(tokens=[
+                            r.PlainText(text="With"),
+                            r.Whitespace(),
+                            r.PlainText(text="some"),
+                            r.Whitespace(),
+                            r.PlainText(text="punctuation"),
+                            r.PlainText(text="."),
+                        ])
+                    ]),
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(text="And"),
+                            r.Whitespace(),
+                            r.PlainText(text="this"),
+                            r.PlainText(text=","),
+                            r.Whitespace(),
+                            r.PlainText(text="is"),
+                            r.Whitespace(),
+                            r.PlainText(text="a"),
+                            r.Whitespace(),
+                            r.MultipleChoicesInput(choices=["alpha", "bravo"]),
+                            r.Whitespace(),
+                            r.PlainText(text="lenient"),
+                            r.Whitespace(),
+                            r.PlainText(text="paragraph"),
+                        ]),
+                    ]),
+                ]),
+                example=r.Section(paragraphs=[]),
+                clue=r.Section(paragraphs=[]),
+                wording_paragraphs_per_pagelet=3,
+            ),
+            d.Exercise(
+                instructions=[
+                    d.TextInsertOp(insert="Choose ", attributes={}),
+                    d.TextInsertOp(insert="alpha/bravo", attributes={"choices2": {"start": "", "separator1": "/", "separator2": "", "stop": "", "placeholder": "..."}}),
+                    d.TextInsertOp(insert=".", attributes={}),
+                ],
+                wording=[
+                    d.TextInsertOp(insert="This is a ... strict paragraph. With some punctuation.\n\nAnd this, is a ... lenient paragraph", attributes={}),
+                ],
+                example=[],
+                clue=[],
+            ),
+        )
 
 
 class MultipleAdaptationEffectsTestCase(AdaptationTestCase):

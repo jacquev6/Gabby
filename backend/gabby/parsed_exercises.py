@@ -47,10 +47,11 @@ class ParsedExercisesResource:
             wording_paragraphs_per_pagelet=wording_paragraphs_per_pagelet,
             adaptation=adaptation,
         )
+        adapted, delta = exercise.make_adapted_and_delta()
         return ParsedExerciseItem(
             id=uuid.uuid4().hex,
-            adapted=exercise.make_adapted(),
-            delta=exercise.make_delta(),
+            adapted=adapted,
+            delta=delta,
         )
 
     def get_item(

@@ -92,7 +92,7 @@ def export_project(
     data = json.dumps(dict(
         projectId=project.id,
         exercises=[
-            exercise.make_adapted().model_dump()
+            exercise.make_adapted_and_delta()[0].model_dump()
             for exercise in project.exercises
         ],
     )).replace("\\", "\\\\").replace('"', "\\\"")
