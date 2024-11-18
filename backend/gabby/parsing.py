@@ -586,8 +586,10 @@ class WordingAdapter(lark.Transformer):
             return renderable.PlainText(text=arg.value)
 
     def PUNCTUATION_IN_LENIENT_PARAGRAPH(self, arg):
-        # @todo(NOW) Fix :)
-        return renderable.PlainText(text=arg.value)
+        if self.select_punctuation:
+            return renderable.SelectableText(text=arg.value, colors=self.selection_colors, boxed=self.selectable_are_boxed)
+        else:
+            return renderable.PlainText(text=arg.value)
 
     def INT(self, arg):
         return int(arg.value)
