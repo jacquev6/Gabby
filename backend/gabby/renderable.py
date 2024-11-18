@@ -1,6 +1,5 @@
 from typing import Literal
 
-from . import settings
 from mydantic import PydanticBase
 
 
