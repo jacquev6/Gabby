@@ -82,37 +82,30 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
             "settings": adaptation.model_dump(),
         }
 
-    def make_adapted(self):
-        adapter = parsing.EffectsBasedAdapter(
+    def make_adapted_and_delta(self):
+        maker = parsing.EffectsBasedAdapterAndDeltaMaker(
             self.adaptation.effects,
             self.instructions,
             self.wording,
             self.example,
             self.clue,
         )
-        return renderable.Exercise(
-            number=self.number,
-            textbook_page=self.textbook_page,
-            instructions=adapter.instructions,
-            wording=adapter.wording,
-            example=adapter.example,
-            clue=adapter.clue,
-            wording_paragraphs_per_pagelet=self.wording_paragraphs_per_pagelet,
-        )
-
-    def make_delta(self):
-        delta_maker = parsing.EffectsBasedDeltaMaker(
-            self.adaptation.effects,
-            self.instructions,
-            self.wording,
-            self.example,
-            self.clue,
-        )
-        return exercise_delta.Exercise(
-            instructions=delta_maker.instructions,
-            wording=delta_maker.wording,
-            example=delta_maker.example,
-            clue=delta_maker.clue,
+        return (
+            renderable.Exercise(
+                number=self.number,
+                textbook_page=self.textbook_page,
+                instructions=maker.adapted_instructions,
+                wording=maker.adapted_wording,
+                example=maker.adapted_example,
+                clue=maker.adapted_clue,
+                wording_paragraphs_per_pagelet=self.wording_paragraphs_per_pagelet,
+            ),
+            exercise_delta.Exercise(
+                instructions=maker.instructions_delta,
+                wording=maker.wording_delta,
+                example=maker.example_delta,
+                clue=maker.clue_delta,
+            )
         )
 
 

@@ -156,8 +156,7 @@ def check_database_with_orm():
         for exercise in session.query(orm_models.Exercise):
             try:
                 exercise.adaptation
-                exercise.make_adapted()
-                exercise.make_delta()
+                exercise.make_adapted_and_delta()
                 print("Exercise", exercise.id, "OK", file=sys.stderr)  # @todo Improve duration (currently 0.3s / exercise) and remove this progress log
             except Exception as e:
                 print(f"ERROR with exercise {exercise.id}: {e}", file=sys.stderr)

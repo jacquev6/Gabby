@@ -11,7 +11,8 @@ class AdaptationTestCase(unittest.TestCase):
     maxDiff = None
 
     def do_test(self, exercise, expected_adapted, expected_delta):
-        actual_adapted = exercise.make_adapted()
+        actual_adapted, actual_delta = exercise.make_adapted_and_delta()
+
         if actual_adapted != expected_adapted:
             print("actual_adapted:")
             print("  instructions:", actual_adapted.instructions)
@@ -19,7 +20,7 @@ class AdaptationTestCase(unittest.TestCase):
             print("  example:", actual_adapted.example)
             print("  clue:", actual_adapted.clue)
         self.assertEqual(actual_adapted, expected_adapted)
-        actual_delta = exercise.make_delta()
+
         if actual_delta != expected_delta:
             print("actual_delta:", actual_delta)
         self.assertEqual(actual_delta, expected_delta)
