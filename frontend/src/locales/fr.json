@@ -113,6 +113,7 @@
   "saveThenBack": "Enregistrer et retourner à la liste",
   "doStripExerciceNumber": "Enlever le numéro d'exercice automatiquement",
   "doKeepAllLineEnds": "Conserver tous les sauts de ligne",
+  "doDetectLists": "Détecter les listes",
 
 
   "selectedText": "Texte sélectionné",

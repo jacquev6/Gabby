@@ -91,6 +91,7 @@ const listFormats = [
 export interface SelectedText {
   withoutLineEnds: string
   withAllLineEnds: string
+  withoutListsDetection: string
 }
 
 function textFromItems(items: TextItem[]): SelectedText {
@@ -147,12 +148,50 @@ function textFromItems(items: TextItem[]): SelectedText {
     }
   }
 
-  const withAllLineEnds = lines.map(textFromLine).join('\n')
-
   if (lines[0].length === 0) {
-    // Empty
-    return {withoutLineEnds: '', withAllLineEnds: ''}
+    return {withoutLineEnds: '', withAllLineEnds: '', withoutListsDetection: ''}
   } else {
+    function lineLooksJustified(line: TextItem[]) {
+      return Math.abs(line[line.length - 1].right - right) < 0.02 * width
+    }
+
+    let withoutListsDetection = ''
+    if (lines.filter(lineLooksJustified).length >= lines.length / 2) {
+      // Justified text: shorter lines end with a line break
+      let text = ''
+      for (const line of lines) {
+        text += textFromLine(line)
+        if (lineLooksJustified(line)) {
+          text += ' '
+        } else {
+          text += '\n'
+        }
+      }
+      withoutListsDetection = text.trimEnd()
+    } else {
+      // General case: we add a line break if the spacing before this line is larger than the spacing before previous line
+      if (lines.length === 1) {
+        withoutListsDetection = textFromLine(lines[0])
+      } else {
+        console.assert(lines.length >= 2)
+
+        const lineSpacings = lines.slice(1).map((line, i) => lines[i][0].bottom - line[0].bottom)
+        lineSpacings.sort((a, b) => a - b)
+        const standardLineSpacing = lineSpacings[Math.floor(lineSpacings.length / 2)]
+
+        let text = textFromLine(lines[0]) + ' ' + textFromLine(lines[1])
+        for (let i = 2; i !== lines.length; ++i) {
+          if (lines[i - 1][0].bottom - lines[i][0].bottom >= 1.1 * standardLineSpacing) {
+            text += '\n'
+          } else {
+            text += ' '
+          }
+          text += textFromLine(lines[i])
+        }
+        withoutListsDetection = text
+      }
+    }
+
     const matchingListFormats = listFormats.filter(listFormat => {
       const format = listFormat()
       // A list format matches the text if the first line starts a new list item...
@@ -167,6 +206,7 @@ function textFromItems(items: TextItem[]): SelectedText {
       return false
     })
 
+    let withoutLineEnds = ''
     if (matchingListFormats.length >= 1) {
       // List: each list item ends with a line break
       console.assert(lines.length >= 2)
@@ -183,47 +223,17 @@ function textFromItems(items: TextItem[]): SelectedText {
         }
         text += textFromLine(line)
       }
-      return {withoutLineEnds: text.trimEnd(), withAllLineEnds}
+      withoutLineEnds = text.trimEnd()
     } else {
-      function lineLooksJustified(line: TextItem[]) {
-        return Math.abs(line[line.length - 1].right - right) < 0.02 * width
-      }
+      withoutLineEnds = withoutListsDetection
+    }
 
-      if (lines.filter(lineLooksJustified).length >= lines.length / 2) {
-        // Justified text: shorter lines end with a line break
-        let text = ''
-        for (const line of lines) {
-          text += textFromLine(line)
-          if (lineLooksJustified(line)) {
-            text += ' '
-          } else {
-            text += '\n'
-          }
-        }
-        return {withoutLineEnds: text.trimEnd(), withAllLineEnds}
-      } else {
-        // General case: we add a line break if the spacing before this line is larger than the spacing before previous line
-        if (lines.length === 1) {
-          return {withoutLineEnds: textFromLine(lines[0]), withAllLineEnds}
-        } else {
-          console.assert(lines.length >= 2)
+    const withAllLineEnds = lines.map(textFromLine).join('\n')
 
-          const lineSpacings = lines.slice(1).map((line, i) => lines[i][0].bottom - line[0].bottom)
-          lineSpacings.sort((a, b) => a - b)
-          const standardLineSpacing = lineSpacings[Math.floor(lineSpacings.length / 2)]
-
-          let text = textFromLine(lines[0]) + ' ' + textFromLine(lines[1])
-          for (let i = 2; i !== lines.length; ++i) {
-            if (lines[i - 1][0].bottom - lines[i][0].bottom >= 1.1 * standardLineSpacing) {
-              text += '\n'
-            } else {
-              text += ' '
-            }
-            text += textFromLine(lines[i])
-          }
-          return {withoutLineEnds: text, withAllLineEnds}
-        }
-      }
+    return {
+      withoutLineEnds,
+      withAllLineEnds,
+      withoutListsDetection,
     }
   }
 }

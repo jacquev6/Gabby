@@ -31,12 +31,15 @@ const selectedString = computed(() => {
   } else {
     if (doKeepAllLineEnds.value) {
       return selectedText.value.withAllLineEnds
+    } else if (!doDetectLists.value) {
+      return selectedText.value.withoutListsDetection
     } else {
       return selectedText.value.withoutLineEnds
     }
   }
 })
 const doKeepAllLineEnds = ref(false)
+const doDetectLists = ref(true)
 
 const canStripExerciceNumber = computed(() => model.value.number !== '' && selectedString.value.startsWith(model.value.number))
 const doStripExerciceNumber = ref(true)
@@ -105,6 +108,7 @@ defineExpose({
     <template #body>
       <BLabeledCheckbox :label="$t('doStripExerciceNumber')" v-model="doStripExerciceNumber" :disabled="!canStripExerciceNumber" />
       <BLabeledCheckbox :label="$t('doKeepAllLineEnds')" v-model="doKeepAllLineEnds" />
+      <BLabeledCheckbox :label="$t('doDetectLists')" v-model="doDetectLists" :disabled="doKeepAllLineEnds"/>
       <BLabeledTextarea ref="textarea" :maxRows="15" v-model="textToAdd" />
 
       <p>{{ $t('addTo') }}</p>

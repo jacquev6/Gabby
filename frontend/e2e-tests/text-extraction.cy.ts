@@ -120,11 +120,23 @@ describe('Gabby', () => {
   }
 
   {
-    const expectedItems = [
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      'Vivamus a iaculis nisl, a tempus urna.',
-      'Curabitur fermentum egestas risus, nec fringilla sapien efficitur quis.',
+    const itemsInPdf = [
+      [
+        'Lorem ipsum dolor sit amet,',
+        'consectetur adipiscing elit.',
+      ],
+      [
+        'Vivamus a iaculis nisl, a',
+        'tempus urna.',
+      ],
+      [
+        'Curabitur fermentum egestas',
+        'risus, nec fringilla sapien',
+        'efficitur quis.',
+      ],
     ]
+
+    const expectedItems = itemsInPdf.map(lines => lines.join(' '))
 
     it('inserts correct line ends on list - a. b. c.', () => {
       visit('/project-xkopqm/textbook-klxufv/page-2/new-exercise', {pdf: 'text-extraction'})
@@ -163,6 +175,27 @@ describe('Gabby', () => {
       cy.get('@wording').find('p').should('have.length', expectedItems.length).each(($el, index) => {
         expect($el.text()).to.equal(['1', '2', '3'][index] + ') ' + expectedItems[index])
       })
+    })
+
+    it('disables lists detection', () => {
+      visit('/project-xkopqm/textbook-klxufv/page-2/new-exercise', {pdf: 'text-extraction'})
+      setupAliases()
+
+      traceRectangle('@canvas', 7, 6, 36, 19)
+
+      cy.get('textarea').should('have.value', expectedItems.map((item, index) => ['a', 'b', 'c'][index] + '. ' + item).join('\n'))
+
+      cy.get('div:contains("Detect lists") >input').should('be.enabled').should('be.checked').uncheck()
+      cy.get('textarea').should('have.value', expectedItems.map((item, index) => ['a', 'b', 'c'][index] + '. ' + item).join(' '))
+
+      cy.get('div:contains("Detect lists") >input').should('be.enabled').should('not.be.checked').check()
+      cy.get('textarea').should('have.value', expectedItems.map((item, index) => ['a', 'b', 'c'][index] + '. ' + item).join('\n'))
+
+      cy.get('div:contains("Keep all line ends") >input').should('be.enabled').should('not.be.checked').check()
+      cy.get('div:contains("Detect lists") >input').should('be.disabled')
+
+      cy.get('div:contains("Keep all line ends") >input').should('be.enabled').should('be.checked').uncheck()
+      cy.get('div:contains("Detect lists") >input').should('be.enabled')
     })
   }
 })
