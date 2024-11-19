@@ -8,7 +8,7 @@ describe('Gabby', () => {
 
   beforeEach(() => {
     login()
-    loadFixtures('empty-text-extraction-textbook')
+    loadFixtures('empty-text-extraction-textbook', 'empty-test-textbook')
     cy.viewport(1200, 1000)
   })
 
@@ -19,6 +19,34 @@ describe('Gabby', () => {
     cy.get('label:contains("Instructions") + div.ql-container div.ql-editor').as('instructions')
     cy.get('label:contains("Wording") + div.ql-container div.ql-editor').as('wording')
   }
+
+  it('removes the exercise number from the text', () => {
+    visit('/project-fryrbl/textbook-ojsbmy/page-1/new-exercise', {pdf: 'test'})
+    setupAliases()
+
+    cy.get('@number').type('3')
+    traceRectangle('@canvas', 50, 67, 94, 73)
+
+    cy.get('textarea').should('have.value', 'Complète avec : le, une, un, des, tu, elles, ils. Puis, souligne les verbes.')
+
+    cy.get('div:contains("Strip exercise number") >input').should('be.enabled').should('be.checked').uncheck()
+    cy.get('textarea').should('have.value', '3 Complète avec : le, une, un, des, tu, elles, ils. Puis, souligne les verbes.')
+
+    cy.get('div:contains("Strip exercise number") >input').should('be.enabled').should('not.be.checked').check()
+    cy.get('textarea').should('have.value', 'Complète avec : le, une, un, des, tu, elles, ils. Puis, souligne les verbes.')
+  })
+
+  it('does not remove the exercise number from the text', () => {
+    visit('/project-fryrbl/textbook-ojsbmy/page-1/new-exercise', {pdf: 'test'})
+    setupAliases()
+
+    cy.get('@number').type('4')  // Wrong number
+    traceRectangle('@canvas', 50, 67, 94, 73)
+
+    cy.get('textarea').should('have.value', '3 Complète avec : le, une, un, des, tu, elles, ils. Puis, souligne les verbes.')
+
+    cy.get('div:contains("Strip exercise number") >input').should('be.disabled')
+  })
 
   {
     const expectedParagraphs = [
