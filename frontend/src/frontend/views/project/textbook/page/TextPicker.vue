@@ -88,7 +88,12 @@ const listFormats = [
   }
 ]
 
-function textFromItems(items: TextItem[]) {
+export interface SelectedText {
+  withoutLineEnds: string
+  withAllLineEnds: string
+}
+
+function textFromItems(items: TextItem[]): SelectedText {
   // Coordinates start from the lower left corner of the page, growing upwards and to the right.
   const left = items.reduce((acc, item) => Math.min(acc, item.left), Infinity)
   const right = items.reduce((acc, item) => Math.max(acc, item.right), -Infinity)
@@ -142,9 +147,11 @@ function textFromItems(items: TextItem[]) {
     }
   }
 
+  const withAllLineEnds = lines.map(textFromLine).join('\n')
+
   if (lines[0].length === 0) {
     // Empty
-    return ''
+    return {withoutLineEnds: '', withAllLineEnds: ''}
   } else {
     const matchingListFormats = listFormats.filter(listFormat => {
       const format = listFormat()
@@ -176,7 +183,7 @@ function textFromItems(items: TextItem[]) {
         }
         text += textFromLine(line)
       }
-      return text.trimEnd()
+      return {withoutLineEnds: text.trimEnd(), withAllLineEnds}
     } else {
       function lineLooksJustified(line: TextItem[]) {
         return Math.abs(line[line.length - 1].right - right) < 0.02 * width
@@ -193,11 +200,11 @@ function textFromItems(items: TextItem[]) {
             text += '\n'
           }
         }
-        return text.trimEnd()
+        return {withoutLineEnds: text.trimEnd(), withAllLineEnds}
       } else {
         // General case: we add a line break if the spacing before this line is larger than the spacing before previous line
         if (lines.length === 1) {
-          return textFromLine(lines[0])
+          return {withoutLineEnds: textFromLine(lines[0]), withAllLineEnds}
         } else {
           console.assert(lines.length >= 2)
 
@@ -214,13 +221,12 @@ function textFromItems(items: TextItem[]) {
             }
             text += textFromLine(lines[i])
           }
-          return text
+          return {withoutLineEnds: text, withAllLineEnds}
         }
       }
     }
   }
 }
-
 </script>
 
 <script setup lang="ts">
@@ -248,7 +254,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  textSelected: [text: string, point: {clientX: number, clientY: number}, rectangle: Rectangle],
+  textSelected: [text: SelectedText, point: {clientX: number, clientY: number}, rectangle: Rectangle],
 }>()
 
 const canvas = ref<HTMLCanvasElement | null>(null)
@@ -310,7 +316,7 @@ function pointerup(event: any/* @todo Type */) {
 
     const text = textFromItems(props.textContent.filter(r.contains))
 
-    if (text !== '') {
+    if (text.withoutLineEnds !== '') {
       emit(
         'textSelected',
         text,

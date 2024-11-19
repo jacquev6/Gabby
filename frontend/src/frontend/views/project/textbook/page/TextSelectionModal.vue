@@ -6,6 +6,7 @@ import { textualFieldNames } from '$/frontend/components/ExerciseFieldsForm.vue'
 import type { Model, TextualFieldName } from '$frontend/components/ExerciseFieldsForm.vue'
 import { BModal } from '$frontend/components/opinion/bootstrap'
 import type { Point, Rectangle } from './RectanglesHighlighter.vue'
+import type { SelectedText } from './TextPicker.vue'
 
 
 const model = defineModel<Model>({required: true})
@@ -17,18 +18,32 @@ const emit = defineEmits<{
 const modal = ref<InstanceType<typeof BModal> | null>(null)
 const textarea = ref<InstanceType<typeof BLabeledTextarea> | null>(null)
 
-const selectedText = ref('')
+const selectedText = ref<SelectedText | null>(null)
 const textToAdd = ref('')
 const pdfSha256 = ref('')
 const pdfPage = ref(0)
 const start = ref<Point>({x: 0, y: 0})
 const stop = ref<Point>({x: 0, y: 0})
 
-const canStripExerciceNumber = computed(() => model.value.number !== '' && selectedText.value.startsWith(model.value.number))
+const selectedString = computed(() => {
+  if (selectedText.value === null) {
+    return ''
+  } else {
+    if (doKeepAllLineEnds.value) {
+      return selectedText.value.withAllLineEnds
+    } else {
+      return selectedText.value.withoutLineEnds
+    }
+  }
+})
+const doKeepAllLineEnds = ref(false)
+
+const canStripExerciceNumber = computed(() => model.value.number !== '' && selectedString.value.startsWith(model.value.number))
 const doStripExerciceNumber = ref(true)
 
+
 function show(options: {
-  selectedText: string
+  selectedText: SelectedText
   at: Point
   pdfSha256: string
   pdfPage: number
@@ -43,17 +58,17 @@ function show(options: {
   modal.value.show({at: options.at})
 }
 
-watch([selectedText, doStripExerciceNumber], () => {
+watch([selectedString, doStripExerciceNumber], () => {
   if (canStripExerciceNumber.value && doStripExerciceNumber.value) {
-    textToAdd.value = selectedText.value.slice(model.value.number.length).trimStart()
+    textToAdd.value = selectedString.value.slice(model.value.number.length).trimStart()
   } else {
-    textToAdd.value = selectedText.value
+    textToAdd.value = selectedString.value
   }
 })
 
 watch(computed(() => modal.value !== null && modal.value.active), active => {
   if (!active) {
-    selectedText.value = ''
+    selectedText.value = null
   }
 })
 
@@ -89,6 +104,7 @@ defineExpose({
 
     <template #body>
       <BLabeledCheckbox :label="$t('doStripExerciceNumber')" v-model="doStripExerciceNumber" :disabled="!canStripExerciceNumber" />
+      <BLabeledCheckbox :label="$t('doKeepAllLineEnds')" v-model="doKeepAllLineEnds" />
       <BLabeledTextarea ref="textarea" :maxRows="15" v-model="textToAdd" />
 
       <p>{{ $t('addTo') }}</p>

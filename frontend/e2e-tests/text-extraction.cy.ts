@@ -49,11 +49,33 @@ describe('Gabby', () => {
   })
 
   {
-    const expectedParagraphs = [
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus a iaculis nisl, a tempus urna. In porttitor eget neque nec pretium. Fusce vitae nulla magna. Suspendisse nec est sed est malesuada hendrerit tempus sagittis nibh. Aenean eu faucibus neque, ut tristique augue.',
-      'Curabitur fermentum egestas risus, nec fringilla sapien efficitur quis. Nam dictum blandit nulla sed lacinia. Nulla tempor sollicitudin facilisis. Sed non lobortis ante, ac tincidunt urna. Donec ac aliquet eros. Integer dictum gravida orci, interdum fringilla sem.',
-      'Aliquam luctus fringilla enim sit amet dignissim. Proin cursus, erat a commodo venenatis, lacus magna vehicula ante, sit amet ultrices tortor lectus eget lacus.',
+    const paragraphsInPdf = [
+      [
+        'Lorem ipsum dolor sit amet, consectetur',
+        'adipiscing elit. Vivamus a iaculis nisl, a tempus',
+        'urna. In porttitor eget neque nec pretium. Fusce',
+        'vitae nulla magna. Suspendisse nec est sed est',
+        'malesuada hendrerit tempus sagittis nibh.',
+        'Aenean eu faucibus neque, ut tristique augue.',
+      ],
+      [
+        'Curabitur fermentum egestas risus, nec fringilla',
+        'sapien efficitur quis. Nam dictum blandit nulla',
+        'sed lacinia. Nulla tempor sollicitudin facilisis.',
+        'Sed non lobortis ante, ac tincidunt urna. Donec',
+        'ac aliquet eros. Integer dictum gravida orci,',
+        'interdum fringilla sem.',
+      ],
+      [
+        'Aliquam luctus fringilla enim sit amet',
+        'dignissim. Proin cursus, erat a commodo',
+        'venenatis, lacus magna vehicula ante, sit amet',
+        'ultrices tortor lectus eget lacus.',
+      ],
     ]
+
+    const linesInPdf = paragraphsInPdf.flat()
+    const expectedParagraphs = paragraphsInPdf.map(lines => lines.join(' '))
 
     it('inserts correct line ends on left-aligned text with space between paragraphs', () => {
       visit('/project-xkopqm/textbook-klxufv/page-1/new-exercise', {pdf: 'text-extraction'})
@@ -79,6 +101,21 @@ describe('Gabby', () => {
       cy.get('@wording').find('p').should('have.length', expectedParagraphs.length).each(($el, index) => {
         expect($el.text()).to.equal(expectedParagraphs[index])
       })
+    })
+
+    it('keeps all line ends', () => {
+      visit('/project-xkopqm/textbook-klxufv/page-1/new-exercise', {pdf: 'text-extraction'})
+      setupAliases()
+
+      traceRectangle('@canvas', 50, 6, 93, 34)
+
+      cy.get('textarea').should('have.value', expectedParagraphs.join('\n'))
+
+      cy.get('div:contains("Keep all line ends") >input').should('be.enabled').should('not.be.checked').check()
+      cy.get('textarea').should('have.value', linesInPdf.join('\n'))
+
+      cy.get('div:contains("Keep all line ends") >input').should('be.enabled').should('be.checked').uncheck()
+      cy.get('textarea').should('have.value', expectedParagraphs.join('\n'))
     })
   }
 
