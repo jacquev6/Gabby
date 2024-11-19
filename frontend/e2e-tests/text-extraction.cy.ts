@@ -8,7 +8,8 @@ describe('Gabby', () => {
 
   beforeEach(() => {
     login()
-    loadFixtures('empty-demo-textbook')
+    loadFixtures('empty-text-extraction-textbook')
+    cy.viewport(1200, 1000)
   })
 
   function setupAliases() {
@@ -27,8 +28,7 @@ describe('Gabby', () => {
     ]
 
     it('inserts correct line ends on left-aligned text with space between paragraphs', () => {
-      cy.viewport(1200, 1000)
-      visit('/project-xkopqm/textbook-klxufv/page-9/new-exercise', {pdf: 'demo'})
+      visit('/project-xkopqm/textbook-klxufv/page-1/new-exercise', {pdf: 'text-extraction'})
       setupAliases()
 
       traceRectangle('@canvas', 7, 6, 49.5, 37)
@@ -41,8 +41,7 @@ describe('Gabby', () => {
     })
 
     it('inserts correct line ends on justified text with paragraphs ending with shorter lines', () => {
-      cy.viewport(1200, 1000)
-      visit('/project-xkopqm/textbook-klxufv/page-9/new-exercise', {pdf: 'demo'})
+      visit('/project-xkopqm/textbook-klxufv/page-1/new-exercise', {pdf: 'text-extraction'})
       setupAliases()
 
       traceRectangle('@canvas', 50, 6, 93, 34)
@@ -63,8 +62,7 @@ describe('Gabby', () => {
     ]
 
     it('inserts correct line ends on list - a. b. c.', () => {
-      cy.viewport(1200, 1000)
-      visit('/project-xkopqm/textbook-klxufv/page-10/new-exercise', {pdf: 'demo'})
+      visit('/project-xkopqm/textbook-klxufv/page-2/new-exercise', {pdf: 'text-extraction'})
       setupAliases()
 
       traceRectangle('@canvas', 7, 6, 36, 19)
@@ -77,8 +75,7 @@ describe('Gabby', () => {
     })
 
     it('inserts correct line ends on list - ◆', () => {
-      cy.viewport(1200, 1000)
-      visit('/project-xkopqm/textbook-klxufv/page-10/new-exercise', {pdf: 'demo'})
+      visit('/project-xkopqm/textbook-klxufv/page-2/new-exercise', {pdf: 'text-extraction'})
       setupAliases()
 
       traceRectangle('@canvas', 37, 6, 63, 19)
@@ -91,8 +88,7 @@ describe('Gabby', () => {
     })
 
     it('inserts correct line ends on list - 1) 2) 3)', () => {
-      cy.viewport(1200, 1000)
-      visit('/project-xkopqm/textbook-klxufv/page-10/new-exercise', {pdf: 'demo'})
+      visit('/project-xkopqm/textbook-klxufv/page-2/new-exercise', {pdf: 'text-extraction'})
       setupAliases()
 
       traceRectangle('@canvas', 64, 6, 91, 19)
