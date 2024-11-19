@@ -121,14 +121,14 @@ services:
     init: true
     # @todo Understand why this container doesn't exit quickly on 'docker compose down'
     command: ["sleep", "infinity"]
-  demo-pdf-maker:
+  test-pdfs-maker:
     image: gabby-dev_backend
     pull_policy: never
     volumes:
       - ..:/app
     working_dir: /app/pdf-examples
     # The Python packages 'watchfile', arguably simpler to use, doesn't work well here because LibreOffice briefly deletes the file when saving it
-    command: ["bash", "-c", "while true; do inotifywait --quiet --quiet --event close_write demo.odt && libreoffice --convert-to pdf demo.odt; done"]
+    command: ["bash", "-c", "while true; do libreoffice --convert-to pdf $(inotifywait --quiet --event close_write *.odt | cut -d ' ' -f 1; sleep 1); done"]
   large-maker:
     image: gabby-dev_backend
     pull_policy: never

@@ -112,6 +112,9 @@
   "backToList": "Back to list (without saving)",
   "saveThenBack": "Save then back to list",
   "doStripExerciceNumber": "Strip exercise number automatically",
+  "doKeepAllLineEnds": "Keep all line ends",
+  "doDetectLists": "Detect lists",
+
 
   "selectedText": "Selected text",
   "addTo": "Add to:",

@@ -1,3 +1,244 @@
+<script lang="ts">
+
+const listFormats = [
+  () => {
+    // "a. b. c.", "A) B) C)", etc.
+    let firstCall = true
+    let next: number | null = null
+    let separator: string | null = null
+    return {
+      startsNextItem(line: TextItem[]) {
+        if (firstCall) {
+          for (const nex of ['a', 'A']) {
+            if (line[0].str.charCodeAt(0) === nex.charCodeAt(0)) {
+              next = nex.charCodeAt(0)
+              break
+            }
+          }
+
+          for (const sep of ['.', ')']) {
+            if (line[0].str[1] === sep) {
+              separator = sep
+              break
+            }
+          }
+
+          firstCall = false
+        }
+
+        if (
+          next !== null && line[0].str.charCodeAt(0) === next
+          && separator !== null && line[0].str[1] === separator
+        ) {
+          ++next
+          return true
+        } else {
+          return false
+        }
+      },
+    }
+  },
+  () => {
+    // "1. 2. 3.", "1) 2) 3)", etc.
+    let firstCall = true
+    let separator: string | null = null
+    let next = 1
+    return {
+      startsNextItem(line: TextItem[]) {
+        if (firstCall) {
+          for (const sep of ['.', ')']) {
+            if (line[0].str[1/* Because the number has to be '1', which is one character wide */] === sep) {
+              separator = sep
+              break
+            }
+          }
+
+          firstCall = false
+        }
+
+        if (parseInt(line[0].str) === next && separator !== null && line[0].str.slice(next.toString().length, next.toString().length + 1) === separator) {
+          ++next
+          return true
+        } else {
+          return false
+        }
+      },
+    }
+  },
+  () => {
+    // "◆", "■", etc.
+    let firstCall = true
+    let bullet: string | null = null
+    return {
+      startsNextItem(line: TextItem[]) {
+        if (firstCall) {
+          for (const bul of ['◆', '■']) {
+            if (line[0].str[0] === bul) {
+              bullet = bul
+              break
+            }
+          }
+
+          firstCall = false
+        }
+
+        return line[0].str[0] === bullet
+      },
+    }
+  }
+]
+
+export interface SelectedText {
+  withoutLineEnds: string
+  withAllLineEnds: string
+  withoutListsDetection: string
+}
+
+function textFromItems(items: TextItem[]): SelectedText {
+  // Coordinates start from the lower left corner of the page, growing upwards and to the right.
+  const left = items.reduce((acc, item) => Math.min(acc, item.left), Infinity)
+  const right = items.reduce((acc, item) => Math.max(acc, item.right), -Infinity)
+  const width = right - left
+  const top = items.reduce((acc, item) => Math.max(acc, item.top), -Infinity)
+  const bottom = items.reduce((acc, item) => Math.min(acc, item.bottom), Infinity)
+  // const height = top - bottom
+
+  const lines: TextItem[][] = [[]]
+  for (const item of items) {
+    console.assert(item.left >= left)
+    console.assert(item.right <= right)
+    console.assert(item.top <= top)
+    console.assert(item.bottom >= bottom)
+
+    if (item.str.trim() !== '') {
+      let currentLine = lines[lines.length - 1]
+      if (currentLine.length === 0) {
+        currentLine.push(item)
+      } else {
+        const previousItem = currentLine[currentLine.length - 1]
+        if (Math.abs(previousItem.bottom - item.bottom) > 0.5 * previousItem.height) {
+          lines.push([item])
+        } else {
+          currentLine.push(item)
+        }
+      }
+    }
+  }
+  // 'TextItems' and not always in reading order (increasing abscissa) => sort them
+  // Side note: we'll probably hit a case where they are not even in increasing ordinate order,
+  // which will result in mangled extraction. We'll tackle this when we have a concrete example.
+  for (const line of lines) {
+    line.sort((a, b) => a.left - b.left)
+  }
+
+  function textFromLine(line: TextItem[]) {
+    if (line.length === 0) {
+      return ''
+    } else {
+      var text = line[0].str
+      for (let i = 1; i !== line.length; ++i) {
+        const previousItem = line[i - 1]
+        const item = line[i]
+        if (item.left - previousItem.right > 0.001 * width) {
+          text += ' '
+        }
+        text += item.str
+      }
+      return text
+    }
+  }
+
+  if (lines[0].length === 0) {
+    return {withoutLineEnds: '', withAllLineEnds: '', withoutListsDetection: ''}
+  } else {
+    function lineLooksJustified(line: TextItem[]) {
+      return Math.abs(line[line.length - 1].right - right) < 0.02 * width
+    }
+
+    let withoutListsDetection = ''
+    if (lines.filter(lineLooksJustified).length >= lines.length / 2) {
+      // Justified text: shorter lines end with a line break
+      let text = ''
+      for (const line of lines) {
+        text += textFromLine(line)
+        if (lineLooksJustified(line)) {
+          text += ' '
+        } else {
+          text += '\n'
+        }
+      }
+      withoutListsDetection = text.trimEnd()
+    } else {
+      // General case: we add a line break if the spacing before this line is larger than the spacing before previous line
+      if (lines.length === 1) {
+        withoutListsDetection = textFromLine(lines[0])
+      } else {
+        console.assert(lines.length >= 2)
+
+        const lineSpacings = lines.slice(1).map((line, i) => lines[i][0].bottom - line[0].bottom)
+        lineSpacings.sort((a, b) => a - b)
+        const standardLineSpacing = lineSpacings[Math.floor(lineSpacings.length / 2)]
+
+        let text = textFromLine(lines[0]) + ' ' + textFromLine(lines[1])
+        for (let i = 2; i !== lines.length; ++i) {
+          if (lines[i - 1][0].bottom - lines[i][0].bottom >= 1.1 * standardLineSpacing) {
+            text += '\n'
+          } else {
+            text += ' '
+          }
+          text += textFromLine(lines[i])
+        }
+        withoutListsDetection = text
+      }
+    }
+
+    const matchingListFormats = listFormats.filter(listFormat => {
+      const format = listFormat()
+      // A list format matches the text if the first line starts a new list item...
+      if (format.startsNextItem(lines[0])) {
+        for (const line of lines.slice(1)) {
+          // ... and some other line starts another list item.
+          if (format.startsNextItem(line)) {
+            return true
+          }
+        }
+      }
+      return false
+    })
+
+    let withoutLineEnds = ''
+    if (matchingListFormats.length >= 1) {
+      // List: each list item ends with a line break
+      console.assert(lines.length >= 2)
+      const listFormat = matchingListFormats[0]()
+
+      const firstLineOk = listFormat.startsNextItem(lines[0])  // May have side effects in the 'listFormat'
+      console.assert(firstLineOk)
+      let text = textFromLine(lines[0])
+      for (const line of lines.slice(1)) {
+        if (listFormat.startsNextItem(line)) {
+          text += '\n'
+        } else {
+          text += ' '
+        }
+        text += textFromLine(line)
+      }
+      withoutLineEnds = text.trimEnd()
+    } else {
+      withoutLineEnds = withoutListsDetection
+    }
+
+    const withAllLineEnds = lines.map(textFromLine).join('\n')
+
+    return {
+      withoutLineEnds,
+      withAllLineEnds,
+      withoutListsDetection,
+    }
+  }
+}
+</script>
+
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 
@@ -23,18 +264,11 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  textSelected: [text: string, point: {clientX: number, clientY: number}, rectangle: Rectangle],
+  textSelected: [text: SelectedText, point: {clientX: number, clientY: number}, rectangle: Rectangle],
 }>()
 
 const canvas = ref<HTMLCanvasElement | null>(null)
 const context = computed(() => canvas.value?.getContext('2d') ?? null)
-const textSpacingTolerance = computed(() =>
-  // Somewhat arbitrary. If the tolerance is too small, then the selected text will contain too many spaces,
-  // not a big deal. If the tolerance is too big, then the selected text could contain too few spaces,
-  // which is a problem.
-  Math.min(props.width, props.height) / 1e3
-  // console.log('textSpacingTolerance', textSpacingTolerance)
-)
 
 watch([props, context], () => {
   console.assert(canvas.value !== null)
@@ -90,35 +324,9 @@ function pointerup(event: any/* @todo Type */) {
     const stopPoint = makeCanvasPoint(event)
     const r = selectionRectangle(startPoint, stopPoint)
 
-    const lines = ['']
-    var previousItem = null
-    const items = []
-    for (const item of props.textContent.filter(r.contains)) {
-      items.push(item)
-      if (previousItem !== null) {
-        if (Math.abs(previousItem.bottom - item.bottom) > textSpacingTolerance.value) {
-          lines.push('')
-        } else if(previousItem.right + textSpacingTolerance.value < item.left) {
-          lines[lines.length - 1] += ' '
-        }
-      }
+    const text = textFromItems(props.textContent.filter(r.contains))
 
-      lines[lines.length - 1] += item.str
-      previousItem = item
-    }
-
-    var text = ''
-    for (var line of lines) {
-      line = line.replace(/[ \t]+/g, ' ').trim()
-      if (line !== '') {
-        if (text !== '') {
-          text += '\n'
-        }
-        text += line
-      }
-    }
-
-    if (text !== '') {
+    if (text.withoutLineEnds !== '') {
       emit(
         'textSelected',
         text,

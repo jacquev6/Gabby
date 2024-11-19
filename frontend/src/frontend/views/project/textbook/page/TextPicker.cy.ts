@@ -714,8 +714,12 @@ describe('TextPicker', () => {
 
     cy.get('@onTextSelectedSpy').should(
       'have.been.calledWith',
-      "3\nComplète avec : le, une, un, des, tu,\nelles, ils. Puis, souligne les verbes.\nIl peut y avoir plusieurs\nsolutions.\n… vide ◆ … vident ◆ … dépenses ◆ … dépensent ◆\n… savon ◆ … savons ◆ … commande",
-      {"clientX": 348, "clientY": 163},
+      {
+        'withoutLineEnds': '3 Complète avec : le, une, un, des, tu, elles, ils. Puis, souligne les verbes.\nIl peut y avoir plusieurs solutions.\n… vide ◆ … vident ◆ … dépenses ◆ … dépensent ◆ … savon ◆ … savons ◆ … commande',
+        'withAllLineEnds': '3 Complète avec : le, une, un, des, tu,\nelles, ils. Puis, souligne les verbes.\nIl peut y avoir plusieurs\nsolutions.\n… vide ◆ … vident ◆ … dépenses ◆ … dépensent ◆\n… savon ◆ … savons ◆ … commande',
+        'withoutListsDetection': '3 Complète avec : le, une, un, des, tu, elles, ils. Puis, souligne les verbes.\nIl peut y avoir plusieurs solutions.\n… vide ◆ … vident ◆ … dépenses ◆ … dépensent ◆ … savon ◆ … savons ◆ … commande',
+      },
+      {'clientX': 348, 'clientY': 163},
     )
   })
 })

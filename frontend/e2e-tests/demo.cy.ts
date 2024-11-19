@@ -310,7 +310,7 @@ describe('Gabby', () => {
     traceRectangle('@canvas', 8, 5, 54, 9)
     cy.get('button:contains("Instructions")').click()
     notBusy()
-    traceRectangle('@canvas', 7, 9, 49, 15)
+    traceRectangle('@canvas', 7, 9, 51, 15)
     cy.get('button:contains("Wording")').click()
     notBusy()
 
@@ -319,7 +319,7 @@ describe('Gabby', () => {
     cy.get('@wording').find('p').then($el => {
       const node = $el[0].firstChild
       console.assert(node !== null)
-      selectRange(node, 8, node, 31)
+      selectRange(node, 11, node, 34)
     })
     cy.get('button:contains("OK")').should('exist')
     cy.get('label + input').eq(3).should('be.enabled').type('{selectAll}{del}', {delay: 0})  // Very fragile selector; sorry, future me!

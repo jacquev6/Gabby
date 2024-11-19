@@ -4,7 +4,7 @@ import { nextTick } from 'vue'
 import type { PDFPageProxy } from 'pdfjs-dist'
 
 import RectanglesHighlighter, { type Rectangle } from './RectanglesHighlighter.vue'
-import TextPicker from './TextPicker.vue'
+import TextPicker, { type SelectedText } from './TextPicker.vue'
 import type { PdfFile, ParsedExercise, InCache, Exists } from '$frontend/stores/api'
 import TextSelectionModal from './TextSelectionModal.vue'
 import { type Model } from '$frontend/components/ExerciseFieldsForm.vue'
@@ -28,7 +28,7 @@ const props = defineProps<{
 
 const model = defineModel<Model>({required: true})
 
-function textSelected(pdfFile: PdfFile, pdf: {page: PDFPageProxy}, selectedText: string, point: {clientX: number, clientY: number}, rectangle: Rectangle) {
+function textSelected(pdfFile: PdfFile, pdf: {page: PDFPageProxy}, selectedText: SelectedText, point: {clientX: number, clientY: number}, rectangle: Rectangle) {
   console.assert(pdfFile.inCache && pdfFile.exists)
   console.assert(pdfFile.relationships.namings.length > 0)
   console.assert(pdfFile.relationships.namings[0].inCache && pdfFile.relationships.namings[0].exists)

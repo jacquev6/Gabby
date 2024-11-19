@@ -568,8 +568,8 @@ def create_test_exercises_3(session, admin):
     )
 
 
-def create_empty_demo_textbook_fixture(session):
-    demo_pdf_path = "../pdf-examples/demo.pdf"
+def create_empty_textbook(session, stem):
+    demo_pdf_path = f"../pdf-examples/{stem}.pdf"
     with open(demo_pdf_path, "rb") as f:
         pdf_bytes = f.read()
         bytes_count = len(pdf_bytes)
@@ -585,11 +585,11 @@ def create_empty_demo_textbook_fixture(session):
         sha256=sha256,
         created_by=admin,
     )
-    add(session, PdfFileNaming, pdf_file=pdffile1, name="demo.pdf", created_by=admin)
+    add(session, PdfFileNaming, pdf_file=pdffile1, name=f"{stem}.pdf", created_by=admin)
     project1 = add(
         session,
         Project,
-        title="Projet de démonstration",
+        title=f"{stem.capitalize()} project",
         description="",
         created_by=admin,
         updated_by=admin,
@@ -598,7 +598,7 @@ def create_empty_demo_textbook_fixture(session):
         session,
         Textbook,
         project=project1,
-        title="Demo",
+        title=f"{stem.capitalize()} textbook",
         publisher="Gabby",
         year=2024,
         isbn="9783161484100",
@@ -612,7 +612,7 @@ def create_empty_demo_textbook_fixture(session):
         pdf_file=pdffile1,
         textbook_start_page=1,
         pdf_file_start_page=1,
-        pages_count=8,
+        pages_count=pages_count,
         created_by=admin,
         updated_by=admin,
     )
@@ -626,7 +626,9 @@ available_fixtures = {
     "test-exercises": create_test_exercises_fixture,
     "more-test-exercises": create_more_test_exercises_fixture,
     "even-more-test-exercises": create_even_more_test_exercises_fixture,
-    "empty-demo-textbook": create_empty_demo_textbook_fixture,
+    "empty-test-textbook": lambda session: create_empty_textbook(session, "test"),
+    "empty-demo-textbook": lambda session: create_empty_textbook(session, "demo"),
+    "empty-text-extraction-textbook": lambda session: create_empty_textbook(session, "text-extraction"),
 }
 
 
