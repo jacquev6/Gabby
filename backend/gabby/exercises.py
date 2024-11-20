@@ -185,9 +185,13 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
         maker = parsing.EffectsBasedAdapterAndDeltaMaker(
             self.adaptation.effects,
             self._instructions_text,
+            self.instructions_deltas,
             self._wording_text,
+            self.wording_deltas,
             self._example_text,
+            self.example_deltas,
             self._clue_text,
+            self.clue_deltas,
         )
         return (
             renderable.Exercise(
@@ -200,10 +204,10 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
                 wording_paragraphs_per_pagelet=self.wording_paragraphs_per_pagelet,
             ),
             exercise_delta.Exercise(
-                instructions=maker.instructions_delta,
-                wording=maker.wording_delta,
-                example=maker.example_delta,
-                clue=maker.clue_delta,
+                instructions=self.instructions_deltas,
+                wording=self.wording_deltas,
+                example=self.example_deltas,
+                clue=self.clue_deltas,
             )
         )
 

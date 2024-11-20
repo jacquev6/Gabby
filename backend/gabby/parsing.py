@@ -718,14 +718,23 @@ class EffectsBasedAdapterAndDeltaMaker:
     def __init__(
         self,
         effects: list[AdaptationEffect],
-        instructions: str,
-        wording: str,
-        example: str,
-        clue: str,
+        instructions_text: str,
+        instructions_deltas: list[exercise_delta.InsertOp],
+        wording_text: str,
+        wording_deltas: list[exercise_delta.InsertOp],
+        example_text: str,
+        example_deltas: list[exercise_delta.InsertOp],
+        clue_text: str,
+        clue_deltas: list[exercise_delta.InsertOp],
     ):
+        assert DeltaMaker().transform(_instructions_parser.parse(instructions_text)) == instructions_deltas
+        assert DeltaMaker().transform(_wording_parser.parse(wording_text)) == wording_deltas
+        assert DeltaMaker().transform(_example_and_clue_parser.parse(example_text)) == example_deltas
+        assert DeltaMaker().transform(_example_and_clue_parser.parse(clue_text)) == clue_deltas
+
         for effect in effects:
-            (instructions, wording, example, clue) = effect.preprocess(instructions, wording, example, clue)
-        (instructions, wording, example, clue) = self.preprocess(instructions, wording, example, clue)
+            (instructions_text, wording_text, example_text, clue_text) = effect.preprocess(instructions_text, wording_text, example_text, clue_text)
+        (instructions_text, wording_text, example_text, clue_text) = self.preprocess(instructions_text, wording_text, example_text, clue_text)
 
         instructions_adapter_constructor_kwds = {}
         wording_adapter_constructor_kwds = {}
@@ -736,60 +745,36 @@ class EffectsBasedAdapterAndDeltaMaker:
             wording_adapter_constructor_kwds.update(effect.make_wording_adapter_constructor_kwds())
             example_adapter_constructor_kwds.update(effect.make_example_adapter_constructor_kwds())
             clue_adapter_constructor_kwds.update(effect.make_clue_adapter_constructor_kwds())
-        wording_adapter_constructor_kwds.update(self.make_wording_adapter_constructor_kwds(instructions))
+        wording_adapter_constructor_kwds.update(self.make_wording_adapter_constructor_kwds(instructions_text))
 
-        instructions = _instructions_parser.parse(instructions)
-        wording = _wording_parser.parse(wording)
-        example = _example_and_clue_parser.parse(example)
-        clue = _example_and_clue_parser.parse(clue)
+        instructions_tree = _instructions_parser.parse(instructions_text)
+        wording_tree = _wording_parser.parse(wording_text)
+        example_tree = _example_and_clue_parser.parse(example_text)
+        clue_tree = _example_and_clue_parser.parse(clue_text)
 
-        self.instructions_delta = self.make_deltas_for_instructions(instructions)
-        self.wording_delta = self.make_deltas_for_wording(wording)
-        self.example_delta = self.make_deltas_for_example(example)
-        self.clue_delta = self.make_deltas_for_clue(clue)
+        assert DeltaMaker().transform(instructions_tree) == instructions_deltas
+        assert DeltaMaker().transform(wording_tree) == wording_deltas
+        assert DeltaMaker().transform(example_tree) == example_deltas
+        assert DeltaMaker().transform(clue_tree) == clue_deltas
 
-        self.adapted_instructions = self.adapt_instructions(instructions, **instructions_adapter_constructor_kwds)
-        self.adapted_wording = self.adapt_wording(wording, **wording_adapter_constructor_kwds)
-        self.adapted_example = self.adapt_example(example, **example_adapter_constructor_kwds)
-        self.adapted_clue = self.adapt_clue(clue, **clue_adapter_constructor_kwds)
+        self.adapted_instructions = InstructionsAdapter(**instructions_adapter_constructor_kwds).transform(instructions_tree)
+        self.adapted_wording = WordingAdapter(**wording_adapter_constructor_kwds).transform(wording_tree)
+        self.adapted_example = InstructionsAdapter(**example_adapter_constructor_kwds).transform(example_tree)
+        self.adapted_clue = InstructionsAdapter(**clue_adapter_constructor_kwds).transform(clue_tree)
 
-    def preprocess(self, instructions, wording, example, clue):
-        placeholders = set(choice[4] for choice in itertools.chain(self.gather_choices(instructions), self.gather_choices(wording)))
+    def preprocess(self, instructions_text, wording_text, example_text, clue_text):
+        placeholders = set(choice[4] for choice in itertools.chain(self.gather_choices(instructions_text), self.gather_choices(wording_text)))
         for placeholder in placeholders:
-            wording = wording.replace(placeholder, f"{{placeholder2|{placeholder}}}").replace(f"|{{placeholder2|{placeholder}}}|", f"|{placeholder}|")
-        return (instructions, wording, example, clue)
+            wording_text = wording_text.replace(placeholder, f"{{placeholder2|{placeholder}}}").replace(f"|{{placeholder2|{placeholder}}}|", f"|{placeholder}|")
+        return (instructions_text, wording_text, example_text, clue_text)
 
-    def make_wording_adapter_constructor_kwds(self, instructions):
+    def make_wording_adapter_constructor_kwds(self, instructions_text):
         multiple_choices = {}
-        for (start, separator1, separator2, stop, placeholder, text) in self.gather_choices(instructions):
+        for (start, separator1, separator2, stop, placeholder, text) in self.gather_choices(instructions_text):
             multiple_choices[placeholder] = _separate_choices(start, separator1, separator2, stop, placeholder, text)
         return {
             "multiple_choices": multiple_choices,
         }
 
-    def gather_choices(self, instructions):
-        return ChoicesGatherer().transform(_instructions_parser.parse(instructions))
-
-    def adapt_instructions(self, instructions, **kwds):
-        return InstructionsAdapter(**kwds).transform(instructions)
-
-    def adapt_example(self, example, **kwds):
-        return InstructionsAdapter(**kwds).transform(example)
-
-    def adapt_clue(self, clue, **kwds):
-        return InstructionsAdapter(**kwds).transform(clue)
-
-    def adapt_wording(self, wording, **kwds):
-        return WordingAdapter(**kwds).transform(wording)
-
-    def make_deltas_for_instructions(self, instructions):
-        return DeltaMaker().transform(instructions)
-
-    def make_deltas_for_example(self, example):
-        return DeltaMaker().transform(example)
-
-    def make_deltas_for_clue(self, clue):
-        return DeltaMaker().transform(clue)
-
-    def make_deltas_for_wording(self, wording):
-        return DeltaMaker().transform(wording)
+    def gather_choices(self, text):
+        return ChoicesGatherer().transform(_instructions_parser.parse(text))
