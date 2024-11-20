@@ -734,7 +734,7 @@ class EffectsBasedAdapterAndDeltaMaker:
 
         for effect in effects:
             (instructions_text, wording_text, example_text, clue_text) = effect.preprocess(instructions_text, wording_text, example_text, clue_text)
-        (instructions_text, wording_text, example_text, clue_text) = self.preprocess(instructions_text, wording_text, example_text, clue_text)
+        (instructions_text, wording_text, example_text, clue_text) = self.preprocess(instructions_text, instructions_deltas, wording_text, wording_deltas, example_text, clue_text)
 
         instructions_adapter_constructor_kwds = {}
         wording_adapter_constructor_kwds = {}
@@ -745,7 +745,7 @@ class EffectsBasedAdapterAndDeltaMaker:
             wording_adapter_constructor_kwds.update(effect.make_wording_adapter_constructor_kwds())
             example_adapter_constructor_kwds.update(effect.make_example_adapter_constructor_kwds())
             clue_adapter_constructor_kwds.update(effect.make_clue_adapter_constructor_kwds())
-        wording_adapter_constructor_kwds.update(self.make_wording_adapter_constructor_kwds(instructions_text))
+        wording_adapter_constructor_kwds.update(self.make_wording_adapter_constructor_kwds(instructions_text, instructions_deltas))
 
         instructions_tree = _instructions_parser.parse(instructions_text)
         wording_tree = _wording_parser.parse(wording_text)
@@ -762,19 +762,33 @@ class EffectsBasedAdapterAndDeltaMaker:
         self.adapted_example = InstructionsAdapter(**example_adapter_constructor_kwds).transform(example_tree)
         self.adapted_clue = InstructionsAdapter(**clue_adapter_constructor_kwds).transform(clue_tree)
 
-    def preprocess(self, instructions_text, wording_text, example_text, clue_text):
-        placeholders = set(choice[4] for choice in itertools.chain(self.gather_choices(instructions_text), self.gather_choices(wording_text)))
+    def preprocess(self, instructions_text, instructions_deltas, wording_text, wording_deltas, example_text, clue_text):
+        placeholders = set(choice[4] for choice in itertools.chain(self.gather_choices(instructions_text, instructions_deltas), self.gather_choices(wording_text, wording_deltas)))
         for placeholder in placeholders:
             wording_text = wording_text.replace(placeholder, f"{{placeholder2|{placeholder}}}").replace(f"|{{placeholder2|{placeholder}}}|", f"|{placeholder}|")
         return (instructions_text, wording_text, example_text, clue_text)
 
-    def make_wording_adapter_constructor_kwds(self, instructions_text):
+    def make_wording_adapter_constructor_kwds(self, instructions_text, instructions_deltas):
         multiple_choices = {}
-        for (start, separator1, separator2, stop, placeholder, text) in self.gather_choices(instructions_text):
+        for (start, separator1, separator2, stop, placeholder, text) in self.gather_choices(instructions_text, instructions_deltas):
             multiple_choices[placeholder] = _separate_choices(start, separator1, separator2, stop, placeholder, text)
         return {
             "multiple_choices": multiple_choices,
         }
 
-    def gather_choices(self, text):
-        return ChoicesGatherer().transform(_instructions_parser.parse(text))
+    def gather_choices(self, text, deltas):
+        choices = []
+        for delta in deltas:
+            if "choices2" in delta.attributes:
+                choices_settings = delta.attributes["choices2"]
+                if choices_settings["placeholder"] != "":
+                    choices.append([
+                        choices_settings["start"] or None,
+                        choices_settings["separator1"] or None,
+                        choices_settings["separator2"] or None,
+                        choices_settings["stop"] or None,
+                        choices_settings["placeholder"],
+                        delta.insert,
+                    ])
+        assert choices == ChoicesGatherer().transform(_instructions_parser.parse(text))
+        return choices
