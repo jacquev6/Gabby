@@ -1,7 +1,6 @@
 from contextlib import contextmanager
 from typing import Annotated
 
-import pydantic
 from sqlalchemy import orm
 import sqlalchemy as sql
 
@@ -44,53 +43,105 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
     # Custom collation: https://dba.stackexchange.com/a/285230
     number: orm.Mapped[str] = orm.mapped_column(sql.String(None, collation="exercise_number"))
 
-    _instructions: orm.Mapped[str] = orm.mapped_column(sql.String, name="instructions")
+    _instructions_text: orm.Mapped[str] = orm.mapped_column(name="instructions_text")
+    _instructions_deltas: orm.Mapped[list] = orm.mapped_column(sql.JSON, name="instructions", default=[{"insert": "\n", "attributes": {}}], server_default='[{"insert": "\\n", "attributes": {}}]')
 
     @property
     def instructions(self) -> str:
-        assert self._instructions.endswith("\n")
-        return self._instructions
+        if self._instructions_text is None:  # Before the first flush to DB if not set in constructor.
+            self._instructions_text = "\n"
+        assert self._instructions_text.endswith("\n")
+        return self._instructions_text
 
     @instructions.setter
     def instructions(self, instructions: str):
         assert instructions.endswith("\n")
-        self._instructions = instructions
+        self._instructions_text = instructions
+        self._instructions_deltas = [
+            delta.model_dump()
+            for delta in parsing.DeltaMaker().transform(parsing._instructions_parser.parse(instructions))
+        ]
 
-    _wording: orm.Mapped[str] = orm.mapped_column(sql.String, name="wording")
+    @property
+    def instructions_deltas(self) -> list[exercise_delta.TextInsertOp]:
+        if self._instructions_deltas is None:  # Before the first flush to DB if not set in constructor.
+            self._instructions_deltas = [{"insert": "\n", "attributes": {}}]
+        return [exercise_delta.TextInsertOp(**delta) for delta in self._instructions_deltas]
+
+    _wording_text: orm.Mapped[str] = orm.mapped_column(name="wording_text")
+    _wording_deltas: orm.Mapped[list] = orm.mapped_column(sql.JSON, name="wording", default=[{"insert": "\n", "attributes": {}}], server_default='[{"insert": "\\n", "attributes": {}}]')
 
     @property
     def wording(self) -> str:
-        assert self._wording.endswith("\n")
-        return self._wording
+        if self._wording_text is None:  # Before the first flush to DB if not set in constructor.
+            self._wording_text = "\n"
+        assert self._wording_text.endswith("\n")
+        return self._wording_text
 
     @wording.setter
     def wording(self, wording: str):
         assert wording.endswith("\n")
-        self._wording = wording
+        self._wording_text = wording
+        self._wording_deltas = [
+            delta.model_dump()
+            for delta in parsing.DeltaMaker().transform(parsing._wording_parser.parse(wording))
+        ]
 
-    _example: orm.Mapped[str] = orm.mapped_column(sql.String, name="example")
+    @property
+    def wording_deltas(self) -> list[exercise_delta.TextInsertOp]:
+        if self._wording_deltas is None:  # Before the first flush to DB if not set in constructor.
+            self._wording_deltas = [{"insert": "\n", "attributes": {}}]
+        return [exercise_delta.TextInsertOp(**delta) for delta in self._wording_deltas]
+
+    _example_text: orm.Mapped[str] = orm.mapped_column(name="example_text")
+    _example_deltas: orm.Mapped[list] = orm.mapped_column(sql.JSON, name="example", default=[{"insert": "\n", "attributes": {}}], server_default='[{"insert": "\\n", "attributes": {}}]')
 
     @property
     def example(self) -> str:
-        assert self._example.endswith("\n")
-        return self._example
+        if self._example_text is None:  # Before the first flush to DB if not set in constructor.
+            self._example_text = "\n"
+        assert self._example_text.endswith("\n")
+        return self._example_text
 
     @example.setter
     def example(self, example: str):
         assert example.endswith("\n")
-        self._example = example
+        self._example_text = example
+        self._example_deltas = [
+            delta.model_dump()
+            for delta in parsing.DeltaMaker().transform(parsing._example_and_clue_parser.parse(example))
+        ]
 
-    _clue: orm.Mapped[str] = orm.mapped_column(sql.String, name="clue")
+    @property
+    def example_deltas(self) -> list[exercise_delta.TextInsertOp]:
+        if self._example_deltas is None:  # Before the first flush to DB if not set in constructor.
+            self._example_deltas = [{"insert": "\n", "attributes": {}}]
+        return [exercise_delta.TextInsertOp(**delta) for delta in self._example_deltas]
+
+    _clue_text: orm.Mapped[str] = orm.mapped_column(name="clue_text")
+    _clue_deltas: orm.Mapped[list] = orm.mapped_column(sql.JSON, name="clue", default=[{"insert": "\n", "attributes": {}}], server_default='[{"insert": "\\n", "attributes": {}}]')
 
     @property
     def clue(self) -> str:
-        assert self._clue.endswith("\n")
-        return self._clue
+        if self._clue_text is None:  # Before the first flush to DB if not set in constructor.
+            self._clue_text = "\n"
+        assert self._clue_text.endswith("\n")
+        return self._clue_text
 
     @clue.setter
     def clue(self, clue: str):
         assert clue.endswith("\n")
-        self._clue = clue
+        self._clue_text = clue
+        self._clue_deltas = [
+            delta.model_dump()
+            for delta in parsing.DeltaMaker().transform(parsing._example_and_clue_parser.parse(clue))
+        ]
+
+    @property
+    def clue_deltas(self) -> list[exercise_delta.TextInsertOp]:
+        if self._clue_deltas is None:  # Before the first flush to DB if not set in constructor.
+            self._clue_deltas = [{"insert": "\n", "attributes": {}}]
+        return [exercise_delta.TextInsertOp(**delta) for delta in self._clue_deltas]
 
     wording_paragraphs_per_pagelet: orm.Mapped[int] = orm.mapped_column(default=3, server_default="3")
 
@@ -127,12 +178,16 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
         }
 
     def make_adapted_and_delta(self):
+        assert self._instructions_text is not None
+        assert self._wording_text is not None
+        assert self._example_text is not None
+        assert self._clue_text is not None
         maker = parsing.EffectsBasedAdapterAndDeltaMaker(
             self.adaptation.effects,
-            self.instructions,
-            self.wording,
-            self.example,
-            self.clue,
+            self._instructions_text,
+            self._wording_text,
+            self._example_text,
+            self._clue_text,
         )
         return (
             renderable.Exercise(
@@ -201,10 +256,10 @@ class ExerciseTestCase(TransactionTestCase):
                     textbook_id=self.textbook.id,
                     textbook_page=5,
                     number="5",
-                    _instructions="\n",
-                    _wording="\n",
-                    _example="\n",
-                    _clue="\n",
+                    instructions_text="\n",
+                    wording_text="\n",
+                    example_text="\n",
+                    clue_text="\n",
                 ))
         self.assertEqual(cm.exception.orig.diag.column_name, "project_id")
 
@@ -233,10 +288,10 @@ class ExerciseTestCase(TransactionTestCase):
                     textbook_id=self.textbook.id,
                     textbook_page=5,
                     number="5",
-                    _instructions="\n",
-                    _wording="\n",
-                    _example="\n",
-                    _clue="\n",
+                    instructions_text="\n",
+                    wording_text="\n",
+                    example_text="\n",
+                    clue_text="\n",
                     created_by_id=self.user_for_create.id,
                     updated_by_id=self.user_for_create.id,
                 ))
