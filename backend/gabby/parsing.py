@@ -107,21 +107,6 @@ _wording_parser = _Parser(
 
 
 class DeltaMaker(lark.Transformer):
-    def __init__(
-        self,
-        *,
-        select_words: bool=False,
-        select_punctuation: bool=False,
-        selection_colors: list[str]=[],
-        selectable_are_boxed: bool=False,
-        multiple_choices: dict[str, list[str]]={},
-    ):
-        super().__init__()
-        self.select_words = select_words
-        self.select_punctuation = select_punctuation
-        self.selection_colors = selection_colors
-        self.selectable_are_boxed = selectable_are_boxed
-
     def _merge(self, args):
         def join_group(key, items):
             items = list(items)
@@ -251,34 +236,19 @@ class DeltaMaker(lark.Transformer):
         return exercise_delta.TextInsertOp(insert=args[0], attributes={})
 
     def sel1_tag(self, args):
-        if len(self.selection_colors) > 0:
-            return exercise_delta.TextInsertOp(insert=args[0], attributes={"sel": 1})
-        else:
-            return exercise_delta.TextInsertOp(insert=args[0], attributes={})
+        return exercise_delta.TextInsertOp(insert=args[0], attributes={"sel": 1})
 
     def sel2_tag(self, args):
-        if len(self.selection_colors) > 1:
-            return exercise_delta.TextInsertOp(insert=args[0], attributes={"sel": 2})
-        else:
-            return exercise_delta.TextInsertOp(insert=args[0], attributes={})
+        return exercise_delta.TextInsertOp(insert=args[0], attributes={"sel": 2})
 
     def sel3_tag(self, args):
-        if len(self.selection_colors) > 2:
-            return exercise_delta.TextInsertOp(insert=args[0], attributes={"sel": 3})
-        else:
-            return exercise_delta.TextInsertOp(insert=args[0], attributes={})
+        return exercise_delta.TextInsertOp(insert=args[0], attributes={"sel": 3})
 
     def sel4_tag(self, args):
-        if len(self.selection_colors) > 3:
-            return exercise_delta.TextInsertOp(insert=args[0], attributes={"sel": 4})
-        else:
-            return exercise_delta.TextInsertOp(insert=args[0], attributes={})
+        return exercise_delta.TextInsertOp(insert=args[0], attributes={"sel": 4})
 
     def sel5_tag(self, args):
-        if len(self.selection_colors) > 4:
-            return exercise_delta.TextInsertOp(insert=args[0], attributes={"sel": 5})
-        else:
-            return exercise_delta.TextInsertOp(insert=args[0], attributes={})
+        return exercise_delta.TextInsertOp(insert=args[0], attributes={"sel": 5})
 
 
 class ChoicesGatherer(lark.Transformer):
@@ -773,10 +743,10 @@ class EffectsBasedAdapterAndDeltaMaker:
         example = _example_and_clue_parser.parse(example)
         clue = _example_and_clue_parser.parse(clue)
 
-        self.instructions_delta = self.make_deltas_for_instructions(instructions, **instructions_adapter_constructor_kwds)
-        self.wording_delta = self.make_deltas_for_wording(wording, **wording_adapter_constructor_kwds)
-        self.example_delta = self.make_deltas_for_example(example, **example_adapter_constructor_kwds)
-        self.clue_delta = self.make_deltas_for_clue(clue, **clue_adapter_constructor_kwds)
+        self.instructions_delta = self.make_deltas_for_instructions(instructions)
+        self.wording_delta = self.make_deltas_for_wording(wording)
+        self.example_delta = self.make_deltas_for_example(example)
+        self.clue_delta = self.make_deltas_for_clue(clue)
 
         self.adapted_instructions = self.adapt_instructions(instructions, **instructions_adapter_constructor_kwds)
         self.adapted_wording = self.adapt_wording(wording, **wording_adapter_constructor_kwds)
@@ -812,14 +782,14 @@ class EffectsBasedAdapterAndDeltaMaker:
     def adapt_wording(self, wording, **kwds):
         return WordingAdapter(**kwds).transform(wording)
 
-    def make_deltas_for_instructions(self, instructions, **kwds):
-        return DeltaMaker(**kwds).transform(instructions)
+    def make_deltas_for_instructions(self, instructions):
+        return DeltaMaker().transform(instructions)
 
-    def make_deltas_for_example(self, example, **kwds):
-        return DeltaMaker(**kwds).transform(example)
+    def make_deltas_for_example(self, example):
+        return DeltaMaker().transform(example)
 
-    def make_deltas_for_clue(self, clue, **kwds):
-        return DeltaMaker(**kwds).transform(clue)
+    def make_deltas_for_clue(self, clue):
+        return DeltaMaker().transform(clue)
 
-    def make_deltas_for_wording(self, wording, **kwds):
-        return DeltaMaker(**kwds).transform(wording)
+    def make_deltas_for_wording(self, wording):
+        return DeltaMaker().transform(wording)

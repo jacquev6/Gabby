@@ -766,7 +766,9 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                     d.TextInsertOp(insert="def", attributes={"sel": 2}),
                     d.TextInsertOp(insert=" ", attributes={}),
                     d.TextInsertOp(insert="ghi", attributes={"sel": 3}),
-                    d.TextInsertOp(insert=" jkl\n", attributes={}),
+                    d.TextInsertOp(insert=" ", attributes={}),
+                    d.TextInsertOp(insert="jkl", attributes={"sel": 4}),
+                    d.TextInsertOp(insert="\n", attributes={}),
                 ],
                 wording=[
                     d.TextInsertOp(insert="wording\n", attributes={}),
@@ -2409,7 +2411,9 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                     d.TextInsertOp(insert="def", attributes={"sel": 2}),
                     d.TextInsertOp(insert=" ", attributes={}),
                     d.TextInsertOp(insert="ghi", attributes={"sel": 3}),
-                    d.TextInsertOp(insert=" jkl\n", attributes={}),
+                    d.TextInsertOp(insert=" ", attributes={}),
+                    d.TextInsertOp(insert="jkl", attributes={"sel": 4}),
+                    d.TextInsertOp(insert="\n", attributes={}),
                 ],
                 wording=[
                     d.TextInsertOp(insert="wording\n", attributes={}),
@@ -2904,7 +2908,9 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 ],
                 clue=[
                     d.TextInsertOp(insert="ghi", attributes={"sel": 3}),
-                    d.TextInsertOp(insert=" jkl\n", attributes={}),
+                    d.TextInsertOp(insert=" ", attributes={}),
+                    d.TextInsertOp(insert="jkl", attributes={"sel": 4}),
+                    d.TextInsertOp(insert="\n", attributes={}),
                 ],
             ),
         )
