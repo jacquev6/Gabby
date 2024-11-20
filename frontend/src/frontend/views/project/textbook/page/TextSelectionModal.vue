@@ -76,10 +76,13 @@ watch(computed(() => modal.value !== null && modal.value.active), active => {
 })
 
 function addTextTo(fieldName: TextualFieldName) {
-  if (model.value[fieldName] !== '' && !model.value[fieldName].endsWith('\n')) {
-    model.value[fieldName] += '\n'
+  console.assert(textToAdd.value.endsWith('\n'))
+  if (model.value[fieldName] === '\n') {
+    model.value[fieldName] = textToAdd.value
+  } else {
+    console.assert(model.value[fieldName].endsWith('\n'))
+    model.value[fieldName] += textToAdd.value
   }
-  model.value[fieldName] += textToAdd.value
   model.value.rectangles.push({
     pdf_sha256: pdfSha256.value,
     pdf_page: pdfPage.value,
@@ -109,7 +112,7 @@ defineExpose({
       <BLabeledCheckbox :label="$t('doStripExerciceNumber')" v-model="doStripExerciceNumber" :disabled="!canStripExerciceNumber" />
       <BLabeledCheckbox :label="$t('doKeepAllLineEnds')" v-model="doKeepAllLineEnds" />
       <BLabeledCheckbox :label="$t('doDetectLists')" v-model="doDetectLists" :disabled="doKeepAllLineEnds"/>
-      <BLabeledTextarea ref="textarea" :maxRows="15" v-model="textToAdd" />
+      <BLabeledTextarea ref="textarea" :enforceTrailingLineEnd="true" :maxRows="15" v-model="textToAdd" />
 
       <p>{{ $t('addTo') }}</p>
       <p>

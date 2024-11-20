@@ -374,8 +374,8 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
 
     def test_get__no_include(self):
         textbook = self.create_model(Textbook, project=self.project, title="The title", publisher="The publisher", year=2023, isbn="9783161484100")
-        self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=16, number="11", instructions="", wording="", example="", clue="")
-        self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=17, number="13", instructions="", wording="", example="", clue="")
+        self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=16, number="11", instructions="\n", wording="\n", example="\n", clue="\n")
+        self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=17, number="13", instructions="\n", wording="\n", example="\n", clue="\n")
 
         response = self.get("http://server/textbooks/klxufv")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
@@ -410,8 +410,8 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
 
     def test_get__include_exercises(self):
         textbook = self.create_model(Textbook, project=self.project, title="The title", publisher="The publisher", year=2023, isbn="9783161484100")
-        self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=16, number="11", instructions="", wording="", example="", clue="")
-        self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=17, number="13", instructions="", wording="", example="", clue="")
+        self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=16, number="11", instructions="\n", wording="\n", example="\n", clue="\n")
+        self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=17, number="13", instructions="\n", wording="\n", example="\n", clue="\n")
 
         response = self.get("http://server/textbooks/klxufv?include=exercises")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
@@ -450,7 +450,7 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                     "attributes": {
                         "textbookPage": 17, "number": "13",
                         "rectangles": [],
-                        "instructions": "", "example": "", "clue": "", "wording": "",
+                        "instructions": "\n", "example": "\n", "clue": "\n", "wording": "\n",
                         "wordingParagraphsPerPagelet": 3,
                         "adaptation": {"kind": "generic", "effects": []},
                         "createdAt": response.json()["included"][0]["attributes"]["createdAt"],
@@ -470,7 +470,7 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                     "attributes": {
                         "textbookPage": 16, "number": "11",
                         "rectangles": [],
-                        "instructions": "", "example": "", "clue": "", "wording": "",
+                        "instructions": "\n", "example": "\n", "clue": "\n", "wording": "\n",
                         "wordingParagraphsPerPagelet": 3,
                         "adaptation": {"kind": "generic", "effects": []},
                         "createdAt": response.json()["included"][1]["attributes"]["createdAt"],
@@ -490,14 +490,14 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
         self.expect_commits_rollbacks(2, 0)
 
         textbook = self.create_model(Textbook, project=self.project, title="The title", publisher="The publisher", year=2023, isbn="9783161484100")
-        self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=12, number="4", instructions="", wording="", example="", clue="")
-        self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=13, number="5", instructions="", wording="", example="", clue="")
+        self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=12, number="4", instructions="\n", wording="\n", example="\n", clue="\n")
+        self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=13, number="5", instructions="\n", wording="\n", example="\n", clue="\n")
         textbook = self.create_model(Textbook, project=self.project, title="Another title", publisher="Another publisher", year=2024, isbn="9783161484101")
-        self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=14, number="6", instructions="", wording="", example="", clue="")
+        self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=14, number="6", instructions="\n", wording="\n", example="\n", clue="\n")
         textbook = self.create_model(Textbook, project=self.project, title="Yet another title", publisher="Yet another publisher", year=2025, isbn="9783161484102")
-        self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=15, number="7", instructions="", wording="", example="", clue="")
-        self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=16, number="8", instructions="", wording="", example="", clue="")
-        self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=17, number="9", instructions="", wording="", example="", clue="")
+        self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=15, number="7", instructions="\n", wording="\n", example="\n", clue="\n")
+        self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=16, number="8", instructions="\n", wording="\n", example="\n", clue="\n")
+        self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=17, number="9", instructions="\n", wording="\n", example="\n", clue="\n")
 
         response = self.get("http://server/textbooks")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
@@ -598,14 +598,14 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
         self.expect_commits_rollbacks(2, 0)
 
         textbook = self.create_model(Textbook, project=self.project, title="The title", publisher="The publisher", year=2023, isbn="9783161484100")
-        self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=12, number="4", instructions="", wording="", example="", clue="")
-        self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=13, number="5", instructions="", wording="", example="", clue="")
+        self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=12, number="4", instructions="\n", wording="\n", example="\n", clue="\n")
+        self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=13, number="5", instructions="\n", wording="\n", example="\n", clue="\n")
         textbook = self.create_model(Textbook, project=self.project, title="Another title", publisher="Another publisher", year=2024, isbn="9783161484101")
-        self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=14, number="6", instructions="", wording="", example="", clue="")
+        self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=14, number="6", instructions="\n", wording="\n", example="\n", clue="\n")
         textbook = self.create_model(Textbook, project=self.project, title="Yet another title", publisher="Yet another publisher", year=2025, isbn="9783161484102")
-        self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=15, number="7", instructions="", wording="", example="", clue="")
-        self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=16, number="8", instructions="", wording="", example="", clue="")
-        self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=17, number="9", instructions="", wording="", example="", clue="")
+        self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=15, number="7", instructions="\n", wording="\n", example="\n", clue="\n")
+        self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=16, number="8", instructions="\n", wording="\n", example="\n", clue="\n")
+        self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=17, number="9", instructions="\n", wording="\n", example="\n", clue="\n")
 
         response = self.get("http://server/textbooks?include=exercises")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
@@ -659,7 +659,7 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                     "attributes": {
                         "textbookPage": 13, "number": "5",
                         "rectangles": [],
-                        "instructions": "", "example": "", "clue": "", "wording": "",
+                        "instructions": "\n", "example": "\n", "clue": "\n", "wording": "\n",
                         "wordingParagraphsPerPagelet": 3,
                         "adaptation": {"kind": "generic", "effects": []},
                         "createdAt": response.json()["included"][0]["attributes"]["createdAt"],
@@ -679,7 +679,7 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                     "attributes": {
                         "textbookPage": 14, "number": "6",
                         "rectangles": [],
-                        "instructions": "", "example": "", "clue": "", "wording": "",
+                        "instructions": "\n", "example": "\n", "clue": "\n", "wording": "\n",
                         "wordingParagraphsPerPagelet": 3,
                         "adaptation": {"kind": "generic", "effects": []},
                         "createdAt": response.json()["included"][1]["attributes"]["createdAt"],
@@ -699,7 +699,7 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                     "attributes": {
                         "textbookPage": 12, "number": "4",
                         "rectangles": [],
-                        "instructions": "", "example": "", "clue": "", "wording": "",
+                        "instructions": "\n", "example": "\n", "clue": "\n", "wording": "\n",
                         "wordingParagraphsPerPagelet": 3,
                         "adaptation": {"kind": "generic", "effects": []},
                         "createdAt": response.json()["included"][2]["attributes"]["createdAt"],
@@ -763,7 +763,7 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                     "attributes": {
                         "textbookPage": 17, "number": "9",
                         "rectangles": [],
-                        "instructions": "", "example": "", "clue": "", "wording": "",
+                        "instructions": "\n", "example": "\n", "clue": "\n", "wording": "\n",
                         "wordingParagraphsPerPagelet": 3,
                         "adaptation": {"kind": "generic", "effects": []},
                         "createdAt": response.json()["included"][0]["attributes"]["createdAt"],
@@ -783,7 +783,7 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                     "attributes": {
                         "textbookPage": 16, "number": "8",
                         "rectangles": [],
-                        "instructions": "", "example": "", "clue": "", "wording": "",
+                        "instructions": "\n", "example": "\n", "clue": "\n", "wording": "\n",
                         "wordingParagraphsPerPagelet": 3,
                         "adaptation": {"kind": "generic", "effects": []},
                         "createdAt": response.json()["included"][1]["attributes"]["createdAt"],
@@ -803,7 +803,7 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                     "attributes": {
                         "textbookPage": 15, "number": "7",
                         "rectangles": [],
-                        "instructions": "", "example": "", "clue": "", "wording": "",
+                        "instructions": "\n", "example": "\n", "clue": "\n", "wording": "\n",
                         "wordingParagraphsPerPagelet": 3,
                         "adaptation": {"kind": "generic", "effects": []},
                         "createdAt": response.json()["included"][2]["attributes"]["createdAt"],
@@ -960,8 +960,8 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
 
     def test_delete__with_exercises(self):
         textbook = self.create_model(Textbook, project=self.project, title="The title", publisher="The publisher", year=2023, isbn="9783161484100")
-        self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=12, number="4", instructions="", wording="", example="", clue="")
-        self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=13, number="5", instructions="", wording="", example="", clue="")
+        self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=12, number="4", instructions="\n", wording="\n", example="\n", clue="\n")
+        self.create_model(Exercise, textbook=textbook, project=textbook.project, textbook_page=13, number="5", instructions="\n", wording="\n", example="\n", clue="\n")
 
         response = self.delete("http://server/textbooks/klxufv")
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
@@ -1000,7 +1000,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                 "attributes": {
                     "textbookPage": None, "number": "42",
                     "rectangles": [],
-                    "instructions": "", "example": "", "clue": "", "wording": "",
+                    "instructions": "\n", "example": "\n", "clue": "\n", "wording": "\n",
                     "wordingParagraphsPerPagelet": 3,
                     "adaptation": {"kind": "generic", "effects": []},
                     "createdAt": response.json()["data"]["attributes"]["createdAt"],
@@ -1022,10 +1022,10 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
         self.assertIsNone(exercise.textbook)
         self.assertIsNone(exercise.textbook_page)
         self.assertEqual(exercise.number, "42")
-        self.assertEqual(exercise.instructions, "")
-        self.assertEqual(exercise.example, "")
-        self.assertEqual(exercise.clue, "")
-        self.assertEqual(exercise.wording, "")
+        self.assertEqual(exercise.instructions, "\n")
+        self.assertEqual(exercise.example, "\n")
+        self.assertEqual(exercise.clue, "\n")
+        self.assertEqual(exercise.wording, "\n")
 
     def test_create__minimal_in_textbook(self):
         payload = {
@@ -1051,7 +1051,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                 "attributes": {
                     "textbookPage": 12, "number": "42",
                     "rectangles": [],
-                    "instructions": "", "example": "", "clue": "", "wording": "",
+                    "instructions": "\n", "example": "\n", "clue": "\n", "wording": "\n",
                     "wordingParagraphsPerPagelet": 3,
                     "adaptation": {"kind": "generic", "effects": []},
                     "createdAt": response.json()["data"]["attributes"]["createdAt"],
@@ -1073,10 +1073,10 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
         self.assertEqual(exercise.textbook, self.textbook)
         self.assertEqual(exercise.textbook_page, 12)
         self.assertEqual(exercise.number, "42")
-        self.assertEqual(exercise.instructions, "")
-        self.assertEqual(exercise.example, "")
-        self.assertEqual(exercise.clue, "")
-        self.assertEqual(exercise.wording, "")
+        self.assertEqual(exercise.instructions, "\n")
+        self.assertEqual(exercise.example, "\n")
+        self.assertEqual(exercise.clue, "\n")
+        self.assertEqual(exercise.wording, "\n")
 
     def test_create__full(self):
         payload = {
@@ -1084,7 +1084,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                 "type": "exercise",
                 "attributes": {
                     "textbookPage": 14, "number": "1",
-                    "instructions": "instructions", "example": "example", "clue": "clue", "wording": "wording",
+                    "instructions": "instructions\n", "example": "example\n", "clue": "clue\n", "wording": "wording\n",
                     "wordingParagraphsPerPagelet": 2,
                     "rectangles": [
                         {
@@ -1113,7 +1113,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                 "links": {"self": "http://server/exercises/wbqloc"},
                 "attributes": {
                     "textbookPage": 14, "number": "1",
-                    "instructions": "instructions", "example": "example", "clue": "clue", "wording": "wording",
+                    "instructions": "instructions\n", "example": "example\n", "clue": "clue\n", "wording": "wording\n",
                     "wordingParagraphsPerPagelet": 2,
                     "adaptation": {"kind": "generic", "effects": []},
                     "rectangles": [
@@ -1146,10 +1146,10 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
         self.assertEqual(exercise.textbook, self.textbook)
         self.assertEqual(exercise.textbook_page, 14)
         self.assertEqual(exercise.number, "1")
-        self.assertEqual(exercise.instructions, "instructions")
-        self.assertEqual(exercise.example, "example")
-        self.assertEqual(exercise.clue, "clue")
-        self.assertEqual(exercise.wording, "wording")
+        self.assertEqual(exercise.instructions, "instructions\n")
+        self.assertEqual(exercise.example, "example\n")
+        self.assertEqual(exercise.clue, "clue\n")
+        self.assertEqual(exercise.wording, "wording\n")
         self.assertEqual(
             exercise.rectangles,
             [
@@ -1172,10 +1172,10 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
             project=self.textbook.project,
             textbook_page=16,
             number="11",
-            instructions="instructions",
-            example="example",
-            clue="clue",
-            wording="wording",
+            instructions="instructions\n",
+            example="example\n",
+            clue="clue\n",
+            wording="wording\n",
         )
 
         response = self.get("http://server/exercises/wbqloc")
@@ -1188,7 +1188,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                 "attributes": {
                     "textbookPage": 16, "number": "11",
                     "rectangles": [],
-                    "instructions": "instructions", "example": "example", "clue": "clue", "wording": "wording",
+                    "instructions": "instructions\n", "example": "example\n", "clue": "clue\n", "wording": "wording\n",
                     "wordingParagraphsPerPagelet": 3,
                     "adaptation": {"kind": "generic", "effects": []},
                     "createdAt": response.json()["data"]["attributes"]["createdAt"],
@@ -1210,10 +1210,10 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
             project=self.textbook.project,
             textbook_page=16,
             number="11",
-            instructions="instructions",
-            example="example",
-            clue="clue",
-            wording="wording",
+            instructions="instructions\n",
+            example="example\n",
+            clue="clue\n",
+            wording="wording\n",
         )
 
         response = self.get("http://server/exercises/wbqloc?include=textbook")
@@ -1226,7 +1226,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                 "attributes": {
                     "textbookPage": 16, "number": "11",
                     "rectangles": [],
-                    "instructions": "instructions", "example": "example", "clue": "clue", "wording": "wording",
+                    "instructions": "instructions\n", "example": "example\n", "clue": "clue\n", "wording": "wording\n",
                     "wordingParagraphsPerPagelet": 3,
                     "adaptation": {"kind": "generic", "effects": []},
                     "createdAt": response.json()["data"]["attributes"]["createdAt"],
@@ -1268,10 +1268,10 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
             project=self.textbook.project,
             textbook_page=16,
             number="11",
-            instructions="instructions",
-            example="example",
-            clue="clue",
-            wording="wording",
+            instructions="instructions\n",
+            example="example\n",
+            clue="clue\n",
+            wording="wording\n",
             adaptation=AdaptationV2(
                 kind="fill-with-free-text",
                 effects=[parsing.FillWithFreeTextAdaptationEffect(kind="fill-with-free-text", placeholder="...")],
@@ -1288,7 +1288,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                 "attributes": {
                     "textbookPage": 16, "number": "11",
                     "rectangles": [],
-                    "instructions": "instructions", "example": "example", "clue": "clue", "wording": "wording",
+                    "instructions": "instructions\n", "example": "example\n", "clue": "clue\n", "wording": "wording\n",
                     "wordingParagraphsPerPagelet": 3,
                     "adaptation": {"kind": "fill-with-free-text", "effects": [{"kind": "fill-with-free-text", "placeholder": "..."}]},
                     "createdAt": response.json()["data"]["attributes"]["createdAt"],
@@ -1309,9 +1309,9 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
     def test_list__sorted_by_default(self):
         self.expect_commits_rollbacks(2, 0)
 
-        self.create_model(Exercise, project=self.textbook.project, textbook=self.textbook, textbook_page=16, number="11", instructions="", wording="", example="", clue="")
-        self.create_model(Exercise, project=self.textbook.project, textbook=self.textbook, textbook_page=17, number="3", instructions="", wording="", example="", clue="")
-        self.create_model(Exercise, project=self.textbook.project, textbook=self.textbook, textbook_page=17, number="4", instructions="", wording="", example="", clue="")
+        self.create_model(Exercise, project=self.textbook.project, textbook=self.textbook, textbook_page=16, number="11", instructions="\n", wording="\n", example="\n", clue="\n")
+        self.create_model(Exercise, project=self.textbook.project, textbook=self.textbook, textbook_page=17, number="3", instructions="\n", wording="\n", example="\n", clue="\n")
+        self.create_model(Exercise, project=self.textbook.project, textbook=self.textbook, textbook_page=17, number="4", instructions="\n", wording="\n", example="\n", clue="\n")
 
         response = self.get("http://server/exercises")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
@@ -1324,7 +1324,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     "attributes": {
                         "textbookPage": 16, "number": "11",
                         "rectangles": [],
-                        "instructions": "", "example": "", "clue": "", "wording": "",
+                        "instructions": "\n", "example": "\n", "clue": "\n", "wording": "\n",
                         "wordingParagraphsPerPagelet": 3,
                         "adaptation": {"kind": "generic", "effects": []},
                         "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
@@ -1344,7 +1344,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     "attributes": {
                         "textbookPage": 17, "number": "3",
                         "rectangles": [],
-                        "instructions": "", "example": "", "clue": "", "wording": "",
+                        "instructions": "\n", "example": "\n", "clue": "\n", "wording": "\n",
                         "wordingParagraphsPerPagelet": 3,
                         "adaptation": {"kind": "generic", "effects": []},
                         "createdAt": response.json()["data"][1]["attributes"]["createdAt"],
@@ -1378,7 +1378,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     "attributes": {
                         "textbookPage": 17, "number": "4",
                         "rectangles": [],
-                        "instructions": "", "example": "", "clue": "", "wording": "",
+                        "instructions": "\n", "example": "\n", "clue": "\n", "wording": "\n",
                         "wordingParagraphsPerPagelet": 3,
                         "adaptation": {"kind": "generic", "effects": []},
                         "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
@@ -1404,9 +1404,9 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
     def test_list__sorted_naturally(self):
         self.expect_commits_rollbacks(2, 0)
 
-        self.create_model(Exercise, project=self.textbook.project, textbook=self.textbook, textbook_page=16, number="11", instructions="", wording="", example="", clue="")
-        self.create_model(Exercise, project=self.textbook.project, textbook=self.textbook, textbook_page=17, number="3", instructions="", wording="", example="", clue="")
-        self.create_model(Exercise, project=self.textbook.project, textbook=self.textbook, textbook_page=17, number="4", instructions="", wording="", example="", clue="")
+        self.create_model(Exercise, project=self.textbook.project, textbook=self.textbook, textbook_page=16, number="11", instructions="\n", wording="\n", example="\n", clue="\n")
+        self.create_model(Exercise, project=self.textbook.project, textbook=self.textbook, textbook_page=17, number="3", instructions="\n", wording="\n", example="\n", clue="\n")
+        self.create_model(Exercise, project=self.textbook.project, textbook=self.textbook, textbook_page=17, number="4", instructions="\n", wording="\n", example="\n", clue="\n")
 
         response = self.get("http://server/exercises")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
@@ -1419,7 +1419,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     "attributes": {
                         "textbookPage": 16, "number": "11",
                         "rectangles": [],
-                        "instructions": "", "example": "", "clue": "", "wording": "",
+                        "instructions": "\n", "example": "\n", "clue": "\n", "wording": "\n",
                         "wordingParagraphsPerPagelet": 3,
                         "adaptation": {"kind": "generic", "effects": []},
                         "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
@@ -1439,7 +1439,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     "attributes": {
                         "textbookPage": 17, "number": "3",
                         "rectangles": [],
-                        "instructions": "", "example": "", "clue": "", "wording": "",
+                        "instructions": "\n", "example": "\n", "clue": "\n", "wording": "\n",
                         "wordingParagraphsPerPagelet": 3,
                         "adaptation": {"kind": "generic", "effects": []},
                         "createdAt": response.json()["data"][1]["attributes"]["createdAt"],
@@ -1473,7 +1473,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     "attributes": {
                         "textbookPage": 17, "number": "4",
                         "rectangles": [],
-                        "instructions": "", "example": "", "clue": "", "wording": "",
+                        "instructions": "\n", "example": "\n", "clue": "\n", "wording": "\n",
                         "wordingParagraphsPerPagelet": 3,
                         "adaptation": {"kind": "generic", "effects": []},
                         "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
@@ -1499,11 +1499,11 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
     def test_list__include_textbook(self):
         self.expect_commits_rollbacks(2, 0)
 
-        self.create_model(Exercise, project=self.textbook.project, textbook=self.textbook, textbook_page=16, number="11", instructions="", wording="", example="", clue="")
-        self.create_model(Exercise, project=self.textbook.project, textbook=self.textbook, textbook_page=17, number="13", instructions="", wording="", example="", clue="")
-        self.create_model(Exercise, project=self.textbook.project, textbook=self.textbook, textbook_page=17, number="14", instructions="", wording="", example="", clue="")
+        self.create_model(Exercise, project=self.textbook.project, textbook=self.textbook, textbook_page=16, number="11", instructions="\n", wording="\n", example="\n", clue="\n")
+        self.create_model(Exercise, project=self.textbook.project, textbook=self.textbook, textbook_page=17, number="13", instructions="\n", wording="\n", example="\n", clue="\n")
+        self.create_model(Exercise, project=self.textbook.project, textbook=self.textbook, textbook_page=17, number="14", instructions="\n", wording="\n", example="\n", clue="\n")
         other_textbook = self.create_model(Textbook, project=self.project, title="The other title")
-        self.create_model(Exercise, project=other_textbook.project, textbook=other_textbook, textbook_page=12, number="4", instructions="", wording="", example="", clue="")
+        self.create_model(Exercise, project=other_textbook.project, textbook=other_textbook, textbook_page=12, number="4", instructions="\n", wording="\n", example="\n", clue="\n")
 
         response = self.get("http://server/exercises?include=textbook")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
@@ -1516,7 +1516,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     "attributes": {
                         "textbookPage": 16, "number": "11",
                         "rectangles": [],
-                        "instructions": "", "example": "", "clue": "", "wording": "",
+                        "instructions": "\n", "example": "\n", "clue": "\n", "wording": "\n",
                         "wordingParagraphsPerPagelet": 3,
                         "adaptation": {"kind": "generic", "effects": []},
                         "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
@@ -1536,7 +1536,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     "attributes": {
                         "textbookPage": 17, "number": "13",
                         "rectangles": [],
-                        "instructions": "", "example": "", "clue": "", "wording": "",
+                        "instructions": "\n", "example": "\n", "clue": "\n", "wording": "\n",
                         "wordingParagraphsPerPagelet": 3,
                         "adaptation": {"kind": "generic", "effects": []},
                         "createdAt": response.json()["data"][1]["attributes"]["createdAt"],
@@ -1597,7 +1597,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     "attributes": {
                         "textbookPage": 17, "number": "14",
                         "rectangles": [],
-                        "instructions": "", "example": "", "clue": "", "wording": "",
+                        "instructions": "\n", "example": "\n", "clue": "\n", "wording": "\n",
                         "wordingParagraphsPerPagelet": 3,
                         "adaptation": {"kind": "generic", "effects": []},
                         "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
@@ -1617,7 +1617,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     "attributes": {
                         "textbookPage": 12, "number": "4",
                         "rectangles": [],
-                        "instructions": "", "example": "", "clue": "", "wording": "",
+                        "instructions": "\n", "example": "\n", "clue": "\n", "wording": "\n",
                         "wordingParagraphsPerPagelet": 3,
                         "adaptation": {"kind": "generic", "effects": []},
                         "createdAt": response.json()["data"][1]["attributes"]["createdAt"],
@@ -1693,11 +1693,11 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
     def test_list__filter_by_textbook(self):
         self.expect_commits_rollbacks(2, 0)
 
-        self.create_model(Exercise, project=self.textbook.project, textbook=self.textbook, textbook_page=16, number="11", instructions="", wording="", example="", clue="")
-        self.create_model(Exercise, project=self.textbook.project, textbook=self.textbook, textbook_page=17, number="13", instructions="", wording="", example="", clue="")
-        self.create_model(Exercise, project=self.textbook.project, textbook=self.textbook, textbook_page=17, number="14", instructions="", wording="", example="", clue="")
+        self.create_model(Exercise, project=self.textbook.project, textbook=self.textbook, textbook_page=16, number="11", instructions="\n", wording="\n", example="\n", clue="\n")
+        self.create_model(Exercise, project=self.textbook.project, textbook=self.textbook, textbook_page=17, number="13", instructions="\n", wording="\n", example="\n", clue="\n")
+        self.create_model(Exercise, project=self.textbook.project, textbook=self.textbook, textbook_page=17, number="14", instructions="\n", wording="\n", example="\n", clue="\n")
         other_textbook = self.create_model(Textbook, project=self.project, title="The other title")
-        self.create_model(Exercise, project=other_textbook.project, textbook=other_textbook, textbook_page=12, number="4", instructions="", wording="", example="", clue="")
+        self.create_model(Exercise, project=other_textbook.project, textbook=other_textbook, textbook_page=12, number="4", instructions="\n", wording="\n", example="\n", clue="\n")
 
         response = self.get("http://server/exercises?filter[textbook]=klxufv")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
@@ -1710,7 +1710,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     "attributes": {
                         "textbookPage": 16, "number": "11",
                         "rectangles": [],
-                        "instructions": "", "example": "", "clue": "", "wording": "",
+                        "instructions": "\n", "example": "\n", "clue": "\n", "wording": "\n",
                         "wordingParagraphsPerPagelet": 3,
                         "adaptation": {"kind": "generic", "effects": []},
                         "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
@@ -1730,7 +1730,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     "attributes": {
                         "textbookPage": 17, "number": "13",
                         "rectangles": [],
-                        "instructions": "", "example": "", "clue": "", "wording": "",
+                        "instructions": "\n", "example": "\n", "clue": "\n", "wording": "\n",
                         "wordingParagraphsPerPagelet": 3,
                         "adaptation": {"kind": "generic", "effects": []},
                         "createdAt": response.json()["data"][1]["attributes"]["createdAt"],
@@ -1764,7 +1764,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     "attributes": {
                         "textbookPage": 17, "number": "14",
                         "rectangles": [],
-                        "instructions": "", "example": "", "clue": "", "wording": "",
+                        "instructions": "\n", "example": "\n", "clue": "\n", "wording": "\n",
                         "wordingParagraphsPerPagelet": 3,
                         "adaptation": {"kind": "generic", "effects": []},
                         "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
@@ -1794,10 +1794,10 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
             project=self.textbook.project,
             textbook_page=16,
             number="11",
-            instructions="instructions",
-            example="example",
-            clue="clue",
-            wording="wording",
+            instructions="instructions\n",
+            example="example\n",
+            clue="clue\n",
+            wording="wording\n",
             rectangles=[PdfRectangle(
                 pdf_sha256="sha256",
                 pdf_page=42,
@@ -1814,10 +1814,10 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
         self.assertEqual(exercise.textbook, self.textbook)
         self.assertEqual(exercise.textbook_page, 16)
         self.assertEqual(exercise.number, "11")
-        self.assertEqual(exercise.instructions, "instructions")
-        self.assertEqual(exercise.example, "example")
-        self.assertEqual(exercise.clue, "clue")
-        self.assertEqual(exercise.wording, "wording")
+        self.assertEqual(exercise.instructions, "instructions\n")
+        self.assertEqual(exercise.example, "example\n")
+        self.assertEqual(exercise.clue, "clue\n")
+        self.assertEqual(exercise.wording, "wording\n")
         self.assertEqual(
             exercise.rectangles,
             [
@@ -1838,7 +1838,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                 "type": "exercise",
                 "id": "wbqloc",
                 "attributes": {
-                    "instructions": "INSTRUCTIONS", "example": "EXAMPLE", "clue": "CLUE", "wording": "WORDING",
+                    "instructions": "INSTRUCTIONS\n", "example": "EXAMPLE\n", "clue": "CLUE\n", "wording": "WORDING\n",
                     "rectangles": [
                         {
                             "pdf_sha256": "sha256",
@@ -1871,7 +1871,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                 "links": {"self": "http://server/exercises/wbqloc"},
                 "attributes": {
                     "textbookPage": 16, "number": "11",
-                    "instructions": "INSTRUCTIONS", "example": "EXAMPLE", "clue": "CLUE", "wording": "WORDING",
+                    "instructions": "INSTRUCTIONS\n", "example": "EXAMPLE\n", "clue": "CLUE\n", "wording": "WORDING\n",
                     "wordingParagraphsPerPagelet": 3,
                     "adaptation": {"kind": "generic", "effects": []},
                     "createdAt": response.json()["data"]["attributes"]["createdAt"],
@@ -1913,10 +1913,10 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
         self.assertEqual(exercise.textbook, self.textbook)
         self.assertEqual(exercise.textbook_page, 16)
         self.assertEqual(exercise.number, "11")
-        self.assertEqual(exercise.instructions, "INSTRUCTIONS")
-        self.assertEqual(exercise.example, "EXAMPLE")
-        self.assertEqual(exercise.clue, "CLUE")
-        self.assertEqual(exercise.wording, "WORDING")
+        self.assertEqual(exercise.instructions, "INSTRUCTIONS\n")
+        self.assertEqual(exercise.example, "EXAMPLE\n")
+        self.assertEqual(exercise.clue, "CLUE\n")
+        self.assertEqual(exercise.wording, "WORDING\n")
         self.assertEqual(
             exercise.rectangles,
             [
@@ -1948,10 +1948,10 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
             project=self.textbook.project,
             textbook_page=16,
             number="11",
-            instructions="instructions",
-            example="example",
-            clue="clue",
-            wording="wording",
+            instructions="instructions\n",
+            example="example\n",
+            clue="clue\n",
+            wording="wording\n",
         )
 
         payload = {
@@ -1959,7 +1959,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                 "type": "exercise",
                 "id": "wbqloc",
                 "attributes": {
-                    "instructions": "INSTRUCTIONS",
+                    "instructions": "INSTRUCTIONS\n",
                 },
             },
         }
@@ -1973,7 +1973,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                 "attributes": {
                     "textbookPage": 16, "number": "11",
                     "rectangles": [],
-                    "instructions": "INSTRUCTIONS", "example": "example", "clue": "clue", "wording": "wording",
+                    "instructions": "INSTRUCTIONS\n", "example": "example\n", "clue": "clue\n", "wording": "wording\n",
                     "wordingParagraphsPerPagelet": 3,
                     "adaptation": {"kind": "generic", "effects": []},
                     "createdAt": response.json()["data"]["attributes"]["createdAt"],
@@ -1995,10 +1995,10 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
         self.assertEqual(exercise.textbook, self.textbook)
         self.assertEqual(exercise.textbook_page, 16)
         self.assertEqual(exercise.number, "11")
-        self.assertEqual(exercise.instructions, "INSTRUCTIONS")
-        self.assertEqual(exercise.example, "example")
-        self.assertEqual(exercise.clue, "clue")
-        self.assertEqual(exercise.wording, "wording")
+        self.assertEqual(exercise.instructions, "INSTRUCTIONS\n")
+        self.assertEqual(exercise.example, "example\n")
+        self.assertEqual(exercise.clue, "clue\n")
+        self.assertEqual(exercise.wording, "wording\n")
 
     def test_patch__read_only_project(self):
         self.create_model(
@@ -2007,10 +2007,10 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
             project=self.textbook.project,
             textbook_page=16,
             number="11",
-            instructions="instructions",
-            example="example",
-            clue="clue",
-            wording="wording",
+            instructions="instructions\n",
+            example="example\n",
+            clue="clue\n",
+            wording="wording\n",
         )
 
         payload = {
@@ -2038,10 +2038,10 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
         self.assertEqual(exercise.textbook, self.textbook)
         self.assertEqual(exercise.textbook_page, 16)
         self.assertEqual(exercise.number, "11")
-        self.assertEqual(exercise.instructions, "instructions")
-        self.assertEqual(exercise.example, "example")
-        self.assertEqual(exercise.clue, "clue")
-        self.assertEqual(exercise.wording, "wording")
+        self.assertEqual(exercise.instructions, "instructions\n")
+        self.assertEqual(exercise.example, "example\n")
+        self.assertEqual(exercise.clue, "clue\n")
+        self.assertEqual(exercise.wording, "wording\n")
 
     def test_patch__read_only_textbook(self):
         self.create_model(
@@ -2050,10 +2050,10 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
             project=self.textbook.project,
             textbook_page=16,
             number="11",
-            instructions="instructions",
-            example="example",
-            clue="clue",
-            wording="wording",
+            instructions="instructions\n",
+            example="example\n",
+            clue="clue\n",
+            wording="wording\n",
         )
         self.create_model(Textbook, project=self.project, title="Another textbook")
 
@@ -2082,10 +2082,10 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
         self.assertEqual(exercise.textbook, self.textbook)
         self.assertEqual(exercise.textbook_page, 16)
         self.assertEqual(exercise.number, "11")
-        self.assertEqual(exercise.instructions, "instructions")
-        self.assertEqual(exercise.example, "example")
-        self.assertEqual(exercise.clue, "clue")
-        self.assertEqual(exercise.wording, "wording")
+        self.assertEqual(exercise.instructions, "instructions\n")
+        self.assertEqual(exercise.example, "example\n")
+        self.assertEqual(exercise.clue, "clue\n")
+        self.assertEqual(exercise.wording, "wording\n")
 
     def test_patch__read_only_page(self):
         self.create_model(
@@ -2094,10 +2094,10 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
             project=self.textbook.project,
             textbook_page=16,
             number="11",
-            instructions="instructions",
-            example="example",
-            clue="clue",
-            wording="wording",
+            instructions="instructions\n",
+            example="example\n",
+            clue="clue\n",
+            wording="wording\n",
         )
 
         payload = {
@@ -2125,10 +2125,10 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
         self.assertEqual(exercise.textbook, self.textbook)
         self.assertEqual(exercise.textbook_page, 16)
         self.assertEqual(exercise.number, "11")
-        self.assertEqual(exercise.instructions, "instructions")
-        self.assertEqual(exercise.example, "example")
-        self.assertEqual(exercise.clue, "clue")
-        self.assertEqual(exercise.wording, "wording")
+        self.assertEqual(exercise.instructions, "instructions\n")
+        self.assertEqual(exercise.example, "example\n")
+        self.assertEqual(exercise.clue, "clue\n")
+        self.assertEqual(exercise.wording, "wording\n")
 
     def test_patch__read_only_number(self):
         self.create_model(
@@ -2137,10 +2137,10 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
             project=self.textbook.project,
             textbook_page=16,
             number="11",
-            instructions="instructions",
-            example="example",
-            clue="clue",
-            wording="wording",
+            instructions="instructions\n",
+            example="example\n",
+            clue="clue\n",
+            wording="wording\n",
         )
 
         payload = {
@@ -2168,13 +2168,13 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
         self.assertEqual(exercise.textbook, self.textbook)
         self.assertEqual(exercise.textbook_page, 16)
         self.assertEqual(exercise.number, "11")
-        self.assertEqual(exercise.instructions, "instructions")
-        self.assertEqual(exercise.example, "example")
-        self.assertEqual(exercise.clue, "clue")
-        self.assertEqual(exercise.wording, "wording")
+        self.assertEqual(exercise.instructions, "instructions\n")
+        self.assertEqual(exercise.example, "example\n")
+        self.assertEqual(exercise.clue, "clue\n")
+        self.assertEqual(exercise.wording, "wording\n")
 
     def test_delete(self):
-        self.create_model(Exercise, project=self.textbook.project, textbook=self.textbook, textbook_page=16, number="11", instructions="", wording="", example="", clue="")
+        self.create_model(Exercise, project=self.textbook.project, textbook=self.textbook, textbook_page=16, number="11", instructions="\n", wording="\n", example="\n", clue="\n")
         self.assertEqual(self.count_models(Exercise), 1)
 
         response = self.delete("http://server/exercises/wbqloc")

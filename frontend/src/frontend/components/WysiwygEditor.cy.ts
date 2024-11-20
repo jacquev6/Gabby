@@ -183,7 +183,7 @@ describe('WysiwygEditor', () => {
   before(console.clear)
 
   it("updates its model", () => {
-    let modelValue = 'hell\n'
+    let modelValue = 'hell\n\n'
     cy.mount(WysiwygEditor, {props: {
       label: 'Test',
       formats: {},
@@ -192,12 +192,12 @@ describe('WysiwygEditor', () => {
       delta: [{insert: modelValue, attributes: {}}],
     }})
     cy.get('div.ql-editor').type('o').then(() => {
-      expect(modelValue).to.equal('hell\no')
+      expect(modelValue).to.equal('hell\no\n')
     })
   })
 
-  it("doesn't add a trailing line end to the model when typing at the end", () => {
-    let modelValue = 'hell'
+  it("adds characters before the trailing line end when typing at the end", () => {
+    let modelValue = 'hell\n'
     cy.mount(WysiwygEditor, {props: {
       label: 'Test',
       formats: {},
@@ -207,39 +207,11 @@ describe('WysiwygEditor', () => {
     }})
     cy.get('div.ql-editor').type('o')
     cy.wait(0).then(() => {
-      expect(modelValue).to.equal('hello')
-    })
-  })
-
-  it("doesn't add a trailing line end to the model when typing at the start", () => {
-    let modelValue = 'ello'
-    cy.mount(WysiwygEditor, {props: {
-      label: 'Test',
-      formats: {},
-      modelValue,
-      'onUpdate:modelValue': (m: string) => {modelValue = m},
-      delta: [{insert: modelValue, attributes: {}}],
-    }})
-    cy.get('div.ql-editor').type('{moveToStart}h').then(() => {
-      expect(modelValue).to.equal('hello')
-    })
-  })
-
-  it("keeps a freshly-added trailing line end", () => {
-    let modelValue = 'hello'
-    cy.mount(WysiwygEditor, {props: {
-      label: 'Test',
-      formats: {},
-      modelValue,
-      'onUpdate:modelValue': (m: string) => {modelValue = m},
-      delta: [{insert: modelValue, attributes: {}}],
-    }})
-    cy.get('div.ql-editor').type('\n').then(() => {
       expect(modelValue).to.equal('hello\n')
     })
   })
 
-  it("keeps an ever-present trailing line end", () => {
+  it("add characters at the start when typing at the start", () => {
     let modelValue = 'ello\n'
     cy.mount(WysiwygEditor, {props: {
       label: 'Test',
@@ -253,8 +225,36 @@ describe('WysiwygEditor', () => {
     })
   })
 
-  it("removes an ever-present trailing line end when deleting all", () => {
+  it("keeps a freshly-added trailing line end", () => {
     let modelValue = 'hello\n'
+    cy.mount(WysiwygEditor, {props: {
+      label: 'Test',
+      formats: {},
+      modelValue,
+      'onUpdate:modelValue': (m: string) => {modelValue = m},
+      delta: [{insert: modelValue, attributes: {}}],
+    }})
+    cy.get('div.ql-editor').type('\n').then(() => {
+      expect(modelValue).to.equal('hello\n\n')
+    })
+  })
+
+  it("keeps an ever-present trailing line end", () => {
+    let modelValue = 'ello\n\n'
+    cy.mount(WysiwygEditor, {props: {
+      label: 'Test',
+      formats: {},
+      modelValue,
+      'onUpdate:modelValue': (m: string) => {modelValue = m},
+      delta: [{insert: modelValue, attributes: {}}],
+    }})
+    cy.get('div.ql-editor').type('{moveToStart}h').then(() => {
+      expect(modelValue).to.equal('hello\n\n')
+    })
+  })
+
+  it("removes an ever-present trailing line end when deleting all", () => {
+    let modelValue = 'hello\n\n'
     cy.mount(WysiwygEditor, {props: {
       label: 'Test',
       formats: {},
@@ -263,33 +263,7 @@ describe('WysiwygEditor', () => {
       delta: [{insert: modelValue, attributes: {}}],
     }})
     cy.get('div.ql-editor').type('{selectAll}{del}').then(() => {
-      expect(modelValue).to.equal('')
+      expect(modelValue).to.equal('\n')
     })
-  })
-
-  it("removes the trailing line end even when the new delta tries to remove it - no ops", () => {
-    let modelValue = 'hello\n'
-    cy.mount(WysiwygEditor, {props: {
-      label: 'Test',
-      formats: {},
-      modelValue,
-      'onUpdate:modelValue': (m: string) => {modelValue = m},
-      delta: [{insert: modelValue, attributes: {}}],
-    }})
-    cy.vue<typeof WysiwygEditor>().then(w => { w.setProps({delta: []}) })
-    cy.wait(0).then(() => { expect(modelValue).to.equal('') })
-  })
-
-  it("removes the trailing line end even when the new delta tries to remove it - no line end in last op", () => {
-    let modelValue = 'hello\n'
-    cy.mount(WysiwygEditor, {props: {
-      label: 'Test',
-      formats: {},
-      modelValue,
-      'onUpdate:modelValue': (m: string) => {modelValue = m},
-      delta: [{insert: modelValue, attributes: {}}],
-    }})
-    cy.vue<typeof WysiwygEditor>().then(w => { w.setProps({delta: [{insert: 'changed', attributes: {}}]}) })
-    cy.wait(0).then(() => { expect(modelValue).to.equal('changed') })
   })
 })

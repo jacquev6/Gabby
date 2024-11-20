@@ -43,10 +43,54 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
 
     # Custom collation: https://dba.stackexchange.com/a/285230
     number: orm.Mapped[str] = orm.mapped_column(sql.String(None, collation="exercise_number"))
-    instructions: orm.Mapped[str]
-    wording: orm.Mapped[str]
-    example: orm.Mapped[str]
-    clue: orm.Mapped[str]
+
+    _instructions: orm.Mapped[str] = orm.mapped_column(sql.String, name="instructions")
+
+    @property
+    def instructions(self) -> str:
+        assert self._instructions.endswith("\n")
+        return self._instructions
+
+    @instructions.setter
+    def instructions(self, instructions: str):
+        assert instructions.endswith("\n")
+        self._instructions = instructions
+
+    _wording: orm.Mapped[str] = orm.mapped_column(sql.String, name="wording")
+
+    @property
+    def wording(self) -> str:
+        assert self._wording.endswith("\n")
+        return self._wording
+
+    @wording.setter
+    def wording(self, wording: str):
+        assert wording.endswith("\n")
+        self._wording = wording
+
+    _example: orm.Mapped[str] = orm.mapped_column(sql.String, name="example")
+
+    @property
+    def example(self) -> str:
+        assert self._example.endswith("\n")
+        return self._example
+
+    @example.setter
+    def example(self, example: str):
+        assert example.endswith("\n")
+        self._example = example
+
+    _clue: orm.Mapped[str] = orm.mapped_column(sql.String, name="clue")
+
+    @property
+    def clue(self) -> str:
+        assert self._clue.endswith("\n")
+        return self._clue
+
+    @clue.setter
+    def clue(self, clue: str):
+        assert clue.endswith("\n")
+        self._clue = clue
 
     wording_paragraphs_per_pagelet: orm.Mapped[int] = orm.mapped_column(default=3, server_default="3")
 
@@ -116,37 +160,37 @@ class ExerciseTestCase(TransactionTestCase):
         self.textbook = self.create_model(Textbook, project=self.project, title="Textbook")
 
     def test_create__with_textbook(self):
-        e = self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=5, number="5", instructions="", wording="", example="", clue="")
+        e = self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=5, number="5", instructions="\n", wording="\n", example="\n", clue="\n")
         self.assertEqual(e.project, self.project)
         self.assertEqual(e.textbook, self.textbook)
         self.assertEqual(e.textbook_page, 5)
         self.assertEqual(e.number, "5")
 
     def test_create__without_textbook(self):
-        e = self.create_model(Exercise, project=self.project, textbook=None, textbook_page=None, number="5", instructions="", wording="", example="", clue="")
+        e = self.create_model(Exercise, project=self.project, textbook=None, textbook_page=None, number="5", instructions="\n", wording="\n", example="\n", clue="\n")
         self.assertEqual(e.project, self.project)
         self.assertIsNone(e.textbook)
         self.assertIsNone(e.textbook_page)
         self.assertEqual(e.number, "5")
 
     def test_create_duplicate(self):
-        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=5, number="5", instructions="", wording="", example="", clue="")
+        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=5, number="5", instructions="\n", wording="\n", example="\n", clue="\n")
         with self.assertRaises(sql.exc.IntegrityError) as cm:
-            self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=5, number="5", instructions="", wording="", example="", clue="")
+            self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=5, number="5", instructions="\n", wording="\n", example="\n", clue="\n")
         self.assertEqual(cm.exception.orig.diag.constraint_name, "exercises_textbook_id_textbook_page_number_key")
 
     def test_create_near_duplicates(self):
-        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=5, number="A", instructions="", wording="", example="", clue="")
-        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=5, number="a", instructions="", wording="", example="", clue="")
+        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=5, number="A", instructions="\n", wording="\n", example="\n", clue="\n")
+        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=5, number="a", instructions="\n", wording="\n", example="\n", clue="\n")
 
     def test_create_with_textbook_but_without_textbook_page(self):
         with self.assertRaises(sql.exc.IntegrityError) as cm:
-            self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=None, number="5", instructions="", wording="", example="", clue="")
+            self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=None, number="5", instructions="\n", wording="\n", example="\n", clue="\n")
         self.assertEqual(cm.exception.orig.diag.constraint_name, "textbook_id_textbook_page_consistently_null")
 
     def test_create_with_textbook_page_but_without_textbook(self):
         with self.assertRaises(sql.exc.IntegrityError) as cm:
-            self.create_model(Exercise, project=self.project, textbook=None, textbook_page=5, number="5", instructions="", wording="", example="", clue="")
+            self.create_model(Exercise, project=self.project, textbook=None, textbook_page=5, number="5", instructions="\n", wording="\n", example="\n", clue="\n")
         self.assertEqual(cm.exception.orig.diag.constraint_name, "textbook_id_textbook_page_consistently_null")
 
     def test_create_without_project__without_orm(self):
@@ -157,10 +201,10 @@ class ExerciseTestCase(TransactionTestCase):
                     textbook_id=self.textbook.id,
                     textbook_page=5,
                     number="5",
-                    instructions="",
-                    wording="",
-                    example="",
-                    clue="",
+                    _instructions="\n",
+                    _wording="\n",
+                    _example="\n",
+                    _clue="\n",
                 ))
         self.assertEqual(cm.exception.orig.diag.column_name, "project_id")
 
@@ -171,10 +215,10 @@ class ExerciseTestCase(TransactionTestCase):
                 textbook=session.get(Textbook, self.textbook.id),
                 textbook_page=5,
                 number="5",
-                instructions="",
-                wording="",
-                example="",
-                clue="",
+                instructions="\n",
+                wording="\n",
+                example="\n",
+                clue="\n",
             ))
             with self.assertRaises(sql.exc.IntegrityError) as cm:
                 session.flush()
@@ -189,10 +233,10 @@ class ExerciseTestCase(TransactionTestCase):
                     textbook_id=self.textbook.id,
                     textbook_page=5,
                     number="5",
-                    instructions="",
-                    wording="",
-                    example="",
-                    clue="",
+                    _instructions="\n",
+                    _wording="\n",
+                    _example="\n",
+                    _clue="\n",
                     created_by_id=self.user_for_create.id,
                     updated_by_id=self.user_for_create.id,
                 ))
@@ -206,10 +250,10 @@ class ExerciseTestCase(TransactionTestCase):
                 textbook=session.get(Textbook, self.textbook.id),
                 textbook_page=5,
                 number="5",
-                instructions="",
-                wording="",
-                example="",
-                clue="",
+                instructions="\n",
+                wording="\n",
+                example="\n",
+                clue="\n",
                 created_by_id=self.user_for_create.id,
                 updated_by_id=self.user_for_create.id,
             ))
@@ -218,22 +262,22 @@ class ExerciseTestCase(TransactionTestCase):
         self.assertEqual(cm.exception.orig.diag.constraint_name, "exercises_project_id_textbook_id_fkey")
 
     def test_ordering(self):
-        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=5, number="5.b", instructions="", wording="", example="", clue="")
-        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=5, number="5.a", instructions="", wording="", example="", clue="")
-        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=5, number="12", instructions="", wording="", example="", clue="")
-        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=5, number="A12", instructions="", wording="", example="", clue="")
-        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=5, number="A1", instructions="", wording="", example="", clue="")
-        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=5, number="2", instructions="", wording="", example="", clue="")
-        self.create_model(Exercise, project=self.project, textbook=None, textbook_page=None, number="4", instructions="", wording="", example="", clue="")
-        self.create_model(Exercise, project=self.project, textbook=None, textbook_page=None, number="Some text", instructions="", wording="", example="", clue="")
-        self.create_model(Exercise, project=self.project, textbook=None, textbook_page=None, number="Some other text", instructions="", wording="", example="", clue="")
-        self.create_model(Exercise, project=self.project, textbook=None, textbook_page=None, number="Other text", instructions="", wording="", example="", clue="")
-        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=1, number="1", instructions="", wording="", example="", clue="")
-        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=1, number="Bob", instructions="", wording="", example="", clue="")
-        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=1, number="10", instructions="", wording="", example="", clue="")
-        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=1, number="Alice", instructions="", wording="", example="", clue="")
-        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=1, number="03", instructions="", wording="", example="", clue="")
-        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=1, number="2", instructions="", wording="", example="", clue="")
+        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=5, number="5.b", instructions="\n", wording="\n", example="\n", clue="\n")
+        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=5, number="5.a", instructions="\n", wording="\n", example="\n", clue="\n")
+        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=5, number="12", instructions="\n", wording="\n", example="\n", clue="\n")
+        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=5, number="A12", instructions="\n", wording="\n", example="\n", clue="\n")
+        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=5, number="A1", instructions="\n", wording="\n", example="\n", clue="\n")
+        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=5, number="2", instructions="\n", wording="\n", example="\n", clue="\n")
+        self.create_model(Exercise, project=self.project, textbook=None, textbook_page=None, number="4", instructions="\n", wording="\n", example="\n", clue="\n")
+        self.create_model(Exercise, project=self.project, textbook=None, textbook_page=None, number="Some text", instructions="\n", wording="\n", example="\n", clue="\n")
+        self.create_model(Exercise, project=self.project, textbook=None, textbook_page=None, number="Some other text", instructions="\n", wording="\n", example="\n", clue="\n")
+        self.create_model(Exercise, project=self.project, textbook=None, textbook_page=None, number="Other text", instructions="\n", wording="\n", example="\n", clue="\n")
+        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=1, number="1", instructions="\n", wording="\n", example="\n", clue="\n")
+        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=1, number="Bob", instructions="\n", wording="\n", example="\n", clue="\n")
+        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=1, number="10", instructions="\n", wording="\n", example="\n", clue="\n")
+        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=1, number="Alice", instructions="\n", wording="\n", example="\n", clue="\n")
+        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=1, number="03", instructions="\n", wording="\n", example="\n", clue="\n")
+        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=1, number="2", instructions="\n", wording="\n", example="\n", clue="\n")
 
         with self.make_session() as session:
             self.assertEqual(

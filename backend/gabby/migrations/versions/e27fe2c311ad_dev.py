@@ -18,6 +18,7 @@ def upgrade():
     # ### end Alembic commands ###
     with orm.Session(op.get_bind()) as session:
         for exercise in session.query(Exercise).all():
+            # Fix adaptation
             adaptation = exercise._adaptation
             assert adaptation["format"] == 2
             settings = adaptation["settings"]
@@ -46,6 +47,17 @@ def upgrade():
                     effect["kind"] = "itemized"
                 effects.append(effect)
             exercise._adaptation = dict(format=2, settings=dict(kind=kind, effects=effects))
+
+            # Fix instructions, wording, etc.
+            exercise._instructions = exercise._instructions + "\n"
+            exercise._wording = exercise._wording + "\n"
+            exercise._clue = exercise._clue + "\n"
+            exercise._example = exercise._example + "\n"
+
+            exercise.instructions = exercise.instructions
+            exercise.wording = exercise.wording
+            exercise.clue = exercise.clue
+            exercise.example = exercise.example
         session.commit()
 
 

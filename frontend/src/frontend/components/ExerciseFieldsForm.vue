@@ -59,10 +59,10 @@ function makeModel({inTextbook, textbookPage}: MakeModelOptions): Model {
     inTextbook,
     number: '',
     textbookPage,
-    instructions: '',
-    wording: '',
-    example: '',
-    clue: '',
+    instructions: '\n',
+    wording: '\n',
+    example: '\n',
+    clue: '\n',
     wordingParagraphsPerPagelet: 3,
     rectangles: [],
     adaptation: {kind: 'generic', effects: []},
@@ -107,10 +107,10 @@ export function resetModelNotInTextbook(model: Model) {
 }
 
 export function modelIsEmpty(model: Model) {
-  return  model.instructions === ''
-    && model.wording === ''
-    && model.example === ''
-    && model.clue === ''
+  return  model.instructions === '\n'
+    && model.wording === '\n'
+    && model.example === '\n'
+    && model.clue === '\n'
     && deepEqual(model.adaptation, {kind: 'generic', effects: []})
 }
 
@@ -292,10 +292,10 @@ const currentWysiwygFormat = computed(() => {
   }
 })
 
-const instructionsDeltas = computed(() => props.deltas === null ? [] : props.deltas.instructions)
-const wordingDeltas = computed(() => props.deltas === null ? [] : props.deltas.wording)
-const exampleDeltas = computed(() => props.deltas === null ? [] : props.deltas.example)
-const clueDeltas = computed(() => props.deltas === null ? [] : props.deltas.clue)
+const instructionsDeltas = computed(() => props.deltas === null ? [{insert: '\n', attributes: {}}] : props.deltas.instructions)
+const wordingDeltas = computed(() => props.deltas === null ? [{insert: '\n', attributes: {}}] : props.deltas.wording)
+const exampleDeltas = computed(() => props.deltas === null ? [{insert: '\n', attributes: {}}] : props.deltas.example)
+const clueDeltas = computed(() => props.deltas === null ? [{insert: '\n', attributes: {}}] : props.deltas.clue)
 
 
 const selBlotColors = computed(() => {
@@ -365,6 +365,7 @@ defineExpose({
       v-else
       ref="instructionsTextArea"
       :label="$t('exerciseInstructions')"
+      :enforceTrailingLineEnd="true"
       v-model="model.instructions"
       data-cy-exercise-field="instructions"
     />
@@ -380,6 +381,7 @@ defineExpose({
       v-else
       ref="wordingTextArea"
       :label="$t('exerciseWording')"
+      :enforceTrailingLineEnd="true"
       v-model="model.wording"
     />
     <div :class="{'container-fluid': noClueNoExample}">
@@ -397,6 +399,7 @@ defineExpose({
             v-else
             ref="exampleTextArea"
             :label="$t('exerciseExample')"
+            :enforceTrailingLineEnd="true"
             v-model="model.example"
           />
         </div>
@@ -413,6 +416,7 @@ defineExpose({
             v-else
             ref="clueTextArea"
             :label="$t('exerciseClue')"
+            :enforceTrailingLineEnd="true"
             v-model="model.clue"
           />
         </div>

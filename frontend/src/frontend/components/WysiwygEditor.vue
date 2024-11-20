@@ -35,7 +35,7 @@ export function makeModel(formats: Record<string, Format>, quillModel: QuillMode
   for (const delta of quillModel) {
     model += makeModelPart(formats, delta)
   }
-  console.assert(model.endsWith('\n'))  // The Quill model always ends with a line end. (Unlike 'props.delta')
+  console.assert(model.endsWith('\n'))
   return model
 }
 
@@ -179,44 +179,24 @@ const props = defineProps<{
 
 const model = defineModel<string>({required: true})
 
+watch(model, model => console.assert(model.endsWith('\n')), {immediate: true})
+
 const emit = defineEmits<{
   focus: []
   blur: []
   selectionChange: [{index: number, length: number}]
 }>()
 
-// We do not detect if the model (or delta) has a trailing line end.
-// We just add one for Quill and remove it for the model.
-// This will match the behavior of 'textarea' elements.
-const modelWithAdditionalLineEnd = computed({
-  get() {
-    return model.value + '\n'
-  },
-  set(value) {
-    console.assert(value.endsWith('\n'))
-    model.value = value.slice(0, -1)
-  },
-})
-
-const deltaWithAdditionalLineEnd = computed((): QuillModel => {
-  if (props.delta.length === 0) {
-    return [{insert: '\n', attributes: {}}]
-  } else {
-    const lastOp = props.delta[props.delta.length - 1]
-    if ('attributes' in lastOp && Object.keys(lastOp.attributes).length === 0) {
-      return [...props.delta.slice(0, -1), {insert: lastOp.insert + '\n', attributes: {}}]
-    } else {
-      return [...props.delta, {insert: '\n', attributes: {}}]
-    }
-  }
-})
-
-const quillModel = ref<QuillModel>([])
+const quillModel = ref<QuillModel>([{insert: '\n', attributes: {}}])
 const quill = ref<InstanceType<typeof Quill> | null>(null)
 
 watch(
-  deltaWithAdditionalLineEnd,
+  () => props.delta,
   delta => {
+    console.assert(delta.length > 0)
+    const lastOp = delta[delta.length - 1]
+    console.assert(typeof lastOp.insert === 'string')
+    console.assert(lastOp.insert.endsWith('\n'))
     if (!deepEqual(quillModel.value, delta)) {
       quillModel.value = delta
     }
@@ -226,8 +206,8 @@ watch(
 
 watch(quillModel, quillModel => {
   const expectedModel = makeModel(props.formats, quillModel)
-  if (modelWithAdditionalLineEnd.value !== expectedModel) {
-    modelWithAdditionalLineEnd.value = expectedModel
+  if (model.value !== expectedModel) {
+    model.value = expectedModel
   }
 })
 

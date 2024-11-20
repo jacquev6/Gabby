@@ -9,50 +9,53 @@ from . import renderable
 from mydantic import PydanticBase
 
 
-def _make_parser(tags, whitespace):
-    assert len(tags) > 0
-    grammar = (
-        r"""\
-            _separated{x, sep}: x (sep x)*
+class _Parser:
+    def __init__(self, tags, whitespace):
+        grammar = (
+            r"""\
+                _separated{x, sep}: x (sep x)*
 
-            section: LEADING_WHITESPACE? [_separated{_paragraph, PARAGRAPH_SEPARATOR}] TRAILING_WHITESPACE?
+                section: LEADING_WHITESPACE? [_separated{_paragraph, PARAGRAPH_SEPARATOR}] TRAILING_WHITESPACE?
 
-            _paragraph: strict_paragraph | lenient_paragraph
+                _paragraph: strict_paragraph | lenient_paragraph
 
-            strict_paragraph.3: _separated{sentence, SENTENCE_SEPARATOR}
+                strict_paragraph.3: _separated{sentence, SENTENCE_SEPARATOR}
 
-            sentence.4: (_tag | WORD | PUNCTUATION_IN_SENTENCE | WHITESPACE_IN_SENTENCE)+ PUNCTUATION_AT_END_OF_SENTENCE
+                sentence.4: (_tag | WORD | PUNCTUATION_IN_SENTENCE | WHITESPACE_IN_SENTENCE)+ PUNCTUATION_AT_END_OF_SENTENCE
 
-            lenient_paragraph.2: (_paragraph_token | WHITESPACE_IN_SENTENCE)* _paragraph_token
-            _paragraph_token: _tag | WORD | PUNCTUATION_IN_LENIENT_PARAGRAPH
+                lenient_paragraph.2: (_paragraph_token | WHITESPACE_IN_SENTENCE)* _paragraph_token
+                _paragraph_token: _tag | WORD | PUNCTUATION_IN_LENIENT_PARAGRAPH
 
-            WORD: /\w+/
+                WORD: /\w+/
 
-            ANY_WHITESPACE: /[ \t\n\r]+/
+                ANY_WHITESPACE: /[ \t\n\r]+/
 
-            LEADING_WHITESPACE: ANY_WHITESPACE
-            TRAILING_WHITESPACE: ANY_WHITESPACE
-            PARAGRAPH_SEPARATOR: PARAGRAPH_SEPARATING_WHITESPACE
-            SENTENCE_SEPARATOR: NON_PARAGRAPH_SEPARATING_WHITESPACE
-            WHITESPACE_IN_SENTENCE: NON_PARAGRAPH_SEPARATING_WHITESPACE
+                LEADING_WHITESPACE: ANY_WHITESPACE
+                TRAILING_WHITESPACE: ANY_WHITESPACE
+                PARAGRAPH_SEPARATOR: PARAGRAPH_SEPARATING_WHITESPACE
+                SENTENCE_SEPARATOR: NON_PARAGRAPH_SEPARATING_WHITESPACE
+                WHITESPACE_IN_SENTENCE: NON_PARAGRAPH_SEPARATING_WHITESPACE
 
-            PUNCTUATION_IN_LENIENT_PARAGRAPH: /\.\.\.|[^\w \t\n\r]/
-            PUNCTUATION_IN_SENTENCE: /[-,;:–]/
-            PUNCTUATION_AT_END_OF_SENTENCE: /\.\.\.|[.!?…]/
+                PUNCTUATION_IN_LENIENT_PARAGRAPH: /\.\.\.|[^\w \t\n\r]/
+                PUNCTUATION_IN_SENTENCE: /[-,;:–]/
+                PUNCTUATION_AT_END_OF_SENTENCE: /\.\.\.|[.!?…]/
 
-            # Terminals usable in tags
-            STR: /(\\\\|\\{|\\\||\\}|[^\\{|}])+/
-            INT: /[0-9]+/
-        """
-        + whitespace
-        + f"_tag.1: {' | '.join(f"{tag}_tag" for tag in tags.keys())}\n"
-        + "\n".join(f'{tag}_tag: "{{" "{tag.replace("_", "-")}" {definition} "}}"' for (tag, definition) in tags.items())
-    )
+                # Terminals usable in tags
+                STR: /(\\\\|\\{|\\\||\\}|[^\\{|}])+/
+                INT: /[0-9]+/
+            """
+            + whitespace
+            + f"_tag.1: {' | '.join(f"{tag}_tag" for tag in tags.keys())}\n"
+            + "\n".join(f'{tag}_tag: "{{" "{tag.replace("_", "-")}" {definition} "}}"' for (tag, definition) in tags.items())
+        )
+        self.lark = lark.Lark(grammar, start="section")
 
-    return lark.Lark(grammar, start="section")
+    def parse(self, text):
+        assert text.endswith("\n")
+        return self.lark.parse(text)
 
 
-_instructions_parser = _make_parser(
+_instructions_parser = _Parser(
     dict(
         bold = r""" "|" STR """,
         italic = r""" "|" STR """,
@@ -70,7 +73,7 @@ _instructions_parser = _make_parser(
 )
 
 
-_example_and_clue_parser = _make_parser(
+_example_and_clue_parser = _Parser(
     dict(
         bold = r""" "|" STR """,
         italic = r""" "|" STR """,
@@ -87,7 +90,7 @@ _example_and_clue_parser = _make_parser(
 )
 
 
-_wording_parser = _make_parser(
+_wording_parser = _Parser(
     dict(
         bold = r""" "|" STR """,
         italic = r""" "|" STR """,

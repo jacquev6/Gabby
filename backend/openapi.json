@@ -958,17 +958,17 @@
             }
           },
           "clue": {
-            "default": "",
+            "default": "\n",
             "title": "Clue",
             "type": "string"
           },
           "example": {
-            "default": "",
+            "default": "\n",
             "title": "Example",
             "type": "string"
           },
           "instructions": {
-            "default": "",
+            "default": "\n",
             "title": "Instructions",
             "type": "string"
           },
@@ -996,7 +996,7 @@
             "title": "Textbookpage"
           },
           "wording": {
-            "default": "",
+            "default": "\n",
             "title": "Wording",
             "type": "string"
           },

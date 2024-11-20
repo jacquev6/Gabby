@@ -116,10 +116,10 @@ class Exercise(PydanticBase, CreatedUpdatedByAtMixin):
 
     number: Annotated[str, Constant()]
 
-    instructions: str = ""
-    wording: str = ""
-    example: str = ""
-    clue: str = ""
+    instructions: str = "\n"
+    wording: str = "\n"
+    example: str = "\n"
+    clue: str = "\n"
 
     wording_paragraphs_per_pagelet: int = 3
 
