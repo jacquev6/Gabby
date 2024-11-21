@@ -178,29 +178,14 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
         }
 
     def make_adapted_and_delta(self):
-        assert self._instructions_text is not None
-        assert self._wording_text is not None
-        assert self._example_text is not None
-        assert self._clue_text is not None
-        maker = parsing.EffectsBasedAdapterAndDeltaMaker(
-            self.adaptation.effects,
-            self._instructions_text,
-            self.instructions_deltas,
-            self._wording_text,
-            self.wording_deltas,
-            self._example_text,
-            self.example_deltas,
-            self._clue_text,
-            self.clue_deltas,
-        )
         return (
             renderable.Exercise(
                 number=self.number,
                 textbook_page=self.textbook_page,
-                instructions=maker.adapted_instructions,
-                wording=maker.adapted_wording,
-                example=maker.adapted_example,
-                clue=maker.adapted_clue,
+                instructions=parsing.adapt_instructions(self.instructions_deltas, self.adaptation.effects),
+                wording=parsing.adapt_wording(self.instructions_deltas, self.wording_deltas, self.adaptation.effects),
+                example=parsing.adapt_instructions(self.example_deltas, self.adaptation.effects),
+                clue=parsing.adapt_instructions(self.clue_deltas, self.adaptation.effects),
                 wording_paragraphs_per_pagelet=self.wording_paragraphs_per_pagelet,
             ),
             exercise_delta.Exercise(
@@ -208,7 +193,7 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
                 wording=self.wording_deltas,
                 example=self.example_deltas,
                 clue=self.clue_deltas,
-            )
+            ),
         )
 
 
