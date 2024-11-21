@@ -60,7 +60,7 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
         self._instructions_text = instructions
         self._instructions_deltas = [
             delta.model_dump()
-            for delta in parsing.DeltaMaker().transform(parsing._instructions_parser.parse(instructions))
+            for delta in parsing.DeltaMaker().transform(parsing.instructions_parser.parse(instructions))
         ]
 
     @property
@@ -85,7 +85,7 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
         self._wording_text = wording
         self._wording_deltas = [
             delta.model_dump()
-            for delta in parsing.DeltaMaker().transform(parsing._wording_parser.parse(wording))
+            for delta in parsing.DeltaMaker().transform(parsing.wording_parser.parse(wording))
         ]
 
     @property
@@ -110,7 +110,7 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
         self._example_text = example
         self._example_deltas = [
             delta.model_dump()
-            for delta in parsing.DeltaMaker().transform(parsing._example_and_clue_parser.parse(example))
+            for delta in parsing.DeltaMaker().transform(parsing.example_and_clue_parser.parse(example))
         ]
 
     @property
@@ -135,7 +135,7 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
         self._clue_text = clue
         self._clue_deltas = [
             delta.model_dump()
-            for delta in parsing.DeltaMaker().transform(parsing._example_and_clue_parser.parse(clue))
+            for delta in parsing.DeltaMaker().transform(parsing.example_and_clue_parser.parse(clue))
         ]
 
     @property
