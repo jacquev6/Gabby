@@ -1,3 +1,4 @@
+import re
 from typing import Annotated, ClassVar, Literal
 import itertools
 import unittest
@@ -8,6 +9,392 @@ import pydantic
 from . import exercise_delta
 from . import renderable
 from mydantic import PydanticBase
+
+
+class FillWithFreeTextAdaptationEffect(PydanticBase):
+    kind: Literal["fill-with-free-text"]
+
+    placeholder: str
+
+    def preprocess(self, instructions, wording, example, clue):
+        wording = wording.replace(self.placeholder, f"{{fill-with-free-text|{self.placeholder}}}")
+        return (instructions, wording, example, clue)
+
+    def make_instructions_adapter_constructor_kwds(self):
+        return {}
+
+    def make_wording_adapter_constructor_kwds(self):
+        return {}
+
+    def make_example_adapter_constructor_kwds(self):
+        return {}
+
+    def make_clue_adapter_constructor_kwds(self):
+        return {}
+
+
+class ItemizedAdaptationEffect(PydanticBase):
+    kind: Literal["itemized"]
+
+    class WordsItems(PydanticBase):
+        kind: Literal["words"]
+        punctuation: bool
+
+    class SentencesItems(PydanticBase):
+        kind: Literal["sentences"]
+
+    class ManualItems(PydanticBase):
+        kind: Literal["manual"]
+
+    Items: ClassVar = WordsItems | SentencesItems | ManualItems
+
+    class Effects(PydanticBase):
+        class Selectable(PydanticBase):
+            colors: list[str]
+
+        selectable: Selectable | None
+        boxed: bool
+
+    items: Items
+    effects: Effects
+
+    def preprocess(self, instructions, wording, example, clue):
+        return (instructions, wording, example, clue)
+
+    def make_instructions_adapter_constructor_kwds(self):
+        if self.effects.selectable is None:
+            return {}
+        else:
+            return {
+                "selection_colors": self.effects.selectable.colors,
+            }
+
+    def make_wording_adapter_constructor_kwds(self):
+        if self.effects.selectable is None:
+            return {}
+        else:
+            if self.items.kind == "words":
+                return {
+                    "select_words": True,
+                    "select_punctuation": self.items.punctuation,
+                    "selection_colors": self.effects.selectable.colors,
+                    "selectable_are_boxed": self.effects.boxed,
+                }
+            elif self.items.kind == "manual":
+                return {
+                    "selection_colors": self.effects.selectable.colors,
+                    "selectable_are_boxed": self.effects.boxed,
+                }
+            else:
+                assert False, f"Unknown items kind: {self.items.kind}"
+
+    def make_example_adapter_constructor_kwds(self):
+        if self.effects.selectable is None:
+            return {}
+        else:
+            return {
+                "selection_colors": self.effects.selectable.colors,
+            }
+
+    def make_clue_adapter_constructor_kwds(self):
+        if self.effects.selectable is None:
+            return {}
+        else:
+            return {
+                "selection_colors": self.effects.selectable.colors,
+            }
+
+
+AdaptationEffect = Annotated[
+    FillWithFreeTextAdaptationEffect | ItemizedAdaptationEffect,
+    pydantic.Field(discriminator="kind"),
+]
+
+
+def gather_choices(deltas):
+    choices = []
+    for delta in deltas:
+        if "choices2" in delta.attributes:
+            choices_settings = delta.attributes["choices2"]
+            if choices_settings["placeholder"] != "":
+                choices.append([
+                    choices_settings["start"] or None,
+                    choices_settings["separator1"] or None,
+                    choices_settings["separator2"] or None,
+                    choices_settings["stop"] or None,
+                    choices_settings["placeholder"],
+                    delta.insert,
+                ])
+    return choices
+
+
+def split_deltas_into_paragraphs_and_sentences(deltas: list[exercise_delta.TextInsertOp], explicit_paragraph_separator_pattern):
+    assert len(deltas) > 0
+    deltas[0].insert = deltas[0].insert.lstrip()
+    deltas[-1].insert = deltas[-1].insert.rstrip()
+
+    deltas_by_paragraph = [[]]
+    for delta in deltas:
+        if "choices2" in delta.attributes:
+            deltas_by_paragraph[-1].append(delta)
+        else:
+            for i, paragraph_part in enumerate(re.split(explicit_paragraph_separator_pattern, delta.insert)):
+                if i > 0:
+                    deltas_by_paragraph.append([])
+                if paragraph_part != "":
+                    deltas_by_paragraph[-1].append(exercise_delta.TextInsertOp(insert=paragraph_part, attributes=delta.attributes))
+
+    deltas_by_paragraph_and_sentence = []
+    for paragraph_deltas in deltas_by_paragraph:
+        can_be_splitted_at_sentence_end = True
+        for j, delta in enumerate(paragraph_deltas):
+            # Ad-hoc for unit tests and migration with behavior preserved bug-to-bug. @todo Remove to allow more splitting by sentences
+            if delta.attributes == {} and any(c in delta.insert for c in "'#«»’()*➞+•/"):
+                can_be_splitted_at_sentence_end = False
+
+            sentence_parts = re.split(r"(\.\.\.|[.!?…])", delta.insert)
+            # Last sentence doesn't end with a punctuation mark
+            if j == len(paragraph_deltas) - 1 and sentence_parts[-1] != "":  # Maybe not as robust as we want, but this is behavior we want removed eventually anyway. @todo Remove to allow more splitting by sentences
+                can_be_splitted_at_sentence_end = False
+
+            # Sentence has two consecutive punctuation marks
+            for i in range(1, len(sentence_parts) // 2):
+                if sentence_parts[2 * i].strip() == "":
+                    can_be_splitted_at_sentence_end = False
+
+            if not can_be_splitted_at_sentence_end:
+                break
+
+        if can_be_splitted_at_sentence_end:
+            # Previously know as "strict paragraph"
+            deltas_by_paragraph_and_sentence.append([[]])
+            for delta in paragraph_deltas:
+                if "choices2" in delta.attributes:
+                    deltas_by_paragraph_and_sentence[-1][-1].append(delta)
+                else:
+                    for i, sentence_part in enumerate(re.split(r"(\.\.\.|[.!?…])", delta.insert)):
+                        if sentence_part != "":
+                            if i % 2 == 0 and i > 1:
+                                deltas_by_paragraph_and_sentence[-1].append([])
+                            deltas_by_paragraph_and_sentence[-1][-1].append(exercise_delta.TextInsertOp(insert=sentence_part, attributes=delta.attributes))
+        else:
+            # Previously know as "lenient paragraph"
+            deltas_by_paragraph_and_sentence.append([paragraph_deltas])
+
+    return deltas_by_paragraph_and_sentence
+
+
+def strip_section(section: renderable.Section):
+    for paragraph_part in section.paragraphs:
+        for s in paragraph_part.sentences:
+            fixed_tokens = []
+            for token in s.tokens:
+                if token == renderable.Whitespace():
+                    if len(fixed_tokens) > 0 and fixed_tokens[-1] != renderable.Whitespace():
+                        fixed_tokens.append(token)
+                else:
+                    fixed_tokens.append(token)
+            while len(fixed_tokens) > 0 and fixed_tokens[-1] == renderable.Whitespace():
+                fixed_tokens.pop(-1)
+            s.tokens = fixed_tokens
+        paragraph_part.sentences = list(filter(lambda s: len(s.tokens) > 0, paragraph_part.sentences))
+    section.paragraphs = list(filter(lambda p: len(p.sentences) > 0, section.paragraphs))
+
+
+def adapt_instructions(deltas: list[exercise_delta.TextInsertOp], effects: list[AdaptationEffect]):
+    selection_colors = []
+    for effect in effects:
+        if isinstance(effect, ItemizedAdaptationEffect):
+            if effect.effects.selectable is not None:
+                assert selection_colors == []
+                selection_colors = effect.effects.selectable.colors
+
+    def adapt_sentence(deltas: list[exercise_delta.TextInsertOp]):
+        for delta in deltas:
+            if delta.attributes == {}:
+                for text in re.split(r"(\.\.\.|\s+|\W)", delta.insert):
+                    if text != "":
+                        if text.strip() == "":
+                            yield renderable.Whitespace()
+                        else:
+                            yield renderable.PlainText(text=text)
+
+            elif "sel" in delta.attributes:
+                assert delta.attributes == {"sel": delta.attributes["sel"]}
+
+                if len(selection_colors) > delta.attributes["sel"] - 1:
+                    yield renderable.SelectedText(text=delta.insert, color=selection_colors[delta.attributes["sel"] - 1])
+                else:
+                    yield renderable.PlainText(text=delta.insert)
+
+            elif "choices2" in delta.attributes:
+                assert delta.attributes == {"choices2": delta.attributes["choices2"]}
+
+                start = delta.attributes["choices2"]["start"] or None
+                separator1 = delta.attributes["choices2"]["separator1"] or None
+                separator2 = delta.attributes["choices2"]["separator2"] or None
+                stop = delta.attributes["choices2"]["stop"] or None
+                placeholder = delta.attributes["choices2"]["placeholder"] or None
+                text = delta.insert
+
+                add_start_and_stop = start is not None and stop is not None and text.startswith(start) and text.endswith(stop)
+                choices = _separate_choices(start, separator1, separator2, stop, placeholder, text)
+                if add_start_and_stop:
+                    yield renderable.PlainText(text=start)
+                yield renderable.BoxedText(text=choices[0])
+                if separator2 is None:
+                    for choice in choices[1:]:
+                        yield renderable.Whitespace()
+                        yield renderable.PlainText(text=separator1)
+                        yield renderable.Whitespace()
+                        yield renderable.BoxedText(text=choice)
+                else:
+                    for choice in choices[1:-1]:
+                        yield renderable.PlainText(text=separator1)
+                        yield renderable.Whitespace()
+                        yield renderable.BoxedText(text=choice)
+                    yield renderable.Whitespace()
+                    yield renderable.PlainText(text=separator2)
+                    yield renderable.Whitespace()
+                    yield renderable.BoxedText(text=choices[-1])
+                if add_start_and_stop:
+                    yield renderable.PlainText(text=stop)
+
+            elif "bold" in delta.attributes:
+                assert delta.attributes == {"bold": delta.attributes["bold"]}
+
+                yield renderable.BoldText(text=delta.insert)
+
+            elif "italic" in delta.attributes:
+                assert delta.attributes == {"italic": delta.attributes["italic"]}
+
+                yield renderable.ItalicText(text=delta.insert)
+
+            else:
+                assert False, f"Unknown attributes: {delta.attributes}"
+
+    # Each sentence is on its own paragraph
+    section = renderable.Section(paragraphs=[
+        renderable.Paragraph(sentences=[renderable.Sentence(tokens=list(adapt_sentence(deltas)))])
+        for sentences_deltas in split_deltas_into_paragraphs_and_sentences(deltas, r"\s*\n\s*\n\s*")
+        for deltas in sentences_deltas
+    ])
+
+    strip_section(section)
+
+    return section
+
+
+def adapt_wording(instructions_deltas, wording_deltas: list[exercise_delta.TextInsertOp], effects: list[AdaptationEffect]):
+    global_placeholders: list[tuple[str, renderable.SentenceToken]] = []
+    words_are_selectable = False
+    punctuation_is_selectable = False
+    selectables_colors = []
+    selectables_are_boxed = False
+
+    for effect in effects:
+        if isinstance(effect, FillWithFreeTextAdaptationEffect):
+            global_placeholders.append((effect.placeholder, renderable.FreeTextInput()))
+        if isinstance(effect, ItemizedAdaptationEffect):
+            words_are_selectable = effect.items.kind == "words"
+            punctuation_is_selectable = words_are_selectable and effect.items.punctuation
+            if effect.effects.selectable is not None:
+                selectables_colors = effect.effects.selectable.colors
+                selectables_are_boxed = effect.effects.boxed
+
+    for (start, separator1, separator2, stop, placeholder, text) in gather_choices(instructions_deltas):
+        if placeholder != "":
+            global_placeholders.append((placeholder, renderable.MultipleChoicesInput(choices=_separate_choices(start, separator1, separator2, stop, placeholder, text))))
+
+    for delta in wording_deltas:
+        if delta.attributes == {}:
+            for index, (placeholder, _token) in enumerate(global_placeholders):
+                delta.insert = delta.insert.replace(placeholder, f"ph{index}hp")
+
+    def adapt_sentence(sentence_deltas: list[exercise_delta.TextInsertOp]):
+        sentence_specific_placeholders = []
+
+        for (start, separator1, separator2, stop, placeholder, text) in gather_choices(sentence_deltas):
+            if placeholder != "":
+                sentence_specific_placeholders.append((placeholder, renderable.MultipleChoicesInput(choices=_separate_choices(start, separator1, separator2, stop, placeholder, text))))
+
+        for delta in sentence_deltas:
+            if delta.attributes == {}:
+                for index, (placeholder, _token) in enumerate(sentence_specific_placeholders):
+                    delta.insert = delta.insert.replace(placeholder, f"ph{len(global_placeholders) + index}hp")
+
+        sentence_placeholders = list(itertools.chain(global_placeholders, sentence_specific_placeholders))
+
+        for delta in sentence_deltas:
+            if delta.attributes == {}:
+                for i, text in enumerate(re.split(r"(\.\.\.|\s+|\W|ph\d+hp)", delta.insert)):
+                    if text != "":
+                        if i % 2 == 1:
+                            # Separator: punctuation, spacing, placeholders
+                            if text.strip() == "":
+                                yield renderable.Whitespace()
+                            elif text.startswith("ph") and text.endswith("hp"):
+                                index = int(text[2:-2])
+                                yield sentence_placeholders[index][1]
+                            else:
+                                if punctuation_is_selectable:
+                                    yield renderable.SelectableText(text=text, colors=selectables_colors, boxed=selectables_are_boxed)
+                                else:
+                                    yield renderable.PlainText(text=text)
+                        else:
+                            # Separated: words
+                            if words_are_selectable:
+                                yield renderable.SelectableText(text=text, colors=selectables_colors, boxed=selectables_are_boxed)
+                            else:
+                                yield renderable.PlainText(text=text)
+
+            elif "selectable" in delta.attributes:
+                assert delta.attributes == {"selectable": delta.attributes["selectable"]}
+
+                for text in re.split(r"(\.\.\.|\s+|\W)", delta.insert):
+                    if text != "":
+                        if text.strip() == "":
+                            yield renderable.Whitespace()
+                        else:
+                            yield renderable.SelectableText(text=text, colors=selectables_colors, boxed=selectables_are_boxed)
+
+            elif "bold" in delta.attributes:
+                assert delta.attributes == {"bold": delta.attributes["bold"]}
+
+                yield renderable.BoldText(text=delta.insert)
+
+            elif "italic" in delta.attributes:
+                assert delta.attributes == {"italic": delta.attributes["italic"]}
+
+                yield renderable.ItalicText(text=delta.insert)
+
+            elif "choices2" in delta.attributes:
+                assert delta.attributes == {"choices2": delta.attributes["choices2"]}
+
+                choices_settings = delta.attributes["choices2"]
+                placeholder = choices_settings["placeholder"] or None
+                if placeholder is None:
+                    start = choices_settings["start"] or None
+                    separator1 = choices_settings["separator1"] or None
+                    separator2 = choices_settings["separator2"] or None
+                    stop = choices_settings["stop"] or None
+                    yield renderable.MultipleChoicesInput(choices=_separate_choices(start, separator1, separator2, stop, placeholder, delta.insert))
+
+            else:
+                assert False, f"Unknown attributes: {delta.attributes}"
+
+    # Paragraph are preserved
+    section = renderable.Section(paragraphs=[
+        renderable.Paragraph(sentences=[
+            renderable.Sentence(tokens=list(adapt_sentence(deltas)))
+            for deltas in sentences_deltas
+        ])
+        for sentences_deltas in split_deltas_into_paragraphs_and_sentences(wording_deltas, r"\s*\n\s*")
+    ])
+
+    strip_section(section)
+
+    return section
 
 
 class _Parser:
@@ -119,16 +506,32 @@ class ParserTestCase(unittest.TestCase):
                     return (name.value, args)
                 return rule
 
-    def do_test(self, test, expected_ast):
+    def do_base_test(self, test, expected_ast):
         parse_tree = self.parser.parse(test)
         actual_ast = self.Transformer().transform(parse_tree)
         if actual_ast != expected_ast:
             print("Actual AST:", actual_ast)
         self.assertEqual(actual_ast, expected_ast)
 
+        return parse_tree
+
 
 class InstructionsParserTestCase(ParserTestCase):
     parser = _instructions_parser
+
+    def do_test(self, test, expected_ast):
+        self.do_base_test(test, expected_ast)
+        parse_tree = self.do_base_test(test, expected_ast)
+
+        deltas = DeltaMaker().transform(parse_tree)
+        expected_adapted = InstructionsAdapter().transform(parse_tree)
+        actual_adapted = adapt_instructions(deltas, [])
+        if actual_adapted != expected_adapted:
+            print("\nDeltas:", deltas)
+            print("Tree:", parse_tree.pretty())
+            print("Expected adapted:", expected_adapted)
+            print("Actual adapted  :", actual_adapted)
+        self.assertEqual(actual_adapted, expected_adapted)
 
     def test_empty(self):
         self.do_test("\n", ("section", [("LEADING_WHITESPACE", "\n")]))
@@ -339,7 +742,21 @@ class InstructionsParserTestCase(ParserTestCase):
 
 class WordingParserTestCase(ParserTestCase):
     parser = _wording_parser
-    
+
+    def do_test(self, test, expected_ast):
+        self.do_base_test(test, expected_ast)
+        parse_tree = self.do_base_test(test, expected_ast)
+
+        deltas = DeltaMaker().transform(parse_tree)
+        expected_adapted = WordingAdapter().transform(parse_tree)
+        actual_adapted = adapt_wording([], deltas, [])
+        if actual_adapted != expected_adapted:
+            print("\nDeltas:", deltas)
+            print("Tree:", parse_tree.pretty())
+            print("Expected adapted:", expected_adapted)
+            print("Actual adapted  :", actual_adapted)
+        self.assertEqual(actual_adapted, expected_adapted)
+
     def test_empty(self):
         self.do_test("\n", ("section", [("LEADING_WHITESPACE", "\n")]))
 
@@ -961,106 +1378,6 @@ class WordingAdapter(lark.Transformer):
         return renderable.SelectableText(text=args[0], colors=self.selection_colors, boxed=self.selectable_are_boxed)
 
 
-class FillWithFreeTextAdaptationEffect(PydanticBase):
-    kind: Literal["fill-with-free-text"]
-
-    placeholder: str
-
-    def preprocess(self, instructions, wording, example, clue):
-        wording = wording.replace(self.placeholder, f"{{fill-with-free-text|{self.placeholder}}}")
-        return (instructions, wording, example, clue)
-
-    def make_instructions_adapter_constructor_kwds(self):
-        return {}
-
-    def make_wording_adapter_constructor_kwds(self):
-        return {}
-
-    def make_example_adapter_constructor_kwds(self):
-        return {}
-
-    def make_clue_adapter_constructor_kwds(self):
-        return {}
-
-
-class ItemizedAdaptationEffect(PydanticBase):
-    kind: Literal["itemized"]
-
-    class WordsItems(PydanticBase):
-        kind: Literal["words"]
-        punctuation: bool
-
-    class SentencesItems(PydanticBase):
-        kind: Literal["sentences"]
-
-    class ManualItems(PydanticBase):
-        kind: Literal["manual"]
-
-    Items: ClassVar = WordsItems | SentencesItems | ManualItems
-
-    class Effects(PydanticBase):
-        class Selectable(PydanticBase):
-            colors: list[str]
-
-        selectable: Selectable | None
-        boxed: bool
-
-    items: Items
-    effects: Effects
-
-    def preprocess(self, instructions, wording, example, clue):
-        return (instructions, wording, example, clue)
-
-    def make_instructions_adapter_constructor_kwds(self):
-        if self.effects.selectable is None:
-            return {}
-        else:
-            return {
-                "selection_colors": self.effects.selectable.colors,
-            }
-
-    def make_wording_adapter_constructor_kwds(self):
-        if self.effects.selectable is None:
-            return {}
-        else:
-            if self.items.kind == "words":
-                return {
-                    "select_words": True,
-                    "select_punctuation": self.items.punctuation,
-                    "selection_colors": self.effects.selectable.colors,
-                    "selectable_are_boxed": self.effects.boxed,
-                }
-            elif self.items.kind == "manual":
-                return {
-                    "selection_colors": self.effects.selectable.colors,
-                    "selectable_are_boxed": self.effects.boxed,
-                }
-            else:
-                assert False, f"Unknown items kind: {self.items.kind}"
-
-    def make_example_adapter_constructor_kwds(self):
-        if self.effects.selectable is None:
-            return {}
-        else:
-            return {
-                "selection_colors": self.effects.selectable.colors,
-            }
-
-    def make_clue_adapter_constructor_kwds(self):
-        if self.effects.selectable is None:
-            return {}
-        else:
-            return {
-                "selection_colors": self.effects.selectable.colors,
-            }
-
-
-AdaptationEffect = Annotated[
-    FillWithFreeTextAdaptationEffect | ItemizedAdaptationEffect,
-    pydantic.Field(discriminator="kind"),
-]
-
-
 def _separate_choices(start, separator1, separator2, stop, placeholder, text):
     text = text.strip()
     if start is not None and stop is not None and text.startswith(start) and text.endswith(stop):
@@ -1077,22 +1394,22 @@ def _separate_choices(start, separator1, separator2, stop, placeholder, text):
 class EffectsBasedAdapterAndDeltaMaker:
     def __init__(
         self,
-        effects: list[AdaptationEffect],
+        global_effects: list[AdaptationEffect],
         instructions_text: str,
-        instructions_deltas: list[exercise_delta.InsertOp],
+        instructions_deltas: list[exercise_delta.TextInsertOp],
         wording_text: str,
-        wording_deltas: list[exercise_delta.InsertOp],
+        wording_deltas: list[exercise_delta.TextInsertOp],
         example_text: str,
-        example_deltas: list[exercise_delta.InsertOp],
+        example_deltas: list[exercise_delta.TextInsertOp],
         clue_text: str,
-        clue_deltas: list[exercise_delta.InsertOp],
+        clue_deltas: list[exercise_delta.TextInsertOp],
     ):
         assert DeltaMaker().transform(_instructions_parser.parse(instructions_text)) == instructions_deltas
         assert DeltaMaker().transform(_wording_parser.parse(wording_text)) == wording_deltas
         assert DeltaMaker().transform(_example_and_clue_parser.parse(example_text)) == example_deltas
         assert DeltaMaker().transform(_example_and_clue_parser.parse(clue_text)) == clue_deltas
 
-        for effect in effects:
+        for effect in global_effects:
             (instructions_text, wording_text, example_text, clue_text) = effect.preprocess(instructions_text, wording_text, example_text, clue_text)
         (instructions_text, wording_text, example_text, clue_text) = self.preprocess(instructions_text, instructions_deltas, wording_text, wording_deltas, example_text, clue_text)
 
@@ -1100,7 +1417,7 @@ class EffectsBasedAdapterAndDeltaMaker:
         wording_adapter_constructor_kwds = {}
         example_adapter_constructor_kwds = {}
         clue_adapter_constructor_kwds = {}
-        for effect in effects:
+        for effect in global_effects:
             instructions_adapter_constructor_kwds.update(effect.make_instructions_adapter_constructor_kwds())
             wording_adapter_constructor_kwds.update(effect.make_wording_adapter_constructor_kwds())
             example_adapter_constructor_kwds.update(effect.make_example_adapter_constructor_kwds())
@@ -1117,38 +1434,62 @@ class EffectsBasedAdapterAndDeltaMaker:
         assert DeltaMaker().transform(example_tree) == example_deltas
         assert DeltaMaker().transform(clue_tree) == clue_deltas
 
-        self.adapted_instructions = InstructionsAdapter(**instructions_adapter_constructor_kwds).transform(instructions_tree)
-        self.adapted_wording = WordingAdapter(**wording_adapter_constructor_kwds).transform(wording_tree)
-        self.adapted_example = InstructionsAdapter(**example_adapter_constructor_kwds).transform(example_tree)
-        self.adapted_clue = InstructionsAdapter(**clue_adapter_constructor_kwds).transform(clue_tree)
+        self.adapted_instructions = adapt_instructions(instructions_deltas, global_effects)
+        expected_adapted_instructions = InstructionsAdapter(**instructions_adapter_constructor_kwds).transform(instructions_tree)
+        if self.adapted_instructions != expected_adapted_instructions:
+            print("Instructions deltas:", instructions_deltas)
+            print("Instructions Tree: ", instructions_tree.pretty())
+            print("Global effects:", global_effects)
+            print("Instructions adaptation keywords:", instructions_adapter_constructor_kwds)
+            print("Expected adapted instructions:", expected_adapted_instructions)
+            print("Actual adapted instructions  :", self.adapted_instructions)
+            assert False
+
+        self.adapted_wording = adapt_wording(instructions_deltas, wording_deltas, global_effects)
+        # self.adapted_wording = WordingAdapter(**wording_adapter_constructor_kwds).transform(wording_tree)
+        expected_adapted_wording = WordingAdapter(**wording_adapter_constructor_kwds).transform(wording_tree)
+        if self.adapted_wording != expected_adapted_wording:
+            print("Instructions deltas:", instructions_deltas)
+            print("Wording deltas:", wording_deltas)
+            print("Wording tree: ", wording_tree.pretty())
+            print("Global effects:", global_effects)
+            print("Wording adaptation keywords:", wording_adapter_constructor_kwds)
+            print("Expected adapted wording:", expected_adapted_wording)
+            print("Actual adapted wording  :", self.adapted_wording)
+            assert False
+
+        self.adapted_example = adapt_instructions(example_deltas, global_effects)
+        expected_adapted_example = InstructionsAdapter(**example_adapter_constructor_kwds).transform(example_tree)
+        if self.adapted_example != expected_adapted_example:
+            print("Example deltas:", example_deltas)
+            print("Example tree: ", example_tree.pretty())
+            print("Global effects:", global_effects)
+            print("Example adaptation keywords:", example_adapter_constructor_kwds)
+            print("Expected adapted example:", expected_adapted_example)
+            print("Actual adapted example  :", self.adapted_example)
+            assert False
+
+        self.adapted_clue = adapt_instructions(clue_deltas, global_effects)
+        expected_adapted_clue = InstructionsAdapter(**clue_adapter_constructor_kwds).transform(clue_tree)
+        if self.adapted_clue != expected_adapted_clue:
+            print("Clue deltas:", clue_deltas)
+            print("Clue Tree: ", clue_tree.pretty())
+            print("Global effects:", global_effects)
+            print("Clue adaptation keywords:", clue_adapter_constructor_kwds)
+            print("Expected adapted clue:", expected_adapted_clue)
+            print("Actual adapted clue  :", self.adapted_clue)
+            assert False
 
     def preprocess(self, instructions_text, instructions_deltas, wording_text, wording_deltas, example_text, clue_text):
-        placeholders = set(choice[4] for choice in itertools.chain(self.gather_choices(instructions_text, instructions_deltas), self.gather_choices(wording_text, wording_deltas)))
+        placeholders = set(choice[4] for choice in itertools.chain(gather_choices(instructions_deltas), gather_choices(wording_deltas)))
         for placeholder in placeholders:
             wording_text = wording_text.replace(placeholder, f"{{placeholder2|{placeholder}}}").replace(f"|{{placeholder2|{placeholder}}}|", f"|{placeholder}|")
         return (instructions_text, wording_text, example_text, clue_text)
 
     def make_wording_adapter_constructor_kwds(self, instructions_text, instructions_deltas):
         multiple_choices = {}
-        for (start, separator1, separator2, stop, placeholder, text) in self.gather_choices(instructions_text, instructions_deltas):
+        for (start, separator1, separator2, stop, placeholder, text) in gather_choices(instructions_deltas):
             multiple_choices[placeholder] = _separate_choices(start, separator1, separator2, stop, placeholder, text)
         return {
             "multiple_choices": multiple_choices,
         }
-
-    def gather_choices(self, text, deltas):
-        choices = []
-        for delta in deltas:
-            if "choices2" in delta.attributes:
-                choices_settings = delta.attributes["choices2"]
-                if choices_settings["placeholder"] != "":
-                    choices.append([
-                        choices_settings["start"] or None,
-                        choices_settings["separator1"] or None,
-                        choices_settings["separator2"] or None,
-                        choices_settings["stop"] or None,
-                        choices_settings["placeholder"],
-                        delta.insert,
-                    ])
-        assert choices == ChoicesGatherer().transform(_instructions_parser.parse(text))
-        return choices
