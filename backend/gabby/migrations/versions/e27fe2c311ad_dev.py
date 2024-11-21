@@ -24,8 +24,8 @@ def upgrade():
     op.add_column("exercises", sa.Column("clue", sa.JSON(), server_default='[{"insert": "\\n", "attributes": {}}]', nullable=False))
     # ### end Alembic commands ###
     with orm.Session(op.get_bind()) as session:
-        for exercise in session.query(Exercise).all():
-            print("Migrating exercise", exercise.id, flush=True)
+        for i, exercise in enumerate(session.query(Exercise).all()):
+            print(f"{i:4} Migrating exercise id={exercise.id}", flush=True)
 
             # Fix adaptation
             adaptation = exercise._adaptation

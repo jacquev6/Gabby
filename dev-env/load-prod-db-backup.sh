@@ -20,6 +20,12 @@ then
     --workdir /app/backend/gabby \
     backend-shell \
       alembic upgrade head
+
+  ./docker-compose.sh exec \
+    backend-shell \
+      python -m gabby \
+        dump-database-as-unit-tests \
+  >../backend/gabby/prod_data_as_unit_tests.py
 fi
 
 ./docker-compose.sh exec \
