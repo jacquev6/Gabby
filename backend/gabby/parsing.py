@@ -3,7 +3,7 @@ import unittest
 
 import lark
 
-from . import exercise_delta
+from . import deltas
 
 
 class _Parser:
@@ -471,7 +471,7 @@ class DeltaMaker(lark.Transformer):
             else:
                 assert key is not None
                 assert all(isinstance(item.insert, str) for item in items)
-                return exercise_delta.TextInsertOp(
+                return deltas.InsertOp(
                     insert="".join(item.insert for item in items),
                     attributes=key,
                 )
@@ -513,31 +513,31 @@ class DeltaMaker(lark.Transformer):
         return args
 
     def WORD(self, arg):
-        return exercise_delta.TextInsertOp(insert=arg.value, attributes={})
+        return deltas.InsertOp(insert=arg.value, attributes={})
 
     def LEADING_WHITESPACE(self, arg):
-        return exercise_delta.TextInsertOp(insert=arg.value, attributes={})
+        return deltas.InsertOp(insert=arg.value, attributes={})
 
     def TRAILING_WHITESPACE(self, arg):
-        return exercise_delta.TextInsertOp(insert=arg.value, attributes={})
+        return deltas.InsertOp(insert=arg.value, attributes={})
 
     def PARAGRAPH_SEPARATOR(self, arg):
-        return exercise_delta.TextInsertOp(insert=arg.value, attributes={})
+        return deltas.InsertOp(insert=arg.value, attributes={})
 
     def SENTENCE_SEPARATOR(self, arg):
-        return exercise_delta.TextInsertOp(insert=arg.value, attributes={})
+        return deltas.InsertOp(insert=arg.value, attributes={})
 
     def WHITESPACE_IN_SENTENCE(self, arg):
-        return exercise_delta.TextInsertOp(insert=arg.value, attributes={})
+        return deltas.InsertOp(insert=arg.value, attributes={})
 
     def PUNCTUATION_IN_SENTENCE(self, arg):
-        return exercise_delta.TextInsertOp(insert=arg.value, attributes={})
+        return deltas.InsertOp(insert=arg.value, attributes={})
 
     def PUNCTUATION_AT_END_OF_SENTENCE(self, arg):
-        return exercise_delta.TextInsertOp(insert=arg.value, attributes={})
+        return deltas.InsertOp(insert=arg.value, attributes={})
 
     def PUNCTUATION_IN_LENIENT_PARAGRAPH(self, arg):
-        return exercise_delta.TextInsertOp(insert=arg.value, attributes={})
+        return deltas.InsertOp(insert=arg.value, attributes={})
 
     def INT(self, arg):
         return arg.value
@@ -547,11 +547,11 @@ class DeltaMaker(lark.Transformer):
 
     def bold_tag(self, args):
         assert len(args) == 1
-        return exercise_delta.TextInsertOp(insert=args[0], attributes={"bold": True})
+        return deltas.InsertOp(insert=args[0], attributes={"bold": True})
 
     def italic_tag(self, args):
         assert len(args) == 1
-        return exercise_delta.TextInsertOp(insert=args[0], attributes={"italic": True})
+        return deltas.InsertOp(insert=args[0], attributes={"italic": True})
 
     def choices2_tag(self, args):
         assert len(args) == 6
@@ -566,7 +566,7 @@ class DeltaMaker(lark.Transformer):
             stop = ""
         if placeholder is None:
             placeholder = ""
-        return exercise_delta.TextInsertOp(
+        return deltas.InsertOp(
             insert=text,
             attributes={
                 "choices2": {
@@ -581,27 +581,27 @@ class DeltaMaker(lark.Transformer):
 
     def selectable_tag(self, args):
         assert len(args) == 1
-        return exercise_delta.TextInsertOp(insert=args[0], attributes={"selectable": True})
+        return deltas.InsertOp(insert=args[0], attributes={"selectable": True})
 
     def fill_with_free_text_tag(self, args):
         assert len(args) == 1
-        return exercise_delta.TextInsertOp(insert=args[0], attributes={})
+        return deltas.InsertOp(insert=args[0], attributes={})
 
     def placeholder2_tag(self, args):
         assert len(args) == 1
-        return exercise_delta.TextInsertOp(insert=args[0], attributes={})
+        return deltas.InsertOp(insert=args[0], attributes={})
 
     def sel1_tag(self, args):
-        return exercise_delta.TextInsertOp(insert=args[0], attributes={"sel": 1})
+        return deltas.InsertOp(insert=args[0], attributes={"sel": 1})
 
     def sel2_tag(self, args):
-        return exercise_delta.TextInsertOp(insert=args[0], attributes={"sel": 2})
+        return deltas.InsertOp(insert=args[0], attributes={"sel": 2})
 
     def sel3_tag(self, args):
-        return exercise_delta.TextInsertOp(insert=args[0], attributes={"sel": 3})
+        return deltas.InsertOp(insert=args[0], attributes={"sel": 3})
 
     def sel4_tag(self, args):
-        return exercise_delta.TextInsertOp(insert=args[0], attributes={"sel": 4})
+        return deltas.InsertOp(insert=args[0], attributes={"sel": 4})
 
     def sel5_tag(self, args):
-        return exercise_delta.TextInsertOp(insert=args[0], attributes={"sel": 5})
+        return deltas.InsertOp(insert=args[0], attributes={"sel": 5})

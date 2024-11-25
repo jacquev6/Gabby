@@ -176,20 +176,6 @@
         "title": "Effects",
         "type": "object"
       },
-      "EmbedInsertOp": {
-        "additionalProperties": false,
-        "properties": {
-          "insert": {
-            "title": "Insert",
-            "type": "object"
-          }
-        },
-        "required": [
-          "insert"
-        ],
-        "title": "EmbedInsertOp",
-        "type": "object"
-      },
       "FillWithFreeTextAdaptationEffect": {
         "additionalProperties": false,
         "properties": {
@@ -224,6 +210,25 @@
           }
         },
         "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "InsertOp": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "title": "Attributes",
+            "type": "object"
+          },
+          "insert": {
+            "title": "Insert",
+            "type": "string"
+          }
+        },
+        "required": [
+          "insert",
+          "attributes"
+        ],
+        "title": "InsertOp",
         "type": "object"
       },
       "ItemLinks": {
@@ -617,25 +622,6 @@
           "kind"
         ],
         "title": "SentencesItems",
-        "type": "object"
-      },
-      "TextInsertOp": {
-        "additionalProperties": false,
-        "properties": {
-          "attributes": {
-            "title": "Attributes",
-            "type": "object"
-          },
-          "insert": {
-            "title": "Insert",
-            "type": "string"
-          }
-        },
-        "required": [
-          "insert",
-          "attributes"
-        ],
-        "title": "TextInsertOp",
         "type": "object"
       },
       "ValidationError": {
@@ -1442,61 +1428,33 @@
         "title": "exercise_updatedBy_Relationship_ObjectId",
         "type": "object"
       },
-      "gabby__exercise_delta__Exercise": {
+      "gabby__deltas__Exercise": {
         "additionalProperties": false,
         "properties": {
           "clue": {
             "items": {
-              "anyOf": [
-                {
-                  "$ref": "#/components/schemas/TextInsertOp"
-                },
-                {
-                  "$ref": "#/components/schemas/EmbedInsertOp"
-                }
-              ]
+              "$ref": "#/components/schemas/InsertOp"
             },
             "title": "Clue",
             "type": "array"
           },
           "example": {
             "items": {
-              "anyOf": [
-                {
-                  "$ref": "#/components/schemas/TextInsertOp"
-                },
-                {
-                  "$ref": "#/components/schemas/EmbedInsertOp"
-                }
-              ]
+              "$ref": "#/components/schemas/InsertOp"
             },
             "title": "Example",
             "type": "array"
           },
           "instructions": {
             "items": {
-              "anyOf": [
-                {
-                  "$ref": "#/components/schemas/TextInsertOp"
-                },
-                {
-                  "$ref": "#/components/schemas/EmbedInsertOp"
-                }
-              ]
+              "$ref": "#/components/schemas/InsertOp"
             },
             "title": "Instructions",
             "type": "array"
           },
           "wording": {
             "items": {
-              "anyOf": [
-                {
-                  "$ref": "#/components/schemas/TextInsertOp"
-                },
-                {
-                  "$ref": "#/components/schemas/EmbedInsertOp"
-                }
-              ]
+              "$ref": "#/components/schemas/InsertOp"
             },
             "title": "Wording",
             "type": "array"
@@ -1694,7 +1652,7 @@
             "$ref": "#/components/schemas/gabby__renderable__Exercise"
           },
           "delta": {
-            "$ref": "#/components/schemas/gabby__exercise_delta__Exercise"
+            "$ref": "#/components/schemas/gabby__deltas__Exercise"
           }
         },
         "required": [

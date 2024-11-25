@@ -19,7 +19,7 @@ from . import orm_models
 from . import settings
 from .fixtures import load as load_fixtures
 from . import renderable
-from . import exercise_delta
+from . import deltas
 
 
 @click.group()
@@ -222,7 +222,7 @@ def dump_database_as_unit_tests():
                     for k, v in attributes["choices2"].items()
                 }
             }
-        return exercise_delta.TextInsertOp(
+        return deltas.InsertOp(
             insert=waste_string(delta.insert),
             attributes=attributes,
         )
@@ -233,12 +233,12 @@ def dump_database_as_unit_tests():
     def gen():
         yield "# WARNING: this file is generated (from database content). Manual changes will be lost."
         yield ""
-        yield "from . import exercise_delta as d"
+        yield "from . import deltas as d"
         yield "from . import exercises as e"
         yield "from . import renderable as r"
         yield "from .adaptation import AdaptationTestCase"
         yield "from .api_models import AdaptationV2, FillWithFreeTextAdaptationEffect, ItemizedAdaptationEffect"
-        yield "from .exercise_delta import TextInsertOp"
+        yield "from .deltas import InsertOp"
         yield "from .renderable import Section, Paragraph, Sentence, _PlainText, _Whitespace, _FreeTextInput, _SelectableText, _BoxedText, _MultipleChoicesInput, _SelectedText"
         yield ""
         yield ""

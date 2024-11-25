@@ -197,11 +197,6 @@ export interface components {
       boxed: boolean;
       selectable: components["schemas"]["Selectable"] | null;
     };
-    /** EmbedInsertOp */
-    EmbedInsertOp: {
-      /** Insert */
-      insert: Record<string, never>;
-    };
     /** FillWithFreeTextAdaptationEffect */
     FillWithFreeTextAdaptationEffect: {
       /**
@@ -217,6 +212,13 @@ export interface components {
     HTTPValidationError: {
       /** Detail */
       detail?: components["schemas"]["ValidationError"][];
+    };
+    /** InsertOp */
+    InsertOp: {
+      /** Attributes */
+      attributes: Record<string, never>;
+      /** Insert */
+      insert: string;
     };
     /** ItemLinks */
     ItemLinks: {
@@ -341,13 +343,6 @@ export interface components {
        * @enum {string}
        */
       kind: "sentences";
-    };
-    /** TextInsertOp */
-    TextInsertOp: {
-      /** Attributes */
-      attributes: Record<string, never>;
-      /** Insert */
-      insert: string;
     };
     /** ValidationError */
     ValidationError: {
@@ -687,15 +682,15 @@ export interface components {
       type: "user";
     };
     /** Exercise */
-    gabby__exercise_delta__Exercise: {
+    gabby__deltas__Exercise: {
       /** Clue */
-      clue: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
+      clue: components["schemas"]["InsertOp"][];
       /** Example */
-      example: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
+      example: components["schemas"]["InsertOp"][];
       /** Instructions */
-      instructions: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
+      instructions: components["schemas"]["InsertOp"][];
       /** Wording */
-      wording: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
+      wording: components["schemas"]["InsertOp"][];
     };
     /** Exercise */
     gabby__renderable__Exercise: {
@@ -758,7 +753,7 @@ export interface components {
     /** parsedExerciseOutputItemAttributes */
     parsedExerciseOutputItemAttributes: {
       adapted: components["schemas"]["gabby__renderable__Exercise"];
-      delta: components["schemas"]["gabby__exercise_delta__Exercise"];
+      delta: components["schemas"]["gabby__deltas__Exercise"];
     };
     /** pdfFileCreateInput */
     pdfFileCreateInput: {

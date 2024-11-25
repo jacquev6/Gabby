@@ -9,7 +9,7 @@ from fastjsonapi import make_filters
 from . import adaptation
 from . import api_models
 from . import parsing
-from . import exercise_delta
+from . import deltas
 from . import renderable
 from . import settings
 from .api_utils import create_item, get_item, get_page, save_item, delete_item
@@ -45,7 +45,7 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
     number: orm.Mapped[str] = orm.mapped_column(sql.String(None, collation="exercise_number"))
 
     _instructions_text: orm.Mapped[str] = orm.mapped_column(name="instructions_text")
-    _instructions_deltas: orm.Mapped[list] = orm.mapped_column(sql.JSON, name="instructions", default=[{"insert": "\n", "attributes": {}}], server_default='[{"insert": "\\n", "attributes": {}}]')
+    _instructions_deltas: orm.Mapped[list] = orm.mapped_column(sql.JSON, name="instructions", default=deltas.empty_as_list, server_default=deltas.empty_as_string)
 
     @property
     def instructions(self) -> str:
@@ -64,13 +64,13 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
         ]
 
     @property
-    def instructions_deltas(self) -> list[exercise_delta.TextInsertOp]:
+    def instructions_deltas(self) -> deltas.Deltas:
         if self._instructions_deltas is None:  # Before the first flush to DB if not set in constructor.
-            self._instructions_deltas = [{"insert": "\n", "attributes": {}}]
-        return [exercise_delta.TextInsertOp(**delta) for delta in self._instructions_deltas]
+            self._instructions_deltas = deltas.empty_as_list
+        return [deltas.InsertOp(**delta) for delta in self._instructions_deltas]
 
     _wording_text: orm.Mapped[str] = orm.mapped_column(name="wording_text")
-    _wording_deltas: orm.Mapped[list] = orm.mapped_column(sql.JSON, name="wording", default=[{"insert": "\n", "attributes": {}}], server_default='[{"insert": "\\n", "attributes": {}}]')
+    _wording_deltas: orm.Mapped[list] = orm.mapped_column(sql.JSON, name="wording", default=deltas.empty_as_list, server_default=deltas.empty_as_string)
 
     @property
     def wording(self) -> str:
@@ -89,13 +89,13 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
         ]
 
     @property
-    def wording_deltas(self) -> list[exercise_delta.TextInsertOp]:
+    def wording_deltas(self) -> deltas.Deltas:
         if self._wording_deltas is None:  # Before the first flush to DB if not set in constructor.
-            self._wording_deltas = [{"insert": "\n", "attributes": {}}]
-        return [exercise_delta.TextInsertOp(**delta) for delta in self._wording_deltas]
+            self._wording_deltas = deltas.empty_as_list
+        return [deltas.InsertOp(**delta) for delta in self._wording_deltas]
 
     _example_text: orm.Mapped[str] = orm.mapped_column(name="example_text")
-    _example_deltas: orm.Mapped[list] = orm.mapped_column(sql.JSON, name="example", default=[{"insert": "\n", "attributes": {}}], server_default='[{"insert": "\\n", "attributes": {}}]')
+    _example_deltas: orm.Mapped[list] = orm.mapped_column(sql.JSON, name="example", default=deltas.empty_as_list, server_default=deltas.empty_as_string)
 
     @property
     def example(self) -> str:
@@ -114,13 +114,13 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
         ]
 
     @property
-    def example_deltas(self) -> list[exercise_delta.TextInsertOp]:
+    def example_deltas(self) -> deltas.Deltas:
         if self._example_deltas is None:  # Before the first flush to DB if not set in constructor.
-            self._example_deltas = [{"insert": "\n", "attributes": {}}]
-        return [exercise_delta.TextInsertOp(**delta) for delta in self._example_deltas]
+            self._example_deltas = deltas.empty_as_list
+        return [deltas.InsertOp(**delta) for delta in self._example_deltas]
 
     _clue_text: orm.Mapped[str] = orm.mapped_column(name="clue_text")
-    _clue_deltas: orm.Mapped[list] = orm.mapped_column(sql.JSON, name="clue", default=[{"insert": "\n", "attributes": {}}], server_default='[{"insert": "\\n", "attributes": {}}]')
+    _clue_deltas: orm.Mapped[list] = orm.mapped_column(sql.JSON, name="clue", default=deltas.empty_as_list, server_default=deltas.empty_as_string)
 
     @property
     def clue(self) -> str:
@@ -139,10 +139,10 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
         ]
 
     @property
-    def clue_deltas(self) -> list[exercise_delta.TextInsertOp]:
+    def clue_deltas(self) -> deltas.Deltas:
         if self._clue_deltas is None:  # Before the first flush to DB if not set in constructor.
-            self._clue_deltas = [{"insert": "\n", "attributes": {}}]
-        return [exercise_delta.TextInsertOp(**delta) for delta in self._clue_deltas]
+            self._clue_deltas = deltas.empty_as_list
+        return [deltas.InsertOp(**delta) for delta in self._clue_deltas]
 
     wording_paragraphs_per_pagelet: orm.Mapped[int] = orm.mapped_column(default=3, server_default="3")
 
@@ -189,7 +189,7 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
                 clue=adaptation.adapt_instructions(self.clue_deltas, self.adaptation.effects),
                 wording_paragraphs_per_pagelet=self.wording_paragraphs_per_pagelet,
             ),
-            exercise_delta.Exercise(
+            deltas.Exercise(
                 instructions=self.instructions_deltas,
                 wording=self.wording_deltas,
                 example=self.example_deltas,

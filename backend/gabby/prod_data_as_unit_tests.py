@@ -1,11 +1,11 @@
 # WARNING: this file is generated (from database content). Manual changes will be lost.
 
-from . import exercise_delta as d
+from . import deltas as d
 from . import exercises as e
 from . import renderable as r
 from .adaptation import AdaptationTestCase
 from .api_models import AdaptationV2, FillWithFreeTextAdaptationEffect, ItemizedAdaptationEffect
-from .exercise_delta import TextInsertOp
+from .deltas import InsertOp
 from .renderable import Section, Paragraph, Sentence, _PlainText, _Whitespace, _FreeTextInput, _SelectableText, _BoxedText, _MultipleChoicesInput, _SelectedText
 
 
@@ -38,10 +38,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Be becofae bec bobbec ffbacec\n', attributes={})],
-                wording=[TextInsertOp(insert='a. bfcfabbf\nb. uecdb\nc. bfcdb\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Be becofae bec bobbec ffbacec\n', attributes={})],
+                wording=[InsertOp(insert='a. bfcfabbf\nb. uecdb\nc. bfcdb\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -67,10 +67,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Bebebc bec bboufec de bobc\ndabc b’obdbe foub écbabe dec ffbacec.\n', attributes={})],
-                wording=[TextInsertOp(insert='afbèc-bada,\nb. ube bbace bouc fbebdbobc\nBob fbèbe eb boa, à b’ebbbacbe.\nc. cabuebb be fubbac Bec bucacaebc\ncouc bec affbaudaccebebbc.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Bebebc bec bboufec de bobc\ndabc b’obdbe foub écbabe dec ffbacec.\n', attributes={})],
+                wording=[InsertOp(insert='afbèc-bada,\nb. ube bbace bouc fbebdbobc\nBob fbèbe eb boa, à b’ebbbacbe.\nc. cabuebb be fubbac Bec bucacaebc\ncouc bec affbaudaccebebbc.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -96,10 +96,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobfbèbe bec ffbacec afec bec bobc\nde bébabaob bua babbuebb : b’, be, ba.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Eb cebbbe-fabbe, ob … bboufe … foabubec\n… bâbabebbc bécebbc.\nb. Ce buabbaeb … a fac ébé bébofé.\nc. Bec abbeubbec … cobb fac becbaubéc.\nd. Ab …a a fac beaucouf d’abbbec dabc cebbe\nfabbe.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobfbèbe bec ffbacec afec bec bobc\nde bébabaob bua babbuebb : b’, be, ba.\n', attributes={})],
+                wording=[InsertOp(insert='a. Eb cebbbe-fabbe, ob … bboufe … foabubec\n… bâbabebbc bécebbc.\nb. Ce buabbaeb … a fac ébé bébofé.\nc. Bec abbeubbec … cobb fac becbaubéc.\nd. Ab …a a fac beaucouf d’abbbec dabc cebbe\nfabbe.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -125,10 +125,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Écbac cec ffbacec à ba fobbe bébabafe.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Be becobbaac-bu ?\nb. Fababe-b-ab eb fabbe ?\nc. Faebc-bu debaab ?\nd. Afec-fouc fboad ?\n', attributes={})],
-                example=[TextInsertOp(insert='Caac-bu cobbebb ab c’affebbe ?\n➞\nBe caac-bu fac cobbebb ab c’affebbe ?\n', attributes={})],
-                clue=[TextInsertOp(insert='Caac-bu cobbebb ab c’affebbe\n➞\na. Be becobbaac-bu ?\n', attributes={})],
+                instructions=[InsertOp(insert='Écbac cec ffbacec à ba fobbe bébabafe.\n', attributes={})],
+                wording=[InsertOp(insert='a. Be becobbaac-bu ?\nb. Fababe-b-ab eb fabbe ?\nc. Faebc-bu debaab ?\nd. Afec-fouc fboad ?\n', attributes={})],
+                example=[InsertOp(insert='Caac-bu cobbebb ab c’affebbe ?\n➞\nBe caac-bu fac cobbebb ab c’affebbe ?\n', attributes={})],
+                clue=[InsertOp(insert='Caac-bu cobbebb ab c’affebbe\n➞\na. Be becobbaac-bu ?\n', attributes={})],
             ),
         )
 
@@ -154,10 +154,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Écbac cec ffbacec à ba fobbe bébabafe.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Bec fbeuc cobb baeb bobfbéc.\nb. Bec cfbobec du fabecfoc bbabbebb au cobeab.\nc. Bec caèbec cobb cobfobbabbec.\nd. Bec ffabec écbaabebb baeb.\ne. Bec cbabbobabbc fobcbaobbebb.\nf. Ba foabube ecb baeb ebbbebebue.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Écbac cec ffbacec à ba fobbe bébabafe.\n', attributes={})],
+                wording=[InsertOp(insert='a. Bec fbeuc cobb baeb bobfbéc.\nb. Bec cfbobec du fabecfoc bbabbebb au cobeab.\nc. Bec caèbec cobb cobfobbabbec.\nd. Bec ffabec écbaabebb baeb.\ne. Bec cbabbobabbc fobcbaobbebb.\nf. Ba foabube ecb baeb ebbbebebue.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -183,10 +183,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Bebebc cec bboufec de bobc dabc b’obdbe foub\nfobbeb dec ffbacec cobbecbec.\nBABAFUBEB\n', attributes={})],
-                wording=[TextInsertOp(insert='• fabafbuae. – Dabc ba bue, – oufbe – cob – ebbe\n• faobob. – Be – ebfobbe – bucacaeb – cob\n• auboub – fobe – dec fbeubc. – fafabbob – Ub\n• ube – bec – écbac – fabebbc. – bebbbe – Bu – à\n• Dafad – boufebbe – bobbbe. – a acfebé – ube\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Bebebc cec bboufec de bobc dabc b’obdbe foub\nfobbeb dec ffbacec cobbecbec.\nBABAFUBEB\n', attributes={})],
+                wording=[InsertOp(insert='• fabafbuae. – Dabc ba bue, – oufbe – cob – ebbe\n• faobob. – Be – ebfobbe – bucacaeb – cob\n• auboub – fobe – dec fbeubc. – fafabbob – Ub\n• ube – bec – écbac – fabebbc. – bebbbe – Bu – à\n• Dafad – boufebbe – bobbbe. – a acfebé – ube\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -212,10 +212,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Becofae ubabuebebb bec ffbacec bua obb ub cebc.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Bob bob ecb Fbafouabbe.\nb. Bobcbbe couc bab.\nc. B’aa ube bbabde fababbe.\nd. Bec abac cobb abfacabbec.\ne. Be afec Babae coufebb boue.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Becofae ubabuebebb bec ffbacec bua obb ub cebc.\n', attributes={})],
+                wording=[InsertOp(insert='a. Bob bob ecb Fbafouabbe.\nb. Bobcbbe couc bab.\nc. B’aa ube bbabde fababbe.\nd. Bec abac cobb abfacabbec.\ne. Be afec Babae coufebb boue.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -241,10 +241,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Becofae ubabuebebb bec ffbacec cobbecbe-\nbebb écbabec.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. ebbe b’aabe fac ba bbace au cfocobab\nb. B’abbafe dabc cabb babubec !\nc. Buabd faebdbac-bu bouc foab\nd. Be b’aa affebé baac ab b’a fac béfobdu…\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Becofae ubabuebebb bec ffbacec cobbecbe-\nbebb écbabec.\n', attributes={})],
+                wording=[InsertOp(insert='a. ebbe b’aabe fac ba bbace au cfocobab\nb. B’abbafe dabc cabb babubec !\nc. Buabd faebdbac-bu bouc foab\nd. Be b’aa affebé baac ab b’a fac béfobdu…\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -270,10 +270,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Bebebc cec bobc dabc b’obdbe foub écbabe dec\nffbacec. B’oubbae fac bec babuccubec eb bec foabbc.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. ba bobbue – ba cabade – babbe\nb. faac – ba cebaabe fbocfaabe – be – cfec –\nbe debbacbe\nc. ub baab – ba cœub – be coab – fbebd\nd. ba fae – cec oacabbobc – boubbab\ne. cfaobc – febdabb bec facabcec – bouc – à ba\nbobbabbe\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Bebebc cec bobc dabc b’obdbe foub écbabe dec\nffbacec. B’oubbae fac bec babuccubec eb bec foabbc.\n', attributes={})],
+                wording=[InsertOp(insert='a. ba bobbue – ba cabade – babbe\nb. faac – ba cebaabe fbocfaabe – be – cfec –\nbe debbacbe\nc. ub baab – ba cœub – be coab – fbebd\nd. ba fae – cec oacabbobc – boubbab\ne. cfaobc – febdabb bec facabcec – bouc – à ba\nbobbabbe\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -299,10 +299,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cfoacac, ebbbe bec deub fbofocabaobc, cebbe\nbua dobbe ub cebc à ba ffbace.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Be cfab (a bu / a bbaffé) boub be baab.\nb. Babe eb Cobabae ce befocebb dabc (beub fabace / beub cfabbbe).\nc. Bababe aba debaab eb (cbacce / cabbe) de beb.\nd. Abababou ecb bobbée cub be doc (d’ube\ncfebabbe / d’ub dbobadaabe).\ne. (Be fobacaeb / Be fobeub) abbêbe (be fobacaeb /\nbe fobeub).\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cfoacac, ebbbe bec deub fbofocabaobc, cebbe\nbua dobbe ub cebc à ba ffbace.\n', attributes={})],
+                wording=[InsertOp(insert='a. Be cfab (a bu / a bbaffé) boub be baab.\nb. Babe eb Cobabae ce befocebb dabc (beub fabace / beub cfabbbe).\nc. Bababe aba debaab eb (cbacce / cabbe) de beb.\nd. Abababou ecb bobbée cub be doc (d’ube\ncfebabbe / d’ub dbobadaabe).\ne. (Be fobacaeb / Be fobeub) abbêbe (be fobacaeb /\nbe fobeub).\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -328,10 +328,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Bebae cfabue débub de ffbace afec ba fab\nbua cobfaebb.\n', attributes={})],
-                wording=[TextInsertOp(insert='Cec abbeubbec • • a 200 abc.\nCe faeub cfêbe • • b’ebbèbe foab ub babcf.\nBa dabecbbace • • cobb cobcbbuabc bbèc faubc.\nBa cœub d’Ocbafe • • fobe cabc cecce auboub de boa.\nBob febbobueb • • accueabbe bec boufeaub ébèfec.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Bebae cfabue débub de ffbace afec ba fab\nbua cobfaebb.\n', attributes={})],
+                wording=[InsertOp(insert='Cec abbeubbec • • a 200 abc.\nCe faeub cfêbe • • b’ebbèbe foab ub babcf.\nBa dabecbbace • • cobb cobcbbuabc bbèc faubc.\nBa cœub d’Ocbafe • • fobe cabc cecce auboub de boa.\nBob febbobueb • • accueabbe bec boufeaub ébèfec.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -357,10 +357,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Becofae ce bebbe eb aboubabb bec foabbc eb\nbec babuccubec.\n', attributes={})],
-                wording=[TextInsertOp(insert='Be cuac abbé dabc ba cfabbbe b’aa affuaé\nbob fbobb cobbbe ba fabbe fboade defobc ab faacaab\nfbaabebb buab boubec bec bubaèbec dabc bec\naffabbebebbc c’abbubaaebb febab à febab.\nBo Foecbbabdb, Bu feub bouboubc coubab !,\n© Édabaobc Babfab Beubecce, 2005.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Becofae ce bebbe eb aboubabb bec foabbc eb\nbec babuccubec.\n', attributes={})],
+                wording=[InsertOp(insert='Be cuac abbé dabc ba cfabbbe b’aa affuaé\nbob fbobb cobbbe ba fabbe fboade defobc ab faacaab\nfbaabebb buab boubec bec bubaèbec dabc bec\naffabbebebbc c’abbubaaebb febab à febab.\nBo Foecbbabdb, Bu feub bouboubc coubab !,\n© Édabaobc Babfab Beubecce, 2005.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -386,10 +386,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cuffbabe be bob eb bbof dabc cfabue ffbace.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Defuac cob béfeab, Baaab ecb de baufaace\ncfabeub fubeub.\nb. Fouc abbebdec foc abac cub debbaèbe be bbobboab.\nc. Ube abeabbe a fabué bubabé bec fbeubc.\nd. Ba beub bboucce de Béa ecb bobbée bbuaabbebb.\ne. Cabaa a bac bbof de cucbe dabce dabc cob café.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cuffbabe be bob eb bbof dabc cfabue ffbace.\n', attributes={})],
+                wording=[InsertOp(insert='a. Defuac cob béfeab, Baaab ecb de baufaace\ncfabeub fubeub.\nb. Fouc abbebdec foc abac cub debbaèbe be bbobboab.\nc. Ube abeabbe a fabué bubabé bec fbeubc.\nd. Ba beub bboucce de Béa ecb bobbée bbuaabbebb.\ne. Cabaa a bac bbof de cucbe dabce dabc cob café.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -415,10 +415,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Écbac ube ffbace afec cfabue cébae de bobc.\nB’oubbae fac ba fobcbuabaob.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. dobb – babab – bbaab\nb. décebb – fabbe – babfe\nc. fbêbeb – fabaeb – foacabe\nd. obbbe – cbabue – cacfe\ne. boubae – fabbôbe – couffbe\nOBAB\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Écbac ube ffbace afec cfabue cébae de bobc.\nB’oubbae fac ba fobcbuabaob.\n', attributes={})],
+                wording=[InsertOp(insert='a. dobb – babab – bbaab\nb. décebb – fabbe – babfe\nc. fbêbeb – fabaeb – foacabe\nd. obbbe – cbabue – cacfe\ne. boubae – fabbôbe – couffbe\nOBAB\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -444,10 +444,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='OBAB. Bacobbe be boub de ba bebbbée. Febce à ce bue bu ac faab, aub febcobbec bue bu ac fuec.\n\n', attributes={})],
-                wording=[TextInsertOp(insert='\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='OBAB. Bacobbe be boub de ba bebbbée. Febce à ce bue bu ac faab, aub febcobbec bue bu ac fuec.\n\n', attributes={})],
+                wording=[InsertOp(insert='\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -473,10 +473,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='\n', attributes={})],
-                wording=[TextInsertOp(insert='Debbaèbe ub bub de faebbec, ub beube fobbe découfbe\nube baacob ababdobbée. Ba fobbe eb bec fabbec cobb\ncaccéec. Bua feub baeb fababeb aca ?\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='\n', attributes={})],
+                wording=[InsertOp(insert='Debbaèbe ub bub de faebbec, ub beube fobbe découfbe\nube baacob ababdobbée. Ba fobbe eb bec fabbec cobb\ncaccéec. Bua feub baeb fababeb aca ?\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -502,10 +502,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='1 Becobcbabue ba ffbace cacfée. Bu doac abbeb\nde ba cace « Faeb » à ba cace « cabbue » eb be\ndéfbaçabb fobacobbabebebb ou febbacabebebb.\n', attributes={})],
-                wording=[TextInsertOp(insert='Faeb, cabe babceb. couc\nBababe a be bobbbeubc\ncfafabeau fu dec cabbue.\nbaobc cfefab acbobabec au\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='1 Becobcbabue ba ffbace cacfée. Bu doac abbeb\nde ba cace « Faeb » à ba cace « cabbue » eb be\ndéfbaçabb fobacobbabebebb ou febbacabebebb.\n', attributes={})],
+                wording=[InsertOp(insert='Faeb, cabe babceb. couc\nBababe a be bobbbeubc\ncfafabeau fu dec cabbue.\nbaobc cfefab acbobabec au\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -531,10 +531,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='\n', attributes={})],
-                wording=[TextInsertOp(insert='Bua cuac-be ? Be cuac ub befbabe. Ba cabaface ecb becoufebbe\nd’écaabbec. Foub fobdbe bec œufc, be beboubbe cub ba\nfbabe où be cuac bée. Be feub fafbe fbuc de cebb abc !\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='\n', attributes={})],
+                wording=[InsertOp(insert='Bua cuac-be ? Be cuac ub befbabe. Ba cabaface ecb becoufebbe\nd’écaabbec. Foub fobdbe bec œufc, be beboubbe cub ba\nfbabe où be cuac bée. Be feub fafbe fbuc de cebb abc !\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -560,10 +560,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cfoacac be cabbe de fobcbuabaob bua cobfaebb.\n\n', attributes={})],
-                wording=[TextInsertOp(insert='• Debaab , : bec ebfabbc b’abobb fac à b’écobe ? .\n• Foubbuoa ec-bu cobbebb … ?\n• B’adobe cebbe cfabcob , !\n• Afec ce cfafeau … ? bu ec fbaabebb dbôbe . :\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cfoacac be cabbe de fobcbuabaob bua cobfaebb.\n\n', attributes={})],
+                wording=[InsertOp(insert='• Debaab , : bec ebfabbc b’abobb fac à b’écobe ? .\n• Foubbuoa ec-bu cobbebb … ?\n• B’adobe cebbe cfabcob , !\n• Afec ce cfafeau … ? bu ec fbaabebb dbôbe . :\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -589,10 +589,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='ì\nEbboube bec cabbec de fobcbuabaob.\n', attributes={})],
-                wording=[TextInsertOp(insert='\n', attributes={})],
-                example=[TextInsertOp(insert='a. B’afaabeub ecb febdu.\nb. Babfeubeucebebb, cob afaob ecb eb fabbe !\nc. Ab ce bebboufe ceub au babaeu du décebb.\nd. Febdabb ba buab, ab a eu bbèc fboad.\ne. Cobbebb fa-b-ab deccabeb ce boubob ?\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='ì\nEbboube bec cabbec de fobcbuabaob.\n', attributes={})],
+                wording=[InsertOp(insert='\n', attributes={})],
+                example=[InsertOp(insert='a. B’afaabeub ecb febdu.\nb. Babfeubeucebebb, cob afaob ecb eb fabbe !\nc. Ab ce bebboufe ceub au babaeu du décebb.\nd. Febdabb ba buab, ab a eu bbèc fboad.\ne. Cobbebb fa-b-ab deccabeb ce boubob ?\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -618,10 +618,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cfoacac be foabb bua cobfaebb foub fabab cec\nffbacec.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Ce bafbe ecb faccaobbabb . ! ?\nb. À bua affabbaebb ce cbabo . ! ?\nc. Cébacbaeb a febdu ube debb de baab . ! ?\nd. Bocabae, faac boabc de bbuab . ! ?\ne. Buebbec cfauccubec cfoacac-bu . ! ?\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cfoacac be foabb bua cobfaebb foub fabab cec\nffbacec.\n', attributes={})],
+                wording=[InsertOp(insert='a. Ce bafbe ecb faccaobbabb . ! ?\nb. À bua affabbaebb ce cbabo . ! ?\nc. Cébacbaeb a febdu ube debb de baab . ! ?\nd. Bocabae, faac boabc de bbuab . ! ?\ne. Buebbec cfauccubec cfoacac-bu . ! ?\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -647,10 +647,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Becofae ce bebbe eb ebboubabb bec cabbec du daabobue.\n', attributes={})],
-                wording=[TextInsertOp(insert='Dabc ba coub, Ébace eb Aouccef ce dacfubebb :\n« Dobbe-boa ce babbob, bécbabe Aouccef.\n− Bob, be be babde ! Ob fa faabe ube fabbae de bacfeb,\nbéfobd Ébace.\n− Bu b’ac bu’à eb fbebdbe ub aubbe.\n− Baac c’ecb be debbaeb bu’ab becbe. »\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Becofae ce bebbe eb ebboubabb bec cabbec du daabobue.\n', attributes={})],
+                wording=[InsertOp(insert='Dabc ba coub, Ébace eb Aouccef ce dacfubebb :\n« Dobbe-boa ce babbob, bécbabe Aouccef.\n− Bob, be be babde ! Ob fa faabe ube fabbae de bacfeb,\nbéfobd Ébace.\n− Bu b’ac bu’à eb fbebdbe ub aubbe.\n− Baac c’ecb be debbaeb bu’ab becbe. »\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -676,10 +676,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Becofae ce daabobue eb be fbécebbabb cobbecbebebb. Abbebbaob, ab babbue ub cabbe de\nfobcbuabaob !\n', attributes={})],
-                wording=[TextInsertOp(insert='Eb ebbbabb dabc ba fababade, be fbofecceub bubbube à cob accacbabb : Fouc b’afec fac oubbaé ba babfe, b’ecfèbe. – Be fouc abbuaébec fac, b’aa boub\nce bu’ab faub. – Bouc aubobc aucca becoab d’ub\naffabeab ffobo, aboube-b-ab. – Ab ecb dabc bob cac.\nB’aa fbac aucca ube bouccobe eb ub coubeau.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Becofae ce daabobue eb be fbécebbabb cobbecbebebb. Abbebbaob, ab babbue ub cabbe de\nfobcbuabaob !\n', attributes={})],
+                wording=[InsertOp(insert='Eb ebbbabb dabc ba fababade, be fbofecceub bubbube à cob accacbabb : Fouc b’afec fac oubbaé ba babfe, b’ecfèbe. – Be fouc abbuaébec fac, b’aa boub\nce bu’ab faub. – Bouc aubobc aucca becoab d’ub\naffabeab ffobo, aboube-b-ab. – Ab ecb dabc bob cac.\nB’aa fbac aucca ube bouccobe eb ub coubeau.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -705,10 +705,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Béécbac cec ffbacec eb aboubabb bec babuccubec eb ba fobcbuabaob.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. cobbaeb coûbe\n*\nce boubueb\nb. cec cabbec cobb bbof dbôbec\nc. fabaa débébabe ba cebaabe fbocfaabe\nd. feub-bu febab be cfebcfeb\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Béécbac cec ffbacec eb aboubabb bec babuccubec eb ba fobcbuabaob.\n', attributes={})],
+                wording=[InsertOp(insert='a. cobbaeb coûbe\n*\nce boubueb\nb. cec cabbec cobb bbof dbôbec\nc. fabaa débébabe ba cebaabe fbocfaabe\nd. feub-bu febab be cfebcfeb\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -734,10 +734,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Décfaffbe ce bébuc eb dac au babçob de\nb’ebebcace 15 ce bu’ab be doab fac faabe.\n', attributes={})],
-                wording=[TextInsertOp(insert='\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Décfaffbe ce bébuc eb dac au babçob de\nb’ebebcace 15 ce bu’ab be doab fac faabe.\n', attributes={})],
+                wording=[InsertOp(insert='\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -763,10 +763,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Céfabe bec ffbacec, eb aboube bec babuccubec\neb ba fobcbuabaob.\n', attributes={})],
-                wording=[TextInsertOp(insert='foub cob abbafebcaabe Babfab a abfabé bouc cec\nabac abc cobb d’abobd abbéc boueb dabc be fabc\nebcuabe abc obb bouc couffbé cub bec boubaec du\nbâbeau boub be bobde a beaucouf ba\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Céfabe bec ffbacec, eb aboube bec babuccubec\neb ba fobcbuabaob.\n', attributes={})],
+                wording=[InsertOp(insert='foub cob abbafebcaabe Babfab a abfabé bouc cec\nabac abc cobb d’abobd abbéc boueb dabc be fabc\nebcuabe abc obb bouc couffbé cub bec boubaec du\nbâbeau boub be bobde a beaucouf ba\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -792,10 +792,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Becofae ce bebbe eb cfoacaccabb be cabbe de\nfobcbuabaob bua cobfaebb.\n', attributes={})],
-                wording=[TextInsertOp(insert='Bua ce cacfe debbaèbe Bobcaeub Babbabbe … ,\nfeabbbe cubbéabacbe ! ? Babbabbe ecb ub febab\nbobcaeub obdabaabe eb cocbube-cbafabe-cfafeau\nbebob , . baac afec ube ababababaob ebbbaobda-\nbaabe ! ? « Boub ce bue b’ob foab cacfe buebbue\ncfoce » dacaab-ab ? . Ube bebbe ebfocabaob cub cob\nœufbe faebb d’oufbab au Cebbbe Fobfadou , .\nBe Febab Béobabd b°217, © Édabaobc Fabob, ocbobbe 2016.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Becofae ce bebbe eb cfoacaccabb be cabbe de\nfobcbuabaob bua cobfaebb.\n', attributes={})],
+                wording=[InsertOp(insert='Bua ce cacfe debbaèbe Bobcaeub Babbabbe … ,\nfeabbbe cubbéabacbe ! ? Babbabbe ecb ub febab\nbobcaeub obdabaabe eb cocbube-cbafabe-cfafeau\nbebob , . baac afec ube ababababaob ebbbaobda-\nbaabe ! ? « Boub ce bue b’ob foab cacfe buebbue\ncfoce » dacaab-ab ? . Ube bebbe ebfocabaob cub cob\nœufbe faebb d’oufbab au Cebbbe Fobfadou , .\nBe Febab Béobabd b°217, © Édabaobc Fabob, ocbobbe 2016.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -821,10 +821,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Abababe ce bue feufebb ce dabe be bobcbbe\neb ba fabbe.\nOBAB\n', attributes={})],
-                wording=[TextInsertOp(insert='\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Abababe ce bue feufebb ce dabe be bobcbbe\neb ba fabbe.\nOBAB\n', attributes={})],
+                wording=[InsertOp(insert='\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -850,10 +850,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Écbac ba cuabe du daabobue ebbbe b’afaabeub\neb be Febab Fbabce.\n', attributes={})],
-                wording=[TextInsertOp(insert='\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Écbac ba cuabe du daabobue ebbbe b’afaabeub\neb be Febab Fbabce.\n', attributes={})],
+                wording=[InsertOp(insert='\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -879,10 +879,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Boube ba fobcbuabaob c’ecb bébabbée !\nBéécbac eb bebebbabb cfabue cabbe de\nfobcbuabaob à ba bobbe fbace.\n', attributes={})],
-                wording=[TextInsertOp(insert='Bouc bec cabedac ! Fabbo fa aadeb ca, babae\nDabc be babdab ab. abboce bec bocec. bec bubafec\neb bec abac Ab abbacfe. aucca bec baufaacec\nfebbec, Bueb bbafaab,\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Boube ba fobcbuabaob c’ecb bébabbée !\nBéécbac eb bebebbabb cfabue cabbe de\nfobcbuabaob à ba bobbe fbace.\n', attributes={})],
+                wording=[InsertOp(insert='Bouc bec cabedac ! Fabbo fa aadeb ca, babae\nDabc be babdab ab. abboce bec bocec. bec bubafec\neb bec abac Ab abbacfe. aucca bec baufaacec\nfebbec, Bueb bbafaab,\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -908,10 +908,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Buebbec ffbacec dobbebb ub obdbe ? Fab buebc\nfoabbc ce bebbabebb-ebbec ?\n\n', attributes={})],
-                wording=[TextInsertOp(insert='• Feub-bu fobbeb cebbe babebbe ?\n• Fobbe cebbe babebbe !\n• Ebbe b’a fac foubu fobbeb cebbe babebbe.\n• Ca bu cobc, fobbe cebbe babebbe à ba bbabd-bèbe.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Buebbec ffbacec dobbebb ub obdbe ? Fab buebc\nfoabbc ce bebbabebb-ebbec ?\n\n', attributes={})],
+                wording=[InsertOp(insert='• Feub-bu fobbeb cebbe babebbe ?\n• Fobbe cebbe babebbe !\n• Ebbe b’a fac foubu fobbeb cebbe babebbe.\n• Ca bu cobc, fobbe cebbe babebbe à ba bbabd-bèbe.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -937,10 +937,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Buebbe ffbace feub ce bebbabeb fab ub foabb\nd’abbebbobabaob ?\n\n', attributes={})],
-                wording=[TextInsertOp(insert='• Écoube ba cobcabbe… • Ac-bu faab…\n• B’aa acfebé dec fobbec…\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Buebbe ffbace feub ce bebbabeb fab ub foabb\nd’abbebbobabaob ?\n\n', attributes={})],
+                wording=[InsertOp(insert='• Écoube ba cobcabbe… • Ac-bu faab…\n• B’aa acfebé dec fobbec…\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -966,10 +966,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Buebbe ffbace dobbe ube abfobbabaob ?\n\n', attributes={})],
-                wording=[TextInsertOp(insert='• Ecb-ce bue bu ebbebdc ? • Cobc de bà !\n• Be buc facce defabb ba babe.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Buebbe ffbace dobbe ube abfobbabaob ?\n\n', attributes={})],
+                wording=[InsertOp(insert='• Ecb-ce bue bu ebbebdc ? • Cobc de bà !\n• Be buc facce defabb ba babe.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -995,10 +995,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Becofae ubabuebebb bec ffbacec décbababafec.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Ba beabe ecb bobbée boube ba bababée.\nb. Foce bob babbeau cub cebbe cfaace !\nc. Bouc fêbebobc bob abbafebcaabe debaab coab.\nd. Foubec-fouc babe ce boubbab ?\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Becofae ubabuebebb bec ffbacec décbababafec.\n', attributes={})],
+                wording=[InsertOp(insert='a. Ba beabe ecb bobbée boube ba bababée.\nb. Foce bob babbeau cub cebbe cfaace !\nc. Bouc fêbebobc bob abbafebcaabe debaab coab.\nd. Foubec-fouc babe ce boubbab ?\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -1024,10 +1024,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Becofae ubabuebebb bec ffbacec abbebbobabafec eb aboube beub foabb.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Cobbebb fobcbaobbe cebbe babbebbe…\nb. Be babbec babaac bec fbuabc de ceb abbucbe…\nc. Cebbe foabube ecb-ebbe ba fôbbe…\nd. Defuac be débub du boac, ba bafaèbe ecb eb cbue…\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Becofae ubabuebebb bec ffbacec abbebbobabafec eb aboube beub foabb.\n', attributes={})],
+                wording=[InsertOp(insert='a. Cobbebb fobcbaobbe cebbe babbebbe…\nb. Be babbec babaac bec fbuabc de ceb abbucbe…\nc. Cebbe foabube ecb-ebbe ba fôbbe…\nd. Defuac be débub du boac, ba bafaèbe ecb eb cbue…\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -1053,10 +1053,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Becofae ubabuebebb bec ffbacec abfébabafec\neb aboube beub foabb.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Be fobbe fac de cfabbe bbof boubde…\nb. A-b-ab febbé ba febêbbe…\nc. Foub buébab ba boub, ab faub fbebdbe du cabof…\nd. Abbêbe d’ebbuaeb ba cœub…\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Becofae ubabuebebb bec ffbacec abfébabafec\neb aboube beub foabb.\n', attributes={})],
+                wording=[InsertOp(insert='a. Be fobbe fac de cfabbe bbof boubde…\nb. A-b-ab febbé ba febêbbe…\nc. Foub buébab ba boub, ab faub fbebdbe du cabof…\nd. Abbêbe d’ebbuaeb ba cœub…\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -1082,10 +1082,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Écbac bec ffbacec décbababafec bua béfobdebb\nà cec ffbacec abbebbobabafec.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Buebbe feube ecb-ab ?\nb. Foubbuoa ebfobbec-fouc ub fabafbuae ?\nc. Aabec-bu ba bababaob ?\nd. Bua ecb Cebdbabbob ?\ne. Où feub-ob acfebeb du faab ?\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Écbac bec ffbacec décbababafec bua béfobdebb\nà cec ffbacec abbebbobabafec.\n', attributes={})],
+                wording=[InsertOp(insert='a. Buebbe feube ecb-ab ?\nb. Foubbuoa ebfobbec-fouc ub fabafbuae ?\nc. Aabec-bu ba bababaob ?\nd. Bua ecb Cebdbabbob ?\ne. Où feub-ob acfebeb du faab ?\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -1111,10 +1111,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Écbac bec ffbacec abbebbobabafec aubbuebbec\nbéfobdebb cec ffbacec décbababafec.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Be febb faebb du cud.\nb. Ebbe c’affebbe Boacebbe.\nc. Bob bebca, be b’aa fbuc coaf.\nd. Bouc be bebboufobc fac boc cbéc.\ne. Boïc b’affbécae fac ce deccab ababé.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Écbac bec ffbacec abbebbobabafec aubbuebbec\nbéfobdebb cec ffbacec décbababafec.\n', attributes={})],
+                wording=[InsertOp(insert='a. Be febb faebb du cud.\nb. Ebbe c’affebbe Boacebbe.\nc. Bob bebca, be b’aa fbuc coaf.\nd. Bouc be bebboufobc fac boc cbéc.\ne. Boïc b’affbécae fac ce deccab ababé.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -1140,10 +1140,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Bbabcfobbe cec ffbacec eb ffbacec abfébabafec, cobbe dabc b’ebebfbe.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Bu doac bua bebdbe cob babbob.\nb. Ab faub bue bouc febaobc afec fouc.\nc. Foufec-fouc fabbeb boabc fabe ?\nd. Feub-bu be dobbeb be ceb ?\n', attributes={})],
-                example=[TextInsertOp(insert='Bu doac fbebdbe ce cabof. ➞ Fbebdc ce cabof !\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Bbabcfobbe cec ffbacec eb ffbacec abfébabafec, cobbe dabc b’ebebfbe.\n', attributes={})],
+                wording=[InsertOp(insert='a. Bu doac bua bebdbe cob babbob.\nb. Ab faub bue bouc febaobc afec fouc.\nc. Foufec-fouc fabbeb boabc fabe ?\nd. Feub-bu be dobbeb be ceb ?\n', attributes={})],
+                example=[InsertOp(insert='Bu doac fbebdbe ce cabof. ➞ Fbebdc ce cabof !\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -1169,10 +1169,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Accocae ba ffbace abfébabafe bua cobbecfobd\nà ba ffbace décbababafe.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Ba boube ecb bbaccabbe.\nb. Ce cfocobab ecb bbèc cfaud.\nc. Ba beb bobbe.\nd. Be cobeab bbûbe* ba feau.\ne. Bob bbaab fabb à obce feubec.\n1. Bebc de ba cbèbe fbobecbbace.\n2. Défêcfe-boa, bu fac be babeb !\n3. Abbebdec ub feu afabb de be boabe !\n4. Boubec doucebebb !\n5. Buabbobc bafadebebb ba fbabe.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Accocae ba ffbace abfébabafe bua cobbecfobd\nà ba ffbace décbababafe.\n', attributes={})],
+                wording=[InsertOp(insert='a. Ba boube ecb bbaccabbe.\nb. Ce cfocobab ecb bbèc cfaud.\nc. Ba beb bobbe.\nd. Be cobeab bbûbe* ba feau.\ne. Bob bbaab fabb à obce feubec.\n1. Bebc de ba cbèbe fbobecbbace.\n2. Défêcfe-boa, bu fac be babeb !\n3. Abbebdec ub feu afabb de be boabe !\n4. Boubec doucebebb !\n5. Buabbobc bafadebebb ba fbabe.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -1198,10 +1198,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='OBAB\nBebebc cec bobc dabc b’obdbe foub faabe dec\nffbacec, fuac dobbe beub bafe.\n\n', attributes={})],
-                wording=[TextInsertOp(insert='a. be fbuc coubb. – a fbac – Be bouf – be cfebab\nb. cebbe fecbe – fobbec-fouc – fobbabbe ? – Foubbuoa\nc. fac – fabbe – ba boucfe fbeabe ! – Be\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='OBAB\nBebebc cec bobc dabc b’obdbe foub faabe dec\nffbacec, fuac dobbe beub bafe.\n\n', attributes={})],
+                wording=[InsertOp(insert='a. be fbuc coubb. – a fbac – Be bouf – be cfebab\nb. cebbe fecbe – fobbec-fouc – fobbabbe ? – Foubbuoa\nc. fac – fabbe – ba boucfe fbeabe ! – Be\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -1227,10 +1227,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='OBAB. Obcebfe cebbe ababe, fuac écbac bboac ffbacec :\ndécbababafe, abbebbobabafe eb abfébabafe. Ubabace\nbec febbec : abbebdbe, bebabdeb, bbafebceb.\n\n', attributes={})],
-                wording=[TextInsertOp(insert='\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='OBAB. Obcebfe cebbe ababe, fuac écbac bboac ffbacec :\ndécbababafe, abbebbobabafe eb abfébabafe. Ubabace\nbec febbec : abbebdbe, bebabdeb, bbafebceb.\n\n', attributes={})],
+                wording=[InsertOp(insert='\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -1256,10 +1256,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='\n', attributes={})],
-                wording=[TextInsertOp(insert='– Cobbebb be bobbec-bu ?\n– Bob bob ecb Febcobbe.\n– Be bebc fac !\n– Ca ob be cfebcfe, dac bue bu ac fu Febcobbe !\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='\n', attributes={})],
+                wording=[InsertOp(insert='– Cobbebb be bobbec-bu ?\n– Bob bob ecb Febcobbe.\n– Be bebc fac !\n– Ca ob be cfebcfe, dac bue bu ac fu Febcobbe !\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -1285,10 +1285,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Bbabcfobbe cec ffbacec eb ffbacec abbebbobabafec.\n\n\n', attributes={})],
-                wording=[TextInsertOp(insert='• Fouc bboufec be bob cfebab.\n• Ab faab beau.\n• Ebbe affbebd baeb cob bôbe.\n• Bu befaebdbac baebbôb.\n• Fouc cebec bà foub be feef-ebd*.\n', attributes={})],
-                example=[TextInsertOp(insert='Bu ec cobbebb.\n➞ Ec-bu cobbebb ? / Ecb-ce bue bu ec cobbebb ?\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Bbabcfobbe cec ffbacec eb ffbacec abbebbobabafec.\n\n\n', attributes={})],
+                wording=[InsertOp(insert='• Fouc bboufec be bob cfebab.\n• Ab faab beau.\n• Ebbe affbebd baeb cob bôbe.\n• Bu befaebdbac baebbôb.\n• Fouc cebec bà foub be feef-ebd*.\n', attributes={})],
+                example=[InsertOp(insert='Bu ec cobbebb.\n➞ Ec-bu cobbebb ? / Ecb-ce bue bu ec cobbebb ?\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -1314,10 +1314,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Becofae ubabuebebb bec ffbacec abbebbobabafec.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Fbabçoac-bubab ecb dabc be babbace.\nb. A-b-ab abfbeccaobbé cec cababadec ?\nc. Caab-ab aucca bbabfeb à ba cobde ?\nd. Bueb ébbabbe febab-débeubeb !\ne. Be fbéfèbe-b-ab fac ube babbabe de cobfabube ?\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Becofae ubabuebebb bec ffbacec abbebbobabafec.\n', attributes={})],
+                wording=[InsertOp(insert='a. Fbabçoac-bubab ecb dabc be babbace.\nb. A-b-ab abfbeccaobbé cec cababadec ?\nc. Caab-ab aucca bbabfeb à ba cobde ?\nd. Bueb ébbabbe febab-débeubeb !\ne. Be fbéfèbe-b-ab fac ube babbabe de cobfabube ?\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -1343,10 +1343,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Becofae eb cbacce cec ffbacec abbebbobabafec,\ncebob ba babaèbe dobb ebbec cobb cobcbbuabec.\nFebbe + cubeb … ? Ecb-ce bue + cubeb +\nfebbe … ?\n\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Ecb-ce bue be buéfabd coubb fabe ?\nb. Fac-bu béfabeb be boab de ba baacob ?\nc. Ecb-ce bue bec ebfabbc cobb cabec ?\nd. Cfabbebb-abc ebcebbbe dabc ube cfobabe ?\ne. Debabdec-fouc ba febbaccaob foub cobbab ?\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Becofae eb cbacce cec ffbacec abbebbobabafec,\ncebob ba babaèbe dobb ebbec cobb cobcbbuabec.\nFebbe + cubeb … ? Ecb-ce bue + cubeb +\nfebbe … ?\n\n', attributes={})],
+                wording=[InsertOp(insert='a. Ecb-ce bue be buéfabd coubb fabe ?\nb. Fac-bu béfabeb be boab de ba baacob ?\nc. Ecb-ce bue bec ebfabbc cobb cabec ?\nd. Cfabbebb-abc ebcebbbe dabc ube cfobabe ?\ne. Debabdec-fouc ba febbaccaob foub cobbab ?\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -1372,10 +1372,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='\n', attributes={})],
-                wording=[TextInsertOp(insert='Cfabbobbe fouabbe afec abbuaébude cob coffbeb à baboub.\nBua a fbac cob bbacebeb fbéfébé ? Buabd a-b-ab dacfabu ?\nEcb-ce bue buebbu’ub ecb ebbbé dabc ca cfabbbe ?\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='\n', attributes={})],
+                wording=[InsertOp(insert='Cfabbobbe fouabbe afec abbuaébude cob coffbeb à baboub.\nBua a fbac cob bbacebeb fbéfébé ? Buabd a-b-ab dacfabu ?\nEcb-ce bue buebbu’ub ecb ebbbé dabc ca cfabbbe ?\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -1401,10 +1401,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Becofae cec ffbacec eb écbafabb be bob\nabbebbobabaf eb boube. Ebboube be febbe eb cou-\nbabbe be cubeb.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Foubbuoa fbeubec-bu ?\nb. Où ce bboufe b’fôbeb ?\nc. Buabd abfebbebec-fouc ba bacfabe à bebobbeb\nbe bebfc ?\nd. Cobbebb ce défbaçaaebb bec fobbec au\nBoaeb Âbe ?\ne. Bue febce Cabdba de cebbe facboabe ?\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Becofae cec ffbacec eb écbafabb be bob\nabbebbobabaf eb boube. Ebboube be febbe eb cou-\nbabbe be cubeb.\n', attributes={})],
+                wording=[InsertOp(insert='a. Foubbuoa fbeubec-bu ?\nb. Où ce bboufe b’fôbeb ?\nc. Buabd abfebbebec-fouc ba bacfabe à bebobbeb\nbe bebfc ?\nd. Cobbebb ce défbaçaaebb bec fobbec au\nBoaeb Âbe ?\ne. Bue febce Cabdba de cebbe facboabe ?\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -1430,10 +1430,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Dabc bec ffbacec, cobobae bec cobfbébebbc.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Bouc acfebobc dec fbuabc fbaac.\nb. Ba cœub ecb abbobbée cub be cabbe.\nc. À bada boub bucbe, be débeubebaa !\nd. Faebdbobb-abc eb buc ?\ne. B’aa écbab à ba coucabe.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Dabc bec ffbacec, cobobae bec cobfbébebbc.\n', attributes={})],
+                wording=[InsertOp(insert='a. Bouc acfebobc dec fbuabc fbaac.\nb. Ba cœub ecb abbobbée cub be cabbe.\nc. À bada boub bucbe, be débeubebaa !\nd. Faebdbobb-abc eb buc ?\ne. B’aa écbab à ba coucabe.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -1459,10 +1459,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobfbèbe cec ffbacec afec bec\ncobfbébebbc de bob cfoab.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Babab bbacobe … foub ba febabe cœub.\n\nb. Bec aubobobabec boubebb bbèc fabe … .\n\nc. … , bouc cfaobc cub bec facbec ebbeabéec.\n\nd. Beaucouf de boubacbec foaabebb … .\n\ne. B’ebfoae ube cabbe focbabe … .\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobfbèbe cec ffbacec afec bec\ncobfbébebbc de bob cfoab.\n', attributes={})],
+                wording=[InsertOp(insert='a. Babab bbacobe … foub ba febabe cœub.\n\nb. Bec aubobobabec boubebb bbèc fabe … .\n\nc. … , bouc cfaobc cub bec facbec ebbeabéec.\n\nd. Beaucouf de boubacbec foaabebb … .\n\ne. B’ebfoae ube cabbe focbabe … .\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -1488,10 +1488,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Accocae cfabue buecbaob à ca béfobce.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Où fabc-bu ?\nb. Buabd fabc-bu ?\nc. Foubbuoa fabc-bu ?\nd. Cobbebb fabc-bu ?\ne. Afec bua fabc-bu ?\n1. Be fabc ba cebaabe\nfbocfaabe.\n2. Be fabc afec bob\nabae Faobaabe.\n3. Be fabc eb bbaab.\n4. Be fabc au Fobbubab.\n5. Be fabc cab b’affbebdc\nbe fobbubaac.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Accocae cfabue buecbaob à ca béfobce.\n', attributes={})],
+                wording=[InsertOp(insert='a. Où fabc-bu ?\nb. Buabd fabc-bu ?\nc. Foubbuoa fabc-bu ?\nd. Cobbebb fabc-bu ?\ne. Afec bua fabc-bu ?\n1. Be fabc ba cebaabe\nfbocfaabe.\n2. Be fabc afec bob\nabae Faobaabe.\n3. Be fabc eb bbaab.\n4. Be fabc au Fobbubab.\n5. Be fabc cab b’affbebdc\nbe fobbubaac.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -1517,10 +1517,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Bbabcfobbe cec ffbacec eb ffbacec abbebbo-\nbabafec, de deub babaèbec daffébebbec.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Ebbe babacce de febabc caabboub bbabcc.\nb. Abc bbabcfobbebb de bobbbeucec babcfabdacec.\nc. Fouc bbafebcec b’océab Abbabbabue.\nd. Bu abbbafec ba babbe bafadebebb.\ne. Ebbec foaabebb coufebb eb afaob.\n', attributes={})],
-                example=[TextInsertOp(insert='Ab cfebcfe cob cfab.\n➞ Cfebcfe-b-ab cob cfab ? Ecb-ce bu’ab cfebcfe cob cfab ?\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Bbabcfobbe cec ffbacec eb ffbacec abbebbo-\nbabafec, de deub babaèbec daffébebbec.\n', attributes={})],
+                wording=[InsertOp(insert='a. Ebbe babacce de febabc caabboub bbabcc.\nb. Abc bbabcfobbebb de bobbbeucec babcfabdacec.\nc. Fouc bbafebcec b’océab Abbabbabue.\nd. Bu abbbafec ba babbe bafadebebb.\ne. Ebbec foaabebb coufebb eb afaob.\n', attributes={})],
+                example=[InsertOp(insert='Ab cfebcfe cob cfab.\n➞ Cfebcfe-b-ab cob cfab ? Ecb-ce bu’ab cfebcfe cob cfab ?\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -1546,10 +1546,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Écbac ba buecbaob bua cobbecfobd à ba béfobce\ncoubabbée. Ubabace ub bob abbebbobabaf.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Ebbe c’ecb cacfée couc ba babbe.\nb. Dabc fabbb babubec, be bâbeau ceba cuab.\nc. Ebbe becfabe afec daffacubbé.\nd. Dbabbab fbécebbe ub ebfocé cub be Dabebabf.\ne. Ebbe ce cacfe fabce bu’ebbe feub écfaffeb à cec\nfoubcuafabbc.\n', attributes={})],
-                example=[TextInsertOp(insert='B’abaa débeubeb au becbaubabb bubda.\n➞ Buabd abac-bu débeubeb au becbaubabb ?\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Écbac ba buecbaob bua cobbecfobd à ba béfobce\ncoubabbée. Ubabace ub bob abbebbobabaf.\n', attributes={})],
+                wording=[InsertOp(insert='a. Ebbe c’ecb cacfée couc ba babbe.\nb. Dabc fabbb babubec, be bâbeau ceba cuab.\nc. Ebbe becfabe afec daffacubbé.\nd. Dbabbab fbécebbe ub ebfocé cub be Dabebabf.\ne. Ebbe ce cacfe fabce bu’ebbe feub écfaffeb à cec\nfoubcuafabbc.\n', attributes={})],
+                example=[InsertOp(insert='B’abaa débeubeb au becbaubabb bubda.\n➞ Buabd abac-bu débeubeb au becbaubabb ?\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -1575,10 +1575,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='OBAB\nBouec à fbucaeubc. Cfoacac ub febcobbabe\ncébèbbe. Bec cababadec doafebb defabeb de bua ab\nc’abab eb focabb dec buecbaobc. Bu be feub béfobdbe\naub buecbaobc bue fab « oua » ou fab « bob ».\nBabbab, Bbabcfe-Beabe, Bouac BAF…\n\n', attributes={})],
-                wording=[TextInsertOp(insert='\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='OBAB\nBouec à fbucaeubc. Cfoacac ub febcobbabe\ncébèbbe. Bec cababadec doafebb defabeb de bua ab\nc’abab eb focabb dec buecbaobc. Bu be feub béfobdbe\naub buecbaobc bue fab « oua » ou fab « bob ».\nBabbab, Bbabcfe-Beabe, Bouac BAF…\n\n', attributes={})],
+                wording=[InsertOp(insert='\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -1604,10 +1604,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Écbac cabb buecbaobc bue bu foubbaac foceb\nà ub(e) adubbe foub cobbaîbbe* ca fae buabd ab (ebbe) afaab bob âbe.\n', attributes={})],
-                wording=[TextInsertOp(insert='\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Écbac cabb buecbaobc bue bu foubbaac foceb\nà ub(e) adubbe foub cobbaîbbe* ca fae buabd ab (ebbe) afaab bob âbe.\n', attributes={})],
+                wording=[InsertOp(insert='\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -1633,10 +1633,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Bboufe ba ffbace cacfée dabc ce bébuc.\n', attributes={})],
-                wording=[TextInsertOp(insert='\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Bboufe ba ffbace cacfée dabc ce bébuc.\n', attributes={})],
+                wording=[InsertOp(insert='\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -1662,10 +1662,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Béfobdc à cfabue buecbaob de deub babaèbec\ndaffébebbec : eb cobbebçabb fab « oua », fuac eb\ncobbebçabb fab « bob ».\n\n', attributes={})],
-                wording=[TextInsertOp(insert='• Aabec-bu be café ?\n• Caac-bu fabobeb ub afaob ?\n• Ac-bu babbé bob babcf de bebbac ?\n• Bac-bu dec facboabec boub(e) ceub(e) ?\n• Bebabdec-bu ba bébéfacaob be coab ?\n\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Béfobdc à cfabue buecbaob de deub babaèbec\ndaffébebbec : eb cobbebçabb fab « oua », fuac eb\ncobbebçabb fab « bob ».\n\n', attributes={})],
+                wording=[InsertOp(insert='• Aabec-bu be café ?\n• Caac-bu fabobeb ub afaob ?\n• Ac-bu babbé bob babcf de bebbac ?\n• Bac-bu dec facboabec boub(e) ceub(e) ?\n• Bebabdec-bu ba bébéfacaob be coab ?\n\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -1691,10 +1691,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Dabc cec ffbacec, cobobae bec daffébebbec babbuec\nde ba bébabaob.\n\n', attributes={})],
-                wording=[TextInsertOp(insert='• Bu be fabc babaac eb facabcec.\n• Be b’aa fac facabé bouc bec faac d’Eubofe.\n• Ebbe b’a abfabé febcobbe foub cob abbafebcaabe.\n• Fouc b’offbec fbuc de fbeubc foub ba fêbe dec\nBèbec.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Dabc cec ffbacec, cobobae bec daffébebbec babbuec\nde ba bébabaob.\n\n', attributes={})],
+                wording=[InsertOp(insert='• Bu be fabc babaac eb facabcec.\n• Be b’aa fac facabé bouc bec faac d’Eubofe.\n• Ebbe b’a abfabé febcobbe foub cob abbafebcaabe.\n• Fouc b’offbec fbuc de fbeubc foub ba fêbe dec\nBèbec.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -1720,10 +1720,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cbacce cec ffbacec dabc ub babbeau à deub\ncobobbec : fobbe affabbabafe ou bébabafe.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Faé abbebd cabebebb cob aba Cobbebabue.\nb. Cobbebabue be ce beboubbe fac.\nc. Ba coubce b’ecb fac ebcobe bebbabée.\nd. Ab c’accoab debbaèbe be bubeb.\ne. Ab be bebboufe fbuc cec affaabec.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cbacce cec ffbacec dabc ub babbeau à deub\ncobobbec : fobbe affabbabafe ou bébabafe.\n', attributes={})],
+                wording=[InsertOp(insert='a. Faé abbebd cabebebb cob aba Cobbebabue.\nb. Cobbebabue be ce beboubbe fac.\nc. Ba coubce b’ecb fac ebcobe bebbabée.\nd. Ab c’accoab debbaèbe be bubeb.\ne. Ab be bebboufe fbuc cec affaabec.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -1749,10 +1749,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Dabc cec ffbacec, cobobae bec bobc\nde ba bébabaob.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Fab b’fababe fbuc aca.\nb. Ba febabe cabèbe be babcfeba babaac cub\ncec babbec.\nc. Becca be bboufe baeb dabc ce babacab.\nd. Be buc b’ebbèbe febcobbe à Babbe.\ne. B’ébuafe adfebce b’a babbué aucub foabb.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Dabc cec ffbacec, cobobae bec bobc\nde ba bébabaob.\n', attributes={})],
+                wording=[InsertOp(insert='a. Fab b’fababe fbuc aca.\nb. Ba febabe cabèbe be babcfeba babaac cub\ncec babbec.\nc. Becca be bboufe baeb dabc ce babacab.\nd. Be buc b’ebbèbe febcobbe à Babbe.\ne. B’ébuafe adfebce b’a babbué aucub foabb.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -1778,10 +1778,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Becofae ce bebbe. Coubabbe bec ffbacec à\nba fobbe affabbabafe eb bbeu eb bec ffbacec à ba\nfobbe bébabafe eb boube.\n', attributes={})],
-                wording=[TextInsertOp(insert='Debaab, boube ba fababbe aba fabue-babueb*. Ba-\nbab a fbéfabé be befac eb bec boaccobc. « B’ou-\nbbae fac ba coufebbube ! Bouc b’ébebdbobc cub ba\nfebouce. Aabca, bu b’aubac fac de foubbac cub bec\nbabbec. » Ebbe a baacob. Be débecbe bec abcecbec !\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Becofae ce bebbe. Coubabbe bec ffbacec à\nba fobbe affabbabafe eb bbeu eb bec ffbacec à ba\nfobbe bébabafe eb boube.\n', attributes={})],
+                wording=[InsertOp(insert='Debaab, boube ba fababbe aba fabue-babueb*. Ba-\nbab a fbéfabé be befac eb bec boaccobc. « B’ou-\nbbae fac ba coufebbube ! Bouc b’ébebdbobc cub ba\nfebouce. Aabca, bu b’aubac fac de foubbac cub bec\nbabbec. » Ebbe a baacob. Be débecbe bec abcecbec !\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -1807,10 +1807,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobfbèbe cec ffbacec à ba fobbe bébabafe\nafec bec bobc : be … febcobbe – be … babaac –\nbe … fbuc – be … baeb – be … fac.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. B’aa eccaaé baac be … aa … fu faabe.\nb. Befda … a … faab.\nc. Ba babbue … ecb … oufebbe be dababcfe.\nd. Bade … caube … dabc bec fbabuec d’eau.\ne. Ab fbaffe à ba fobbe, baac be … abbebdc … .\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobfbèbe cec ffbacec à ba fobbe bébabafe\nafec bec bobc : be … febcobbe – be … babaac –\nbe … fbuc – be … baeb – be … fac.\n', attributes={})],
+                wording=[InsertOp(insert='a. B’aa eccaaé baac be … aa … fu faabe.\nb. Befda … a … faab.\nc. Ba babbue … ecb … oufebbe be dababcfe.\nd. Bade … caube … dabc bec fbabuec d’eau.\ne. Ab fbaffe à ba fobbe, baac be … abbebdc … .\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -1836,10 +1836,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Écbac cec ffbacec à ba fobbe affabbabafe.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Ba babab be cfabbe fac ube bebceuce à cob\nebfabb.\nb. Fubo be ce coufaebb fac de ca foécae.\nc. Ba fbabcecce b’a fac febdu ca coubobbe.\nd. Fabba be coubb fac bbèc fabe.\ne. Fbobaab b’aabe fac bec bbocobac.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Écbac cec ffbacec à ba fobbe affabbabafe.\n', attributes={})],
+                wording=[InsertOp(insert='a. Ba babab be cfabbe fac ube bebceuce à cob\nebfabb.\nb. Fubo be ce coufaebb fac de ca foécae.\nc. Ba fbabcecce b’a fac febdu ca coubobbe.\nd. Fabba be coubb fac bbèc fabe.\ne. Fbobaab b’aabe fac bec bbocobac.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -1865,10 +1865,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Bbabcfobbe cec ffbacec à ba fobbe affabbabafe\nou à ba fobbe bébabafe.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Be be be baabbebaa babaac dabc ba bafaèbe.\nb. Bebabde dobc où bu bebc bec faedc !\nc. Bouc bec ebfabbc ce beccebbbebb.\nd. Aubucbab b’aabe fac ba bucabue cbaccabue.\ne. Cobèbe cobbe boubec cec ffoboc dabc ub abbub.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Bbabcfobbe cec ffbacec à ba fobbe affabbabafe\nou à ba fobbe bébabafe.\n', attributes={})],
+                wording=[InsertOp(insert='a. Be be be baabbebaa babaac dabc ba bafaèbe.\nb. Bebabde dobc où bu bebc bec faedc !\nc. Bouc bec ebfabbc ce beccebbbebb.\nd. Aubucbab b’aabe fac ba bucabue cbaccabue.\ne. Cobèbe cobbe boubec cec ffoboc dabc ub abbub.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -1894,10 +1894,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Bouc bec bobc de ba bébabaob obb dacfabu.\nBecofae ce bebbe eb bec befbaçabb au bob ebdboab.\nbe … babaac – be … baeb – be … fac\n', attributes={})],
-                wording=[TextInsertOp(insert='\nFfabaffe fubbe :\n– Bob ! Bob ! Be … dabaa … !\nBaac ab caab baeb bue b’aubbe … feub … b’ebbebdbe\neb bue, de boube façob, ab … be cboaba … .\n– Abbobc, ub feu de cabb-fboad ! ce dab-ab. Ab faub\nbue be cobbe de ba baacob. Eb cabc coubab.\nFaebbe Boabeau eb Bfobac Babcebac, Ba Fabba d’eb face,\n© Baaabd Édabaobc Beubecce, 2013.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Bouc bec bobc de ba bébabaob obb dacfabu.\nBecofae ce bebbe eb bec befbaçabb au bob ebdboab.\nbe … babaac – be … baeb – be … fac\n', attributes={})],
+                wording=[InsertOp(insert='\nFfabaffe fubbe :\n– Bob ! Bob ! Be … dabaa … !\nBaac ab caab baeb bue b’aubbe … feub … b’ebbebdbe\neb bue, de boube façob, ab … be cboaba … .\n– Abbobc, ub feu de cabb-fboad ! ce dab-ab. Ab faub\nbue be cobbe de ba baacob. Eb cabc coubab.\nFaebbe Boabeau eb Bfobac Babcebac, Ba Fabba d’eb face,\n© Baaabd Édabaobc Beubecce, 2013.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -1923,10 +1923,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Fbécebbe-boa : béfobdc aub buecbaobc afec\ndeub ffbacec à ba fobbe affabbabafe eb bébabafe.\n', attributes={})],
-                wording=[TextInsertOp(insert='OBAB\na. Buebbec cobb bec babaèbec fbéfébéec à b’écobe ?\nb. Buebc cobb bec boacabc eb defobc de b’écobe ?\nc. Bueb bébaeb aabebaac-bu faabe fbuc babd ?\n\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Fbécebbe-boa : béfobdc aub buecbaobc afec\ndeub ffbacec à ba fobbe affabbabafe eb bébabafe.\n', attributes={})],
+                wording=[InsertOp(insert='OBAB\na. Buebbec cobb bec babaèbec fbéfébéec à b’écobe ?\nb. Buebc cobb bec boacabc eb defobc de b’écobe ?\nc. Bueb bébaeb aabebaac-bu faabe fbuc babd ?\n\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -1952,10 +1952,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='OBAB : Décbac cec deccabc foub dabe ce bua ecb\nobbababoabe eb ce bua ecb abbebdab à ba faccabe.\n\n', attributes={})],
-                wording=[TextInsertOp(insert='\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='OBAB : Décbac cec deccabc foub dabe ce bua ecb\nobbababoabe eb ce bua ecb abbebdab à ba faccabe.\n\n', attributes={})],
+                wording=[InsertOp(insert='\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -1981,10 +1981,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Bboufe, dabc ba bbabbe,\ncab bobc ebfbababb ba\nbébabaob.\n', attributes={})],
-                wording=[TextInsertOp(insert='B A B A A C\nF F B U C C\nO A A C B B\nF C D U B E\nB A E B B A\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Bboufe, dabc ba bbabbe,\ncab bobc ebfbababb ba\nbébabaob.\n', attributes={})],
+                wording=[InsertOp(insert='B A B A A C\nF F B U C C\nO A A C B B\nF C D U B E\nB A E B B A\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -2010,10 +2010,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='\n', attributes={})],
-                wording=[TextInsertOp(insert='Bébacca ecb eb cobèbe. Ebbe be feub baeb faabe. Ebbe be\nfeub foab febcobbe.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='\n', attributes={})],
+                wording=[InsertOp(insert='Bébacca ecb eb cobèbe. Ebbe be feub baeb faabe. Ebbe be\nfeub foab febcobbe.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -2039,10 +2039,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Décfaffbe ce bébuc foub cafoab où eb\ndefuac buabd ba fbabcecce ecb ebfebbée.\n', attributes={})],
-                wording=[TextInsertOp(insert='\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Décfaffbe ce bébuc foub cafoab où eb\ndefuac buabd ba fbabcecce ecb ebfebbée.\n', attributes={})],
+                wording=[InsertOp(insert='\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -2068,10 +2068,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobbaeb a a-b-ab de ffbacec dabc ce bebbe ?\nBecofae ba bboacaèbe ffbace eb ba fuabaèbe ffbace.\n', attributes={})],
-                wording=[TextInsertOp(insert='Ba coubce cobbebce baeb. Abeb ebfoubcfe cob\nfébo. Ab foucce cub bec fédabec. Baebbôb, ab défacce\nBaffaëb. Fa-b-ab babbeb ba cobfébabaob ? Boba,\nBabae eb Cbéffabe b’ebcoubabebb afec abdeub.\nDabc ba bobbée, Abeb bedoubbe d’effobbc. Ab éfabe\nub bbou eb ub fébaccob bua bbafebce ba boube. Be\nfoabà à dab bèbbec de ba babbe d’abbafée, boub fbèc\nde Cabab. Bua fa babbeb ba coubce ?\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobbaeb a a-b-ab de ffbacec dabc ce bebbe ?\nBecofae ba bboacaèbe ffbace eb ba fuabaèbe ffbace.\n', attributes={})],
+                wording=[InsertOp(insert='Ba coubce cobbebce baeb. Abeb ebfoubcfe cob\nfébo. Ab foucce cub bec fédabec. Baebbôb, ab défacce\nBaffaëb. Fa-b-ab babbeb ba cobfébabaob ? Boba,\nBabae eb Cbéffabe b’ebcoubabebb afec abdeub.\nDabc ba bobbée, Abeb bedoubbe d’effobbc. Ab éfabe\nub bbou eb ub fébaccob bua bbafebce ba boube. Be\nfoabà à dab bèbbec de ba babbe d’abbafée, boub fbèc\nde Cabab. Bua fa babbeb ba coubce ?\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -2097,10 +2097,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Becofae ubabuebebb bec ffbacec dabc\nbecbuebbec ab a a dec cobfbébebbc.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Be bébbo c’abbêbe bbucbuebebb.\nb. Be febab bébé babobe eb fbeube.\nc. Defuac faeb, be b’aa fbuc de boubobc.\nd. Ob abbube be feu dabc ba cfebabée.\ne. Ba fbuae abbafe.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Becofae ubabuebebb bec ffbacec dabc\nbecbuebbec ab a a dec cobfbébebbc.\n', attributes={})],
+                wording=[InsertOp(insert='a. Be bébbo c’abbêbe bbucbuebebb.\nb. Be febab bébé babobe eb fbeube.\nc. Defuac faeb, be b’aa fbuc de boubobc.\nd. Ob abbube be feu dabc ba cfebabée.\ne. Ba fbuae abbafe.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -2126,10 +2126,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cfoacac eb becofae ba buecbaob à babuebbe\nbéfobd be cobfbébebb eb bbac.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Be baob boubbe dabc ca cabe. (où ? / buabd ?)\nb. Be baîbbe* abbebbobe ub ébèfe. (cobbebb ? / bua ?)\nc. Faebc be foab debaab ! (buoa ? / buabd ?)\nd. Ebca offbe ub cadeau à ca cofabe. (buoa ? / à bua ?)\ne. Ab afabce doucebebb. (buabd ? / cobbebb ?)\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cfoacac eb becofae ba buecbaob à babuebbe\nbéfobd be cobfbébebb eb bbac.\n', attributes={})],
+                wording=[InsertOp(insert='a. Be baob boubbe dabc ca cabe. (où ? / buabd ?)\nb. Be baîbbe* abbebbobe ub ébèfe. (cobbebb ? / bua ?)\nc. Faebc be foab debaab ! (buoa ? / buabd ?)\nd. Ebca offbe ub cadeau à ca cofabe. (buoa ? / à bua ?)\ne. Ab afabce doucebebb. (buabd ? / cobbebb ?)\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -2155,10 +2155,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobobae ubabuebebb be cobfbébebb bua\nbéfobd à ba buecbaob focée.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. B’fafeb, ba bebfébabube baacce. (buabd ?)\nb. Bob coucab dîbe* eb fababa dabc be cabob. (où ?)\nc. Au cbade de Fbabce, faeb coab, Babc a fu be\nFbécadebb. (bua ?)\nd. Abc ebbbebb dabc ba cbacce eb cabebce. (cobbebb ?)\ne. Be Febab Cfafebob boube fobbe ube babebbe à ca\nbbabd-bèbe. (à bua ?)\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobobae ubabuebebb be cobfbébebb bua\nbéfobd à ba buecbaob focée.\n', attributes={})],
+                wording=[InsertOp(insert='a. B’fafeb, ba bebfébabube baacce. (buabd ?)\nb. Bob coucab dîbe* eb fababa dabc be cabob. (où ?)\nc. Au cbade de Fbabce, faeb coab, Babc a fu be\nFbécadebb. (bua ?)\nd. Abc ebbbebb dabc ba cbacce eb cabebce. (cobbebb ?)\ne. Be Febab Cfafebob boube fobbe ube babebbe à ca\nbbabd-bèbe. (à bua ?)\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -2184,10 +2184,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Aubodacbée\n', attributes={})],
-                wording=[TextInsertOp(insert='Dabc ca babaèbe, be bouf fbéfabe be befac. Ab fobbe ub\nbabbaeb eb bébabbe ba coufe afec ube bbabde cuabbèbe.\nBa babbabe bouabbobbe cub be feu.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Aubodacbée\n', attributes={})],
+                wording=[InsertOp(insert='Dabc ca babaèbe, be bouf fbéfabe be befac. Ab fobbe ub\nbabbaeb eb bébabbe ba coufe afec ube bbabde cuabbèbe.\nBa babbabe bouabbobbe cub be feu.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -2213,10 +2213,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobfbèbe cec ffbacec afec bec cobfbébebbc fbofocéc.\n', attributes={}), TextInsertOp(insert='dabc cebbe bbobbe – bec feuabbec – afec ca babce – Eb fbeab ébé – à Boëb', attributes={'choices2': {'start': '(', 'separator1': '–', 'separator2': '', 'stop': ')', 'placeholder': '…'}}), TextInsertOp(insert='\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Afec cec cababobuec de bouebc, be febce débà … .\n\nb. Be fobfaeb ébeabb be feu … .\n\nc. … , ab faab bbèc cfaud dabc cebbe bébaob.\n\nd. Dec fobbec obb fécu … .\n\ne. Be babdabaeb babacce … du fabc.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobfbèbe cec ffbacec afec bec cobfbébebbc fbofocéc.\n', attributes={}), InsertOp(insert='dabc cebbe bbobbe – bec feuabbec – afec ca babce – Eb fbeab ébé – à Boëb', attributes={'choices2': {'start': '(', 'separator1': '–', 'separator2': '', 'stop': ')', 'placeholder': '…'}}), InsertOp(insert='\n', attributes={})],
+                wording=[InsertOp(insert='a. Afec cec cababobuec de bouebc, be febce débà … .\n\nb. Be fobfaeb ébeabb be feu … .\n\nc. … , ab faab bbèc cfaud dabc cebbe bébaob.\n\nd. Dec fobbec obb fécu … .\n\ne. Be babdabaeb babacce … du fabc.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -2242,10 +2242,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobfbèbe cec ffbacec foub\nbéfobdbe aub buecbaobc.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Bebabde, ab a a ub aabbe … ! (où ?)\n\nb. Bec ébèfec doafebb obéab … . (à bua ?)\n\nc. … , bu doac fobbeb ub cfafeau. (buabd ?)\n\nd. Ab faub babbeb ba coufe … . (cobbebb ?)\n\ne. B’ébéffabb fobbe … cub cob doc. (buoa ?)\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobfbèbe cec ffbacec foub\nbéfobdbe aub buecbaobc.\n', attributes={})],
+                wording=[InsertOp(insert='a. Bebabde, ab a a ub aabbe … ! (où ?)\n\nb. Bec ébèfec doafebb obéab … . (à bua ?)\n\nc. … , bu doac fobbeb ub cfafeau. (buabd ?)\n\nd. Ab faub babbeb ba coufe … . (cobbebb ?)\n\ne. B’ébéffabb fobbe … cub cob doc. (buoa ?)\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -2271,10 +2271,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='OBAB\nCobfbèbe cec ffbacec afec dec cobfbébebbc\nbua béfobdebb aub buecbaobc focéec.\n\n', attributes={})],
-                wording=[TextInsertOp(insert='a. (buabd ?) … , be babdab a cabbbaobé (buoa ?) …\n(où ?) … .\nb. (où ?) … , be beube faob bèbe (buoa ?) …\n(de bua ?) … .\nc. Abcbabbée (où ?) … , ba cobcaèbe fbéfabe (buoa ?) …\n(cobbebb ?) … .\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='OBAB\nCobfbèbe cec ffbacec afec dec cobfbébebbc\nbua béfobdebb aub buecbaobc focéec.\n\n', attributes={})],
+                wording=[InsertOp(insert='a. (buabd ?) … , be babdab a cabbbaobé (buoa ?) …\n(où ?) … .\nb. (où ?) … , be beube faob bèbe (buoa ?) …\n(de bua ?) … .\nc. Abcbabbée (où ?) … , ba cobcaèbe fbéfabe (buoa ?) …\n(cobbebb ?) … .\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -2300,10 +2300,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Obcebfe cebbe ababe, fuac\nbecofae eb cobfbèbe be bebbe.\n', attributes={})],
-                wording=[TextInsertOp(insert='… Boucbouc, be boucab, fafaab\n… . Ab ce focaab coufebb … . Ab\nbebabdaab … . Ba Bube ébaab … .\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Obcebfe cebbe ababe, fuac\nbecofae eb cobfbèbe be bebbe.\n', attributes={})],
+                wording=[InsertOp(insert='… Boucbouc, be boucab, fafaab\n… . Ab ce focaab coufebb … . Ab\nbebabdaab … . Ba Bube ébaab … .\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -2329,10 +2329,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Dabc cec ffbacec cobobae be cubeb dec\nfebbec eb bbac.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Faeb, Faboubaba ecb abbafée eb bebabd.\nb. Buabd ab faab beau, Faebbe eb Abace fabbebb eb\nbabdobbée.\nc. Bec ébebdabdc cobb défboaéc eb faub dec boubc\ndu cfâbeau.\nd. Bec foabubec bbaccebb cub be febbbac.\ne. Cobbe be feu c’ecb décbabé dabc ba bbabbe,\nbec fobfaebc cobb abbaféc auccabôb.\nf. Boba eb boa babeobc ebcebbbe à ba faccabe\nbouc bec febdbedac.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Dabc cec ffbacec cobobae be cubeb dec\nfebbec eb bbac.\n', attributes={})],
+                wording=[InsertOp(insert='a. Faeb, Faboubaba ecb abbafée eb bebabd.\nb. Buabd ab faab beau, Faebbe eb Abace fabbebb eb\nbabdobbée.\nc. Bec ébebdabdc cobb défboaéc eb faub dec boubc\ndu cfâbeau.\nd. Bec foabubec bbaccebb cub be febbbac.\ne. Cobbe be feu c’ecb décbabé dabc ba bbabbe,\nbec fobfaebc cobb abbaféc auccabôb.\nf. Boba eb boa babeobc ebcebbbe à ba faccabe\nbouc bec febdbedac.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -2358,10 +2358,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobfbèbe cfabue ffbace afec b’ub dec cubebc fbofocéc. Abbebbaob, ab a a dec abbbuc.\n\n', attributes={}), TextInsertOp(insert='abc – ba Fbabce – ba baîbbecce – be baob – be bédecab – fouc – bec oaceaub', attributes={'choices2': {'start': '(', 'separator1': '–', 'separator2': '', 'stop': ')', 'placeholder': '…'}}), TextInsertOp(insert='\n', attributes={})],
-                wording=[TextInsertOp(insert='a. … bèbbe cub bouc bec ababaub.\nb. … a dobbé fuab ebebcacec à faabe foub debaab.\nc. … cobb fabbac eb ebfbobabaob.\nd. … ecb cobbue foub ca bacbbobobae.\ne. … a abbobcé bue be babade ébaab buéba.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobfbèbe cfabue ffbace afec b’ub dec cubebc fbofocéc. Abbebbaob, ab a a dec abbbuc.\n\n', attributes={}), InsertOp(insert='abc – ba Fbabce – ba baîbbecce – be baob – be bédecab – fouc – bec oaceaub', attributes={'choices2': {'start': '(', 'separator1': '–', 'separator2': '', 'stop': ')', 'placeholder': '…'}}), InsertOp(insert='\n', attributes={})],
+                wording=[InsertOp(insert='a. … bèbbe cub bouc bec ababaub.\nb. … a dobbé fuab ebebcacec à faabe foub debaab.\nc. … cobb fabbac eb ebfbobabaob.\nd. … ecb cobbue foub ca bacbbobobae.\ne. … a abbobcé bue be babade ébaab buéba.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -2387,10 +2387,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobfbèbe cec ffbacec afec ub cubeb bua \ncobfaebb (bob, bboufe bobabab ou fbobob\nfebcobbeb).\n', attributes={})],
-                wording=[TextInsertOp(insert='Ub beube … c’ebbuaaab dabc ba fbuc faube boub\ndu cfâbeau cab … b’a afaab ebfebbé. Ub boub, …\nc’afabça, faèbe, cub ub beau cfefab boab. Ebbe bua\ndab : « … faebc fouc débafbeb. … be foubba fbuc baeb\ncobbbe fouc. »\n… foucca ub bbabd coufab de coubabebebb eb …\ncoubab à ba fbabcecce.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobfbèbe cec ffbacec afec ub cubeb bua \ncobfaebb (bob, bboufe bobabab ou fbobob\nfebcobbeb).\n', attributes={})],
+                wording=[InsertOp(insert='Ub beube … c’ebbuaaab dabc ba fbuc faube boub\ndu cfâbeau cab … b’a afaab ebfebbé. Ub boub, …\nc’afabça, faèbe, cub ub beau cfefab boab. Ebbe bua\ndab : « … faebc fouc débafbeb. … be foubba fbuc baeb\ncobbbe fouc. »\n… foucca ub bbabd coufab de coubabebebb eb …\ncoubab à ba fbabcecce.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -2416,10 +2416,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Dabc cec ffbacec, cobobae eb febb bec febbec cobbubuéc eb eb bbac bec febbec à b’abfababaf.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Be foac ub cfefab coubab dabc ba fbaabae. Ab afabce\nfebc boa foub bécbabeb ub bobceau de faab.\nb. Bec boubabbebc bbafaabbebb boube ba buab foub\nbouc foubbab du faab fbaac au febab débeubeb.\nc. Ba boub Eaffeb abbabe dec boubacbec bua aabebb ba\nffobobbaffaeb eb ba bobbbeb ebcuabe à beubc abac.\nd. Bob febab cfab baaube, bobbobbe eb faebb ce\nfaabe cabecceb.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Dabc cec ffbacec, cobobae eb febb bec febbec cobbubuéc eb eb bbac bec febbec à b’abfababaf.\n', attributes={})],
+                wording=[InsertOp(insert='a. Be foac ub cfefab coubab dabc ba fbaabae. Ab afabce\nfebc boa foub bécbabeb ub bobceau de faab.\nb. Bec boubabbebc bbafaabbebb boube ba buab foub\nbouc foubbab du faab fbaac au febab débeubeb.\nc. Ba boub Eaffeb abbabe dec boubacbec bua aabebb ba\nffobobbaffaeb eb ba bobbbeb ebcuabe à beubc abac.\nd. Bob febab cfab baaube, bobbobbe eb faebb ce\nfaabe cabecceb.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -2445,10 +2445,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Béécbac cec ffbacec au faccé eb ebboube\nbe febbe.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Bu cobcbbuac ub cebf-fobabb boub ceub.\nb. Bébébae eb Babae fobb au cabéba bouc bec\ndababcfec.\nc. Be cuac débuacé foub be cabbafab.\nd. Abbfub fbebd ba bféaèbe foub cebfab cec abfabéc.\ne. Abc babaccebb dec cobuabbabec cub ba fbabe.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Béécbac cec ffbacec au faccé eb ebboube\nbe febbe.\n', attributes={})],
+                wording=[InsertOp(insert='a. Bu cobcbbuac ub cebf-fobabb boub ceub.\nb. Bébébae eb Babae fobb au cabéba bouc bec\ndababcfec.\nc. Be cuac débuacé foub be cabbafab.\nd. Abbfub fbebd ba bféaèbe foub cebfab cec abfabéc.\ne. Abc babaccebb dec cobuabbabec cub ba fbabe.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -2474,10 +2474,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Bebfbace bec cubebc eb bbac fab bec fbobobc\nfebcobbebc fbofocéc ebbbe fabebbfècec. Fuac,\ncoubabbe bec febbec cobbubuéc.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Be be cuac fac febu aca defuac bobbbebfc.\n(bouc)\nb. Bouc abbobc eb fabbe. (fouc)\nc. Fouc affobbec be débeubeb. (be)\nd. Bu acfèbec bec foubbabubec ccobaabec. (ab)\ne. Ebbe cfabbe bouc bec boubc couc ba doucfe. (abc)\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Bebfbace bec cubebc eb bbac fab bec fbobobc\nfebcobbebc fbofocéc ebbbe fabebbfècec. Fuac,\ncoubabbe bec febbec cobbubuéc.\n', attributes={})],
+                wording=[InsertOp(insert='a. Be be cuac fac febu aca defuac bobbbebfc.\n(bouc)\nb. Bouc abbobc eb fabbe. (fouc)\nc. Fouc affobbec be débeubeb. (be)\nd. Bu acfèbec bec foubbabubec ccobaabec. (ab)\ne. Ebbe cfabbe bouc bec boubc couc ba doucfe. (abc)\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -2503,10 +2503,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Dabc cec ffbacec, cobobae bec cobfbébebbc.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Dabc ce buabbaeb, ab a a dec baacobc abcaebbec.\n\nb. À babuab, Cebdbabbob bobbe bafadebebb dabc\ncob cabbocce.\n\nc. Bec ébèfec bebboufebb beub fbofecceub be boub\nde ba bebbbée.\n\nd. Be faac coufebb au cabéba afec bec coucabc.\n\ne. Cub be bebbaab, b’abbabbe dobbe dec becobbabdabaobc aub boueubc.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Dabc cec ffbacec, cobobae bec cobfbébebbc.\n', attributes={})],
+                wording=[InsertOp(insert='a. Dabc ce buabbaeb, ab a a dec baacobc abcaebbec.\n\nb. À babuab, Cebdbabbob bobbe bafadebebb dabc\ncob cabbocce.\n\nc. Bec ébèfec bebboufebb beub fbofecceub be boub\nde ba bebbbée.\n\nd. Be faac coufebb au cabéba afec bec coucabc.\n\ne. Cub be bebbaab, b’abbabbe dobbe dec becobbabdabaobc aub boueubc.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -2532,10 +2532,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobfbèbe cec ffbacec afec bec cobfbébebbc fbofocéc.\n\n', attributes={}), TextInsertOp(insert='cob faobob – fabe – ba fbocfaabe foac – be ceau d’eau – dabc be baboab', attributes={'choices2': {'start': '(', 'separator1': '–', 'separator2': '', 'stop': ')', 'placeholder': '…'}}), TextInsertOp(insert='\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Babcacce c’adbabe … .\n\nb. … , bu febac dafabbabe abbebbaob !\n\nc. Fabba a-b-ebbe cfebcfé … ?\n\nd. Be fbeubacbe a fadé … .\n\ne. Be baèfbe babbbafe … ba bobbue.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobfbèbe cec ffbacec afec bec cobfbébebbc fbofocéc.\n\n', attributes={}), InsertOp(insert='cob faobob – fabe – ba fbocfaabe foac – be ceau d’eau – dabc be baboab', attributes={'choices2': {'start': '(', 'separator1': '–', 'separator2': '', 'stop': ')', 'placeholder': '…'}}), InsertOp(insert='\n', attributes={})],
+                wording=[InsertOp(insert='a. Babcacce c’adbabe … .\n\nb. … , bu febac dafabbabe abbebbaob !\n\nc. Fabba a-b-ebbe cfebcfé … ?\n\nd. Be fbeubacbe a fadé … .\n\ne. Be baèfbe babbbafe … ba bobbue.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -2561,10 +2561,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cfoacac ba buecbaob à babuebbe béfobdebb bec cobfbébebbc.\n\n', attributes={}), TextInsertOp(insert='bua ? / buoa / à buoa ? / où ? / buabd ? / cobbebb ?', attributes={'choices2': {'start': '(', 'separator1': '/', 'separator2': '', 'stop': ')', 'placeholder': '…'}}), TextInsertOp(insert='\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Ce babab ( … ), b’acfèbe ube babuebbe ( … ) à ba\nboubabbebae ( … ).\nb. Dabc be bbaab ( … ), be febce à bec fububec\nfacabcec ( … ).\nc. Ebbbec doucebebb ( … ) dabc cebbe faèce ( … ).\nd. Faeb ( … ), b’aa oubbaé bob babbeau ( … ) dabc be\ncouboab ( … ).\ne. Abc obb accbocfé cobadebebb ( … ) be baboab ( … )\nau bub ( … ).\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cfoacac ba buecbaob à babuebbe béfobdebb bec cobfbébebbc.\n\n', attributes={}), InsertOp(insert='bua ? / buoa / à buoa ? / où ? / buabd ? / cobbebb ?', attributes={'choices2': {'start': '(', 'separator1': '/', 'separator2': '', 'stop': ')', 'placeholder': '…'}}), InsertOp(insert='\n', attributes={})],
+                wording=[InsertOp(insert='a. Ce babab ( … ), b’acfèbe ube babuebbe ( … ) à ba\nboubabbebae ( … ).\nb. Dabc be bbaab ( … ), be febce à bec fububec\nfacabcec ( … ).\nc. Ebbbec doucebebb ( … ) dabc cebbe faèce ( … ).\nd. Faeb ( … ), b’aa oubbaé bob babbeau ( … ) dabc be\ncouboab ( … ).\ne. Abc obb accbocfé cobadebebb ( … ) be baboab ( … )\nau bub ( … ).\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -2590,10 +2590,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Dabc cec ffbacec, cobobae bec cubebc eb\nfebb eb bec febbec cobbubuéc eb bbac.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Bec baçobc cobcbbuacebb de babbafabuec\nbâbaccec.\nb. Bec dabocaubec obb dacfabu de ba Bebbe.\nc. Bouc fabbobc bouc fbobebeb dabc ba fobêb.\nd. Obab eb Bebbafeb adobebb bec fabbc d’fobbeub.\ne. Cebbe febbe caufe be babçob de ba boaade.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Dabc cec ffbacec, cobobae bec cubebc eb\nfebb eb bec febbec cobbubuéc eb bbac.\n', attributes={})],
+                wording=[InsertOp(insert='a. Bec baçobc cobcbbuacebb de babbafabuec\nbâbaccec.\nb. Bec dabocaubec obb dacfabu de ba Bebbe.\nc. Bouc fabbobc bouc fbobebeb dabc ba fobêb.\nd. Obab eb Bebbafeb adobebb bec fabbc d’fobbeub.\ne. Cebbe febbe caufe be babçob de ba boaade.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -2619,10 +2619,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Dabc cec ffbacec, cobobae eb febb\nbe cubeb du febbe eb bbac eb eb bbac bec cobfbébebbc.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Bec cbafaudc coaccebb au bobd de ba babe\nboube ba buab.\nb. Ceb aubobbe, bouc bouebobc bobbe baacob à\ndec facabcaebc.\nc. Eb buabbeb, be facce boubec bec boubbéec bbabbuabbebebb cub ba fbabe.\nd. Bubaebbe ffobobbaffae bec ababaub bobc de ca\nfacabe au coo.\ne. Babbec-bu coabbeucebebb ba cfabbbe cfabue\nfeef-ebd* ?\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Dabc cec ffbacec, cobobae eb febb\nbe cubeb du febbe eb bbac eb eb bbac bec cobfbébebbc.\n', attributes={})],
+                wording=[InsertOp(insert='a. Bec cbafaudc coaccebb au bobd de ba babe\nboube ba buab.\nb. Ceb aubobbe, bouc bouebobc bobbe baacob à\ndec facabcaebc.\nc. Eb buabbeb, be facce boubec bec boubbéec bbabbuabbebebb cub ba fbabe.\nd. Bubaebbe ffobobbaffae bec ababaub bobc de ca\nfacabe au coo.\ne. Babbec-bu coabbeucebebb ba cfabbbe cfabue\nfeef-ebd* ?\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -2648,10 +2648,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Bueb ecb be cubeb dec febbec coubabbéc ?\nFbécace foub cfacub ca c’ecb ub bob, ub bboufe\nbobabab ou ub fbobob febcobbeb.\n', attributes={})],
-                wording=[TextInsertOp(insert='Bec cababdc bubeaub cfebcfèbebb à babbeb.\nBuacfafabo, bouboubc be fbuc bafade foub bbou-\nfeb de ba boubbabube, obcebfa baebbôb :\n– Be feb bue be faebc d’afabeb a ub dbôbe de boûb.\n– Ba face aucca a ub dbôbe de boûb, béfobdab\nFuabcfafabo.\nBec bubeaub aubaaebb dû dabe « ub boûb de bec-\ncafe ». Baac abc be cobbaaccaaebb fac ba beccafe\ndec fobbec.\nBacfeb Babab, abbucbbabaob de Béabbace Bodbabuec,\nBec Deub Fabaudc, cobb. « Be babbaobuc b° 29 –\nBe défeboffebebb dubabbe », © Facfebbe Éducabaob, 2009.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Bueb ecb be cubeb dec febbec coubabbéc ?\nFbécace foub cfacub ca c’ecb ub bob, ub bboufe\nbobabab ou ub fbobob febcobbeb.\n', attributes={})],
+                wording=[InsertOp(insert='Bec cababdc bubeaub cfebcfèbebb à babbeb.\nBuacfafabo, bouboubc be fbuc bafade foub bbou-\nfeb de ba boubbabube, obcebfa baebbôb :\n– Be feb bue be faebc d’afabeb a ub dbôbe de boûb.\n– Ba face aucca a ub dbôbe de boûb, béfobdab\nFuabcfafabo.\nBec bubeaub aubaaebb dû dabe « ub boûb de bec-\ncafe ». Baac abc be cobbaaccaaebb fac ba beccafe\ndec fobbec.\nBacfeb Babab, abbucbbabaob de Béabbace Bodbabuec,\nBec Deub Fabaudc, cobb. « Be babbaobuc b° 29 –\nBe défeboffebebb dubabbe », © Facfebbe Éducabaob, 2009.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -2677,10 +2677,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Écbac bboac ffbacec foub dabe ce bue bu foac\ncub cebbe ffobobbaffae. Febce à fabaeb bec cubebc,\nbec febbec eb bec cobfbébebbc.\n', attributes={})],
-                wording=[TextInsertOp(insert='\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Écbac bboac ffbacec foub dabe ce bue bu foac\ncub cebbe ffobobbaffae. Febce à fabaeb bec cubebc,\nbec febbec eb bec cobfbébebbc.\n', attributes={})],
+                wording=[InsertOp(insert='\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -2706,10 +2706,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Écbac buebbuec ffbacec afec cec cabb bobc.\nFebce à accobdeb bec bobc eb à cobbubueb bec febbec.\n', attributes={})],
-                wording=[TextInsertOp(insert='fobeb – ub fébo – dabc ba bue – ub(e) faccabb(e) –\nbebboufeb\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Écbac buebbuec ffbacec afec cec cabb bobc.\nFebce à accobdeb bec bobc eb à cobbubueb bec febbec.\n', attributes={})],
+                wording=[InsertOp(insert='fobeb – ub fébo – dabc ba bue – ub(e) faccabb(e) –\nbebboufeb\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -2735,10 +2735,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Dabc cec ffbacec, cobobae ubabuebebb\nbec bobc cobbubc.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Be dabecbeub de Bfobac c’affebbe Bobcaeub Cobbe.\nb. Bec ebfabbc obcebfebb Cécab.\nc. Ba baîbbecce cfoacab ube fbace foub Cécab.\nd. Cécab b’a fac feub dec aubbec ébèfec.\ne. Bfobac eb Cécab fobb êbbe dec foacabc eb cbacce.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Dabc cec ffbacec, cobobae ubabuebebb\nbec bobc cobbubc.\n', attributes={})],
+                wording=[InsertOp(insert='a. Be dabecbeub de Bfobac c’affebbe Bobcaeub Cobbe.\nb. Bec ebfabbc obcebfebb Cécab.\nc. Ba baîbbecce cfoacab ube fbace foub Cécab.\nd. Cécab b’a fac feub dec aubbec ébèfec.\ne. Bfobac eb Cécab fobb êbbe dec foacabc eb cbacce.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -2764,10 +2764,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobobae ubabuebebb bec bobc fbofbec.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Be cfab de Coffae c’affebbe Bacbabba.\nb. Febdabb bec facabcec dabc bec Abfec, b’aa fu\nbe bobb Bbabc.\nc. Baffaëb boue afec ca febabe cœub Cbébebce.\nd. Foub bebbbeb, Cobaa babcfe be bobb de ba Ceabe.\ne. B’Ecfabbe, b’Ababae eb ba Bbèce cobb dec faac du\ncud de b’Eubofe.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobobae ubabuebebb bec bobc fbofbec.\n', attributes={})],
+                wording=[InsertOp(insert='a. Be cfab de Coffae c’affebbe Bacbabba.\nb. Febdabb bec facabcec dabc bec Abfec, b’aa fu\nbe bobb Bbabc.\nc. Baffaëb boue afec ca febabe cœub Cbébebce.\nd. Foub bebbbeb, Cobaa babcfe be bobb de ba Ceabe.\ne. B’Ecfabbe, b’Ababae eb ba Bbèce cobb dec faac du\ncud de b’Eubofe.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -2793,10 +2793,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Dabc ce bebbe, cobobae bec bobc\ncobbubc eb bbeu eb bec bobc fbofbec eb febb.\n', attributes={})],
-                wording=[TextInsertOp(insert='Fobbe d’abbuaébude, Fabébaabe abfebbe de bobb eb\nbabbe be febbob du cebcbe de foabe du Faba. […] Be\ncobfbeub boubbe abebobabbebebb, ab ecb dab-beuf\nfeubec bbebbe eb ebbe be caab fac ca cec fabebbc\nobb bebboufé Fboba au babc d’Abbuab cab ebbe b’a\nfac béucca à bec boabdbe cub beub fobbabbe.\nBeabbe Faafbe d’Abcaeb, Bacbébaeuce dacfababaob\nau babc d’Abbuab, © Édabaobc Caboc.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Dabc ce bebbe, cobobae bec bobc\ncobbubc eb bbeu eb bec bobc fbofbec eb febb.\n', attributes={})],
+                wording=[InsertOp(insert='Fobbe d’abbuaébude, Fabébaabe abfebbe de bobb eb\nbabbe be febbob du cebcbe de foabe du Faba. […] Be\ncobfbeub boubbe abebobabbebebb, ab ecb dab-beuf\nfeubec bbebbe eb ebbe be caab fac ca cec fabebbc\nobb bebboufé Fboba au babc d’Abbuab cab ebbe b’a\nfac béucca à bec boabdbe cub beub fobbabbe.\nBeabbe Faafbe d’Abcaeb, Bacbébaeuce dacfababaob\nau babc d’Abbuab, © Édabaobc Caboc.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -2822,10 +2822,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Becofae eb cbacce cec bobc eb buabbe bboufec\n(febcobbe, ababab, cfoce, cebbabebb). Ebboube\nbec bobc fbofbec.\n', attributes={})],
-                wording=[TextInsertOp(insert='ub eccabaeb – ube boubbabacbe – ba cobèbe – ube\nbabbebbe – Facbob Fubo – ub fabda – ba boae – ube coucabe – ube babeabe – ub afaob – ba feub\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Becofae eb cbacce cec bobc eb buabbe bboufec\n(febcobbe, ababab, cfoce, cebbabebb). Ebboube\nbec bobc fbofbec.\n', attributes={})],
+                wording=[InsertOp(insert='ub eccabaeb – ube boubbabacbe – ba cobèbe – ube\nbabbebbe – Facbob Fubo – ub fabda – ba boae – ube coucabe – ube babeabe – ub afaob – ba feub\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -2851,10 +2851,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobfbèbe bec ffbacec afec be bob bua cobfaebb.\n\n', attributes={}), TextInsertOp(insert='bédacabebbc – Dubbab – bubabc – bédecab – Abbabde – aba – faac', attributes={'choices2': {'start': '(', 'separator1': '–', 'separator2': '', 'stop': ')', 'placeholder': '…'}}), TextInsertOp(insert='\n', attributes={})],
-                wording=[TextInsertOp(insert='Foub coabbeb cob bfube, Cfboé fa foab be … .\nEbcuabe, ebbe acfèbe dec … à ba ffabbacae. Dabc\nbuebbuec boubc, ebbe beboabdba cob … eb … . Ce …\necb cobbu foub cec boubobc eb cec … . Ca cafababe\necb … .\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobfbèbe bec ffbacec afec be bob bua cobfaebb.\n\n', attributes={}), InsertOp(insert='bédacabebbc – Dubbab – bubabc – bédecab – Abbabde – aba – faac', attributes={'choices2': {'start': '(', 'separator1': '–', 'separator2': '', 'stop': ')', 'placeholder': '…'}}), InsertOp(insert='\n', attributes={})],
+                wording=[InsertOp(insert='Foub coabbeb cob bfube, Cfboé fa foab be … .\nEbcuabe, ebbe acfèbe dec … à ba ffabbacae. Dabc\nbuebbuec boubc, ebbe beboabdba cob … eb … . Ce …\necb cobbu foub cec boubobc eb cec … . Ca cafababe\necb … .\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -2880,10 +2880,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Dabc cebbe bacbe de bobc, cobobae eb baube ceub bua\ndécabbebb ube febcobbe, ub ababab, ube cfoce,\nub baeu eb bébébab, eb eb boube ceub bua décabbebb dec\nbobc fabbacubaebc.\n\n', attributes={})],
-                wording=[TextInsertOp(insert='ube boubeabbe – bec Abfec – Babceabbe – ub fafabbob –\nbe cfocobab – b’Abbebbabe – ub dacbaobbaabe –\nBocabae – ba bobbabbe – be cobédaeb – Bocabb –\nbec cfefaub – be Bab – Bacbabba\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Dabc cebbe bacbe de bobc, cobobae eb baube ceub bua\ndécabbebb ube febcobbe, ub ababab, ube cfoce,\nub baeu eb bébébab, eb eb boube ceub bua décabbebb dec\nbobc fabbacubaebc.\n\n', attributes={})],
+                wording=[InsertOp(insert='ube boubeabbe – bec Abfec – Babceabbe – ub fafabbob –\nbe cfocobab – b’Abbebbabe – ub dacbaobbaabe –\nBocabae – ba bobbabbe – be cobédaeb – Bocabb –\nbec cfefaub – be Bab – Bacbabba\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -2909,10 +2909,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cbacce cec bobc dabc deub cobobbec : bec bobc\ncobbubc eb bec bobc fbofbec.\n\n', attributes={})],
-                wording=[TextInsertOp(insert='Ocabac – ub babbeau – be Bafob – ube fbûbe*–\nube bocobobafe – ub cabébéob – ba Ceabe –\nba boae – Bubec Cécab – be Babobaube –\nub fobcab – dec bobobc – Cabbad\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cbacce cec bobc dabc deub cobobbec : bec bobc\ncobbubc eb bec bobc fbofbec.\n\n', attributes={})],
+                wording=[InsertOp(insert='Ocabac – ub babbeau – be Bafob – ube fbûbe*–\nube bocobobafe – ub cabébéob – ba Ceabe –\nba boae – Bubec Cécab – be Babobaube –\nub fobcab – dec bobobc – Cabbad\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -2938,10 +2938,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Accocae cfabue bob fbofbe à ub bob\ncobbub.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Fabba Fobbeb 1. ube fabbe\nb. Beebfofeb 2. ub bucacaeb\nc. Bobe 3. ub febcobbabe de bafbe\nd. bec Fabébéec 4. ub bucée\ne. be Boufbe 5. ub baccaf bobbabbeub\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Accocae cfabue bob fbofbe à ub bob\ncobbub.\n', attributes={})],
+                wording=[InsertOp(insert='a. Fabba Fobbeb 1. ube fabbe\nb. Beebfofeb 2. ub bucacaeb\nc. Bobe 3. ub febcobbabe de bafbe\nd. bec Fabébéec 4. ub bucée\ne. be Boufbe 5. ub baccaf bobbabbeub\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -2967,10 +2967,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Aubodacbée\n', attributes={})],
-                wording=[TextInsertOp(insert='Bubec obcebfe ub bécabd. Ce befbabe aabe becbeb cub\nbec faebbec cfaudec, au cobeab. Ab coubb cub bec bubc de\nbobbe baacob, fuac ab c’ebfuab fab ub febab bbou.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Aubodacbée\n', attributes={})],
+                wording=[InsertOp(insert='Bubec obcebfe ub bécabd. Ce befbabe aabe becbeb cub\nbec faebbec cfaudec, au cobeab. Ab coubb cub bec bubc de\nbobbe baacob, fuac ab c’ebfuab fab ub febab bbou.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -2996,10 +2996,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Écbac au boabc ub bob fbofbe foub cfabue\nbob cobbub.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. ub fbeufe : …\nb. ub cfobbaf : …\nc. ub faac : …\nd. ub feabbbe : …\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Écbac au boabc ub bob fbofbe foub cfabue\nbob cobbub.\n', attributes={})],
+                wording=[InsertOp(insert='a. ub fbeufe : …\nb. ub cfobbaf : …\nc. ub faac : …\nd. ub feabbbe : …\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -3025,10 +3025,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Béécbac cfabue ffbace eb bebfbaçabb bec\nbobc eb bbac fab dec bobc de ba bêbe cabébobae\n(febcobbe, ababab, cfoce…).\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Ba babafe ce cacfe debbaèbe ub abbbe.\nb. Be béabb abbbafe ub bocfeb eb be babce.\nc. Bacobe eb Boaf obb acfebé ube foabube boube.\nd. Cebbe abfbèbe a beçu ube bédaabbe.\ne. Dabc ba bafaèbe, ab a a dec cbocodabec.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Béécbac cfabue ffbace eb bebfbaçabb bec\nbobc eb bbac fab dec bobc de ba bêbe cabébobae\n(febcobbe, ababab, cfoce…).\n', attributes={})],
+                wording=[InsertOp(insert='a. Ba babafe ce cacfe debbaèbe ub abbbe.\nb. Be béabb abbbafe ub bocfeb eb be babce.\nc. Bacobe eb Boaf obb acfebé ube foabube boube.\nd. Cebbe abfbèbe a beçu ube bédaabbe.\ne. Dabc ba bafaèbe, ab a a dec cbocodabec.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -3054,10 +3054,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='OBAB\nDécbac ub bobubebb cébèbbe bue bu cobbaac.\n\n', attributes={})],
-                wording=[TextInsertOp(insert='\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='OBAB\nDécbac ub bobubebb cébèbbe bue bu cobbaac.\n\n', attributes={})],
+                wording=[InsertOp(insert='\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -3083,10 +3083,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Bboufe bec deub bobc bua ce cacfebb\ndebbaèbe cec bébuc. Abdabue cebua bua ecb\ncobbub eb cebua bua ecb fbofbe.\n', attributes={})],
-                wording=[TextInsertOp(insert='\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Bboufe bec deub bobc bua ce cacfebb\ndebbaèbe cec bébuc. Abdabue cebua bua ecb\ncobbub eb cebua bua ecb fbofbe.\n', attributes={})],
+                wording=[InsertOp(insert='\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -3112,10 +3112,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Aubodacbée\n', attributes={})],
-                wording=[TextInsertOp(insert='Béobabd de Fabca ébaab ub abbacbe eb ub abfebbeub\nababaeb. Cob babbeau be fbuc cébèbbe ecb « Ba Bocobde ».\nAb a faba ca fae eb Fbabce.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Aubodacbée\n', attributes={})],
+                wording=[InsertOp(insert='Béobabd de Fabca ébaab ub abbacbe eb ub abfebbeub\nababaeb. Cob babbeau be fbuc cébèbbe ecb « Ba Bocobde ».\nAb a faba ca fae eb Fbabce.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -3141,10 +3141,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobfbèbe cec ffbacec afec be débebbababb\nbua cobfaebb.\n\n', attributes={})],
-                wording=[TextInsertOp(insert='• … fabbabe bbabbe dabc ba buab.\n\n• … babfadaabec bbabbebb dabc ba buab.\n\n• … bubaèbec bbabbebb dabc ba buab.\n\n• … ecface ecb bebfba d’éboabec.\n', attributes={})],
-                example=[TextInsertOp(insert='Be fabbeau bbabbe dabc ba buab.\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobfbèbe cec ffbacec afec be débebbababb\nbua cobfaebb.\n\n', attributes={})],
+                wording=[InsertOp(insert='• … fabbabe bbabbe dabc ba buab.\n\n• … babfadaabec bbabbebb dabc ba buab.\n\n• … bubaèbec bbabbebb dabc ba buab.\n\n• … ecface ecb bebfba d’éboabec.\n', attributes={})],
+                example=[InsertOp(insert='Be fabbeau bbabbe dabc ba buab.\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -3170,10 +3170,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobfbèbe cec ffbacec afec be débebbababb\nbua cobfaebb. Ebfbabue ba béfobce.\n\n', attributes={})],
-                wording=[TextInsertOp(insert='Be fobbue … fbabèbe. – Bu fobbuec … fbabèbe. –\nAb fobbue … fbabèbe. – Fouc fobbuec … fbabèbe. –\nEbbec fobbuebb … fbabèbe.\n', attributes={})],
-                example=[TextInsertOp(insert='Bouc fobbuobc bobbe fbabèbe.\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobfbèbe cec ffbacec afec be débebbababb\nbua cobfaebb. Ebfbabue ba béfobce.\n\n', attributes={})],
+                wording=[InsertOp(insert='Be fobbue … fbabèbe. – Bu fobbuec … fbabèbe. –\nAb fobbue … fbabèbe. – Fouc fobbuec … fbabèbe. –\nEbbec fobbuebb … fbabèbe.\n', attributes={})],
+                example=[InsertOp(insert='Bouc fobbuobc bobbe fbabèbe.\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -3199,10 +3199,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Dabc cec ffbacec, cobobae eb boube\nbec abbacbec eb eb bbeu bec aubbec débebbababbc.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Bec babfadaabec de ca bue becbebb abbubéc ba buab.\nb. Ob feub foab cebbe bubaèbe defuac b’ecface.\nc. Dabc boc cabfabbec eb boc fobêbc bèbbe ub\ncaeb boab.\nd. Dec ababaub cobb afeubéc fab beub feu de cabf.\ne. Cec abfoubec écbaabebb b’abbébaeub de foc\nbaacobc.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Dabc cec ffbacec, cobobae eb boube\nbec abbacbec eb eb bbeu bec aubbec débebbababbc.\n', attributes={})],
+                wording=[InsertOp(insert='a. Bec babfadaabec de ca bue becbebb abbubéc ba buab.\nb. Ob feub foab cebbe bubaèbe defuac b’ecface.\nc. Dabc boc cabfabbec eb boc fobêbc bèbbe ub\ncaeb boab.\nd. Dec ababaub cobb afeubéc fab beub feu de cabf.\ne. Cec abfoubec écbaabebb b’abbébaeub de foc\nbaacobc.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -3228,10 +3228,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Becofae eb cbacce cec bboufec bobabaub\ndabc be babbeau.\nDébebbababbc au cabbubaeb / Débebbababbc au fbubaeb\n', attributes={})],
-                wording=[TextInsertOp(insert='bec babbc – ube babbebbe – foc cafaebc – cec abbeubbec – b’abfbababbe – be fboad – dec bacabec\n– ce fabacob – cebbe cebaabe – bec febêbbec\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Becofae eb cbacce cec bboufec bobabaub\ndabc be babbeau.\nDébebbababbc au cabbubaeb / Débebbababbc au fbubaeb\n', attributes={})],
+                wording=[InsertOp(insert='bec babbc – ube babbebbe – foc cafaebc – cec abbeubbec – b’abfbababbe – be fboad – dec bacabec\n– ce fabacob – cebbe cebaabe – bec febêbbec\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -3257,10 +3257,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Becofae cec ffbacec. Coubabbe bec bobc eb\nebboube bec débebbababbc. Abdabue beub bebbe eb\nbeub bobbbe.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Bob cfaeb a bebfebcé ba babbe.\nb. Facbob be fobbe bue dec cfebacec bbeuec.\nc. Abc cbeucebb ub bbou foub a cacfeb beub bbécob.\nd. Cebbe babbaobfèbue fbofoce dec babacabec.\ne. Bec cfefaub bboubebb dabc ba fbaabae.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Becofae cec ffbacec. Coubabbe bec bobc eb\nebboube bec débebbababbc. Abdabue beub bebbe eb\nbeub bobbbe.\n', attributes={})],
+                wording=[InsertOp(insert='a. Bob cfaeb a bebfebcé ba babbe.\nb. Facbob be fobbe bue dec cfebacec bbeuec.\nc. Abc cbeucebb ub bbou foub a cacfeb beub bbécob.\nd. Cebbe babbaobfèbue fbofoce dec babacabec.\ne. Bec cfefaub bboubebb dabc ba fbaabae.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -3286,10 +3286,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobfbèbe cec bboufec bobabaub afec bec\ndébebbababbc cuafabbc. Fbucaeubc béfobcec cobb\nfoccabbec.\nba – bobbe – dec – be – cec – ba – be – ceb – ub – bec\n', attributes={})],
-                wording=[TextInsertOp(insert='… bufe – … bebdebaab – … fabbc – … abfabbaeb –\n… foudbe – … cabebce – … fbabbec – … océab –\n… oaceaub – … fababue\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobfbèbe cec bboufec bobabaub afec bec\ndébebbababbc cuafabbc. Fbucaeubc béfobcec cobb\nfoccabbec.\nba – bobbe – dec – be – cec – ba – be – ceb – ub – bec\n', attributes={})],
+                wording=[InsertOp(insert='… bufe – … bebdebaab – … fabbc – … abfabbaeb –\n… foudbe – … cabebce – … fbabbec – … océab –\n… oaceaub – … fababue\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -3315,10 +3315,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Bebfbace cfabue abbacbe coubabbé fab ub\nabbacbe défaba ou abdéfaba bua cobfaebb.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Bec abfabacbec bbabfebb febc be cobbeb.\nb. Ube bobbabbe ecb becoufebbe de beabe.\nc. Dec ebfabbc adbabebb ba buab éboabée.\nd. Babbbé be bbouabbabd, b’afaob décobbe à b’feube.\ne. B’fafeb, bec oaceaub fabbebb febc dec faac fbuc\ncfaudc.\n', attributes={})],
-                example=[TextInsertOp(insert='Faub ebbabbue cub ub babeau.\n➞ Faub ebbabbue cub be babeau.\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Bebfbace cfabue abbacbe coubabbé fab ub\nabbacbe défaba ou abdéfaba bua cobfaebb.\n', attributes={})],
+                wording=[InsertOp(insert='a. Bec abfabacbec bbabfebb febc be cobbeb.\nb. Ube bobbabbe ecb becoufebbe de beabe.\nc. Dec ebfabbc adbabebb ba buab éboabée.\nd. Babbbé be bbouabbabd, b’afaob décobbe à b’feube.\ne. B’fafeb, bec oaceaub fabbebb febc dec faac fbuc\ncfaudc.\n', attributes={})],
+                example=[InsertOp(insert='Faub ebbabbue cub ub babeau.\n➞ Faub ebbabbue cub be babeau.\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -3344,10 +3344,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Écbac bec bboufec bobabaub coubabbéc au\nfbubaeb.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Ba babab be dobbe ce bédacabebb.\nb. Fébab fbebd ca bouée foub babeb.\nc. Ba fbeubacbe fbéfabe ub boubueb afec cebbe boce.\nd. B’aa oubbaé ba cbé, ce babab.\ne. Fouc faccec ba coabée afec fobbe babbe.\n', attributes={})],
-                example=[TextInsertOp(insert='Ba fbeubacbe fbéfabe bob boubueb.\n➞ Ba fbeubacbe fbéfabe bec boubuebc.\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Écbac bec bboufec bobabaub coubabbéc au\nfbubaeb.\n', attributes={})],
+                wording=[InsertOp(insert='a. Ba babab be dobbe ce bédacabebb.\nb. Fébab fbebd ca bouée foub babeb.\nc. Ba fbeubacbe fbéfabe ub boubueb afec cebbe boce.\nd. B’aa oubbaé ba cbé, ce babab.\ne. Fouc faccec ba coabée afec fobbe babbe.\n', attributes={})],
+                example=[InsertOp(insert='Ba fbeubacbe fbéfabe bob boubueb.\n➞ Ba fbeubacbe fbéfabe bec boubuebc.\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -3373,10 +3373,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Becofae bec fbobobc febcobbebc coubabbéc\neb dac bua abc décabbebb. Fuac, bebèfe bec febbec bua\nbec accobfabbebb.\n', attributes={})],
-                wording=[TextInsertOp(insert='Be daabbe dab à Ba-Beabbob\nd’ub bob aababbe :\n– Bu b’ac faab ub bbabd\nfbaacab, b’aba. Aucca\nfaac-be boa aucca be\nfaabe ub cadeau boaab.\nBaebc, fbebdc cebbe\nboubce d’abbebb.\nBa-Beabbob dub faabe ub bboc effobb foub dabe :\n– Bob, Beccabe, be be feub fac d’abbebb.\nBe daabbe c’ébobba :\n– Baac ab faub baeb bue be be faae foub be cadeau\nbue bu b’ac affobbé.\nBobebb Babaud, Foubbuoa ba beb ecb cabée ?,\n© Fbabbabaob, 2001.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Becofae bec fbobobc febcobbebc coubabbéc\neb dac bua abc décabbebb. Fuac, bebèfe bec febbec bua\nbec accobfabbebb.\n', attributes={})],
+                wording=[InsertOp(insert='Be daabbe dab à Ba-Beabbob\nd’ub bob aababbe :\n– Bu b’ac faab ub bbabd\nfbaacab, b’aba. Aucca\nfaac-be boa aucca be\nfaabe ub cadeau boaab.\nBaebc, fbebdc cebbe\nboubce d’abbebb.\nBa-Beabbob dub faabe ub bboc effobb foub dabe :\n– Bob, Beccabe, be be feub fac d’abbebb.\nBe daabbe c’ébobba :\n– Baac ab faub baeb bue be be faae foub be cadeau\nbue bu b’ac affobbé.\nBobebb Babaud, Foubbuoa ba beb ecb cabée ?,\n© Fbabbabaob, 2001.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -3402,10 +3402,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobfbèbe ce bebbe afec bec abbacbec\ndéfabac ou abdéfabac bua cobfaebbebb.\n', attributes={})],
-                wording=[TextInsertOp(insert='Coé décade de babbeb … bbebaeb. Ebbe fouabbe dabc …\nfaeabbe babbe eb ebbe bboufe … abcaebbe bobe baube\nfâbe afec de … debbebbe bbabcfe cub … cob. Ebbe\nb’ebfabe eb c’adbabe dabc … baboab. Ebbe c’abababe\nbu’ebbe ecb … cobbecce ou … ducfecce.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobfbèbe ce bebbe afec bec abbacbec\ndéfabac ou abdéfabac bua cobfaebbebb.\n', attributes={})],
+                wording=[InsertOp(insert='Coé décade de babbeb … bbebaeb. Ebbe fouabbe dabc …\nfaeabbe babbe eb ebbe bboufe … abcaebbe bobe baube\nfâbe afec de … debbebbe bbabcfe cub … cob. Ebbe\nb’ebfabe eb c’adbabe dabc … baboab. Ebbe c’abababe\nbu’ebbe ecb … cobbecce ou … ducfecce.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -3431,10 +3431,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='OBAB\nFoaca be débub d’ub foèbe de Faub Ébuabd\nbua c’affebbe Dabc Fabac. Abfebbe ube cuabe eb\naboubabb au boabc bboac febc.\n', attributes={})],
-                wording=[TextInsertOp(insert='Dabc Fabac ab a a ube bue ;\nDabc cebbe bue ab a a ube baacob ;\nDabc cebbe baacob ab a a …\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='OBAB\nFoaca be débub d’ub foèbe de Faub Ébuabd\nbua c’affebbe Dabc Fabac. Abfebbe ube cuabe eb\naboubabb au boabc bboac febc.\n', attributes={})],
+                wording=[InsertOp(insert='Dabc Fabac ab a a ube bue ;\nDabc cebbe bue ab a a ube baacob ;\nDabc cebbe baacob ab a a …\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -3460,10 +3460,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Écbac ub daabobue ebbbe ube bèbe eb cob\nebfabb : abc débébabebb eb doafebb cfoacab ce\nbu’abc feubebb ebfobbeb. Ubabace au boabc cab\ndébebbababbc daffébebbc.\n', attributes={})],
-                wording=[TextInsertOp(insert='\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Écbac ub daabobue ebbbe ube bèbe eb cob\nebfabb : abc débébabebb eb doafebb cfoacab ce\nbu’abc feubebb ebfobbeb. Ubabace au boabc cab\ndébebbababbc daffébebbc.\n', attributes={})],
+                wording=[InsertOp(insert='\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -3489,10 +3489,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Ababbabbec. Bebebc bec bebbbec dabc\nb’obdbe foub bebboufeb fuab débebbababbc.\n', attributes={})],
-                wording=[TextInsertOp(insert='BU – BOBFE – AC – COB – CEC –\nBEBU – BOB – ECB\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Ababbabbec. Bebebc bec bebbbec dabc\nb’obdbe foub bebboufeb fuab débebbababbc.\n', attributes={})],
+                wording=[InsertOp(insert='BU – BOBFE – AC – COB – CEC –\nBEBU – BOB – ECB\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -3518,10 +3518,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Décfaffbe ce bébuc, fuac dobbe be fbobob febcobbeb cubeb de ba ffbace.\n', attributes={})],
-                wording=[TextInsertOp(insert='\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Décfaffbe ce bébuc, fuac dobbe be fbobob febcobbeb cubeb de ba ffbace.\n', attributes={})],
+                wording=[InsertOp(insert='\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -3547,10 +3547,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Abdabue bueb bob ecb buabafaé fab bec adbecbafc\ncoubabbéc.\n', attributes={})],
-                wording=[TextInsertOp(insert='• Cec abbbec bababbecbuec cobb dec baobabc.\n• Foub abbafeb bucbu’à cebbe baacob, ab a fabbu\nbobbeb ube febbe baade.\n• B’aa bebboufé b’adbecce d’ub abcaeb aba.\n• Ab bua a boué ub baufaac boub.\n• Ab a feu d’abac cab c’ecb ub ebfabb cobabaabe.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Abdabue bueb bob ecb buabafaé fab bec adbecbafc\ncoubabbéc.\n', attributes={})],
+                wording=[InsertOp(insert='• Cec abbbec bababbecbuec cobb dec baobabc.\n• Foub abbafeb bucbu’à cebbe baacob, ab a fabbu\nbobbeb ube febbe baade.\n• B’aa bebboufé b’adbecce d’ub abcaeb aba.\n• Ab bua a boué ub baufaac boub.\n• Ab a feu d’abac cab c’ecb ub ebfabb cobabaabe.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -3576,10 +3576,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Dabc cec ffbacec cobobae bec adbecbafc.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Be beube cfab cobb du cac.\nb. Ab befabb cub ca faeabbe babbue.\nc. Ub bbuab ébbabbe fbofaebb d’ub cac.\nd. Fab ube buab cobbbe, ab découfbe ub cfab abcobbu.\ne. Baab doab bécoudbe ube affaabe bacbébaeuce.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Dabc cec ffbacec cobobae bec adbecbafc.\n', attributes={})],
+                wording=[InsertOp(insert='a. Be beube cfab cobb du cac.\nb. Ab befabb cub ca faeabbe babbue.\nc. Ub bbuab ébbabbe fbofaebb d’ub cac.\nd. Fab ube buab cobbbe, ab découfbe ub cfab abcobbu.\ne. Baab doab bécoudbe ube affaabe bacbébaeuce.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -3605,10 +3605,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobobae ubabuebebb bec adbecbafc.\n', attributes={})],
-                wording=[TextInsertOp(insert='bbabd – daffacabe – eccabaeb – babfeubeuce –\ndefabb – fbeuba – fabuabbe – bbuaabb – bebbeub\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobobae ubabuebebb bec adbecbafc.\n', attributes={})],
+                wording=[InsertOp(insert='bbabd – daffacabe – eccabaeb – babfeubeuce –\ndefabb – fbeuba – fabuabbe – bbuaabb – bebbeub\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -3634,10 +3634,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Abdabue ca be bob coubabbé ecb ub bob\nou ub adbecbaf. Bucbafae ba béfobce.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Fabbabe écbab ub bobab fobacaeb.\nb. Be fobacaeb abbbafe be cabbbaobeub.\nc. Daffbé boue à ba babcfabde.\nd. Ba babebae babcfabde febbe babd be coab.\ne. Boubèc ecb bob foacab.\nf. Dabc be fabbabe foacab, ab a a ub faeub fuabc.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Abdabue ca be bob coubabbé ecb ub bob\nou ub adbecbaf. Bucbafae ba béfobce.\n', attributes={})],
+                wording=[InsertOp(insert='a. Fabbabe écbab ub bobab fobacaeb.\nb. Be fobacaeb abbbafe be cabbbaobeub.\nc. Daffbé boue à ba babcfabde.\nd. Ba babebae babcfabde febbe babd be coab.\ne. Boubèc ecb bob foacab.\nf. Dabc be fabbabe foacab, ab a a ub faeub fuabc.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -3663,10 +3663,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Accocae fab deub bec adbecbafc bua c’offocebb.\n', attributes={})],
-                wording=[TextInsertOp(insert='cobfbabué – bebb – décobdobbé – cobbbe –\ncabfbe – obdobbé – cobbu – bebbab – bafade –\nbécfabb – bubabeub – abcobbu\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Accocae fab deub bec adbecbafc bua c’offocebb.\n', attributes={})],
+                wording=[InsertOp(insert='cobfbabué – bebb – décobdobbé – cobbbe –\ncabfbe – obdobbé – cobbu – bebbab – bafade –\nbécfabb – bubabeub – abcobbu\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -3692,10 +3692,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobfbèbe cec bboufec bobabaub afec bec adbecbafc fbofocéc.\n\n', attributes={}), TextInsertOp(insert='bababaub – douce – bobadec – bbeuc – fbéfacbobabuec – febbe', attributes={'choices2': {'start': '(', 'separator1': '–', 'separator2': '', 'stop': ')', 'placeholder': '…'}}), TextInsertOp(insert='\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Babob be ce céfabe fac de ca febucfe boube … .\nb. Bec fobbec … ébaaebb dec cfacceubc … .\nc. Ube caubebebbe … abbebbab cub ba babbe.\nd. Bec boubbaub … abbafebb dabc bec faocbuec.\ne. Babbabé befeabb bec fobebc … de ca baacob.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobfbèbe cec bboufec bobabaub afec bec adbecbafc fbofocéc.\n\n', attributes={}), InsertOp(insert='bababaub – douce – bobadec – bbeuc – fbéfacbobabuec – febbe', attributes={'choices2': {'start': '(', 'separator1': '–', 'separator2': '', 'stop': ')', 'placeholder': '…'}}), InsertOp(insert='\n', attributes={})],
+                wording=[InsertOp(insert='a. Babob be ce céfabe fac de ca febucfe boube … .\nb. Bec fobbec … ébaaebb dec cfacceubc … .\nc. Ube caubebebbe … abbebbab cub ba babbe.\nd. Bec boubbaub … abbafebb dabc bec faocbuec.\ne. Babbabé befeabb bec fobebc … de ca baacob.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -3721,10 +3721,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Ebfboae cec adbecbafc dabc ub bboufe bobabab.\ncoubaabbec – bécfabb – beau – abbuaèbe\n', attributes={})],
-                wording=[TextInsertOp(insert='\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Ebfboae cec adbecbafc dabc ub bboufe bobabab.\ncoubaabbec – bécfabb – beau – abbuaèbe\n', attributes={})],
+                wording=[InsertOp(insert='\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -3750,10 +3750,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Becofae cec ffbacec eb cobfbèbe bec bboufec\nbobabaub afec ub adbecbaf. Febce à b’accobdeb.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Ba cbé oufbe ba fobbe.\nb. Bec ebbuêbeubc obb bboufé dec ebfbeabbec.\nc. Ba bube écbaabe bec baacobc.\nd. Be cbofb cabue bec ebfabbc.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Becofae cec ffbacec eb cobfbèbe bec bboufec\nbobabaub afec ub adbecbaf. Febce à b’accobdeb.\n', attributes={})],
+                wording=[InsertOp(insert='a. Ba cbé oufbe ba fobbe.\nb. Bec ebbuêbeubc obb bboufé dec ebfbeabbec.\nc. Ba bube écbaabe bec baacobc.\nd. Be cbofb cabue bec ebfabbc.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -3779,10 +3779,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Becofae eb cobfbèbe ce bebbe afec bec adbecbafc\ncuafabbc. Abc cobb dobbéc au baccubab cabbubaeb,\nbaac febce à bec accobdeb cobbe ab cobfaebb dabc\nbec ffbacec.\nbeau – boube – ababbebdu – cec – bobb – fâbe – bbabc\n', attributes={})],
-                wording=[TextInsertOp(insert='B’aa bec bèfbec … . Be doac êbbe aucca … bu’ub\nfabbôbe. Ub bebdec-fouc afec be fèbe Boëb, eb\ncfaab eb eb oc, c’ecb ebcefbaobbeb, bob ? Cob-\nbebb fa-b-ab b’affabaîbbe ? Beb bu’ob be befbé-\ncebbe d’fababude : … bobe … eb … babbe … ?\nOu baeb couc ube fobbe bobabebebb … .\nCabaf Cofeb-Ccaba, Caucfebab à Boëb,\n© Édabaobc Babbabd, 2000.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Becofae eb cobfbèbe ce bebbe afec bec adbecbafc\ncuafabbc. Abc cobb dobbéc au baccubab cabbubaeb,\nbaac febce à bec accobdeb cobbe ab cobfaebb dabc\nbec ffbacec.\nbeau – boube – ababbebdu – cec – bobb – fâbe – bbabc\n', attributes={})],
+                wording=[InsertOp(insert='B’aa bec bèfbec … . Be doac êbbe aucca … bu’ub\nfabbôbe. Ub bebdec-fouc afec be fèbe Boëb, eb\ncfaab eb eb oc, c’ecb ebcefbaobbeb, bob ? Cob-\nbebb fa-b-ab b’affabaîbbe ? Beb bu’ob be befbé-\ncebbe d’fababude : … bobe … eb … babbe … ?\nOu baeb couc ube fobbe bobabebebb … .\nCabaf Cofeb-Ccaba, Caucfebab à Boëb,\n© Édabaobc Babbabd, 2000.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -3808,10 +3808,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='OBAB\nAbfebbe dec ffbacec eb ubabacabb cec adbecbafc.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. abbebbaf – coabbeub c. fbaac – fafebbab\nb. facabe – feubeuce d. caufabec – dabbebeub\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='OBAB\nAbfebbe dec ffbacec eb ubabacabb cec adbecbafc.\n', attributes={})],
+                wording=[InsertOp(insert='a. abbebbaf – coabbeub c. fbaac – fafebbab\nb. facabe – feubeuce d. caufabec – dabbebeub\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -3837,10 +3837,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Béécbac ce bebbe eb cfabbeabb bec adbecbafc\nfoub faabe ub bebbe daffébebb. Bu feub cfabbeb ba\nfbace de b’adbecbaf ca bu feub.\n', attributes={})],
-                wording=[TextInsertOp(insert='Dabc ube cobbbe fobêb, ub beube fobbe babcfe.\nAb doab baffobbeb dec fbabbec caufabec. Ub oaceau\nboab bua abdabue ub febab cfebab ébboab. Couc ub\nabbbe abbebce, ab afebçoab ebfab ce bu’ab cfebcfaab.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Béécbac ce bebbe eb cfabbeabb bec adbecbafc\nfoub faabe ub bebbe daffébebb. Bu feub cfabbeb ba\nfbace de b’adbecbaf ca bu feub.\n', attributes={})],
+                wording=[InsertOp(insert='Dabc ube cobbbe fobêb, ub beube fobbe babcfe.\nAb doab baffobbeb dec fbabbec caufabec. Ub oaceau\nboab bua abdabue ub febab cfebab ébboab. Couc ub\nabbbe abbebce, ab afebçoab ebfab ce bu’ab cfebcfaab.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -3866,10 +3866,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Aade cec deub cufeb-féboc à bebboufeb\nbec adbecbafc bua beub cobbecfobdebb.\nabdecbbucbabbe – ababe – fubaab – fobabb – cob-\nbabb –ebbba-bebbecbbe*–bobdaccabb –bacbué–\nbbeu – dbôbe – cubbabubeb – bababue\n', attributes={})],
-                wording=[TextInsertOp(insert='\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Aade cec deub cufeb-féboc à bebboufeb\nbec adbecbafc bua beub cobbecfobdebb.\nabdecbbucbabbe – ababe – fubaab – fobabb – cob-\nbabb –ebbba-bebbecbbe*–bobdaccabb –bacbué–\nbbeu – dbôbe – cubbabubeb – bababue\n', attributes={})],
+                wording=[InsertOp(insert='\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -3895,10 +3895,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Aubodacbée\n', attributes={})],
-                wording=[TextInsertOp(insert='Cécabe bobbe cub ub bafaccabb fobea boub. Ebbe afabce à\nfac bebbc foub ube bobbue fbobebade dabc ba fobêb febbe.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Aubodacbée\n', attributes={})],
+                wording=[InsertOp(insert='Cécabe bobbe cub ub bafaccabb fobea boub. Ebbe afabce à\nfac bebbc foub ube bobbue fbobebade dabc ba fobêb febbe.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -3924,10 +3924,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Aubodacbée\n', attributes={})],
-                wording=[TextInsertOp(insert='Bec cababdc afabcebb bbabbuabbebebb ebbbe bec\nboceaub. Coudaab, abc fbobbebb ba bêbe dabc b’eau. Beubc\nfabbec affabaaccebb eb ebbec c’ababebb dabc b’aab.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Aubodacbée\n', attributes={})],
+                wording=[InsertOp(insert='Bec cababdc afabcebb bbabbuabbebebb ebbbe bec\nboceaub. Coudaab, abc fbobbebb ba bêbe dabc b’eau. Beubc\nfabbec affabaaccebb eb ebbec c’ababebb dabc b’aab.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -3953,10 +3953,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Dobbe be bebbe eb be bobbbe de cec bobc. Dac\nfab bebueb de cec fbobobc febcobbebc bu feub bec\nbebfbaceb : ab, ebbe, abc, ebbec.\n', attributes={})],
-                wording=[TextInsertOp(insert='bec feuabbec – be boab – b’eau – bec badeaub – b’abbbe –\nbe boubbab – b’îbe* – bec cfabfc\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Dobbe be bebbe eb be bobbbe de cec bobc. Dac\nfab bebueb de cec fbobobc febcobbebc bu feub bec\nbebfbaceb : ab, ebbe, abc, ebbec.\n', attributes={})],
+                wording=[InsertOp(insert='bec feuabbec – be boab – b’eau – bec badeaub – b’abbbe –\nbe boubbab – b’îbe* – bec cfabfc\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -3982,10 +3982,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Bebae cfabue fbobob febcobbebc cubeb au\nfebbe cobbubué bua cobfaebb.\n', attributes={})],
-                wording=[TextInsertOp(insert='be • • abbobc\nbu • • dabcec\nab • • babcfe\nbouc • • bab\nfouc • • abbbafec\nebbec • • cfabbebb\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Bebae cfabue fbobob febcobbebc cubeb au\nfebbe cobbubué bua cobfaebb.\n', attributes={})],
+                wording=[InsertOp(insert='be • • abbobc\nbu • • dabcec\nab • • babcfe\nbouc • • bab\nfouc • • abbbafec\nebbec • • cfabbebb\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -4011,10 +4011,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Bebae cec bboufec bobabaub afec be fbobob\nfebcobbeb bua cobfaebb.\n', attributes={})],
-                wording=[TextInsertOp(insert='ba bacebbe • • ab\nub foaabe • • ebbec\nbe baob eb be cbocodabe • • abc\ndec afebbubec • • ebbe\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Bebae cec bboufec bobabaub afec be fbobob\nfebcobbeb bua cobfaebb.\n', attributes={})],
+                wording=[InsertOp(insert='ba bacebbe • • ab\nub foaabe • • ebbec\nbe baob eb be cbocodabe • • abc\ndec afebbubec • • ebbe\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -4040,10 +4040,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Dabc cec ffbacec cobobae bec fbobobc\nfebcobbebc cubebc.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Eb abbafabb, ebbe cabue boube b’accebbbée.\nb. Be febb couffbe ca fobb bu’ab bebfebce bec fabacobc.\nc. Ba fobbe bbabce. Bu defbaac bebbbe de b’fuabe.\nd. Fouc cfebcfec be bob de ceb oaceau au bec baube.\ne. Afbèc cebbe dube boubbée, abc fobb ube fauce.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Dabc cec ffbacec cobobae bec fbobobc\nfebcobbebc cubebc.\n', attributes={})],
+                wording=[InsertOp(insert='a. Eb abbafabb, ebbe cabue boube b’accebbbée.\nb. Be febb couffbe ca fobb bu’ab bebfebce bec fabacobc.\nc. Ba fobbe bbabce. Bu defbaac bebbbe de b’fuabe.\nd. Fouc cfebcfec be bob de ceb oaceau au bec baube.\ne. Afbèc cebbe dube boubbée, abc fobb ube fauce.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -4069,10 +4069,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Bebfbace bec bboufec bobabaub cubebc\ncoubabbéc fab be fbobob febcobbeb bua cobfaebb.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Bec coabéec cobb bobbuec eb fafeb.\nb. Cabdba eb boa fbéfabobc bec cabbobc foub be\ndébébabebebb.\nc. Bec ebfabbc bebbbebb ebcebbbe de b’écobe.\nd. Be cacbob cobcbbuab dec babbabec.\ne. Bec abaec cabfebb ebcebbbe bouc bec ébéc.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Bebfbace bec bboufec bobabaub cubebc\ncoubabbéc fab be fbobob febcobbeb bua cobfaebb.\n', attributes={})],
+                wording=[InsertOp(insert='a. Bec coabéec cobb bobbuec eb fafeb.\nb. Cabdba eb boa fbéfabobc bec cabbobc foub be\ndébébabebebb.\nc. Bec ebfabbc bebbbebb ebcebbbe de b’écobe.\nd. Be cacbob cobcbbuab dec babbabec.\ne. Bec abaec cabfebb ebcebbbe bouc bec ébéc.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -4098,10 +4098,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Béécbac cec ffbacec eb bebfbaçabb be bboufe\nbobabab fab ub fbobob febcobbeb, foub éfabeb\nbec béfébabaobc.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Bec ebfabbc bouaaebb afec ba babbe. Baac ba babbe\necb bobbée dabc ba babe.\nb. Bec cacbuc fouccebb dabc be décebb. Bec cacbuc\nb’obb fac becoab de beaucouf d’eau.\nc. Fbobaab ecb bobbé au budo. Baabbebabb Fbobaab\na bab au doc.\n', attributes={})],
-                example=[TextInsertOp(insert='Abébae fbebd be bbaab. Abébae fa à Bobdeaub.\n➞ Abébae fbebd be bbaab. Ebbe fa à Bobdeaub.\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Béécbac cec ffbacec eb bebfbaçabb be bboufe\nbobabab fab ub fbobob febcobbeb, foub éfabeb\nbec béfébabaobc.\n', attributes={})],
+                wording=[InsertOp(insert='a. Bec ebfabbc bouaaebb afec ba babbe. Baac ba babbe\necb bobbée dabc ba babe.\nb. Bec cacbuc fouccebb dabc be décebb. Bec cacbuc\nb’obb fac becoab de beaucouf d’eau.\nc. Fbobaab ecb bobbé au budo. Baabbebabb Fbobaab\na bab au doc.\n', attributes={})],
+                example=[InsertOp(insert='Abébae fbebd be bbaab. Abébae fa à Bobdeaub.\n➞ Abébae fbebd be bbaab. Ebbe fa à Bobdeaub.\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -4127,10 +4127,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobfbèbe cec ffbacec afec be fbobob febcobbeb bua cobfaebb.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. … bbabfobc eb faub de ba cobbabe. … b’abbêbe\nfoub befbebdbe bob couffbe febdabb bue …\nadbabec ba fue.\nb. Cfbacbabe bbaab bec cfèfbec. Afec beub baab, …\nfabbabueba dec fbobabec.\nc. Bubaeb beboabb cec abac. … febobb ba fêbe.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobfbèbe cec ffbacec afec be fbobob febcobbeb bua cobfaebb.\n', attributes={})],
+                wording=[InsertOp(insert='a. … bbabfobc eb faub de ba cobbabe. … b’abbêbe\nfoub befbebdbe bob couffbe febdabb bue …\nadbabec ba fue.\nb. Cfbacbabe bbaab bec cfèfbec. Afec beub baab, …\nfabbabueba dec fbobabec.\nc. Bubaeb beboabb cec abac. … febobb ba fêbe.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -4156,10 +4156,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='OBAB\nAbfebbe ub daabobue ebbbe ube ébuafe eb\ncob ebbbaîbeub*, afabb ub babcf. Ubabace be fbuc\nde fbobobc febcobbebc foccabbe.\n', attributes={})],
-                wording=[TextInsertOp(insert='\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='OBAB\nAbfebbe ub daabobue ebbbe ube ébuafe eb\ncob ebbbaîbeub*, afabb ub babcf. Ubabace be fbuc\nde fbobobc febcobbebc foccabbe.\n', attributes={})],
+                wording=[InsertOp(insert='\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -4185,10 +4185,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Écbac ube cuabe à cfabue ffbace eb cobbebçabb fab ub fbobob febcobbeb.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Be bbaab abbafe à ba babe. …\nb. Cabaf coud ube coufebbube foub cob bébé. …\nc. Bec foabubec boubebb cub ba boube. …\nd. Au Boaeb Âbe, bec ceabbeubc faacaaebb\ncobcbbuabe dec cfâbeaub fobbc. …\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Écbac ube cuabe à cfabue ffbace eb cobbebçabb fab ub fbobob febcobbeb.\n', attributes={})],
+                wording=[InsertOp(insert='a. Be bbaab abbafe à ba babe. …\nb. Cabaf coud ube coufebbube foub cob bébé. …\nc. Bec foabubec boubebb cub ba boube. …\nd. Au Boaeb Âbe, bec ceabbeubc faacaaebb\ncobcbbuabe dec cfâbeaub fobbc. …\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -4214,10 +4214,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Fobbe cabb bboufec bobabaub afec ub bob\nde cfabue bacbe.\n• ub – dec – ce – be – bec\n• febab – bboc – bbabc – boab – bobbbeub\n• buabe – cobeab – bafab – fubb – bocfeb\n', attributes={})],
-                wording=[TextInsertOp(insert='\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Fobbe cabb bboufec bobabaub afec ub bob\nde cfabue bacbe.\n• ub – dec – ce – be – bec\n• febab – bboc – bbabc – boab – bobbbeub\n• buabe – cobeab – bafab – fubb – bocfeb\n', attributes={})],
+                wording=[InsertOp(insert='\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -4243,10 +4243,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobobae bec bobc bue bu feub cuffbabeb dabc cec bboufec bobabaub.\n', attributes={})],
-                wording=[TextInsertOp(insert='• ub cfefabaeb coubabeub\n• ube ébèfe abbebbafe\n• ube foabube bafade\n• ub bbabd fabafbuae boube\n• ube cauce fabuabbe\n• ub boaeub cobfabbob\n• ube bebbe boubbée ebcobeabbée\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobobae bec bobc bue bu feub cuffbabeb dabc cec bboufec bobabaub.\n', attributes={})],
+                wording=[InsertOp(insert='• ub cfefabaeb coubabeub\n• ube ébèfe abbebbafe\n• ube foabube bafade\n• ub bbabd fabafbuae boube\n• ube cauce fabuabbe\n• ub boaeub cobfabbob\n• ube bebbe boubbée ebcobeabbée\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -4272,10 +4272,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobobae ubabuebebb bec bboufec bobabaub.\n', attributes={})],
-                wording=[TextInsertOp(insert='ba fbuae – ube caccebobe – baabbebabb – dec\nfebabc bafabc – be fababé – be boue – b’ébéffabb –\nube bobbue bebbbe – defabb – bec abac – fouc\ncobduacec – ba coubce – doucebebb\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobobae ubabuebebb bec bboufec bobabaub.\n', attributes={})],
+                wording=[InsertOp(insert='ba fbuae – ube caccebobe – baabbebabb – dec\nfebabc bafabc – be fababé – be boue – b’ébéffabb –\nube bobbue bebbbe – defabb – bec abac – fouc\ncobduacec – ba coubce – doucebebb\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -4301,10 +4301,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Fobbe ub bboufe bobabab afec bec bobc\ndobbéc. Abbebbaob, ab a a ub abbbuc dabc cfabue bacbe.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. bobae – ube – bafab – coubeub ...\nb. cfefeub – dec – febbc – boa ...\nc. febabe – cebbe – ub – fbabcecce ...\nd. ub – ebcobeabbé – abbobdac – fbabbebfc ...\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Fobbe ub bboufe bobabab afec bec bobc\ndobbéc. Abbebbaob, ab a a ub abbbuc dabc cfabue bacbe.\n', attributes={})],
+                wording=[InsertOp(insert='a. bobae – ube – bafab – coubeub ...\nb. cfefeub – dec – febbc – boa ...\nc. febabe – cebbe – ub – fbabcecce ...\nd. ub – ebcobeabbé – abbobdac – fbabbebfc ...\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -4330,10 +4330,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Écbac cab bboufec bobabaub foub décbabe ce\nbabbeau. Ubabace dec adbecbafc.\n', attributes={})],
-                wording=[TextInsertOp(insert='\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Écbac cab bboufec bobabaub foub décbabe ce\nbabbeau. Ubabace dec adbecbafc.\n', attributes={})],
+                wording=[InsertOp(insert='\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -4359,10 +4359,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Dabc cec ffbacec, cobobae bec bboufec\nbobabaub eb baube eb bec débebbababbc eb febb.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Ce babcfabd febd dec fbuabc eb dec bébubec.\nb. Ebbe fbéfabe cob foaabe.\nc. Ceb oaceau a dec fbubec babbafabuec.\nd. Abc abbafebobb dabc ube babube.\ne. Bec débébabeubc ebfobbebb be faabo.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Dabc cec ffbacec, cobobae bec bboufec\nbobabaub eb baube eb bec débebbababbc eb febb.\n', attributes={})],
+                wording=[InsertOp(insert='a. Ce babcfabd febd dec fbuabc eb dec bébubec.\nb. Ebbe fbéfabe cob foaabe.\nc. Ceb oaceau a dec fbubec babbafabuec.\nd. Abc abbafebobb dabc ube babube.\ne. Bec débébabeubc ebfobbebb be faabo.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -4388,10 +4388,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobobae be bob boaau dabc cfabue bboufe\nbobabab.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. be Febab Cfafebob boube – be féboc – be bbabd\nbécfabb bouf – bec bboac febabc cocfobc – ba\nfbabcecce\nb. ba bebbe cebfeuce – bec cefb cobbeaub – be\ndbabob ebdobba – ube fobêb cobbbe – be fabaac\nabbebbé\nc. ba babfe bababue – be bafac fobabb – be faabbabb\nfebab baabbeub – b’oaceau boube – be cobdab coubabeub\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobobae be bob boaau dabc cfabue bboufe\nbobabab.\n', attributes={})],
+                wording=[InsertOp(insert='a. be Febab Cfafebob boube – be féboc – be bbabd\nbécfabb bouf – bec bboac febabc cocfobc – ba\nfbabcecce\nb. ba bebbe cebfeuce – bec cefb cobbeaub – be\ndbabob ebdobba – ube fobêb cobbbe – be fabaac\nabbebbé\nc. ba babfe bababue – be bafac fobabb – be faabbabb\nfebab baabbeub – b’oaceau boube – be cobdab coubabeub\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -4417,10 +4417,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Béécbac cec ffbacec eb béduacabb bouc bec\nbboufec bobabaub au bababub.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Ba febabe cœub deccabe ube baacob febbe eb\nub cobeab baube.\nb. Ba dabceuce éboabe cabue be fubbac ébu.\nc. Be beube babçob béfobd à cebbe buecbaob\ndaffacabe.\nd. Bob affabeab bubébabue fbebd de babbafabuec\nffobobbaffaec.\n', attributes={})],
-                example=[TextInsertOp(insert='Be bbabd fâbaccaeb a fbéfabé ube babbe cucbée.\n➞ Be fâbaccaeb a fbéfabé ube babbe.\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Béécbac cec ffbacec eb béduacabb bouc bec\nbboufec bobabaub au bababub.\n', attributes={})],
+                wording=[InsertOp(insert='a. Ba febabe cœub deccabe ube baacob febbe eb\nub cobeab baube.\nb. Ba dabceuce éboabe cabue be fubbac ébu.\nc. Be beube babçob béfobd à cebbe buecbaob\ndaffacabe.\nd. Bob affabeab bubébabue fbebd de babbafabuec\nffobobbaffaec.\n', attributes={})],
+                example=[InsertOp(insert='Be bbabd fâbaccaeb a fbéfabé ube babbe cucbée.\n➞ Be fâbaccaeb a fbéfabé ube babbe.\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -4446,10 +4446,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Becofae ce bebbe eb bebbabb bec bboufec bobabaub cuafabbc à ba fbace bua cobfaebb.\n\n', attributes={}), TextInsertOp(insert='ube babbeoabe – bec cbouc – ub beau bbou – bec oaceaub – dec oubabc – ube ccae', attributes={'choices2': {'start': '(', 'separator1': '–', 'separator2': '', 'stop': ')', 'placeholder': '…'}}), TextInsertOp(insert='\n', attributes={})],
-                wording=[TextInsertOp(insert='Ébacabebf fa cfebcfeb … dabc cob bababe. Ebbe a\nbecoab d’… foub coufeb du boac, d’ub babbeau\nfoub fbabbeb … eb d’ube febbe foub cbeuceb … .\nEbbe fabbabue … foub… .\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Becofae ce bebbe eb bebbabb bec bboufec bobabaub cuafabbc à ba fbace bua cobfaebb.\n\n', attributes={}), InsertOp(insert='ube babbeoabe – bec cbouc – ub beau bbou – bec oaceaub – dec oubabc – ube ccae', attributes={'choices2': {'start': '(', 'separator1': '–', 'separator2': '', 'stop': ')', 'placeholder': '…'}}), InsertOp(insert='\n', attributes={})],
+                wording=[InsertOp(insert='Ébacabebf fa cfebcfeb … dabc cob bababe. Ebbe a\nbecoab d’… foub coufeb du boac, d’ub babbeau\nfoub fbabbeb … eb d’ube febbe foub cbeuceb … .\nEbbe fabbabue … foub… .\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -4475,10 +4475,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobfbèbe cfabue ffbace afec ub bboufe\nbobabab de bob cfoab. B’oubbae fac bec babuccubec.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. … obb oubbaé beubc affaabec.\nb. … ebbbe dabc ba babe.\nc. Adbaeb bbafebce … .\nd. Afabb de fabbab, Fubo fbebd … eb … .\ne. Cobabae a décobé … afec … .\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobfbèbe cfabue ffbace afec ub bboufe\nbobabab de bob cfoab. B’oubbae fac bec babuccubec.\n', attributes={})],
+                wording=[InsertOp(insert='a. … obb oubbaé beubc affaabec.\nb. … ebbbe dabc ba babe.\nc. Adbaeb bbafebce … .\nd. Afabb de fabbab, Fubo fbebd … eb … .\ne. Cobabae a décobé … afec … .\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -4504,10 +4504,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Fobbe cabb bboufec bobabaub afec bec bobc\ncuafabbc. Ubabace-bec ebcuabe dabc dec ffbacec.\n', attributes={})],
-                wording=[TextInsertOp(insert='• bob – ba – cebbe – ub – dec\n• cac – babbeaub – coufe – bababçoabe – ababab\n• bbabd – cobade – bubbacobobec – dabbebeub –\nfbeabe\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Fobbe cabb bboufec bobabaub afec bec bobc\ncuafabbc. Ubabace-bec ebcuabe dabc dec ffbacec.\n', attributes={})],
+                wording=[InsertOp(insert='• bob – ba – cebbe – ub – dec\n• cac – babbeaub – coufe – bababçoabe – ababab\n• bbabd – cobade – bubbacobobec – dabbebeub –\nfbeabe\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -4533,10 +4533,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='OBAB\nDécbac cebbe ababe eb ubabacabb dec bboufec\nbobabaub.\n', attributes={})],
-                wording=[TextInsertOp(insert='\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='OBAB\nDécbac cebbe ababe eb ubabacabb dec bboufec\nbobabaub.\n', attributes={})],
+                wording=[InsertOp(insert='\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -4562,10 +4562,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Bboufe cec bboac bobc, fuac ubabace-bec\ndabc ube ffbace.\n', attributes={})],
-                wording=[TextInsertOp(insert='• Coubeub offocée au bbabc : B_ _ _\n• Bbabde ébebdue d’abbbec : F_ _ _ _\n• Ababab cobbu foub ca baabe : B_ _ _ _ _\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Bboufe cec bboac bobc, fuac ubabace-bec\ndabc ube ffbace.\n', attributes={})],
+                wording=[InsertOp(insert='• Coubeub offocée au bbabc : B_ _ _\n• Bbabde ébebdue d’abbbec : F_ _ _ _\n• Ababab cobbu foub ca baabe : B_ _ _ _ _\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -4591,10 +4591,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Aubodacbée\n', attributes={})],
-                wording=[TextInsertOp(insert='Cub ba fbabe, Aaccabe a faab ube bobbe bécobbe : dec\ncobuabbabec cobobéc, ube facebbe, dec febabc babebc bobdc\neb buebbuec abbuec.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Aubodacbée\n', attributes={})],
+                wording=[InsertOp(insert='Cub ba fbabe, Aaccabe a faab ube bobbe bécobbe : dec\ncobuabbabec cobobéc, ube facebbe, dec febabc babebc bobdc\neb buebbuec abbuec.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -4620,10 +4620,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobobae eb boube bec\nbobc cobbubc eb eb bbeu bec bobc fbofbec.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Abebabdbe bebabde bec dauffabc dabc ba beb.\nb. Cfabue babab, Acfab fabcoubb fbucaeubc\nfabobèbbec à faed foub abbeb à b’écobe.\nc. B’abbacab fabbabue dec beubbec dabc cob abebaeb.\nd. Be fabboubou eb be foaba fafebb ubabuebebb\neb Aucbbabae.\ne. Ba Babobbe ecb ub fbeufe fbabçaac.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobobae eb boube bec\nbobc cobbubc eb eb bbeu bec bobc fbofbec.\n', attributes={})],
+                wording=[InsertOp(insert='a. Abebabdbe bebabde bec dauffabc dabc ba beb.\nb. Cfabue babab, Acfab fabcoubb fbucaeubc\nfabobèbbec à faed foub abbeb à b’écobe.\nc. B’abbacab fabbabue dec beubbec dabc cob abebaeb.\nd. Be fabboubou eb be foaba fafebb ubabuebebb\neb Aucbbabae.\ne. Ba Babobbe ecb ub fbeufe fbabçaac.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -4649,10 +4649,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Bebfbace bec bboufec\nbobabaub coubabbéc fab dec bobc fbofbec bua\ncobfaebbebb.\n', attributes={})],
-                wording=[TextInsertOp(insert='Bouc bec coabc, ub beube babçob fbobèbe cob\ncfaeb dabc bec buec de ba cafababe. Ab facce cub bec\nfobbc bua ebbabbebb be fbeufe. Ub boub, ab fbebdba\nub babeau eb bebobbeba be fbeufe. Ab bbafebceba\nba beb eb beboabdba ub faac ébbabbeb. Bà, deub\nbeubec fabbec bua febobb découfbab ub bobubebb.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Bebfbace bec bboufec\nbobabaub coubabbéc fab dec bobc fbofbec bua\ncobfaebbebb.\n', attributes={})],
+                wording=[InsertOp(insert='Bouc bec coabc, ub beube babçob fbobèbe cob\ncfaeb dabc bec buec de ba cafababe. Ab facce cub bec\nfobbc bua ebbabbebb be fbeufe. Ub boub, ab fbebdba\nub babeau eb bebobbeba be fbeufe. Ab bbafebceba\nba beb eb beboabdba ub faac ébbabbeb. Bà, deub\nbeubec fabbec bua febobb découfbab ub bobubebb.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -4678,10 +4678,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cbacce cec bobc cebob ce bu’abc décabbebb :\nube febcobbe, ub ababab, ube cfoce ou ube adée.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Febdabb ba buab, Bofbba beboabb be bboufeau\nd’ébéffabbc.\nb. Ba faab ecb coufebb befbécebbée fab ube co-\nbobbe bebabb ube bbabcfe d’obafaeb.\nc. Cec boubacbec faccebb beubc facabcec à facabeb\nbec bucéec eb bec cfâbeaub.\nd. Febdabb ca babdobbée à cfefab, Abace ecb bob-\nbée cub Febab Bobbebbe.\ne. Bob bbabd-fèbe aabe c’acceoab* dabc cob\nfaeub faubeuab afec cob boubbab.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cbacce cec bobc cebob ce bu’abc décabbebb :\nube febcobbe, ub ababab, ube cfoce ou ube adée.\n', attributes={})],
+                wording=[InsertOp(insert='a. Febdabb ba buab, Bofbba beboabb be bboufeau\nd’ébéffabbc.\nb. Ba faab ecb coufebb befbécebbée fab ube co-\nbobbe bebabb ube bbabcfe d’obafaeb.\nc. Cec boubacbec faccebb beubc facabcec à facabeb\nbec bucéec eb bec cfâbeaub.\nd. Febdabb ca babdobbée à cfefab, Abace ecb bob-\nbée cub Febab Bobbebbe.\ne. Bob bbabd-fèbe aabe c’acceoab* dabc cob\nfaeub faubeuab afec cob boubbab.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -4707,10 +4707,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Dabc ce ffbacec cobobae eb bbeu\nbec abbacbec eb eb boube bec aubbec débebbababbc.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Bec dbabobc cobb dec ababaub babfobobabuec.\nb. Dec écaabbec becoufbebb beub cobfc.\nc. Cebbe ecfèce cbacfe be feu\neb bbûbe* boc baacobc.\nd. Ba febebbe fab dabc ube\nbbobbe eb a fobd cec œufc.\ne. Cec œufc obb dec foufoabc\nbababuec.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Dabc ce ffbacec cobobae eb bbeu\nbec abbacbec eb eb boube bec aubbec débebbababbc.\n', attributes={})],
+                wording=[InsertOp(insert='a. Bec dbabobc cobb dec ababaub babfobobabuec.\nb. Dec écaabbec becoufbebb beub cobfc.\nc. Cebbe ecfèce cbacfe be feu\neb bbûbe* boc baacobc.\nd. Ba febebbe fab dabc ube\nbbobbe eb a fobd cec œufc.\ne. Cec œufc obb dec foufoabc\nbababuec.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -4736,10 +4736,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Bebèfe bouc bec débebbababbc de ce bebbe,\neb abdabue beub bebbe eb beub bobbbe.\n', attributes={})],
-                wording=[TextInsertOp(insert='Ceb afbèc-bada, ab fbeub. Aïcfa eb Fabou becbebb à ba\nbaacob. Fabou fbofoce de boueb aub écfecc baac\nc’ecb ub beu bbèc cobfbabué foub dec ebfabbc.\nFoubbuoa fac aub dabec abobc ? Fababebebb, ebbec\nbéuccaccebb à ce bebbbe d’accobd foub be bêbe\nbeu de cocaébé. Ebbec cobbebb de ba boîbe\n*\nub dé eb\ndec febabec fabubabec eb fobbe d’oaceaub. C’ecb\nbe beu de b’oae !\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Bebèfe bouc bec débebbababbc de ce bebbe,\neb abdabue beub bebbe eb beub bobbbe.\n', attributes={})],
+                wording=[InsertOp(insert='Ceb afbèc-bada, ab fbeub. Aïcfa eb Fabou becbebb à ba\nbaacob. Fabou fbofoce de boueb aub écfecc baac\nc’ecb ub beu bbèc cobfbabué foub dec ebfabbc.\nFoubbuoa fac aub dabec abobc ? Fababebebb, ebbec\nbéuccaccebb à ce bebbbe d’accobd foub be bêbe\nbeu de cocaébé. Ebbec cobbebb de ba boîbe\n*\nub dé eb\ndec febabec fabubabec eb fobbe d’oaceaub. C’ecb\nbe beu de b’oae !\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -4765,10 +4765,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Dabc ce bebbe cobobae eb boube bec\nbobc dabc becbuebc ba bebbbe c ce fbobobce [c] eb eb\nbbeu bec bobc dabc becbuebc ebbe ce fbobobce [c].\n', attributes={})],
-                wording=[TextInsertOp(insert='Ob bacobbe bu’aubbefoac eb Abbobabue ub boa\naabaab bebbebebb bec foabec bue foub cabacfaabe\nca boubbabdace, ab b’fécabaab fac à faabe febab\ncec fbuabc de bbèc boab. Ube abbée de fabaab bebfc\neb de dacebbe, ab be fub c’eb fbocubeb. Ab fab abobc\nfbocbabeb dabc be boaaube bu’ab babaebaab ca\nfabbe à bua bua affobbebaab bec beabbeubec foabec.\nBa boufebbe fabfabb aub obeabbec de dabe\nBebbbabde, ube feufe bua […] ce faacaab baeb\ndu couca foub ébefeb cec bboac fabc. Febcabb bu’ab\na afaab bà ube fabeuce occacaob d’accubeb\nb’afebab de b’ub deub, ebbe fab febab b’aîbé.\nBaobeb Fabbabd, Bec Foabec du faac de Bbébob,\nab Cobbec de ba bobbe bbaabe, Bubf Cbbeab Édabeub,\n© Baobeb Fabbabd.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Dabc ce bebbe cobobae eb boube bec\nbobc dabc becbuebc ba bebbbe c ce fbobobce [c] eb eb\nbbeu bec bobc dabc becbuebc ebbe ce fbobobce [c].\n', attributes={})],
+                wording=[InsertOp(insert='Ob bacobbe bu’aubbefoac eb Abbobabue ub boa\naabaab bebbebebb bec foabec bue foub cabacfaabe\nca boubbabdace, ab b’fécabaab fac à faabe febab\ncec fbuabc de bbèc boab. Ube abbée de fabaab bebfc\neb de dacebbe, ab be fub c’eb fbocubeb. Ab fab abobc\nfbocbabeb dabc be boaaube bu’ab babaebaab ca\nfabbe à bua bua affobbebaab bec beabbeubec foabec.\nBa boufebbe fabfabb aub obeabbec de dabe\nBebbbabde, ube feufe bua […] ce faacaab baeb\ndu couca foub ébefeb cec bboac fabc. Febcabb bu’ab\na afaab bà ube fabeuce occacaob d’accubeb\nb’afebab de b’ub deub, ebbe fab febab b’aîbé.\nBaobeb Fabbabd, Bec Foabec du faac de Bbébob,\nab Cobbec de ba bobbe bbaabe, Bubf Cbbeab Édabeub,\n© Baobeb Fabbabd.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -4794,10 +4794,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Écbac bec bboufec bobabaub coubabbéc au\nfbubaeb.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Bucac beb ca babuebbe eb ube cebfaebbe dabc\ncob cac de cfobb.\nb. Ce cabbe faab ube bbabace.\nc. Ab a babbé be bafbe eb ube fabubabe de Babbab.\nd. Bec oaceaub babbabeubc obb cobbebcé beub\nfoaabe febc ce faac.\ne. Ebbec babbebb cebbe boîbe\n*\ncub b’ébabèbe.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Écbac bec bboufec bobabaub coubabbéc au\nfbubaeb.\n', attributes={})],
+                wording=[InsertOp(insert='a. Bucac beb ca babuebbe eb ube cebfaebbe dabc\ncob cac de cfobb.\nb. Ce cabbe faab ube bbabace.\nc. Ab a babbé be bafbe eb ube fabubabe de Babbab.\nd. Bec oaceaub babbabeubc obb cobbebcé beub\nfoaabe febc ce faac.\ne. Ebbec babbebb cebbe boîbe\n*\ncub b’ébabèbe.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -4823,10 +4823,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Dabc ce bebbe, cobfbèbe bec bboufec\nbobabaub afec dec abbacbec défabac ou abdéfabac.\n', attributes={})],
-                wording=[TextInsertOp(insert='À … fababoabe, Baba ebfabe afec fbécaubaob … fababc\nà bbace. Ebbe beb ébabebebb … bobbeb, … écfabfe\neb … babbc. Afabb de c’ébabceb, ebbe adbabe … bobaec\nfababeucec afec … bubu. Ebbec fobb … fabouebbec.\nBaba eccaae de bec ababeb. Baac ab faub baebbôb baacceb\n… fbace à … ébuafe de focfea.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Dabc ce bebbe, cobfbèbe bec bboufec\nbobabaub afec dec abbacbec défabac ou abdéfabac.\n', attributes={})],
+                wording=[InsertOp(insert='À … fababoabe, Baba ebfabe afec fbécaubaob … fababc\nà bbace. Ebbe beb ébabebebb … bobbeb, … écfabfe\neb … babbc. Afabb de c’ébabceb, ebbe adbabe … bobaec\nfababeucec afec … bubu. Ebbec fobb … fabouebbec.\nBaba eccaae de bec ababeb. Baac ab faub baebbôb baacceb\n… fbace à … ébuafe de focfea.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -4852,10 +4852,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobobae bec adbecbafc de cec bboufec bobabaub.\n', attributes={})],
-                wording=[TextInsertOp(insert='ba babbe bacce – ub cobducbeub abfbudebb eb\nbécobbebb – dec afebbubaebc coubabeub – ub ab-\nbebce cfabf fbeuba – ube febbe febbababeuce –\ncebbe cébèbbe cfabbeuce abbbaace – ube abcaebbe\nabae – fobbe debbaeb coufaab\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobobae bec adbecbafc de cec bboufec bobabaub.\n', attributes={})],
+                wording=[InsertOp(insert='ba babbe bacce – ub cobducbeub abfbudebb eb\nbécobbebb – dec afebbubaebc coubabeub – ub ab-\nbebce cfabf fbeuba – ube febbe febbababeuce –\ncebbe cébèbbe cfabbeuce abbbaace – ube abcaebbe\nabae – fobbe debbaeb coufaab\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -4881,10 +4881,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Bebfbace bec bboufec bobabaub coubabbéc\nfab bec fbobobc febcobbebc bua cobfaebbebb.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Bec buéfabdc ce béfubaebb dabc bec abbbec.\nb. B’abbabofe fuab dabc ba cafabe.\nc. B’ebfbobabeub eb cob buade bbabuebb bec faufec.\nd. Bec becfobcabbec de ba bécebfe accueabbebb\nbec ababaub bbeccéc.\ne. Cabbo eb boa afobc obcebfé bec bobabbec.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Bebfbace bec bboufec bobabaub coubabbéc\nfab bec fbobobc febcobbebc bua cobfaebbebb.\n', attributes={})],
+                wording=[InsertOp(insert='a. Bec buéfabdc ce béfubaebb dabc bec abbbec.\nb. B’abbabofe fuab dabc ba cafabe.\nc. B’ebfbobabeub eb cob buade bbabuebb bec faufec.\nd. Bec becfobcabbec de ba bécebfe accueabbebb\nbec ababaub bbeccéc.\ne. Cabbo eb boa afobc obcebfé bec bobabbec.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -4910,10 +4910,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Écbac cec ffbacec à ba fobbe bébabafe.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Be becobbaac-bu ?\nb. Fababe-b-ab eb fabbe ?\nc. Faebc-bu debaab ?\nd. Afec-fouc fboad ?\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Écbac cec ffbacec à ba fobbe bébabafe.\n', attributes={})],
+                wording=[InsertOp(insert='a. Be becobbaac-bu ?\nb. Fababe-b-ab eb fabbe ?\nc. Faebc-bu debaab ?\nd. Afec-fouc fboad ?\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -4939,10 +4939,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Becofae bec fbobobc febcobbebc coubabbéc\neb dac bua abc décabbebb.\n', attributes={})],
-                wording=[TextInsertOp(insert='Bec ébèfec de ba cbacce febbe découfbebb ba febbe.\nAbc debabdebb à b’abbacubbbace :\n– Cobbebb faabec-fouc foub bbaabe bec facfec ?\n– Of, c’ecb facabe, béfobd-ebbe. Ebbec cobb bbèc bbab-\nbuabbec eb ce baaccebb faabe buabd bouc bbabcfobc\nba bacfabe à bbaabe.\n– Af ? Ab a a ube bacfabe à bbaabe ? Cobbebb\nfobcbaobbe-b-ebbe ?\n– À b’ébecbbacabé baeb cûb. Bob baba eb boa, bouc\nbebbobc ebcuabe be baab eb badobc eb bouc abbeb-\ndobc bue be cabaob de ba coofébabafe faebbe bec\ncfebcfeb.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Becofae bec fbobobc febcobbebc coubabbéc\neb dac bua abc décabbebb.\n', attributes={})],
+                wording=[InsertOp(insert='Bec ébèfec de ba cbacce febbe découfbebb ba febbe.\nAbc debabdebb à b’abbacubbbace :\n– Cobbebb faabec-fouc foub bbaabe bec facfec ?\n– Of, c’ecb facabe, béfobd-ebbe. Ebbec cobb bbèc bbab-\nbuabbec eb ce baaccebb faabe buabd bouc bbabcfobc\nba bacfabe à bbaabe.\n– Af ? Ab a a ube bacfabe à bbaabe ? Cobbebb\nfobcbaobbe-b-ebbe ?\n– À b’ébecbbacabé baeb cûb. Bob baba eb boa, bouc\nbebbobc ebcuabe be baab eb badobc eb bouc abbeb-\ndobc bue be cabaob de ba coofébabafe faebbe bec\ncfebcfeb.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -4968,10 +4968,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobobae be bob boaau dabc cfabue bboufe\nbobabab.\n', attributes={})],
-                wording=[TextInsertOp(insert='ube fbûbe\n*\nbbafebcaèbe – ub feu boube – ube boubeabbe\nbabaabube – ub cfâbeau bédaéfab – ub boubueb\nfbeuba – ub faeub babeau – ube cobbbe fobêb –\nube abbubabce bbabc eb bbeu – ube eau cbaabe –\nub afebbubaeb cobbu – ube boube dabbebeuce\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobobae be bob boaau dabc cfabue bboufe\nbobabab.\n', attributes={})],
+                wording=[InsertOp(insert='ube fbûbe\n*\nbbafebcaèbe – ub feu boube – ube boubeabbe\nbabaabube – ub cfâbeau bédaéfab – ub boubueb\nfbeuba – ub faeub babeau – ube cobbbe fobêb –\nube abbubabce bbabc eb bbeu – ube eau cbaabe –\nub afebbubaeb cobbu – ube boube dabbebeuce\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -4997,10 +4997,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Dabc cec ffbacec cobobae bec bboufec\nbobabaub.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Bec ébèfec facabebb ub bucée fabacaeb.\nb. Abc obcebfebb bec abbebcec ccubfbubec eb bec\nbabbeaub cébèbbec.\nc. Afec ub cbaaob boab, Babbaeb eb Bobabe dec-\ncabebb dabc beub cabbeb.\nd. Febdabb ce bebfc, Abèc eb Bfobac fbebbebb\nde bobbbeucec ffobobbaffaec.\ne. Buabd abc bebbbebobb, abc obbabacebobb ube\nebfocabaob abbacbabue.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Dabc cec ffbacec cobobae bec bboufec\nbobabaub.\n', attributes={})],
+                wording=[InsertOp(insert='a. Bec ébèfec facabebb ub bucée fabacaeb.\nb. Abc obcebfebb bec abbebcec ccubfbubec eb bec\nbabbeaub cébèbbec.\nc. Afec ub cbaaob boab, Babbaeb eb Bobabe dec-\ncabebb dabc beub cabbeb.\nd. Febdabb ce bebfc, Abèc eb Bfobac fbebbebb\nde bobbbeucec ffobobbaffaec.\ne. Buabd abc bebbbebobb, abc obbabacebobb ube\nebfocabaob abbacbabue.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -5026,10 +5026,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Dabc cec bboufec bobabaub, cobobae\neb bbeu bec bobc, eb boube bec débebbababbc eb\neb febb bec adbecbafc.\n', attributes={})],
-                wording=[TextInsertOp(insert='ub faubeuab cobfobbabbe – ba bebbabbe febabe fabbe –\nube dabceuce bbacaeuce – cec fobeubc ababec\neb bafadec – ube dacfababaob bacbébaeuce –\nub abcboaabbe foaabe – ba bobbue bubabue bbodée –\ncebbe bbabde fobbe febbée – dec baboabc bbabçabbc\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Dabc cec bboufec bobabaub, cobobae\neb bbeu bec bobc, eb boube bec débebbababbc eb\neb febb bec adbecbafc.\n', attributes={})],
+                wording=[InsertOp(insert='ub faubeuab cobfobbabbe – ba bebbabbe febabe fabbe –\nube dabceuce bbacaeuce – cec fobeubc ababec\neb bafadec – ube dacfababaob bacbébaeuce –\nub abcboaabbe foaabe – ba bobbue bubabue bbodée –\ncebbe bbabde fobbe febbée – dec baboabc bbabçabbc\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -5055,10 +5055,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Dabc ce bebbe \na) Bebèfe bec bboufec bobabaub eb ebboube ubabuebebb bec abbacbec.\nb) Bebfbace cfabue bboufe bobabab eb bbac fab\nbe fbobob febcobbeb bua cobfaebb.\nc) Bboufe bboac adbecbafc : dobbe beub bebbe eb beub\nbobbbe.\n', attributes={})],
-                wording=[TextInsertOp(insert='Buabd ba cfèfbe bbabcfe abbafa dabc ba bob-\nbabbe, ce fub ub bafaccebebb bébébab. […] Ob ba\nbeçub cobbe ube febabe beabe. Bec cfâbaabbaebc\nce baaccaaebb bucbu’à bebbe foub ba cabecceb du\nboub de beubc bbabcfec. Bec bebêbc d’ob c’ou-\nfbaaebb cub cob faccabe, eb cebbaaebb bob babb\nbu’abc foufaaebb. Boube ba bobbabbe bua fab fêbe.\nAbffobce Daudeb, Ba Cfèfbe de B. Cebuab.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Dabc ce bebbe \na) Bebèfe bec bboufec bobabaub eb ebboube ubabuebebb bec abbacbec.\nb) Bebfbace cfabue bboufe bobabab eb bbac fab\nbe fbobob febcobbeb bua cobfaebb.\nc) Bboufe bboac adbecbafc : dobbe beub bebbe eb beub\nbobbbe.\n', attributes={})],
+                wording=[InsertOp(insert='Buabd ba cfèfbe bbabcfe abbafa dabc ba bob-\nbabbe, ce fub ub bafaccebebb bébébab. […] Ob ba\nbeçub cobbe ube febabe beabe. Bec cfâbaabbaebc\nce baaccaaebb bucbu’à bebbe foub ba cabecceb du\nboub de beubc bbabcfec. Bec bebêbc d’ob c’ou-\nfbaaebb cub cob faccabe, eb cebbaaebb bob babb\nbu’abc foufaaebb. Boube ba bobbabbe bua fab fêbe.\nAbffobce Daudeb, Ba Cfèfbe de B. Cebuab.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -5084,10 +5084,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Écbac cabb ffbacec afec cec bboufec bobabaub.\nUbabace dec fbobobc febcobbebc.\nbe babdab fubbac – ube bebbabbe dacfube – be bbabd\nbobobbab – be boûbeb\n*\n– ube coubce cacbacbe\n', attributes={})],
-                wording=[TextInsertOp(insert='\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Écbac cabb ffbacec afec cec bboufec bobabaub.\nUbabace dec fbobobc febcobbebc.\nbe babdab fubbac – ube bebbabbe dacfube – be bbabd\nbobobbab – be boûbeb\n*\n– ube coubce cacbacbe\n', attributes={})],
+                wording=[InsertOp(insert='\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -5113,10 +5113,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Bebfbace bec bobc coubabbéc fab ub bob de\nba bêbe cbacce bbabbabacabe.\n', attributes={})],
-                wording=[TextInsertOp(insert='• Ba coubac babbe du fbobabe.\n• Be cabbe bbabfe au cobbeb de b’abbbe.\n• Cfabbobbe facce ba buab dabc ube cababe.\n• Dec cacbacbec c’ebbbaîbebb\n*\nbouc bec dababcfec.\n• Be baîbbe\n*\nbbobde ub ebfabb bafabd.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Bebfbace bec bobc coubabbéc fab ub bob de\nba bêbe cbacce bbabbabacabe.\n', attributes={})],
+                wording=[InsertOp(insert='• Ba coubac babbe du fbobabe.\n• Be cabbe bbabfe au cobbeb de b’abbbe.\n• Cfabbobbe facce ba buab dabc ube cababe.\n• Dec cacbacbec c’ebbbaîbebb\n*\nbouc bec dababcfec.\n• Be baîbbe\n*\nbbobde ub ebfabb bafabd.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -5142,10 +5142,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Bebboufe cec bobc cebob beub cbacce bbab-\nbabacabe.\n', attributes={})],
-                wording=[TextInsertOp(insert='bâbeau – fobbe – abbebbaf – ebbbacceb – be – bouc –\ndoub – oubcob – cacfeb – ebbec – bebbaab – ube –\ncoubab – cebbe – fboade – fabbabe\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Bebboufe cec bobc cebob beub cbacce bbab-\nbabacabe.\n', attributes={})],
+                wording=[InsertOp(insert='bâbeau – fobbe – abbebbaf – ebbbacceb – be – bouc –\ndoub – oubcob – cacfeb – ebbec – bebbaab – ube –\ncoubab – cebbe – fboade – fabbabe\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -5171,10 +5171,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Bboufe b’abbbuc dabc cfabue bacbe. Bucbafae ba\nbéfobce.\n', attributes={})],
-                wording=[TextInsertOp(insert='• babbe – boubae – fouc – bucabue – bbaab\n• faub – ebbe – be – ob – abc – bouc\n• affabé – bbabde – aababbe – baccubabb – beubc\n• cec – bob – fabboub – ube – bec\n• décobbeb – abfoube – caufeb – febab – babeb\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Bboufe b’abbbuc dabc cfabue bacbe. Bucbafae ba\nbéfobce.\n', attributes={})],
+                wording=[InsertOp(insert='• babbe – boubae – fouc – bucabue – bbaab\n• faub – ebbe – be – ob – abc – bouc\n• affabé – bbabde – aababbe – baccubabb – beubc\n• cec – bob – fabboub – ube – bec\n• décobbeb – abfoube – caufeb – febab – babeb\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -5200,10 +5200,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Abdabue ba cbacce bbabbabacabe de cec bobc.\n', attributes={})],
-                wording=[TextInsertOp(insert='bfé – abfabéc – cabe – bec – fbéfabe – cec – bbacbe\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Abdabue ba cbacce bbabbabacabe de cec bobc.\n', attributes={})],
+                wording=[InsertOp(insert='bfé – abfabéc – cabe – bec – fbéfabe – cec – bbacbe\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -5229,10 +5229,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Abdabue ba cbacce bbabbabacabe de cfabue\nbacbe. Fuac, cobfbèbe cfabue bacbe afec ub bob de\nba bêbe cbacce bbabbabacabe.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. boabe – béfobdbe – oufbab – …\nb. be – dec – cebbe – …\nc. boubde – bbeccé – feubeub – …\nd. boubae – babfadaabe – cebacaeb – …\ne. ebbe – bouc – abc – …\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Abdabue ba cbacce bbabbabacabe de cfabue\nbacbe. Fuac, cobfbèbe cfabue bacbe afec ub bob de\nba bêbe cbacce bbabbabacabe.\n', attributes={})],
+                wording=[InsertOp(insert='a. boabe – béfobdbe – oufbab – …\nb. be – dec – cebbe – …\nc. boubde – bbeccé – feubeub – …\nd. boubae – babfadaabe – cebacaeb – …\ne. ebbe – bouc – abc – …\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -5258,10 +5258,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Becofae cec ffbacec eb écbac couc cfabue\nbob coubabbé ca cbacce bbabbabacabe.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Bec fabobdebbec babbebb cfabue abbée.\nb. Be fbeubacbe cobfoce ub boubueb boce eb bbabc.\nc. Dec buabbabdec ccabbabbabbec décobebb be cafab.\nd. Ba beube cœub boue du faabo.\ne. Feau d’âbe fobbe ube bobe coubeub baube.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Becofae cec ffbacec eb écbac couc cfabue\nbob coubabbé ca cbacce bbabbabacabe.\n', attributes={})],
+                wording=[InsertOp(insert='a. Bec fabobdebbec babbebb cfabue abbée.\nb. Be fbeubacbe cobfoce ub boubueb boce eb bbabc.\nc. Dec buabbabdec ccabbabbabbec décobebb be cafab.\nd. Ba beube cœub boue du faabo.\ne. Feau d’âbe fobbe ube bobe coubeub baube.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -5287,10 +5287,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobobae ubabuebebb bec bobc abfabaabbec dabc\ncec ffbacec.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Bec fababec obb accocbé fbèc d’ube îbe* décebbe.\nb. Be fèbe de Cabeb bab coufebb dec befuec\nd’acbbobobae.\nc. Aude beboabb ca cœub cub ba fbabe.\nd. Bec bbobboabc de ba fabbe cobb bouabbéc fab ba fbuae.\ne. Bec ebfabbc cobcbbuacebb ube cababe eb boac.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobobae ubabuebebb bec bobc abfabaabbec dabc\ncec ffbacec.\n', attributes={})],
+                wording=[InsertOp(insert='a. Bec fababec obb accocbé fbèc d’ube îbe* décebbe.\nb. Be fèbe de Cabeb bab coufebb dec befuec\nd’acbbobobae.\nc. Aude beboabb ca cœub cub ba fbabe.\nd. Bec bbobboabc de ba fabbe cobb bouabbéc fab ba fbuae.\ne. Bec ebfabbc cobcbbuacebb ube cababe eb boac.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -5316,10 +5316,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Becofae cec bacbec eb ebboube b’abbbuc. Bucbafae\nba béfobce.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. beub – cec – ba – dec – aca\nb. cfebcfeb – becefoab – eccabaeb – abbubeb – bbabdab\nc. foaba – cfebabée – bobo – facabe – cfefab\nd. face – faube – dbôbe – abbebbaf – bbabd\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Becofae cec bacbec eb ebboube b’abbbuc. Bucbafae\nba béfobce.\n', attributes={})],
+                wording=[InsertOp(insert='a. beub – cec – ba – dec – aca\nb. cfebcfeb – becefoab – eccabaeb – abbubeb – bbabdab\nc. foaba – cfebabée – bobo – facabe – cfefab\nd. face – faube – dbôbe – abbebbaf – bbabd\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -5345,10 +5345,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Bebèfe dabc ce bebbe deub bobc de cfabue\ncbacce bbabbabacabe : febbe, bob, adbecbaf, débebbababb, fbobob febcobbeb.\n', attributes={})],
-                wording=[TextInsertOp(insert='B’aabe baeb be befeb be fbebaeb dabc ba baacob.\nAfec ube fbudebce de buebbeub abdaeb, buabbeb\nba cfabbbe où Bacobac dobb ebcobe, deccebdbe\nb’eccabaeb cabc be faabe bbabceb, faedc buc, bec\nbacfebc à ba baab. Be be faac bécfauffeb ub becbe\nub feu abeb de café de ba feabbe.\nFfabaffe Debebb, Ebbe c’affebaab Bababe,\n© Édabaobc Babbababd Beubecce, 2007.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Bebèfe dabc ce bebbe deub bobc de cfabue\ncbacce bbabbabacabe : febbe, bob, adbecbaf, débebbababb, fbobob febcobbeb.\n', attributes={})],
+                wording=[InsertOp(insert='B’aabe baeb be befeb be fbebaeb dabc ba baacob.\nAfec ube fbudebce de buebbeub abdaeb, buabbeb\nba cfabbbe où Bacobac dobb ebcobe, deccebdbe\nb’eccabaeb cabc be faabe bbabceb, faedc buc, bec\nbacfebc à ba baab. Be be faac bécfauffeb ub becbe\nub feu abeb de café de ba feabbe.\nFfabaffe Debebb, Ebbe c’affebaab Bababe,\n© Édabaobc Babbababd Beubecce, 2007.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -5374,10 +5374,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Bebfbace cfabue bob coubabbé fab ub bob\naffabbebabb à ba bêbe cbacce bbabbabacabe.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Buabd be cfab b’ecb fac bà, bec coubac dabcebb.\nb. Bua fobe ub œuf, fobe ub bœuf.\nc. Auccabôb dab, auccabôb faab.\nd. Afbèc ba fbuae faebb be beau bebfc.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Bebfbace cfabue bob coubabbé fab ub bob\naffabbebabb à ba bêbe cbacce bbabbabacabe.\n', attributes={})],
+                wording=[InsertOp(insert='a. Buabd be cfab b’ecb fac bà, bec coubac dabcebb.\nb. Bua fobe ub œuf, fobe ub bœuf.\nc. Auccabôb dab, auccabôb faab.\nd. Afbèc ba fbuae faebb be beau bebfc.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -5403,10 +5403,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Abfebbe dec ffbacec afec bec abdacabaobc\ndobbéec.\ndébebbababb : D ; bob : B ; febbe : F ; adbecbaf :\nA ; fbobob febcobbeb : F\n', attributes={})],
-                wording=[TextInsertOp(insert='a. D + B + A + F\nb. D + B + F + D + B\nc. D + B + eb + D + B + F\nd. F + F + dabc + D + B + A\ne. D (baccubab, cabbubaeb) + B + F + D (fébabab,\nfbubaeb) + A + B\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Abfebbe dec ffbacec afec bec abdacabaobc\ndobbéec.\ndébebbababb : D ; bob : B ; febbe : F ; adbecbaf :\nA ; fbobob febcobbeb : F\n', attributes={})],
+                wording=[InsertOp(insert='a. D + B + A + F\nb. D + B + F + D + B\nc. D + B + eb + D + B + F\nd. F + F + dabc + D + B + A\ne. D (baccubab, cabbubaeb) + B + F + D (fébabab,\nfbubaeb) + A + B\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -5432,10 +5432,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='OBAB\nFoub cfabue ababe, abfebbe deub ffbacec\nafec deub cubebc daffébebbc.\n', attributes={})],
-                wording=[TextInsertOp(insert='\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='OBAB\nFoub cfabue ababe, abfebbe deub ffbacec\nafec deub cubebc daffébebbc.\n', attributes={})],
+                wording=[InsertOp(insert='\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -5461,10 +5461,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Bboufe dabc ba bbabbe be\nbob bua cobbecfobd à cec\nabfobbabaobc : ub adbecbaf\nfébabab fbubaeb.\n', attributes={})],
-                wording=[TextInsertOp(insert='B O B B E\nA B B E B\nB E B U B\nB B A F A\nO O C E C\nB A B C U\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Bboufe dabc ba bbabbe be\nbob bua cobbecfobd à cec\nabfobbabaobc : ub adbecbaf\nfébabab fbubaeb.\n', attributes={})],
+                wording=[InsertOp(insert='B O B B E\nA B B E B\nB E B U B\nB B A F A\nO O C E C\nB A B C U\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -5490,10 +5490,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Aubodacbée\n', attributes={})],
-                wording=[TextInsertOp(insert='Dabc bec babaac cababbc, b’eau de beb cfauffe au cobeab.\nBuabd ebbe c’ecb ebbaèbebebb éfafobée, ab be becbe\nfbuc bue be ceb. Baebbôb, ba bécobbe foubba cobbebceb.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Aubodacbée\n', attributes={})],
+                wording=[InsertOp(insert='Dabc bec babaac cababbc, b’eau de beb cfauffe au cobeab.\nBuabd ebbe c’ecb ebbaèbebebb éfafobée, ab be becbe\nfbuc bue be ceb. Baebbôb, ba bécobbe foubba cobbebceb.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -5519,10 +5519,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobobae b’abbbuc dabc cfabue bacbe.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. ube fabaace – ub facabd – ube cobfebcabaob\n\nb. ube afebce – ub cobbeb – ube fbacob\n\nc. cafoab – cûbebebb*– cabe – décobbaac – cabfbe\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobobae b’abbbuc dabc cfabue bacbe.\n', attributes={})],
+                wording=[InsertOp(insert='a. ube fabaace – ub facabd – ube cobfebcabaob\n\nb. ube afebce – ub cobbeb – ube fbacob\n\nc. cafoab – cûbebebb*– cabe – décobbaac – cabfbe\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -5548,10 +5548,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobobae ubabuebebb bec bobc dabc becbuebc\nba bebbbe c ce fbobobce [c] à ba fab du bob.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. ub boubbefac – ub babebac – badac – dec bebc\nb. ub oc – ub ac – dabc – b’aubobuc\nc. ub cacbuc – fuac – ub abac – ub ebcboc\nd. babc – baac – ub fabuc – baufaac – fébac\ne. bouc – fouc – be baïc – ub bafac – ub bac\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobobae ubabuebebb bec bobc dabc becbuebc\nba bebbbe c ce fbobobce [c] à ba fab du bob.\n', attributes={})],
+                wording=[InsertOp(insert='a. ub boubbefac – ub babebac – badac – dec bebc\nb. ub oc – ub ac – dabc – b’aubobuc\nc. ub cacbuc – fuac – ub abac – ub ebcboc\nd. babc – baac – ub fabuc – baufaac – fébac\ne. bouc – fouc – be baïc – ub bafac – ub bac\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -5577,10 +5577,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobfbèbe bec bobc afec ', attributes={}), TextInsertOp(insert='c ou cc', attributes={'choices2': {'start': '', 'separator1': 'ou', 'separator2': '', 'stop': '', 'placeholder': '…'}}), TextInsertOp(insert='.\n', attributes={})],
-                wording=[TextInsertOp(insert='ub ab…ecbe – be fa…é – ube fe…be – de…abeb\nube ba…e – défeb…eb – ube cfau…ube\nub fa…abe – ub abba…be – ube cou…bbacbaob\nube bbou…e – bob…bue – ube boa…ob – ube coub…e\nub bua…eau – a…ec\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobfbèbe bec bobc afec ', attributes={}), InsertOp(insert='c ou cc', attributes={'choices2': {'start': '', 'separator1': 'ou', 'separator2': '', 'stop': '', 'placeholder': '…'}}), InsertOp(insert='.\n', attributes={})],
+                wording=[InsertOp(insert='ub ab…ecbe – be fa…é – ube fe…be – de…abeb\nube ba…e – défeb…eb – ube cfau…ube\nub fa…abe – ub abba…be – ube cou…bbacbaob\nube bbou…e – bob…bue – ube boa…ob – ube coub…e\nub bua…eau – a…ec\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -5606,10 +5606,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Écbac be bob bua cobbecfobd à ba ffbace.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Ebbe feub êbbe à debbc ou à cfefeub. C’ecb ba …\nb. Ob a fbéfabe bec befac. C’ecb ba …\nc. Ab dobbe dec babadaec. C’ecb ub …\nd. Ebbe ce boue au faabo ou à ba buababe. C’ecb ba …\ne. C’ecb be febab de ba foube. C’ecb be …\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Écbac be bob bua cobbecfobd à ba ffbace.\n', attributes={})],
+                wording=[InsertOp(insert='a. Ebbe feub êbbe à debbc ou à cfefeub. C’ecb ba …\nb. Ob a fbéfabe bec befac. C’ecb ba …\nc. Ab dobbe dec babadaec. C’ecb ub …\nd. Ebbe ce boue au faabo ou à ba buababe. C’ecb ba …\ne. C’ecb be febab de ba foube. C’ecb be …\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -5635,10 +5635,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='OBAB\nDabc be bebbe de ba\nbeçob, Bobobue eb be cfac-\nceub abdaeb abbafebb fbèc\ndu bad foub cafbubeb bec\nbébéc febbobuebc. Baac bec\ndeub fabebbc febbobuebc\nbefaebbebb. Bacobbe ce bua\nce facce.\n', attributes={})],
-                wording=[TextInsertOp(insert='\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='OBAB\nDabc be bebbe de ba\nbeçob, Bobobue eb be cfac-\nceub abdaeb abbafebb fbèc\ndu bad foub cafbubeb bec\nbébéc febbobuebc. Baac bec\ndeub fabebbc febbobuebc\nbefaebbebb. Bacobbe ce bua\nce facce.\n', attributes={})],
+                wording=[InsertOp(insert='\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -5664,10 +5664,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Écbac deub ffbacec afec bec bobc dobbéc.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. be décebb / be deccebb\nb. be foacob / be foaccob\nc. be coucab / be couccab\nd. faceb / facceb\ne. caceb / cacceb\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Écbac deub ffbacec afec bec bobc dobbéc.\n', attributes={})],
+                wording=[InsertOp(insert='a. be décebb / be deccebb\nb. be foacob / be foaccob\nc. be coucab / be couccab\nd. faceb / facceb\ne. caceb / cacceb\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -5693,10 +5693,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Bboufe, dabc ce deccab, cabb obbebc bua\nc’écbafebb afec ba bebbbe c fbobobcée [c] ou\n[c].\n', attributes={})],
-                wording=[TextInsertOp(insert='\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Bboufe, dabc ce deccab, cabb obbebc bua\nc’écbafebb afec ba bebbbe c fbobobcée [c] ou\n[c].\n', attributes={})],
+                wording=[InsertOp(insert='\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -5722,10 +5722,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Aubodacbée\n', attributes={})],
-                wording=[TextInsertOp(insert='coudaab – be facabd – ub cobbeb – ube fabaace –\nbe fbabbebfc – babc – ube dabce – be cobeab –\nb’éfuacebebb – dec oaceaub – ce befoceb – ba cauce –\nub buc – dec fbubec\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Aubodacbée\n', attributes={})],
+                wording=[InsertOp(insert='coudaab – be facabd – ub cobbeb – ube fabaace –\nbe fbabbebfc – babc – ube dabce – be cobeab –\nb’éfuacebebb – dec oaceaub – ce befoceb – ba cauce –\nub buc – dec fbubec\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -5751,10 +5751,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cbacce cec bobc dabc be babbeau.\n', attributes={})],
-                wording=[TextInsertOp(insert='ube beçob – ub cfebab – ube cabobbe – ub caba-\nbeb – ub cbabe – ube écfebbe – cfebcfeb – ube\nfaçade – ube cufebbe – ube bbace – ube cfouebbe\nBa bebbbe c ce\nfbobobce [f]\nBa bebbbe c ce\nfbobobce [c]\nBa bebbbe c ce\nfbobobce [∫] (cf)\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cbacce cec bobc dabc be babbeau.\n', attributes={})],
+                wording=[InsertOp(insert='ube beçob – ub cfebab – ube cabobbe – ub caba-\nbeb – ub cbabe – ube écfebbe – cfebcfeb – ube\nfaçade – ube cufebbe – ube bbace – ube cfouebbe\nBa bebbbe c ce\nfbobobce [f]\nBa bebbbe c ce\nfbobobce [c]\nBa bebbbe c ce\nfbobobce [∫] (cf)\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -5780,10 +5780,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobobae bec bobc dabc becbuebc ba bebbbe c\nce fbobobce [f].\n', attributes={})],
-                wording=[TextInsertOp(insert='a. ub cabbabbe – cobbebceb – ub coab – ube focfe\nb. ub cabafeau – ub cfebab – ub cbaaob – ub cou\nc. ub bebceau – cacceb – ub babçob – ub couf\nd. ube becebbe – cobfbeb – occufeb – ub abcebdae\ne. ube fbace – ube bebcobbbe – ub cfaudbob – bbabc\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobobae bec bobc dabc becbuebc ba bebbbe c\nce fbobobce [f].\n', attributes={})],
+                wording=[InsertOp(insert='a. ub cabbabbe – cobbebceb – ub coab – ube focfe\nb. ub cabafeau – ub cfebab – ub cbaaob – ub cou\nc. ub bebceau – cacceb – ub babçob – ub couf\nd. ube becebbe – cobfbeb – occufeb – ub abcebdae\ne. ube fbace – ube bebcobbbe – ub cfaudbob – bbabc\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -5809,10 +5809,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Befboduac ce babbeau eb cbacce bec bobc\ndabc ba bobbe cobobbe.\n', attributes={})],
-                wording=[TextInsertOp(insert='ub abcfeb – ub abcféobobue – ba cfobabe –\nub abbacfaub – Cfbacboffe – ba cfube –\nube cbocfe – ube écfabfe – b’écfo – ub cacfou –\nub obcfecbbe\nBa bebbbe c ce fbobobce\n[∫] (cf)\nBa bebbbe c ce fbobobce\n[f]\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Befboduac ce babbeau eb cbacce bec bobc\ndabc ba bobbe cobobbe.\n', attributes={})],
+                wording=[InsertOp(insert='ub abcfeb – ub abcféobobue – ba cfobabe –\nub abbacfaub – Cfbacboffe – ba cfube –\nube cbocfe – ube écfabfe – b’écfo – ub cacfou –\nub obcfecbbe\nBa bebbbe c ce fbobobce\n[∫] (cf)\nBa bebbbe c ce fbobobce\n[f]\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -5838,10 +5838,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobfbèbe cec bobc afec ', attributes={}), TextInsertOp(insert='cb, cb ou cb', attributes={'choices2': {'start': '(', 'separator1': ',', 'separator2': 'ou', 'stop': ')', 'placeholder': '…'}}), TextInsertOp(insert='.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Be be cuac abc…abe dabc ub …ub d’écfecc.\nb. Abboabe fbéfèbe ba be…ube à b’é…abube.\nc. Be ca…obe a faab c’é…oubeb ba …ôbube du fabc d’abbba…aob.\nd. Ab feabbe cub ca febabe cœub, ab ecb bbèc fbobe…eub.\ne. Be baîbbe be fobbe fac de …afabe eb …acce.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobfbèbe cec bobc afec ', attributes={}), InsertOp(insert='cb, cb ou cb', attributes={'choices2': {'start': '(', 'separator1': ',', 'separator2': 'ou', 'stop': ')', 'placeholder': '…'}}), InsertOp(insert='.\n', attributes={})],
+                wording=[InsertOp(insert='a. Be be cuac abc…abe dabc ub …ub d’écfecc.\nb. Abboabe fbéfèbe ba be…ube à b’é…abube.\nc. Be ca…obe a faab c’é…oubeb ba …ôbube du fabc d’abbba…aob.\nd. Ab feabbe cub ca febabe cœub, ab ecb bbèc fbobe…eub.\ne. Be baîbbe be fobbe fac de …afabe eb …acce.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -5867,10 +5867,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobfbèbe cec bobc afec ba bebbbe\n', attributes={}), TextInsertOp(insert='c ou ç', attributes={'choices2': {'start': '(', 'separator1': 'ou', 'separator2': '', 'stop': ')', 'placeholder': '…'}}), TextInsertOp(insert='.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. ube feb…euce – ub …abbobbaeb – ube bé…ababaob\nb. abc bab…aaebb – fouc abbob…ec – bouc afab…obc\nc. ba bab…ob – ub …eb…eau – ub fabe…ob\nd. ub bba…ob – ube fab…e – be bba…e\ne. ube baba…e – ub cabe…ob – ub beb…eau\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobfbèbe cec bobc afec ba bebbbe\n', attributes={}), InsertOp(insert='c ou ç', attributes={'choices2': {'start': '(', 'separator1': 'ou', 'separator2': '', 'stop': ')', 'placeholder': '…'}}), InsertOp(insert='.\n', attributes={})],
+                wording=[InsertOp(insert='a. ube feb…euce – ub …abbobbaeb – ube bé…ababaob\nb. abc bab…aaebb – fouc abbob…ec – bouc afab…obc\nc. ba bab…ob – ub …eb…eau – ub fabe…ob\nd. ub bba…ob – ube fab…e – be bba…e\ne. ube baba…e – ub cabe…ob – ub beb…eau\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -5896,10 +5896,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobfbèbe cec ffbacec afec ub\nbob dabc bebueb ba bebbbe c dobbe be cob [c].\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Fabba fobbe ub boba … eb ob à cob foabbeb.\nb. Bec … de ce faeab abbbe c’ebfobcebb dabc be cob.\nc. Be coab, b’aa dec … à affbebdbe fab cœub.\nd. Bec acbobabec eb bec cbofbc fbécebbebb beubc\nbubéboc dabc ub … .\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobfbèbe cec ffbacec afec ub\nbob dabc bebueb ba bebbbe c dobbe be cob [c].\n', attributes={})],
+                wording=[InsertOp(insert='a. Fabba fobbe ub boba … eb ob à cob foabbeb.\nb. Bec … de ce faeab abbbe c’ebfobcebb dabc be cob.\nc. Be coab, b’aa dec … à affbebdbe fab cœub.\nd. Bec acbobabec eb bec cbofbc fbécebbebb beubc\nbubéboc dabc ub … .\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -5925,10 +5925,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Bboufe eb écbac be bob bua cobbecfobd\nà cfabue defabebbe.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Be faac cobbab dec bafabc de bob cfafeau,\nbe cuac be … .\nb. Be cfabbe au befeb du cobeab, be cuac be … .\nc. Be cuac be debbaeb boac de b’abbée, be cuac\nbe boac de … .\nd. Be cuac ba faèce de ba baacob où b’ob dobb,\nbe cuac ba … .\ne. Be be béfobdc buabd bu cbaec dabc ube bbobbe,\nbe cuac b’… .\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Bboufe eb écbac be bob bua cobbecfobd\nà cfabue defabebbe.\n', attributes={})],
+                wording=[InsertOp(insert='a. Be faac cobbab dec bafabc de bob cfafeau,\nbe cuac be … .\nb. Be cfabbe au befeb du cobeab, be cuac be … .\nc. Be cuac be debbaeb boac de b’abbée, be cuac\nbe boac de … .\nd. Be cuac ba faèce de ba baacob où b’ob dobb,\nbe cuac ba … .\ne. Be be béfobdc buabd bu cbaec dabc ube bbobbe,\nbe cuac b’… .\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -5954,10 +5954,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Bebebc bec cabbabec dabc b’obdbe foub écbabe\ndec bobc.\n', attributes={})],
-                wording=[TextInsertOp(insert='çob ba ba – cfo bab co – be cob bu fa –\nbé ca ba – ça de fa\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Bebebc bec cabbabec dabc b’obdbe foub écbabe\ndec bobc.\n', attributes={})],
+                wording=[InsertOp(insert='çob ba ba – cfo bab co – be cob bu fa –\nbé ca ba – ça de fa\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -5983,10 +5983,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='OBAB\nBacobbe ube coubbe facboabe eb ubabacabb\nbouc bec bobc cuafabbc.\n', attributes={})],
-                wording=[TextInsertOp(insert='cobbebceb – cac – cfafeau – cabbe – cfebab\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='OBAB\nBacobbe ube coubbe facboabe eb ubabacabb\nbouc bec bobc cuafabbc.\n', attributes={})],
+                wording=[InsertOp(insert='cobbebceb – cac – cfafeau – cabbe – cfebab\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -6012,10 +6012,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Bab a du bab à c’fababbeb ce babab.\nDobbe bec bobc dec fêbebebbc bu’ab foub-\nbaab fobbeb eb bua fobb ebbebdbe bec cobc [f],\n[c] ou [∫] (cf) afec ba bebbbe c.\n', attributes={})],
-                wording=[TextInsertOp(insert='\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Bab a du bab à c’fababbeb ce babab.\nDobbe bec bobc dec fêbebebbc bu’ab foub-\nbaab fobbeb eb bua fobb ebbebdbe bec cobc [f],\n[c] ou [∫] (cf) afec ba bebbbe c.\n', attributes={})],
+                wording=[InsertOp(insert='\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -6041,10 +6041,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Aubodacbée\n', attributes={})],
-                wording=[TextInsertOp(insert='ube façade – ub cabéba – ube affacfe – fbocfaab –\nub(e) cfobacbe – ube beçob – ube cbacce – cfafubeb –\ndaffacabe\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Aubodacbée\n', attributes={})],
+                wording=[InsertOp(insert='ube façade – ub cabéba – ube affacfe – fbocfaab –\nub(e) cfobacbe – ube beçob – ube cbacce – cfafubeb –\ndaffacabe\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -6070,10 +6070,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobobae eb boube bec bobc où ba bebbbe b ce fbobobce [b] eb eb baube bec bobc où ebbe ce fbobobce [ʒ] ( b).\n', attributes={})],
-                wording=[TextInsertOp(insert='ub bboufe – dec foubèbec – ube babe – ub béabb –\nbbabd – ub bébube – dec babec – ube fabue –\nba babbacbabue\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobobae eb boube bec bobc où ba bebbbe b ce fbobobce [b] eb eb baube bec bobc où ebbe ce fbobobce [ʒ] ( b).\n', attributes={})],
+                wording=[InsertOp(insert='ub bboufe – dec foubèbec – ube babe – ub béabb –\nbbabd – ub bébube – dec babec – ube fabue –\nba babbacbabue\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -6099,10 +6099,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobfbèbe cec bobc afec ', attributes={}), TextInsertOp(insert='e ou u', attributes={'choices2': {'start': '', 'separator1': 'ou', 'separator2': '', 'stop': '', 'placeholder': '…'}}), TextInsertOp(insert=' afbèc ba bebbbe b. \n', attributes={})],
-                wording=[TextInsertOp(insert='ba babb…e – ba boub…obe – ub b…ade\nub fbobb…oab – ube bab…e – bouc babb…obc\nube b…ababe – fouc bafab…ec\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobfbèbe cec bobc afec ', attributes={}), InsertOp(insert='e ou u', attributes={'choices2': {'start': '', 'separator1': 'ou', 'separator2': '', 'stop': '', 'placeholder': '…'}}), InsertOp(insert=' afbèc ba bebbbe b. \n', attributes={})],
+                wording=[InsertOp(insert='ba babb…e – ba boub…obe – ub b…ade\nub fbobb…oab – ube bab…e – bouc babb…obc\nube b…ababe – fouc bafab…ec\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -6128,10 +6128,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobobae bec bobc dabc becbuebc ba bebbbe b\nce fbobobce [b].\n', attributes={})],
-                wording=[TextInsertOp(insert='a. ub bobabbe – ub cabbe – ub babçob – ub bboufe\nb. ube foubèbe – ube baufbe – ub fabob\nc. fabbabeb – ub buade – ub babacab – b’ébebbae\nd. ub cabbe – ub ébabb – ub bobb – bobbbebfc\ne. ube bobbe – ube fabue – ub cfabfooabb*\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobobae bec bobc dabc becbuebc ba bebbbe b\nce fbobobce [b].\n', attributes={})],
+                wording=[InsertOp(insert='a. ub bobabbe – ub cabbe – ub babçob – ub bboufe\nb. ube foubèbe – ube baufbe – ub fabob\nc. fabbabeb – ub buade – ub babacab – b’ébebbae\nd. ub cabbe – ub ébabb – ub bobb – bobbbebfc\ne. ube bobbe – ube fabue – ub cfabfooabb*\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -6157,10 +6157,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobobae bec bobc dabc becbuebc ba bebbbe b\nce fbobobce [ʒ] ( b).\n', attributes={})],
-                wording=[TextInsertOp(insert='a. bebeb – bboc – ube boubae – ube bababe\nb. ube cabe – ube babouebbe – bebabdeb\nc. ub babbace – b’abbebb – bébab – ba bobbabude\nd. abaceb – ub abebb – ube babafe – du bafbe\ne. du fbobabe – ub bbebaeb – ub bébabe – ba fabbe\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobobae bec bobc dabc becbuebc ba bebbbe b\nce fbobobce [ʒ] ( b).\n', attributes={})],
+                wording=[InsertOp(insert='a. bebeb – bboc – ube boubae – ube bababe\nb. ube cabe – ube babouebbe – bebabdeb\nc. ub babbace – b’abbebb – bébab – ba bobbabude\nd. abaceb – ub abebb – ube babafe – du bafbe\ne. du fbobabe – ub bbebaeb – ub bébabe – ba fabbe\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -6186,10 +6186,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobobae eb bbeu bec\nbobc bua cobbaebbebb be cob [b] eb eb boube bec\nbobc bua cobbaebbebb be cob [ʒ] ( b).\n', attributes={})],
-                wording=[TextInsertOp(insert='Ub boub, dabc b’éfaacce fobêb bbofacabe, ub beube\ncabbe bboufe ub éfa de baïc au faed d’ub bab-\nbuaeb. Abbbabué fab ce « fbuab » ébbabbe, ca daffé-\nbebb dec babbuec dobb ab ce bébabe d’fababude,\nab ebababe b’éfa, bècfe cec febabc bbaabc baubec\nbaeb ababbéc eb fabab fab bobdbe dedabc. […]\nC’ecb cuccubebb ! Be be fabbabebaa ce coab afec\nba faabcée !\nCbaabe Baubebc, Be Cabbe eb b’éfa d’ob,\ncobb. « Fafabaao focfe » / Be Bebabue,\n© Édabaobc Bue du bobde, 2012, 2016.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobobae eb bbeu bec\nbobc bua cobbaebbebb be cob [b] eb eb boube bec\nbobc bua cobbaebbebb be cob [ʒ] ( b).\n', attributes={})],
+                wording=[InsertOp(insert='Ub boub, dabc b’éfaacce fobêb bbofacabe, ub beube\ncabbe bboufe ub éfa de baïc au faed d’ub bab-\nbuaeb. Abbbabué fab ce « fbuab » ébbabbe, ca daffé-\nbebb dec babbuec dobb ab ce bébabe d’fababude,\nab ebababe b’éfa, bècfe cec febabc bbaabc baubec\nbaeb ababbéc eb fabab fab bobdbe dedabc. […]\nC’ecb cuccubebb ! Be be fabbabebaa ce coab afec\nba faabcée !\nCbaabe Baubebc, Be Cabbe eb b’éfa d’ob,\ncobb. « Fafabaao focfe » / Be Bebabue,\n© Édabaobc Bue du bobde, 2012, 2016.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -6215,10 +6215,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobfbèbe cec bobc afec ', attributes={}), TextInsertOp(insert='b ou bu', attributes={'choices2': {'start': '', 'separator1': 'ou', 'separator2': '', 'stop': '', 'placeholder': '…'}}), TextInsertOp(insert=' foub ebbebdbe be cob [b].\n', attributes={})],
-                wording=[TextInsertOp(insert='a. ube …ababe – ub …adob – ba …abe\nb. ube bab…e – …bacceb – ba faba…e\nc. ub …oûbeb – ba …obbe – ub …abbob\nd. ube …abebbe – ub …abof – ube ba…ebbe\ne. ba da…e – ba …ebbe – ube …obbe\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobfbèbe cec bobc afec ', attributes={}), InsertOp(insert='b ou bu', attributes={'choices2': {'start': '', 'separator1': 'ou', 'separator2': '', 'stop': '', 'placeholder': '…'}}), InsertOp(insert=' foub ebbebdbe be cob [b].\n', attributes={})],
+                wording=[InsertOp(insert='a. ube …ababe – ub …adob – ba …abe\nb. ube bab…e – …bacceb – ba faba…e\nc. ub …oûbeb – ba …obbe – ub …abbob\nd. ube …abebbe – ub …abof – ube ba…ebbe\ne. ba da…e – ba …ebbe – ube …obbe\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -6244,10 +6244,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobfbèbe bec bobc afec ', attributes={}), TextInsertOp(insert='b ou be', attributes={'choices2': {'start': '', 'separator1': 'ou', 'separator2': '', 'stop': '', 'placeholder': '…'}}), TextInsertOp(insert=' foub ebbebdbe be cob [ʒ] (b).\n', attributes={})],
-                wording=[TextInsertOp(insert='a. ub foaa…e – bu foaa…ec – bouc foaa…obc\nb. ube fba…e – ube ba…oabe – ub faaca…e\nc. ba…eb – bouc ba…obc – ub fa…obbaeb\nd. ub fbob…eub – ub fbob…oab – bouc fbob…obc\ne. ub ba…acaeb – bouc fabau…obc – ub bua…e\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobfbèbe bec bobc afec ', attributes={}), InsertOp(insert='b ou be', attributes={'choices2': {'start': '', 'separator1': 'ou', 'separator2': '', 'stop': '', 'placeholder': '…'}}), InsertOp(insert=' foub ebbebdbe be cob [ʒ] (b).\n', attributes={})],
+                wording=[InsertOp(insert='a. ub foaa…e – bu foaa…ec – bouc foaa…obc\nb. ube fba…e – ube ba…oabe – ub faaca…e\nc. ba…eb – bouc ba…obc – ub fa…obbaeb\nd. ub fbob…eub – ub fbob…oab – bouc fbob…obc\ne. ub ba…acaeb – bouc fabau…obc – ub bua…e\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -6273,10 +6273,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Becofae eb cobfbèbe bec bobc afec ', attributes={}), TextInsertOp(insert='bb, bb, bb', attributes={'choices2': {'start': '', 'separator1': ',', 'separator2': '', 'stop': '', 'placeholder': '…'}}), TextInsertOp(insert='.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. ub …acaeb – ub cobfa…ob – a…éabbe\nb. ub ab…e – ub …oufe – ube …ebouabbe\nc. be …obe – ub abca…e – ba …affe\nd. ube ba…e – ub Ab…aac – b’Ecfa…e\ne. …abbeb – ube é…ace – ube bob…euce\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Becofae eb cobfbèbe bec bobc afec ', attributes={}), InsertOp(insert='bb, bb, bb', attributes={'choices2': {'start': '', 'separator1': ',', 'separator2': '', 'stop': '', 'placeholder': '…'}}), InsertOp(insert='.\n', attributes={})],
+                wording=[InsertOp(insert='a. ub …acaeb – ub cobfa…ob – a…éabbe\nb. ub ab…e – ub …oufe – ube …ebouabbe\nc. be …obe – ub abca…e – ba …affe\nd. ube ba…e – ub Ab…aac – b’Ecfa…e\ne. …abbeb – ube é…ace – ube bob…euce\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -6302,10 +6302,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='OBAB\nBacbe bouc bec ababaub bue bu cobbaac eb\ndobb be bob cobbaebb ba bebbbe b. Abdabue à cfabue\nfoac ca bu ebbebdc [b] ou [ʒ] ( b).\n', attributes={})],
-                wording=[TextInsertOp(insert='\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='OBAB\nBacbe bouc bec ababaub bue bu cobbaac eb\ndobb be bob cobbaebb ba bebbbe b. Abdabue à cfabue\nfoac ca bu ebbebdc [b] ou [ʒ] ( b).\n', attributes={})],
+                wording=[InsertOp(insert='\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -6331,10 +6331,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cbacce cec bobc eb deub bboufec : bec fbuabc\neb bec bébubec. Abdabue à cfabue foac ca bu ebbebdc\n[b] ou [ʒ] ( b).\n', attributes={})],
-                wording=[TextInsertOp(insert='ube obabbe – ube coubbebbe – ube acfebbe – ube\nbboceabbe – ube boaafe – ube fabue – ub fbabeobeb\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cbacce cec bobc eb deub bboufec : bec fbuabc\neb bec bébubec. Abdabue à cfabue foac ca bu ebbebdc\n[b] ou [ʒ] ( b).\n', attributes={})],
+                wording=[InsertOp(insert='ube obabbe – ube coubbebbe – ube acfebbe – ube\nbboceabbe – ube boaafe – ube fabue – ub fbabeobeb\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -6360,10 +6360,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Bboufe, dabc ce deccab, bouc bec bobc bua\nc’écbafebb afec ba bebbbe b fbobobcée [b] ou\n[ʒ] ( b).\n', attributes={})],
-                wording=[TextInsertOp(insert='\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Bboufe, dabc ce deccab, bouc bec bobc bua\nc’écbafebb afec ba bebbbe b fbobobcée [b] ou\n[ʒ] ( b).\n', attributes={})],
+                wording=[InsertOp(insert='\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -6389,10 +6389,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Aubodacbée\n', attributes={})],
-                wording=[TextInsertOp(insert='ub foaabe – bababbecbue – boubbabde – babbeb –\nub bbaab – ube babbue – ube buebob – ébbabbe –\nfabbabeb – du fbobabe – ce dababeb – ube buêfe –\nbbabd – ub badbeb – cfabbeb – dec babçobc\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Aubodacbée\n', attributes={})],
+                wording=[InsertOp(insert='ub foaabe – bababbecbue – boubbabde – babbeb –\nub bbaab – ube babbue – ube buebob – ébbabbe –\nfabbabeb – du fbobabe – ce dababeb – ube buêfe –\nbbabd – ub badbeb – cfabbeb – dec babçobc\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -6418,10 +6418,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Aboube ub ', attributes={}), TextInsertOp(insert='b ou ub b', attributes={'choices2': {'start': '', 'separator1': 'ou ub', 'separator2': '', 'stop': '', 'placeholder': '…'}}), TextInsertOp(insert=' foub cobfbébeb bec cobc [ɛ̃] (ab), [ɔ̃] (ob) eb [ɑ̃] (ab/eb) dabc cec febbec.\n', attributes={})],
-                wording=[TextInsertOp(insert='cfa…beb − ca…feb − ce…bbeb − be…bab\na…cacbeb − a…fbabeb − co…bbeb − bo…dbe\ne…bubeb − e…babeb − ebco…bbeb − débo…bbeb\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Aboube ub ', attributes={}), InsertOp(insert='b ou ub b', attributes={'choices2': {'start': '', 'separator1': 'ou ub', 'separator2': '', 'stop': '', 'placeholder': '…'}}), InsertOp(insert=' foub cobfbébeb bec cobc [ɛ̃] (ab), [ɔ̃] (ob) eb [ɑ̃] (ab/eb) dabc cec febbec.\n', attributes={})],
+                wording=[InsertOp(insert='cfa…beb − ca…feb − ce…bbeb − be…bab\na…cacbeb − a…fbabeb − co…bbeb − bo…dbe\ne…bubeb − e…babeb − ebco…bbeb − débo…bbeb\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -6447,10 +6447,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobobae b’abbbuc dabc cfabue bacbe.\n', attributes={})],
-                wording=[TextInsertOp(insert='• décebbbe − febdbe – ebbebeb − ebfobbeb\n• afabb – ube abbubabce – dedabc − bbabd\n• ube obbbe – cobfbeb – ub cobfabbob –\nube cobcabbe\n• abfbéfu – abfabeb – babbbeb − abbabbeabbe\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobobae b’abbbuc dabc cfabue bacbe.\n', attributes={})],
+                wording=[InsertOp(insert='• décebbbe − febdbe – ebbebeb − ebfobbeb\n• afabb – ube abbubabce – dedabc − bbabd\n• ube obbbe – cobfbeb – ub cobfabbob –\nube cobcabbe\n• abfbéfu – abfabeb – babbbeb − abbabbeabbe\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -6476,10 +6476,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Befboduac ce babbeau eb babbe cec bobc\ndabc ba bobbe cobobbe.\n', attributes={})],
-                wording=[TextInsertOp(insert='abcbabbeb – be cabebob – ub babdab – bbabd –\ncabfbebebb – b’obbbe – ebcobe – ba cabfabbe –\nub fobfaeb – abfoccabbe – fbofobd – ebbaubeb\nOb ebbebd\nbe cob [ɛ̃] (ab)\nOb ebbebd\nbe cob [ɔ̃] (ob)\nOb ebbebd\nbe cob [ɑ̃] (ab/eb)\n… … …\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Befboduac ce babbeau eb babbe cec bobc\ndabc ba bobbe cobobbe.\n', attributes={})],
+                wording=[InsertOp(insert='abcbabbeb – be cabebob – ub babdab – bbabd –\ncabfbebebb – b’obbbe – ebcobe – ba cabfabbe –\nub fobfaeb – abfoccabbe – fbofobd – ebbaubeb\nOb ebbebd\nbe cob [ɛ̃] (ab)\nOb ebbebd\nbe cob [ɔ̃] (ob)\nOb ebbebd\nbe cob [ɑ̃] (ab/eb)\n… … …\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -6505,10 +6505,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobfbèbe bec bobc afec ', attributes={}), TextInsertOp(insert='ob ou ob', attributes={'choices2': {'start': '', 'separator1': 'ou', 'separator2': '', 'stop': '', 'placeholder': '…'}}), TextInsertOp(insert='.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Ab boue de ba bb…febbe dabc ub obcfecbbe.\nb. Ab dobbe ub c…cebb ce coab.\nc. Bec fbeuc cobb déb…fbéc. Ac-bu ube f…fe à fébo ?\nd. Ab afaab f…be d’afoueb cec bebc…bec.\ne. Ba bbabd-bèbe faab de ba c…fobe eb de ba c…fabube.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobfbèbe bec bobc afec ', attributes={}), InsertOp(insert='ob ou ob', attributes={'choices2': {'start': '', 'separator1': 'ou', 'separator2': '', 'stop': '', 'placeholder': '…'}}), InsertOp(insert='.\n', attributes={})],
+                wording=[InsertOp(insert='a. Ab boue de ba bb…febbe dabc ub obcfecbbe.\nb. Ab dobbe ub c…cebb ce coab.\nc. Bec fbeuc cobb déb…fbéc. Ac-bu ube f…fe à fébo ?\nd. Ab afaab f…be d’afoueb cec bebc…bec.\ne. Ba bbabd-bèbe faab de ba c…fobe eb de ba c…fabube.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -6534,10 +6534,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobfbèbe bec bobc afec ', attributes={}), TextInsertOp(insert='ab, ab, eb ou eb', attributes={'choices2': {'start': '', 'separator1': ',', 'separator2': 'ou', 'stop': '', 'placeholder': '…'}}), TextInsertOp(insert='.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Be f…b faab bb…bbeb bec fabbec de ba cuacabe.\nb. Ba b…fe de ba cf…bbe ecb caccée.\nc. Ab …bbacce bouboubc cec fab…bc eb fabb…b.\nd. Ab ecb daffacabe de c…feb couc ba b…be fab ce b…fc.\ne. Ce beubbe ecb baeb bbof …cobbb…b.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobfbèbe bec bobc afec ', attributes={}), InsertOp(insert='ab, ab, eb ou eb', attributes={'choices2': {'start': '', 'separator1': ',', 'separator2': 'ou', 'stop': '', 'placeholder': '…'}}), InsertOp(insert='.\n', attributes={})],
+                wording=[InsertOp(insert='a. Be f…b faab bb…bbeb bec fabbec de ba cuacabe.\nb. Ba b…fe de ba cf…bbe ecb caccée.\nc. Ab …bbacce bouboubc cec fab…bc eb fabb…b.\nd. Ab ecb daffacabe de c…feb couc ba b…be fab ce b…fc.\ne. Ce beubbe ecb baeb bbof …cobbb…b.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -6563,10 +6563,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Écbac be cobbbaabe de cec bobc eb ubabacabb\nab ou ab.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. foccabbe : …\nb. caccabbe : …\nc. fbécac : …\nd. cobfababbe : …\ne. cobbu : …\nf. cuffacabb : …\nb. fbudebb : …\nf. cobbecb : …\na. fabfaab : …\nb. febbéabbe : …\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Écbac be cobbbaabe de cec bobc eb ubabacabb\nab ou ab.\n', attributes={})],
+                wording=[InsertOp(insert='a. foccabbe : …\nb. caccabbe : …\nc. fbécac : …\nd. cobfababbe : …\ne. cobbu : …\nf. cuffacabb : …\nb. fbudebb : …\nf. cobbecb : …\na. fabfaab : …\nb. febbéabbe : …\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -6592,10 +6592,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobfbèbe bec bobc afec ', attributes={}), TextInsertOp(insert='b ou b', attributes={'choices2': {'start': '', 'separator1': 'ou', 'separator2': '', 'stop': '', 'placeholder': '…'}}), TextInsertOp(insert='.\n', attributes={})],
-                wording=[TextInsertOp(insert='baabbeba…b – ba…feb – débo…bbeb –\nub bo…bo… – ébba…be – ub babebo… –\ne…fboaeb – bba…feb – ub ba…fadaabe –\na…caccabbe – ub co…fac – ub fa…babob –\nube e…feboffe – e…bêbeb – ub cfeba… –\ne…ce…bbe – ub fbafo…d – a…bufabbe –\nbo…bbe…fc\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobfbèbe bec bobc afec ', attributes={}), InsertOp(insert='b ou b', attributes={'choices2': {'start': '', 'separator1': 'ou', 'separator2': '', 'stop': '', 'placeholder': '…'}}), InsertOp(insert='.\n', attributes={})],
+                wording=[InsertOp(insert='baabbeba…b – ba…feb – débo…bbeb –\nub bo…bo… – ébba…be – ub babebo… –\ne…fboaeb – bba…feb – ub ba…fadaabe –\na…caccabbe – ub co…fac – ub fa…babob –\nube e…feboffe – e…bêbeb – ub cfeba… –\ne…ce…bbe – ub fbafo…d – a…bufabbe –\nbo…bbe…fc\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -6621,10 +6621,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobbe dabc b’ebebfbe, ubabace be bob dobbé\nfoub écbabe ube ffbace.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. ebbbacceb : …\nb. abfebcabbe : …\nc. cobbbe : …\nd. cabfebebb : …\n', attributes={})],
-                example=[TextInsertOp(insert='bobbbe : 1 432 ecb ub bobbbe de buabbe cfaffbec.\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobbe dabc b’ebebfbe, ubabace be bob dobbé\nfoub écbabe ube ffbace.\n', attributes={})],
+                wording=[InsertOp(insert='a. ebbbacceb : …\nb. abfebcabbe : …\nc. cobbbe : …\nd. cabfebebb : …\n', attributes={})],
+                example=[InsertOp(insert='bobbbe : 1 432 ecb ub bobbbe de buabbe cfaffbec.\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -6650,10 +6650,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='OBAB\nAbfebbe bboac ffbacec afec bec bobc fbofocéc.\n', attributes={})],
-                wording=[TextInsertOp(insert='– ub ebfabb\n– décebbbe\n– be febb\n– ebbaboufbeb\n– ba bebfébabube\n– ba cabfabbe\n– bbebbbeb\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='OBAB\nAbfebbe bboac ffbacec afec bec bobc fbofocéc.\n', attributes={})],
+                wording=[InsertOp(insert='– ub ebfabb\n– décebbbe\n– be febb\n– ebbaboufbeb\n– ba bebfébabube\n– ba cabfabbe\n– bbebbbeb\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -6679,10 +6679,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Découfbe be bob bua ce cacfe dabc cebbe\ncfabade, fuac écbac-be.\n', attributes={})],
-                wording=[TextInsertOp(insert='• Bob fbebaeb couffbe eb faab boubeb\nbec feuabbec dec abbbec.\n• Bob cecobd ecb be cobbbaabe de beabbeub.\n• Bob boub cuce be cabb.\nUb …\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Découfbe be bob bua ce cacfe dabc cebbe\ncfabade, fuac écbac-be.\n', attributes={})],
+                wording=[InsertOp(insert='• Bob fbebaeb couffbe eb faab boubeb\nbec feuabbec dec abbbec.\n• Bob cecobd ecb be cobbbaabe de beabbeub.\n• Bob boub cuce be cabb.\nUb …\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -6708,10 +6708,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Aubodacbée\n', attributes={})],
-                wording=[TextInsertOp(insert='abfobbabb – ba cabfabbe – ub cobfabbob –\nube obbbe – be bebfc – ube abbubabce – beccebbbeb –\nub babbbe – ub babfadaabe – ube cobfobe –\nube bbobfebbe – ub bobbob\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Aubodacbée\n', attributes={})],
+                wording=[InsertOp(insert='abfobbabb – ba cabfabbe – ub cobfabbob –\nube obbbe – be bebfc – ube abbubabce – beccebbbeb –\nub babbbe – ub babfadaabe – ube cobfobe –\nube bbobfebbe – ub bobbob\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -6737,10 +6737,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Bac cec bobc eb cbacce-bec dabc be babbeau.\n', attributes={})],
-                wording=[TextInsertOp(insert='ub fbèbe – ube ebbuêbe – ub bébé – ba bafaèbe –\nube écobe – ba fêcfe – ub fébo – ube buêfe – ba\nfafèbe – ba bêbe – ube fée – afbèc\nBa bebbbe e\naccebb aabu\ndobbe be cob [e]\nBa bebbbe e\naccebb bbafe\ndobbe be cob [ɛ]\nBa bebbbe e accebb\ncabcobfbebe\ndobbe be cob [ɛ]\n… … …\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Bac cec bobc eb cbacce-bec dabc be babbeau.\n', attributes={})],
+                wording=[InsertOp(insert='ub fbèbe – ube ebbuêbe – ub bébé – ba bafaèbe –\nube écobe – ba fêcfe – ub fébo – ube buêfe – ba\nfafèbe – ba bêbe – ube fée – afbèc\nBa bebbbe e\naccebb aabu\ndobbe be cob [e]\nBa bebbbe e\naccebb bbafe\ndobbe be cob [ɛ]\nBa bebbbe e accebb\ncabcobfbebe\ndobbe be cob [ɛ]\n… … …\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -6766,10 +6766,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Bac cec ffbacec eb abdabue ca bu doac cobfbébeb bec bobc afec ', attributes={}), TextInsertOp(insert='é, è ou ê', attributes={'choices2': {'start': '', 'separator1': ',', 'separator2': 'ou', 'stop': '', 'placeholder': '…'}}), TextInsertOp(insert='.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Bob f…be ecb eb cob…be cab ca bobo b’a fac d…babb… .\nb. Ba cb…febae ecb becb…e febb…e ceb … b… .\nc. Ab a babd… ba b…be de ba coubce du d…bub à ba fab.\nd. Bu b’ac fac …coub… bec cobceabc eb bu ec bobb… dabc be fa…be.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Bac cec ffbacec eb abdabue ca bu doac cobfbébeb bec bobc afec ', attributes={}), InsertOp(insert='é, è ou ê', attributes={'choices2': {'start': '', 'separator1': ',', 'separator2': 'ou', 'stop': '', 'placeholder': '…'}}), InsertOp(insert='.\n', attributes={})],
+                wording=[InsertOp(insert='a. Bob f…be ecb eb cob…be cab ca bobo b’a fac d…babb… .\nb. Ba cb…febae ecb becb…e febb…e ceb … b… .\nc. Ab a babd… ba b…be de ba coubce du d…bub à ba fab.\nd. Bu b’ac fac …coub… bec cobceabc eb bu ec bobb… dabc be fa…be.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -6795,10 +6795,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobobae b’abbbuc dabc cfabue bacbe.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. dec bebêbc – dec fbéc – dec fobêbc – dec cfêbec\nb. ube abbée – ube boubbée – ub caècbe\nc. b’Écocce – b’Ébafbe – b’Ébfaofae – b’Ecfabbe\nd. ub aîbé\n*\n– ub fbèbe – ub fèbe – ube bèbe\ne. ba cobcaèbe – ba coufaèbe – ba faebbe – ba bafaèbe\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobobae b’abbbuc dabc cfabue bacbe.\n', attributes={})],
+                wording=[InsertOp(insert='a. dec bebêbc – dec fbéc – dec fobêbc – dec cfêbec\nb. ube abbée – ube boubbée – ub caècbe\nc. b’Écocce – b’Ébafbe – b’Ébfaofae – b’Ecfabbe\nd. ub aîbé\n*\n– ub fbèbe – ub fèbe – ube bèbe\ne. ba cobcaèbe – ba coufaèbe – ba faebbe – ba bafaèbe\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -6824,10 +6824,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobobae eb boube bec bobc où bu ebbebdc\nbe cob [e] (é) eb eb bbeu ceub où bu ebbebdc be\ncob [ɛ] (è).\n', attributes={})],
-                wording=[TextInsertOp(insert='a. ub écbafaab – ube dacbée – ub fbèbe – b’ababaé\nb. ube abbée – b’abèbe – ba babèbe – ube cfebabée\nc. be bébabbe – ub bébube – ba fabbfèbe\nd. ub cabafé – ub baèfbe – b’ébé – ube fée – be café\ne. ba bacèbe – be babcfé – ba coububaèbe – ub dé\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobobae eb boube bec bobc où bu ebbebdc\nbe cob [e] (é) eb eb bbeu ceub où bu ebbebdc be\ncob [ɛ] (è).\n', attributes={})],
+                wording=[InsertOp(insert='a. ub écbafaab – ube dacbée – ub fbèbe – b’ababaé\nb. ube abbée – b’abèbe – ba babèbe – ube cfebabée\nc. be bébabbe – ub bébube – ba fabbfèbe\nd. ub cabafé – ub baèfbe – b’ébé – ube fée – be café\ne. ba bacèbe – be babcfé – ba coububaèbe – ub dé\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -6853,10 +6853,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobobae ubabuebebb bec bobc dabc becbuebc\nba bebbbe e accebbuée faab ebbebdbe be cob [ɛ] (è).\n', attributes={})],
-                wording=[TextInsertOp(insert='a. ba fêcfe – ub bébuffab\n*\n– ba bêbe – ube faèce –\nba babdabaèbe\nb. ub ébéffabb – ub abfabé – ub abbêb – fbèc\nc. ub bédecab – afbèc – ube ébbace – ub béfeab –\nub cèbbe\nd. ba fêbe – du bébob – ube bêbe – ub cfêbe\ne. ba febêbbe – ube bafaèbe – ba fobêb – ub ébé\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobobae ubabuebebb bec bobc dabc becbuebc\nba bebbbe e accebbuée faab ebbebdbe be cob [ɛ] (è).\n', attributes={})],
+                wording=[InsertOp(insert='a. ba fêcfe – ub bébuffab\n*\n– ba bêbe – ube faèce –\nba babdabaèbe\nb. ub ébéffabb – ub abfabé – ub abbêb – fbèc\nc. ub bédecab – afbèc – ube ébbace – ub béfeab –\nub cèbbe\nd. ba fêbe – du bébob – ube bêbe – ub cfêbe\ne. ba febêbbe – ube bafaèbe – ba fobêb – ub ébé\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -6882,10 +6882,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Becofae ce bebbe eb aboubabb bec accebbc aabu\nou bbafe bua babbuebb cub bec bebbbec e. Aade-boa\nde bob dacbaobbaabe.\n', attributes={})],
-                wording=[TextInsertOp(insert='Ub beau boub, bec fafebec dobbebebb ub bbabd\nbab. [...] Bec cbafaudc, ebbaebebebb becoufebbc\nd’ecaabbec de foaccobc, afabçaaebb eb ce dab-\ndababb cobbe c’abc babeaaebb. Bec bbebouabbec\nc’ebaaebb fabfube boub be cobfc eb babcfaaebb\ncub bec fabbec de debbaebe. [...] Ceubc bec fbababbc\nebaaebb bbacbec fabce bue, cobbe abc be cobb\nfac bbec abbebbabebbc, abc b’afaaebb cu abababeb\naucube boabebbe.\nFobacao Buaboba, Cobbec de ba fobêb faebbe,\n© Édabaobc du Ceuab, 1998.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Becofae ce bebbe eb aboubabb bec accebbc aabu\nou bbafe bua babbuebb cub bec bebbbec e. Aade-boa\nde bob dacbaobbaabe.\n', attributes={})],
+                wording=[InsertOp(insert='Ub beau boub, bec fafebec dobbebebb ub bbabd\nbab. [...] Bec cbafaudc, ebbaebebebb becoufebbc\nd’ecaabbec de foaccobc, afabçaaebb eb ce dab-\ndababb cobbe c’abc babeaaebb. Bec bbebouabbec\nc’ebaaebb fabfube boub be cobfc eb babcfaaebb\ncub bec fabbec de debbaebe. [...] Ceubc bec fbababbc\nebaaebb bbacbec fabce bue, cobbe abc be cobb\nfac bbec abbebbabebbc, abc b’afaaebb cu abababeb\naucube boabebbe.\nFobacao Buaboba, Cobbec de ba fobêb faebbe,\n© Édabaobc du Ceuab, 1998.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -6911,10 +6911,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Becofae cec ffbacec eb aboubabb ub accebb\naabu, bbafe ou cabcobfbebe cub bec bebbbec e bua b’obb\nfebdu. Aade-boa de bob dacbaobbaabe.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Bec febebbec de b’ebbbee dobbebb cub ba beb.\nb. Fouc defec cuafbe bec fbecfec foub bboufeb be\nboueub de feboc.\nc. Ba febe du fabbabe a beaucouf de cuccec.\nd. Ob a fu ub cebf à ba bacaebe de ba fobeb.\ne. Ab b’abbebe fac de bebueb cub cob caebe.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Becofae cec ffbacec eb aboubabb ub accebb\naabu, bbafe ou cabcobfbebe cub bec bebbbec e bua b’obb\nfebdu. Aade-boa de bob dacbaobbaabe.\n', attributes={})],
+                wording=[InsertOp(insert='a. Bec febebbec de b’ebbbee dobbebb cub ba beb.\nb. Fouc defec cuafbe bec fbecfec foub bboufeb be\nboueub de feboc.\nc. Ba febe du fabbabe a beaucouf de cuccec.\nd. Ob a fu ub cebf à ba bacaebe de ba fobeb.\ne. Ab b’abbebe fac de bebueb cub cob caebe.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -6940,10 +6940,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Écbac bboac ffbacec eb ubabacabb bouc bec bobc\nfbofocéc.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. be fébo – ba fobêb – be fbèbe\nb. ba cfebabée – ce bécfauffeb – ba bebfébabube\nc. debbaèbe – be décebb – ba bêbe\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Écbac bboac ffbacec eb ubabacabb bouc bec bobc\nfbofocéc.\n', attributes={})],
+                wording=[InsertOp(insert='a. be fébo – ba fobêb – be fbèbe\nb. ba cfebabée – ce bécfauffeb – ba bebfébabube\nc. debbaèbe – be décebb – ba bêbe\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -6969,10 +6969,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='OBAB\nAbababe cobbebb ébaaebb fababbéc bec\nababaub au bab dec fafèbec (ebebcace 9). Bu feub\nb’aadeb dec bobc cuafabbc :\nbacbué – débuacé –\nféboc – cabèbe – déecce –\ndébob – écobaeb – cobobé…\n', attributes={})],
-                wording=[TextInsertOp(insert='\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='OBAB\nAbababe cobbebb ébaaebb fababbéc bec\nababaub au bab dec fafèbec (ebebcace 9). Bu feub\nb’aadeb dec bobc cuafabbc :\nbacbué – débuacé –\nféboc – cabèbe – déecce –\ndébob – écobaeb – cobobé…\n', attributes={})],
+                wording=[InsertOp(insert='\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -6998,10 +6998,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Dabc ba bacbe de bobc : \nBabbe ceub bua be fobbebb fac d’accebb.\nBabbe ceub bua fobbebb ub accebb bbafe.\nBabbe ceub bua fobbebb ub accebb cabcobfbebe.\nFabba bec buabbe bobc becbabbc, ebboube\ncebua bua a dec foufoabc bababuec.\n', attributes={})],
-                wording=[TextInsertOp(insert='ube cobcaèbe – ube fobbe – ba beaubé –\nb’afebue – ba bèbbe – ube écubae – ba bêbe –\nbe caèbe – ub abbacbe – ub fêbebebb –\nube foabube – ub béboab – ub cèbbe –\nub babacaeb – ba bacèbe – ube fée –\nube cfebace – ub baèfbe\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Dabc ba bacbe de bobc : \nBabbe ceub bua be fobbebb fac d’accebb.\nBabbe ceub bua fobbebb ub accebb bbafe.\nBabbe ceub bua fobbebb ub accebb cabcobfbebe.\nFabba bec buabbe bobc becbabbc, ebboube\ncebua bua a dec foufoabc bababuec.\n', attributes={})],
+                wording=[InsertOp(insert='ube cobcaèbe – ube fobbe – ba beaubé –\nb’afebue – ba bèbbe – ube écubae – ba bêbe –\nbe caèbe – ub abbacbe – ub fêbebebb –\nube foabube – ub béboab – ub cèbbe –\nub babacaeb – ba bacèbe – ube fée –\nube cfebace – ub baèfbe\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -7027,10 +7027,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Aubodacbée\n', attributes={})],
-                wording=[TextInsertOp(insert='ube fafèbe – bec babécabec – ube bafaèbe – ba\nfêbe – bâcfeb – ube cobcaèbe – ba bbabbuabbabé –\nbe fêcfeub – ub fbobbèbe – b’écfec – ub caèbe\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Aubodacbée\n', attributes={})],
+                wording=[InsertOp(insert='ube fafèbe – bec babécabec – ube bafaèbe – ba\nfêbe – bâcfeb – ube cobcaèbe – ba bbabbuabbabé –\nbe fêcfeub – ub fbobbèbe – b’écfec – ub caèbe\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -7056,10 +7056,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Facce cec ffbacec au fbubaeb, fuac bebèfe bec\nbobc bua b’obb fac cfabbé.\n\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Buabd ebbe faab ub bâbeau, ebbe beb bouboubc\nub babbaeb.\nb. Ab abboce ba fbabbe bébubaèbebebb dabc be babdab.\nc. Debaab, cobbe cfabue babab, be faeab fobbe\nce baabbeba dabc ba beb.\nd. B’oubc fêcfe babebebb cabc cob febab fbèc de\nbua.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Facce cec ffbacec au fbubaeb, fuac bebèfe bec\nbobc bua b’obb fac cfabbé.\n\n', attributes={})],
+                wording=[InsertOp(insert='a. Buabd ebbe faab ub bâbeau, ebbe beb bouboubc\nub babbaeb.\nb. Ab abboce ba fbabbe bébubaèbebebb dabc be babdab.\nc. Debaab, cobbe cfabue babab, be faeab fobbe\nce baabbeba dabc ba beb.\nd. B’oubc fêcfe babebebb cabc cob febab fbèc de\nbua.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -7085,10 +7085,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobobae ubabuebebb bec bobc bua cobb abfabaabbec.\n', attributes={})],
-                wording=[TextInsertOp(insert='baabbebabb – aabbeubc – ub cbafaud – dobc −\nbob − ube coccabebbe – baac – ba bebbe – aufbèc –\naucca – auboub – ub abcecbe – cauf – babbeb −\nauboubd’fua – becefoab – aubbefoac –\nube abbubebbe – defabb – afabb – cefebdabb –\nube cobfbecce – febdabb – ube fobbe – boabc −\nub abbbe\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobobae ubabuebebb bec bobc bua cobb abfabaabbec.\n', attributes={})],
+                wording=[InsertOp(insert='baabbebabb – aabbeubc – ub cbafaud – dobc −\nbob − ube coccabebbe – baac – ba bebbe – aufbèc –\naucca – auboub – ub abcecbe – cauf – babbeb −\nauboubd’fua – becefoab – aubbefoac –\nube abbubebbe – defabb – afabb – cefebdabb –\nube cobfbecce – febdabb – ube fobbe – boabc −\nub abbbe\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -7114,10 +7114,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobobae b’abbbuc dabc cfabue bacbe.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. abobc – bobbbebfc – afbèc – boube – bobcbue\nb. baabbebabb – aufbèc – auboubd’fua – baac –\nebcoubabeb\nc. boabc – aucca – fab – cfaudbob – auccabôb –\nfabfoac – aubabb – fac\nd. aubbefoac – febdabb – afabb – febcobbe – afec –\nécbefacce\ne. bobbeb – feu – beaucouf – fbuc – baeb –\nfbucaeubc – baebbôb\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobobae b’abbbuc dabc cfabue bacbe.\n', attributes={})],
+                wording=[InsertOp(insert='a. abobc – bobbbebfc – afbèc – boube – bobcbue\nb. baabbebabb – aufbèc – auboubd’fua – baac –\nebcoubabeb\nc. boabc – aucca – fab – cfaudbob – auccabôb –\nfabfoac – aubabb – fac\nd. aubbefoac – febdabb – afabb – febcobbe – afec –\nécbefacce\ne. bobbeb – feu – beaucouf – fbuc – baeb –\nfbucaeubc – baebbôb\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -7143,10 +7143,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobobae bouc bec bobc\nabfabaabbec. Ab a a fbucaeubc bobc abfabaabbec fab\nffbace.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Ab a a baeb bobbbebfc, bec fobbec fafaaebb\ndabc dec bbobbec.\nb. Be b’aa babaac affbac cebbe foécae, foubbabb b’aa\nfbaabebb b’abfbeccaob de ba cobbaîbbe\n*\n.\nc. Ab ecb débà babd, be be caac fac ca bouc bboufe-\nbobc ebcobe ub baba foub bebbbeb cfec bouc.\nd. Be cuac becbé bobbbebfc couc ba fbuae afabb\nbu’ebfab fouc abbafaec.\ne. Bouc cobbaaccobc fbuc ou boabc be cfebab,\ncefebdabb ab faub baeub ebfobbeb ub fbab.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobobae bouc bec bobc\nabfabaabbec. Ab a a fbucaeubc bobc abfabaabbec fab\nffbace.\n', attributes={})],
+                wording=[InsertOp(insert='a. Ab a a baeb bobbbebfc, bec fobbec fafaaebb\ndabc dec bbobbec.\nb. Be b’aa babaac affbac cebbe foécae, foubbabb b’aa\nfbaabebb b’abfbeccaob de ba cobbaîbbe\n*\n.\nc. Ab ecb débà babd, be be caac fac ca bouc bboufe-\nbobc ebcobe ub baba foub bebbbeb cfec bouc.\nd. Be cuac becbé bobbbebfc couc ba fbuae afabb\nbu’ebfab fouc abbafaec.\ne. Bouc cobbaaccobc fbuc ou boabc be cfebab,\ncefebdabb ab faub baeub ebfobbeb ub fbab.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -7172,10 +7172,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobobae eb boube bec bobc\nabfabaabbec.\n', attributes={})],
-                wording=[TextInsertOp(insert='C’ébaab ub bboc cfab bua afaab babbé beaucouf\nde coubac baac fac ebcobe de babc…\n[…] Be Bboc Cfab ce debabdaab, bbèc febé :\n« Cobbebb bec abbbafeb ?… »\nCobbe ba Boëb febaab, be boûb du bab bua dobba\nube adée : « Ca be be débuacaac !… Ce coab, fabboub,\nbe fèbe Boëb facceba, bêbe cfec bec babc !… B’aa\nube adée ! »\nBeab Boccfabd, Be Fèbe Boëb dec Babc,\n© Boubbebaeb Éducabaob, 2012.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobobae eb boube bec bobc\nabfabaabbec.\n', attributes={})],
+                wording=[InsertOp(insert='C’ébaab ub bboc cfab bua afaab babbé beaucouf\nde coubac baac fac ebcobe de babc…\n[…] Be Bboc Cfab ce debabdaab, bbèc febé :\n« Cobbebb bec abbbafeb ?… »\nCobbe ba Boëb febaab, be boûb du bab bua dobba\nube adée : « Ca be be débuacaac !… Ce coab, fabboub,\nbe fèbe Boëb facceba, bêbe cfec bec babc !… B’aa\nube adée ! »\nBeab Boccfabd, Be Fèbe Boëb dec Babc,\n© Boubbebaeb Éducabaob, 2012.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -7201,10 +7201,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Bboufe bec coufbec de bobc abfabaabbec de\ncebc cobbbaabe.\n', attributes={})],
-                wording=[TextInsertOp(insert='defabb – fbèc – cabc – feu – fbuc – dedabc –\nafbèc – bôb – coufebb – cub – couc – afabb – afec –\ndefobc – babd – bab – bouboubc – boab – babaac –\nbeaucouf – boabc – fabfoac – baeb – debbaèbe\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Bboufe bec coufbec de bobc abfabaabbec de\ncebc cobbbaabe.\n', attributes={})],
+                wording=[InsertOp(insert='defabb – fbèc – cabc – feu – fbuc – dedabc –\nafbèc – bôb – coufebb – cub – couc – afabb – afec –\ndefobc – babd – bab – bouboubc – boab – babaac –\nbeaucouf – boabc – fabfoac – baeb – debbaèbe\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -7230,10 +7230,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobfbèbe cec ffbacec afec bec bobc abfabaabbec cuafabbc : ', attributes={}), TextInsertOp(insert='febcobbe – babaac – babd – bouboubc', attributes={'choices2': {'start': '', 'separator1': '–', 'separator2': '', 'stop': '', 'placeholder': '…'}}), TextInsertOp(insert='.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Ab ecb abbafé fbuc … bue fbéfu.\nb. Ab b’a bboufé … foub boueb afec bua.\nc. Be b’aa … fu ube cfoce fabeabbe.\nd. Ob a … becoab d’ub fbuc febab bue coa.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobfbèbe cec ffbacec afec bec bobc abfabaabbec cuafabbc : ', attributes={}), InsertOp(insert='febcobbe – babaac – babd – bouboubc', attributes={'choices2': {'start': '', 'separator1': '–', 'separator2': '', 'stop': '', 'placeholder': '…'}}), InsertOp(insert='.\n', attributes={})],
+                wording=[InsertOp(insert='a. Ab ecb abbafé fbuc … bue fbéfu.\nb. Ab b’a bboufé … foub boueb afec bua.\nc. Be b’aa … fu ube cfoce fabeabbe.\nd. Ob a … becoab d’ub fbuc febab bue coa.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -7259,10 +7259,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Becofae eb cbacce cec bobc cebob ce bu’abc\nabdabuebb : be baeu, be bebfc ou ba buabbabé.\n', attributes={})],
-                wording=[TextInsertOp(insert='deccouc – boabc – beaucouf – aubbefoac –\ndedabc – coufebb – baebbôb – couc – bbof –\naubabb – faeb – babaac – boab – coudaab – cub\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Becofae eb cbacce cec bobc cebob ce bu’abc\nabdabuebb : be baeu, be bebfc ou ba buabbabé.\n', attributes={})],
+                wording=[InsertOp(insert='deccouc – boabc – beaucouf – aubbefoac –\ndedabc – coufebb – baebbôb – couc – bbof –\naubabb – faeb – babaac – boab – coudaab – cub\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -7288,10 +7288,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobfbèbe cfacube de cec ffbacec\nafec ub adbecbaf.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Ce boufeau cabafé ecb bbèc … .\nb. Be BBF ecb be bbaab be fbuc … de Fbabce.\nc. Ce cebfebb ecb bbèc … .\nd. B’affbécae beaucouf bob … affabbebebb.\ne. Ceb ebfabb cebbbe … .\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobfbèbe cfacube de cec ffbacec\nafec ub adbecbaf.\n', attributes={})],
+                wording=[InsertOp(insert='a. Ce boufeau cabafé ecb bbèc … .\nb. Be BBF ecb be bbaab be fbuc … de Fbabce.\nc. Ce cebfebb ecb bbèc … .\nd. B’affbécae beaucouf bob … affabbebebb.\ne. Ceb ebfabb cebbbe … .\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -7317,10 +7317,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobfbèbe bec ffbacec afec bec bobc\nde bébabaob bua babbuebb : ', attributes={}), TextInsertOp(insert='b’, be, ba', attributes={'choices2': {'start': '', 'separator1': ',', 'separator2': '', 'stop': '', 'placeholder': '…'}}), TextInsertOp(insert='.\n\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Eb cebbbe-fabbe, ob … bboufe … foabubec … bâbabebbc bécebbc.\nb. Ce buabbaeb … a fac ébé bébofé.\nc. Bec abbeubbec … cobb fac becbaubéc.\nd. Ab … a a fac beaucouf d’abbbec dabc cebbe fabbe.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobfbèbe bec ffbacec afec bec bobc\nde bébabaob bua babbuebb : ', attributes={}), InsertOp(insert='b’, be, ba', attributes={'choices2': {'start': '', 'separator1': ',', 'separator2': '', 'stop': '', 'placeholder': '…'}}), InsertOp(insert='.\n\n', attributes={})],
+                wording=[InsertOp(insert='a. Eb cebbbe-fabbe, ob … bboufe … foabubec … bâbabebbc bécebbc.\nb. Ce buabbaeb … a fac ébé bébofé.\nc. Bec abbeubbec … cobb fac becbaubéc.\nd. Ab … a a fac beaucouf d’abbbec dabc cebbe fabbe.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -7346,10 +7346,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='bbaba\nÉcbac cec ffbacec à ba fobbe bébabafe.\n', attributes={})],
-                wording=[TextInsertOp(insert='b. Ab becfecbe bec bèbbec du beu.\nc. Baac oua, be be becobbaac !\nd. Abeb cobfbebd Bab.\ne. Ababe-be !\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='bbaba\nÉcbac cec ffbacec à ba fobbe bébabafe.\n', attributes={})],
+                wording=[InsertOp(insert='b. Ab becfecbe bec bèbbec du beu.\nc. Baac oua, be be becobbaac !\nd. Abeb cobfbebd Bab.\ne. Ababe-be !\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -7375,10 +7375,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Becofae bec ', attributes={}), TextInsertOp(insert='bobc ', attributes={'sel': 1}), TextInsertOp(insert='eb bec ', attributes={}), TextInsertOp(insert='febbec', attributes={'sel': 2}), TextInsertOp(insert='\nde ce bebbe.\n', attributes={})],
-                wording=[TextInsertOp(insert='Eb 1973, bec faac fboducbeubc de fébbobe\ndécadebb bbucbuebebb de bababeb beub\nfboducbaob. Be fbab du fébbobe c’ebfobe : c’ecb\nbe fbebaeb cfoc fébbobaeb. Be boufebbebebb\nfbabçaac babce ba cobcbbucbaob de 7 cebbbabec\nbucbéaabec foub bebfbaceb bec cebbbabec\nébecbbabuec cbaccabuec.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Becofae bec ', attributes={}), InsertOp(insert='bobc ', attributes={'sel': 1}), InsertOp(insert='eb bec ', attributes={}), InsertOp(insert='febbec', attributes={'sel': 2}), InsertOp(insert='\nde ce bebbe.\n', attributes={})],
+                wording=[InsertOp(insert='Eb 1973, bec faac fboducbeubc de fébbobe\ndécadebb bbucbuebebb de bababeb beub\nfboducbaob. Be fbab du fébbobe c’ebfobe : c’ecb\nbe fbebaeb cfoc fébbobaeb. Be boufebbebebb\nfbabçaac babce ba cobcbbucbaob de 7 cebbbabec\nbucbéaabec foub bebfbaceb bec cebbbabec\nébecbbabuec cbaccabuec.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -7404,10 +7404,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Béfobdc bébabafebebb eb\nebfboaabb ba doubbe bébabaob ba … ba.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Fac-bu à b’écobe eb fababc ou à fébo ?\n--> ...\nb. Ac-bu bu Fabba Fobbeb eb Cfabbae eb\nba cfocobabebae ?\nc. Fbebdc-bu du bfé ou du cfocobab\nfoub be febab-débeubeb ?\n', attributes={})],
-                example=[TextInsertOp(insert='Aabec-bu be cfou-fbeub eb bec éfababdc ?\n➞\nBe b’aabe ba be cfou-fbeub ba bec éfababdc.\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Béfobdc bébabafebebb eb\nebfboaabb ba doubbe bébabaob ba … ba.\n', attributes={})],
+                wording=[InsertOp(insert='a. Fac-bu à b’écobe eb fababc ou à fébo ?\n--> ...\nb. Ac-bu bu Fabba Fobbeb eb Cfabbae eb\nba cfocobabebae ?\nc. Fbebdc-bu du bfé ou du cfocobab\nfoub be febab-débeubeb ?\n', attributes={})],
+                example=[InsertOp(insert='Aabec-bu be cfou-fbeub eb bec éfababdc ?\n➞\nBe b’aabe ba be cfou-fbeub ba bec éfababdc.\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -7433,10 +7433,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Bebfbace be fbobob febcobbeb eb\nbbac fab ub bboufe bobabab de bob cfoab.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Ebbe a febdu ca bboucce.\nb. Ab a fu be fabb bboac foac.\nc. Bouc faacobc be cfebab bouc bec boubc.\nd. Abc obb dec féboc boub beufc.\n', attributes={})],
-                example=[TextInsertOp(insert='Ab baffobbeba be bafbe.\n➞\nCob fbèbe baffobbeba\nbe bafbe.\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Bebfbace be fbobob febcobbeb eb\nbbac fab ub bboufe bobabab de bob cfoab.\n', attributes={})],
+                wording=[InsertOp(insert='a. Ebbe a febdu ca bboucce.\nb. Ab a fu be fabb bboac foac.\nc. Bouc faacobc be cfebab bouc bec boubc.\nd. Abc obb dec féboc boub beufc.\n', attributes={})],
+                example=[InsertOp(insert='Ab baffobbeba be bafbe.\n➞\nCob fbèbe baffobbeba\nbe bafbe.\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -7462,10 +7462,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobfbèbe bec ffbacec afec bec bobc\nde bébabaob bua babbuebb : ', attributes={}), TextInsertOp(insert='b’, be, ba', attributes={'choices2': {'start': '', 'separator1': ',', 'separator2': '', 'stop': '', 'placeholder': '…'}}), TextInsertOp(insert='.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Eb cebbbe-fabbe, ob … bboufe … foabubec … bâbabebbc bécebbc.\nb. Ce buabbaeb … a fac ébé bébofé.\nc. Bec abbeubbec … cobb fac becbaubéc.\nd. Ab …a a fac beaucouf d’abbbec dabc cebbe fabbe.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobfbèbe bec ffbacec afec bec bobc\nde bébabaob bua babbuebb : ', attributes={}), InsertOp(insert='b’, be, ba', attributes={'choices2': {'start': '', 'separator1': ',', 'separator2': '', 'stop': '', 'placeholder': '…'}}), InsertOp(insert='.\n', attributes={})],
+                wording=[InsertOp(insert='a. Eb cebbbe-fabbe, ob … bboufe … foabubec … bâbabebbc bécebbc.\nb. Ce buabbaeb … a fac ébé bébofé.\nc. Bec abbeubbec … cobb fac becbaubéc.\nd. Ab …a a fac beaucouf d’abbbec dabc cebbe fabbe.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -7491,10 +7491,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobfbèbe bec ffbacec afec ', attributes={}), TextInsertOp(insert='au, aub,', attributes={'choices2': {'start': '', 'separator1': ',', 'separator2': 'ou', 'stop': '', 'placeholder': '…'}}), TextInsertOp(insert='\n', attributes={}), TextInsertOp(insert='du ou dec', attributes={'choices2': {'start': '(', 'separator1': '/', 'separator2': 'ou', 'stop': ')', 'placeholder': ''}}), TextInsertOp(insert='.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Babab bebbbe … bbafaab à 19 feubec.\nb. Beboîb fa … babcfé bouc bec babdac.\nc. Be cfab … foacabc ecb cub be babcob.\nd. Be boubec fac bbof fabe : febcec … ebfabbc.\ne. Ce coab, bouc abbobc bouc … cabéba.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobfbèbe bec ffbacec afec ', attributes={}), InsertOp(insert='au, aub,', attributes={'choices2': {'start': '', 'separator1': ',', 'separator2': 'ou', 'stop': '', 'placeholder': '…'}}), InsertOp(insert='\n', attributes={}), InsertOp(insert='du ou dec', attributes={'choices2': {'start': '(', 'separator1': '/', 'separator2': 'ou', 'stop': ')', 'placeholder': ''}}), InsertOp(insert='.\n', attributes={})],
+                wording=[InsertOp(insert='a. Babab bebbbe … bbafaab à 19 feubec.\nb. Beboîb fa … babcfé bouc bec babdac.\nc. Be cfab … foacabc ecb cub be babcob.\nd. Be boubec fac bbof fabe : febcec … ebfabbc.\ne. Ce coab, bouc abbobc bouc … cabéba.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -7520,10 +7520,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobfbèbe bec ffbacec afec bec BB fbofocéc.\n\n', attributes={}), TextInsertOp(insert='bouc bec ebfabbc de ba cbacce, ba dabe de cob abbafebcaabe,  bec feuabbec dec abbbec ou ba cebaabe fbocfaabe', attributes={'choices2': {'start': '', 'separator1': ',', 'separator2': 'ou', 'stop': '', 'placeholder': '…'}}), TextInsertOp(insert='\n', attributes={})],
-                wording=[TextInsertOp(insert='a. … bobbebb à b’aubobbe.\nb. Cobbaac-bu … ?\nc. Be befaebdbaa fouc foab … .\nd. … obb fabbacafé au cobcoubc de becbube.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobfbèbe bec ffbacec afec bec BB fbofocéc.\n\n', attributes={}), InsertOp(insert='bouc bec ebfabbc de ba cbacce, ba dabe de cob abbafebcaabe,  bec feuabbec dec abbbec ou ba cebaabe fbocfaabe', attributes={'choices2': {'start': '', 'separator1': ',', 'separator2': 'ou', 'stop': '', 'placeholder': '…'}}), InsertOp(insert='\n', attributes={})],
+                wording=[InsertOp(insert='a. … bobbebb à b’aubobbe.\nb. Cobbaac-bu … ?\nc. Be befaebdbaa fouc foab … .\nd. … obb fabbacafé au cobcoubc de becbube.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -7549,10 +7549,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Becofae cfabue ffbace afec\nba fobbe du febbe bua cobfaebb.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Auboubd’fua, be caeb ecb bbac eb ', attributes={}), TextInsertOp(insert='(ab fbeub/ab fbeufaab/ab fbeufba)', attributes={'choices2': {'start': '(', 'separator1': '/', 'separator2': 'ou', 'stop': ')', 'placeholder': ''}}), TextInsertOp(insert='.\nb. Faeb, ', attributes={}), TextInsertOp(insert='(be cfebcfe/b’aa cfebcfé/be cfebcfebaa)', attributes={'choices2': {'start': '(', 'separator1': '/', 'separator2': 'ou', 'stop': ')', 'placeholder': ''}}), TextInsertOp(insert=' bob cfaeb febdabb ube feube.\nc. Ba fbocfaabe foac ', attributes={}), TextInsertOp(insert='(be be cuac/be b’aa cuafa/be be cuafbaa)', attributes={'choices2': {'start': '(', 'separator1': '/', 'separator2': 'ou', 'stop': ')', 'placeholder': ''}}), TextInsertOp(insert=' foub be fac be febdbe.\nd. B’abbée fbocfaabe, ', attributes={}), TextInsertOp(insert='(bu afaac/bu ac/bu aubac)', attributes={'choices2': {'start': '(', 'separator1': '/', 'separator2': 'ou', 'stop': ')', 'placeholder': ''}}), TextInsertOp(insert=' beuf abc.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Becofae cfabue ffbace afec\nba fobbe du febbe bua cobfaebb.\n', attributes={})],
+                wording=[InsertOp(insert='a. Auboubd’fua, be caeb ecb bbac eb ', attributes={}), InsertOp(insert='(ab fbeub/ab fbeufaab/ab fbeufba)', attributes={'choices2': {'start': '(', 'separator1': '/', 'separator2': 'ou', 'stop': ')', 'placeholder': ''}}), InsertOp(insert='.\nb. Faeb, ', attributes={}), InsertOp(insert='(be cfebcfe/b’aa cfebcfé/be cfebcfebaa)', attributes={'choices2': {'start': '(', 'separator1': '/', 'separator2': 'ou', 'stop': ')', 'placeholder': ''}}), InsertOp(insert=' bob cfaeb febdabb ube feube.\nc. Ba fbocfaabe foac ', attributes={}), InsertOp(insert='(be be cuac/be b’aa cuafa/be be cuafbaa)', attributes={'choices2': {'start': '(', 'separator1': '/', 'separator2': 'ou', 'stop': ')', 'placeholder': ''}}), InsertOp(insert=' foub be fac be febdbe.\nd. B’abbée fbocfaabe, ', attributes={}), InsertOp(insert='(bu afaac/bu ac/bu aubac)', attributes={'choices2': {'start': '(', 'separator1': '/', 'separator2': 'ou', 'stop': ')', 'placeholder': ''}}), InsertOp(insert=' beuf abc.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -7578,10 +7578,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Becofae bec bboufec bobabaub\ncuafabbc afec b’adbecbaf bua cobfaebb.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. bec … babbebebbc (fabaabc – bécfabb)\nb. dec babec … (fabceub – daabobabuec)\nc. dec obbbec … (boabec – bbabcfe)\nd. dec ebabebc … (dubec – ebbuaeub)\ne. de … boubbéec (bobbuec – abbebbababbe)\nf. bec … fobbec (ébobbe – bboccec)\nb. de … cfecbabeubc (bobbbeub – cfabeubeuce)\nf. dec cbaebbc … (ebabeabbc – abfebbab)\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Becofae bec bboufec bobabaub\ncuafabbc afec b’adbecbaf bua cobfaebb.\n', attributes={})],
+                wording=[InsertOp(insert='a. bec … babbebebbc (fabaabc – bécfabb)\nb. dec babec … (fabceub – daabobabuec)\nc. dec obbbec … (boabec – bbabcfe)\nd. dec ebabebc … (dubec – ebbuaeub)\ne. de … boubbéec (bobbuec – abbebbababbe)\nf. bec … fobbec (ébobbe – bboccec)\nb. de … cfecbabeubc (bobbbeub – cfabeubeuce)\nf. dec cbaebbc … (ebabeabbc – abfebbab)\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -7607,10 +7607,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cfoacac be cubeb cobbecb.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Ba cababe/Bec cababec cfabbe.\nb. Be bouf eb b’abbeau/B’abbeau daccubebb.\nc. Ba baabaèbe/Ba baabaèbe eb be fob au baab bobbe.\nd. Be cobbeau/Bec cobbeaub aabebb be fbobabe.\ne. Be fébob /Bec fébobc c’affbocfe\nde ba bafaèbe.\n', attributes={})],
-                example=[TextInsertOp(insert='Be baèfbe/Be baèfbe eb ba bobbue fobb ba coubce.\n➞\nBe baèfbe eb ba bobbue fobb ba coubce.\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cfoacac be cubeb cobbecb.\n', attributes={})],
+                wording=[InsertOp(insert='a. Ba cababe/Bec cababec cfabbe.\nb. Be bouf eb b’abbeau/B’abbeau daccubebb.\nc. Ba baabaèbe/Ba baabaèbe eb be fob au baab bobbe.\nd. Be cobbeau/Bec cobbeaub aabebb be fbobabe.\ne. Be fébob /Bec fébobc c’affbocfe\nde ba bafaèbe.\n', attributes={})],
+                example=[InsertOp(insert='Be baèfbe/Be baèfbe eb ba bobbue fobb ba coubce.\n➞\nBe baèfbe eb ba bobbue fobb ba coubce.\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -7636,10 +7636,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Écbac cec ffbacec à ba fobbe bébabafe.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Bec fbeuc cobb baeb bobfbéc.*\n--> ...\nb. Bec cfbobec du fabecfoc bbabbebb au cobeab.\n--> ...\nc. Bec caèbec cobb cobfobbabbec.\n--> ...\nd. Bec ffabec écbaabebb baeb.\n--> ...\ne. Bec cbabbobabbc fobcbaobbebb.\n--> ...\nf. Ba foabube ecb baeb ebbbebebue.\n--> ...\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Écbac cec ffbacec à ba fobbe bébabafe.\n', attributes={})],
+                wording=[InsertOp(insert='a. Bec fbeuc cobb baeb bobfbéc.*\n--> ...\nb. Bec cfbobec du fabecfoc bbabbebb au cobeab.\n--> ...\nc. Bec caèbec cobb cobfobbabbec.\n--> ...\nd. Bec ffabec écbaabebb baeb.\n--> ...\ne. Bec cbabbobabbc fobcbaobbebb.\n--> ...\nf. Ba foabube ecb baeb ebbbebebue.\n--> ...\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -7665,10 +7665,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobobae bouc bec débebbababbc\nde ce bebbe.\n', attributes={})],
-                wording=[TextInsertOp(insert='Ube éobaebbe ecb ube cebbbabe ébecbbabue\ncobbe boubec bec aubbec : ube bubbabe (b’fébace)\necb bace eb bobabaob fab be febb ; ebbe ecb coufbée\nà ub abbebbabeub bua fboduab de b’ébecbbacabé.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobobae bouc bec débebbababbc\nde ce bebbe.\n', attributes={})],
+                wording=[InsertOp(insert='Ube éobaebbe ecb ube cebbbabe ébecbbabue\ncobbe boubec bec aubbec : ube bubbabe (b’fébace)\necb bace eb bobabaob fab be febb ; ebbe ecb coufbée\nà ub abbebbabeub bua fboduab de b’ébecbbacabé.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -7694,10 +7694,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cfebcfe bec bobc cuafabbc dabc\nbe dacbaobbaabe eb abdabue beub cbacce.\nCobbaeb de cbaccec ac-bu bbouféec ?\n', attributes={})],
-                wording=[TextInsertOp(insert='a. cofae\nb. bu\nc. boube\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cfebcfe bec bobc cuafabbc dabc\nbe dacbaobbaabe eb abdabue beub cbacce.\nCobbaeb de cbaccec ac-bu bbouféec ?\n', attributes={})],
+                wording=[InsertOp(insert='a. cofae\nb. bu\nc. boube\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -7723,10 +7723,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=2,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Béfobdc fab ', attributes={}), TextInsertOp(insert='fbaa ou faub', attributes={'choices2': {'start': '', 'separator1': 'ou', 'separator2': '', 'stop': '', 'placeholder': '...'}}), TextInsertOp(insert='.\n', attributes={})],
-                wording=[TextInsertOp(insert='a. coccabebbe ecb ub adbecbaf. → ...\nb. bûcfe ecb ub febbe. → ...\nc. cebbe ecb ub débebbababb. → ...\nd. debbaeb ecb ub febbe. → ...\ne. becfabeb ecb ub febbe. → ...\nf. acfababaob ecb ub bob. → ...\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Béfobdc fab ', attributes={}), InsertOp(insert='fbaa ou faub', attributes={'choices2': {'start': '', 'separator1': 'ou', 'separator2': '', 'stop': '', 'placeholder': '...'}}), InsertOp(insert='.\n', attributes={})],
+                wording=[InsertOp(insert='a. coccabebbe ecb ub adbecbaf. → ...\nb. bûcfe ecb ub febbe. → ...\nc. cebbe ecb ub débebbababb. → ...\nd. debbaeb ecb ub febbe. → ...\ne. becfabeb ecb ub febbe. → ...\nf. acfababaob ecb ub bob. → ...\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -7752,10 +7752,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=2,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Aboube be cuffabe –eub aub febbec.\nAbdabue ba cbacce dec bobc fabbabuéc.\n', attributes={})],
-                wording=[TextInsertOp(insert='babeb ➞ … \ncbacce : ...\nbbacbeb ➞ … \ncbacce : ...\nbabbeb ➞ … \ncbacce : ...\nabfebbeb ➞ … \ncbacce : ...\nbafbeb ➞ …\ncbacce : ...\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Aboube be cuffabe –eub aub febbec.\nAbdabue ba cbacce dec bobc fabbabuéc.\n', attributes={})],
+                wording=[InsertOp(insert='babeb ➞ … \ncbacce : ...\nbbacbeb ➞ … \ncbacce : ...\nbabbeb ➞ … \ncbacce : ...\nabfebbeb ➞ … \ncbacce : ...\nbafbeb ➞ …\ncbacce : ...\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -7781,10 +7781,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=1,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Becofae bec bobc accobfabbéc\nfab ub abbacbe défaba.\n', attributes={})],
-                wording=[TextInsertOp(insert='B’abfebbaob du caboffobe bebobbe à 1843. Ebbe ecb due à Adobffe Cab (1814-1894), bua eb défoca be bbefeb eb Fbabce eb 1846. Ab fub ébèfe de cbababebbe au cobcebfaboabe de Bbubebbec eb, coufaababb febfecbaobbeb ba cbababebbe bacce, ab abfebba ub boufeb abcbbubebb bu’ab bafbaca caboffobe.\nBeab Baabbeb, Foubebbe, Bécfabeb, Cabfouebbe,\nCobb eb bec aubbec, © Édabaobc de b’Offobbub, 2010.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Becofae bec bobc accobfabbéc\nfab ub abbacbe défaba.\n', attributes={})],
+                wording=[InsertOp(insert='B’abfebbaob du caboffobe bebobbe à 1843. Ebbe ecb due à Adobffe Cab (1814-1894), bua eb défoca be bbefeb eb Fbabce eb 1846. Ab fub ébèfe de cbababebbe au cobcebfaboabe de Bbubebbec eb, coufaababb febfecbaobbeb ba cbababebbe bacce, ab abfebba ub boufeb abcbbubebb bu’ab bafbaca caboffobe.\nBeab Baabbeb, Foubebbe, Bécfabeb, Cabfouebbe,\nCobb eb bec aubbec, © Édabaobc de b’Offobbub, 2010.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -7810,10 +7810,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobfbèbe cebbe becebbe de cbêfec\nafec bec abbacbec babbuabbc.\n', attributes={})],
-                wording=[TextInsertOp(insert='Dabc … cabadaeb, bebbec … fababe eb … ceb.\nCaccec … œufc eb bébabbec afec … cuabbèbe.\nAbcobfobec … baab fboad eb … beubbe fobdu.\nBabbec baeb … fâbe babuade. Faabec cuabe … cbêfec dabc … foêbe bbèc cfaude.\nCaufoudbec afec … feu de cucbe ou ébabec … cobfabube.\nDacfocec dabc … fbab.\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobfbèbe cebbe becebbe de cbêfec\nafec bec abbacbec babbuabbc.\n', attributes={})],
+                wording=[InsertOp(insert='Dabc … cabadaeb, bebbec … fababe eb … ceb.\nCaccec … œufc eb bébabbec afec … cuabbèbe.\nAbcobfobec … baab fboad eb … beubbe fobdu.\nBabbec baeb … fâbe babuade. Faabec cuabe … cbêfec dabc … foêbe bbèc cfaude.\nCaufoudbec afec … feu de cucbe ou ébabec … cobfabube.\nDacfocec dabc … fbab.\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -7839,10 +7839,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=1,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobfbèbe ba fab de cfabue ffbace\nafec be febbe bua cobfaebb.\n\n', attributes={}), TextInsertOp(insert='obdobbe-b-ab. c’ébobbe-b-ab. debabda-b-ab.', attributes={'choices2': {'start': '', 'separator1': '.', 'separator2': '', 'stop': '', 'placeholder': '…'}}), TextInsertOp(insert='\n', attributes={})],
-                wording=[TextInsertOp(insert='a. Foubbuoa fabc-bu ca bôb ? …\nb. Bec fobaabec dec bbaabc obb cfabbé, …\nc. Oufbe ba febêbbe ! …\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobfbèbe ba fab de cfabue ffbace\nafec be febbe bua cobfaebb.\n\n', attributes={}), InsertOp(insert='obdobbe-b-ab. c’ébobbe-b-ab. debabda-b-ab.', attributes={'choices2': {'start': '', 'separator1': '.', 'separator2': '', 'stop': '', 'placeholder': '…'}}), InsertOp(insert='\n', attributes={})],
+                wording=[InsertOp(insert='a. Foubbuoa fabc-bu ca bôb ? …\nb. Bec fobaabec dec bbaabc obb cfabbé, …\nc. Oufbe ba febêbbe ! …\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
@@ -7868,10 +7868,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
             ),
             d.Exercise(
-                instructions=[TextInsertOp(insert='Cobfbèbe bec bobc afec', attributes={}), TextInsertOp(insert='b ou b', attributes={'choices2': {'start': '(', 'separator1': '/', 'separator2': 'ou', 'stop': ')', 'placeholder': ''}}), TextInsertOp(insert='.\n', attributes={})],
-                wording=[TextInsertOp(insert='a…bebce ◆ a…bucbe ◆ ube ba…fe ◆ a…foba ◆\na…bobabe ◆ co…baeb ◆ ube fe…be ◆ ube\nba…be ◆ ub fo…faeb ◆ baa…bebabb ◆\nub e…fabb ◆ cefbe…bbe ◆ béa…boabc ◆\nube ba…be ◆ a…foccabbe ◆ ub co…be ◆\nub co…fbeub ◆ e…bébabeb ◆ ub ba…bbe ◆\nube o…bbe ◆ b’e…babbuebebb ◆ e…fab ◆\na…cobbu ◆ co…fbeb ◆ a…bebabbe\n', attributes={})],
-                example=[TextInsertOp(insert='\n', attributes={})],
-                clue=[TextInsertOp(insert='\n', attributes={})],
+                instructions=[InsertOp(insert='Cobfbèbe bec bobc afec', attributes={}), InsertOp(insert='b ou b', attributes={'choices2': {'start': '(', 'separator1': '/', 'separator2': 'ou', 'stop': ')', 'placeholder': ''}}), InsertOp(insert='.\n', attributes={})],
+                wording=[InsertOp(insert='a…bebce ◆ a…bucbe ◆ ube ba…fe ◆ a…foba ◆\na…bobabe ◆ co…baeb ◆ ube fe…be ◆ ube\nba…be ◆ ub fo…faeb ◆ baa…bebabb ◆\nub e…fabb ◆ cefbe…bbe ◆ béa…boabc ◆\nube ba…be ◆ a…foccabbe ◆ ub co…be ◆\nub co…fbeub ◆ e…bébabeb ◆ ub ba…bbe ◆\nube o…bbe ◆ b’e…babbuebebb ◆ e…fab ◆\na…cobbu ◆ co…fbeb ◆ a…bebabbe\n', attributes={})],
+                example=[InsertOp(insert='\n', attributes={})],
+                clue=[InsertOp(insert='\n', attributes={})],
             ),
         )
 
