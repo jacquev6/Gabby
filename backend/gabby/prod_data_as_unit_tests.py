@@ -4,9 +4,8 @@ from . import exercise_delta as d
 from . import exercises as e
 from . import renderable as r
 from .adaptation import AdaptationTestCase
-from .api_models import AdaptationV2
+from .api_models import AdaptationV2, FillWithFreeTextAdaptationEffect, ItemizedAdaptationEffect
 from .exercise_delta import TextInsertOp
-from .parsing import FillWithFreeTextAdaptationEffect, ItemizedAdaptationEffect
 from .renderable import Section, Paragraph, Sentence, _PlainText, _Whitespace, _FreeTextInput, _SelectableText, _BoxedText, _MultipleChoicesInput, _SelectedText
 
 

@@ -4,9 +4,9 @@ import hashlib
 import PyPDF2
 
 from . import adaptation
+from . import api_models
 from . import database_utils
 from . import exercise_delta as d
-from . import parsing
 from . import renderable as r
 from . import testing
 from .api_models import AdaptationV2, PdfRectangle, Point
@@ -411,13 +411,13 @@ def create_test_exercises_2(session, admin):
         wording="Les Touaregs sont des Berbères, un peuple qui habite en Afrique du Nord depuis la préhistoire.\nIls vivent dans le désert du Sahara (Algérie, Libye, Mali, Niger, Burkina Faso…).\nEn été, les températures y montent à plus de 50 °C et elles descendent en dessous de zéro durant les nuits d’hiver.\n",
         adaptation=AdaptationV2(
             kind="generic",
-            effects=[parsing.ItemizedAdaptationEffect(
+            effects=[api_models.ItemizedAdaptationEffect(
                 kind="itemized",
-                items=parsing.ItemizedAdaptationEffect.WordsItems(
+                items=api_models.ItemizedAdaptationEffect.WordsItems(
                     kind="words", punctuation=True,
                 ),
-                effects=parsing.ItemizedAdaptationEffect.Effects(
-                    selectable=parsing.ItemizedAdaptationEffect.Effects.Selectable(
+                effects=api_models.ItemizedAdaptationEffect.Effects(
+                    selectable=api_models.ItemizedAdaptationEffect.Effects.Selectable(
                         colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
                     ),
                     boxed=False,
@@ -469,7 +469,7 @@ def create_test_exercises_2(session, admin):
         wording="nager ➞ … ◆ tracter ➞ … ◆ manger ➞ … ◆\ninventer ➞ … ◆ livrer ➞ …\n",
         adaptation=AdaptationV2(
             kind="fill-with-free-text",
-            effects=[parsing.FillWithFreeTextAdaptationEffect(
+            effects=[api_models.FillWithFreeTextAdaptationEffect(
                 kind="fill-with-free-text", placeholder="…"
             )],
         ),
@@ -537,13 +537,13 @@ def create_test_exercises_3(session, admin):
         wording_paragraphs_per_pagelet=1,
         adaptation=AdaptationV2(
             kind="generic",
-            effects=[parsing.ItemizedAdaptationEffect(
+            effects=[api_models.ItemizedAdaptationEffect(
                 kind="itemized",
-                items=parsing.ItemizedAdaptationEffect.WordsItems(
+                items=api_models.ItemizedAdaptationEffect.WordsItems(
                     kind="words", punctuation=False
                 ),
-                effects=parsing.ItemizedAdaptationEffect.Effects(
-                    selectable=parsing.ItemizedAdaptationEffect.Effects.Selectable(
+                effects=api_models.ItemizedAdaptationEffect.Effects(
+                    selectable=api_models.ItemizedAdaptationEffect.Effects.Selectable(
                         colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"]
                     ),
                     boxed=False,

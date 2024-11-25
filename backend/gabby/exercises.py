@@ -6,6 +6,7 @@ import sqlalchemy as sql
 
 from fastjsonapi import make_filters
 
+from . import adaptation
 from . import api_models
 from . import parsing
 from . import exercise_delta
@@ -182,10 +183,10 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
             renderable.Exercise(
                 number=self.number,
                 textbook_page=self.textbook_page,
-                instructions=parsing.adapt_instructions(self.instructions_deltas, self.adaptation.effects),
-                wording=parsing.adapt_wording(self.instructions_deltas, self.wording_deltas, self.adaptation.effects),
-                example=parsing.adapt_instructions(self.example_deltas, self.adaptation.effects),
-                clue=parsing.adapt_instructions(self.clue_deltas, self.adaptation.effects),
+                instructions=adaptation.adapt_instructions(self.instructions_deltas, self.adaptation.effects),
+                wording=adaptation.adapt_wording(self.instructions_deltas, self.wording_deltas, self.adaptation.effects),
+                example=adaptation.adapt_instructions(self.example_deltas, self.adaptation.effects),
+                clue=adaptation.adapt_instructions(self.clue_deltas, self.adaptation.effects),
                 wording_paragraphs_per_pagelet=self.wording_paragraphs_per_pagelet,
             ),
             exercise_delta.Exercise(
