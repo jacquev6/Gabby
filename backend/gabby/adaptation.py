@@ -14,15 +14,12 @@ class AdaptationTestCase(unittest.TestCase):
         actual_adapted, actual_delta = exercise.make_adapted_and_delta()
 
         if actual_adapted != expected_adapted:
-            print("actual_adapted:")
-            print("  instructions:", actual_adapted.instructions)
-            print("  wording:", actual_adapted.wording)
-            print("  example:", actual_adapted.example)
-            print("  clue:", actual_adapted.clue)
-        self.assertEqual(actual_adapted, expected_adapted)
+            print("actual_adapted:", [actual_adapted])
 
         if actual_delta != expected_delta:
-            print("actual_delta:", actual_delta)
+            print("actual_delta:", [actual_delta])
+
+        self.assertEqual(actual_adapted, expected_adapted)
         self.assertEqual(actual_delta, expected_delta)
 
 
