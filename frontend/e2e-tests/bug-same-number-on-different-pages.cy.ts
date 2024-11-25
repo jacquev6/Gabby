@@ -10,7 +10,7 @@ describe('Gabby', () => {
   })
 
   it('does not reproduce the bug anymore', () => {
-    visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise', {wysiwyg: false})
+    visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise')
 
     // User filled the form on page 6, intending to create an exercise on that page.
     cy.get('label:contains("Number")').next().type('42')
@@ -26,7 +26,7 @@ describe('Gabby', () => {
     cy.get('li:contains("42"):contains("Do this")').should('exist')
 
     // User then attempted to create exercise with same number on page 7.
-    visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise', {wysiwyg: false})
+    visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
 
     cy.get('label:contains("Number")').next().type('42')  // This should have displayed the message "Exercise 42 already exists.", but the request was cached.
     // This UI bug open the door to a constraint violation:

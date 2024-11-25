@@ -16,7 +16,7 @@ describe('Gabby', () => {
   }
 
   it('collects rectangles when creating and editing an exercise split on two pages', () => {
-    visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise', {wysiwyg: false, pdf: 'test'})
+    visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise', {pdf: 'test'})
 
     cy.get('label:contains("Number")').next().type('1')
 

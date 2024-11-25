@@ -10,7 +10,7 @@ describe('Gabby', () => {
   })
 
   it('saves an exercise after setting its adaptation', () => {
-    visit('/project-xkopqm/textbook-klxufv/page-7/exercise-jkrudc', {wysiwyg: false})
+    visit('/project-xkopqm/textbook-klxufv/page-7/exercise-jkrudc')
 
     cy.get('label:contains("Adaptation type")').next().should('have.value', 'generic')
 
@@ -23,13 +23,13 @@ describe('Gabby', () => {
 
     cy.get('li:contains("Instructions!"):contains("Multiple choices")').should('exist')
 
-    visit('/project-xkopqm/textbook-klxufv/page-7/exercise-jkrudc', {wysiwyg: false})
+    visit('/project-xkopqm/textbook-klxufv/page-7/exercise-jkrudc')
     cy.get('label:contains("Adaptation type")').next().should('have.value', 'multiple-choices')
-    cy.get('label:contains("Instructions")').next().should('have.value', 'Instructions!')
+    cy.get('label:contains("Instructions")').next().should('have.text', 'Instructions!')
   })
 
   it('saves an exercise after resetting its pre-existing adaptation', () => {
-    visit('/project-xkopqm/textbook-klxufv/page-7/exercise-dymwin', {wysiwyg: false})
+    visit('/project-xkopqm/textbook-klxufv/page-7/exercise-dymwin')
 
     cy.get('label:contains("Adaptation type")').next().should('have.value', 'fill-with-free-text')
 
@@ -41,9 +41,9 @@ describe('Gabby', () => {
 
     cy.get('li:contains("Instructions!")').should('exist').should('not.contain', 'Fill with free text')
 
-    visit('/project-xkopqm/textbook-klxufv/page-7/exercise-dymwin', {wysiwyg: false})
+    visit('/project-xkopqm/textbook-klxufv/page-7/exercise-dymwin')
     cy.get('label:contains("Adaptation type")').next().should('have.value', 'generic')
-    cy.get('label:contains("Instructions")').next().should('have.value', 'Instructions!')
+    cy.get('label:contains("Instructions")').next().should('have.text', 'Instructions!')
   })
 
   it('saves an exercise after deleting its adaptation', () => {
@@ -64,7 +64,7 @@ describe('Gabby', () => {
   })
 
   it('saves an exercise without changing its pre-existing adaptation', () => {
-    visit('/project-xkopqm/textbook-klxufv/page-7/exercise-dymwin', {wysiwyg: false})
+    visit('/project-xkopqm/textbook-klxufv/page-7/exercise-dymwin')
 
     cy.get('label:contains("Adaptation type")').next().should('have.value', 'fill-with-free-text')
 
@@ -76,9 +76,9 @@ describe('Gabby', () => {
 
     cy.get('li:contains("Instructions!"):contains("Fill with free text")').should('exist')
 
-    visit('/project-xkopqm/textbook-klxufv/page-7/exercise-dymwin', {wysiwyg: false})
+    visit('/project-xkopqm/textbook-klxufv/page-7/exercise-dymwin')
     cy.get('label:contains("Adaptation type")').next().should('have.value', 'fill-with-free-text')
-    cy.get('label:contains("Instructions")').next().should('have.value', 'Instructions!')
+    cy.get('label:contains("Instructions")').next().should('have.text', 'Instructions!')
   })
 
   it('saves an exercise after changing details of its adaptation', () => {
@@ -120,7 +120,7 @@ describe('Gabby', () => {
   })
 
   it('saves an exercise after changing the type of its pre-existing adaptation', () => {
-    visit('/project-xkopqm/textbook-klxufv/page-7/exercise-dymwin', {wysiwyg: false})
+    visit('/project-xkopqm/textbook-klxufv/page-7/exercise-dymwin')
 
     cy.get('label:contains("Adaptation type")').next().should('have.value', 'fill-with-free-text')
 
@@ -132,23 +132,25 @@ describe('Gabby', () => {
 
     cy.get('li:contains("Instructions!"):contains("Multiple choices")').should('exist')
 
-    visit('/project-xkopqm/textbook-klxufv/page-7/exercise-dymwin', {wysiwyg: false})
+    visit('/project-xkopqm/textbook-klxufv/page-7/exercise-dymwin')
     cy.get('label:contains("Adaptation type")').next().should('have.value', 'multiple-choices')
-    cy.get('label:contains("Instructions")').next().should('have.value', 'Instructions!')
+    cy.get('label:contains("Instructions")').next().should('have.text', 'Instructions!')
   })
 
   it('throttles updates of the preview', () => {
-    visit('/project-xkopqm/textbook-klxufv/page-7/exercise-vodhqn', {wysiwyg: false})
+    visit('/project-xkopqm/textbook-klxufv/page-7/exercise-vodhqn')
 
     cy.get('label:contains("Wording")').next().type('{selectAll}{del}', {delay: 0})
     notBusy()
 
+    const count = 50
+
     cy.intercept('POST', '/api/parsedExercises').as('parsedExercises')
-    for (let i = 0; i !== 20; i += 1) {
+    for (let i = 0; i !== count; i += 1) {
       cy.get('label:contains("Wording")').next().type(' a', {delay: 0})
     }
     notBusy()
 
-    cy.get('@parsedExercises.all').its('length').should('be.lessThan', 19)
+    cy.get('@parsedExercises.all').its('length').should('be.lessThan', count - 1)
   })
 })

@@ -190,7 +190,6 @@ import OptionalInput from './OptionalInput.vue'
 
 
 defineProps<{
-  wysiwyg: boolean
   fields: InstanceType<typeof ExerciseFieldsForm>
 }>()
 

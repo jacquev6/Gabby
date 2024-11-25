@@ -182,8 +182,7 @@ import { ref, computed } from 'vue'
 import deepCopy from 'deep-copy'
 import { useI18n } from 'vue-i18n'
 
-import { BRow, BCol, BLabeledInput, BLabeledTextarea, BLabeledSelect } from './opinion/bootstrap'
-import OptionalTextarea from './OptionalTextarea.vue'
+import { BRow, BCol, BLabeledInput, BLabeledSelect } from './opinion/bootstrap'
 import WysiwygEditor from './WysiwygEditor.vue'
 import { wysiwygFormats } from './AdaptationDetailsFieldsForm.vue'
 import OptionalWysiwygEditor from './OptionalWysiwygEditor.vue'
@@ -191,7 +190,6 @@ import OptionalWysiwygEditor from './OptionalWysiwygEditor.vue'
 
 const props = defineProps<{
   fixedNumber: boolean
-  wysiwyg: boolean
   deltas: (ParsedExercise & InCache & Exists)['attributes']['delta'] | null
   displayedPage: number | null
 }>()
@@ -199,17 +197,6 @@ const props = defineProps<{
 const model = defineModel<Model>({required: true})
 
 const i18n = useI18n()
-
-const instructionsTextArea = ref<InstanceType<typeof BLabeledTextarea> | null>(null)
-const wordingTextArea = ref<InstanceType<typeof BLabeledTextarea> | null>(null)
-const exampleTextArea = ref<InstanceType<typeof OptionalTextarea> | null>(null)
-const clueTextArea = ref<InstanceType<typeof OptionalTextarea> | null>(null)
-const textAreas = {
-  instructions: instructionsTextArea,
-  wording: wordingTextArea,
-  example: exampleTextArea,
-  clue: clueTextArea,
-}
 
 const instructionsEditor = ref<InstanceType<typeof WysiwygEditor> | null>(null)
 const wordingEditor = ref<InstanceType<typeof WysiwygEditor> | null>(null)
@@ -223,11 +210,7 @@ const editors = {
 }
 
 const noClueNoExample = computed(() => {
-  if (props.wysiwyg) {
-    return !exampleEditor.value?.expanded && !clueEditor.value?.expanded
-  } else {
-    return !exampleTextArea.value?.expanded && !clueTextArea.value?.expanded
-  }
+  return !exampleEditor.value?.expanded && !clueEditor.value?.expanded
 })
 
 const saveDisabled = computed(() => model.value.number === '')
@@ -235,17 +218,10 @@ const saveDisabled = computed(() => model.value.number === '')
 function highlightSuffix(fieldName: TextualFieldName, suffix: string) {
   const text = model.value[fieldName]
   console.assert(text.endsWith(suffix))
-  if (props.wysiwyg) {
-    const editor = editors[fieldName].value
-    console.assert(editor !== null)
-    editor.focus()
-    editor.setSelection(editor.getLength() - suffix.length - 1, suffix.length)
-  } else {
-    const textArea = textAreas[fieldName].value
-    console.assert(textArea !== null)
-    textArea.focus()
-    textArea.setSelectionRange(text.length - suffix.length, text.length)
-  }
+  const editor = editors[fieldName].value
+  console.assert(editor !== null)
+  editor.focus()
+  editor.setSelection(editor.getLength() - suffix.length - 1, suffix.length)
 }
 
 function toggle(format: string, value: unknown = true) {
@@ -257,36 +233,28 @@ function toggle(format: string, value: unknown = true) {
 }
 
 const focusedWysiwygField = computed(() => {
-  if (props.wysiwyg) {
-    if (instructionsEditor.value?.hasFocus) {
-      return 'instructions'
-    } else if (wordingEditor.value?.hasFocus) {
-      return 'wording'
-    } else if (exampleEditor.value?.hasFocus) {
-      return 'example'
-    } else if (clueEditor.value?.hasFocus) {
-      return 'clue'
-    } else {
-      return null
-    }
+  if (instructionsEditor.value?.hasFocus) {
+    return 'instructions'
+  } else if (wordingEditor.value?.hasFocus) {
+    return 'wording'
+  } else if (exampleEditor.value?.hasFocus) {
+    return 'example'
+  } else if (clueEditor.value?.hasFocus) {
+    return 'clue'
   } else {
     return null
   }
 })
 
 const currentWysiwygFormat = computed(() => {
-  if (props.wysiwyg) {
-    if (instructionsEditor.value?.hasFocus) {
-      return instructionsEditor.value.currentFormat
-    } else if (wordingEditor.value?.hasFocus) {
-      return wordingEditor.value.currentFormat
-    } else if (exampleEditor.value?.hasFocus) {
-      return exampleEditor.value.currentFormat
-    } else if (clueEditor.value?.hasFocus) {
-      return clueEditor.value.currentFormat
-    } else {
-      return {}
-    }
+  if (instructionsEditor.value?.hasFocus) {
+    return instructionsEditor.value.currentFormat
+  } else if (wordingEditor.value?.hasFocus) {
+    return wordingEditor.value.currentFormat
+  } else if (exampleEditor.value?.hasFocus) {
+    return exampleEditor.value.currentFormat
+  } else if (clueEditor.value?.hasFocus) {
+    return clueEditor.value.currentFormat
   } else {
     return {}
   }
@@ -354,69 +322,36 @@ defineExpose({
       :options="adaptationKinds.map(kind => ({value: kind, label: $t(kind)}))"
     />
     <WysiwygEditor
-      v-if="wysiwyg"
       ref="instructionsEditor"
       :label="$t('exerciseInstructions')"
       :formats="wysiwygFormats"
       v-model="model.instructions" :delta="instructionsDeltas"
       @selectionChange="selectionChangeInInstructionsOrWording"
     />
-    <BLabeledTextarea
-      v-else
-      ref="instructionsTextArea"
-      :label="$t('exerciseInstructions')"
-      :enforceTrailingLineEnd="true"
-      v-model="model.instructions"
-      data-cy-exercise-field="instructions"
-    />
     <WysiwygEditor
-      v-if="wysiwyg"
       ref="wordingEditor"
       :label="$t('exerciseWording')"
       :formats="wysiwygFormats"
       v-model="model.wording" :delta="wordingDeltas"
       @selectionChange="selectionChangeInInstructionsOrWording"
     />
-    <BLabeledTextarea
-      v-else
-      ref="wordingTextArea"
-      :label="$t('exerciseWording')"
-      :enforceTrailingLineEnd="true"
-      v-model="model.wording"
-    />
     <div :class="{'container-fluid': noClueNoExample}">
       <div :class="{row: noClueNoExample}">
         <div :class="{col: noClueNoExample}" style="padding: 0;">
           <OptionalWysiwygEditor
-            v-if="wysiwyg"
             ref="exampleEditor"
             :label="$t('exerciseExample')"
             :formats="wysiwygFormats"
             :delta="exampleDeltas"
             v-model="model.example"
           />
-          <OptionalTextarea
-            v-else
-            ref="exampleTextArea"
-            :label="$t('exerciseExample')"
-            :enforceTrailingLineEnd="true"
-            v-model="model.example"
-          />
         </div>
         <div :class="{col: noClueNoExample}" style="padding: 0;">
           <OptionalWysiwygEditor
-            v-if="wysiwyg"
             ref="clueEditor"
             :label="$t('exerciseClue')"
             :formats="wysiwygFormats"
             :delta="clueDeltas"
-            v-model="model.clue"
-          />
-          <OptionalTextarea
-            v-else
-            ref="clueTextArea"
-            :label="$t('exerciseClue')"
-            :enforceTrailingLineEnd="true"
             v-model="model.clue"
           />
         </div>

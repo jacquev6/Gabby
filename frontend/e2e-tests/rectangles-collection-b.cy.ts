@@ -18,7 +18,7 @@ describe('Gabby', () => {
   it('collects rectangles when creating and editing an exercise (on a single page)', () => {
     cy.viewport(1600, 1000)
 
-    visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise', {wysiwyg: false, pdf: 'test'})
+    visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise', {pdf: 'test'})
 
     cy.get('label:contains("Number")').next().type('5')
 
@@ -83,7 +83,7 @@ describe('Gabby', () => {
 
     cy.intercept('GET', '/api/exercises/pghtfo').as('getExercise')
 
-    visit('/project-xkopqm/textbook-klxufv/page-7/exercise-pghtfo', {wysiwyg: false, pdf: 'test'})
+    visit('/project-xkopqm/textbook-klxufv/page-7/exercise-pghtfo', {pdf: 'test'})
 
     cy.get('@getExercise').its('response.body.data.attributes.rectangles').should('deep.equal', [
       {
