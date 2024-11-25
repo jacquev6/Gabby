@@ -1,7 +1,7 @@
 <script lang="ts">
 import Quill from 'quill/core'
 
-import { InlineBlot } from './Quill.vue'
+import { InlineBlot, type Model as Deltas } from './Quill.vue'
 import { basicFormats, escapeForTag } from './WysiwygEditor.vue'
 import ContextMenu from './ContextMenu.vue'
 
@@ -119,32 +119,45 @@ function doneEditingChoices2() {
     // @todo Don't replicate if current selection doesn't match start separator and stop
   if (needsReplication) {
     console.log('Replicating choices')
-    let newWording = ''
-    const wording = model.value.wording
-    let lastProcessedIndex = -1
-    while (true) {
-      const startIndex = wording.indexOf(model.value.inProgress.settings.start, lastProcessedIndex + 1)
-      if (startIndex === -1) {
-        break
-      }
-      newWording += wording.slice(lastProcessedIndex + 1, startIndex)
-      if (wording[startIndex - 1] === '|') {
-        newWording += model.value.inProgress.settings.start
-        lastProcessedIndex = startIndex + model.value.inProgress.settings.start.length - 1
-      } else {
-        const stopIndex = wording.indexOf(model.value.inProgress.settings.stop, startIndex + model.value.inProgress.settings.start.length)
-        const separatorIndex = wording.indexOf(model.value.inProgress.settings.separator1, startIndex + model.value.inProgress.settings.start.length)
-        if (stopIndex !== -1 && separatorIndex !== -1 && separatorIndex < stopIndex) {
-          console.log('Replicating choices: found choice:', '#' + wording.slice(startIndex, stopIndex + model.value.inProgress.settings.stop.length) + '#')
+    const newWording: Deltas = []
+    for (const operation of model.value.wording) {
+      console.assert(typeof operation.insert === 'string')
+      console.assert('attributes' in operation)
+      if (Object.keys(operation.attributes).length === 0) {
+        let lastProcessedIndex = -1
+        let newInsert = ''
+        while (true) {
+          const startIndex = operation.insert.indexOf(model.value.inProgress.settings.start, lastProcessedIndex + 1)
+          if (startIndex === -1) {
+            break
+          }
+          newInsert += operation.insert.slice(lastProcessedIndex + 1, startIndex)
+          if (operation.insert[startIndex - 1] === '|') {
+            newInsert += model.value.inProgress.settings.start
+            lastProcessedIndex = startIndex + model.value.inProgress.settings.start.length - 1
+          } else {
+            const stopIndex = operation.insert.indexOf(model.value.inProgress.settings.stop, startIndex + model.value.inProgress.settings.start.length)
+            const separatorIndex = operation.insert.indexOf(model.value.inProgress.settings.separator1, startIndex + model.value.inProgress.settings.start.length)
+            if (stopIndex !== -1 && separatorIndex !== -1 && separatorIndex < stopIndex) {
+              console.log('Replicating choices: found choice:', '#' + operation.insert.slice(startIndex, stopIndex + model.value.inProgress.settings.stop.length) + '#')
+            }
+            newWording.push({insert: newInsert, attributes: operation.attributes})
+            newWording.push({insert: operation.insert.slice(startIndex, stopIndex + model.value.inProgress.settings.stop.length), attributes: {choices2: model.value.inProgress.settings}})
+            newInsert = ''
+            lastProcessedIndex = stopIndex + model.value.inProgress.settings.stop.length - 1
+          }
         }
-        newWording += `{choices2|${escapeForTag(model.value.inProgress.settings.start)}|${escapeForTag(model.value.inProgress.settings.separator1)}|${escapeForTag(model.value.inProgress.settings.separator2)}|${escapeForTag(model.value.inProgress.settings.stop)}|${escapeForTag(model.value.inProgress.settings.placeholder)}|${escapeForTag(wording.slice(startIndex, stopIndex + model.value.inProgress.settings.stop.length))}}`
-        lastProcessedIndex = stopIndex + model.value.inProgress.settings.stop.length - 1
+        newInsert += operation.insert.slice(lastProcessedIndex + 1)
+        if (newInsert !== '') {
+          newWording.push({insert: newInsert, attributes: operation.attributes})
+        }
+      } else {
+        newWording.push(operation)
       }
     }
-    newWording += wording.slice(lastProcessedIndex + 1)
     console.log('Replicating choices: previous wording:', model.value.wording)
     model.value.wording = newWording
-    console.log('Replicating choices: new wording:', model.value.wording)
+    console.log('Replicating choices: new wording:', newWording)
   }
   model.value.inProgress = {kind: 'nothing'}
 }

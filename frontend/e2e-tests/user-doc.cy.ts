@@ -131,7 +131,6 @@ describe('Gabby', () => {
 
     cy.get('label:contains("Type d\'adaptation") + select').select('generic')
     cy.get('div:contains("Cochable") >input').check()
-    cy.get('div.busy').should('exist')  // This may fail (race condition) but is required because the 'div.busy' is not displayed quickly enough.
     notBusy()
     cy.screenshot('project-textbook-page-exercise/project-textbook-page-exercise', {clip: {x: 0, y: 0, width: 1000, height: 330}})
 

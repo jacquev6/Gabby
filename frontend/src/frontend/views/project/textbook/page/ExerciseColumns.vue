@@ -54,14 +54,6 @@ const adaptedExercise = computed(() => {
   }
 })
 
-const deltas = computed(() => {
-  if (parsedExercise.value === null) {
-    return null
-  } else {
-    return parsedExercise.value.attributes.delta
-  }
-})
-
 const toolSlotNames = [
   'undoRedo',
   'adaptationDetails',
@@ -94,7 +86,7 @@ defineExpose({
         <BBusy :busy>
           <ExerciseFieldsForm ref="fields"
             v-model="model" :displayedPage
-            :fixedNumber="mode === 'edit'" :deltas
+            :fixedNumber="mode === 'edit'"
           >
             <template #overlay>
               <slot name="exerciseFieldsOverlay"></slot>

@@ -197,6 +197,19 @@ export interface components {
       boxed: boolean;
       selectable: components["schemas"]["Selectable"] | null;
     };
+    /** Exercise */
+    Exercise: {
+      clue: components["schemas"]["Section"];
+      example: components["schemas"]["Section"];
+      instructions: components["schemas"]["Section"];
+      /** Number */
+      number: string;
+      /** Textbook Page */
+      textbook_page: number | null;
+      wording: components["schemas"]["Section"];
+      /** Wording Paragraphs Per Pagelet */
+      wording_paragraphs_per_pagelet: number;
+    };
     /** FillWithFreeTextAdaptationEffect */
     FillWithFreeTextAdaptationEffect: {
       /**
@@ -216,7 +229,7 @@ export interface components {
     /** InsertOp */
     InsertOp: {
       /** Attributes */
-      attributes: Record<string, never>;
+      attributes: Record<string, unknown>;
       /** Insert */
       insert: string;
     };
@@ -487,19 +500,34 @@ export interface components {
       adaptation?: components["schemas"]["AdaptationV2-Input"];
       /**
        * Clue
-       * @default
+       * @default [
+       *   {
+       *     "attributes": {},
+       *     "insert": "\n"
+       *   }
+       * ]
        */
-      clue?: string;
+      clue?: components["schemas"]["InsertOp"][];
       /**
        * Example
-       * @default
+       * @default [
+       *   {
+       *     "attributes": {},
+       *     "insert": "\n"
+       *   }
+       * ]
        */
-      example?: string;
+      example?: components["schemas"]["InsertOp"][];
       /**
        * Instructions
-       * @default
+       * @default [
+       *   {
+       *     "attributes": {},
+       *     "insert": "\n"
+       *   }
+       * ]
        */
-      instructions?: string;
+      instructions?: components["schemas"]["InsertOp"][];
       /** Number */
       number: string;
       /**
@@ -511,9 +539,14 @@ export interface components {
       textbookPage?: number | null;
       /**
        * Wording
-       * @default
+       * @default [
+       *   {
+       *     "attributes": {},
+       *     "insert": "\n"
+       *   }
+       * ]
        */
-      wording?: string;
+      wording?: components["schemas"]["InsertOp"][];
       /**
        * Wordingparagraphsperpagelet
        * @default 3
@@ -546,16 +579,16 @@ export interface components {
     exerciseOutputItemAttributes: {
       adaptation: components["schemas"]["AdaptationV2-Output"];
       /** Clue */
-      clue: string;
+      clue: components["schemas"]["InsertOp"][];
       /**
        * Createdat
        * Format: date-time
        */
       createdAt: string;
       /** Example */
-      example: string;
+      example: components["schemas"]["InsertOp"][];
       /** Instructions */
-      instructions: string;
+      instructions: components["schemas"]["InsertOp"][];
       /** Number */
       number: string;
       /** Rectangles */
@@ -568,7 +601,7 @@ export interface components {
        */
       updatedAt: string;
       /** Wording */
-      wording: string;
+      wording: components["schemas"]["InsertOp"][];
       /** Wordingparagraphsperpagelet */
       wordingParagraphsPerPagelet: number;
     };
@@ -607,15 +640,15 @@ export interface components {
     exerciseUpdateInputDataAttributes: {
       adaptation?: components["schemas"]["AdaptationV2-Input"];
       /** Clue */
-      clue?: string;
+      clue?: components["schemas"]["InsertOp"][];
       /** Example */
-      example?: string;
+      example?: components["schemas"]["InsertOp"][];
       /** Instructions */
-      instructions?: string;
+      instructions?: components["schemas"]["InsertOp"][];
       /** Rectangles */
       rectangles?: components["schemas"]["PdfRectangle"][];
       /** Wording */
-      wording?: string;
+      wording?: components["schemas"]["InsertOp"][];
       /** Wordingparagraphsperpagelet */
       wordingParagraphsPerPagelet?: number;
     };
@@ -681,30 +714,6 @@ export interface components {
        */
       type: "user";
     };
-    /** Exercise */
-    gabby__deltas__Exercise: {
-      /** Clue */
-      clue: components["schemas"]["InsertOp"][];
-      /** Example */
-      example: components["schemas"]["InsertOp"][];
-      /** Instructions */
-      instructions: components["schemas"]["InsertOp"][];
-      /** Wording */
-      wording: components["schemas"]["InsertOp"][];
-    };
-    /** Exercise */
-    gabby__renderable__Exercise: {
-      clue: components["schemas"]["Section"];
-      example: components["schemas"]["Section"];
-      instructions: components["schemas"]["Section"];
-      /** Number */
-      number: string;
-      /** Textbook Page */
-      textbook_page: number | null;
-      wording: components["schemas"]["Section"];
-      /** Wording Paragraphs Per Pagelet */
-      wording_paragraphs_per_pagelet: number;
-    };
     /** parsedExerciseCreateInput */
     parsedExerciseCreateInput: {
       data: components["schemas"]["parsedExerciseCreateInputData"];
@@ -721,15 +730,15 @@ export interface components {
     parsedExerciseCreateInputDataAttributes: {
       adaptation: components["schemas"]["AdaptationV2-Input"];
       /** Clue */
-      clue: string;
+      clue: components["schemas"]["InsertOp"][];
       /** Example */
-      example: string;
+      example: components["schemas"]["InsertOp"][];
       /** Instructions */
-      instructions: string;
+      instructions: components["schemas"]["InsertOp"][];
       /** Number */
       number: string;
       /** Wording */
-      wording: string;
+      wording: components["schemas"]["InsertOp"][];
       /** Wordingparagraphsperpagelet */
       wordingParagraphsPerPagelet: number;
     };
@@ -752,8 +761,7 @@ export interface components {
     };
     /** parsedExerciseOutputItemAttributes */
     parsedExerciseOutputItemAttributes: {
-      adapted: components["schemas"]["gabby__renderable__Exercise"];
-      delta: components["schemas"]["gabby__deltas__Exercise"];
+      adapted: components["schemas"]["Exercise"];
     };
     /** pdfFileCreateInput */
     pdfFileCreateInput: {

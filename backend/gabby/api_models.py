@@ -152,10 +152,10 @@ class Exercise(PydanticBase, CreatedUpdatedByAtMixin):
 
     number: Annotated[str, Constant()]
 
-    instructions: str = "\n"
-    wording: str = "\n"
-    example: str = "\n"
-    clue: str = "\n"
+    instructions: deltas.Deltas = deltas.empty
+    wording: deltas.Deltas = deltas.empty
+    example: deltas.Deltas = deltas.empty
+    clue: deltas.Deltas = deltas.empty
 
     wording_paragraphs_per_pagelet: int = 3
 
@@ -165,14 +165,13 @@ class Exercise(PydanticBase, CreatedUpdatedByAtMixin):
 
 class ParsedExercise(PydanticBase):
     number: Annotated[str, WriteOnly()]
-    instructions: Annotated[str, WriteOnly()]
-    wording: Annotated[str, WriteOnly()]
-    example: Annotated[str, WriteOnly()]
-    clue: Annotated[str, WriteOnly()]
+    instructions: Annotated[deltas.Deltas, WriteOnly()]
+    wording: Annotated[deltas.Deltas, WriteOnly()]
+    example: Annotated[deltas.Deltas, WriteOnly()]
+    clue: Annotated[deltas.Deltas, WriteOnly()]
     wording_paragraphs_per_pagelet: Annotated[int, WriteOnly()]
     adaptation: Annotated[AdaptationV2, WriteOnly()]
     adapted: Annotated[renderable.Exercise, Computed()]
-    delta: Annotated[deltas.Exercise, Computed()]
 
 
 class SyntheticError(PydanticBase):

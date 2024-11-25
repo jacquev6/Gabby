@@ -56,7 +56,7 @@ services:
     working_dir: /app/frontend
     environment:
       SHELL: bash
-    command: ["npx", "chokidar", "../backend/openapi.json", "--initial", "--verbose", "--command", "npx openapi-typescript ../backend/openapi.json --output src/openapi.ts"]
+    command: ["npx", "chokidar", "../backend/openapi.json", "--initial", "--verbose", "--command", "npx openapi-typescript ../backend/openapi.json | sed 's/attributes: Record<string, never>/attributes: Record<string, unknown>/' >src/openapi.ts"]
     depends_on:
       npm-installer:
         condition: service_completed_successfully

@@ -1487,7 +1487,7 @@ describe('ApiStore - Application - 1', () => {
       'exercise',
       {
         textbookPage: 6, number: '14',
-        instructions: 'Do this\n',
+        instructions: [{insert: 'Do this\n', attributes: {}}],
       },
       {
         project: api.cache.getOne('project', 'xkopqm'),
@@ -1497,7 +1497,7 @@ describe('ApiStore - Application - 1', () => {
 
     expect(newExercise.id).to.equal('vodhqn')
     expectToBeTrue(newExercise.exists)
-    expect(newExercise.attributes.instructions).to.equal('Do this\n')
+    expect(newExercise.attributes.instructions).to.deep.equal([{insert: 'Do this\n', attributes: {}}])
 
     expect(api.cache.getOne('textbook', 'klxufv').inCache).to.be.false
 
@@ -1518,7 +1518,7 @@ describe('ApiStore - Application - 1', () => {
       'exercise',
       {
         textbookPage: 6, number: '14',
-        instructions: 'Do that\n',
+        instructions: [{insert: 'Do that\n', attributes: {}}],
       },
       {
         project: api.cache.getOne('project', 'xkopqm'),
@@ -1531,7 +1531,7 @@ describe('ApiStore - Application - 1', () => {
 
     expect(newExercise.id).to.equal('vodhqn')
     expectToBeTrue(newExercise.exists)
-    expect(newExercise.attributes.instructions).to.equal('Do that\n')
+    expect(newExercise.attributes.instructions).to.deep.equal([{insert: 'Do that\n', attributes: {}}])
 
     expectToBeTrue(textbook.inCache)
     expectToBeTrue(textbook.exists)
@@ -1545,11 +1545,11 @@ describe('ApiStore - Application - 1', () => {
     await api.auth.login('admin', 'password')
 
     const updatedExercise = api.cache.getOne('exercise', 'wbqloc')
-    await updatedExercise.patch({instructions: 'Do that\n'}, {})
+    await updatedExercise.patch({instructions: [{insert: 'Do that\n', attributes: {}}]}, {})
 
     expectToBeTrue(updatedExercise.inCache)
     expectToBeTrue(updatedExercise.exists)
-    expect(updatedExercise.attributes.instructions).to.equal('Do that\n')
+    expect(updatedExercise.attributes.instructions).to.deep.equal([{insert: 'Do that\n', attributes: {}}])
   })
 
   it('updates an exercise and retrieves its textbook', async () => {
@@ -1561,14 +1561,14 @@ describe('ApiStore - Application - 1', () => {
 
     const updatedExercise = api.cache.getOne('exercise', 'wbqloc')
     await updatedExercise.patch(
-      {instructions: 'Do that\n'},
+      {instructions: [{insert: 'Do that\n', attributes: {}}]},
       {},
       {include: ['textbook']},
     )
 
     expectToBeTrue(updatedExercise.inCache)
     expectToBeTrue(updatedExercise.exists)
-    expect(updatedExercise.attributes.instructions).to.equal('Do that\n')
+    expect(updatedExercise.attributes.instructions).to.deep.equal([{insert: 'Do that\n', attributes: {}}])
 
     expectToBeTrue(textbook.inCache)
     expectToBeTrue(textbook.exists)
@@ -1608,7 +1608,7 @@ describe('ApiStore - Application - 2', () => {
     const exercise = await api.client.getOne('exercise', 'bylced')
 
     expectToBeTrue(exercise.exists)
-    expect(exercise.attributes.instructions).to.equal('Écris une phrase en respectant l\'ordre des classes grammaticales indiquées.\n')
+    expect(exercise.attributes.instructions).to.deep.equal([{insert: 'Écris une phrase en respectant l\'ordre des classes grammaticales indiquées.\n', attributes: {}}])
     expect(exercise.attributes.adaptation.kind).to.equal('generic')
   })
 
@@ -1618,7 +1618,17 @@ describe('ApiStore - Application - 2', () => {
     const exercise = await api.client.getOne('exercise', 'vodhqn')
 
     expectToBeTrue(exercise.exists)
-    expect(exercise.attributes.instructions).to.equal('Relève dans le texte trois\n{sel1|déterminants}, un {sel2|nom propre}, quatre\n{sel3|noms communs} et trois {sel4|verbes}.\n')
+    expect(exercise.attributes.instructions).to.deep.equal([
+      {insert: 'Relève dans le texte trois\n', attributes: {}},
+      {insert: 'déterminants', attributes: {sel: 1}},
+      {insert: ', un ', attributes: {}},
+      {insert: 'nom propre', attributes: {sel: 2}},
+      {insert: ', quatre\n', attributes: {}},
+      {insert: 'noms communs', attributes: {sel: 3}},
+      {insert: ' et trois ', attributes: {}},
+      {insert: 'verbes', attributes: {sel: 4}},
+      {insert: '.\n', attributes: {}}
+    ])
     expect(exercise.attributes.adaptation.kind).to.equal('generic')
     expect(exercise.attributes.adaptation.effects).to.have.length(1)
     expect(exercise.attributes.adaptation.effects[0].kind).to.equal('itemized')
@@ -1634,7 +1644,7 @@ describe('ApiStore - Application - 2', () => {
     const exercise = await api.client.getOne('exercise', 'dymwin')
 
     expectToBeTrue(exercise.exists)
-    expect(exercise.attributes.instructions).to.equal('Ajoute le suffixe –eur aux verbes.\nIndique la classe des mots fabriqués.\n')
+    expect(exercise.attributes.instructions).to.deep.equal([{insert: 'Ajoute le suffixe –eur aux verbes.\nIndique la classe des mots fabriqués.\n', attributes: {}}])
     expect(exercise.attributes.adaptation.kind).to.equal('fill-with-free-text')
     expect(exercise.attributes.adaptation.effects).to.have.length(1)
     console.assert(exercise.attributes.adaptation.effects[0].kind === 'fill-with-free-text')
@@ -1650,7 +1660,7 @@ describe('ApiStore - Application - 2', () => {
       {
         textbookPage: 7,
         number: '12',
-        instructions: 'Do this\n',
+        instructions: [{insert: 'Do this\n', attributes: {}}],
         adaptation: {
           kind: 'generic',
           effects: [{

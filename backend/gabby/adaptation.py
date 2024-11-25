@@ -2,6 +2,7 @@ import re
 import itertools
 import unittest
 
+from . import deltas
 from . import deltas as d
 from . import exercises as e
 from . import renderable
@@ -9,7 +10,7 @@ from . import renderable as r
 from .api_models import AdaptationV2, AdaptationEffect, FillWithFreeTextAdaptationEffect, ItemizedAdaptationEffect
 
 
-def adapt_instructions(deltas: list[d.InsertOp], effects: list[AdaptationEffect]):
+def adapt_instructions(instructions: deltas.Deltas, effects: list[AdaptationEffect]):
     selection_colors = []
     for effect in effects:
         if isinstance(effect, ItemizedAdaptationEffect):
@@ -17,8 +18,8 @@ def adapt_instructions(deltas: list[d.InsertOp], effects: list[AdaptationEffect]
                 assert selection_colors == []
                 selection_colors = effect.effects.selectable.colors
 
-    def adapt_sentence(deltas: list[d.InsertOp]):
-        for delta in deltas:
+    def adapt_sentence(sentence: deltas.Deltas):
+        for delta in sentence:
             if delta.attributes == {}:
                 for text in re.split(r"(\.\.\.|\s+|\W)", delta.insert):
                     if text != "":
@@ -84,7 +85,7 @@ def adapt_instructions(deltas: list[d.InsertOp], effects: list[AdaptationEffect]
     # Each sentence is on its own paragraph
     section = renderable.Section(paragraphs=[
         renderable.Paragraph(sentences=[renderable.Sentence(tokens=list(adapt_sentence(deltas)))])
-        for sentences_deltas in _split_deltas_into_paragraphs_and_sentences(deltas, r"\s*\n\s*\n\s*")
+        for sentences_deltas in _split_deltas_into_paragraphs_and_sentences(instructions, r"\s*\n\s*\n\s*")
         for deltas in sentences_deltas
     ])
 
@@ -93,7 +94,7 @@ def adapt_instructions(deltas: list[d.InsertOp], effects: list[AdaptationEffect]
     return section
 
 
-def adapt_wording(instructions_deltas, wording_deltas: list[d.InsertOp], effects: list[AdaptationEffect]):
+def adapt_wording(instructions, wording: deltas.Deltas, effects: list[AdaptationEffect]):
     global_placeholders: list[tuple[str, renderable.SentenceToken]] = []
     words_are_selectable = False
     punctuation_is_selectable = False
@@ -110,16 +111,16 @@ def adapt_wording(instructions_deltas, wording_deltas: list[d.InsertOp], effects
                 selectables_colors = effect.effects.selectable.colors
                 selectables_are_boxed = effect.effects.boxed
 
-    for (start, separator1, separator2, stop, placeholder, text) in _gather_choices(instructions_deltas):
+    for (start, separator1, separator2, stop, placeholder, text) in _gather_choices(instructions):
         if placeholder != "":
             global_placeholders.append((placeholder, renderable.MultipleChoicesInput(choices=_separate_choices(start, separator1, separator2, stop, placeholder, text))))
 
-    for delta in wording_deltas:
+    for delta in wording:
         if delta.attributes == {}:
             for index, (placeholder, _token) in enumerate(global_placeholders):
                 delta.insert = delta.insert.replace(placeholder, f"ph{index}hp")
 
-    def adapt_sentence(sentence_deltas: list[d.InsertOp]):
+    def adapt_sentence(sentence_deltas: deltas.Deltas):
         sentence_specific_placeholders = []
 
         for (start, separator1, separator2, stop, placeholder, text) in _gather_choices(sentence_deltas):
@@ -197,7 +198,7 @@ def adapt_wording(instructions_deltas, wording_deltas: list[d.InsertOp], effects
             renderable.Sentence(tokens=list(adapt_sentence(deltas)))
             for deltas in sentences_deltas
         ])
-        for sentences_deltas in _split_deltas_into_paragraphs_and_sentences(wording_deltas, r"\s*\n\s*")
+        for sentences_deltas in _split_deltas_into_paragraphs_and_sentences(wording, r"\s*\n\s*")
     ])
 
     _strip_section(section)
@@ -205,7 +206,7 @@ def adapt_wording(instructions_deltas, wording_deltas: list[d.InsertOp], effects
     return section
 
 
-def _split_deltas_into_paragraphs_and_sentences(deltas: list[d.InsertOp], explicit_paragraph_separator_pattern):
+def _split_deltas_into_paragraphs_and_sentences(deltas: deltas.Deltas, explicit_paragraph_separator_pattern):
     assert len(deltas) > 0
     deltas[0].insert = deltas[0].insert.lstrip()
     deltas[-1].insert = deltas[-1].insert.rstrip()
@@ -311,18 +312,11 @@ def _separate_choices(start, separator1, separator2, stop, placeholder, text):
 class AdaptationTestCase(unittest.TestCase):
     maxDiff = None
 
-    def do_test(self, exercise, expected_adapted, expected_delta):
-        actual_adapted, actual_delta = exercise.make_adapted_and_delta()
-
+    def do_test(self, exercise, expected_adapted):
+        actual_adapted = exercise.make_adapted()
         if actual_adapted != expected_adapted:
             print("actual_adapted:", [actual_adapted])
-
-        if actual_delta != expected_delta:
-            print("actual_delta:", [actual_delta])
-
         self.assertEqual(actual_adapted, expected_adapted)
-        self.assertEqual(actual_delta, expected_delta)
-
 
 # Tests in this file follow a legacy organization, based on classes that have been deleted.
 # There is some duplication because tests have been kept through refactoring.
@@ -335,10 +329,14 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions="instructions\n",
-                wording="The wording of this ... is a ... sentence.\n",
-                example="\n",
-                clue="\n",
+                instructions=[
+                    d.InsertOp(insert="instructions\n", attributes={}),
+                ],
+                wording=[
+                    d.InsertOp(insert="The wording of this ... is a ... sentence.\n", attributes={}),
+                ],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(kind="fill-with-free-text", effects=[FillWithFreeTextAdaptationEffect(kind="fill-with-free-text", placeholder="...")]),
             ),
@@ -380,16 +378,6 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 clue=r.Section(paragraphs=[]),
                 wording_paragraphs_per_pagelet=3,
             ),
-            d.Exercise(
-                instructions=[
-                    d.InsertOp(insert="instructions\n", attributes={}),
-                ],
-                wording=[
-                    d.InsertOp(insert="The wording of this ... is a ... sentence.\n", attributes={}),
-                ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
-            ),
         )
 
     def test_start_and_end_with_placeholder(self):
@@ -397,10 +385,14 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=None,
-                instructions="instructions\n",
-                wording="@ a @\n",
-                example="\n",
-                clue="\n",
+                instructions=[
+                    d.InsertOp(insert="instructions\n", attributes={}),
+                ],
+                wording=[
+                    d.InsertOp(insert="@ a @\n", attributes={}),
+                ],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(kind="fill-with-free-text", effects=[FillWithFreeTextAdaptationEffect(kind="fill-with-free-text", placeholder="@")]),
             ),
@@ -429,16 +421,6 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 clue=r.Section(paragraphs=[]),
                 wording_paragraphs_per_pagelet=3,
             ),
-            d.Exercise(
-                instructions=[
-                    d.InsertOp(insert="instructions\n", attributes={}),
-                ],
-                wording=[
-                    d.InsertOp(insert="@ a @\n", attributes={}),
-                ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
-            ),
         )
 
     def test_multiple_lines_in_instructions(self):
@@ -446,10 +428,14 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions="instructions\nare\n\non\n\nmultiple\nlines\n",
-                wording="wording\n",
-                example="\n",
-                clue="\n",
+                instructions=[
+                    d.InsertOp(insert="instructions\nare\n\non\n\nmultiple\nlines\n", attributes={}),
+                ],
+                wording=[
+                    d.InsertOp(insert="wording\n", attributes={}),
+                ],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(kind="fill-with-free-text", effects=[FillWithFreeTextAdaptationEffect(kind="fill-with-free-text", placeholder="...")]),
             ),
@@ -488,16 +474,6 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 clue=r.Section(paragraphs=[]),
                 wording_paragraphs_per_pagelet=3,
             ),
-            d.Exercise(
-                instructions=[
-                    d.InsertOp(insert="instructions\nare\n\non\n\nmultiple\nlines\n", attributes={}),
-                ],
-                wording=[
-                    d.InsertOp(insert="wording\n", attributes={}),
-                ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
-            ),
         )
 
     def test_multiple_lines_in_wording(self):
@@ -505,10 +481,14 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions="instructions\n",
-                wording="foo toto : ...\n\nbar : ...\n\nbaz : ...\n",
-                example="\n",
-                clue="\n",
+                instructions=[
+                    d.InsertOp(insert="instructions\n", attributes={}),
+                ],
+                wording=[
+                    d.InsertOp(insert="foo toto : ...\n\nbar : ...\n\nbaz : ...\n", attributes={}),
+                ],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(kind="fill-with-free-text", effects=[FillWithFreeTextAdaptationEffect(kind="fill-with-free-text", placeholder="...")]),
             ),
@@ -557,16 +537,6 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 clue=r.Section(paragraphs=[]),
                 wording_paragraphs_per_pagelet=3,
             ),
-            d.Exercise(
-                instructions=[
-                    d.InsertOp(insert="instructions\n", attributes={}),
-                ],
-                wording=[
-                    d.InsertOp(insert="foo toto : ...\n\nbar : ...\n\nbaz : ...\n", attributes={}),
-                ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
-            ),
         )
 
     def test_unknown_tags(self):
@@ -574,43 +544,6 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions="{tag|abc}\n",
-                wording="{tag|def}\n",
-                example="\n",
-                clue="\n",
-                wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="fill-with-free-text", effects=[FillWithFreeTextAdaptationEffect(kind="fill-with-free-text", placeholder="...")]),
-            ),
-            r.Exercise(
-                number="number",
-                textbook_page=42,
-                instructions=r.Section(paragraphs=[
-                    r.Paragraph(sentences=[
-                        r.Sentence(tokens=[
-                            r.PlainText(text="{"),
-                            r.PlainText(text="tag"),
-                            r.PlainText(text="|"),
-                            r.PlainText(text="abc"),
-                            r.PlainText(text="}"),
-                        ]),
-                    ]),
-                ]),
-                wording=r.Section(paragraphs=[
-                    r.Paragraph(sentences=[
-                        r.Sentence(tokens=[
-                            r.PlainText(text="{"),
-                            r.PlainText(text="tag"),
-                            r.PlainText(text="|"),
-                            r.PlainText(text="def"),
-                            r.PlainText(text="}"),
-                        ]),
-                    ]),
-                ]),
-                example=r.Section(paragraphs=[]),
-                clue=r.Section(paragraphs=[]),
-                wording_paragraphs_per_pagelet=3,
-            ),
-            d.Exercise(
                 instructions=[
                     d.InsertOp(insert="{tag|abc}\n", attributes={}),
                 ],
@@ -619,6 +552,37 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 ],
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
+                wording_paragraphs_per_pagelet=3,
+                adaptation=AdaptationV2(kind="fill-with-free-text", effects=[FillWithFreeTextAdaptationEffect(kind="fill-with-free-text", placeholder="...")]),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(text="{"),
+                            r.PlainText(text="tag"),
+                            r.PlainText(text="|"),
+                            r.PlainText(text="abc"),
+                            r.PlainText(text="}"),
+                        ]),
+                    ]),
+                ]),
+                wording=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(text="{"),
+                            r.PlainText(text="tag"),
+                            r.PlainText(text="|"),
+                            r.PlainText(text="def"),
+                            r.PlainText(text="}"),
+                        ]),
+                    ]),
+                ]),
+                example=r.Section(paragraphs=[]),
+                clue=r.Section(paragraphs=[]),
+                wording_paragraphs_per_pagelet=3,
             ),
         )
 
@@ -627,10 +591,14 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions="   abc   \n",
-                wording="   def   \n",
-                example="\n",
-                clue="\n",
+                instructions=[
+                    d.InsertOp(insert="   abc   \n", attributes={}),
+                ],
+                wording=[
+                    d.InsertOp(insert="   def   \n", attributes={}),
+                ],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(kind="fill-with-free-text", effects=[FillWithFreeTextAdaptationEffect(kind="fill-with-free-text", placeholder="...")]),
             ),
@@ -655,16 +623,6 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 clue=r.Section(paragraphs=[]),
                 wording_paragraphs_per_pagelet=3,
             ),
-            d.Exercise(
-                instructions=[
-                    d.InsertOp(insert="   abc   \n", attributes={}),
-                ],
-                wording=[
-                    d.InsertOp(insert="   def   \n", attributes={}),
-                ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
-            ),
         )
 
     def test_example_and_clue(self):
@@ -672,10 +630,18 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions="instructions\n",
-                wording="This @ is the wording.\n",
-                example="This @ is the example.\n",
-                clue="This @ is the clue.\n",
+                instructions=[
+                    d.InsertOp(insert="instructions\n", attributes={}),
+                ],
+                wording=[
+                    d.InsertOp(insert="This @ is the wording.\n", attributes={}),
+                ],
+                example=[
+                    d.InsertOp(insert="This @ is the example.\n", attributes={}),
+                ],
+                clue=[
+                    d.InsertOp(insert="This @ is the clue.\n", attributes={}),
+                ],
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(kind="fill-with-free-text", effects=[FillWithFreeTextAdaptationEffect(kind="fill-with-free-text", placeholder="@")]),
             ),
@@ -739,20 +705,6 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 ]),
                 wording_paragraphs_per_pagelet=3,
             ),
-            d.Exercise(
-                instructions=[
-                    d.InsertOp(insert="instructions\n", attributes={}),
-                ],
-                wording=[
-                    d.InsertOp(insert="This @ is the wording.\n", attributes={}),
-                ],
-                example=[
-                    d.InsertOp(insert="This @ is the example.\n", attributes={}),
-                ],
-                clue=[
-                    d.InsertOp(insert="This @ is the clue.\n", attributes={}),
-                ],
-            ),
         )
 
 
@@ -762,10 +714,10 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions="Instructions\n",
-                wording="This is, the wording.\n",
-                example="\n",
-                clue="\n",
+                instructions=[d.InsertOp(insert="Instructions\n", attributes={})],
+                wording=[d.InsertOp(insert="This is, the wording.\n", attributes={})],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(kind="generic", effects=[ItemizedAdaptationEffect(
                     kind="itemized",
@@ -798,12 +750,6 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 clue=r.Section(paragraphs=[]),
                 wording_paragraphs_per_pagelet=3,
             ),
-            d.Exercise(
-                instructions=[d.InsertOp(insert="Instructions\n", attributes={})],
-                wording=[d.InsertOp(insert="This is, the wording.\n", attributes={})],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
-            ),
         )
 
     def test_selectable_words_and_punctuation(self):
@@ -811,10 +757,10 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions="Instructions\n",
-                wording="This is, the wording.\n",
-                example="\n",
-                clue="\n",
+                instructions=[d.InsertOp(insert="Instructions\n", attributes={})],
+                wording=[d.InsertOp(insert="This is, the wording.\n", attributes={})],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(kind="generic", effects=[ItemizedAdaptationEffect(
                     kind="itemized",
@@ -847,12 +793,6 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 clue=r.Section(paragraphs=[]),
                 wording_paragraphs_per_pagelet=3,
             ),
-            d.Exercise(
-                instructions=[d.InsertOp(insert="Instructions\n", attributes={})],
-                wording=[d.InsertOp(insert="This is, the wording.\n", attributes={})],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
-            ),
         )
 
     def test_selectable_words__boxed(self):
@@ -860,10 +800,10 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions="Instructions\n",
-                wording="This is, the wording.\n",
-                example="\n",
-                clue="\n",
+                instructions=[d.InsertOp(insert="Instructions\n", attributes={})],
+                wording=[d.InsertOp(insert="This is, the wording.\n", attributes={})],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(kind="generic", effects=[ItemizedAdaptationEffect(
                     kind="itemized",
@@ -896,12 +836,6 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 clue=r.Section(paragraphs=[]),
                 wording_paragraphs_per_pagelet=3,
             ),
-            d.Exercise(
-                instructions=[d.InsertOp(insert="Instructions\n", attributes={})],
-                wording=[d.InsertOp(insert="This is, the wording.\n", attributes={})],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
-            ),
         )
 
     def test_selectable_manual_items__plain(self):
@@ -909,10 +843,16 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions="Instructions\n",
-                wording="This {selectable|is}{selectable|,} {selectable|the} wording.\n",
-                example="\n",
-                clue="\n",
+                instructions=[d.InsertOp(insert="Instructions\n", attributes={})],
+                wording=[
+                    d.InsertOp(insert="This ", attributes={}),
+                    d.InsertOp(insert="is,", attributes={"selectable": True}),
+                    d.InsertOp(insert=" ", attributes={}),
+                    d.InsertOp(insert="the", attributes={"selectable": True}),
+                    d.InsertOp(insert=" wording.\n", attributes={}),
+                ],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(kind="generic", effects=[ItemizedAdaptationEffect(
                     kind="itemized",
@@ -945,7 +885,13 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 clue=r.Section(paragraphs=[]),
                 wording_paragraphs_per_pagelet=3,
             ),
-            d.Exercise(
+        )
+
+    def test_selectable_manual_items__boxed(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=42,
                 instructions=[d.InsertOp(insert="Instructions\n", attributes={})],
                 wording=[
                     d.InsertOp(insert="This ", attributes={}),
@@ -956,18 +902,6 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 ],
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
-            ),
-        )
-
-    def test_selectable_manual_items__boxed(self):
-        self.do_test(
-            e.Exercise(
-                number="number",
-                textbook_page=42,
-                instructions="Instructions\n",
-                wording="This {selectable|is}{selectable|,} {selectable|the} wording.\n",
-                example="\n",
-                clue="\n",
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(kind="generic", effects=[ItemizedAdaptationEffect(
                     kind="itemized",
@@ -1000,18 +934,6 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 clue=r.Section(paragraphs=[]),
                 wording_paragraphs_per_pagelet=3,
             ),
-            d.Exercise(
-                instructions=[d.InsertOp(insert="Instructions\n", attributes={})],
-                wording=[
-                    d.InsertOp(insert="This ", attributes={}),
-                    d.InsertOp(insert="is,", attributes={"selectable": True}),
-                    d.InsertOp(insert=" ", attributes={}),
-                    d.InsertOp(insert="the", attributes={"selectable": True}),
-                    d.InsertOp(insert=" wording.\n", attributes={}),
-                ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
-            ),
         )
 
     def test_sel_tags(self):
@@ -1019,10 +941,21 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=None,
-                instructions="{sel1|abc} {sel2|def} {sel3|ghi} {sel4|jkl}\n",
-                wording="wording\n",
-                example="\n",
-                clue="\n",
+                instructions=[
+                    d.InsertOp(insert="abc", attributes={"sel": 1}),
+                    d.InsertOp(insert=" ", attributes={}),
+                    d.InsertOp(insert="def", attributes={"sel": 2}),
+                    d.InsertOp(insert=" ", attributes={}),
+                    d.InsertOp(insert="ghi", attributes={"sel": 3}),
+                    d.InsertOp(insert=" ", attributes={}),
+                    d.InsertOp(insert="jkl", attributes={"sel": 4}),
+                    d.InsertOp(insert="\n", attributes={}),
+                ],
+                wording=[
+                    d.InsertOp(insert="wording\n", attributes={}),
+                ],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
                     adaptation=AdaptationV2(kind="generic", effects=[ItemizedAdaptationEffect(
                         kind="itemized",
@@ -1057,23 +990,6 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 clue=r.Section(paragraphs=[]),
                 wording_paragraphs_per_pagelet=3,
             ),
-            d.Exercise(
-                instructions=[
-                    d.InsertOp(insert="abc", attributes={"sel": 1}),
-                    d.InsertOp(insert=" ", attributes={}),
-                    d.InsertOp(insert="def", attributes={"sel": 2}),
-                    d.InsertOp(insert=" ", attributes={}),
-                    d.InsertOp(insert="ghi", attributes={"sel": 3}),
-                    d.InsertOp(insert=" ", attributes={}),
-                    d.InsertOp(insert="jkl", attributes={"sel": 4}),
-                    d.InsertOp(insert="\n", attributes={}),
-                ],
-                wording=[
-                    d.InsertOp(insert="wording\n", attributes={}),
-                ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
-            ),
         )
 
 
@@ -1083,10 +999,16 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions="Choose {choices2||or|||...|a or b}.\n",
-                wording="A ... B ...\n",
-                example="\n",
-                clue="\n",
+                instructions=[
+                    d.InsertOp(insert="Choose ", attributes={}),
+                    d.InsertOp(insert="a or b", attributes={"choices2": {"start": "", "separator1": "or", "separator2": "", "stop": "", "placeholder": "..."}}),
+                    d.InsertOp(insert=".\n", attributes={}),
+                ],
+                wording=[
+                    d.InsertOp(insert="A ... B ...\n", attributes={}),
+                ],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
             ),
@@ -1124,18 +1046,6 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                 clue=r.Section(paragraphs=[]),
                 wording_paragraphs_per_pagelet=3,
             ),
-            d.Exercise(
-                instructions=[
-                    d.InsertOp(insert="Choose ", attributes={}),
-                    d.InsertOp(insert="a or b", attributes={"choices2": {"start": "", "separator1": "or", "separator2": "", "stop": "", "placeholder": "..."}}),
-                    d.InsertOp(insert=".\n", attributes={}),
-                ],
-                wording=[
-                    d.InsertOp(insert="A ... B ...\n", attributes={}),
-                ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
-            ),
         )
 
     def test_example_and_clue(self):
@@ -1143,10 +1053,20 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions="Choose {choices2||or|||@|a or b}.\n",
-                wording="A @ B @\n",
-                example="This {choices2||/||||is} the @ example.\n",
-                clue="This is {choices2||/||||the} @ clue.\n",
+                instructions=[
+                    d.InsertOp(insert="Choose ", attributes={}),
+                    d.InsertOp(insert="a or b", attributes={"choices2": {"start": "", "separator1": "or", "separator2": "", "stop": "", "placeholder": "@"}}),
+                    d.InsertOp(insert=".\n", attributes={}),
+                ],
+                wording=[
+                    d.InsertOp(insert="A @ B @\n", attributes={}),
+                ],
+                example=[
+                    d.InsertOp(insert="This {choices2||/||||is} the @ example.\n", attributes={}),
+                ],
+                clue=[
+                    d.InsertOp(insert="This is {choices2||/||||the} @ clue.\n", attributes={}),
+                ],
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
             ),
@@ -1234,22 +1154,6 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                 ]),
                 wording_paragraphs_per_pagelet=3,
             ),
-            d.Exercise(
-                instructions=[
-                    d.InsertOp(insert="Choose ", attributes={}),
-                    d.InsertOp(insert="a or b", attributes={"choices2": {"start": "", "separator1": "or", "separator2": "", "stop": "", "placeholder": "@"}}),
-                    d.InsertOp(insert=".\n", attributes={}),
-                ],
-                wording=[
-                    d.InsertOp(insert="A @ B @\n", attributes={}),
-                ],
-                example=[
-                    d.InsertOp(insert="This {choices2||/||||is} the @ example.\n", attributes={}),
-                ],
-                clue=[
-                    d.InsertOp(insert="This is {choices2||/||||the} @ clue.\n", attributes={}),
-                ],
-            ),
         )
 
     def test_choices2(self):
@@ -1257,48 +1161,6 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions="Choose {choices2||or|||...|a or b}.\n",
-                wording="A ... B ...\n",
-                example="\n",
-                clue="\n",
-                wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
-            ),
-            r.Exercise(
-                number="number",
-                textbook_page=42,
-                instructions=r.Section(paragraphs=[
-                    r.Paragraph(sentences=[
-                        r.Sentence(tokens=[
-                            r.PlainText(text="Choose"),
-                            r.Whitespace(),
-                            r.BoxedText(text="a"),
-                            r.Whitespace(),
-                            r.PlainText(text="or"),
-                            r.Whitespace(),
-                            r.BoxedText(text="b"),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                ]),
-                wording=r.Section(paragraphs=[
-                    r.Paragraph(sentences=[
-                        r.Sentence(tokens=[
-                            r.PlainText(text="A"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(choices=["a", "b"]),
-                            r.Whitespace(),
-                            r.PlainText(text="B"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(choices=["a", "b"]),
-                        ]),
-                    ]),
-                ]),
-                example=r.Section(paragraphs=[]),
-                clue=r.Section(paragraphs=[]),
-                wording_paragraphs_per_pagelet=3,
-            ),
-            d.Exercise(
                 instructions=[
                     d.InsertOp(insert="Choose ", attributes={}),
                     d.InsertOp(insert="a or b", attributes={"choices2": {"start": "", "separator1": "or", "separator2": "", "stop": "", "placeholder": "..."}}),
@@ -1309,18 +1171,6 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                 ],
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
-            ),
-        )
-
-    def test_choices2_with_two_separators(self):
-        self.do_test(
-            e.Exercise(
-                number="number",
-                textbook_page=42,
-                instructions="Choose {choices2||,|or||...|a, b, c or d}.\n",
-                wording="A ... B ...\n",
-                example="\n",
-                clue="\n",
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
             ),
@@ -1333,16 +1183,10 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                             r.PlainText(text="Choose"),
                             r.Whitespace(),
                             r.BoxedText(text="a"),
-                            r.PlainText(text=","),
-                            r.Whitespace(),
-                            r.BoxedText(text="b"),
-                            r.PlainText(text=","),
-                            r.Whitespace(),
-                            r.BoxedText(text="c"),
                             r.Whitespace(),
                             r.PlainText(text="or"),
                             r.Whitespace(),
-                            r.BoxedText(text="d"),
+                            r.BoxedText(text="b"),
                             r.PlainText(text="."),
                         ]),
                     ]),
@@ -1352,11 +1196,11 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                         r.Sentence(tokens=[
                             r.PlainText(text="A"),
                             r.Whitespace(),
-                            r.MultipleChoicesInput(choices=["a", "b", "c", "d"]),
+                            r.MultipleChoicesInput(choices=["a", "b"]),
                             r.Whitespace(),
                             r.PlainText(text="B"),
                             r.Whitespace(),
-                            r.MultipleChoicesInput(choices=["a", "b", "c", "d"]),
+                            r.MultipleChoicesInput(choices=["a", "b"]),
                         ]),
                     ]),
                 ]),
@@ -1364,7 +1208,13 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                 clue=r.Section(paragraphs=[]),
                 wording_paragraphs_per_pagelet=3,
             ),
-            d.Exercise(
+        )
+
+    def test_choices2_with_two_separators(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=42,
                 instructions=[
                     d.InsertOp(insert="Choose ", attributes={}),
                     d.InsertOp(insert="a, b, c or d", attributes={"choices2": {"start": "", "separator1": ",", "separator2": "or", "stop": "", "placeholder": "..."}}),
@@ -1375,18 +1225,6 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                 ],
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
-            ),
-        )
-
-    def test_choices2_with_oxford_comma(self):
-        self.do_test(
-            e.Exercise(
-                number="number",
-                textbook_page=42,
-                instructions="Choose {choices2||,|or||...|a, b, c, or d}.\n",
-                wording="A ... B ...\n",
-                example="\n",
-                clue="\n",
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
             ),
@@ -1430,7 +1268,13 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                 clue=r.Section(paragraphs=[]),
                 wording_paragraphs_per_pagelet=3,
             ),
-            d.Exercise(
+        )
+
+    def test_choices2_with_oxford_comma(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=42,
                 instructions=[
                     d.InsertOp(insert="Choose ", attributes={}),
                     d.InsertOp(insert="a, b, c, or d", attributes={"choices2": {"start": "", "separator1": ",", "separator2": "or", "stop": "", "placeholder": "..."}}),
@@ -1441,6 +1285,48 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                 ],
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
+                wording_paragraphs_per_pagelet=3,
+                adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(text="Choose"),
+                            r.Whitespace(),
+                            r.BoxedText(text="a"),
+                            r.PlainText(text=","),
+                            r.Whitespace(),
+                            r.BoxedText(text="b"),
+                            r.PlainText(text=","),
+                            r.Whitespace(),
+                            r.BoxedText(text="c"),
+                            r.Whitespace(),
+                            r.PlainText(text="or"),
+                            r.Whitespace(),
+                            r.BoxedText(text="d"),
+                            r.PlainText(text="."),
+                        ]),
+                    ]),
+                ]),
+                wording=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(text="A"),
+                            r.Whitespace(),
+                            r.MultipleChoicesInput(choices=["a", "b", "c", "d"]),
+                            r.Whitespace(),
+                            r.PlainText(text="B"),
+                            r.Whitespace(),
+                            r.MultipleChoicesInput(choices=["a", "b", "c", "d"]),
+                        ]),
+                    ]),
+                ]),
+                example=r.Section(paragraphs=[]),
+                clue=r.Section(paragraphs=[]),
+                wording_paragraphs_per_pagelet=3,
             ),
         )
 
@@ -1449,10 +1335,16 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions="Choose {choices2||/|||...|a / b // c}.\n",
-                wording="A ... B ...\n",
-                example="\n",
-                clue="\n",
+                instructions=[
+                    d.InsertOp(insert="Choose ", attributes={}),
+                    d.InsertOp(insert="a / b // c", attributes={"choices2": {"start": "", "separator1": "/", "separator2": "", "stop": "", "placeholder": "..."}}),
+                    d.InsertOp(insert=".\n", attributes={}),
+                ],
+                wording=[
+                    d.InsertOp(insert="A ... B ...\n", attributes={}),
+                ],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
             ),
@@ -1494,18 +1386,6 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                 clue=r.Section(paragraphs=[]),
                 wording_paragraphs_per_pagelet=3,
             ),
-            d.Exercise(
-                instructions=[
-                    d.InsertOp(insert="Choose ", attributes={}),
-                    d.InsertOp(insert="a / b // c", attributes={"choices2": {"start": "", "separator1": "/", "separator2": "", "stop": "", "placeholder": "..."}}),
-                    d.InsertOp(insert=".\n", attributes={}),
-                ],
-                wording=[
-                    d.InsertOp(insert="A ... B ...\n", attributes={}),
-                ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
-            ),
         )
 
     def test_choices2_with_start_and_stop(self):
@@ -1513,10 +1393,16 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions="Choose {choices2|(|or||)|...|(a or b)}.\n",
-                wording="A ... B ...\n",
-                example="\n",
-                clue="\n",
+                instructions=[
+                    d.InsertOp(insert="Choose ", attributes={}),
+                    d.InsertOp(insert="(a or b)", attributes={"choices2": {"start": "(", "separator1": "or", "separator2": "", "stop": ")", "placeholder": "..."}}),
+                    d.InsertOp(insert=".\n", attributes={}),
+                ],
+                wording=[
+                    d.InsertOp(insert="A ... B ...\n", attributes={}),
+                ],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
             ),
@@ -1556,18 +1442,6 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                 clue=r.Section(paragraphs=[]),
                 wording_paragraphs_per_pagelet=3,
             ),
-            d.Exercise(
-                instructions=[
-                    d.InsertOp(insert="Choose ", attributes={}),
-                    d.InsertOp(insert="(a or b)", attributes={"choices2": {"start": "(", "separator1": "or", "separator2": "", "stop": ")", "placeholder": "..."}}),
-                    d.InsertOp(insert=".\n", attributes={}),
-                ],
-                wording=[
-                    d.InsertOp(insert="A ... B ...\n", attributes={}),
-                ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
-            ),
         )
 
     def test_two_choices2(self):
@@ -1575,10 +1449,18 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions="Choose {choices2||or|||...|a or b} and {choices2||or|||@@@|c or d}.\n",
-                wording="A ... @@@\nB ... @@@\n",
-                example="\n",
-                clue="\n",
+                instructions=[
+                    d.InsertOp(insert="Choose ", attributes={}),
+                    d.InsertOp(insert="a or b", attributes={"choices2": {"start": "", "separator1": "or", "separator2": "", "stop": "", "placeholder": "..."}}),
+                    d.InsertOp(insert=" and ", attributes={}),
+                    d.InsertOp(insert="c or d", attributes={"choices2": {"start": "", "separator1": "or", "separator2": "", "stop": "", "placeholder": "@@@"}}),
+                    d.InsertOp(insert=".\n", attributes={}),
+                ],
+                wording=[
+                    d.InsertOp(insert="A ... @@@\nB ... @@@\n", attributes={}),
+                ],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
             ),
@@ -1631,20 +1513,6 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                 clue=r.Section(paragraphs=[]),
                 wording_paragraphs_per_pagelet=3,
             ),
-            d.Exercise(
-                instructions=[
-                    d.InsertOp(insert="Choose ", attributes={}),
-                    d.InsertOp(insert="a or b", attributes={"choices2": {"start": "", "separator1": "or", "separator2": "", "stop": "", "placeholder": "..."}}),
-                    d.InsertOp(insert=" and ", attributes={}),
-                    d.InsertOp(insert="c or d", attributes={"choices2": {"start": "", "separator1": "or", "separator2": "", "stop": "", "placeholder": "@@@"}}),
-                    d.InsertOp(insert=".\n", attributes={}),
-                ],
-                wording=[
-                    d.InsertOp(insert="A ... @@@\nB ... @@@\n", attributes={}),
-                ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
-            ),
         )
 
 
@@ -1654,10 +1522,18 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions="Choose wisely.\n",
-                wording="A {choices2||/||||a/b/c} B {choices2||#||||d#e}.\n",
-                example="\n",
-                clue="\n",
+                instructions=[
+                    d.InsertOp(insert="Choose wisely.\n", attributes={}),
+                ],
+                wording=[
+                    d.InsertOp(insert="A ", attributes={}),
+                    d.InsertOp(insert="a/b/c", attributes={"choices2": {"start": "", "separator1": "/", "separator2": "", "stop": "", "placeholder": ""}}),
+                    d.InsertOp(insert=" B ", attributes={}),
+                    d.InsertOp(insert="d#e", attributes={"choices2": {"start": "", "separator1": "#", "separator2": "", "stop": "", "placeholder": ""}}),
+                    d.InsertOp(insert=".\n", attributes={}),
+                ],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
             ),
@@ -1692,20 +1568,6 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 clue=r.Section(paragraphs=[]),
                 wording_paragraphs_per_pagelet=3,
             ),
-            d.Exercise(
-                instructions=[
-                    d.InsertOp(insert="Choose wisely.\n", attributes={}),
-                ],
-                wording=[
-                    d.InsertOp(insert="A ", attributes={}),
-                    d.InsertOp(insert="a/b/c", attributes={"choices2": {"start": "", "separator1": "/", "separator2": "", "stop": "", "placeholder": ""}}),
-                    d.InsertOp(insert=" B ", attributes={}),
-                    d.InsertOp(insert="d#e", attributes={"choices2": {"start": "", "separator1": "#", "separator2": "", "stop": "", "placeholder": ""}}),
-                    d.InsertOp(insert=".\n", attributes={}),
-                ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
-            ),
         )
 
     def test_choices2_without_placeholder(self):
@@ -1713,41 +1575,6 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions="Choose wisely.\n",
-                wording="A {choices2|(|/||)||(blah/blih)}.\n",
-                example="\n",
-                clue="\n",
-                wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
-            ),
-            r.Exercise(
-                number="number",
-                textbook_page=42,
-                instructions=r.Section(paragraphs=[
-                    r.Paragraph(sentences=[
-                        r.Sentence(tokens=[
-                            r.PlainText(text="Choose"),
-                            r.Whitespace(),
-                            r.PlainText(text="wisely"),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                ]),
-                wording=r.Section(paragraphs=[
-                    r.Paragraph(sentences=[
-                        r.Sentence(tokens=[
-                            r.PlainText(text="A"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(choices=["blah", "blih"]),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                ]),
-                example=r.Section(paragraphs=[]),
-                clue=r.Section(paragraphs=[]),
-                wording_paragraphs_per_pagelet=3,
-            ),
-            d.Exercise(
                 instructions=[
                     d.InsertOp(insert="Choose wisely.\n", attributes={}),
                 ],
@@ -1769,18 +1596,6 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 ],
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
-            ),
-        )
-
-    def test_choices2_with_spaces(self):
-        self.do_test(
-            e.Exercise(
-                number="number",
-                textbook_page=42,
-                instructions="Choose wisely.\n",
-                wording="A {choices2|(|/||)||  (  blah  /  blih  )  }.\n",
-                example="\n",
-                clue="\n",
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
             ),
@@ -1811,7 +1626,13 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 clue=r.Section(paragraphs=[]),
                 wording_paragraphs_per_pagelet=3,
             ),
-            d.Exercise(
+        )
+
+    def test_choices2_with_spaces(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=42,
                 instructions=[
                     d.InsertOp(insert="Choose wisely.\n", attributes={}),
                 ],
@@ -1833,18 +1654,6 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 ],
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
-            ),
-        )
-
-    def test_choices2_with_empty_start_and_stop(self):
-        self.do_test(
-            e.Exercise(
-                number="number",
-                textbook_page=42,
-                instructions="Choose wisely.\n",
-                wording="A {choices2||/||||blah/blih}.\n",
-                example="\n",
-                clue="\n",
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
             ),
@@ -1875,7 +1684,13 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 clue=r.Section(paragraphs=[]),
                 wording_paragraphs_per_pagelet=3,
             ),
-            d.Exercise(
+        )
+
+    def test_choices2_with_empty_start_and_stop(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=42,
                 instructions=[
                     d.InsertOp(insert="Choose wisely.\n", attributes={}),
                 ],
@@ -1897,6 +1712,35 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 ],
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
+                wording_paragraphs_per_pagelet=3,
+                adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(text="Choose"),
+                            r.Whitespace(),
+                            r.PlainText(text="wisely"),
+                            r.PlainText(text="."),
+                        ]),
+                    ]),
+                ]),
+                wording=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(text="A"),
+                            r.Whitespace(),
+                            r.MultipleChoicesInput(choices=["blah", "blih"]),
+                            r.PlainText(text="."),
+                        ]),
+                    ]),
+                ]),
+                example=r.Section(paragraphs=[]),
+                clue=r.Section(paragraphs=[]),
+                wording_paragraphs_per_pagelet=3,
             ),
         )
 
@@ -1905,10 +1749,27 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions="Choose wisely.\n",
-                wording="A {choices2||||||blah / blih}.\n",
-                example="\n",
-                clue="\n",
+                instructions=[
+                    d.InsertOp(insert="Choose wisely.\n", attributes={}),
+                ],
+                wording=[
+                    d.InsertOp(insert="A ", attributes={}),
+                    d.InsertOp(
+                        insert="blah / blih",
+                        attributes={
+                            "choices2": {
+                                "start": "",
+                                "separator1": "",
+                                "separator2": "",
+                                "stop": "",
+                                "placeholder": "",
+                            },
+                        },
+                    ),
+                    d.InsertOp(insert=".\n", attributes={}),
+                ],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
             ),
@@ -1939,29 +1800,6 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 clue=r.Section(paragraphs=[]),
                 wording_paragraphs_per_pagelet=3,
             ),
-            d.Exercise(
-                instructions=[
-                    d.InsertOp(insert="Choose wisely.\n", attributes={}),
-                ],
-                wording=[
-                    d.InsertOp(insert="A ", attributes={}),
-                    d.InsertOp(
-                        insert="blah / blih",
-                        attributes={
-                            "choices2": {
-                                "start": "",
-                                "separator1": "",
-                                "separator2": "",
-                                "stop": "",
-                                "placeholder": "",
-                            },
-                        },
-                    ),
-                    d.InsertOp(insert=".\n", attributes={}),
-                ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
-            ),
         )
 
     def test_choices2_with_longer_separators(self):
@@ -1969,41 +1807,6 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions="Choose wisely.\n",
-                wording="A {choices2|((|//||))||((blah//blih))}.\n",
-                example="\n",
-                clue="\n",
-                wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
-            ),
-            r.Exercise(
-                number="number",
-                textbook_page=42,
-                instructions=r.Section(paragraphs=[
-                    r.Paragraph(sentences=[
-                        r.Sentence(tokens=[
-                            r.PlainText(text="Choose"),
-                            r.Whitespace(),
-                            r.PlainText(text="wisely"),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                ]),
-                wording=r.Section(paragraphs=[
-                    r.Paragraph(sentences=[
-                        r.Sentence(tokens=[
-                            r.PlainText(text="A"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(choices=["blah", "blih"]),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                ]),
-                example=r.Section(paragraphs=[]),
-                clue=r.Section(paragraphs=[]),
-                wording_paragraphs_per_pagelet=3,
-            ),
-            d.Exercise(
                 instructions=[
                     d.InsertOp(insert="Choose wisely.\n", attributes={}),
                 ],
@@ -2025,18 +1828,6 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 ],
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
-            ),
-        )
-
-    def test_choices2_with_escaped_separators(self):
-        self.do_test(
-            e.Exercise(
-                number="number",
-                textbook_page=42,
-                instructions="Choose wisely.\n",
-                wording=r"A {choices2|\{|\|||\}||\{blah\|blih\}}." + "\n",
-                example="\n",
-                clue="\n",
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
             ),
@@ -2067,7 +1858,13 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 clue=r.Section(paragraphs=[]),
                 wording_paragraphs_per_pagelet=3,
             ),
-            d.Exercise(
+        )
+
+    def test_choices2_with_escaped_separators(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=42,
                 instructions=[
                     d.InsertOp(insert="Choose wisely.\n", attributes={}),
                 ],
@@ -2089,18 +1886,6 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 ],
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
-            ),
-        )
-
-    def test_choices2_with_placeholder_before(self):
-        self.do_test(
-            e.Exercise(
-                number="number",
-                textbook_page=42,
-                instructions="Choose wisely.\n",
-                wording="The sky is @@. {choices2|(|/||)|@@|(blue/red)} \n",
-                example="\n",
-                clue="\n",
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
             ),
@@ -2120,13 +1905,9 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 wording=r.Section(paragraphs=[
                     r.Paragraph(sentences=[
                         r.Sentence(tokens=[
-                            r.PlainText(text="The"),
+                            r.PlainText(text="A"),
                             r.Whitespace(),
-                            r.PlainText(text="sky"),
-                            r.Whitespace(),
-                            r.PlainText(text="is"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(choices=["blue", "red"]),
+                            r.MultipleChoicesInput(choices=["blah", "blih"]),
                             r.PlainText(text="."),
                         ]),
                     ]),
@@ -2135,7 +1916,13 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 clue=r.Section(paragraphs=[]),
                 wording_paragraphs_per_pagelet=3,
             ),
-            d.Exercise(
+        )
+
+    def test_choices2_with_placeholder_before(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=42,
                 instructions=[
                     d.InsertOp(insert="Choose wisely.\n", attributes={}),
                 ],
@@ -2157,18 +1944,6 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 ],
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
-            ),
-        )
-
-    def test_choices2_with_placeholder_after(self):
-        self.do_test(
-            e.Exercise(
-                number="number",
-                textbook_page=42,
-                instructions="Choose wisely.\n",
-                wording="{choices2|(|/||)|...|(blue/red)} The sky is ....\n",
-                example="\n",
-                clue="\n",
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
             ),
@@ -2203,7 +1978,13 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 clue=r.Section(paragraphs=[]),
                 wording_paragraphs_per_pagelet=3,
             ),
-            d.Exercise(
+        )
+
+    def test_choices2_with_placeholder_after(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=42,
                 instructions=[
                     d.InsertOp(insert="Choose wisely.\n", attributes={}),
                 ],
@@ -2224,94 +2005,6 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 ],
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
-            ),
-        )
-
-    def test_choices2_with_two_placeholders(self):
-        self.do_test(
-            e.Exercise(
-                number="number",
-                textbook_page=42,
-                instructions="Choose wisely.\n",
-                wording="{choices2|(|/||)|...|(blue/yellow)} The sky is ..., the sun is ....\n",
-                example="\n",
-                clue="\n",
-                wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
-            ),
-            r.Exercise(
-                number="number",
-                textbook_page=42,
-                instructions=r.Section(paragraphs=[
-                    r.Paragraph(sentences=[
-                        r.Sentence(tokens=[
-                            r.PlainText(text="Choose"),
-                            r.Whitespace(),
-                            r.PlainText(text="wisely"),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                ]),
-                wording=r.Section(paragraphs=[
-                    r.Paragraph(sentences=[
-                        r.Sentence(tokens=[
-                            r.PlainText(text="The"),
-                            r.Whitespace(),
-                            r.PlainText(text="sky"),
-                            r.Whitespace(),
-                            r.PlainText(text="is"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(choices=["blue", "yellow"]),
-                            r.PlainText(text=","),
-                            r.Whitespace(),
-                            r.PlainText(text="the"),
-                            r.Whitespace(),
-                            r.PlainText(text="sun"),
-                            r.Whitespace(),
-                            r.PlainText(text="is"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(choices=["blue", "yellow"]),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                ]),
-                example=r.Section(paragraphs=[]),
-                clue=r.Section(paragraphs=[]),
-                wording_paragraphs_per_pagelet=3,
-            ),
-            d.Exercise(
-                instructions=[
-                    d.InsertOp(insert="Choose wisely.\n", attributes={}),
-                ],
-                wording=[
-                    d.InsertOp(
-                        insert="(blue/yellow)",
-                        attributes={
-                            "choices2": {
-                                "start": "(",
-                                "separator1": "/",
-                                "separator2": "",
-                                "stop": ")",
-                                "placeholder": "...",
-                            },
-                        },
-                    ),
-                    d.InsertOp(insert=" The sky is ..., the sun is ....\n", attributes={}),
-                ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
-            ),
-        )
-
-    def test_two_choices2_with_matching_placeholders(self):
-        self.do_test(
-            e.Exercise(
-                number="number",
-                textbook_page=42,
-                instructions="Choose wisely.\n",
-                wording="{choices2|(|/||)|@1|(blue/red)} {choices2|[|*||]|@2|[green*yellow]} The sky is @1, the sun is @2.\n",
-                example="\n",
-                clue="\n",
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
             ),
@@ -2338,15 +2031,6 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                             r.PlainText(text="is"),
                             r.Whitespace(),
                             r.MultipleChoicesInput(choices=["blue", "red"]),
-                            r.PlainText(text=","),
-                            r.Whitespace(),
-                            r.PlainText(text="the"),
-                            r.Whitespace(),
-                            r.PlainText(text="sun"),
-                            r.Whitespace(),
-                            r.PlainText(text="is"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(choices=["green", "yellow"]),
                             r.PlainText(text="."),
                         ]),
                     ]),
@@ -2355,7 +2039,83 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 clue=r.Section(paragraphs=[]),
                 wording_paragraphs_per_pagelet=3,
             ),
-            d.Exercise(
+        )
+
+    def test_choices2_with_two_placeholders(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions=[
+                    d.InsertOp(insert="Choose wisely.\n", attributes={}),
+                ],
+                wording=[
+                    d.InsertOp(
+                        insert="(blue/yellow)",
+                        attributes={
+                            "choices2": {
+                                "start": "(",
+                                "separator1": "/",
+                                "separator2": "",
+                                "stop": ")",
+                                "placeholder": "...",
+                            },
+                        },
+                    ),
+                    d.InsertOp(insert=" The sky is ..., the sun is ....\n", attributes={}),
+                ],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
+                wording_paragraphs_per_pagelet=3,
+                adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(text="Choose"),
+                            r.Whitespace(),
+                            r.PlainText(text="wisely"),
+                            r.PlainText(text="."),
+                        ]),
+                    ]),
+                ]),
+                wording=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(text="The"),
+                            r.Whitespace(),
+                            r.PlainText(text="sky"),
+                            r.Whitespace(),
+                            r.PlainText(text="is"),
+                            r.Whitespace(),
+                            r.MultipleChoicesInput(choices=["blue", "yellow"]),
+                            r.PlainText(text=","),
+                            r.Whitespace(),
+                            r.PlainText(text="the"),
+                            r.Whitespace(),
+                            r.PlainText(text="sun"),
+                            r.Whitespace(),
+                            r.PlainText(text="is"),
+                            r.Whitespace(),
+                            r.MultipleChoicesInput(choices=["blue", "yellow"]),
+                            r.PlainText(text="."),
+                        ]),
+                    ]),
+                ]),
+                example=r.Section(paragraphs=[]),
+                clue=r.Section(paragraphs=[]),
+                wording_paragraphs_per_pagelet=3,
+            ),
+        )
+
+    def test_two_choices2_with_matching_placeholders(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=42,
                 instructions=[
                     d.InsertOp(insert="Choose wisely.\n", attributes={}),
                 ],
@@ -2389,18 +2149,6 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 ],
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
-            ),
-        )
-
-    def test_two_choices2_with_identical_placeholders(self):
-        self.do_test(
-            e.Exercise(
-                number="number",
-                textbook_page=42,
-                instructions="Choose wisely.\n",
-                wording="The sky is @@. {choices2|(|/||)|@@|(blue/red)}\n\nThe sun is @@. {choices2|(|/||)|@@|(green/yellow)}\n",
-                example="\n",
-                clue="\n",
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
             ),
@@ -2427,12 +2175,9 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                             r.PlainText(text="is"),
                             r.Whitespace(),
                             r.MultipleChoicesInput(choices=["blue", "red"]),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                    r.Paragraph(sentences=[
-                        r.Sentence(tokens=[
-                            r.PlainText(text="The"),
+                            r.PlainText(text=","),
+                            r.Whitespace(),
+                            r.PlainText(text="the"),
                             r.Whitespace(),
                             r.PlainText(text="sun"),
                             r.Whitespace(),
@@ -2447,7 +2192,13 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 clue=r.Section(paragraphs=[]),
                 wording_paragraphs_per_pagelet=3,
             ),
-            d.Exercise(
+        )
+
+    def test_two_choices2_with_identical_placeholders(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=42,
                 instructions=[
                     d.InsertOp(insert="Choose wisely.\n", attributes={}),
                 ],
@@ -2482,6 +2233,51 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 ],
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
+                wording_paragraphs_per_pagelet=3,
+                adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(text="Choose"),
+                            r.Whitespace(),
+                            r.PlainText(text="wisely"),
+                            r.PlainText(text="."),
+                        ]),
+                    ]),
+                ]),
+                wording=r.Section(paragraphs=[
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(text="The"),
+                            r.Whitespace(),
+                            r.PlainText(text="sky"),
+                            r.Whitespace(),
+                            r.PlainText(text="is"),
+                            r.Whitespace(),
+                            r.MultipleChoicesInput(choices=["blue", "red"]),
+                            r.PlainText(text="."),
+                        ]),
+                    ]),
+                    r.Paragraph(sentences=[
+                        r.Sentence(tokens=[
+                            r.PlainText(text="The"),
+                            r.Whitespace(),
+                            r.PlainText(text="sun"),
+                            r.Whitespace(),
+                            r.PlainText(text="is"),
+                            r.Whitespace(),
+                            r.MultipleChoicesInput(choices=["green", "yellow"]),
+                            r.PlainText(text="."),
+                        ]),
+                    ]),
+                ]),
+                example=r.Section(paragraphs=[]),
+                clue=r.Section(paragraphs=[]),
+                wording_paragraphs_per_pagelet=3,
             ),
         )
 
@@ -2490,10 +2286,40 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions="Choose wisely.\n",
-                wording="The sky is @1, {choices2|(|/||)|@1|(blue/red)} {choices2|[|*||]|@2|[green*yellow]} the sun is @2.\n",
-                example="\n",
-                clue="\n",
+                instructions=[
+                    d.InsertOp(insert="Choose wisely.\n", attributes={}),
+                ],
+                wording=[
+                    d.InsertOp(insert="The sky is @1, ", attributes={}),
+                    d.InsertOp(
+                        insert="(blue/red)",
+                        attributes={
+                            "choices2": {
+                                "start": "(",
+                                "separator1": "/",
+                                "separator2": "",
+                                "stop": ")",
+                                "placeholder": "@1",
+                            },
+                        },
+                    ),
+                    d.InsertOp(insert=" ", attributes={}),
+                    d.InsertOp(
+                        insert="[green*yellow]",
+                        attributes={
+                            "choices2": {
+                                "start": "[",
+                                "separator1": "*",
+                                "separator2": "",
+                                "stop": "]",
+                                "placeholder": "@2",
+                            },
+                        },
+                    ),
+                    d.InsertOp(insert=" the sun is @2.\n", attributes={}),
+                ],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
             ),
@@ -2537,42 +2363,6 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 clue=r.Section(paragraphs=[]),
                 wording_paragraphs_per_pagelet=3,
             ),
-            d.Exercise(
-                instructions=[
-                    d.InsertOp(insert="Choose wisely.\n", attributes={}),
-                ],
-                wording=[
-                    d.InsertOp(insert="The sky is @1, ", attributes={}),
-                    d.InsertOp(
-                        insert="(blue/red)",
-                        attributes={
-                            "choices2": {
-                                "start": "(",
-                                "separator1": "/",
-                                "separator2": "",
-                                "stop": ")",
-                                "placeholder": "@1",
-                            },
-                        },
-                    ),
-                    d.InsertOp(insert=" ", attributes={}),
-                    d.InsertOp(
-                        insert="[green*yellow]",
-                        attributes={
-                            "choices2": {
-                                "start": "[",
-                                "separator1": "*",
-                                "separator2": "",
-                                "stop": "]",
-                                "placeholder": "@2",
-                            },
-                        },
-                    ),
-                    d.InsertOp(insert=" the sun is @2.\n", attributes={}),
-                ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
-            ),
         )
 
 
@@ -2582,10 +2372,14 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=None,
-                instructions="instructions\n",
-                wording="The wording of this exercise is a single sentence.\n",
-                example="\n",
-                clue="\n",
+                instructions=[
+                    d.InsertOp(insert="instructions\n", attributes={}),
+                ],
+                wording=[
+                    d.InsertOp(insert="The wording of this exercise is a single sentence.\n", attributes={}),
+                ],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(
                     kind="generic",
@@ -2639,16 +2433,6 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 clue=r.Section(paragraphs=[]),
                 wording_paragraphs_per_pagelet=3,
             ),
-            d.Exercise(
-                instructions=[
-                    d.InsertOp(insert="instructions\n", attributes={}),
-                ],
-                wording=[
-                    d.InsertOp(insert="The wording of this exercise is a single sentence.\n", attributes={}),
-                ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
-            ),
         )
 
     def test_sel_tags(self):
@@ -2656,10 +2440,21 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=None,
-                instructions="{sel1|abc} {sel2|def} {sel3|ghi} {sel4|jkl}\n",
-                wording="wording\n",
-                example="\n",
-                clue="\n",
+                instructions=[
+                    d.InsertOp(insert="abc", attributes={"sel": 1}),
+                    d.InsertOp(insert=" ", attributes={}),
+                    d.InsertOp(insert="def", attributes={"sel": 2}),
+                    d.InsertOp(insert=" ", attributes={}),
+                    d.InsertOp(insert="ghi", attributes={"sel": 3}),
+                    d.InsertOp(insert=" ", attributes={}),
+                    d.InsertOp(insert="jkl", attributes={"sel": 4}),
+                    d.InsertOp(insert="\n", attributes={}),
+                ],
+                wording=[
+                    d.InsertOp(insert="wording\n", attributes={}),
+                ],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(
                     kind="generic",
@@ -2702,23 +2497,6 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 clue=r.Section(paragraphs=[]),
                 wording_paragraphs_per_pagelet=3,
             ),
-            d.Exercise(
-                instructions=[
-                    d.InsertOp(insert="abc", attributes={"sel": 1}),
-                    d.InsertOp(insert=" ", attributes={}),
-                    d.InsertOp(insert="def", attributes={"sel": 2}),
-                    d.InsertOp(insert=" ", attributes={}),
-                    d.InsertOp(insert="ghi", attributes={"sel": 3}),
-                    d.InsertOp(insert=" ", attributes={}),
-                    d.InsertOp(insert="jkl", attributes={"sel": 4}),
-                    d.InsertOp(insert="\n", attributes={}),
-                ],
-                wording=[
-                    d.InsertOp(insert="wording\n", attributes={}),
-                ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
-            ),
         )
 
     def test_single_color(self):
@@ -2726,10 +2504,15 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=None,
-                instructions="{sel1|abc}\n",
-                wording="wording\n",
-                example="\n",
-                clue="\n",
+                instructions=[
+                    d.InsertOp(insert="abc", attributes={"sel": 1}),
+                    d.InsertOp(insert="\n", attributes={}),
+                ],
+                wording=[
+                    d.InsertOp(insert="wording\n", attributes={}),
+                ],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(
                     kind="generic",
@@ -2766,17 +2549,6 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 clue=r.Section(paragraphs=[]),
                 wording_paragraphs_per_pagelet=3,
             ),
-            d.Exercise(
-                instructions=[
-                    d.InsertOp(insert="abc", attributes={"sel": 1}),
-                    d.InsertOp(insert="\n", attributes={}),
-                ],
-                wording=[
-                    d.InsertOp(insert="wording\n", attributes={}),
-                ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
-            ),
         )
 
     def test_multiple_lines_in_instructions(self):
@@ -2784,10 +2556,14 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions="instructions\nare\n\non\n\nmultiple\nlines\n",
-                wording="wording\n",
-                example="\n",
-                clue="\n",
+                instructions=[
+                    d.InsertOp(insert="instructions\nare\n\non\n\nmultiple\nlines\n", attributes={}),
+                ],
+                wording=[
+                    d.InsertOp(insert="wording\n", attributes={}),
+                ],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(
                     kind="generic",
@@ -2838,16 +2614,6 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 clue=r.Section(paragraphs=[]),
                 wording_paragraphs_per_pagelet=3,
             ),
-            d.Exercise(
-                instructions=[
-                    d.InsertOp(insert="instructions\nare\n\non\n\nmultiple\nlines\n", attributes={}),
-                ],
-                wording=[
-                    d.InsertOp(insert="wording\n", attributes={}),
-                ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
-            ),
         )
 
     def test_multiple_lines_in_wording(self):
@@ -2855,10 +2621,14 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions="instructions\n",
-                wording="wording is\n\non\n\nmultiple lines\n",
-                example="\n",
-                clue="\n",
+                instructions=[
+                    d.InsertOp(insert="instructions\n", attributes={}),
+                ],
+                wording=[
+                    d.InsertOp(insert="wording is\n\non\n\nmultiple lines\n", attributes={}),
+                ],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(
                     kind="generic",
@@ -2909,16 +2679,6 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 clue=r.Section(paragraphs=[]),
                 wording_paragraphs_per_pagelet=3,
             ),
-            d.Exercise(
-                instructions=[
-                    d.InsertOp(insert="instructions\n", attributes={}),
-                ],
-                wording=[
-                    d.InsertOp(insert="wording is\n\non\n\nmultiple lines\n", attributes={}),
-                ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
-            ),
         )
 
     def test_unknown_tags(self):
@@ -2926,10 +2686,14 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions="{tag|abc}\n",
-                wording="{tag|def}\n",
-                example="\n",
-                clue="\n",
+                instructions=[
+                    d.InsertOp(insert="{tag|abc}\n", attributes={}),
+                ],
+                wording=[
+                    d.InsertOp(insert="{tag|def}\n", attributes={}),
+                ],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(
                     kind="generic",
@@ -2974,16 +2738,6 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 clue=r.Section(paragraphs=[]),
                 wording_paragraphs_per_pagelet=3,
             ),
-            d.Exercise(
-                instructions=[
-                    d.InsertOp(insert="{tag|abc}\n", attributes={}),
-                ],
-                wording=[
-                    d.InsertOp(insert="{tag|def}\n", attributes={}),
-                ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
-            ),
         )
 
     def test_strip_whitespace(self):
@@ -2991,10 +2745,14 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions="   abc   \n",
-                wording="   def   \n",
-                example="\n",
-                clue="\n",
+                instructions=[
+                    d.InsertOp(insert="   abc   \n", attributes={}),
+                ],
+                wording=[
+                    d.InsertOp(insert="   def   \n", attributes={}),
+                ],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(
                     kind="generic",
@@ -3031,16 +2789,6 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 clue=r.Section(paragraphs=[]),
                 wording_paragraphs_per_pagelet=3,
             ),
-            d.Exercise(
-                instructions=[
-                    d.InsertOp(insert="   abc   \n", attributes={}),
-                ],
-                wording=[
-                    d.InsertOp(insert="   def   \n", attributes={}),
-                ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
-            ),
         )
 
     def test_example_and_clue(self):
@@ -3048,10 +2796,18 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=None,
-                instructions="instructions\n",
-                wording="wording\n",
-                example="This is the example.\n",
-                clue="This is the clue.\n",
+                instructions=[
+                    d.InsertOp(insert="instructions\n", attributes={}),
+                ],
+                wording=[
+                    d.InsertOp(insert="wording\n", attributes={}),
+                ],
+                example=[
+                    d.InsertOp(insert="This is the example.\n", attributes={}),
+                ],
+                clue=[
+                    d.InsertOp(insert="This is the clue.\n", attributes={}),
+                ],
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(
                     kind="generic",
@@ -3114,20 +2870,6 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 ]),
                 wording_paragraphs_per_pagelet=3,
             ),
-            d.Exercise(
-                instructions=[
-                    d.InsertOp(insert="instructions\n", attributes={}),
-                ],
-                wording=[
-                    d.InsertOp(insert="wording\n", attributes={}),
-                ],
-                example=[
-                    d.InsertOp(insert="This is the example.\n", attributes={}),
-                ],
-                clue=[
-                    d.InsertOp(insert="This is the clue.\n", attributes={}),
-                ],
-            ),
         )
 
     def test_example_and_clue_with_sel_tags(self):
@@ -3135,10 +2877,24 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=None,
-                instructions="instructions\n",
-                wording="wording\n",
-                example="{sel1|abc} {sel2|def}\n",
-                clue="{sel3|ghi} {sel4|jkl}\n",
+                instructions=[
+                    d.InsertOp(insert="instructions\n", attributes={}),
+                ],
+                wording=[
+                    d.InsertOp(insert="wording\n", attributes={}),
+                ],
+                example=[
+                    d.InsertOp(insert="abc", attributes={"sel": 1}),
+                    d.InsertOp(insert=" ", attributes={}),
+                    d.InsertOp(insert="def", attributes={"sel": 2}),
+                    d.InsertOp(insert="\n", attributes={}),
+                ],
+                clue=[
+                    d.InsertOp(insert="ghi", attributes={"sel": 3}),
+                    d.InsertOp(insert=" ", attributes={}),
+                    d.InsertOp(insert="jkl", attributes={"sel": 4}),
+                    d.InsertOp(insert="\n", attributes={}),
+                ],
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(
                     kind="generic",
@@ -3191,26 +2947,6 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 ]),
                 wording_paragraphs_per_pagelet=3,
             ),
-            d.Exercise(
-                instructions=[
-                    d.InsertOp(insert="instructions\n", attributes={}),
-                ],
-                wording=[
-                    d.InsertOp(insert="wording\n", attributes={}),
-                ],
-                example=[
-                    d.InsertOp(insert="abc", attributes={"sel": 1}),
-                    d.InsertOp(insert=" ", attributes={}),
-                    d.InsertOp(insert="def", attributes={"sel": 2}),
-                    d.InsertOp(insert="\n", attributes={}),
-                ],
-                clue=[
-                    d.InsertOp(insert="ghi", attributes={"sel": 3}),
-                    d.InsertOp(insert=" ", attributes={}),
-                    d.InsertOp(insert="jkl", attributes={"sel": 4}),
-                    d.InsertOp(insert="\n", attributes={}),
-                ],
-            ),
         )
 
 
@@ -3220,10 +2956,30 @@ class LenientParagraphTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=None,
-                instructions="This is a {bold|strict} instructions {italic|paragraph}.\n\nAnd this is a {bold|lenient} instructions {italic|paragraph}\n",
-                wording="This is a {bold|strict} wording {italic|paragraph}.\nAnd this is a {bold|lenient} wording {italic|paragraph}\n",
-                example="\n",
-                clue="\n",
+                instructions=[
+                    d.InsertOp(insert="This is a ", attributes={}),
+                    d.InsertOp(insert="strict", attributes={"bold": True}),
+                    d.InsertOp(insert=" instructions ", attributes={}),
+                    d.InsertOp(insert="paragraph", attributes={"italic": True}),
+                    d.InsertOp(insert=".\n\nAnd this is a ", attributes={}),
+                    d.InsertOp(insert="lenient", attributes={"bold": True}),
+                    d.InsertOp(insert=" instructions ", attributes={}),
+                    d.InsertOp(insert="paragraph", attributes={"italic": True}),
+                    d.InsertOp(insert="\n", attributes={}),
+                ],
+                wording=[
+                    d.InsertOp(insert="This is a ", attributes={}),
+                    d.InsertOp(insert="strict", attributes={"bold": True}),
+                    d.InsertOp(insert=" wording ", attributes={}),
+                    d.InsertOp(insert="paragraph", attributes={"italic": True}),
+                    d.InsertOp(insert=".\nAnd this is a ", attributes={}),
+                    d.InsertOp(insert="lenient", attributes={"bold": True}),
+                    d.InsertOp(insert=" wording ", attributes={}),
+                    d.InsertOp(insert="paragraph", attributes={"italic": True}),
+                    d.InsertOp(insert="\n", attributes={}),
+                ],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(kind="generic", effects=[])
             ),
@@ -3304,32 +3060,6 @@ class LenientParagraphTestCase(AdaptationTestCase):
                 clue=r.Section(paragraphs=[]),
                 wording_paragraphs_per_pagelet=3,
             ),
-            d.Exercise(
-                instructions=[
-                    d.InsertOp(insert="This is a ", attributes={}),
-                    d.InsertOp(insert="strict", attributes={"bold": True}),
-                    d.InsertOp(insert=" instructions ", attributes={}),
-                    d.InsertOp(insert="paragraph", attributes={"italic": True}),
-                    d.InsertOp(insert=".\n\nAnd this is a ", attributes={}),
-                    d.InsertOp(insert="lenient", attributes={"bold": True}),
-                    d.InsertOp(insert=" instructions ", attributes={}),
-                    d.InsertOp(insert="paragraph", attributes={"italic": True}),
-                    d.InsertOp(insert="\n", attributes={}),
-                ],
-                wording=[
-                    d.InsertOp(insert="This is a ", attributes={}),
-                    d.InsertOp(insert="strict", attributes={"bold": True}),
-                    d.InsertOp(insert=" wording ", attributes={}),
-                    d.InsertOp(insert="paragraph", attributes={"italic": True}),
-                    d.InsertOp(insert=".\nAnd this is a ", attributes={}),
-                    d.InsertOp(insert="lenient", attributes={"bold": True}),
-                    d.InsertOp(insert=" wording ", attributes={}),
-                    d.InsertOp(insert="paragraph", attributes={"italic": True}),
-                    d.InsertOp(insert="\n", attributes={}),
-                ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
-            ),
         )
 
     def test_select_words_without_punctuation(self):
@@ -3337,10 +3067,14 @@ class LenientParagraphTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=None,
-                instructions="instructions\n",
-                wording="This is a strict paragraph, with... some punctuation.\n\nAnd this, is a... lenient paragraph\n",
-                example="\n",
-                clue="\n",
+                instructions=[
+                    d.InsertOp(insert="instructions\n", attributes={}),
+                ],
+                wording=[
+                    d.InsertOp(insert="This is a strict paragraph, with... some punctuation.\n\nAnd this, is a... lenient paragraph\n", attributes={}),
+                ],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(
                     kind="generic",
@@ -3412,7 +3146,13 @@ class LenientParagraphTestCase(AdaptationTestCase):
                 clue=r.Section(paragraphs=[]),
                 wording_paragraphs_per_pagelet=3,
             ),
-            d.Exercise(
+        )
+
+    def test_select_words_with_punctuation(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=None,
                 instructions=[
                     d.InsertOp(insert="instructions\n", attributes={}),
                 ],
@@ -3421,18 +3161,6 @@ class LenientParagraphTestCase(AdaptationTestCase):
                 ],
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
-            ),
-        )
-
-    def test_select_words_with_punctuation(self):
-        self.do_test(
-            e.Exercise(
-                number="number",
-                textbook_page=None,
-                instructions="instructions\n",
-                wording="This is a strict paragraph, with... some punctuation.\n\nAnd this, is a... lenient paragraph\n",
-                example="\n",
-                clue="\n",
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(
                     kind="generic",
@@ -3504,16 +3232,6 @@ class LenientParagraphTestCase(AdaptationTestCase):
                 clue=r.Section(paragraphs=[]),
                 wording_paragraphs_per_pagelet=3,
             ),
-            d.Exercise(
-                instructions=[
-                    d.InsertOp(insert="instructions\n", attributes={}),
-                ],
-                wording=[
-                    d.InsertOp(insert="This is a strict paragraph, with... some punctuation.\n\nAnd this, is a... lenient paragraph\n", attributes={}),
-                ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
-            ),
         )
 
     def test_fill_with_free_text(self):
@@ -3521,10 +3239,14 @@ class LenientParagraphTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=None,
-                instructions="instructions\n",
-                wording="This is a ... strict paragraph. With some punctuation.\n\nAnd this, is a ... lenient paragraph\n",
-                example="\n",
-                clue="\n",
+                instructions=[
+                    d.InsertOp(insert="instructions\n", attributes={}),
+                ],
+                wording=[
+                    d.InsertOp(insert="This is a ... strict paragraph. With some punctuation.\n\nAnd this, is a ... lenient paragraph\n", attributes={}),
+                ],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(
                     kind="generic",
@@ -3589,16 +3311,6 @@ class LenientParagraphTestCase(AdaptationTestCase):
                 clue=r.Section(paragraphs=[]),
                 wording_paragraphs_per_pagelet=3,
             ),
-            d.Exercise(
-                instructions=[
-                    d.InsertOp(insert="instructions\n", attributes={}),
-                ],
-                wording=[
-                    d.InsertOp(insert="This is a ... strict paragraph. With some punctuation.\n\nAnd this, is a ... lenient paragraph\n", attributes={}),
-                ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
-            ),
         )
 
     def test_multiple_choices(self):
@@ -3606,10 +3318,16 @@ class LenientParagraphTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=None,
-                instructions="Choose {choices2||/|||...|alpha/bravo}.\n",
-                wording="This is a ... strict paragraph. With some punctuation.\n\nAnd this, is a ... lenient paragraph\n",
-                example="\n",
-                clue="\n",
+                instructions=[
+                    d.InsertOp(insert="Choose ", attributes={}),
+                    d.InsertOp(insert="alpha/bravo", attributes={"choices2": {"start": "", "separator1": "/", "separator2": "", "stop": "", "placeholder": "..."}}),
+                    d.InsertOp(insert=".\n", attributes={}),
+                ],
+                wording=[
+                    d.InsertOp(insert="This is a ... strict paragraph. With some punctuation.\n\nAnd this, is a ... lenient paragraph\n", attributes={}),
+                ],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(kind="generic", effects=[]),
             ),
@@ -3678,18 +3396,6 @@ class LenientParagraphTestCase(AdaptationTestCase):
                 clue=r.Section(paragraphs=[]),
                 wording_paragraphs_per_pagelet=3,
             ),
-            d.Exercise(
-                instructions=[
-                    d.InsertOp(insert="Choose ", attributes={}),
-                    d.InsertOp(insert="alpha/bravo", attributes={"choices2": {"start": "", "separator1": "/", "separator2": "", "stop": "", "placeholder": "..."}}),
-                    d.InsertOp(insert=".\n", attributes={}),
-                ],
-                wording=[
-                    d.InsertOp(insert="This is a ... strict paragraph. With some punctuation.\n\nAnd this, is a ... lenient paragraph\n", attributes={}),
-                ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
-            ),
         )
 
 
@@ -3699,10 +3405,16 @@ class MultipleAdaptationEffectsTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions="instructions {choices2||/|||@@@|short/long}\n",
-                wording="The wording of this ... is a @@@ sentence.\n",
-                example="\n",
-                clue="\n",
+                instructions=[
+                    d.InsertOp(insert="instructions ", attributes={}),
+                    d.InsertOp(insert="short/long", attributes={"choices2": {"start": "", "separator1": "/", "separator2": "", "stop": "", "placeholder": "@@@"}}),
+                    d.InsertOp(insert="\n", attributes={}),
+                ],
+                wording=[
+                    d.InsertOp(insert="The wording of this ... is a @@@ sentence.\n", attributes={}),
+                ],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(kind="generic", effects=[
                     FillWithFreeTextAdaptationEffect(kind="fill-with-free-text", placeholder="..."),
@@ -3752,18 +3464,6 @@ class MultipleAdaptationEffectsTestCase(AdaptationTestCase):
                 clue=r.Section(paragraphs=[]),
                 wording_paragraphs_per_pagelet=3,
             ),
-            d.Exercise(
-                instructions=[
-                    d.InsertOp(insert="instructions ", attributes={}),
-                    d.InsertOp(insert="short/long", attributes={"choices2": {"start": "", "separator1": "/", "separator2": "", "stop": "", "placeholder": "@@@"}}),
-                    d.InsertOp(insert="\n", attributes={}),
-                ],
-                wording=[
-                    d.InsertOp(insert="The wording of this ... is a @@@ sentence.\n", attributes={}),
-                ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
-            ),
         )
 
     def test_multiple_choices_in_instructions_and_wording(self):
@@ -3771,10 +3471,20 @@ class MultipleAdaptationEffectsTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions="Choose wisely {choices2||/|||@@@|alpha/bravo}.\n",
-                wording="A {choices2||/||||a/b/c} B {choices2||/||||d/e} C @@@.\n",
-                example="\n",
-                clue="\n",
+                instructions=[
+                    d.InsertOp(insert="Choose wisely ", attributes={}),
+                    d.InsertOp(insert="alpha/bravo", attributes={"choices2": {"start": "", "separator1": "/", "separator2": "", "stop": "", "placeholder": "@@@"}}),
+                    d.InsertOp(insert=".\n", attributes={}),
+                ],
+                wording=[
+                    d.InsertOp(insert="A ", attributes={}),
+                    d.InsertOp(insert="a/b/c", attributes={"choices2": {"start": "", "separator1": "/", "separator2": "", "stop": "", "placeholder": ""}}),
+                    d.InsertOp(insert=" B ", attributes={}),
+                    d.InsertOp(insert="d/e", attributes={"choices2": {"start": "", "separator1": "/", "separator2": "", "stop": "", "placeholder": ""}}),
+                    d.InsertOp(insert=" C @@@.\n", attributes={}),
+                ],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(kind="generic", effects=[]),
             ),
@@ -3818,21 +3528,5 @@ class MultipleAdaptationEffectsTestCase(AdaptationTestCase):
                 example=r.Section(paragraphs=[]),
                 clue=r.Section(paragraphs=[]),
                 wording_paragraphs_per_pagelet=3,
-            ),
-            d.Exercise(
-                instructions=[
-                    d.InsertOp(insert="Choose wisely ", attributes={}),
-                    d.InsertOp(insert="alpha/bravo", attributes={"choices2": {"start": "", "separator1": "/", "separator2": "", "stop": "", "placeholder": "@@@"}}),
-                    d.InsertOp(insert=".\n", attributes={}),
-                ],
-                wording=[
-                    d.InsertOp(insert="A ", attributes={}),
-                    d.InsertOp(insert="a/b/c", attributes={"choices2": {"start": "", "separator1": "/", "separator2": "", "stop": "", "placeholder": ""}}),
-                    d.InsertOp(insert=" B ", attributes={}),
-                    d.InsertOp(insert="d/e", attributes={"choices2": {"start": "", "separator1": "/", "separator2": "", "stop": "", "placeholder": ""}}),
-                    d.InsertOp(insert=" C @@@.\n", attributes={}),
-                ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
             ),
         )

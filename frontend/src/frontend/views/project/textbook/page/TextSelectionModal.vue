@@ -7,6 +7,7 @@ import type { Model, TextualFieldName } from '$frontend/components/ExerciseField
 import { BModal } from '$frontend/components/opinion/bootstrap'
 import type { Point, Rectangle } from './RectanglesHighlighter.vue'
 import type { SelectedText } from './TextPicker.vue'
+import deepEqual from 'deep-equal'
 
 
 const model = defineModel<Model>({required: true})
@@ -77,11 +78,13 @@ watch(computed(() => modal.value !== null && modal.value.active), active => {
 
 function addTextTo(fieldName: TextualFieldName) {
   console.assert(textToAdd.value.endsWith('\n'))
-  if (model.value[fieldName] === '\n') {
-    model.value[fieldName] = textToAdd.value
+  if (deepEqual(model.value[fieldName], [{insert: '\n', attributes: {}}])) {
+    model.value[fieldName] = [{insert: textToAdd.value, attributes: {}}]
   } else {
-    console.assert(model.value[fieldName].endsWith('\n'))
-    model.value[fieldName] += textToAdd.value
+    const insert = model.value[fieldName].slice(-1)[0].insert
+    console.assert(typeof insert === 'string')
+    console.assert(insert.endsWith('\n'))
+    model.value[fieldName].push({insert: textToAdd.value, attributes: {}})
   }
   model.value.rectangles.push({
     pdf_sha256: pdfSha256.value,

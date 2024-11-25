@@ -8,7 +8,6 @@ from fastjsonapi import make_filters
 
 from . import adaptation
 from . import api_models
-from . import parsing
 from . import deltas
 from . import renderable
 from . import settings
@@ -44,105 +43,57 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
     # Custom collation: https://dba.stackexchange.com/a/285230
     number: orm.Mapped[str] = orm.mapped_column(sql.String(None, collation="exercise_number"))
 
-    _instructions_text: orm.Mapped[str] = orm.mapped_column(name="instructions_text")
+    _instructions_text: orm.Mapped[str] = orm.mapped_column(name="instructions_text", nullable=True)
     _instructions_deltas: orm.Mapped[list] = orm.mapped_column(sql.JSON, name="instructions", default=deltas.empty_as_list, server_default=deltas.empty_as_string)
 
     @property
-    def instructions(self) -> str:
-        if self._instructions_text is None:  # Before the first flush to DB if not set in constructor.
-            self._instructions_text = "\n"
-        assert self._instructions_text.endswith("\n")
-        return self._instructions_text
-
-    @instructions.setter
-    def instructions(self, instructions: str):
-        assert instructions.endswith("\n")
-        self._instructions_text = instructions
-        self._instructions_deltas = [
-            delta.model_dump()
-            for delta in parsing.DeltaMaker().transform(parsing.instructions_parser.parse(instructions))
-        ]
-
-    @property
-    def instructions_deltas(self) -> deltas.Deltas:
+    def instructions(self) -> deltas.Deltas:
         if self._instructions_deltas is None:  # Before the first flush to DB if not set in constructor.
             self._instructions_deltas = deltas.empty_as_list
         return [deltas.InsertOp(**delta) for delta in self._instructions_deltas]
 
-    _wording_text: orm.Mapped[str] = orm.mapped_column(name="wording_text")
+    @instructions.setter
+    def instructions(self, instructions: deltas.Deltas):
+        self._instructions_deltas = [delta.model_dump() for delta in instructions]
+
+    _wording_text: orm.Mapped[str] = orm.mapped_column(name="wording_text", nullable=True)
     _wording_deltas: orm.Mapped[list] = orm.mapped_column(sql.JSON, name="wording", default=deltas.empty_as_list, server_default=deltas.empty_as_string)
 
     @property
-    def wording(self) -> str:
-        if self._wording_text is None:  # Before the first flush to DB if not set in constructor.
-            self._wording_text = "\n"
-        assert self._wording_text.endswith("\n")
-        return self._wording_text
-
-    @wording.setter
-    def wording(self, wording: str):
-        assert wording.endswith("\n")
-        self._wording_text = wording
-        self._wording_deltas = [
-            delta.model_dump()
-            for delta in parsing.DeltaMaker().transform(parsing.wording_parser.parse(wording))
-        ]
-
-    @property
-    def wording_deltas(self) -> deltas.Deltas:
+    def wording(self) -> deltas.Deltas:
         if self._wording_deltas is None:  # Before the first flush to DB if not set in constructor.
             self._wording_deltas = deltas.empty_as_list
         return [deltas.InsertOp(**delta) for delta in self._wording_deltas]
 
-    _example_text: orm.Mapped[str] = orm.mapped_column(name="example_text")
+    @wording.setter
+    def wording(self, wording: deltas.Deltas):
+        self._wording_deltas = [delta.model_dump() for delta in wording]
+
+    _example_text: orm.Mapped[str] = orm.mapped_column(name="example_text", nullable=True)
     _example_deltas: orm.Mapped[list] = orm.mapped_column(sql.JSON, name="example", default=deltas.empty_as_list, server_default=deltas.empty_as_string)
 
     @property
-    def example(self) -> str:
-        if self._example_text is None:  # Before the first flush to DB if not set in constructor.
-            self._example_text = "\n"
-        assert self._example_text.endswith("\n")
-        return self._example_text
-
-    @example.setter
-    def example(self, example: str):
-        assert example.endswith("\n")
-        self._example_text = example
-        self._example_deltas = [
-            delta.model_dump()
-            for delta in parsing.DeltaMaker().transform(parsing.example_and_clue_parser.parse(example))
-        ]
-
-    @property
-    def example_deltas(self) -> deltas.Deltas:
+    def example(self) -> deltas.Deltas:
         if self._example_deltas is None:  # Before the first flush to DB if not set in constructor.
             self._example_deltas = deltas.empty_as_list
         return [deltas.InsertOp(**delta) for delta in self._example_deltas]
 
-    _clue_text: orm.Mapped[str] = orm.mapped_column(name="clue_text")
+    @example.setter
+    def example(self, example: str | deltas.Deltas):
+        self._example_deltas = [delta.model_dump() for delta in example]
+
+    _clue_text: orm.Mapped[str] = orm.mapped_column(name="clue_text", nullable=True)
     _clue_deltas: orm.Mapped[list] = orm.mapped_column(sql.JSON, name="clue", default=deltas.empty_as_list, server_default=deltas.empty_as_string)
 
     @property
-    def clue(self) -> str:
-        if self._clue_text is None:  # Before the first flush to DB if not set in constructor.
-            self._clue_text = "\n"
-        assert self._clue_text.endswith("\n")
-        return self._clue_text
-
-    @clue.setter
-    def clue(self, clue: str):
-        assert clue.endswith("\n")
-        self._clue_text = clue
-        self._clue_deltas = [
-            delta.model_dump()
-            for delta in parsing.DeltaMaker().transform(parsing.example_and_clue_parser.parse(clue))
-        ]
-
-    @property
-    def clue_deltas(self) -> deltas.Deltas:
+    def clue(self) -> deltas.Deltas:
         if self._clue_deltas is None:  # Before the first flush to DB if not set in constructor.
             self._clue_deltas = deltas.empty_as_list
         return [deltas.InsertOp(**delta) for delta in self._clue_deltas]
+
+    @clue.setter
+    def clue(self, clue: deltas.Deltas):
+        self._clue_deltas = [delta.model_dump() for delta in clue]
 
     wording_paragraphs_per_pagelet: orm.Mapped[int] = orm.mapped_column(default=3, server_default="3")
 
@@ -178,23 +129,15 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
             "settings": adaptation.model_dump(),
         }
 
-    def make_adapted_and_delta(self):
-        return (
-            renderable.Exercise(
-                number=self.number,
-                textbook_page=self.textbook_page,
-                instructions=adaptation.adapt_instructions(self.instructions_deltas, self.adaptation.effects),
-                wording=adaptation.adapt_wording(self.instructions_deltas, self.wording_deltas, self.adaptation.effects),
-                example=adaptation.adapt_instructions(self.example_deltas, self.adaptation.effects),
-                clue=adaptation.adapt_instructions(self.clue_deltas, self.adaptation.effects),
-                wording_paragraphs_per_pagelet=self.wording_paragraphs_per_pagelet,
-            ),
-            deltas.Exercise(
-                instructions=self.instructions_deltas,
-                wording=self.wording_deltas,
-                example=self.example_deltas,
-                clue=self.clue_deltas,
-            ),
+    def make_adapted(self):
+        return renderable.Exercise(
+            number=self.number,
+            textbook_page=self.textbook_page,
+            instructions=adaptation.adapt_instructions(self.instructions, self.adaptation.effects),
+            wording=adaptation.adapt_wording(self.instructions, self.wording, self.adaptation.effects),
+            example=adaptation.adapt_instructions(self.example, self.adaptation.effects),
+            clue=adaptation.adapt_instructions(self.clue, self.adaptation.effects),
+            wording_paragraphs_per_pagelet=self.wording_paragraphs_per_pagelet,
         )
 
 
@@ -205,37 +148,37 @@ class ExerciseTestCase(TransactionTestCase):
         self.textbook = self.create_model(Textbook, project=self.project, title="Textbook")
 
     def test_create__with_textbook(self):
-        e = self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=5, number="5", instructions="\n", wording="\n", example="\n", clue="\n")
+        e = self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=5, number="5", instructions=deltas.empty, wording=deltas.empty, example=deltas.empty, clue=deltas.empty)
         self.assertEqual(e.project, self.project)
         self.assertEqual(e.textbook, self.textbook)
         self.assertEqual(e.textbook_page, 5)
         self.assertEqual(e.number, "5")
 
     def test_create__without_textbook(self):
-        e = self.create_model(Exercise, project=self.project, textbook=None, textbook_page=None, number="5", instructions="\n", wording="\n", example="\n", clue="\n")
+        e = self.create_model(Exercise, project=self.project, textbook=None, textbook_page=None, number="5", instructions=deltas.empty, wording=deltas.empty, example=deltas.empty, clue=deltas.empty)
         self.assertEqual(e.project, self.project)
         self.assertIsNone(e.textbook)
         self.assertIsNone(e.textbook_page)
         self.assertEqual(e.number, "5")
 
     def test_create_duplicate(self):
-        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=5, number="5", instructions="\n", wording="\n", example="\n", clue="\n")
+        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=5, number="5", instructions=deltas.empty, wording=deltas.empty, example=deltas.empty, clue=deltas.empty)
         with self.assertRaises(sql.exc.IntegrityError) as cm:
-            self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=5, number="5", instructions="\n", wording="\n", example="\n", clue="\n")
+            self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=5, number="5", instructions=deltas.empty, wording=deltas.empty, example=deltas.empty, clue=deltas.empty)
         self.assertEqual(cm.exception.orig.diag.constraint_name, "exercises_textbook_id_textbook_page_number_key")
 
     def test_create_near_duplicates(self):
-        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=5, number="A", instructions="\n", wording="\n", example="\n", clue="\n")
-        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=5, number="a", instructions="\n", wording="\n", example="\n", clue="\n")
+        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=5, number="A", instructions=deltas.empty, wording=deltas.empty, example=deltas.empty, clue=deltas.empty)
+        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=5, number="a", instructions=deltas.empty, wording=deltas.empty, example=deltas.empty, clue=deltas.empty)
 
     def test_create_with_textbook_but_without_textbook_page(self):
         with self.assertRaises(sql.exc.IntegrityError) as cm:
-            self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=None, number="5", instructions="\n", wording="\n", example="\n", clue="\n")
+            self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=None, number="5", instructions=deltas.empty, wording=deltas.empty, example=deltas.empty, clue=deltas.empty)
         self.assertEqual(cm.exception.orig.diag.constraint_name, "textbook_id_textbook_page_consistently_null")
 
     def test_create_with_textbook_page_but_without_textbook(self):
         with self.assertRaises(sql.exc.IntegrityError) as cm:
-            self.create_model(Exercise, project=self.project, textbook=None, textbook_page=5, number="5", instructions="\n", wording="\n", example="\n", clue="\n")
+            self.create_model(Exercise, project=self.project, textbook=None, textbook_page=5, number="5", instructions=deltas.empty, wording=deltas.empty, example=deltas.empty, clue=deltas.empty)
         self.assertEqual(cm.exception.orig.diag.constraint_name, "textbook_id_textbook_page_consistently_null")
 
     def test_create_without_project__without_orm(self):
@@ -246,10 +189,6 @@ class ExerciseTestCase(TransactionTestCase):
                     textbook_id=self.textbook.id,
                     textbook_page=5,
                     number="5",
-                    instructions_text="\n",
-                    wording_text="\n",
-                    example_text="\n",
-                    clue_text="\n",
                 ))
         self.assertEqual(cm.exception.orig.diag.column_name, "project_id")
 
@@ -260,10 +199,10 @@ class ExerciseTestCase(TransactionTestCase):
                 textbook=session.get(Textbook, self.textbook.id),
                 textbook_page=5,
                 number="5",
-                instructions="\n",
-                wording="\n",
-                example="\n",
-                clue="\n",
+                instructions=deltas.empty,
+                wording=deltas.empty,
+                example=deltas.empty,
+                clue=deltas.empty,
             ))
             with self.assertRaises(sql.exc.IntegrityError) as cm:
                 session.flush()
@@ -278,10 +217,6 @@ class ExerciseTestCase(TransactionTestCase):
                     textbook_id=self.textbook.id,
                     textbook_page=5,
                     number="5",
-                    instructions_text="\n",
-                    wording_text="\n",
-                    example_text="\n",
-                    clue_text="\n",
                     created_by_id=self.user_for_create.id,
                     updated_by_id=self.user_for_create.id,
                 ))
@@ -295,10 +230,10 @@ class ExerciseTestCase(TransactionTestCase):
                 textbook=session.get(Textbook, self.textbook.id),
                 textbook_page=5,
                 number="5",
-                instructions="\n",
-                wording="\n",
-                example="\n",
-                clue="\n",
+                instructions=deltas.empty,
+                wording=deltas.empty,
+                example=deltas.empty,
+                clue=deltas.empty,
                 created_by_id=self.user_for_create.id,
                 updated_by_id=self.user_for_create.id,
             ))
@@ -307,22 +242,22 @@ class ExerciseTestCase(TransactionTestCase):
         self.assertEqual(cm.exception.orig.diag.constraint_name, "exercises_project_id_textbook_id_fkey")
 
     def test_ordering(self):
-        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=5, number="5.b", instructions="\n", wording="\n", example="\n", clue="\n")
-        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=5, number="5.a", instructions="\n", wording="\n", example="\n", clue="\n")
-        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=5, number="12", instructions="\n", wording="\n", example="\n", clue="\n")
-        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=5, number="A12", instructions="\n", wording="\n", example="\n", clue="\n")
-        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=5, number="A1", instructions="\n", wording="\n", example="\n", clue="\n")
-        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=5, number="2", instructions="\n", wording="\n", example="\n", clue="\n")
-        self.create_model(Exercise, project=self.project, textbook=None, textbook_page=None, number="4", instructions="\n", wording="\n", example="\n", clue="\n")
-        self.create_model(Exercise, project=self.project, textbook=None, textbook_page=None, number="Some text", instructions="\n", wording="\n", example="\n", clue="\n")
-        self.create_model(Exercise, project=self.project, textbook=None, textbook_page=None, number="Some other text", instructions="\n", wording="\n", example="\n", clue="\n")
-        self.create_model(Exercise, project=self.project, textbook=None, textbook_page=None, number="Other text", instructions="\n", wording="\n", example="\n", clue="\n")
-        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=1, number="1", instructions="\n", wording="\n", example="\n", clue="\n")
-        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=1, number="Bob", instructions="\n", wording="\n", example="\n", clue="\n")
-        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=1, number="10", instructions="\n", wording="\n", example="\n", clue="\n")
-        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=1, number="Alice", instructions="\n", wording="\n", example="\n", clue="\n")
-        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=1, number="03", instructions="\n", wording="\n", example="\n", clue="\n")
-        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=1, number="2", instructions="\n", wording="\n", example="\n", clue="\n")
+        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=5, number="5.b", instructions=deltas.empty, wording=deltas.empty, example=deltas.empty, clue=deltas.empty)
+        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=5, number="5.a", instructions=deltas.empty, wording=deltas.empty, example=deltas.empty, clue=deltas.empty)
+        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=5, number="12", instructions=deltas.empty, wording=deltas.empty, example=deltas.empty, clue=deltas.empty)
+        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=5, number="A12", instructions=deltas.empty, wording=deltas.empty, example=deltas.empty, clue=deltas.empty)
+        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=5, number="A1", instructions=deltas.empty, wording=deltas.empty, example=deltas.empty, clue=deltas.empty)
+        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=5, number="2", instructions=deltas.empty, wording=deltas.empty, example=deltas.empty, clue=deltas.empty)
+        self.create_model(Exercise, project=self.project, textbook=None, textbook_page=None, number="4", instructions=deltas.empty, wording=deltas.empty, example=deltas.empty, clue=deltas.empty)
+        self.create_model(Exercise, project=self.project, textbook=None, textbook_page=None, number="Some text", instructions=deltas.empty, wording=deltas.empty, example=deltas.empty, clue=deltas.empty)
+        self.create_model(Exercise, project=self.project, textbook=None, textbook_page=None, number="Some other text", instructions=deltas.empty, wording=deltas.empty, example=deltas.empty, clue=deltas.empty)
+        self.create_model(Exercise, project=self.project, textbook=None, textbook_page=None, number="Other text", instructions=deltas.empty, wording=deltas.empty, example=deltas.empty, clue=deltas.empty)
+        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=1, number="1", instructions=deltas.empty, wording=deltas.empty, example=deltas.empty, clue=deltas.empty)
+        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=1, number="Bob", instructions=deltas.empty, wording=deltas.empty, example=deltas.empty, clue=deltas.empty)
+        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=1, number="10", instructions=deltas.empty, wording=deltas.empty, example=deltas.empty, clue=deltas.empty)
+        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=1, number="Alice", instructions=deltas.empty, wording=deltas.empty, example=deltas.empty, clue=deltas.empty)
+        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=1, number="03", instructions=deltas.empty, wording=deltas.empty, example=deltas.empty, clue=deltas.empty)
+        self.create_model(Exercise, project=self.project, textbook=self.textbook, textbook_page=1, number="2", instructions=deltas.empty, wording=deltas.empty, example=deltas.empty, clue=deltas.empty)
 
         with self.make_session() as session:
             self.assertEqual(

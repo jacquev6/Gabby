@@ -150,23 +150,6 @@ def restore_database(backup_url, yes, patch_according_to_settings):
 
 
 @main.command()
-def check_database_with_orm():
-    database_engine = database_utils.create_engine(settings.DATABASE_URL)
-    ok = True
-    with orm.Session(database_engine) as session:
-        for exercise in session.query(orm_models.Exercise):
-            try:
-                exercise.adaptation
-                exercise.make_adapted_and_delta()
-                print("Exercise", exercise.id, "OK", file=sys.stderr)  # @todo Improve duration (currently 0.3s / exercise) and remove this progress log
-            except Exception as e:
-                print(f"ERROR with exercise {exercise.id}: {e}", file=sys.stderr)
-                ok = False
-    if not ok:
-        sys.exit(1)
-
-
-@main.command()
 def dump_database_as_unit_tests():
     # Waste data to avoid issues with copyrighted material (extracted from textbooks)
     def waste_char(c):
@@ -253,19 +236,17 @@ def dump_database_as_unit_tests():
         database_engine = database_utils.create_engine(settings.DATABASE_URL)
         with orm.Session(database_engine) as session:
             for i, exercise in enumerate(session.query(orm_models.Exercise).all()):
-                print(f"{i:4} Generating unit test for exercise id={exercise.id}", file=sys.stderr)
-
-                adapted, _deltas = exercise.make_adapted_and_delta()
+                adapted = exercise.make_adapted()
 
                 yield f"    def test_exercise_{exercise.id}(self):"
                 yield f"        self.do_test("
                 yield f"            e.Exercise("
                 yield f"                number={repr(waste_string(exercise.number))},"
                 yield f"                textbook_page={repr(exercise.textbook_page)},"
-                yield f"                instructions={repr(waste_string(exercise.instructions))},"
-                yield f"                wording={repr(waste_string(exercise.wording))},"
-                yield f"                example={repr(waste_string(exercise.example))},"
-                yield f"                clue={repr(waste_string(exercise.clue))},"
+                yield f"                instructions={repr(waste_deltas(exercise.instructions))},"
+                yield f"                wording={repr(waste_deltas(exercise.wording))},"
+                yield f"                example={repr(waste_deltas(exercise.example))},"
+                yield f"                clue={repr(waste_deltas(exercise.clue))},"
                 yield f"                wording_paragraphs_per_pagelet={repr(exercise.wording_paragraphs_per_pagelet)},"
                 yield f"                adaptation={repr(exercise.adaptation)},"
                 yield f"            ),"
@@ -277,12 +258,6 @@ def dump_database_as_unit_tests():
                 yield f"                example={repr(waste_renderable(adapted.example))},"
                 yield f"                clue={repr(waste_renderable(adapted.clue))},"
                 yield f"                wording_paragraphs_per_pagelet={repr(exercise.wording_paragraphs_per_pagelet)},"
-                yield f"            ),"
-                yield f"            d.Exercise("
-                yield f"                instructions={repr(waste_deltas(exercise.instructions_deltas))},"
-                yield f"                wording={repr(waste_deltas(exercise.wording_deltas))},"
-                yield f"                example={repr(waste_deltas(exercise.example_deltas))},"
-                yield f"                clue={repr(waste_deltas(exercise.clue_deltas))},"
                 yield f"            ),"
                 yield f"        )"
                 yield f""
