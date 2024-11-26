@@ -10,7 +10,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
   backend-shell \
     python -m gabby \
       restore-database \
-        s3://jacquev6/gabby/prod/backups/gabby-backup-20241120-124206.tar.gz \
+        s3://jacquev6/gabby/prod/backups/gabby-backup-20241126-124206.tar.gz \
         --patch-according-to-settings \
         --yes
 
