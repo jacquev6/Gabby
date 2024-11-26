@@ -10,7 +10,6 @@ import FreeTextInput from './FreeTextInput.vue'
 
 const props = withDefaults(defineProps<{
   paragraphs: Paragraph[]
-  paragraphIndexOffset: number
   centered?: boolean
   first?: boolean
 }>(), {
@@ -37,7 +36,7 @@ const style = computed(() => ({
   <p v-for="(paragraph, paragraphIndex) in paragraphs" :style :class="{first: first && paragraphIndex === 0}">
     <template v-for="(sentence, sentenceIndex) in paragraph.sentences">
       <template v-for="(token, tokenIndex) in sentence.tokens">
-        <template v-for="modelKey in [`${paragraphIndex + paragraphIndexOffset}-${sentenceIndex}-${tokenIndex}`]">
+        <template v-for="modelKey in [`${paragraphIndex}-${sentenceIndex}-${tokenIndex}`]">
           <span>
             <template v-if="token.type === 'plainText'">{{ token.text }}</template>
             <template v-else-if="token.type === 'whitespace'">&nbsp;&nbsp;<wbr /></template>

@@ -179,18 +179,16 @@
       "Exercise": {
         "additionalProperties": false,
         "properties": {
-          "clue": {
-            "$ref": "#/components/schemas/Section"
-          },
-          "example": {
-            "$ref": "#/components/schemas/Section"
-          },
-          "instructions": {
-            "$ref": "#/components/schemas/Section"
-          },
           "number": {
             "title": "Number",
             "type": "string"
+          },
+          "pagelets": {
+            "items": {
+              "$ref": "#/components/schemas/Pagelet"
+            },
+            "title": "Pagelets",
+            "type": "array"
           },
           "textbook_page": {
             "anyOf": [
@@ -202,23 +200,12 @@
               }
             ],
             "title": "Textbook Page"
-          },
-          "wording": {
-            "$ref": "#/components/schemas/Section"
-          },
-          "wording_paragraphs_per_pagelet": {
-            "title": "Wording Paragraphs Per Pagelet",
-            "type": "integer"
           }
         },
         "required": [
           "number",
           "textbook_page",
-          "instructions",
-          "wording",
-          "example",
-          "clue",
-          "wording_paragraphs_per_pagelet"
+          "pagelets"
         ],
         "title": "Exercise",
         "type": "object"
@@ -440,6 +427,23 @@
           "pagination"
         ],
         "title": "PageMeta",
+        "type": "object"
+      },
+      "Pagelet": {
+        "additionalProperties": false,
+        "properties": {
+          "instructions": {
+            "$ref": "#/components/schemas/Section"
+          },
+          "wording": {
+            "$ref": "#/components/schemas/Section"
+          }
+        },
+        "required": [
+          "instructions",
+          "wording"
+        ],
+        "title": "Pagelet",
         "type": "object"
       },
       "Pagination": {

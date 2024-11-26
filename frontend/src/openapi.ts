@@ -199,16 +199,12 @@ export interface components {
     };
     /** Exercise */
     Exercise: {
-      clue: components["schemas"]["Section"];
-      example: components["schemas"]["Section"];
-      instructions: components["schemas"]["Section"];
       /** Number */
       number: string;
+      /** Pagelets */
+      pagelets: components["schemas"]["Pagelet"][];
       /** Textbook Page */
       textbook_page: number | null;
-      wording: components["schemas"]["Section"];
-      /** Wording Paragraphs Per Pagelet */
-      wording_paragraphs_per_pagelet: number;
     };
     /** FillWithFreeTextAdaptationEffect */
     FillWithFreeTextAdaptationEffect: {
@@ -286,6 +282,11 @@ export interface components {
     /** PageMeta */
     PageMeta: {
       pagination: components["schemas"]["Pagination"];
+    };
+    /** Pagelet */
+    Pagelet: {
+      instructions: components["schemas"]["Section"];
+      wording: components["schemas"]["Section"];
     };
     /** Pagination */
     Pagination: {
