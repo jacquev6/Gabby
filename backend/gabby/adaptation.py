@@ -16,15 +16,21 @@ def adapt(exercise):
     example = adapt_instructions(exercise.example, exercise.adaptation.effects)
     clue = adapt_instructions(exercise.clue, exercise.adaptation.effects)
 
-    wording_paragraphs_count = len(wording.paragraphs)
-    pagelets_count = max(1, wording_paragraphs_count // exercise.wording_paragraphs_per_pagelet + (1 if wording_paragraphs_count % exercise.wording_paragraphs_per_pagelet != 0 else 0))
-    pagelets = []
     pagelet_instructions = renderable.Section(paragraphs=instructions.paragraphs + example.paragraphs + clue.paragraphs)
-    for i in range(pagelets_count):
+    pagelets = []
+    wording_paragraphs_count = len(wording.paragraphs)
+    if exercise.wording_paragraphs_per_pagelet is None:
         pagelets.append(renderable.Pagelet(
             instructions=pagelet_instructions,
-            wording=renderable.Section(paragraphs=wording.paragraphs[i * exercise.wording_paragraphs_per_pagelet : (i + 1) * exercise.wording_paragraphs_per_pagelet]),
+            wording=renderable.Section(paragraphs=wording.paragraphs),
         ))
+    else:
+        pagelets_count = max(1, wording_paragraphs_count // exercise.wording_paragraphs_per_pagelet + (1 if wording_paragraphs_count % exercise.wording_paragraphs_per_pagelet != 0 else 0))
+        for i in range(pagelets_count):
+            pagelets.append(renderable.Pagelet(
+                instructions=pagelet_instructions,
+                wording=renderable.Section(paragraphs=wording.paragraphs[i * exercise.wording_paragraphs_per_pagelet : (i + 1) * exercise.wording_paragraphs_per_pagelet]),
+            ))
 
     return renderable.Exercise(
         number=exercise.number,

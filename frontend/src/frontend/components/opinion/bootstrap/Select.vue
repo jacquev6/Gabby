@@ -5,6 +5,9 @@ export interface Option<T> {
   disabled?: boolean
 }
 
+export function value(option: string): string
+export function value<T>(option: Option<T>): T
+export function value<T>(option: string | Option<T>): string | T
 export function value<T>(option: string | Option<T>) {
   if (typeof option === 'string') {
     return option

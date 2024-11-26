@@ -94,7 +94,7 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
     def clue(self, clue: deltas.Deltas):
         self._clue_deltas = [delta.model_dump() for delta in clue]
 
-    wording_paragraphs_per_pagelet: orm.Mapped[int] = orm.mapped_column(default=3, server_default="3")
+    wording_paragraphs_per_pagelet: orm.Mapped[int | None] = orm.mapped_column(nullable=True)
 
     _rectangles: orm.Mapped[list] = orm.mapped_column(sql.JSON, name="rectangles", default=[], server_default="[]")
 

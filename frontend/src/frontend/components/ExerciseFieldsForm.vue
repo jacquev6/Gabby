@@ -24,7 +24,7 @@ export type Model = {
   wording: Deltas
   example: Deltas
   clue: Deltas
-  wordingParagraphsPerPagelet: number
+  wordingParagraphsPerPagelet: number | null
   rectangles: PdfRectangle[]
   adaptation: Adaptation
   inProgress:
@@ -65,7 +65,7 @@ function makeModel({inTextbook, textbookPage}: MakeModelOptions): Model {
     wording: [{insert: '\n', attributes: {}}],
     example: [{insert: '\n', attributes: {}}],
     clue: [{insert: '\n', attributes: {}}],
-    wordingParagraphsPerPagelet: 3,
+    wordingParagraphsPerPagelet: null,
     rectangles: [],
     adaptation: {kind: 'generic', effects: []},
     inProgress: {

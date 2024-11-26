@@ -1025,9 +1025,15 @@
             "type": "array"
           },
           "wordingParagraphsPerPagelet": {
-            "default": 3,
-            "title": "Wordingparagraphsperpagelet",
-            "type": "integer"
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Wordingparagraphsperpagelet"
           }
         },
         "required": [
@@ -1169,8 +1175,15 @@
             "type": "array"
           },
           "wordingParagraphsPerPagelet": {
-            "title": "Wordingparagraphsperpagelet",
-            "type": "integer"
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Wordingparagraphsperpagelet"
           }
         },
         "required": [
@@ -1326,8 +1339,15 @@
             "type": "array"
           },
           "wordingParagraphsPerPagelet": {
-            "title": "Wordingparagraphsperpagelet",
-            "type": "integer"
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Wordingparagraphsperpagelet"
           }
         },
         "title": "exerciseUpdateInputDataAttributes",
@@ -1552,8 +1572,15 @@
             "type": "array"
           },
           "wordingParagraphsPerPagelet": {
-            "title": "Wordingparagraphsperpagelet",
-            "type": "integer"
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Wordingparagraphsperpagelet"
           }
         },
         "required": [
