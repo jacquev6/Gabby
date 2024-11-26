@@ -7,8 +7,8 @@ describe('Gabby', () => {
   })
 
   beforeEach(() => {
-    login()
     loadFixtures('empty-text-extraction-textbook', 'empty-test-textbook')
+    login()
     cy.viewport(1200, 1000)
   })
 

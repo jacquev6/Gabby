@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 
 import type { Project, Exercise, InCache, Exists } from '$frontend/stores/api'
+import type { Model as Deltas } from '$frontend/components/Quill.vue'
 
 
 const props = defineProps<{
@@ -37,7 +38,8 @@ const independentExercises = computed(() => {
   return exercises
 })
 
-function ellipsis(s: string) {
+function ellipsis(deltas: Deltas) {
+  const s = deltas.map(delta => typeof delta.insert === 'string' ? delta.insert : '').join('')
   return s.length > 25 ? s.slice(0, 25) + '…' : s
 }
 </script>

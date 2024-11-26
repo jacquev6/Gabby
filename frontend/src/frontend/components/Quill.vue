@@ -146,7 +146,7 @@ watch([quill, model], ([quill, model]) => {
   if (quill !== null && !deepEqual(getContents(quill), model)) {
     quill.setContents(model)
   }
-})
+}, {deep: true})
 
 function toggle(formatting: string, value: unknown = true) {
   console.assert(quill.value !== null)

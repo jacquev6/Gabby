@@ -4,13 +4,15 @@ import { ref } from 'vue'
 import type { List, Exercise } from '$frontend/stores/api'
 import { BBusy, BButton } from '$frontend/components/opinion/bootstrap'
 import ConfirmationModal from '$frontend/components/ConfirmationModal.vue'
+import type { Model as Deltas } from '$frontend/components/Quill.vue'
 
 
 const props = defineProps<{
   exercises: List<'exercise'>
 }>()
 
-function ellipsis(s: string) {
+function ellipsis(deltas: Deltas) {
+  const s = deltas.map(delta => typeof delta.insert === 'string' ? delta.insert : '').join('')
   return s.length > 25 ? s.slice(0, 25) + '…' : s
 }
 

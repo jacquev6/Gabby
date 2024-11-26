@@ -1,11 +1,11 @@
 from __future__ import annotations
-from typing import Annotated, Literal
+from typing import Annotated, ClassVar, Literal
 import datetime
 
 from fastjsonapi import Constant, Computed, Secret, WriteOnly
+import pydantic
 
-from . import exercise_delta
-from . import parsing
+from . import deltas
 from . import renderable
 from mydantic import PydanticBase
 
@@ -104,9 +104,45 @@ class PdfRectangle(PydanticBase):
     text: str | None
     role: Literal["bounding", "instructions", "wording", "example", "clue"]
 
+
+class FillWithFreeTextAdaptationEffect(PydanticBase):
+    kind: Literal["fill-with-free-text"]
+
+    placeholder: str
+
+class ItemizedAdaptationEffect(PydanticBase):
+    kind: Literal["itemized"]
+
+    class WordsItems(PydanticBase):
+        kind: Literal["words"]
+        punctuation: bool
+
+    class SentencesItems(PydanticBase):
+        kind: Literal["sentences"]
+
+    class ManualItems(PydanticBase):
+        kind: Literal["manual"]
+
+    Items: ClassVar = WordsItems | SentencesItems | ManualItems
+
+    class Effects(PydanticBase):
+        class Selectable(PydanticBase):
+            colors: list[str]
+
+        selectable: Selectable | None
+        boxed: bool
+
+    items: Items
+    effects: Effects
+
+AdaptationEffect = Annotated[
+    FillWithFreeTextAdaptationEffect | ItemizedAdaptationEffect,
+    pydantic.Field(discriminator="kind"),
+]
+
 class AdaptationV2(PydanticBase):
     kind: Literal["generic", "fill-with-free-text", "multiple-choices"]
-    effects: list[parsing.AdaptationEffect]
+    effects: list[AdaptationEffect]
 
 class Exercise(PydanticBase, CreatedUpdatedByAtMixin):
     project: Annotated[Project, Constant()]
@@ -116,10 +152,10 @@ class Exercise(PydanticBase, CreatedUpdatedByAtMixin):
 
     number: Annotated[str, Constant()]
 
-    instructions: str = ""
-    wording: str = ""
-    example: str = ""
-    clue: str = ""
+    instructions: deltas.Deltas = deltas.empty
+    wording: deltas.Deltas = deltas.empty
+    example: deltas.Deltas = deltas.empty
+    clue: deltas.Deltas = deltas.empty
 
     wording_paragraphs_per_pagelet: int = 3
 
@@ -129,14 +165,13 @@ class Exercise(PydanticBase, CreatedUpdatedByAtMixin):
 
 class ParsedExercise(PydanticBase):
     number: Annotated[str, WriteOnly()]
-    instructions: Annotated[str, WriteOnly()]
-    wording: Annotated[str, WriteOnly()]
-    example: Annotated[str, WriteOnly()]
-    clue: Annotated[str, WriteOnly()]
+    instructions: Annotated[deltas.Deltas, WriteOnly()]
+    wording: Annotated[deltas.Deltas, WriteOnly()]
+    example: Annotated[deltas.Deltas, WriteOnly()]
+    clue: Annotated[deltas.Deltas, WriteOnly()]
     wording_paragraphs_per_pagelet: Annotated[int, WriteOnly()]
     adaptation: Annotated[AdaptationV2, WriteOnly()]
     adapted: Annotated[renderable.Exercise, Computed()]
-    delta: Annotated[exercise_delta.Exercise, Computed()]
 
 
 class SyntheticError(PydanticBase):

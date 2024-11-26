@@ -22,7 +22,6 @@ export function visit(
   url: string,
   options: {
     locale?: string
-    wysiwyg?: boolean
     pdf?: string
   } = {}
 ) {
@@ -39,14 +38,6 @@ export function visit(
   cy.visit(url)
   cy.get('select[data-cy="language"]').last().select(options.locale ?? 'en')
   notBusy()
-
-  if (options.wysiwyg !== undefined) {
-    if (options.wysiwyg) {
-      cy.get('span:contains("WYSIWYG") input').check()
-    } else {
-      cy.get('span:contains("WYSIWYG") input').uncheck()
-    }
-  }
 
   if (options.pdf !== undefined) {
     loadPdf(options.pdf)

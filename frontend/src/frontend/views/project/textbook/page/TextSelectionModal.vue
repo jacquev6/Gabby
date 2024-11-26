@@ -7,6 +7,7 @@ import type { Model, TextualFieldName } from '$frontend/components/ExerciseField
 import { BModal } from '$frontend/components/opinion/bootstrap'
 import type { Point, Rectangle } from './RectanglesHighlighter.vue'
 import type { SelectedText } from './TextPicker.vue'
+import deepEqual from 'deep-equal'
 
 
 const model = defineModel<Model>({required: true})
@@ -76,10 +77,15 @@ watch(computed(() => modal.value !== null && modal.value.active), active => {
 })
 
 function addTextTo(fieldName: TextualFieldName) {
-  if (model.value[fieldName] !== '' && !model.value[fieldName].endsWith('\n')) {
-    model.value[fieldName] += '\n'
+  console.assert(textToAdd.value.endsWith('\n'))
+  if (deepEqual(model.value[fieldName], [{insert: '\n', attributes: {}}])) {
+    model.value[fieldName] = [{insert: textToAdd.value, attributes: {}}]
+  } else {
+    const insert = model.value[fieldName].slice(-1)[0].insert
+    console.assert(typeof insert === 'string')
+    console.assert(insert.endsWith('\n'))
+    model.value[fieldName].push({insert: textToAdd.value, attributes: {}})
   }
-  model.value[fieldName] += textToAdd.value
   model.value.rectangles.push({
     pdf_sha256: pdfSha256.value,
     pdf_page: pdfPage.value,
@@ -109,7 +115,7 @@ defineExpose({
       <BLabeledCheckbox :label="$t('doStripExerciceNumber')" v-model="doStripExerciceNumber" :disabled="!canStripExerciceNumber" />
       <BLabeledCheckbox :label="$t('doKeepAllLineEnds')" v-model="doKeepAllLineEnds" />
       <BLabeledCheckbox :label="$t('doDetectLists')" v-model="doDetectLists" :disabled="doKeepAllLineEnds"/>
-      <BLabeledTextarea ref="textarea" :maxRows="15" v-model="textToAdd" />
+      <BLabeledTextarea ref="textarea" :enforceTrailingLineEnd="true" :maxRows="15" v-model="textToAdd" />
 
       <p>{{ $t('addTo') }}</p>
       <p>

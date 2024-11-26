@@ -75,9 +75,9 @@ describe('Gabby', () => {
     cy.get('@container').should(haveVerticalScrollbarOnly)
     cy.get('@container').should(beAtTop)
 
-    cy.get('[data-cy="create-exercise"]').should('not.be.visible')
-    cy.get('[data-cy="create-exercise"]').scrollIntoView()
-    cy.get('[data-cy="create-exercise"]').should('be.visible')
+    cy.get('button:contains("Create textbook")').should('not.be.visible')
+    cy.get('button:contains("Create textbook")').scrollIntoView()
+    cy.get('button:contains("Create textbook")').should('be.visible')
 
     cy.get('@container').should(beScrolledDown)
   })

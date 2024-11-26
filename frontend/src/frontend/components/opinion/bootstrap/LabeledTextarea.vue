@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
 defineOptions({
   // Disable attribute inheritance to apply all fallthrough attributes to the textarea
@@ -7,14 +7,34 @@ defineOptions({
   inheritAttrs: false
 })
 
-withDefaults(defineProps<{
+const props = withDefaults(defineProps<{
   label?: string
   maxRows?: number
+  enforceTrailingLineEnd?: boolean
 }>(), {
   maxRows: Infinity,
+  enforceTrailingLineEnd: false,
 })
 
-const model = defineModel<string>({default: ''})
+const model = defineModel<string>({default: '\n'})
+
+const modelWithoutTrailingLineEnd = computed({
+  get() {
+    if (props.enforceTrailingLineEnd) {
+      console.assert(model.value.endsWith('\n'))
+      return model.value.slice(0, -1)
+    } else {
+      return model.value
+    }
+  },
+  set(value) {
+    if (props.enforceTrailingLineEnd) {
+      model.value = value + '\n'
+    } else {
+      model.value = value
+    }
+  },
+})
 
 const id = `textarea-${ Math.floor(Math.random() * 4000000000) }`
 
@@ -30,6 +50,6 @@ defineExpose({
 <template>
   <div class="mb-3">
     <label v-if="label !== undefined" class="form-label" :for="id">{{ label }}</label>
-    <textarea class="form-control" :id="id" ref="textarea" v-model="model" v-bind="$attrs" :rows="Math.min(model.split('\n').length + 1, maxRows)"></textarea>
+    <textarea class="form-control" :id="id" ref="textarea" v-model="modelWithoutTrailingLineEnd" v-bind="$attrs" :rows="Math.min(modelWithoutTrailingLineEnd.split('\n').length + 1, maxRows)"></textarea>
   </div>
 </template>

@@ -54,27 +54,12 @@ const adaptedExercise = computed(() => {
   }
 })
 
-const deltas = computed(() => {
-  if (parsedExercise.value === null) {
-    return null
-  } else {
-    return parsedExercise.value.attributes.delta
-  }
-})
-
-const wantWysiwyg = ref(true)
-const wysiwyg = computed(() => wantWysiwyg.value)
-
-const toolSlotNames = computed(() => {
-  const names = []
-  names.push('undoRedo')
-  names.push('adaptationDetails')
-  if (wysiwyg.value) {
-    names.push('basicFormatting')
-  }
-  names.push('repartition')
-  return names
-})
+const toolSlotNames = [
+  'undoRedo',
+  'adaptationDetails',
+  'basicFormatting',
+  'repartition',
+]
 
 const wordingParagraphsPerPageletOptions = computed(() => [1, 2, 3, 4, 5].map(value => ({
   label: i18n.t('exerciseLinesPerPage', {lines: value}),
@@ -97,11 +82,11 @@ defineExpose({
   <TwoResizableColumns saveKey="projectTextbookPage-2" :snap="150" class="h-100" gutterWidth="200px">
     <template #left>
       <div class="h-100 overflow-auto position-relative" id="left-col-2" data-cy="left-col-2">
-        <h1>{{ $t('edition') }} <span style="font-size: small">(<label>WYSIWYG: <input type="checkbox" v-model="wantWysiwyg" /></label>)</span></h1>
+        <h1>{{ $t('edition') }}</h1>
         <BBusy :busy>
           <ExerciseFieldsForm ref="fields"
             v-model="model" :displayedPage
-            :fixedNumber="mode === 'edit'" :wysiwyg :deltas
+            :fixedNumber="mode === 'edit'"
           >
             <template #overlay>
               <slot name="exerciseFieldsOverlay"></slot>
@@ -124,7 +109,7 @@ defineExpose({
                     <UndoRedoTool v-model="model" :reset="doResetUndoRedo" />
                   </template>
                   <template #adaptationDetails>
-                    <AdaptationDetailsFieldsForm v-if="fields !== null" v-model="model" :wysiwyg :fields/>
+                    <AdaptationDetailsFieldsForm v-if="fields !== null" v-model="model" :fields/>
                   </template>
                   <template #basicFormatting>
                     <BasicFormattingTools v-if="fields !== null" v-model="model" :fields />

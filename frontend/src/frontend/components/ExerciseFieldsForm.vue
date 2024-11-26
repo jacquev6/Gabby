@@ -1,13 +1,15 @@
 <script lang="ts">
 import { useApiStore } from '$frontend/stores/api'
-import type { Project, Textbook, Exercise, InCache, Exists, ParsedExercise } from '$frontend/stores/api'
+import type { Project, Textbook, Exercise, InCache, Exists } from '$frontend/stores/api'
 import deepEqual from 'deep-equal'
-
+import { type Model as Deltas } from '$frontend/components/Quill.vue'
 
 const api = useApiStore()
 
 type Adaptation = (Exercise & InCache & Exists)['attributes']['adaptation']
 type PdfRectangle = (Exercise & InCache & Exists)['attributes']['rectangles'][number]
+
+const emptyDeltas: Deltas = [{insert: '\n', attributes: {}}]
 
 export const adaptationKinds: Adaptation['kind'][] = ['generic', 'fill-with-free-text', 'multiple-choices']
 
@@ -18,10 +20,10 @@ export type Model = {
   inTextbook: boolean
   number: string
   textbookPage: number | null
-  instructions: string
-  wording: string
-  example: string
-  clue: string
+  instructions: Deltas
+  wording: Deltas
+  example: Deltas
+  clue: Deltas
   wordingParagraphsPerPagelet: number
   rectangles: PdfRectangle[]
   adaptation: Adaptation
@@ -59,10 +61,10 @@ function makeModel({inTextbook, textbookPage}: MakeModelOptions): Model {
     inTextbook,
     number: '',
     textbookPage,
-    instructions: '',
-    wording: '',
-    example: '',
-    clue: '',
+    instructions: [{insert: '\n', attributes: {}}],
+    wording: [{insert: '\n', attributes: {}}],
+    example: [{insert: '\n', attributes: {}}],
+    clue: [{insert: '\n', attributes: {}}],
     wordingParagraphsPerPagelet: 3,
     rectangles: [],
     adaptation: {kind: 'generic', effects: []},
@@ -107,21 +109,29 @@ export function resetModelNotInTextbook(model: Model) {
 }
 
 export function modelIsEmpty(model: Model) {
-  return  model.instructions === ''
-    && model.wording === ''
-    && model.example === ''
-    && model.clue === ''
+  return  deepEqual(model.instructions, emptyDeltas)
+    && deepEqual(model.wording, emptyDeltas)
+    && deepEqual(model.example, emptyDeltas)
+    && deepEqual(model.clue, emptyDeltas)
     && deepEqual(model.adaptation, {kind: 'generic', effects: []})
+}
+
+function downgradeDeltas(deltas: Deltas) {
+  return deltas.map(operation => {
+    console.assert(typeof operation.insert === 'string')
+    console.assert('attributes' in operation)
+    return operation
+  })
 }
 
 export async function getParsed(model: Model) {
   const parsed = await api.client.createOne(
     'parsedExercise', {
       number: model.number,
-      instructions: model.instructions,
-      wording: model.wording,
-      example: model.example,
-      clue: model.clue,
+      instructions: downgradeDeltas(model.instructions),
+      wording: downgradeDeltas(model.wording),
+      example: downgradeDeltas(model.example),
+      clue: downgradeDeltas(model.clue),
       wordingParagraphsPerPagelet: model.wordingParagraphsPerPagelet,
       adaptation: model.adaptation,
     },
@@ -137,10 +147,10 @@ export async function create(project: Project, textbook: Textbook | null, model:
     {
       number: model.number,
       textbookPage: model.textbookPage,
-      instructions: model.instructions,
-      wording: model.wording,
-      example: model.example,
-      clue: model.clue,
+      instructions: downgradeDeltas(model.instructions),
+      wording: downgradeDeltas(model.wording),
+      example: downgradeDeltas(model.example),
+      clue: downgradeDeltas(model.clue),
       wordingParagraphsPerPagelet: model.wordingParagraphsPerPagelet,
       adaptation: model.adaptation,
       rectangles: model.rectangles,
@@ -155,10 +165,10 @@ export async function create(project: Project, textbook: Textbook | null, model:
 export async function save(exercise: Exercise & InCache & Exists, model: Model) {
   await exercise.patch(
     {
-      instructions: model.instructions,
-      wording: model.wording,
-      example: model.example,
-      clue: model.clue,
+      instructions: downgradeDeltas(model.instructions),
+      wording: downgradeDeltas(model.wording),
+      example: downgradeDeltas(model.example),
+      clue: downgradeDeltas(model.clue),
       wordingParagraphsPerPagelet: model.wordingParagraphsPerPagelet,
       adaptation: model.adaptation,
       rectangles: model.rectangles,
@@ -182,34 +192,20 @@ import { ref, computed } from 'vue'
 import deepCopy from 'deep-copy'
 import { useI18n } from 'vue-i18n'
 
-import { BRow, BCol, BLabeledInput, BLabeledTextarea, BLabeledSelect } from './opinion/bootstrap'
-import OptionalTextarea from './OptionalTextarea.vue'
+import { BRow, BCol, BLabeledInput, BLabeledSelect } from './opinion/bootstrap'
 import WysiwygEditor from './WysiwygEditor.vue'
 import { wysiwygFormats } from './AdaptationDetailsFieldsForm.vue'
 import OptionalWysiwygEditor from './OptionalWysiwygEditor.vue'
 
 
-const props = defineProps<{
+defineProps<{
   fixedNumber: boolean
-  wysiwyg: boolean
-  deltas: (ParsedExercise & InCache & Exists)['attributes']['delta'] | null
   displayedPage: number | null
 }>()
 
 const model = defineModel<Model>({required: true})
 
 const i18n = useI18n()
-
-const instructionsTextArea = ref<InstanceType<typeof BLabeledTextarea> | null>(null)
-const wordingTextArea = ref<InstanceType<typeof BLabeledTextarea> | null>(null)
-const exampleTextArea = ref<InstanceType<typeof OptionalTextarea> | null>(null)
-const clueTextArea = ref<InstanceType<typeof OptionalTextarea> | null>(null)
-const textAreas = {
-  instructions: instructionsTextArea,
-  wording: wordingTextArea,
-  example: exampleTextArea,
-  clue: clueTextArea,
-}
 
 const instructionsEditor = ref<InstanceType<typeof WysiwygEditor> | null>(null)
 const wordingEditor = ref<InstanceType<typeof WysiwygEditor> | null>(null)
@@ -223,29 +219,16 @@ const editors = {
 }
 
 const noClueNoExample = computed(() => {
-  if (props.wysiwyg) {
-    return !exampleEditor.value?.expanded && !clueEditor.value?.expanded
-  } else {
-    return !exampleTextArea.value?.expanded && !clueTextArea.value?.expanded
-  }
+  return !exampleEditor.value?.expanded && !clueEditor.value?.expanded
 })
 
 const saveDisabled = computed(() => model.value.number === '')
 
 function highlightSuffix(fieldName: TextualFieldName, suffix: string) {
-  const text = model.value[fieldName]
-  console.assert(text.endsWith(suffix))
-  if (props.wysiwyg) {
-    const editor = editors[fieldName].value
-    console.assert(editor !== null)
-    editor.focus()
-    editor.setSelection(editor.getLength() - suffix.length - 1, suffix.length)
-  } else {
-    const textArea = textAreas[fieldName].value
-    console.assert(textArea !== null)
-    textArea.focus()
-    textArea.setSelectionRange(text.length - suffix.length, text.length)
-  }
+  const editor = editors[fieldName].value
+  console.assert(editor !== null)
+  editor.focus()
+  editor.setSelection(editor.getLength() - suffix.length - 1, suffix.length)
 }
 
 function toggle(format: string, value: unknown = true) {
@@ -257,45 +240,32 @@ function toggle(format: string, value: unknown = true) {
 }
 
 const focusedWysiwygField = computed(() => {
-  if (props.wysiwyg) {
-    if (instructionsEditor.value?.hasFocus) {
-      return 'instructions'
-    } else if (wordingEditor.value?.hasFocus) {
-      return 'wording'
-    } else if (exampleEditor.value?.hasFocus) {
-      return 'example'
-    } else if (clueEditor.value?.hasFocus) {
-      return 'clue'
-    } else {
-      return null
-    }
+  if (instructionsEditor.value?.hasFocus) {
+    return 'instructions'
+  } else if (wordingEditor.value?.hasFocus) {
+    return 'wording'
+  } else if (exampleEditor.value?.hasFocus) {
+    return 'example'
+  } else if (clueEditor.value?.hasFocus) {
+    return 'clue'
   } else {
     return null
   }
 })
 
 const currentWysiwygFormat = computed(() => {
-  if (props.wysiwyg) {
-    if (instructionsEditor.value?.hasFocus) {
-      return instructionsEditor.value.currentFormat
-    } else if (wordingEditor.value?.hasFocus) {
-      return wordingEditor.value.currentFormat
-    } else if (exampleEditor.value?.hasFocus) {
-      return exampleEditor.value.currentFormat
-    } else if (clueEditor.value?.hasFocus) {
-      return clueEditor.value.currentFormat
-    } else {
-      return {}
-    }
+  if (instructionsEditor.value?.hasFocus) {
+    return instructionsEditor.value.currentFormat
+  } else if (wordingEditor.value?.hasFocus) {
+    return wordingEditor.value.currentFormat
+  } else if (exampleEditor.value?.hasFocus) {
+    return exampleEditor.value.currentFormat
+  } else if (clueEditor.value?.hasFocus) {
+    return clueEditor.value.currentFormat
   } else {
     return {}
   }
 })
-
-const instructionsDeltas = computed(() => props.deltas === null ? [] : props.deltas.instructions)
-const wordingDeltas = computed(() => props.deltas === null ? [] : props.deltas.wording)
-const exampleDeltas = computed(() => props.deltas === null ? [] : props.deltas.example)
-const clueDeltas = computed(() => props.deltas === null ? [] : props.deltas.clue)
 
 
 const selBlotColors = computed(() => {
@@ -354,65 +324,34 @@ defineExpose({
       :options="adaptationKinds.map(kind => ({value: kind, label: $t(kind)}))"
     />
     <WysiwygEditor
-      v-if="wysiwyg"
       ref="instructionsEditor"
       :label="$t('exerciseInstructions')"
       :formats="wysiwygFormats"
-      v-model="model.instructions" :delta="instructionsDeltas"
+      v-model="model.instructions"
       @selectionChange="selectionChangeInInstructionsOrWording"
     />
-    <BLabeledTextarea
-      v-else
-      ref="instructionsTextArea"
-      :label="$t('exerciseInstructions')"
-      v-model="model.instructions"
-      data-cy-exercise-field="instructions"
-    />
     <WysiwygEditor
-      v-if="wysiwyg"
       ref="wordingEditor"
       :label="$t('exerciseWording')"
       :formats="wysiwygFormats"
-      v-model="model.wording" :delta="wordingDeltas"
-      @selectionChange="selectionChangeInInstructionsOrWording"
-    />
-    <BLabeledTextarea
-      v-else
-      ref="wordingTextArea"
-      :label="$t('exerciseWording')"
       v-model="model.wording"
+      @selectionChange="selectionChangeInInstructionsOrWording"
     />
     <div :class="{'container-fluid': noClueNoExample}">
       <div :class="{row: noClueNoExample}">
         <div :class="{col: noClueNoExample}" style="padding: 0;">
           <OptionalWysiwygEditor
-            v-if="wysiwyg"
             ref="exampleEditor"
             :label="$t('exerciseExample')"
             :formats="wysiwygFormats"
-            :delta="exampleDeltas"
-            v-model="model.example"
-          />
-          <OptionalTextarea
-            v-else
-            ref="exampleTextArea"
-            :label="$t('exerciseExample')"
             v-model="model.example"
           />
         </div>
         <div :class="{col: noClueNoExample}" style="padding: 0;">
           <OptionalWysiwygEditor
-            v-if="wysiwyg"
             ref="clueEditor"
             :label="$t('exerciseClue')"
             :formats="wysiwygFormats"
-            :delta="clueDeltas"
-            v-model="model.clue"
-          />
-          <OptionalTextarea
-            v-else
-            ref="clueTextArea"
-            :label="$t('exerciseClue')"
             v-model="model.clue"
           />
         </div>

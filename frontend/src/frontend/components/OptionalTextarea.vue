@@ -5,8 +5,9 @@ import { nextTick } from 'vue'
 import { BLabeledTextarea } from './opinion/bootstrap'
 
 
-defineProps<{
+const props = defineProps<{
   label: string,
+  enforceTrailingLineEnd: boolean,
 }>()
 
 const model = defineModel<string>({required: true})
@@ -24,7 +25,9 @@ function unforce() {
   forced.value = false
 }
 
-const expanded = computed(() => model.value !== '' || forced.value)
+const emptyModel = computed(() => props.enforceTrailingLineEnd ? '\n' : '')
+
+const expanded = computed(() => model.value !== emptyModel.value || forced.value)
 
 defineExpose({
   expanded,
@@ -35,6 +38,6 @@ defineExpose({
 </script>
 
 <template>
-  <BLabeledTextarea v-if="expanded" ref="textArea" :label v-model="model" @focus="force" @blur="unforce" />
+  <BLabeledTextarea v-if="expanded" ref="textArea" :label :enforceTrailingLineEnd v-model="model" @focus="force" @blur="unforce" />
   <p v-else @click="force">{{ label }} <button class="btn btn-sm btn-primary">+</button></p>
 </template>

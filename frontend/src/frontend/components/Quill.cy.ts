@@ -354,4 +354,10 @@ describe('Quill', () => {
       ])
     })
   })
+
+  it('allows adding an insert operation with the same attributes', () => {
+    cy.mount(Quill, {props: {blots: [StrBlot], modelValue: [{insert: 'abc', attributes: {}}]}})
+    cy.vue<typeof Quill>().then(w => {w.setProps({modelValue: [{insert: 'abc', attributes: {}}, {insert: 'def', attributes: {}}]})})
+    cy.get(':contains("abcdef")').should('exist')
+  })
 })

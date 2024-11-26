@@ -4,7 +4,7 @@ import uuid
 from starlette import status
 
 from . import api_models
-from . import exercise_delta
+from . import deltas
 from . import renderable
 from . import settings
 from .exercises import Exercise
@@ -16,7 +16,6 @@ from .users import MandatoryAuthBearerDependable
 class ParsedExerciseItem:
     id: str
     adapted: renderable.Exercise
-    delta: exercise_delta.Exercise
 
 
 class ParsedExercisesResource:
@@ -47,11 +46,9 @@ class ParsedExercisesResource:
             wording_paragraphs_per_pagelet=wording_paragraphs_per_pagelet,
             adaptation=adaptation,
         )
-        adapted, delta = exercise.make_adapted_and_delta()
         return ParsedExerciseItem(
             id=uuid.uuid4().hex,
-            adapted=adapted,
-            delta=delta,
+            adapted=exercise.make_adapted(),
         )
 
     def get_item(
@@ -72,10 +69,10 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                 "type": "parsedExercise",
                 "attributes": {
                     "number": "C",
-                    "instructions": "This is the {boxed-text|instructions}.",
-                    "wording": "This is the wording.",
-                    "example": "",
-                    "clue": "",
+                    "instructions": [{"insert": "This is the {boxed-text|instructions}.\n", "attributes": {}}],
+                    "wording": [{"insert": "This is the wording.\n", "attributes": {}}],
+                    "example": [{"insert": "\n", "attributes": {}}],
+                    "clue": [{"insert": "\n", "attributes": {}}],
                     "wordingParagraphsPerPagelet": 3,
                     "adaptation": {"kind": "generic", "effects": []},
                 },
@@ -125,10 +122,10 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                 "type": "parsedExercise",
                 "attributes": {
                     "number": "A.1",
-                    "instructions": "This is the instructions.",
-                    "wording": "This is the wording.",
-                    "example": "",
-                    "clue": "",
+                    "instructions": [{"insert": "This is the instructions.\n", "attributes": {}}],
+                    "wording": [{"insert": "This is the wording.\n", "attributes": {}}],
+                    "example": [{"insert": "\n", "attributes": {}}],
+                    "clue": [{"insert": "\n", "attributes": {}}],
                     "wordingParagraphsPerPagelet": 3,
                     "adaptation": {
                         "kind": "generic",
@@ -189,10 +186,10 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                 "type": "parsedExercise",
                 "attributes": {
                     "number": "A.1",
-                    "instructions": "This is the instructions.",
-                    "wording": "This is the wording.",
-                    "example": "This is the example.",
-                    "clue": "This is the clue.",
+                    "instructions": [{"insert": "This is the instructions.\n", "attributes": {}}],
+                    "wording": [{"insert": "This is the wording.\n", "attributes": {}}],
+                    "example": [{"insert": "This is the example.\n", "attributes": {}}],
+                    "clue": [{"insert": "This is the clue.\n", "attributes": {}}],
                     "wordingParagraphsPerPagelet": 3,
                     "adaptation": {
                         "kind": "generic",
@@ -271,10 +268,10 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                 "type": "parsedExercise",
                 "attributes": {
                     "number": "A.1",
-                    "instructions": "This is the instructions.",
-                    "wording": "Fill @",
-                    "example": "",
-                    "clue": "",
+                    "instructions": [{"insert": "This is the instructions.\n", "attributes": {}}],
+                    "wording": [{"insert": "Fill @\n", "attributes": {}}],
+                    "example": [{"insert": "\n", "attributes": {}}],
+                    "clue": [{"insert": "\n", "attributes": {}}],
                     "wordingParagraphsPerPagelet": 3,
                     "adaptation": {
                         "kind": "fill-with-free-text",
@@ -319,10 +316,24 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                 "type": "parsedExercise",
                 "attributes": {
                     "number": "A.1",
-                    "instructions": "{choices2||or|||@|a or b}",
-                    "wording": "A @\n\nB @",
-                    "example": "",
-                    "clue": "",
+                    "instructions": [
+                        {
+                            "insert": "a or b",
+                            "attributes": {
+                                "choices2": {
+                                    "start": "",
+                                    "separator1": "or",
+                                    "separator2": "",
+                                    "stop": "",
+                                    "placeholder": "@",
+                                },
+                            },
+                        },
+                        {"insert": "\n", "attributes": {}},
+                    ],
+                    "wording": [{"insert": "A @\n\nB @\n", "attributes": {}}],
+                    "example": [{"insert": "\n", "attributes": {}}],
+                    "clue": [{"insert": "\n", "attributes": {}}],
                     "wordingParagraphsPerPagelet": 3,
                     "adaptation": {"kind": "multiple-choices", "effects": []},
                 },
@@ -363,10 +374,25 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                 "type": "parsedExercise",
                 "attributes": {
                     "number": "A.1",
-                    "instructions": "Instructions.",
-                    "wording": "A {choices2||/||||alpha/beta}.",
-                    "example": "",
-                    "clue": "",
+                    "instructions": [{"insert": "Instructions.\n", "attributes": {}}],
+                    "wording": [
+                        {"insert": "A ", "attributes": {}},
+                        {
+                            "insert": "alpha/beta",
+                            "attributes": {
+                                "choices2": {
+                                    "start": "",
+                                    "separator1": "/",
+                                    "separator2": "",
+                                    "stop": "",
+                                    "placeholder": "",
+                                },
+                            },
+                        },
+                        {"insert": ".\n", "attributes": {}},
+                    ],
+                    "example": [{"insert": "\n", "attributes": {}}],
+                    "clue": [{"insert": "\n", "attributes": {}}],
                     "wordingParagraphsPerPagelet": 3,
                     "adaptation": {"kind": "multiple-choices", "effects": []},
                 },

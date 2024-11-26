@@ -24,23 +24,6 @@ describe('Gabby', () => {
     cy.get('button:contains("Save then next")').should('be.enabled')
   })
 
-  it('adjusts textarea heights', () => {
-    visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise', {wysiwyg: false})
-
-    for (const label of ['Instructions', 'Wording']) {
-      cy.get(`label:contains("${label}")`).next().should('have.attr', 'rows', '2')
-      cy.get(`label:contains("${label}")`).next().type('a\nb\nc\nd')
-      cy.get(`label:contains("${label}")`).next().should('have.attr', 'rows', '5')
-    }
-
-    for (const label of ['Example', 'Clue']) {
-      cy.get(`p:contains("${label}")`).click()
-      cy.get(`label:contains("${label}")`).next().should('have.attr', 'rows', '2')
-      cy.get(`label:contains("${label}")`).next().type('a\nb\nc')
-      cy.get(`label:contains("${label}")`).next().should('have.attr', 'rows', '4')
-    }
-  })
-
   it('creates a minimal exercise', () => {
     visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise')
 
@@ -56,7 +39,7 @@ describe('Gabby', () => {
   })
 
   it('creates a full exercise', () => {
-    visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise', {wysiwyg: false})
+    visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise')
 
     cy.get('label:contains("Number")').next().type('Défis')
     cy.get('label:contains("Instructions")').next().type('Do the smartest thing ever.')

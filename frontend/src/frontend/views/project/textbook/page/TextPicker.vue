@@ -231,9 +231,9 @@ function textFromItems(items: TextItem[]): SelectedText {
     const withAllLineEnds = lines.map(textFromLine).join('\n')
 
     return {
-      withoutLineEnds,
-      withAllLineEnds,
-      withoutListsDetection,
+      withoutLineEnds: withoutLineEnds + '\n',
+      withAllLineEnds: withAllLineEnds + '\n',
+      withoutListsDetection: withoutListsDetection + '\n',
     }
   }
 }

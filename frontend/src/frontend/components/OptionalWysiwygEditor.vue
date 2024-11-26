@@ -3,16 +3,16 @@ import { ref, computed } from 'vue'
 import { nextTick } from 'vue'
 
 import WysiwygEditor, { type Format } from './WysiwygEditor.vue'
-import { type Model as QuillModel } from './Quill.vue'
+import { type Model } from './Quill.vue'
+import deepEqual from 'deep-equal'
 
 
 defineProps<{
   label: string,
   formats: Record<string, Format>
-  delta: QuillModel
 }>()
 
-const model = defineModel<string>({required: true})
+const model = defineModel<Model>({required: true})
 
 const forced = ref(false)
 
@@ -27,7 +27,7 @@ function unforce() {
   forced.value = false
 }
 
-const expanded = computed(() => model.value !== '' || forced.value)
+const expanded = computed(() => !deepEqual(model.value, [{insert: '\n', 'attributes': {}}]) || forced.value)
 
 defineExpose({
   expanded,
@@ -53,7 +53,6 @@ defineExpose({
     ref="editor"
     :label
     :formats
-    :delta
     v-model="model"
     @focus="force"
     @blur="unforce"

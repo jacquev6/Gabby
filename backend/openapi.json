@@ -176,18 +176,51 @@
         "title": "Effects",
         "type": "object"
       },
-      "EmbedInsertOp": {
+      "Exercise": {
         "additionalProperties": false,
         "properties": {
-          "insert": {
-            "title": "Insert",
-            "type": "object"
+          "clue": {
+            "$ref": "#/components/schemas/Section"
+          },
+          "example": {
+            "$ref": "#/components/schemas/Section"
+          },
+          "instructions": {
+            "$ref": "#/components/schemas/Section"
+          },
+          "number": {
+            "title": "Number",
+            "type": "string"
+          },
+          "textbook_page": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Textbook Page"
+          },
+          "wording": {
+            "$ref": "#/components/schemas/Section"
+          },
+          "wording_paragraphs_per_pagelet": {
+            "title": "Wording Paragraphs Per Pagelet",
+            "type": "integer"
           }
         },
         "required": [
-          "insert"
+          "number",
+          "textbook_page",
+          "instructions",
+          "wording",
+          "example",
+          "clue",
+          "wording_paragraphs_per_pagelet"
         ],
-        "title": "EmbedInsertOp",
+        "title": "Exercise",
         "type": "object"
       },
       "FillWithFreeTextAdaptationEffect": {
@@ -224,6 +257,25 @@
           }
         },
         "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "InsertOp": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "title": "Attributes",
+            "type": "object"
+          },
+          "insert": {
+            "title": "Insert",
+            "type": "string"
+          }
+        },
+        "required": [
+          "insert",
+          "attributes"
+        ],
+        "title": "InsertOp",
         "type": "object"
       },
       "ItemLinks": {
@@ -619,25 +671,6 @@
         "title": "SentencesItems",
         "type": "object"
       },
-      "TextInsertOp": {
-        "additionalProperties": false,
-        "properties": {
-          "attributes": {
-            "title": "Attributes",
-            "type": "object"
-          },
-          "insert": {
-            "title": "Insert",
-            "type": "string"
-          }
-        },
-        "required": [
-          "insert",
-          "attributes"
-        ],
-        "title": "TextInsertOp",
-        "type": "object"
-      },
       "ValidationError": {
         "properties": {
           "loc": {
@@ -958,19 +991,43 @@
             }
           },
           "clue": {
-            "default": "",
+            "default": [
+              {
+                "attributes": {},
+                "insert": "\n"
+              }
+            ],
+            "items": {
+              "$ref": "#/components/schemas/InsertOp"
+            },
             "title": "Clue",
-            "type": "string"
+            "type": "array"
           },
           "example": {
-            "default": "",
+            "default": [
+              {
+                "attributes": {},
+                "insert": "\n"
+              }
+            ],
+            "items": {
+              "$ref": "#/components/schemas/InsertOp"
+            },
             "title": "Example",
-            "type": "string"
+            "type": "array"
           },
           "instructions": {
-            "default": "",
+            "default": [
+              {
+                "attributes": {},
+                "insert": "\n"
+              }
+            ],
+            "items": {
+              "$ref": "#/components/schemas/InsertOp"
+            },
             "title": "Instructions",
-            "type": "string"
+            "type": "array"
           },
           "number": {
             "title": "Number",
@@ -996,9 +1053,17 @@
             "title": "Textbookpage"
           },
           "wording": {
-            "default": "",
+            "default": [
+              {
+                "attributes": {},
+                "insert": "\n"
+              }
+            ],
+            "items": {
+              "$ref": "#/components/schemas/InsertOp"
+            },
             "title": "Wording",
-            "type": "string"
+            "type": "array"
           },
           "wordingParagraphsPerPagelet": {
             "default": 3,
@@ -1085,8 +1150,11 @@
             "$ref": "#/components/schemas/AdaptationV2-Output"
           },
           "clue": {
+            "items": {
+              "$ref": "#/components/schemas/InsertOp"
+            },
             "title": "Clue",
-            "type": "string"
+            "type": "array"
           },
           "createdAt": {
             "format": "date-time",
@@ -1094,12 +1162,18 @@
             "type": "string"
           },
           "example": {
+            "items": {
+              "$ref": "#/components/schemas/InsertOp"
+            },
             "title": "Example",
-            "type": "string"
+            "type": "array"
           },
           "instructions": {
+            "items": {
+              "$ref": "#/components/schemas/InsertOp"
+            },
             "title": "Instructions",
-            "type": "string"
+            "type": "array"
           },
           "number": {
             "title": "Number",
@@ -1129,8 +1203,11 @@
             "type": "string"
           },
           "wording": {
+            "items": {
+              "$ref": "#/components/schemas/InsertOp"
+            },
             "title": "Wording",
-            "type": "string"
+            "type": "array"
           },
           "wordingParagraphsPerPagelet": {
             "title": "Wordingparagraphsperpagelet",
@@ -1255,16 +1332,25 @@
             "$ref": "#/components/schemas/AdaptationV2-Input"
           },
           "clue": {
+            "items": {
+              "$ref": "#/components/schemas/InsertOp"
+            },
             "title": "Clue",
-            "type": "string"
+            "type": "array"
           },
           "example": {
+            "items": {
+              "$ref": "#/components/schemas/InsertOp"
+            },
             "title": "Example",
-            "type": "string"
+            "type": "array"
           },
           "instructions": {
+            "items": {
+              "$ref": "#/components/schemas/InsertOp"
+            },
             "title": "Instructions",
-            "type": "string"
+            "type": "array"
           },
           "rectangles": {
             "items": {
@@ -1274,8 +1360,11 @@
             "type": "array"
           },
           "wording": {
+            "items": {
+              "$ref": "#/components/schemas/InsertOp"
+            },
             "title": "Wording",
-            "type": "string"
+            "type": "array"
           },
           "wordingParagraphsPerPagelet": {
             "title": "Wordingparagraphsperpagelet",
@@ -1442,122 +1531,6 @@
         "title": "exercise_updatedBy_Relationship_ObjectId",
         "type": "object"
       },
-      "gabby__exercise_delta__Exercise": {
-        "additionalProperties": false,
-        "properties": {
-          "clue": {
-            "items": {
-              "anyOf": [
-                {
-                  "$ref": "#/components/schemas/TextInsertOp"
-                },
-                {
-                  "$ref": "#/components/schemas/EmbedInsertOp"
-                }
-              ]
-            },
-            "title": "Clue",
-            "type": "array"
-          },
-          "example": {
-            "items": {
-              "anyOf": [
-                {
-                  "$ref": "#/components/schemas/TextInsertOp"
-                },
-                {
-                  "$ref": "#/components/schemas/EmbedInsertOp"
-                }
-              ]
-            },
-            "title": "Example",
-            "type": "array"
-          },
-          "instructions": {
-            "items": {
-              "anyOf": [
-                {
-                  "$ref": "#/components/schemas/TextInsertOp"
-                },
-                {
-                  "$ref": "#/components/schemas/EmbedInsertOp"
-                }
-              ]
-            },
-            "title": "Instructions",
-            "type": "array"
-          },
-          "wording": {
-            "items": {
-              "anyOf": [
-                {
-                  "$ref": "#/components/schemas/TextInsertOp"
-                },
-                {
-                  "$ref": "#/components/schemas/EmbedInsertOp"
-                }
-              ]
-            },
-            "title": "Wording",
-            "type": "array"
-          }
-        },
-        "required": [
-          "instructions",
-          "wording",
-          "example",
-          "clue"
-        ],
-        "title": "Exercise",
-        "type": "object"
-      },
-      "gabby__renderable__Exercise": {
-        "additionalProperties": false,
-        "properties": {
-          "clue": {
-            "$ref": "#/components/schemas/Section"
-          },
-          "example": {
-            "$ref": "#/components/schemas/Section"
-          },
-          "instructions": {
-            "$ref": "#/components/schemas/Section"
-          },
-          "number": {
-            "title": "Number",
-            "type": "string"
-          },
-          "textbook_page": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Textbook Page"
-          },
-          "wording": {
-            "$ref": "#/components/schemas/Section"
-          },
-          "wording_paragraphs_per_pagelet": {
-            "title": "Wording Paragraphs Per Pagelet",
-            "type": "integer"
-          }
-        },
-        "required": [
-          "number",
-          "textbook_page",
-          "instructions",
-          "wording",
-          "example",
-          "clue",
-          "wording_paragraphs_per_pagelet"
-        ],
-        "title": "Exercise",
-        "type": "object"
-      },
       "parsedExerciseCreateInput": {
         "additionalProperties": false,
         "properties": {
@@ -1600,24 +1573,36 @@
             "$ref": "#/components/schemas/AdaptationV2-Input"
           },
           "clue": {
+            "items": {
+              "$ref": "#/components/schemas/InsertOp"
+            },
             "title": "Clue",
-            "type": "string"
+            "type": "array"
           },
           "example": {
+            "items": {
+              "$ref": "#/components/schemas/InsertOp"
+            },
             "title": "Example",
-            "type": "string"
+            "type": "array"
           },
           "instructions": {
+            "items": {
+              "$ref": "#/components/schemas/InsertOp"
+            },
             "title": "Instructions",
-            "type": "string"
+            "type": "array"
           },
           "number": {
             "title": "Number",
             "type": "string"
           },
           "wording": {
+            "items": {
+              "$ref": "#/components/schemas/InsertOp"
+            },
             "title": "Wording",
-            "type": "string"
+            "type": "array"
           },
           "wordingParagraphsPerPagelet": {
             "title": "Wordingparagraphsperpagelet",
@@ -1691,15 +1676,11 @@
         "additionalProperties": false,
         "properties": {
           "adapted": {
-            "$ref": "#/components/schemas/gabby__renderable__Exercise"
-          },
-          "delta": {
-            "$ref": "#/components/schemas/gabby__exercise_delta__Exercise"
+            "$ref": "#/components/schemas/Exercise"
           }
         },
         "required": [
-          "adapted",
-          "delta"
+          "adapted"
         ],
         "title": "parsedExerciseOutputItemAttributes",
         "type": "object"
