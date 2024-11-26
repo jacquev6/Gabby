@@ -426,9 +426,6 @@
           },
           "type": {
             "const": "resource",
-            "enum": [
-              "resource"
-            ],
             "title": "Type",
             "type": "string"
           }
@@ -470,9 +467,6 @@
           },
           "type": {
             "const": "resource",
-            "enum": [
-              "resource"
-            ],
             "title": "Type",
             "type": "string"
           }
@@ -513,9 +507,6 @@
           },
           "type": {
             "const": "resource",
-            "enum": [
-              "resource"
-            ],
             "title": "Type",
             "type": "string"
           }

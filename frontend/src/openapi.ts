@@ -215,7 +215,6 @@ export interface components {
       /**
        * Kind
        * @constant
-       * @enum {string}
        */
       kind: "fill-with-free-text";
       /** Placeholder */
@@ -246,7 +245,6 @@ export interface components {
       /**
        * Kind
        * @constant
-       * @enum {string}
        */
       kind: "itemized";
     };
@@ -258,7 +256,6 @@ export interface components {
       /**
        * Kind
        * @constant
-       * @enum {string}
        */
       kind: "itemized";
     };
@@ -267,7 +264,6 @@ export interface components {
       /**
        * Kind
        * @constant
-       * @enum {string}
        */
       kind: "manual";
     };
@@ -353,7 +349,6 @@ export interface components {
       /**
        * Kind
        * @constant
-       * @enum {string}
        */
       kind: "sentences";
     };
@@ -371,7 +366,6 @@ export interface components {
       /**
        * Kind
        * @constant
-       * @enum {string}
        */
       kind: "words";
       /** Punctuation */
@@ -384,7 +378,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "boldText";
     };
@@ -395,7 +388,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "boxedText";
     };
@@ -404,7 +396,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "freeTextInput";
     };
@@ -415,7 +406,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "italicText";
     };
@@ -426,7 +416,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "multipleChoicesInput";
     };
@@ -437,7 +426,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "plainText";
     };
@@ -452,7 +440,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "selectableText";
     };
@@ -465,7 +452,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "selectedText";
     };
@@ -474,7 +460,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "whitespace";
     };
@@ -665,7 +650,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "user";
     };
@@ -680,7 +664,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "project";
     };
@@ -695,7 +678,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "textbook";
     };
@@ -710,7 +692,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "user";
     };
@@ -882,7 +863,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "user";
     };
@@ -897,7 +877,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "pdfFile";
     };
@@ -970,7 +949,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "user";
     };
@@ -987,7 +965,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "pdfFileNaming";
     };
@@ -1004,7 +981,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "section";
     };
@@ -1127,7 +1103,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "user";
     };
@@ -1143,7 +1118,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "ping";
     };
@@ -1160,7 +1134,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "ping";
     };
@@ -1175,7 +1148,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "ping";
     };
@@ -1190,7 +1162,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "user";
     };
@@ -1302,7 +1273,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "user";
     };
@@ -1319,7 +1289,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "exercise";
     };
@@ -1336,7 +1305,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "textbook";
     };
@@ -1351,7 +1319,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "user";
     };
@@ -1503,7 +1470,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "user";
     };
@@ -1518,7 +1484,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "pdfFile";
     };
@@ -1533,7 +1498,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "textbook";
     };
@@ -1548,7 +1512,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "user";
     };
@@ -1685,7 +1648,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "user";
     };
@@ -1702,7 +1664,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "exercise";
     };
@@ -1717,7 +1678,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "project";
     };
@@ -1734,7 +1694,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "section";
     };
@@ -1749,7 +1708,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "user";
     };
@@ -1824,7 +1782,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "user";
     };
@@ -1839,7 +1796,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "user";
     };
