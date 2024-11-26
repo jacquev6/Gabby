@@ -62,7 +62,7 @@ const toolSlotNames = [
 ]
 
 const wordingParagraphsPerPageletOptions = computed(() => [1, 2, 3, 4, 5].map(value => ({
-  label: i18n.t('exerciseLinesPerPage', {lines: value}),
+  label: i18n.t('exerciseLinesPerPage', value),
   value,
 })))
 

@@ -134,7 +134,7 @@
   "boldButton": "Bold",
   "italicButton": "Italic",
   "exerciseDistribution": "Distribution",
-  "exerciseLinesPerPage": "{lines} lines per page",
+  "exerciseLinesPerPage": "1 line per page | {n} lines per page",
   "items": "Items",
   "itemsWords": "Words",
   "itemsPunctuation": "Punctuation",

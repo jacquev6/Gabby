@@ -134,7 +134,7 @@
   "boldButton": "Gras",
   "italicButton": "Italique",
   "exerciseDistribution": "Répartition",
-  "exerciseLinesPerPage": "{lines} lignes par page",
+  "exerciseLinesPerPage": "1 ligne par page | {n} lignes par page",
   "items": "Items",
   "itemsWords": "Mots",
   "itemsPunctuation": "Ponctuation",
