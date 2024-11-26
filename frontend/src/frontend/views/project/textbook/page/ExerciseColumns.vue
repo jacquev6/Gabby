@@ -58,7 +58,7 @@ const toolSlotNames = [
   'undoRedo',
   'adaptationDetails',
   'basicFormatting',
-  'repartition',
+  'distribution',
 ]
 
 const wordingParagraphsPerPageletOptions = computed(() => [1, 2, 3, 4, 5].map(value => ({
@@ -114,8 +114,8 @@ defineExpose({
                   <template #basicFormatting>
                     <BasicFormattingTools v-if="fields !== null" v-model="model" :fields />
                   </template>
-                  <template #repartition>
-                    <BLabeledCheckboxes :label="$t('exerciseRepartition')" v-model="model.wordingParagraphsPerPagelet" :options="wordingParagraphsPerPageletOptions" />
+                  <template #distribution>
+                    <BLabeledCheckboxes :label="$t('exerciseDistribution')" v-model="model.wordingParagraphsPerPagelet" :options="wordingParagraphsPerPageletOptions" />
                   </template>
                 </ToolsGutter>
               </div>
