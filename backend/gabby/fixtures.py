@@ -268,6 +268,7 @@ def create_test_exercises_1(session, admin):
         clue=[deltas.InsertOp(insert="Il peut y avoir plusieurs solutions.\n", attributes={})],
         wording=[deltas.InsertOp(insert="... vide\r\n... vident\r\n... dépenses\r\n... dépensent\r\n... savon\r\n... savons\r\n... commande\n", attributes={})],
         adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
+        wording_paragraphs_per_pagelet=3,
         created_by=admin,
         updated_by=admin,
     )
@@ -438,6 +439,7 @@ def create_test_exercises_2(session, admin):
                 ),
             )],
         ),
+        wording_paragraphs_per_pagelet=3,
         created_by=admin,
         updated_by=admin,
     )
@@ -528,6 +530,7 @@ def create_test_exercises_2(session, admin):
         clue=[deltas.InsertOp(insert="\n", attributes={})],
         wording=[deltas.InsertOp(insert="a. coccinelle est un adjectif. @\nb. bûche est un verbe. @\nc. cette est un déterminant. @\nd. dentier est un verbe. @\ne. respirer est un verbe. @\nf. aspiration est un nom. @\n", attributes={})],
         adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
+        wording_paragraphs_per_pagelet=3,
         created_by=admin,
         updated_by=admin,
     )
