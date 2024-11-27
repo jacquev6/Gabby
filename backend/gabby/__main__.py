@@ -185,11 +185,8 @@ def dump_database_as_unit_tests():
                 "whitespace": lambda: renderable.Whitespace(),
             }[token.type]()
 
-        def waste_sentence(sentence):
-            return renderable.Sentence(tokens=[waste_token(token) for token in sentence.tokens])
-
         def waste_paragraph(paragraph):
-            return renderable.Paragraph(sentences=[waste_sentence(sentence) for sentence in paragraph.sentences])
+            return renderable.Paragraph(tokens=[waste_token(token) for token in paragraph.tokens])
 
         def waste_section(section):
             return renderable.Section(paragraphs=[waste_paragraph(paragraph) for paragraph in section.paragraphs])
@@ -216,13 +213,12 @@ def dump_database_as_unit_tests():
     def gen():
         yield "# WARNING: this file is generated (from database content). Manual changes will be lost."
         yield ""
-        yield "from . import deltas as d"
         yield "from . import exercises as e"
         yield "from . import renderable as r"
         yield "from .adaptation import AdaptationTestCase"
         yield "from .api_models import AdaptationV2, FillWithFreeTextAdaptationEffect, ItemizedAdaptationEffect"
         yield "from .deltas import InsertOp"
-        yield "from .renderable import Section, Paragraph, Sentence, _PlainText, _Whitespace, _FreeTextInput, _SelectableText, _BoxedText, _MultipleChoicesInput, _SelectedText"
+        yield "from .renderable import Section, Paragraph, _PlainText, _Whitespace, _FreeTextInput, _SelectableText, _BoxedText, _MultipleChoicesInput, _SelectedText"
         yield ""
         yield ""
         yield "WordsItems = ItemizedAdaptationEffect.WordsItems"

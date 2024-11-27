@@ -85,12 +85,8 @@ def Whitespace():
 SentenceToken = _PlainText | _BoxedText | _BoldText | _ItalicText | _SelectableText | _SelectedText | _FreeTextInput | _MultipleChoicesInput | _Whitespace
 
 
-class Sentence(PydanticBase):
-    tokens: list[SentenceToken]
-
-
 class Paragraph(PydanticBase):
-    sentences: list[Sentence]
+    tokens: list[SentenceToken]
 
 
 class Section(PydanticBase):

@@ -473,16 +473,44 @@
       "Paragraph": {
         "additionalProperties": false,
         "properties": {
-          "sentences": {
+          "tokens": {
             "items": {
-              "$ref": "#/components/schemas/Sentence"
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/_PlainText"
+                },
+                {
+                  "$ref": "#/components/schemas/_BoxedText"
+                },
+                {
+                  "$ref": "#/components/schemas/_BoldText"
+                },
+                {
+                  "$ref": "#/components/schemas/_ItalicText"
+                },
+                {
+                  "$ref": "#/components/schemas/_SelectableText"
+                },
+                {
+                  "$ref": "#/components/schemas/_SelectedText"
+                },
+                {
+                  "$ref": "#/components/schemas/_FreeTextInput"
+                },
+                {
+                  "$ref": "#/components/schemas/_MultipleChoicesInput"
+                },
+                {
+                  "$ref": "#/components/schemas/_Whitespace"
+                }
+              ]
             },
-            "title": "Sentences",
+            "title": "Tokens",
             "type": "array"
           }
         },
         "required": [
-          "sentences"
+          "tokens"
         ],
         "title": "Paragraph",
         "type": "object"
@@ -598,51 +626,6 @@
           "colors"
         ],
         "title": "Selectable",
-        "type": "object"
-      },
-      "Sentence": {
-        "additionalProperties": false,
-        "properties": {
-          "tokens": {
-            "items": {
-              "anyOf": [
-                {
-                  "$ref": "#/components/schemas/_PlainText"
-                },
-                {
-                  "$ref": "#/components/schemas/_BoxedText"
-                },
-                {
-                  "$ref": "#/components/schemas/_BoldText"
-                },
-                {
-                  "$ref": "#/components/schemas/_ItalicText"
-                },
-                {
-                  "$ref": "#/components/schemas/_SelectableText"
-                },
-                {
-                  "$ref": "#/components/schemas/_SelectedText"
-                },
-                {
-                  "$ref": "#/components/schemas/_FreeTextInput"
-                },
-                {
-                  "$ref": "#/components/schemas/_MultipleChoicesInput"
-                },
-                {
-                  "$ref": "#/components/schemas/_Whitespace"
-                }
-              ]
-            },
-            "title": "Tokens",
-            "type": "array"
-          }
-        },
-        "required": [
-          "tokens"
-        ],
-        "title": "Sentence",
         "type": "object"
       },
       "SentencesItems": {

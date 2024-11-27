@@ -85,7 +85,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
             "textbook_page": None,  # @todo Rename to textbookPage
             "pagelets": [{
                 "instructions": {"paragraphs": [
-                    {"sentences": [{"tokens": [
+                    {"tokens": [
                         {"type": "plainText", "text": "This"},
                         {"type": "whitespace"},
                         {"type": "plainText", "text": "is"},
@@ -100,9 +100,9 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                         {"type": "plainText", "text": "instructions"},
                         {"type": "plainText", "text": "}"},
                         {"type": "plainText", "text": "."},
-                    ]}]},
+                    ]},
                 ]},
-                "wording": {"paragraphs": [{"sentences": [{"tokens": [
+                "wording": {"paragraphs": [{"tokens": [
                     {"type": "plainText", "text": "This"},
                     {"type": "whitespace"},
                     {"type": "plainText", "text": "is"},
@@ -111,7 +111,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     {"type": "whitespace"},
                     {"type": "plainText", "text": "wording"},
                     {"type": "plainText", "text": "."},
-                ]}]}]},
+                ]}]},
             }],
         })
 
@@ -154,7 +154,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
             "textbook_page": None,  # @todo Rename to textbookPage
             "pagelets": [{
                 "instructions": {"paragraphs": [
-                    {"sentences": [{"tokens": [
+                    {"tokens": [
                         {"type": "plainText", "text": "This"},
                         {"type": "whitespace"},
                         {"type": "plainText", "text": "is"},
@@ -163,9 +163,9 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                         {"type": "whitespace"},
                         {"type": "plainText", "text": "instructions"},
                         {"type": "plainText", "text": "."},
-                    ]}]},
+                    ]},
                 ]},
-                "wording": {"paragraphs": [{"sentences": [{"tokens": [
+                "wording": {"paragraphs": [{"tokens": [
                     {"type": "selectableText", "text": "This", "colors": ["red", "green", "blue"], "boxed": False},
                     {"type": "whitespace"},
                     {"type": "selectableText", "text": "is", "colors": ["red", "green", "blue"], "boxed": False},
@@ -174,7 +174,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     {"type": "whitespace"},
                     {"type": "selectableText", "text": "wording", "colors": ["red", "green", "blue"], "boxed": False},
                     {"type": "plainText", "text": "."},
-                ]}]}]},
+                ]}]},
             }],
         })
 
@@ -217,7 +217,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
             "textbook_page": None,  # @todo Rename to textbookPage
             "pagelets": [{
                 "instructions": {"paragraphs": [
-                    {"sentences": [{"tokens": [
+                    {"tokens": [
                         {"type": "plainText", "text": "This"},
                         {"type": "whitespace"},
                         {"type": "plainText", "text": "is"},
@@ -226,8 +226,8 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                         {"type": "whitespace"},
                         {"type": "plainText", "text": "instructions"},
                         {"type": "plainText", "text": "."},
-                    ]}]},
-                    {"sentences": [{"tokens": [
+                    ]},
+                    {"tokens": [
                         {"type": "plainText", "text": "This"},
                         {"type": "whitespace"},
                         {"type": "plainText", "text": "is"},
@@ -236,8 +236,8 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                         {"type": "whitespace"},
                         {"type": "plainText", "text": "example"},
                         {"type": "plainText", "text": "."},
-                    ]}]},
-                    {"sentences": [{"tokens": [
+                    ]},
+                    {"tokens": [
                         {"type": "plainText", "text": "This"},
                         {"type": "whitespace"},
                         {"type": "plainText", "text": "is"},
@@ -246,9 +246,9 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                         {"type": "whitespace"},
                         {"type": "plainText", "text": "clue"},
                         {"type": "plainText", "text": "."},
-                    ]}]},
+                    ]},
                 ]},
-                "wording": {"paragraphs": [{"sentences": [{"tokens": [
+                "wording": {"paragraphs": [{"tokens": [
                     {"type": "selectableText", "text": "This", "colors": ["red", "green", "blue"], "boxed": False},
                     {"type": "whitespace"},
                     {"type": "selectableText", "text": "is", "colors": ["red", "green", "blue"], "boxed": False},
@@ -257,7 +257,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     {"type": "whitespace"},
                     {"type": "selectableText", "text": "wording", "colors": ["red", "green", "blue"], "boxed": False},
                     {"type": "plainText", "text": "."},
-                ]}]}]},
+                ]}]},
             }],
         })
 
@@ -290,7 +290,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
             "number": "A.1",
             "textbook_page": None,  # @todo Rename to textbookPage
             "pagelets": [{
-                "instructions": {"paragraphs": [{"sentences": [{"tokens": [
+                "instructions": {"paragraphs": [{"tokens": [
                     {"type": "plainText", "text": "This"},
                     {"type": "whitespace"},
                     {"type": "plainText", "text": "is"},
@@ -299,12 +299,12 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     {"type": "whitespace"},
                     {"type": "plainText", "text": "instructions"},
                     {"type": "plainText", "text": "."},
-                ]}]}]},
-                "wording": {"paragraphs": [{"sentences": [{"tokens": [
+                ]}]},
+                "wording": {"paragraphs": [{"tokens": [
                     {"type": "plainText", "text": "Fill"},
                     {"type": "whitespace"},
                     {"type": "freeTextInput"},
-                ]}]}]},
+                ]}]},
             }],
         })
 
@@ -343,24 +343,24 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
             "number": "A.1",
             "textbook_page": None,  # @todo Rename to textbookPage
             "pagelets": [{
-                "instructions": {"paragraphs": [{"sentences": [{"tokens": [
+                "instructions": {"paragraphs": [{"tokens": [
                     {"type": "boxedText", "text": "a"},
                     {"type": "whitespace"},
                     {"type": "plainText", "text": "or"},
                     {"type": "whitespace"},
                     {"type": "boxedText", "text": "b"},
-                ]}]}]},
+                ]}]},
                 "wording": {"paragraphs": [
-                    {"sentences": [{"tokens": [
+                    {"tokens": [
                         {"type": "plainText", "text": "A"},
                         {"type": "whitespace"},
                         {"type": "multipleChoicesInput", "choices": ["a", "b"]},
-                    ]}]},
-                    {"sentences": [{"tokens": [
+                    ]},
+                    {"tokens": [
                         {"type": "plainText", "text": "B"},
                         {"type": "whitespace"},
                         {"type": "multipleChoicesInput", "choices": ["a", "b"]},
-                    ]}]},
+                    ]},
                 ]},
             }],
         })
@@ -401,15 +401,15 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
             "number": "A.1",
             "textbook_page": None,  # @todo Rename to textbookPage
             "pagelets": [{
-                "instructions": {"paragraphs": [{"sentences": [{"tokens": [
+                "instructions": {"paragraphs": [{"tokens": [
                     {"type": "plainText", "text": "Instructions"},
                     {"type": "plainText", "text": "."},
-                ]}]}]},
-                "wording": {"paragraphs": [{"sentences": [{"tokens": [
+                ]}]},
+                "wording": {"paragraphs": [{"tokens": [
                     {"type": "plainText", "text": "A"},
                     {"type": "whitespace"},
                     {"type": "multipleChoicesInput", "choices": ["alpha", "beta"]},
                     {"type": "plainText", "text": "."},
-                ]}]}]},
+                ]}]},
             }],
         })

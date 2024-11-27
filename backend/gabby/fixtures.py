@@ -772,7 +772,6 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
             Pagelet,
             Section,
             Paragraph,
-            Sentence,
             _PlainText,
             _Whitespace,
             _BoxedText,
@@ -792,80 +791,68 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                             instructions=Section(
                                 paragraphs=[
                                     Paragraph(
-                                        sentences=[
-                                            Sentence(
-                                                tokens=[
-                                                    _PlainText(type="plainText", text="Complète"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="avec"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text=":"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _BoxedText(type="boxedText", text="le"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text=","),
-                                                    _Whitespace(type="whitespace"),
-                                                    _BoxedText(type="boxedText", text="une"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text=","),
-                                                    _Whitespace(type="whitespace"),
-                                                    _BoxedText(type="boxedText", text="un"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text=","),
-                                                    _Whitespace(type="whitespace"),
-                                                    _BoxedText(type="boxedText", text="des"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text=","),
-                                                    _Whitespace(type="whitespace"),
-                                                    _BoxedText(type="boxedText", text="tu"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text=","),
-                                                    _Whitespace(type="whitespace"),
-                                                    _BoxedText(type="boxedText", text="elles"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text=","),
-                                                    _Whitespace(type="whitespace"),
-                                                    _BoxedText(type="boxedText", text="ils"),
-                                                    _PlainText(type="plainText", text="."),
-                                                ]
-                                            )
+                                        tokens=[
+                                            _PlainText(type="plainText", text="Complète"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="avec"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text=":"),
+                                            _Whitespace(type="whitespace"),
+                                            _BoxedText(type="boxedText", text="le"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text=","),
+                                            _Whitespace(type="whitespace"),
+                                            _BoxedText(type="boxedText", text="une"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text=","),
+                                            _Whitespace(type="whitespace"),
+                                            _BoxedText(type="boxedText", text="un"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text=","),
+                                            _Whitespace(type="whitespace"),
+                                            _BoxedText(type="boxedText", text="des"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text=","),
+                                            _Whitespace(type="whitespace"),
+                                            _BoxedText(type="boxedText", text="tu"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text=","),
+                                            _Whitespace(type="whitespace"),
+                                            _BoxedText(type="boxedText", text="elles"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text=","),
+                                            _Whitespace(type="whitespace"),
+                                            _BoxedText(type="boxedText", text="ils"),
+                                            _PlainText(type="plainText", text="."),
                                         ]
                                     ),
                                     Paragraph(
-                                        sentences=[
-                                            Sentence(
-                                                tokens=[
-                                                    _PlainText(type="plainText", text="Puis"),
-                                                    _PlainText(type="plainText", text=","),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="souligne"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="les"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="verbes"),
-                                                    _PlainText(type="plainText", text="."),
-                                                ]
-                                            )
+                                        tokens=[
+                                            _PlainText(type="plainText", text="Puis"),
+                                            _PlainText(type="plainText", text=","),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="souligne"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="les"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="verbes"),
+                                            _PlainText(type="plainText", text="."),
                                         ]
                                     ),
                                     Paragraph(
-                                        sentences=[
-                                            Sentence(
-                                                tokens=[
-                                                    _PlainText(type="plainText", text="Il"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="peut"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="y"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="avoir"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="plusieurs"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="solutions"),
-                                                    _PlainText(type="plainText", text="."),
-                                                ]
-                                            )
+                                        tokens=[
+                                            _PlainText(type="plainText", text="Il"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="peut"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="y"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="avoir"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="plusieurs"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="solutions"),
+                                            _PlainText(type="plainText", text="."),
                                         ]
                                     ),
                                 ]
@@ -873,45 +860,33 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                             wording=Section(
                                 paragraphs=[
                                     Paragraph(
-                                        sentences=[
-                                            Sentence(
-                                                tokens=[
-                                                    _MultipleChoicesInput(
-                                                        type="multipleChoicesInput",
-                                                        choices=["le", "une", "un", "des", "tu", "elles", "ils"],
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="vide"),
-                                                ]
-                                            )
+                                        tokens=[
+                                            _MultipleChoicesInput(
+                                                type="multipleChoicesInput",
+                                                choices=["le", "une", "un", "des", "tu", "elles", "ils"],
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="vide"),
                                         ]
                                     ),
                                     Paragraph(
-                                        sentences=[
-                                            Sentence(
-                                                tokens=[
-                                                    _MultipleChoicesInput(
-                                                        type="multipleChoicesInput",
-                                                        choices=["le", "une", "un", "des", "tu", "elles", "ils"],
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="vident"),
-                                                ]
-                                            )
+                                        tokens=[
+                                            _MultipleChoicesInput(
+                                                type="multipleChoicesInput",
+                                                choices=["le", "une", "un", "des", "tu", "elles", "ils"],
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="vident"),
                                         ]
                                     ),
                                     Paragraph(
-                                        sentences=[
-                                            Sentence(
-                                                tokens=[
-                                                    _MultipleChoicesInput(
-                                                        type="multipleChoicesInput",
-                                                        choices=["le", "une", "un", "des", "tu", "elles", "ils"],
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="dépenses"),
-                                                ]
-                                            )
+                                        tokens=[
+                                            _MultipleChoicesInput(
+                                                type="multipleChoicesInput",
+                                                choices=["le", "une", "un", "des", "tu", "elles", "ils"],
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="dépenses"),
                                         ]
                                     ),
                                 ]
@@ -921,80 +896,68 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                             instructions=Section(
                                 paragraphs=[
                                     Paragraph(
-                                        sentences=[
-                                            Sentence(
-                                                tokens=[
-                                                    _PlainText(type="plainText", text="Complète"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="avec"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text=":"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _BoxedText(type="boxedText", text="le"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text=","),
-                                                    _Whitespace(type="whitespace"),
-                                                    _BoxedText(type="boxedText", text="une"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text=","),
-                                                    _Whitespace(type="whitespace"),
-                                                    _BoxedText(type="boxedText", text="un"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text=","),
-                                                    _Whitespace(type="whitespace"),
-                                                    _BoxedText(type="boxedText", text="des"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text=","),
-                                                    _Whitespace(type="whitespace"),
-                                                    _BoxedText(type="boxedText", text="tu"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text=","),
-                                                    _Whitespace(type="whitespace"),
-                                                    _BoxedText(type="boxedText", text="elles"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text=","),
-                                                    _Whitespace(type="whitespace"),
-                                                    _BoxedText(type="boxedText", text="ils"),
-                                                    _PlainText(type="plainText", text="."),
-                                                ]
-                                            )
+                                        tokens=[
+                                            _PlainText(type="plainText", text="Complète"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="avec"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text=":"),
+                                            _Whitespace(type="whitespace"),
+                                            _BoxedText(type="boxedText", text="le"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text=","),
+                                            _Whitespace(type="whitespace"),
+                                            _BoxedText(type="boxedText", text="une"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text=","),
+                                            _Whitespace(type="whitespace"),
+                                            _BoxedText(type="boxedText", text="un"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text=","),
+                                            _Whitespace(type="whitespace"),
+                                            _BoxedText(type="boxedText", text="des"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text=","),
+                                            _Whitespace(type="whitespace"),
+                                            _BoxedText(type="boxedText", text="tu"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text=","),
+                                            _Whitespace(type="whitespace"),
+                                            _BoxedText(type="boxedText", text="elles"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text=","),
+                                            _Whitespace(type="whitespace"),
+                                            _BoxedText(type="boxedText", text="ils"),
+                                            _PlainText(type="plainText", text="."),
                                         ]
                                     ),
                                     Paragraph(
-                                        sentences=[
-                                            Sentence(
-                                                tokens=[
-                                                    _PlainText(type="plainText", text="Puis"),
-                                                    _PlainText(type="plainText", text=","),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="souligne"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="les"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="verbes"),
-                                                    _PlainText(type="plainText", text="."),
-                                                ]
-                                            )
+                                        tokens=[
+                                            _PlainText(type="plainText", text="Puis"),
+                                            _PlainText(type="plainText", text=","),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="souligne"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="les"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="verbes"),
+                                            _PlainText(type="plainText", text="."),
                                         ]
                                     ),
                                     Paragraph(
-                                        sentences=[
-                                            Sentence(
-                                                tokens=[
-                                                    _PlainText(type="plainText", text="Il"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="peut"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="y"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="avoir"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="plusieurs"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="solutions"),
-                                                    _PlainText(type="plainText", text="."),
-                                                ]
-                                            )
+                                        tokens=[
+                                            _PlainText(type="plainText", text="Il"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="peut"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="y"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="avoir"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="plusieurs"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="solutions"),
+                                            _PlainText(type="plainText", text="."),
                                         ]
                                     ),
                                 ]
@@ -1002,45 +965,33 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                             wording=Section(
                                 paragraphs=[
                                     Paragraph(
-                                        sentences=[
-                                            Sentence(
-                                                tokens=[
-                                                    _MultipleChoicesInput(
-                                                        type="multipleChoicesInput",
-                                                        choices=["le", "une", "un", "des", "tu", "elles", "ils"],
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="dépensent"),
-                                                ]
-                                            )
+                                        tokens=[
+                                            _MultipleChoicesInput(
+                                                type="multipleChoicesInput",
+                                                choices=["le", "une", "un", "des", "tu", "elles", "ils"],
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="dépensent"),
                                         ]
                                     ),
                                     Paragraph(
-                                        sentences=[
-                                            Sentence(
-                                                tokens=[
-                                                    _MultipleChoicesInput(
-                                                        type="multipleChoicesInput",
-                                                        choices=["le", "une", "un", "des", "tu", "elles", "ils"],
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="savon"),
-                                                ]
-                                            )
+                                        tokens=[
+                                            _MultipleChoicesInput(
+                                                type="multipleChoicesInput",
+                                                choices=["le", "une", "un", "des", "tu", "elles", "ils"],
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="savon"),
                                         ]
                                     ),
                                     Paragraph(
-                                        sentences=[
-                                            Sentence(
-                                                tokens=[
-                                                    _MultipleChoicesInput(
-                                                        type="multipleChoicesInput",
-                                                        choices=["le", "une", "un", "des", "tu", "elles", "ils"],
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="savons"),
-                                                ]
-                                            )
+                                        tokens=[
+                                            _MultipleChoicesInput(
+                                                type="multipleChoicesInput",
+                                                choices=["le", "une", "un", "des", "tu", "elles", "ils"],
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="savons"),
                                         ]
                                     ),
                                 ]
@@ -1050,80 +1001,68 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                             instructions=Section(
                                 paragraphs=[
                                     Paragraph(
-                                        sentences=[
-                                            Sentence(
-                                                tokens=[
-                                                    _PlainText(type="plainText", text="Complète"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="avec"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text=":"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _BoxedText(type="boxedText", text="le"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text=","),
-                                                    _Whitespace(type="whitespace"),
-                                                    _BoxedText(type="boxedText", text="une"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text=","),
-                                                    _Whitespace(type="whitespace"),
-                                                    _BoxedText(type="boxedText", text="un"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text=","),
-                                                    _Whitespace(type="whitespace"),
-                                                    _BoxedText(type="boxedText", text="des"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text=","),
-                                                    _Whitespace(type="whitespace"),
-                                                    _BoxedText(type="boxedText", text="tu"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text=","),
-                                                    _Whitespace(type="whitespace"),
-                                                    _BoxedText(type="boxedText", text="elles"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text=","),
-                                                    _Whitespace(type="whitespace"),
-                                                    _BoxedText(type="boxedText", text="ils"),
-                                                    _PlainText(type="plainText", text="."),
-                                                ]
-                                            )
+                                        tokens=[
+                                            _PlainText(type="plainText", text="Complète"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="avec"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text=":"),
+                                            _Whitespace(type="whitespace"),
+                                            _BoxedText(type="boxedText", text="le"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text=","),
+                                            _Whitespace(type="whitespace"),
+                                            _BoxedText(type="boxedText", text="une"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text=","),
+                                            _Whitespace(type="whitespace"),
+                                            _BoxedText(type="boxedText", text="un"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text=","),
+                                            _Whitespace(type="whitespace"),
+                                            _BoxedText(type="boxedText", text="des"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text=","),
+                                            _Whitespace(type="whitespace"),
+                                            _BoxedText(type="boxedText", text="tu"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text=","),
+                                            _Whitespace(type="whitespace"),
+                                            _BoxedText(type="boxedText", text="elles"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text=","),
+                                            _Whitespace(type="whitespace"),
+                                            _BoxedText(type="boxedText", text="ils"),
+                                            _PlainText(type="plainText", text="."),
                                         ]
                                     ),
                                     Paragraph(
-                                        sentences=[
-                                            Sentence(
-                                                tokens=[
-                                                    _PlainText(type="plainText", text="Puis"),
-                                                    _PlainText(type="plainText", text=","),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="souligne"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="les"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="verbes"),
-                                                    _PlainText(type="plainText", text="."),
-                                                ]
-                                            )
+                                        tokens=[
+                                            _PlainText(type="plainText", text="Puis"),
+                                            _PlainText(type="plainText", text=","),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="souligne"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="les"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="verbes"),
+                                            _PlainText(type="plainText", text="."),
                                         ]
                                     ),
                                     Paragraph(
-                                        sentences=[
-                                            Sentence(
-                                                tokens=[
-                                                    _PlainText(type="plainText", text="Il"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="peut"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="y"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="avoir"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="plusieurs"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="solutions"),
-                                                    _PlainText(type="plainText", text="."),
-                                                ]
-                                            )
+                                        tokens=[
+                                            _PlainText(type="plainText", text="Il"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="peut"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="y"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="avoir"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="plusieurs"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="solutions"),
+                                            _PlainText(type="plainText", text="."),
                                         ]
                                     ),
                                 ]
@@ -1131,17 +1070,13 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                             wording=Section(
                                 paragraphs=[
                                     Paragraph(
-                                        sentences=[
-                                            Sentence(
-                                                tokens=[
-                                                    _MultipleChoicesInput(
-                                                        type="multipleChoicesInput",
-                                                        choices=["le", "une", "un", "des", "tu", "elles", "ils"],
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="commande"),
-                                                ]
-                                            )
+                                        tokens=[
+                                            _MultipleChoicesInput(
+                                                type="multipleChoicesInput",
+                                                choices=["le", "une", "un", "des", "tu", "elles", "ils"],
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="commande"),
                                         ]
                                     )
                                 ]
@@ -1154,7 +1089,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
             self.expect_rollback()
 
     def test_adapt_exercise_2(self):
-        from .renderable import Pagelet, Section, Paragraph, Sentence, _PlainText, _Whitespace
+        from .renderable import Pagelet, Section, Paragraph, _PlainText, _Whitespace
 
         with self.make_session() as session:
             load(session, ["even-more-test-exercises"])
@@ -1169,69 +1104,61 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                             instructions=Section(
                                 paragraphs=[
                                     Paragraph(
-                                        sentences=[
-                                            Sentence(
-                                                tokens=[
-                                                    _PlainText(type="plainText", text="Écris"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="une"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="phrase"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="en"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="respectant"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="l"),
-                                                    _PlainText(type="plainText", text="'"),
-                                                    _PlainText(type="plainText", text="ordre"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="des"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="classes"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="grammaticales"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="indiquées"),
-                                                    _PlainText(type="plainText", text="."),
-                                                ]
-                                            )
+                                        tokens=[
+                                            _PlainText(type="plainText", text="Écris"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="une"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="phrase"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="en"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="respectant"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="l"),
+                                            _PlainText(type="plainText", text="'"),
+                                            _PlainText(type="plainText", text="ordre"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="des"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="classes"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="grammaticales"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="indiquées"),
+                                            _PlainText(type="plainText", text="."),
                                         ]
                                     ),
                                     Paragraph(
-                                        sentences=[
-                                            Sentence(
-                                                tokens=[
-                                                    _PlainText(type="plainText", text="pronom"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="personnel"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="/"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="verbe"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="/"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="déterminant"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="/"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="nom"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="commun"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text=":"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="Je"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="mange"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="une"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="pomme"),
-                                                    _PlainText(type="plainText", text="."),
-                                                ]
-                                            )
+                                        tokens=[
+                                            _PlainText(type="plainText", text="pronom"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="personnel"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="/"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="verbe"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="/"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="déterminant"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="/"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="nom"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="commun"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text=":"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="Je"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="mange"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="une"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="pomme"),
+                                            _PlainText(type="plainText", text="."),
                                         ]
                                     ),
                                 ]
@@ -1239,32 +1166,28 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                             wording=Section(
                                 paragraphs=[
                                     Paragraph(
-                                        sentences=[
-                                            Sentence(
-                                                tokens=[
-                                                    _PlainText(type="plainText", text="nom"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="propre"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="/"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="verbe"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="/"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="déterminant"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="/"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="adjectif"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="/"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="nom"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="commun"),
-                                                ]
-                                            )
+                                        tokens=[
+                                            _PlainText(type="plainText", text="nom"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="propre"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="/"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="verbe"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="/"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="déterminant"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="/"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="adjectif"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="/"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="nom"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="commun"),
                                         ]
                                     )
                                 ]
@@ -1277,7 +1200,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
             self.expect_rollback()
 
     def test_adapt_exercise_3(self):
-        from .renderable import Pagelet, Section, Paragraph, Sentence, _PlainText, _Whitespace
+        from .renderable import Pagelet, Section, Paragraph, _PlainText, _Whitespace
 
         with self.make_session() as session:
             load(session, ["even-more-test-exercises"])
@@ -1292,37 +1215,33 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                             instructions=Section(
                                 paragraphs=[
                                     Paragraph(
-                                        sentences=[
-                                            Sentence(
-                                                tokens=[
-                                                    _PlainText(type="plainText", text="Recopie"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="l"),
-                                                    _PlainText(type="plainText", text="’"),
-                                                    _PlainText(type="plainText", text="intrus"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="qui"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="se"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="cache"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="dans"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="chaque"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="liste"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="et"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="écris"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="sa"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="classe"),
-                                                    _PlainText(type="plainText", text="."),
-                                                ]
-                                            )
+                                        tokens=[
+                                            _PlainText(type="plainText", text="Recopie"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="l"),
+                                            _PlainText(type="plainText", text="’"),
+                                            _PlainText(type="plainText", text="intrus"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="qui"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="se"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="cache"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="dans"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="chaque"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="liste"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="et"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="écris"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="sa"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="classe"),
+                                            _PlainText(type="plainText", text="."),
                                         ]
                                     )
                                 ]
@@ -1330,75 +1249,63 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                             wording=Section(
                                 paragraphs=[
                                     Paragraph(
-                                        sentences=[
-                                            Sentence(
-                                                tokens=[
-                                                    _PlainText(type="plainText", text="a"),
-                                                    _PlainText(type="plainText", text="."),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="partons"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="◆"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="bidons"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="◆"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="allons"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="◆"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="vendons"),
-                                                ]
-                                            )
+                                        tokens=[
+                                            _PlainText(type="plainText", text="a"),
+                                            _PlainText(type="plainText", text="."),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="partons"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="◆"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="bidons"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="◆"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="allons"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="◆"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="vendons"),
                                         ]
                                     ),
                                     Paragraph(
-                                        sentences=[
-                                            Sentence(
-                                                tokens=[
-                                                    _PlainText(type="plainText", text="b"),
-                                                    _PlainText(type="plainText", text="."),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="vidons"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="◆"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="mentons"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="◆"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="ballons"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="◆"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="salons"),
-                                                ]
-                                            )
+                                        tokens=[
+                                            _PlainText(type="plainText", text="b"),
+                                            _PlainText(type="plainText", text="."),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="vidons"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="◆"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="mentons"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="◆"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="ballons"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="◆"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="salons"),
                                         ]
                                     ),
                                     Paragraph(
-                                        sentences=[
-                                            Sentence(
-                                                tokens=[
-                                                    _PlainText(type="plainText", text="c"),
-                                                    _PlainText(type="plainText", text="."),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="voir"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="◆"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="armoire"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="◆"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="couloir"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="◆"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="dortoir"),
-                                                ]
-                                            )
+                                        tokens=[
+                                            _PlainText(type="plainText", text="c"),
+                                            _PlainText(type="plainText", text="."),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="voir"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="◆"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="armoire"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="◆"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="couloir"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="◆"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="dortoir"),
                                         ]
                                     ),
                                 ]
@@ -1411,7 +1318,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
             self.expect_rollback()
 
     def test_adapt_exercise_4(self):
-        from .renderable import Pagelet, Section, Paragraph, Sentence, _PlainText, _Whitespace
+        from .renderable import Pagelet, Section, Paragraph, _PlainText, _Whitespace
 
         with self.make_session() as session:
             load(session, ["even-more-test-exercises"])
@@ -1426,19 +1333,15 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                             instructions=Section(
                                 paragraphs=[
                                     Paragraph(
-                                        sentences=[
-                                            Sentence(
-                                                tokens=[
-                                                    _PlainText(type="plainText", text="Faire"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="des"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="choses"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="intelligentes"),
-                                                    _PlainText(type="plainText", text="."),
-                                                ]
-                                            )
+                                        tokens=[
+                                            _PlainText(type="plainText", text="Faire"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="des"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="choses"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="intelligentes"),
+                                            _PlainText(type="plainText", text="."),
                                         ]
                                     )
                                 ]
@@ -1452,7 +1355,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
             self.expect_rollback()
 
     def test_adapt_exercise_5(self):
-        from .renderable import Pagelet, Section, Paragraph, Sentence, _PlainText, _Whitespace
+        from .renderable import Pagelet, Section, Paragraph, _PlainText, _Whitespace
 
         with self.make_session() as session:
             load(session, ["even-more-test-exercises"])
@@ -1467,21 +1370,17 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                             instructions=Section(
                                 paragraphs=[
                                     Paragraph(
-                                        sentences=[
-                                            Sentence(
-                                                tokens=[
-                                                    _PlainText(type="plainText", text="Faire"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="d"),
-                                                    _PlainText(type="plainText", text="'"),
-                                                    _PlainText(type="plainText", text="autres"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="choses"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="intelligentes"),
-                                                    _PlainText(type="plainText", text="."),
-                                                ]
-                                            )
+                                        tokens=[
+                                            _PlainText(type="plainText", text="Faire"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="d"),
+                                            _PlainText(type="plainText", text="'"),
+                                            _PlainText(type="plainText", text="autres"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="choses"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="intelligentes"),
+                                            _PlainText(type="plainText", text="."),
                                         ]
                                     )
                                 ]
@@ -1495,7 +1394,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
             self.expect_rollback()
 
     def test_adapt_exercise_6(self):
-        from .renderable import Pagelet, Section, Paragraph, Sentence, _PlainText, _Whitespace
+        from .renderable import Pagelet, Section, Paragraph, _PlainText, _Whitespace
 
         with self.make_session() as session:
             load(session, ["even-more-test-exercises"])
@@ -1510,29 +1409,25 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                             instructions=Section(
                                 paragraphs=[
                                     Paragraph(
-                                        sentences=[
-                                            Sentence(
-                                                tokens=[
-                                                    _PlainText(type="plainText", text="Prendre"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="le"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="temps"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="de"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="faire"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="aussi"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="des"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="choses"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="banales"),
-                                                    _PlainText(type="plainText", text="."),
-                                                ]
-                                            )
+                                        tokens=[
+                                            _PlainText(type="plainText", text="Prendre"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="le"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="temps"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="de"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="faire"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="aussi"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="des"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="choses"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="banales"),
+                                            _PlainText(type="plainText", text="."),
                                         ]
                                     )
                                 ]
@@ -1550,7 +1445,6 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
             Pagelet,
             Section,
             Paragraph,
-            Sentence,
             _PlainText,
             _Whitespace,
             _SelectedText,
@@ -1570,45 +1464,35 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                             instructions=Section(
                                 paragraphs=[
                                     Paragraph(
-                                        sentences=[
-                                            Sentence(
-                                                tokens=[
-                                                    _PlainText(type="plainText", text="Relève"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="dans"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="le"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="texte"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="trois"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectedText(
-                                                        type="selectedText", text="déterminants", color="#ffff00"
-                                                    ),
-                                                    _PlainText(type="plainText", text=","),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="un"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectedText(
-                                                        type="selectedText", text="nom propre", color="#ffc0cb"
-                                                    ),
-                                                    _PlainText(type="plainText", text=","),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="quatre"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectedText(
-                                                        type="selectedText", text="noms communs", color="#bbbbff"
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="et"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="trois"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectedText(type="selectedText", text="verbes", color="#bbffbb"),
-                                                    _PlainText(type="plainText", text="."),
-                                                ]
-                                            )
+                                        tokens=[
+                                            _PlainText(type="plainText", text="Relève"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="dans"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="le"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="texte"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="trois"),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectedText(type="selectedText", text="déterminants", color="#ffff00"),
+                                            _PlainText(type="plainText", text=","),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="un"),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectedText(type="selectedText", text="nom propre", color="#ffc0cb"),
+                                            _PlainText(type="plainText", text=","),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="quatre"),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectedText(type="selectedText", text="noms communs", color="#bbbbff"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="et"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="trois"),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectedText(type="selectedText", text="verbes", color="#bbffbb"),
+                                            _PlainText(type="plainText", text="."),
                                         ]
                                     )
                                 ]
@@ -1616,471 +1500,459 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                             wording=Section(
                                 paragraphs=[
                                     Paragraph(
-                                        sentences=[
-                                            Sentence(
-                                                tokens=[
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="Les",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="Touaregs",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="sont",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="des",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="Berbères",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text=",",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="un",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="peuple",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="qui",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="habite",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="en",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="Afrique",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="du",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="Nord",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="depuis",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="la",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="préhistoire",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text=".",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                ]
-                                            )
+                                        tokens=[
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="Les",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="Touaregs",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="sont",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="des",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="Berbères",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text=",",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="un",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="peuple",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="qui",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="habite",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="en",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="Afrique",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="du",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="Nord",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="depuis",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="la",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="préhistoire",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text=".",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
                                         ]
                                     ),
                                     Paragraph(
-                                        sentences=[
-                                            Sentence(
-                                                tokens=[
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="Ils",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="vivent",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="dans",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="le",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="désert",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="du",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="Sahara",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="(",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="Algérie",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text=",",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="Libye",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text=",",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="Mali",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text=",",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="Niger",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text=",",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="Burkina",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="Faso",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="…",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text=")",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text=".",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                ]
-                                            )
+                                        tokens=[
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="Ils",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="vivent",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="dans",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="le",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="désert",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="du",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="Sahara",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="(",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="Algérie",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text=",",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="Libye",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text=",",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="Mali",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text=",",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="Niger",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text=",",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="Burkina",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="Faso",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="…",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text=")",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text=".",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
                                         ]
                                     ),
                                     Paragraph(
-                                        sentences=[
-                                            Sentence(
-                                                tokens=[
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="En",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="été",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text=",",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="les",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="températures",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="y",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="montent",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="à",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="plus",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="de",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="50",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="°",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="C",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="et",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="elles",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="descendent",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="en",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="dessous",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="de",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="zéro",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="durant",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="les",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="nuits",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="d",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="’",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="hiver",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text=".",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                ]
-                                            )
+                                        tokens=[
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="En",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="été",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text=",",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="les",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="températures",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="y",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="montent",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="à",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="plus",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="de",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="50",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="°",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="C",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="et",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="elles",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="descendent",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="en",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="dessous",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="de",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="zéro",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="durant",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="les",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="nuits",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="d",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="’",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="hiver",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text=".",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
                                         ]
                                     ),
                                 ]
@@ -2093,7 +1965,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
             self.expect_rollback()
 
     def test_adapt_exercise_8(self):
-        from .renderable import Pagelet, Section, Paragraph, Sentence, _PlainText, _Whitespace, _FreeTextInput
+        from .renderable import Pagelet, Section, Paragraph, _PlainText, _Whitespace, _FreeTextInput
 
         with self.make_session() as session:
             load(session, ["even-more-test-exercises"])
@@ -2108,44 +1980,36 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                             instructions=Section(
                                 paragraphs=[
                                     Paragraph(
-                                        sentences=[
-                                            Sentence(
-                                                tokens=[
-                                                    _PlainText(type="plainText", text="Ajoute"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="le"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="suffixe"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="–"),
-                                                    _PlainText(type="plainText", text="eur"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="aux"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="verbes"),
-                                                    _PlainText(type="plainText", text="."),
-                                                ]
-                                            )
+                                        tokens=[
+                                            _PlainText(type="plainText", text="Ajoute"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="le"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="suffixe"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="–"),
+                                            _PlainText(type="plainText", text="eur"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="aux"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="verbes"),
+                                            _PlainText(type="plainText", text="."),
                                         ]
                                     ),
                                     Paragraph(
-                                        sentences=[
-                                            Sentence(
-                                                tokens=[
-                                                    _PlainText(type="plainText", text="Indique"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="la"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="classe"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="des"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="mots"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="fabriqués"),
-                                                    _PlainText(type="plainText", text="."),
-                                                ]
-                                            )
+                                        tokens=[
+                                            _PlainText(type="plainText", text="Indique"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="la"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="classe"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="des"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="mots"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="fabriqués"),
+                                            _PlainText(type="plainText", text="."),
                                         ]
                                     ),
                                 ]
@@ -2153,55 +2017,47 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                             wording=Section(
                                 paragraphs=[
                                     Paragraph(
-                                        sentences=[
-                                            Sentence(
-                                                tokens=[
-                                                    _PlainText(type="plainText", text="nager"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="➞"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _FreeTextInput(type="freeTextInput"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="◆"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="tracter"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="➞"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _FreeTextInput(type="freeTextInput"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="◆"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="manger"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="➞"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _FreeTextInput(type="freeTextInput"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="◆"),
-                                                ]
-                                            )
+                                        tokens=[
+                                            _PlainText(type="plainText", text="nager"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="➞"),
+                                            _Whitespace(type="whitespace"),
+                                            _FreeTextInput(type="freeTextInput"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="◆"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="tracter"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="➞"),
+                                            _Whitespace(type="whitespace"),
+                                            _FreeTextInput(type="freeTextInput"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="◆"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="manger"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="➞"),
+                                            _Whitespace(type="whitespace"),
+                                            _FreeTextInput(type="freeTextInput"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="◆"),
                                         ]
                                     ),
                                     Paragraph(
-                                        sentences=[
-                                            Sentence(
-                                                tokens=[
-                                                    _PlainText(type="plainText", text="inventer"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="➞"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _FreeTextInput(type="freeTextInput"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="◆"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="livrer"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="➞"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _FreeTextInput(type="freeTextInput"),
-                                                ]
-                                            )
+                                        tokens=[
+                                            _PlainText(type="plainText", text="inventer"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="➞"),
+                                            _Whitespace(type="whitespace"),
+                                            _FreeTextInput(type="freeTextInput"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="◆"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="livrer"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="➞"),
+                                            _Whitespace(type="whitespace"),
+                                            _FreeTextInput(type="freeTextInput"),
                                         ]
                                     ),
                                 ]
@@ -2218,7 +2074,6 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
             Pagelet,
             Section,
             Paragraph,
-            Sentence,
             _PlainText,
             _Whitespace,
             _BoxedText,
@@ -2238,21 +2093,17 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                             instructions=Section(
                                 paragraphs=[
                                     Paragraph(
-                                        sentences=[
-                                            Sentence(
-                                                tokens=[
-                                                    _PlainText(type="plainText", text="Réponds"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="par"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _BoxedText(type="boxedText", text="vrai"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="ou"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _BoxedText(type="boxedText", text="faux"),
-                                                    _PlainText(type="plainText", text="."),
-                                                ]
-                                            )
+                                        tokens=[
+                                            _PlainText(type="plainText", text="Réponds"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="par"),
+                                            _Whitespace(type="whitespace"),
+                                            _BoxedText(type="boxedText", text="vrai"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="ou"),
+                                            _Whitespace(type="whitespace"),
+                                            _BoxedText(type="boxedText", text="faux"),
+                                            _PlainText(type="plainText", text="."),
                                         ]
                                     )
                                 ]
@@ -2260,72 +2111,60 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                             wording=Section(
                                 paragraphs=[
                                     Paragraph(
-                                        sentences=[
-                                            Sentence(
-                                                tokens=[
-                                                    _PlainText(type="plainText", text="a"),
-                                                    _PlainText(type="plainText", text="."),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="coccinelle"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="est"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="un"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="adjectif"),
-                                                    _PlainText(type="plainText", text="."),
-                                                    _Whitespace(type="whitespace"),
-                                                    _MultipleChoicesInput(
-                                                        type="multipleChoicesInput", choices=["vrai", "faux"]
-                                                    ),
-                                                ]
-                                            )
+                                        tokens=[
+                                            _PlainText(type="plainText", text="a"),
+                                            _PlainText(type="plainText", text="."),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="coccinelle"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="est"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="un"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="adjectif"),
+                                            _PlainText(type="plainText", text="."),
+                                            _Whitespace(type="whitespace"),
+                                            _MultipleChoicesInput(
+                                                type="multipleChoicesInput", choices=["vrai", "faux"]
+                                            ),
                                         ]
                                     ),
                                     Paragraph(
-                                        sentences=[
-                                            Sentence(
-                                                tokens=[
-                                                    _PlainText(type="plainText", text="b"),
-                                                    _PlainText(type="plainText", text="."),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="bûche"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="est"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="un"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="verbe"),
-                                                    _PlainText(type="plainText", text="."),
-                                                    _Whitespace(type="whitespace"),
-                                                    _MultipleChoicesInput(
-                                                        type="multipleChoicesInput", choices=["vrai", "faux"]
-                                                    ),
-                                                ]
-                                            )
+                                        tokens=[
+                                            _PlainText(type="plainText", text="b"),
+                                            _PlainText(type="plainText", text="."),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="bûche"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="est"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="un"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="verbe"),
+                                            _PlainText(type="plainText", text="."),
+                                            _Whitespace(type="whitespace"),
+                                            _MultipleChoicesInput(
+                                                type="multipleChoicesInput", choices=["vrai", "faux"]
+                                            ),
                                         ]
                                     ),
                                     Paragraph(
-                                        sentences=[
-                                            Sentence(
-                                                tokens=[
-                                                    _PlainText(type="plainText", text="c"),
-                                                    _PlainText(type="plainText", text="."),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="cette"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="est"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="un"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="déterminant"),
-                                                    _PlainText(type="plainText", text="."),
-                                                    _Whitespace(type="whitespace"),
-                                                    _MultipleChoicesInput(
-                                                        type="multipleChoicesInput", choices=["vrai", "faux"]
-                                                    ),
-                                                ]
-                                            )
+                                        tokens=[
+                                            _PlainText(type="plainText", text="c"),
+                                            _PlainText(type="plainText", text="."),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="cette"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="est"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="un"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="déterminant"),
+                                            _PlainText(type="plainText", text="."),
+                                            _Whitespace(type="whitespace"),
+                                            _MultipleChoicesInput(
+                                                type="multipleChoicesInput", choices=["vrai", "faux"]
+                                            ),
                                         ]
                                     ),
                                 ]
@@ -2335,21 +2174,17 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                             instructions=Section(
                                 paragraphs=[
                                     Paragraph(
-                                        sentences=[
-                                            Sentence(
-                                                tokens=[
-                                                    _PlainText(type="plainText", text="Réponds"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="par"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _BoxedText(type="boxedText", text="vrai"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="ou"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _BoxedText(type="boxedText", text="faux"),
-                                                    _PlainText(type="plainText", text="."),
-                                                ]
-                                            )
+                                        tokens=[
+                                            _PlainText(type="plainText", text="Réponds"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="par"),
+                                            _Whitespace(type="whitespace"),
+                                            _BoxedText(type="boxedText", text="vrai"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="ou"),
+                                            _Whitespace(type="whitespace"),
+                                            _BoxedText(type="boxedText", text="faux"),
+                                            _PlainText(type="plainText", text="."),
                                         ]
                                     )
                                 ]
@@ -2357,72 +2192,60 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                             wording=Section(
                                 paragraphs=[
                                     Paragraph(
-                                        sentences=[
-                                            Sentence(
-                                                tokens=[
-                                                    _PlainText(type="plainText", text="d"),
-                                                    _PlainText(type="plainText", text="."),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="dentier"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="est"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="un"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="verbe"),
-                                                    _PlainText(type="plainText", text="."),
-                                                    _Whitespace(type="whitespace"),
-                                                    _MultipleChoicesInput(
-                                                        type="multipleChoicesInput", choices=["vrai", "faux"]
-                                                    ),
-                                                ]
-                                            )
+                                        tokens=[
+                                            _PlainText(type="plainText", text="d"),
+                                            _PlainText(type="plainText", text="."),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="dentier"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="est"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="un"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="verbe"),
+                                            _PlainText(type="plainText", text="."),
+                                            _Whitespace(type="whitespace"),
+                                            _MultipleChoicesInput(
+                                                type="multipleChoicesInput", choices=["vrai", "faux"]
+                                            ),
                                         ]
                                     ),
                                     Paragraph(
-                                        sentences=[
-                                            Sentence(
-                                                tokens=[
-                                                    _PlainText(type="plainText", text="e"),
-                                                    _PlainText(type="plainText", text="."),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="respirer"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="est"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="un"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="verbe"),
-                                                    _PlainText(type="plainText", text="."),
-                                                    _Whitespace(type="whitespace"),
-                                                    _MultipleChoicesInput(
-                                                        type="multipleChoicesInput", choices=["vrai", "faux"]
-                                                    ),
-                                                ]
-                                            )
+                                        tokens=[
+                                            _PlainText(type="plainText", text="e"),
+                                            _PlainText(type="plainText", text="."),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="respirer"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="est"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="un"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="verbe"),
+                                            _PlainText(type="plainText", text="."),
+                                            _Whitespace(type="whitespace"),
+                                            _MultipleChoicesInput(
+                                                type="multipleChoicesInput", choices=["vrai", "faux"]
+                                            ),
                                         ]
                                     ),
                                     Paragraph(
-                                        sentences=[
-                                            Sentence(
-                                                tokens=[
-                                                    _PlainText(type="plainText", text="f"),
-                                                    _PlainText(type="plainText", text="."),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="aspiration"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="est"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="un"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="nom"),
-                                                    _PlainText(type="plainText", text="."),
-                                                    _Whitespace(type="whitespace"),
-                                                    _MultipleChoicesInput(
-                                                        type="multipleChoicesInput", choices=["vrai", "faux"]
-                                                    ),
-                                                ]
-                                            )
+                                        tokens=[
+                                            _PlainText(type="plainText", text="f"),
+                                            _PlainText(type="plainText", text="."),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="aspiration"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="est"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="un"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="nom"),
+                                            _PlainText(type="plainText", text="."),
+                                            _Whitespace(type="whitespace"),
+                                            _MultipleChoicesInput(
+                                                type="multipleChoicesInput", choices=["vrai", "faux"]
+                                            ),
                                         ]
                                     ),
                                 ]
@@ -2439,7 +2262,6 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
             Pagelet,
             Section,
             Paragraph,
-            Sentence,
             _PlainText,
             _Whitespace,
             _SelectedText,
@@ -2459,45 +2281,35 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                             instructions=Section(
                                 paragraphs=[
                                     Paragraph(
-                                        sentences=[
-                                            Sentence(
-                                                tokens=[
-                                                    _PlainText(type="plainText", text="Relève"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="dans"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="le"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="texte"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="trois"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectedText(
-                                                        type="selectedText", text="déterminants", color="#ffff00"
-                                                    ),
-                                                    _PlainText(type="plainText", text=","),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="un"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectedText(
-                                                        type="selectedText", text="nom propre", color="#ffc0cb"
-                                                    ),
-                                                    _PlainText(type="plainText", text=","),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="quatre"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectedText(
-                                                        type="selectedText", text="noms communs", color="#bbbbff"
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="et"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="trois"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectedText(type="selectedText", text="verbes", color="#bbffbb"),
-                                                    _PlainText(type="plainText", text="."),
-                                                ]
-                                            )
+                                        tokens=[
+                                            _PlainText(type="plainText", text="Relève"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="dans"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="le"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="texte"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="trois"),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectedText(type="selectedText", text="déterminants", color="#ffff00"),
+                                            _PlainText(type="plainText", text=","),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="un"),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectedText(type="selectedText", text="nom propre", color="#ffc0cb"),
+                                            _PlainText(type="plainText", text=","),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="quatre"),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectedText(type="selectedText", text="noms communs", color="#bbbbff"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="et"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="trois"),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectedText(type="selectedText", text="verbes", color="#bbffbb"),
+                                            _PlainText(type="plainText", text="."),
                                         ]
                                     )
                                 ]
@@ -2505,124 +2317,120 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                             wording=Section(
                                 paragraphs=[
                                     Paragraph(
-                                        sentences=[
-                                            Sentence(
-                                                tokens=[
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="Les",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="Touaregs",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="sont",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="des",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="Berbères",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _PlainText(type="plainText", text=","),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="un",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="peuple",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="qui",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="habite",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="en",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="Afrique",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="du",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="Nord",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="depuis",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="la",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="préhistoire",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _PlainText(type="plainText", text="."),
-                                                ]
-                                            )
+                                        tokens=[
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="Les",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="Touaregs",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="sont",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="des",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="Berbères",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _PlainText(type="plainText", text=","),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="un",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="peuple",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="qui",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="habite",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="en",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="Afrique",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="du",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="Nord",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="depuis",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="la",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="préhistoire",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _PlainText(type="plainText", text="."),
                                         ]
                                     )
                                 ]
@@ -2632,45 +2440,35 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                             instructions=Section(
                                 paragraphs=[
                                     Paragraph(
-                                        sentences=[
-                                            Sentence(
-                                                tokens=[
-                                                    _PlainText(type="plainText", text="Relève"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="dans"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="le"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="texte"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="trois"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectedText(
-                                                        type="selectedText", text="déterminants", color="#ffff00"
-                                                    ),
-                                                    _PlainText(type="plainText", text=","),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="un"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectedText(
-                                                        type="selectedText", text="nom propre", color="#ffc0cb"
-                                                    ),
-                                                    _PlainText(type="plainText", text=","),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="quatre"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectedText(
-                                                        type="selectedText", text="noms communs", color="#bbbbff"
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="et"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="trois"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectedText(type="selectedText", text="verbes", color="#bbffbb"),
-                                                    _PlainText(type="plainText", text="."),
-                                                ]
-                                            )
+                                        tokens=[
+                                            _PlainText(type="plainText", text="Relève"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="dans"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="le"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="texte"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="trois"),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectedText(type="selectedText", text="déterminants", color="#ffff00"),
+                                            _PlainText(type="plainText", text=","),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="un"),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectedText(type="selectedText", text="nom propre", color="#ffc0cb"),
+                                            _PlainText(type="plainText", text=","),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="quatre"),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectedText(type="selectedText", text="noms communs", color="#bbbbff"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="et"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="trois"),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectedText(type="selectedText", text="verbes", color="#bbffbb"),
+                                            _PlainText(type="plainText", text="."),
                                         ]
                                     )
                                 ]
@@ -2678,109 +2476,105 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                             wording=Section(
                                 paragraphs=[
                                     Paragraph(
-                                        sentences=[
-                                            Sentence(
-                                                tokens=[
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="Ils",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="vivent",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="dans",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="le",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="désert",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="du",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="Sahara",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="("),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="Algérie",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _PlainText(type="plainText", text=","),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="Libye",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _PlainText(type="plainText", text=","),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="Mali",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _PlainText(type="plainText", text=","),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="Niger",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _PlainText(type="plainText", text=","),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="Burkina",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="Faso",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _PlainText(type="plainText", text="…"),
-                                                    _PlainText(type="plainText", text=")"),
-                                                    _PlainText(type="plainText", text="."),
-                                                ]
-                                            )
+                                        tokens=[
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="Ils",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="vivent",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="dans",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="le",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="désert",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="du",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="Sahara",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="("),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="Algérie",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _PlainText(type="plainText", text=","),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="Libye",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _PlainText(type="plainText", text=","),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="Mali",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _PlainText(type="plainText", text=","),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="Niger",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _PlainText(type="plainText", text=","),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="Burkina",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="Faso",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _PlainText(type="plainText", text="…"),
+                                            _PlainText(type="plainText", text=")"),
+                                            _PlainText(type="plainText", text="."),
                                         ]
                                     )
                                 ]
@@ -2790,45 +2584,35 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                             instructions=Section(
                                 paragraphs=[
                                     Paragraph(
-                                        sentences=[
-                                            Sentence(
-                                                tokens=[
-                                                    _PlainText(type="plainText", text="Relève"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="dans"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="le"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="texte"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="trois"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectedText(
-                                                        type="selectedText", text="déterminants", color="#ffff00"
-                                                    ),
-                                                    _PlainText(type="plainText", text=","),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="un"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectedText(
-                                                        type="selectedText", text="nom propre", color="#ffc0cb"
-                                                    ),
-                                                    _PlainText(type="plainText", text=","),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="quatre"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectedText(
-                                                        type="selectedText", text="noms communs", color="#bbbbff"
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="et"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="trois"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectedText(type="selectedText", text="verbes", color="#bbffbb"),
-                                                    _PlainText(type="plainText", text="."),
-                                                ]
-                                            )
+                                        tokens=[
+                                            _PlainText(type="plainText", text="Relève"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="dans"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="le"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="texte"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="trois"),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectedText(type="selectedText", text="déterminants", color="#ffff00"),
+                                            _PlainText(type="plainText", text=","),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="un"),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectedText(type="selectedText", text="nom propre", color="#ffc0cb"),
+                                            _PlainText(type="plainText", text=","),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="quatre"),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectedText(type="selectedText", text="noms communs", color="#bbbbff"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="et"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="trois"),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectedText(type="selectedText", text="verbes", color="#bbffbb"),
+                                            _PlainText(type="plainText", text="."),
                                         ]
                                     )
                                 ]
@@ -2836,174 +2620,170 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                             wording=Section(
                                 paragraphs=[
                                     Paragraph(
-                                        sentences=[
-                                            Sentence(
-                                                tokens=[
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="En",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="été",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _PlainText(type="plainText", text=","),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="les",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="températures",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="y",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="montent",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="à",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="plus",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="de",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="50",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="°"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="C",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="et",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="elles",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="descendent",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="en",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="dessous",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="de",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="zéro",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="durant",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="les",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="nuits",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="d",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _PlainText(type="plainText", text="’"),
-                                                    _SelectableText(
-                                                        type="selectableText",
-                                                        text="hiver",
-                                                        colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                        boxed=False,
-                                                    ),
-                                                    _PlainText(type="plainText", text="."),
-                                                ]
-                                            )
+                                        tokens=[
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="En",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="été",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _PlainText(type="plainText", text=","),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="les",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="températures",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="y",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="montent",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="à",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="plus",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="de",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="50",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="°"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="C",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="et",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="elles",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="descendent",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="en",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="dessous",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="de",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="zéro",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="durant",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="les",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="nuits",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="d",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _PlainText(type="plainText", text="’"),
+                                            _SelectableText(
+                                                type="selectableText",
+                                                text="hiver",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                boxed=False,
+                                            ),
+                                            _PlainText(type="plainText", text="."),
                                         ]
                                     )
                                 ]
@@ -3020,7 +2800,6 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
             Pagelet,
             Section,
             Paragraph,
-            Sentence,
             _PlainText,
             _Whitespace,
             _MultipleChoicesInput,
@@ -3039,109 +2818,92 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                     pagelets=[
                         Pagelet(
                             instructions=Section(
-                                paragraphs=[
-                                    Paragraph(sentences=[Sentence(tokens=[_PlainText(type="plainText", text="...")])])
-                                ]
+                                paragraphs=[Paragraph(tokens=[_PlainText(type="plainText", text="...")])]
                             ),
                             wording=Section(
                                 paragraphs=[
                                     Paragraph(
-                                        sentences=[
-                                            Sentence(
-                                                tokens=[
-                                                    _PlainText(type="plainText", text="a"),
-                                                    _PlainText(type="plainText", text="."),
-                                                    _Whitespace(type="whitespace"),
-                                                    _BoldText(type="boldText", text="Aujourd'hui"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="il"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="fait"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _ItalicText(type="italicText", text="gris"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="et"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="("),
-                                                    _PlainText(type="plainText", text="il"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="pleuvra"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="/"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="il"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="pleut"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="/"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="il"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="pleuvait"),
-                                                    _PlainText(type="plainText", text=")"),
-                                                    _PlainText(type="plainText", text="."),
-                                                ]
-                                            )
+                                        tokens=[
+                                            _PlainText(type="plainText", text="a"),
+                                            _PlainText(type="plainText", text="."),
+                                            _Whitespace(type="whitespace"),
+                                            _BoldText(type="boldText", text="Aujourd'hui"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="il"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="fait"),
+                                            _Whitespace(type="whitespace"),
+                                            _ItalicText(type="italicText", text="gris"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="et"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="("),
+                                            _PlainText(type="plainText", text="il"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="pleuvra"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="/"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="il"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="pleut"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="/"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="il"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="pleuvait"),
+                                            _PlainText(type="plainText", text=")"),
+                                            _PlainText(type="plainText", text="."),
                                         ]
                                     ),
                                     Paragraph(
-                                        sentences=[
-                                            Sentence(
-                                                tokens=[
-                                                    _PlainText(type="plainText", text="b"),
-                                                    _PlainText(type="plainText", text="."),
-                                                ]
+                                        tokens=[
+                                            _PlainText(type="plainText", text="b"),
+                                            _PlainText(type="plainText", text="."),
+                                            _Whitespace(type="whitespace"),
+                                            _BoldText(type="boldText", text="Aujourd'hui"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="il"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="fait"),
+                                            _Whitespace(type="whitespace"),
+                                            _ItalicText(type="italicText", text="gris"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="et"),
+                                            _Whitespace(type="whitespace"),
+                                            _MultipleChoicesInput(
+                                                type="multipleChoicesInput",
+                                                choices=["il pleuvra", "il pleut", "il pleuvait"],
                                             ),
-                                            Sentence(
-                                                tokens=[
-                                                    _BoldText(type="boldText", text="Aujourd'hui"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="il"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="fait"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _ItalicText(type="italicText", text="gris"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="et"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _MultipleChoicesInput(
-                                                        type="multipleChoicesInput",
-                                                        choices=["il pleuvra", "il pleut", "il pleuvait"],
-                                                    ),
-                                                    _PlainText(type="plainText", text="."),
-                                                ]
-                                            ),
+                                            _PlainText(type="plainText", text="."),
                                         ]
                                     ),
                                     Paragraph(
-                                        sentences=[
-                                            Sentence(
-                                                tokens=[
-                                                    _PlainText(type="plainText", text="c"),
-                                                    _PlainText(type="plainText", text="."),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="Aujourd"),
-                                                    _PlainText(type="plainText", text="'"),
-                                                    _PlainText(type="plainText", text="hui"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="il"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="fait"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _MultipleChoicesInput(
-                                                        type="multipleChoicesInput", choices=["gris", "beau"]
-                                                    ),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="et"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _PlainText(type="plainText", text="il"),
-                                                    _Whitespace(type="whitespace"),
-                                                    _MultipleChoicesInput(
-                                                        type="multipleChoicesInput", choices=["pleut", "pleuvra"]
-                                                    ),
-                                                    _PlainText(type="plainText", text="."),
-                                                ]
-                                            )
+                                        tokens=[
+                                            _PlainText(type="plainText", text="c"),
+                                            _PlainText(type="plainText", text="."),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="Aujourd"),
+                                            _PlainText(type="plainText", text="'"),
+                                            _PlainText(type="plainText", text="hui"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="il"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="fait"),
+                                            _Whitespace(type="whitespace"),
+                                            _MultipleChoicesInput(
+                                                type="multipleChoicesInput", choices=["gris", "beau"]
+                                            ),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="et"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="il"),
+                                            _Whitespace(type="whitespace"),
+                                            _MultipleChoicesInput(
+                                                type="multipleChoicesInput", choices=["pleut", "pleuvra"]
+                                            ),
+                                            _PlainText(type="plainText", text="."),
                                         ]
                                     ),
                                 ]

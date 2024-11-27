@@ -299,8 +299,8 @@ export interface components {
     };
     /** Paragraph */
     Paragraph: {
-      /** Sentences */
-      sentences: components["schemas"]["Sentence"][];
+      /** Tokens */
+      tokens: (components["schemas"]["_PlainText"] | components["schemas"]["_BoxedText"] | components["schemas"]["_BoldText"] | components["schemas"]["_ItalicText"] | components["schemas"]["_SelectableText"] | components["schemas"]["_SelectedText"] | components["schemas"]["_FreeTextInput"] | components["schemas"]["_MultipleChoicesInput"] | components["schemas"]["_Whitespace"])[];
     };
     /** PdfRectangle */
     PdfRectangle: {
@@ -339,11 +339,6 @@ export interface components {
     Selectable: {
       /** Colors */
       colors: string[];
-    };
-    /** Sentence */
-    Sentence: {
-      /** Tokens */
-      tokens: (components["schemas"]["_PlainText"] | components["schemas"]["_BoxedText"] | components["schemas"]["_BoldText"] | components["schemas"]["_ItalicText"] | components["schemas"]["_SelectableText"] | components["schemas"]["_SelectedText"] | components["schemas"]["_FreeTextInput"] | components["schemas"]["_MultipleChoicesInput"] | components["schemas"]["_Whitespace"])[];
     };
     /** SentencesItems */
     SentencesItems: {
