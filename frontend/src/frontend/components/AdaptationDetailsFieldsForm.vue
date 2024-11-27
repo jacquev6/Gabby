@@ -180,8 +180,7 @@ import { computed, reactive, ref, watch } from 'vue'
 import deepEqual from 'deep-equal'
 
 import { BRow, BCol, BLabeledInput, BButton, BLabeledCheckbox, BRadio } from './opinion/bootstrap'
-import type { Model } from './ExerciseFieldsForm.vue'
-import type ExerciseFieldsForm from './ExerciseFieldsForm.vue'
+import ExerciseFieldsForm, { type Model, cleanupModel } from './ExerciseFieldsForm.vue'
 import { defaultColors as defaultColorsForSelectableEffect } from './AdaptationDetailsFieldsForm.vue'
 import FloatingColorPicker from './FloatingColorPicker.vue'
 import OptionalInput from './OptionalInput.vue'
@@ -320,6 +319,8 @@ watch(
         }
       }
     }
+
+    cleanupModel(model.value)
   },
   {
     deep: true,

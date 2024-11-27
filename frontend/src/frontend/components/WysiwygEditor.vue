@@ -32,7 +32,7 @@ watch(
     console.assert(typeof lastOp.insert === 'string')
     console.assert(lastOp.insert.endsWith('\n'))
   },
-  {immediate: true},
+  {immediate: true, deep: true},
 )
 
 defineExpose({

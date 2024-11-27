@@ -186,4 +186,53 @@ describe('Gabby', () => {
     cy.get('@editor').should('not.contain.text', 'Foo')
     cy.get('@editor').should('contain.text', 'Bar')
   })
+
+  it('remove "sel" blots when the number of usable colors is reduced', () => {
+    visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
+    setAliases()
+
+    cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="4"]').click()
+    cy.get('button[data-cy="format-color-1"]').as("button1").should('be.disabled')
+    cy.get('button[data-cy="format-color-2"]').as("button2").should('be.disabled')
+    cy.get('button[data-cy="format-color-3"]').as("button3").should('be.disabled')
+    cy.get('button[data-cy="format-color-4"]').as("button4").should('be.disabled')
+
+    cy.get('@instructions').click()
+    cy.get('@instructions').type('plain ', {delay: 0})
+    cy.get('@button1').click()
+    cy.get('@instructions').type('sel1', {delay: 0})
+    cy.get('@button1').click()
+    cy.get('@instructions').type(' plain ', {delay: 0})
+    cy.get('@button2').click()
+    cy.get('@instructions').type('sel2', {delay: 0})
+    cy.get('@button2').click()
+    cy.get('@instructions').type(' plain ', {delay: 0})
+    cy.get('@button3').click()
+    cy.get('@instructions').type('sel3', {delay: 0})
+    cy.get('@button3').click()
+    cy.get('@instructions').type(' plain ', {delay: 0})
+    cy.get('@button4').click()
+    cy.get('@instructions').type('sel4', {delay: 0})
+    cy.get('@button4').click()
+    cy.get('@instructions').type(' plain', {delay: 0})
+
+    cy.get('sel-blot[data-sel="1"]').should('exist')
+    cy.get('sel-blot[data-sel="2"]').should('exist')
+    cy.get('sel-blot[data-sel="3"]').should('exist')
+    cy.get('sel-blot[data-sel="4"]').should('exist')
+
+    cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="3"]').click()
+
+    cy.get('sel-blot[data-sel="1"]').should('exist')
+    cy.get('sel-blot[data-sel="2"]').should('exist')
+    cy.get('sel-blot[data-sel="3"]').should('exist')
+    cy.get('sel-blot[data-sel="4"]').should('not.exist')
+
+    cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="4"]').click()
+
+    cy.get('sel-blot[data-sel="1"]').should('exist')
+    cy.get('sel-blot[data-sel="2"]').should('exist')
+    cy.get('sel-blot[data-sel="3"]').should('exist')
+    cy.get('sel-blot[data-sel="4"]').should('not.exist')
+  })
 })

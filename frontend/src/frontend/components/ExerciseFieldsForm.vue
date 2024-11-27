@@ -3,6 +3,7 @@ import { useApiStore } from '$frontend/stores/api'
 import type { Project, Textbook, Exercise, InCache, Exists } from '$frontend/stores/api'
 import deepEqual from 'deep-equal'
 import { type Model as Deltas } from '$frontend/components/Quill.vue'
+import { Delta } from 'quill/core'
 
 const api = useApiStore()
 
@@ -114,6 +115,31 @@ export function modelIsEmpty(model: Model) {
     && deepEqual(model.example, emptyDeltas)
     && deepEqual(model.clue, emptyDeltas)
     && deepEqual(model.adaptation, {kind: 'generic', effects: []})
+}
+
+export function cleanupModel(model: Model) {
+  let usableColorsCount = 0
+  const itemizedEffects = model.adaptation.effects.filter(effect => effect.kind === 'itemized')
+  if (itemizedEffects.length === 1) {
+    const itemizedEffect = itemizedEffects[0]
+    if (itemizedEffect.effects.selectable !== null) {
+      usableColorsCount = itemizedEffect.effects.selectable.colors.length
+    }
+  }
+  for (const fieldName of ['instructions', 'wording', 'example'] as const) {
+    const newOps = new Delta()
+    for (const delta of downgradeDeltas(model[fieldName])) {
+      if ('sel' in delta.attributes && (delta.attributes.sel as number) > usableColorsCount) {
+        newOps.insert(delta.insert, {})
+      } else {
+        newOps.insert(delta.insert, delta.attributes)
+      }
+    }
+    model[fieldName] = newOps.ops.map(op => {
+      console.assert(typeof op.insert === 'string')
+      return {insert: op.insert, attributes: op.attributes ?? {}}
+    })
+  }
 }
 
 function downgradeDeltas(deltas: Deltas) {
