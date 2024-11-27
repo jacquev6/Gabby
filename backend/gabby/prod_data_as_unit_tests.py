@@ -565,7 +565,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="affebbe"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="?"),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="➞"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="Be"),
@@ -605,7 +608,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="a"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Be"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="becobbaac"),
@@ -752,7 +758,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="affebbe"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="?"),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="➞"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="Be"),
@@ -792,7 +801,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="a"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Be"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="becobbaac"),
@@ -1077,10 +1089,9 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="cobbecbec"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="BABAFUBEB"),
                                     ]
-                                )
+                                ),
+                                Paragraph(tokens=[_PlainText(type="plainText", text="BABAFUBEB")]),
                             ]
                         ),
                         wording=Section(
@@ -1198,10 +1209,9 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="cobbecbec"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="BABAFUBEB"),
                                     ]
-                                )
+                                ),
+                                Paragraph(tokens=[_PlainText(type="plainText", text="BABAFUBEB")]),
                             ]
                         ),
                         wording=Section(
@@ -1652,7 +1662,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="ffbacec"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="B"),
                                         _PlainText(type="plainText", text="’"),
                                         _PlainText(type="plainText", text="oubbae"),
@@ -1670,7 +1683,7 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="foabbc"),
                                         _PlainText(type="plainText", text="."),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(
@@ -1756,7 +1769,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="ffbacec"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="B"),
                                         _PlainText(type="plainText", text="’"),
                                         _PlainText(type="plainText", text="oubbae"),
@@ -1774,7 +1790,7 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="foabbc"),
                                         _PlainText(type="plainText", text="."),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(
@@ -1879,7 +1895,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="ffbacec"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="B"),
                                         _PlainText(type="plainText", text="’"),
                                         _PlainText(type="plainText", text="oubbae"),
@@ -1897,7 +1916,7 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="foabbc"),
                                         _PlainText(type="plainText", text="."),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(paragraphs=[Paragraph(tokens=[_PlainText(type="plainText", text="bobbabbe")])]),
@@ -2887,7 +2906,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="bobc"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="B"),
                                         _PlainText(type="plainText", text="’"),
                                         _PlainText(type="plainText", text="oubbae"),
@@ -2899,7 +2921,7 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="fobcbuabaob"),
                                         _PlainText(type="plainText", text="."),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(
@@ -2976,7 +2998,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="bobc"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="B"),
                                         _PlainText(type="plainText", text="’"),
                                         _PlainText(type="plainText", text="oubbae"),
@@ -2988,7 +3013,7 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="fobcbuabaob"),
                                         _PlainText(type="plainText", text="."),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(
@@ -3253,7 +3278,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="cacfée"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Bu"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="doac"),
@@ -3297,7 +3325,7 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="febbacabebebb"),
                                         _PlainText(type="plainText", text="."),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(
@@ -3356,7 +3384,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="cacfée"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Bu"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="doac"),
@@ -3400,7 +3431,7 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="febbacabebebb"),
                                         _PlainText(type="plainText", text="."),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(
@@ -3755,7 +3786,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                     tokens=[
                                         _PlainText(type="plainText", text="a"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="B"),
                                         _PlainText(type="plainText", text="’"),
                                         _PlainText(type="plainText", text="afaabeub"),
@@ -3764,10 +3798,16 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="febdu"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="b"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Babfeubeucebebb"),
                                         _PlainText(type="plainText", text=","),
                                         _Whitespace(type="whitespace"),
@@ -3782,10 +3822,16 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="fabbe"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="!"),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="c"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Ab"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="ce"),
@@ -3802,10 +3848,16 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="décebb"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="d"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Febdabb"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="ba"),
@@ -3823,10 +3875,16 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="fboad"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="e"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Cobbebb"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="fa"),
@@ -5443,10 +5501,9 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="fabbe"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="OBAB"),
                                     ]
-                                )
+                                ),
+                                Paragraph(tokens=[_PlainText(type="plainText", text="OBAB")]),
                             ]
                         ),
                         wording=Section(paragraphs=[]),
@@ -5556,7 +5613,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="bébabbée"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="!"),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Béécbac"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="eb"),
@@ -5580,7 +5640,7 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="fbace"),
                                         _PlainText(type="plainText", text="."),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(
@@ -5671,7 +5731,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="bébabbée"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="!"),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Béécbac"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="eb"),
@@ -5695,7 +5758,7 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="fbace"),
                                         _PlainText(type="plainText", text="."),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(
@@ -7042,7 +7105,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="cabof"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="➞"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="Fbebdc"),
@@ -7159,7 +7225,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="cabof"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="➞"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="Fbebdc"),
@@ -7943,7 +8012,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="cobbebb"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="➞"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="Ec"),
@@ -7953,7 +8025,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="cobbebb"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="?"),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="/"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="Ecb"),
@@ -8049,7 +8124,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="cobbebb"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="➞"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="Ec"),
@@ -8059,7 +8137,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="cobbebb"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="?"),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="/"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="Ecb"),
@@ -8355,7 +8436,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="cobcbbuabec"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Febbe"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="+"),
@@ -8363,9 +8447,11 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="cubeb"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="…"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="?"),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(tokens=[_PlainText(type="plainText", text="?")]),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Ecb"),
                                         _PlainText(type="plainText", text="-"),
                                         _PlainText(type="plainText", text="ce"),
@@ -8381,10 +8467,9 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="febbe"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="…"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="?"),
                                     ]
-                                )
+                                ),
+                                Paragraph(tokens=[_PlainText(type="plainText", text="?")]),
                             ]
                         ),
                         wording=Section(
@@ -8492,7 +8577,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="cobcbbuabec"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Febbe"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="+"),
@@ -8500,9 +8588,11 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="cubeb"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="…"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="?"),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(tokens=[_PlainText(type="plainText", text="?")]),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Ecb"),
                                         _PlainText(type="plainText", text="-"),
                                         _PlainText(type="plainText", text="ce"),
@@ -8518,10 +8608,9 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="febbe"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="…"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="?"),
                                     ]
-                                )
+                                ),
+                                Paragraph(tokens=[_PlainText(type="plainText", text="?")]),
                             ]
                         ),
                         wording=Section(
@@ -9847,7 +9936,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="cfab"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="➞"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="Cfebcfe"),
@@ -9861,7 +9953,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="cfab"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="?"),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Ecb"),
                                         _PlainText(type="plainText", text="-"),
                                         _PlainText(type="plainText", text="ce"),
@@ -9980,7 +10075,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="cfab"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="➞"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="Cfebcfe"),
@@ -9994,7 +10092,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="cfab"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="?"),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Ecb"),
                                         _PlainText(type="plainText", text="-"),
                                         _PlainText(type="plainText", text="ce"),
@@ -10139,7 +10240,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="bubda"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="➞"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="Buabd"),
@@ -10273,7 +10377,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="bubda"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="➞"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="Buabd"),
@@ -10389,7 +10496,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="fbucaeubc"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Cfoacac"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="ub"),
@@ -10398,7 +10508,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="cébèbbe"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Bec"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="cababadec"),
@@ -10425,7 +10538,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="buecbaobc"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Bu"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="be"),
@@ -10458,7 +10574,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="»"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Babbab"),
                                         _PlainText(type="plainText", text=","),
                                         _Whitespace(type="whitespace"),
@@ -10472,7 +10591,7 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="BAF"),
                                         _PlainText(type="plainText", text="…"),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(paragraphs=[]),
@@ -12736,7 +12855,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="dacfabu"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Becofae"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="ce"),
@@ -12755,11 +12877,17 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="ebdboab"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="be"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="…"),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="babaac"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="–"),
@@ -12767,7 +12895,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="be"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="…"),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="baeb"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="–"),
@@ -12775,10 +12906,9 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="be"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="…"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="fac"),
                                     ]
-                                )
+                                ),
+                                Paragraph(tokens=[_PlainText(type="plainText", text="fac")]),
                             ]
                         ),
                         wording=Section(
@@ -12866,7 +12996,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="dacfabu"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Becofae"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="ce"),
@@ -12885,11 +13018,17 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="ebdboab"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="be"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="…"),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="babaac"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="–"),
@@ -12897,7 +13036,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="be"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="…"),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="baeb"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="–"),
@@ -12905,10 +13047,9 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="be"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="…"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="fac"),
                                     ]
-                                )
+                                ),
+                                Paragraph(tokens=[_PlainText(type="plainText", text="fac")]),
                             ]
                         ),
                         wording=Section(
@@ -13018,7 +13159,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="dacfabu"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Becofae"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="ce"),
@@ -13037,11 +13181,17 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="ebdboab"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="be"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="…"),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="babaac"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="–"),
@@ -13049,7 +13199,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="be"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="…"),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="baeb"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="–"),
@@ -13057,10 +13210,9 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="be"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="…"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="fac"),
                                     ]
-                                )
+                                ),
+                                Paragraph(tokens=[_PlainText(type="plainText", text="fac")]),
                             ]
                         ),
                         wording=Section(
@@ -15120,7 +15272,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="fbofocéc"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _BoxedText(type="boxedText", text="dabc cebbe bbobbe"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="–"),
@@ -15139,7 +15294,7 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _BoxedText(type="boxedText", text="à Boëb"),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(
@@ -15265,7 +15420,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="fbofocéc"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _BoxedText(type="boxedText", text="dabc cebbe bbobbe"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="–"),
@@ -15284,7 +15442,7 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _BoxedText(type="boxedText", text="à Boëb"),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(
@@ -16497,7 +16655,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="fbofocéc"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Abbebbaob"),
                                         _PlainText(type="plainText", text=","),
                                         _Whitespace(type="whitespace"),
@@ -16666,7 +16827,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="fbofocéc"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Abbebbaob"),
                                         _PlainText(type="plainText", text=","),
                                         _Whitespace(type="whitespace"),
@@ -20337,7 +20501,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="coubabbéc"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="?"),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Fbécace"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="foub"),
@@ -20370,7 +20537,7 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="febcobbeb"),
                                         _PlainText(type="plainText", text="."),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(
@@ -20451,7 +20618,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="coubabbéc"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="?"),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Fbécace"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="foub"),
@@ -20484,7 +20654,7 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="febcobbeb"),
                                         _PlainText(type="plainText", text="."),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(
@@ -20572,7 +20742,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="coubabbéc"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="?"),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Fbécace"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="foub"),
@@ -20605,7 +20778,7 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="febcobbeb"),
                                         _PlainText(type="plainText", text="."),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(
@@ -20687,7 +20860,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="coubabbéc"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="?"),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Fbécace"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="foub"),
@@ -20720,7 +20896,7 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="febcobbeb"),
                                         _PlainText(type="plainText", text="."),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(
@@ -22409,7 +22585,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="cebbabebb"),
                                         _PlainText(type="plainText", text=")"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Ebboube"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="bec"),
@@ -22419,7 +22598,7 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="fbofbec"),
                                         _PlainText(type="plainText", text="."),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(
@@ -23956,10 +24135,14 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="cfoce"),
                                         _PlainText(type="plainText", text="…"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text=")"),
                                         _PlainText(type="plainText", text="."),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(
@@ -24080,10 +24263,14 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="cfoce"),
                                         _PlainText(type="plainText", text="…"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text=")"),
                                         _PlainText(type="plainText", text="."),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(
@@ -25273,7 +25460,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="babbeau"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Débebbababbc"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="au"),
@@ -25288,7 +25478,7 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="fbubaeb"),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(
@@ -25650,7 +25840,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="cuafabbc"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Fbucaeubc"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="béfobcec"),
@@ -25659,7 +25852,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="foccabbec"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="ba"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="–"),
@@ -25698,7 +25894,7 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="bec"),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(
@@ -25848,7 +26044,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="babeau"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="➞"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="Faub"),
@@ -25970,7 +26169,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="babeau"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="➞"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="Faub"),
@@ -26112,7 +26314,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="boubueb"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="➞"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="Ba"),
@@ -26228,7 +26433,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="boubueb"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="➞"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="Ba"),
@@ -27109,7 +27317,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="Fabac"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Abfebbe"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="ube"),
@@ -27129,7 +27340,7 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="febc"),
                                         _PlainText(type="plainText", text="."),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(
@@ -27264,7 +27475,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="ebfobbeb"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Ubabace"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="au"),
@@ -27278,7 +27492,7 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="daffébebbc"),
                                         _PlainText(type="plainText", text="."),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(paragraphs=[]),
@@ -27315,7 +27529,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                     tokens=[
                                         _PlainText(type="plainText", text="Ababbabbec"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Bebebc"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="bec"),
@@ -27337,7 +27554,7 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="débebbababbc"),
                                         _PlainText(type="plainText", text="."),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(
@@ -28796,7 +29013,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="bobabab"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="coubaabbec"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="–"),
@@ -28811,7 +29031,7 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="abbuaèbe"),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(paragraphs=[]),
@@ -28873,7 +29093,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="adbecbaf"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Febce"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="à"),
@@ -28883,7 +29106,7 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="accobdeb"),
                                         _PlainText(type="plainText", text="."),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(
@@ -28971,7 +29194,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="adbecbaf"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Febce"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="à"),
@@ -28981,7 +29207,7 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="accobdeb"),
                                         _PlainText(type="plainText", text="."),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(
@@ -29059,7 +29285,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="cuafabbc"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Abc"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="cobb"),
@@ -29095,7 +29324,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="ffbacec"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="beau"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="–"),
@@ -29122,7 +29354,7 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="bbabc"),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(
@@ -29231,7 +29463,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="cuafabbc"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Abc"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="cobb"),
@@ -29267,7 +29502,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="ffbacec"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="beau"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="–"),
@@ -29294,7 +29532,7 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="bbabc"),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(
@@ -29399,7 +29637,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="cuafabbc"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Abc"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="cobb"),
@@ -29435,7 +29676,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="ffbacec"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="beau"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="–"),
@@ -29462,7 +29706,7 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="bbabc"),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(
@@ -29658,7 +29902,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="daffébebb"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Bu"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="feub"),
@@ -29682,7 +29929,7 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="feub"),
                                         _PlainText(type="plainText", text="."),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(
@@ -29782,7 +30029,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="daffébebb"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Bu"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="feub"),
@@ -29806,7 +30056,7 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="feub"),
                                         _PlainText(type="plainText", text="."),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(
@@ -29891,7 +30141,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="cobbecfobdebb"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="abdecbbucbabbe"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="–"),
@@ -29939,7 +30192,7 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="bababue"),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(paragraphs=[]),
@@ -31244,7 +31497,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="bbaab"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Abébae"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="fa"),
@@ -31253,7 +31509,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="Bobdeaub"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="➞"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="Abébae"),
@@ -31264,7 +31523,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="bbaab"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Ebbe"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="fa"),
@@ -31394,7 +31656,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="bbaab"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Abébae"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="fa"),
@@ -31403,7 +31668,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="Bobdeaub"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="➞"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="Abébae"),
@@ -31414,7 +31682,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="bbaab"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Ebbe"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="fa"),
@@ -31749,7 +32020,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="babcf"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Ubabace"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="be"),
@@ -31765,7 +32039,7 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="foccabbe"),
                                         _PlainText(type="plainText", text="."),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(paragraphs=[]),
@@ -32026,7 +32300,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="bacbe"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="•"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="ub"),
@@ -32087,7 +32364,7 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="bocfeb"),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(paragraphs=[]),
@@ -33775,7 +34052,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="cucbée"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="➞"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="Be"),
@@ -33899,7 +34179,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="cucbée"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="➞"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="Be"),
@@ -34014,7 +34297,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="cucbée"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="➞"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="Be"),
@@ -34424,7 +34710,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="cfoab"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="B"),
                                         _PlainText(type="plainText", text="’"),
                                         _PlainText(type="plainText", text="oubbae"),
@@ -34436,7 +34725,7 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="babuccubec"),
                                         _PlainText(type="plainText", text="."),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(
@@ -34517,7 +34806,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="cfoab"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="B"),
                                         _PlainText(type="plainText", text="’"),
                                         _PlainText(type="plainText", text="oubbae"),
@@ -34529,7 +34821,7 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="babuccubec"),
                                         _PlainText(type="plainText", text="."),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(
@@ -41026,7 +41318,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="abbacbec"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="b"),
                                         _PlainText(type="plainText", text=")"),
                                         _Whitespace(type="whitespace"),
@@ -41054,7 +41349,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="cobfaebb"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="c"),
                                         _PlainText(type="plainText", text=")"),
                                         _Whitespace(type="whitespace"),
@@ -41079,7 +41377,7 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="bobbbe"),
                                         _PlainText(type="plainText", text="."),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(
@@ -41182,7 +41480,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="abbacbec"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="b"),
                                         _PlainText(type="plainText", text=")"),
                                         _Whitespace(type="whitespace"),
@@ -41210,7 +41511,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="cobfaebb"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="c"),
                                         _PlainText(type="plainText", text=")"),
                                         _Whitespace(type="whitespace"),
@@ -41235,7 +41539,7 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="bobbbe"),
                                         _PlainText(type="plainText", text="."),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(
@@ -41341,7 +41645,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="abbacbec"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="b"),
                                         _PlainText(type="plainText", text=")"),
                                         _Whitespace(type="whitespace"),
@@ -41369,7 +41676,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="cobfaebb"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="c"),
                                         _PlainText(type="plainText", text=")"),
                                         _Whitespace(type="whitespace"),
@@ -41394,7 +41704,7 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="bobbbe"),
                                         _PlainText(type="plainText", text="."),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(
@@ -41489,7 +41799,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="bobabaub"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Ubabace"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="dec"),
@@ -41498,7 +41811,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="febcobbebc"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="be"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="babdab"),
@@ -41537,7 +41853,7 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="cacbacbe"),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(paragraphs=[]),
@@ -41961,7 +42277,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="bacbe"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Bucbafae"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="ba"),
@@ -41969,7 +42288,7 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="béfobce"),
                                         _PlainText(type="plainText", text="."),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(
@@ -42067,7 +42386,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="bacbe"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Bucbafae"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="ba"),
@@ -42075,7 +42397,7 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="béfobce"),
                                         _PlainText(type="plainText", text="."),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(
@@ -43046,7 +43368,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="’"),
                                         _PlainText(type="plainText", text="abbbuc"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Bucbafae"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="ba"),
@@ -43054,7 +43379,7 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="béfobce"),
                                         _PlainText(type="plainText", text="."),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(
@@ -43153,7 +43478,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="’"),
                                         _PlainText(type="plainText", text="abbbuc"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Bucbafae"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="ba"),
@@ -43161,7 +43489,7 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="béfobce"),
                                         _PlainText(type="plainText", text="."),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(
@@ -43784,7 +44112,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="dobbéec"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="débebbababb"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text=":"),
@@ -43825,7 +44156,7 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="F"),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(
@@ -43924,7 +44255,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="dobbéec"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="débebbababb"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text=":"),
@@ -43965,7 +44299,7 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="F"),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(
@@ -48067,7 +48401,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="babab"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Dobbe"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="bec"),
@@ -48129,7 +48466,7 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="c"),
                                         _PlainText(type="plainText", text="."),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(paragraphs=[]),
@@ -51087,7 +51424,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="b"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Abdabue"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="à"),
@@ -51118,7 +51458,7 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text=")"),
                                         _PlainText(type="plainText", text="."),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(paragraphs=[]),
@@ -51182,7 +51522,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="bébubec"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Abdabue"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="à"),
@@ -51213,7 +51556,7 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text=")"),
                                         _PlainText(type="plainText", text="."),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(
@@ -56566,7 +56909,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="febdu"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Aade"),
                                         _PlainText(type="plainText", text="-"),
                                         _PlainText(type="plainText", text="boa"),
@@ -56578,7 +56924,7 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="dacbaobbaabe"),
                                         _PlainText(type="plainText", text="."),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(
@@ -56687,7 +57033,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="febdu"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Aade"),
                                         _PlainText(type="plainText", text="-"),
                                         _PlainText(type="plainText", text="boa"),
@@ -56699,7 +57048,7 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="dacbaobbaabe"),
                                         _PlainText(type="plainText", text="."),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(
@@ -56965,7 +57314,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="9"),
                                         _PlainText(type="plainText", text=")"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Bu"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="feub"),
@@ -57013,7 +57365,7 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="cobobé"),
                                         _PlainText(type="plainText", text="…"),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(paragraphs=[]),
@@ -57081,7 +57433,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="’"),
                                         _PlainText(type="plainText", text="accebb"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Babbe"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="ceub"),
@@ -57096,7 +57451,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="bbafe"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Babbe"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="ceub"),
@@ -57111,7 +57469,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="cabcobfbebe"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Fabba"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="bec"),
@@ -57138,7 +57499,7 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="bababuec"),
                                         _PlainText(type="plainText", text="."),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(
@@ -57248,7 +57609,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="’"),
                                         _PlainText(type="plainText", text="accebb"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Babbe"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="ceub"),
@@ -57263,7 +57627,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="bbafe"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Babbe"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="ceub"),
@@ -57278,7 +57645,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="cabcobfbebe"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="Fabba"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="bec"),
@@ -57305,7 +57675,7 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="bababuec"),
                                         _PlainText(type="plainText", text="."),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                         wording=Section(
@@ -61333,7 +61703,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="éfababdc"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="?"),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="➞"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="Be"),
@@ -61473,7 +61846,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="éfababdc"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="?"),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="➞"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="Be"),
@@ -61622,7 +61998,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="bafbe"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="➞"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="Cob"),
@@ -61746,7 +62125,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="bafbe"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="➞"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="Cob"),
@@ -63082,7 +63464,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="coubce"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="➞"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="Be"),
@@ -63214,7 +63599,10 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="coubce"),
                                         _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
                                         _PlainText(type="plainText", text="➞"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="Be"),

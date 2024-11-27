@@ -250,42 +250,18 @@ class _Adapter:
         yield current_paragraph
 
     def split_deltas_into_sentences(self, paragraph_deltas: deltas.Deltas) -> Iterable[deltas.Deltas]:
-        can_be_splitted_at_sentence_end = True
-        for j, delta in enumerate(paragraph_deltas):
-            # Ad-hoc for unit tests and migration with behavior preserved bug-to-bug. @todo Remove to allow more splitting by sentences
-            if delta.attributes == {} and any(c in delta.insert for c in "'#«»’()*➞+•/"):
-                can_be_splitted_at_sentence_end = False
-
-            sentence_parts = re.split(r"(\.\.\.|[.!?…])", delta.insert)
-            # Last sentence doesn't end with a punctuation mark
-            if j == len(paragraph_deltas) - 1 and sentence_parts[-1] != "":  # Maybe not as robust as we want, but this is behavior we want removed eventually anyway. @todo Remove to allow more splitting by sentences
-                can_be_splitted_at_sentence_end = False
-
-            # Sentence has two consecutive punctuation marks
-            for i in range(1, len(sentence_parts) // 2):
-                if sentence_parts[2 * i].strip() == "":
-                    can_be_splitted_at_sentence_end = False
-
-            if not can_be_splitted_at_sentence_end:
-                break
-
-        if can_be_splitted_at_sentence_end:
-            # Previously know as "strict paragraph"
-            current_sentence = []
-            for delta in paragraph_deltas:
-                if "choices2" in delta.attributes:
-                    current_sentence.append(delta)
-                else:
-                    for i, sentence_part in enumerate(re.split(r"(\.\.\.|[.!?…])", delta.insert)):
-                        if sentence_part != "":
-                            if i % 2 == 0 and i > 1:
-                                yield current_sentence
-                                current_sentence = []
-                            current_sentence.append(d.InsertOp(insert=sentence_part, attributes=delta.attributes))
-            yield current_sentence
-        else:
-            # Previously know as "lenient paragraph"
-            yield paragraph_deltas
+        current_sentence = []
+        for delta in paragraph_deltas:
+            if "choices2" in delta.attributes:
+                current_sentence.append(delta)
+            else:
+                for i, sentence_part in enumerate(re.split(r"(\.\.\.|[.!?…])", delta.insert)):
+                    if sentence_part != "":
+                        if i % 2 == 0 and i > 1:
+                            yield current_sentence
+                            current_sentence = []
+                        current_sentence.append(d.InsertOp(insert=sentence_part, attributes=delta.attributes))
+        yield current_sentence
 
     def strip_section(self, section: renderable.Section) -> renderable.Section:
         section = copy.deepcopy(section)
