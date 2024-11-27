@@ -3478,3 +3478,68 @@ class MultipleAdaptationEffectsTestCase(AdaptationTestCase):
                 )],
             ),
         )
+
+    def test_many_adaptations_in_same_exercise(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=None,
+                instructions=[
+                    d.InsertOp(insert="Choose wisely ", attributes={}),
+                    # Multiple choices in instructions
+                    d.InsertOp(insert="alpha/bravo", attributes={"choices2": {"start": "", "separator1": "/", "separator2": "", "stop": "", "placeholder": "@@@"}}),
+                ],
+                wording=[
+                    d.InsertOp(insert="Hello @@@ $$$ ....", attributes={}),
+                    # Multiple choices in wording
+                    d.InsertOp(insert="(charlie|delta)", attributes={"choices2": {"start": "(", "separator1": "|", "separator2": "", "stop": ")", "placeholder": "$$$"}}),
+                    d.InsertOp(insert="\n", attributes={}),
+                ],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
+                adaptation=AdaptationV2(kind="generic", effects=[
+                    # Free text
+                    FillWithFreeTextAdaptationEffect(kind="fill-with-free-text", placeholder="..."),
+                    # Selectable words
+                    ItemizedAdaptationEffect(
+                        kind="itemized",
+                        items=ItemizedAdaptationEffect.WordsItems(kind="words", punctuation=False),
+                        effects=ItemizedAdaptationEffect.Effects(
+                            selectable=ItemizedAdaptationEffect.Effects.Selectable(colors=["red", "yellow"]),
+                            boxed=True,
+                        ),
+                    ),
+                ]),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=None,
+                pagelets=[r.Pagelet(
+                    instructions=r.Section(paragraphs=[
+                        r.Paragraph(tokens=[
+                            r.PlainText(text="Choose"),
+                            r.Whitespace(),
+                            r.PlainText(text="wisely"),
+                            r.Whitespace(),
+                            r.BoxedText(text="alpha"),
+                            r.Whitespace(),
+                            r.PlainText(text="/"),
+                            r.Whitespace(),
+                            r.BoxedText(text="bravo"),
+                        ]),
+                    ]),
+                    wording=r.Section(paragraphs=[
+                        r.Paragraph(tokens=[
+                            r.SelectableText(text="Hello", colors=["red", "yellow"], boxed=True),
+                            r.Whitespace(),
+                            r.MultipleChoicesInput(choices=["alpha", "bravo"]),
+                            r.Whitespace(),
+                            r.MultipleChoicesInput(choices=["charlie", "delta"]),
+                            r.Whitespace(),
+                            r.FreeTextInput(),
+                            r.PlainText(text="."),
+                        ]),
+                    ]),
+                )],
+            ),
+        )
