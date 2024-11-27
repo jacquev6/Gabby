@@ -9,7 +9,6 @@ from fastjsonapi import make_filters
 from . import adaptation
 from . import api_models
 from . import deltas
-from . import renderable
 from . import settings
 from .api_utils import create_item, get_item, get_page, save_item, delete_item
 from .database_utils import OrmBase, SessionDependable
@@ -95,7 +94,7 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
     def clue(self, clue: deltas.Deltas):
         self._clue_deltas = [delta.model_dump() for delta in clue]
 
-    wording_paragraphs_per_pagelet: orm.Mapped[int] = orm.mapped_column(default=3, server_default="3")
+    wording_paragraphs_per_pagelet: orm.Mapped[int | None] = orm.mapped_column(nullable=True)
 
     _rectangles: orm.Mapped[list] = orm.mapped_column(sql.JSON, name="rectangles", default=[], server_default="[]")
 
@@ -130,15 +129,7 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
         }
 
     def make_adapted(self):
-        return renderable.Exercise(
-            number=self.number,
-            textbook_page=self.textbook_page,
-            instructions=adaptation.adapt_instructions(self.instructions, self.adaptation.effects),
-            wording=adaptation.adapt_wording(self.instructions, self.wording, self.adaptation.effects),
-            example=adaptation.adapt_instructions(self.example, self.adaptation.effects),
-            clue=adaptation.adapt_instructions(self.clue, self.adaptation.effects),
-            wording_paragraphs_per_pagelet=self.wording_paragraphs_per_pagelet,
-        )
+        return adaptation.adapt(self)
 
 
 class ExerciseTestCase(TransactionTestCase):

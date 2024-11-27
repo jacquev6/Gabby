@@ -157,7 +157,7 @@ class Exercise(PydanticBase, CreatedUpdatedByAtMixin):
     example: deltas.Deltas = deltas.empty
     clue: deltas.Deltas = deltas.empty
 
-    wording_paragraphs_per_pagelet: int = 3
+    wording_paragraphs_per_pagelet: int | None = None
 
     rectangles: list[PdfRectangle] = []
 
@@ -169,7 +169,7 @@ class ParsedExercise(PydanticBase):
     wording: Annotated[deltas.Deltas, WriteOnly()]
     example: Annotated[deltas.Deltas, WriteOnly()]
     clue: Annotated[deltas.Deltas, WriteOnly()]
-    wording_paragraphs_per_pagelet: Annotated[int, WriteOnly()]
+    wording_paragraphs_per_pagelet: Annotated[int | None, WriteOnly()]
     adaptation: Annotated[AdaptationV2, WriteOnly()]
     adapted: Annotated[renderable.Exercise, Computed()]
 

@@ -4,7 +4,7 @@ import deepCopy from 'deep-copy'
 import deepEqual from 'deep-equal'
 import { useI18n } from 'vue-i18n'
 
-import { BBusy, BButton, BLabeledRadios } from '$frontend/components/opinion/bootstrap'
+import { BBusy, BButton, BLabeledCheckboxes } from '$frontend/components/opinion/bootstrap'
 import TwoResizableColumns from '$frontend/components/TwoResizableColumns.vue'
 import type { Exists, InCache, ParsedExercise } from '$frontend/stores/api'
 import { type Model, getParsed } from '$frontend/components/ExerciseFieldsForm.vue'
@@ -58,11 +58,11 @@ const toolSlotNames = [
   'undoRedo',
   'adaptationDetails',
   'basicFormatting',
-  'repartition',
+  'distribution',
 ]
 
 const wordingParagraphsPerPageletOptions = computed(() => [1, 2, 3, 4, 5].map(value => ({
-  label: i18n.t('exerciseLinesPerPage', {lines: value}),
+  label: i18n.t('exerciseLinesPerPage', value),
   value,
 })))
 
@@ -114,8 +114,8 @@ defineExpose({
                   <template #basicFormatting>
                     <BasicFormattingTools v-if="fields !== null" v-model="model" :fields />
                   </template>
-                  <template #repartition>
-                    <BLabeledRadios :label="$t('exerciseRepartition')" v-model="model.wordingParagraphsPerPagelet" :options="wordingParagraphsPerPageletOptions" />
+                  <template #distribution>
+                    <BLabeledCheckboxes :label="$t('exerciseDistribution')" v-model="model.wordingParagraphsPerPagelet" :options="wordingParagraphsPerPageletOptions" />
                   </template>
                 </ToolsGutter>
               </div>

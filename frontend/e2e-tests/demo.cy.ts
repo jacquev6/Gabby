@@ -253,6 +253,8 @@ describe('Gabby', () => {
     cy.get('@wording').find('p').eq(2).type(' ... @@@\n')
     cy.get('@wording').find('p').eq(3).type('{end} ... @@@')
 
+    cy.get('div:contains("3 lines per page") >input').check()
+
     cy.get('button:contains("Multiple choices")').click()
     screenshot('multiple-choices-with-two-set-of-choices-in-instructions', 'edit-1')
     cy.get('@instructions').find('p').then($el => {

@@ -97,11 +97,12 @@ class Section(PydanticBase):
     paragraphs: list[Paragraph]
 
 
+class Pagelet(PydanticBase):
+    instructions: Section
+    wording: Section
+
+
 class Exercise(PydanticBase):
     number: str
     textbook_page: int | None
-    instructions: Section
-    wording: Section
-    example: Section
-    clue: Section
-    wording_paragraphs_per_pagelet: int
+    pagelets: list[Pagelet]

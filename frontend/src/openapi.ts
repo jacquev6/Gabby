@@ -199,16 +199,12 @@ export interface components {
     };
     /** Exercise */
     Exercise: {
-      clue: components["schemas"]["Section"];
-      example: components["schemas"]["Section"];
-      instructions: components["schemas"]["Section"];
       /** Number */
       number: string;
+      /** Pagelets */
+      pagelets: components["schemas"]["Pagelet"][];
       /** Textbook Page */
       textbook_page: number | null;
-      wording: components["schemas"]["Section"];
-      /** Wording Paragraphs Per Pagelet */
-      wording_paragraphs_per_pagelet: number;
     };
     /** FillWithFreeTextAdaptationEffect */
     FillWithFreeTextAdaptationEffect: {
@@ -286,6 +282,11 @@ export interface components {
     /** PageMeta */
     PageMeta: {
       pagination: components["schemas"]["Pagination"];
+    };
+    /** Pagelet */
+    Pagelet: {
+      instructions: components["schemas"]["Section"];
+      wording: components["schemas"]["Section"];
     };
     /** Pagination */
     Pagination: {
@@ -532,11 +533,8 @@ export interface components {
        * ]
        */
       wording?: components["schemas"]["InsertOp"][];
-      /**
-       * Wordingparagraphsperpagelet
-       * @default 3
-       */
-      wordingParagraphsPerPagelet?: number;
+      /** Wordingparagraphsperpagelet */
+      wordingParagraphsPerPagelet?: number | null;
     };
     /** exerciseCreateInputDataRelationships */
     exerciseCreateInputDataRelationships: {
@@ -588,7 +586,7 @@ export interface components {
       /** Wording */
       wording: components["schemas"]["InsertOp"][];
       /** Wordingparagraphsperpagelet */
-      wordingParagraphsPerPagelet: number;
+      wordingParagraphsPerPagelet: number | null;
     };
     /** exerciseOutputItemRelationships */
     exerciseOutputItemRelationships: {
@@ -635,7 +633,7 @@ export interface components {
       /** Wording */
       wording?: components["schemas"]["InsertOp"][];
       /** Wordingparagraphsperpagelet */
-      wordingParagraphsPerPagelet?: number;
+      wordingParagraphsPerPagelet?: number | null;
     };
     /** exerciseUpdateInputDataRelationships */
     exerciseUpdateInputDataRelationships: Record<string, never>;
@@ -721,7 +719,7 @@ export interface components {
       /** Wording */
       wording: components["schemas"]["InsertOp"][];
       /** Wordingparagraphsperpagelet */
-      wordingParagraphsPerPagelet: number;
+      wordingParagraphsPerPagelet: number | null;
     };
     /** parsedExerciseCreateInputDataRelationships */
     parsedExerciseCreateInputDataRelationships: Record<string, never>;

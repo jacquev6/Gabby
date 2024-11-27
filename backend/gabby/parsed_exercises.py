@@ -83,37 +83,36 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
         self.assertEqual(response.json()["data"]["attributes"]["adapted"], {
             "number": "C",
             "textbook_page": None,  # @todo Rename to textbookPage
-            "instructions": {"paragraphs": [
-                {"sentences": [{"tokens": [
+            "pagelets": [{
+                "instructions": {"paragraphs": [
+                    {"sentences": [{"tokens": [
+                        {"type": "plainText", "text": "This"},
+                        {"type": "whitespace"},
+                        {"type": "plainText", "text": "is"},
+                        {"type": "whitespace"},
+                        {"type": "plainText", "text": "the"},
+                        {"type": "whitespace"},
+                        {"type": "plainText", "text": "{"},
+                        {"type": "plainText", "text": "boxed"},
+                        {"type": "plainText", "text": "-"},
+                        {"type": "plainText", "text": "text"},
+                        {"type": "plainText", "text": "|"},
+                        {"type": "plainText", "text": "instructions"},
+                        {"type": "plainText", "text": "}"},
+                        {"type": "plainText", "text": "."},
+                    ]}]},
+                ]},
+                "wording": {"paragraphs": [{"sentences": [{"tokens": [
                     {"type": "plainText", "text": "This"},
                     {"type": "whitespace"},
                     {"type": "plainText", "text": "is"},
                     {"type": "whitespace"},
                     {"type": "plainText", "text": "the"},
                     {"type": "whitespace"},
-                    {"type": "plainText", "text": "{"},
-                    {"type": "plainText", "text": "boxed"},
-                    {"type": "plainText", "text": "-"},
-                    {"type": "plainText", "text": "text"},
-                    {"type": "plainText", "text": "|"},
-                    {"type": "plainText", "text": "instructions"},
-                    {"type": "plainText", "text": "}"},
+                    {"type": "plainText", "text": "wording"},
                     {"type": "plainText", "text": "."},
-                ]}]},
-            ]},
-            "wording": {"paragraphs": [{"sentences": [{"tokens": [
-                {"type": "plainText", "text": "This"},
-                {"type": "whitespace"},
-                {"type": "plainText", "text": "is"},
-                {"type": "whitespace"},
-                {"type": "plainText", "text": "the"},
-                {"type": "whitespace"},
-                {"type": "plainText", "text": "wording"},
-                {"type": "plainText", "text": "."},
-            ]}]}]},
-            "example": {"paragraphs": []},
-            "clue": {"paragraphs": []},
-            "wording_paragraphs_per_pagelet": 3,
+                ]}]}]},
+            }],
         })
 
     def test_select_things(self):
@@ -153,31 +152,30 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
         self.assertEqual(response.json()["data"]["attributes"]["adapted"], {
             "number": "A.1",
             "textbook_page": None,  # @todo Rename to textbookPage
-            "instructions": {"paragraphs": [
-                {"sentences": [{"tokens": [
-                    {"type": "plainText", "text": "This"},
+            "pagelets": [{
+                "instructions": {"paragraphs": [
+                    {"sentences": [{"tokens": [
+                        {"type": "plainText", "text": "This"},
+                        {"type": "whitespace"},
+                        {"type": "plainText", "text": "is"},
+                        {"type": "whitespace"},
+                        {"type": "plainText", "text": "the"},
+                        {"type": "whitespace"},
+                        {"type": "plainText", "text": "instructions"},
+                        {"type": "plainText", "text": "."},
+                    ]}]},
+                ]},
+                "wording": {"paragraphs": [{"sentences": [{"tokens": [
+                    {"type": "selectableText", "text": "This", "colors": ["red", "green", "blue"], "boxed": False},
                     {"type": "whitespace"},
-                    {"type": "plainText", "text": "is"},
+                    {"type": "selectableText", "text": "is", "colors": ["red", "green", "blue"], "boxed": False},
                     {"type": "whitespace"},
-                    {"type": "plainText", "text": "the"},
+                    {"type": "selectableText", "text": "the", "colors": ["red", "green", "blue"], "boxed": False},
                     {"type": "whitespace"},
-                    {"type": "plainText", "text": "instructions"},
+                    {"type": "selectableText", "text": "wording", "colors": ["red", "green", "blue"], "boxed": False},
                     {"type": "plainText", "text": "."},
-                ]}]},
-            ]},
-            "wording": {"paragraphs": [{"sentences": [{"tokens": [
-                {"type": "selectableText", "text": "This", "colors": ["red", "green", "blue"], "boxed": False},
-                {"type": "whitespace"},
-                {"type": "selectableText", "text": "is", "colors": ["red", "green", "blue"], "boxed": False},
-                {"type": "whitespace"},
-                {"type": "selectableText", "text": "the", "colors": ["red", "green", "blue"], "boxed": False},
-                {"type": "whitespace"},
-                {"type": "selectableText", "text": "wording", "colors": ["red", "green", "blue"], "boxed": False},
-                {"type": "plainText", "text": "."},
-            ]}]}]},
-            "example": {"paragraphs": []},
-            "clue": {"paragraphs": []},
-            "wording_paragraphs_per_pagelet": 3,
+                ]}]}]},
+            }],
         })
 
     def test_select_things_with_example_and_clue(self):
@@ -217,49 +215,50 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
         self.assertEqual(response.json()["data"]["attributes"]["adapted"], {
             "number": "A.1",
             "textbook_page": None,  # @todo Rename to textbookPage
-            "instructions": {"paragraphs": [
-                {"sentences": [{"tokens": [
-                    {"type": "plainText", "text": "This"},
+            "pagelets": [{
+                "instructions": {"paragraphs": [
+                    {"sentences": [{"tokens": [
+                        {"type": "plainText", "text": "This"},
+                        {"type": "whitespace"},
+                        {"type": "plainText", "text": "is"},
+                        {"type": "whitespace"},
+                        {"type": "plainText", "text": "the"},
+                        {"type": "whitespace"},
+                        {"type": "plainText", "text": "instructions"},
+                        {"type": "plainText", "text": "."},
+                    ]}]},
+                    {"sentences": [{"tokens": [
+                        {"type": "plainText", "text": "This"},
+                        {"type": "whitespace"},
+                        {"type": "plainText", "text": "is"},
+                        {"type": "whitespace"},
+                        {"type": "plainText", "text": "the"},
+                        {"type": "whitespace"},
+                        {"type": "plainText", "text": "example"},
+                        {"type": "plainText", "text": "."},
+                    ]}]},
+                    {"sentences": [{"tokens": [
+                        {"type": "plainText", "text": "This"},
+                        {"type": "whitespace"},
+                        {"type": "plainText", "text": "is"},
+                        {"type": "whitespace"},
+                        {"type": "plainText", "text": "the"},
+                        {"type": "whitespace"},
+                        {"type": "plainText", "text": "clue"},
+                        {"type": "plainText", "text": "."},
+                    ]}]},
+                ]},
+                "wording": {"paragraphs": [{"sentences": [{"tokens": [
+                    {"type": "selectableText", "text": "This", "colors": ["red", "green", "blue"], "boxed": False},
                     {"type": "whitespace"},
-                    {"type": "plainText", "text": "is"},
+                    {"type": "selectableText", "text": "is", "colors": ["red", "green", "blue"], "boxed": False},
                     {"type": "whitespace"},
-                    {"type": "plainText", "text": "the"},
+                    {"type": "selectableText", "text": "the", "colors": ["red", "green", "blue"], "boxed": False},
                     {"type": "whitespace"},
-                    {"type": "plainText", "text": "instructions"},
+                    {"type": "selectableText", "text": "wording", "colors": ["red", "green", "blue"], "boxed": False},
                     {"type": "plainText", "text": "."},
-                ]}]},
-            ]},
-            "wording": {"paragraphs": [{"sentences": [{"tokens": [
-                {"type": "selectableText", "text": "This", "colors": ["red", "green", "blue"], "boxed": False},
-                {"type": "whitespace"},
-                {"type": "selectableText", "text": "is", "colors": ["red", "green", "blue"], "boxed": False},
-                {"type": "whitespace"},
-                {"type": "selectableText", "text": "the", "colors": ["red", "green", "blue"], "boxed": False},
-                {"type": "whitespace"},
-                {"type": "selectableText", "text": "wording", "colors": ["red", "green", "blue"], "boxed": False},
-                {"type": "plainText", "text": "."},
-            ]}]}]},
-            "example": {"paragraphs": [{"sentences": [{"tokens": [
-                {"type": "plainText", "text": "This"},
-                {"type": "whitespace"},
-                {"type": "plainText", "text": "is"},
-                {"type": "whitespace"},
-                {"type": "plainText", "text": "the"},
-                {"type": "whitespace"},
-                {"type": "plainText", "text": "example"},
-                {"type": "plainText", "text": "."},
-            ]}]}]},
-            "clue": {"paragraphs": [{"sentences": [{"tokens": [
-                {"type": "plainText", "text": "This"},
-                {"type": "whitespace"},
-                {"type": "plainText", "text": "is"},
-                {"type": "whitespace"},
-                {"type": "plainText", "text": "the"},
-                {"type": "whitespace"},
-                {"type": "plainText", "text": "clue"},
-                {"type": "plainText", "text": "."},
-            ]}]}]},
-            "wording_paragraphs_per_pagelet": 3,
+                ]}]}]},
+            }],
         })
 
     def test_fill_with_free_text(self):
@@ -290,24 +289,23 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
         self.assertEqual(response.json()["data"]["attributes"]["adapted"], {
             "number": "A.1",
             "textbook_page": None,  # @todo Rename to textbookPage
-            "instructions": {"paragraphs": [{"sentences": [{"tokens": [
-                {"type": "plainText", "text": "This"},
-                {"type": "whitespace"},
-                {"type": "plainText", "text": "is"},
-                {"type": "whitespace"},
-                {"type": "plainText", "text": "the"},
-                {"type": "whitespace"},
-                {"type": "plainText", "text": "instructions"},
-                {"type": "plainText", "text": "."},
-            ]}]}]},
-            "wording": {"paragraphs": [{"sentences": [{"tokens": [
-                {"type": "plainText", "text": "Fill"},
-                {"type": "whitespace"},
-                {"type": "freeTextInput"},
-            ]}]}]},
-            "example": {"paragraphs": []},
-            "clue": {"paragraphs": []},
-            "wording_paragraphs_per_pagelet": 3,
+            "pagelets": [{
+                "instructions": {"paragraphs": [{"sentences": [{"tokens": [
+                    {"type": "plainText", "text": "This"},
+                    {"type": "whitespace"},
+                    {"type": "plainText", "text": "is"},
+                    {"type": "whitespace"},
+                    {"type": "plainText", "text": "the"},
+                    {"type": "whitespace"},
+                    {"type": "plainText", "text": "instructions"},
+                    {"type": "plainText", "text": "."},
+                ]}]}]},
+                "wording": {"paragraphs": [{"sentences": [{"tokens": [
+                    {"type": "plainText", "text": "Fill"},
+                    {"type": "whitespace"},
+                    {"type": "freeTextInput"},
+                ]}]}]},
+            }],
         })
 
     def test_multiple_choices_in_instructions(self):
@@ -344,28 +342,27 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
         self.assertEqual(response.json()["data"]["attributes"]["adapted"], {
             "number": "A.1",
             "textbook_page": None,  # @todo Rename to textbookPage
-            "instructions": {"paragraphs": [{"sentences": [{"tokens": [
-                {"type": "boxedText", "text": "a"},
-                {"type": "whitespace"},
-                {"type": "plainText", "text": "or"},
-                {"type": "whitespace"},
-                {"type": "boxedText", "text": "b"},
-            ]}]}]},
-            "wording": {"paragraphs": [
-                {"sentences": [{"tokens": [
-                    {"type": "plainText", "text": "A"},
+            "pagelets": [{
+                "instructions": {"paragraphs": [{"sentences": [{"tokens": [
+                    {"type": "boxedText", "text": "a"},
                     {"type": "whitespace"},
-                    {"type": "multipleChoicesInput", "choices": ["a", "b"]},
-                ]}]},
-                {"sentences": [{"tokens": [
-                    {"type": "plainText", "text": "B"},
+                    {"type": "plainText", "text": "or"},
                     {"type": "whitespace"},
-                    {"type": "multipleChoicesInput", "choices": ["a", "b"]},
-                ]}]},
-            ]},
-            "example": {"paragraphs": []},
-            "clue": {"paragraphs": []},
-            "wording_paragraphs_per_pagelet": 3,
+                    {"type": "boxedText", "text": "b"},
+                ]}]}]},
+                "wording": {"paragraphs": [
+                    {"sentences": [{"tokens": [
+                        {"type": "plainText", "text": "A"},
+                        {"type": "whitespace"},
+                        {"type": "multipleChoicesInput", "choices": ["a", "b"]},
+                    ]}]},
+                    {"sentences": [{"tokens": [
+                        {"type": "plainText", "text": "B"},
+                        {"type": "whitespace"},
+                        {"type": "multipleChoicesInput", "choices": ["a", "b"]},
+                    ]}]},
+                ]},
+            }],
         })
 
     def test_multiple_choices_in_wording(self):
@@ -403,17 +400,16 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
         self.assertEqual(response.json()["data"]["attributes"]["adapted"], {
             "number": "A.1",
             "textbook_page": None,  # @todo Rename to textbookPage
-            "instructions": {"paragraphs": [{"sentences": [{"tokens": [
-                {"type": "plainText", "text": "Instructions"},
-                {"type": "plainText", "text": "."},
-            ]}]}]},
-            "wording": {"paragraphs": [{"sentences": [{"tokens": [
-                {"type": "plainText", "text": "A"},
-                {"type": "whitespace"},
-                {"type": "multipleChoicesInput", "choices": ["alpha", "beta"]},
-                {"type": "plainText", "text": "."},
-            ]}]}]},
-            "example": {"paragraphs": []},
-            "clue": {"paragraphs": []},
-            "wording_paragraphs_per_pagelet": 3,
+            "pagelets": [{
+                "instructions": {"paragraphs": [{"sentences": [{"tokens": [
+                    {"type": "plainText", "text": "Instructions"},
+                    {"type": "plainText", "text": "."},
+                ]}]}]},
+                "wording": {"paragraphs": [{"sentences": [{"tokens": [
+                    {"type": "plainText", "text": "A"},
+                    {"type": "whitespace"},
+                    {"type": "multipleChoicesInput", "choices": ["alpha", "beta"]},
+                    {"type": "plainText", "text": "."},
+                ]}]}]},
+            }],
         })
