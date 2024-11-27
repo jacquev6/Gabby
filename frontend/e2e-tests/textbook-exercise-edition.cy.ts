@@ -137,21 +137,18 @@ describe('Gabby', () => {
     cy.get('label:contains("Instructions")').next().should('have.text', 'Instructions!')
   })
 
-  // @todo Restore test, probably by delaying the response to POST /api/parsedExercises
-  it.skip('throttles updates of the preview', () => {
+  it('throttles updates of the preview', () => {
     visit('/project-xkopqm/textbook-klxufv/page-7/exercise-vodhqn')
 
     cy.get('label:contains("Wording")').next().type('{selectAll}{del}', {delay: 0})
     notBusy()
 
-    const count = 50
-
-    cy.intercept('POST', '/api/parsedExercises').as('parsedExercises')
-    for (let i = 0; i !== count; i += 1) {
+    cy.intercept('POST', '/api/parsedExercises', req => req.on('response', res => { res.delay = 300 })).as('parsedExercises')
+    for (let i = 0; i !== 20; i += 1) {
       cy.get('label:contains("Wording")').next().type(' a', {delay: 0})
     }
     notBusy()
 
-    cy.get('@parsedExercises.all').its('length').should('be.lessThan', count - 1)
+    cy.get('@parsedExercises.all').its('length').should('be.lessThan', 15)
   })
 })
