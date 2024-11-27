@@ -194,7 +194,7 @@ import { useI18n } from 'vue-i18n'
 
 import { BRow, BCol, BLabeledInput, BLabeledSelect } from './opinion/bootstrap'
 import WysiwygEditor from './WysiwygEditor.vue'
-import { wysiwygFormats } from './AdaptationDetailsFieldsForm.vue'
+import { wysiwygBlots } from './AdaptationDetailsFieldsForm.vue'
 import OptionalWysiwygEditor from './OptionalWysiwygEditor.vue'
 
 
@@ -326,14 +326,14 @@ defineExpose({
     <WysiwygEditor
       ref="instructionsEditor"
       :label="$t('exerciseInstructions')"
-      :formats="wysiwygFormats"
+      :blots="wysiwygBlots"
       v-model="model.instructions"
       @selectionChange="selectionChangeInInstructionsOrWording"
     />
     <WysiwygEditor
       ref="wordingEditor"
       :label="$t('exerciseWording')"
-      :formats="wysiwygFormats"
+      :blots="wysiwygBlots"
       v-model="model.wording"
       @selectionChange="selectionChangeInInstructionsOrWording"
     />
@@ -343,7 +343,7 @@ defineExpose({
           <OptionalWysiwygEditor
             ref="exampleEditor"
             :label="$t('exerciseExample')"
-            :formats="wysiwygFormats"
+            :blots="wysiwygBlots"
             v-model="model.example"
           />
         </div>
@@ -351,7 +351,7 @@ defineExpose({
           <OptionalWysiwygEditor
             ref="clueEditor"
             :label="$t('exerciseClue')"
-            :formats="wysiwygFormats"
+            :blots="wysiwygBlots"
             v-model="model.clue"
           />
         </div>

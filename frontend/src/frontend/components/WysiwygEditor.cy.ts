@@ -8,7 +8,7 @@ describe('WysiwygEditor', () => {
     let modelValue: Model = [{insert: 'hell\n\n', attributes: {}}]
     cy.mount(WysiwygEditor, {props: {
       label: 'Test',
-      formats: {},
+      blots: [],
       modelValue,
       'onUpdate:modelValue': (m: Model) => {modelValue = m},
     }})
@@ -21,7 +21,7 @@ describe('WysiwygEditor', () => {
     let modelValue: Model = [{insert: 'hell\n', attributes: {}}]
     cy.mount(WysiwygEditor, {props: {
       label: 'Test',
-      formats: {},
+      blots: [],
       modelValue,
       'onUpdate:modelValue': (m: Model) => {modelValue = m},
     }})
@@ -35,7 +35,7 @@ describe('WysiwygEditor', () => {
     let modelValue: Model = [{insert: 'ello\n', attributes: {}}]
     cy.mount(WysiwygEditor, {props: {
       label: 'Test',
-      formats: {},
+      blots: [],
       modelValue,
       'onUpdate:modelValue': (m: Model) => {modelValue = m},
     }})
@@ -48,7 +48,7 @@ describe('WysiwygEditor', () => {
     let modelValue: Model = [{insert: 'hello\n', attributes: {}}]
     cy.mount(WysiwygEditor, {props: {
       label: 'Test',
-      formats: {},
+      blots: [],
       modelValue,
       'onUpdate:modelValue': (m: Model) => {modelValue = m},
     }})
@@ -61,7 +61,7 @@ describe('WysiwygEditor', () => {
     let modelValue: Model = [{insert: 'ello\n\n', attributes: {}}]
     cy.mount(WysiwygEditor, {props: {
       label: 'Test',
-      formats: {},
+      blots: [],
       modelValue,
       'onUpdate:modelValue': (m: Model) => {modelValue = m},
       delta: [{insert: modelValue, attributes: {}}],
@@ -75,7 +75,7 @@ describe('WysiwygEditor', () => {
     let modelValue: Model = [{insert: 'hello\n\n', attributes: {}}]
     cy.mount(WysiwygEditor, {props: {
       label: 'Test',
-      formats: {},
+      blots: [],
       modelValue,
       'onUpdate:modelValue': (m: Model) => {modelValue = m},
       delta: [{insert: modelValue, attributes: {}}],

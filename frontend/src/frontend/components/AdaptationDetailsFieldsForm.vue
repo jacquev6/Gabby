@@ -2,7 +2,7 @@
 import Quill from 'quill/core'
 
 import { InlineBlot, type Model as Deltas } from './Quill.vue'
-import { basicFormats, escapeForTag } from './WysiwygEditor.vue'
+import { basicBlots } from './WysiwygEditor.vue'
 import ContextMenu from './ContextMenu.vue'
 
 
@@ -167,27 +167,12 @@ class SelectableBlot extends InlineBlot {
   static override tagName = 'selectable-blot'
 }
 
-export const wysiwygFormats = {
-  ...basicFormats,
-  sel: {
-    kind: 'text' as const,
-    make: (text: string, value: unknown) => `{sel${value}|${escapeForTag(text)}}`,
-    blot: SelBlot,
-  },
-  choices2: {
-    kind: 'text' as const,
-    make(text: string, settings_: unknown) {
-      const settings = settings_ as {start: string, separator1: string, separator2: string, stop: string, placeholder: string}
-      return `{choices2|${escapeForTag(settings.start)}|${escapeForTag(settings.separator1)}|${escapeForTag(settings.separator2)}|${escapeForTag(settings.stop)}|${escapeForTag(settings.placeholder)}|${escapeForTag(text)}}`
-    },
-    blot: Choices2Blot,
-  },
-  selectable: {
-    kind: 'text' as const,
-    make: (text: string) => `{selectable|${escapeForTag(text)}}`,
-    blot: SelectableBlot,
-  },
-}
+export const wysiwygBlots = [
+  ...basicBlots,
+  SelBlot,
+  Choices2Blot,
+  SelectableBlot,
+]
 </script>
 
 <script setup lang="ts">

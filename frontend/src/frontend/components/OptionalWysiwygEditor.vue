@@ -2,14 +2,14 @@
 import { ref, computed } from 'vue'
 import { nextTick } from 'vue'
 
-import WysiwygEditor, { type Format } from './WysiwygEditor.vue'
-import { type Model } from './Quill.vue'
+import WysiwygEditor from './WysiwygEditor.vue'
+import { type Model, BoldBlot } from './Quill.vue'
 import deepEqual from 'deep-equal'
 
 
 defineProps<{
   label: string,
-  formats: Record<string, Format>
+  blots: (typeof BoldBlot)[]
 }>()
 
 const model = defineModel<Model>({required: true})
@@ -52,7 +52,7 @@ defineExpose({
     v-if="expanded"
     ref="editor"
     :label
-    :formats
+    :blots
     v-model="model"
     @focus="force"
     @blur="unforce"

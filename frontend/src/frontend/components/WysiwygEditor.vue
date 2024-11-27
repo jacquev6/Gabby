@@ -1,33 +1,7 @@
 <script lang="ts">
 import { BoldBlot, ItalicBlot } from './Quill.vue'
 
-
-export function escapeForTag(text: string) {
-  return text.replaceAll('\\', '\\\\').replaceAll('|', '\\|').replaceAll('{', '\\{').replaceAll('}', '\\}')
-}
-
-export const basicFormats = {
-  bold: {
-    kind: 'text' as const,
-    make: (text: string) => `{bold|${escapeForTag(text)}}`,
-    blot: BoldBlot,
-  },
-  italic: {
-    kind: 'text' as const,
-    make: (text: string) => `{italic|${escapeForTag(text)}}`,
-    blot: ItalicBlot,
-  },
-}
-
-export type Format = {
-  kind: 'text'
-  make: (text: string, value: unknown) => string
-  blot: typeof BoldBlot
-} | {
-  kind: 'embed'
-  make: (value: unknown) => string
-  blot: typeof BoldBlot
-}
+export const basicBlots = [BoldBlot, ItalicBlot]
 </script>
 
 <script setup lang="ts">
@@ -35,9 +9,9 @@ import { ref, computed, watch } from 'vue'
 
 import Quill, { type Model, type SelectionRange } from './Quill.vue'
 
-const props = defineProps<{
+defineProps<{
   label: string
-  formats: Record<string, Format>
+  blots: (typeof BoldBlot)[]
 }>()
 
 const model = defineModel<Model>({required: true})
@@ -60,8 +34,6 @@ watch(
   },
   {immediate: true},
 )
-
-const blots = computed(() => Object.values(props.formats).map(format => format.blot))
 
 defineExpose({
   // Could we automate these? They all forward to 'quill.value'.
