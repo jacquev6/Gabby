@@ -264,8 +264,9 @@ def dump_database_as_unit_tests():
                 yield f"        )"
                 yield f""
 
-    for line in gen():
-        print(line)
+    # Black does not have a Python API, so use it as a command-line tool.
+    # https://black.readthedocs.io/en/stable/faq.html#does-black-have-an-api
+    subprocess.run(["black", "--line-length", "120", "-"], universal_newlines=True, input="\n".join(gen()), check=True)
 
 
 @main.command(name="load-fixtures")
