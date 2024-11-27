@@ -307,20 +307,56 @@ const selBlotColors = computed(() => {
   }
 })
 
-function selectionChangeInInstructionsOrWording(_range: {index: number, length: number}) {
+function selectionChangeInInstructionsOrWording(fieldName: 'instructions' | 'wording', range: {index: number, length: number}) {
   if (model.value.inProgress.kind === 'multipleChoicesCreation') {
-    // @todo Automatically detect these settings. How? Ask client for spec.
+    const selected = downgradeDeltas(model.value[fieldName]).map(delta => delta.insert).join('').slice(range.index, range.index + range.length)
+
+    const [start, stop] = (() => {
+      for (const [start, stop] of [['(', ')'], ['[', ']']]) {
+        if (selected.startsWith(start) && selected.endsWith(stop)) {
+          return [start, stop]
+        }
+      }
+      return ['', '']
+    })()
+
+    const separator1 = (() => {
+      for (const separator of ['/', '|', ',', '*', 'ou', 'or']) {
+        if (selected.includes(separator)) {
+          return separator
+        }
+      }
+      return ''
+    })()
+
+    const separator2 = (() => {
+      for (const separator of [i18n.t('multipleChoicesSeparator2'), 'ou', 'or']) {
+        if (selected.includes(' ' + separator + ' ')) {
+          return separator
+        }
+      }
+      return ''
+    })()
+
     const settings = {
-      start: '(',
-      stop: ')',
-      separator1: '/',
-      separator2: i18n.t('multipleChoicesSeparator2'),
+      start,
+      stop,
+      separator1,
+      separator2,
       placeholder: '',
       justCreated: true,
     }
 
     toggle('choices2', settings)
   }
+}
+
+function selectionChangeInInstructions(range: {index: number, length: number}) {
+  selectionChangeInInstructionsOrWording('instructions', range)
+}
+
+function selectionChangeInWording(range: {index: number, length: number}) {
+  selectionChangeInInstructionsOrWording('wording', range)
 }
 
 defineExpose({
@@ -354,14 +390,14 @@ defineExpose({
       :label="$t('exerciseInstructions')"
       :blots="wysiwygBlots"
       v-model="model.instructions"
-      @selectionChange="selectionChangeInInstructionsOrWording"
+      @selectionChange="selectionChangeInInstructions"
     />
     <WysiwygEditor
       ref="wordingEditor"
       :label="$t('exerciseWording')"
       :blots="wysiwygBlots"
       v-model="model.wording"
-      @selectionChange="selectionChangeInInstructionsOrWording"
+      @selectionChange="selectionChangeInWording"
     />
     <div :class="{'container-fluid': noClueNoExample}">
       <div :class="{row: noClueNoExample}">
