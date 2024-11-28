@@ -2,7 +2,7 @@ import { defineApiStore, resetApiStores } from '$frontend/stores/api'
 import Pinger from './Pinger.vue'
 
 
-const useApiStore = defineApiStore('api', {baseUrl: 'http://fanout:8080/api/'})
+const useApiStore = defineApiStore('api', {baseUrl: 'http://fanout:8080/api'})
 
 describe('Pinger', () => {
   before(console.clear)

@@ -76,8 +76,8 @@ describe('Gabby', () => {
 
     cy.get('@number').type('1')
 
-    cy.get('@adaptationType').select('select-things').blur()
     cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="2"]').click()
+    cy.get('div:contains("Selectable") >input').should('be.checked')
 
     traceRectangle('@canvas', 8, 5, 60, 9)
     cy.get('button:contains("Instructions")').click()
@@ -123,8 +123,8 @@ describe('Gabby', () => {
 
     cy.get('@number').type('1')
 
-    cy.get('@adaptationType').select('select-things').blur()
     cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="2"]').click()
+    cy.get('div:contains("Selectable") >input').should('be.checked')
 
     traceRectangle('@canvas', 8, 5, 60, 9)
     cy.get('button:contains("Instructions")').click()
@@ -174,13 +174,13 @@ describe('Gabby', () => {
   })
 
   it('creates a "Multiple choices" exercise with choices in instructions', () => {
-    cy.viewport(1200, 850)
+    cy.viewport(1200, 1000)
     visit('/project-xkopqm/textbook-klxufv/page-3/new-exercise', {pdf: 'demo'})
     setupAliases()
 
     cy.get('@number').type('1')
 
-    cy.get('@adaptationType').select('multiple-choices').blur()
+    cy.get('@adaptationType').select('multiple-choices')
 
     traceRectangle('@canvas', 8, 5, 48, 9)
     cy.get('button:contains("Instructions")').click()
@@ -197,8 +197,10 @@ describe('Gabby', () => {
       selectRange(node, 14, node, 37)
     })
     cy.get('button:contains("OK")').should('exist')
-    cy.get('label + input').eq(3).should('be.enabled').type('{selectAll}ou', {delay: 0})  // Very fragile selector; sorry, future me!
-    cy.get('label:contains("Separator") + input').should('be.enabled').type('{selectAll},', {delay: 0})
+    cy.get('label:contains("Start") + input').should('have.value', '')
+    cy.get('label:contains("Stop") + input').should('have.value', '')
+    cy.get('label:contains("Separators") + input').should('have.value', ',')
+    cy.get('label + input').eq(3).should('have.value', 'ou')  // Very fragile selector; sorry, future me!
     cy.get('label:contains("Placeholder") + input').type('...', {delay: 0})
     screenshot('multiple-choices-with-choices-in-instructions', 'edit-2', {clearSel: false})
     cy.get('button:contains("OK")').click()
@@ -218,7 +220,7 @@ describe('Gabby', () => {
   })
 
   it('creates a "Multiple choices" exercise with two sets of choices in instructions', () => {
-    cy.viewport(1200, 850)
+    cy.viewport(1200, 1000)
     visit('/project-xkopqm/textbook-klxufv/page-5/new-exercise', {pdf: 'demo'})
     setupAliases()
 
@@ -253,6 +255,8 @@ describe('Gabby', () => {
     cy.get('@wording').find('p').eq(2).type(' ... @@@\n')
     cy.get('@wording').find('p').eq(3).type('{end} ... @@@')
 
+    cy.get('div:contains("3 lines per page") >input').check()
+
     cy.get('button:contains("Multiple choices")').click()
     screenshot('multiple-choices-with-two-set-of-choices-in-instructions', 'edit-1')
     cy.get('@instructions').find('p').then($el => {
@@ -261,7 +265,10 @@ describe('Gabby', () => {
       selectRange(node, 17, node, 35)
     })
     cy.get('button:contains("OK")').should('exist')
-    cy.get('label + input').eq(3).should('be.enabled').type('{selectAll}{del}', {delay: 0})  // Very fragile selector; sorry, future me!
+    cy.get('label:contains("Start") + input').should('have.value', '(')
+    cy.get('label:contains("Stop") + input').should('have.value', ')')
+    cy.get('label:contains("Separators") + input').should('have.value', '/')
+    cy.get('label + input').eq(3).should('have.value', '')  // Very fragile selector; sorry, future me!
     cy.get('label:contains("Placeholder") + input').should('be.enabled').type('...', {delay: 0})
     screenshot('multiple-choices-with-two-set-of-choices-in-instructions', 'edit-2', {clearSel: false})
     cy.get('button:contains("OK")').click()
@@ -272,10 +279,13 @@ describe('Gabby', () => {
     cy.get('@instructions').find('p').then($el => {
       const node = $el[0].firstChild!.nextSibling!.nextSibling
       console.assert(node !== null)
-      selectRange(node, 14, node, 33)
+      selectRange(node, 14, node, 35)
     })
     cy.get('button:contains("OK")').should('exist')
-    cy.get('label + input').eq(3).should('be.enabled').type('{selectAll}{del}', {delay: 0})  // Very fragile selector; sorry, future me!
+    cy.get('label:contains("Start") + input').should('have.value', '[')
+    cy.get('label:contains("Stop") + input').should('have.value', ']')
+    cy.get('label:contains("Separators") + input').should('have.value', '*')
+    cy.get('label + input').eq(3).should('have.value', '')  // Very fragile selector; sorry, future me!
     cy.get('label:contains("Placeholder") + input').should('be.enabled').type('@@@', {delay: 0})
     screenshot('multiple-choices-with-two-set-of-choices-in-instructions', 'edit-5', {clearSel: false})
     cy.get('button:contains("OK")').click()
@@ -299,7 +309,7 @@ describe('Gabby', () => {
   })
 
   it('creates a "Multiple choices" exercise with choices in wording', () => {
-    cy.viewport(1200, 850)
+    cy.viewport(1200, 1000)
     visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise', {pdf: 'demo'})
     setupAliases()
 
@@ -310,7 +320,7 @@ describe('Gabby', () => {
     traceRectangle('@canvas', 8, 5, 54, 9)
     cy.get('button:contains("Instructions")').click()
     notBusy()
-    traceRectangle('@canvas', 7, 9, 49, 15)
+    traceRectangle('@canvas', 7, 9, 51, 15)
     cy.get('button:contains("Wording")').click()
     notBusy()
 
@@ -319,10 +329,13 @@ describe('Gabby', () => {
     cy.get('@wording').find('p').then($el => {
       const node = $el[0].firstChild
       console.assert(node !== null)
-      selectRange(node, 8, node, 31)
+      selectRange(node, 11, node, 34)
     })
     cy.get('button:contains("OK")').should('exist')
-    cy.get('label + input').eq(3).should('be.enabled').type('{selectAll}{del}', {delay: 0})  // Very fragile selector; sorry, future me!
+    cy.get('label:contains("Start") + input').should('have.value', '(')
+    cy.get('label:contains("Stop") + input').should('have.value', ')')
+    cy.get('label:contains("Separators") + input').should('have.value', '/')
+    cy.get('label + input').eq(3).should('have.value', '')  // Very fragile selector; sorry, future me!
     screenshot('multiple-choices-with-choices-in-wording', 'edit-2', {clearSel: false})
     cy.get('button:contains("OK")').click()
     screenshot('multiple-choices-with-choices-in-wording', 'edit-3')
@@ -341,13 +354,14 @@ describe('Gabby', () => {
   })
 
   it('creates a "Fill with free text" exercise', () => {
-    cy.viewport(1200, 850)
+    cy.viewport(1200, 1000)
     visit('/project-xkopqm/textbook-klxufv/page-4/new-exercise', {pdf: 'demo'})
     setupAliases()
 
     cy.get('@number').type('1')
 
     cy.get('@adaptationType').select('fill-with-free-text').blur()
+    cy.get('p:contains("Placeholder") >button:contains("+")').click()
     cy.get('label:contains("Placeholder") + input').type('{selectAll}…', {delay: 0})
 
     traceRectangle('@canvas', 8, 5, 60, 9)

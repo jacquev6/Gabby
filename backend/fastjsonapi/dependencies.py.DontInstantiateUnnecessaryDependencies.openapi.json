@@ -381,9 +381,6 @@
           },
           "type": {
             "const": "computed",
-            "enum": [
-              "computed"
-            ],
             "title": "Type",
             "type": "string"
           }
@@ -417,9 +414,6 @@
           },
           "type": {
             "const": "constant",
-            "enum": [
-              "constant"
-            ],
             "title": "Type",
             "type": "string"
           }
@@ -453,9 +447,6 @@
           },
           "type": {
             "const": "writable",
-            "enum": [
-              "writable"
-            ],
             "title": "Type",
             "type": "string"
           }

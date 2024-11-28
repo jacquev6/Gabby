@@ -74,7 +74,7 @@ describe('Gabby', () => {
     cy.get('@clueHeader').click()
     cy.get('@clue').type('X')
 
-    for (const adaptationType of ['-', 'select-things', 'fill-with-free-text', 'multiple-choices']) {
+    for (const adaptationType of ['-', 'fill-with-free-text', 'multiple-choices']) {
       cy.get('@adaptationType').select(adaptationType)
 
       for (const fieldAlias of ['@instructions', '@wording', '@example', '@clue']) {
@@ -114,7 +114,8 @@ describe('Gabby', () => {
     visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
     setAliases()
     cy.get('@number').type('test')
-    cy.get('@adaptationType').select('select-things')
+    cy.get('@adaptationType').select('generic')
+    cy.get('div:contains("Selectable") >input').check()
     cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="2"]').click()
 
     cy.get('button[data-cy="format-color-1"]').as("button1").should('be.disabled')
@@ -186,15 +187,52 @@ describe('Gabby', () => {
     cy.get('@editor').should('contain.text', 'Bar')
   })
 
-  it('handles switching from non-WYSIWYG to WYSIWYG', () => {
-    visit('/project-xkopqm/textbook-klxufv/page-7/exercise-jkrudc', {wysiwyg: false})
+  it('remove "sel" blots when the number of usable colors is reduced', () => {
+    visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
+    setAliases()
 
-    cy.get('label:contains("Instructions")').next().type('{selectall}Réponds par {{}choice|vrai} ou {{}choice|faux}.', {delay: 0})
-    cy.get('label:contains("Adaptation type")').next().select('multiple-choices')
-    notBusy()
+    cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="4"]').click()
+    cy.get('button[data-cy="format-color-1"]').as("button1").should('be.disabled')
+    cy.get('button[data-cy="format-color-2"]').as("button2").should('be.disabled')
+    cy.get('button[data-cy="format-color-3"]').as("button3").should('be.disabled')
+    cy.get('button[data-cy="format-color-4"]').as("button4").should('be.disabled')
 
-    cy.get('span:contains("WYSIWYG") input').check()
+    cy.get('@instructions').click()
+    cy.get('@instructions').type('plain ', {delay: 0})
+    cy.get('@button1').click()
+    cy.get('@instructions').type('sel1', {delay: 0})
+    cy.get('@button1').click()
+    cy.get('@instructions').type(' plain ', {delay: 0})
+    cy.get('@button2').click()
+    cy.get('@instructions').type('sel2', {delay: 0})
+    cy.get('@button2').click()
+    cy.get('@instructions').type(' plain ', {delay: 0})
+    cy.get('@button3').click()
+    cy.get('@instructions').type('sel3', {delay: 0})
+    cy.get('@button3').click()
+    cy.get('@instructions').type(' plain ', {delay: 0})
+    cy.get('@button4').click()
+    cy.get('@instructions').type('sel4', {delay: 0})
+    cy.get('@button4').click()
+    cy.get('@instructions').type(' plain', {delay: 0})
 
-    cy.get(':has(>label:contains("Instructions")) .ql-editor').should('contain.text', 'Réponds par vrai ou faux.')
+    cy.get('sel-blot[data-sel="1"]').should('exist')
+    cy.get('sel-blot[data-sel="2"]').should('exist')
+    cy.get('sel-blot[data-sel="3"]').should('exist')
+    cy.get('sel-blot[data-sel="4"]').should('exist')
+
+    cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="3"]').click()
+
+    cy.get('sel-blot[data-sel="1"]').should('exist')
+    cy.get('sel-blot[data-sel="2"]').should('exist')
+    cy.get('sel-blot[data-sel="3"]').should('exist')
+    cy.get('sel-blot[data-sel="4"]').should('not.exist')
+
+    cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="4"]').click()
+
+    cy.get('sel-blot[data-sel="1"]').should('exist')
+    cy.get('sel-blot[data-sel="2"]').should('exist')
+    cy.get('sel-blot[data-sel="3"]').should('exist')
+    cy.get('sel-blot[data-sel="4"]').should('not.exist')
   })
 })

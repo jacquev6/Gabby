@@ -1,4 +1,3 @@
-import json
 from urllib.parse import urlparse
 import datetime
 import io
@@ -19,6 +18,8 @@ from . import database_utils
 from . import orm_models
 from . import settings
 from .fixtures import load as load_fixtures
+from . import renderable
+from . import deltas
 
 
 @click.group()
@@ -146,6 +147,122 @@ def restore_database(backup_url, yes, patch_according_to_settings):
     )
 
     sqlalchemy_utils.functions.drop_database(placeholder_database_url)
+
+
+@main.command()
+def dump_database_as_unit_tests():
+    # Waste data to avoid issues with copyrighted material (extracted from textbooks)
+    def waste_char(c):
+        return {
+            # Keep "abcdef" unchanged for lists (hoping no list is longer than 6 items)
+            # Keep "ou" unchanged for French separator2
+            "I": "A", "Y": "A",
+            "G": "B", "H": "F", "J": "B", "K": "F", "L": "B", "M": "B", "N": "B", "P": "F", "Q": "B", "R": "B", "S": "C", "T": "B", "V": "F", "W": "F", "X": "B", "Z": "C",
+            "i": "a", "y": "a",
+            "g": "b", "h": "f", "j": "b", "k": "f", "l": "b", "m": "b", "n": "b", "p": "f", "q": "b", "r": "b", "s": "c", "t": "b", "v": "f", "w": "f", "x": "b", "z": "c",
+        }.get(c, c)
+
+    tags = [
+        ("".join(waste_char(c) for c in tag), tag)
+        for tag in ["{choices2|", "{bold|", "{italic|", "{sel1|", "{sel2|", "{sel3|", "{sel4|", "{sel5|"]
+    ]
+
+    def waste_string(s):
+        r = "".join(waste_char(c) for c in s)
+        for wasted_tag, tag in tags:
+            r = r.replace(wasted_tag, tag)
+        return r
+
+    def waste_renderable(section):
+        def waste_token(token):
+            return {
+                "boxedText": lambda: renderable.BoxedText(text=waste_string(token.text)),
+                "freeTextInput": lambda: renderable.FreeTextInput(),
+                "multipleChoicesInput": lambda: renderable.MultipleChoicesInput(choices=[waste_string(choice) for choice in token.choices]),
+                "plainText": lambda: renderable.PlainText(text=waste_string(token.text)),
+                "selectableText": lambda: renderable.SelectableText(text=waste_string(token.text), colors=token.colors, boxed=token.boxed),
+                "selectedText": lambda: renderable.SelectedText(text=waste_string(token.text), color=token.color),
+                "whitespace": lambda: renderable.Whitespace(),
+            }[token.type]()
+
+        def waste_paragraph(paragraph):
+            return renderable.Paragraph(tokens=[waste_token(token) for token in paragraph.tokens])
+
+        def waste_section(section):
+            return renderable.Section(paragraphs=[waste_paragraph(paragraph) for paragraph in section.paragraphs])
+
+        return waste_section(section)
+
+    def waste_delta(delta):
+        attributes = delta.attributes
+        if "choices2" in attributes:
+            attributes = {
+                "choices2": {
+                    k: waste_string(v)
+                    for k, v in attributes["choices2"].items()
+                }
+            }
+        return deltas.InsertOp(
+            insert=waste_string(delta.insert),
+            attributes=attributes,
+        )
+
+    def waste_deltas(deltas):
+        return [waste_delta(delta) for delta in deltas]
+
+    def gen():
+        yield "# WARNING: this file is generated (from database content). Manual changes will be lost."
+        yield ""
+        yield "from . import exercises as e"
+        yield "from . import renderable as r"
+        yield "from .adaptation import AdaptationTestCase"
+        yield "from .api_models import AdaptationV2, FillWithFreeTextAdaptationEffect, ItemizedAdaptationEffect"
+        yield "from .deltas import InsertOp"
+        yield "from .renderable import Section, Paragraph, _PlainText, _Whitespace, _FreeTextInput, _SelectableText, _BoxedText, _MultipleChoicesInput, _SelectedText"
+        yield ""
+        yield ""
+        yield "WordsItems = ItemizedAdaptationEffect.WordsItems"
+        yield "ManualItems = ItemizedAdaptationEffect.ManualItems"
+        yield "Effects = ItemizedAdaptationEffect.Effects"
+        yield "Selectable = ItemizedAdaptationEffect.Effects.Selectable"
+        yield ""
+        yield ""
+        yield "class DatabaseAsUnitTests(AdaptationTestCase):"
+
+        database_engine = database_utils.create_engine(settings.DATABASE_URL)
+        with orm.Session(database_engine) as session:
+            for i, exercise in enumerate(session.query(orm_models.Exercise).all()):
+                adapted = exercise.make_adapted()
+
+                yield f"    def test_exercise_{exercise.id}(self):"
+                yield f"        self.do_test("
+                yield f"            e.Exercise("
+                yield f"                number={repr(waste_string(exercise.number))},"
+                yield f"                textbook_page={repr(exercise.textbook_page)},"
+                yield f"                instructions={repr(waste_deltas(exercise.instructions))},"
+                yield f"                wording={repr(waste_deltas(exercise.wording))},"
+                yield f"                example={repr(waste_deltas(exercise.example))},"
+                yield f"                clue={repr(waste_deltas(exercise.clue))},"
+                yield f"                wording_paragraphs_per_pagelet={repr(exercise.wording_paragraphs_per_pagelet)},"
+                yield f"                adaptation={repr(exercise.adaptation)},"
+                yield f"            ),"
+                yield f"            r.Exercise("
+                yield f"                number={repr(waste_string(exercise.number))},"
+                yield f"                textbook_page={repr(exercise.textbook_page)},"
+                yield f"                pagelets=["
+                for pagelet in adapted.pagelets:
+                    yield f"                    r.Pagelet("
+                    yield f"                        instructions={repr(waste_renderable(pagelet.instructions))},"
+                    yield f"                        wording={repr(waste_renderable(pagelet.wording))},"
+                    yield f"                    ),"
+                yield f"                ],"
+                yield f"            ),"
+                yield f"        )"
+                yield f""
+
+    # Black does not have a Python API, so use it as a command-line tool.
+    # https://black.readthedocs.io/en/stable/faq.html#does-black-have-an-api
+    subprocess.run(["black", "--line-length", "120", "-"], universal_newlines=True, input="\n".join(gen()), check=True)
 
 
 @main.command(name="load-fixtures")

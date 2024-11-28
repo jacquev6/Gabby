@@ -381,9 +381,6 @@
           },
           "type": {
             "const": "node",
-            "enum": [
-              "node"
-            ],
             "title": "Type",
             "type": "string"
           }
@@ -424,9 +421,6 @@
           },
           "type": {
             "const": "node",
-            "enum": [
-              "node"
-            ],
             "title": "Type",
             "type": "string"
           }

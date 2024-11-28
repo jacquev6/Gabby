@@ -9,9 +9,7 @@
               "discriminator": {
                 "mapping": {
                   "fill-with-free-text": "#/components/schemas/FillWithFreeTextAdaptationEffect",
-                  "items-and-effects-attempt-1": "#/components/schemas/ItemsAndEffectsAttempt1AdaptationEffect-Input",
-                  "multiple-choices-in-instructions": "#/components/schemas/MultipleChoicesInInstructionsAdaptationEffect",
-                  "select-things": "#/components/schemas/SelectThingsAdaptationEffect"
+                  "itemized": "#/components/schemas/ItemizedAdaptationEffect-Input"
                 },
                 "propertyName": "kind"
               },
@@ -20,13 +18,7 @@
                   "$ref": "#/components/schemas/FillWithFreeTextAdaptationEffect"
                 },
                 {
-                  "$ref": "#/components/schemas/MultipleChoicesInInstructionsAdaptationEffect"
-                },
-                {
-                  "$ref": "#/components/schemas/SelectThingsAdaptationEffect"
-                },
-                {
-                  "$ref": "#/components/schemas/ItemsAndEffectsAttempt1AdaptationEffect-Input"
+                  "$ref": "#/components/schemas/ItemizedAdaptationEffect-Input"
                 }
               ]
             },
@@ -34,23 +26,13 @@
             "type": "array"
           },
           "kind": {
-            "anyOf": [
-              {
-                "enum": [
-                  "fill-with-free-text",
-                  "items-and-effects-attempt-1",
-                  "select-things",
-                  "multiple-choices-in-instructions",
-                  "multiple-choices-in-wording",
-                  "multiple-choices"
-                ],
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
+            "enum": [
+              "generic",
+              "fill-with-free-text",
+              "multiple-choices"
             ],
-            "title": "Kind"
+            "title": "Kind",
+            "type": "string"
           }
         },
         "required": [
@@ -68,9 +50,7 @@
               "discriminator": {
                 "mapping": {
                   "fill-with-free-text": "#/components/schemas/FillWithFreeTextAdaptationEffect",
-                  "items-and-effects-attempt-1": "#/components/schemas/ItemsAndEffectsAttempt1AdaptationEffect-Output",
-                  "multiple-choices-in-instructions": "#/components/schemas/MultipleChoicesInInstructionsAdaptationEffect",
-                  "select-things": "#/components/schemas/SelectThingsAdaptationEffect"
+                  "itemized": "#/components/schemas/ItemizedAdaptationEffect-Output"
                 },
                 "propertyName": "kind"
               },
@@ -79,13 +59,7 @@
                   "$ref": "#/components/schemas/FillWithFreeTextAdaptationEffect"
                 },
                 {
-                  "$ref": "#/components/schemas/MultipleChoicesInInstructionsAdaptationEffect"
-                },
-                {
-                  "$ref": "#/components/schemas/SelectThingsAdaptationEffect"
-                },
-                {
-                  "$ref": "#/components/schemas/ItemsAndEffectsAttempt1AdaptationEffect-Output"
+                  "$ref": "#/components/schemas/ItemizedAdaptationEffect-Output"
                 }
               ]
             },
@@ -93,23 +67,13 @@
             "type": "array"
           },
           "kind": {
-            "anyOf": [
-              {
-                "enum": [
-                  "fill-with-free-text",
-                  "items-and-effects-attempt-1",
-                  "select-things",
-                  "multiple-choices-in-instructions",
-                  "multiple-choices-in-wording",
-                  "multiple-choices"
-                ],
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
+            "enum": [
+              "generic",
+              "fill-with-free-text",
+              "multiple-choices"
             ],
-            "title": "Kind"
+            "title": "Kind",
+            "type": "string"
           }
         },
         "required": [
@@ -212,18 +176,38 @@
         "title": "Effects",
         "type": "object"
       },
-      "EmbedInsertOp": {
+      "Exercise": {
         "additionalProperties": false,
         "properties": {
-          "insert": {
-            "title": "Insert",
-            "type": "object"
+          "number": {
+            "title": "Number",
+            "type": "string"
+          },
+          "pagelets": {
+            "items": {
+              "$ref": "#/components/schemas/Pagelet"
+            },
+            "title": "Pagelets",
+            "type": "array"
+          },
+          "textbook_page": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Textbook Page"
           }
         },
         "required": [
-          "insert"
+          "number",
+          "textbook_page",
+          "pagelets"
         ],
-        "title": "EmbedInsertOp",
+        "title": "Exercise",
         "type": "object"
       },
       "FillWithFreeTextAdaptationEffect": {
@@ -231,9 +215,6 @@
         "properties": {
           "kind": {
             "const": "fill-with-free-text",
-            "enum": [
-              "fill-with-free-text"
-            ],
             "title": "Kind",
             "type": "string"
           },
@@ -262,6 +243,25 @@
         "title": "HTTPValidationError",
         "type": "object"
       },
+      "InsertOp": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "title": "Attributes",
+            "type": "object"
+          },
+          "insert": {
+            "title": "Insert",
+            "type": "string"
+          }
+        },
+        "required": [
+          "insert",
+          "attributes"
+        ],
+        "title": "InsertOp",
+        "type": "object"
+      },
       "ItemLinks": {
         "additionalProperties": false,
         "properties": {
@@ -276,7 +276,7 @@
         "title": "ItemLinks",
         "type": "object"
       },
-      "ItemsAndEffectsAttempt1AdaptationEffect-Input": {
+      "ItemizedAdaptationEffect-Input": {
         "additionalProperties": false,
         "properties": {
           "effects": {
@@ -297,10 +297,7 @@
             "title": "Items"
           },
           "kind": {
-            "const": "items-and-effects-attempt-1",
-            "enum": [
-              "items-and-effects-attempt-1"
-            ],
+            "const": "itemized",
             "title": "Kind",
             "type": "string"
           }
@@ -310,10 +307,10 @@
           "items",
           "effects"
         ],
-        "title": "ItemsAndEffectsAttempt1AdaptationEffect",
+        "title": "ItemizedAdaptationEffect",
         "type": "object"
       },
-      "ItemsAndEffectsAttempt1AdaptationEffect-Output": {
+      "ItemizedAdaptationEffect-Output": {
         "additionalProperties": false,
         "properties": {
           "effects": {
@@ -334,10 +331,7 @@
             "title": "Items"
           },
           "kind": {
-            "const": "items-and-effects-attempt-1",
-            "enum": [
-              "items-and-effects-attempt-1"
-            ],
+            "const": "itemized",
             "title": "Kind",
             "type": "string"
           }
@@ -347,7 +341,7 @@
           "items",
           "effects"
         ],
-        "title": "ItemsAndEffectsAttempt1AdaptationEffect",
+        "title": "ItemizedAdaptationEffect",
         "type": "object"
       },
       "ManualItems": {
@@ -355,9 +349,6 @@
         "properties": {
           "kind": {
             "const": "manual",
-            "enum": [
-              "manual"
-            ],
             "title": "Kind",
             "type": "string"
           }
@@ -366,29 +357,6 @@
           "kind"
         ],
         "title": "ManualItems",
-        "type": "object"
-      },
-      "MultipleChoicesInInstructionsAdaptationEffect": {
-        "additionalProperties": false,
-        "properties": {
-          "kind": {
-            "const": "multiple-choices-in-instructions",
-            "enum": [
-              "multiple-choices-in-instructions"
-            ],
-            "title": "Kind",
-            "type": "string"
-          },
-          "placeholder": {
-            "title": "Placeholder",
-            "type": "string"
-          }
-        },
-        "required": [
-          "kind",
-          "placeholder"
-        ],
-        "title": "MultipleChoicesInInstructionsAdaptationEffect",
         "type": "object"
       },
       "OutputListRelationShipMeta": {
@@ -461,6 +429,23 @@
         "title": "PageMeta",
         "type": "object"
       },
+      "Pagelet": {
+        "additionalProperties": false,
+        "properties": {
+          "instructions": {
+            "$ref": "#/components/schemas/Section"
+          },
+          "wording": {
+            "$ref": "#/components/schemas/Section"
+          }
+        },
+        "required": [
+          "instructions",
+          "wording"
+        ],
+        "title": "Pagelet",
+        "type": "object"
+      },
       "Pagination": {
         "additionalProperties": false,
         "properties": {
@@ -488,16 +473,44 @@
       "Paragraph": {
         "additionalProperties": false,
         "properties": {
-          "sentences": {
+          "tokens": {
             "items": {
-              "$ref": "#/components/schemas/Sentence"
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/_PlainText"
+                },
+                {
+                  "$ref": "#/components/schemas/_BoxedText"
+                },
+                {
+                  "$ref": "#/components/schemas/_BoldText"
+                },
+                {
+                  "$ref": "#/components/schemas/_ItalicText"
+                },
+                {
+                  "$ref": "#/components/schemas/_SelectableText"
+                },
+                {
+                  "$ref": "#/components/schemas/_SelectedText"
+                },
+                {
+                  "$ref": "#/components/schemas/_FreeTextInput"
+                },
+                {
+                  "$ref": "#/components/schemas/_MultipleChoicesInput"
+                },
+                {
+                  "$ref": "#/components/schemas/_Whitespace"
+                }
+              ]
             },
-            "title": "Sentences",
+            "title": "Tokens",
             "type": "array"
           }
         },
         "required": [
-          "sentences"
+          "tokens"
         ],
         "title": "Paragraph",
         "type": "object"
@@ -598,42 +611,6 @@
         "title": "Section",
         "type": "object"
       },
-      "SelectThingsAdaptationEffect": {
-        "additionalProperties": false,
-        "properties": {
-          "colors": {
-            "items": {
-              "type": "string"
-            },
-            "title": "Colors",
-            "type": "array"
-          },
-          "kind": {
-            "const": "select-things",
-            "enum": [
-              "select-things"
-            ],
-            "title": "Kind",
-            "type": "string"
-          },
-          "punctuation": {
-            "title": "Punctuation",
-            "type": "boolean"
-          },
-          "words": {
-            "title": "Words",
-            "type": "boolean"
-          }
-        },
-        "required": [
-          "kind",
-          "colors",
-          "words",
-          "punctuation"
-        ],
-        "title": "SelectThingsAdaptationEffect",
-        "type": "object"
-      },
       "Selectable": {
         "additionalProperties": false,
         "properties": {
@@ -651,59 +628,11 @@
         "title": "Selectable",
         "type": "object"
       },
-      "Sentence": {
-        "additionalProperties": false,
-        "properties": {
-          "tokens": {
-            "items": {
-              "anyOf": [
-                {
-                  "$ref": "#/components/schemas/_PlainText"
-                },
-                {
-                  "$ref": "#/components/schemas/_BoxedText"
-                },
-                {
-                  "$ref": "#/components/schemas/_BoldText"
-                },
-                {
-                  "$ref": "#/components/schemas/_ItalicText"
-                },
-                {
-                  "$ref": "#/components/schemas/_SelectableText"
-                },
-                {
-                  "$ref": "#/components/schemas/_SelectedText"
-                },
-                {
-                  "$ref": "#/components/schemas/_FreeTextInput"
-                },
-                {
-                  "$ref": "#/components/schemas/_MultipleChoicesInput"
-                },
-                {
-                  "$ref": "#/components/schemas/_Whitespace"
-                }
-              ]
-            },
-            "title": "Tokens",
-            "type": "array"
-          }
-        },
-        "required": [
-          "tokens"
-        ],
-        "title": "Sentence",
-        "type": "object"
-      },
       "SentencesItems": {
         "additionalProperties": false,
         "properties": {
           "kind": {
             "const": "sentences",
-            "enum": [
-              "sentences"
-            ],
             "title": "Kind",
             "type": "string"
           }
@@ -712,25 +641,6 @@
           "kind"
         ],
         "title": "SentencesItems",
-        "type": "object"
-      },
-      "TextInsertOp": {
-        "additionalProperties": false,
-        "properties": {
-          "attributes": {
-            "title": "Attributes",
-            "type": "object"
-          },
-          "insert": {
-            "title": "Insert",
-            "type": "string"
-          }
-        },
-        "required": [
-          "insert",
-          "attributes"
-        ],
-        "title": "TextInsertOp",
         "type": "object"
       },
       "ValidationError": {
@@ -771,9 +681,6 @@
         "properties": {
           "kind": {
             "const": "words",
-            "enum": [
-              "words"
-            ],
             "title": "Kind",
             "type": "string"
           },
@@ -798,9 +705,6 @@
           },
           "type": {
             "const": "boldText",
-            "enum": [
-              "boldText"
-            ],
             "title": "Type",
             "type": "string"
           }
@@ -821,9 +725,6 @@
           },
           "type": {
             "const": "boxedText",
-            "enum": [
-              "boxedText"
-            ],
             "title": "Type",
             "type": "string"
           }
@@ -840,9 +741,6 @@
         "properties": {
           "type": {
             "const": "freeTextInput",
-            "enum": [
-              "freeTextInput"
-            ],
             "title": "Type",
             "type": "string"
           }
@@ -862,9 +760,6 @@
           },
           "type": {
             "const": "italicText",
-            "enum": [
-              "italicText"
-            ],
             "title": "Type",
             "type": "string"
           }
@@ -888,9 +783,6 @@
           },
           "type": {
             "const": "multipleChoicesInput",
-            "enum": [
-              "multipleChoicesInput"
-            ],
             "title": "Type",
             "type": "string"
           }
@@ -911,9 +803,6 @@
           },
           "type": {
             "const": "plainText",
-            "enum": [
-              "plainText"
-            ],
             "title": "Type",
             "type": "string"
           }
@@ -945,9 +834,6 @@
           },
           "type": {
             "const": "selectableText",
-            "enum": [
-              "selectableText"
-            ],
             "title": "Type",
             "type": "string"
           }
@@ -974,9 +860,6 @@
           },
           "type": {
             "const": "selectedText",
-            "enum": [
-              "selectedText"
-            ],
             "title": "Type",
             "type": "string"
           }
@@ -994,9 +877,6 @@
         "properties": {
           "type": {
             "const": "whitespace",
-            "enum": [
-              "whitespace"
-            ],
             "title": "Type",
             "type": "string"
           }
@@ -1048,23 +928,48 @@
           "adaptation": {
             "$ref": "#/components/schemas/AdaptationV2-Input",
             "default": {
-              "effects": []
+              "effects": [],
+              "kind": "generic"
             }
           },
           "clue": {
-            "default": "",
+            "default": [
+              {
+                "attributes": {},
+                "insert": "\n"
+              }
+            ],
+            "items": {
+              "$ref": "#/components/schemas/InsertOp"
+            },
             "title": "Clue",
-            "type": "string"
+            "type": "array"
           },
           "example": {
-            "default": "",
+            "default": [
+              {
+                "attributes": {},
+                "insert": "\n"
+              }
+            ],
+            "items": {
+              "$ref": "#/components/schemas/InsertOp"
+            },
             "title": "Example",
-            "type": "string"
+            "type": "array"
           },
           "instructions": {
-            "default": "",
+            "default": [
+              {
+                "attributes": {},
+                "insert": "\n"
+              }
+            ],
+            "items": {
+              "$ref": "#/components/schemas/InsertOp"
+            },
             "title": "Instructions",
-            "type": "string"
+            "type": "array"
           },
           "number": {
             "title": "Number",
@@ -1090,14 +995,28 @@
             "title": "Textbookpage"
           },
           "wording": {
-            "default": "",
+            "default": [
+              {
+                "attributes": {},
+                "insert": "\n"
+              }
+            ],
+            "items": {
+              "$ref": "#/components/schemas/InsertOp"
+            },
             "title": "Wording",
-            "type": "string"
+            "type": "array"
           },
           "wordingParagraphsPerPagelet": {
-            "default": 3,
-            "title": "Wordingparagraphsperpagelet",
-            "type": "integer"
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Wordingparagraphsperpagelet"
           }
         },
         "required": [
@@ -1179,8 +1098,11 @@
             "$ref": "#/components/schemas/AdaptationV2-Output"
           },
           "clue": {
+            "items": {
+              "$ref": "#/components/schemas/InsertOp"
+            },
             "title": "Clue",
-            "type": "string"
+            "type": "array"
           },
           "createdAt": {
             "format": "date-time",
@@ -1188,12 +1110,18 @@
             "type": "string"
           },
           "example": {
+            "items": {
+              "$ref": "#/components/schemas/InsertOp"
+            },
             "title": "Example",
-            "type": "string"
+            "type": "array"
           },
           "instructions": {
+            "items": {
+              "$ref": "#/components/schemas/InsertOp"
+            },
             "title": "Instructions",
-            "type": "string"
+            "type": "array"
           },
           "number": {
             "title": "Number",
@@ -1223,12 +1151,22 @@
             "type": "string"
           },
           "wording": {
+            "items": {
+              "$ref": "#/components/schemas/InsertOp"
+            },
             "title": "Wording",
-            "type": "string"
+            "type": "array"
           },
           "wordingParagraphsPerPagelet": {
-            "title": "Wordingparagraphsperpagelet",
-            "type": "integer"
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Wordingparagraphsperpagelet"
           }
         },
         "required": [
@@ -1349,16 +1287,25 @@
             "$ref": "#/components/schemas/AdaptationV2-Input"
           },
           "clue": {
+            "items": {
+              "$ref": "#/components/schemas/InsertOp"
+            },
             "title": "Clue",
-            "type": "string"
+            "type": "array"
           },
           "example": {
+            "items": {
+              "$ref": "#/components/schemas/InsertOp"
+            },
             "title": "Example",
-            "type": "string"
+            "type": "array"
           },
           "instructions": {
+            "items": {
+              "$ref": "#/components/schemas/InsertOp"
+            },
             "title": "Instructions",
-            "type": "string"
+            "type": "array"
           },
           "rectangles": {
             "items": {
@@ -1368,12 +1315,22 @@
             "type": "array"
           },
           "wording": {
+            "items": {
+              "$ref": "#/components/schemas/InsertOp"
+            },
             "title": "Wording",
-            "type": "string"
+            "type": "array"
           },
           "wordingParagraphsPerPagelet": {
-            "title": "Wordingparagraphsperpagelet",
-            "type": "integer"
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Wordingparagraphsperpagelet"
           }
         },
         "title": "exerciseUpdateInputDataAttributes",
@@ -1407,9 +1364,6 @@
           },
           "type": {
             "const": "user",
-            "enum": [
-              "user"
-            ],
             "title": "Type",
             "type": "string"
           }
@@ -1443,9 +1397,6 @@
           },
           "type": {
             "const": "project",
-            "enum": [
-              "project"
-            ],
             "title": "Type",
             "type": "string"
           }
@@ -1486,9 +1437,6 @@
           },
           "type": {
             "const": "textbook",
-            "enum": [
-              "textbook"
-            ],
             "title": "Type",
             "type": "string"
           }
@@ -1522,9 +1470,6 @@
           },
           "type": {
             "const": "user",
-            "enum": [
-              "user"
-            ],
             "title": "Type",
             "type": "string"
           }
@@ -1534,122 +1479,6 @@
           "id"
         ],
         "title": "exercise_updatedBy_Relationship_ObjectId",
-        "type": "object"
-      },
-      "gabby__exercise_delta__Exercise": {
-        "additionalProperties": false,
-        "properties": {
-          "clue": {
-            "items": {
-              "anyOf": [
-                {
-                  "$ref": "#/components/schemas/TextInsertOp"
-                },
-                {
-                  "$ref": "#/components/schemas/EmbedInsertOp"
-                }
-              ]
-            },
-            "title": "Clue",
-            "type": "array"
-          },
-          "example": {
-            "items": {
-              "anyOf": [
-                {
-                  "$ref": "#/components/schemas/TextInsertOp"
-                },
-                {
-                  "$ref": "#/components/schemas/EmbedInsertOp"
-                }
-              ]
-            },
-            "title": "Example",
-            "type": "array"
-          },
-          "instructions": {
-            "items": {
-              "anyOf": [
-                {
-                  "$ref": "#/components/schemas/TextInsertOp"
-                },
-                {
-                  "$ref": "#/components/schemas/EmbedInsertOp"
-                }
-              ]
-            },
-            "title": "Instructions",
-            "type": "array"
-          },
-          "wording": {
-            "items": {
-              "anyOf": [
-                {
-                  "$ref": "#/components/schemas/TextInsertOp"
-                },
-                {
-                  "$ref": "#/components/schemas/EmbedInsertOp"
-                }
-              ]
-            },
-            "title": "Wording",
-            "type": "array"
-          }
-        },
-        "required": [
-          "instructions",
-          "wording",
-          "example",
-          "clue"
-        ],
-        "title": "Exercise",
-        "type": "object"
-      },
-      "gabby__renderable__Exercise": {
-        "additionalProperties": false,
-        "properties": {
-          "clue": {
-            "$ref": "#/components/schemas/Section"
-          },
-          "example": {
-            "$ref": "#/components/schemas/Section"
-          },
-          "instructions": {
-            "$ref": "#/components/schemas/Section"
-          },
-          "number": {
-            "title": "Number",
-            "type": "string"
-          },
-          "textbook_page": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Textbook Page"
-          },
-          "wording": {
-            "$ref": "#/components/schemas/Section"
-          },
-          "wording_paragraphs_per_pagelet": {
-            "title": "Wording Paragraphs Per Pagelet",
-            "type": "integer"
-          }
-        },
-        "required": [
-          "number",
-          "textbook_page",
-          "instructions",
-          "wording",
-          "example",
-          "clue",
-          "wording_paragraphs_per_pagelet"
-        ],
-        "title": "Exercise",
         "type": "object"
       },
       "parsedExerciseCreateInput": {
@@ -1694,28 +1523,47 @@
             "$ref": "#/components/schemas/AdaptationV2-Input"
           },
           "clue": {
+            "items": {
+              "$ref": "#/components/schemas/InsertOp"
+            },
             "title": "Clue",
-            "type": "string"
+            "type": "array"
           },
           "example": {
+            "items": {
+              "$ref": "#/components/schemas/InsertOp"
+            },
             "title": "Example",
-            "type": "string"
+            "type": "array"
           },
           "instructions": {
+            "items": {
+              "$ref": "#/components/schemas/InsertOp"
+            },
             "title": "Instructions",
-            "type": "string"
+            "type": "array"
           },
           "number": {
             "title": "Number",
             "type": "string"
           },
           "wording": {
+            "items": {
+              "$ref": "#/components/schemas/InsertOp"
+            },
             "title": "Wording",
-            "type": "string"
+            "type": "array"
           },
           "wordingParagraphsPerPagelet": {
-            "title": "Wordingparagraphsperpagelet",
-            "type": "integer"
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Wordingparagraphsperpagelet"
           }
         },
         "required": [
@@ -1785,15 +1633,11 @@
         "additionalProperties": false,
         "properties": {
           "adapted": {
-            "$ref": "#/components/schemas/gabby__renderable__Exercise"
-          },
-          "delta": {
-            "$ref": "#/components/schemas/gabby__exercise_delta__Exercise"
+            "$ref": "#/components/schemas/Exercise"
           }
         },
         "required": [
-          "adapted",
-          "delta"
+          "adapted"
         ],
         "title": "parsedExerciseOutputItemAttributes",
         "type": "object"
@@ -2133,9 +1977,6 @@
           },
           "type": {
             "const": "user",
-            "enum": [
-              "user"
-            ],
             "title": "Type",
             "type": "string"
           }
@@ -2169,9 +2010,6 @@
           },
           "type": {
             "const": "pdfFile",
-            "enum": [
-              "pdfFile"
-            ],
             "title": "Type",
             "type": "string"
           }
@@ -2369,9 +2207,6 @@
           },
           "type": {
             "const": "user",
-            "enum": [
-              "user"
-            ],
             "title": "Type",
             "type": "string"
           }
@@ -2413,9 +2248,6 @@
           },
           "type": {
             "const": "pdfFileNaming",
-            "enum": [
-              "pdfFileNaming"
-            ],
             "title": "Type",
             "type": "string"
           }
@@ -2457,9 +2289,6 @@
           },
           "type": {
             "const": "section",
-            "enum": [
-              "section"
-            ],
             "title": "Type",
             "type": "string"
           }
@@ -2783,9 +2612,6 @@
           },
           "type": {
             "const": "user",
-            "enum": [
-              "user"
-            ],
             "title": "Type",
             "type": "string"
           }
@@ -2823,9 +2649,6 @@
           },
           "type": {
             "const": "ping",
-            "enum": [
-              "ping"
-            ],
             "title": "Type",
             "type": "string"
           }
@@ -2867,9 +2690,6 @@
           },
           "type": {
             "const": "ping",
-            "enum": [
-              "ping"
-            ],
             "title": "Type",
             "type": "string"
           }
@@ -2910,9 +2730,6 @@
           },
           "type": {
             "const": "ping",
-            "enum": [
-              "ping"
-            ],
             "title": "Type",
             "type": "string"
           }
@@ -2953,9 +2770,6 @@
           },
           "type": {
             "const": "user",
-            "enum": [
-              "user"
-            ],
             "title": "Type",
             "type": "string"
           }
@@ -3245,9 +3059,6 @@
           },
           "type": {
             "const": "user",
-            "enum": [
-              "user"
-            ],
             "title": "Type",
             "type": "string"
           }
@@ -3289,9 +3100,6 @@
           },
           "type": {
             "const": "exercise",
-            "enum": [
-              "exercise"
-            ],
             "title": "Type",
             "type": "string"
           }
@@ -3333,9 +3141,6 @@
           },
           "type": {
             "const": "textbook",
-            "enum": [
-              "textbook"
-            ],
             "title": "Type",
             "type": "string"
           }
@@ -3369,9 +3174,6 @@
           },
           "type": {
             "const": "user",
-            "enum": [
-              "user"
-            ],
             "title": "Type",
             "type": "string"
           }
@@ -3787,9 +3589,6 @@
           },
           "type": {
             "const": "user",
-            "enum": [
-              "user"
-            ],
             "title": "Type",
             "type": "string"
           }
@@ -3823,9 +3622,6 @@
           },
           "type": {
             "const": "pdfFile",
-            "enum": [
-              "pdfFile"
-            ],
             "title": "Type",
             "type": "string"
           }
@@ -3859,9 +3655,6 @@
           },
           "type": {
             "const": "textbook",
-            "enum": [
-              "textbook"
-            ],
             "title": "Type",
             "type": "string"
           }
@@ -3895,9 +3688,6 @@
           },
           "type": {
             "const": "user",
-            "enum": [
-              "user"
-            ],
             "title": "Type",
             "type": "string"
           }
@@ -4327,9 +4117,6 @@
           },
           "type": {
             "const": "user",
-            "enum": [
-              "user"
-            ],
             "title": "Type",
             "type": "string"
           }
@@ -4371,9 +4158,6 @@
           },
           "type": {
             "const": "exercise",
-            "enum": [
-              "exercise"
-            ],
             "title": "Type",
             "type": "string"
           }
@@ -4407,9 +4191,6 @@
           },
           "type": {
             "const": "project",
-            "enum": [
-              "project"
-            ],
             "title": "Type",
             "type": "string"
           }
@@ -4451,9 +4232,6 @@
           },
           "type": {
             "const": "section",
-            "enum": [
-              "section"
-            ],
             "title": "Type",
             "type": "string"
           }
@@ -4487,9 +4265,6 @@
           },
           "type": {
             "const": "user",
-            "enum": [
-              "user"
-            ],
             "title": "Type",
             "type": "string"
           }
@@ -4690,9 +4465,6 @@
           },
           "type": {
             "const": "user",
-            "enum": [
-              "user"
-            ],
             "title": "Type",
             "type": "string"
           }
@@ -4726,9 +4498,6 @@
           },
           "type": {
             "const": "user",
-            "enum": [
-              "user"
-            ],
             "title": "Type",
             "type": "string"
           }

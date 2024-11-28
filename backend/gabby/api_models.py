@@ -1,18 +1,12 @@
 from __future__ import annotations
-from typing import Annotated, Literal, TypeAlias
+from typing import Annotated, ClassVar, Literal
 import datetime
 
 from fastjsonapi import Constant, Computed, Secret, WriteOnly
+import pydantic
 
-from . import exercise_delta
-from . import parsing
+from . import deltas
 from . import renderable
-from .adaptations.fill_with_free_text import FillWithFreeTextAdaptation
-from .adaptations.items_and_effects_attempt_1 import ItemsAndEffectsAttempt1Adaptation
-from .adaptations.multiple_choices_in_instructions import MultipleChoicesInInstructionsAdaptation
-from .adaptations.multiple_choices_in_wording import MultipleChoicesInWordingAdaptation
-from .adaptations.null import NullAdaptation
-from .adaptations.select_things import SelectThingsAdaptation
 from mydantic import PydanticBase
 
 
@@ -111,14 +105,44 @@ class PdfRectangle(PydanticBase):
     role: Literal["bounding", "instructions", "wording", "example", "clue"]
 
 
-# @todo(After production data is migrated) Remove this type alias
-AdaptationV1: TypeAlias = FillWithFreeTextAdaptation | ItemsAndEffectsAttempt1Adaptation | MultipleChoicesInInstructionsAdaptation | MultipleChoicesInWordingAdaptation | NullAdaptation | SelectThingsAdaptation
+class FillWithFreeTextAdaptationEffect(PydanticBase):
+    kind: Literal["fill-with-free-text"]
+
+    placeholder: str
+
+class ItemizedAdaptationEffect(PydanticBase):
+    kind: Literal["itemized"]
+
+    class WordsItems(PydanticBase):
+        kind: Literal["words"]
+        punctuation: bool
+
+    class SentencesItems(PydanticBase):
+        kind: Literal["sentences"]
+
+    class ManualItems(PydanticBase):
+        kind: Literal["manual"]
+
+    Items: ClassVar = WordsItems | SentencesItems | ManualItems
+
+    class Effects(PydanticBase):
+        class Selectable(PydanticBase):
+            colors: list[str]
+
+        selectable: Selectable | None
+        boxed: bool
+
+    items: Items
+    effects: Effects
+
+AdaptationEffect = Annotated[
+    FillWithFreeTextAdaptationEffect | ItemizedAdaptationEffect,
+    pydantic.Field(discriminator="kind"),
+]
 
 class AdaptationV2(PydanticBase):
-    # @todo(When production data has been manually fixed) Remove "multiple-choices-in-instructions"
-    # @todo(When production data is migrated) Remove "multiple-choices-in-wording"
-    kind: Literal["fill-with-free-text", "items-and-effects-attempt-1", "select-things", "multiple-choices-in-instructions", "multiple-choices-in-wording", "multiple-choices"] | None
-    effects: list[parsing.AdaptationEffect]
+    kind: Literal["generic", "fill-with-free-text", "multiple-choices"]
+    effects: list[AdaptationEffect]
 
 class Exercise(PydanticBase, CreatedUpdatedByAtMixin):
     project: Annotated[Project, Constant()]
@@ -128,27 +152,26 @@ class Exercise(PydanticBase, CreatedUpdatedByAtMixin):
 
     number: Annotated[str, Constant()]
 
-    instructions: str = ""
-    wording: str = ""
-    example: str = ""
-    clue: str = ""
+    instructions: deltas.Deltas = deltas.empty
+    wording: deltas.Deltas = deltas.empty
+    example: deltas.Deltas = deltas.empty
+    clue: deltas.Deltas = deltas.empty
 
-    wording_paragraphs_per_pagelet: int = 3
+    wording_paragraphs_per_pagelet: int | None = None
 
     rectangles: list[PdfRectangle] = []
 
-    adaptation: AdaptationV2 = AdaptationV2(kind=None, effects=[])
+    adaptation: AdaptationV2 = AdaptationV2(kind="generic", effects=[])
 
 class ParsedExercise(PydanticBase):
     number: Annotated[str, WriteOnly()]
-    instructions: Annotated[str, WriteOnly()]
-    wording: Annotated[str, WriteOnly()]
-    example: Annotated[str, WriteOnly()]
-    clue: Annotated[str, WriteOnly()]
-    wording_paragraphs_per_pagelet: Annotated[int, WriteOnly()]
+    instructions: Annotated[deltas.Deltas, WriteOnly()]
+    wording: Annotated[deltas.Deltas, WriteOnly()]
+    example: Annotated[deltas.Deltas, WriteOnly()]
+    clue: Annotated[deltas.Deltas, WriteOnly()]
+    wording_paragraphs_per_pagelet: Annotated[int | None, WriteOnly()]
     adaptation: Annotated[AdaptationV2, WriteOnly()]
     adapted: Annotated[renderable.Exercise, Computed()]
-    delta: Annotated[exercise_delta.Exercise, Computed()]
 
 
 class SyntheticError(PydanticBase):

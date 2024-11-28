@@ -4,6 +4,7 @@ import BBusy from './Busy.vue'
 import BButton from './Button.vue'
 import BCol from './Col.vue'
 import BLabeledCheckbox from './LabeledCheckbox.vue'
+import BLabeledCheckboxes from './LabeledCheckboxes.vue'
 import BLabeledInput from './LabeledInput.vue'
 import BLabeledRadios from './LabeledRadios.vue'
 import BLabeledSelect from './LabeledSelect.vue'
@@ -19,6 +20,7 @@ export {
   BButton,
   BCol,
   BLabeledCheckbox,
+  BLabeledCheckboxes,
   BLabeledInput,
   BLabeledRadios,
   BLabeledSelect,

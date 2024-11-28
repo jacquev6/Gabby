@@ -16,7 +16,7 @@ describe('Gabby', () => {
   }
 
   it('collects rectangles when creating and editing an exercise split on two pages', () => {
-    visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise', {wysiwyg: false, pdf: 'test'})
+    visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise', {pdf: 'test'})
 
     cy.get('label:contains("Number")').next().type('1')
 
@@ -26,7 +26,7 @@ describe('Gabby', () => {
     expectRectangles('@highlighter', 'surrounded', [])
 
     traceRectangle('@canvas', 6, 72, 45, 79)
-    cy.get('textarea').first().should('have.value', 'Cherche les mots suivants dans\nle dictionnaire et indique leur classe.\nCombien de classes as-tu trouvées ?')
+    cy.get('textarea').first().should('have.value', 'Cherche les mots suivants dans le dictionnaire et indique leur classe. Combien de classes as-tu trouvées ?')
     cy.get('button:contains("Instructions")').click()
     expectRectangles('@highlighter', 'surrounded', [{
       'left': 63.24492293708562,
@@ -118,7 +118,7 @@ describe('Gabby', () => {
     }])
 
     traceRectangle('@canvas', 6, 5, 45, 10)
-    cy.get('textarea').first().should('have.value', '5\nRecopie les mots suivants, puis\nentoure les pronoms personnels.')
+    cy.get('textarea').first().should('have.value', '5 Recopie les mots suivants, puis entoure les pronoms personnels.')
     cy.get('button:contains("Instructions")').click()
     expectRectangles('@highlighter', 'surrounded', [{
       'left': 63.24492293708562,

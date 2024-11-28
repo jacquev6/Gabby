@@ -4,7 +4,7 @@ import deepCopy from 'deep-copy'
 import deepEqual from 'deep-equal'
 import { useI18n } from 'vue-i18n'
 
-import { BBusy, BButton, BLabeledRadios } from '$frontend/components/opinion/bootstrap'
+import { BBusy, BButton, BLabeledCheckboxes } from '$frontend/components/opinion/bootstrap'
 import TwoResizableColumns from '$frontend/components/TwoResizableColumns.vue'
 import type { Exists, InCache, ParsedExercise } from '$frontend/stores/api'
 import { type Model, getParsed } from '$frontend/components/ExerciseFieldsForm.vue'
@@ -54,32 +54,15 @@ const adaptedExercise = computed(() => {
   }
 })
 
-const deltas = computed(() => {
-  if (parsedExercise.value === null) {
-    return null
-  } else {
-    return parsedExercise.value.attributes.delta
-  }
-})
-
-const wantWysiwyg = ref(true)
-const wysiwyg = computed(() => wantWysiwyg.value)
-
-const toolSlotNames = computed(() => {
-  const names = []
-  names.push('undoRedo')
-  if (model.value.adaptationKind !== 'null') {
-    names.push('adaptationDetails')
-  }
-  if (wysiwyg.value) {
-    names.push('basicFormatting')
-  }
-  names.push('repartition')
-  return names
-})
+const toolSlotNames = [
+  'undoRedo',
+  'adaptationDetails',
+  'basicFormatting',
+  'distribution',
+]
 
 const wordingParagraphsPerPageletOptions = computed(() => [1, 2, 3, 4, 5].map(value => ({
-  label: i18n.t('exerciseLinesPerPage', {lines: value}),
+  label: i18n.t('exerciseLinesPerPage', value),
   value,
 })))
 
@@ -99,11 +82,11 @@ defineExpose({
   <TwoResizableColumns saveKey="projectTextbookPage-2" :snap="150" class="h-100" gutterWidth="200px">
     <template #left>
       <div class="h-100 overflow-auto position-relative" id="left-col-2" data-cy="left-col-2">
-        <h1>{{ $t('edition') }} <span style="font-size: small">(<label>WYSIWYG: <input type="checkbox" v-model="wantWysiwyg" /></label>)</span></h1>
+        <h1>{{ $t('edition') }}</h1>
         <BBusy :busy>
           <ExerciseFieldsForm ref="fields"
             v-model="model" :displayedPage
-            :fixedNumber="mode === 'edit'" :wysiwyg :deltas
+            :fixedNumber="mode === 'edit'"
           >
             <template #overlay>
               <slot name="exerciseFieldsOverlay"></slot>
@@ -126,13 +109,13 @@ defineExpose({
                     <UndoRedoTool v-model="model" :reset="doResetUndoRedo" />
                   </template>
                   <template #adaptationDetails>
-                    <AdaptationDetailsFieldsForm v-if="fields !== null" v-model="model" :wysiwyg :fields/>
+                    <AdaptationDetailsFieldsForm v-if="fields !== null" v-model="model" :fields/>
                   </template>
                   <template #basicFormatting>
                     <BasicFormattingTools v-if="fields !== null" v-model="model" :fields />
                   </template>
-                  <template #repartition>
-                    <BLabeledRadios :label="$t('exerciseRepartition')" v-model="model.wordingParagraphsPerPagelet" :options="wordingParagraphsPerPageletOptions" />
+                  <template #distribution>
+                    <BLabeledCheckboxes :label="$t('exerciseDistribution')" v-model="model.wordingParagraphsPerPagelet" :options="wordingParagraphsPerPageletOptions" />
                   </template>
                 </ToolsGutter>
               </div>
@@ -141,7 +124,7 @@ defineExpose({
                 style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); cursor: initial;"
                 @mousedown="e => e.stopPropagation()" @touchstart="e => e.stopPropagation()"
               >
-                <div style="position: absolute; top: 50%; left: 10%; width: 80%; transform: translate(0, -50%); background-color: white; padding: 1em;">
+                <div style="position: absolute; top: 50px; left: 10%; width: 80%; background-color: white; padding: 1em;">
                   {{ $t('multipleChoicesInstructions') }}
                   <BButton secondary sm @click="model.inProgress = {kind: 'nothing'}">{{ $t('choicesSettingsCancel') }}</BButton>
                 </div>

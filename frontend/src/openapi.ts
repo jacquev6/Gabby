@@ -154,16 +154,22 @@ export interface components {
     /** AdaptationV2 */
     "AdaptationV2-Input": {
       /** Effects */
-      effects: (components["schemas"]["FillWithFreeTextAdaptationEffect"] | components["schemas"]["MultipleChoicesInInstructionsAdaptationEffect"] | components["schemas"]["SelectThingsAdaptationEffect"] | components["schemas"]["ItemsAndEffectsAttempt1AdaptationEffect-Input"])[];
-      /** Kind */
-      kind: ("fill-with-free-text" | "items-and-effects-attempt-1" | "select-things" | "multiple-choices-in-instructions" | "multiple-choices-in-wording" | "multiple-choices") | null;
+      effects: (components["schemas"]["FillWithFreeTextAdaptationEffect"] | components["schemas"]["ItemizedAdaptationEffect-Input"])[];
+      /**
+       * Kind
+       * @enum {string}
+       */
+      kind: "generic" | "fill-with-free-text" | "multiple-choices";
     };
     /** AdaptationV2 */
     "AdaptationV2-Output": {
       /** Effects */
-      effects: (components["schemas"]["FillWithFreeTextAdaptationEffect"] | components["schemas"]["MultipleChoicesInInstructionsAdaptationEffect"] | components["schemas"]["SelectThingsAdaptationEffect"] | components["schemas"]["ItemsAndEffectsAttempt1AdaptationEffect-Output"])[];
-      /** Kind */
-      kind: ("fill-with-free-text" | "items-and-effects-attempt-1" | "select-things" | "multiple-choices-in-instructions" | "multiple-choices-in-wording" | "multiple-choices") | null;
+      effects: (components["schemas"]["FillWithFreeTextAdaptationEffect"] | components["schemas"]["ItemizedAdaptationEffect-Output"])[];
+      /**
+       * Kind
+       * @enum {string}
+       */
+      kind: "generic" | "fill-with-free-text" | "multiple-choices";
     };
     /** Body_login_api_token_post */
     Body_login_api_token_post: {
@@ -191,17 +197,20 @@ export interface components {
       boxed: boolean;
       selectable: components["schemas"]["Selectable"] | null;
     };
-    /** EmbedInsertOp */
-    EmbedInsertOp: {
-      /** Insert */
-      insert: Record<string, never>;
+    /** Exercise */
+    Exercise: {
+      /** Number */
+      number: string;
+      /** Pagelets */
+      pagelets: components["schemas"]["Pagelet"][];
+      /** Textbook Page */
+      textbook_page: number | null;
     };
     /** FillWithFreeTextAdaptationEffect */
     FillWithFreeTextAdaptationEffect: {
       /**
        * Kind
        * @constant
-       * @enum {string}
        */
       kind: "fill-with-free-text";
       /** Placeholder */
@@ -212,54 +221,47 @@ export interface components {
       /** Detail */
       detail?: components["schemas"]["ValidationError"][];
     };
+    /** InsertOp */
+    InsertOp: {
+      /** Attributes */
+      attributes: Record<string, unknown>;
+      /** Insert */
+      insert: string;
+    };
     /** ItemLinks */
     ItemLinks: {
       /** Self */
       self: string;
     };
-    /** ItemsAndEffectsAttempt1AdaptationEffect */
-    "ItemsAndEffectsAttempt1AdaptationEffect-Input": {
+    /** ItemizedAdaptationEffect */
+    "ItemizedAdaptationEffect-Input": {
       effects: components["schemas"]["Effects"];
       /** Items */
       items: components["schemas"]["WordsItems"] | components["schemas"]["SentencesItems"] | components["schemas"]["ManualItems"];
       /**
        * Kind
        * @constant
-       * @enum {string}
        */
-      kind: "items-and-effects-attempt-1";
+      kind: "itemized";
     };
-    /** ItemsAndEffectsAttempt1AdaptationEffect */
-    "ItemsAndEffectsAttempt1AdaptationEffect-Output": {
+    /** ItemizedAdaptationEffect */
+    "ItemizedAdaptationEffect-Output": {
       effects: components["schemas"]["Effects"];
       /** Items */
       items: components["schemas"]["WordsItems"] | components["schemas"]["SentencesItems"] | components["schemas"]["ManualItems"];
       /**
        * Kind
        * @constant
-       * @enum {string}
        */
-      kind: "items-and-effects-attempt-1";
+      kind: "itemized";
     };
     /** ManualItems */
     ManualItems: {
       /**
        * Kind
        * @constant
-       * @enum {string}
        */
       kind: "manual";
-    };
-    /** MultipleChoicesInInstructionsAdaptationEffect */
-    MultipleChoicesInInstructionsAdaptationEffect: {
-      /**
-       * Kind
-       * @constant
-       * @enum {string}
-       */
-      kind: "multiple-choices-in-instructions";
-      /** Placeholder */
-      placeholder: string;
     };
     /** OutputListRelationShipMeta */
     OutputListRelationShipMeta: {
@@ -281,6 +283,11 @@ export interface components {
     PageMeta: {
       pagination: components["schemas"]["Pagination"];
     };
+    /** Pagelet */
+    Pagelet: {
+      instructions: components["schemas"]["Section"];
+      wording: components["schemas"]["Section"];
+    };
     /** Pagination */
     Pagination: {
       /** Count */
@@ -292,8 +299,8 @@ export interface components {
     };
     /** Paragraph */
     Paragraph: {
-      /** Sentences */
-      sentences: components["schemas"]["Sentence"][];
+      /** Tokens */
+      tokens: (components["schemas"]["_PlainText"] | components["schemas"]["_BoxedText"] | components["schemas"]["_BoldText"] | components["schemas"]["_ItalicText"] | components["schemas"]["_SelectableText"] | components["schemas"]["_SelectedText"] | components["schemas"]["_FreeTextInput"] | components["schemas"]["_MultipleChoicesInput"] | components["schemas"]["_Whitespace"])[];
     };
     /** PdfRectangle */
     PdfRectangle: {
@@ -328,46 +335,18 @@ export interface components {
       /** Paragraphs */
       paragraphs: components["schemas"]["Paragraph"][];
     };
-    /** SelectThingsAdaptationEffect */
-    SelectThingsAdaptationEffect: {
-      /** Colors */
-      colors: string[];
-      /**
-       * Kind
-       * @constant
-       * @enum {string}
-       */
-      kind: "select-things";
-      /** Punctuation */
-      punctuation: boolean;
-      /** Words */
-      words: boolean;
-    };
     /** Selectable */
     Selectable: {
       /** Colors */
       colors: string[];
-    };
-    /** Sentence */
-    Sentence: {
-      /** Tokens */
-      tokens: (components["schemas"]["_PlainText"] | components["schemas"]["_BoxedText"] | components["schemas"]["_BoldText"] | components["schemas"]["_ItalicText"] | components["schemas"]["_SelectableText"] | components["schemas"]["_SelectedText"] | components["schemas"]["_FreeTextInput"] | components["schemas"]["_MultipleChoicesInput"] | components["schemas"]["_Whitespace"])[];
     };
     /** SentencesItems */
     SentencesItems: {
       /**
        * Kind
        * @constant
-       * @enum {string}
        */
       kind: "sentences";
-    };
-    /** TextInsertOp */
-    TextInsertOp: {
-      /** Attributes */
-      attributes: Record<string, never>;
-      /** Insert */
-      insert: string;
     };
     /** ValidationError */
     ValidationError: {
@@ -383,7 +362,6 @@ export interface components {
       /**
        * Kind
        * @constant
-       * @enum {string}
        */
       kind: "words";
       /** Punctuation */
@@ -396,7 +374,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "boldText";
     };
@@ -407,7 +384,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "boxedText";
     };
@@ -416,7 +392,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "freeTextInput";
     };
@@ -427,7 +402,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "italicText";
     };
@@ -438,7 +412,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "multipleChoicesInput";
     };
@@ -449,7 +422,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "plainText";
     };
@@ -464,7 +436,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "selectableText";
     };
@@ -477,7 +448,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "selectedText";
     };
@@ -486,7 +456,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "whitespace";
     };
@@ -505,25 +474,41 @@ export interface components {
     exerciseCreateInputDataAttributes: {
       /**
        * @default {
-       *   "effects": []
+       *   "effects": [],
+       *   "kind": "generic"
        * }
        */
       adaptation?: components["schemas"]["AdaptationV2-Input"];
       /**
        * Clue
-       * @default
+       * @default [
+       *   {
+       *     "attributes": {},
+       *     "insert": "\n"
+       *   }
+       * ]
        */
-      clue?: string;
+      clue?: components["schemas"]["InsertOp"][];
       /**
        * Example
-       * @default
+       * @default [
+       *   {
+       *     "attributes": {},
+       *     "insert": "\n"
+       *   }
+       * ]
        */
-      example?: string;
+      example?: components["schemas"]["InsertOp"][];
       /**
        * Instructions
-       * @default
+       * @default [
+       *   {
+       *     "attributes": {},
+       *     "insert": "\n"
+       *   }
+       * ]
        */
-      instructions?: string;
+      instructions?: components["schemas"]["InsertOp"][];
       /** Number */
       number: string;
       /**
@@ -535,14 +520,16 @@ export interface components {
       textbookPage?: number | null;
       /**
        * Wording
-       * @default
+       * @default [
+       *   {
+       *     "attributes": {},
+       *     "insert": "\n"
+       *   }
+       * ]
        */
-      wording?: string;
-      /**
-       * Wordingparagraphsperpagelet
-       * @default 3
-       */
-      wordingParagraphsPerPagelet?: number;
+      wording?: components["schemas"]["InsertOp"][];
+      /** Wordingparagraphsperpagelet */
+      wordingParagraphsPerPagelet?: number | null;
     };
     /** exerciseCreateInputDataRelationships */
     exerciseCreateInputDataRelationships: {
@@ -570,16 +557,16 @@ export interface components {
     exerciseOutputItemAttributes: {
       adaptation: components["schemas"]["AdaptationV2-Output"];
       /** Clue */
-      clue: string;
+      clue: components["schemas"]["InsertOp"][];
       /**
        * Createdat
        * Format: date-time
        */
       createdAt: string;
       /** Example */
-      example: string;
+      example: components["schemas"]["InsertOp"][];
       /** Instructions */
-      instructions: string;
+      instructions: components["schemas"]["InsertOp"][];
       /** Number */
       number: string;
       /** Rectangles */
@@ -592,9 +579,9 @@ export interface components {
        */
       updatedAt: string;
       /** Wording */
-      wording: string;
+      wording: components["schemas"]["InsertOp"][];
       /** Wordingparagraphsperpagelet */
-      wordingParagraphsPerPagelet: number;
+      wordingParagraphsPerPagelet: number | null;
     };
     /** exerciseOutputItemRelationships */
     exerciseOutputItemRelationships: {
@@ -631,17 +618,17 @@ export interface components {
     exerciseUpdateInputDataAttributes: {
       adaptation?: components["schemas"]["AdaptationV2-Input"];
       /** Clue */
-      clue?: string;
+      clue?: components["schemas"]["InsertOp"][];
       /** Example */
-      example?: string;
+      example?: components["schemas"]["InsertOp"][];
       /** Instructions */
-      instructions?: string;
+      instructions?: components["schemas"]["InsertOp"][];
       /** Rectangles */
       rectangles?: components["schemas"]["PdfRectangle"][];
       /** Wording */
-      wording?: string;
+      wording?: components["schemas"]["InsertOp"][];
       /** Wordingparagraphsperpagelet */
-      wordingParagraphsPerPagelet?: number;
+      wordingParagraphsPerPagelet?: number | null;
     };
     /** exerciseUpdateInputDataRelationships */
     exerciseUpdateInputDataRelationships: Record<string, never>;
@@ -656,7 +643,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "user";
     };
@@ -671,7 +657,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "project";
     };
@@ -686,7 +671,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "textbook";
     };
@@ -701,33 +685,8 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "user";
-    };
-    /** Exercise */
-    gabby__exercise_delta__Exercise: {
-      /** Clue */
-      clue: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
-      /** Example */
-      example: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
-      /** Instructions */
-      instructions: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
-      /** Wording */
-      wording: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
-    };
-    /** Exercise */
-    gabby__renderable__Exercise: {
-      clue: components["schemas"]["Section"];
-      example: components["schemas"]["Section"];
-      instructions: components["schemas"]["Section"];
-      /** Number */
-      number: string;
-      /** Textbook Page */
-      textbook_page: number | null;
-      wording: components["schemas"]["Section"];
-      /** Wording Paragraphs Per Pagelet */
-      wording_paragraphs_per_pagelet: number;
     };
     /** parsedExerciseCreateInput */
     parsedExerciseCreateInput: {
@@ -745,17 +704,17 @@ export interface components {
     parsedExerciseCreateInputDataAttributes: {
       adaptation: components["schemas"]["AdaptationV2-Input"];
       /** Clue */
-      clue: string;
+      clue: components["schemas"]["InsertOp"][];
       /** Example */
-      example: string;
+      example: components["schemas"]["InsertOp"][];
       /** Instructions */
-      instructions: string;
+      instructions: components["schemas"]["InsertOp"][];
       /** Number */
       number: string;
       /** Wording */
-      wording: string;
+      wording: components["schemas"]["InsertOp"][];
       /** Wordingparagraphsperpagelet */
-      wordingParagraphsPerPagelet: number;
+      wordingParagraphsPerPagelet: number | null;
     };
     /** parsedExerciseCreateInputDataRelationships */
     parsedExerciseCreateInputDataRelationships: Record<string, never>;
@@ -776,8 +735,7 @@ export interface components {
     };
     /** parsedExerciseOutputItemAttributes */
     parsedExerciseOutputItemAttributes: {
-      adapted: components["schemas"]["gabby__renderable__Exercise"];
-      delta: components["schemas"]["gabby__exercise_delta__Exercise"];
+      adapted: components["schemas"]["Exercise"];
     };
     /** pdfFileCreateInput */
     pdfFileCreateInput: {
@@ -898,7 +856,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "user";
     };
@@ -913,7 +870,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "pdfFile";
     };
@@ -986,7 +942,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "user";
     };
@@ -1003,7 +958,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "pdfFileNaming";
     };
@@ -1020,7 +974,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "section";
     };
@@ -1143,7 +1096,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "user";
     };
@@ -1159,7 +1111,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "ping";
     };
@@ -1176,7 +1127,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "ping";
     };
@@ -1191,7 +1141,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "ping";
     };
@@ -1206,7 +1155,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "user";
     };
@@ -1318,7 +1266,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "user";
     };
@@ -1335,7 +1282,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "exercise";
     };
@@ -1352,7 +1298,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "textbook";
     };
@@ -1367,7 +1312,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "user";
     };
@@ -1519,7 +1463,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "user";
     };
@@ -1534,7 +1477,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "pdfFile";
     };
@@ -1549,7 +1491,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "textbook";
     };
@@ -1564,7 +1505,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "user";
     };
@@ -1701,7 +1641,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "user";
     };
@@ -1718,7 +1657,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "exercise";
     };
@@ -1733,7 +1671,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "project";
     };
@@ -1750,7 +1687,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "section";
     };
@@ -1765,7 +1701,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "user";
     };
@@ -1840,7 +1775,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "user";
     };
@@ -1855,7 +1789,6 @@ export interface components {
       /**
        * Type
        * @constant
-       * @enum {string}
        */
       type: "user";
     };

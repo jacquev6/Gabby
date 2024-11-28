@@ -18,7 +18,7 @@ describe('Gabby', () => {
   it('collects rectangles when creating and editing an exercise (on a single page)', () => {
     cy.viewport(1600, 1000)
 
-    visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise', {wysiwyg: false, pdf: 'test'})
+    visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise', {pdf: 'test'})
 
     cy.get('label:contains("Number")').next().type('5')
 
@@ -26,7 +26,7 @@ describe('Gabby', () => {
     cy.get('canvas[style="position: absolute; top: 0px; left: 0px;"]').first().as('highlighter')
 
     traceRectangle('@canvas', 5, 4, 45, 12)
-    cy.get('textarea').first().should('have.value', 'Recopie les mots suivants, puis\nentoure les pronoms personnels.\nIndique la classe des autres mots.')
+    cy.get('textarea').first().should('have.value', 'Recopie les mots suivants, puis entoure les pronoms personnels. Indique la classe des autres mots.')
     cy.get('button:contains("Instructions")').click()
     expectRectangles('@highlighter', 'surrounded', [{
       'left': 56.26098090252517,
@@ -83,7 +83,7 @@ describe('Gabby', () => {
 
     cy.intercept('GET', '/api/exercises/pghtfo').as('getExercise')
 
-    visit('/project-xkopqm/textbook-klxufv/page-7/exercise-pghtfo', {wysiwyg: false, pdf: 'test'})
+    visit('/project-xkopqm/textbook-klxufv/page-7/exercise-pghtfo', {pdf: 'test'})
 
     cy.get('@getExercise').its('response.body.data.attributes.rectangles').should('deep.equal', [
       {
@@ -98,7 +98,7 @@ describe('Gabby', () => {
           'x': 282.44883175340175,
           'y': isProdPreview ? 726.5359457228192 : 725.8392892267519
         },
-        'text': 'Recopie les mots suivants, puis\nentoure les pronoms personnels.\nIndique la classe des autres mots.',
+        'text': 'Recopie les mots suivants, puis entoure les pronoms personnels. Indique la classe des autres mots.\n',
         'role': 'instructions',
       },
       {
@@ -113,7 +113,7 @@ describe('Gabby', () => {
           'x': 277.0116238002557,
           'y': isProdPreview ? 698.2618869556034 : 698.6526942582752
         },
-        'text': 'b. vous ◆ un ◆ arbre ◆ ce',
+        'text': 'b. vous ◆ un ◆ arbre ◆ ce\n',
         'role': 'wording',
       },
       {
@@ -128,7 +128,7 @@ describe('Gabby', () => {
           'x': 243.30093449075005,
           'y': isProdPreview ? 683.0373937732564 : 682.3407372771892
         },
-        'text': 'c. ils ◆ des ◆ grandir ◆ port',
+        'text': 'c. ils ◆ des ◆ grandir ◆ port\n',
         'role': 'wording',
       },
       {
@@ -143,7 +143,7 @@ describe('Gabby', () => {
           'x': 225.9018690406826,
           'y': isProdPreview ? 666.7254367921705 : 667.1162440948424
         },
-        'text': 'd. dessin ◆ tu ◆ aller ◆ mon',
+        'text': 'd. dessin ◆ tu ◆ aller ◆ mon\n',
         'role': 'example',
       },
       {
@@ -158,7 +158,7 @@ describe('Gabby', () => {
           'x': 237.86372653760395,
           'y': isProdPreview ? 651.5009436098235 : 650.8042871137563
         },
-        'text': 'e. elle ◆ gomme ◆ peindre ◆ ces',
+        'text': 'e. elle ◆ gomme ◆ peindre ◆ ces\n',
         'role': 'clue',
       },
     ])
@@ -192,7 +192,7 @@ describe('Gabby', () => {
           'x': 282.44883175340175,
           'y': isProdPreview ? 726.5359457228192 : 725.8392892267519
         },
-        'text': 'Recopie les mots suivants, puis\nentoure les pronoms personnels.\nIndique la classe des autres mots.',
+        'text': 'Recopie les mots suivants, puis entoure les pronoms personnels. Indique la classe des autres mots.\n',
         'role': 'instructions',
       },
       {
@@ -207,7 +207,7 @@ describe('Gabby', () => {
           'x': 277.0116238002557,
           'y': isProdPreview ? 698.2618869556034 : 698.6526942582752
         },
-        'text': 'b. vous ◆ un ◆ arbre ◆ ce',
+        'text': 'b. vous ◆ un ◆ arbre ◆ ce\n',
         'role': 'wording',
       },
       {
@@ -222,7 +222,7 @@ describe('Gabby', () => {
           'x': 243.30093449075005,
           'y': isProdPreview ? 683.0373937732564 : 682.3407372771892
         },
-        'text': 'c. ils ◆ des ◆ grandir ◆ port',
+        'text': 'c. ils ◆ des ◆ grandir ◆ port\n',
         'role': 'wording',
       },
       {
@@ -237,7 +237,7 @@ describe('Gabby', () => {
           'x': 225.9018690406826,
           'y': isProdPreview ? 666.7254367921705 : 667.1162440948424
         },
-        'text': 'd. dessin ◆ tu ◆ aller ◆ mon',
+        'text': 'd. dessin ◆ tu ◆ aller ◆ mon\n',
         'role': 'example',
       },
       {
@@ -252,7 +252,7 @@ describe('Gabby', () => {
           'x': 237.86372653760395,
           'y': isProdPreview ? 651.5009436098235 : 650.8042871137563
         },
-        'text': 'e. elle ◆ gomme ◆ peindre ◆ ces',
+        'text': 'e. elle ◆ gomme ◆ peindre ◆ ces\n',
         'role': 'clue',
       },
       {
@@ -267,7 +267,7 @@ describe('Gabby', () => {
             'x': 237.86372653760395,
             'y': isProdPreview ? 635.1889866287376 : 635.5797939314094
         },
-        'text': 'f. histoire ◆ nous ◆ gentil ◆ la',
+        'text': 'f. histoire ◆ nous ◆ gentil ◆ la\n',
         'role': 'wording',
       },
     ])

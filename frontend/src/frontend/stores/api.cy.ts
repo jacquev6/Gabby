@@ -1487,7 +1487,7 @@ describe('ApiStore - Application - 1', () => {
       'exercise',
       {
         textbookPage: 6, number: '14',
-        instructions: 'Do this',
+        instructions: [{insert: 'Do this\n', attributes: {}}],
       },
       {
         project: api.cache.getOne('project', 'xkopqm'),
@@ -1497,7 +1497,7 @@ describe('ApiStore - Application - 1', () => {
 
     expect(newExercise.id).to.equal('vodhqn')
     expectToBeTrue(newExercise.exists)
-    expect(newExercise.attributes.instructions).to.equal('Do this')
+    expect(newExercise.attributes.instructions).to.deep.equal([{insert: 'Do this\n', attributes: {}}])
 
     expect(api.cache.getOne('textbook', 'klxufv').inCache).to.be.false
 
@@ -1518,7 +1518,7 @@ describe('ApiStore - Application - 1', () => {
       'exercise',
       {
         textbookPage: 6, number: '14',
-        instructions: 'Do that',
+        instructions: [{insert: 'Do that\n', attributes: {}}],
       },
       {
         project: api.cache.getOne('project', 'xkopqm'),
@@ -1531,7 +1531,7 @@ describe('ApiStore - Application - 1', () => {
 
     expect(newExercise.id).to.equal('vodhqn')
     expectToBeTrue(newExercise.exists)
-    expect(newExercise.attributes.instructions).to.equal('Do that')
+    expect(newExercise.attributes.instructions).to.deep.equal([{insert: 'Do that\n', attributes: {}}])
 
     expectToBeTrue(textbook.inCache)
     expectToBeTrue(textbook.exists)
@@ -1545,11 +1545,11 @@ describe('ApiStore - Application - 1', () => {
     await api.auth.login('admin', 'password')
 
     const updatedExercise = api.cache.getOne('exercise', 'wbqloc')
-    await updatedExercise.patch({instructions: 'Do that'}, {})
+    await updatedExercise.patch({instructions: [{insert: 'Do that\n', attributes: {}}]}, {})
 
     expectToBeTrue(updatedExercise.inCache)
     expectToBeTrue(updatedExercise.exists)
-    expect(updatedExercise.attributes.instructions).to.equal('Do that')
+    expect(updatedExercise.attributes.instructions).to.deep.equal([{insert: 'Do that\n', attributes: {}}])
   })
 
   it('updates an exercise and retrieves its textbook', async () => {
@@ -1561,14 +1561,14 @@ describe('ApiStore - Application - 1', () => {
 
     const updatedExercise = api.cache.getOne('exercise', 'wbqloc')
     await updatedExercise.patch(
-      {instructions: 'Do that'},
+      {instructions: [{insert: 'Do that\n', attributes: {}}]},
       {},
       {include: ['textbook']},
     )
 
     expectToBeTrue(updatedExercise.inCache)
     expectToBeTrue(updatedExercise.exists)
-    expect(updatedExercise.attributes.instructions).to.equal('Do that')
+    expect(updatedExercise.attributes.instructions).to.deep.equal([{insert: 'Do that\n', attributes: {}}])
 
     expectToBeTrue(textbook.inCache)
     expectToBeTrue(textbook.exists)
@@ -1608,8 +1608,8 @@ describe('ApiStore - Application - 2', () => {
     const exercise = await api.client.getOne('exercise', 'bylced')
 
     expectToBeTrue(exercise.exists)
-    expect(exercise.attributes.instructions).to.equal('Écris une phrase en respectant l\'ordre des classes grammaticales indiquées.')
-    expect(exercise.attributes.adaptation.kind).to.be.null
+    expect(exercise.attributes.instructions).to.deep.equal([{insert: 'Écris une phrase en respectant l\'ordre des classes grammaticales indiquées.\n', attributes: {}}])
+    expect(exercise.attributes.adaptation.kind).to.equal('generic')
   })
 
   it('gets an exercise with "select things" adaptation', async () => {
@@ -1618,12 +1618,24 @@ describe('ApiStore - Application - 2', () => {
     const exercise = await api.client.getOne('exercise', 'vodhqn')
 
     expectToBeTrue(exercise.exists)
-    expect(exercise.attributes.instructions).to.equal('Relève dans le texte trois\n{sel1|déterminants}, un {sel2|nom propre}, quatre\n{sel3|noms communs} et trois {sel4|verbes}.')
-    expect(exercise.attributes.adaptation.kind).to.equal('select-things')
+    expect(exercise.attributes.instructions).to.deep.equal([
+      {insert: 'Relève dans le texte trois\n', attributes: {}},
+      {insert: 'déterminants', attributes: {sel: 1}},
+      {insert: ', un ', attributes: {}},
+      {insert: 'nom propre', attributes: {sel: 2}},
+      {insert: ', quatre\n', attributes: {}},
+      {insert: 'noms communs', attributes: {sel: 3}},
+      {insert: ' et trois ', attributes: {}},
+      {insert: 'verbes', attributes: {sel: 4}},
+      {insert: '.\n', attributes: {}}
+    ])
+    expect(exercise.attributes.adaptation.kind).to.equal('generic')
     expect(exercise.attributes.adaptation.effects).to.have.length(1)
-    expect(exercise.attributes.adaptation.effects[0].kind).to.equal('select-things')
-    console.assert(exercise.attributes.adaptation.effects[0].kind === 'select-things')
-    expect(exercise.attributes.adaptation.effects[0].colors).to.deep.equal(["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"])
+    expect(exercise.attributes.adaptation.effects[0].kind).to.equal('itemized')
+    console.assert(exercise.attributes.adaptation.effects[0].kind === 'itemized')
+    expect(exercise.attributes.adaptation.effects[0].effects.selectable).to.not.be.null
+    console.assert(exercise.attributes.adaptation.effects[0].effects.selectable !== null)
+    expect(exercise.attributes.adaptation.effects[0].effects.selectable.colors).to.deep.equal(['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'])
   })
 
   it('gets an exercise with "fill with free text" adaptation', async () => {
@@ -1632,7 +1644,7 @@ describe('ApiStore - Application - 2', () => {
     const exercise = await api.client.getOne('exercise', 'dymwin')
 
     expectToBeTrue(exercise.exists)
-    expect(exercise.attributes.instructions).to.equal('Ajoute le suffixe –eur aux verbes.\nIndique la classe des mots fabriqués.')
+    expect(exercise.attributes.instructions).to.deep.equal([{insert: 'Ajoute le suffixe –eur aux verbes.\nIndique la classe des mots fabriqués.\n', attributes: {}}])
     expect(exercise.attributes.adaptation.kind).to.equal('fill-with-free-text')
     expect(exercise.attributes.adaptation.effects).to.have.length(1)
     console.assert(exercise.attributes.adaptation.effects[0].kind === 'fill-with-free-text')
@@ -1648,14 +1660,16 @@ describe('ApiStore - Application - 2', () => {
       {
         textbookPage: 7,
         number: '12',
-        instructions: 'Do this',
+        instructions: [{insert: 'Do this\n', attributes: {}}],
         adaptation: {
-          kind: 'select-things',
+          kind: 'generic',
           effects: [{
-            kind: 'select-things',
-            colors: ['red', 'green', 'blue', 'purple'],
-            words: true,
-            punctuation: true,
+            kind: 'itemized',
+            items: {kind: 'words', punctuation: false},
+            effects: {
+              selectable: {colors: ['red', 'green', 'blue', 'purple']},
+              boxed: false,
+            },
           }],
         },
       },
@@ -1666,10 +1680,12 @@ describe('ApiStore - Application - 2', () => {
     )
 
     console.assert(exercise.inCache && exercise.exists)
-    expect(exercise.attributes.adaptation.kind).to.equal('select-things')
+    expect(exercise.attributes.adaptation.kind).to.equal('generic')
     expect(exercise.attributes.adaptation.effects).to.have.length(1)
-    expect(exercise.attributes.adaptation.effects[0].kind).to.equal('select-things')
-    console.assert(exercise.attributes.adaptation.effects[0].kind === 'select-things')
-    expect(exercise.attributes.adaptation.effects[0].colors).to.deep.equal(['red', 'green', 'blue', 'purple'])
+    expect(exercise.attributes.adaptation.effects[0].kind).to.equal('itemized')
+    console.assert(exercise.attributes.adaptation.effects[0].kind === 'itemized')
+    expect(exercise.attributes.adaptation.effects[0].effects.selectable).to.not.be.null
+    console.assert(exercise.attributes.adaptation.effects[0].effects.selectable !== null)
+    expect(exercise.attributes.adaptation.effects[0].effects.selectable.colors).to.deep.equal(['red', 'green', 'blue', 'purple'])
   })
 })

@@ -61,7 +61,7 @@ describe('Gabby', () => {
   })
 
   it("navigates the PDF when creating an exercise - changes exercise's page", () => {
-    visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise', {wysiwyg: false, pdf: 'test'})
+    visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise', {pdf: 'test'})
 
     cy.get('canvas').first().as('renderer')
     cy.get('canvas[style="position: absolute; top: 0px; left: 0px;"]').first().as('highlighter')
@@ -129,7 +129,7 @@ describe('Gabby', () => {
         "surrounded": [],
       },
     )
-    cy.get('[data-cy-exercise-field="instructions"]').type('Do this')
+    cy.get('label:contains("Instructions") + div.ql-container div.ql-editor').type('Do this')
 
     cy.get('button:contains("Save then next")').click()
     notBusy()
@@ -141,14 +141,14 @@ describe('Gabby', () => {
   })
 
   it("navigates the PDF when creating an exercise - doesn't change exercise's page - save then next", () => {
-    visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise', {wysiwyg: false, pdf: 'test'})
+    visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise', {pdf: 'test'})
 
     cy.get('canvas').first().as('renderer')
     cy.get('canvas[style="position: absolute; top: 0px; left: 0px;"]').first().as('highlighter')
 
     cy.get('[data-cy-exercise-field="number"]').type('5')
     cy.get('[data-cy-exercise-field="page"]').should('have.value', 6)
-    cy.get('[data-cy-exercise-field="instructions"]').type('Do that')
+    cy.get('label:contains("Instructions") + div.ql-container div.ql-editor').type('Do that')
     cy.get('@renderer').should('have.attr', 'data-cy-rendered-page', '1')
     cy.get('@highlighter').should('have.attr', 'data-cy-drawn-rectangles').then(JSON.parse as any/* Work around Cypress typing limitations */).should(
       'deep.equal',
@@ -211,7 +211,6 @@ describe('Gabby', () => {
         "surrounded": [],
       },
     )
-    cy.get('[data-cy-exercise-field="instructions"]').should('have.value', 'Do that')
 
     cy.get('button:contains("Save then next")').click()
     cy.get('button:contains("Confirm")').click()
@@ -228,14 +227,14 @@ describe('Gabby', () => {
   })
 
   it("navigates the PDF when creating an exercise - doesn't change exercise's page - save then back", () => {
-    visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise', {wysiwyg: false, pdf: 'test'})
+    visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise', {pdf: 'test'})
 
     cy.get('canvas').first().as('renderer')
     cy.get('canvas[style="position: absolute; top: 0px; left: 0px;"]').first().as('highlighter')
 
     cy.get('[data-cy-exercise-field="number"]').type('5')
     cy.get('[data-cy-exercise-field="page"]').should('have.value', 6)
-    cy.get('[data-cy-exercise-field="instructions"]').type('Do that')
+    cy.get('label:contains("Instructions") + div.ql-container div.ql-editor').type('Do that')
     cy.get('@renderer').should('have.attr', 'data-cy-rendered-page', '1')
     cy.get('@highlighter').should('have.attr', 'data-cy-drawn-rectangles').then(JSON.parse as any/* Work around Cypress typing limitations */).should(
       'deep.equal',
@@ -298,7 +297,6 @@ describe('Gabby', () => {
         "surrounded": [],
       },
     )
-    cy.get('[data-cy-exercise-field="instructions"]').should('have.value', 'Do that')
 
     cy.get('button:contains("Save then back to list")').click()
     cy.get('button:contains("Confirm")').click()

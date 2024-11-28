@@ -3,7 +3,7 @@ import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 
 import type { Data, Settings } from '$adapted/types'
-import Exercise, { useExercisePagelets } from '$adapted/components/Exercise.vue'
+import Exercise from '$adapted/components/Exercise.vue'
 import PageletsNavigationControls from '$adapted/components/PageletsNavigationControls.vue'
 
 
@@ -20,11 +20,7 @@ const exercise = computed(() => {
   return props.data.exercises[props.exerciseId]
 })
 
-const { firstWordingParagraph, lastWordingParagraph, pageletsCount } = useExercisePagelets(
-  computed(() => exercise.value.wording_paragraphs_per_pagelet),  // @todo Rename to wordingParagraphsPerPagelet
-  computed(() => exercise.value.wording.paragraphs.length),
-  computed(() => props.pageletIndex),
-)
+const pageletsCount = computed(() => exercise.value.pagelets.length)
 
 const exerciseComponent = ref<InstanceType<typeof Exercise> | null>(null)
 
@@ -42,8 +38,7 @@ function changePagelet(newPageletIndex: number) {
       :projectId="data.projectId"
       :exerciseId
       :exercise
-      :firstWordingParagraph
-      :lastWordingParagraph
+      :pageletIndex
       :settings
     />
   </PageletsNavigationControls>

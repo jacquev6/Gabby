@@ -10,7 +10,6 @@ import FreeTextInput from './FreeTextInput.vue'
 
 const props = withDefaults(defineProps<{
   paragraphs: Paragraph[]
-  paragraphIndexOffset: number
   centered?: boolean
   first?: boolean
 }>(), {
@@ -35,34 +34,31 @@ const style = computed(() => ({
 
 <template>
   <p v-for="(paragraph, paragraphIndex) in paragraphs" :style :class="{first: first && paragraphIndex === 0}">
-    <template v-for="(sentence, sentenceIndex) in paragraph.sentences">
-      <template v-for="(token, tokenIndex) in sentence.tokens">
-        <template v-for="modelKey in [`${paragraphIndex + paragraphIndexOffset}-${sentenceIndex}-${tokenIndex}`]">
-          <span>
-            <template v-if="token.type === 'plainText'">{{ token.text }}</template>
-            <template v-else-if="token.type === 'whitespace'">&nbsp;&nbsp;<wbr /></template>
-            <template v-else-if="token.type === 'boxedText'"><span class="boxed">{{ token.text }}</span></template>
-            <template v-else-if="token.type === 'boldText'"><b>{{ token.text }}</b></template>
-            <template v-else-if="token.type === 'italicText'"><i>{{ token.text }}</i></template>
-            <template v-else-if="token.type === 'freeTextInput'">
-              <FreeTextInput v-model="models[modelKey]" />
-            </template>
-            <template v-else-if="token.type === 'selectableText'">
-              <SelectableText :colors="token.colors" :boxed="token.boxed" v-model="models[modelKey]">{{ token.text }}</SelectableText>
-            </template>
-            <template v-else-if="token.type === 'selectedText'">
-              <SelectedText :color="token.color" :boxed="false">{{ token.text }}</SelectedText>
-            </template>
-            <template v-else-if="token.type === 'multipleChoicesInput'">
-              <MultipleChoicesInput :choices="token.choices" v-model="models[modelKey]" />
-            </template>
-            <template v-else>
-              <span>{{ $t('thisIsABug') }} {{ ((t: never) => t)(token) }}</span>
-            </template>
-          </span>
-        </template>
+    <template v-for="(token, tokenIndex) in paragraph.tokens">
+      <template v-for="modelKey in [`${paragraphIndex}-${tokenIndex}`]">
+        <span>
+          <template v-if="token.type === 'plainText'">{{ token.text }}</template>
+          <template v-else-if="token.type === 'whitespace'">&nbsp;&nbsp;<wbr /></template>
+          <template v-else-if="token.type === 'boxedText'"><span class="boxed">{{ token.text }}</span></template>
+          <template v-else-if="token.type === 'boldText'"><b>{{ token.text }}</b></template>
+          <template v-else-if="token.type === 'italicText'"><i>{{ token.text }}</i></template>
+          <template v-else-if="token.type === 'freeTextInput'">
+            <FreeTextInput v-model="models[modelKey]" />
+          </template>
+          <template v-else-if="token.type === 'selectableText'">
+            <SelectableText :colors="token.colors" :boxed="token.boxed" v-model="models[modelKey]">{{ token.text }}</SelectableText>
+          </template>
+          <template v-else-if="token.type === 'selectedText'">
+            <SelectedText :color="token.color" :boxed="false">{{ token.text }}</SelectedText>
+          </template>
+          <template v-else-if="token.type === 'multipleChoicesInput'">
+            <MultipleChoicesInput :choices="token.choices" v-model="models[modelKey]" />
+          </template>
+          <template v-else>
+            <span>{{ $t('thisIsABug') }} {{ ((t: never) => t)(token) }}</span>
+          </template>
+        </span>
       </template>
-      <span> </span>
     </template>
   </p>
 </template>

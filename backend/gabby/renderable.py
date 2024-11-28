@@ -1,6 +1,5 @@
 from typing import Literal
 
-from . import settings
 from mydantic import PydanticBase
 
 
@@ -86,23 +85,20 @@ def Whitespace():
 SentenceToken = _PlainText | _BoxedText | _BoldText | _ItalicText | _SelectableText | _SelectedText | _FreeTextInput | _MultipleChoicesInput | _Whitespace
 
 
-class Sentence(PydanticBase):
-    tokens: list[SentenceToken]
-
-
 class Paragraph(PydanticBase):
-    sentences: list[Sentence]
+    tokens: list[SentenceToken]
 
 
 class Section(PydanticBase):
     paragraphs: list[Paragraph]
 
 
+class Pagelet(PydanticBase):
+    instructions: Section
+    wording: Section
+
+
 class Exercise(PydanticBase):
     number: str
     textbook_page: int | None
-    instructions: Section
-    wording: Section
-    example: Section
-    clue: Section
-    wording_paragraphs_per_pagelet: int
+    pagelets: list[Pagelet]

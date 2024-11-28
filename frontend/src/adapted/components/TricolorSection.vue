@@ -7,7 +7,6 @@ import MonocolorSection from './MonocolorSection.vue'
 
 defineProps<{
   paragraphs: Paragraph[],
-  paragraphIndexOffset: number,
 }>()
 
 const model = defineModel<Record<string, any/* @todo Type */>>({
@@ -19,7 +18,7 @@ const tricolorLines = ref<InstanceType<typeof TricolorLines> | null>(null)
 
 <template>
   <TricolorLines ref="tricolorLines">
-    <MonocolorSection :paragraphs :paragraphIndexOffset v-model="model" @layoutChanged="tricolorLines?.recolor()">
+    <MonocolorSection :paragraphs v-model="model" @layoutChanged="tricolorLines?.recolor()">
       <template v-slot="{ token, tokenIndex }">
         <slot :token :tokenIndex></slot>
       </template>

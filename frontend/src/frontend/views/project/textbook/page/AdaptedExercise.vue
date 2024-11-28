@@ -4,7 +4,7 @@ import { useWindowSize, useElementBounding } from '@vueuse/core'
 
 import type { Exercise } from '$adapted/types'
 import { BButton } from '$frontend/components/opinion/bootstrap'
-import ExerciseComponent, { useExercisePagelets } from '$adapted/components/Exercise.vue'
+import ExerciseComponent from '$adapted/components/Exercise.vue'
 import PageletsNavigationControls from '$adapted/components/PageletsNavigationControls.vue'
 
 
@@ -20,16 +20,11 @@ const settings = {
 }
 
 const pageletIndex = ref(0)
+const pageletsCount = computed(() => props.exercise.pagelets.length)
 
-const { firstWordingParagraph, lastWordingParagraph, pageletsCount } = useExercisePagelets(
-  computed(() => props.exercise.wording_paragraphs_per_pagelet),  // @todo Rename to wordingParagraphsPerPagelet
-  computed(() => props.exercise.wording.paragraphs.length),
-  pageletIndex,
-)
-
-watch(pageletsCount, () => {
-  if (pageletIndex.value >= pageletsCount.value) {
-    pageletIndex.value = pageletsCount.value - 1
+watch(pageletsCount, pageletsCount => {
+  if (pageletIndex.value >= pageletsCount) {
+    pageletIndex.value = pageletsCount - 1
   }
 })
 
@@ -92,14 +87,13 @@ provide('adaptedExerciseBackdropCovers', preview)
 <template>
   <div ref="container" style="border: 1px solid black" :style="containerStyle">
     <div ref="preview" :style=previewStyle>
-      <PageletsNavigationControls :pageletsCount v-model="pageletIndex">
+      <PageletsNavigationControls :pageletsCount="pageletsCount" v-model="pageletIndex">
         <ExerciseComponent
           ref="exerciseComponent"
           :projectId="props.projectId"
           :exerciseId="props.exerciseId"
           :exercise
-          :firstWordingParagraph
-          :lastWordingParagraph
+          :pageletIndex
           :settings
           :isPreview="true"
         />

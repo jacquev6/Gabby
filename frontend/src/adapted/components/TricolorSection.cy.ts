@@ -7,7 +7,7 @@ function makeToken(text: string) {
 }
 
 function makeSentence(prefix: string, length=26) {
-  const tokens: Paragraph['sentences'][number]['tokens'] = [
+  const tokens: Paragraph['tokens'] = [
     makeToken(prefix + 'A')
   ]
   for (let i = 1; i < length; i++) {
@@ -15,7 +15,7 @@ function makeSentence(prefix: string, length=26) {
     tokens.push(makeToken(prefix + String.fromCharCode('A'.charCodeAt(0) + i)))
   }
   tokens.push(makeToken('.'))
-  return {tokens}
+  return tokens
 }
 
 const color1 = 'rgb(0, 0, 255)'
@@ -24,8 +24,8 @@ const color3 = 'rgb(0, 204, 0)'
 
 const props = {
   paragraphs: [
-    {sentences: [makeSentence('A'), makeSentence('B'), makeSentence('C')]},
-    {sentences: [makeSentence('D'), makeSentence('E'), makeSentence('F')]},
+    {tokens: [...makeSentence('A'), {type: 'whitespace'}, ...makeSentence('B'), {type: 'whitespace'}, ...makeSentence('C')]},
+    {tokens: [...makeSentence('D'), {type: 'whitespace'}, ...makeSentence('E'), {type: 'whitespace'}, ...makeSentence('F')]},
   ] as Paragraph[],
   paragraphIndexOffset: 0,
   modelValue: {} as Record<string, any/* @todo Type */>,
@@ -74,17 +74,17 @@ describe('TricolorSection', () => {
     cy.get('span:contains("AM")').last().should('have.css', 'color', color2)
     cy.get('span:contains("AW")').last().should('have.css', 'color', color2)
     cy.get('span:contains("AX")').last().should('have.css', 'color', color3)
-    cy.get('span:contains("BI")').last().should('have.css', 'color', color3)
+    cy.get('span:contains("BH")').last().should('have.css', 'color', color3)
 
     cy.viewport(880, 1400)
 
     cy.get('span:contains("AA")').last().should('have.css', 'color', color1)
     cy.get('span:contains("AO")').last().should('have.css', 'color', color1)
     cy.get('span:contains("AP")').last().should('have.css', 'color', color2)
-    cy.get('span:contains("BD")').last().should('have.css', 'color', color2)
-    cy.get('span:contains("BE")').last().should('have.css', 'color', color3)
-    cy.get('span:contains("BS")').last().should('have.css', 'color', color3)
-    cy.get('span:contains("BT")').last().should('have.css', 'color', color1)
+    cy.get('span:contains("BC")').last().should('have.css', 'color', color2)
+    cy.get('span:contains("BD")').last().should('have.css', 'color', color3)
+    cy.get('span:contains("BQ")').last().should('have.css', 'color', color3)
+    cy.get('span:contains("BR")').last().should('have.css', 'color', color1)
   })
 
   it('reacts to text changes', () => {
@@ -92,26 +92,26 @@ describe('TricolorSection', () => {
     cy.mount(TricolorSection, mountOptions)
     cy.viewport(1140, 600)
 
-    cy.vue().then((w) => w.setProps({paragraphs: [{sentences: [
-      makeSentence('A', 10),
-      makeSentence('B', 10),
-      makeSentence('C', 10),
-      makeSentence('D', 10),
-      makeSentence('E', 10),
-      makeSentence('F', 10),
-      makeSentence('G', 10),
-      makeSentence('H', 10),
+    cy.vue().then((w) => w.setProps({paragraphs: [{tokens: [
+      ...makeSentence('A', 10), {type: 'whitespace'},
+      ...makeSentence('B', 10), {type: 'whitespace'},
+      ...makeSentence('C', 10), {type: 'whitespace'},
+      ...makeSentence('D', 10), {type: 'whitespace'},
+      ...makeSentence('E', 10), {type: 'whitespace'},
+      ...makeSentence('F', 10), {type: 'whitespace'},
+      ...makeSentence('G', 10), {type: 'whitespace'},
+      ...makeSentence('H', 10)
     ]}]}))
 
     cy.get('span:contains("AA")').last().should('have.css', 'color', color1)
-    cy.get('span:contains("BJ")').last().should('have.css', 'color', color1)
-    cy.get('span:contains("CA")').last().should('have.css', 'color', color2)
-    cy.get('span:contains("DI")').last().should('have.css', 'color', color2)
-    cy.get('span:contains("DJ")').last().should('have.css', 'color', color3)
-    cy.get('span:contains("FJ")').last().should('have.css', 'color', color3)
-    cy.get('span:contains("GA")').last().should('have.css', 'color', color1)
-    cy.get('span:contains("HH")').last().should('have.css', 'color', color1)
-    cy.get('span:contains("HI")').last().should('have.css', 'color', color2)
+    cy.get('span:contains("BI")').last().should('have.css', 'color', color1)
+    cy.get('span:contains("BJ")').last().should('have.css', 'color', color2)
+    cy.get('span:contains("DH")').last().should('have.css', 'color', color2)
+    cy.get('span:contains("DI")').last().should('have.css', 'color', color3)
+    cy.get('span:contains("FH")').last().should('have.css', 'color', color3)
+    cy.get('span:contains("FI")').last().should('have.css', 'color', color1)
+    cy.get('span:contains("HG")').last().should('have.css', 'color', color1)
+    cy.get('span:contains("HH")').last().should('have.css', 'color', color2)
     cy.get('span:contains("HJ")').last().should('have.css', 'color', color2)
   })
 
@@ -125,7 +125,7 @@ describe('TricolorSection', () => {
       {
         props: {
           paragraphs: [
-            {sentences: [makeSentence('A', 10)]},
+            {tokens: makeSentence('A', 10)},
           ],
           paragraphIndexOffset: 0,
           modelValue: [],
@@ -150,9 +150,9 @@ describe('TricolorSection', () => {
       TricolorSection,
       {
         props: {
-          paragraphs: [{sentences: [{
-            tokens: [makeToken('abcdefghijkl'), makeToken(' '), makeToken('mnopqrstuvwxyz')],
-          }]}],
+          paragraphs: [{
+            tokens: [makeToken('abcdefghijkl'), {type: 'whitespace'}, makeToken('mnopqrstuvwxyz')],
+          }],
           paragraphIndexOffset: 0,
           modelValue: [],
         },

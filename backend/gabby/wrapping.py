@@ -54,14 +54,9 @@ def make_sqids(name):
     # @todo Return a wrapper that checks if the sqid is "canonical" (cf. https://sqids.org/faq#valid-ids)
     return sqids
 # IDs of the first few exercises: wbqloc bylced jkrudc ufefwu orxbzq ahbwey vodhqn dymwin xnyegk
-# IDs of the first few fill_with_free_text_adaptations: ljpupg vahdwa udaorb zqltqi ylstuq dlymea rzmwsn fczoca xiqxfv
-# IDs of the first few items_and_effects_attempt_1_adaptations: rucejk blhvyl yvmxwv sqjkxi ltxkjf uafqbk ntdcdv gsrsrq okejkh
-# IDs of the first few multiple_choices_in_instructions_adaptations: zqwpae bopxey lavpnb wcdrmo hpzlba jlkmxy gqezrb cyxsei knsznf
-# IDs of the first few multiple_choices_in_wording_adaptations: vhjtbd liditc rvkfty qihgyl matkce zwnpmz greflc orgncm jgqfzd
 # IDs of the first few pdf_file_namings: tnahml wmyxrm yogtxq oexfhs bnqavf rhjojh pdbrtv uqodzk jgtoux
 # IDs of the first few projects: xkopqm fryrbl ztmcex dillfm oqwpdb pbiqru handbn whkaxt tlfeqv
 # IDs of the first few sections: eyjahd mknkny ajzqny fimocq nsbbfq rkqvdw qwozki tdchbv uygrig
-# IDs of the first few select_things_adaptations: ugrfkh fojjim oxzozr ehmtgu sftpwh bonnut dhxeyk jewvat gjhfvp
 # IDs of the first few textbooks: klxufv ojsbmy pkdksv alyral ixpuoz zsrfro deanft cpnkwb skhjfi
 # IDs of the first few users: fvirvd ckylfa jahykn mrexcg pjxbru ywnpmi bhpuqj ztmkbr sgdyfj
 
