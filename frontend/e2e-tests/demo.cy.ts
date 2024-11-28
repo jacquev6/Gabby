@@ -70,7 +70,7 @@ describe('Gabby', () => {
   }
 
   it('creates a "Select words" exercise', () => {
-    cy.viewport(1200, 1200)
+    cy.viewport(1300, 1200)
     visit('/project-xkopqm/textbook-klxufv/page-2/new-exercise', {pdf: 'demo'})
     setupAliases()
 
@@ -117,7 +117,7 @@ describe('Gabby', () => {
   })
 
   it('creates a "Select words" exercise with custom colors', () => {
-    cy.viewport(1200, 1000)
+    cy.viewport(1300, 1000)
     visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise', {pdf: 'demo'})
     setupAliases()
 
@@ -174,7 +174,7 @@ describe('Gabby', () => {
   })
 
   it('creates a "Multiple choices" exercise with choices in instructions', () => {
-    cy.viewport(1200, 1000)
+    cy.viewport(1300, 1000)
     visit('/project-xkopqm/textbook-klxufv/page-3/new-exercise', {pdf: 'demo'})
     setupAliases()
 
@@ -220,7 +220,7 @@ describe('Gabby', () => {
   })
 
   it('creates a "Multiple choices" exercise with two sets of choices in instructions', () => {
-    cy.viewport(1200, 1000)
+    cy.viewport(1300, 1000)
     visit('/project-xkopqm/textbook-klxufv/page-5/new-exercise', {pdf: 'demo'})
     setupAliases()
 
@@ -309,7 +309,7 @@ describe('Gabby', () => {
   })
 
   it('creates a "Multiple choices" exercise with choices in wording', () => {
-    cy.viewport(1200, 1000)
+    cy.viewport(1300, 1000)
     visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise', {pdf: 'demo'})
     setupAliases()
 
@@ -354,7 +354,7 @@ describe('Gabby', () => {
   })
 
   it('creates a "Fill with free text" exercise', () => {
-    cy.viewport(1200, 1000)
+    cy.viewport(1300, 1000)
     visit('/project-xkopqm/textbook-klxufv/page-4/new-exercise', {pdf: 'demo'})
     setupAliases()
 
