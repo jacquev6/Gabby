@@ -1,7 +1,7 @@
 Évolutions prévues
 ==================
 
-Voir la `roadmap à jour dans Google Docs <https://docs.google.com/document/d/1DS8Rko0q3MCxfUUt0CijjdX41bBWy8J_3IV4rR0sOeA/edit?usp=sharing>`__.
+Voir la `roadmap sur GitHub <https://github.com/jacquev6/Gabby/issues>`__.
 
 Historique des versions
 =======================
@@ -11,6 +11,37 @@ Les améliorations techniques ne figurent que dans le `log git <https://github.c
 
 Les titres des sections de ce document correspondent au champ ``Gabby version`` dans le "À propos".
 Les versions sont nommées selon leur date de publication, au format ``YYYYMMDD-HHMMSS`` (année, mois, jour, tiret, heure, minute, seconde).
+
+20241128-093541
+---------------
+
+- Homogénéisation du comportement relativement au type d'adaptation (`#33 <https://github.com/jacquev6/Gabby/issues/33>`__)
+    - les données existantes ont été migrées au nouveau format
+    - le type d'adaptation n'a plus aucun impact fonctionnel; tous les types sont équivalents, le type d'adaptation est purement informatif
+    - tous les exercices sont maintenant inclus dans le HTML exporté (précédemment, seuls les exercices ayant un type d'adaptation défini l'étaient)
+    - les mêmes outils sont affichés quel que soit le type d'adaptation
+- Amélioration de la gestion des fins de lignes (`#1 <https://github.com/jacquev6/Gabby/issues/1>`__)
+    - lors de l'extraction depuis le PDF, des retours à la ligne ne sont ajoutés automatiquement que dans les cas suivants :
+        - si une liste est détectée : chaque item est terminé par un retour à la ligne
+        - si du texte justifié est détecté : les ligne plus courtes que les autres sont terminées par un retour à la ligne
+        - si des interlignes plus grands sont détectés parmi des interlignes réguliers : les lignes avant ces grands interlignes sont terminées par un retour à la ligne
+    - une option a été ajoutée au dialogue d'extraction pour conserver tous les retours à la ligne du PDF (utile pour les poèmes par exemple)
+    - une option a été ajoutée au dialogue d'extraction pour désactiver la détection des listes. Cette option sera retirée quand on aura confiance que cette détection fonctionne correctement
+    - les exercices pré-existants ne bénéficient pas de cette amélioration, et devront être corrigés à la main (car ce changement intervient avant l'enregistrement de l'exercice)
+- la création des exercices indépendants a été (temporairement) retirée. Cette fonctionnalité était inutilisable en l'état, en l'absence de prévisualisation et de possibilité de modification
+- la case à cocher "WYSIWYG" a été retirée. Toute l'édition se fait maintenant en WYSIWYG
+- Répartition des lignes (`#5 <https://github.com/jacquev6/Gabby/issues/5>`__)
+    - une typo a été corrigée ("1 lignes par page" devient "1 ligne par page")
+    - la répartition automatique est devenu optionnelle (décochable)
+    - il est maintenant possible de forcer un passage à la page suivante dans l'exercices adapté en insérant deux lignes blanches consécutives dans l'énoncé
+- la détection des phrases dans la consigne (pour les mettre chacune sur une ligne) a été rendue plus souple
+    - il est vraisemblable que cela donne lieu à des cas où la consigne est affichée sur trop de lignes; l'issue `#39 <https://github.com/jacquev6/Gabby/issues/39>`__ a été ouverte pour recenser ces cas
+- Création de choix multiples (`#34 <https://github.com/jacquev6/Gabby/issues/34>`__)
+    - les réglages ("Début", "Fin", "Séparateurs") sont détectés automatiquement :
+        - si le texte est encadré par des parenthèses ou crochets droits, ces caractères sont utilisés comme "Début" et "Fin"
+        - si le texte contient au moins un caractère comme "," ou "/", il est utilisé comme premier séparateur
+        - si le texte contient le mot "ou", il est utilisé comme deuxième séparateur
+- un `PDF de demo <https://github.com/jacquev6/Gabby/blob/main/pdf-examples/demo.pdf>`__ et un `PDF focalisant sur l'extraction de texte <https://github.com/jacquev6/Gabby/blob/main/pdf-examples/text-extraction.pdf>`__, correspondant à une infime parte des tests automatisés, ont été ajoutés. Ils peuvent servir de base au discussions concernant l'extraction et l'adaptation
 
 20241031-160526
 ---------------
