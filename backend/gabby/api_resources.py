@@ -454,6 +454,7 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                         "example": [{"insert": "\n", "attributes": {}}],
                         "clue": [{"insert": "\n", "attributes": {}}],
                         "wording": [{"insert": "\n", "attributes": {}}],
+                        "textReference": [{"insert": "\n", "attributes": {}}],
                         "wordingParagraphsPerPagelet": None,
                         "adaptation": {"kind": "generic", "effects": []},
                         "createdAt": response.json()["included"][0]["attributes"]["createdAt"],
@@ -477,6 +478,7 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                         "example": [{"insert": "\n", "attributes": {}}],
                         "clue": [{"insert": "\n", "attributes": {}}],
                         "wording": [{"insert": "\n", "attributes": {}}],
+                        "textReference": [{"insert": "\n", "attributes": {}}],
                         "wordingParagraphsPerPagelet": None,
                         "adaptation": {"kind": "generic", "effects": []},
                         "createdAt": response.json()["included"][1]["attributes"]["createdAt"],
@@ -669,6 +671,7 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                         "example": [{"insert": "\n", "attributes": {}}],
                         "clue": [{"insert": "\n", "attributes": {}}],
                         "wording": [{"insert": "\n", "attributes": {}}],
+                        "textReference": [{"insert": "\n", "attributes": {}}],
                         "wordingParagraphsPerPagelet": None,
                         "adaptation": {"kind": "generic", "effects": []},
                         "createdAt": response.json()["included"][0]["attributes"]["createdAt"],
@@ -692,6 +695,7 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                         "example": [{"insert": "\n", "attributes": {}}],
                         "clue": [{"insert": "\n", "attributes": {}}],
                         "wording": [{"insert": "\n", "attributes": {}}],
+                        "textReference": [{"insert": "\n", "attributes": {}}],
                         "wordingParagraphsPerPagelet": None,
                         "adaptation": {"kind": "generic", "effects": []},
                         "createdAt": response.json()["included"][1]["attributes"]["createdAt"],
@@ -715,6 +719,7 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                         "example": [{"insert": "\n", "attributes": {}}],
                         "clue": [{"insert": "\n", "attributes": {}}],
                         "wording": [{"insert": "\n", "attributes": {}}],
+                        "textReference": [{"insert": "\n", "attributes": {}}],
                         "wordingParagraphsPerPagelet": None,
                         "adaptation": {"kind": "generic", "effects": []},
                         "createdAt": response.json()["included"][2]["attributes"]["createdAt"],
@@ -782,6 +787,7 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                         "example": [{"insert": "\n", "attributes": {}}],
                         "clue": [{"insert": "\n", "attributes": {}}],
                         "wording": [{"insert": "\n", "attributes": {}}],
+                        "textReference": [{"insert": "\n", "attributes": {}}],
                         "wordingParagraphsPerPagelet": None,
                         "adaptation": {"kind": "generic", "effects": []},
                         "createdAt": response.json()["included"][0]["attributes"]["createdAt"],
@@ -805,6 +811,7 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                         "example": [{"insert": "\n", "attributes": {}}],
                         "clue": [{"insert": "\n", "attributes": {}}],
                         "wording": [{"insert": "\n", "attributes": {}}],
+                        "textReference": [{"insert": "\n", "attributes": {}}],
                         "wordingParagraphsPerPagelet": None,
                         "adaptation": {"kind": "generic", "effects": []},
                         "createdAt": response.json()["included"][1]["attributes"]["createdAt"],
@@ -828,6 +835,7 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                         "example": [{"insert": "\n", "attributes": {}}],
                         "clue": [{"insert": "\n", "attributes": {}}],
                         "wording": [{"insert": "\n", "attributes": {}}],
+                        "textReference": [{"insert": "\n", "attributes": {}}],
                         "wordingParagraphsPerPagelet": None,
                         "adaptation": {"kind": "generic", "effects": []},
                         "createdAt": response.json()["included"][2]["attributes"]["createdAt"],
@@ -1028,6 +1036,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     "example": [{"insert": "\n", "attributes": {}}],
                     "clue": [{"insert": "\n", "attributes": {}}],
                     "wording": [{"insert": "\n", "attributes": {}}],
+                    "textReference": [{"insert": "\n", "attributes": {}}],
                     "wordingParagraphsPerPagelet": None,
                     "adaptation": {"kind": "generic", "effects": []},
                     "createdAt": response.json()["data"]["attributes"]["createdAt"],
@@ -1082,6 +1091,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     "example": [{"insert": "\n", "attributes": {}}],
                     "clue": [{"insert": "\n", "attributes": {}}],
                     "wording": [{"insert": "\n", "attributes": {}}],
+                    "textReference": [{"insert": "\n", "attributes": {}}],
                     "wordingParagraphsPerPagelet": None,
                     "adaptation": {"kind": "generic", "effects": []},
                     "createdAt": response.json()["data"]["attributes"]["createdAt"],
@@ -1118,6 +1128,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     "example": [{"insert": "example\n", "attributes": {}}],
                     "clue": [{"insert": "clue\n", "attributes": {}}],
                     "wording": [{"insert": "wording\n", "attributes": {}}],
+                    "textReference": [{"insert": "\n", "attributes": {}}],
                     "wordingParagraphsPerPagelet": 2,
                     "rectangles": [
                         {
@@ -1150,6 +1161,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     "example": [{"insert": "example\n", "attributes": {}}],
                     "clue": [{"insert": "clue\n", "attributes": {}}],
                     "wording": [{"insert": "wording\n", "attributes": {}}],
+                    "textReference": [{"insert": "\n", "attributes": {}}],
                     "wordingParagraphsPerPagelet": 2,
                     "adaptation": {"kind": "generic", "effects": []},
                     "rectangles": [
@@ -1228,6 +1240,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     "example": [{"insert": "example\n", "attributes": {}}],
                     "clue": [{"insert": "clue\n", "attributes": {}}],
                     "wording": [{"insert": "wording\n", "attributes": {}}],
+                    "textReference": [{"insert": "\n", "attributes": {}}],
                     "wordingParagraphsPerPagelet": None,
                     "adaptation": {"kind": "generic", "effects": []},
                     "createdAt": response.json()["data"]["attributes"]["createdAt"],
@@ -1269,6 +1282,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     "example": [{"insert": "example\n", "attributes": {}}],
                     "clue": [{"insert": "clue\n", "attributes": {}}],
                     "wording": [{"insert": "wording\n", "attributes": {}}],
+                    "textReference": [{"insert": "\n", "attributes": {}}],
                     "wordingParagraphsPerPagelet": None,
                     "adaptation": {"kind": "generic", "effects": []},
                     "createdAt": response.json()["data"]["attributes"]["createdAt"],
@@ -1334,6 +1348,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     "example": [{"insert": "example\n", "attributes": {}}],
                     "clue": [{"insert": "clue\n", "attributes": {}}],
                     "wording": [{"insert": "wording\n", "attributes": {}}],
+                    "textReference": [{"insert": "\n", "attributes": {}}],
                     "wordingParagraphsPerPagelet": None,
                     "adaptation": {"kind": "fill-with-free-text", "effects": [{"kind": "fill-with-free-text", "placeholder": "..."}]},
                     "createdAt": response.json()["data"]["attributes"]["createdAt"],
@@ -1373,6 +1388,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                         "example": [{"insert": "\n", "attributes": {}}],
                         "clue": [{"insert": "\n", "attributes": {}}],
                         "wording": [{"insert": "\n", "attributes": {}}],
+                        "textReference": [{"insert": "\n", "attributes": {}}],
                         "wordingParagraphsPerPagelet": None,
                         "adaptation": {"kind": "generic", "effects": []},
                         "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
@@ -1396,6 +1412,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                         "example": [{"insert": "\n", "attributes": {}}],
                         "clue": [{"insert": "\n", "attributes": {}}],
                         "wording": [{"insert": "\n", "attributes": {}}],
+                        "textReference": [{"insert": "\n", "attributes": {}}],
                         "wordingParagraphsPerPagelet": None,
                         "adaptation": {"kind": "generic", "effects": []},
                         "createdAt": response.json()["data"][1]["attributes"]["createdAt"],
@@ -1433,6 +1450,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                         "example": [{"insert": "\n", "attributes": {}}],
                         "clue": [{"insert": "\n", "attributes": {}}],
                         "wording": [{"insert": "\n", "attributes": {}}],
+                        "textReference": [{"insert": "\n", "attributes": {}}],
                         "wordingParagraphsPerPagelet": None,
                         "adaptation": {"kind": "generic", "effects": []},
                         "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
@@ -1477,6 +1495,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                         "example": [{"insert": "\n", "attributes": {}}],
                         "clue": [{"insert": "\n", "attributes": {}}],
                         "wording": [{"insert": "\n", "attributes": {}}],
+                        "textReference": [{"insert": "\n", "attributes": {}}],
                         "wordingParagraphsPerPagelet": None,
                         "adaptation": {"kind": "generic", "effects": []},
                         "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
@@ -1500,6 +1519,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                         "example": [{"insert": "\n", "attributes": {}}],
                         "clue": [{"insert": "\n", "attributes": {}}],
                         "wording": [{"insert": "\n", "attributes": {}}],
+                        "textReference": [{"insert": "\n", "attributes": {}}],
                         "wordingParagraphsPerPagelet": None,
                         "adaptation": {"kind": "generic", "effects": []},
                         "createdAt": response.json()["data"][1]["attributes"]["createdAt"],
@@ -1537,6 +1557,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                         "example": [{"insert": "\n", "attributes": {}}],
                         "clue": [{"insert": "\n", "attributes": {}}],
                         "wording": [{"insert": "\n", "attributes": {}}],
+                        "textReference": [{"insert": "\n", "attributes": {}}],
                         "wordingParagraphsPerPagelet": None,
                         "adaptation": {"kind": "generic", "effects": []},
                         "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
@@ -1583,6 +1604,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                         "example": [{"insert": "\n", "attributes": {}}],
                         "clue": [{"insert": "\n", "attributes": {}}],
                         "wording": [{"insert": "\n", "attributes": {}}],
+                        "textReference": [{"insert": "\n", "attributes": {}}],
                         "wordingParagraphsPerPagelet": None,
                         "adaptation": {"kind": "generic", "effects": []},
                         "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
@@ -1606,6 +1628,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                         "example": [{"insert": "\n", "attributes": {}}],
                         "clue": [{"insert": "\n", "attributes": {}}],
                         "wording": [{"insert": "\n", "attributes": {}}],
+                        "textReference": [{"insert": "\n", "attributes": {}}],
                         "wordingParagraphsPerPagelet": None,
                         "adaptation": {"kind": "generic", "effects": []},
                         "createdAt": response.json()["data"][1]["attributes"]["createdAt"],
@@ -1670,6 +1693,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                         "example": [{"insert": "\n", "attributes": {}}],
                         "clue": [{"insert": "\n", "attributes": {}}],
                         "wording": [{"insert": "\n", "attributes": {}}],
+                        "textReference": [{"insert": "\n", "attributes": {}}],
                         "wordingParagraphsPerPagelet": None,
                         "adaptation": {"kind": "generic", "effects": []},
                         "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
@@ -1693,6 +1717,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                         "example": [{"insert": "\n", "attributes": {}}],
                         "clue": [{"insert": "\n", "attributes": {}}],
                         "wording": [{"insert": "\n", "attributes": {}}],
+                        "textReference": [{"insert": "\n", "attributes": {}}],
                         "wordingParagraphsPerPagelet": None,
                         "adaptation": {"kind": "generic", "effects": []},
                         "createdAt": response.json()["data"][1]["attributes"]["createdAt"],
@@ -1789,6 +1814,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                         "example": [{"insert": "\n", "attributes": {}}],
                         "clue": [{"insert": "\n", "attributes": {}}],
                         "wording": [{"insert": "\n", "attributes": {}}],
+                        "textReference": [{"insert": "\n", "attributes": {}}],
                         "wordingParagraphsPerPagelet": None,
                         "adaptation": {"kind": "generic", "effects": []},
                         "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
@@ -1812,6 +1838,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                         "example": [{"insert": "\n", "attributes": {}}],
                         "clue": [{"insert": "\n", "attributes": {}}],
                         "wording": [{"insert": "\n", "attributes": {}}],
+                        "textReference": [{"insert": "\n", "attributes": {}}],
                         "wordingParagraphsPerPagelet": None,
                         "adaptation": {"kind": "generic", "effects": []},
                         "createdAt": response.json()["data"][1]["attributes"]["createdAt"],
@@ -1849,6 +1876,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                         "example": [{"insert": "\n", "attributes": {}}],
                         "clue": [{"insert": "\n", "attributes": {}}],
                         "wording": [{"insert": "\n", "attributes": {}}],
+                        "textReference": [{"insert": "\n", "attributes": {}}],
                         "wordingParagraphsPerPagelet": None,
                         "adaptation": {"kind": "generic", "effects": []},
                         "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
@@ -1882,6 +1910,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
             example=[deltas.InsertOp(insert="example\n", attributes={})],
             clue=[deltas.InsertOp(insert="clue\n", attributes={})],
             wording=[deltas.InsertOp(insert="wording\n", attributes={})],
+            text_reference=[deltas.InsertOp(insert="reference\n", attributes={})],
             rectangles=[PdfRectangle(
                 pdf_sha256="sha256",
                 pdf_page=42,
@@ -1902,6 +1931,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
         self.assertEqual(exercise.example, [deltas.InsertOp(insert="example\n", attributes={})])
         self.assertEqual(exercise.clue, [deltas.InsertOp(insert="clue\n", attributes={})])
         self.assertEqual(exercise.wording, [deltas.InsertOp(insert="wording\n", attributes={})])
+        self.assertEqual(exercise.text_reference, [deltas.InsertOp(insert="reference\n", attributes={})])
         self.assertEqual(
             exercise.rectangles,
             [
@@ -1926,6 +1956,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     "example": [{"insert": "EXAMPLE\n", "attributes": {}}],
                     "clue": [{"insert": "CLUE\n", "attributes": {}}],
                     "wording": [{"insert": "WORDING\n", "attributes": {}}],
+                    "textReference": [{"insert": "REFERENCE\n", "attributes": {}}],
                     "rectangles": [
                         {
                             "pdf_sha256": "sha256",
@@ -1962,6 +1993,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     "example": [{"insert": "EXAMPLE\n", "attributes": {}}],
                     "clue": [{"insert": "CLUE\n", "attributes": {}}],
                     "wording": [{"insert": "WORDING\n", "attributes": {}}],
+                    "textReference": [{"insert": "REFERENCE\n", "attributes": {}}],
                     "wordingParagraphsPerPagelet": None,
                     "adaptation": {"kind": "generic", "effects": []},
                     "createdAt": response.json()["data"]["attributes"]["createdAt"],
@@ -2007,6 +2039,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
         self.assertEqual(exercise.example, [deltas.InsertOp(insert="EXAMPLE\n", attributes={})])
         self.assertEqual(exercise.clue, [deltas.InsertOp(insert="CLUE\n", attributes={})])
         self.assertEqual(exercise.wording, [deltas.InsertOp(insert="WORDING\n", attributes={})])
+        self.assertEqual(exercise.text_reference, [deltas.InsertOp(insert="REFERENCE\n", attributes={})])
         self.assertEqual(
             exercise.rectangles,
             [
@@ -2042,6 +2075,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
             example=[deltas.InsertOp(insert="example\n", attributes={})],
             clue=[deltas.InsertOp(insert="clue\n", attributes={})],
             wording=[deltas.InsertOp(insert="wording\n", attributes={})],
+            text_reference=[deltas.InsertOp(insert="reference\n", attributes={})],
         )
 
         payload = {
@@ -2067,6 +2101,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     "example": [{"insert": "example\n", "attributes": {}}],
                     "clue": [{"insert": "clue\n", "attributes": {}}],
                     "wording": [{"insert": "wording\n", "attributes": {}}],
+                    "textReference": [{"insert": "reference\n", "attributes": {}}],
                     "wordingParagraphsPerPagelet": None,
                     "adaptation": {"kind": "generic", "effects": []},
                     "createdAt": response.json()["data"]["attributes"]["createdAt"],
@@ -2092,6 +2127,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
         self.assertEqual(exercise.example, [deltas.InsertOp(insert="example\n", attributes={})])
         self.assertEqual(exercise.clue, [deltas.InsertOp(insert="clue\n", attributes={})])
         self.assertEqual(exercise.wording, [deltas.InsertOp(insert="wording\n", attributes={})])
+        self.assertEqual(exercise.text_reference, [deltas.InsertOp(insert="reference\n", attributes={})])
 
     def test_patch__read_only_project(self):
         self.create_model(

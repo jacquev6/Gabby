@@ -317,7 +317,7 @@ export interface components {
        * Role
        * @enum {string}
        */
-      role: "bounding" | "instructions" | "wording" | "example" | "clue";
+      role: "bounding" | "instructions" | "wording" | "example" | "clue" | "textReference";
       start: components["schemas"]["Point"];
       stop: components["schemas"]["Point"];
       /** Text */
@@ -516,6 +516,16 @@ export interface components {
        * @default []
        */
       rectangles?: components["schemas"]["PdfRectangle"][];
+      /**
+       * Textreference
+       * @default [
+       *   {
+       *     "attributes": {},
+       *     "insert": "\n"
+       *   }
+       * ]
+       */
+      textReference?: components["schemas"]["InsertOp"][];
       /** Textbookpage */
       textbookPage?: number | null;
       /**
@@ -571,6 +581,8 @@ export interface components {
       number: string;
       /** Rectangles */
       rectangles: components["schemas"]["PdfRectangle"][];
+      /** Textreference */
+      textReference: components["schemas"]["InsertOp"][];
       /** Textbookpage */
       textbookPage: number | null;
       /**
@@ -625,6 +637,8 @@ export interface components {
       instructions?: components["schemas"]["InsertOp"][];
       /** Rectangles */
       rectangles?: components["schemas"]["PdfRectangle"][];
+      /** Textreference */
+      textReference?: components["schemas"]["InsertOp"][];
       /** Wording */
       wording?: components["schemas"]["InsertOp"][];
       /** Wordingparagraphsperpagelet */
@@ -711,6 +725,8 @@ export interface components {
       instructions: components["schemas"]["InsertOp"][];
       /** Number */
       number: string;
+      /** Textreference */
+      textReference: components["schemas"]["InsertOp"][];
       /** Wording */
       wording: components["schemas"]["InsertOp"][];
       /** Wordingparagraphsperpagelet */

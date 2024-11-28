@@ -33,6 +33,7 @@ class ParsedExercisesResource:
         wording,
         example,
         clue,
+        text_reference,
         wording_paragraphs_per_pagelet,
         adaptation,
         authenticated_user: MandatoryAuthBearerDependable,
@@ -43,6 +44,7 @@ class ParsedExercisesResource:
             wording=wording,
             example=example,
             clue=clue,
+            text_reference=text_reference,
             wording_paragraphs_per_pagelet=wording_paragraphs_per_pagelet,
             adaptation=adaptation,
         )
@@ -73,6 +75,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     "wording": [{"insert": "This is the wording.\n", "attributes": {}}],
                     "example": [{"insert": "\n", "attributes": {}}],
                     "clue": [{"insert": "\n", "attributes": {}}],
+                    "textReference": [{"insert": "\n", "attributes": {}}],
                     "wordingParagraphsPerPagelet": 3,
                     "adaptation": {"kind": "generic", "effects": []},
                 },
@@ -125,6 +128,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     "wording": [{"insert": "This is the wording.\n", "attributes": {}}],
                     "example": [{"insert": "\n", "attributes": {}}],
                     "clue": [{"insert": "\n", "attributes": {}}],
+                    "textReference": [{"insert": "\n", "attributes": {}}],
                     "wordingParagraphsPerPagelet": 3,
                     "adaptation": {
                         "kind": "generic",
@@ -188,6 +192,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     "wording": [{"insert": "This is the wording.\n", "attributes": {}}],
                     "example": [{"insert": "This is the example.\n", "attributes": {}}],
                     "clue": [{"insert": "This is the clue.\n", "attributes": {}}],
+                    "textReference": [{"insert": "\n", "attributes": {}}],
                     "wordingParagraphsPerPagelet": 3,
                     "adaptation": {
                         "kind": "generic",
@@ -271,6 +276,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     "wording": [{"insert": "Fill @\n", "attributes": {}}],
                     "example": [{"insert": "\n", "attributes": {}}],
                     "clue": [{"insert": "\n", "attributes": {}}],
+                    "textReference": [{"insert": "\n", "attributes": {}}],
                     "wordingParagraphsPerPagelet": 3,
                     "adaptation": {
                         "kind": "fill-with-free-text",
@@ -332,6 +338,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     "wording": [{"insert": "A @\n\nB @\n", "attributes": {}}],
                     "example": [{"insert": "\n", "attributes": {}}],
                     "clue": [{"insert": "\n", "attributes": {}}],
+                    "textReference": [{"insert": "\n", "attributes": {}}],
                     "wordingParagraphsPerPagelet": 3,
                     "adaptation": {"kind": "multiple-choices", "effects": []},
                 },
@@ -390,6 +397,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     ],
                     "example": [{"insert": "\n", "attributes": {}}],
                     "clue": [{"insert": "\n", "attributes": {}}],
+                    "textReference": [{"insert": "\n", "attributes": {}}],
                     "wordingParagraphsPerPagelet": 3,
                     "adaptation": {"kind": "multiple-choices", "effects": []},
                 },

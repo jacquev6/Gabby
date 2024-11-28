@@ -540,7 +540,8 @@
               "instructions",
               "wording",
               "example",
-              "clue"
+              "clue",
+              "textReference"
             ],
             "title": "Role",
             "type": "string"
@@ -983,6 +984,19 @@
             "title": "Rectangles",
             "type": "array"
           },
+          "textReference": {
+            "default": [
+              {
+                "attributes": {},
+                "insert": "\n"
+              }
+            ],
+            "items": {
+              "$ref": "#/components/schemas/InsertOp"
+            },
+            "title": "Textreference",
+            "type": "array"
+          },
           "textbookPage": {
             "anyOf": [
               {
@@ -1134,6 +1148,13 @@
             "title": "Rectangles",
             "type": "array"
           },
+          "textReference": {
+            "items": {
+              "$ref": "#/components/schemas/InsertOp"
+            },
+            "title": "Textreference",
+            "type": "array"
+          },
           "textbookPage": {
             "anyOf": [
               {
@@ -1178,6 +1199,7 @@
           "wording",
           "example",
           "clue",
+          "textReference",
           "wordingParagraphsPerPagelet",
           "rectangles",
           "adaptation"
@@ -1312,6 +1334,13 @@
               "$ref": "#/components/schemas/PdfRectangle"
             },
             "title": "Rectangles",
+            "type": "array"
+          },
+          "textReference": {
+            "items": {
+              "$ref": "#/components/schemas/InsertOp"
+            },
+            "title": "Textreference",
             "type": "array"
           },
           "wording": {
@@ -1547,6 +1576,13 @@
             "title": "Number",
             "type": "string"
           },
+          "textReference": {
+            "items": {
+              "$ref": "#/components/schemas/InsertOp"
+            },
+            "title": "Textreference",
+            "type": "array"
+          },
           "wording": {
             "items": {
               "$ref": "#/components/schemas/InsertOp"
@@ -1572,6 +1608,7 @@
           "wording",
           "example",
           "clue",
+          "textReference",
           "wordingParagraphsPerPagelet",
           "adaptation"
         ],

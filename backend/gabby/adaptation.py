@@ -36,6 +36,12 @@ class _Adapter:
             for wording_paragraphs in self.adapt_wording(exercise.instructions, exercise.wording, exercise.wording_paragraphs_per_pagelet, exercise.adaptation.effects)
         )
 
+        if exercise.text_reference != deltas.empty:
+            pagelets.append(r.Pagelet(
+                instructions=self.strip_section(renderable.Section(paragraphs=list(self.adapt_instructions(exercise.text_reference)))),
+                wording=self.strip_section(renderable.Section(paragraphs=[])),
+            ))
+
         self.adapted = renderable.Exercise(number=exercise.number, textbook_page=exercise.textbook_page, pagelets=pagelets)
 
     def preprocess(self, instructions: deltas.Deltas, effects: list[AdaptationEffect]) -> None:
