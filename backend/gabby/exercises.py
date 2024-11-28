@@ -94,6 +94,18 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
     def clue(self, clue: deltas.Deltas):
         self._clue_deltas = [delta.model_dump() for delta in clue]
 
+    _text_reference: orm.Mapped[list] = orm.mapped_column(sql.JSON, name="text_reference", default=deltas.empty_as_list, server_default=deltas.empty_as_string)
+
+    @property
+    def text_reference(self) -> deltas.Deltas:
+        if self._text_reference is None:  # Before the first flush to DB if not set in constructor.
+            self._text_reference = deltas.empty_as_list
+        return [deltas.InsertOp(**delta) for delta in self._text_reference]
+
+    @text_reference.setter
+    def text_reference(self, text_reference: deltas.Deltas):
+        self._text_reference = [delta.model_dump() for delta in text_reference]
+
     wording_paragraphs_per_pagelet: orm.Mapped[int | None] = orm.mapped_column(nullable=True)
 
     _rectangles: orm.Mapped[list] = orm.mapped_column(sql.JSON, name="rectangles", default=[], server_default="[]")
@@ -297,6 +309,7 @@ class ExercisesResource:
         wording,
         example,
         clue,
+        text_reference,
         wording_paragraphs_per_pagelet,
         rectangles,
         adaptation,
@@ -314,6 +327,7 @@ class ExercisesResource:
             wording=wording,
             example=example,
             clue=clue,
+            text_reference=text_reference,
             wording_paragraphs_per_pagelet=wording_paragraphs_per_pagelet,
             rectangles=rectangles,
             adaptation=adaptation,

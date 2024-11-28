@@ -23,6 +23,10 @@ def upgrade():
     op.add_column("exercises", sa.Column("wording", sa.JSON(), server_default='[{"insert": "\\n", "attributes": {}}]', nullable=False))
     op.add_column("exercises", sa.Column("example", sa.JSON(), server_default='[{"insert": "\\n", "attributes": {}}]', nullable=False))
     op.add_column("exercises", sa.Column("clue", sa.JSON(), server_default='[{"insert": "\\n", "attributes": {}}]', nullable=False))
+    op.add_column(
+        "exercises",
+        sa.Column("text_reference", sa.JSON(), server_default='[{"insert": "\\n", "attributes": {}}]', nullable=False),
+    )
     op.alter_column(
         "exercises",
         "wording_paragraphs_per_pagelet",
@@ -96,4 +100,5 @@ def downgrade():
     op.alter_column("exercises", "wording_text", new_column_name="wording")
     op.alter_column("exercises", "example_text", new_column_name="example")
     op.alter_column("exercises", "clue_text", new_column_name="clue")
+    op.drop_column("exercises", "text_reference")
     # ### end Alembic commands ###

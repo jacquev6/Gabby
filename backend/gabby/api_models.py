@@ -102,7 +102,7 @@ class PdfRectangle(PydanticBase):
     start: Point
     stop: Point
     text: str | None
-    role: Literal["bounding", "instructions", "wording", "example", "clue"]
+    role: Literal["bounding", "instructions", "wording", "example", "clue", "textReference"]
 
 
 class FillWithFreeTextAdaptationEffect(PydanticBase):
@@ -156,6 +156,7 @@ class Exercise(PydanticBase, CreatedUpdatedByAtMixin):
     wording: deltas.Deltas = deltas.empty
     example: deltas.Deltas = deltas.empty
     clue: deltas.Deltas = deltas.empty
+    text_reference: deltas.Deltas = deltas.empty
 
     wording_paragraphs_per_pagelet: int | None = None
 
@@ -169,6 +170,7 @@ class ParsedExercise(PydanticBase):
     wording: Annotated[deltas.Deltas, WriteOnly()]
     example: Annotated[deltas.Deltas, WriteOnly()]
     clue: Annotated[deltas.Deltas, WriteOnly()]
+    text_reference: Annotated[deltas.Deltas, WriteOnly()]
     wording_paragraphs_per_pagelet: Annotated[int | None, WriteOnly()]
     adaptation: Annotated[AdaptationV2, WriteOnly()]
     adapted: Annotated[renderable.Exercise, Computed()]

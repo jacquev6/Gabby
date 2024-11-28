@@ -411,6 +411,15 @@ def create_test_exercises_2(session, admin):
                 text="Les Touaregs sont des Berbères, un peuple\nqui habite en Afrique du Nord depuis la\npréhistoire. Ils vivent dans le désert du Sahara\n(Algérie, Libye, Mali, Niger, Burkina Faso…). En\nété, les températures y montent à plus de 50 °C\net elles descendent en dessous de zéro durant\nles nuits d’hiver.",
                 role="wording",
             ),
+            PdfRectangle(
+                pdf_sha256="f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c",
+                pdf_page=2,
+                coordinates="pdfjs",
+                start=Point(x=112.37332314140376, y=352.2926939550555),
+                stop=Point(x=304.6623309473473, y=312.1753253726276),
+                text="Mon quotidien, pour les 10-14 ans, www.monquotidien.fr, 13 septembre 2014.\n",
+                role="textReference",
+            ),
         ],
         number="7",
         instructions=[
@@ -431,6 +440,12 @@ def create_test_exercises_2(session, admin):
                 insert="Les Touaregs sont des Berbères, un peuple qui habite en Afrique du Nord depuis la préhistoire.\nIls vivent dans le désert du Sahara (Algérie, Libye, Mali, Niger, Burkina Faso…).\nEn été, les températures y montent à plus de 50 °C et elles descendent en dessous de zéro durant les nuits d’hiver.\n",
                 attributes={},
             )
+        ],
+        text_reference=[
+            deltas.InsertOp(
+                insert="Mon quotidien, pour les 10-14 ans, www.monquotidien.fr, 13 septembre 2014.\n",
+                attributes={},
+            ),
         ],
         adaptation=AdaptationV2(
             kind="generic",
@@ -1957,7 +1972,55 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                     ),
                                 ]
                             ),
-                        )
+                        ),
+                        Pagelet(
+                            instructions=Section(
+                                paragraphs=[
+                                    Paragraph(
+                                        tokens=[
+                                            _PlainText(type="plainText", text="Mon"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="quotidien"),
+                                            _PlainText(type="plainText", text=","),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="pour"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="les"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="10"),
+                                            _PlainText(type="plainText", text="-"),
+                                            _PlainText(type="plainText", text="14"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="ans"),
+                                            _PlainText(type="plainText", text=","),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="www"),
+                                            _PlainText(type="plainText", text="."),
+                                        ]
+                                    ),
+                                    Paragraph(
+                                        tokens=[
+                                            _PlainText(type="plainText", text="monquotidien"),
+                                            _PlainText(type="plainText", text="."),
+                                        ]
+                                    ),
+                                    Paragraph(
+                                        tokens=[
+                                            _PlainText(type="plainText", text="fr"),
+                                            _PlainText(type="plainText", text=","),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="13"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="septembre"),
+                                            _Whitespace(type="whitespace"),
+                                            _PlainText(type="plainText", text="2014"),
+                                            _PlainText(type="plainText", text="."),
+                                        ]
+                                    ),
+                                ]
+                            ),
+                            wording=Section(paragraphs=[]),
+                        ),
                     ],
                 ),
             )

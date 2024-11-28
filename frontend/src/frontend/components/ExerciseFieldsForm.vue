@@ -14,7 +14,7 @@ const emptyDeltas: Deltas = [{insert: '\n', attributes: {}}]
 
 export const adaptationKinds: Adaptation['kind'][] = ['generic', 'fill-with-free-text', 'multiple-choices']
 
-export const textualFieldNames = ['instructions', 'wording', 'example', 'clue'] as const
+export const textualFieldNames = ['instructions', 'wording', 'example', 'clue', 'textReference'] as const
 export type TextualFieldName = typeof textualFieldNames[number]
 
 export type Model = {
@@ -25,6 +25,7 @@ export type Model = {
   wording: Deltas
   example: Deltas
   clue: Deltas
+  textReference: Deltas
   wordingParagraphsPerPagelet: number | null
   rectangles: PdfRectangle[]
   adaptation: Adaptation
@@ -66,6 +67,7 @@ function makeModel({inTextbook, textbookPage}: MakeModelOptions): Model {
     wording: [{insert: '\n', attributes: {}}],
     example: [{insert: '\n', attributes: {}}],
     clue: [{insert: '\n', attributes: {}}],
+    textReference: [{insert: '\n', attributes: {}}],
     wordingParagraphsPerPagelet: null,
     rectangles: [],
     adaptation: {kind: 'generic', effects: []},
@@ -89,6 +91,7 @@ export function assignModelFrom(model: Model, exercise: Exercise & InCache & Exi
   model.wording = exercise.attributes.wording
   model.example = exercise.attributes.example
   model.clue = exercise.attributes.clue
+  model.textReference = exercise.attributes.textReference
   model.wordingParagraphsPerPagelet = exercise.attributes.wordingParagraphsPerPagelet
   model.adaptation = deepCopy(exercise.attributes.adaptation)
   model.rectangles = deepCopy(exercise.attributes.rectangles)
@@ -114,6 +117,7 @@ export function modelIsEmpty(model: Model) {
     && deepEqual(model.wording, emptyDeltas)
     && deepEqual(model.example, emptyDeltas)
     && deepEqual(model.clue, emptyDeltas)
+    && deepEqual(model.textReference, emptyDeltas)
     && deepEqual(model.adaptation, {kind: 'generic', effects: []})
 }
 
@@ -158,6 +162,7 @@ export async function getParsed(model: Model) {
       wording: downgradeDeltas(model.wording),
       example: downgradeDeltas(model.example),
       clue: downgradeDeltas(model.clue),
+      textReference: downgradeDeltas(model.textReference),
       wordingParagraphsPerPagelet: model.wordingParagraphsPerPagelet,
       adaptation: model.adaptation,
     },
@@ -177,6 +182,7 @@ export async function create(project: Project, textbook: Textbook | null, model:
       wording: downgradeDeltas(model.wording),
       example: downgradeDeltas(model.example),
       clue: downgradeDeltas(model.clue),
+      textReference: downgradeDeltas(model.textReference),
       wordingParagraphsPerPagelet: model.wordingParagraphsPerPagelet,
       adaptation: model.adaptation,
       rectangles: model.rectangles,
@@ -195,6 +201,7 @@ export async function save(exercise: Exercise & InCache & Exists, model: Model) 
       wording: downgradeDeltas(model.wording),
       example: downgradeDeltas(model.example),
       clue: downgradeDeltas(model.clue),
+      textReference: downgradeDeltas(model.textReference),
       wordingParagraphsPerPagelet: model.wordingParagraphsPerPagelet,
       adaptation: model.adaptation,
       rectangles: model.rectangles,
@@ -237,15 +244,17 @@ const instructionsEditor = ref<InstanceType<typeof WysiwygEditor> | null>(null)
 const wordingEditor = ref<InstanceType<typeof WysiwygEditor> | null>(null)
 const exampleEditor = ref<InstanceType<typeof OptionalWysiwygEditor> | null>(null)
 const clueEditor = ref<InstanceType<typeof OptionalWysiwygEditor> | null>(null)
+const textReferenceEditor = ref<InstanceType<typeof OptionalWysiwygEditor> | null>(null)
 const editors = {
   instructions: instructionsEditor,
   wording: wordingEditor,
   example: exampleEditor,
   clue: clueEditor,
+  textReference: textReferenceEditor,
 }
 
-const noClueNoExample = computed(() => {
-  return !exampleEditor.value?.expanded && !clueEditor.value?.expanded
+const allOptionalsAreCollapsed = computed(() => {
+  return !exampleEditor.value?.expanded && !clueEditor.value?.expanded && !textReferenceEditor.value?.expanded
 })
 
 const saveDisabled = computed(() => model.value.number === '')
@@ -274,6 +283,8 @@ const focusedWysiwygField = computed(() => {
     return 'example'
   } else if (clueEditor.value?.hasFocus) {
     return 'clue'
+  } else if (textReferenceEditor.value?.hasFocus) {
+    return 'textReference'
   } else {
     return null
   }
@@ -288,6 +299,8 @@ const currentWysiwygFormat = computed(() => {
     return exampleEditor.value.currentFormat
   } else if (clueEditor.value?.hasFocus) {
     return clueEditor.value.currentFormat
+  } else if (textReferenceEditor.value?.hasFocus) {
+    return textReferenceEditor.value.currentFormat
   } else {
     return {}
   }
@@ -399,9 +412,9 @@ defineExpose({
       v-model="model.wording"
       @selectionChange="selectionChangeInWording"
     />
-    <div :class="{'container-fluid': noClueNoExample}">
-      <div :class="{row: noClueNoExample}">
-        <div :class="{col: noClueNoExample}" style="padding: 0;">
+    <div :class="{'container-fluid': allOptionalsAreCollapsed}">
+      <div :class="{row: allOptionalsAreCollapsed}">
+        <div :class="{col: allOptionalsAreCollapsed}" style="padding: 0;">
           <OptionalWysiwygEditor
             ref="exampleEditor"
             :label="$t('exerciseExample')"
@@ -409,12 +422,20 @@ defineExpose({
             v-model="model.example"
           />
         </div>
-        <div :class="{col: noClueNoExample}" style="padding: 0;">
+        <div :class="{col: allOptionalsAreCollapsed}" style="padding: 0;">
           <OptionalWysiwygEditor
             ref="clueEditor"
             :label="$t('exerciseClue')"
             :blots="wysiwygBlots"
             v-model="model.clue"
+          />
+        </div>
+        <div :class="{col: allOptionalsAreCollapsed}" style="padding: 0;">
+          <OptionalWysiwygEditor
+            ref="textReferenceEditor"
+            :label="$t('exerciseTextReference')"
+            :blots="wysiwygBlots"
+            v-model="model.textReference"
           />
         </div>
       </div>
