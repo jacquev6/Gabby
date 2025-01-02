@@ -115,6 +115,7 @@ describe('Gabby', () => {
     setAliases()
     cy.get('@number').type('test')
     cy.get('@adaptationType').select('generic')
+    cy.get('div:contains("Words") >input').check()
     cy.get('div:contains("Selectable") >input').check()
     cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="2"]').click()
 
@@ -191,6 +192,7 @@ describe('Gabby', () => {
     visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
     setAliases()
 
+    cy.get('div:contains("Words") >input').check()
     cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="4"]').click()
     cy.get('button[data-cy="format-color-1"]').as("button1").should('be.disabled')
     cy.get('button[data-cy="format-color-2"]').as("button2").should('be.disabled')

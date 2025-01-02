@@ -50,6 +50,7 @@ describe('Gabby', () => {
     cy.focused().type('The clue')
 
     cy.get('label:contains("Adaptation type") + select').select('generic')
+    cy.get('div:contains("Words") >input').check()
     cy.get('div:contains("Selectable") >input').check()
     cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="2"]').click()
 

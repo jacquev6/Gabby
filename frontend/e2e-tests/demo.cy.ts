@@ -76,6 +76,7 @@ describe('Gabby', () => {
 
     cy.get('@number').type('1')
 
+    cy.get('div:contains("Words") >input').check()
     cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="2"]').click()
     cy.get('div:contains("Selectable") >input').should('be.checked')
 
@@ -123,6 +124,7 @@ describe('Gabby', () => {
 
     cy.get('@number').type('1')
 
+    cy.get('div:contains("Words") >input').check()
     cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="2"]').click()
     cy.get('div:contains("Selectable") >input').should('be.checked')
 

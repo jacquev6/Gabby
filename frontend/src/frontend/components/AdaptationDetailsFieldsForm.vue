@@ -7,7 +7,7 @@ import ContextMenu from './ContextMenu.vue'
 
 
 // Keep the 'style' section below consistent with the length of this array
-export const defaultColors = [
+export const defaultColorsForSelectableEffect = [
   // Colors provided by the client
   "#ffff00",  // yellow
   "#ffc0cb",  // pink (light red)
@@ -179,9 +179,8 @@ export const wysiwygBlots = [
 import { computed, reactive, ref, watch } from 'vue'
 import deepEqual from 'deep-equal'
 
-import { BRow, BCol, BLabeledInput, BButton, BLabeledCheckbox, BRadio } from './opinion/bootstrap'
+import { BRow, BCol, BLabeledInput, BButton, BLabeledCheckbox } from './opinion/bootstrap'
 import ExerciseFieldsForm, { type Model, cleanupModel } from './ExerciseFieldsForm.vue'
-import { defaultColors as defaultColorsForSelectableEffect } from './AdaptationDetailsFieldsForm.vue'
 import FloatingColorPicker from './FloatingColorPicker.vue'
 import OptionalInput from './OptionalInput.vue'
 
@@ -190,7 +189,7 @@ defineProps<{
   fields: InstanceType<typeof ExerciseFieldsForm>
 }>()
 
-type ItemizeEffect = Model['adaptation']['effects'][number] & {kind: 'itemized'}
+type ItemizedEffect = Model['adaptation']['effects'][number] & {kind: 'itemized'}
 
 const model_ = defineModel<Model>({required: true})
 model = model_
@@ -224,7 +223,8 @@ const fillWithFreeTextPlaceholder = computed({
 const settings = reactive({
   itemized: {
     items: {
-      kind: 'words' as ItemizeEffect['items']['kind'],
+      isWords: false,
+      isManual: false,
       words: {punctuation: false},
     },
     effects: {
@@ -238,20 +238,59 @@ const settings = reactive({
   },
 })
 
-function makeEffect(): ItemizeEffect | null {
-  if (settings.itemized.effects.isSelectable || settings.itemized.effects.isBoxed) {
+const isWordsProxy = computed({
+  get() {
+    return settings.itemized.items.isWords
+  },
+  set(value: boolean) {
+    settings.itemized.items.isWords = value
+    if (value) {
+      settings.itemized.items.isManual = false
+    }
+  },
+})
+
+const isManualProxy = computed({
+  get() {
+    return settings.itemized.items.isManual
+  },
+  set(value: boolean) {
+    settings.itemized.items.isManual = value
+    if (value) {
+      settings.itemized.items.isWords = false
+      settings.itemized.items.words.punctuation = false
+    }
+  },
+})
+
+function makeEffect(): ItemizedEffect | null {
+  const hasItems = settings.itemized.items.isWords || settings.itemized.items.isManual
+  const hasEffects = settings.itemized.effects.isSelectable || settings.itemized.effects.isBoxed
+  if (hasItems && hasEffects) {
+    const items = ((): ItemizedEffect['items'] => {
+      if (settings.itemized.items.isWords) {
+        return {kind: 'words', punctuation: settings.itemized.items.words.punctuation}
+      } else {
+        console.assert(settings.itemized.items.isManual)
+        return {kind: 'manual'}
+      }
+    })()
+
+    const selectable = (() => {
+      if (settings.itemized.effects.isSelectable) {
+        return  {
+          colors: settings.itemized.effects.selectable.allColors.slice(0, settings.itemized.effects.selectable.colorsCount),
+        }
+      } else {
+        return null
+      }
+    })()
+
     return {
       kind: 'itemized',
-      items: settings.itemized.items.kind === 'words' ? {
-        kind: 'words',
-        punctuation: settings.itemized.items.words.punctuation,
-      } : {
-        kind: settings.itemized.items.kind,
-      },
+      items,
       effects: {
-        selectable: settings.itemized.effects.isSelectable ? {
-          colors: settings.itemized.effects.selectable.allColors.slice(0, settings.itemized.effects.selectable.colorsCount),
-        } : null,
+        selectable,
         boxed: settings.itemized.effects.isBoxed,
       },
     }
@@ -267,15 +306,26 @@ watch(
     console.assert(itemizedEffects.length <= 1)
 
     if (itemizedEffects.length === 0) {
-      settings.itemized.effects.isSelectable = false
-      settings.itemized.effects.isBoxed = false
-
+      const hasItems = settings.itemized.items.isWords || settings.itemized.items.isManual
+      const hasEffects = settings.itemized.effects.isSelectable || settings.itemized.effects.isBoxed
+      if (hasItems && hasEffects) {
+        settings.itemized.items.isWords = false
+        settings.itemized.items.words.punctuation = false
+        settings.itemized.items.isManual = false
+        settings.itemized.effects.isSelectable = false
+        settings.itemized.effects.isBoxed = false
+      }
       console.assert(makeEffect() === null)
     } else {
       const itemizedEffect = itemizedEffects[0]
-      settings.itemized.items.kind = itemizedEffect.items.kind
       if (itemizedEffect.items.kind === 'words') {
+        settings.itemized.items.isManual = false
+        settings.itemized.items.isWords = true
         settings.itemized.items.words.punctuation = itemizedEffect.items.punctuation
+      } else if (itemizedEffect.items.kind === 'manual') {
+        settings.itemized.items.isManual = true
+        settings.itemized.items.isWords = false
+        settings.itemized.items.words.punctuation = false
       }
       if (itemizedEffect.effects.selectable !== null) {
         settings.itemized.effects.isSelectable = true
@@ -368,10 +418,10 @@ const colorPickers = ref<InstanceType<typeof FloatingColorPicker>[]>([])
 
   <div class="mb-3">
     <p class="form-label">{{ $t('items') }}</p>
-    <BRadio v-model="settings.itemized.items.kind" :label="$t('itemsWords')" value="words" />
-    <BLabeledCheckbox :label="$t('itemsPunctuation')" v-model="settings.itemized.items.words.punctuation" :disabled="settings.itemized.items.kind !== 'words'" />
-    <BRadio v-model="settings.itemized.items.kind" :label="$t('itemsSentences')" value="sentences" disabled />
-    <BRadio v-model="settings.itemized.items.kind" :label="$t('itemsManual')" value="manual" />
+    <BLabeledCheckbox v-model="isWordsProxy" :label="$t('itemsWords')" />
+    <BLabeledCheckbox v-model="settings.itemized.items.words.punctuation" :label="$t('itemsPunctuation')" :disabled="!settings.itemized.items.isWords" />
+    <BLabeledCheckbox disabled :label="$t('itemsSentences')" />
+    <BLabeledCheckbox v-model="isManualProxy" :label="$t('itemsManual')" />
   </div>
   <p>{{ $t('effects') }}</p>
   <BLabeledCheckbox :label="$t('effectsSelectable')" v-model="settings.itemized.effects.isSelectable" />

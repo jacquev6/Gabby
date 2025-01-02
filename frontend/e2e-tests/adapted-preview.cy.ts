@@ -17,6 +17,7 @@ describe('Gabby', () => {
     cy.get('span[contenteditable]').first().type('Abcd')
 
     cy.get('label:contains("Adaptation type")').next().select('generic')
+    cy.get('div:contains("Words") >input').check()
     cy.get('div:contains("Selectable") >input').check()
     notBusy()
 
