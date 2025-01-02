@@ -2,7 +2,7 @@
 import { useApiStore } from '$frontend/stores/api'
 import type { Project, Textbook, Exercise, InCache, Exists } from '$frontend/stores/api'
 import deepEqual from 'deep-equal'
-import { type Model as Deltas } from '$frontend/components/Quill.vue'
+import { type Model as Deltas } from './Quill.vue'
 import { Delta } from 'quill/core'
 
 const api = useApiStore()
