@@ -363,12 +363,6 @@ const colorPickers = ref<InstanceType<typeof FloatingColorPicker>[]>([])
   <hr />
 
   <OptionalInput v-model="fillWithFreeTextPlaceholder" :label="$t('placeholderForFreeText')" />
-  <!-- <template v-if="fillWithFreeTextPlaceholder !== ''">
-    <BLabeledInput :label="$t('placeholderForFreeText')" type="text" v-model="fillWithFreeTextPlaceholder" />
-  </template>
-  <template v-else>
-    <p>{{ $t('placeholderForFreeText') }} <BButton sm primary>+</BButton></p>
-  </template> -->
 
   <hr />
 
