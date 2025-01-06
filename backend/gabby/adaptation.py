@@ -46,6 +46,7 @@ class _Adapter:
 
     def preprocess(self, instructions: deltas.Deltas, effects: list[AdaptationEffect]) -> None:
         self.global_placeholders: list[tuple[str, renderable.SentenceToken]] = []
+        self.letters_are_selectable = False
         self.words_are_selectable = False
         self.punctuation_is_selectable = False
         self.selectables_are_boxed = False
@@ -55,6 +56,7 @@ class _Adapter:
             if isinstance(effect, FillWithFreeTextAdaptationEffect):
                 self.global_placeholders.append((effect.placeholder, renderable.FreeTextInput()))
             if isinstance(effect, ItemizedAdaptationEffect):
+                self.letters_are_selectable = effect.items.kind == "characters" and effect.items.letters
                 self.words_are_selectable = effect.items.kind == "tokens" and effect.items.words
                 self.punctuation_is_selectable = effect.items.kind == "tokens" and effect.items.punctuation
                 if effect.effects.selectable is not None:
@@ -196,7 +198,10 @@ class _Adapter:
                                     yield renderable.PlainText(text=text)
                         else:
                             # Separated: words
-                            if self.words_are_selectable:
+                            if self.letters_are_selectable:
+                                for letter in text:
+                                    yield renderable.SelectableText(text=letter, colors=self.selectables_colors, boxed=self.selectables_are_boxed)
+                            elif self.words_are_selectable:
                                 yield renderable.SelectableText(text=text, colors=self.selectables_colors, boxed=self.selectables_are_boxed)
                             else:
                                 yield renderable.PlainText(text=text)
@@ -914,6 +919,58 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
 
 
 class ItemizedAdaptationTestCase(AdaptationTestCase):
+    def test_selectable_letters(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions=[d.InsertOp(insert="Instructions\n", attributes={})],
+                wording=[d.InsertOp(insert="This is, the wording.\n", attributes={})],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
+                wording_paragraphs_per_pagelet=3,
+                adaptation=AdaptationV2(kind="generic", effects=[ItemizedAdaptationEffect(
+                    kind="itemized",
+                    items={"kind": "characters", "letters": True},
+                    effects={"selectable": {"colors": ["red"]}, "boxed": False},
+                )]),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=42,
+                pagelets=[r.Pagelet(
+                    instructions=r.Section(paragraphs=[
+                        r.Paragraph(tokens=[
+                            r.PlainText(text="Instructions"),
+                        ]),
+                    ]),
+                    wording=r.Section(paragraphs=[r.Paragraph(tokens=[
+                        r.SelectableText(text="T", colors=["red"], boxed=False),
+                        r.SelectableText(text="h", colors=["red"], boxed=False),
+                        r.SelectableText(text="i", colors=["red"], boxed=False),
+                        r.SelectableText(text="s", colors=["red"], boxed=False),
+                        r.Whitespace(),
+                        r.SelectableText(text="i", colors=["red"], boxed=False),
+                        r.SelectableText(text="s", colors=["red"], boxed=False),
+                        r.PlainText(text=","),
+                        r.Whitespace(),
+                        r.SelectableText(text="t", colors=["red"], boxed=False),
+                        r.SelectableText(text="h", colors=["red"], boxed=False),
+                        r.SelectableText(text="e", colors=["red"], boxed=False),
+                        r.Whitespace(),
+                        r.SelectableText(text="w", colors=["red"], boxed=False),
+                        r.SelectableText(text="o", colors=["red"], boxed=False),
+                        r.SelectableText(text="r", colors=["red"], boxed=False),
+                        r.SelectableText(text="d", colors=["red"], boxed=False),
+                        r.SelectableText(text="i", colors=["red"], boxed=False),
+                        r.SelectableText(text="n", colors=["red"], boxed=False),
+                        r.SelectableText(text="g", colors=["red"], boxed=False),
+                        r.PlainText(text="."),
+                    ])]),
+                )],
+            ),
+        )
+
     def test_selectable_words__plain(self):
         self.do_test(
             e.Exercise(

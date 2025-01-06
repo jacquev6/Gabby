@@ -191,6 +191,16 @@ export interface components {
       /** Username */
       username: string;
     };
+    /** CharactersItems */
+    CharactersItems: {
+      /**
+       * Kind
+       * @constant
+       */
+      kind: "characters";
+      /** Letters */
+      letters: boolean;
+    };
     /** Effects */
     Effects: {
       /** Boxed */
@@ -237,7 +247,7 @@ export interface components {
     "ItemizedAdaptationEffect-Input": {
       effects: components["schemas"]["Effects"];
       /** Items */
-      items: components["schemas"]["TokensItems"] | components["schemas"]["SentencesItems"] | components["schemas"]["ManualItems"];
+      items: components["schemas"]["CharactersItems"] | components["schemas"]["TokensItems"] | components["schemas"]["SentencesItems"] | components["schemas"]["ManualItems"];
       /**
        * Kind
        * @constant
@@ -248,7 +258,7 @@ export interface components {
     "ItemizedAdaptationEffect-Output": {
       effects: components["schemas"]["Effects"];
       /** Items */
-      items: components["schemas"]["TokensItems"] | components["schemas"]["SentencesItems"] | components["schemas"]["ManualItems"];
+      items: components["schemas"]["CharactersItems"] | components["schemas"]["TokensItems"] | components["schemas"]["SentencesItems"] | components["schemas"]["ManualItems"];
       /**
        * Kind
        * @constant

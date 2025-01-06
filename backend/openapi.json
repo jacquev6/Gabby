@@ -151,6 +151,26 @@
         "title": "Body_login_api_token_post",
         "type": "object"
       },
+      "CharactersItems": {
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "const": "characters",
+            "title": "Kind",
+            "type": "string"
+          },
+          "letters": {
+            "title": "Letters",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "kind",
+          "letters"
+        ],
+        "title": "CharactersItems",
+        "type": "object"
+      },
       "Effects": {
         "additionalProperties": false,
         "properties": {
@@ -285,6 +305,9 @@
           "items": {
             "anyOf": [
               {
+                "$ref": "#/components/schemas/CharactersItems"
+              },
+              {
                 "$ref": "#/components/schemas/TokensItems"
               },
               {
@@ -318,6 +341,9 @@
           },
           "items": {
             "anyOf": [
+              {
+                "$ref": "#/components/schemas/CharactersItems"
+              },
               {
                 "$ref": "#/components/schemas/TokensItems"
               },
