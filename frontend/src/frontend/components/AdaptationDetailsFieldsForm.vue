@@ -226,6 +226,7 @@ const settings = reactive({
       isLetters: false,
       isWords: false,
       isPunctuation: false,
+      isSentences: false,
       isManual: false,
     },
     effects: {
@@ -248,10 +249,12 @@ const isLettersProxy = computed({
     if (value) {
       settings.itemized.items.isWords = false
       settings.itemized.items.isPunctuation = false
+      settings.itemized.items.isSentences = false
       settings.itemized.items.isManual = false
     }
   },
 })
+
 const isWordsProxy = computed({
   get() {
     return settings.itemized.items.isWords
@@ -260,6 +263,7 @@ const isWordsProxy = computed({
     settings.itemized.items.isWords = value
     if (value) {
       settings.itemized.items.isLetters = false
+      settings.itemized.items.isSentences = false
       settings.itemized.items.isManual = false
     }
   },
@@ -273,6 +277,22 @@ const isPunctuationProxy = computed({
     settings.itemized.items.isPunctuation = value
     if (value) {
       settings.itemized.items.isLetters = false
+      settings.itemized.items.isSentences = false
+      settings.itemized.items.isManual = false
+    }
+  },
+})
+
+const isSentencesProxy = computed({
+  get() {
+    return settings.itemized.items.isSentences
+  },
+  set(value: boolean) {
+    settings.itemized.items.isSentences = value
+    if (value) {
+      settings.itemized.items.isLetters = false
+      settings.itemized.items.isWords = false
+      settings.itemized.items.isPunctuation = false
       settings.itemized.items.isManual = false
     }
   },
@@ -288,12 +308,18 @@ const isManualProxy = computed({
       settings.itemized.items.isLetters = false
       settings.itemized.items.isWords = false
       settings.itemized.items.isPunctuation = false
+      settings.itemized.items.isSentences = false
     }
   },
 })
 
 function makeEffect(): ItemizedEffect | null {
-  const hasItems = settings.itemized.items.isLetters || settings.itemized.items.isWords || settings.itemized.items.isPunctuation || settings.itemized.items.isManual
+  const hasItems =
+    settings.itemized.items.isLetters
+    || settings.itemized.items.isWords
+    || settings.itemized.items.isPunctuation
+    || settings.itemized.items.isSentences
+    || settings.itemized.items.isManual
   const hasEffects = settings.itemized.effects.isSelectable || settings.itemized.effects.isBoxed
   if (hasItems && hasEffects) {
     const items = ((): ItemizedEffect['items'] => {
@@ -301,6 +327,8 @@ function makeEffect(): ItemizedEffect | null {
         return {kind: 'characters', letters: true}
       } else if (settings.itemized.items.isWords || settings.itemized.items.isPunctuation) {
         return {kind: 'tokens', words: settings.itemized.items.isWords, punctuation: settings.itemized.items.isPunctuation}
+      } else if (settings.itemized.items.isSentences) {
+        return {kind: 'sentences'}
       } else {
         console.assert(settings.itemized.items.isManual)
         return {kind: 'manual'}
@@ -452,7 +480,7 @@ const colorPickers = ref<InstanceType<typeof FloatingColorPicker>[]>([])
     <BLabeledCheckbox v-model="isLettersProxy" :label="$t('itemsLetters')" />
     <BLabeledCheckbox v-model="isWordsProxy" :label="$t('itemsWords')" />
     <BLabeledCheckbox v-model="isPunctuationProxy" :label="$t('itemsPunctuation')" />
-    <BLabeledCheckbox disabled :label="$t('itemsSentences')" />
+    <BLabeledCheckbox v-model="isSentencesProxy" :label="$t('itemsSentences')" />
     <BLabeledCheckbox v-model="isManualProxy" :label="$t('itemsManual')" />
   </div>
   <p>{{ $t('effects') }}</p>

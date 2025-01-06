@@ -263,6 +263,54 @@ describe('Gabby', () => {
     })
   })
 
+  it('creates a "Select sentences" exercise', () => {
+    cy.viewport(1300, 1200)
+    visit('/project-xkopqm/textbook-klxufv/page-10/new-exercise', {pdf: 'demo'})
+    setupAliases()
+
+    cy.get('@number').type('1')
+
+    cy.get('div:contains("Sentences") >input').check()
+    cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="2"]').click()
+    cy.get('div:contains("Selectable") >input').should('be.checked')
+
+    traceRectangle('@canvas', 8, 5, 70, 9)
+    cy.get('button:contains("Instructions")').click()
+    notBusy()
+    cy.get('@instructions').find('p').then($el => {
+      const node = $el[0].firstChild
+      console.assert(node !== null)
+      selectRange(node, 52, node, 73)
+    })
+    cy.get('button[data-cy="format-color-2"]').click()
+    cy.get('@instructions').find('p').then($el => {
+      const node = $el[0].firstChild
+      console.assert(node !== null)
+      selectRange(node, 25, node, 44)
+    })
+    cy.get('button[data-cy="format-color-1"]').click()
+    notBusy()
+
+    traceRectangle('@canvas', 7, 9.5, 92, 19)
+    cy.get('button:contains("Wording")').click()
+    notBusy()
+
+    cy.focused().blur()
+    screenshot('select-sentences', 'edit-1')
+
+    cy.get('button:contains("Save then back")').click()
+    visit('/project-xkopqm')
+    cy.get('a:contains("the exported HTML")').should('have.attr', 'href').then(url => {
+      cy.visit(url + '&download=false')
+      cy.get('a').click()
+      screenshot('select-sentences', 'export-1')
+      cy.get('span[data-cy=selectable]').eq(0).click()
+      cy.get('span[data-cy=selectable]').eq(1).click()
+      cy.get('span[data-cy=selectable]').eq(1).click()
+      screenshot('select-sentences', 'export-2')
+    })
+  })
+
   it('creates a "Multiple choices" exercise with choices in instructions', () => {
     cy.viewport(1300, 1000)
     visit('/project-xkopqm/textbook-klxufv/page-3/new-exercise', {pdf: 'demo'})
