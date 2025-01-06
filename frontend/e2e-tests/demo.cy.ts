@@ -117,6 +117,54 @@ describe('Gabby', () => {
     })
   })
 
+  it('creates a "Select punctuation" exercise', () => {
+    cy.viewport(1300, 1200)
+    visit('/project-xkopqm/textbook-klxufv/page-9/new-exercise', {pdf: 'demo'})
+    setupAliases()
+
+    cy.get('@number').type('1')
+
+    cy.get('div:contains("Punctuation") >input').check()
+    cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="2"]').click()
+    cy.get('div:contains("Selectable") >input').should('be.checked')
+
+    traceRectangle('@canvas', 8, 5, 92, 11)
+    cy.get('button:contains("Instructions")').click()
+    notBusy()
+    cy.get('@instructions').find('p').then($el => {
+      const node = $el[0].firstChild
+      console.assert(node !== null)
+      selectRange(node, 80, node, 119)
+    })
+    cy.get('button[data-cy="format-color-2"]').click()
+    cy.get('@instructions').find('p').then($el => {
+      const node = $el[0].firstChild
+      console.assert(node !== null)
+      selectRange(node, 25, node, 76)
+    })
+    cy.get('button[data-cy="format-color-1"]').click()
+    notBusy()
+
+    traceRectangle('@canvas', 7, 9.5, 92, 19)
+    cy.get('button:contains("Wording")').click()
+    notBusy()
+
+    cy.focused().blur()
+    screenshot('select-punctuation', 'edit-1')
+
+    cy.get('button:contains("Save then back")').click()
+    visit('/project-xkopqm')
+    cy.get('a:contains("the exported HTML")').should('have.attr', 'href').then(url => {
+      cy.visit(url + '&download=false')
+      cy.get('a').click()
+      screenshot('select-punctuation', 'export-1')
+      cy.get('span[data-cy=selectable]').eq(1).click()
+      cy.get('span[data-cy=selectable]').eq(1).click()
+      cy.get('span[data-cy=selectable]').eq(2).click()
+      screenshot('select-punctuation', 'export-2')
+    })
+  })
+
   it('creates a "Select words" exercise with custom colors', () => {
     cy.viewport(1300, 1000)
     visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise', {pdf: 'demo'})
