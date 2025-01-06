@@ -85,7 +85,8 @@ const listFormats = [
         return line[0].str[0] === bullet
       },
     }
-  }
+  },
+  // WARNING: keep the set of list formats supported here consistent with what's supported by '_Adapter.split_list_header' in 'adaptation.py'.
 ]
 
 export interface SelectedText {

@@ -39,7 +39,7 @@ class _Adapter:
         if exercise.text_reference != deltas.empty:
             pagelets.append(r.Pagelet(
                 instructions=self.strip_section(renderable.Section(paragraphs=list(self.adapt_instructions(exercise.text_reference)))),
-                wording=self.strip_section(renderable.Section(paragraphs=[])),
+                wording=renderable.Section(paragraphs=[]),
             ))
 
         self.adapted = renderable.Exercise(number=exercise.number, textbook_page=exercise.textbook_page, pagelets=pagelets)
@@ -166,21 +166,30 @@ class _Adapter:
             for paragraph_deltas in self.split_deltas(pagelet_deltas, r"\s*\n\s*")
         ]
 
-    def adapt_wording_paragraph(self, sentence_deltas: deltas.Deltas):
+    def adapt_wording_paragraph(self, paragraph_deltas: deltas.Deltas):
         sentence_specific_placeholders = []
 
-        for (start, separator1, separator2, stop, placeholder, text) in self.gather_choices(sentence_deltas):
+        for (start, separator1, separator2, stop, placeholder, text) in self.gather_choices(paragraph_deltas):
             if placeholder != "":
                 sentence_specific_placeholders.append((placeholder, renderable.MultipleChoicesInput(choices=self.separate_choices(start, separator1, separator2, stop, placeholder, text))))
 
-        for delta in sentence_deltas:
+        for delta in paragraph_deltas:
             if delta.attributes == {}:
                 for index, (placeholder, _token) in enumerate(sentence_specific_placeholders):
                     delta.insert = delta.insert.replace(placeholder, f"ph{len(self.global_placeholders) + index}hp")
 
         sentence_placeholders = list(itertools.chain(self.global_placeholders, sentence_specific_placeholders))
 
-        for delta in sentence_deltas:
+        list_header_deltas, paragraph_deltas = self.split_list_header(paragraph_deltas)
+
+        if len(list_header_deltas) > 0:
+            for delta in list_header_deltas:
+                for text in re.split(r"(\.\.\.|\s+|\W|ph\d+hp)", delta.insert):
+                    if text != "":
+                        yield renderable.PlainText(text=text)
+            yield renderable.Whitespace()
+
+        for delta in paragraph_deltas:
             if delta.attributes == {}:
                 for i, text in enumerate(re.split(r"(\.\.\.|\s+|\W|ph\d+hp)", delta.insert)):
                     if text != "":
@@ -273,6 +282,33 @@ class _Adapter:
                             current_sentence = []
                         current_sentence.append(d.InsertOp(insert=sentence_part, attributes=delta.attributes))
         yield current_sentence
+
+    def split_list_header(self, paragraph_deltas: deltas.Deltas) -> tuple[deltas.Deltas, deltas.Deltas]:
+        if len(paragraph_deltas) == 0:
+            return ([], [])
+        else:
+            # WARNING: keep the list formats supported here consistent with what's supported in 'listFormats' in 'TextPicker.vue'
+            list_header_deltas = []
+            paragraph_deltas = copy.deepcopy(paragraph_deltas)
+
+            number_prefix = re.match(r"^\d+", paragraph_deltas[0].insert)
+            if number_prefix is not None:
+                number_prefix = number_prefix.group(0)
+
+            if number_prefix is not None and len(paragraph_deltas[0].insert) > len(number_prefix) and paragraph_deltas[0].insert[len(number_prefix)] in ").":
+                # "1. 2. 3.", "1) 2) 3)", etc.
+                list_header_deltas.append(deltas.InsertOp(insert=paragraph_deltas[0].insert[:len(number_prefix) + 1], attributes=paragraph_deltas[0].attributes))
+                paragraph_deltas[0].insert = paragraph_deltas[0].insert[len(number_prefix) + 1:].lstrip()
+            elif len(paragraph_deltas[0].insert) > 1 and paragraph_deltas[0].insert[0] in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" and paragraph_deltas[0].insert[1] in ").":
+                # "a. b. c.", "A) B) C)", etc.
+                list_header_deltas.append(deltas.InsertOp(insert=paragraph_deltas[0].insert[:2], attributes=paragraph_deltas[0].attributes))
+                paragraph_deltas[0].insert = paragraph_deltas[0].insert[2:].lstrip()
+            elif len(paragraph_deltas[0].insert) > 0 and paragraph_deltas[0].insert[0] in "◆■":
+                # "◆", "■", etc.
+                list_header_deltas.append(deltas.InsertOp(insert=paragraph_deltas[0].insert[0], attributes=paragraph_deltas[0].attributes))
+                paragraph_deltas[0].insert = paragraph_deltas[0].insert[1:].lstrip()
+
+            return (list_header_deltas, paragraph_deltas)
 
     def strip_section(self, section: renderable.Section) -> renderable.Section:
         section = copy.deepcopy(section)
@@ -1159,8 +1195,8 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                         ]),
                         wording=r.Section(paragraphs=[
                             r.Paragraph(tokens=[
-                                r.SelectableText(text="a", colors=["red"], boxed=False),
-                                r.SelectableText(text=".", colors=["red"], boxed=False),
+                                r.PlainText(text="a"),
+                                r.PlainText(text="."),
                                 r.Whitespace(),
                                 r.SelectableText(text="First", colors=["red"], boxed=False),
                                 r.Whitespace(),
@@ -1170,8 +1206,8 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                                 r.SelectableText(text=".", colors=["red"], boxed=False),
                             ]),
                             r.Paragraph(tokens=[
-                                r.SelectableText(text="b", colors=["red"], boxed=False),
-                                r.SelectableText(text=".", colors=["red"], boxed=False),
+                                r.PlainText(text="b"),
+                                r.PlainText(text="."),
                                 r.Whitespace(),
                                 r.SelectableText(text="Second", colors=["red"], boxed=False),
                                 r.Whitespace(),
@@ -1195,8 +1231,8 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                         ]),
                         wording=r.Section(paragraphs=[
                             r.Paragraph(tokens=[
-                                r.SelectableText(text="c", colors=["red"], boxed=False),
-                                r.SelectableText(text=".", colors=["red"], boxed=False),
+                                r.PlainText(text="c"),
+                                r.PlainText(text="."),
                                 r.Whitespace(),
                                 r.SelectableText(text="Third", colors=["red"], boxed=False),
                                 r.Whitespace(),
@@ -1244,8 +1280,8 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                         ]),
                         wording=r.Section(paragraphs=[
                             r.Paragraph(tokens=[
-                                r.SelectableText(text="1", colors=["red"], boxed=False),
-                                r.SelectableText(text=")", colors=["red"], boxed=False),
+                                r.PlainText(text="1"),
+                                r.PlainText(text=")"),
                                 r.Whitespace(),
                                 r.SelectableText(text="First", colors=["red"], boxed=False),
                                 r.Whitespace(),
@@ -1255,8 +1291,8 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                                 r.SelectableText(text=".", colors=["red"], boxed=False),
                             ]),
                             r.Paragraph(tokens=[
-                                r.SelectableText(text="2", colors=["red"], boxed=False),
-                                r.SelectableText(text=")", colors=["red"], boxed=False),
+                                r.PlainText(text="2"),
+                                r.PlainText(text=")"),
                                 r.Whitespace(),
                                 r.SelectableText(text="Second", colors=["red"], boxed=False),
                                 r.Whitespace(),
@@ -1280,8 +1316,8 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                         ]),
                         wording=r.Section(paragraphs=[
                             r.Paragraph(tokens=[
-                                r.SelectableText(text="3", colors=["red"], boxed=False),
-                                r.SelectableText(text=")", colors=["red"], boxed=False),
+                                r.PlainText(text="3"),
+                                r.PlainText(text=")"),
                                 r.Whitespace(),
                                 r.SelectableText(text="Third", colors=["red"], boxed=False),
                                 r.Whitespace(),
@@ -1329,7 +1365,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                         ]),
                         wording=r.Section(paragraphs=[
                             r.Paragraph(tokens=[
-                                r.SelectableText(text="◆", colors=["red"], boxed=False),
+                                r.PlainText(text="◆"),
                                 r.Whitespace(),
                                 r.SelectableText(text="First", colors=["red"], boxed=False),
                                 r.Whitespace(),
@@ -1339,7 +1375,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                                 r.SelectableText(text=".", colors=["red"], boxed=False),
                             ]),
                             r.Paragraph(tokens=[
-                                r.SelectableText(text="◆", colors=["red"], boxed=False),
+                                r.PlainText(text="◆"),
                                 r.Whitespace(),
                                 r.SelectableText(text="Second", colors=["red"], boxed=False),
                                 r.Whitespace(),
@@ -1363,7 +1399,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                         ]),
                         wording=r.Section(paragraphs=[
                             r.Paragraph(tokens=[
-                                r.SelectableText(text="◆", colors=["red"], boxed=False),
+                                r.PlainText(text="◆"),
                                 r.Whitespace(),
                                 r.SelectableText(text="Third", colors=["red"], boxed=False),
                                 r.Whitespace(),
