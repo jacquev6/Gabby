@@ -1131,6 +1131,258 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
             ),
         )
 
+    def test_selectable_tokens__in_lettered_list(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions=[d.InsertOp(insert="Instructions\n", attributes={})],
+                wording=[d.InsertOp(insert="a. First list element.\nb. Second element, still in list.\nc. Third element. The last one!", attributes={})],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
+                wording_paragraphs_per_pagelet=2,
+                adaptation=AdaptationV2(kind="generic", effects=[ItemizedAdaptationEffect(
+                    kind="itemized",
+                    items={"kind": "tokens", "words": True, "punctuation": True},
+                    effects={"selectable": {"colors": ["red"]}, "boxed": False},
+                )]),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=42,
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(paragraphs=[
+                            r.Paragraph(tokens=[
+                                r.PlainText(text="Instructions"),
+                            ]),
+                        ]),
+                        wording=r.Section(paragraphs=[
+                            r.Paragraph(tokens=[
+                                r.SelectableText(text="a", colors=["red"], boxed=False),
+                                r.SelectableText(text=".", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="First", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="list", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="element", colors=["red"], boxed=False),
+                                r.SelectableText(text=".", colors=["red"], boxed=False),
+                            ]),
+                            r.Paragraph(tokens=[
+                                r.SelectableText(text="b", colors=["red"], boxed=False),
+                                r.SelectableText(text=".", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="Second", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="element", colors=["red"], boxed=False),
+                                r.SelectableText(text=",", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="still", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="in", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="list", colors=["red"], boxed=False),
+                                r.SelectableText(text=".", colors=["red"], boxed=False),
+                            ]),
+                        ]),
+                    ),
+                    r.Pagelet(
+                        instructions=r.Section(paragraphs=[
+                            r.Paragraph(tokens=[
+                                r.PlainText(text="Instructions"),
+                            ]),
+                        ]),
+                        wording=r.Section(paragraphs=[
+                            r.Paragraph(tokens=[
+                                r.SelectableText(text="c", colors=["red"], boxed=False),
+                                r.SelectableText(text=".", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="Third", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="element", colors=["red"], boxed=False),
+                                r.SelectableText(text=".", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="The", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="last", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="one", colors=["red"], boxed=False),
+                                r.SelectableText(text="!", colors=["red"], boxed=False),
+                            ]),
+                        ]),
+                    ),
+                ],
+            ),
+        )
+
+    def test_selectable_tokens__in_numbered_list(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions=[d.InsertOp(insert="Instructions\n", attributes={})],
+                wording=[d.InsertOp(insert="1) First list element.\n2) Second element, still in list.\n3) Third element. The last one!", attributes={})],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
+                wording_paragraphs_per_pagelet=2,
+                adaptation=AdaptationV2(kind="generic", effects=[ItemizedAdaptationEffect(
+                    kind="itemized",
+                    items={"kind": "tokens", "words": True, "punctuation": True},
+                    effects={"selectable": {"colors": ["red"]}, "boxed": False},
+                )]),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=42,
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(paragraphs=[
+                            r.Paragraph(tokens=[
+                                r.PlainText(text="Instructions"),
+                            ]),
+                        ]),
+                        wording=r.Section(paragraphs=[
+                            r.Paragraph(tokens=[
+                                r.SelectableText(text="1", colors=["red"], boxed=False),
+                                r.SelectableText(text=")", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="First", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="list", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="element", colors=["red"], boxed=False),
+                                r.SelectableText(text=".", colors=["red"], boxed=False),
+                            ]),
+                            r.Paragraph(tokens=[
+                                r.SelectableText(text="2", colors=["red"], boxed=False),
+                                r.SelectableText(text=")", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="Second", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="element", colors=["red"], boxed=False),
+                                r.SelectableText(text=",", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="still", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="in", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="list", colors=["red"], boxed=False),
+                                r.SelectableText(text=".", colors=["red"], boxed=False),
+                            ]),
+                        ]),
+                    ),
+                    r.Pagelet(
+                        instructions=r.Section(paragraphs=[
+                            r.Paragraph(tokens=[
+                                r.PlainText(text="Instructions"),
+                            ]),
+                        ]),
+                        wording=r.Section(paragraphs=[
+                            r.Paragraph(tokens=[
+                                r.SelectableText(text="3", colors=["red"], boxed=False),
+                                r.SelectableText(text=")", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="Third", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="element", colors=["red"], boxed=False),
+                                r.SelectableText(text=".", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="The", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="last", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="one", colors=["red"], boxed=False),
+                                r.SelectableText(text="!", colors=["red"], boxed=False),
+                            ]),
+                        ]),
+                    ),
+                ],
+            ),
+        )
+
+    def test_selectable_tokens__in_bullet_list(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions=[d.InsertOp(insert="Instructions\n", attributes={})],
+                wording=[d.InsertOp(insert="◆ First list element.\n◆ Second element, still in list.\n◆ Third element. The last one!", attributes={})],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
+                wording_paragraphs_per_pagelet=2,
+                adaptation=AdaptationV2(kind="generic", effects=[ItemizedAdaptationEffect(
+                    kind="itemized",
+                    items={"kind": "tokens", "words": True, "punctuation": True},
+                    effects={"selectable": {"colors": ["red"]}, "boxed": False},
+                )]),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=42,
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(paragraphs=[
+                            r.Paragraph(tokens=[
+                                r.PlainText(text="Instructions"),
+                            ]),
+                        ]),
+                        wording=r.Section(paragraphs=[
+                            r.Paragraph(tokens=[
+                                r.SelectableText(text="◆", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="First", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="list", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="element", colors=["red"], boxed=False),
+                                r.SelectableText(text=".", colors=["red"], boxed=False),
+                            ]),
+                            r.Paragraph(tokens=[
+                                r.SelectableText(text="◆", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="Second", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="element", colors=["red"], boxed=False),
+                                r.SelectableText(text=",", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="still", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="in", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="list", colors=["red"], boxed=False),
+                                r.SelectableText(text=".", colors=["red"], boxed=False),
+                            ]),
+                        ]),
+                    ),
+                    r.Pagelet(
+                        instructions=r.Section(paragraphs=[
+                            r.Paragraph(tokens=[
+                                r.PlainText(text="Instructions"),
+                            ]),
+                        ]),
+                        wording=r.Section(paragraphs=[
+                            r.Paragraph(tokens=[
+                                r.SelectableText(text="◆", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="Third", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="element", colors=["red"], boxed=False),
+                                r.SelectableText(text=".", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="The", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="last", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="one", colors=["red"], boxed=False),
+                                r.SelectableText(text="!", colors=["red"], boxed=False),
+                            ]),
+                        ]),
+                    ),
+                ],
+            ),
+        )
+
     def test_selectable_manual_items__plain(self):
         self.do_test(
             e.Exercise(
