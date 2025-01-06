@@ -231,7 +231,7 @@ def dump_database_as_unit_tests():
 
         database_engine = database_utils.create_engine(settings.DATABASE_URL)
         with orm.Session(database_engine) as session:
-            for i, exercise in enumerate(session.query(orm_models.Exercise).all()):
+            for exercise in session.query(orm_models.Exercise).order_by(orm_models.Exercise.id).all():
                 adapted = exercise.make_adapted()
 
                 yield f"    def test_exercise_{exercise.id}(self):"

@@ -3143,100 +3143,6 @@ class DatabaseAsUnitTests(AdaptationTestCase):
             ),
         )
 
-    def test_exercise_29(self):
-        self.do_test(
-            e.Exercise(
-                number="Aubodacbée",
-                textbook_page=15,
-                instructions=[InsertOp(insert="\n", attributes={})],
-                wording=[
-                    InsertOp(
-                        insert="Debbaèbe ub bub de faebbec, ub beube fobbe découfbe\nube baacob ababdobbée. Ba fobbe eb bec fabbec cobb\ncaccéec. Bua feub baeb fababeb aca ?\n",
-                        attributes={},
-                    )
-                ],
-                example=[InsertOp(insert="\n", attributes={})],
-                clue=[InsertOp(insert="\n", attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="generic", effects=[]),
-            ),
-            r.Exercise(
-                number="Aubodacbée",
-                textbook_page=15,
-                pagelets=[
-                    r.Pagelet(
-                        instructions=Section(paragraphs=[]),
-                        wording=Section(
-                            paragraphs=[
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="Debbaèbe"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ub"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bub"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="de"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="faebbec"),
-                                        _PlainText(type="plainText", text=","),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ub"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="beube"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="fobbe"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="découfbe"),
-                                    ]
-                                ),
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="ube"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="baacob"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ababdobbée"),
-                                        _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="Ba"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="fobbe"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="eb"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bec"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="fabbec"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="cobb"),
-                                    ]
-                                ),
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="caccéec"),
-                                        _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="Bua"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="feub"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="baeb"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="fababeb"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="aca"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="?"),
-                                    ]
-                                ),
-                            ]
-                        ),
-                    ),
-                ],
-            ),
-        )
-
     def test_exercise_16(self):
         self.do_test(
             e.Exercise(
@@ -4898,78 +4804,6 @@ class DatabaseAsUnitTests(AdaptationTestCase):
             ),
         )
 
-    def test_exercise_42(self):
-        self.do_test(
-            e.Exercise(
-                number="A boa de boueb",
-                textbook_page=17,
-                instructions=[
-                    InsertOp(
-                        insert="Décfaffbe ce bébuc eb dac au babçob de\nb’ebebcace 15 ce bu’ab be doab fac faabe.\n",
-                        attributes={},
-                    )
-                ],
-                wording=[InsertOp(insert="\n", attributes={})],
-                example=[InsertOp(insert="\n", attributes={})],
-                clue=[InsertOp(insert="\n", attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="generic", effects=[]),
-            ),
-            r.Exercise(
-                number="A boa de boueb",
-                textbook_page=17,
-                pagelets=[
-                    r.Pagelet(
-                        instructions=Section(
-                            paragraphs=[
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="Décfaffbe"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ce"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bébuc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="eb"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="dac"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="au"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="babçob"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="de"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="b"),
-                                        _PlainText(type="plainText", text="’"),
-                                        _PlainText(type="plainText", text="ebebcace"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="15"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ce"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bu"),
-                                        _PlainText(type="plainText", text="’"),
-                                        _PlainText(type="plainText", text="ab"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="be"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="doab"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="fac"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="faabe"),
-                                        _PlainText(type="plainText", text="."),
-                                    ]
-                                )
-                            ]
-                        ),
-                        wording=Section(paragraphs=[]),
-                    ),
-                ],
-            ),
-        )
-
     def test_exercise_24(self):
         self.do_test(
             e.Exercise(
@@ -5774,6 +5608,100 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text=","),
                                     ]
                                 )
+                            ]
+                        ),
+                    ),
+                ],
+            ),
+        )
+
+    def test_exercise_29(self):
+        self.do_test(
+            e.Exercise(
+                number="Aubodacbée",
+                textbook_page=15,
+                instructions=[InsertOp(insert="\n", attributes={})],
+                wording=[
+                    InsertOp(
+                        insert="Debbaèbe ub bub de faebbec, ub beube fobbe découfbe\nube baacob ababdobbée. Ba fobbe eb bec fabbec cobb\ncaccéec. Bua feub baeb fababeb aca ?\n",
+                        attributes={},
+                    )
+                ],
+                example=[InsertOp(insert="\n", attributes={})],
+                clue=[InsertOp(insert="\n", attributes={})],
+                wording_paragraphs_per_pagelet=3,
+                adaptation=AdaptationV2(kind="generic", effects=[]),
+            ),
+            r.Exercise(
+                number="Aubodacbée",
+                textbook_page=15,
+                pagelets=[
+                    r.Pagelet(
+                        instructions=Section(paragraphs=[]),
+                        wording=Section(
+                            paragraphs=[
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="Debbaèbe"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ub"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bub"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="de"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="faebbec"),
+                                        _PlainText(type="plainText", text=","),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ub"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="beube"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="fobbe"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="découfbe"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="ube"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="baacob"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ababdobbée"),
+                                        _PlainText(type="plainText", text="."),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="Ba"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="fobbe"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="eb"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bec"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="fabbec"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="cobb"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="caccéec"),
+                                        _PlainText(type="plainText", text="."),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="Bua"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="feub"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="baeb"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="fababeb"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="aca"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="?"),
+                                    ]
+                                ),
                             ]
                         ),
                     ),
@@ -7851,6 +7779,78 @@ class DatabaseAsUnitTests(AdaptationTestCase):
             ),
         )
 
+    def test_exercise_42(self):
+        self.do_test(
+            e.Exercise(
+                number="A boa de boueb",
+                textbook_page=17,
+                instructions=[
+                    InsertOp(
+                        insert="Décfaffbe ce bébuc eb dac au babçob de\nb’ebebcace 15 ce bu’ab be doab fac faabe.\n",
+                        attributes={},
+                    )
+                ],
+                wording=[InsertOp(insert="\n", attributes={})],
+                example=[InsertOp(insert="\n", attributes={})],
+                clue=[InsertOp(insert="\n", attributes={})],
+                wording_paragraphs_per_pagelet=3,
+                adaptation=AdaptationV2(kind="generic", effects=[]),
+            ),
+            r.Exercise(
+                number="A boa de boueb",
+                textbook_page=17,
+                pagelets=[
+                    r.Pagelet(
+                        instructions=Section(
+                            paragraphs=[
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="Décfaffbe"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ce"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bébuc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="eb"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="dac"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="au"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="babçob"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="de"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="b"),
+                                        _PlainText(type="plainText", text="’"),
+                                        _PlainText(type="plainText", text="ebebcace"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="15"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ce"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bu"),
+                                        _PlainText(type="plainText", text="’"),
+                                        _PlainText(type="plainText", text="ab"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="be"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="doab"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="fac"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="faabe"),
+                                        _PlainText(type="plainText", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=Section(paragraphs=[]),
+                    ),
+                ],
+            ),
+        )
+
     def test_exercise_43(self):
         self.do_test(
             e.Exercise(
@@ -8651,112 +8651,6 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="foub"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="cobbab"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="?"),
-                                    ]
-                                ),
-                            ]
-                        ),
-                    ),
-                ],
-            ),
-        )
-
-    def test_exercise_56(self):
-        self.do_test(
-            e.Exercise(
-                number="Aubodacbée",
-                textbook_page=19,
-                instructions=[InsertOp(insert="\n", attributes={})],
-                wording=[
-                    InsertOp(
-                        insert="Cfabbobbe fouabbe afec abbuaébude cob coffbeb à baboub.\nBua a fbac cob bbacebeb fbéfébé ? Buabd a-b-ab dacfabu ?\nEcb-ce bue buebbu’ub ecb ebbbé dabc ca cfabbbe ?\n",
-                        attributes={},
-                    )
-                ],
-                example=[InsertOp(insert="\n", attributes={})],
-                clue=[InsertOp(insert="\n", attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="generic", effects=[]),
-            ),
-            r.Exercise(
-                number="Aubodacbée",
-                textbook_page=19,
-                pagelets=[
-                    r.Pagelet(
-                        instructions=Section(paragraphs=[]),
-                        wording=Section(
-                            paragraphs=[
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="Cfabbobbe"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="fouabbe"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="afec"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="abbuaébude"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="cob"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="coffbeb"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="à"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="baboub"),
-                                        _PlainText(type="plainText", text="."),
-                                    ]
-                                ),
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="Bua"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="a"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="fbac"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="cob"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bbacebeb"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="fbéfébé"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="?"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="Buabd"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="a"),
-                                        _PlainText(type="plainText", text="-"),
-                                        _PlainText(type="plainText", text="b"),
-                                        _PlainText(type="plainText", text="-"),
-                                        _PlainText(type="plainText", text="ab"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="dacfabu"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="?"),
-                                    ]
-                                ),
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="Ecb"),
-                                        _PlainText(type="plainText", text="-"),
-                                        _PlainText(type="plainText", text="ce"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bue"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="buebbu"),
-                                        _PlainText(type="plainText", text="’"),
-                                        _PlainText(type="plainText", text="ub"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ecb"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ebbbé"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="dabc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ca"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="cfabbbe"),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="?"),
                                     ]
@@ -10722,6 +10616,112 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                             ]
                         ),
                         wording=Section(paragraphs=[]),
+                    ),
+                ],
+            ),
+        )
+
+    def test_exercise_56(self):
+        self.do_test(
+            e.Exercise(
+                number="Aubodacbée",
+                textbook_page=19,
+                instructions=[InsertOp(insert="\n", attributes={})],
+                wording=[
+                    InsertOp(
+                        insert="Cfabbobbe fouabbe afec abbuaébude cob coffbeb à baboub.\nBua a fbac cob bbacebeb fbéfébé ? Buabd a-b-ab dacfabu ?\nEcb-ce bue buebbu’ub ecb ebbbé dabc ca cfabbbe ?\n",
+                        attributes={},
+                    )
+                ],
+                example=[InsertOp(insert="\n", attributes={})],
+                clue=[InsertOp(insert="\n", attributes={})],
+                wording_paragraphs_per_pagelet=3,
+                adaptation=AdaptationV2(kind="generic", effects=[]),
+            ),
+            r.Exercise(
+                number="Aubodacbée",
+                textbook_page=19,
+                pagelets=[
+                    r.Pagelet(
+                        instructions=Section(paragraphs=[]),
+                        wording=Section(
+                            paragraphs=[
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="Cfabbobbe"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="fouabbe"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="afec"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="abbuaébude"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="cob"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="coffbeb"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="à"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="baboub"),
+                                        _PlainText(type="plainText", text="."),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="Bua"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="a"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="fbac"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="cob"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bbacebeb"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="fbéfébé"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="?"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="Buabd"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="a"),
+                                        _PlainText(type="plainText", text="-"),
+                                        _PlainText(type="plainText", text="b"),
+                                        _PlainText(type="plainText", text="-"),
+                                        _PlainText(type="plainText", text="ab"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="dacfabu"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="?"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="Ecb"),
+                                        _PlainText(type="plainText", text="-"),
+                                        _PlainText(type="plainText", text="ce"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bue"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="buebbu"),
+                                        _PlainText(type="plainText", text="’"),
+                                        _PlainText(type="plainText", text="ub"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ecb"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ebbbé"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="dabc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ca"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="cfabbbe"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="?"),
+                                    ]
+                                ),
+                            ]
+                        ),
                     ),
                 ],
             ),
@@ -13765,68 +13765,6 @@ class DatabaseAsUnitTests(AdaptationTestCase):
             ),
         )
 
-    def test_exercise_78(self):
-        self.do_test(
-            e.Exercise(
-                number="A boa de boueb",
-                textbook_page=29,
-                instructions=[
-                    InsertOp(
-                        insert="Décfaffbe ce bébuc foub cafoab où eb\ndefuac buabd ba fbabcecce ecb ebfebbée.\n",
-                        attributes={},
-                    )
-                ],
-                wording=[InsertOp(insert="\n", attributes={})],
-                example=[InsertOp(insert="\n", attributes={})],
-                clue=[InsertOp(insert="\n", attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="generic", effects=[]),
-            ),
-            r.Exercise(
-                number="A boa de boueb",
-                textbook_page=29,
-                pagelets=[
-                    r.Pagelet(
-                        instructions=Section(
-                            paragraphs=[
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="Décfaffbe"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ce"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bébuc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="foub"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="cafoab"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="où"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="eb"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="defuac"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="buabd"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ba"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="fbabcecce"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ecb"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ebfebbée"),
-                                        _PlainText(type="plainText", text="."),
-                                    ]
-                                )
-                            ]
-                        ),
-                        wording=Section(paragraphs=[]),
-                    ),
-                ],
-            ),
-        )
-
     def test_exercise_70(self):
         self.do_test(
             e.Exercise(
@@ -15118,105 +15056,6 @@ class DatabaseAsUnitTests(AdaptationTestCase):
             ),
         )
 
-    def test_exercise_79(self):
-        self.do_test(
-            e.Exercise(
-                number="Aubodacbée",
-                textbook_page=29,
-                instructions=[InsertOp(insert="Aubodacbée\n", attributes={})],
-                wording=[
-                    InsertOp(
-                        insert="Dabc ca babaèbe, be bouf fbéfabe be befac. Ab fobbe ub\nbabbaeb eb bébabbe ba coufe afec ube bbabde cuabbèbe.\nBa babbabe bouabbobbe cub be feu.\n",
-                        attributes={},
-                    )
-                ],
-                example=[InsertOp(insert="\n", attributes={})],
-                clue=[InsertOp(insert="\n", attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="generic", effects=[]),
-            ),
-            r.Exercise(
-                number="Aubodacbée",
-                textbook_page=29,
-                pagelets=[
-                    r.Pagelet(
-                        instructions=Section(
-                            paragraphs=[Paragraph(tokens=[_PlainText(type="plainText", text="Aubodacbée")])]
-                        ),
-                        wording=Section(
-                            paragraphs=[
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="Dabc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ca"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="babaèbe"),
-                                        _PlainText(type="plainText", text=","),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="be"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bouf"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="fbéfabe"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="be"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="befac"),
-                                        _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="Ab"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="fobbe"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ub"),
-                                    ]
-                                ),
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="babbaeb"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="eb"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bébabbe"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ba"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="coufe"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="afec"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ube"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bbabde"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="cuabbèbe"),
-                                        _PlainText(type="plainText", text="."),
-                                    ]
-                                ),
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="Ba"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="babbabe"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bouabbobbe"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="cub"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="be"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="feu"),
-                                        _PlainText(type="plainText", text="."),
-                                    ]
-                                ),
-                            ]
-                        ),
-                    ),
-                ],
-            ),
-        )
-
     def test_exercise_74(self):
         self.do_test(
             e.Exercise(
@@ -16082,6 +15921,167 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _FreeTextInput(type="freeTextInput"),
                                         _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="."),
+                                    ]
+                                ),
+                            ]
+                        ),
+                    ),
+                ],
+            ),
+        )
+
+    def test_exercise_78(self):
+        self.do_test(
+            e.Exercise(
+                number="A boa de boueb",
+                textbook_page=29,
+                instructions=[
+                    InsertOp(
+                        insert="Décfaffbe ce bébuc foub cafoab où eb\ndefuac buabd ba fbabcecce ecb ebfebbée.\n",
+                        attributes={},
+                    )
+                ],
+                wording=[InsertOp(insert="\n", attributes={})],
+                example=[InsertOp(insert="\n", attributes={})],
+                clue=[InsertOp(insert="\n", attributes={})],
+                wording_paragraphs_per_pagelet=3,
+                adaptation=AdaptationV2(kind="generic", effects=[]),
+            ),
+            r.Exercise(
+                number="A boa de boueb",
+                textbook_page=29,
+                pagelets=[
+                    r.Pagelet(
+                        instructions=Section(
+                            paragraphs=[
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="Décfaffbe"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ce"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bébuc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="foub"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="cafoab"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="où"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="eb"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="defuac"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="buabd"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ba"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="fbabcecce"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ecb"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ebfebbée"),
+                                        _PlainText(type="plainText", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=Section(paragraphs=[]),
+                    ),
+                ],
+            ),
+        )
+
+    def test_exercise_79(self):
+        self.do_test(
+            e.Exercise(
+                number="Aubodacbée",
+                textbook_page=29,
+                instructions=[InsertOp(insert="Aubodacbée\n", attributes={})],
+                wording=[
+                    InsertOp(
+                        insert="Dabc ca babaèbe, be bouf fbéfabe be befac. Ab fobbe ub\nbabbaeb eb bébabbe ba coufe afec ube bbabde cuabbèbe.\nBa babbabe bouabbobbe cub be feu.\n",
+                        attributes={},
+                    )
+                ],
+                example=[InsertOp(insert="\n", attributes={})],
+                clue=[InsertOp(insert="\n", attributes={})],
+                wording_paragraphs_per_pagelet=3,
+                adaptation=AdaptationV2(kind="generic", effects=[]),
+            ),
+            r.Exercise(
+                number="Aubodacbée",
+                textbook_page=29,
+                pagelets=[
+                    r.Pagelet(
+                        instructions=Section(
+                            paragraphs=[Paragraph(tokens=[_PlainText(type="plainText", text="Aubodacbée")])]
+                        ),
+                        wording=Section(
+                            paragraphs=[
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="Dabc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ca"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="babaèbe"),
+                                        _PlainText(type="plainText", text=","),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="be"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bouf"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="fbéfabe"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="be"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="befac"),
+                                        _PlainText(type="plainText", text="."),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="Ab"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="fobbe"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ub"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="babbaeb"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="eb"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bébabbe"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ba"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="coufe"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="afec"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ube"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bbabde"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="cuabbèbe"),
+                                        _PlainText(type="plainText", text="."),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="Ba"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="babbabe"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bouabbobbe"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="cub"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="be"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="feu"),
                                         _PlainText(type="plainText", text="."),
                                     ]
                                 ),
@@ -23802,114 +23802,6 @@ class DatabaseAsUnitTests(AdaptationTestCase):
             ),
         )
 
-    def test_exercise_119(self):
-        self.do_test(
-            e.Exercise(
-                number="Aubodacbée",
-                textbook_page=35,
-                instructions=[InsertOp(insert="Aubodacbée\n", attributes={})],
-                wording=[
-                    InsertOp(
-                        insert="Bubec obcebfe ub bécabd. Ce befbabe aabe becbeb cub\nbec faebbec cfaudec, au cobeab. Ab coubb cub bec bubc de\nbobbe baacob, fuac ab c’ebfuab fab ub febab bbou.\n",
-                        attributes={},
-                    )
-                ],
-                example=[InsertOp(insert="\n", attributes={})],
-                clue=[InsertOp(insert="\n", attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="generic", effects=[]),
-            ),
-            r.Exercise(
-                number="Aubodacbée",
-                textbook_page=35,
-                pagelets=[
-                    r.Pagelet(
-                        instructions=Section(
-                            paragraphs=[Paragraph(tokens=[_PlainText(type="plainText", text="Aubodacbée")])]
-                        ),
-                        wording=Section(
-                            paragraphs=[
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="Bubec"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="obcebfe"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ub"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bécabd"),
-                                        _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="Ce"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="befbabe"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="aabe"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="becbeb"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="cub"),
-                                    ]
-                                ),
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="bec"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="faebbec"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="cfaudec"),
-                                        _PlainText(type="plainText", text=","),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="au"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="cobeab"),
-                                        _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="Ab"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="coubb"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="cub"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bec"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bubc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="de"),
-                                    ]
-                                ),
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="bobbe"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="baacob"),
-                                        _PlainText(type="plainText", text=","),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="fuac"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ab"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="c"),
-                                        _PlainText(type="plainText", text="’"),
-                                        _PlainText(type="plainText", text="ebfuab"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="fab"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ub"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="febab"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bbou"),
-                                        _PlainText(type="plainText", text="."),
-                                    ]
-                                ),
-                            ]
-                        ),
-                    ),
-                ],
-            ),
-        )
-
     def test_exercise_102(self):
         self.do_test(
             e.Exercise(
@@ -26505,537 +26397,6 @@ class DatabaseAsUnitTests(AdaptationTestCase):
             ),
         )
 
-    def test_exercise_137(self):
-        self.do_test(
-            e.Exercise(
-                number="8",
-                textbook_page=39,
-                instructions=[
-                    InsertOp(
-                        insert="Becofae bec fbobobc febcobbebc coubabbéc\neb dac bua abc décabbebb. Fuac, bebèfe bec febbec bua\nbec accobfabbebb.\n",
-                        attributes={},
-                    )
-                ],
-                wording=[
-                    InsertOp(
-                        insert="Be daabbe dab à Ba-Beabbob\nd’ub bob aababbe :\n– Bu b’ac faab ub bbabd\nfbaacab, b’aba. Aucca\nfaac-be boa aucca be\nfaabe ub cadeau boaab.\nBaebc, fbebdc cebbe\nboubce d’abbebb.\nBa-Beabbob dub faabe ub bboc effobb foub dabe :\n– Bob, Beccabe, be be feub fac d’abbebb.\nBe daabbe c’ébobba :\n– Baac ab faub baeb bue be be faae foub be cadeau\nbue bu b’ac affobbé.\nBobebb Babaud, Foubbuoa ba beb ecb cabée ?,\n© Fbabbabaob, 2001.\n",
-                        attributes={},
-                    )
-                ],
-                example=[InsertOp(insert="\n", attributes={})],
-                clue=[InsertOp(insert="\n", attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="generic", effects=[]),
-            ),
-            r.Exercise(
-                number="8",
-                textbook_page=39,
-                pagelets=[
-                    r.Pagelet(
-                        instructions=Section(
-                            paragraphs=[
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="Becofae"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bec"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="fbobobc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="febcobbebc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="coubabbéc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="eb"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="dac"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bua"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="abc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="décabbebb"),
-                                        _PlainText(type="plainText", text="."),
-                                    ]
-                                ),
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="Fuac"),
-                                        _PlainText(type="plainText", text=","),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bebèfe"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bec"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="febbec"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bua"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bec"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="accobfabbebb"),
-                                        _PlainText(type="plainText", text="."),
-                                    ]
-                                ),
-                            ]
-                        ),
-                        wording=Section(
-                            paragraphs=[
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="Be"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="daabbe"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="dab"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="à"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="Ba"),
-                                        _PlainText(type="plainText", text="-"),
-                                        _PlainText(type="plainText", text="Beabbob"),
-                                    ]
-                                ),
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="d"),
-                                        _PlainText(type="plainText", text="’"),
-                                        _PlainText(type="plainText", text="ub"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bob"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="aababbe"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text=":"),
-                                    ]
-                                ),
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="–"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="Bu"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="b"),
-                                        _PlainText(type="plainText", text="’"),
-                                        _PlainText(type="plainText", text="ac"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="faab"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ub"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bbabd"),
-                                    ]
-                                ),
-                            ]
-                        ),
-                    ),
-                    r.Pagelet(
-                        instructions=Section(
-                            paragraphs=[
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="Becofae"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bec"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="fbobobc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="febcobbebc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="coubabbéc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="eb"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="dac"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bua"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="abc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="décabbebb"),
-                                        _PlainText(type="plainText", text="."),
-                                    ]
-                                ),
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="Fuac"),
-                                        _PlainText(type="plainText", text=","),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bebèfe"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bec"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="febbec"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bua"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bec"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="accobfabbebb"),
-                                        _PlainText(type="plainText", text="."),
-                                    ]
-                                ),
-                            ]
-                        ),
-                        wording=Section(
-                            paragraphs=[
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="fbaacab"),
-                                        _PlainText(type="plainText", text=","),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="b"),
-                                        _PlainText(type="plainText", text="’"),
-                                        _PlainText(type="plainText", text="aba"),
-                                        _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="Aucca"),
-                                    ]
-                                ),
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="faac"),
-                                        _PlainText(type="plainText", text="-"),
-                                        _PlainText(type="plainText", text="be"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="boa"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="aucca"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="be"),
-                                    ]
-                                ),
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="faabe"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ub"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="cadeau"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="boaab"),
-                                        _PlainText(type="plainText", text="."),
-                                    ]
-                                ),
-                            ]
-                        ),
-                    ),
-                    r.Pagelet(
-                        instructions=Section(
-                            paragraphs=[
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="Becofae"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bec"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="fbobobc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="febcobbebc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="coubabbéc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="eb"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="dac"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bua"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="abc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="décabbebb"),
-                                        _PlainText(type="plainText", text="."),
-                                    ]
-                                ),
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="Fuac"),
-                                        _PlainText(type="plainText", text=","),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bebèfe"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bec"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="febbec"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bua"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bec"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="accobfabbebb"),
-                                        _PlainText(type="plainText", text="."),
-                                    ]
-                                ),
-                            ]
-                        ),
-                        wording=Section(
-                            paragraphs=[
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="Baebc"),
-                                        _PlainText(type="plainText", text=","),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="fbebdc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="cebbe"),
-                                    ]
-                                ),
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="boubce"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="d"),
-                                        _PlainText(type="plainText", text="’"),
-                                        _PlainText(type="plainText", text="abbebb"),
-                                        _PlainText(type="plainText", text="."),
-                                    ]
-                                ),
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="Ba"),
-                                        _PlainText(type="plainText", text="-"),
-                                        _PlainText(type="plainText", text="Beabbob"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="dub"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="faabe"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ub"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bboc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="effobb"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="foub"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="dabe"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text=":"),
-                                    ]
-                                ),
-                            ]
-                        ),
-                    ),
-                    r.Pagelet(
-                        instructions=Section(
-                            paragraphs=[
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="Becofae"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bec"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="fbobobc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="febcobbebc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="coubabbéc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="eb"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="dac"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bua"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="abc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="décabbebb"),
-                                        _PlainText(type="plainText", text="."),
-                                    ]
-                                ),
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="Fuac"),
-                                        _PlainText(type="plainText", text=","),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bebèfe"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bec"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="febbec"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bua"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bec"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="accobfabbebb"),
-                                        _PlainText(type="plainText", text="."),
-                                    ]
-                                ),
-                            ]
-                        ),
-                        wording=Section(
-                            paragraphs=[
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="–"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="Bob"),
-                                        _PlainText(type="plainText", text=","),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="Beccabe"),
-                                        _PlainText(type="plainText", text=","),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="be"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="be"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="feub"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="fac"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="d"),
-                                        _PlainText(type="plainText", text="’"),
-                                        _PlainText(type="plainText", text="abbebb"),
-                                        _PlainText(type="plainText", text="."),
-                                    ]
-                                ),
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="Be"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="daabbe"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="c"),
-                                        _PlainText(type="plainText", text="’"),
-                                        _PlainText(type="plainText", text="ébobba"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text=":"),
-                                    ]
-                                ),
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="–"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="Baac"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ab"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="faub"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="baeb"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bue"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="be"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="be"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="faae"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="foub"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="be"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="cadeau"),
-                                    ]
-                                ),
-                            ]
-                        ),
-                    ),
-                    r.Pagelet(
-                        instructions=Section(
-                            paragraphs=[
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="Becofae"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bec"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="fbobobc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="febcobbebc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="coubabbéc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="eb"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="dac"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bua"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="abc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="décabbebb"),
-                                        _PlainText(type="plainText", text="."),
-                                    ]
-                                ),
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="Fuac"),
-                                        _PlainText(type="plainText", text=","),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bebèfe"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bec"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="febbec"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bua"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bec"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="accobfabbebb"),
-                                        _PlainText(type="plainText", text="."),
-                                    ]
-                                ),
-                            ]
-                        ),
-                        wording=Section(
-                            paragraphs=[
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="bue"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bu"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="b"),
-                                        _PlainText(type="plainText", text="’"),
-                                        _PlainText(type="plainText", text="ac"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="affobbé"),
-                                        _PlainText(type="plainText", text="."),
-                                    ]
-                                ),
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="Bobebb"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="Babaud"),
-                                        _PlainText(type="plainText", text=","),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="Foubbuoa"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ba"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="beb"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ecb"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="cabée"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="?"),
-                                        _PlainText(type="plainText", text=","),
-                                    ]
-                                ),
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="©"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="Fbabbabaob"),
-                                        _PlainText(type="plainText", text=","),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="2001"),
-                                        _PlainText(type="plainText", text="."),
-                                    ]
-                                ),
-                            ]
-                        ),
-                    ),
-                ],
-            ),
-        )
-
     def test_exercise_115(self):
         self.do_test(
             e.Exercise(
@@ -27602,61 +26963,109 @@ class DatabaseAsUnitTests(AdaptationTestCase):
             ),
         )
 
-    def test_exercise_143(self):
+    def test_exercise_119(self):
         self.do_test(
             e.Exercise(
-                number="A boa de boueb",
-                textbook_page=39,
-                instructions=[
+                number="Aubodacbée",
+                textbook_page=35,
+                instructions=[InsertOp(insert="Aubodacbée\n", attributes={})],
+                wording=[
                     InsertOp(
-                        insert="Décfaffbe ce bébuc, fuac dobbe be fbobob febcobbeb cubeb de ba ffbace.\n", attributes={}
+                        insert="Bubec obcebfe ub bécabd. Ce befbabe aabe becbeb cub\nbec faebbec cfaudec, au cobeab. Ab coubb cub bec bubc de\nbobbe baacob, fuac ab c’ebfuab fab ub febab bbou.\n",
+                        attributes={},
                     )
                 ],
-                wording=[InsertOp(insert="\n", attributes={})],
                 example=[InsertOp(insert="\n", attributes={})],
                 clue=[InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(kind="generic", effects=[]),
             ),
             r.Exercise(
-                number="A boa de boueb",
-                textbook_page=39,
+                number="Aubodacbée",
+                textbook_page=35,
                 pagelets=[
                     r.Pagelet(
                         instructions=Section(
+                            paragraphs=[Paragraph(tokens=[_PlainText(type="plainText", text="Aubodacbée")])]
+                        ),
+                        wording=Section(
                             paragraphs=[
                                 Paragraph(
                                     tokens=[
-                                        _PlainText(type="plainText", text="Décfaffbe"),
+                                        _PlainText(type="plainText", text="Bubec"),
                                         _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ce"),
+                                        _PlainText(type="plainText", text="obcebfe"),
                                         _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bébuc"),
+                                        _PlainText(type="plainText", text="ub"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bécabd"),
+                                        _PlainText(type="plainText", text="."),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="Ce"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="befbabe"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="aabe"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="becbeb"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="cub"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="bec"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="faebbec"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="cfaudec"),
+                                        _PlainText(type="plainText", text=","),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="au"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="cobeab"),
+                                        _PlainText(type="plainText", text="."),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="Ab"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="coubb"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="cub"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bec"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bubc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="de"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="bobbe"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="baacob"),
                                         _PlainText(type="plainText", text=","),
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="fuac"),
                                         _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="dobbe"),
+                                        _PlainText(type="plainText", text="ab"),
                                         _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="be"),
+                                        _PlainText(type="plainText", text="c"),
+                                        _PlainText(type="plainText", text="’"),
+                                        _PlainText(type="plainText", text="ebfuab"),
                                         _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="fbobob"),
+                                        _PlainText(type="plainText", text="fab"),
                                         _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="febcobbeb"),
+                                        _PlainText(type="plainText", text="ub"),
                                         _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="cubeb"),
+                                        _PlainText(type="plainText", text="febab"),
                                         _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="de"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ba"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ffbace"),
+                                        _PlainText(type="plainText", text="bbou"),
                                         _PlainText(type="plainText", text="."),
                                     ]
-                                )
+                                ),
                             ]
                         ),
-                        wording=Section(paragraphs=[]),
                     ),
                 ],
             ),
@@ -30283,103 +29692,6 @@ class DatabaseAsUnitTests(AdaptationTestCase):
             ),
         )
 
-    def test_exercise_144(self):
-        self.do_test(
-            e.Exercise(
-                number="Aubodacbée",
-                textbook_page=39,
-                instructions=[InsertOp(insert="Aubodacbée\n", attributes={})],
-                wording=[
-                    InsertOp(
-                        insert="Bec cababdc afabcebb bbabbuabbebebb ebbbe bec\nboceaub. Coudaab, abc fbobbebb ba bêbe dabc b’eau. Beubc\nfabbec affabaaccebb eb ebbec c’ababebb dabc b’aab.\n",
-                        attributes={},
-                    )
-                ],
-                example=[InsertOp(insert="\n", attributes={})],
-                clue=[InsertOp(insert="\n", attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="generic", effects=[]),
-            ),
-            r.Exercise(
-                number="Aubodacbée",
-                textbook_page=39,
-                pagelets=[
-                    r.Pagelet(
-                        instructions=Section(
-                            paragraphs=[Paragraph(tokens=[_PlainText(type="plainText", text="Aubodacbée")])]
-                        ),
-                        wording=Section(
-                            paragraphs=[
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="Bec"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="cababdc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="afabcebb"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bbabbuabbebebb"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ebbbe"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bec"),
-                                    ]
-                                ),
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="boceaub"),
-                                        _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="Coudaab"),
-                                        _PlainText(type="plainText", text=","),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="abc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="fbobbebb"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ba"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bêbe"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="dabc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="b"),
-                                        _PlainText(type="plainText", text="’"),
-                                        _PlainText(type="plainText", text="eau"),
-                                        _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="Beubc"),
-                                    ]
-                                ),
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="fabbec"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="affabaaccebb"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="eb"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ebbec"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="c"),
-                                        _PlainText(type="plainText", text="’"),
-                                        _PlainText(type="plainText", text="ababebb"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="dabc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="b"),
-                                        _PlainText(type="plainText", text="’"),
-                                        _PlainText(type="plainText", text="aab"),
-                                        _PlainText(type="plainText", text="."),
-                                    ]
-                                ),
-                            ]
-                        ),
-                    ),
-                ],
-            ),
-        )
-
     def test_exercise_133(self):
         self.do_test(
             e.Exercise(
@@ -31195,6 +30507,537 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _SelectableText(
                                             type="selectableText", text=".", colors=["#ffff00"], boxed=False
                                         ),
+                                    ]
+                                ),
+                            ]
+                        ),
+                    ),
+                ],
+            ),
+        )
+
+    def test_exercise_137(self):
+        self.do_test(
+            e.Exercise(
+                number="8",
+                textbook_page=39,
+                instructions=[
+                    InsertOp(
+                        insert="Becofae bec fbobobc febcobbebc coubabbéc\neb dac bua abc décabbebb. Fuac, bebèfe bec febbec bua\nbec accobfabbebb.\n",
+                        attributes={},
+                    )
+                ],
+                wording=[
+                    InsertOp(
+                        insert="Be daabbe dab à Ba-Beabbob\nd’ub bob aababbe :\n– Bu b’ac faab ub bbabd\nfbaacab, b’aba. Aucca\nfaac-be boa aucca be\nfaabe ub cadeau boaab.\nBaebc, fbebdc cebbe\nboubce d’abbebb.\nBa-Beabbob dub faabe ub bboc effobb foub dabe :\n– Bob, Beccabe, be be feub fac d’abbebb.\nBe daabbe c’ébobba :\n– Baac ab faub baeb bue be be faae foub be cadeau\nbue bu b’ac affobbé.\nBobebb Babaud, Foubbuoa ba beb ecb cabée ?,\n© Fbabbabaob, 2001.\n",
+                        attributes={},
+                    )
+                ],
+                example=[InsertOp(insert="\n", attributes={})],
+                clue=[InsertOp(insert="\n", attributes={})],
+                wording_paragraphs_per_pagelet=3,
+                adaptation=AdaptationV2(kind="generic", effects=[]),
+            ),
+            r.Exercise(
+                number="8",
+                textbook_page=39,
+                pagelets=[
+                    r.Pagelet(
+                        instructions=Section(
+                            paragraphs=[
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="Becofae"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bec"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="fbobobc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="febcobbebc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="coubabbéc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="eb"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="dac"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bua"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="abc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="décabbebb"),
+                                        _PlainText(type="plainText", text="."),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="Fuac"),
+                                        _PlainText(type="plainText", text=","),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bebèfe"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bec"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="febbec"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bua"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bec"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="accobfabbebb"),
+                                        _PlainText(type="plainText", text="."),
+                                    ]
+                                ),
+                            ]
+                        ),
+                        wording=Section(
+                            paragraphs=[
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="Be"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="daabbe"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="dab"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="à"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="Ba"),
+                                        _PlainText(type="plainText", text="-"),
+                                        _PlainText(type="plainText", text="Beabbob"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="d"),
+                                        _PlainText(type="plainText", text="’"),
+                                        _PlainText(type="plainText", text="ub"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bob"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="aababbe"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text=":"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="–"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="Bu"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="b"),
+                                        _PlainText(type="plainText", text="’"),
+                                        _PlainText(type="plainText", text="ac"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="faab"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ub"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bbabd"),
+                                    ]
+                                ),
+                            ]
+                        ),
+                    ),
+                    r.Pagelet(
+                        instructions=Section(
+                            paragraphs=[
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="Becofae"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bec"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="fbobobc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="febcobbebc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="coubabbéc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="eb"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="dac"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bua"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="abc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="décabbebb"),
+                                        _PlainText(type="plainText", text="."),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="Fuac"),
+                                        _PlainText(type="plainText", text=","),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bebèfe"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bec"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="febbec"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bua"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bec"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="accobfabbebb"),
+                                        _PlainText(type="plainText", text="."),
+                                    ]
+                                ),
+                            ]
+                        ),
+                        wording=Section(
+                            paragraphs=[
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="fbaacab"),
+                                        _PlainText(type="plainText", text=","),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="b"),
+                                        _PlainText(type="plainText", text="’"),
+                                        _PlainText(type="plainText", text="aba"),
+                                        _PlainText(type="plainText", text="."),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="Aucca"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="faac"),
+                                        _PlainText(type="plainText", text="-"),
+                                        _PlainText(type="plainText", text="be"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="boa"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="aucca"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="be"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="faabe"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ub"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="cadeau"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="boaab"),
+                                        _PlainText(type="plainText", text="."),
+                                    ]
+                                ),
+                            ]
+                        ),
+                    ),
+                    r.Pagelet(
+                        instructions=Section(
+                            paragraphs=[
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="Becofae"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bec"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="fbobobc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="febcobbebc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="coubabbéc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="eb"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="dac"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bua"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="abc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="décabbebb"),
+                                        _PlainText(type="plainText", text="."),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="Fuac"),
+                                        _PlainText(type="plainText", text=","),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bebèfe"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bec"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="febbec"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bua"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bec"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="accobfabbebb"),
+                                        _PlainText(type="plainText", text="."),
+                                    ]
+                                ),
+                            ]
+                        ),
+                        wording=Section(
+                            paragraphs=[
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="Baebc"),
+                                        _PlainText(type="plainText", text=","),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="fbebdc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="cebbe"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="boubce"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="d"),
+                                        _PlainText(type="plainText", text="’"),
+                                        _PlainText(type="plainText", text="abbebb"),
+                                        _PlainText(type="plainText", text="."),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="Ba"),
+                                        _PlainText(type="plainText", text="-"),
+                                        _PlainText(type="plainText", text="Beabbob"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="dub"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="faabe"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ub"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bboc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="effobb"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="foub"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="dabe"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text=":"),
+                                    ]
+                                ),
+                            ]
+                        ),
+                    ),
+                    r.Pagelet(
+                        instructions=Section(
+                            paragraphs=[
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="Becofae"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bec"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="fbobobc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="febcobbebc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="coubabbéc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="eb"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="dac"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bua"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="abc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="décabbebb"),
+                                        _PlainText(type="plainText", text="."),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="Fuac"),
+                                        _PlainText(type="plainText", text=","),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bebèfe"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bec"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="febbec"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bua"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bec"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="accobfabbebb"),
+                                        _PlainText(type="plainText", text="."),
+                                    ]
+                                ),
+                            ]
+                        ),
+                        wording=Section(
+                            paragraphs=[
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="–"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="Bob"),
+                                        _PlainText(type="plainText", text=","),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="Beccabe"),
+                                        _PlainText(type="plainText", text=","),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="be"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="be"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="feub"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="fac"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="d"),
+                                        _PlainText(type="plainText", text="’"),
+                                        _PlainText(type="plainText", text="abbebb"),
+                                        _PlainText(type="plainText", text="."),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="Be"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="daabbe"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="c"),
+                                        _PlainText(type="plainText", text="’"),
+                                        _PlainText(type="plainText", text="ébobba"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text=":"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="–"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="Baac"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ab"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="faub"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="baeb"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bue"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="be"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="be"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="faae"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="foub"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="be"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="cadeau"),
+                                    ]
+                                ),
+                            ]
+                        ),
+                    ),
+                    r.Pagelet(
+                        instructions=Section(
+                            paragraphs=[
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="Becofae"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bec"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="fbobobc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="febcobbebc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="coubabbéc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="eb"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="dac"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bua"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="abc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="décabbebb"),
+                                        _PlainText(type="plainText", text="."),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="Fuac"),
+                                        _PlainText(type="plainText", text=","),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bebèfe"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bec"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="febbec"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bua"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bec"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="accobfabbebb"),
+                                        _PlainText(type="plainText", text="."),
+                                    ]
+                                ),
+                            ]
+                        ),
+                        wording=Section(
+                            paragraphs=[
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="bue"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bu"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="b"),
+                                        _PlainText(type="plainText", text="’"),
+                                        _PlainText(type="plainText", text="ac"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="affobbé"),
+                                        _PlainText(type="plainText", text="."),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="Bobebb"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="Babaud"),
+                                        _PlainText(type="plainText", text=","),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="Foubbuoa"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ba"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="beb"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ecb"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="cabée"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="?"),
+                                        _PlainText(type="plainText", text=","),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="©"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="Fbabbabaob"),
+                                        _PlainText(type="plainText", text=","),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="2001"),
+                                        _PlainText(type="plainText", text="."),
                                     ]
                                 ),
                             ]
@@ -32254,6 +32097,163 @@ class DatabaseAsUnitTests(AdaptationTestCase):
             ),
         )
 
+    def test_exercise_143(self):
+        self.do_test(
+            e.Exercise(
+                number="A boa de boueb",
+                textbook_page=39,
+                instructions=[
+                    InsertOp(
+                        insert="Décfaffbe ce bébuc, fuac dobbe be fbobob febcobbeb cubeb de ba ffbace.\n", attributes={}
+                    )
+                ],
+                wording=[InsertOp(insert="\n", attributes={})],
+                example=[InsertOp(insert="\n", attributes={})],
+                clue=[InsertOp(insert="\n", attributes={})],
+                wording_paragraphs_per_pagelet=3,
+                adaptation=AdaptationV2(kind="generic", effects=[]),
+            ),
+            r.Exercise(
+                number="A boa de boueb",
+                textbook_page=39,
+                pagelets=[
+                    r.Pagelet(
+                        instructions=Section(
+                            paragraphs=[
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="Décfaffbe"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ce"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bébuc"),
+                                        _PlainText(type="plainText", text=","),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="fuac"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="dobbe"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="be"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="fbobob"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="febcobbeb"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="cubeb"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="de"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ba"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ffbace"),
+                                        _PlainText(type="plainText", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=Section(paragraphs=[]),
+                    ),
+                ],
+            ),
+        )
+
+    def test_exercise_144(self):
+        self.do_test(
+            e.Exercise(
+                number="Aubodacbée",
+                textbook_page=39,
+                instructions=[InsertOp(insert="Aubodacbée\n", attributes={})],
+                wording=[
+                    InsertOp(
+                        insert="Bec cababdc afabcebb bbabbuabbebebb ebbbe bec\nboceaub. Coudaab, abc fbobbebb ba bêbe dabc b’eau. Beubc\nfabbec affabaaccebb eb ebbec c’ababebb dabc b’aab.\n",
+                        attributes={},
+                    )
+                ],
+                example=[InsertOp(insert="\n", attributes={})],
+                clue=[InsertOp(insert="\n", attributes={})],
+                wording_paragraphs_per_pagelet=3,
+                adaptation=AdaptationV2(kind="generic", effects=[]),
+            ),
+            r.Exercise(
+                number="Aubodacbée",
+                textbook_page=39,
+                pagelets=[
+                    r.Pagelet(
+                        instructions=Section(
+                            paragraphs=[Paragraph(tokens=[_PlainText(type="plainText", text="Aubodacbée")])]
+                        ),
+                        wording=Section(
+                            paragraphs=[
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="Bec"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="cababdc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="afabcebb"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bbabbuabbebebb"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ebbbe"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bec"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="boceaub"),
+                                        _PlainText(type="plainText", text="."),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="Coudaab"),
+                                        _PlainText(type="plainText", text=","),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="abc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="fbobbebb"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ba"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bêbe"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="dabc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="b"),
+                                        _PlainText(type="plainText", text="’"),
+                                        _PlainText(type="plainText", text="eau"),
+                                        _PlainText(type="plainText", text="."),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="Beubc"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="fabbec"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="affabaaccebb"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="eb"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ebbec"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="c"),
+                                        _PlainText(type="plainText", text="’"),
+                                        _PlainText(type="plainText", text="ababebb"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="dabc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="b"),
+                                        _PlainText(type="plainText", text="’"),
+                                        _PlainText(type="plainText", text="aab"),
+                                        _PlainText(type="plainText", text="."),
+                                    ]
+                                ),
+                            ]
+                        ),
+                    ),
+                ],
+            ),
+        )
+
     def test_exercise_145(self):
         self.do_test(
             e.Exercise(
@@ -33126,68 +33126,6 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                 )
                             ]
                         ),
-                    ),
-                ],
-            ),
-        )
-
-    def test_exercise_172(self):
-        self.do_test(
-            e.Exercise(
-                number="15",
-                textbook_page=43,
-                instructions=[
-                    InsertOp(
-                        insert="Écbac cab bboufec bobabaub foub décbabe ce\nbabbeau. Ubabace dec adbecbafc.\n",
-                        attributes={},
-                    )
-                ],
-                wording=[InsertOp(insert="\n", attributes={})],
-                example=[InsertOp(insert="\n", attributes={})],
-                clue=[InsertOp(insert="\n", attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="generic", effects=[]),
-            ),
-            r.Exercise(
-                number="15",
-                textbook_page=43,
-                pagelets=[
-                    r.Pagelet(
-                        instructions=Section(
-                            paragraphs=[
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="Écbac"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="cab"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bboufec"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bobabaub"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="foub"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="décbabe"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ce"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="babbeau"),
-                                        _PlainText(type="plainText", text="."),
-                                    ]
-                                ),
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="Ubabace"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="dec"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="adbecbafc"),
-                                        _PlainText(type="plainText", text="."),
-                                    ]
-                                ),
-                            ]
-                        ),
-                        wording=Section(paragraphs=[]),
                     ),
                 ],
             ),
@@ -37345,1269 +37283,6 @@ class DatabaseAsUnitTests(AdaptationTestCase):
             ),
         )
 
-    def test_exercise_190(self):
-        self.do_test(
-            e.Exercise(
-                number="8",
-                textbook_page=49,
-                instructions=[
-                    InsertOp(
-                        insert="Dabc ce bebbe cobobae eb boube bec\nbobc dabc becbuebc ba bebbbe c ce fbobobce [c] eb eb\nbbeu bec bobc dabc becbuebc ebbe ce fbobobce [c].\n",
-                        attributes={},
-                    )
-                ],
-                wording=[
-                    InsertOp(
-                        insert="Ob bacobbe bu’aubbefoac eb Abbobabue ub boa\naabaab bebbebebb bec foabec bue foub cabacfaabe\nca boubbabdace, ab b’fécabaab fac à faabe febab\ncec fbuabc de bbèc boab. Ube abbée de fabaab bebfc\neb de dacebbe, ab be fub c’eb fbocubeb. Ab fab abobc\nfbocbabeb dabc be boaaube bu’ab babaebaab ca\nfabbe à bua bua affobbebaab bec beabbeubec foabec.\nBa boufebbe fabfabb aub obeabbec de dabe\nBebbbabde, ube feufe bua […] ce faacaab baeb\ndu couca foub ébefeb cec bboac fabc. Febcabb bu’ab\na afaab bà ube fabeuce occacaob d’accubeb\nb’afebab de b’ub deub, ebbe fab febab b’aîbé.\nBaobeb Fabbabd, Bec Foabec du faac de Bbébob,\nab Cobbec de ba bobbe bbaabe, Bubf Cbbeab Édabeub,\n© Baobeb Fabbabd.\n",
-                        attributes={},
-                    )
-                ],
-                example=[InsertOp(insert="\n", attributes={})],
-                clue=[InsertOp(insert="\n", attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(
-                    kind="generic",
-                    effects=[
-                        ItemizedAdaptationEffect(
-                            kind="itemized",
-                            items=WordsItems(kind="words", punctuation=True),
-                            effects=Effects(selectable=Selectable(colors=["#ffff00", "#ffc0cb"]), boxed=False),
-                        )
-                    ],
-                ),
-            ),
-            r.Exercise(
-                number="8",
-                textbook_page=49,
-                pagelets=[
-                    r.Pagelet(
-                        instructions=Section(
-                            paragraphs=[
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="Dabc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ce"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bebbe"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="cobobae"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="eb"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="boube"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bec"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bobc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="dabc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="becbuebc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ba"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bebbbe"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="c"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ce"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="fbobobce"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="["),
-                                        _PlainText(type="plainText", text="c"),
-                                        _PlainText(type="plainText", text="]"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="eb"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="eb"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bbeu"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bec"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bobc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="dabc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="becbuebc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ebbe"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ce"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="fbobobce"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="["),
-                                        _PlainText(type="plainText", text="c"),
-                                        _PlainText(type="plainText", text="]"),
-                                        _PlainText(type="plainText", text="."),
-                                    ]
-                                )
-                            ]
-                        ),
-                        wording=Section(
-                            paragraphs=[
-                                Paragraph(
-                                    tokens=[
-                                        _SelectableText(
-                                            type="selectableText", text="Ob", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="bacobbe",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText", text="bu", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _SelectableText(
-                                            type="selectableText", text="’", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="aubbefoac",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText", text="eb", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="Abbobabue",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText", text="ub", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="boa",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                    ]
-                                ),
-                                Paragraph(
-                                    tokens=[
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="aabaab",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="bebbebebb",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="bec",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="foabec",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="bue",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="foub",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="cabacfaabe",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                    ]
-                                ),
-                                Paragraph(
-                                    tokens=[
-                                        _SelectableText(
-                                            type="selectableText", text="ca", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="boubbabdace",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _SelectableText(
-                                            type="selectableText", text=",", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText", text="ab", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText", text="b", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _SelectableText(
-                                            type="selectableText", text="’", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="fécabaab",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="fac",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText", text="à", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="faabe",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="febab",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                    ]
-                                ),
-                            ]
-                        ),
-                    ),
-                    r.Pagelet(
-                        instructions=Section(
-                            paragraphs=[
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="Dabc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ce"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bebbe"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="cobobae"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="eb"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="boube"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bec"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bobc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="dabc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="becbuebc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ba"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bebbbe"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="c"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ce"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="fbobobce"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="["),
-                                        _PlainText(type="plainText", text="c"),
-                                        _PlainText(type="plainText", text="]"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="eb"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="eb"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bbeu"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bec"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bobc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="dabc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="becbuebc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ebbe"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ce"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="fbobobce"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="["),
-                                        _PlainText(type="plainText", text="c"),
-                                        _PlainText(type="plainText", text="]"),
-                                        _PlainText(type="plainText", text="."),
-                                    ]
-                                )
-                            ]
-                        ),
-                        wording=Section(
-                            paragraphs=[
-                                Paragraph(
-                                    tokens=[
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="cec",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="fbuabc",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText", text="de", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="bbèc",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="boab",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _SelectableText(
-                                            type="selectableText", text=".", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="Ube",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="abbée",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText", text="de", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="fabaab",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="bebfc",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                    ]
-                                ),
-                                Paragraph(
-                                    tokens=[
-                                        _SelectableText(
-                                            type="selectableText", text="eb", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText", text="de", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="dacebbe",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _SelectableText(
-                                            type="selectableText", text=",", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText", text="ab", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText", text="be", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="fub",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText", text="c", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _SelectableText(
-                                            type="selectableText", text="’", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _SelectableText(
-                                            type="selectableText", text="eb", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="fbocubeb",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _SelectableText(
-                                            type="selectableText", text=".", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText", text="Ab", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="fab",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="abobc",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                    ]
-                                ),
-                                Paragraph(
-                                    tokens=[
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="fbocbabeb",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="dabc",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText", text="be", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="boaaube",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText", text="bu", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _SelectableText(
-                                            type="selectableText", text="’", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _SelectableText(
-                                            type="selectableText", text="ab", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="babaebaab",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText", text="ca", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                    ]
-                                ),
-                            ]
-                        ),
-                    ),
-                    r.Pagelet(
-                        instructions=Section(
-                            paragraphs=[
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="Dabc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ce"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bebbe"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="cobobae"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="eb"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="boube"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bec"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bobc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="dabc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="becbuebc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ba"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bebbbe"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="c"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ce"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="fbobobce"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="["),
-                                        _PlainText(type="plainText", text="c"),
-                                        _PlainText(type="plainText", text="]"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="eb"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="eb"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bbeu"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bec"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bobc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="dabc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="becbuebc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ebbe"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ce"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="fbobobce"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="["),
-                                        _PlainText(type="plainText", text="c"),
-                                        _PlainText(type="plainText", text="]"),
-                                        _PlainText(type="plainText", text="."),
-                                    ]
-                                )
-                            ]
-                        ),
-                        wording=Section(
-                            paragraphs=[
-                                Paragraph(
-                                    tokens=[
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="fabbe",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText", text="à", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="bua",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="bua",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="affobbebaab",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="bec",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="beabbeubec",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="foabec",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _SelectableText(
-                                            type="selectableText", text=".", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                    ]
-                                ),
-                                Paragraph(
-                                    tokens=[
-                                        _SelectableText(
-                                            type="selectableText", text="Ba", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="boufebbe",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="fabfabb",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="aub",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="obeabbec",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText", text="de", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="dabe",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                    ]
-                                ),
-                                Paragraph(
-                                    tokens=[
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="Bebbbabde",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _SelectableText(
-                                            type="selectableText", text=",", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="ube",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="feufe",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="bua",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText", text="[", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _SelectableText(
-                                            type="selectableText", text="…", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _SelectableText(
-                                            type="selectableText", text="]", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText", text="ce", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="faacaab",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="baeb",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                    ]
-                                ),
-                            ]
-                        ),
-                    ),
-                    r.Pagelet(
-                        instructions=Section(
-                            paragraphs=[
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="Dabc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ce"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bebbe"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="cobobae"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="eb"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="boube"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bec"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bobc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="dabc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="becbuebc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ba"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bebbbe"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="c"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ce"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="fbobobce"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="["),
-                                        _PlainText(type="plainText", text="c"),
-                                        _PlainText(type="plainText", text="]"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="eb"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="eb"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bbeu"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bec"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bobc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="dabc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="becbuebc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ebbe"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ce"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="fbobobce"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="["),
-                                        _PlainText(type="plainText", text="c"),
-                                        _PlainText(type="plainText", text="]"),
-                                        _PlainText(type="plainText", text="."),
-                                    ]
-                                )
-                            ]
-                        ),
-                        wording=Section(
-                            paragraphs=[
-                                Paragraph(
-                                    tokens=[
-                                        _SelectableText(
-                                            type="selectableText", text="du", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="couca",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="foub",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="ébefeb",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="cec",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="bboac",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="fabc",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _SelectableText(
-                                            type="selectableText", text=".", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="Febcabb",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText", text="bu", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _SelectableText(
-                                            type="selectableText", text="’", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _SelectableText(
-                                            type="selectableText", text="ab", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                    ]
-                                ),
-                                Paragraph(
-                                    tokens=[
-                                        _SelectableText(
-                                            type="selectableText", text="a", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="afaab",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText", text="bà", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="ube",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="fabeuce",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="occacaob",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText", text="d", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _SelectableText(
-                                            type="selectableText", text="’", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="accubeb",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                    ]
-                                ),
-                                Paragraph(
-                                    tokens=[
-                                        _SelectableText(
-                                            type="selectableText", text="b", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _SelectableText(
-                                            type="selectableText", text="’", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="afebab",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText", text="de", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText", text="b", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _SelectableText(
-                                            type="selectableText", text="’", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _SelectableText(
-                                            type="selectableText", text="ub", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="deub",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _SelectableText(
-                                            type="selectableText", text=",", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="ebbe",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="fab",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="febab",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText", text="b", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _SelectableText(
-                                            type="selectableText", text="’", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="aîbé",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _SelectableText(
-                                            type="selectableText", text=".", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                    ]
-                                ),
-                            ]
-                        ),
-                    ),
-                    r.Pagelet(
-                        instructions=Section(
-                            paragraphs=[
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="Dabc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ce"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bebbe"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="cobobae"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="eb"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="boube"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bec"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bobc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="dabc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="becbuebc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ba"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bebbbe"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="c"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ce"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="fbobobce"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="["),
-                                        _PlainText(type="plainText", text="c"),
-                                        _PlainText(type="plainText", text="]"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="eb"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="eb"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bbeu"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bec"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bobc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="dabc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="becbuebc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ebbe"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ce"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="fbobobce"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="["),
-                                        _PlainText(type="plainText", text="c"),
-                                        _PlainText(type="plainText", text="]"),
-                                        _PlainText(type="plainText", text="."),
-                                    ]
-                                )
-                            ]
-                        ),
-                        wording=Section(
-                            paragraphs=[
-                                Paragraph(
-                                    tokens=[
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="Baobeb",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="Fabbabd",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _SelectableText(
-                                            type="selectableText", text=",", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="Bec",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="Foabec",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText", text="du", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="faac",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText", text="de", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="Bbébob",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _SelectableText(
-                                            type="selectableText", text=",", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                    ]
-                                ),
-                                Paragraph(
-                                    tokens=[
-                                        _SelectableText(
-                                            type="selectableText", text="ab", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="Cobbec",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText", text="de", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText", text="ba", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="bobbe",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="bbaabe",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _SelectableText(
-                                            type="selectableText", text=",", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="Bubf",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="Cbbeab",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="Édabeub",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _SelectableText(
-                                            type="selectableText", text=",", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                    ]
-                                ),
-                                Paragraph(
-                                    tokens=[
-                                        _SelectableText(
-                                            type="selectableText", text="©", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="Baobeb",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _Whitespace(type="whitespace"),
-                                        _SelectableText(
-                                            type="selectableText",
-                                            text="Fabbabd",
-                                            colors=["#ffff00", "#ffc0cb"],
-                                            boxed=False,
-                                        ),
-                                        _SelectableText(
-                                            type="selectableText", text=".", colors=["#ffff00", "#ffc0cb"], boxed=False
-                                        ),
-                                    ]
-                                ),
-                            ]
-                        ),
-                    ),
-                ],
-            ),
-        )
-
     def test_exercise_163(self):
         self.do_test(
             e.Exercise(
@@ -39559,147 +38234,6 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _PlainText(type="plainText", text="."),
                                     ]
                                 ),
-                            ]
-                        ),
-                    ),
-                ],
-            ),
-        )
-
-    def test_exercise_264(self):
-        self.do_test(
-            e.Exercise(
-                number="8",
-                textbook_page=15,
-                instructions=[InsertOp(insert="Écbac cec ffbacec à ba fobbe bébabafe.\n", attributes={})],
-                wording=[
-                    InsertOp(
-                        insert="a. Be becobbaac-bu ?\nb. Fababe-b-ab eb fabbe ?\nc. Faebc-bu debaab ?\nd. Afec-fouc fboad ?\n",
-                        attributes={},
-                    )
-                ],
-                example=[InsertOp(insert="\n", attributes={})],
-                clue=[InsertOp(insert="\n", attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="generic", effects=[]),
-            ),
-            r.Exercise(
-                number="8",
-                textbook_page=15,
-                pagelets=[
-                    r.Pagelet(
-                        instructions=Section(
-                            paragraphs=[
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="Écbac"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="cec"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ffbacec"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="à"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ba"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="fobbe"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bébabafe"),
-                                        _PlainText(type="plainText", text="."),
-                                    ]
-                                )
-                            ]
-                        ),
-                        wording=Section(
-                            paragraphs=[
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="a"),
-                                        _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="Be"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="becobbaac"),
-                                        _PlainText(type="plainText", text="-"),
-                                        _PlainText(type="plainText", text="bu"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="?"),
-                                    ]
-                                ),
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="b"),
-                                        _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="Fababe"),
-                                        _PlainText(type="plainText", text="-"),
-                                        _PlainText(type="plainText", text="b"),
-                                        _PlainText(type="plainText", text="-"),
-                                        _PlainText(type="plainText", text="ab"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="eb"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="fabbe"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="?"),
-                                    ]
-                                ),
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="c"),
-                                        _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="Faebc"),
-                                        _PlainText(type="plainText", text="-"),
-                                        _PlainText(type="plainText", text="bu"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="debaab"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="?"),
-                                    ]
-                                ),
-                            ]
-                        ),
-                    ),
-                    r.Pagelet(
-                        instructions=Section(
-                            paragraphs=[
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="Écbac"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="cec"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ffbacec"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="à"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="ba"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="fobbe"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="bébabafe"),
-                                        _PlainText(type="plainText", text="."),
-                                    ]
-                                )
-                            ]
-                        ),
-                        wording=Section(
-                            paragraphs=[
-                                Paragraph(
-                                    tokens=[
-                                        _PlainText(type="plainText", text="d"),
-                                        _PlainText(type="plainText", text="."),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="Afec"),
-                                        _PlainText(type="plainText", text="-"),
-                                        _PlainText(type="plainText", text="fouc"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="fboad"),
-                                        _Whitespace(type="whitespace"),
-                                        _PlainText(type="plainText", text="?"),
-                                    ]
-                                )
                             ]
                         ),
                     ),
@@ -41754,6 +40288,68 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                 ),
                             ]
                         ),
+                    ),
+                ],
+            ),
+        )
+
+    def test_exercise_172(self):
+        self.do_test(
+            e.Exercise(
+                number="15",
+                textbook_page=43,
+                instructions=[
+                    InsertOp(
+                        insert="Écbac cab bboufec bobabaub foub décbabe ce\nbabbeau. Ubabace dec adbecbafc.\n",
+                        attributes={},
+                    )
+                ],
+                wording=[InsertOp(insert="\n", attributes={})],
+                example=[InsertOp(insert="\n", attributes={})],
+                clue=[InsertOp(insert="\n", attributes={})],
+                wording_paragraphs_per_pagelet=3,
+                adaptation=AdaptationV2(kind="generic", effects=[]),
+            ),
+            r.Exercise(
+                number="15",
+                textbook_page=43,
+                pagelets=[
+                    r.Pagelet(
+                        instructions=Section(
+                            paragraphs=[
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="Écbac"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="cab"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bboufec"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bobabaub"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="foub"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="décbabe"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ce"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="babbeau"),
+                                        _PlainText(type="plainText", text="."),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="Ubabace"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="dec"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="adbecbafc"),
+                                        _PlainText(type="plainText", text="."),
+                                    ]
+                                ),
+                            ]
+                        ),
+                        wording=Section(paragraphs=[]),
                     ),
                 ],
             ),
@@ -45328,6 +43924,1269 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _SelectableText(
                                             type="selectableText", text="bac", colors=["#ffff00"], boxed=False
+                                        ),
+                                    ]
+                                ),
+                            ]
+                        ),
+                    ),
+                ],
+            ),
+        )
+
+    def test_exercise_190(self):
+        self.do_test(
+            e.Exercise(
+                number="8",
+                textbook_page=49,
+                instructions=[
+                    InsertOp(
+                        insert="Dabc ce bebbe cobobae eb boube bec\nbobc dabc becbuebc ba bebbbe c ce fbobobce [c] eb eb\nbbeu bec bobc dabc becbuebc ebbe ce fbobobce [c].\n",
+                        attributes={},
+                    )
+                ],
+                wording=[
+                    InsertOp(
+                        insert="Ob bacobbe bu’aubbefoac eb Abbobabue ub boa\naabaab bebbebebb bec foabec bue foub cabacfaabe\nca boubbabdace, ab b’fécabaab fac à faabe febab\ncec fbuabc de bbèc boab. Ube abbée de fabaab bebfc\neb de dacebbe, ab be fub c’eb fbocubeb. Ab fab abobc\nfbocbabeb dabc be boaaube bu’ab babaebaab ca\nfabbe à bua bua affobbebaab bec beabbeubec foabec.\nBa boufebbe fabfabb aub obeabbec de dabe\nBebbbabde, ube feufe bua […] ce faacaab baeb\ndu couca foub ébefeb cec bboac fabc. Febcabb bu’ab\na afaab bà ube fabeuce occacaob d’accubeb\nb’afebab de b’ub deub, ebbe fab febab b’aîbé.\nBaobeb Fabbabd, Bec Foabec du faac de Bbébob,\nab Cobbec de ba bobbe bbaabe, Bubf Cbbeab Édabeub,\n© Baobeb Fabbabd.\n",
+                        attributes={},
+                    )
+                ],
+                example=[InsertOp(insert="\n", attributes={})],
+                clue=[InsertOp(insert="\n", attributes={})],
+                wording_paragraphs_per_pagelet=3,
+                adaptation=AdaptationV2(
+                    kind="generic",
+                    effects=[
+                        ItemizedAdaptationEffect(
+                            kind="itemized",
+                            items=WordsItems(kind="words", punctuation=True),
+                            effects=Effects(selectable=Selectable(colors=["#ffff00", "#ffc0cb"]), boxed=False),
+                        )
+                    ],
+                ),
+            ),
+            r.Exercise(
+                number="8",
+                textbook_page=49,
+                pagelets=[
+                    r.Pagelet(
+                        instructions=Section(
+                            paragraphs=[
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="Dabc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ce"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bebbe"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="cobobae"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="eb"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="boube"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bec"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bobc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="dabc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="becbuebc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ba"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bebbbe"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="c"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ce"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="fbobobce"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="["),
+                                        _PlainText(type="plainText", text="c"),
+                                        _PlainText(type="plainText", text="]"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="eb"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="eb"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bbeu"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bec"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bobc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="dabc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="becbuebc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ebbe"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ce"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="fbobobce"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="["),
+                                        _PlainText(type="plainText", text="c"),
+                                        _PlainText(type="plainText", text="]"),
+                                        _PlainText(type="plainText", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=Section(
+                            paragraphs=[
+                                Paragraph(
+                                    tokens=[
+                                        _SelectableText(
+                                            type="selectableText", text="Ob", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="bacobbe",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText", text="bu", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _SelectableText(
+                                            type="selectableText", text="’", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="aubbefoac",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText", text="eb", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="Abbobabue",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText", text="ub", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="boa",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="aabaab",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="bebbebebb",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="bec",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="foabec",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="bue",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="foub",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="cabacfaabe",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
+                                        _SelectableText(
+                                            type="selectableText", text="ca", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="boubbabdace",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _SelectableText(
+                                            type="selectableText", text=",", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText", text="ab", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText", text="b", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _SelectableText(
+                                            type="selectableText", text="’", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="fécabaab",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="fac",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText", text="à", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="faabe",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="febab",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                    ]
+                                ),
+                            ]
+                        ),
+                    ),
+                    r.Pagelet(
+                        instructions=Section(
+                            paragraphs=[
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="Dabc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ce"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bebbe"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="cobobae"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="eb"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="boube"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bec"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bobc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="dabc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="becbuebc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ba"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bebbbe"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="c"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ce"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="fbobobce"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="["),
+                                        _PlainText(type="plainText", text="c"),
+                                        _PlainText(type="plainText", text="]"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="eb"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="eb"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bbeu"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bec"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bobc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="dabc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="becbuebc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ebbe"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ce"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="fbobobce"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="["),
+                                        _PlainText(type="plainText", text="c"),
+                                        _PlainText(type="plainText", text="]"),
+                                        _PlainText(type="plainText", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=Section(
+                            paragraphs=[
+                                Paragraph(
+                                    tokens=[
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="cec",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="fbuabc",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText", text="de", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="bbèc",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="boab",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _SelectableText(
+                                            type="selectableText", text=".", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="Ube",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="abbée",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText", text="de", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="fabaab",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="bebfc",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
+                                        _SelectableText(
+                                            type="selectableText", text="eb", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText", text="de", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="dacebbe",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _SelectableText(
+                                            type="selectableText", text=",", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText", text="ab", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText", text="be", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="fub",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText", text="c", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _SelectableText(
+                                            type="selectableText", text="’", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _SelectableText(
+                                            type="selectableText", text="eb", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="fbocubeb",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _SelectableText(
+                                            type="selectableText", text=".", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText", text="Ab", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="fab",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="abobc",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="fbocbabeb",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="dabc",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText", text="be", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="boaaube",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText", text="bu", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _SelectableText(
+                                            type="selectableText", text="’", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _SelectableText(
+                                            type="selectableText", text="ab", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="babaebaab",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText", text="ca", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                    ]
+                                ),
+                            ]
+                        ),
+                    ),
+                    r.Pagelet(
+                        instructions=Section(
+                            paragraphs=[
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="Dabc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ce"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bebbe"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="cobobae"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="eb"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="boube"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bec"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bobc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="dabc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="becbuebc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ba"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bebbbe"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="c"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ce"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="fbobobce"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="["),
+                                        _PlainText(type="plainText", text="c"),
+                                        _PlainText(type="plainText", text="]"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="eb"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="eb"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bbeu"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bec"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bobc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="dabc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="becbuebc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ebbe"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ce"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="fbobobce"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="["),
+                                        _PlainText(type="plainText", text="c"),
+                                        _PlainText(type="plainText", text="]"),
+                                        _PlainText(type="plainText", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=Section(
+                            paragraphs=[
+                                Paragraph(
+                                    tokens=[
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="fabbe",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText", text="à", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="bua",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="bua",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="affobbebaab",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="bec",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="beabbeubec",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="foabec",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _SelectableText(
+                                            type="selectableText", text=".", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
+                                        _SelectableText(
+                                            type="selectableText", text="Ba", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="boufebbe",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="fabfabb",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="aub",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="obeabbec",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText", text="de", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="dabe",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="Bebbbabde",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _SelectableText(
+                                            type="selectableText", text=",", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="ube",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="feufe",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="bua",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText", text="[", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _SelectableText(
+                                            type="selectableText", text="…", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _SelectableText(
+                                            type="selectableText", text="]", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText", text="ce", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="faacaab",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="baeb",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                    ]
+                                ),
+                            ]
+                        ),
+                    ),
+                    r.Pagelet(
+                        instructions=Section(
+                            paragraphs=[
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="Dabc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ce"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bebbe"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="cobobae"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="eb"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="boube"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bec"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bobc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="dabc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="becbuebc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ba"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bebbbe"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="c"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ce"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="fbobobce"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="["),
+                                        _PlainText(type="plainText", text="c"),
+                                        _PlainText(type="plainText", text="]"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="eb"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="eb"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bbeu"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bec"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bobc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="dabc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="becbuebc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ebbe"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ce"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="fbobobce"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="["),
+                                        _PlainText(type="plainText", text="c"),
+                                        _PlainText(type="plainText", text="]"),
+                                        _PlainText(type="plainText", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=Section(
+                            paragraphs=[
+                                Paragraph(
+                                    tokens=[
+                                        _SelectableText(
+                                            type="selectableText", text="du", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="couca",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="foub",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="ébefeb",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="cec",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="bboac",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="fabc",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _SelectableText(
+                                            type="selectableText", text=".", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="Febcabb",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText", text="bu", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _SelectableText(
+                                            type="selectableText", text="’", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _SelectableText(
+                                            type="selectableText", text="ab", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
+                                        _SelectableText(
+                                            type="selectableText", text="a", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="afaab",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText", text="bà", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="ube",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="fabeuce",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="occacaob",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText", text="d", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _SelectableText(
+                                            type="selectableText", text="’", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="accubeb",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
+                                        _SelectableText(
+                                            type="selectableText", text="b", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _SelectableText(
+                                            type="selectableText", text="’", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="afebab",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText", text="de", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText", text="b", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _SelectableText(
+                                            type="selectableText", text="’", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _SelectableText(
+                                            type="selectableText", text="ub", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="deub",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _SelectableText(
+                                            type="selectableText", text=",", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="ebbe",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="fab",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="febab",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText", text="b", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _SelectableText(
+                                            type="selectableText", text="’", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="aîbé",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _SelectableText(
+                                            type="selectableText", text=".", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                    ]
+                                ),
+                            ]
+                        ),
+                    ),
+                    r.Pagelet(
+                        instructions=Section(
+                            paragraphs=[
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="Dabc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ce"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bebbe"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="cobobae"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="eb"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="boube"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bec"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bobc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="dabc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="becbuebc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ba"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bebbbe"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="c"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ce"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="fbobobce"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="["),
+                                        _PlainText(type="plainText", text="c"),
+                                        _PlainText(type="plainText", text="]"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="eb"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="eb"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bbeu"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bec"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bobc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="dabc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="becbuebc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ebbe"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ce"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="fbobobce"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="["),
+                                        _PlainText(type="plainText", text="c"),
+                                        _PlainText(type="plainText", text="]"),
+                                        _PlainText(type="plainText", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=Section(
+                            paragraphs=[
+                                Paragraph(
+                                    tokens=[
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="Baobeb",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="Fabbabd",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _SelectableText(
+                                            type="selectableText", text=",", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="Bec",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="Foabec",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText", text="du", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="faac",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText", text="de", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="Bbébob",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _SelectableText(
+                                            type="selectableText", text=",", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
+                                        _SelectableText(
+                                            type="selectableText", text="ab", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="Cobbec",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText", text="de", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText", text="ba", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="bobbe",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="bbaabe",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _SelectableText(
+                                            type="selectableText", text=",", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="Bubf",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="Cbbeab",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="Édabeub",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _SelectableText(
+                                            type="selectableText", text=",", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
+                                        _SelectableText(
+                                            type="selectableText", text="©", colors=["#ffff00", "#ffc0cb"], boxed=False
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="Baobeb",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _Whitespace(type="whitespace"),
+                                        _SelectableText(
+                                            type="selectableText",
+                                            text="Fabbabd",
+                                            colors=["#ffff00", "#ffc0cb"],
+                                            boxed=False,
+                                        ),
+                                        _SelectableText(
+                                            type="selectableText", text=".", colors=["#ffff00", "#ffc0cb"], boxed=False
                                         ),
                                     ]
                                 ),
@@ -62394,6 +62253,147 @@ class DatabaseAsUnitTests(AdaptationTestCase):
                                         _Whitespace(type="whitespace"),
                                         _PlainText(type="plainText", text="fabbe"),
                                         _PlainText(type="plainText", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                    ),
+                ],
+            ),
+        )
+
+    def test_exercise_264(self):
+        self.do_test(
+            e.Exercise(
+                number="8",
+                textbook_page=15,
+                instructions=[InsertOp(insert="Écbac cec ffbacec à ba fobbe bébabafe.\n", attributes={})],
+                wording=[
+                    InsertOp(
+                        insert="a. Be becobbaac-bu ?\nb. Fababe-b-ab eb fabbe ?\nc. Faebc-bu debaab ?\nd. Afec-fouc fboad ?\n",
+                        attributes={},
+                    )
+                ],
+                example=[InsertOp(insert="\n", attributes={})],
+                clue=[InsertOp(insert="\n", attributes={})],
+                wording_paragraphs_per_pagelet=3,
+                adaptation=AdaptationV2(kind="generic", effects=[]),
+            ),
+            r.Exercise(
+                number="8",
+                textbook_page=15,
+                pagelets=[
+                    r.Pagelet(
+                        instructions=Section(
+                            paragraphs=[
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="Écbac"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="cec"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ffbacec"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="à"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ba"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="fobbe"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bébabafe"),
+                                        _PlainText(type="plainText", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=Section(
+                            paragraphs=[
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="a"),
+                                        _PlainText(type="plainText", text="."),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="Be"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="becobbaac"),
+                                        _PlainText(type="plainText", text="-"),
+                                        _PlainText(type="plainText", text="bu"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="?"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="b"),
+                                        _PlainText(type="plainText", text="."),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="Fababe"),
+                                        _PlainText(type="plainText", text="-"),
+                                        _PlainText(type="plainText", text="b"),
+                                        _PlainText(type="plainText", text="-"),
+                                        _PlainText(type="plainText", text="ab"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="eb"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="fabbe"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="?"),
+                                    ]
+                                ),
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="c"),
+                                        _PlainText(type="plainText", text="."),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="Faebc"),
+                                        _PlainText(type="plainText", text="-"),
+                                        _PlainText(type="plainText", text="bu"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="debaab"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="?"),
+                                    ]
+                                ),
+                            ]
+                        ),
+                    ),
+                    r.Pagelet(
+                        instructions=Section(
+                            paragraphs=[
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="Écbac"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="cec"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ffbacec"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="à"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="ba"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="fobbe"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="bébabafe"),
+                                        _PlainText(type="plainText", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=Section(
+                            paragraphs=[
+                                Paragraph(
+                                    tokens=[
+                                        _PlainText(type="plainText", text="d"),
+                                        _PlainText(type="plainText", text="."),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="Afec"),
+                                        _PlainText(type="plainText", text="-"),
+                                        _PlainText(type="plainText", text="fouc"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="fboad"),
+                                        _Whitespace(type="whitespace"),
+                                        _PlainText(type="plainText", text="?"),
                                     ]
                                 )
                             ]
