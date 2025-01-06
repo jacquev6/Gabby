@@ -452,8 +452,9 @@ def create_test_exercises_2(session, admin):
             effects=[
                 api_models.ItemizedAdaptationEffect(
                     kind="itemized",
-                    items=api_models.ItemizedAdaptationEffect.WordsItems(
-                        kind="words",
+                    items=api_models.ItemizedAdaptationEffect.TokensItems(
+                        kind="tokens",
+                        words=True,
                         punctuation=True,
                     ),
                     effects=api_models.ItemizedAdaptationEffect.Effects(
@@ -622,7 +623,7 @@ def create_test_exercises_3(session, admin):
             effects=[
                 api_models.ItemizedAdaptationEffect(
                     kind="itemized",
-                    items=api_models.ItemizedAdaptationEffect.WordsItems(kind="words", punctuation=False),
+                    items=api_models.ItemizedAdaptationEffect.TokensItems(kind="tokens", words=True, punctuation=False),
                     effects=api_models.ItemizedAdaptationEffect.Effects(
                         selectable=api_models.ItemizedAdaptationEffect.Effects.Selectable(
                             colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"]

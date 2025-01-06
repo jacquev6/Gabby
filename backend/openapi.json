@@ -285,7 +285,7 @@
           "items": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/WordsItems"
+                "$ref": "#/components/schemas/TokensItems"
               },
               {
                 "$ref": "#/components/schemas/SentencesItems"
@@ -319,7 +319,7 @@
           "items": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/WordsItems"
+                "$ref": "#/components/schemas/TokensItems"
               },
               {
                 "$ref": "#/components/schemas/SentencesItems"
@@ -644,6 +644,31 @@
         "title": "SentencesItems",
         "type": "object"
       },
+      "TokensItems": {
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "const": "tokens",
+            "title": "Kind",
+            "type": "string"
+          },
+          "punctuation": {
+            "title": "Punctuation",
+            "type": "boolean"
+          },
+          "words": {
+            "title": "Words",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "kind",
+          "words",
+          "punctuation"
+        ],
+        "title": "TokensItems",
+        "type": "object"
+      },
       "ValidationError": {
         "properties": {
           "loc": {
@@ -675,26 +700,6 @@
           "type"
         ],
         "title": "ValidationError",
-        "type": "object"
-      },
-      "WordsItems": {
-        "additionalProperties": false,
-        "properties": {
-          "kind": {
-            "const": "words",
-            "title": "Kind",
-            "type": "string"
-          },
-          "punctuation": {
-            "title": "Punctuation",
-            "type": "boolean"
-          }
-        },
-        "required": [
-          "kind",
-          "punctuation"
-        ],
-        "title": "WordsItems",
         "type": "object"
       },
       "_BoldText": {

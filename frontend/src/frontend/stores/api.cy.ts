@@ -1665,7 +1665,7 @@ describe('ApiStore - Application - 2', () => {
           kind: 'generic',
           effects: [{
             kind: 'itemized',
-            items: {kind: 'words', punctuation: false},
+            items: {kind: 'tokens', words: true, punctuation: false},
             effects: {
               selectable: {colors: ['red', 'green', 'blue', 'purple']},
               boxed: false,

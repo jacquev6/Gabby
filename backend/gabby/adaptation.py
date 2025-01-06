@@ -55,8 +55,8 @@ class _Adapter:
             if isinstance(effect, FillWithFreeTextAdaptationEffect):
                 self.global_placeholders.append((effect.placeholder, renderable.FreeTextInput()))
             if isinstance(effect, ItemizedAdaptationEffect):
-                self.words_are_selectable = effect.items.kind == "words"
-                self.punctuation_is_selectable = self.words_are_selectable and effect.items.punctuation
+                self.words_are_selectable = effect.items.kind == "tokens" and effect.items.words
+                self.punctuation_is_selectable = effect.items.kind == "tokens" and effect.items.punctuation
                 if effect.effects.selectable is not None:
                     self.selectables_are_boxed = effect.effects.boxed
                     assert self.selectables_colors == []
@@ -926,7 +926,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(kind="generic", effects=[ItemizedAdaptationEffect(
                     kind="itemized",
-                    items={"kind": "words", "punctuation": False},
+                    items={"kind": "tokens", "words": True, "punctuation": False},
                     effects={"selectable": {"colors": ["red", "blue"]}, "boxed": False},
                 )]),
             ),
@@ -966,7 +966,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(kind="generic", effects=[ItemizedAdaptationEffect(
                     kind="itemized",
-                    items={"kind": "words", "punctuation": True},
+                    items={"kind": "tokens", "words": True, "punctuation": True},
                     effects={"selectable": {"colors": ["green", "yellow", "orange"]}, "boxed": False},
                 )]),
             ),
@@ -994,6 +994,46 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
             ),
         )
 
+    def test_selectable_punctuation_only(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions=[d.InsertOp(insert="Instructions\n", attributes={})],
+                wording=[d.InsertOp(insert="This is, the wording.\n", attributes={})],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
+                wording_paragraphs_per_pagelet=3,
+                adaptation=AdaptationV2(kind="generic", effects=[ItemizedAdaptationEffect(
+                    kind="itemized",
+                    items={"kind": "tokens", "words": False, "punctuation": True},
+                    effects={"selectable": {"colors": ["green", "yellow", "orange"]}, "boxed": False},
+                )]),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=42,
+                pagelets=[r.Pagelet(
+                    instructions=r.Section(paragraphs=[
+                        r.Paragraph(tokens=[
+                            r.PlainText(text="Instructions"),
+                        ]),
+                    ]),
+                    wording=r.Section(paragraphs=[r.Paragraph(tokens=[
+                        r.PlainText(text="This"),
+                        r.Whitespace(),
+                        r.PlainText(text="is"),
+                        r.SelectableText(text=",", colors=["green", "yellow", "orange"], boxed=False),
+                        r.Whitespace(),
+                        r.PlainText(text="the"),
+                        r.Whitespace(),
+                        r.PlainText(text="wording"),
+                        r.SelectableText(text=".", colors=["green", "yellow", "orange"], boxed=False),
+                    ])]),
+                )],
+            ),
+        )
+
     def test_selectable_words__boxed(self):
         self.do_test(
             e.Exercise(
@@ -1006,7 +1046,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(kind="generic", effects=[ItemizedAdaptationEffect(
                     kind="itemized",
-                    items={"kind": "words", "punctuation": False},
+                    items={"kind": "tokens", "words": True, "punctuation": False},
                     effects={"selectable": {"colors": ["red", "blue"]}, "boxed": True},
                 )]),
             ),
@@ -1149,7 +1189,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
                     adaptation=AdaptationV2(kind="generic", effects=[ItemizedAdaptationEffect(
                         kind="itemized",
-                        items={"kind": "words", "punctuation": False},
+                        items={"kind": "tokens", "words": True, "punctuation": False},
                         effects={"selectable": {"colors": ["red", "green", "blue"]}, "boxed": False},
                     )]),
             ),
@@ -2456,7 +2496,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                     effects=[
                         ItemizedAdaptationEffect(
                             kind="itemized",
-                            items=ItemizedAdaptationEffect.WordsItems(kind="words", punctuation=False),
+                            items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=True, punctuation=False),
                             effects=ItemizedAdaptationEffect.Effects(
                                 selectable=ItemizedAdaptationEffect.Effects.Selectable(colors=["red", "blue"]),
                                 boxed=False,
@@ -2526,7 +2566,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                     effects=[
                         ItemizedAdaptationEffect(
                             kind="itemized",
-                            items=ItemizedAdaptationEffect.WordsItems(kind="words", punctuation=False),
+                            items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=True, punctuation=False),
                             effects=ItemizedAdaptationEffect.Effects(
                                 selectable=ItemizedAdaptationEffect.Effects.Selectable(colors=["red", "green", "blue"]),
                                 boxed=False,
@@ -2579,7 +2619,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                     effects=[
                         ItemizedAdaptationEffect(
                             kind="itemized",
-                            items=ItemizedAdaptationEffect.WordsItems(kind="words", punctuation=False),
+                            items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=True, punctuation=False),
                             effects=ItemizedAdaptationEffect.Effects(
                                 selectable=ItemizedAdaptationEffect.Effects.Selectable(colors=["red"]),
                                 boxed=False,
@@ -2625,7 +2665,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                     effects=[
                         ItemizedAdaptationEffect(
                             kind="itemized",
-                            items=ItemizedAdaptationEffect.WordsItems(kind="words", punctuation=False),
+                            items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=True, punctuation=False),
                             effects=ItemizedAdaptationEffect.Effects(
                                 selectable=ItemizedAdaptationEffect.Effects.Selectable(colors=["red"]),
                                 boxed=False,
@@ -2681,7 +2721,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                     effects=[
                         ItemizedAdaptationEffect(
                             kind="itemized",
-                            items=ItemizedAdaptationEffect.WordsItems(kind="words", punctuation=False),
+                            items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=True, punctuation=False),
                             effects=ItemizedAdaptationEffect.Effects(
                                 selectable=ItemizedAdaptationEffect.Effects.Selectable(colors=["red"]),
                                 boxed=False,
@@ -2737,7 +2777,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                     effects=[
                         ItemizedAdaptationEffect(
                             kind="itemized",
-                            items=ItemizedAdaptationEffect.WordsItems(kind="words", punctuation=False),
+                            items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=True, punctuation=False),
                             effects=ItemizedAdaptationEffect.Effects(
                                 selectable=ItemizedAdaptationEffect.Effects.Selectable(colors=["red"]),
                                 boxed=False,
@@ -2791,7 +2831,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                     effects=[
                         ItemizedAdaptationEffect(
                             kind="itemized",
-                            items=ItemizedAdaptationEffect.WordsItems(kind="words", punctuation=False),
+                            items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=True, punctuation=False),
                             effects=ItemizedAdaptationEffect.Effects(
                                 selectable=ItemizedAdaptationEffect.Effects.Selectable(colors=["red"]),
                                 boxed=False,
@@ -2841,7 +2881,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                     effects=[
                         ItemizedAdaptationEffect(
                             kind="itemized",
-                            items=ItemizedAdaptationEffect.WordsItems(kind="words", punctuation=False),
+                            items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=True, punctuation=False),
                             effects=ItemizedAdaptationEffect.Effects(
                                 selectable=ItemizedAdaptationEffect.Effects.Selectable(colors=["red"]),
                                 boxed=False,
@@ -2917,7 +2957,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                     effects=[
                         ItemizedAdaptationEffect(
                             kind="itemized",
-                            items=ItemizedAdaptationEffect.WordsItems(kind="words", punctuation=False),
+                            items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=True, punctuation=False),
                             effects=ItemizedAdaptationEffect.Effects(
                                 selectable=ItemizedAdaptationEffect.Effects.Selectable(colors=["red", "green", "blue"]),
                                 boxed=False,
@@ -3077,7 +3117,7 @@ class LenientParagraphTestCase(AdaptationTestCase):
                     effects=[
                         ItemizedAdaptationEffect(
                             kind="itemized",
-                            items=ItemizedAdaptationEffect.WordsItems(kind="words", punctuation=False),
+                            items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=True, punctuation=False),
                             effects=ItemizedAdaptationEffect.Effects(
                                 selectable=ItemizedAdaptationEffect.Effects.Selectable(colors=["red"]),
                                 boxed=False,
@@ -3155,7 +3195,7 @@ class LenientParagraphTestCase(AdaptationTestCase):
                     effects=[
                         ItemizedAdaptationEffect(
                             kind="itemized",
-                            items=ItemizedAdaptationEffect.WordsItems(kind="words", punctuation=True),
+                            items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=True, punctuation=True),
                             effects=ItemizedAdaptationEffect.Effects(
                                 selectable=ItemizedAdaptationEffect.Effects.Selectable(colors=["red"]),
                                 boxed=False,
@@ -3509,7 +3549,7 @@ class MultipleAdaptationEffectsTestCase(AdaptationTestCase):
                     # Selectable words
                     ItemizedAdaptationEffect(
                         kind="itemized",
-                        items=ItemizedAdaptationEffect.WordsItems(kind="words", punctuation=False),
+                        items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=True, punctuation=False),
                         effects=ItemizedAdaptationEffect.Effects(
                             selectable=ItemizedAdaptationEffect.Effects.Selectable(colors=["red", "yellow"]),
                             boxed=True,

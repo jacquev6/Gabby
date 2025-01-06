@@ -136,7 +136,8 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                             {
                                 "kind": "itemized",
                                 "items": {
-                                    "kind": "words",
+                                    "kind": "tokens",
+                                    "words": True,
                                     "punctuation": False,
                                 },
                                 "effects": {
@@ -200,7 +201,8 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                             {
                                 "kind": "itemized",
                                 "items": {
-                                    "kind": "words",
+                                    "kind": "tokens",
+                                    "words": True,
                                     "punctuation": False,
                                 },
                                 "effects": {

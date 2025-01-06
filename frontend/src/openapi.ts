@@ -237,7 +237,7 @@ export interface components {
     "ItemizedAdaptationEffect-Input": {
       effects: components["schemas"]["Effects"];
       /** Items */
-      items: components["schemas"]["WordsItems"] | components["schemas"]["SentencesItems"] | components["schemas"]["ManualItems"];
+      items: components["schemas"]["TokensItems"] | components["schemas"]["SentencesItems"] | components["schemas"]["ManualItems"];
       /**
        * Kind
        * @constant
@@ -248,7 +248,7 @@ export interface components {
     "ItemizedAdaptationEffect-Output": {
       effects: components["schemas"]["Effects"];
       /** Items */
-      items: components["schemas"]["WordsItems"] | components["schemas"]["SentencesItems"] | components["schemas"]["ManualItems"];
+      items: components["schemas"]["TokensItems"] | components["schemas"]["SentencesItems"] | components["schemas"]["ManualItems"];
       /**
        * Kind
        * @constant
@@ -348,6 +348,18 @@ export interface components {
        */
       kind: "sentences";
     };
+    /** TokensItems */
+    TokensItems: {
+      /**
+       * Kind
+       * @constant
+       */
+      kind: "tokens";
+      /** Punctuation */
+      punctuation: boolean;
+      /** Words */
+      words: boolean;
+    };
     /** ValidationError */
     ValidationError: {
       /** Location */
@@ -356,16 +368,6 @@ export interface components {
       msg: string;
       /** Error Type */
       type: string;
-    };
-    /** WordsItems */
-    WordsItems: {
-      /**
-       * Kind
-       * @constant
-       */
-      kind: "words";
-      /** Punctuation */
-      punctuation: boolean;
     };
     /** _BoldText */
     _BoldText: {

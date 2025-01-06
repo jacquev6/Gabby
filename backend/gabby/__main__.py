@@ -221,7 +221,7 @@ def dump_database_as_unit_tests():
         yield "from .renderable import Section, Paragraph, _PlainText, _Whitespace, _FreeTextInput, _SelectableText, _BoxedText, _MultipleChoicesInput, _SelectedText"
         yield ""
         yield ""
-        yield "WordsItems = ItemizedAdaptationEffect.WordsItems"
+        yield "TokensItems = ItemizedAdaptationEffect.TokensItems"
         yield "ManualItems = ItemizedAdaptationEffect.ManualItems"
         yield "Effects = ItemizedAdaptationEffect.Effects"
         yield "Selectable = ItemizedAdaptationEffect.Effects.Selectable"

@@ -113,8 +113,9 @@ class FillWithFreeTextAdaptationEffect(PydanticBase):
 class ItemizedAdaptationEffect(PydanticBase):
     kind: Literal["itemized"]
 
-    class WordsItems(PydanticBase):
-        kind: Literal["words"]
+    class TokensItems(PydanticBase):
+        kind: Literal["tokens"]
+        words: bool
         punctuation: bool
 
     class SentencesItems(PydanticBase):
@@ -123,7 +124,7 @@ class ItemizedAdaptationEffect(PydanticBase):
     class ManualItems(PydanticBase):
         kind: Literal["manual"]
 
-    Items: ClassVar = WordsItems | SentencesItems | ManualItems
+    Items: ClassVar = TokensItems | SentencesItems | ManualItems
 
     class Effects(PydanticBase):
         class Selectable(PydanticBase):
