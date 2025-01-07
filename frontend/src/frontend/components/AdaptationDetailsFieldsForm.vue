@@ -162,16 +162,16 @@ function doneEditingChoices2() {
   model.value.inProgress = {kind: 'nothing'}
 }
 
-class SelectableBlot extends InlineBlot {
-  static override blotName = 'selectable'
-  static override tagName = 'selectable-blot'
+class ManualItemBlot extends InlineBlot {
+  static override blotName = 'manual-item'
+  static override tagName = 'manual-item-blot'
 }
 
 export const wysiwygBlots = [
   ...basicBlots,
   SelBlot,
   Choices2Blot,
-  SelectableBlot,
+  ManualItemBlot,
 ]
 </script>
 
@@ -535,7 +535,7 @@ div.ql-editor choice-blot {
   border: 2px solid black;
 }
 
-div.ql-editor selectable-blot {
+div.ql-editor manual-item-blot {
   margin: 0;
   padding: 0 0.4em;
   border: 2px dotted black;

@@ -581,7 +581,7 @@ class DeltaMaker(lark.Transformer):
 
     def selectable_tag(self, args):
         assert len(args) == 1
-        return deltas.InsertOp(insert=args[0], attributes={"selectable": True})
+        return deltas.InsertOp(insert=args[0], attributes={"manual-item": True})
 
     def fill_with_free_text_tag(self, args):
         assert len(args) == 1

@@ -252,8 +252,8 @@ class _Adapter:
                             else:
                                 yield renderable.PlainText(text=text)
 
-            elif "selectable" in delta.attributes:
-                assert delta.attributes == {"selectable": delta.attributes["selectable"]}
+            elif "manual-item" in delta.attributes:
+                assert delta.attributes == {"manual-item": delta.attributes["manual-item"]}
 
                 for text in re.split(r"(\.\.\.|\s+|\W)", delta.insert):
                     if text != "":
@@ -1574,9 +1574,9 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 instructions=[d.InsertOp(insert="Instructions\n", attributes={})],
                 wording=[
                     d.InsertOp(insert="This ", attributes={}),
-                    d.InsertOp(insert="is,", attributes={"selectable": True}),
+                    d.InsertOp(insert="is,", attributes={"manual-item": True}),
                     d.InsertOp(insert=" ", attributes={}),
-                    d.InsertOp(insert="the", attributes={"selectable": True}),
+                    d.InsertOp(insert="the", attributes={"manual-item": True}),
                     d.InsertOp(insert=" wording.\n", attributes={}),
                 ],
                 example=[d.InsertOp(insert="\n", attributes={})],
@@ -1620,9 +1620,9 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 instructions=[d.InsertOp(insert="Instructions\n", attributes={})],
                 wording=[
                     d.InsertOp(insert="This ", attributes={}),
-                    d.InsertOp(insert="is,", attributes={"selectable": True}),
+                    d.InsertOp(insert="is,", attributes={"manual-item": True}),
                     d.InsertOp(insert=" ", attributes={}),
-                    d.InsertOp(insert="the", attributes={"selectable": True}),
+                    d.InsertOp(insert="the", attributes={"manual-item": True}),
                     d.InsertOp(insert=" wording.\n", attributes={}),
                 ],
                 example=[d.InsertOp(insert="\n", attributes={})],

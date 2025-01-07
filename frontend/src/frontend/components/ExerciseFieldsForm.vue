@@ -139,7 +139,7 @@ export function cleanupModel(model: Model) {
     for (const delta of downgradeDeltas(model[fieldName])) {
       if ('sel' in delta.attributes && (delta.attributes.sel as number) > usableColorsCount) {
         newOps.insert(delta.insert, {})
-      } else if ('selectable' in delta.attributes && !hasManualItems) {
+      } else if ('manual-item' in delta.attributes && !hasManualItems) {
         newOps.insert(delta.insert, {})
       } else {
         newOps.insert(delta.insert, delta.attributes)

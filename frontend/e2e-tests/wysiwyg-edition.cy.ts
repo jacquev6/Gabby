@@ -350,14 +350,14 @@ describe('Gabby', () => {
     cy.get('@manualItemButton').click()
     cy.get('@wording').type(' plain', {delay: 0})
 
-    cy.get('selectable-blot').should('exist')
+    cy.get('manual-item-blot').should('exist')
 
     cy.get(':contains("Manual selection") >input').uncheck()
 
-    cy.get('selectable-blot').should('not.exist')
+    cy.get('manual-item-blot').should('not.exist')
 
     cy.get(':contains("Manual selection") >input').check()
 
-    cy.get('selectable-blot').should('not.exist')
+    cy.get('manual-item-blot').should('not.exist')
   })
 })

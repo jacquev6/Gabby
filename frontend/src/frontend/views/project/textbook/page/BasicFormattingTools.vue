@@ -63,9 +63,9 @@ const itemizedEffect = computed(() => {
     <BButton
       sm secondary
       :disabled="fields.focusedWysiwygField !== 'wording'"
-      :class="{active: fields.currentWysiwygFormat.selectable}"
-      @click="fields.toggle('selectable')"
-      data-cy="format-selectable"
+      :class="{active: fields.currentWysiwygFormat['manual-item']}"
+      @click="fields.toggle('manual-item')"
+      data-cy="format-manual-item"
     >{{ $t('manualItemButton') }}</BButton>
   </p>
 </template>
