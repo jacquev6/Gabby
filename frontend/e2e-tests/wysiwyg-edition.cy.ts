@@ -333,4 +333,31 @@ describe('Gabby', () => {
     cy.get('sel-blot[data-sel="3"]').should('not.exist')
     cy.get('sel-blot[data-sel="4"]').should('not.exist')
   })
+
+  it('removes "manual-item" blots when "Manual items" in unchecked', () => {
+    visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
+    setAliases()
+
+    cy.get(':contains("Manual selection") >input').check()
+    cy.get(':contains("Boxed") >input').check()
+
+    cy.get('button:contains("Manual item")').as("manualItemButton")
+
+    cy.get('@wording').click()
+    cy.get('@wording').type('plain ', {delay: 0})
+    cy.get('@manualItemButton').click()
+    cy.get('@wording').type('manual', {delay: 0})
+    cy.get('@manualItemButton').click()
+    cy.get('@wording').type(' plain', {delay: 0})
+
+    cy.get('selectable-blot').should('exist')
+
+    cy.get(':contains("Manual selection") >input').uncheck()
+
+    cy.get('selectable-blot').should('not.exist')
+
+    cy.get(':contains("Manual selection") >input').check()
+
+    cy.get('selectable-blot').should('not.exist')
+  })
 })

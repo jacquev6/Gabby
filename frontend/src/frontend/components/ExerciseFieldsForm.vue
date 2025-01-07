@@ -124,17 +124,22 @@ export function modelIsEmpty(model: Model) {
 
 export function cleanupModel(model: Model) {
   let usableColorsCount = 0
+  let hasManualItems = false
   const itemizedEffects = model.adaptation.effects.filter(effect => effect.kind === 'itemized')
+  console.assert(itemizedEffects.length <= 1)
   if (itemizedEffects.length === 1) {
     const itemizedEffect = itemizedEffects[0]
     if (itemizedEffect.effects.selectable !== null) {
       usableColorsCount = itemizedEffect.effects.selectable.colors.length
     }
+    hasManualItems = itemizedEffect.items.kind === 'manual'
   }
   for (const fieldName of ['instructions', 'wording', 'example'] as const) {
     const newOps = new Delta()
     for (const delta of downgradeDeltas(model[fieldName])) {
       if ('sel' in delta.attributes && (delta.attributes.sel as number) > usableColorsCount) {
+        newOps.insert(delta.insert, {})
+      } else if ('selectable' in delta.attributes && !hasManualItems) {
         newOps.insert(delta.insert, {})
       } else {
         newOps.insert(delta.insert, delta.attributes)
