@@ -515,9 +515,6 @@
                   "$ref": "#/components/schemas/_ItalicText"
                 },
                 {
-                  "$ref": "#/components/schemas/_SelectableText"
-                },
-                {
                   "$ref": "#/components/schemas/_SelectedText"
                 },
                 {
@@ -528,6 +525,12 @@
                 },
                 {
                   "$ref": "#/components/schemas/_Whitespace"
+                },
+                {
+                  "$ref": "#/components/schemas/_Selectable"
+                },
+                {
+                  "$ref": "#/components/schemas/_SelectableText"
                 }
               ]
             },
@@ -844,6 +847,67 @@
           "text"
         ],
         "title": "_PlainText",
+        "type": "object"
+      },
+      "_Selectable": {
+        "additionalProperties": false,
+        "properties": {
+          "boxed": {
+            "title": "Boxed",
+            "type": "boolean"
+          },
+          "colors": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Colors",
+            "type": "array"
+          },
+          "contents": {
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/_PlainText"
+                },
+                {
+                  "$ref": "#/components/schemas/_BoxedText"
+                },
+                {
+                  "$ref": "#/components/schemas/_BoldText"
+                },
+                {
+                  "$ref": "#/components/schemas/_ItalicText"
+                },
+                {
+                  "$ref": "#/components/schemas/_SelectedText"
+                },
+                {
+                  "$ref": "#/components/schemas/_FreeTextInput"
+                },
+                {
+                  "$ref": "#/components/schemas/_MultipleChoicesInput"
+                },
+                {
+                  "$ref": "#/components/schemas/_Whitespace"
+                }
+              ]
+            },
+            "title": "Contents",
+            "type": "array"
+          },
+          "type": {
+            "const": "selectable",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "contents",
+          "colors",
+          "boxed"
+        ],
+        "title": "_Selectable",
         "type": "object"
       },
       "_SelectableText": {

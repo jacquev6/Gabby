@@ -192,74 +192,80 @@ class _Adapter:
             yield renderable.Whitespace()
 
         if self.sentences_are_selectable:
+            assert not self.letters_are_selectable
+            assert not self.words_are_selectable
+            assert not self.punctuation_is_selectable
             is_first_sentence = True
             for sentence_deltas in self.split_deltas_into_sentences(paragraph_deltas):
                 if not is_first_sentence:
                     yield renderable.Whitespace()
                 is_first_sentence = False
-                text = "".join(delta.insert for delta in sentence_deltas).strip()
-                yield renderable.SelectableText(text=text, colors=self.selectables_colors, boxed=self.selectables_are_boxed)
+                contents = list(self.adapt_wording_sentence(sentence_deltas, sentence_placeholders))
+                yield renderable.Selectable(contents=contents, colors=self.selectables_colors, boxed=self.selectables_are_boxed)
         else:
-            for delta in paragraph_deltas:
-                if delta.attributes == {}:
-                    for i, text in enumerate(re.split(r"(\.\.\.|\s+|\W|ph\d+hp)", delta.insert)):
-                        if text != "":
-                            if i % 2 == 1:
-                                # Separator: punctuation, spacing, placeholders
-                                if text.strip() == "":
-                                    yield renderable.Whitespace()
-                                elif text.startswith("ph") and text.endswith("hp"):
-                                    index = int(text[2:-2])
-                                    yield sentence_placeholders[index][1]
-                                else:
-                                    if self.punctuation_is_selectable:
-                                        yield renderable.SelectableText(text=text, colors=self.selectables_colors, boxed=self.selectables_are_boxed)
-                                    else:
-                                        yield renderable.PlainText(text=text)
+            yield from self.adapt_wording_sentence(paragraph_deltas, sentence_placeholders)
+
+    def adapt_wording_sentence(self, sentence_deltas: deltas.Deltas, sentence_placeholders: list[tuple[str, renderable.SentenceToken]]):
+        for delta in sentence_deltas:
+            if delta.attributes == {}:
+                for i, text in enumerate(re.split(r"(\.\.\.|\s+|\W|ph\d+hp)", delta.insert)):
+                    if text != "":
+                        if i % 2 == 1:
+                            # Separator: punctuation, spacing, placeholders
+                            if text.strip() == "":
+                                yield renderable.Whitespace()
+                            elif text.startswith("ph") and text.endswith("hp"):
+                                index = int(text[2:-2])
+                                yield sentence_placeholders[index][1]
                             else:
-                                # Separated: words
-                                if self.letters_are_selectable:
-                                    for letter in text:
-                                        yield renderable.SelectableText(text=letter, colors=self.selectables_colors, boxed=self.selectables_are_boxed)
-                                elif self.words_are_selectable:
+                                if self.punctuation_is_selectable:
                                     yield renderable.SelectableText(text=text, colors=self.selectables_colors, boxed=self.selectables_are_boxed)
                                 else:
                                     yield renderable.PlainText(text=text)
-
-                elif "selectable" in delta.attributes:
-                    assert delta.attributes == {"selectable": delta.attributes["selectable"]}
-
-                    for text in re.split(r"(\.\.\.|\s+|\W)", delta.insert):
-                        if text != "":
-                            if text.strip() == "":
-                                yield renderable.Whitespace()
-                            else:
+                        else:
+                            # Separated: words
+                            if self.letters_are_selectable:
+                                for letter in text:
+                                    yield renderable.SelectableText(text=letter, colors=self.selectables_colors, boxed=self.selectables_are_boxed)
+                            elif self.words_are_selectable:
                                 yield renderable.SelectableText(text=text, colors=self.selectables_colors, boxed=self.selectables_are_boxed)
+                            else:
+                                yield renderable.PlainText(text=text)
 
-                elif "bold" in delta.attributes:
-                    assert delta.attributes == {"bold": delta.attributes["bold"]}
+            elif "selectable" in delta.attributes:
+                assert delta.attributes == {"selectable": delta.attributes["selectable"]}
 
-                    yield renderable.BoldText(text=delta.insert)
+                for text in re.split(r"(\.\.\.|\s+|\W)", delta.insert):
+                    if text != "":
+                        if text.strip() == "":
+                            yield renderable.Whitespace()
+                        else:
+                            yield renderable.SelectableText(text=text, colors=self.selectables_colors, boxed=self.selectables_are_boxed)
 
-                elif "italic" in delta.attributes:
-                    assert delta.attributes == {"italic": delta.attributes["italic"]}
+            elif "bold" in delta.attributes:
+                assert delta.attributes == {"bold": delta.attributes["bold"]}
 
-                    yield renderable.ItalicText(text=delta.insert)
+                yield renderable.BoldText(text=delta.insert)
 
-                elif "choices2" in delta.attributes:
-                    assert delta.attributes == {"choices2": delta.attributes["choices2"]}
+            elif "italic" in delta.attributes:
+                assert delta.attributes == {"italic": delta.attributes["italic"]}
 
-                    choices_settings = delta.attributes["choices2"]
-                    placeholder = choices_settings["placeholder"] or None
-                    if placeholder is None:
-                        start = choices_settings["start"] or None
-                        separator1 = choices_settings["separator1"] or None
-                        separator2 = choices_settings["separator2"] or None
-                        stop = choices_settings["stop"] or None
-                        yield renderable.MultipleChoicesInput(choices=self.separate_choices(start, separator1, separator2, stop, placeholder, delta.insert))
+                yield renderable.ItalicText(text=delta.insert)
 
-                else:
-                    assert False, f"Unknown attributes: {delta.attributes}"
+            elif "choices2" in delta.attributes:
+                assert delta.attributes == {"choices2": delta.attributes["choices2"]}
+
+                choices_settings = delta.attributes["choices2"]
+                placeholder = choices_settings["placeholder"] or None
+                if placeholder is None:
+                    start = choices_settings["start"] or None
+                    separator1 = choices_settings["separator1"] or None
+                    separator2 = choices_settings["separator2"] or None
+                    stop = choices_settings["stop"] or None
+                    yield renderable.MultipleChoicesInput(choices=self.separate_choices(start, separator1, separator2, stop, placeholder, delta.insert))
+
+            else:
+                assert False, f"Unknown attributes: {delta.attributes}"
 
     def split_deltas(self, section_deltas: deltas.Deltas, explicit_paragraph_separator_pattern: str) -> Iterable[deltas.Deltas]:
         section_deltas = copy.deepcopy(section_deltas)
@@ -1457,17 +1463,76 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                     ]),
                     wording=r.Section(paragraphs=[
                         r.Paragraph(tokens=[
-                            r.SelectableText(text="Affirmative sentence.", colors=["red", "blue"], boxed=True),
+                            r.Selectable(
+                                contents=[
+                                    r.PlainText(text="Affirmative"),
+                                    r.Whitespace(),
+                                    r.PlainText(text="sentence"),
+                                    r.PlainText(text="."),
+                                ],
+                                colors=["red", "blue"],
+                                boxed=True,
+                            ),
                             r.Whitespace(),
-                            r.SelectableText(text="Exclamative sentence!", colors=["red", "blue"], boxed=True),
+                            r.Selectable(
+                                contents=[
+                                    r.Whitespace(),
+                                    r.PlainText(text="Exclamative"),
+                                    r.Whitespace(),
+                                    r.PlainText(text="sentence"),
+                                    r.PlainText(text="!"),
+                                ],
+                                colors=["red", "blue"],
+                                boxed=True,
+                            ),
                             r.Whitespace(),
-                            r.SelectableText(text="Phrase exclamative !", colors=["red", "blue"], boxed=True),
+                            r.Selectable(
+                                contents=[
+                                    r.Whitespace(),
+                                    r.PlainText(text="Phrase"),
+                                    r.Whitespace(),
+                                    r.PlainText(text="exclamative"),
+                                    r.Whitespace(),
+                                    r.PlainText(text="!"),
+                                ],
+                                colors=["red", "blue"],
+                                boxed=True,
+                            ),
                             r.Whitespace(),
-                            r.SelectableText(text="Interrogative sentence?", colors=["red", "blue"], boxed=True),
+                            r.Selectable(
+                                contents=[
+                                    r.Whitespace(),
+                                    r.PlainText(text="Interrogative"),
+                                    r.Whitespace(),
+                                    r.PlainText(text="sentence"),
+                                    r.PlainText(text="?"),
+                                ],
+                                colors=["red", "blue"],
+                                boxed=True,
+                            ),
                             r.Whitespace(),
-                            r.SelectableText(text="Phrase interrogative ?", colors=["red", "blue"], boxed=True),
+                            r.Selectable(
+                                contents=[
+                                    r.Whitespace(),
+                                    r.PlainText(text="Phrase"),
+                                    r.Whitespace(),
+                                    r.PlainText(text="interrogative"),
+                                    r.Whitespace(),
+                                    r.PlainText(text="?"),
+                                ],
+                                colors=["red", "blue"],
+                                boxed=True,
+                            ),
                             r.Whitespace(),
-                            r.SelectableText(text="Suspens...", colors=["red", "blue"], boxed=True),
+                            r.Selectable(
+                                contents=[
+                                    r.Whitespace(),
+                                    r.PlainText(text="Suspens"),
+                                    r.PlainText(text="..."),
+                                ],
+                                colors=["red", "blue"],
+                                boxed=True,
+                            ),
                         ]),
                     ]),
                 )],

@@ -310,7 +310,7 @@ export interface components {
     /** Paragraph */
     Paragraph: {
       /** Tokens */
-      tokens: (components["schemas"]["_PlainText"] | components["schemas"]["_BoxedText"] | components["schemas"]["_BoldText"] | components["schemas"]["_ItalicText"] | components["schemas"]["_SelectableText"] | components["schemas"]["_SelectedText"] | components["schemas"]["_FreeTextInput"] | components["schemas"]["_MultipleChoicesInput"] | components["schemas"]["_Whitespace"])[];
+      tokens: (components["schemas"]["_PlainText"] | components["schemas"]["_BoxedText"] | components["schemas"]["_BoldText"] | components["schemas"]["_ItalicText"] | components["schemas"]["_SelectedText"] | components["schemas"]["_FreeTextInput"] | components["schemas"]["_MultipleChoicesInput"] | components["schemas"]["_Whitespace"] | components["schemas"]["_Selectable"] | components["schemas"]["_SelectableText"])[];
     };
     /** PdfRectangle */
     PdfRectangle: {
@@ -436,6 +436,20 @@ export interface components {
        * @constant
        */
       type: "plainText";
+    };
+    /** _Selectable */
+    _Selectable: {
+      /** Boxed */
+      boxed: boolean;
+      /** Colors */
+      colors: string[];
+      /** Contents */
+      contents: (components["schemas"]["_PlainText"] | components["schemas"]["_BoxedText"] | components["schemas"]["_BoldText"] | components["schemas"]["_ItalicText"] | components["schemas"]["_SelectedText"] | components["schemas"]["_FreeTextInput"] | components["schemas"]["_MultipleChoicesInput"] | components["schemas"]["_Whitespace"])[];
+      /**
+       * Type
+       * @constant
+       */
+      type: "selectable";
     };
     /** _SelectableText */
     _SelectableText: {
