@@ -91,6 +91,39 @@ const style = computed(() => ({
             </template>
           </SelectableText>
         </template>
+        <template v-else-if="token.type === 'boxed'">
+          <span class="boxed">
+            <template v-for="subToken in token.contents">
+              <template v-if="subToken.type === 'plainText'">
+                <span class="tricolorable">{{ subToken.text }}</span>
+              </template>
+              <template v-else-if="subToken.type === 'whitespace'">
+                <span>&nbsp;&nbsp;<wbr /></span>
+              </template>
+              <template v-else-if="subToken.type === 'boxedText'">
+                <span class="tricolorable boxed">{{ subToken.text }}</span>
+              </template>
+              <template v-else-if="subToken.type === 'boldText'">
+                <b class="tricolorable">{{ subToken.text }}</b>
+              </template>
+              <template v-else-if="subToken.type === 'italicText'">
+                <i class="tricolorable">{{ subToken.text }}</i>
+              </template>
+              <template v-else-if="subToken.type === 'freeTextInput'">
+                <FreeTextInput class="tricolorable" v-model="models[modelKey]" />
+              </template>
+              <template v-else-if="subToken.type === 'selectedText'">
+                <SelectedText class="tricolorable" :color="subToken.color" :boxed="false">{{ subToken.text }}</SelectedText>
+              </template>
+              <template v-else-if="subToken.type === 'multipleChoicesInput'">
+                <MultipleChoicesInput class="tricolorable" :choices="subToken.choices" v-model="models[modelKey]" />
+              </template>
+              <template v-else>
+                <span>{{ $t('thisIsABug') }} {{ ((t: never) => t)(subToken) }}</span>
+              </template>
+            </template>
+          </span>
+        </template>
         <template v-else-if="token.type === 'selectedText'">
           <SelectedText class="tricolorable" :color="token.color" :boxed="false">{{ token.text }}</SelectedText>
         </template>

@@ -46,23 +46,27 @@ class _Adapter:
 
     def preprocess(self, instructions: deltas.Deltas, effects: list[AdaptationEffect]) -> None:
         self.global_placeholders: list[tuple[str, renderable.SentenceToken]] = []
-        self.letters_are_selectable = False
-        self.words_are_selectable = False
-        self.punctuation_is_selectable = False
-        self.sentences_are_selectable = False
-        self.selectables_are_boxed = False
+        self.letters_are_items = False
+        self.words_are_items = False
+        self.punctuation_is_items = False
+        self.sentences_are_items = False
+        self.manual_items_are_items = False
+        self.items_are_selectable = False
+        self.items_are_boxed = False
         self.selectables_colors = []
 
         for effect in effects:
             if isinstance(effect, FillWithFreeTextAdaptationEffect):
                 self.global_placeholders.append((effect.placeholder, renderable.FreeTextInput()))
             if isinstance(effect, ItemizedAdaptationEffect):
-                self.letters_are_selectable = effect.items.kind == "characters" and effect.items.letters
-                self.words_are_selectable = effect.items.kind == "tokens" and effect.items.words
-                self.punctuation_is_selectable = effect.items.kind == "tokens" and effect.items.punctuation
-                self.sentences_are_selectable = effect.items.kind == "sentences"
+                self.letters_are_items = effect.items.kind == "characters" and effect.items.letters
+                self.words_are_items = effect.items.kind == "tokens" and effect.items.words
+                self.punctuation_is_items = effect.items.kind == "tokens" and effect.items.punctuation
+                self.sentences_are_items = effect.items.kind == "sentences"
+                self.manual_items_are_items = effect.items.kind == "manual"
+                self.items_are_boxed = effect.effects.boxed
                 if effect.effects.selectable is not None:
-                    self.selectables_are_boxed = effect.effects.boxed
+                    self.items_are_selectable = True
                     assert self.selectables_colors == []
                     self.selectables_colors = effect.effects.selectable.colors
 
@@ -191,17 +195,21 @@ class _Adapter:
                         yield renderable.PlainText(text=text)
             yield renderable.Whitespace()
 
-        if self.sentences_are_selectable:
-            assert not self.letters_are_selectable
-            assert not self.words_are_selectable
-            assert not self.punctuation_is_selectable
+        if self.sentences_are_items:
+            assert not self.letters_are_items
+            assert not self.words_are_items
+            assert not self.punctuation_is_items
             is_first_sentence = True
             for sentence_deltas in self.split_deltas_into_sentences(paragraph_deltas):
                 if not is_first_sentence:
                     yield renderable.Whitespace()
                 is_first_sentence = False
                 contents = list(self.adapt_wording_sentence(sentence_deltas, sentence_placeholders))
-                yield renderable.Selectable(contents=contents, colors=self.selectables_colors, boxed=self.selectables_are_boxed)
+                if self.items_are_selectable:
+                    yield renderable.Selectable(contents=contents, colors=self.selectables_colors, boxed=self.items_are_boxed)
+                else:
+                    assert self.items_are_boxed
+                    yield renderable.Boxed(contents=contents)
         else:
             yield from self.adapt_wording_sentence(paragraph_deltas, sentence_placeholders)
 
@@ -218,17 +226,29 @@ class _Adapter:
                                 index = int(text[2:-2])
                                 yield sentence_placeholders[index][1]
                             else:
-                                if self.punctuation_is_selectable:
-                                    yield renderable.SelectableText(text=text, colors=self.selectables_colors, boxed=self.selectables_are_boxed)
+                                if self.punctuation_is_items:
+                                    if self.items_are_selectable:
+                                        yield renderable.SelectableText(text=text, colors=self.selectables_colors, boxed=self.items_are_boxed)
+                                    else:
+                                        assert self.items_are_boxed
+                                        yield renderable.BoxedText(text=text)
                                 else:
                                     yield renderable.PlainText(text=text)
                         else:
                             # Separated: words
-                            if self.letters_are_selectable:
+                            if self.letters_are_items:
                                 for letter in text:
-                                    yield renderable.SelectableText(text=letter, colors=self.selectables_colors, boxed=self.selectables_are_boxed)
-                            elif self.words_are_selectable:
-                                yield renderable.SelectableText(text=text, colors=self.selectables_colors, boxed=self.selectables_are_boxed)
+                                    if self.items_are_selectable:
+                                        yield renderable.SelectableText(text=letter, colors=self.selectables_colors, boxed=self.items_are_boxed)
+                                    else:
+                                        assert self.items_are_boxed
+                                        yield renderable.BoxedText(text=letter)
+                            elif self.words_are_items:
+                                if self.items_are_selectable:
+                                    yield renderable.SelectableText(text=text, colors=self.selectables_colors, boxed=self.items_are_boxed)
+                                else:
+                                    assert self.items_are_boxed
+                                    yield renderable.BoxedText(text=text)
                             else:
                                 yield renderable.PlainText(text=text)
 
@@ -240,7 +260,14 @@ class _Adapter:
                         if text.strip() == "":
                             yield renderable.Whitespace()
                         else:
-                            yield renderable.SelectableText(text=text, colors=self.selectables_colors, boxed=self.selectables_are_boxed)
+                            if self.manual_items_are_items:
+                                if self.items_are_selectable:
+                                    yield renderable.SelectableText(text=text, colors=self.selectables_colors, boxed=self.items_are_boxed)
+                                else:
+                                    assert self.items_are_boxed
+                                    yield renderable.BoxedText(text=text)
+                            else:
+                                yield renderable.PlainText(text=text)
 
             elif "bold" in delta.attributes:
                 assert delta.attributes == {"bold": delta.attributes["bold"]}
@@ -1625,6 +1652,46 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                         r.SelectableText(text="the", colors=["red", "blue"], boxed=True),
                         r.Whitespace(),
                         r.PlainText(text="wording"),
+                        r.PlainText(text="."),
+                    ])]),
+                )],
+            ),
+        )
+
+    def test_boxed_words(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions=[d.InsertOp(insert="Instructions\n", attributes={})],
+                wording=[d.InsertOp(insert="This is, the wording.\n", attributes={})],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
+                wording_paragraphs_per_pagelet=3,
+                adaptation=AdaptationV2(kind="generic", effects=[ItemizedAdaptationEffect(
+                    kind="itemized",
+                    items={"kind": "tokens", "words": True, "punctuation": False},
+                    effects={"selectable": None, "boxed": True},
+                )]),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=42,
+                pagelets=[r.Pagelet(
+                    instructions=r.Section(paragraphs=[
+                        r.Paragraph(tokens=[
+                            r.PlainText(text="Instructions"),
+                        ]),
+                    ]),
+                    wording=r.Section(paragraphs=[r.Paragraph(tokens=[
+                        r.BoxedText(text="This"),
+                        r.Whitespace(),
+                        r.BoxedText(text="is"),
+                        r.PlainText(text=","),
+                        r.Whitespace(),
+                        r.BoxedText(text="the"),
+                        r.Whitespace(),
+                        r.BoxedText(text="wording"),
                         r.PlainText(text="."),
                     ])]),
                 )],

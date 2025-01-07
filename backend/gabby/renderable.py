@@ -95,7 +95,15 @@ def Selectable(contents: list[LeafToken], colors: list[str], boxed: bool):
     return _Selectable(type="selectable", contents=contents, colors=colors, boxed=boxed)
 
 
-SentenceToken = LeafToken | _Selectable | _SelectableText
+class _Boxed(PydanticBase):
+    type: Literal["boxed"]
+    contents: list[LeafToken]
+
+def Boxed(contents: list[LeafToken]):
+    return _Boxed(type="boxed", contents=contents)
+
+
+SentenceToken = LeafToken | _Selectable | _Boxed | _SelectableText
 
 
 class Paragraph(PydanticBase):

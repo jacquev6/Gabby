@@ -28,6 +28,7 @@ const model = defineModel<Model>({required: true})
 const i18n = useI18n()
 
 const fields = ref<InstanceType<typeof ExerciseFieldsForm> | null>(null)
+const adaptationDetails = ref<InstanceType<typeof AdaptationDetailsFieldsForm> | null>(null)
 
 const parsedExercise = ref<ParsedExercise & InCache & Exists | null>(null)
 const parsedExerciseIsLoading = ref(false)
@@ -109,10 +110,10 @@ defineExpose({
                     <UndoRedoTool v-model="model" :reset="doResetUndoRedo" />
                   </template>
                   <template #adaptationDetails>
-                    <AdaptationDetailsFieldsForm v-if="fields !== null" v-model="model" :fields/>
+                    <AdaptationDetailsFieldsForm ref="adaptationDetails" v-if="fields !== null" v-model="model" :fields/>
                   </template>
                   <template #basicFormatting>
-                    <BasicFormattingTools v-if="fields !== null" v-model="model" :fields />
+                    <BasicFormattingTools v-if="fields !== null && adaptationDetails !== null" v-model="model" :fields :adaptationDetails />
                   </template>
                   <template #distribution>
                     <BLabeledCheckboxes :label="$t('exerciseDistribution')" v-model="model.wordingParagraphsPerPagelet" :options="wordingParagraphsPerPageletOptions" />

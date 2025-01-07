@@ -146,7 +146,7 @@
   "effects": "Effects",
   "effectsSelectable": "Selectable",
   "effectsBoxed": "Boxed",
-  "selectableButton": "Selectable",
+  "manualItemButton": "Manual item",
 
   "multipleChoicesButton": "Multiple choices",
   "multipleChoicesInstructions": "Select a set of choices in the \"Instructions\" or \"Wording\" fields in the \"Edition\" column. Include start, stop and separator characters.",

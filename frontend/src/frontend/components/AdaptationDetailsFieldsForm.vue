@@ -437,6 +437,10 @@ watch(
 )
 
 const colorPickers = ref<InstanceType<typeof FloatingColorPicker>[]>([])
+
+defineExpose({
+  hasManualItems: computed(() => settings.itemized.items.isManual),
+})
 </script>
 
 <template>

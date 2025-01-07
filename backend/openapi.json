@@ -530,6 +530,9 @@
                   "$ref": "#/components/schemas/_Selectable"
                 },
                 {
+                  "$ref": "#/components/schemas/_Boxed"
+                },
+                {
                   "$ref": "#/components/schemas/_SelectableText"
                 }
               ]
@@ -749,6 +752,54 @@
           "text"
         ],
         "title": "_BoldText",
+        "type": "object"
+      },
+      "_Boxed": {
+        "additionalProperties": false,
+        "properties": {
+          "contents": {
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/_PlainText"
+                },
+                {
+                  "$ref": "#/components/schemas/_BoxedText"
+                },
+                {
+                  "$ref": "#/components/schemas/_BoldText"
+                },
+                {
+                  "$ref": "#/components/schemas/_ItalicText"
+                },
+                {
+                  "$ref": "#/components/schemas/_SelectedText"
+                },
+                {
+                  "$ref": "#/components/schemas/_FreeTextInput"
+                },
+                {
+                  "$ref": "#/components/schemas/_MultipleChoicesInput"
+                },
+                {
+                  "$ref": "#/components/schemas/_Whitespace"
+                }
+              ]
+            },
+            "title": "Contents",
+            "type": "array"
+          },
+          "type": {
+            "const": "boxed",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "contents"
+        ],
+        "title": "_Boxed",
         "type": "object"
       },
       "_BoxedText": {

@@ -146,7 +146,7 @@
   "effects": "Effets",
   "effectsSelectable": "Cochable",
   "effectsBoxed": "Cadre",
-  "selectableButton": "Cochable",
+  "manualItemButton": "Item manuel",
 
   "multipleChoicesButton": "Choix multiples",
   "multipleChoicesInstructions": "Sélectionnez un ensemble de choix dans le champ \"Consigne\" ou \"Énoncé\" de la colonne \"Édition\". Incluez les caractère de début, fin et séparation.",
