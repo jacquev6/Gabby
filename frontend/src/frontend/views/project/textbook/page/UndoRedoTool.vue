@@ -5,6 +5,9 @@ import { useDebouncedRefHistory } from '@vueuse/core'
 <script setup lang="ts">
 import { useMagicKeys } from '@vueuse/core'
 import { ref, watch } from 'vue'
+import deepCopy from 'deep-copy'
+import deepEqual from 'deep-equal'
+
 
 import { BButton } from '$/frontend/components/opinion/bootstrap'
 import type { Model } from '$/frontend/components/ExerciseFieldsForm.vue'
@@ -19,9 +22,27 @@ const model = defineModel<Model>({required: true})
 // I don't know why 'useDebouncedRefHistory' doesn't work with 'model' directly
 // (its undo/redo methods don't seem to have any effect)
 // This two-way watch is a workaround
-const model_ = ref(Object.assign({}, model.value))
-watch(model_, m => Object.assign(model.value, m), {deep: true})
-watch(model, m => Object.assign(model_.value, m), {deep: true})
+const model_ = ref(deepCopy(model.value))
+watch(
+  model_,
+  m => {
+    if (!deepEqual(model.value, m)) {
+      console.log('model_ changed => updating model')
+      Object.assign(model.value, deepCopy(m))
+    }
+  },
+  {deep: true},
+)
+watch(
+  model,
+  m => {
+    if (!deepEqual(model_.value, m)) {
+      console.log('model changed => updating model_')
+      Object.assign(model_.value, deepCopy(m))
+    }
+  },
+  {deep: true},
+)
 
 // @todo Consider using 'useThrottledRefHistory' instead of 'useDebouncedRefHistory'
 let history = useDebouncedRefHistory(model_, {deep: true, debounce: 1000})

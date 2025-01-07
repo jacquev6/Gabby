@@ -5,6 +5,7 @@ import deepEqual from 'deep-equal'
 import { type Model as Deltas } from './Quill.vue'
 import { Delta } from 'quill/core'
 
+
 const api = useApiStore()
 
 type Adaptation = (Exercise & InCache & Exists)['attributes']['adaptation']
@@ -88,10 +89,10 @@ export function makeModelNotInTextbook(): Model {
 export function assignModelFrom(model: Model, exercise: Exercise & InCache & Exists) {
   model.number = exercise.attributes.number
   model.instructions = exercise.attributes.instructions
-  model.wording = exercise.attributes.wording
-  model.example = exercise.attributes.example
-  model.clue = exercise.attributes.clue
-  model.textReference = exercise.attributes.textReference
+  model.wording = deepCopy(exercise.attributes.wording)
+  model.example = deepCopy(exercise.attributes.example)
+  model.clue = deepCopy(exercise.attributes.clue)
+  model.textReference = deepCopy(exercise.attributes.textReference)
   model.wordingParagraphsPerPagelet = exercise.attributes.wordingParagraphsPerPagelet
   model.adaptation = deepCopy(exercise.attributes.adaptation)
   model.rectangles = deepCopy(exercise.attributes.rectangles)
