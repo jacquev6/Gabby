@@ -42,7 +42,6 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
     # Custom collation: https://dba.stackexchange.com/a/285230
     number: orm.Mapped[str] = orm.mapped_column(sql.String(None, collation="exercise_number"))
 
-    _instructions_text: orm.Mapped[str] = orm.mapped_column(name="instructions_text", nullable=True)
     _instructions_deltas: orm.Mapped[list] = orm.mapped_column(sql.JSON, name="instructions", default=deltas.empty_as_list, server_default=deltas.empty_as_string)
 
     @property
@@ -55,7 +54,6 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
     def instructions(self, instructions: deltas.Deltas):
         self._instructions_deltas = [delta.model_dump() for delta in instructions]
 
-    _wording_text: orm.Mapped[str] = orm.mapped_column(name="wording_text", nullable=True)
     _wording_deltas: orm.Mapped[list] = orm.mapped_column(sql.JSON, name="wording", default=deltas.empty_as_list, server_default=deltas.empty_as_string)
 
     @property
@@ -68,7 +66,6 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
     def wording(self, wording: deltas.Deltas):
         self._wording_deltas = [delta.model_dump() for delta in wording]
 
-    _example_text: orm.Mapped[str] = orm.mapped_column(name="example_text", nullable=True)
     _example_deltas: orm.Mapped[list] = orm.mapped_column(sql.JSON, name="example", default=deltas.empty_as_list, server_default=deltas.empty_as_string)
 
     @property
@@ -81,7 +78,6 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
     def example(self, example: str | deltas.Deltas):
         self._example_deltas = [delta.model_dump() for delta in example]
 
-    _clue_text: orm.Mapped[str] = orm.mapped_column(name="clue_text", nullable=True)
     _clue_deltas: orm.Mapped[list] = orm.mapped_column(sql.JSON, name="clue", default=deltas.empty_as_list, server_default=deltas.empty_as_string)
 
     @property
