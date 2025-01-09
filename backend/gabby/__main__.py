@@ -162,16 +162,8 @@ def dump_database_as_unit_tests():
             "g": "b", "h": "f", "j": "b", "k": "f", "l": "b", "m": "b", "n": "b", "p": "f", "q": "b", "r": "b", "s": "c", "t": "b", "v": "f", "w": "f", "x": "b", "z": "c",
         }.get(c, c)
 
-    tags = [
-        ("".join(waste_char(c) for c in tag), tag)
-        for tag in ["{choices2|", "{bold|", "{italic|", "{sel1|", "{sel2|", "{sel3|", "{sel4|", "{sel5|"]
-    ]
-
     def waste_string(s):
-        r = "".join(waste_char(c) for c in s)
-        for wasted_tag, tag in tags:
-            r = r.replace(wasted_tag, tag)
-        return r
+        return "".join(waste_char(c) for c in s)
 
     def waste_renderable(section):
         def waste_token(token):
