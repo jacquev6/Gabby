@@ -68,17 +68,17 @@ const backdropCovers = inject<string>('adaptedExerciseBackdropCovers', 'body')
         <span class="choice" style="display: block;"><span>Option 2</span></span>
       </span>
     </span>
-  </span>
-  <template v-if="showChoices">
-    <Teleport :to="backdropCovers">
-      <div class="backdrop" @click="showChoices = false"></div>
-    </Teleport>
-    <div ref="floating" class="choices" :style="floatingStyles">
-      <div v-for="choiceColumn in choiceColumns" class="choiceColumn">
-        <p v-for="choice in choiceColumn" class="choice" @click="set(choice.text)"><span :class="`choice${choice.colorIndex}`">{{ choice.text }}</span></p>
+    <template v-if="showChoices">
+      <Teleport :to="backdropCovers">
+        <div class="backdrop" @click="showChoices = false"></div>
+      </Teleport>
+      <div ref="floating" class="choices" :style="floatingStyles">
+        <div v-for="choiceColumn in choiceColumns" class="choiceColumn">
+          <p v-for="choice in choiceColumn" class="choice" @click="set(choice.text)"><span :class="`choice${choice.colorIndex}`">{{ choice.text }}</span></p>
+        </div>
       </div>
-    </div>
-  </template>
+    </template>
+  </span>
 </template>
 
 <style scoped>
