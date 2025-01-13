@@ -2232,6 +2232,62 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
             ),
         )
 
+    # https://github.com/jacquev6/Gabby/issues/3#issuecomment-2462720676
+    def test_chose_a_single_letter_to_complete_a_word(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions=[
+                    d.InsertOp(insert="Complète les mots avec ", attributes={}),
+                    d.InsertOp(insert="m ou n", attributes={"choices2": {"start": "", "separator1": "ou", "separator2": "", "stop": "", "placeholder": "..."}}),
+                    d.InsertOp(insert=".\n", attributes={}),
+                ],
+                wording=[
+                    d.InsertOp(insert="i...mense i...juste\n", attributes={}),
+                ],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
+                wording_paragraphs_per_pagelet=3,
+                adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=42,
+                pagelets=[r.Pagelet(
+                    instructions=r.Section(paragraphs=[
+                        r.Paragraph(tokens=[
+                            r.PlainText(text="Complète"),
+                            r.Whitespace(),
+                            r.PlainText(text="les"),
+                            r.Whitespace(),
+                            r.PlainText(text="mots"),
+                            r.Whitespace(),
+                            r.PlainText(text="avec"),
+                            r.Whitespace(),
+                            r.BoxedText(text="m"),
+                            r.Whitespace(),
+                            r.PlainText(text="ou"),
+                            r.Whitespace(),
+                            r.BoxedText(text="n"),
+                            r.PlainText(text="."),
+                        ]),
+                    ]),
+                    wording=r.Section(paragraphs=[
+                        r.Paragraph(tokens=[
+                            r.PlainText(text="i"),
+                            r.MultipleChoicesInput(choices=["m", "n"]),
+                            r.PlainText(text="mense"),
+                            r.Whitespace(),
+                            r.PlainText(text="i"),
+                            r.MultipleChoicesInput(choices=["m", "n"]),
+                            r.PlainText(text="juste"),
+                        ]),
+                    ]),
+                )],
+            ),
+        )
+
 
 class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
     def test_simple(self):

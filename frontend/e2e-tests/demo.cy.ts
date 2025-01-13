@@ -521,4 +521,50 @@ describe('Gabby', () => {
       screenshot('fill-with-free-text', 'export-2')
     })
   })
+
+  it('creates a "Multiple choices" exercise where you choose a letter to complete words', () => {
+    cy.viewport(1300, 1000)
+    visit('/project-xkopqm/textbook-klxufv/page-11/new-exercise', {pdf: 'demo'})
+    setupAliases()
+
+    cy.get('@number').type('1')
+
+    cy.get('@adaptationType').select('multiple-choices')
+
+    traceRectangle('@canvas', 8, 5, 48, 9)
+    cy.get('button:contains("Instructions")').click()
+    notBusy()
+    traceRectangle('@canvas', 7, 11, 36, 14)
+    cy.get('button:contains("Wording")').click()
+    notBusy()
+
+    cy.get('button:contains("Multiple choices")').click()
+    screenshot('multiple-choices-for-letter-in-word', 'edit-1')
+    cy.get('@instructions').find('p').then($el => {
+      const node = $el[0].firstChild
+      console.assert(node !== null)
+      selectRange(node, 23, node, 29)
+    })
+    cy.get('button:contains("OK")').should('exist')
+    cy.get('label:contains("Start") + input').should('have.value', '')
+    cy.get('label:contains("Stop") + input').should('have.value', '')
+    cy.get('label:contains("Separators") + input').should('have.value', 'ou')
+    cy.get('label + input').eq(3).type('{selectAll}{del}')  // Very fragile selector; sorry, future me!
+    cy.get('label:contains("Placeholder") + input').type('...', {delay: 0})
+    screenshot('multiple-choices-for-letter-in-word', 'edit-2', {clearSel: false})
+    cy.get('button:contains("OK")').click()
+    screenshot('multiple-choices-for-letter-in-word', 'edit-3')
+
+    cy.get('button:contains("Save then back")').click()
+    visit('/project-xkopqm')
+    cy.get('a:contains("the exported HTML")').should('have.attr', 'href').then(url => {
+      cy.visit(url + '&download=false')
+      cy.get('a').click()
+      screenshot('multiple-choices-for-letter-in-word', 'export-1')
+      cy.get('span.main').eq(1).click()
+      screenshot('multiple-choices-for-letter-in-word', 'export-2')
+      cy.get('span.choice1').click()
+      screenshot('multiple-choices-for-letter-in-word', 'export-3')
+    })
+  })
 })
