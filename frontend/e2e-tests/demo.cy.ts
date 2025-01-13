@@ -500,7 +500,7 @@ describe('Gabby', () => {
 
     cy.get('@adaptationType').select('fill-with-free-text').blur()
     cy.get('p:contains("Placeholder") >button:contains("+")').click()
-    cy.get('label:contains("Placeholder") + input').type('{selectAll}…', {delay: 0})
+    cy.get('label:contains("Placeholder") + input').type('{selectAll}...', {delay: 0})
 
     traceRectangle('@canvas', 8, 5, 60, 9)
     cy.get('button:contains("Instructions")').click()

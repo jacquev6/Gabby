@@ -145,6 +145,11 @@ function textFromItems(items: TextItem[]): SelectedText {
         }
         text += item.str
       }
+      // Ellipsis is a confusing character; people don't know how to type it.
+      // It's often used as the placeholder for missing text, so needs to be typed in some fields
+      // like "placeholder for free text" or the "placeholder to fill" for MCQs.
+      // So we replace the ellipsis character with three dots, that people definitely know how to type.
+      text = text.replaceAll('…', '...')
       return text
     }
   }
