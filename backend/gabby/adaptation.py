@@ -23,7 +23,7 @@ class _Adapter:
     def __init__(self, exercise: exercises.Exercise):
         self.preprocess(exercise.instructions, exercise.adaptation.effects)
 
-        instructions = self.strip_section(renderable.Section(paragraphs=list(itertools.chain.from_iterable(
+        instructions = self.postprocess_section(renderable.Section(paragraphs=list(itertools.chain.from_iterable(
             self.adapt_instructions(part)
             for part in [exercise.instructions, exercise.example, exercise.clue]
         ))))
@@ -31,14 +31,14 @@ class _Adapter:
         pagelets = list(
             r.Pagelet(
                 instructions=instructions,
-                wording=self.strip_section(renderable.Section(paragraphs=wording_paragraphs)),
+                wording=self.postprocess_section(renderable.Section(paragraphs=wording_paragraphs)),
             )
-            for wording_paragraphs in self.adapt_wording(exercise.instructions, exercise.wording, exercise.wording_paragraphs_per_pagelet, exercise.adaptation.effects)
+            for wording_paragraphs in self.adapt_wording(exercise.wording, exercise.wording_paragraphs_per_pagelet, exercise.adaptation.effects)
         )
 
         if exercise.text_reference != deltas.empty:
             pagelets.append(r.Pagelet(
-                instructions=self.strip_section(renderable.Section(paragraphs=list(self.adapt_instructions(exercise.text_reference)))),
+                instructions=self.postprocess_section(renderable.Section(paragraphs=list(self.adapt_instructions(exercise.text_reference)))),
                 wording=renderable.Section(paragraphs=[]),
             ))
 
@@ -143,12 +143,12 @@ class _Adapter:
             else:
                 assert False, f"Unknown attributes: {delta.attributes}"
 
-    def adapt_wording(self, instructions: deltas.Deltas, wording: deltas.Deltas, wording_paragraphs_per_pagelet: int | None, effects: list[AdaptationEffect]) -> Iterable[list[renderable.Paragraph]]:
+    def adapt_wording(self, wording: deltas.Deltas, wording_paragraphs_per_pagelet: int | None, effects: list[AdaptationEffect]) -> Iterable[list[renderable.Paragraph]]:
         current_pagelet = []
         has_yielded = False
         for pagelet_deltas in self.split_deltas(wording, r"\s*\n\s*\n\s*\n\s*"):
             if len(pagelet_deltas) != 0:
-                for paragraph in self.adapt_wording_pagelet(instructions, pagelet_deltas, effects):
+                for paragraph in self.adapt_wording_pagelet(pagelet_deltas, effects):
                     current_pagelet.append(paragraph)
                     if len(current_pagelet) == wording_paragraphs_per_pagelet:
                         yield current_pagelet
@@ -161,7 +161,7 @@ class _Adapter:
         if not has_yielded:
             yield []
 
-    def adapt_wording_pagelet(self, instructions: deltas.Deltas, pagelet_deltas: deltas.Deltas, effects: list[AdaptationEffect]) -> Iterable[renderable.Paragraph]:
+    def adapt_wording_pagelet(self, pagelet_deltas: deltas.Deltas, effects: list[AdaptationEffect]) -> Iterable[renderable.Paragraph]:
         for delta in pagelet_deltas:
             if delta.attributes == {}:
                 for index, (placeholder, _token) in enumerate(self.global_placeholders):
@@ -354,7 +354,7 @@ class _Adapter:
 
             return (list_header_deltas, paragraph_deltas)
 
-    def strip_section(self, section: renderable.Section) -> renderable.Section:
+    def postprocess_section(self, section: renderable.Section) -> renderable.Section:
         section = copy.deepcopy(section)
         for paragraph in section.paragraphs:
             fixed_tokens = []
