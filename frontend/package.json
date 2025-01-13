@@ -1,6 +1,5 @@
 {
   "dependencies": {
-    "@cyhnkckali/vue3-color-picker": "^2.0.2",
     "@floating-ui/vue": "^1.0.6",
     "@popperjs/core": "^2.11.8",
     "@unhead/vue": "^1.9.10",

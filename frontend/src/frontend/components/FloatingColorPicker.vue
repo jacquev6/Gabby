@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { Vue3ColorPicker as ColorPicker } from '@cyhnkckali/vue3-color-picker'
-import '@cyhnkckali/vue3-color-picker/dist/style.css'
 import { ref } from 'vue'
 
 import { BButton } from './opinion/bootstrap'
 import ContextMenu from './ContextMenu.vue'
+import { defaultColorsForSelectableEffect } from './AdaptationDetailsFieldsForm.vue'
 
 
 const props = defineProps<{
@@ -14,6 +13,19 @@ const props = defineProps<{
 }>()
 
 const model = defineModel<string>({required: true})
+
+const colorLines = [
+  defaultColorsForSelectableEffect,
+  [
+    // Provided by client in https://github.com/jacquev6/Gabby/issues/10#issuecomment-2462656497
+    '#ffcf4c',
+    '#ff8084',
+    '#8177ff',
+    '#68e495',
+    '#632f2b',
+    '#000000',
+  ],
+]
 
 const contextMenu = ref<InstanceType<typeof ContextMenu> | null>(null)
 function show(ref: HTMLElement) {
@@ -36,26 +48,21 @@ defineExpose({show})
 
 <template>
   <ContextMenu ref="contextMenu" :backdropCovers1 :backdropCovers2>
-    <ColorPicker
-      v-model="model"
-      mode="solid"
-      type="HEX"
-      :showColorList="false"
-      :showEyeDrop="false"
-      :showAlpha="false"
-      :showInputMenu="false"
-      :showInputSet="false"
-      :showPickerMode="false"
-    />
-    <BButton sm secondary @click="reset">{{ $t('resetColorToDefault') }} <span class="default-color" :style="{background: props.default}"></span></BButton>
+    <p v-for="colorLine in colorLines">
+      <span class="color" :style="{background: color}" v-for="color in colorLine" @click="model=color"></span>
+    </p>
+    <BButton sm secondary @click="reset">{{ $t('resetColorToDefault') }} <span class="color" :style="{background: props.default}"></span></BButton>
     <BButton sm primary @click="commit">OK</BButton>
   </ContextMenu>
 </template>
 
 <style scoped>
-span.default-color {
+span.color {
   display: inline flow-root;
   width: 1.25em;
   height: 1.25em;
+  margin-left: 0.25em;
+  margin-right: 0.25em;
+  cursor: pointer;
 }
 </style>

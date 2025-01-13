@@ -221,24 +221,23 @@ describe('Gabby', () => {
     notBusy()
 
     cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="1"]').rightclick()
-    cy.get('.picker-hue-range-slider').invoke('val', 320).trigger('input')
+    cy.get('.color').eq(9).click()
     cy.get('button:contains("OK")').click()
     cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="2"]').rightclick()
-    cy.get('.picker-hue-range-slider').invoke('val', 180).trigger('input')
-    cy.get('.colour-area-mask').click(240, 10)
+    cy.get('.color').eq(5).click()
     cy.get('button:contains("OK")').click()
     notBusy()
 
     cy.get('@instructions').find('p').then($el => {
       const node = $el[0].firstChild
       console.assert(node !== null)
-      selectRange(node, 49, node, 58)
+      selectRange(node, 36, node, 44)
     })
     cy.get('button[data-cy="format-color-2"]').click()
     cy.get('@instructions').find('p').then($el => {
       const node = $el[0].firstChild
       console.assert(node !== null)
-      selectRange(node, 24, node, 29)
+      selectRange(node, 12, node, 20)
     })
     cy.get('button[data-cy="format-color-1"]').click()
     notBusy()
