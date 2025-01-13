@@ -27,7 +27,6 @@ watch(
   model_,
   m => {
     if (!deepEqual(model.value, m)) {
-      console.log('model_ changed => updating model')
       Object.assign(model.value, deepCopy(m))
     }
   },
@@ -37,7 +36,6 @@ watch(
   model,
   m => {
     if (!deepEqual(model_.value, m)) {
-      console.log('model changed => updating model_')
       Object.assign(model_.value, deepCopy(m))
     }
   },
