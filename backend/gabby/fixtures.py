@@ -240,7 +240,13 @@ def create_test_exercises_1(session, admin):
             deltas.InsertOp(
                 insert="le, une, un, des, tu, elles, ils",
                 attributes={
-                    "choices2": {"start": "", "separator1": ",", "separator2": "", "stop": "", "placeholder": "..."}
+                    "choices2": {
+                        "start": "",
+                        "separator1": ",",
+                        "separator2": "",
+                        "stop": "",
+                        "placeholder": "...",
+                    }
                 },
             ),
             deltas.InsertOp(insert=".\r\nPuis, souligne les verbes.\n", attributes={}),
@@ -278,16 +284,23 @@ def create_test_exercises_1(session, admin):
         number="4",
         instructions=[
             deltas.InsertOp(
-                insert="Écris une phrase en respectant l'ordre des classes grammaticales indiquées.\n", attributes={}
+                insert="Écris une phrase en respectant l'ordre des classes grammaticales indiquées.\n",
+                attributes={},
             )
         ],
         example=[
             deltas.InsertOp(
-                insert="pronom personnel / verbe / déterminant / nom commun :\r\nJe mange une pomme.\n", attributes={}
+                insert="pronom personnel / verbe / déterminant / nom commun :\r\nJe mange une pomme.\n",
+                attributes={},
             )
         ],
         clue=[deltas.InsertOp(insert="\n", attributes={})],
-        wording=[deltas.InsertOp(insert="nom propre / verbe / déterminant / adjectif / nom commun\n", attributes={})],
+        wording=[
+            deltas.InsertOp(
+                insert="nom propre / verbe / déterminant / adjectif / nom commun\n",
+                attributes={},
+            )
+        ],
         created_by=admin,
         updated_by=admin,
     )
@@ -311,7 +324,8 @@ def create_test_exercises_1(session, admin):
         number="9",
         instructions=[
             deltas.InsertOp(
-                insert="Recopie l’intrus qui se cache dans chaque liste et écris sa classe.\n", attributes={}
+                insert="Recopie l’intrus qui se cache dans chaque liste et écris sa classe.\n",
+                attributes={},
             )
         ],
         example=[deltas.InsertOp(insert="\n", attributes={})],
@@ -360,7 +374,12 @@ def create_test_exercises_1(session, admin):
         textbook=None,
         textbook_page=None,
         number="L3",
-        instructions=[deltas.InsertOp(insert="Prendre le temps de faire aussi des choses banales.\n", attributes={})],
+        instructions=[
+            deltas.InsertOp(
+                insert="Prendre le temps de faire aussi des choses banales.\n",
+                attributes={},
+            )
+        ],
         example=[deltas.InsertOp(insert="\n", attributes={})],
         clue=[deltas.InsertOp(insert="\n", attributes={})],
         wording=[deltas.InsertOp(insert="\n", attributes={})],
@@ -508,13 +527,17 @@ def create_test_exercises_2(session, admin):
         number="11",
         instructions=[
             deltas.InsertOp(
-                insert="Ajoute le suffixe –eur aux verbes.\nIndique la classe des mots fabriqués.\n", attributes={}
+                insert="Ajoute le suffixe –eur aux verbes.\nIndique la classe des mots fabriqués.\n",
+                attributes={},
             )
         ],
         example=[deltas.InsertOp(insert="\n", attributes={})],
         clue=[deltas.InsertOp(insert="\n", attributes={})],
         wording=[
-            deltas.InsertOp(insert="nager ➞ … ◆ tracter ➞ … ◆ manger ➞ … ◆\ninventer ➞ … ◆ livrer ➞ …\n", attributes={})
+            deltas.InsertOp(
+                insert="nager ➞ … ◆ tracter ➞ … ◆ manger ➞ … ◆\ninventer ➞ … ◆ livrer ➞ …\n",
+                attributes={},
+            )
         ],
         adaptation=AdaptationV2(
             kind="fill-with-free-text",
@@ -784,16 +807,6 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
         self.expect_commits_rollbacks(0, len(available_fixtures))
 
     def test_adapt_exercise_1(self):
-        from .renderable import (
-            Pagelet,
-            Section,
-            Paragraph,
-            _PlainText,
-            _Whitespace,
-            _BoxedText,
-            _MultipleChoicesInput,
-        )
-
         with self.make_session() as session:
             load(session, ["even-more-test-exercises"])
 
@@ -803,296 +816,345 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                     number="3",
                     textbook_page=6,
                     pagelets=[
-                        Pagelet(
-                            instructions=Section(
+                        r.Pagelet(
+                            instructions=r.Section(
                                 paragraphs=[
-                                    Paragraph(
+                                    r.Paragraph(
                                         tokens=[
-                                            _PlainText(type="plainText", text="Complète"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="avec"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text=":"),
-                                            _Whitespace(type="whitespace"),
-                                            _BoxedText(type="boxedText", text="le"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text=","),
-                                            _Whitespace(type="whitespace"),
-                                            _BoxedText(type="boxedText", text="une"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text=","),
-                                            _Whitespace(type="whitespace"),
-                                            _BoxedText(type="boxedText", text="un"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text=","),
-                                            _Whitespace(type="whitespace"),
-                                            _BoxedText(type="boxedText", text="des"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text=","),
-                                            _Whitespace(type="whitespace"),
-                                            _BoxedText(type="boxedText", text="tu"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text=","),
-                                            _Whitespace(type="whitespace"),
-                                            _BoxedText(type="boxedText", text="elles"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text=","),
-                                            _Whitespace(type="whitespace"),
-                                            _BoxedText(type="boxedText", text="ils"),
-                                            _PlainText(type="plainText", text="."),
+                                            r.PlainText(text="Complète"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="avec"),
+                                            r.Whitespace(),
+                                            r.PlainText(text=":"),
+                                            r.Whitespace(),
+                                            r.BoxedText(text="le"),
+                                            r.Whitespace(),
+                                            r.PlainText(text=","),
+                                            r.Whitespace(),
+                                            r.BoxedText(text="une"),
+                                            r.Whitespace(),
+                                            r.PlainText(text=","),
+                                            r.Whitespace(),
+                                            r.BoxedText(text="un"),
+                                            r.Whitespace(),
+                                            r.PlainText(text=","),
+                                            r.Whitespace(),
+                                            r.BoxedText(text="des"),
+                                            r.Whitespace(),
+                                            r.PlainText(text=","),
+                                            r.Whitespace(),
+                                            r.BoxedText(text="tu"),
+                                            r.Whitespace(),
+                                            r.PlainText(text=","),
+                                            r.Whitespace(),
+                                            r.BoxedText(text="elles"),
+                                            r.Whitespace(),
+                                            r.PlainText(text=","),
+                                            r.Whitespace(),
+                                            r.BoxedText(text="ils"),
+                                            r.PlainText(text="."),
                                         ]
                                     ),
-                                    Paragraph(
+                                    r.Paragraph(
                                         tokens=[
-                                            _PlainText(type="plainText", text="Puis"),
-                                            _PlainText(type="plainText", text=","),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="souligne"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="les"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="verbes"),
-                                            _PlainText(type="plainText", text="."),
+                                            r.PlainText(text="Puis"),
+                                            r.PlainText(text=","),
+                                            r.Whitespace(),
+                                            r.PlainText(text="souligne"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="les"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="verbes"),
+                                            r.PlainText(text="."),
                                         ]
                                     ),
-                                    Paragraph(
+                                    r.Paragraph(
                                         tokens=[
-                                            _PlainText(type="plainText", text="Il"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="peut"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="y"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="avoir"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="plusieurs"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="solutions"),
-                                            _PlainText(type="plainText", text="."),
+                                            r.PlainText(text="Il"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="peut"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="y"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="avoir"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="plusieurs"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="solutions"),
+                                            r.PlainText(text="."),
                                         ]
                                     ),
                                 ]
                             ),
-                            wording=Section(
+                            wording=r.Section(
                                 paragraphs=[
-                                    Paragraph(
+                                    r.Paragraph(
                                         tokens=[
-                                            _MultipleChoicesInput(
-                                                type="multipleChoicesInput",
-                                                choices=["le", "une", "un", "des", "tu", "elles", "ils"],
+                                            r.MultipleChoicesInput(
+                                                choices=[
+                                                    "le",
+                                                    "une",
+                                                    "un",
+                                                    "des",
+                                                    "tu",
+                                                    "elles",
+                                                    "ils",
+                                                ],
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="vide"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="vide"),
                                         ]
                                     ),
-                                    Paragraph(
+                                    r.Paragraph(
                                         tokens=[
-                                            _MultipleChoicesInput(
-                                                type="multipleChoicesInput",
-                                                choices=["le", "une", "un", "des", "tu", "elles", "ils"],
+                                            r.MultipleChoicesInput(
+                                                choices=[
+                                                    "le",
+                                                    "une",
+                                                    "un",
+                                                    "des",
+                                                    "tu",
+                                                    "elles",
+                                                    "ils",
+                                                ],
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="vident"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="vident"),
                                         ]
                                     ),
-                                    Paragraph(
+                                    r.Paragraph(
                                         tokens=[
-                                            _MultipleChoicesInput(
-                                                type="multipleChoicesInput",
-                                                choices=["le", "une", "un", "des", "tu", "elles", "ils"],
+                                            r.MultipleChoicesInput(
+                                                choices=[
+                                                    "le",
+                                                    "une",
+                                                    "un",
+                                                    "des",
+                                                    "tu",
+                                                    "elles",
+                                                    "ils",
+                                                ],
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="dépenses"),
-                                        ]
-                                    ),
-                                ]
-                            ),
-                        ),
-                        Pagelet(
-                            instructions=Section(
-                                paragraphs=[
-                                    Paragraph(
-                                        tokens=[
-                                            _PlainText(type="plainText", text="Complète"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="avec"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text=":"),
-                                            _Whitespace(type="whitespace"),
-                                            _BoxedText(type="boxedText", text="le"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text=","),
-                                            _Whitespace(type="whitespace"),
-                                            _BoxedText(type="boxedText", text="une"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text=","),
-                                            _Whitespace(type="whitespace"),
-                                            _BoxedText(type="boxedText", text="un"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text=","),
-                                            _Whitespace(type="whitespace"),
-                                            _BoxedText(type="boxedText", text="des"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text=","),
-                                            _Whitespace(type="whitespace"),
-                                            _BoxedText(type="boxedText", text="tu"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text=","),
-                                            _Whitespace(type="whitespace"),
-                                            _BoxedText(type="boxedText", text="elles"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text=","),
-                                            _Whitespace(type="whitespace"),
-                                            _BoxedText(type="boxedText", text="ils"),
-                                            _PlainText(type="plainText", text="."),
-                                        ]
-                                    ),
-                                    Paragraph(
-                                        tokens=[
-                                            _PlainText(type="plainText", text="Puis"),
-                                            _PlainText(type="plainText", text=","),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="souligne"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="les"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="verbes"),
-                                            _PlainText(type="plainText", text="."),
-                                        ]
-                                    ),
-                                    Paragraph(
-                                        tokens=[
-                                            _PlainText(type="plainText", text="Il"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="peut"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="y"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="avoir"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="plusieurs"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="solutions"),
-                                            _PlainText(type="plainText", text="."),
-                                        ]
-                                    ),
-                                ]
-                            ),
-                            wording=Section(
-                                paragraphs=[
-                                    Paragraph(
-                                        tokens=[
-                                            _MultipleChoicesInput(
-                                                type="multipleChoicesInput",
-                                                choices=["le", "une", "un", "des", "tu", "elles", "ils"],
-                                            ),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="dépensent"),
-                                        ]
-                                    ),
-                                    Paragraph(
-                                        tokens=[
-                                            _MultipleChoicesInput(
-                                                type="multipleChoicesInput",
-                                                choices=["le", "une", "un", "des", "tu", "elles", "ils"],
-                                            ),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="savon"),
-                                        ]
-                                    ),
-                                    Paragraph(
-                                        tokens=[
-                                            _MultipleChoicesInput(
-                                                type="multipleChoicesInput",
-                                                choices=["le", "une", "un", "des", "tu", "elles", "ils"],
-                                            ),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="savons"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="dépenses"),
                                         ]
                                     ),
                                 ]
                             ),
                         ),
-                        Pagelet(
-                            instructions=Section(
+                        r.Pagelet(
+                            instructions=r.Section(
                                 paragraphs=[
-                                    Paragraph(
+                                    r.Paragraph(
                                         tokens=[
-                                            _PlainText(type="plainText", text="Complète"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="avec"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text=":"),
-                                            _Whitespace(type="whitespace"),
-                                            _BoxedText(type="boxedText", text="le"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text=","),
-                                            _Whitespace(type="whitespace"),
-                                            _BoxedText(type="boxedText", text="une"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text=","),
-                                            _Whitespace(type="whitespace"),
-                                            _BoxedText(type="boxedText", text="un"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text=","),
-                                            _Whitespace(type="whitespace"),
-                                            _BoxedText(type="boxedText", text="des"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text=","),
-                                            _Whitespace(type="whitespace"),
-                                            _BoxedText(type="boxedText", text="tu"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text=","),
-                                            _Whitespace(type="whitespace"),
-                                            _BoxedText(type="boxedText", text="elles"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text=","),
-                                            _Whitespace(type="whitespace"),
-                                            _BoxedText(type="boxedText", text="ils"),
-                                            _PlainText(type="plainText", text="."),
+                                            r.PlainText(text="Complète"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="avec"),
+                                            r.Whitespace(),
+                                            r.PlainText(text=":"),
+                                            r.Whitespace(),
+                                            r.BoxedText(text="le"),
+                                            r.Whitespace(),
+                                            r.PlainText(text=","),
+                                            r.Whitespace(),
+                                            r.BoxedText(text="une"),
+                                            r.Whitespace(),
+                                            r.PlainText(text=","),
+                                            r.Whitespace(),
+                                            r.BoxedText(text="un"),
+                                            r.Whitespace(),
+                                            r.PlainText(text=","),
+                                            r.Whitespace(),
+                                            r.BoxedText(text="des"),
+                                            r.Whitespace(),
+                                            r.PlainText(text=","),
+                                            r.Whitespace(),
+                                            r.BoxedText(text="tu"),
+                                            r.Whitespace(),
+                                            r.PlainText(text=","),
+                                            r.Whitespace(),
+                                            r.BoxedText(text="elles"),
+                                            r.Whitespace(),
+                                            r.PlainText(text=","),
+                                            r.Whitespace(),
+                                            r.BoxedText(text="ils"),
+                                            r.PlainText(text="."),
                                         ]
                                     ),
-                                    Paragraph(
+                                    r.Paragraph(
                                         tokens=[
-                                            _PlainText(type="plainText", text="Puis"),
-                                            _PlainText(type="plainText", text=","),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="souligne"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="les"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="verbes"),
-                                            _PlainText(type="plainText", text="."),
+                                            r.PlainText(text="Puis"),
+                                            r.PlainText(text=","),
+                                            r.Whitespace(),
+                                            r.PlainText(text="souligne"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="les"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="verbes"),
+                                            r.PlainText(text="."),
                                         ]
                                     ),
-                                    Paragraph(
+                                    r.Paragraph(
                                         tokens=[
-                                            _PlainText(type="plainText", text="Il"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="peut"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="y"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="avoir"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="plusieurs"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="solutions"),
-                                            _PlainText(type="plainText", text="."),
+                                            r.PlainText(text="Il"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="peut"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="y"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="avoir"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="plusieurs"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="solutions"),
+                                            r.PlainText(text="."),
+                                        ]
+                                    ),
+                                ],
+                            ),
+                            wording=r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        tokens=[
+                                            r.MultipleChoicesInput(
+                                                choices=[
+                                                    "le",
+                                                    "une",
+                                                    "un",
+                                                    "des",
+                                                    "tu",
+                                                    "elles",
+                                                    "ils",
+                                                ],
+                                            ),
+                                            r.Whitespace(),
+                                            r.PlainText(text="dépensent"),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        tokens=[
+                                            r.MultipleChoicesInput(
+                                                choices=[
+                                                    "le",
+                                                    "une",
+                                                    "un",
+                                                    "des",
+                                                    "tu",
+                                                    "elles",
+                                                    "ils",
+                                                ],
+                                            ),
+                                            r.Whitespace(),
+                                            r.PlainText(text="savon"),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        tokens=[
+                                            r.MultipleChoicesInput(
+                                                choices=[
+                                                    "le",
+                                                    "une",
+                                                    "un",
+                                                    "des",
+                                                    "tu",
+                                                    "elles",
+                                                    "ils",
+                                                ],
+                                            ),
+                                            r.Whitespace(),
+                                            r.PlainText(text="savons"),
+                                        ]
+                                    ),
+                                ],
+                            ),
+                        ),
+                        r.Pagelet(
+                            instructions=r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        tokens=[
+                                            r.PlainText(text="Complète"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="avec"),
+                                            r.Whitespace(),
+                                            r.PlainText(text=":"),
+                                            r.Whitespace(),
+                                            r.BoxedText(text="le"),
+                                            r.Whitespace(),
+                                            r.PlainText(text=","),
+                                            r.Whitespace(),
+                                            r.BoxedText(text="une"),
+                                            r.Whitespace(),
+                                            r.PlainText(text=","),
+                                            r.Whitespace(),
+                                            r.BoxedText(text="un"),
+                                            r.Whitespace(),
+                                            r.PlainText(text=","),
+                                            r.Whitespace(),
+                                            r.BoxedText(text="des"),
+                                            r.Whitespace(),
+                                            r.PlainText(text=","),
+                                            r.Whitespace(),
+                                            r.BoxedText(text="tu"),
+                                            r.Whitespace(),
+                                            r.PlainText(text=","),
+                                            r.Whitespace(),
+                                            r.BoxedText(text="elles"),
+                                            r.Whitespace(),
+                                            r.PlainText(text=","),
+                                            r.Whitespace(),
+                                            r.BoxedText(text="ils"),
+                                            r.PlainText(text="."),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        tokens=[
+                                            r.PlainText(text="Puis"),
+                                            r.PlainText(text=","),
+                                            r.Whitespace(),
+                                            r.PlainText(text="souligne"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="les"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="verbes"),
+                                            r.PlainText(text="."),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        tokens=[
+                                            r.PlainText(text="Il"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="peut"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="y"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="avoir"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="plusieurs"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="solutions"),
+                                            r.PlainText(text="."),
                                         ]
                                     ),
                                 ]
                             ),
-                            wording=Section(
+                            wording=r.Section(
                                 paragraphs=[
-                                    Paragraph(
+                                    r.Paragraph(
                                         tokens=[
-                                            _MultipleChoicesInput(
-                                                type="multipleChoicesInput",
-                                                choices=["le", "une", "un", "des", "tu", "elles", "ils"],
+                                            r.MultipleChoicesInput(
+                                                choices=[
+                                                    "le",
+                                                    "une",
+                                                    "un",
+                                                    "des",
+                                                    "tu",
+                                                    "elles",
+                                                    "ils",
+                                                ],
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="commande"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="commande"),
                                         ]
                                     )
                                 ]
@@ -1105,8 +1167,6 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
             self.expect_rollback()
 
     def test_adapt_exercise_2(self):
-        from .renderable import Pagelet, Section, Paragraph, _PlainText, _Whitespace
-
         with self.make_session() as session:
             load(session, ["even-more-test-exercises"])
 
@@ -1116,94 +1176,94 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                     number="4",
                     textbook_page=6,
                     pagelets=[
-                        Pagelet(
-                            instructions=Section(
+                        r.Pagelet(
+                            instructions=r.Section(
                                 paragraphs=[
-                                    Paragraph(
+                                    r.Paragraph(
                                         tokens=[
-                                            _PlainText(type="plainText", text="Écris"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="une"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="phrase"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="en"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="respectant"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="l"),
-                                            _PlainText(type="plainText", text="'"),
-                                            _PlainText(type="plainText", text="ordre"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="des"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="classes"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="grammaticales"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="indiquées"),
-                                            _PlainText(type="plainText", text="."),
+                                            r.PlainText(text="Écris"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="une"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="phrase"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="en"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="respectant"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="l"),
+                                            r.PlainText(text="'"),
+                                            r.PlainText(text="ordre"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="des"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="classes"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="grammaticales"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="indiquées"),
+                                            r.PlainText(text="."),
                                         ]
                                     ),
-                                    Paragraph(
+                                    r.Paragraph(
                                         tokens=[
-                                            _PlainText(type="plainText", text="pronom"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="personnel"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="/"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="verbe"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="/"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="déterminant"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="/"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="nom"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="commun"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text=":"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="Je"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="mange"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="une"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="pomme"),
-                                            _PlainText(type="plainText", text="."),
+                                            r.PlainText(text="pronom"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="personnel"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="/"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="verbe"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="/"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="déterminant"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="/"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="nom"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="commun"),
+                                            r.Whitespace(),
+                                            r.PlainText(text=":"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="Je"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="mange"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="une"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="pomme"),
+                                            r.PlainText(text="."),
                                         ]
                                     ),
                                 ]
                             ),
-                            wording=Section(
+                            wording=r.Section(
                                 paragraphs=[
-                                    Paragraph(
+                                    r.Paragraph(
                                         tokens=[
-                                            _PlainText(type="plainText", text="nom"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="propre"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="/"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="verbe"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="/"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="déterminant"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="/"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="adjectif"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="/"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="nom"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="commun"),
+                                            r.PlainText(text="nom"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="propre"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="/"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="verbe"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="/"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="déterminant"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="/"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="adjectif"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="/"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="nom"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="commun"),
                                         ]
                                     )
                                 ]
@@ -1216,8 +1276,6 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
             self.expect_rollback()
 
     def test_adapt_exercise_3(self):
-        from .renderable import Pagelet, Section, Paragraph, _PlainText, _Whitespace
-
         with self.make_session() as session:
             load(session, ["even-more-test-exercises"])
 
@@ -1227,101 +1285,101 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                     number="9",
                     textbook_page=7,
                     pagelets=[
-                        Pagelet(
-                            instructions=Section(
+                        r.Pagelet(
+                            instructions=r.Section(
                                 paragraphs=[
-                                    Paragraph(
+                                    r.Paragraph(
                                         tokens=[
-                                            _PlainText(type="plainText", text="Recopie"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="l"),
-                                            _PlainText(type="plainText", text="’"),
-                                            _PlainText(type="plainText", text="intrus"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="qui"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="se"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="cache"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="dans"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="chaque"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="liste"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="et"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="écris"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="sa"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="classe"),
-                                            _PlainText(type="plainText", text="."),
+                                            r.PlainText(text="Recopie"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="l"),
+                                            r.PlainText(text="’"),
+                                            r.PlainText(text="intrus"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="qui"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="se"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="cache"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="dans"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="chaque"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="liste"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="et"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="écris"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="sa"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="classe"),
+                                            r.PlainText(text="."),
                                         ]
                                     )
                                 ]
                             ),
-                            wording=Section(
+                            wording=r.Section(
                                 paragraphs=[
-                                    Paragraph(
+                                    r.Paragraph(
                                         tokens=[
-                                            _PlainText(type="plainText", text="a"),
-                                            _PlainText(type="plainText", text="."),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="partons"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="◆"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="bidons"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="◆"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="allons"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="◆"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="vendons"),
+                                            r.PlainText(text="a"),
+                                            r.PlainText(text="."),
+                                            r.Whitespace(),
+                                            r.PlainText(text="partons"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="◆"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="bidons"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="◆"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="allons"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="◆"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="vendons"),
                                         ]
                                     ),
-                                    Paragraph(
+                                    r.Paragraph(
                                         tokens=[
-                                            _PlainText(type="plainText", text="b"),
-                                            _PlainText(type="plainText", text="."),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="vidons"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="◆"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="mentons"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="◆"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="ballons"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="◆"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="salons"),
+                                            r.PlainText(text="b"),
+                                            r.PlainText(text="."),
+                                            r.Whitespace(),
+                                            r.PlainText(text="vidons"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="◆"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="mentons"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="◆"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="ballons"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="◆"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="salons"),
                                         ]
                                     ),
-                                    Paragraph(
+                                    r.Paragraph(
                                         tokens=[
-                                            _PlainText(type="plainText", text="c"),
-                                            _PlainText(type="plainText", text="."),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="voir"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="◆"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="armoire"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="◆"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="couloir"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="◆"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="dortoir"),
+                                            r.PlainText(text="c"),
+                                            r.PlainText(text="."),
+                                            r.Whitespace(),
+                                            r.PlainText(text="voir"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="◆"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="armoire"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="◆"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="couloir"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="◆"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="dortoir"),
                                         ]
                                     ),
                                 ]
@@ -1334,8 +1392,6 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
             self.expect_rollback()
 
     def test_adapt_exercise_4(self):
-        from .renderable import Pagelet, Section, Paragraph, _PlainText, _Whitespace
-
         with self.make_session() as session:
             load(session, ["even-more-test-exercises"])
 
@@ -1345,24 +1401,24 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                     number="L1",
                     textbook_page=None,
                     pagelets=[
-                        Pagelet(
-                            instructions=Section(
+                        r.Pagelet(
+                            instructions=r.Section(
                                 paragraphs=[
-                                    Paragraph(
+                                    r.Paragraph(
                                         tokens=[
-                                            _PlainText(type="plainText", text="Faire"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="des"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="choses"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="intelligentes"),
-                                            _PlainText(type="plainText", text="."),
+                                            r.PlainText(text="Faire"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="des"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="choses"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="intelligentes"),
+                                            r.PlainText(text="."),
                                         ]
                                     )
                                 ]
                             ),
-                            wording=Section(paragraphs=[]),
+                            wording=r.Section(paragraphs=[]),
                         )
                     ],
                 ),
@@ -1371,8 +1427,6 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
             self.expect_rollback()
 
     def test_adapt_exercise_5(self):
-        from .renderable import Pagelet, Section, Paragraph, _PlainText, _Whitespace
-
         with self.make_session() as session:
             load(session, ["even-more-test-exercises"])
 
@@ -1382,26 +1436,26 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                     number="L2",
                     textbook_page=None,
                     pagelets=[
-                        Pagelet(
-                            instructions=Section(
+                        r.Pagelet(
+                            instructions=r.Section(
                                 paragraphs=[
-                                    Paragraph(
+                                    r.Paragraph(
                                         tokens=[
-                                            _PlainText(type="plainText", text="Faire"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="d"),
-                                            _PlainText(type="plainText", text="'"),
-                                            _PlainText(type="plainText", text="autres"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="choses"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="intelligentes"),
-                                            _PlainText(type="plainText", text="."),
+                                            r.PlainText(text="Faire"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="d"),
+                                            r.PlainText(text="'"),
+                                            r.PlainText(text="autres"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="choses"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="intelligentes"),
+                                            r.PlainText(text="."),
                                         ]
                                     )
                                 ]
                             ),
-                            wording=Section(paragraphs=[]),
+                            wording=r.Section(paragraphs=[]),
                         )
                     ],
                 ),
@@ -1410,8 +1464,6 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
             self.expect_rollback()
 
     def test_adapt_exercise_6(self):
-        from .renderable import Pagelet, Section, Paragraph, _PlainText, _Whitespace
-
         with self.make_session() as session:
             load(session, ["even-more-test-exercises"])
 
@@ -1421,34 +1473,34 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                     number="L3",
                     textbook_page=None,
                     pagelets=[
-                        Pagelet(
-                            instructions=Section(
+                        r.Pagelet(
+                            instructions=r.Section(
                                 paragraphs=[
-                                    Paragraph(
+                                    r.Paragraph(
                                         tokens=[
-                                            _PlainText(type="plainText", text="Prendre"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="le"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="temps"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="de"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="faire"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="aussi"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="des"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="choses"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="banales"),
-                                            _PlainText(type="plainText", text="."),
+                                            r.PlainText(text="Prendre"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="le"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="temps"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="de"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="faire"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="aussi"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="des"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="choses"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="banales"),
+                                            r.PlainText(text="."),
                                         ]
                                     )
                                 ]
                             ),
-                            wording=Section(paragraphs=[]),
+                            wording=r.Section(paragraphs=[]),
                         )
                     ],
                 ),
@@ -1457,16 +1509,6 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
             self.expect_rollback()
 
     def test_adapt_exercise_7(self):
-        from .renderable import (
-            Pagelet,
-            Section,
-            Paragraph,
-            _PlainText,
-            _Whitespace,
-            _SelectedText,
-            _SelectableText,
-        )
-
         with self.make_session() as session:
             load(session, ["even-more-test-exercises"])
 
@@ -1476,491 +1518,751 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                     number="7",
                     textbook_page=7,
                     pagelets=[
-                        Pagelet(
-                            instructions=Section(
+                        r.Pagelet(
+                            instructions=r.Section(
                                 paragraphs=[
-                                    Paragraph(
+                                    r.Paragraph(
                                         tokens=[
-                                            _PlainText(type="plainText", text="Relève"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="dans"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="le"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="texte"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="trois"),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectedText(type="selectedText", text="déterminants", color="#ffff00"),
-                                            _PlainText(type="plainText", text=","),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="un"),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectedText(type="selectedText", text="nom propre", color="#ffc0cb"),
-                                            _PlainText(type="plainText", text=","),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="quatre"),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectedText(type="selectedText", text="noms communs", color="#bbbbff"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="et"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="trois"),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectedText(type="selectedText", text="verbes", color="#bbffbb"),
-                                            _PlainText(type="plainText", text="."),
+                                            r.PlainText(text="Relève"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="dans"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="le"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="texte"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="trois"),
+                                            r.Whitespace(),
+                                            r.SelectedText(text="déterminants", color="#ffff00"),
+                                            r.PlainText(text=","),
+                                            r.Whitespace(),
+                                            r.PlainText(text="un"),
+                                            r.Whitespace(),
+                                            r.SelectedText(text="nom propre", color="#ffc0cb"),
+                                            r.PlainText(text=","),
+                                            r.Whitespace(),
+                                            r.PlainText(text="quatre"),
+                                            r.Whitespace(),
+                                            r.SelectedText(text="noms communs", color="#bbbbff"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="et"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="trois"),
+                                            r.Whitespace(),
+                                            r.SelectedText(text="verbes", color="#bbffbb"),
+                                            r.PlainText(text="."),
                                         ]
                                     )
                                 ]
                             ),
-                            wording=Section(
+                            wording=r.Section(
                                 paragraphs=[
-                                    Paragraph(
+                                    r.Paragraph(
                                         tokens=[
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.SelectableText(
                                                 text="Les",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="Touaregs",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="sont",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="des",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="Berbères",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.SelectableText(
                                                 text=",",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="un",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="peuple",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="qui",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="habite",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="en",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="Afrique",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="du",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="Nord",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="depuis",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="la",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="préhistoire",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.SelectableText(
                                                 text=".",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
                                         ]
                                     ),
-                                    Paragraph(
+                                    r.Paragraph(
                                         tokens=[
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.SelectableText(
                                                 text="Ils",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="vivent",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="dans",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="le",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="désert",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="du",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="Sahara",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="(",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.SelectableText(
                                                 text="Algérie",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.SelectableText(
                                                 text=",",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="Libye",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.SelectableText(
                                                 text=",",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="Mali",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.SelectableText(
                                                 text=",",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="Niger",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.SelectableText(
                                                 text=",",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="Burkina",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="Faso",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.SelectableText(
                                                 text="…",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.SelectableText(
                                                 text=")",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.SelectableText(
                                                 text=".",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
                                         ]
                                     ),
-                                    Paragraph(
+                                    r.Paragraph(
                                         tokens=[
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.SelectableText(
                                                 text="En",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="été",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.SelectableText(
                                                 text=",",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="les",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="températures",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="y",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="montent",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="à",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="plus",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="de",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="50",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="°",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.SelectableText(
                                                 text="C",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="et",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="elles",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="descendent",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="en",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="dessous",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="de",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="zéro",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="durant",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="les",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="nuits",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="d’",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.SelectableText(
                                                 text="hiver",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.SelectableText(
                                                 text=".",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
                                         ]
@@ -1968,53 +2270,53 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                 ]
                             ),
                         ),
-                        Pagelet(
-                            instructions=Section(
+                        r.Pagelet(
+                            instructions=r.Section(
                                 paragraphs=[
-                                    Paragraph(
+                                    r.Paragraph(
                                         tokens=[
-                                            _PlainText(type="plainText", text="Mon"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="quotidien"),
-                                            _PlainText(type="plainText", text=","),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="pour"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="les"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="10"),
-                                            _PlainText(type="plainText", text="-"),
-                                            _PlainText(type="plainText", text="14"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="ans"),
-                                            _PlainText(type="plainText", text=","),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="www"),
-                                            _PlainText(type="plainText", text="."),
+                                            r.PlainText(text="Mon"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="quotidien"),
+                                            r.PlainText(text=","),
+                                            r.Whitespace(),
+                                            r.PlainText(text="pour"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="les"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="10"),
+                                            r.PlainText(text="-"),
+                                            r.PlainText(text="14"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="ans"),
+                                            r.PlainText(text=","),
+                                            r.Whitespace(),
+                                            r.PlainText(text="www"),
+                                            r.PlainText(text="."),
                                         ]
                                     ),
-                                    Paragraph(
+                                    r.Paragraph(
                                         tokens=[
-                                            _PlainText(type="plainText", text="monquotidien"),
-                                            _PlainText(type="plainText", text="."),
+                                            r.PlainText(text="monquotidien"),
+                                            r.PlainText(text="."),
                                         ]
                                     ),
-                                    Paragraph(
+                                    r.Paragraph(
                                         tokens=[
-                                            _PlainText(type="plainText", text="fr"),
-                                            _PlainText(type="plainText", text=","),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="13"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="septembre"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="2014"),
-                                            _PlainText(type="plainText", text="."),
+                                            r.PlainText(text="fr"),
+                                            r.PlainText(text=","),
+                                            r.Whitespace(),
+                                            r.PlainText(text="13"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="septembre"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="2014"),
+                                            r.PlainText(text="."),
                                         ]
                                     ),
                                 ]
                             ),
-                            wording=Section(paragraphs=[]),
+                            wording=r.Section(paragraphs=[]),
                         ),
                     ],
                 ),
@@ -2023,8 +2325,6 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
             self.expect_rollback()
 
     def test_adapt_exercise_8(self):
-        from .renderable import Pagelet, Section, Paragraph, _PlainText, _Whitespace, _FreeTextInput
-
         with self.make_session() as session:
             load(session, ["even-more-test-exercises"])
 
@@ -2034,88 +2334,88 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                     number="11",
                     textbook_page=7,
                     pagelets=[
-                        Pagelet(
-                            instructions=Section(
+                        r.Pagelet(
+                            instructions=r.Section(
                                 paragraphs=[
-                                    Paragraph(
+                                    r.Paragraph(
                                         tokens=[
-                                            _PlainText(type="plainText", text="Ajoute"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="le"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="suffixe"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="–"),
-                                            _PlainText(type="plainText", text="eur"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="aux"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="verbes"),
-                                            _PlainText(type="plainText", text="."),
+                                            r.PlainText(text="Ajoute"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="le"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="suffixe"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="–"),
+                                            r.PlainText(text="eur"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="aux"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="verbes"),
+                                            r.PlainText(text="."),
                                         ]
                                     ),
-                                    Paragraph(
+                                    r.Paragraph(
                                         tokens=[
-                                            _PlainText(type="plainText", text="Indique"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="la"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="classe"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="des"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="mots"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="fabriqués"),
-                                            _PlainText(type="plainText", text="."),
+                                            r.PlainText(text="Indique"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="la"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="classe"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="des"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="mots"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="fabriqués"),
+                                            r.PlainText(text="."),
                                         ]
                                     ),
                                 ]
                             ),
-                            wording=Section(
+                            wording=r.Section(
                                 paragraphs=[
-                                    Paragraph(
+                                    r.Paragraph(
                                         tokens=[
-                                            _PlainText(type="plainText", text="nager"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="➞"),
-                                            _Whitespace(type="whitespace"),
-                                            _FreeTextInput(type="freeTextInput"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="◆"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="tracter"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="➞"),
-                                            _Whitespace(type="whitespace"),
-                                            _FreeTextInput(type="freeTextInput"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="◆"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="manger"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="➞"),
-                                            _Whitespace(type="whitespace"),
-                                            _FreeTextInput(type="freeTextInput"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="◆"),
+                                            r.PlainText(text="nager"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="➞"),
+                                            r.Whitespace(),
+                                            r.FreeTextInput(),
+                                            r.Whitespace(),
+                                            r.PlainText(text="◆"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="tracter"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="➞"),
+                                            r.Whitespace(),
+                                            r.FreeTextInput(),
+                                            r.Whitespace(),
+                                            r.PlainText(text="◆"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="manger"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="➞"),
+                                            r.Whitespace(),
+                                            r.FreeTextInput(),
+                                            r.Whitespace(),
+                                            r.PlainText(text="◆"),
                                         ]
                                     ),
-                                    Paragraph(
+                                    r.Paragraph(
                                         tokens=[
-                                            _PlainText(type="plainText", text="inventer"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="➞"),
-                                            _Whitespace(type="whitespace"),
-                                            _FreeTextInput(type="freeTextInput"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="◆"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="livrer"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="➞"),
-                                            _Whitespace(type="whitespace"),
-                                            _FreeTextInput(type="freeTextInput"),
+                                            r.PlainText(text="inventer"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="➞"),
+                                            r.Whitespace(),
+                                            r.FreeTextInput(),
+                                            r.Whitespace(),
+                                            r.PlainText(text="◆"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="livrer"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="➞"),
+                                            r.Whitespace(),
+                                            r.FreeTextInput(),
                                         ]
                                     ),
                                 ]
@@ -2128,16 +2428,6 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
             self.expect_rollback()
 
     def test_adapt_exercise_9(self):
-        from .renderable import (
-            Pagelet,
-            Section,
-            Paragraph,
-            _PlainText,
-            _Whitespace,
-            _BoxedText,
-            _MultipleChoicesInput,
-        )
-
         with self.make_session() as session:
             load(session, ["even-more-test-exercises"])
 
@@ -2147,163 +2437,151 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                     number="8",
                     textbook_page=7,
                     pagelets=[
-                        Pagelet(
-                            instructions=Section(
+                        r.Pagelet(
+                            instructions=r.Section(
                                 paragraphs=[
-                                    Paragraph(
+                                    r.Paragraph(
                                         tokens=[
-                                            _PlainText(type="plainText", text="Réponds"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="par"),
-                                            _Whitespace(type="whitespace"),
-                                            _BoxedText(type="boxedText", text="vrai"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="ou"),
-                                            _Whitespace(type="whitespace"),
-                                            _BoxedText(type="boxedText", text="faux"),
-                                            _PlainText(type="plainText", text="."),
+                                            r.PlainText(text="Réponds"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="par"),
+                                            r.Whitespace(),
+                                            r.BoxedText(text="vrai"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="ou"),
+                                            r.Whitespace(),
+                                            r.BoxedText(text="faux"),
+                                            r.PlainText(text="."),
                                         ]
                                     )
                                 ]
                             ),
-                            wording=Section(
+                            wording=r.Section(
                                 paragraphs=[
-                                    Paragraph(
+                                    r.Paragraph(
                                         tokens=[
-                                            _PlainText(type="plainText", text="a"),
-                                            _PlainText(type="plainText", text="."),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="coccinelle"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="est"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="un"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="adjectif"),
-                                            _PlainText(type="plainText", text="."),
-                                            _Whitespace(type="whitespace"),
-                                            _MultipleChoicesInput(
-                                                type="multipleChoicesInput", choices=["vrai", "faux"]
-                                            ),
+                                            r.PlainText(text="a"),
+                                            r.PlainText(text="."),
+                                            r.Whitespace(),
+                                            r.PlainText(text="coccinelle"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="est"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="un"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="adjectif"),
+                                            r.PlainText(text="."),
+                                            r.Whitespace(),
+                                            r.MultipleChoicesInput(choices=["vrai", "faux"]),
                                         ]
                                     ),
-                                    Paragraph(
+                                    r.Paragraph(
                                         tokens=[
-                                            _PlainText(type="plainText", text="b"),
-                                            _PlainText(type="plainText", text="."),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="bûche"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="est"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="un"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="verbe"),
-                                            _PlainText(type="plainText", text="."),
-                                            _Whitespace(type="whitespace"),
-                                            _MultipleChoicesInput(
-                                                type="multipleChoicesInput", choices=["vrai", "faux"]
-                                            ),
+                                            r.PlainText(text="b"),
+                                            r.PlainText(text="."),
+                                            r.Whitespace(),
+                                            r.PlainText(text="bûche"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="est"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="un"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="verbe"),
+                                            r.PlainText(text="."),
+                                            r.Whitespace(),
+                                            r.MultipleChoicesInput(choices=["vrai", "faux"]),
                                         ]
                                     ),
-                                    Paragraph(
+                                    r.Paragraph(
                                         tokens=[
-                                            _PlainText(type="plainText", text="c"),
-                                            _PlainText(type="plainText", text="."),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="cette"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="est"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="un"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="déterminant"),
-                                            _PlainText(type="plainText", text="."),
-                                            _Whitespace(type="whitespace"),
-                                            _MultipleChoicesInput(
-                                                type="multipleChoicesInput", choices=["vrai", "faux"]
-                                            ),
+                                            r.PlainText(text="c"),
+                                            r.PlainText(text="."),
+                                            r.Whitespace(),
+                                            r.PlainText(text="cette"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="est"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="un"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="déterminant"),
+                                            r.PlainText(text="."),
+                                            r.Whitespace(),
+                                            r.MultipleChoicesInput(choices=["vrai", "faux"]),
                                         ]
                                     ),
                                 ]
                             ),
                         ),
-                        Pagelet(
-                            instructions=Section(
+                        r.Pagelet(
+                            instructions=r.Section(
                                 paragraphs=[
-                                    Paragraph(
+                                    r.Paragraph(
                                         tokens=[
-                                            _PlainText(type="plainText", text="Réponds"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="par"),
-                                            _Whitespace(type="whitespace"),
-                                            _BoxedText(type="boxedText", text="vrai"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="ou"),
-                                            _Whitespace(type="whitespace"),
-                                            _BoxedText(type="boxedText", text="faux"),
-                                            _PlainText(type="plainText", text="."),
+                                            r.PlainText(text="Réponds"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="par"),
+                                            r.Whitespace(),
+                                            r.BoxedText(text="vrai"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="ou"),
+                                            r.Whitespace(),
+                                            r.BoxedText(text="faux"),
+                                            r.PlainText(text="."),
                                         ]
                                     )
                                 ]
                             ),
-                            wording=Section(
+                            wording=r.Section(
                                 paragraphs=[
-                                    Paragraph(
+                                    r.Paragraph(
                                         tokens=[
-                                            _PlainText(type="plainText", text="d"),
-                                            _PlainText(type="plainText", text="."),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="dentier"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="est"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="un"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="verbe"),
-                                            _PlainText(type="plainText", text="."),
-                                            _Whitespace(type="whitespace"),
-                                            _MultipleChoicesInput(
-                                                type="multipleChoicesInput", choices=["vrai", "faux"]
-                                            ),
+                                            r.PlainText(text="d"),
+                                            r.PlainText(text="."),
+                                            r.Whitespace(),
+                                            r.PlainText(text="dentier"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="est"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="un"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="verbe"),
+                                            r.PlainText(text="."),
+                                            r.Whitespace(),
+                                            r.MultipleChoicesInput(choices=["vrai", "faux"]),
                                         ]
                                     ),
-                                    Paragraph(
+                                    r.Paragraph(
                                         tokens=[
-                                            _PlainText(type="plainText", text="e"),
-                                            _PlainText(type="plainText", text="."),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="respirer"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="est"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="un"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="verbe"),
-                                            _PlainText(type="plainText", text="."),
-                                            _Whitespace(type="whitespace"),
-                                            _MultipleChoicesInput(
-                                                type="multipleChoicesInput", choices=["vrai", "faux"]
-                                            ),
+                                            r.PlainText(text="e"),
+                                            r.PlainText(text="."),
+                                            r.Whitespace(),
+                                            r.PlainText(text="respirer"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="est"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="un"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="verbe"),
+                                            r.PlainText(text="."),
+                                            r.Whitespace(),
+                                            r.MultipleChoicesInput(choices=["vrai", "faux"]),
                                         ]
                                     ),
-                                    Paragraph(
+                                    r.Paragraph(
                                         tokens=[
-                                            _PlainText(type="plainText", text="f"),
-                                            _PlainText(type="plainText", text="."),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="aspiration"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="est"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="un"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="nom"),
-                                            _PlainText(type="plainText", text="."),
-                                            _Whitespace(type="whitespace"),
-                                            _MultipleChoicesInput(
-                                                type="multipleChoicesInput", choices=["vrai", "faux"]
-                                            ),
+                                            r.PlainText(text="f"),
+                                            r.PlainText(text="."),
+                                            r.Whitespace(),
+                                            r.PlainText(text="aspiration"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="est"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="un"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="nom"),
+                                            r.PlainText(text="."),
+                                            r.Whitespace(),
+                                            r.MultipleChoicesInput(choices=["vrai", "faux"]),
                                         ]
                                     ),
                                 ]
@@ -2316,16 +2594,6 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
             self.expect_rollback()
 
     def test_adapt_exercise_10(self):
-        from .renderable import (
-            Pagelet,
-            Section,
-            Paragraph,
-            _PlainText,
-            _Whitespace,
-            _SelectedText,
-            _SelectableText,
-        )
-
         with self.make_session() as session:
             load(session, ["even-more-test-exercises"])
 
@@ -2335,512 +2603,720 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                     number="7b",
                     textbook_page=7,
                     pagelets=[
-                        Pagelet(
-                            instructions=Section(
+                        r.Pagelet(
+                            instructions=r.Section(
                                 paragraphs=[
-                                    Paragraph(
+                                    r.Paragraph(
                                         tokens=[
-                                            _PlainText(type="plainText", text="Relève"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="dans"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="le"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="texte"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="trois"),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectedText(type="selectedText", text="déterminants", color="#ffff00"),
-                                            _PlainText(type="plainText", text=","),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="un"),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectedText(type="selectedText", text="nom propre", color="#ffc0cb"),
-                                            _PlainText(type="plainText", text=","),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="quatre"),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectedText(type="selectedText", text="noms communs", color="#bbbbff"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="et"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="trois"),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectedText(type="selectedText", text="verbes", color="#bbffbb"),
-                                            _PlainText(type="plainText", text="."),
+                                            r.PlainText(text="Relève"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="dans"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="le"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="texte"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="trois"),
+                                            r.Whitespace(),
+                                            r.SelectedText(text="déterminants", color="#ffff00"),
+                                            r.PlainText(text=","),
+                                            r.Whitespace(),
+                                            r.PlainText(text="un"),
+                                            r.Whitespace(),
+                                            r.SelectedText(text="nom propre", color="#ffc0cb"),
+                                            r.PlainText(text=","),
+                                            r.Whitespace(),
+                                            r.PlainText(text="quatre"),
+                                            r.Whitespace(),
+                                            r.SelectedText(text="noms communs", color="#bbbbff"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="et"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="trois"),
+                                            r.Whitespace(),
+                                            r.SelectedText(text="verbes", color="#bbffbb"),
+                                            r.PlainText(text="."),
                                         ]
                                     )
                                 ]
                             ),
-                            wording=Section(
+                            wording=r.Section(
                                 paragraphs=[
-                                    Paragraph(
+                                    r.Paragraph(
                                         tokens=[
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.SelectableText(
                                                 text="Les",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="Touaregs",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="sont",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="des",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="Berbères",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _PlainText(type="plainText", text=","),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.PlainText(text=","),
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="un",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="peuple",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="qui",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="habite",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="en",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="Afrique",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="du",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="Nord",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="depuis",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="la",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="préhistoire",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _PlainText(type="plainText", text="."),
+                                            r.PlainText(text="."),
                                         ]
                                     )
                                 ]
                             ),
                         ),
-                        Pagelet(
-                            instructions=Section(
+                        r.Pagelet(
+                            instructions=r.Section(
                                 paragraphs=[
-                                    Paragraph(
+                                    r.Paragraph(
                                         tokens=[
-                                            _PlainText(type="plainText", text="Relève"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="dans"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="le"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="texte"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="trois"),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectedText(type="selectedText", text="déterminants", color="#ffff00"),
-                                            _PlainText(type="plainText", text=","),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="un"),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectedText(type="selectedText", text="nom propre", color="#ffc0cb"),
-                                            _PlainText(type="plainText", text=","),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="quatre"),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectedText(type="selectedText", text="noms communs", color="#bbbbff"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="et"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="trois"),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectedText(type="selectedText", text="verbes", color="#bbffbb"),
-                                            _PlainText(type="plainText", text="."),
+                                            r.PlainText(text="Relève"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="dans"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="le"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="texte"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="trois"),
+                                            r.Whitespace(),
+                                            r.SelectedText(text="déterminants", color="#ffff00"),
+                                            r.PlainText(text=","),
+                                            r.Whitespace(),
+                                            r.PlainText(text="un"),
+                                            r.Whitespace(),
+                                            r.SelectedText(text="nom propre", color="#ffc0cb"),
+                                            r.PlainText(text=","),
+                                            r.Whitespace(),
+                                            r.PlainText(text="quatre"),
+                                            r.Whitespace(),
+                                            r.SelectedText(text="noms communs", color="#bbbbff"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="et"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="trois"),
+                                            r.Whitespace(),
+                                            r.SelectedText(text="verbes", color="#bbffbb"),
+                                            r.PlainText(text="."),
                                         ]
                                     )
                                 ]
                             ),
-                            wording=Section(
+                            wording=r.Section(
                                 paragraphs=[
-                                    Paragraph(
+                                    r.Paragraph(
                                         tokens=[
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.SelectableText(
                                                 text="Ils",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="vivent",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="dans",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="le",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="désert",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="du",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="Sahara",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="("),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.PlainText(text="("),
+                                            r.SelectableText(
                                                 text="Algérie",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _PlainText(type="plainText", text=","),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.PlainText(text=","),
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="Libye",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _PlainText(type="plainText", text=","),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.PlainText(text=","),
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="Mali",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _PlainText(type="plainText", text=","),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.PlainText(text=","),
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="Niger",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _PlainText(type="plainText", text=","),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.PlainText(text=","),
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="Burkina",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="Faso",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _PlainText(type="plainText", text="…"),
-                                            _PlainText(type="plainText", text=")"),
-                                            _PlainText(type="plainText", text="."),
+                                            r.PlainText(text="…"),
+                                            r.PlainText(text=")"),
+                                            r.PlainText(text="."),
                                         ]
                                     )
                                 ]
                             ),
                         ),
-                        Pagelet(
-                            instructions=Section(
+                        r.Pagelet(
+                            instructions=r.Section(
                                 paragraphs=[
-                                    Paragraph(
+                                    r.Paragraph(
                                         tokens=[
-                                            _PlainText(type="plainText", text="Relève"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="dans"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="le"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="texte"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="trois"),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectedText(type="selectedText", text="déterminants", color="#ffff00"),
-                                            _PlainText(type="plainText", text=","),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="un"),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectedText(type="selectedText", text="nom propre", color="#ffc0cb"),
-                                            _PlainText(type="plainText", text=","),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="quatre"),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectedText(type="selectedText", text="noms communs", color="#bbbbff"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="et"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="trois"),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectedText(type="selectedText", text="verbes", color="#bbffbb"),
-                                            _PlainText(type="plainText", text="."),
+                                            r.PlainText(text="Relève"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="dans"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="le"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="texte"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="trois"),
+                                            r.Whitespace(),
+                                            r.SelectedText(text="déterminants", color="#ffff00"),
+                                            r.PlainText(text=","),
+                                            r.Whitespace(),
+                                            r.PlainText(text="un"),
+                                            r.Whitespace(),
+                                            r.SelectedText(text="nom propre", color="#ffc0cb"),
+                                            r.PlainText(text=","),
+                                            r.Whitespace(),
+                                            r.PlainText(text="quatre"),
+                                            r.Whitespace(),
+                                            r.SelectedText(text="noms communs", color="#bbbbff"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="et"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="trois"),
+                                            r.Whitespace(),
+                                            r.SelectedText(text="verbes", color="#bbffbb"),
+                                            r.PlainText(text="."),
                                         ]
                                     )
                                 ]
                             ),
-                            wording=Section(
+                            wording=r.Section(
                                 paragraphs=[
-                                    Paragraph(
+                                    r.Paragraph(
                                         tokens=[
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.SelectableText(
                                                 text="En",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="été",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _PlainText(type="plainText", text=","),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.PlainText(text=","),
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="les",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="températures",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="y",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="montent",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="à",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="plus",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="de",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="50",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="°"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.PlainText(text="°"),
+                                            r.SelectableText(
                                                 text="C",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="et",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="elles",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="descendent",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="en",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="dessous",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="de",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="zéro",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="durant",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="les",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="nuits",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _Whitespace(type="whitespace"),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.Whitespace(),
+                                            r.SelectableText(
                                                 text="d’",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _SelectableText(
-                                                type="selectableText",
+                                            r.SelectableText(
                                                 text="hiver",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                colors=[
+                                                    "#ffff00",
+                                                    "#ffc0cb",
+                                                    "#bbbbff",
+                                                    "#bbffbb",
+                                                ],
                                                 boxed=False,
                                             ),
-                                            _PlainText(type="plainText", text="."),
+                                            r.PlainText(text="."),
                                         ]
                                     )
                                 ]
@@ -2853,17 +3329,6 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
             self.expect_rollback()
 
     def test_adapt_exercise_11(self):
-        from .renderable import (
-            Pagelet,
-            Section,
-            Paragraph,
-            _PlainText,
-            _Whitespace,
-            _MultipleChoicesInput,
-            _BoldText,
-            _ItalicText,
-        )
-
         with self.make_session() as session:
             load(session, ["even-more-test-exercises"])
 
@@ -2873,94 +3338,91 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                     number="1",
                     textbook_page=5,
                     pagelets=[
-                        Pagelet(
-                            instructions=Section(
-                                paragraphs=[Paragraph(tokens=[_PlainText(type="plainText", text="...")])]
-                            ),
-                            wording=Section(
+                        r.Pagelet(
+                            instructions=r.Section(paragraphs=[r.Paragraph(tokens=[r.PlainText(text="...")])]),
+                            wording=r.Section(
                                 paragraphs=[
-                                    Paragraph(
+                                    r.Paragraph(
                                         tokens=[
-                                            _PlainText(type="plainText", text="a"),
-                                            _PlainText(type="plainText", text="."),
-                                            _Whitespace(type="whitespace"),
-                                            _BoldText(type="boldText", text="Aujourd'hui"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="il"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="fait"),
-                                            _Whitespace(type="whitespace"),
-                                            _ItalicText(type="italicText", text="gris"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="et"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="("),
-                                            _PlainText(type="plainText", text="il"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="pleuvra"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="/"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="il"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="pleut"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="/"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="il"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="pleuvait"),
-                                            _PlainText(type="plainText", text=")"),
-                                            _PlainText(type="plainText", text="."),
+                                            r.PlainText(text="a"),
+                                            r.PlainText(text="."),
+                                            r.Whitespace(),
+                                            r.BoldText(text="Aujourd'hui"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="il"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="fait"),
+                                            r.Whitespace(),
+                                            r.ItalicText(text="gris"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="et"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="("),
+                                            r.PlainText(text="il"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="pleuvra"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="/"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="il"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="pleut"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="/"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="il"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="pleuvait"),
+                                            r.PlainText(text=")"),
+                                            r.PlainText(text="."),
                                         ]
                                     ),
-                                    Paragraph(
+                                    r.Paragraph(
                                         tokens=[
-                                            _PlainText(type="plainText", text="b"),
-                                            _PlainText(type="plainText", text="."),
-                                            _Whitespace(type="whitespace"),
-                                            _BoldText(type="boldText", text="Aujourd'hui"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="il"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="fait"),
-                                            _Whitespace(type="whitespace"),
-                                            _ItalicText(type="italicText", text="gris"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="et"),
-                                            _Whitespace(type="whitespace"),
-                                            _MultipleChoicesInput(
-                                                type="multipleChoicesInput",
-                                                choices=["il pleuvra", "il pleut", "il pleuvait"],
+                                            r.PlainText(text="b"),
+                                            r.PlainText(text="."),
+                                            r.Whitespace(),
+                                            r.BoldText(text="Aujourd'hui"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="il"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="fait"),
+                                            r.Whitespace(),
+                                            r.ItalicText(text="gris"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="et"),
+                                            r.Whitespace(),
+                                            r.MultipleChoicesInput(
+                                                choices=[
+                                                    "il pleuvra",
+                                                    "il pleut",
+                                                    "il pleuvait",
+                                                ],
                                             ),
-                                            _PlainText(type="plainText", text="."),
+                                            r.PlainText(text="."),
                                         ]
                                     ),
-                                    Paragraph(
+                                    r.Paragraph(
                                         tokens=[
-                                            _PlainText(type="plainText", text="c"),
-                                            _PlainText(type="plainText", text="."),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="Aujourd"),
-                                            _PlainText(type="plainText", text="'"),
-                                            _PlainText(type="plainText", text="hui"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="il"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="fait"),
-                                            _Whitespace(type="whitespace"),
-                                            _MultipleChoicesInput(
-                                                type="multipleChoicesInput", choices=["gris", "beau"]
-                                            ),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="et"),
-                                            _Whitespace(type="whitespace"),
-                                            _PlainText(type="plainText", text="il"),
-                                            _Whitespace(type="whitespace"),
-                                            _MultipleChoicesInput(
-                                                type="multipleChoicesInput", choices=["pleut", "pleuvra"]
-                                            ),
-                                            _PlainText(type="plainText", text="."),
+                                            r.PlainText(text="c"),
+                                            r.PlainText(text="."),
+                                            r.Whitespace(),
+                                            r.PlainText(text="Aujourd"),
+                                            r.PlainText(text="'"),
+                                            r.PlainText(text="hui"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="il"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="fait"),
+                                            r.Whitespace(),
+                                            r.MultipleChoicesInput(choices=["gris", "beau"]),
+                                            r.Whitespace(),
+                                            r.PlainText(text="et"),
+                                            r.Whitespace(),
+                                            r.PlainText(text="il"),
+                                            r.Whitespace(),
+                                            r.MultipleChoicesInput(choices=["pleut", "pleuvra"]),
+                                            r.PlainText(text="."),
                                         ]
                                     ),
                                 ]
