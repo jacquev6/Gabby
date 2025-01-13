@@ -354,17 +354,25 @@ class _Adapter:
 
             return (list_header_deltas, paragraph_deltas)
 
+    __apostrophes = [
+        # https://fr.wikipedia.org/wiki/Apostrophe_(typographie) mentions one more encoding than https://en.wikipedia.org/wiki/Apostrophe
+        "\u2019", "\u0027", "\u02BC",
+    ]
+
     def postprocess_section(self, section: renderable.Section) -> renderable.Section:
         section = copy.deepcopy(section)
         for paragraph in section.paragraphs:
             fixed_tokens = []
             for token in paragraph.tokens:
-                if token == renderable.Whitespace():
-                    if len(fixed_tokens) > 0 and fixed_tokens[-1] != renderable.Whitespace():
-                        fixed_tokens.append(token)
+                if token.type == "whitespace" and len(fixed_tokens) == 0:
+                    pass
+                elif token.type == "whitespace" and len(fixed_tokens) > 0 and fixed_tokens[-1].type == "whitespace":
+                    pass
+                elif token.type in ["plainText", "selectableText"] and token.text in self.__apostrophes and len(fixed_tokens) > 0 and fixed_tokens[-1].type == "selectableText":
+                    fixed_tokens[-1].text += token.text
                 else:
                     fixed_tokens.append(token)
-            while len(fixed_tokens) > 0 and fixed_tokens[-1] == renderable.Whitespace():
+            while len(fixed_tokens) > 0 and fixed_tokens[-1].type == "whitespace":
                 fixed_tokens.pop(-1)
             paragraph.tokens = fixed_tokens
         section.paragraphs = list(filter(lambda p: len(p.tokens) > 0, section.paragraphs))
@@ -3522,6 +3530,218 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                             r.SelectableText(text="wording", colors=["red", "green", "blue"], boxed=False),
                         ]),
                     ]),
+                )],
+            ),
+        )
+
+    def test_french_elision_of_articles__without_punctuation(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=None,
+                instructions=[
+                    d.InsertOp(insert="Selectionne les articles.\n", attributes={}),
+                ],
+                wording=[
+                    d.InsertOp(insert="La maison est belle. L'école est fermée. L’automobile est verte.\n", attributes={}),
+                ],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
+                wording_paragraphs_per_pagelet=3,
+                adaptation=AdaptationV2(
+                    kind="generic",
+                    effects=[
+                        ItemizedAdaptationEffect(
+                            kind="itemized",
+                            items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=True, punctuation=False),
+                            effects=ItemizedAdaptationEffect.Effects(
+                                selectable=ItemizedAdaptationEffect.Effects.Selectable(colors=["red"]),
+                                boxed=False,
+                            ),
+                        ),
+                    ],
+                ),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=None,
+                pagelets=[r.Pagelet(
+                    instructions=r.Section(paragraphs=[r.Paragraph(tokens=[
+                        r.PlainText(text="Selectionne"),
+                        r.Whitespace(),
+                        r.PlainText(text="les"),
+                        r.Whitespace(),
+                        r.PlainText(text="articles"),
+                        r.PlainText(text="."),
+                    ])]),
+                    wording=r.Section(paragraphs=[r.Paragraph(tokens=[
+                        r.SelectableText(text="La", colors=["red"], boxed=False),
+                        r.Whitespace(),
+                        r.SelectableText(text="maison", colors=["red"], boxed=False),
+                        r.Whitespace(),
+                        r.SelectableText(text="est", colors=["red"], boxed=False),
+                        r.Whitespace(),
+                        r.SelectableText(text="belle", colors=["red"], boxed=False),
+                        r.PlainText(text="."),
+                        r.Whitespace(),
+                        r.SelectableText(text="L'", colors=["red"], boxed=False),
+                        r.SelectableText(text="école", colors=["red"], boxed=False),
+                        r.Whitespace(),
+                        r.SelectableText(text="est", colors=["red"], boxed=False),
+                        r.Whitespace(),
+                        r.SelectableText(text="fermée", colors=["red"], boxed=False),
+                        r.PlainText(text="."),
+                        r.Whitespace(),
+                        r.SelectableText(text="L’", colors=["red"], boxed=False),
+                        r.SelectableText(text="automobile", colors=["red"], boxed=False),
+                        r.Whitespace(),
+                        r.SelectableText(text="est", colors=["red"], boxed=False),
+                        r.Whitespace(),
+                        r.SelectableText(text="verte", colors=["red"], boxed=False),
+                        r.PlainText(text="."),
+                    ])]),
+                )],
+            ),
+        )
+
+    def test_french_elision_of_articles__punctuation_only(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=None,
+                instructions=[
+                    d.InsertOp(insert="Selectionne les articles.\n", attributes={}),
+                ],
+                wording=[
+                    d.InsertOp(insert="La maison est belle. L'école est fermée. L’automobile est verte.\n", attributes={}),
+                ],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
+                wording_paragraphs_per_pagelet=3,
+                adaptation=AdaptationV2(
+                    kind="generic",
+                    effects=[
+                        ItemizedAdaptationEffect(
+                            kind="itemized",
+                            items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=False, punctuation=True),
+                            effects=ItemizedAdaptationEffect.Effects(
+                                selectable=ItemizedAdaptationEffect.Effects.Selectable(colors=["red"]),
+                                boxed=False,
+                            ),
+                        ),
+                    ],
+                ),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=None,
+                pagelets=[r.Pagelet(
+                    instructions=r.Section(paragraphs=[r.Paragraph(tokens=[
+                        r.PlainText(text="Selectionne"),
+                        r.Whitespace(),
+                        r.PlainText(text="les"),
+                        r.Whitespace(),
+                        r.PlainText(text="articles"),
+                        r.PlainText(text="."),
+                    ])]),
+                    wording=r.Section(paragraphs=[r.Paragraph(tokens=[
+                        r.PlainText(text="La"),
+                        r.Whitespace(),
+                        r.PlainText(text="maison"),
+                        r.Whitespace(),
+                        r.PlainText(text="est"),
+                        r.Whitespace(),
+                        r.PlainText(text="belle"),
+                        r.SelectableText(text=".", colors=["red"], boxed=False),
+                        r.Whitespace(),
+                        r.PlainText(text="L"),
+                        r.SelectableText(text="'", colors=["red"], boxed=False),
+                        r.PlainText(text="école"),
+                        r.Whitespace(),
+                        r.PlainText(text="est"),
+                        r.Whitespace(),
+                        r.PlainText(text="fermée"),
+                        r.SelectableText(text=".", colors=["red"], boxed=False),
+                        r.Whitespace(),
+                        r.PlainText(text="L"),
+                        r.SelectableText(text="’", colors=["red"], boxed=False),
+                        r.PlainText(text="automobile"),
+                        r.Whitespace(),
+                        r.PlainText(text="est"),
+                        r.Whitespace(),
+                        r.PlainText(text="verte"),
+                        r.SelectableText(text=".", colors=["red"], boxed=False),
+                    ])]),
+                )],
+            ),
+        )
+
+    def test_french_elision_of_articles__with_punctuation(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=None,
+                instructions=[
+                    d.InsertOp(insert="Selectionne les articles.\n", attributes={}),
+                ],
+                wording=[
+                    d.InsertOp(insert="La maison est belle. L'école est fermée. L’automobile est verte.\n", attributes={}),
+                ],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
+                wording_paragraphs_per_pagelet=3,
+                adaptation=AdaptationV2(
+                    kind="generic",
+                    effects=[
+                        ItemizedAdaptationEffect(
+                            kind="itemized",
+                            items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=True, punctuation=True),
+                            effects=ItemizedAdaptationEffect.Effects(
+                                selectable=ItemizedAdaptationEffect.Effects.Selectable(colors=["red"]),
+                                boxed=False,
+                            ),
+                        ),
+                    ],
+                ),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=None,
+                pagelets=[r.Pagelet(
+                    instructions=r.Section(paragraphs=[r.Paragraph(tokens=[
+                        r.PlainText(text="Selectionne"),
+                        r.Whitespace(),
+                        r.PlainText(text="les"),
+                        r.Whitespace(),
+                        r.PlainText(text="articles"),
+                        r.PlainText(text="."),
+                    ])]),
+                    wording=r.Section(paragraphs=[r.Paragraph(tokens=[
+                        r.SelectableText(text="La", colors=["red"], boxed=False),
+                        r.Whitespace(),
+                        r.SelectableText(text="maison", colors=["red"], boxed=False),
+                        r.Whitespace(),
+                        r.SelectableText(text="est", colors=["red"], boxed=False),
+                        r.Whitespace(),
+                        r.SelectableText(text="belle", colors=["red"], boxed=False),
+                        r.SelectableText(text=".", colors=["red"], boxed=False),
+                        r.Whitespace(),
+                        r.SelectableText(text="L'", colors=["red"], boxed=False),
+                        r.SelectableText(text="école", colors=["red"], boxed=False),
+                        r.Whitespace(),
+                        r.SelectableText(text="est", colors=["red"], boxed=False),
+                        r.Whitespace(),
+                        r.SelectableText(text="fermée", colors=["red"], boxed=False),
+                        r.SelectableText(text=".", colors=["red"], boxed=False),
+                        r.Whitespace(),
+                        r.SelectableText(text="L’", colors=["red"], boxed=False),
+                        r.SelectableText(text="automobile", colors=["red"], boxed=False),
+                        r.Whitespace(),
+                        r.SelectableText(text="est", colors=["red"], boxed=False),
+                        r.Whitespace(),
+                        r.SelectableText(text="verte", colors=["red"], boxed=False),
+                        r.SelectableText(text=".", colors=["red"], boxed=False),
+                    ])]),
                 )],
             ),
         )

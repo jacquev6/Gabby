@@ -1947,13 +1947,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                             _Whitespace(type="whitespace"),
                                             _SelectableText(
                                                 type="selectableText",
-                                                text="d",
-                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                boxed=False,
-                                            ),
-                                            _SelectableText(
-                                                type="selectableText",
-                                                text="’",
+                                                text="d’",
                                                 colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
                                                 boxed=False,
                                             ),
@@ -2836,11 +2830,10 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                             _Whitespace(type="whitespace"),
                                             _SelectableText(
                                                 type="selectableText",
-                                                text="d",
+                                                text="d’",
                                                 colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
                                                 boxed=False,
                                             ),
-                                            _PlainText(type="plainText", text="’"),
                                             _SelectableText(
                                                 type="selectableText",
                                                 text="hiver",
