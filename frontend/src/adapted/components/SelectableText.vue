@@ -23,7 +23,7 @@ function increment() {
 span {
   cursor: pointer;
   user-select: none;
-  padding: 3.2px 16px;
+  padding: 3.2px 0px;
 }
 
 span:hover {
