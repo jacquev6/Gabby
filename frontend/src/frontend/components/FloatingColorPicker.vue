@@ -14,14 +14,10 @@ const props = defineProps<{
 }>()
 
 const model = defineModel<string>({required: true})
-const initialValue = ref('')
-
 
 const contextMenu = ref<InstanceType<typeof ContextMenu> | null>(null)
 function show(ref: HTMLElement) {
   console.assert(contextMenu.value !== null)
-
-  initialValue.value = model.value
   contextMenu.value.show(ref)
 }
 
