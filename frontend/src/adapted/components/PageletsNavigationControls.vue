@@ -9,9 +9,9 @@ const model = defineModel<number>({required: true})
 <!-- Arrow characters copy-pasted from https://fsymbols.com/signs/arrow/ -->
 <template>
   <div class="root">
-    <div class="control" :class="{disabled: model === 0}" @click="model = Math.max(0, model - 1)"><div class="arrow arrowLeft"><div>🡸</div></div></div>
+    <div class="control" :class="{disabled: model === 0}" @click="model = Math.max(0, model - 1)"><div class="arrow arrowLeft"></div></div>
     <div style="overflow-x: hidden;"><slot></slot></div>
-    <div class="control" :class="{disabled: model === pageletsCount - 1}" @click="model = Math.min(pageletsCount - 1, model + 1)"><div class="arrow arrowRight"><div :style="model === 0 ? {} : {}">🡺</div></div></div>
+    <div class="control" :class="{disabled: model === pageletsCount - 1}" @click="model = Math.min(pageletsCount - 1, model + 1)"><div class="arrow"></div></div>
   </div>
 </template>
 
@@ -46,26 +46,17 @@ div.arrow {
   flex-direction: column;
   justify-content: center;
   color: black;
-}
-
-div.arrowLeft {
-  border-top-right-radius: var(--control-width);
-  border-bottom-right-radius: var(--control-width);
-}
-
-div.arrowLeft >div {
-  padding-left: calc(0.1 * var(--control-width));
-  text-align: left;
-}
-
-div.arrowRight {
   border-top-left-radius: var(--control-width);
   border-bottom-left-radius: var(--control-width);
 }
 
-div.arrowRight >div {
-  padding-right: calc(0.1 * var(--control-width));
-  text-align: right;
+div.arrow::before {
+  content: "⮕";
+  text-align: center;
+}
+
+div.arrowLeft {
+  transform: scaleX(-1);
 }
 
 div.control.disabled {
