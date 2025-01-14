@@ -6,19 +6,6 @@ import { basicBlots } from './WysiwygEditor.vue'
 import ContextMenu from './ContextMenu.vue'
 
 
-// Keep the 'style' section below consistent with the length of this array
-export const defaultColorsForSelectableEffect = [
-  // Colors provided by the client
-  "#ffff00",  // yellow
-  "#ffc0cb",  // pink (light red)
-  "#bbbbff",  // light blue
-  "#bbffbb",  // light green
-  "#bbbbbb",  // grey
-  // Colors suggested by Vincent Jacques on the same pattern
-  // "#bbffff",  // light cyan
-  // "#ffbbff",  // light magenta
-]
-
 class SelBlot extends InlineBlot {
   static override blotName = 'sel'
   static override tagName = 'sel-blot'
@@ -188,6 +175,31 @@ import OptionalInput from './OptionalInput.vue'
 defineProps<{
   fields: InstanceType<typeof ExerciseFieldsForm>
 }>()
+
+// Colors provided by the client, in display order
+const allColorsForSelectableEffect = [
+  '#ffff00',  // yellow
+  '#ffcf4c',  // orange
+  '#ff8084',  // red
+  '#ffc0cb',  // pink
+  '#d49cff',  // purple
+  '#8177ff',  // dark blue
+  '#bbbbff',  // light blue
+  '#bbffbb',  // light green
+  '#68e495',  // dark green
+  '#632f2b',  // brown
+  '#bbbbbb',  // grey
+  '#000000',  // black
+]
+
+// Keep the 'style' section below consistent with the length of this array
+const defaultColorsForSelectableEffect = [
+  allColorsForSelectableEffect[0],
+  allColorsForSelectableEffect[3],
+  allColorsForSelectableEffect[6],
+  allColorsForSelectableEffect[7],
+  allColorsForSelectableEffect[10],
+]
 
 type ItemizedEffect = Model['adaptation']['effects'][number] & {kind: 'itemized'}
 
@@ -466,7 +478,7 @@ defineExpose({
     v-for="i in settings.itemized.effects.selectable.allColors.length"
     ref="colorPickers"
     v-model="settings.itemized.effects.selectable.allColors[i - 1]"
-    :default="defaultColorsForSelectableEffect[i - 1]"
+    :colors="allColorsForSelectableEffect"
     backdropCovers1="#left-col-2"
     backdropCovers2="#gutter-2"
   />

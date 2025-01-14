@@ -222,10 +222,8 @@ describe('Gabby', () => {
 
     cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="1"]').rightclick()
     cy.get('.color').eq(9).click()
-    cy.get('button:contains("OK")').click()
     cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="2"]').rightclick()
-    cy.get('.color').eq(5).click()
-    cy.get('button:contains("OK")').click()
+    cy.get('.color').eq(1).click()
     notBusy()
 
     cy.get('@instructions').find('p').then($el => {

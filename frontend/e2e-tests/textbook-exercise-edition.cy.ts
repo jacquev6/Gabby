@@ -95,7 +95,6 @@ describe('Gabby', () => {
     cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="4"]').should('have.css', 'background-color', 'rgb(99, 47, 43)')
     cy.get('button[data-cy="format-color-4"] > span').should('have.css', 'background-color', 'rgb(99, 47, 43)')
     cy.get('span:contains("verbes")').last().should('have.css', 'background-color', 'rgb(99, 47, 43)')
-    cy.get('button:contains("OK")').click()
     cy.get('span:contains("Afrique")').last().click()
     cy.get('span:contains("Afrique")').last().click()
     cy.get('span:contains("Afrique")').last().click()
