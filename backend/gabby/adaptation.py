@@ -368,7 +368,7 @@ class _Adapter:
                     pass
                 elif token.type == "whitespace" and len(fixed_tokens) > 0 and fixed_tokens[-1].type == "whitespace":
                     pass
-                elif token.type in ["plainText", "selectableText"] and token.text in self.__apostrophes and len(fixed_tokens) > 0 and fixed_tokens[-1].type == "selectableText":
+                elif token.type in ["plainText", "selectableText", "boxedText"] and token.text in self.__apostrophes and len(fixed_tokens) > 0 and fixed_tokens[-1].type in ["selectableText", "boxedText"]:
                     fixed_tokens[-1].text += token.text
                 else:
                     fixed_tokens.append(token)
@@ -3797,6 +3797,218 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                         r.Whitespace(),
                         r.SelectableText(text="verte", colors=["red"], boxed=False),
                         r.SelectableText(text=".", colors=["red"], boxed=False),
+                    ])]),
+                )],
+            ),
+        )
+
+    def test_french_elision_of_articles__without_punctuation__boxed_only(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=None,
+                instructions=[
+                    d.InsertOp(insert="Selectionne les articles.\n", attributes={}),
+                ],
+                wording=[
+                    d.InsertOp(insert="La maison est belle. L'école est fermée. L’automobile est verte.\n", attributes={}),
+                ],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
+                wording_paragraphs_per_pagelet=3,
+                adaptation=AdaptationV2(
+                    kind="generic",
+                    effects=[
+                        ItemizedAdaptationEffect(
+                            kind="itemized",
+                            items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=True, punctuation=False),
+                            effects=ItemizedAdaptationEffect.Effects(
+                                selectable=None,
+                                boxed=True,
+                            ),
+                        ),
+                    ],
+                ),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=None,
+                pagelets=[r.Pagelet(
+                    instructions=r.Section(paragraphs=[r.Paragraph(tokens=[
+                        r.PlainText(text="Selectionne"),
+                        r.Whitespace(),
+                        r.PlainText(text="les"),
+                        r.Whitespace(),
+                        r.PlainText(text="articles"),
+                        r.PlainText(text="."),
+                    ])]),
+                    wording=r.Section(paragraphs=[r.Paragraph(tokens=[
+                        r.BoxedText(text="La"),
+                        r.Whitespace(),
+                        r.BoxedText(text="maison"),
+                        r.Whitespace(),
+                        r.BoxedText(text="est"),
+                        r.Whitespace(),
+                        r.BoxedText(text="belle"),
+                        r.PlainText(text="."),
+                        r.Whitespace(),
+                        r.BoxedText(text="L'"),
+                        r.BoxedText(text="école"),
+                        r.Whitespace(),
+                        r.BoxedText(text="est"),
+                        r.Whitespace(),
+                        r.BoxedText(text="fermée"),
+                        r.PlainText(text="."),
+                        r.Whitespace(),
+                        r.BoxedText(text="L’"),
+                        r.BoxedText(text="automobile"),
+                        r.Whitespace(),
+                        r.BoxedText(text="est"),
+                        r.Whitespace(),
+                        r.BoxedText(text="verte"),
+                        r.PlainText(text="."),
+                    ])]),
+                )],
+            ),
+        )
+
+    def test_french_elision_of_articles__punctuation_only__boxed_only(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=None,
+                instructions=[
+                    d.InsertOp(insert="Selectionne les articles.\n", attributes={}),
+                ],
+                wording=[
+                    d.InsertOp(insert="La maison est belle. L'école est fermée. L’automobile est verte.\n", attributes={}),
+                ],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
+                wording_paragraphs_per_pagelet=3,
+                adaptation=AdaptationV2(
+                    kind="generic",
+                    effects=[
+                        ItemizedAdaptationEffect(
+                            kind="itemized",
+                            items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=False, punctuation=True),
+                            effects=ItemizedAdaptationEffect.Effects(
+                                selectable=None,
+                                boxed=True,
+                            ),
+                        ),
+                    ],
+                ),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=None,
+                pagelets=[r.Pagelet(
+                    instructions=r.Section(paragraphs=[r.Paragraph(tokens=[
+                        r.PlainText(text="Selectionne"),
+                        r.Whitespace(),
+                        r.PlainText(text="les"),
+                        r.Whitespace(),
+                        r.PlainText(text="articles"),
+                        r.PlainText(text="."),
+                    ])]),
+                    wording=r.Section(paragraphs=[r.Paragraph(tokens=[
+                        r.PlainText(text="La"),
+                        r.Whitespace(),
+                        r.PlainText(text="maison"),
+                        r.Whitespace(),
+                        r.PlainText(text="est"),
+                        r.Whitespace(),
+                        r.PlainText(text="belle"),
+                        r.BoxedText(text="."),
+                        r.Whitespace(),
+                        r.PlainText(text="L"),
+                        r.BoxedText(text="'"),
+                        r.PlainText(text="école"),
+                        r.Whitespace(),
+                        r.PlainText(text="est"),
+                        r.Whitespace(),
+                        r.PlainText(text="fermée"),
+                        r.BoxedText(text="."),
+                        r.Whitespace(),
+                        r.PlainText(text="L"),
+                        r.BoxedText(text="’"),
+                        r.PlainText(text="automobile"),
+                        r.Whitespace(),
+                        r.PlainText(text="est"),
+                        r.Whitespace(),
+                        r.PlainText(text="verte"),
+                        r.BoxedText(text="."),
+                    ])]),
+                )],
+            ),
+        )
+
+    def test_french_elision_of_articles__with_punctuation__boxed_only(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=None,
+                instructions=[
+                    d.InsertOp(insert="Selectionne les articles.\n", attributes={}),
+                ],
+                wording=[
+                    d.InsertOp(insert="La maison est belle. L'école est fermée. L’automobile est verte.\n", attributes={}),
+                ],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
+                wording_paragraphs_per_pagelet=3,
+                adaptation=AdaptationV2(
+                    kind="generic",
+                    effects=[
+                        ItemizedAdaptationEffect(
+                            kind="itemized",
+                            items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=True, punctuation=True),
+                            effects=ItemizedAdaptationEffect.Effects(
+                                selectable=None,
+                                boxed=True,
+                            ),
+                        ),
+                    ],
+                ),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=None,
+                pagelets=[r.Pagelet(
+                    instructions=r.Section(paragraphs=[r.Paragraph(tokens=[
+                        r.PlainText(text="Selectionne"),
+                        r.Whitespace(),
+                        r.PlainText(text="les"),
+                        r.Whitespace(),
+                        r.PlainText(text="articles"),
+                        r.PlainText(text="."),
+                    ])]),
+                    wording=r.Section(paragraphs=[r.Paragraph(tokens=[
+                        r.BoxedText(text="La"),
+                        r.Whitespace(),
+                        r.BoxedText(text="maison"),
+                        r.Whitespace(),
+                        r.BoxedText(text="est"),
+                        r.Whitespace(),
+                        r.BoxedText(text="belle"),
+                        r.BoxedText(text="."),
+                        r.Whitespace(),
+                        r.BoxedText(text="L'"),
+                        r.BoxedText(text="école"),
+                        r.Whitespace(),
+                        r.BoxedText(text="est"),
+                        r.Whitespace(),
+                        r.BoxedText(text="fermée"),
+                        r.BoxedText(text="."),
+                        r.Whitespace(),
+                        r.BoxedText(text="L’"),
+                        r.BoxedText(text="automobile"),
+                        r.Whitespace(),
+                        r.BoxedText(text="est"),
+                        r.Whitespace(),
+                        r.BoxedText(text="verte"),
+                        r.BoxedText(text="."),
                     ])]),
                 )],
             ),
