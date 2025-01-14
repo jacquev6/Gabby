@@ -31,7 +31,8 @@ span:hover {
 }
 
 span.boxed_ {
-  outline: black solid 3px;
+  padding: 4px 0;
+  outline: black solid 2px;
 }
 
 /* span.boxed:hover {

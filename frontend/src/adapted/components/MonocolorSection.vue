@@ -150,7 +150,7 @@ p.first {
 }
 
 span.boxed {
-  padding: 0 0.2em;
+  padding: 4px 0;
   outline: 2px solid black;
 }
 </style>
