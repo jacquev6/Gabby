@@ -806,7 +806,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                     session.rollback()
         self.expect_commits_rollbacks(0, len(available_fixtures))
 
-    def test_adapt_exercise_1(self):
+    def test_adapt_exercise_01(self):
         with self.make_session() as session:
             load(session, ["even-more-test-exercises"])
 
@@ -828,28 +828,23 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                             r.PlainText(text=":"),
                                             r.Whitespace(),
                                             r.BoxedText(text="le"),
-                                            r.Whitespace(),
                                             r.PlainText(text=","),
                                             r.Whitespace(),
                                             r.BoxedText(text="une"),
-                                            r.Whitespace(),
                                             r.PlainText(text=","),
                                             r.Whitespace(),
                                             r.BoxedText(text="un"),
-                                            r.Whitespace(),
                                             r.PlainText(text=","),
                                             r.Whitespace(),
                                             r.BoxedText(text="des"),
-                                            r.Whitespace(),
                                             r.PlainText(text=","),
                                             r.Whitespace(),
                                             r.BoxedText(text="tu"),
-                                            r.Whitespace(),
                                             r.PlainText(text=","),
                                             r.Whitespace(),
                                             r.BoxedText(text="elles"),
                                             r.Whitespace(),
-                                            r.PlainText(text=","),
+                                            r.PlainText(text="ou"),
                                             r.Whitespace(),
                                             r.BoxedText(text="ils"),
                                             r.PlainText(text="."),
@@ -954,28 +949,23 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                             r.PlainText(text=":"),
                                             r.Whitespace(),
                                             r.BoxedText(text="le"),
-                                            r.Whitespace(),
                                             r.PlainText(text=","),
                                             r.Whitespace(),
                                             r.BoxedText(text="une"),
-                                            r.Whitespace(),
                                             r.PlainText(text=","),
                                             r.Whitespace(),
                                             r.BoxedText(text="un"),
-                                            r.Whitespace(),
                                             r.PlainText(text=","),
                                             r.Whitespace(),
                                             r.BoxedText(text="des"),
-                                            r.Whitespace(),
                                             r.PlainText(text=","),
                                             r.Whitespace(),
                                             r.BoxedText(text="tu"),
-                                            r.Whitespace(),
                                             r.PlainText(text=","),
                                             r.Whitespace(),
                                             r.BoxedText(text="elles"),
                                             r.Whitespace(),
-                                            r.PlainText(text=","),
+                                            r.PlainText(text="ou"),
                                             r.Whitespace(),
                                             r.BoxedText(text="ils"),
                                             r.PlainText(text="."),
@@ -1080,28 +1070,23 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                             r.PlainText(text=":"),
                                             r.Whitespace(),
                                             r.BoxedText(text="le"),
-                                            r.Whitespace(),
                                             r.PlainText(text=","),
                                             r.Whitespace(),
                                             r.BoxedText(text="une"),
-                                            r.Whitespace(),
                                             r.PlainText(text=","),
                                             r.Whitespace(),
                                             r.BoxedText(text="un"),
-                                            r.Whitespace(),
                                             r.PlainText(text=","),
                                             r.Whitespace(),
                                             r.BoxedText(text="des"),
-                                            r.Whitespace(),
                                             r.PlainText(text=","),
                                             r.Whitespace(),
                                             r.BoxedText(text="tu"),
-                                            r.Whitespace(),
                                             r.PlainText(text=","),
                                             r.Whitespace(),
                                             r.BoxedText(text="elles"),
                                             r.Whitespace(),
-                                            r.PlainText(text=","),
+                                            r.PlainText(text="ou"),
                                             r.Whitespace(),
                                             r.BoxedText(text="ils"),
                                             r.PlainText(text="."),
@@ -1166,7 +1151,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
             session.rollback()
             self.expect_rollback()
 
-    def test_adapt_exercise_2(self):
+    def test_adapt_exercise_02(self):
         with self.make_session() as session:
             load(session, ["even-more-test-exercises"])
 
@@ -1275,7 +1260,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
             session.rollback()
             self.expect_rollback()
 
-    def test_adapt_exercise_3(self):
+    def test_adapt_exercise_03(self):
         with self.make_session() as session:
             load(session, ["even-more-test-exercises"])
 
@@ -1391,7 +1376,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
             session.rollback()
             self.expect_rollback()
 
-    def test_adapt_exercise_4(self):
+    def test_adapt_exercise_04(self):
         with self.make_session() as session:
             load(session, ["even-more-test-exercises"])
 
@@ -1426,7 +1411,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
             session.rollback()
             self.expect_rollback()
 
-    def test_adapt_exercise_5(self):
+    def test_adapt_exercise_05(self):
         with self.make_session() as session:
             load(session, ["even-more-test-exercises"])
 
@@ -1463,7 +1448,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
             session.rollback()
             self.expect_rollback()
 
-    def test_adapt_exercise_6(self):
+    def test_adapt_exercise_06(self):
         with self.make_session() as session:
             load(session, ["even-more-test-exercises"])
 
@@ -1508,7 +1493,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
             session.rollback()
             self.expect_rollback()
 
-    def test_adapt_exercise_7(self):
+    def test_adapt_exercise_07(self):
         with self.make_session() as session:
             load(session, ["even-more-test-exercises"])
 
@@ -2324,7 +2309,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
             session.rollback()
             self.expect_rollback()
 
-    def test_adapt_exercise_8(self):
+    def test_adapt_exercise_08(self):
         with self.make_session() as session:
             load(session, ["even-more-test-exercises"])
 
@@ -2427,7 +2412,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
             session.rollback()
             self.expect_rollback()
 
-    def test_adapt_exercise_9(self):
+    def test_adapt_exercise_09(self):
         with self.make_session() as session:
             load(session, ["even-more-test-exercises"])
 

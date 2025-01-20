@@ -107,28 +107,17 @@ class _Adapter:
                 placeholder = delta.attributes["choices2"]["placeholder"] or None
                 text = delta.insert
 
-                add_start_and_stop = start is not None and stop is not None and text.startswith(start) and text.endswith(stop)
                 choices = self.separate_choices(start, separator1, separator2, stop, placeholder, text)
-                if add_start_and_stop:
-                    yield renderable.PlainText(text=start)
+                # Always format choices the same way in instructions: https://github.com/jacquev6/Gabby/issues/74
                 yield renderable.BoxedText(text=choices[0])
-                if separator2 is None:
-                    for choice in choices[1:]:
-                        yield renderable.Whitespace()
-                        yield renderable.PlainText(text=separator1)
-                        yield renderable.Whitespace()
-                        yield renderable.BoxedText(text=choice)
-                else:
-                    for choice in choices[1:-1]:
-                        yield renderable.PlainText(text=separator1)
-                        yield renderable.Whitespace()
-                        yield renderable.BoxedText(text=choice)
+                for choice in choices[1:-1]:
+                    yield renderable.PlainText(text=",")
                     yield renderable.Whitespace()
-                    yield renderable.PlainText(text=separator2)
-                    yield renderable.Whitespace()
-                    yield renderable.BoxedText(text=choices[-1])
-                if add_start_and_stop:
-                    yield renderable.PlainText(text=stop)
+                    yield renderable.BoxedText(text=choice)
+                yield renderable.Whitespace()
+                yield renderable.PlainText(text="ou")  # @todo Fix this if we ever support exercises in English
+                yield renderable.Whitespace()
+                yield renderable.BoxedText(text=choices[-1])
 
             elif "bold" in delta.attributes:
                 assert delta.attributes == {"bold": delta.attributes["bold"]}
@@ -1787,7 +1776,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                             r.Whitespace(),
                             r.BoxedText(text="a"),
                             r.Whitespace(),
-                            r.PlainText(text="or"),
+                            r.PlainText(text="ou"),
                             r.Whitespace(),
                             r.BoxedText(text="b"),
                             r.PlainText(text="."),
@@ -1840,7 +1829,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                             r.Whitespace(),
                             r.BoxedText(text="a"),
                             r.Whitespace(),
-                            r.PlainText(text="or"),
+                            r.PlainText(text="ou"),
                             r.Whitespace(),
                             r.BoxedText(text="b"),
                             r.PlainText(text="."),
@@ -1933,7 +1922,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                             r.Whitespace(),
                             r.BoxedText(text="a"),
                             r.Whitespace(),
-                            r.PlainText(text="or"),
+                            r.PlainText(text="ou"),
                             r.Whitespace(),
                             r.BoxedText(text="b"),
                             r.PlainText(text="."),
@@ -1988,7 +1977,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                             r.Whitespace(),
                             r.BoxedText(text="c"),
                             r.Whitespace(),
-                            r.PlainText(text="or"),
+                            r.PlainText(text="ou"),
                             r.Whitespace(),
                             r.BoxedText(text="d"),
                             r.PlainText(text="."),
@@ -2043,7 +2032,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                             r.Whitespace(),
                             r.BoxedText(text="c"),
                             r.Whitespace(),
-                            r.PlainText(text="or"),
+                            r.PlainText(text="ou"),
                             r.Whitespace(),
                             r.BoxedText(text="d"),
                             r.PlainText(text="."),
@@ -2091,12 +2080,11 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                             r.PlainText(text="Choose"),
                             r.Whitespace(),
                             r.BoxedText(text="a"),
-                            r.Whitespace(),
-                            r.PlainText(text="/"),
+                            r.PlainText(text=","),
                             r.Whitespace(),
                             r.BoxedText(text="b"),
                             r.Whitespace(),
-                            r.PlainText(text="/"),
+                            r.PlainText(text="ou"),
                             r.Whitespace(),
                             r.BoxedText(text="c"),
                             r.PlainText(text="."),
@@ -2143,13 +2131,11 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                         r.Paragraph(tokens=[
                             r.PlainText(text="Choose"),
                             r.Whitespace(),
-                            r.PlainText(text="("),
                             r.BoxedText(text="a"),
                             r.Whitespace(),
-                            r.PlainText(text="or"),
+                            r.PlainText(text="ou"),
                             r.Whitespace(),
                             r.BoxedText(text="b"),
-                            r.PlainText(text=")"),
                             r.PlainText(text="."),
                         ]),
                     ]),
@@ -2198,7 +2184,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                             r.Whitespace(),
                             r.BoxedText(text="a"),
                             r.Whitespace(),
-                            r.PlainText(text="or"),
+                            r.PlainText(text="ou"),
                             r.Whitespace(),
                             r.BoxedText(text="b"),
                             r.Whitespace(),
@@ -2206,7 +2192,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                             r.Whitespace(),
                             r.BoxedText(text="c"),
                             r.Whitespace(),
-                            r.PlainText(text="or"),
+                            r.PlainText(text="ou"),
                             r.Whitespace(),
                             r.BoxedText(text="d"),
                             r.PlainText(text="."),
@@ -4373,7 +4359,7 @@ class LenientParagraphTestCase(AdaptationTestCase):
                             r.Whitespace(),
                             r.BoxedText(text="alpha"),
                             r.Whitespace(),
-                            r.PlainText(text="/"),
+                            r.PlainText(text="ou"),
                             r.Whitespace(),
                             r.BoxedText(text="bravo"),
                             r.PlainText(text="."),
@@ -4454,7 +4440,7 @@ class MultipleAdaptationEffectsTestCase(AdaptationTestCase):
                             r.Whitespace(),
                             r.BoxedText(text="short"),
                             r.Whitespace(),
-                            r.PlainText(text="/"),
+                            r.PlainText(text="ou"),
                             r.Whitespace(),
                             r.BoxedText(text="long"),
                         ]),
@@ -4519,7 +4505,7 @@ class MultipleAdaptationEffectsTestCase(AdaptationTestCase):
                             r.Whitespace(),
                             r.BoxedText(text="alpha"),
                             r.Whitespace(),
-                            r.PlainText(text="/"),
+                            r.PlainText(text="ou"),
                             r.Whitespace(),
                             r.BoxedText(text="bravo"),
                             r.PlainText(text="."),
@@ -4589,7 +4575,7 @@ class MultipleAdaptationEffectsTestCase(AdaptationTestCase):
                             r.Whitespace(),
                             r.BoxedText(text="alpha"),
                             r.Whitespace(),
-                            r.PlainText(text="/"),
+                            r.PlainText(text="ou"),
                             r.Whitespace(),
                             r.BoxedText(text="bravo"),
                         ]),

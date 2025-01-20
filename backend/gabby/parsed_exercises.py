@@ -355,7 +355,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                 "instructions": {"paragraphs": [{"tokens": [
                     {"type": "boxedText", "text": "a"},
                     {"type": "whitespace"},
-                    {"type": "plainText", "text": "or"},
+                    {"type": "plainText", "text": "ou"},
                     {"type": "whitespace"},
                     {"type": "boxedText", "text": "b"},
                 ]}]},

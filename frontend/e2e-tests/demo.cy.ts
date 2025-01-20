@@ -397,11 +397,11 @@ describe('Gabby', () => {
     cy.get('@instructions').find('p').then($el => {
       const node = $el[0].firstChild
       console.assert(node !== null)
-      selectRange(node, 17, node, 35)
+      selectRange(node, 18, node, 34)
     })
     cy.get('button:contains("OK")').should('exist')
-    cy.get('label:contains("Start") + input').should('have.value', '(')
-    cy.get('label:contains("Stop") + input').should('have.value', ')')
+    cy.get('label:contains("Start") + input').should('have.value', '')
+    cy.get('label:contains("Stop") + input').should('have.value', '')
     cy.get('label:contains("Separators") + input').should('have.value', '/')
     cy.get('label + input').eq(3).should('have.value', '')  // Very fragile selector; sorry, future me!
     cy.get('label:contains("Placeholder") + input').should('be.enabled').type('...', {delay: 0})
@@ -414,11 +414,11 @@ describe('Gabby', () => {
     cy.get('@instructions').find('p').then($el => {
       const node = $el[0].firstChild!.nextSibling!.nextSibling
       console.assert(node !== null)
-      selectRange(node, 14, node, 35)
+      selectRange(node, 16, node, 35)
     })
     cy.get('button:contains("OK")').should('exist')
-    cy.get('label:contains("Start") + input').should('have.value', '[')
-    cy.get('label:contains("Stop") + input').should('have.value', ']')
+    cy.get('label:contains("Start") + input').should('have.value', '')
+    cy.get('label:contains("Stop") + input').should('have.value', '')
     cy.get('label:contains("Separators") + input').should('have.value', '*')
     cy.get('label + input').eq(3).should('have.value', '')  // Very fragile selector; sorry, future me!
     cy.get('label:contains("Placeholder") + input').should('be.enabled').type('@@@', {delay: 0})
