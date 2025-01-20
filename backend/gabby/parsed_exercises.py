@@ -487,3 +487,44 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
         }
         response = self.post("http://server/parsedExercises", payload)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
+        self.assertEqual(response.json()["data"]["attributes"]["adapted"], {
+            "number": "",
+            "textbook_page": None,
+            "pagelets": [
+                {
+                    "instructions": {
+                        "paragraphs": [
+                            {
+                                "tokens": [
+                                    {"text": "Blah", "type": "plainText"},
+                                    {"type": "whitespace"},
+                                    {"text": "n", "type": "boxedText"},
+                                    {"text": ",", "type": "plainText"},
+                                    {"type": "whitespace"},
+                                    {"text": "u", "type": "boxedText"},
+                                    {"type": "whitespace"},
+                                    {"text": "ou", "type": "plainText"},
+                                    {"type": "whitespace"},
+                                    {"text": "nt", "type": "boxedText"},
+                                    {"text": ".", "type": "plainText"},
+                                ]
+                            }
+                        ]
+                    },
+                    "wording": {
+                        "paragraphs": [
+                            {
+                                "tokens": [
+                                    {"text": "Blah", "type": "plainText"},
+                                    {"type": "whitespace"},
+                                    {"text": "...", "type": "plainText"},
+                                    {"type": "whitespace"},
+                                    {"text": "blih", "type": "plainText"},
+                                    {"text": ".", "type": "plainText"},
+                                ]
+                            }
+                        ]
+                    },
+                }
+            ],
+        })
