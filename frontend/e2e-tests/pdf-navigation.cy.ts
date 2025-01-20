@@ -305,6 +305,66 @@ describe('Gabby', () => {
     cy.get('li:contains("5"):contains("Do that")').should('exist')
   })
 
+  it('handles a manual change of the exercise page', () => {
+    visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise', {pdf: 'test'})
+
+    cy.get('[data-cy-exercise-field="page"]').type('{selectAll}7').blur()
+    cy.location('pathname').should('eq', '/project-xkopqm/textbook-klxufv/page-7/new-exercise')
+    cy.location('search').should('eq', '?displayPage=6')
+    cy.get('label:contains("Page"):contains("not the one displayed")').should('exist')
+
+    cy.get('p:contains("Page"):contains("(on 7)") :contains(">")').click()
+    notBusy()
+    cy.location('pathname').should('eq', '/project-xkopqm/textbook-klxufv/page-7/new-exercise')
+    cy.location('search').should('eq', '')
+    cy.get('label:contains("Page"):contains("not the one displayed")').should('not.exist')
+  })
+
+  it('handles a manual change of the exercise page - even after navigation', () => {
+    visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise', {pdf: 'test'})
+    cy.get('p:contains("Page"):contains("(on 7)") :contains(">")').click()
+
+    cy.location('pathname').should('eq', '/project-xkopqm/textbook-klxufv/page-7/new-exercise')
+    cy.location('search').should('eq', '')
+
+    cy.get('[data-cy-exercise-field="page"]').type('{selectAll}6').blur()
+    cy.location('pathname').should('eq', '/project-xkopqm/textbook-klxufv/page-6/new-exercise')
+    cy.location('search').should('eq', '?displayPage=7')
+    cy.get('label:contains("Page"):contains("not the one displayed")').should('exist')
+
+    cy.get('p:contains("Page"):contains("(on 7)") :contains("<")').click()
+    notBusy()
+    cy.location('pathname').should('eq', '/project-xkopqm/textbook-klxufv/page-6/new-exercise')
+    cy.location('search').should('eq', '')
+    cy.get('label:contains("Page"):contains("not the one displayed")').should('not.exist')
+  })
+
+  it("handles a manual fix of the exercise page", () => {
+    visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise', {pdf: 'test'})
+
+    cy.get('[data-cy-exercise-field="number"]').type('5')
+    cy.get('[data-cy-exercise-field="page"]').should('have.value', 6)
+    cy.get('label:contains("Instructions") + div.ql-container div.ql-editor').type('Do that')
+
+    cy.get('p:contains("Page"):contains("(on 7)") :contains(">")').click()
+    notBusy()
+    cy.location('pathname').should('eq', '/project-xkopqm/textbook-klxufv/page-6/new-exercise')
+    cy.location('search').should('eq', '?displayPage=7')
+    cy.get('[data-cy-exercise-field="number"]').should('have.value', '5')
+    cy.get('[data-cy-exercise-field="page"]').should('have.value', 6)
+    cy.get('label:contains("Page"):contains("not the one displayed")').should('exist')
+
+    cy.get('[data-cy-exercise-field="page"]').type('{selectAll}7').blur()
+    cy.location('pathname').should('eq', '/project-xkopqm/textbook-klxufv/page-7/new-exercise')
+    cy.location('search').should('eq', '')
+    cy.get('label:contains("Page"):contains("not the one displayed")').should('not.exist')
+
+    cy.get('button:contains("Save then back to list")').click()
+    notBusy()
+    cy.location('pathname').should('eq', '/project-xkopqm/textbook-klxufv/page-7')
+    cy.get('li:contains("5"):contains("Do that")').should('exist')
+  })
+
   it("navigates the PDF when editing an exercise - doesn't change exercise's page", () => {
     visit('/project-xkopqm/textbook-klxufv/page-6/exercise-wbqloc', {pdf: 'test'})
 

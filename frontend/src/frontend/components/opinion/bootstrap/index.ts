@@ -6,6 +6,7 @@ import BCol from './Col.vue'
 import BLabeledCheckbox from './LabeledCheckbox.vue'
 import BLabeledCheckboxes from './LabeledCheckboxes.vue'
 import BLabeledInput from './LabeledInput.vue'
+import BLabeledNumberInput from './LabeledNumberInput.vue'
 import BLabeledRadios from './LabeledRadios.vue'
 import BLabeledSelect from './LabeledSelect.vue'
 import BLabeledTextarea from './LabeledTextarea.vue'
@@ -22,6 +23,7 @@ export {
   BLabeledCheckbox,
   BLabeledCheckboxes,
   BLabeledInput,
+  BLabeledNumberInput,
   BLabeledRadios,
   BLabeledSelect,
   BLabeledTextarea,

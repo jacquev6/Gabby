@@ -18,10 +18,16 @@ export const adaptationKinds: Adaptation['kind'][] = ['generic', 'fill-with-free
 export const textualFieldNames = ['instructions', 'wording', 'example', 'clue', 'textReference'] as const
 export type TextualFieldName = typeof textualFieldNames[number]
 
-export type Model = {
-  inTextbook: boolean
+type MakeModelOptions  = {
+  inTextbook: true
+  textbookPage: number
+} | {
+  inTextbook: false
+  textbookPage: null
+}
+
+export type Model = MakeModelOptions & {
   number: string
-  textbookPage: number | null
   instructions: Deltas
   wording: Deltas
   example: Deltas
@@ -51,19 +57,10 @@ export type Model = {
     }
 }
 
-type MakeModelOptions  = {
-  inTextbook: true
-  textbookPage: number
-} | {
-  inTextbook: false
-  textbookPage: null
-}
-
-function makeModel({inTextbook, textbookPage}: MakeModelOptions): Model {
+function makeModel(options: MakeModelOptions): Model {
   return {
-    inTextbook,
+    ...options,
     number: '',
-    textbookPage,
     instructions: [{insert: '\n', attributes: {}}],
     wording: [{insert: '\n', attributes: {}}],
     example: [{insert: '\n', attributes: {}}],
@@ -114,7 +111,7 @@ export function resetModelNotInTextbook(model: Model) {
 }
 
 export function modelIsEmpty(model: Model) {
-  return  deepEqual(model.instructions, emptyDeltas)
+  return deepEqual(model.instructions, emptyDeltas)
     && deepEqual(model.wording, emptyDeltas)
     && deepEqual(model.example, emptyDeltas)
     && deepEqual(model.clue, emptyDeltas)
@@ -231,7 +228,7 @@ import { ref, computed } from 'vue'
 import deepCopy from 'deep-copy'
 import { useI18n } from 'vue-i18n'
 
-import { BRow, BCol, BLabeledInput, BLabeledSelect } from './opinion/bootstrap'
+import { BRow, BCol, BLabeledInput, BLabeledNumberInput, BLabeledSelect } from './opinion/bootstrap'
 import WysiwygEditor from './WysiwygEditor.vue'
 import { wysiwygBlots } from './AdaptationDetailsFieldsForm.vue'
 import OptionalWysiwygEditor from './OptionalWysiwygEditor.vue'
@@ -394,8 +391,7 @@ defineExpose({
         <BLabeledInput :label="$t('exerciseNumber')" v-model="model.number" data-cy-exercise-field="number" :disabled="fixedNumber" />
       </BCol>
       <BCol v-if="model.inTextbook">
-        <!-- @todo Add warning icon when different from displayed page -->
-        <BLabeledInput :label="$t( model.textbookPage === displayedPage ? 'exercisePage' : 'exercisePageWithWarning')" v-model="model.textbookPage" data-cy-exercise-field="page" :disabled="fixedNumber" />
+        <BLabeledNumberInput :label="$t( model.textbookPage === displayedPage ? 'exercisePage' : 'exercisePageWithWarning')" v-model="model.textbookPage" data-cy-exercise-field="page" :disabled="fixedNumber" />
       </BCol>
     </BRow>
   </div>

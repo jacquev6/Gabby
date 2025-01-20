@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { ref, computed, reactive } from 'vue'
+import { ref, computed, reactive, nextTick } from 'vue'
 import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import { watchPausable } from '@vueuse/core'
 
 import { BButton } from '$frontend/components/opinion/bootstrap'
 import bc from '$frontend/components/breadcrumbs'
@@ -43,6 +44,8 @@ function makeGreyRectangles(pdfSha256: string, pdfPage: number) {
   return makeBoundingRectangles(pdfSha256, pdfPage, [...exercisesOnPageBeforeDisplayed.value.existingItems, ...exercisesOnDisplayedPage.value.existingItems])
 }
 
+const model = reactive(makeModelInTextbook(page.value))
+
 const matchingExercises = computed(() => {
   if (model.number === '') {
     return null
@@ -62,11 +65,14 @@ const matchingExercises = computed(() => {
 
 const alreadyExists = computed(() => matchingExercises.value !== null && matchingExercises.value.existingItems.length === 1)
 
-function changeDisplayedPage(newDisplayedPage: number) {
+async function changeDisplayedPage(newDisplayedPage: number) {
   if (modelIsEmpty(model)) {
     exerciseCreationHistory.reset()
     router.push({name: 'project-textbook-page-new-exercise', params: {page: newDisplayedPage}})
+    watcherForModelTextbookPage.pause()
     model.textbookPage = newDisplayedPage
+    await nextTick()
+    watcherForModelTextbookPage.resume()
   } else {
     router.replace({
       name: 'project-textbook-page-new-exercise',
@@ -76,11 +82,28 @@ function changeDisplayedPage(newDisplayedPage: number) {
   }
 }
 
+const watcherForModelTextbookPage = watchPausable(() => model.textbookPage, newTextbookPage => {
+  console.assert(newTextbookPage !== null)
+  if (newTextbookPage === displayedPage.value) {
+    router.replace({
+      name: 'project-textbook-page-new-exercise',
+      params: {page: newTextbookPage},
+      query: {},
+    })
+  } else {
+    router.replace({
+      name: 'project-textbook-page-new-exercise',
+      params: {
+        page: newTextbookPage,
+      },
+      query: {displayPage: displayedPage.value},
+    })
+  }
+})
+
 const title = computed(() => [i18n.t('create')])
 
 const breadcrumbs = computed(() => bc.last(i18n.t('create')))
-
-const model = reactive(makeModelInTextbook(page.value))
 
 function makeSurroundedRectangles(pdfSha256: string, pdfPage: number) {
   const boundingRectangle = makeBoundingRectangle(pdfSha256, pdfPage, model.rectangles)
