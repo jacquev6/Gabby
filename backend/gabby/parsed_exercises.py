@@ -421,3 +421,67 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                 ]}]},
             }],
         })
+
+    def test_crash_79(self):
+        payload = {
+            "data": {
+                "type": "parsedExercise",
+                "attributes": {
+                    "adaptation": {
+                        "effects": [],
+                        "kind": "generic",
+                    },
+                    "clue": [
+                        {
+                            "attributes": {},
+                            "insert": "\n",
+                        },
+                    ],
+                    "example": [
+                        {
+                            "attributes": {},
+                            "insert": "\n",
+                        },
+                    ],
+                    "instructions": [
+                        {
+                            "attributes": {},
+                            "insert": "Blah ",
+                        },
+                        {
+                            "attributes": {
+                                "choices2": {
+                                    "placeholder": "",
+                                    "separator1": "",
+                                    "separator2": "o",
+                                    "start": "",
+                                    "stop": "",
+                                }
+                            },
+                            "insert": "on ou ont",
+                        },
+                        {
+                            "attributes": {},
+                            "insert": ".\n",
+                        },
+                    ],
+                    "number": "",
+                    "textReference": [
+                        {
+                            "attributes": {},
+                            "insert": "\n",
+                        },
+                    ],
+                    "wording": [
+                        {
+                            "attributes": {},
+                            "insert": "Blah ... blih.\n",
+                        },
+                    ],
+                    "wordingParagraphsPerPagelet": None,
+                },
+                "relationships": {},
+            },
+        }
+        response = self.post("http://server/parsedExercises", payload)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
