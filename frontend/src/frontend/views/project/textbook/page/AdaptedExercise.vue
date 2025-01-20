@@ -85,7 +85,7 @@ provide('adaptedExerciseBackdropCovers', preview)
 </script>
 
 <template>
-  <div ref="container" style="border: 1px solid black" :style="containerStyle">
+  <div ref="container" class="overflow-hidden" style="border: 1px solid black" :style="containerStyle">
     <div ref="preview" :style=previewStyle>
       <PageletsNavigationControls :pageletsCount="pageletsCount" v-model="pageletIndex">
         <ExerciseComponent
