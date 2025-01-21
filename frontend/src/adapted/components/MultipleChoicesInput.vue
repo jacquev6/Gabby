@@ -35,7 +35,6 @@ const { floatingStyles } = useFloating(
   floating,
   {
     placement: 'bottom',
-    transform: false,
     middleware: [shift({crossAxis: true})],
   },
 );
