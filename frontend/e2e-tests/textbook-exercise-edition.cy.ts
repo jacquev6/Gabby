@@ -150,4 +150,26 @@ describe('Gabby', () => {
 
     cy.get('@parsedExercises.all').its('length').should('be.lessThan', 15)
   })
+
+  it('edits MCQ choices - at the right end of the choices2 blot', () => {
+    cy.viewport(1200, 800)
+    visit('/project-xkopqm/textbook-klxufv/page-7/exercise-xnyegk')
+
+    cy.get('label:contains("Instructions") + .ql-container > .ql-editor').click().type('{end}{leftArrow}blah')
+    // Text was added in the choices2 blot. Good.
+    // Note that this does not work with Firefox (text is added after the blot).
+    // In Firefox, this requires an additional {leftArrow}{rightArrow} before adding the text.
+    cy.get('choices2-blot:contains("vrai ou fauxblah")').should('exist')
+  })
+
+  it('fails to edit MCQ choices - at the left end of the choices2 blot', () => {
+    cy.viewport(1200, 800)
+    visit('/project-xkopqm/textbook-klxufv/page-7/exercise-xnyegk')
+
+    cy.get('label:contains("Instructions") + .ql-container > .ql-editor').click().type('{end}{leftArrow}{leftArrow}{leftArrow}{leftArrow}{leftArrow}{leftArrow}{leftArrow}{leftArrow}{leftArrow}{leftArrow}{leftArrow}{leftArrow}{leftArrow}blah')
+    // Text was added before the choices2 blot. Bad according to https://github.com/jacquev6/Gabby/issues/82
+    // Note that this does work with Firefox (text is added at the very beginning of the blot).
+    // Quill handles caret navigation differently in Firefox and Chrome.
+    cy.get('choices2-blot:contains("vrai ou faux")').should('exist').parent().should('contain', 'blah')
+  })
 })
