@@ -226,7 +226,6 @@ export function suggestNextNumber(number: string) {
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import deepCopy from 'deep-copy'
-import { useI18n } from 'vue-i18n'
 
 import { BRow, BCol, BLabeledInput, BLabeledNumberInput, BLabeledSelect } from './opinion/bootstrap'
 import WysiwygEditor from './WysiwygEditor.vue'
@@ -240,8 +239,6 @@ defineProps<{
 }>()
 
 const model = defineModel<Model>({required: true})
-
-const i18n = useI18n()
 
 const instructionsEditor = ref<InstanceType<typeof WysiwygEditor> | null>(null)
 const wordingEditor = ref<InstanceType<typeof WysiwygEditor> | null>(null)
@@ -337,8 +334,13 @@ function selectionChangeInInstructionsOrWording(fieldName: 'instructions' | 'wor
     })()
 
     const separator1 = (() => {
-      for (const separator of ['/', '|', ',', '*', 'ou', 'or']) {
+      for (const separator of ['/', '|', ',', '*']) {
         if (selected.includes(separator)) {
+          return separator
+        }
+      }
+      for (const separator of ['ou']) {
+        if (selected.includes(' ' + separator + ' ')) {
           return separator
         }
       }
@@ -346,8 +348,8 @@ function selectionChangeInInstructionsOrWording(fieldName: 'instructions' | 'wor
     })()
 
     const separator2 = (() => {
-      for (const separator of [i18n.t('multipleChoicesSeparator2'), 'ou', 'or']) {
-        if (selected.includes(' ' + separator + ' ')) {
+      for (const separator of ['ou']) {
+        if (separator1 !== separator && selected.includes(' ' + separator + ' ')) {
           return separator
         }
       }

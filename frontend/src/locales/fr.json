@@ -151,7 +151,6 @@
   "multipleChoicesButton": "Choix multiples",
   "multipleChoicesInstructions": "Sélectionnez un ensemble de choix dans le champ \"Consigne\" ou \"Énoncé\" de la colonne \"Édition\". Incluez les caractère de début, fin et séparation.",
   "choicesSettingsSeparators": "Séparateurs",
-  "multipleChoicesSeparator2": "ou",
   "choicesSettingsStart": "Début",
   "choicesSettingsStop": "Fin",
   "choicesSettingsPlaceholder": "Trou à remplir",

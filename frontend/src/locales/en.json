@@ -151,7 +151,6 @@
   "multipleChoicesButton": "Multiple choices",
   "multipleChoicesInstructions": "Select a set of choices in the \"Instructions\" or \"Wording\" fields in the \"Edition\" column. Include start, stop and separator characters.",
   "choicesSettingsSeparators": "Separators",
-  "multipleChoicesSeparator2": "or",
   "choicesSettingsStart": "Start",
   "choicesSettingsStop": "Stop",
   "choicesSettingsPlaceholder": "Placeholder to fill",

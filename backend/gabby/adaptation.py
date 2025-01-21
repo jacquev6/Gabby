@@ -114,10 +114,11 @@ class _Adapter:
                     yield renderable.PlainText(text=",")
                     yield renderable.Whitespace()
                     yield renderable.BoxedText(text=choice)
-                yield renderable.Whitespace()
-                yield renderable.PlainText(text="ou")  # @todo Fix this if we ever support exercises in English
-                yield renderable.Whitespace()
-                yield renderable.BoxedText(text=choices[-1])
+                if len(choices) > 1:
+                    yield renderable.Whitespace()
+                    yield renderable.PlainText(text="ou")  # @todo Fix this if we ever support exercises in English
+                    yield renderable.Whitespace()
+                    yield renderable.BoxedText(text=choices[-1])
 
             elif "bold" in delta.attributes:
                 assert delta.attributes == {"bold": delta.attributes["bold"]}
@@ -1937,6 +1938,51 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                             r.PlainText(text="B"),
                             r.Whitespace(),
                             r.MultipleChoicesInput(choices=["a", "b"]),
+                        ]),
+                    ]),
+                )],
+            ),
+        )
+
+    def test_choices2_with_empty_separator(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions=[
+                    d.InsertOp(insert="Choose ", attributes={}),
+                    d.InsertOp(insert="a b", attributes={"choices2": {"start": "", "separator1": "", "separator2": "", "stop": "", "placeholder": "..."}}),
+                    d.InsertOp(insert=".\n", attributes={}),
+                ],
+                wording=[
+                    d.InsertOp(insert="A ... B ...\n", attributes={}),
+                ],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
+                wording_paragraphs_per_pagelet=3,
+                adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=42,
+                pagelets=[r.Pagelet(
+                    instructions=r.Section(paragraphs=[
+                        r.Paragraph(tokens=[
+                            r.PlainText(text="Choose"),
+                            r.Whitespace(),
+                            r.BoxedText(text="a b"),
+                            r.PlainText(text="."),
+                        ]),
+                    ]),
+                    wording=r.Section(paragraphs=[
+                        r.Paragraph(tokens=[
+                            r.PlainText(text="A"),
+                            r.Whitespace(),
+                            r.MultipleChoicesInput(choices=["a b"]),
+                            r.Whitespace(),
+                            r.PlainText(text="B"),
+                            r.Whitespace(),
+                            r.MultipleChoicesInput(choices=["a b"]),
                         ]),
                     ]),
                 )],
