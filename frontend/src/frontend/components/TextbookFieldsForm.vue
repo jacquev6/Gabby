@@ -35,7 +35,7 @@ export function resetModel(model: Model) {
 <script setup lang="ts">
 import { computed } from 'vue'
 
-import { BLabeledInput } from './opinion/bootstrap'
+import { BLabeledInput, BLabeledNumberInput } from './opinion/bootstrap'
 
 
 const model = defineModel<Model>({required: true})
@@ -50,6 +50,6 @@ defineExpose({
 <template>
   <BLabeledInput :label="$t('textbookTitle')" v-model="model.title"/>
   <BLabeledInput :label="$t('textbookPublisher')" v-model="model.publisher"/>
-  <BLabeledInput :label="$t('textbookYear')" type="number" v-model="model.year"/>
+  <BLabeledNumberInput :label="$t('textbookYear')" v-model="model.year"/>
   <BLabeledInput :label="$t('textbookIsbn')" v-model="model.isbn"/>
 </template>

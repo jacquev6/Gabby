@@ -9,7 +9,7 @@ defineProps<{
   label: string
 }>()
 
-const model = defineModel<number>()
+const model = defineModel<number | null>()
 
 const id = `input-${ Math.floor(Math.random() * 4000000000) }`
 
