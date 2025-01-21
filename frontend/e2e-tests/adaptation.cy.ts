@@ -62,6 +62,32 @@ describe('Gabby', () => {
     screenshot('mcq-choices-on-two-lines-2')
   })
 
+  it('shows MCQ choices as well as possible when they are wider than the screen', () => {
+    visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
+
+    cy.get('label:contains("Instructions") + .ql-container > .ql-editor').as('instructions')
+    cy.get('label:contains("Wording") + .ql-container > .ql-editor').as('wording')
+
+    cy.get('@instructions').click().type('{selectAll}Long choice half the screen/Other long choice half the screen/Alpha/Bravo', {delay: 0})
+    cy.get('@wording').click().type('{selectAll}Blah ... blih.\nSecond ... line.', {delay: 0})
+
+    cy.get('button:contains("Multiple choices")').click()
+    cy.get('@instructions').find('p').then($el => {
+      const node = $el[0].firstChild
+      console.assert(node !== null)
+      selectRange(node, 0, node, 73)
+    })
+    cy.get('label:contains("Placeholder") + input').click().should('be.enabled').type('...')
+    cy.get('button:contains("OK")').click()
+
+    cy.get('button:contains("Full screen")').click()
+    cy.get('span.main').eq(0).click()
+    screenshot('mcq-choices-as-well-as-possible-1')
+    cy.get('div.backdrop').click({force: true})
+    cy.get('span.main').eq(1).click()
+    screenshot('mcq-choices-as-well-as-possible-2')
+  })
+
   it('detects comma as the only MCQ separator', () => {
     visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
 
