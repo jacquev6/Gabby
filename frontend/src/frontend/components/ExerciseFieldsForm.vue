@@ -334,7 +334,7 @@ function selectionChangeInInstructionsOrWording(fieldName: 'instructions' | 'wor
     })()
 
     const separator1 = (() => {
-      for (const separator of ['/', '|', ',', '*', '◆', '●']) {
+      for (const separator of ['/', '|', ',', '*', '◆', '●', '-', '–', '—']) {
         if (selected.includes(separator)) {
           return separator
         }
