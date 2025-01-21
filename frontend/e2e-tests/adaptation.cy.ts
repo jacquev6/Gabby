@@ -79,6 +79,23 @@ describe('Gabby', () => {
     cy.get('label + input').eq(4).should('have.value', '')  // Very fragile selector; sorry, future me!
   })
 
+  it('detects "◆" as the only MCQ separator', () => {
+    visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
+
+    cy.get('label:contains("Instructions") + .ql-container > .ql-editor').as('instructions')
+
+    cy.get('@instructions').click().type('{selectAll}alpha ◆ bravo ◆ charlie', {delay: 0})
+
+    cy.get('button:contains("Multiple choices")').click()
+    cy.get('@instructions').find('p').then($el => {
+      const node = $el[0].firstChild
+      console.assert(node !== null)
+      selectRange(node, 0, node, 23)
+    })
+    cy.get('label:contains("Separators") + input').should('have.value', '◆')
+    cy.get('label + input').eq(4).should('have.value', '')  // Very fragile selector; sorry, future me!
+  })
+
   it('detects "ou" as the only MCQ separator', () => {
     visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
 
