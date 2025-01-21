@@ -404,7 +404,7 @@ describe('Gabby', () => {
     cy.get('label:contains("Stop") + input').should('have.value', '')
     cy.get('label:contains("Separators") + input').should('have.value', '/')
     cy.get('label + input').eq(3).should('have.value', '')  // Very fragile selector; sorry, future me!
-    cy.get('label:contains("Placeholder") + input').should('be.enabled').type('...', {delay: 0})
+    cy.get('label:contains("Placeholder") + input').click().type('...', {delay: 0})
     screenshot('multiple-choices-with-two-set-of-choices-in-instructions', 'edit-2', {clearSel: false})
     cy.get('button:contains("OK")').click()
     screenshot('multiple-choices-with-two-set-of-choices-in-instructions', 'edit-3')
@@ -421,7 +421,7 @@ describe('Gabby', () => {
     cy.get('label:contains("Stop") + input').should('have.value', '')
     cy.get('label:contains("Separators") + input').should('have.value', '*')
     cy.get('label + input').eq(3).should('have.value', '')  // Very fragile selector; sorry, future me!
-    cy.get('label:contains("Placeholder") + input').should('be.enabled').type('@@@', {delay: 0})
+    cy.get('label:contains("Placeholder") + input').click().type('@@@', {delay: 0})
     screenshot('multiple-choices-with-two-set-of-choices-in-instructions', 'edit-5', {clearSel: false})
     cy.get('button:contains("OK")').click()
     screenshot('multiple-choices-with-two-set-of-choices-in-instructions', 'edit-6')
@@ -548,7 +548,7 @@ describe('Gabby', () => {
     cy.get('label:contains("Stop") + input').should('have.value', '')
     cy.get('label:contains("Separators") + input').should('have.value', 'ou')
     cy.get('label + input').eq(3).type('{selectAll}{del}')  // Very fragile selector; sorry, future me!
-    cy.get('label:contains("Placeholder") + input').type('...', {delay: 0})
+    cy.get('label:contains("Placeholder") + input').click().type('...', {delay: 0})
     screenshot('multiple-choices-for-letter-in-word', 'edit-2', {clearSel: false})
     cy.get('button:contains("OK")').click()
     screenshot('multiple-choices-for-letter-in-word', 'edit-3')
