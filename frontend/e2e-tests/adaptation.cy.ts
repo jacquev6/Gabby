@@ -146,4 +146,31 @@ describe('Gabby', () => {
     cy.get('label:contains("Separators") + input').should('have.value', '')
     cy.get('label + input').eq(4).should('have.value', '')  // Very fragile selector; sorry, future me!
   })
+
+  it('detects similar MCQs automatically', () => {
+    cy.viewport(1300, 800)
+    visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
+
+    cy.get('label:contains("Wording") + .ql-container > .ql-editor').as('wording')
+
+    cy.get('@wording').click().type('{selectAll}a. Trou … (alpha – bravo)\nb. Le … trou (charlie – delta)\nc. Trou … (echo – foxtrot)', {delay: 0})
+
+    cy.get('button:contains("Multiple choices")').click()
+    cy.get('@wording').find('p').then($el => {
+      const node = $el[0].firstChild
+      console.assert(node !== null)
+      selectRange(node, 10, node, 25)
+    })
+    cy.get('label:contains("Separators") + input').should('have.value', '–')
+    cy.get('label + input').eq(4).should('have.value', '')  // Very fragile selector; sorry, future me!
+    cy.get('label:contains("Start") + input').should('have.value', '(')
+    cy.get('label:contains("Stop") + input').should('have.value', ')')
+    cy.get('label:contains("Placeholder") + input').click().type('…')
+    cy.get('button:contains("OK")').click()
+
+    cy.get('button:contains("Full screen")').click()
+    screenshot('similar-mcqs-1')
+    cy.get('span.main').eq(2).click()
+    screenshot('similar-mcqs-2')
+  })
 })
