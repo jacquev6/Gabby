@@ -10,6 +10,11 @@ watch(width, () => nextTick(recolor))
 onMounted(recolor)
 onUpdated(recolor)
 
+// Client found a situation where the colors were not updated. I have no idea why :-/
+// (https://github.com/jacquev6/Gabby/issues/76)
+// So, better safe than sorry, let's update the colors periodically.
+setInterval(recolor, 1000)
+
 /* Colors provided by client */
 const colors = ['#00F', '#F00', '#0C0']
 
