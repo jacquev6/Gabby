@@ -160,6 +160,8 @@ export const wysiwygBlots = [
   Choices2Blot,
   ManualItemBlot,
 ]
+
+export const wysiwygContagiousFormats = ['choices2']
 </script>
 
 <script setup lang="ts">
@@ -577,7 +579,9 @@ div.ql-editor sel-blot[data-sel="5"] {
 
 div.ql-editor choices2-blot {
   margin: 0;
-  padding: 0 0.4em;
-  border: 2px solid black;
+  padding: 0;
+  border-top: 2px solid black;
+  border-bottom: 2px solid black;
+  background-color: lightgray;
 }
 </style>

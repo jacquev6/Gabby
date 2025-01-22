@@ -45,6 +45,7 @@ describe('Quill', () => {
   it('renders its model', () => {
     cy.mount(Quill, {props: {
       blots: [BoldBlot, ItalicBlot],
+      contagiousFormats: [],
       modelValue: [
         {insert: '1-plain', attributes: {}},
         {insert: '2-bold', attributes: {bold: true}},
@@ -69,6 +70,7 @@ describe('Quill', () => {
     let modelValue: Model = []
     cy.mount(Quill, {props: {
       blots: [BoldBlot, ItalicBlot],
+      contagiousFormats: [],
       modelValue,
       'onUpdate:modelValue': (m: Model) => { modelValue = m },
     }})
@@ -92,6 +94,7 @@ describe('Quill', () => {
     let modelValue: Model = [{insert: 'abcdefghi', attributes: {}}]
     cy.mount(Quill, {props: {
       blots: [BoldBlot, ItalicBlot],
+      contagiousFormats: [],
       modelValue,
       'onUpdate:modelValue': (m: Model) => { modelValue = m },
     }})
@@ -116,6 +119,7 @@ describe('Quill', () => {
     let modelValue: Model = [{insert: 'abcdefghi', attributes: {bold: true}}]
     cy.mount(Quill, {props: {
       blots: [BoldBlot, ItalicBlot],
+      contagiousFormats: [],
       modelValue,
       'onUpdate:modelValue': (m: Model) => { modelValue = m },
     }})
@@ -141,6 +145,7 @@ describe('Quill', () => {
     let modelValue: Model = [{insert: 'abcdefghi', attributes: {bold: true}}]
     cy.mount(Quill, {props: {
       blots: [BoldBlot, ItalicBlot],
+      contagiousFormats: [],
       modelValue,
       'onUpdate:modelValue': (m: Model) => { modelValue = m },
     }})
@@ -166,6 +171,7 @@ describe('Quill', () => {
     let modelValue: Model = [{insert: 'abcd', attributes: {}}, {insert: 'e', attributes: {bold: true}}, {insert: 'fghi', attributes: {}}]
     cy.mount(Quill, {props: {
       blots: [BoldBlot, ItalicBlot],
+      contagiousFormats: [],
       modelValue,
       'onUpdate:modelValue': (m: Model) => { modelValue = m },
     }})
@@ -188,6 +194,7 @@ describe('Quill', () => {
     let modelValue: Model = [{insert: 'abc', attributes: {}}]
     cy.mount(Quill, {props: {
       blots: [BoldBlot, ItalicBlot],
+      contagiousFormats: [],
       modelValue,
       'onUpdate:modelValue': (m: Model) => { modelValue = m },
     }})
@@ -212,6 +219,7 @@ describe('Quill', () => {
     let modelValue: Model = [{insert: 'abcdefghi', attributes: {}}]
     cy.mount(Quill, {props: {
       blots: [StrBlot],
+      contagiousFormats: [],
       modelValue,
       'onUpdate:modelValue': (m: Model) => { modelValue = m },
     }})
@@ -236,6 +244,7 @@ describe('Quill', () => {
     let modelValue: Model = [{insert: 'abcdefghi', attributes: {string: 'A'}}]
     cy.mount(Quill, {props: {
       blots: [StrBlot],
+      contagiousFormats: [],
       modelValue,
       'onUpdate:modelValue': (m: Model) => { modelValue = m },
     }})
@@ -261,6 +270,7 @@ describe('Quill', () => {
     let modelValue: Model = [{insert: 'abcdefghi', attributes: {string: 'A'}}]
     cy.mount(Quill, {props: {
       blots: [StrBlot],
+      contagiousFormats: [],
       modelValue,
       'onUpdate:modelValue': (m: Model) => { modelValue = m },
     }})
@@ -286,6 +296,7 @@ describe('Quill', () => {
     let modelValue: Model = [{insert: 'abc', attributes: {}}]
     cy.mount(Quill, {props: {
       blots: [StrBlot],
+      contagiousFormats: [],
       modelValue,
       'onUpdate:modelValue': (m: Model) => { modelValue = m },
     }})
@@ -307,7 +318,7 @@ describe('Quill', () => {
   })
 
   it('reacts to model changes', () => {
-    cy.mount(Quill, {props: {blots: [BoldBlot, ItalicBlot], modelValue: [{insert: 'initial', attributes: {}}]}})
+    cy.mount(Quill, {props: {blots: [BoldBlot, ItalicBlot], contagiousFormats: [], modelValue: [{insert: 'initial', attributes: {}}]}})
     cy.get(':contains("initial")').should('exist')
     cy.vue<typeof Quill>().then(w => {w.setProps({modelValue: [{insert: 'changed'}]})})
     cy.get(':contains("initial")').should('not.exist')
@@ -315,7 +326,7 @@ describe('Quill', () => {
   })
 
   it("reacts to 'props.blots' changes", () => {
-    cy.mount(Quill, {props: {blots: [BoldBlot], modelValue: [{insert: 'bold', attributes: {bold: true}}]}})
+    cy.mount(Quill, {props: {blots: [BoldBlot], contagiousFormats: [], modelValue: [{insert: 'bold', attributes: {bold: true}}]}})
     cy.get(':contains("bold")').last().should('have.css', 'font-weight', '700')
     cy.vue<typeof Quill>().then(w => {w.setProps({blots: []})})
     cy.get(':contains("bold")').last().should('have.css', 'font-weight', '400')
@@ -327,6 +338,7 @@ describe('Quill', () => {
     let modelValue: Model = [{insert: 'a\n', attributes: {}}, {insert: {divider: true}}, {insert: 'b\n', attributes: {}}]
     cy.mount(Quill, {props: {
       blots: [StrBlot, DividerBlot],
+      contagiousFormats: [],
       modelValue,
       'onUpdate:modelValue': (m: Model) => { modelValue = m },
     }})
@@ -343,6 +355,7 @@ describe('Quill', () => {
     let modelValue: Model = [{insert: 'a', attributes: {}}, {insert: {'inl-emb': {color: 'green'}}}, {insert: 'b\n', attributes: {}}]
     cy.mount(Quill, {props: {
       blots: [StrBlot, InlEmbBlot],
+      contagiousFormats: [],
       modelValue,
       'onUpdate:modelValue': (m: Model) => { modelValue = m },
     }})
@@ -356,8 +369,153 @@ describe('Quill', () => {
   })
 
   it('allows adding an insert operation with the same attributes', () => {
-    cy.mount(Quill, {props: {blots: [StrBlot], modelValue: [{insert: 'abc', attributes: {}}]}})
+    cy.mount(Quill, {props: {blots: [StrBlot], contagiousFormats: [], modelValue: [{insert: 'abc', attributes: {}}]}})
     cy.vue<typeof Quill>().then(w => {w.setProps({modelValue: [{insert: 'abc', attributes: {}}, {insert: 'def', attributes: {}}]})})
     cy.get(':contains("abcdef")').should('exist')
+  })
+
+  it('spreads contagious format to the left - at index zero', () => {
+    let modelValue: Model = [{insert: 'abc', attributes: {bold: true}}, {insert: '\n', attributes: {}}]
+    cy.mount(Quill, {props: {
+      blots: [BoldBlot],
+      contagiousFormats: ['bold'],
+      modelValue,
+      'onUpdate:modelValue': (m: Model) => { modelValue = m },
+    }})
+    cy.get('div.ql-editor').type('{moveToStart}blah').then(() => {
+      expect(modelValue).to.deep.equal([{insert: 'blahabc', attributes: {bold: true}}, {insert: '\n', attributes: {}}])
+    })
+    cy.get('bold-blot').should('have.text', 'blahabc')
+  })
+
+  it('spreads contagious format to the left - at non-zero index - coming from the left', () => {
+    let modelValue: Model = [{insert: 'abc ', attributes: {}}, {insert: 'def', attributes: {bold: true}}, {insert: '\n', attributes: {}}]
+    cy.mount(Quill, {props: {
+      blots: [BoldBlot],
+      contagiousFormats: ['bold'],
+      modelValue,
+      'onUpdate:modelValue': (m: Model) => { modelValue = m },
+    }})
+    cy.get('div.ql-editor').type('{moveToStart}{rightArrow}{rightArrow}{rightArrow}{rightArrow}blah').then(() => {
+      expect(modelValue).to.deep.equal([{insert: 'abc ', attributes: {}}, {insert: 'blahdef', attributes: {bold: true}}, {insert: '\n', attributes: {}}])
+    })
+    cy.get('bold-blot').should('have.text', 'blahdef')
+  })
+
+  it('spreads contagious format to the left - at non-zero index - coming from the right', () => {
+    let modelValue: Model = [{insert: 'abc ', attributes: {}}, {insert: 'def', attributes: {bold: true}}, {insert: '\n', attributes: {}}]
+    cy.mount(Quill, {props: {
+      blots: [BoldBlot],
+      contagiousFormats: ['bold'],
+      modelValue,
+      'onUpdate:modelValue': (m: Model) => { modelValue = m },
+    }})
+    cy.get('div.ql-editor').type('{moveToEnd}{leftArrow}{leftArrow}{leftArrow}blah').then(() => {
+      expect(modelValue).to.deep.equal([{insert: 'abc ', attributes: {}}, {insert: 'blahdef', attributes: {bold: true}}, {insert: '\n', attributes: {}}])
+    })
+    cy.get('bold-blot').should('have.text', 'blahdef')
+  })
+
+  it('spreads contagious format to the right - coming from the right', () => {
+    let modelValue: Model = [{insert: 'abc', attributes: {bold: true}}, {insert: ' def\n', attributes: {}}]
+    cy.mount(Quill, {props: {
+      blots: [BoldBlot],
+      contagiousFormats: ['bold'],
+      modelValue,
+      'onUpdate:modelValue': (m: Model) => { modelValue = m },
+    }})
+    cy.get('div.ql-editor').type('{moveToEnd}{leftArrow}{leftArrow}{leftArrow}{leftArrow}blah').then(() => {
+      expect(modelValue).to.deep.equal([{insert: 'abcblah', attributes: {bold: true}}, {insert: ' def\n', attributes: {}}])
+    })
+    cy.get('bold-blot').should('have.text', 'abcblah')
+  })
+
+  it('spreads contagious format to the right - coming from the left', () => {
+    let modelValue: Model = [{insert: 'abc', attributes: {bold: true}}, {insert: ' def\n', attributes: {}}]
+    cy.mount(Quill, {props: {
+      blots: [BoldBlot],
+      contagiousFormats: ['bold'],
+      modelValue,
+      'onUpdate:modelValue': (m: Model) => { modelValue = m },
+    }})
+    cy.get('div.ql-editor').type('{moveToStart}{rightArrow}{rightArrow}{rightArrow}blah').then(() => {
+      expect(modelValue).to.deep.equal([{insert: 'abcblah', attributes: {bold: true}}, {insert: ' def\n', attributes: {}}])
+    })
+    cy.get('bold-blot').should('have.text', 'abcblah')
+  })
+
+  it('spreads non-contagious format to the left - at index zero', () => {
+    // Inconsistent behavior from Quill?
+    let modelValue: Model = [{insert: 'abc', attributes: {bold: true}}, {insert: '\n', attributes: {}}]
+    cy.mount(Quill, {props: {
+      blots: [BoldBlot],
+      contagiousFormats: [],
+      modelValue,
+      'onUpdate:modelValue': (m: Model) => { modelValue = m },
+    }})
+    cy.get('div.ql-editor').type('{moveToStart}blah').then(() => {
+      expect(modelValue).to.deep.equal([{insert: 'blahabc', attributes: {bold: true}}, {insert: '\n', attributes: {}}])
+    })
+    cy.get('bold-blot').should('have.text', 'blahabc')
+  })
+
+  it('does not spread non-contagious format to the left - at non-zero index - coming from the left', () => {
+    // Default behavior in Chrome: don't spread format to the left
+    // Default behavior in Firefox: spread format to the left when cursor came from the right
+    let modelValue: Model = [{insert: 'abc ', attributes: {}}, {insert: 'def', attributes: {bold: true}}, {insert: '\n', attributes: {}}]
+    cy.mount(Quill, {props: {
+      blots: [BoldBlot],
+      contagiousFormats: [],
+      modelValue,
+      'onUpdate:modelValue': (m: Model) => { modelValue = m },
+    }})
+    cy.get('div.ql-editor').type('{moveToStart}{rightArrow}{rightArrow}{rightArrow}{rightArrow}blah').then(() => {
+      expect(modelValue).to.deep.equal([{insert: 'abc blah', attributes: {}}, {insert: 'def', attributes: {bold: true}}, {insert: '\n', attributes: {}}])
+    })
+    cy.get('bold-blot').should('have.text', 'def')
+  })
+
+  it('does not spread non-contagious format to the left - at non-zero index - coming from the right', () => {
+    let modelValue: Model = [{insert: 'abc ', attributes: {}}, {insert: 'def', attributes: {bold: true}}, {insert: '\n', attributes: {}}]
+    cy.mount(Quill, {props: {
+      blots: [BoldBlot],
+      contagiousFormats: [],
+      modelValue,
+      'onUpdate:modelValue': (m: Model) => { modelValue = m },
+    }})
+    cy.get('div.ql-editor').type('{moveToEnd}{leftArrow}{leftArrow}{leftArrow}blah').then(() => {
+      expect(modelValue).to.deep.equal([{insert: 'abc blah', attributes: {}}, {insert: 'def', attributes: {bold: true}}, {insert: '\n', attributes: {}}])
+    })
+    cy.get('bold-blot').should('have.text', 'def')
+  })
+
+  it('spreads non-contagious format to the right - coming from the right', () => {
+    // Default behavior in Chrome: spread format to the right
+    // Default behavior in Firefox: spread format to the right when cursor came from the left
+    let modelValue: Model = [{insert: 'abc', attributes: {bold: true}}, {insert: ' def\n', attributes: {}}]
+    cy.mount(Quill, {props: {
+      blots: [BoldBlot],
+      contagiousFormats: [],
+      modelValue,
+      'onUpdate:modelValue': (m: Model) => { modelValue = m },
+    }})
+    cy.get('div.ql-editor').type('{moveToEnd}{leftArrow}{leftArrow}{leftArrow}{leftArrow}blah').then(() => {
+      expect(modelValue).to.deep.equal([{insert: 'abcblah', attributes: {bold: true}}, {insert: ' def\n', attributes: {}}])
+    })
+    cy.get('bold-blot').should('have.text', 'abcblah')
+  })
+
+  it('spreads non-contagious format to the right - coming from the left', () => {
+    let modelValue: Model = [{insert: 'abc', attributes: {bold: true}}, {insert: ' def\n', attributes: {}}]
+    cy.mount(Quill, {props: {
+      blots: [BoldBlot],
+      contagiousFormats: [],
+      modelValue,
+      'onUpdate:modelValue': (m: Model) => { modelValue = m },
+    }})
+    cy.get('div.ql-editor').type('{moveToStart}{rightArrow}{rightArrow}{rightArrow}blah').then(() => {
+      expect(modelValue).to.deep.equal([{insert: 'abcblah', attributes: {bold: true}}, {insert: ' def\n', attributes: {}}])
+    })
+    cy.get('bold-blot').should('have.text', 'abcblah')
   })
 })

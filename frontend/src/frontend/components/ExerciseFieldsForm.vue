@@ -229,7 +229,7 @@ import deepCopy from 'deep-copy'
 
 import { BRow, BCol, BLabeledInput, BLabeledNumberInput, BLabeledSelect } from './opinion/bootstrap'
 import WysiwygEditor from './WysiwygEditor.vue'
-import { wysiwygBlots } from './AdaptationDetailsFieldsForm.vue'
+import { wysiwygBlots, wysiwygContagiousFormats } from './AdaptationDetailsFieldsForm.vue'
 import OptionalWysiwygEditor from './OptionalWysiwygEditor.vue'
 
 
@@ -406,6 +406,7 @@ defineExpose({
       ref="instructionsEditor"
       :label="$t('exerciseInstructions')"
       :blots="wysiwygBlots"
+      :contagiousFormats="wysiwygContagiousFormats"
       v-model="model.instructions"
       @selectionChange="selectionChangeInInstructions"
     />
@@ -413,6 +414,7 @@ defineExpose({
       ref="wordingEditor"
       :label="$t('exerciseWording')"
       :blots="wysiwygBlots"
+      :contagiousFormats="wysiwygContagiousFormats"
       v-model="model.wording"
       @selectionChange="selectionChangeInWording"
     />
@@ -423,6 +425,7 @@ defineExpose({
             ref="exampleEditor"
             :label="$t('exerciseExample')"
             :blots="wysiwygBlots"
+            :contagiousFormats="wysiwygContagiousFormats"
             v-model="model.example"
           />
         </div>
@@ -431,6 +434,7 @@ defineExpose({
             ref="clueEditor"
             :label="$t('exerciseClue')"
             :blots="wysiwygBlots"
+            :contagiousFormats="wysiwygContagiousFormats"
             v-model="model.clue"
           />
         </div>
@@ -439,6 +443,7 @@ defineExpose({
             ref="textReferenceEditor"
             :label="$t('exerciseTextReference')"
             :blots="wysiwygBlots"
+            :contagiousFormats="wysiwygContagiousFormats"
             v-model="model.textReference"
           />
         </div>

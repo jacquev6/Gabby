@@ -77,6 +77,7 @@ import deepEqual from 'deep-equal'
 
 const props = defineProps<{
   blots: Blot[]
+  contagiousFormats: string[]
 }>()
 
 const emit = defineEmits<{
@@ -116,11 +117,48 @@ const quill = computed(() => {
         modules: {history: {maxStack: 0, userOnly: true}},  // https://github.com/slab/quill/issues/691#issuecomment-797861431
       },
     )
-    quill.on('text-change', (_delta: unknown, _oldDelta: unknown, source: string) => {
+
+    quill.on('text-change', (deltas: any/*@todo Type*/, _oldDeltas: unknown, source: string) => {
       if (source === 'user') {
+        const insertIndex: number | null = (() => {
+          if (deltas.ops.length === 1 && typeof deltas.ops[0].insert === 'string') {
+            return 0
+          } else if (deltas.ops.length === 2 && typeof deltas.ops[0].retain === 'number' && typeof deltas.ops[1].insert === 'string') {
+            return deltas.ops[0].retain
+          } else {
+            return null
+          }
+        })()
+
+        if (insertIndex !== null) {
+          const format = quill.getFormat(insertIndex + 1)
+          if (Object.keys(format).length === 0) {
+            const formatBefore = quill.getFormat(insertIndex)
+            const formatAfter = quill.getFormat(insertIndex + 2)
+
+            let formatsToApply: {name: string, value: unknown}[] = []
+            for (const f of props.contagiousFormats) {
+              if (formatBefore[f] !== undefined && formatAfter[f] === undefined) {
+                formatsToApply.push({name: f, value: formatBefore[f]})
+              } else if (formatBefore[f] === undefined && formatAfter[f] !== undefined) {
+                formatsToApply.push({name: f, value: formatAfter[f]})
+              }
+            }
+
+            if (formatsToApply.length > 0) {
+              for (const formatToApply of formatsToApply) {
+                quill.formatText(insertIndex, 1, formatToApply.name, formatToApply.value, 'user')
+              }
+              quill.setContents(getContents(quill))  // Force merging the choices2 blots
+              quill.setSelection(insertIndex + 1, 0)  // Restore caret position
+            }
+          }
+        }
+
         model.value = getContents(quill)
       }
     })
+
     quill.on('selection-change', (range: SelectionRange | null, _oldRange: SelectionRange | null, _source: string) => {
       const hadFocus = hasFocus.value
       if (range !== null) {
@@ -138,6 +176,7 @@ const quill = computed(() => {
         }
       }
     })
+
     return quill
   }
 })
