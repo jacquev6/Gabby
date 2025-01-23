@@ -12,8 +12,47 @@ Les améliorations techniques ne figurent que dans le `log git <https://github.c
 Les titres des sections de ce document correspondent au champ ``Gabby version`` dans le "À propos".
 Les versions sont nommées selon leur date de publication, au format ``YYYYMMDD-HHMMSS`` (année, mois, jour, tiret, heure, minute, seconde).
 
+20250123-XXXXXX
+---------------
+
+(La `milestone GitHub avec les issues traitées <https://github.com/jacquev6/Gabby/milestone/2>`__.)
+
+- Le caractère "…" (points de suspension) est maintenant remplacé par trois caractères "." (points) lors de l'extraction depuis le PDF. **Il ne sera plus nécessaire de le copier-coller** pour l'utiliser comme trou à remplir (QCM ou texte libre). Les données existantes ont été corrigées de la même manière (`#29 <https://github.com/jacquev6/Gabby/issues/29>`__)
+
+- Items et effets :
+    - suppression du type d'items par défaut : l'utilisateur doit le choisir explicitement (`#44 <https://github.com/jacquev6/Gabby/issues/44>`__)
+    - ajout des types d'items "Phrases" (`#46 <https://github.com/jacquev6/Gabby/issues/46>`__) et "Lettres" (`#47 <https://github.com/jacquev6/Gabby/issues/47>`__)
+    - possibilité de choisir le type d'items "Ponctuations" sans avoir choisi "Mots" (`#51 <https://github.com/jacquev6/Gabby/issues/51>`__)
+    - détection des en-têtes de listes, pour ne pas leur appliquer les effets (`#43 <https://github.com/jacquev6/Gabby/issues/43>`__)
+    - possibilité d'utiliser l'effet "Cadre" sans l'effet "Cochable" (`#6 <https://github.com/jacquev6/Gabby/issues/6>`__)
+    - l'apostrophe est maintenant reconnue comme un caractère en fin de mot (`#50 <https://github.com/jacquev6/Gabby/issues/50>`__)
+    - remplacement de la palette continue par une liste de couleurs prédéfinies pour la personnalisation des couleurs de l'effet "Cochable" (`#10 <https://github.com/jacquev6/Gabby/issues/10>`__)
+    - l'activation des effets "Cadre" et "Cochable" ne change plus l'espacement entre les mots (`#48 <https://github.com/jacquev6/Gabby/issues/48>`__, `#53 <https://github.com/jacquev6/Gabby/issues/53>`__)
+    - la largeur des cadres a été réduite (`#49 <https://github.com/jacquev6/Gabby/issues/49>`__)
+    - suppression du padding horizontal sur les items cochables (`#3 <https://github.com/jacquev6/Gabby/issues/3>`__, `#48 <https://github.com/jacquev6/Gabby/issues/48>`__)
+
+- Choix multiples :
+    - taper du texte à une extrémité d'un choix multiple dans la colonne "Édition" ajoute ce texte dans le choix. Cela a demandé d'en changer le formatage (traits noirs en haut et en bas, et fond gris) pour que le curseur de texte soit affiché à la bonne position (`#82 <https://github.com/jacquev6/Gabby/issues/82>`__)
+    - les choix dans la consigne sont toujours affichés de la même manière dans l'exercice adapté, indépendamment des séparateurs utilisé dans la colonne "Édition" : séparés par des virgules et les deux derniers par un "ou" (`#74 <https://github.com/jacquev6/Gabby/issues/74>`__)
+    - la détection automatique du séparateur a été améliorée :
+        - suppression de la détection du mot anglais "or" (`#75 <https://github.com/jacquev6/Gabby/issues/75>`__)
+        - ajout des tirets (`#77 <https://github.com/jacquev6/Gabby/issues/77>`__)
+        - ajout des losanges "◆" et ronds "●" (`#78 <https://github.com/jacquev6/Gabby/issues/78>`__)
+        - la détection du mot "ou" ne s'active maintenant que s'il est entouré d'espaces (`#79 <https://github.com/jacquev6/Gabby/issues/79>`__)
+    - les choix sont maintenant affichés espacés relativement à la fin du choix précédent, et plus sous forme de tableau (`#60 <https://github.com/jacquev6/Gabby/issues/60>`__)
+    - les choix ne sont toujours affichés que sur 2 lignes même près du bord droit de l'écran (`#61 <https://github.com/jacquev6/Gabby/issues/61>`__)
+    - suppression d'un espace accidentel après les champs "Choix multiples" (`#3 <https://github.com/jacquev6/Gabby/issues/3>`__)
+
+- Corrections diverses :
+    - les lignes de l'exercice adapté sont maintenant toujours colorées en alternance. Il peut y avoir retard d'une seconde dans de rares cas (`#76 <https://github.com/jacquev6/Gabby/issues/76>`__)
+    - la flèche pour changer de page dans l'exercice adapté est maintenant correcte sous tous les OS (`#38 <https://github.com/jacquev6/Gabby/issues/38>`__)
+    - suppression de la barre de défilement apparaissant inutilement dans la colonne "Exercice adapté" sous Firefox (`#36 <https://github.com/jacquev6/Gabby/issues/36>`__)
+    - changer manuellement la page d'un exercice (champ "Page" dans la colonne "Edition") est maintenant pris en compte dans l'avertissement "Pas [la page] affichée" (`#81 <https://github.com/jacquev6/Gabby/issues/81>`__)
+
 20241128-161450
 ---------------
+
+(La `milestone GitHub avec les issues traitées <https://github.com/jacquev6/Gabby/milestone/>`__.)
 
 - Homogénéisation du comportement relativement au type d'adaptation (`#33 <https://github.com/jacquev6/Gabby/issues/33>`__)
     - les données existantes ont été migrées au nouveau format
