@@ -12,7 +12,7 @@ Les améliorations techniques ne figurent que dans le `log git <https://github.c
 Les titres des sections de ce document correspondent au champ ``Gabby version`` dans le "À propos".
 Les versions sont nommées selon leur date de publication, au format ``YYYYMMDD-HHMMSS`` (année, mois, jour, tiret, heure, minute, seconde).
 
-20250123-XXXXXX
+20250123-100544
 ---------------
 
 (La `milestone GitHub avec les issues traitées <https://github.com/jacquev6/Gabby/milestone/2>`__.)
