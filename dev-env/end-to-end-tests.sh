@@ -7,11 +7,16 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
 
 
 console_options="--env ELECTRON_ENABLE_LOGGING=1"
+specs_options=""
 while [ $# -gt 0 ]
 do
   case "$1" in
     --no-console)
       console_options=""
+      shift
+      ;;
+    --visual)
+      specs_options="--spec e2e-tests/demo.cy.ts,e2e-tests/visual-appearance.cy.ts,e2e-tests/user-doc.cy.ts,e2e-tests/adaptation.cy.ts"
       shift
       ;;
     *)
@@ -31,7 +36,7 @@ fi
   $console_options \
   frontend-shell \
     npx cypress run \
-      --e2e "$@"
+      --e2e $specs_options "$@"
 
 if [ -d ../$test_dir/screenshots/user-doc.cy.ts ]
 then

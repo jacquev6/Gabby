@@ -136,7 +136,8 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                             {
                                 "kind": "itemized",
                                 "items": {
-                                    "kind": "words",
+                                    "kind": "tokens",
+                                    "words": True,
                                     "punctuation": False,
                                 },
                                 "effects": {
@@ -200,7 +201,8 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                             {
                                 "kind": "itemized",
                                 "items": {
-                                    "kind": "words",
+                                    "kind": "tokens",
+                                    "words": True,
                                     "punctuation": False,
                                 },
                                 "effects": {
@@ -353,7 +355,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                 "instructions": {"paragraphs": [{"tokens": [
                     {"type": "boxedText", "text": "a"},
                     {"type": "whitespace"},
-                    {"type": "plainText", "text": "or"},
+                    {"type": "plainText", "text": "ou"},
                     {"type": "whitespace"},
                     {"type": "boxedText", "text": "b"},
                 ]}]},
@@ -420,4 +422,109 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     {"type": "plainText", "text": "."},
                 ]}]},
             }],
+        })
+
+    def test_crash_79(self):
+        payload = {
+            "data": {
+                "type": "parsedExercise",
+                "attributes": {
+                    "adaptation": {
+                        "effects": [],
+                        "kind": "generic",
+                    },
+                    "clue": [
+                        {
+                            "attributes": {},
+                            "insert": "\n",
+                        },
+                    ],
+                    "example": [
+                        {
+                            "attributes": {},
+                            "insert": "\n",
+                        },
+                    ],
+                    "instructions": [
+                        {
+                            "attributes": {},
+                            "insert": "Blah ",
+                        },
+                        {
+                            "attributes": {
+                                "choices2": {
+                                    "placeholder": "",
+                                    "separator1": "",
+                                    "separator2": "o",
+                                    "start": "",
+                                    "stop": "",
+                                }
+                            },
+                            "insert": "on ou ont",
+                        },
+                        {
+                            "attributes": {},
+                            "insert": ".\n",
+                        },
+                    ],
+                    "number": "",
+                    "textReference": [
+                        {
+                            "attributes": {},
+                            "insert": "\n",
+                        },
+                    ],
+                    "wording": [
+                        {
+                            "attributes": {},
+                            "insert": "Blah ... blih.\n",
+                        },
+                    ],
+                    "wordingParagraphsPerPagelet": None,
+                },
+                "relationships": {},
+            },
+        }
+        response = self.post("http://server/parsedExercises", payload)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
+        self.assertEqual(response.json()["data"]["attributes"]["adapted"], {
+            "number": "",
+            "textbook_page": None,
+            "pagelets": [
+                {
+                    "instructions": {
+                        "paragraphs": [
+                            {
+                                "tokens": [
+                                    {"text": "Blah", "type": "plainText"},
+                                    {"type": "whitespace"},
+                                    {"text": "n", "type": "boxedText"},
+                                    {"text": ",", "type": "plainText"},
+                                    {"type": "whitespace"},
+                                    {"text": "u", "type": "boxedText"},
+                                    {"type": "whitespace"},
+                                    {"text": "ou", "type": "plainText"},
+                                    {"type": "whitespace"},
+                                    {"text": "nt", "type": "boxedText"},
+                                    {"text": ".", "type": "plainText"},
+                                ]
+                            }
+                        ]
+                    },
+                    "wording": {
+                        "paragraphs": [
+                            {
+                                "tokens": [
+                                    {"text": "Blah", "type": "plainText"},
+                                    {"type": "whitespace"},
+                                    {"text": "...", "type": "plainText"},
+                                    {"type": "whitespace"},
+                                    {"text": "blih", "type": "plainText"},
+                                    {"text": ".", "type": "plainText"},
+                                ]
+                            }
+                        ]
+                    },
+                }
+            ],
         })

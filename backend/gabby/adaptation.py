@@ -23,7 +23,7 @@ class _Adapter:
     def __init__(self, exercise: exercises.Exercise):
         self.preprocess(exercise.instructions, exercise.adaptation.effects)
 
-        instructions = self.strip_section(renderable.Section(paragraphs=list(itertools.chain.from_iterable(
+        instructions = self.postprocess_section(renderable.Section(paragraphs=list(itertools.chain.from_iterable(
             self.adapt_instructions(part)
             for part in [exercise.instructions, exercise.example, exercise.clue]
         ))))
@@ -31,34 +31,42 @@ class _Adapter:
         pagelets = list(
             r.Pagelet(
                 instructions=instructions,
-                wording=self.strip_section(renderable.Section(paragraphs=wording_paragraphs)),
+                wording=self.postprocess_section(renderable.Section(paragraphs=wording_paragraphs)),
             )
-            for wording_paragraphs in self.adapt_wording(exercise.instructions, exercise.wording, exercise.wording_paragraphs_per_pagelet, exercise.adaptation.effects)
+            for wording_paragraphs in self.adapt_wording(exercise.wording, exercise.wording_paragraphs_per_pagelet, exercise.adaptation.effects)
         )
 
         if exercise.text_reference != deltas.empty:
             pagelets.append(r.Pagelet(
-                instructions=self.strip_section(renderable.Section(paragraphs=list(self.adapt_instructions(exercise.text_reference)))),
-                wording=self.strip_section(renderable.Section(paragraphs=[])),
+                instructions=self.postprocess_section(renderable.Section(paragraphs=list(self.adapt_instructions(exercise.text_reference)))),
+                wording=renderable.Section(paragraphs=[]),
             ))
 
         self.adapted = renderable.Exercise(number=exercise.number, textbook_page=exercise.textbook_page, pagelets=pagelets)
 
     def preprocess(self, instructions: deltas.Deltas, effects: list[AdaptationEffect]) -> None:
         self.global_placeholders: list[tuple[str, renderable.SentenceToken]] = []
-        self.words_are_selectable = False
-        self.punctuation_is_selectable = False
-        self.selectables_are_boxed = False
+        self.letters_are_items = False
+        self.words_are_items = False
+        self.punctuation_is_items = False
+        self.sentences_are_items = False
+        self.manual_items_are_items = False
+        self.items_are_selectable = False
+        self.items_are_boxed = False
         self.selectables_colors = []
 
         for effect in effects:
             if isinstance(effect, FillWithFreeTextAdaptationEffect):
                 self.global_placeholders.append((effect.placeholder, renderable.FreeTextInput()))
             if isinstance(effect, ItemizedAdaptationEffect):
-                self.words_are_selectable = effect.items.kind == "words"
-                self.punctuation_is_selectable = self.words_are_selectable and effect.items.punctuation
+                self.letters_are_items = effect.items.kind == "characters" and effect.items.letters
+                self.words_are_items = effect.items.kind == "tokens" and effect.items.words
+                self.punctuation_is_items = effect.items.kind == "tokens" and effect.items.punctuation
+                self.sentences_are_items = effect.items.kind == "sentences"
+                self.manual_items_are_items = effect.items.kind == "manual"
+                self.items_are_boxed = effect.effects.boxed
                 if effect.effects.selectable is not None:
-                    self.selectables_are_boxed = effect.effects.boxed
+                    self.items_are_selectable = True
                     assert self.selectables_colors == []
                     self.selectables_colors = effect.effects.selectable.colors
 
@@ -99,28 +107,18 @@ class _Adapter:
                 placeholder = delta.attributes["choices2"]["placeholder"] or None
                 text = delta.insert
 
-                add_start_and_stop = start is not None and stop is not None and text.startswith(start) and text.endswith(stop)
                 choices = self.separate_choices(start, separator1, separator2, stop, placeholder, text)
-                if add_start_and_stop:
-                    yield renderable.PlainText(text=start)
+                # Always format choices the same way in instructions: https://github.com/jacquev6/Gabby/issues/74
                 yield renderable.BoxedText(text=choices[0])
-                if separator2 is None:
-                    for choice in choices[1:]:
-                        yield renderable.Whitespace()
-                        yield renderable.PlainText(text=separator1)
-                        yield renderable.Whitespace()
-                        yield renderable.BoxedText(text=choice)
-                else:
-                    for choice in choices[1:-1]:
-                        yield renderable.PlainText(text=separator1)
-                        yield renderable.Whitespace()
-                        yield renderable.BoxedText(text=choice)
+                for choice in choices[1:-1]:
+                    yield renderable.PlainText(text=",")
                     yield renderable.Whitespace()
-                    yield renderable.PlainText(text=separator2)
+                    yield renderable.BoxedText(text=choice)
+                if len(choices) > 1:
+                    yield renderable.Whitespace()
+                    yield renderable.PlainText(text="ou")  # @todo Fix this if we ever support exercises in English
                     yield renderable.Whitespace()
                     yield renderable.BoxedText(text=choices[-1])
-                if add_start_and_stop:
-                    yield renderable.PlainText(text=stop)
 
             elif "bold" in delta.attributes:
                 assert delta.attributes == {"bold": delta.attributes["bold"]}
@@ -135,12 +133,12 @@ class _Adapter:
             else:
                 assert False, f"Unknown attributes: {delta.attributes}"
 
-    def adapt_wording(self, instructions: deltas.Deltas, wording: deltas.Deltas, wording_paragraphs_per_pagelet: int | None, effects: list[AdaptationEffect]) -> Iterable[list[renderable.Paragraph]]:
+    def adapt_wording(self, wording: deltas.Deltas, wording_paragraphs_per_pagelet: int | None, effects: list[AdaptationEffect]) -> Iterable[list[renderable.Paragraph]]:
         current_pagelet = []
         has_yielded = False
         for pagelet_deltas in self.split_deltas(wording, r"\s*\n\s*\n\s*\n\s*"):
             if len(pagelet_deltas) != 0:
-                for paragraph in self.adapt_wording_pagelet(instructions, pagelet_deltas, effects):
+                for paragraph in self.adapt_wording_pagelet(pagelet_deltas, effects):
                     current_pagelet.append(paragraph)
                     if len(current_pagelet) == wording_paragraphs_per_pagelet:
                         yield current_pagelet
@@ -153,7 +151,7 @@ class _Adapter:
         if not has_yielded:
             yield []
 
-    def adapt_wording_pagelet(self, instructions: deltas.Deltas, pagelet_deltas: deltas.Deltas, effects: list[AdaptationEffect]) -> Iterable[renderable.Paragraph]:
+    def adapt_wording_pagelet(self, pagelet_deltas: deltas.Deltas, effects: list[AdaptationEffect]) -> Iterable[renderable.Paragraph]:
         for delta in pagelet_deltas:
             if delta.attributes == {}:
                 for index, (placeholder, _token) in enumerate(self.global_placeholders):
@@ -164,20 +162,48 @@ class _Adapter:
             for paragraph_deltas in self.split_deltas(pagelet_deltas, r"\s*\n\s*")
         ]
 
-    def adapt_wording_paragraph(self, sentence_deltas: deltas.Deltas):
+    def adapt_wording_paragraph(self, paragraph_deltas: deltas.Deltas):
         sentence_specific_placeholders = []
 
-        for (start, separator1, separator2, stop, placeholder, text) in self.gather_choices(sentence_deltas):
+        for (start, separator1, separator2, stop, placeholder, text) in self.gather_choices(paragraph_deltas):
             if placeholder != "":
                 sentence_specific_placeholders.append((placeholder, renderable.MultipleChoicesInput(choices=self.separate_choices(start, separator1, separator2, stop, placeholder, text))))
 
-        for delta in sentence_deltas:
+        for delta in paragraph_deltas:
             if delta.attributes == {}:
                 for index, (placeholder, _token) in enumerate(sentence_specific_placeholders):
                     delta.insert = delta.insert.replace(placeholder, f"ph{len(self.global_placeholders) + index}hp")
 
         sentence_placeholders = list(itertools.chain(self.global_placeholders, sentence_specific_placeholders))
 
+        list_header_deltas, paragraph_deltas = self.split_list_header(paragraph_deltas)
+
+        if len(list_header_deltas) > 0:
+            for delta in list_header_deltas:
+                for text in re.split(r"(\.\.\.|\s+|\W|ph\d+hp)", delta.insert):
+                    if text != "":
+                        yield renderable.PlainText(text=text)
+            yield renderable.Whitespace()
+
+        if self.sentences_are_items:
+            assert not self.letters_are_items
+            assert not self.words_are_items
+            assert not self.punctuation_is_items
+            is_first_sentence = True
+            for sentence_deltas in self.split_deltas_into_sentences(paragraph_deltas):
+                if not is_first_sentence:
+                    yield renderable.Whitespace()
+                is_first_sentence = False
+                contents = list(self.adapt_wording_sentence(sentence_deltas, sentence_placeholders))
+                if self.items_are_selectable:
+                    yield renderable.Selectable(contents=contents, colors=self.selectables_colors, boxed=self.items_are_boxed)
+                else:
+                    assert self.items_are_boxed
+                    yield renderable.Boxed(contents=contents)
+        else:
+            yield from self.adapt_wording_sentence(paragraph_deltas, sentence_placeholders)
+
+    def adapt_wording_sentence(self, sentence_deltas: deltas.Deltas, sentence_placeholders: list[tuple[str, renderable.SentenceToken]]):
         for delta in sentence_deltas:
             if delta.attributes == {}:
                 for i, text in enumerate(re.split(r"(\.\.\.|\s+|\W|ph\d+hp)", delta.insert)):
@@ -190,26 +216,48 @@ class _Adapter:
                                 index = int(text[2:-2])
                                 yield sentence_placeholders[index][1]
                             else:
-                                if self.punctuation_is_selectable:
-                                    yield renderable.SelectableText(text=text, colors=self.selectables_colors, boxed=self.selectables_are_boxed)
+                                if self.punctuation_is_items:
+                                    if self.items_are_selectable:
+                                        yield renderable.SelectableText(text=text, colors=self.selectables_colors, boxed=self.items_are_boxed)
+                                    else:
+                                        assert self.items_are_boxed
+                                        yield renderable.BoxedText(text=text)
                                 else:
                                     yield renderable.PlainText(text=text)
                         else:
                             # Separated: words
-                            if self.words_are_selectable:
-                                yield renderable.SelectableText(text=text, colors=self.selectables_colors, boxed=self.selectables_are_boxed)
+                            if self.letters_are_items:
+                                for letter in text:
+                                    if self.items_are_selectable:
+                                        yield renderable.SelectableText(text=letter, colors=self.selectables_colors, boxed=self.items_are_boxed)
+                                    else:
+                                        assert self.items_are_boxed
+                                        yield renderable.BoxedText(text=letter)
+                            elif self.words_are_items:
+                                if self.items_are_selectable:
+                                    yield renderable.SelectableText(text=text, colors=self.selectables_colors, boxed=self.items_are_boxed)
+                                else:
+                                    assert self.items_are_boxed
+                                    yield renderable.BoxedText(text=text)
                             else:
                                 yield renderable.PlainText(text=text)
 
-            elif "selectable" in delta.attributes:
-                assert delta.attributes == {"selectable": delta.attributes["selectable"]}
+            elif "manual-item" in delta.attributes:
+                assert delta.attributes == {"manual-item": delta.attributes["manual-item"]}
 
                 for text in re.split(r"(\.\.\.|\s+|\W)", delta.insert):
                     if text != "":
                         if text.strip() == "":
                             yield renderable.Whitespace()
                         else:
-                            yield renderable.SelectableText(text=text, colors=self.selectables_colors, boxed=self.selectables_are_boxed)
+                            if self.manual_items_are_items:
+                                if self.items_are_selectable:
+                                    yield renderable.SelectableText(text=text, colors=self.selectables_colors, boxed=self.items_are_boxed)
+                                else:
+                                    assert self.items_are_boxed
+                                    yield renderable.BoxedText(text=text)
+                            else:
+                                yield renderable.PlainText(text=text)
 
             elif "bold" in delta.attributes:
                 assert delta.attributes == {"bold": delta.attributes["bold"]}
@@ -269,17 +317,52 @@ class _Adapter:
                         current_sentence.append(d.InsertOp(insert=sentence_part, attributes=delta.attributes))
         yield current_sentence
 
-    def strip_section(self, section: renderable.Section) -> renderable.Section:
+    def split_list_header(self, paragraph_deltas: deltas.Deltas) -> tuple[deltas.Deltas, deltas.Deltas]:
+        if len(paragraph_deltas) == 0:
+            return ([], [])
+        else:
+            # WARNING: keep the list formats supported here consistent with what's supported in 'listFormats' in 'TextPicker.vue'
+            list_header_deltas = []
+            paragraph_deltas = copy.deepcopy(paragraph_deltas)
+
+            number_prefix = re.match(r"^\d+", paragraph_deltas[0].insert)
+            if number_prefix is not None:
+                number_prefix = number_prefix.group(0)
+
+            if number_prefix is not None and len(paragraph_deltas[0].insert) > len(number_prefix) and paragraph_deltas[0].insert[len(number_prefix)] in ").":
+                # "1. 2. 3.", "1) 2) 3)", etc.
+                list_header_deltas.append(deltas.InsertOp(insert=paragraph_deltas[0].insert[:len(number_prefix) + 1], attributes=paragraph_deltas[0].attributes))
+                paragraph_deltas[0].insert = paragraph_deltas[0].insert[len(number_prefix) + 1:].lstrip()
+            elif len(paragraph_deltas[0].insert) > 1 and paragraph_deltas[0].insert[0] in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" and paragraph_deltas[0].insert[1] in ").":
+                # "a. b. c.", "A) B) C)", etc.
+                list_header_deltas.append(deltas.InsertOp(insert=paragraph_deltas[0].insert[:2], attributes=paragraph_deltas[0].attributes))
+                paragraph_deltas[0].insert = paragraph_deltas[0].insert[2:].lstrip()
+            elif len(paragraph_deltas[0].insert) > 0 and paragraph_deltas[0].insert[0] in "◆■":
+                # "◆", "■", etc.
+                list_header_deltas.append(deltas.InsertOp(insert=paragraph_deltas[0].insert[0], attributes=paragraph_deltas[0].attributes))
+                paragraph_deltas[0].insert = paragraph_deltas[0].insert[1:].lstrip()
+
+            return (list_header_deltas, paragraph_deltas)
+
+    __apostrophes = [
+        # https://fr.wikipedia.org/wiki/Apostrophe_(typographie) mentions one more encoding than https://en.wikipedia.org/wiki/Apostrophe
+        "\u2019", "\u0027", "\u02BC",
+    ]
+
+    def postprocess_section(self, section: renderable.Section) -> renderable.Section:
         section = copy.deepcopy(section)
         for paragraph in section.paragraphs:
             fixed_tokens = []
             for token in paragraph.tokens:
-                if token == renderable.Whitespace():
-                    if len(fixed_tokens) > 0 and fixed_tokens[-1] != renderable.Whitespace():
-                        fixed_tokens.append(token)
+                if token.type == "whitespace" and len(fixed_tokens) == 0:
+                    pass
+                elif token.type == "whitespace" and len(fixed_tokens) > 0 and fixed_tokens[-1].type == "whitespace":
+                    pass
+                elif token.type in ["plainText", "selectableText", "boxedText"] and token.text in self.__apostrophes and len(fixed_tokens) > 0 and fixed_tokens[-1].type in ["selectableText", "boxedText"]:
+                    fixed_tokens[-1].text += token.text
                 else:
                     fixed_tokens.append(token)
-            while len(fixed_tokens) > 0 and fixed_tokens[-1] == renderable.Whitespace():
+            while len(fixed_tokens) > 0 and fixed_tokens[-1].type == "whitespace":
                 fixed_tokens.pop(-1)
             paragraph.tokens = fixed_tokens
         section.paragraphs = list(filter(lambda p: len(p.tokens) > 0, section.paragraphs))
@@ -914,6 +997,58 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
 
 
 class ItemizedAdaptationTestCase(AdaptationTestCase):
+    def test_selectable_letters(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions=[d.InsertOp(insert="Instructions\n", attributes={})],
+                wording=[d.InsertOp(insert="This is, the wording.\n", attributes={})],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
+                wording_paragraphs_per_pagelet=3,
+                adaptation=AdaptationV2(kind="generic", effects=[ItemizedAdaptationEffect(
+                    kind="itemized",
+                    items={"kind": "characters", "letters": True},
+                    effects={"selectable": {"colors": ["red"]}, "boxed": False},
+                )]),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=42,
+                pagelets=[r.Pagelet(
+                    instructions=r.Section(paragraphs=[
+                        r.Paragraph(tokens=[
+                            r.PlainText(text="Instructions"),
+                        ]),
+                    ]),
+                    wording=r.Section(paragraphs=[r.Paragraph(tokens=[
+                        r.SelectableText(text="T", colors=["red"], boxed=False),
+                        r.SelectableText(text="h", colors=["red"], boxed=False),
+                        r.SelectableText(text="i", colors=["red"], boxed=False),
+                        r.SelectableText(text="s", colors=["red"], boxed=False),
+                        r.Whitespace(),
+                        r.SelectableText(text="i", colors=["red"], boxed=False),
+                        r.SelectableText(text="s", colors=["red"], boxed=False),
+                        r.PlainText(text=","),
+                        r.Whitespace(),
+                        r.SelectableText(text="t", colors=["red"], boxed=False),
+                        r.SelectableText(text="h", colors=["red"], boxed=False),
+                        r.SelectableText(text="e", colors=["red"], boxed=False),
+                        r.Whitespace(),
+                        r.SelectableText(text="w", colors=["red"], boxed=False),
+                        r.SelectableText(text="o", colors=["red"], boxed=False),
+                        r.SelectableText(text="r", colors=["red"], boxed=False),
+                        r.SelectableText(text="d", colors=["red"], boxed=False),
+                        r.SelectableText(text="i", colors=["red"], boxed=False),
+                        r.SelectableText(text="n", colors=["red"], boxed=False),
+                        r.SelectableText(text="g", colors=["red"], boxed=False),
+                        r.PlainText(text="."),
+                    ])]),
+                )],
+            ),
+        )
+
     def test_selectable_words__plain(self):
         self.do_test(
             e.Exercise(
@@ -926,7 +1061,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(kind="generic", effects=[ItemizedAdaptationEffect(
                     kind="itemized",
-                    items={"kind": "words", "punctuation": False},
+                    items={"kind": "tokens", "words": True, "punctuation": False},
                     effects={"selectable": {"colors": ["red", "blue"]}, "boxed": False},
                 )]),
             ),
@@ -966,7 +1101,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(kind="generic", effects=[ItemizedAdaptationEffect(
                     kind="itemized",
-                    items={"kind": "words", "punctuation": True},
+                    items={"kind": "tokens", "words": True, "punctuation": True},
                     effects={"selectable": {"colors": ["green", "yellow", "orange"]}, "boxed": False},
                 )]),
             ),
@@ -994,6 +1129,46 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
             ),
         )
 
+    def test_selectable_punctuation_only(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions=[d.InsertOp(insert="Instructions\n", attributes={})],
+                wording=[d.InsertOp(insert="This is, the wording.\n", attributes={})],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
+                wording_paragraphs_per_pagelet=3,
+                adaptation=AdaptationV2(kind="generic", effects=[ItemizedAdaptationEffect(
+                    kind="itemized",
+                    items={"kind": "tokens", "words": False, "punctuation": True},
+                    effects={"selectable": {"colors": ["green", "yellow", "orange"]}, "boxed": False},
+                )]),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=42,
+                pagelets=[r.Pagelet(
+                    instructions=r.Section(paragraphs=[
+                        r.Paragraph(tokens=[
+                            r.PlainText(text="Instructions"),
+                        ]),
+                    ]),
+                    wording=r.Section(paragraphs=[r.Paragraph(tokens=[
+                        r.PlainText(text="This"),
+                        r.Whitespace(),
+                        r.PlainText(text="is"),
+                        r.SelectableText(text=",", colors=["green", "yellow", "orange"], boxed=False),
+                        r.Whitespace(),
+                        r.PlainText(text="the"),
+                        r.Whitespace(),
+                        r.PlainText(text="wording"),
+                        r.SelectableText(text=".", colors=["green", "yellow", "orange"], boxed=False),
+                    ])]),
+                )],
+            ),
+        )
+
     def test_selectable_words__boxed(self):
         self.do_test(
             e.Exercise(
@@ -1006,7 +1181,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
                 adaptation=AdaptationV2(kind="generic", effects=[ItemizedAdaptationEffect(
                     kind="itemized",
-                    items={"kind": "words", "punctuation": False},
+                    items={"kind": "tokens", "words": True, "punctuation": False},
                     effects={"selectable": {"colors": ["red", "blue"]}, "boxed": True},
                 )]),
             ),
@@ -1034,6 +1209,361 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
             ),
         )
 
+    def test_selectable_tokens__in_lettered_list(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions=[d.InsertOp(insert="Instructions\n", attributes={})],
+                wording=[d.InsertOp(insert="a. First list element.\nb. Second element, still in list.\nc. Third element. The last one!", attributes={})],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
+                wording_paragraphs_per_pagelet=2,
+                adaptation=AdaptationV2(kind="generic", effects=[ItemizedAdaptationEffect(
+                    kind="itemized",
+                    items={"kind": "tokens", "words": True, "punctuation": True},
+                    effects={"selectable": {"colors": ["red"]}, "boxed": False},
+                )]),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=42,
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(paragraphs=[
+                            r.Paragraph(tokens=[
+                                r.PlainText(text="Instructions"),
+                            ]),
+                        ]),
+                        wording=r.Section(paragraphs=[
+                            r.Paragraph(tokens=[
+                                r.PlainText(text="a"),
+                                r.PlainText(text="."),
+                                r.Whitespace(),
+                                r.SelectableText(text="First", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="list", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="element", colors=["red"], boxed=False),
+                                r.SelectableText(text=".", colors=["red"], boxed=False),
+                            ]),
+                            r.Paragraph(tokens=[
+                                r.PlainText(text="b"),
+                                r.PlainText(text="."),
+                                r.Whitespace(),
+                                r.SelectableText(text="Second", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="element", colors=["red"], boxed=False),
+                                r.SelectableText(text=",", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="still", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="in", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="list", colors=["red"], boxed=False),
+                                r.SelectableText(text=".", colors=["red"], boxed=False),
+                            ]),
+                        ]),
+                    ),
+                    r.Pagelet(
+                        instructions=r.Section(paragraphs=[
+                            r.Paragraph(tokens=[
+                                r.PlainText(text="Instructions"),
+                            ]),
+                        ]),
+                        wording=r.Section(paragraphs=[
+                            r.Paragraph(tokens=[
+                                r.PlainText(text="c"),
+                                r.PlainText(text="."),
+                                r.Whitespace(),
+                                r.SelectableText(text="Third", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="element", colors=["red"], boxed=False),
+                                r.SelectableText(text=".", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="The", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="last", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="one", colors=["red"], boxed=False),
+                                r.SelectableText(text="!", colors=["red"], boxed=False),
+                            ]),
+                        ]),
+                    ),
+                ],
+            ),
+        )
+
+    def test_selectable_tokens__in_numbered_list(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions=[d.InsertOp(insert="Instructions\n", attributes={})],
+                wording=[d.InsertOp(insert="1) First list element.\n2) Second element, still in list.\n3) Third element. The last one!", attributes={})],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
+                wording_paragraphs_per_pagelet=2,
+                adaptation=AdaptationV2(kind="generic", effects=[ItemizedAdaptationEffect(
+                    kind="itemized",
+                    items={"kind": "tokens", "words": True, "punctuation": True},
+                    effects={"selectable": {"colors": ["red"]}, "boxed": False},
+                )]),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=42,
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(paragraphs=[
+                            r.Paragraph(tokens=[
+                                r.PlainText(text="Instructions"),
+                            ]),
+                        ]),
+                        wording=r.Section(paragraphs=[
+                            r.Paragraph(tokens=[
+                                r.PlainText(text="1"),
+                                r.PlainText(text=")"),
+                                r.Whitespace(),
+                                r.SelectableText(text="First", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="list", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="element", colors=["red"], boxed=False),
+                                r.SelectableText(text=".", colors=["red"], boxed=False),
+                            ]),
+                            r.Paragraph(tokens=[
+                                r.PlainText(text="2"),
+                                r.PlainText(text=")"),
+                                r.Whitespace(),
+                                r.SelectableText(text="Second", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="element", colors=["red"], boxed=False),
+                                r.SelectableText(text=",", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="still", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="in", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="list", colors=["red"], boxed=False),
+                                r.SelectableText(text=".", colors=["red"], boxed=False),
+                            ]),
+                        ]),
+                    ),
+                    r.Pagelet(
+                        instructions=r.Section(paragraphs=[
+                            r.Paragraph(tokens=[
+                                r.PlainText(text="Instructions"),
+                            ]),
+                        ]),
+                        wording=r.Section(paragraphs=[
+                            r.Paragraph(tokens=[
+                                r.PlainText(text="3"),
+                                r.PlainText(text=")"),
+                                r.Whitespace(),
+                                r.SelectableText(text="Third", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="element", colors=["red"], boxed=False),
+                                r.SelectableText(text=".", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="The", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="last", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="one", colors=["red"], boxed=False),
+                                r.SelectableText(text="!", colors=["red"], boxed=False),
+                            ]),
+                        ]),
+                    ),
+                ],
+            ),
+        )
+
+    def test_selectable_tokens__in_bullet_list(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions=[d.InsertOp(insert="Instructions\n", attributes={})],
+                wording=[d.InsertOp(insert="◆ First list element.\n◆ Second element, still in list.\n◆ Third element. The last one!", attributes={})],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
+                wording_paragraphs_per_pagelet=2,
+                adaptation=AdaptationV2(kind="generic", effects=[ItemizedAdaptationEffect(
+                    kind="itemized",
+                    items={"kind": "tokens", "words": True, "punctuation": True},
+                    effects={"selectable": {"colors": ["red"]}, "boxed": False},
+                )]),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=42,
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(paragraphs=[
+                            r.Paragraph(tokens=[
+                                r.PlainText(text="Instructions"),
+                            ]),
+                        ]),
+                        wording=r.Section(paragraphs=[
+                            r.Paragraph(tokens=[
+                                r.PlainText(text="◆"),
+                                r.Whitespace(),
+                                r.SelectableText(text="First", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="list", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="element", colors=["red"], boxed=False),
+                                r.SelectableText(text=".", colors=["red"], boxed=False),
+                            ]),
+                            r.Paragraph(tokens=[
+                                r.PlainText(text="◆"),
+                                r.Whitespace(),
+                                r.SelectableText(text="Second", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="element", colors=["red"], boxed=False),
+                                r.SelectableText(text=",", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="still", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="in", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="list", colors=["red"], boxed=False),
+                                r.SelectableText(text=".", colors=["red"], boxed=False),
+                            ]),
+                        ]),
+                    ),
+                    r.Pagelet(
+                        instructions=r.Section(paragraphs=[
+                            r.Paragraph(tokens=[
+                                r.PlainText(text="Instructions"),
+                            ]),
+                        ]),
+                        wording=r.Section(paragraphs=[
+                            r.Paragraph(tokens=[
+                                r.PlainText(text="◆"),
+                                r.Whitespace(),
+                                r.SelectableText(text="Third", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="element", colors=["red"], boxed=False),
+                                r.SelectableText(text=".", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="The", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="last", colors=["red"], boxed=False),
+                                r.Whitespace(),
+                                r.SelectableText(text="one", colors=["red"], boxed=False),
+                                r.SelectableText(text="!", colors=["red"], boxed=False),
+                            ]),
+                        ]),
+                    ),
+                ],
+            ),
+        )
+
+    def test_selectable_sentences(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions=[d.InsertOp(insert="Instructions\n", attributes={})],
+                wording=[d.InsertOp(insert="Affirmative sentence. Exclamative sentence! Phrase exclamative ! Interrogative sentence? Phrase interrogative ? Suspens...\n", attributes={})],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
+                wording_paragraphs_per_pagelet=3,
+                adaptation=AdaptationV2(kind="generic", effects=[ItemizedAdaptationEffect(
+                    kind="itemized",
+                    items={"kind": "sentences"},
+                    effects={"selectable": {"colors": ["red", "blue"]}, "boxed": True},
+                )]),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=42,
+                pagelets=[r.Pagelet(
+                    instructions=r.Section(paragraphs=[
+                        r.Paragraph(tokens=[
+                            r.PlainText(text="Instructions"),
+                        ]),
+                    ]),
+                    wording=r.Section(paragraphs=[
+                        r.Paragraph(tokens=[
+                            r.Selectable(
+                                contents=[
+                                    r.PlainText(text="Affirmative"),
+                                    r.Whitespace(),
+                                    r.PlainText(text="sentence"),
+                                    r.PlainText(text="."),
+                                ],
+                                colors=["red", "blue"],
+                                boxed=True,
+                            ),
+                            r.Whitespace(),
+                            r.Selectable(
+                                contents=[
+                                    r.Whitespace(),
+                                    r.PlainText(text="Exclamative"),
+                                    r.Whitespace(),
+                                    r.PlainText(text="sentence"),
+                                    r.PlainText(text="!"),
+                                ],
+                                colors=["red", "blue"],
+                                boxed=True,
+                            ),
+                            r.Whitespace(),
+                            r.Selectable(
+                                contents=[
+                                    r.Whitespace(),
+                                    r.PlainText(text="Phrase"),
+                                    r.Whitespace(),
+                                    r.PlainText(text="exclamative"),
+                                    r.Whitespace(),
+                                    r.PlainText(text="!"),
+                                ],
+                                colors=["red", "blue"],
+                                boxed=True,
+                            ),
+                            r.Whitespace(),
+                            r.Selectable(
+                                contents=[
+                                    r.Whitespace(),
+                                    r.PlainText(text="Interrogative"),
+                                    r.Whitespace(),
+                                    r.PlainText(text="sentence"),
+                                    r.PlainText(text="?"),
+                                ],
+                                colors=["red", "blue"],
+                                boxed=True,
+                            ),
+                            r.Whitespace(),
+                            r.Selectable(
+                                contents=[
+                                    r.Whitespace(),
+                                    r.PlainText(text="Phrase"),
+                                    r.Whitespace(),
+                                    r.PlainText(text="interrogative"),
+                                    r.Whitespace(),
+                                    r.PlainText(text="?"),
+                                ],
+                                colors=["red", "blue"],
+                                boxed=True,
+                            ),
+                            r.Whitespace(),
+                            r.Selectable(
+                                contents=[
+                                    r.Whitespace(),
+                                    r.PlainText(text="Suspens"),
+                                    r.PlainText(text="..."),
+                                ],
+                                colors=["red", "blue"],
+                                boxed=True,
+                            ),
+                        ]),
+                    ]),
+                )],
+            ),
+        )
+
     def test_selectable_manual_items__plain(self):
         self.do_test(
             e.Exercise(
@@ -1042,9 +1572,9 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 instructions=[d.InsertOp(insert="Instructions\n", attributes={})],
                 wording=[
                     d.InsertOp(insert="This ", attributes={}),
-                    d.InsertOp(insert="is,", attributes={"selectable": True}),
+                    d.InsertOp(insert="is,", attributes={"manual-item": True}),
                     d.InsertOp(insert=" ", attributes={}),
-                    d.InsertOp(insert="the", attributes={"selectable": True}),
+                    d.InsertOp(insert="the", attributes={"manual-item": True}),
                     d.InsertOp(insert=" wording.\n", attributes={}),
                 ],
                 example=[d.InsertOp(insert="\n", attributes={})],
@@ -1088,9 +1618,9 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 instructions=[d.InsertOp(insert="Instructions\n", attributes={})],
                 wording=[
                     d.InsertOp(insert="This ", attributes={}),
-                    d.InsertOp(insert="is,", attributes={"selectable": True}),
+                    d.InsertOp(insert="is,", attributes={"manual-item": True}),
                     d.InsertOp(insert=" ", attributes={}),
-                    d.InsertOp(insert="the", attributes={"selectable": True}),
+                    d.InsertOp(insert="the", attributes={"manual-item": True}),
                     d.InsertOp(insert=" wording.\n", attributes={}),
                 ],
                 example=[d.InsertOp(insert="\n", attributes={})],
@@ -1126,6 +1656,46 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
             ),
         )
 
+    def test_boxed_words(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions=[d.InsertOp(insert="Instructions\n", attributes={})],
+                wording=[d.InsertOp(insert="This is, the wording.\n", attributes={})],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
+                wording_paragraphs_per_pagelet=3,
+                adaptation=AdaptationV2(kind="generic", effects=[ItemizedAdaptationEffect(
+                    kind="itemized",
+                    items={"kind": "tokens", "words": True, "punctuation": False},
+                    effects={"selectable": None, "boxed": True},
+                )]),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=42,
+                pagelets=[r.Pagelet(
+                    instructions=r.Section(paragraphs=[
+                        r.Paragraph(tokens=[
+                            r.PlainText(text="Instructions"),
+                        ]),
+                    ]),
+                    wording=r.Section(paragraphs=[r.Paragraph(tokens=[
+                        r.BoxedText(text="This"),
+                        r.Whitespace(),
+                        r.BoxedText(text="is"),
+                        r.PlainText(text=","),
+                        r.Whitespace(),
+                        r.BoxedText(text="the"),
+                        r.Whitespace(),
+                        r.BoxedText(text="wording"),
+                        r.PlainText(text="."),
+                    ])]),
+                )],
+            ),
+        )
+
     def test_sel_tags(self):
         self.do_test(
             e.Exercise(
@@ -1149,7 +1719,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
                     adaptation=AdaptationV2(kind="generic", effects=[ItemizedAdaptationEffect(
                         kind="itemized",
-                        items={"kind": "words", "punctuation": False},
+                        items={"kind": "tokens", "words": True, "punctuation": False},
                         effects={"selectable": {"colors": ["red", "green", "blue"]}, "boxed": False},
                     )]),
             ),
@@ -1207,7 +1777,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                             r.Whitespace(),
                             r.BoxedText(text="a"),
                             r.Whitespace(),
-                            r.PlainText(text="or"),
+                            r.PlainText(text="ou"),
                             r.Whitespace(),
                             r.BoxedText(text="b"),
                             r.PlainText(text="."),
@@ -1260,7 +1830,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                             r.Whitespace(),
                             r.BoxedText(text="a"),
                             r.Whitespace(),
-                            r.PlainText(text="or"),
+                            r.PlainText(text="ou"),
                             r.Whitespace(),
                             r.BoxedText(text="b"),
                             r.PlainText(text="."),
@@ -1353,7 +1923,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                             r.Whitespace(),
                             r.BoxedText(text="a"),
                             r.Whitespace(),
-                            r.PlainText(text="or"),
+                            r.PlainText(text="ou"),
                             r.Whitespace(),
                             r.BoxedText(text="b"),
                             r.PlainText(text="."),
@@ -1368,6 +1938,51 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                             r.PlainText(text="B"),
                             r.Whitespace(),
                             r.MultipleChoicesInput(choices=["a", "b"]),
+                        ]),
+                    ]),
+                )],
+            ),
+        )
+
+    def test_choices2_with_empty_separator(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions=[
+                    d.InsertOp(insert="Choose ", attributes={}),
+                    d.InsertOp(insert="a b", attributes={"choices2": {"start": "", "separator1": "", "separator2": "", "stop": "", "placeholder": "..."}}),
+                    d.InsertOp(insert=".\n", attributes={}),
+                ],
+                wording=[
+                    d.InsertOp(insert="A ... B ...\n", attributes={}),
+                ],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
+                wording_paragraphs_per_pagelet=3,
+                adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=42,
+                pagelets=[r.Pagelet(
+                    instructions=r.Section(paragraphs=[
+                        r.Paragraph(tokens=[
+                            r.PlainText(text="Choose"),
+                            r.Whitespace(),
+                            r.BoxedText(text="a b"),
+                            r.PlainText(text="."),
+                        ]),
+                    ]),
+                    wording=r.Section(paragraphs=[
+                        r.Paragraph(tokens=[
+                            r.PlainText(text="A"),
+                            r.Whitespace(),
+                            r.MultipleChoicesInput(choices=["a b"]),
+                            r.Whitespace(),
+                            r.PlainText(text="B"),
+                            r.Whitespace(),
+                            r.MultipleChoicesInput(choices=["a b"]),
                         ]),
                     ]),
                 )],
@@ -1408,7 +2023,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                             r.Whitespace(),
                             r.BoxedText(text="c"),
                             r.Whitespace(),
-                            r.PlainText(text="or"),
+                            r.PlainText(text="ou"),
                             r.Whitespace(),
                             r.BoxedText(text="d"),
                             r.PlainText(text="."),
@@ -1463,7 +2078,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                             r.Whitespace(),
                             r.BoxedText(text="c"),
                             r.Whitespace(),
-                            r.PlainText(text="or"),
+                            r.PlainText(text="ou"),
                             r.Whitespace(),
                             r.BoxedText(text="d"),
                             r.PlainText(text="."),
@@ -1511,12 +2126,11 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                             r.PlainText(text="Choose"),
                             r.Whitespace(),
                             r.BoxedText(text="a"),
-                            r.Whitespace(),
-                            r.PlainText(text="/"),
+                            r.PlainText(text=","),
                             r.Whitespace(),
                             r.BoxedText(text="b"),
                             r.Whitespace(),
-                            r.PlainText(text="/"),
+                            r.PlainText(text="ou"),
                             r.Whitespace(),
                             r.BoxedText(text="c"),
                             r.PlainText(text="."),
@@ -1563,13 +2177,11 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                         r.Paragraph(tokens=[
                             r.PlainText(text="Choose"),
                             r.Whitespace(),
-                            r.PlainText(text="("),
                             r.BoxedText(text="a"),
                             r.Whitespace(),
-                            r.PlainText(text="or"),
+                            r.PlainText(text="ou"),
                             r.Whitespace(),
                             r.BoxedText(text="b"),
-                            r.PlainText(text=")"),
                             r.PlainText(text="."),
                         ]),
                     ]),
@@ -1618,7 +2230,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                             r.Whitespace(),
                             r.BoxedText(text="a"),
                             r.Whitespace(),
-                            r.PlainText(text="or"),
+                            r.PlainText(text="ou"),
                             r.Whitespace(),
                             r.BoxedText(text="b"),
                             r.Whitespace(),
@@ -1626,7 +2238,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                             r.Whitespace(),
                             r.BoxedText(text="c"),
                             r.Whitespace(),
-                            r.PlainText(text="or"),
+                            r.PlainText(text="ou"),
                             r.Whitespace(),
                             r.BoxedText(text="d"),
                             r.PlainText(text="."),
@@ -1646,6 +2258,62 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                             r.MultipleChoicesInput(choices=["a", "b"]),
                             r.Whitespace(),
                             r.MultipleChoicesInput(choices=["c", "d"]),
+                        ]),
+                    ]),
+                )],
+            ),
+        )
+
+    # https://github.com/jacquev6/Gabby/issues/3#issuecomment-2462720676
+    def test_chose_a_single_letter_to_complete_a_word(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions=[
+                    d.InsertOp(insert="Complète les mots avec ", attributes={}),
+                    d.InsertOp(insert="m ou n", attributes={"choices2": {"start": "", "separator1": "ou", "separator2": "", "stop": "", "placeholder": "..."}}),
+                    d.InsertOp(insert=".\n", attributes={}),
+                ],
+                wording=[
+                    d.InsertOp(insert="i...mense i...juste\n", attributes={}),
+                ],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
+                wording_paragraphs_per_pagelet=3,
+                adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=42,
+                pagelets=[r.Pagelet(
+                    instructions=r.Section(paragraphs=[
+                        r.Paragraph(tokens=[
+                            r.PlainText(text="Complète"),
+                            r.Whitespace(),
+                            r.PlainText(text="les"),
+                            r.Whitespace(),
+                            r.PlainText(text="mots"),
+                            r.Whitespace(),
+                            r.PlainText(text="avec"),
+                            r.Whitespace(),
+                            r.BoxedText(text="m"),
+                            r.Whitespace(),
+                            r.PlainText(text="ou"),
+                            r.Whitespace(),
+                            r.BoxedText(text="n"),
+                            r.PlainText(text="."),
+                        ]),
+                    ]),
+                    wording=r.Section(paragraphs=[
+                        r.Paragraph(tokens=[
+                            r.PlainText(text="i"),
+                            r.MultipleChoicesInput(choices=["m", "n"]),
+                            r.PlainText(text="mense"),
+                            r.Whitespace(),
+                            r.PlainText(text="i"),
+                            r.MultipleChoicesInput(choices=["m", "n"]),
+                            r.PlainText(text="juste"),
                         ]),
                     ]),
                 )],
@@ -2456,7 +3124,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                     effects=[
                         ItemizedAdaptationEffect(
                             kind="itemized",
-                            items=ItemizedAdaptationEffect.WordsItems(kind="words", punctuation=False),
+                            items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=True, punctuation=False),
                             effects=ItemizedAdaptationEffect.Effects(
                                 selectable=ItemizedAdaptationEffect.Effects.Selectable(colors=["red", "blue"]),
                                 boxed=False,
@@ -2526,7 +3194,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                     effects=[
                         ItemizedAdaptationEffect(
                             kind="itemized",
-                            items=ItemizedAdaptationEffect.WordsItems(kind="words", punctuation=False),
+                            items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=True, punctuation=False),
                             effects=ItemizedAdaptationEffect.Effects(
                                 selectable=ItemizedAdaptationEffect.Effects.Selectable(colors=["red", "green", "blue"]),
                                 boxed=False,
@@ -2579,7 +3247,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                     effects=[
                         ItemizedAdaptationEffect(
                             kind="itemized",
-                            items=ItemizedAdaptationEffect.WordsItems(kind="words", punctuation=False),
+                            items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=True, punctuation=False),
                             effects=ItemizedAdaptationEffect.Effects(
                                 selectable=ItemizedAdaptationEffect.Effects.Selectable(colors=["red"]),
                                 boxed=False,
@@ -2625,7 +3293,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                     effects=[
                         ItemizedAdaptationEffect(
                             kind="itemized",
-                            items=ItemizedAdaptationEffect.WordsItems(kind="words", punctuation=False),
+                            items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=True, punctuation=False),
                             effects=ItemizedAdaptationEffect.Effects(
                                 selectable=ItemizedAdaptationEffect.Effects.Selectable(colors=["red"]),
                                 boxed=False,
@@ -2681,7 +3349,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                     effects=[
                         ItemizedAdaptationEffect(
                             kind="itemized",
-                            items=ItemizedAdaptationEffect.WordsItems(kind="words", punctuation=False),
+                            items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=True, punctuation=False),
                             effects=ItemizedAdaptationEffect.Effects(
                                 selectable=ItemizedAdaptationEffect.Effects.Selectable(colors=["red"]),
                                 boxed=False,
@@ -2737,7 +3405,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                     effects=[
                         ItemizedAdaptationEffect(
                             kind="itemized",
-                            items=ItemizedAdaptationEffect.WordsItems(kind="words", punctuation=False),
+                            items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=True, punctuation=False),
                             effects=ItemizedAdaptationEffect.Effects(
                                 selectable=ItemizedAdaptationEffect.Effects.Selectable(colors=["red"]),
                                 boxed=False,
@@ -2791,7 +3459,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                     effects=[
                         ItemizedAdaptationEffect(
                             kind="itemized",
-                            items=ItemizedAdaptationEffect.WordsItems(kind="words", punctuation=False),
+                            items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=True, punctuation=False),
                             effects=ItemizedAdaptationEffect.Effects(
                                 selectable=ItemizedAdaptationEffect.Effects.Selectable(colors=["red"]),
                                 boxed=False,
@@ -2841,7 +3509,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                     effects=[
                         ItemizedAdaptationEffect(
                             kind="itemized",
-                            items=ItemizedAdaptationEffect.WordsItems(kind="words", punctuation=False),
+                            items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=True, punctuation=False),
                             effects=ItemizedAdaptationEffect.Effects(
                                 selectable=ItemizedAdaptationEffect.Effects.Selectable(colors=["red"]),
                                 boxed=False,
@@ -2917,7 +3585,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                     effects=[
                         ItemizedAdaptationEffect(
                             kind="itemized",
-                            items=ItemizedAdaptationEffect.WordsItems(kind="words", punctuation=False),
+                            items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=True, punctuation=False),
                             effects=ItemizedAdaptationEffect.Effects(
                                 selectable=ItemizedAdaptationEffect.Effects.Selectable(colors=["red", "green", "blue"]),
                                 boxed=False,
@@ -2950,6 +3618,430 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                             r.SelectableText(text="wording", colors=["red", "green", "blue"], boxed=False),
                         ]),
                     ]),
+                )],
+            ),
+        )
+
+    def test_french_elision_of_articles__without_punctuation(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=None,
+                instructions=[
+                    d.InsertOp(insert="Selectionne les articles.\n", attributes={}),
+                ],
+                wording=[
+                    d.InsertOp(insert="La maison est belle. L'école est fermée. L’automobile est verte.\n", attributes={}),
+                ],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
+                wording_paragraphs_per_pagelet=3,
+                adaptation=AdaptationV2(
+                    kind="generic",
+                    effects=[
+                        ItemizedAdaptationEffect(
+                            kind="itemized",
+                            items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=True, punctuation=False),
+                            effects=ItemizedAdaptationEffect.Effects(
+                                selectable=ItemizedAdaptationEffect.Effects.Selectable(colors=["red"]),
+                                boxed=False,
+                            ),
+                        ),
+                    ],
+                ),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=None,
+                pagelets=[r.Pagelet(
+                    instructions=r.Section(paragraphs=[r.Paragraph(tokens=[
+                        r.PlainText(text="Selectionne"),
+                        r.Whitespace(),
+                        r.PlainText(text="les"),
+                        r.Whitespace(),
+                        r.PlainText(text="articles"),
+                        r.PlainText(text="."),
+                    ])]),
+                    wording=r.Section(paragraphs=[r.Paragraph(tokens=[
+                        r.SelectableText(text="La", colors=["red"], boxed=False),
+                        r.Whitespace(),
+                        r.SelectableText(text="maison", colors=["red"], boxed=False),
+                        r.Whitespace(),
+                        r.SelectableText(text="est", colors=["red"], boxed=False),
+                        r.Whitespace(),
+                        r.SelectableText(text="belle", colors=["red"], boxed=False),
+                        r.PlainText(text="."),
+                        r.Whitespace(),
+                        r.SelectableText(text="L'", colors=["red"], boxed=False),
+                        r.SelectableText(text="école", colors=["red"], boxed=False),
+                        r.Whitespace(),
+                        r.SelectableText(text="est", colors=["red"], boxed=False),
+                        r.Whitespace(),
+                        r.SelectableText(text="fermée", colors=["red"], boxed=False),
+                        r.PlainText(text="."),
+                        r.Whitespace(),
+                        r.SelectableText(text="L’", colors=["red"], boxed=False),
+                        r.SelectableText(text="automobile", colors=["red"], boxed=False),
+                        r.Whitespace(),
+                        r.SelectableText(text="est", colors=["red"], boxed=False),
+                        r.Whitespace(),
+                        r.SelectableText(text="verte", colors=["red"], boxed=False),
+                        r.PlainText(text="."),
+                    ])]),
+                )],
+            ),
+        )
+
+    def test_french_elision_of_articles__punctuation_only(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=None,
+                instructions=[
+                    d.InsertOp(insert="Selectionne les articles.\n", attributes={}),
+                ],
+                wording=[
+                    d.InsertOp(insert="La maison est belle. L'école est fermée. L’automobile est verte.\n", attributes={}),
+                ],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
+                wording_paragraphs_per_pagelet=3,
+                adaptation=AdaptationV2(
+                    kind="generic",
+                    effects=[
+                        ItemizedAdaptationEffect(
+                            kind="itemized",
+                            items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=False, punctuation=True),
+                            effects=ItemizedAdaptationEffect.Effects(
+                                selectable=ItemizedAdaptationEffect.Effects.Selectable(colors=["red"]),
+                                boxed=False,
+                            ),
+                        ),
+                    ],
+                ),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=None,
+                pagelets=[r.Pagelet(
+                    instructions=r.Section(paragraphs=[r.Paragraph(tokens=[
+                        r.PlainText(text="Selectionne"),
+                        r.Whitespace(),
+                        r.PlainText(text="les"),
+                        r.Whitespace(),
+                        r.PlainText(text="articles"),
+                        r.PlainText(text="."),
+                    ])]),
+                    wording=r.Section(paragraphs=[r.Paragraph(tokens=[
+                        r.PlainText(text="La"),
+                        r.Whitespace(),
+                        r.PlainText(text="maison"),
+                        r.Whitespace(),
+                        r.PlainText(text="est"),
+                        r.Whitespace(),
+                        r.PlainText(text="belle"),
+                        r.SelectableText(text=".", colors=["red"], boxed=False),
+                        r.Whitespace(),
+                        r.PlainText(text="L"),
+                        r.SelectableText(text="'", colors=["red"], boxed=False),
+                        r.PlainText(text="école"),
+                        r.Whitespace(),
+                        r.PlainText(text="est"),
+                        r.Whitespace(),
+                        r.PlainText(text="fermée"),
+                        r.SelectableText(text=".", colors=["red"], boxed=False),
+                        r.Whitespace(),
+                        r.PlainText(text="L"),
+                        r.SelectableText(text="’", colors=["red"], boxed=False),
+                        r.PlainText(text="automobile"),
+                        r.Whitespace(),
+                        r.PlainText(text="est"),
+                        r.Whitespace(),
+                        r.PlainText(text="verte"),
+                        r.SelectableText(text=".", colors=["red"], boxed=False),
+                    ])]),
+                )],
+            ),
+        )
+
+    def test_french_elision_of_articles__with_punctuation(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=None,
+                instructions=[
+                    d.InsertOp(insert="Selectionne les articles.\n", attributes={}),
+                ],
+                wording=[
+                    d.InsertOp(insert="La maison est belle. L'école est fermée. L’automobile est verte.\n", attributes={}),
+                ],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
+                wording_paragraphs_per_pagelet=3,
+                adaptation=AdaptationV2(
+                    kind="generic",
+                    effects=[
+                        ItemizedAdaptationEffect(
+                            kind="itemized",
+                            items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=True, punctuation=True),
+                            effects=ItemizedAdaptationEffect.Effects(
+                                selectable=ItemizedAdaptationEffect.Effects.Selectable(colors=["red"]),
+                                boxed=False,
+                            ),
+                        ),
+                    ],
+                ),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=None,
+                pagelets=[r.Pagelet(
+                    instructions=r.Section(paragraphs=[r.Paragraph(tokens=[
+                        r.PlainText(text="Selectionne"),
+                        r.Whitespace(),
+                        r.PlainText(text="les"),
+                        r.Whitespace(),
+                        r.PlainText(text="articles"),
+                        r.PlainText(text="."),
+                    ])]),
+                    wording=r.Section(paragraphs=[r.Paragraph(tokens=[
+                        r.SelectableText(text="La", colors=["red"], boxed=False),
+                        r.Whitespace(),
+                        r.SelectableText(text="maison", colors=["red"], boxed=False),
+                        r.Whitespace(),
+                        r.SelectableText(text="est", colors=["red"], boxed=False),
+                        r.Whitespace(),
+                        r.SelectableText(text="belle", colors=["red"], boxed=False),
+                        r.SelectableText(text=".", colors=["red"], boxed=False),
+                        r.Whitespace(),
+                        r.SelectableText(text="L'", colors=["red"], boxed=False),
+                        r.SelectableText(text="école", colors=["red"], boxed=False),
+                        r.Whitespace(),
+                        r.SelectableText(text="est", colors=["red"], boxed=False),
+                        r.Whitespace(),
+                        r.SelectableText(text="fermée", colors=["red"], boxed=False),
+                        r.SelectableText(text=".", colors=["red"], boxed=False),
+                        r.Whitespace(),
+                        r.SelectableText(text="L’", colors=["red"], boxed=False),
+                        r.SelectableText(text="automobile", colors=["red"], boxed=False),
+                        r.Whitespace(),
+                        r.SelectableText(text="est", colors=["red"], boxed=False),
+                        r.Whitespace(),
+                        r.SelectableText(text="verte", colors=["red"], boxed=False),
+                        r.SelectableText(text=".", colors=["red"], boxed=False),
+                    ])]),
+                )],
+            ),
+        )
+
+    def test_french_elision_of_articles__without_punctuation__boxed_only(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=None,
+                instructions=[
+                    d.InsertOp(insert="Selectionne les articles.\n", attributes={}),
+                ],
+                wording=[
+                    d.InsertOp(insert="La maison est belle. L'école est fermée. L’automobile est verte.\n", attributes={}),
+                ],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
+                wording_paragraphs_per_pagelet=3,
+                adaptation=AdaptationV2(
+                    kind="generic",
+                    effects=[
+                        ItemizedAdaptationEffect(
+                            kind="itemized",
+                            items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=True, punctuation=False),
+                            effects=ItemizedAdaptationEffect.Effects(
+                                selectable=None,
+                                boxed=True,
+                            ),
+                        ),
+                    ],
+                ),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=None,
+                pagelets=[r.Pagelet(
+                    instructions=r.Section(paragraphs=[r.Paragraph(tokens=[
+                        r.PlainText(text="Selectionne"),
+                        r.Whitespace(),
+                        r.PlainText(text="les"),
+                        r.Whitespace(),
+                        r.PlainText(text="articles"),
+                        r.PlainText(text="."),
+                    ])]),
+                    wording=r.Section(paragraphs=[r.Paragraph(tokens=[
+                        r.BoxedText(text="La"),
+                        r.Whitespace(),
+                        r.BoxedText(text="maison"),
+                        r.Whitespace(),
+                        r.BoxedText(text="est"),
+                        r.Whitespace(),
+                        r.BoxedText(text="belle"),
+                        r.PlainText(text="."),
+                        r.Whitespace(),
+                        r.BoxedText(text="L'"),
+                        r.BoxedText(text="école"),
+                        r.Whitespace(),
+                        r.BoxedText(text="est"),
+                        r.Whitespace(),
+                        r.BoxedText(text="fermée"),
+                        r.PlainText(text="."),
+                        r.Whitespace(),
+                        r.BoxedText(text="L’"),
+                        r.BoxedText(text="automobile"),
+                        r.Whitespace(),
+                        r.BoxedText(text="est"),
+                        r.Whitespace(),
+                        r.BoxedText(text="verte"),
+                        r.PlainText(text="."),
+                    ])]),
+                )],
+            ),
+        )
+
+    def test_french_elision_of_articles__punctuation_only__boxed_only(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=None,
+                instructions=[
+                    d.InsertOp(insert="Selectionne les articles.\n", attributes={}),
+                ],
+                wording=[
+                    d.InsertOp(insert="La maison est belle. L'école est fermée. L’automobile est verte.\n", attributes={}),
+                ],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
+                wording_paragraphs_per_pagelet=3,
+                adaptation=AdaptationV2(
+                    kind="generic",
+                    effects=[
+                        ItemizedAdaptationEffect(
+                            kind="itemized",
+                            items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=False, punctuation=True),
+                            effects=ItemizedAdaptationEffect.Effects(
+                                selectable=None,
+                                boxed=True,
+                            ),
+                        ),
+                    ],
+                ),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=None,
+                pagelets=[r.Pagelet(
+                    instructions=r.Section(paragraphs=[r.Paragraph(tokens=[
+                        r.PlainText(text="Selectionne"),
+                        r.Whitespace(),
+                        r.PlainText(text="les"),
+                        r.Whitespace(),
+                        r.PlainText(text="articles"),
+                        r.PlainText(text="."),
+                    ])]),
+                    wording=r.Section(paragraphs=[r.Paragraph(tokens=[
+                        r.PlainText(text="La"),
+                        r.Whitespace(),
+                        r.PlainText(text="maison"),
+                        r.Whitespace(),
+                        r.PlainText(text="est"),
+                        r.Whitespace(),
+                        r.PlainText(text="belle"),
+                        r.BoxedText(text="."),
+                        r.Whitespace(),
+                        r.PlainText(text="L"),
+                        r.BoxedText(text="'"),
+                        r.PlainText(text="école"),
+                        r.Whitespace(),
+                        r.PlainText(text="est"),
+                        r.Whitespace(),
+                        r.PlainText(text="fermée"),
+                        r.BoxedText(text="."),
+                        r.Whitespace(),
+                        r.PlainText(text="L"),
+                        r.BoxedText(text="’"),
+                        r.PlainText(text="automobile"),
+                        r.Whitespace(),
+                        r.PlainText(text="est"),
+                        r.Whitespace(),
+                        r.PlainText(text="verte"),
+                        r.BoxedText(text="."),
+                    ])]),
+                )],
+            ),
+        )
+
+    def test_french_elision_of_articles__with_punctuation__boxed_only(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=None,
+                instructions=[
+                    d.InsertOp(insert="Selectionne les articles.\n", attributes={}),
+                ],
+                wording=[
+                    d.InsertOp(insert="La maison est belle. L'école est fermée. L’automobile est verte.\n", attributes={}),
+                ],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
+                wording_paragraphs_per_pagelet=3,
+                adaptation=AdaptationV2(
+                    kind="generic",
+                    effects=[
+                        ItemizedAdaptationEffect(
+                            kind="itemized",
+                            items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=True, punctuation=True),
+                            effects=ItemizedAdaptationEffect.Effects(
+                                selectable=None,
+                                boxed=True,
+                            ),
+                        ),
+                    ],
+                ),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=None,
+                pagelets=[r.Pagelet(
+                    instructions=r.Section(paragraphs=[r.Paragraph(tokens=[
+                        r.PlainText(text="Selectionne"),
+                        r.Whitespace(),
+                        r.PlainText(text="les"),
+                        r.Whitespace(),
+                        r.PlainText(text="articles"),
+                        r.PlainText(text="."),
+                    ])]),
+                    wording=r.Section(paragraphs=[r.Paragraph(tokens=[
+                        r.BoxedText(text="La"),
+                        r.Whitespace(),
+                        r.BoxedText(text="maison"),
+                        r.Whitespace(),
+                        r.BoxedText(text="est"),
+                        r.Whitespace(),
+                        r.BoxedText(text="belle"),
+                        r.BoxedText(text="."),
+                        r.Whitespace(),
+                        r.BoxedText(text="L'"),
+                        r.BoxedText(text="école"),
+                        r.Whitespace(),
+                        r.BoxedText(text="est"),
+                        r.Whitespace(),
+                        r.BoxedText(text="fermée"),
+                        r.BoxedText(text="."),
+                        r.Whitespace(),
+                        r.BoxedText(text="L’"),
+                        r.BoxedText(text="automobile"),
+                        r.Whitespace(),
+                        r.BoxedText(text="est"),
+                        r.Whitespace(),
+                        r.BoxedText(text="verte"),
+                        r.BoxedText(text="."),
+                    ])]),
                 )],
             ),
         )
@@ -3077,7 +4169,7 @@ class LenientParagraphTestCase(AdaptationTestCase):
                     effects=[
                         ItemizedAdaptationEffect(
                             kind="itemized",
-                            items=ItemizedAdaptationEffect.WordsItems(kind="words", punctuation=False),
+                            items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=True, punctuation=False),
                             effects=ItemizedAdaptationEffect.Effects(
                                 selectable=ItemizedAdaptationEffect.Effects.Selectable(colors=["red"]),
                                 boxed=False,
@@ -3155,7 +4247,7 @@ class LenientParagraphTestCase(AdaptationTestCase):
                     effects=[
                         ItemizedAdaptationEffect(
                             kind="itemized",
-                            items=ItemizedAdaptationEffect.WordsItems(kind="words", punctuation=True),
+                            items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=True, punctuation=True),
                             effects=ItemizedAdaptationEffect.Effects(
                                 selectable=ItemizedAdaptationEffect.Effects.Selectable(colors=["red"]),
                                 boxed=False,
@@ -3313,7 +4405,7 @@ class LenientParagraphTestCase(AdaptationTestCase):
                             r.Whitespace(),
                             r.BoxedText(text="alpha"),
                             r.Whitespace(),
-                            r.PlainText(text="/"),
+                            r.PlainText(text="ou"),
                             r.Whitespace(),
                             r.BoxedText(text="bravo"),
                             r.PlainText(text="."),
@@ -3394,7 +4486,7 @@ class MultipleAdaptationEffectsTestCase(AdaptationTestCase):
                             r.Whitespace(),
                             r.BoxedText(text="short"),
                             r.Whitespace(),
-                            r.PlainText(text="/"),
+                            r.PlainText(text="ou"),
                             r.Whitespace(),
                             r.BoxedText(text="long"),
                         ]),
@@ -3459,7 +4551,7 @@ class MultipleAdaptationEffectsTestCase(AdaptationTestCase):
                             r.Whitespace(),
                             r.BoxedText(text="alpha"),
                             r.Whitespace(),
-                            r.PlainText(text="/"),
+                            r.PlainText(text="ou"),
                             r.Whitespace(),
                             r.BoxedText(text="bravo"),
                             r.PlainText(text="."),
@@ -3509,7 +4601,7 @@ class MultipleAdaptationEffectsTestCase(AdaptationTestCase):
                     # Selectable words
                     ItemizedAdaptationEffect(
                         kind="itemized",
-                        items=ItemizedAdaptationEffect.WordsItems(kind="words", punctuation=False),
+                        items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=True, punctuation=False),
                         effects=ItemizedAdaptationEffect.Effects(
                             selectable=ItemizedAdaptationEffect.Effects.Selectable(colors=["red", "yellow"]),
                             boxed=True,
@@ -3529,7 +4621,7 @@ class MultipleAdaptationEffectsTestCase(AdaptationTestCase):
                             r.Whitespace(),
                             r.BoxedText(text="alpha"),
                             r.Whitespace(),
-                            r.PlainText(text="/"),
+                            r.PlainText(text="ou"),
                             r.Whitespace(),
                             r.BoxedText(text="bravo"),
                         ]),

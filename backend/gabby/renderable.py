@@ -82,7 +82,28 @@ def Whitespace():
     return _Whitespace(type="whitespace")
 
 
-SentenceToken = _PlainText | _BoxedText | _BoldText | _ItalicText | _SelectableText | _SelectedText | _FreeTextInput | _MultipleChoicesInput | _Whitespace
+LeafToken = _PlainText | _BoxedText | _BoldText | _ItalicText | _SelectedText | _FreeTextInput | _MultipleChoicesInput | _Whitespace
+
+
+class _Selectable(PydanticBase):
+    type: Literal["selectable"]
+    contents: list[LeafToken]
+    colors: list[str]
+    boxed: bool
+
+def Selectable(contents: list[LeafToken], colors: list[str], boxed: bool):
+    return _Selectable(type="selectable", contents=contents, colors=colors, boxed=boxed)
+
+
+class _Boxed(PydanticBase):
+    type: Literal["boxed"]
+    contents: list[LeafToken]
+
+def Boxed(contents: list[LeafToken]):
+    return _Boxed(type="boxed", contents=contents)
+
+
+SentenceToken = LeafToken | _Selectable | _Boxed | _SelectableText
 
 
 class Paragraph(PydanticBase):

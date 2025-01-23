@@ -23,7 +23,7 @@ function increment() {
 span {
   cursor: pointer;
   user-select: none;
-  padding: 3.2px 16px;
+  padding: 3.2px 0px;
 }
 
 span:hover {
@@ -31,7 +31,8 @@ span:hover {
 }
 
 span.boxed_ {
-  outline: black solid 3px;
+  padding: 4px 0;
+  outline: black solid 2px;
 }
 
 /* span.boxed:hover {

@@ -21,7 +21,7 @@ const props = withDefaults(defineProps<{
   fade: true,
 })
 
-interface Point {
+export interface Point {
   x: number
   y: number
 }

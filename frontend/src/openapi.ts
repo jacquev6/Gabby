@@ -191,6 +191,16 @@ export interface components {
       /** Username */
       username: string;
     };
+    /** CharactersItems */
+    CharactersItems: {
+      /**
+       * Kind
+       * @constant
+       */
+      kind: "characters";
+      /** Letters */
+      letters: boolean;
+    };
     /** Effects */
     Effects: {
       /** Boxed */
@@ -237,7 +247,7 @@ export interface components {
     "ItemizedAdaptationEffect-Input": {
       effects: components["schemas"]["Effects"];
       /** Items */
-      items: components["schemas"]["WordsItems"] | components["schemas"]["SentencesItems"] | components["schemas"]["ManualItems"];
+      items: components["schemas"]["CharactersItems"] | components["schemas"]["TokensItems"] | components["schemas"]["SentencesItems"] | components["schemas"]["ManualItems"];
       /**
        * Kind
        * @constant
@@ -248,7 +258,7 @@ export interface components {
     "ItemizedAdaptationEffect-Output": {
       effects: components["schemas"]["Effects"];
       /** Items */
-      items: components["schemas"]["WordsItems"] | components["schemas"]["SentencesItems"] | components["schemas"]["ManualItems"];
+      items: components["schemas"]["CharactersItems"] | components["schemas"]["TokensItems"] | components["schemas"]["SentencesItems"] | components["schemas"]["ManualItems"];
       /**
        * Kind
        * @constant
@@ -300,7 +310,7 @@ export interface components {
     /** Paragraph */
     Paragraph: {
       /** Tokens */
-      tokens: (components["schemas"]["_PlainText"] | components["schemas"]["_BoxedText"] | components["schemas"]["_BoldText"] | components["schemas"]["_ItalicText"] | components["schemas"]["_SelectableText"] | components["schemas"]["_SelectedText"] | components["schemas"]["_FreeTextInput"] | components["schemas"]["_MultipleChoicesInput"] | components["schemas"]["_Whitespace"])[];
+      tokens: (components["schemas"]["_PlainText"] | components["schemas"]["_BoxedText"] | components["schemas"]["_BoldText"] | components["schemas"]["_ItalicText"] | components["schemas"]["_SelectedText"] | components["schemas"]["_FreeTextInput"] | components["schemas"]["_MultipleChoicesInput"] | components["schemas"]["_Whitespace"] | components["schemas"]["_Selectable"] | components["schemas"]["_Boxed"] | components["schemas"]["_SelectableText"])[];
     };
     /** PdfRectangle */
     PdfRectangle: {
@@ -348,6 +358,18 @@ export interface components {
        */
       kind: "sentences";
     };
+    /** TokensItems */
+    TokensItems: {
+      /**
+       * Kind
+       * @constant
+       */
+      kind: "tokens";
+      /** Punctuation */
+      punctuation: boolean;
+      /** Words */
+      words: boolean;
+    };
     /** ValidationError */
     ValidationError: {
       /** Location */
@@ -356,16 +378,6 @@ export interface components {
       msg: string;
       /** Error Type */
       type: string;
-    };
-    /** WordsItems */
-    WordsItems: {
-      /**
-       * Kind
-       * @constant
-       */
-      kind: "words";
-      /** Punctuation */
-      punctuation: boolean;
     };
     /** _BoldText */
     _BoldText: {
@@ -376,6 +388,16 @@ export interface components {
        * @constant
        */
       type: "boldText";
+    };
+    /** _Boxed */
+    _Boxed: {
+      /** Contents */
+      contents: (components["schemas"]["_PlainText"] | components["schemas"]["_BoxedText"] | components["schemas"]["_BoldText"] | components["schemas"]["_ItalicText"] | components["schemas"]["_SelectedText"] | components["schemas"]["_FreeTextInput"] | components["schemas"]["_MultipleChoicesInput"] | components["schemas"]["_Whitespace"])[];
+      /**
+       * Type
+       * @constant
+       */
+      type: "boxed";
     };
     /** _BoxedText */
     _BoxedText: {
@@ -424,6 +446,20 @@ export interface components {
        * @constant
        */
       type: "plainText";
+    };
+    /** _Selectable */
+    _Selectable: {
+      /** Boxed */
+      boxed: boolean;
+      /** Colors */
+      colors: string[];
+      /** Contents */
+      contents: (components["schemas"]["_PlainText"] | components["schemas"]["_BoxedText"] | components["schemas"]["_BoldText"] | components["schemas"]["_ItalicText"] | components["schemas"]["_SelectedText"] | components["schemas"]["_FreeTextInput"] | components["schemas"]["_MultipleChoicesInput"] | components["schemas"]["_Whitespace"])[];
+      /**
+       * Type
+       * @constant
+       */
+      type: "selectable";
     };
     /** _SelectableText */
     _SelectableText: {

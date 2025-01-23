@@ -89,18 +89,17 @@ describe('Gabby', () => {
     cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="4"]').should('have.css', 'background-color', 'rgb(187, 255, 187)')
 
     cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="4"]').rightclick()
-    cy.get('.colour-area-mask').click(100, 100)
+    cy.get('.color').eq(9).click()
     notBusy()
-    cy.get('sel-blot[data-sel="4"]').should('have.css', 'background-color', 'rgb(45, 75, 45)')
-    cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="4"]').should('have.css', 'background-color', 'rgb(45, 75, 45)')
-    cy.get('button[data-cy="format-color-4"] > span').should('have.css', 'background-color', 'rgb(45, 75, 45)')
-    cy.get('span:contains("verbes")').last().should('have.css', 'background-color', 'rgb(45, 75, 45)')
-    cy.get('button:contains("OK")').click()
+    cy.get('sel-blot[data-sel="4"]').should('have.css', 'background-color', 'rgb(99, 47, 43)')
+    cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="4"]').should('have.css', 'background-color', 'rgb(99, 47, 43)')
+    cy.get('button[data-cy="format-color-4"] > span').should('have.css', 'background-color', 'rgb(99, 47, 43)')
+    cy.get('span:contains("verbes")').last().should('have.css', 'background-color', 'rgb(99, 47, 43)')
     cy.get('span:contains("Afrique")').last().click()
     cy.get('span:contains("Afrique")').last().click()
     cy.get('span:contains("Afrique")').last().click()
     cy.get('span:contains("Afrique")').last().click()
-    cy.get('span:contains("Afrique")').last().should('have.css', 'background-color', 'rgb(45, 75, 45)')
+    cy.get('span:contains("Afrique")').last().should('have.css', 'background-color', 'rgb(99, 47, 43)')
 
     cy.get('button:contains("Save then back to list")').click()
     notBusy()
@@ -108,15 +107,15 @@ describe('Gabby', () => {
     cy.get('li:contains("7 Relève") a:contains("Edit")').click()
     notBusy()
 
-    cy.get('sel-blot[data-sel="4"]').should('have.css', 'background-color', 'rgb(45, 75, 45)')
-    cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="4"]').should('have.css', 'background-color', 'rgb(45, 75, 45)')
-    cy.get('button[data-cy="format-color-4"] > span').should('have.css', 'background-color', 'rgb(45, 75, 45)')
-    cy.get('span:contains("verbes")').last().should('have.css', 'background-color', 'rgb(45, 75, 45)')
+    cy.get('sel-blot[data-sel="4"]').should('have.css', 'background-color', 'rgb(99, 47, 43)')
+    cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="4"]').should('have.css', 'background-color', 'rgb(99, 47, 43)')
+    cy.get('button[data-cy="format-color-4"] > span').should('have.css', 'background-color', 'rgb(99, 47, 43)')
+    cy.get('span:contains("verbes")').last().should('have.css', 'background-color', 'rgb(99, 47, 43)')
     cy.get('span:contains("Afrique")').last().click()
     cy.get('span:contains("Afrique")').last().click()
     cy.get('span:contains("Afrique")').last().click()
     cy.get('span:contains("Afrique")').last().click()
-    cy.get('span:contains("Afrique")').last().should('have.css', 'background-color', 'rgb(45, 75, 45)')
+    cy.get('span:contains("Afrique")').last().should('have.css', 'background-color', 'rgb(99, 47, 43)')
   })
 
   it('saves an exercise after changing the type of its pre-existing adaptation', () => {
@@ -150,5 +149,21 @@ describe('Gabby', () => {
     notBusy()
 
     cy.get('@parsedExercises.all').its('length').should('be.lessThan', 15)
+  })
+
+  it('edits MCQ choices - at the right end of the choices2 blot', () => {
+    cy.viewport(1200, 800)
+    visit('/project-xkopqm/textbook-klxufv/page-7/exercise-xnyegk')
+
+    cy.get('label:contains("Instructions") + .ql-container > .ql-editor').click().type('{end}{leftArrow}blah')
+    cy.get('choices2-blot:contains("vrai ou fauxblah")').should('exist')
+  })
+
+  it('edits MCQ choices - at the left end of the choices2 blot', () => {
+    cy.viewport(1200, 800)
+    visit('/project-xkopqm/textbook-klxufv/page-7/exercise-xnyegk')
+
+    cy.get('label:contains("Instructions") + .ql-container > .ql-editor').click().type('{end}{leftArrow}{leftArrow}{leftArrow}{leftArrow}{leftArrow}{leftArrow}{leftArrow}{leftArrow}{leftArrow}{leftArrow}{leftArrow}{leftArrow}{leftArrow}blah')
+    cy.get('choices2-blot:contains("blahvrai ou faux")').should('exist')
   })
 })

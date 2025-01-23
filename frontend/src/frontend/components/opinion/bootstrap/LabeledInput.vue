@@ -6,10 +6,10 @@ defineOptions({
 })
 
 defineProps<{
-  label: string,
+  label: string
 }>()
 
-const model = defineModel<unknown>()
+const model = defineModel<string>()
 
 const id = `input-${ Math.floor(Math.random() * 4000000000) }`
 
@@ -28,6 +28,6 @@ defineExpose({
 <template>
   <div class="mb-3">
     <label class="form-label" :for="id">{{ label }}</label>
-    <input ref="inputElement" class="form-control" :id="id" v-model="model" v-bind="$attrs" />
+    <input ref="inputElement" class="form-control" :id v-model="model" v-bind="$attrs" />
   </div>
 </template>

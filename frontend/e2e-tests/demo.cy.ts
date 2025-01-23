@@ -69,6 +69,46 @@ describe('Gabby', () => {
     cy.screenshot(`${testName}--${screenshotName}`)
   }
 
+  it('creates a "Select letters" exercise', () => {
+    cy.viewport(1300, 1200)
+    visit('/project-xkopqm/textbook-klxufv/page-8/new-exercise', {pdf: 'demo'})
+    setupAliases()
+
+    cy.get('@number').type('1')
+
+    cy.get('div:contains("Letters") >input').check()
+    cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="1"]').click()
+    cy.get('div:contains("Selectable") >input').should('be.checked')
+
+    traceRectangle('@canvas', 8, 5, 31, 9)
+    cy.get('button:contains("Instructions")').click()
+    notBusy()
+    cy.get('@instructions').find('p').then($el => {
+      const node = $el[0].firstChild
+      console.assert(node !== null)
+      selectRange(node, 16, node, 24)
+    })
+    cy.get('button[data-cy="format-color-1"]').click()
+    notBusy()
+
+    traceRectangle('@canvas', 7, 9.25, 60, 11)
+    cy.get('button:contains("Wording")').click()
+    notBusy()
+
+    cy.focused().blur()
+    screenshot('select-letters', 'edit-1')
+
+    cy.get('button:contains("Save then back")').click()
+    visit('/project-xkopqm')
+    cy.get('a:contains("the exported HTML")').should('have.attr', 'href').then(url => {
+      cy.visit(url + '&download=false')
+      cy.get('a').click()
+      screenshot('select-letters', 'export-1')
+      cy.get('span[data-cy=selectable]').eq(5).click()
+      screenshot('select-letters', 'export-2')
+    })
+  })
+
   it('creates a "Select words" exercise', () => {
     cy.viewport(1300, 1200)
     visit('/project-xkopqm/textbook-klxufv/page-2/new-exercise', {pdf: 'demo'})
@@ -76,6 +116,7 @@ describe('Gabby', () => {
 
     cy.get('@number').type('1')
 
+    cy.get('div:contains("Words") >input').check()
     cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="2"]').click()
     cy.get('div:contains("Selectable") >input').should('be.checked')
 
@@ -116,6 +157,54 @@ describe('Gabby', () => {
     })
   })
 
+  it('creates a "Select punctuation" exercise', () => {
+    cy.viewport(1300, 1200)
+    visit('/project-xkopqm/textbook-klxufv/page-9/new-exercise', {pdf: 'demo'})
+    setupAliases()
+
+    cy.get('@number').type('1')
+
+    cy.get('div:contains("Punctuation") >input').check()
+    cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="2"]').click()
+    cy.get('div:contains("Selectable") >input').should('be.checked')
+
+    traceRectangle('@canvas', 8, 5, 92, 11)
+    cy.get('button:contains("Instructions")').click()
+    notBusy()
+    cy.get('@instructions').find('p').then($el => {
+      const node = $el[0].firstChild
+      console.assert(node !== null)
+      selectRange(node, 80, node, 119)
+    })
+    cy.get('button[data-cy="format-color-2"]').click()
+    cy.get('@instructions').find('p').then($el => {
+      const node = $el[0].firstChild
+      console.assert(node !== null)
+      selectRange(node, 25, node, 76)
+    })
+    cy.get('button[data-cy="format-color-1"]').click()
+    notBusy()
+
+    traceRectangle('@canvas', 7, 9.5, 92, 19)
+    cy.get('button:contains("Wording")').click()
+    notBusy()
+
+    cy.focused().blur()
+    screenshot('select-punctuation', 'edit-1')
+
+    cy.get('button:contains("Save then back")').click()
+    visit('/project-xkopqm')
+    cy.get('a:contains("the exported HTML")').should('have.attr', 'href').then(url => {
+      cy.visit(url + '&download=false')
+      cy.get('a').click()
+      screenshot('select-punctuation', 'export-1')
+      cy.get('span[data-cy=selectable]').eq(1).click()
+      cy.get('span[data-cy=selectable]').eq(1).click()
+      cy.get('span[data-cy=selectable]').eq(2).click()
+      screenshot('select-punctuation', 'export-2')
+    })
+  })
+
   it('creates a "Select words" exercise with custom colors', () => {
     cy.viewport(1300, 1000)
     visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise', {pdf: 'demo'})
@@ -123,6 +212,7 @@ describe('Gabby', () => {
 
     cy.get('@number').type('1')
 
+    cy.get('div:contains("Words") >input').check()
     cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="2"]').click()
     cy.get('div:contains("Selectable") >input').should('be.checked')
 
@@ -131,24 +221,21 @@ describe('Gabby', () => {
     notBusy()
 
     cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="1"]').rightclick()
-    cy.get('.picker-hue-range-slider').invoke('val', 320).trigger('input')
-    cy.get('button:contains("OK")').click()
+    cy.get('.color').eq(9).click()
     cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="2"]').rightclick()
-    cy.get('.picker-hue-range-slider').invoke('val', 180).trigger('input')
-    cy.get('.colour-area-mask').click(240, 10)
-    cy.get('button:contains("OK")').click()
+    cy.get('.color').eq(1).click()
     notBusy()
 
     cy.get('@instructions').find('p').then($el => {
       const node = $el[0].firstChild
       console.assert(node !== null)
-      selectRange(node, 49, node, 58)
+      selectRange(node, 36, node, 44)
     })
     cy.get('button[data-cy="format-color-2"]').click()
     cy.get('@instructions').find('p').then($el => {
       const node = $el[0].firstChild
       console.assert(node !== null)
-      selectRange(node, 24, node, 29)
+      selectRange(node, 12, node, 20)
     })
     cy.get('button[data-cy="format-color-1"]').click()
     notBusy()
@@ -170,6 +257,54 @@ describe('Gabby', () => {
       cy.get('span[data-cy=selectable]').eq(7).click()
       cy.get('span[data-cy=selectable]').eq(7).click()
       screenshot('select-words-with-custom-colors', 'export-2')
+    })
+  })
+
+  it('creates a "Select sentences" exercise', () => {
+    cy.viewport(1300, 1200)
+    visit('/project-xkopqm/textbook-klxufv/page-10/new-exercise', {pdf: 'demo'})
+    setupAliases()
+
+    cy.get('@number').type('1')
+
+    cy.get('div:contains("Sentences") >input').check()
+    cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="2"]').click()
+    cy.get('div:contains("Selectable") >input').should('be.checked')
+
+    traceRectangle('@canvas', 8, 5, 70, 9)
+    cy.get('button:contains("Instructions")').click()
+    notBusy()
+    cy.get('@instructions').find('p').then($el => {
+      const node = $el[0].firstChild
+      console.assert(node !== null)
+      selectRange(node, 52, node, 73)
+    })
+    cy.get('button[data-cy="format-color-2"]').click()
+    cy.get('@instructions').find('p').then($el => {
+      const node = $el[0].firstChild
+      console.assert(node !== null)
+      selectRange(node, 25, node, 44)
+    })
+    cy.get('button[data-cy="format-color-1"]').click()
+    notBusy()
+
+    traceRectangle('@canvas', 7, 9.5, 92, 19)
+    cy.get('button:contains("Wording")').click()
+    notBusy()
+
+    cy.focused().blur()
+    screenshot('select-sentences', 'edit-1')
+
+    cy.get('button:contains("Save then back")').click()
+    visit('/project-xkopqm')
+    cy.get('a:contains("the exported HTML")').should('have.attr', 'href').then(url => {
+      cy.visit(url + '&download=false')
+      cy.get('a').click()
+      screenshot('select-sentences', 'export-1')
+      cy.get('span[data-cy=selectable]').eq(0).click()
+      cy.get('span[data-cy=selectable]').eq(1).click()
+      cy.get('span[data-cy=selectable]').eq(1).click()
+      screenshot('select-sentences', 'export-2')
     })
   })
 
@@ -262,14 +397,14 @@ describe('Gabby', () => {
     cy.get('@instructions').find('p').then($el => {
       const node = $el[0].firstChild
       console.assert(node !== null)
-      selectRange(node, 17, node, 35)
+      selectRange(node, 18, node, 34)
     })
     cy.get('button:contains("OK")').should('exist')
-    cy.get('label:contains("Start") + input').should('have.value', '(')
-    cy.get('label:contains("Stop") + input').should('have.value', ')')
+    cy.get('label:contains("Start") + input').should('have.value', '')
+    cy.get('label:contains("Stop") + input').should('have.value', '')
     cy.get('label:contains("Separators") + input').should('have.value', '/')
     cy.get('label + input').eq(3).should('have.value', '')  // Very fragile selector; sorry, future me!
-    cy.get('label:contains("Placeholder") + input').should('be.enabled').type('...', {delay: 0})
+    cy.get('label:contains("Placeholder") + input').click().type('...', {delay: 0})
     screenshot('multiple-choices-with-two-set-of-choices-in-instructions', 'edit-2', {clearSel: false})
     cy.get('button:contains("OK")').click()
     screenshot('multiple-choices-with-two-set-of-choices-in-instructions', 'edit-3')
@@ -279,14 +414,14 @@ describe('Gabby', () => {
     cy.get('@instructions').find('p').then($el => {
       const node = $el[0].firstChild!.nextSibling!.nextSibling
       console.assert(node !== null)
-      selectRange(node, 14, node, 35)
+      selectRange(node, 16, node, 35)
     })
     cy.get('button:contains("OK")').should('exist')
-    cy.get('label:contains("Start") + input').should('have.value', '[')
-    cy.get('label:contains("Stop") + input').should('have.value', ']')
+    cy.get('label:contains("Start") + input').should('have.value', '')
+    cy.get('label:contains("Stop") + input').should('have.value', '')
     cy.get('label:contains("Separators") + input').should('have.value', '*')
     cy.get('label + input').eq(3).should('have.value', '')  // Very fragile selector; sorry, future me!
-    cy.get('label:contains("Placeholder") + input').should('be.enabled').type('@@@', {delay: 0})
+    cy.get('label:contains("Placeholder") + input').click().type('@@@', {delay: 0})
     screenshot('multiple-choices-with-two-set-of-choices-in-instructions', 'edit-5', {clearSel: false})
     cy.get('button:contains("OK")').click()
     screenshot('multiple-choices-with-two-set-of-choices-in-instructions', 'edit-6')
@@ -362,7 +497,7 @@ describe('Gabby', () => {
 
     cy.get('@adaptationType').select('fill-with-free-text').blur()
     cy.get('p:contains("Placeholder") >button:contains("+")').click()
-    cy.get('label:contains("Placeholder") + input').type('{selectAll}…', {delay: 0})
+    cy.get('label:contains("Placeholder") + input').type('{selectAll}...', {delay: 0})
 
     traceRectangle('@canvas', 8, 5, 60, 9)
     cy.get('button:contains("Instructions")').click()
@@ -382,6 +517,52 @@ describe('Gabby', () => {
       screenshot('fill-with-free-text', 'export-1')
       cy.get('[contenteditable]').eq(1).type('coureuse')
       screenshot('fill-with-free-text', 'export-2')
+    })
+  })
+
+  it('creates a "Multiple choices" exercise where you choose a letter to complete words', () => {
+    cy.viewport(1300, 1000)
+    visit('/project-xkopqm/textbook-klxufv/page-11/new-exercise', {pdf: 'demo'})
+    setupAliases()
+
+    cy.get('@number').type('1')
+
+    cy.get('@adaptationType').select('multiple-choices')
+
+    traceRectangle('@canvas', 8, 5, 48, 9)
+    cy.get('button:contains("Instructions")').click()
+    notBusy()
+    traceRectangle('@canvas', 7, 11, 36, 14)
+    cy.get('button:contains("Wording")').click()
+    notBusy()
+
+    cy.get('button:contains("Multiple choices")').click()
+    screenshot('multiple-choices-for-letter-in-word', 'edit-1')
+    cy.get('@instructions').find('p').then($el => {
+      const node = $el[0].firstChild
+      console.assert(node !== null)
+      selectRange(node, 23, node, 29)
+    })
+    cy.get('button:contains("OK")').should('exist')
+    cy.get('label:contains("Start") + input').should('have.value', '')
+    cy.get('label:contains("Stop") + input').should('have.value', '')
+    cy.get('label:contains("Separators") + input').should('have.value', 'ou')
+    cy.get('label + input').eq(3).type('{selectAll}{del}')  // Very fragile selector; sorry, future me!
+    cy.get('label:contains("Placeholder") + input').click().type('...', {delay: 0})
+    screenshot('multiple-choices-for-letter-in-word', 'edit-2', {clearSel: false})
+    cy.get('button:contains("OK")').click()
+    screenshot('multiple-choices-for-letter-in-word', 'edit-3')
+
+    cy.get('button:contains("Save then back")').click()
+    visit('/project-xkopqm')
+    cy.get('a:contains("the exported HTML")').should('have.attr', 'href').then(url => {
+      cy.visit(url + '&download=false')
+      cy.get('a').click()
+      screenshot('multiple-choices-for-letter-in-word', 'export-1')
+      cy.get('span.main').eq(1).click()
+      screenshot('multiple-choices-for-letter-in-word', 'export-2')
+      cy.get('span.choice1').click()
+      screenshot('multiple-choices-for-letter-in-word', 'export-3')
     })
   })
 })

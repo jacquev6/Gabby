@@ -42,57 +42,53 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
     # Custom collation: https://dba.stackexchange.com/a/285230
     number: orm.Mapped[str] = orm.mapped_column(sql.String(None, collation="exercise_number"))
 
-    _instructions_text: orm.Mapped[str] = orm.mapped_column(name="instructions_text", nullable=True)
-    _instructions_deltas: orm.Mapped[list] = orm.mapped_column(sql.JSON, name="instructions", default=deltas.empty_as_list, server_default=deltas.empty_as_string)
+    _instructions: orm.Mapped[list] = orm.mapped_column(sql.JSON, name="instructions", default=deltas.empty_as_list, server_default=deltas.empty_as_string)
 
     @property
     def instructions(self) -> deltas.Deltas:
-        if self._instructions_deltas is None:  # Before the first flush to DB if not set in constructor.
-            self._instructions_deltas = deltas.empty_as_list
-        return [deltas.InsertOp(**delta) for delta in self._instructions_deltas]
+        if self._instructions is None:  # Before the first flush to DB if not set in constructor.
+            self._instructions = deltas.empty_as_list
+        return [deltas.InsertOp(**delta) for delta in self._instructions]
 
     @instructions.setter
     def instructions(self, instructions: deltas.Deltas):
-        self._instructions_deltas = [delta.model_dump() for delta in instructions]
+        self._instructions = [delta.model_dump() for delta in instructions]
 
-    _wording_text: orm.Mapped[str] = orm.mapped_column(name="wording_text", nullable=True)
-    _wording_deltas: orm.Mapped[list] = orm.mapped_column(sql.JSON, name="wording", default=deltas.empty_as_list, server_default=deltas.empty_as_string)
+    _wording: orm.Mapped[list] = orm.mapped_column(sql.JSON, name="wording", default=deltas.empty_as_list, server_default=deltas.empty_as_string)
 
     @property
     def wording(self) -> deltas.Deltas:
-        if self._wording_deltas is None:  # Before the first flush to DB if not set in constructor.
-            self._wording_deltas = deltas.empty_as_list
-        return [deltas.InsertOp(**delta) for delta in self._wording_deltas]
+        if self._wording is None:  # Before the first flush to DB if not set in constructor.
+            self._wording = deltas.empty_as_list
+        return [deltas.InsertOp(**delta) for delta in self._wording]
 
     @wording.setter
     def wording(self, wording: deltas.Deltas):
-        self._wording_deltas = [delta.model_dump() for delta in wording]
+        self._wording = [delta.model_dump() for delta in wording]
 
-    _example_text: orm.Mapped[str] = orm.mapped_column(name="example_text", nullable=True)
-    _example_deltas: orm.Mapped[list] = orm.mapped_column(sql.JSON, name="example", default=deltas.empty_as_list, server_default=deltas.empty_as_string)
+    _example: orm.Mapped[list] = orm.mapped_column(sql.JSON, name="example", default=deltas.empty_as_list, server_default=deltas.empty_as_string)
 
     @property
     def example(self) -> deltas.Deltas:
-        if self._example_deltas is None:  # Before the first flush to DB if not set in constructor.
-            self._example_deltas = deltas.empty_as_list
-        return [deltas.InsertOp(**delta) for delta in self._example_deltas]
+        if self._example is None:  # Before the first flush to DB if not set in constructor.
+            self._example = deltas.empty_as_list
+        return [deltas.InsertOp(**delta) for delta in self._example]
 
     @example.setter
     def example(self, example: str | deltas.Deltas):
-        self._example_deltas = [delta.model_dump() for delta in example]
+        self._example = [delta.model_dump() for delta in example]
 
-    _clue_text: orm.Mapped[str] = orm.mapped_column(name="clue_text", nullable=True)
-    _clue_deltas: orm.Mapped[list] = orm.mapped_column(sql.JSON, name="clue", default=deltas.empty_as_list, server_default=deltas.empty_as_string)
+    _clue: orm.Mapped[list] = orm.mapped_column(sql.JSON, name="clue", default=deltas.empty_as_list, server_default=deltas.empty_as_string)
 
     @property
     def clue(self) -> deltas.Deltas:
-        if self._clue_deltas is None:  # Before the first flush to DB if not set in constructor.
-            self._clue_deltas = deltas.empty_as_list
-        return [deltas.InsertOp(**delta) for delta in self._clue_deltas]
+        if self._clue is None:  # Before the first flush to DB if not set in constructor.
+            self._clue = deltas.empty_as_list
+        return [deltas.InsertOp(**delta) for delta in self._clue]
 
     @clue.setter
     def clue(self, clue: deltas.Deltas):
-        self._clue_deltas = [delta.model_dump() for delta in clue]
+        self._clue = [delta.model_dump() for delta in clue]
 
     _text_reference: orm.Mapped[list] = orm.mapped_column(sql.JSON, name="text_reference", default=deltas.empty_as_list, server_default=deltas.empty_as_string)
 

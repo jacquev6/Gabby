@@ -151,6 +151,26 @@
         "title": "Body_login_api_token_post",
         "type": "object"
       },
+      "CharactersItems": {
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "const": "characters",
+            "title": "Kind",
+            "type": "string"
+          },
+          "letters": {
+            "title": "Letters",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "kind",
+          "letters"
+        ],
+        "title": "CharactersItems",
+        "type": "object"
+      },
       "Effects": {
         "additionalProperties": false,
         "properties": {
@@ -285,7 +305,10 @@
           "items": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/WordsItems"
+                "$ref": "#/components/schemas/CharactersItems"
+              },
+              {
+                "$ref": "#/components/schemas/TokensItems"
               },
               {
                 "$ref": "#/components/schemas/SentencesItems"
@@ -319,7 +342,10 @@
           "items": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/WordsItems"
+                "$ref": "#/components/schemas/CharactersItems"
+              },
+              {
+                "$ref": "#/components/schemas/TokensItems"
               },
               {
                 "$ref": "#/components/schemas/SentencesItems"
@@ -489,9 +515,6 @@
                   "$ref": "#/components/schemas/_ItalicText"
                 },
                 {
-                  "$ref": "#/components/schemas/_SelectableText"
-                },
-                {
                   "$ref": "#/components/schemas/_SelectedText"
                 },
                 {
@@ -502,6 +525,15 @@
                 },
                 {
                   "$ref": "#/components/schemas/_Whitespace"
+                },
+                {
+                  "$ref": "#/components/schemas/_Selectable"
+                },
+                {
+                  "$ref": "#/components/schemas/_Boxed"
+                },
+                {
+                  "$ref": "#/components/schemas/_SelectableText"
                 }
               ]
             },
@@ -644,6 +676,31 @@
         "title": "SentencesItems",
         "type": "object"
       },
+      "TokensItems": {
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "const": "tokens",
+            "title": "Kind",
+            "type": "string"
+          },
+          "punctuation": {
+            "title": "Punctuation",
+            "type": "boolean"
+          },
+          "words": {
+            "title": "Words",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "kind",
+          "words",
+          "punctuation"
+        ],
+        "title": "TokensItems",
+        "type": "object"
+      },
       "ValidationError": {
         "properties": {
           "loc": {
@@ -677,26 +734,6 @@
         "title": "ValidationError",
         "type": "object"
       },
-      "WordsItems": {
-        "additionalProperties": false,
-        "properties": {
-          "kind": {
-            "const": "words",
-            "title": "Kind",
-            "type": "string"
-          },
-          "punctuation": {
-            "title": "Punctuation",
-            "type": "boolean"
-          }
-        },
-        "required": [
-          "kind",
-          "punctuation"
-        ],
-        "title": "WordsItems",
-        "type": "object"
-      },
       "_BoldText": {
         "additionalProperties": false,
         "properties": {
@@ -715,6 +752,54 @@
           "text"
         ],
         "title": "_BoldText",
+        "type": "object"
+      },
+      "_Boxed": {
+        "additionalProperties": false,
+        "properties": {
+          "contents": {
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/_PlainText"
+                },
+                {
+                  "$ref": "#/components/schemas/_BoxedText"
+                },
+                {
+                  "$ref": "#/components/schemas/_BoldText"
+                },
+                {
+                  "$ref": "#/components/schemas/_ItalicText"
+                },
+                {
+                  "$ref": "#/components/schemas/_SelectedText"
+                },
+                {
+                  "$ref": "#/components/schemas/_FreeTextInput"
+                },
+                {
+                  "$ref": "#/components/schemas/_MultipleChoicesInput"
+                },
+                {
+                  "$ref": "#/components/schemas/_Whitespace"
+                }
+              ]
+            },
+            "title": "Contents",
+            "type": "array"
+          },
+          "type": {
+            "const": "boxed",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "contents"
+        ],
+        "title": "_Boxed",
         "type": "object"
       },
       "_BoxedText": {
@@ -813,6 +898,67 @@
           "text"
         ],
         "title": "_PlainText",
+        "type": "object"
+      },
+      "_Selectable": {
+        "additionalProperties": false,
+        "properties": {
+          "boxed": {
+            "title": "Boxed",
+            "type": "boolean"
+          },
+          "colors": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Colors",
+            "type": "array"
+          },
+          "contents": {
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/_PlainText"
+                },
+                {
+                  "$ref": "#/components/schemas/_BoxedText"
+                },
+                {
+                  "$ref": "#/components/schemas/_BoldText"
+                },
+                {
+                  "$ref": "#/components/schemas/_ItalicText"
+                },
+                {
+                  "$ref": "#/components/schemas/_SelectedText"
+                },
+                {
+                  "$ref": "#/components/schemas/_FreeTextInput"
+                },
+                {
+                  "$ref": "#/components/schemas/_MultipleChoicesInput"
+                },
+                {
+                  "$ref": "#/components/schemas/_Whitespace"
+                }
+              ]
+            },
+            "title": "Contents",
+            "type": "array"
+          },
+          "type": {
+            "const": "selectable",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "contents",
+          "colors",
+          "boxed"
+        ],
+        "title": "_Selectable",
         "type": "object"
       },
       "_SelectableText": {

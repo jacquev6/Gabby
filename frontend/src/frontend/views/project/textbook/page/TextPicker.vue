@@ -85,7 +85,8 @@ const listFormats = [
         return line[0].str[0] === bullet
       },
     }
-  }
+  },
+  // WARNING: keep the set of list formats supported here consistent with what's supported by '_Adapter.split_list_header' in 'adaptation.py'.
 ]
 
 export interface SelectedText {
@@ -144,6 +145,11 @@ function textFromItems(items: TextItem[]): SelectedText {
         }
         text += item.str
       }
+      // Ellipsis is a confusing character; people don't know how to type it.
+      // It's often used as the placeholder for missing text, so needs to be typed in some fields
+      // like "placeholder for free text" or the "placeholder to fill" for MCQs.
+      // So we replace the ellipsis character with three dots, that people definitely know how to type.
+      text = text.replaceAll('…', '...')
       return text
     }
   }

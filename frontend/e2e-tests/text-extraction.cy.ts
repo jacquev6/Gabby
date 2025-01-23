@@ -198,4 +198,16 @@ describe('Gabby', () => {
       cy.get('div:contains("Detect lists") >input').should('be.enabled')
     })
   }
+
+  it('transforms ellipisis to three dots', () => {
+    visit('/project-xkopqm/textbook-klxufv/page-3/new-exercise', {pdf: 'text-extraction'})
+    setupAliases()
+
+    traceRectangle('@canvas', 7, 6, 82, 9)
+    cy.get('button:contains("Wording")').click()
+    notBusy()
+
+    // '…' has been replaced by '...'
+    cy.get('@wording').should('contain.text', 'Cette phrase se termine par trois points... Et celle-ci par des points de suspension...')
+  })
 })

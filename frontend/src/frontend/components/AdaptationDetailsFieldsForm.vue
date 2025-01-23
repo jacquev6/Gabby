@@ -6,19 +6,6 @@ import { basicBlots } from './WysiwygEditor.vue'
 import ContextMenu from './ContextMenu.vue'
 
 
-// Keep the 'style' section below consistent with the length of this array
-export const defaultColors = [
-  // Colors provided by the client
-  "#ffff00",  // yellow
-  "#ffc0cb",  // pink (light red)
-  "#bbbbff",  // light blue
-  "#bbffbb",  // light green
-  "#bbbbbb",  // grey
-  // Colors suggested by Vincent Jacques on the same pattern
-  // "#bbffff",  // light cyan
-  // "#ffbbff",  // light magenta
-]
-
 class SelBlot extends InlineBlot {
   static override blotName = 'sel'
   static override tagName = 'sel-blot'
@@ -162,26 +149,27 @@ function doneEditingChoices2() {
   model.value.inProgress = {kind: 'nothing'}
 }
 
-class SelectableBlot extends InlineBlot {
-  static override blotName = 'selectable'
-  static override tagName = 'selectable-blot'
+class ManualItemBlot extends InlineBlot {
+  static override blotName = 'manual-item'
+  static override tagName = 'manual-item-blot'
 }
 
 export const wysiwygBlots = [
   ...basicBlots,
   SelBlot,
   Choices2Blot,
-  SelectableBlot,
+  ManualItemBlot,
 ]
+
+export const wysiwygContagiousFormats = ['choices2']
 </script>
 
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from 'vue'
 import deepEqual from 'deep-equal'
 
-import { BRow, BCol, BLabeledInput, BButton, BLabeledCheckbox, BRadio } from './opinion/bootstrap'
+import { BRow, BCol, BLabeledInput, BButton, BLabeledCheckbox } from './opinion/bootstrap'
 import ExerciseFieldsForm, { type Model, cleanupModel } from './ExerciseFieldsForm.vue'
-import { defaultColors as defaultColorsForSelectableEffect } from './AdaptationDetailsFieldsForm.vue'
 import FloatingColorPicker from './FloatingColorPicker.vue'
 import OptionalInput from './OptionalInput.vue'
 
@@ -190,7 +178,32 @@ defineProps<{
   fields: InstanceType<typeof ExerciseFieldsForm>
 }>()
 
-type ItemizeEffect = Model['adaptation']['effects'][number] & {kind: 'itemized'}
+// Colors provided by the client, in display order
+const allColorsForSelectableEffect = [
+  '#ffff00',  // yellow
+  '#ffcf4c',  // orange
+  '#ff8084',  // red
+  '#ffc0cb',  // pink
+  '#d49cff',  // purple
+  '#8177ff',  // dark blue
+  '#bbbbff',  // light blue
+  '#bbffbb',  // light green
+  '#68e495',  // dark green
+  '#632f2b',  // brown
+  '#bbbbbb',  // grey
+  '#000000',  // black
+]
+
+// Keep the 'style' section below consistent with the length of this array
+const defaultColorsForSelectableEffect = [
+  allColorsForSelectableEffect[0],
+  allColorsForSelectableEffect[3],
+  allColorsForSelectableEffect[6],
+  allColorsForSelectableEffect[7],
+  allColorsForSelectableEffect[10],
+]
+
+type ItemizedEffect = Model['adaptation']['effects'][number] & {kind: 'itemized'}
 
 const model_ = defineModel<Model>({required: true})
 model = model_
@@ -224,8 +237,11 @@ const fillWithFreeTextPlaceholder = computed({
 const settings = reactive({
   itemized: {
     items: {
-      kind: 'words' as ItemizeEffect['items']['kind'],
-      words: {punctuation: false},
+      isLetters: false,
+      isWords: false,
+      isPunctuation: false,
+      isSentences: false,
+      isManual: false,
     },
     effects: {
       isSelectable: false,
@@ -238,20 +254,116 @@ const settings = reactive({
   },
 })
 
-function makeEffect(): ItemizeEffect | null {
-  if (settings.itemized.effects.isSelectable || settings.itemized.effects.isBoxed) {
+const isLettersProxy = computed({
+  get() {
+    return settings.itemized.items.isLetters
+  },
+  set(value: boolean) {
+    settings.itemized.items.isLetters = value
+    if (value) {
+      settings.itemized.items.isWords = false
+      settings.itemized.items.isPunctuation = false
+      settings.itemized.items.isSentences = false
+      settings.itemized.items.isManual = false
+    }
+  },
+})
+
+const isWordsProxy = computed({
+  get() {
+    return settings.itemized.items.isWords
+  },
+  set(value: boolean) {
+    settings.itemized.items.isWords = value
+    if (value) {
+      settings.itemized.items.isLetters = false
+      settings.itemized.items.isSentences = false
+      settings.itemized.items.isManual = false
+    }
+  },
+})
+
+const isPunctuationProxy = computed({
+  get() {
+    return settings.itemized.items.isPunctuation
+  },
+  set(value: boolean) {
+    settings.itemized.items.isPunctuation = value
+    if (value) {
+      settings.itemized.items.isLetters = false
+      settings.itemized.items.isSentences = false
+      settings.itemized.items.isManual = false
+    }
+  },
+})
+
+const isSentencesProxy = computed({
+  get() {
+    return settings.itemized.items.isSentences
+  },
+  set(value: boolean) {
+    settings.itemized.items.isSentences = value
+    if (value) {
+      settings.itemized.items.isLetters = false
+      settings.itemized.items.isWords = false
+      settings.itemized.items.isPunctuation = false
+      settings.itemized.items.isManual = false
+    }
+  },
+})
+
+const isManualProxy = computed({
+  get() {
+    return settings.itemized.items.isManual
+  },
+  set(value: boolean) {
+    settings.itemized.items.isManual = value
+    if (value) {
+      settings.itemized.items.isLetters = false
+      settings.itemized.items.isWords = false
+      settings.itemized.items.isPunctuation = false
+      settings.itemized.items.isSentences = false
+    }
+  },
+})
+
+function makeEffect(): ItemizedEffect | null {
+  const hasItems =
+    settings.itemized.items.isLetters
+    || settings.itemized.items.isWords
+    || settings.itemized.items.isPunctuation
+    || settings.itemized.items.isSentences
+    || settings.itemized.items.isManual
+  const hasEffects = settings.itemized.effects.isSelectable || settings.itemized.effects.isBoxed
+  if (hasItems && hasEffects) {
+    const items = ((): ItemizedEffect['items'] => {
+      if (settings.itemized.items.isLetters) {
+        return {kind: 'characters', letters: true}
+      } else if (settings.itemized.items.isWords || settings.itemized.items.isPunctuation) {
+        return {kind: 'tokens', words: settings.itemized.items.isWords, punctuation: settings.itemized.items.isPunctuation}
+      } else if (settings.itemized.items.isSentences) {
+        return {kind: 'sentences'}
+      } else {
+        console.assert(settings.itemized.items.isManual)
+        return {kind: 'manual'}
+      }
+    })()
+
+    const selectable = (() => {
+      if (settings.itemized.effects.isSelectable) {
+        return  {
+          colors: settings.itemized.effects.selectable.allColors.slice(0, settings.itemized.effects.selectable.colorsCount),
+        }
+      } else {
+        return null
+      }
+    })()
+
     return {
       kind: 'itemized',
-      items: settings.itemized.items.kind === 'words' ? {
-        kind: 'words',
-        punctuation: settings.itemized.items.words.punctuation,
-      } : {
-        kind: settings.itemized.items.kind,
-      },
+      items,
       effects: {
-        selectable: settings.itemized.effects.isSelectable ? {
-          colors: settings.itemized.effects.selectable.allColors.slice(0, settings.itemized.effects.selectable.colorsCount),
-        } : null,
+        selectable,
         boxed: settings.itemized.effects.isBoxed,
       },
     }
@@ -267,15 +379,26 @@ watch(
     console.assert(itemizedEffects.length <= 1)
 
     if (itemizedEffects.length === 0) {
-      settings.itemized.effects.isSelectable = false
-      settings.itemized.effects.isBoxed = false
-
+      const hasItems = settings.itemized.items.isWords || settings.itemized.items.isManual
+      const hasEffects = settings.itemized.effects.isSelectable || settings.itemized.effects.isBoxed
+      if (hasItems && hasEffects) {
+        settings.itemized.items.isWords = false
+        settings.itemized.items.isPunctuation = false
+        settings.itemized.items.isManual = false
+        settings.itemized.effects.isSelectable = false
+        settings.itemized.effects.isBoxed = false
+      }
       console.assert(makeEffect() === null)
     } else {
       const itemizedEffect = itemizedEffects[0]
-      settings.itemized.items.kind = itemizedEffect.items.kind
-      if (itemizedEffect.items.kind === 'words') {
-        settings.itemized.items.words.punctuation = itemizedEffect.items.punctuation
+      if (itemizedEffect.items.kind === 'tokens') {
+        settings.itemized.items.isManual = false
+        settings.itemized.items.isWords = itemizedEffect.items.words
+        settings.itemized.items.isPunctuation = itemizedEffect.items.punctuation
+      } else if (itemizedEffect.items.kind === 'manual') {
+        settings.itemized.items.isManual = true
+        settings.itemized.items.isWords = false
+        settings.itemized.items.isPunctuation = false
       }
       if (itemizedEffect.effects.selectable !== null) {
         settings.itemized.effects.isSelectable = true
@@ -328,6 +451,10 @@ watch(
 )
 
 const colorPickers = ref<InstanceType<typeof FloatingColorPicker>[]>([])
+
+defineExpose({
+  hasManualItems: computed(() => settings.itemized.items.isManual),
+})
 </script>
 
 <template>
@@ -353,7 +480,7 @@ const colorPickers = ref<InstanceType<typeof FloatingColorPicker>[]>([])
     v-for="i in settings.itemized.effects.selectable.allColors.length"
     ref="colorPickers"
     v-model="settings.itemized.effects.selectable.allColors[i - 1]"
-    :default="defaultColorsForSelectableEffect[i - 1]"
+    :colors="allColorsForSelectableEffect"
     backdropCovers1="#left-col-2"
     backdropCovers2="#gutter-2"
   />
@@ -363,21 +490,16 @@ const colorPickers = ref<InstanceType<typeof FloatingColorPicker>[]>([])
   <hr />
 
   <OptionalInput v-model="fillWithFreeTextPlaceholder" :label="$t('placeholderForFreeText')" />
-  <!-- <template v-if="fillWithFreeTextPlaceholder !== ''">
-    <BLabeledInput :label="$t('placeholderForFreeText')" type="text" v-model="fillWithFreeTextPlaceholder" />
-  </template>
-  <template v-else>
-    <p>{{ $t('placeholderForFreeText') }} <BButton sm primary>+</BButton></p>
-  </template> -->
 
   <hr />
 
   <div class="mb-3">
     <p class="form-label">{{ $t('items') }}</p>
-    <BRadio v-model="settings.itemized.items.kind" :label="$t('itemsWords')" value="words" />
-    <BLabeledCheckbox :label="$t('itemsPunctuation')" v-model="settings.itemized.items.words.punctuation" :disabled="settings.itemized.items.kind !== 'words'" />
-    <BRadio v-model="settings.itemized.items.kind" :label="$t('itemsSentences')" value="sentences" disabled />
-    <BRadio v-model="settings.itemized.items.kind" :label="$t('itemsManual')" value="manual" />
+    <BLabeledCheckbox v-model="isLettersProxy" :label="$t('itemsLetters')" />
+    <BLabeledCheckbox v-model="isWordsProxy" :label="$t('itemsWords')" />
+    <BLabeledCheckbox v-model="isPunctuationProxy" :label="$t('itemsPunctuation')" />
+    <BLabeledCheckbox v-model="isSentencesProxy" :label="$t('itemsSentences')" />
+    <BLabeledCheckbox v-model="isManualProxy" :label="$t('itemsManual')" />
   </div>
   <p>{{ $t('effects') }}</p>
   <BLabeledCheckbox :label="$t('effectsSelectable')" v-model="settings.itemized.effects.isSelectable" />
@@ -427,7 +549,7 @@ div.ql-editor choice-blot {
   border: 2px solid black;
 }
 
-div.ql-editor selectable-blot {
+div.ql-editor manual-item-blot {
   margin: 0;
   padding: 0 0.4em;
   border: 2px dotted black;
@@ -457,7 +579,9 @@ div.ql-editor sel-blot[data-sel="5"] {
 
 div.ql-editor choices2-blot {
   margin: 0;
-  padding: 0 0.4em;
-  border: 2px solid black;
+  padding: 0;
+  border-top: 2px solid black;
+  border-bottom: 2px solid black;
+  background-color: lightgray;
 }
 </style>

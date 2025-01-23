@@ -10,28 +10,29 @@ watch(width, () => nextTick(recolor))
 onMounted(recolor)
 onUpdated(recolor)
 
+// Client found a situation where the colors were not updated. I have no idea why :-/
+// (https://github.com/jacquev6/Gabby/issues/76)
+// So, better safe than sorry, let's update the colors periodically.
+setInterval(recolor, 1000)
+
 /* Colors provided by client */
 const colors = ['#00F', '#F00', '#0C0']
 
 function recolor() {
   if (container.value !== null) {
-    let colorIndex = -1
-    let previousOffset: number | null = null
+    const tricolorables = Array.from(container.value.getElementsByClassName('tricolorable') as HTMLCollectionOf<HTMLElement>)
 
-    const paragraphElements = container.value.children as HTMLCollectionOf<HTMLParagraphElement>
-    for (let paragraphIndex = 0; paragraphIndex < paragraphElements.length; paragraphIndex++) {
-      const paragraphElement = paragraphElements[paragraphIndex]
-      const spanElements = paragraphElement.children as HTMLCollectionOf<HTMLSpanElement>
-      for (let spanIndex = 0; spanIndex < spanElements.length; spanIndex++) {
-        const spanElement = spanElements[spanIndex]
-        const offset = spanElement.offsetLeft
-        if (previousOffset === null || offset < previousOffset) {
-          colorIndex++
-        }
-        previousOffset = offset
-        spanElement.style.color = colors[colorIndex % colors.length]
+    let colorIndex = -1
+    let previousOffsetLeft: number | null = null
+
+    tricolorables.forEach(element => {
+      const offsetLeft = element.offsetLeft
+      if (previousOffsetLeft === null || offsetLeft <= previousOffsetLeft) {
+        colorIndex++
       }
-    }
+      previousOffsetLeft = offsetLeft
+      element.style.color = colors[colorIndex % colors.length]
+    })
   }
 }
 
@@ -41,3 +42,14 @@ defineExpose({ recolor })
 <template>
   <div ref="container"><slot></slot></div>
 </template>
+
+<style>
+.tricolorable .tricolorable {
+  background-color: rgba(255, 0, 0, 0.5);
+}
+
+.tricolorable .tricolorable::after {
+  content: 'THERE IS A BUG (nested tricolorable)';
+  color: black;
+}
+</style>

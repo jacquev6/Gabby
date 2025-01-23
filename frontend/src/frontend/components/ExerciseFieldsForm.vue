@@ -2,8 +2,9 @@
 import { useApiStore } from '$frontend/stores/api'
 import type { Project, Textbook, Exercise, InCache, Exists } from '$frontend/stores/api'
 import deepEqual from 'deep-equal'
-import { type Model as Deltas } from '$frontend/components/Quill.vue'
+import { type Model as Deltas } from './Quill.vue'
 import { Delta } from 'quill/core'
+
 
 const api = useApiStore()
 
@@ -17,10 +18,16 @@ export const adaptationKinds: Adaptation['kind'][] = ['generic', 'fill-with-free
 export const textualFieldNames = ['instructions', 'wording', 'example', 'clue', 'textReference'] as const
 export type TextualFieldName = typeof textualFieldNames[number]
 
-export type Model = {
-  inTextbook: boolean
+type MakeModelOptions  = {
+  inTextbook: true
+  textbookPage: number
+} | {
+  inTextbook: false
+  textbookPage: null
+}
+
+export type Model = MakeModelOptions & {
   number: string
-  textbookPage: number | null
   instructions: Deltas
   wording: Deltas
   example: Deltas
@@ -50,19 +57,10 @@ export type Model = {
     }
 }
 
-type MakeModelOptions  = {
-  inTextbook: true
-  textbookPage: number
-} | {
-  inTextbook: false
-  textbookPage: null
-}
-
-function makeModel({inTextbook, textbookPage}: MakeModelOptions): Model {
+function makeModel(options: MakeModelOptions): Model {
   return {
-    inTextbook,
+    ...options,
     number: '',
-    textbookPage,
     instructions: [{insert: '\n', attributes: {}}],
     wording: [{insert: '\n', attributes: {}}],
     example: [{insert: '\n', attributes: {}}],
@@ -88,10 +86,10 @@ export function makeModelNotInTextbook(): Model {
 export function assignModelFrom(model: Model, exercise: Exercise & InCache & Exists) {
   model.number = exercise.attributes.number
   model.instructions = exercise.attributes.instructions
-  model.wording = exercise.attributes.wording
-  model.example = exercise.attributes.example
-  model.clue = exercise.attributes.clue
-  model.textReference = exercise.attributes.textReference
+  model.wording = deepCopy(exercise.attributes.wording)
+  model.example = deepCopy(exercise.attributes.example)
+  model.clue = deepCopy(exercise.attributes.clue)
+  model.textReference = deepCopy(exercise.attributes.textReference)
   model.wordingParagraphsPerPagelet = exercise.attributes.wordingParagraphsPerPagelet
   model.adaptation = deepCopy(exercise.attributes.adaptation)
   model.rectangles = deepCopy(exercise.attributes.rectangles)
@@ -113,7 +111,7 @@ export function resetModelNotInTextbook(model: Model) {
 }
 
 export function modelIsEmpty(model: Model) {
-  return  deepEqual(model.instructions, emptyDeltas)
+  return deepEqual(model.instructions, emptyDeltas)
     && deepEqual(model.wording, emptyDeltas)
     && deepEqual(model.example, emptyDeltas)
     && deepEqual(model.clue, emptyDeltas)
@@ -123,17 +121,22 @@ export function modelIsEmpty(model: Model) {
 
 export function cleanupModel(model: Model) {
   let usableColorsCount = 0
+  let hasManualItems = false
   const itemizedEffects = model.adaptation.effects.filter(effect => effect.kind === 'itemized')
+  console.assert(itemizedEffects.length <= 1)
   if (itemizedEffects.length === 1) {
     const itemizedEffect = itemizedEffects[0]
     if (itemizedEffect.effects.selectable !== null) {
       usableColorsCount = itemizedEffect.effects.selectable.colors.length
     }
+    hasManualItems = itemizedEffect.items.kind === 'manual'
   }
   for (const fieldName of ['instructions', 'wording', 'example'] as const) {
     const newOps = new Delta()
     for (const delta of downgradeDeltas(model[fieldName])) {
       if ('sel' in delta.attributes && (delta.attributes.sel as number) > usableColorsCount) {
+        newOps.insert(delta.insert, {})
+      } else if ('manual-item' in delta.attributes && !hasManualItems) {
         newOps.insert(delta.insert, {})
       } else {
         newOps.insert(delta.insert, delta.attributes)
@@ -223,11 +226,10 @@ export function suggestNextNumber(number: string) {
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import deepCopy from 'deep-copy'
-import { useI18n } from 'vue-i18n'
 
-import { BRow, BCol, BLabeledInput, BLabeledSelect } from './opinion/bootstrap'
+import { BRow, BCol, BLabeledInput, BLabeledNumberInput, BLabeledSelect } from './opinion/bootstrap'
 import WysiwygEditor from './WysiwygEditor.vue'
-import { wysiwygBlots } from './AdaptationDetailsFieldsForm.vue'
+import { wysiwygBlots, wysiwygContagiousFormats } from './AdaptationDetailsFieldsForm.vue'
 import OptionalWysiwygEditor from './OptionalWysiwygEditor.vue'
 
 
@@ -237,8 +239,6 @@ defineProps<{
 }>()
 
 const model = defineModel<Model>({required: true})
-
-const i18n = useI18n()
 
 const instructionsEditor = ref<InstanceType<typeof WysiwygEditor> | null>(null)
 const wordingEditor = ref<InstanceType<typeof WysiwygEditor> | null>(null)
@@ -334,8 +334,13 @@ function selectionChangeInInstructionsOrWording(fieldName: 'instructions' | 'wor
     })()
 
     const separator1 = (() => {
-      for (const separator of ['/', '|', ',', '*', 'ou', 'or']) {
+      for (const separator of ['/', '|', ',', '*', '◆', '●', '-', '–', '—']) {
         if (selected.includes(separator)) {
+          return separator
+        }
+      }
+      for (const separator of ['ou']) {
+        if (selected.includes(' ' + separator + ' ')) {
           return separator
         }
       }
@@ -343,8 +348,8 @@ function selectionChangeInInstructionsOrWording(fieldName: 'instructions' | 'wor
     })()
 
     const separator2 = (() => {
-      for (const separator of [i18n.t('multipleChoicesSeparator2'), 'ou', 'or']) {
-        if (selected.includes(' ' + separator + ' ')) {
+      for (const separator of ['ou']) {
+        if (separator1 !== separator && selected.includes(' ' + separator + ' ')) {
           return separator
         }
       }
@@ -388,8 +393,7 @@ defineExpose({
         <BLabeledInput :label="$t('exerciseNumber')" v-model="model.number" data-cy-exercise-field="number" :disabled="fixedNumber" />
       </BCol>
       <BCol v-if="model.inTextbook">
-        <!-- @todo Add warning icon when different from displayed page -->
-        <BLabeledInput :label="$t( model.textbookPage === displayedPage ? 'exercisePage' : 'exercisePageWithWarning')" v-model="model.textbookPage" data-cy-exercise-field="page" :disabled="fixedNumber" />
+        <BLabeledNumberInput :label="$t( model.textbookPage === displayedPage ? 'exercisePage' : 'exercisePageWithWarning')" v-model="model.textbookPage" data-cy-exercise-field="page" :disabled="fixedNumber" />
       </BCol>
     </BRow>
   </div>
@@ -402,6 +406,7 @@ defineExpose({
       ref="instructionsEditor"
       :label="$t('exerciseInstructions')"
       :blots="wysiwygBlots"
+      :contagiousFormats="wysiwygContagiousFormats"
       v-model="model.instructions"
       @selectionChange="selectionChangeInInstructions"
     />
@@ -409,6 +414,7 @@ defineExpose({
       ref="wordingEditor"
       :label="$t('exerciseWording')"
       :blots="wysiwygBlots"
+      :contagiousFormats="wysiwygContagiousFormats"
       v-model="model.wording"
       @selectionChange="selectionChangeInWording"
     />
@@ -419,6 +425,7 @@ defineExpose({
             ref="exampleEditor"
             :label="$t('exerciseExample')"
             :blots="wysiwygBlots"
+            :contagiousFormats="wysiwygContagiousFormats"
             v-model="model.example"
           />
         </div>
@@ -427,6 +434,7 @@ defineExpose({
             ref="clueEditor"
             :label="$t('exerciseClue')"
             :blots="wysiwygBlots"
+            :contagiousFormats="wysiwygContagiousFormats"
             v-model="model.clue"
           />
         </div>
@@ -435,6 +443,7 @@ defineExpose({
             ref="textReferenceEditor"
             :label="$t('exerciseTextReference')"
             :blots="wysiwygBlots"
+            :contagiousFormats="wysiwygContagiousFormats"
             v-model="model.textReference"
           />
         </div>

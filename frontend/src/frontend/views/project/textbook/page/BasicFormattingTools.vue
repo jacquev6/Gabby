@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { BButton } from '$frontend/components/opinion/bootstrap'
 import type ExerciseFieldsForm from '$frontend/components/ExerciseFieldsForm.vue'
+import type AdaptationDetailsFieldsForm from '$frontend/components/AdaptationDetailsFieldsForm.vue'
 import type { Model } from '$frontend/components/ExerciseFieldsForm.vue'
 import { computed } from 'vue'
 
 
 defineProps<{
   fields: InstanceType<typeof ExerciseFieldsForm>
+  adaptationDetails: InstanceType<typeof AdaptationDetailsFieldsForm>
 }>()
 
 const model = defineModel<Model>({required: true})
@@ -40,34 +42,32 @@ const itemizedEffect = computed(() => {
     ><img :style="{height: '1.25em'}" src="/italic.svg" /></BButton>
   </p>
 
-  <template v-if="itemizedEffect !== null && itemizedEffect.effects.selectable !== null">
-    <p>
-      <template v-for="i in itemizedEffect.effects.selectable.colors.length">
-        <BButton
-          class="format-color"
-          sm secondary
-          :disabled="fields.focusedWysiwygField === null || fields.focusedWysiwygField === 'wording'"
-          :class="{active: fields.currentWysiwygFormat.sel === i}"
-          @click="fields.toggle('sel', i)"
-          :style="{lineHeight: 0, padding: '2px'}"
-          :data-cy="`format-color-${i}`"
-        >
-          <span :style="{backgroundColor: itemizedEffect.effects.selectable.colors[i - 1]}"></span>
-        </BButton>
-        <wbr />
-      </template>
-    </p>
-
-    <p v-if="itemizedEffect.items.kind === 'manual'">
+  <p v-if="itemizedEffect !== null && itemizedEffect.effects.selectable !== null">
+    <template v-for="i in itemizedEffect.effects.selectable.colors.length">
       <BButton
+        class="format-color"
         sm secondary
-        :disabled="fields.focusedWysiwygField !== 'wording'"
-        :class="{active: fields.currentWysiwygFormat.selectable}"
-        @click="fields.toggle('selectable')"
-        data-cy="format-selectable"
-      >{{ $t('selectableButton') }}</BButton>
-    </p>
-  </template>
+        :disabled="fields.focusedWysiwygField === null || fields.focusedWysiwygField === 'wording'"
+        :class="{active: fields.currentWysiwygFormat.sel === i}"
+        @click="fields.toggle('sel', i)"
+        :style="{lineHeight: 0, padding: '2px'}"
+        :data-cy="`format-color-${i}`"
+      >
+        <span :style="{backgroundColor: itemizedEffect.effects.selectable.colors[i - 1]}"></span>
+      </BButton>
+      <wbr />
+    </template>
+  </p>
+
+  <p v-if="adaptationDetails.hasManualItems">
+    <BButton
+      sm secondary
+      :disabled="fields.focusedWysiwygField !== 'wording'"
+      :class="{active: fields.currentWysiwygFormat['manual-item']}"
+      @click="fields.toggle('manual-item')"
+      data-cy="format-manual-item"
+    >{{ $t('manualItemButton') }}</BButton>
+  </p>
 </template>
 
 <style scoped>

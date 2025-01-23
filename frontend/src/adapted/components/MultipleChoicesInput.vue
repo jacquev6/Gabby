@@ -3,6 +3,10 @@ import { ref, computed, inject } from 'vue'
 import { useFloating, shift } from '@floating-ui/vue'
 
 
+defineOptions({
+  inheritAttrs: false
+})
+
 const props = withDefaults(defineProps<{
   choices: string[],
   placeholder?: string,
@@ -31,57 +35,50 @@ const { floatingStyles } = useFloating(
   floating,
   {
     placement: 'bottom',
-    transform: false,
     middleware: [shift({crossAxis: true})],
   },
 );
 
-const choiceColumns = computed(() => {
-  const columns = []
-  for (let i = 0; i < props.choices.length; i += 2) {
-    columns.push([
-      {text: props.choices[i], colorIndex: i % 3},
-    ])
-    if (i + 1 < props.choices.length) {
-      columns[columns.length - 1].push(
-        {text: props.choices[i + 1], colorIndex: (i + 1) % 3},
-      )
-    }
+const choicesLines = computed(() => {
+  const lines: {text: string, colorIndex: number}[][] = [[], []]
+  for (let i = 0; i < props.choices.length; ++i) {
+    lines[i % 2].push({text: props.choices[i], colorIndex: i % 3})
   }
-  return columns
+  return lines
 })
 
 const backdropCovers = inject<string>('adaptedExerciseBackdropCovers', 'body')
 </script>
 
 <template>
-  <span style="display: inline flow-root; vertical-align: top">
+  <span v-bind="$attrs" style="display: inline flow-root; vertical-align: top">
     <span ref="reference" class="main" :class="{open: showChoices}" @click="showChoices = true">{{ value }}</span>
     <!-- Insert hidden nodes in the DOM to ensure the floating choices does not cover any text. -->
     <span class="choices" style="display: block; margin-top: -24px; max-width: 0; overflow: hidden; visibility: hidden;">
-      <span class="choiceColumn" style="display: block; min-width: 1000vw;">
-        <span class="choice" style="display: block;"><span>Option 1</span></span>
-        <span class="choice" style="display: block;"><span>Option 2</span></span>
+      <span class="choicesColumn" style="display: block;">
+        <span class="choicesLine" style="display: block;"><span class="choice">1</span></span>
+        <span class="choicesLine" style="display: block;"><span class="choice">2</span></span>
       </span>
     </span>
-  </span>
-  <template v-if="showChoices">
-    <Teleport :to="backdropCovers">
-      <div class="backdrop" @click="showChoices = false"></div>
-    </Teleport>
-    <div ref="floating" class="choices" :style="floatingStyles">
-      <div v-for="choiceColumn in choiceColumns" class="choiceColumn">
-        <p v-for="choice in choiceColumn" class="choice" @click="set(choice.text)"><span :class="`choice${choice.colorIndex}`">{{ choice.text }}</span></p>
+    <template v-if="showChoices">
+      <Teleport :to="backdropCovers">
+        <div class="backdrop" @click="showChoices = false"></div>
+      </Teleport>
+      <div ref="floating" class="choices" :style="floatingStyles">
+        <div class="choicesColumn">
+          <p v-for="choicesLine in choicesLines" class="choicesLine">
+            <template v-for="(choice, i) in choicesLine">
+              <span v-if="i !== 0">&nbsp;&nbsp;</span><span class="choice" :class="`choice${choice.colorIndex}`" @click="set(choice.text)">{{ choice.text }}</span>
+            </template>
+          </p>
+        </div>
       </div>
-    </div>
-  </template>
+    </template>
+  </span>
 </template>
 
 <style scoped>
-/* Based on Etude_de_la_langue_CE1_Belin/P8Ex1_hboj.html */
-
 span {
-  cursor: pointer;
   user-select: none;
   margin: 0;
   padding: 0;
@@ -89,6 +86,7 @@ span {
 }
 
 span.main {
+  cursor: pointer;
   font-family: Arial, sans-serif;
   font-size: 32px;
   border: 2px outset #888;
@@ -112,12 +110,11 @@ div.backdrop {
   z-index: 10;  /* Arbitrary z-order is fragile but used only in preview */
 }
 
-.choiceColumn {
-  float: left;
+.choicesColumn {
   margin: 15px 5px;
 }
 
-.choice {
+.choicesLine {
   font-family: Arial, sans-serif;
   font-size: 32px;
   line-height: 3;
@@ -125,7 +122,8 @@ div.backdrop {
   margin-bottom: -24px;
 }
 
-.choice >span {
+span.choice {
+  cursor: pointer;
   border: 1px solid black;
   padding: 1px 4px;
 }

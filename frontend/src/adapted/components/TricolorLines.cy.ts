@@ -2,11 +2,11 @@ import TricolorLines from './TricolorLines.vue'
 
 
 function makeSentence(prefix: string, length=26) {
-  let sentence = `<span>${prefix}A</span>`
+  let sentence = `<span class="tricolorable">${prefix}A</span>`
   for (let i = 1; i < length; i++) {
-    sentence += `<span><wbr/> <wbr/></span><span>${prefix}${String.fromCharCode('A'.charCodeAt(0) + i)}</span>`
+    sentence += `<span><wbr/> <wbr/></span><span class="tricolorable">${prefix}${String.fromCharCode('A'.charCodeAt(0) + i)}</span>`
   }
-  sentence += '<span>.</span>'
+  sentence += '<span class="tricolorable">.</span>'
   return sentence
 }
 
@@ -78,9 +78,18 @@ describe('TricolorLines', () => {
   it('colors single-token lines', () => {
     cy.viewport(200, 600)
 
-    cy.mount(TricolorLines, {slots: {default: `<p><span>abcdefghijkl</span><span><wbr/> <wbr/></span><span>mnopqrstuvwxyz</span></p>`}})
+    cy.mount(TricolorLines, {slots: {default: `<p><span class="tricolorable">abcdefghijkl</span><span><wbr/> <wbr/></span><span class="tricolorable">mnopqrstuvwxyz</span></p>`}})
 
     cy.get('span:contains("abcdefghijkl")').last().should('have.css', 'color', color1)
     cy.get('span:contains("mnopqrstuvwxyz")').last().should('have.css', 'color', color2)
+  })
+
+  it('uses only the .tricolorable spans for coloring', () => {
+    cy.viewport(200, 600)
+
+    cy.mount(TricolorLines, {slots: {default: `<p><span class="tricolorable">A</span> <span class="tricolorable">B</span> <span class="tricolorable">C</span> <span class="tricolorable">D</span> <span class="tricolorable">E</span> <span class="tricolorable">F</span> <span class="tricolorable">G</span> <span class="tricolorable">H</span> <span class="tricolorable">I</span> <span class="tricolorable">J</span> <span><span class="tricolorable">K</span> <span class="tricolorable">L</span> <span class="tricolorable">M</span> <span class="tricolorable">N</span> <span class="tricolorable">O</span> <span class="tricolorable">P</span></span> <span class="tricolorable">Q</span> <span class="tricolorable">R</span> <span class="tricolorable">S</span> <span class="tricolorable">T</span></p>`}})
+
+    cy.get('span:contains("M")').last().should('have.css', 'color', color1)
+    cy.get('span:contains("N")').last().should('have.css', 'color', color2)
   })
 })

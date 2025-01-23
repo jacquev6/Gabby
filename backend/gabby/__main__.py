@@ -162,16 +162,8 @@ def dump_database_as_unit_tests():
             "g": "b", "h": "f", "j": "b", "k": "f", "l": "b", "m": "b", "n": "b", "p": "f", "q": "b", "r": "b", "s": "c", "t": "b", "v": "f", "w": "f", "x": "b", "z": "c",
         }.get(c, c)
 
-    tags = [
-        ("".join(waste_char(c) for c in tag), tag)
-        for tag in ["{choices2|", "{bold|", "{italic|", "{sel1|", "{sel2|", "{sel3|", "{sel4|", "{sel5|"]
-    ]
-
     def waste_string(s):
-        r = "".join(waste_char(c) for c in s)
-        for wasted_tag, tag in tags:
-            r = r.replace(wasted_tag, tag)
-        return r
+        return "".join(waste_char(c) for c in s)
 
     def waste_renderable(section):
         def waste_token(token):
@@ -221,7 +213,7 @@ def dump_database_as_unit_tests():
         yield "from .renderable import Section, Paragraph, _PlainText, _Whitespace, _FreeTextInput, _SelectableText, _BoxedText, _MultipleChoicesInput, _SelectedText"
         yield ""
         yield ""
-        yield "WordsItems = ItemizedAdaptationEffect.WordsItems"
+        yield "TokensItems = ItemizedAdaptationEffect.TokensItems"
         yield "ManualItems = ItemizedAdaptationEffect.ManualItems"
         yield "Effects = ItemizedAdaptationEffect.Effects"
         yield "Selectable = ItemizedAdaptationEffect.Effects.Selectable"
@@ -231,7 +223,7 @@ def dump_database_as_unit_tests():
 
         database_engine = database_utils.create_engine(settings.DATABASE_URL)
         with orm.Session(database_engine) as session:
-            for i, exercise in enumerate(session.query(orm_models.Exercise).all()):
+            for exercise in session.query(orm_models.Exercise).order_by(orm_models.Exercise.id).all():
                 adapted = exercise.make_adapted()
 
                 yield f"    def test_exercise_{exercise.id}(self):"

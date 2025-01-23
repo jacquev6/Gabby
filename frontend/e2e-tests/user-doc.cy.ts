@@ -140,6 +140,6 @@ describe('Gabby', () => {
     cy.get('label:contains("Consigne") + div.ql-container > div.ql-editor').click()
     cy.screenshot('project-textbook-page-exercise/select-things-color-formatting-button', {clip: {x: 560, y: 660, width: 140, height: 100}})
     cy.get('span[data-cy-colors="2"]').rightclick()
-    cy.screenshot('project-textbook-page-exercise/select-things-color-customization', {clip: {x: 450, y: 600, width: 340, height: 300}})
+    cy.screenshot('project-textbook-page-exercise/select-things-color-customization', {clip: {x: 430, y: 600, width: 380, height: 100}})
   })
 })

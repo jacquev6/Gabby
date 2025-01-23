@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, type Ref } from 'vue'
 
-import { BBusy, BLabeledInput, BButton, BRow, BCol, BModal } from '$frontend/components/opinion/bootstrap'
+import { BBusy, BLabeledNumberInput, BButton, BRow, BCol, BModal } from '$frontend/components/opinion/bootstrap'
 import { useApiStore } from '$frontend/stores/api'
 
 
@@ -86,18 +86,18 @@ defineExpose({
       <BBusy :busy="saving">
         <BRow>
           <BCol>
-            <BLabeledInput label="Début dans le PDF" v-model="pdfFileFirstPage" type="number" min="1" />
+            <BLabeledNumberInput label="Début dans le PDF" v-model="pdfFileFirstPage" min="1" />
           </BCol>
           <BCol>
-            <BLabeledInput label="Fin dans le PDF" v-model="pdfFileLastPage" type="number" min="1" />
+            <BLabeledNumberInput label="Fin dans le PDF" v-model="pdfFileLastPage" min="1" />
           </BCol>
         </BRow>
         <BRow>
           <BCol>
-            <BLabeledInput label="Début dans le manuel" v-model="textbookFirstPage" type="number" min="1" />
+            <BLabeledNumberInput label="Début dans le manuel" v-model="textbookFirstPage" min="1" />
           </BCol>
           <BCol>
-            <BLabeledInput label="Fin dans le manuel" v-model="textbookLastPage" type="number" min="1" disabled />
+            <BLabeledNumberInput label="Fin dans le manuel" v-model="textbookLastPage" min="1" disabled />
           </BCol>
         </BRow>
         <hr>
