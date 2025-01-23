@@ -57,7 +57,7 @@ describe('Gabby', () => {
     cy.get('button:contains("Full screen")').click()
     cy.get('span.main').eq(0).click()
     screenshot('mcq-choices-on-two-lines-1')
-    cy.get('div.backdrop').click()
+    cy.get('div.backdrop').click({force: true})
     cy.get('span.main').eq(1).click()
     screenshot('mcq-choices-on-two-lines-2')
   })
