@@ -116,7 +116,7 @@ export function modelIsEmpty(model: Model) {
     && deepEqual(model.example, emptyDeltas)
     && deepEqual(model.clue, emptyDeltas)
     && deepEqual(model.textReference, emptyDeltas)
-    && deepEqual(model.adaptation, {kind: 'generic', effects: []})
+    && deepEqual(model.adaptation, {kind: 'generic', effects: []} as Adaptation)
 }
 
 export function cleanupModel(model: Model) {
