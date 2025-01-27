@@ -2,7 +2,7 @@ from fastapi import HTTPException
 from starlette import status
 
 from . import deltas
-from .api_models import PdfRectangle, Point, SyntheticError, AdaptationV2, FillWithFreeTextAdaptationEffect
+from .api_models import PdfRectangle, Point, SyntheticError, Adaptation, FillWithFreeTextAdaptationEffect
 from .exercises import Exercise, ExercisesResource
 from .parsed_exercises import ParsedExercisesResource
 from .pdfs import PdfFile, PdfFileNaming, PdfFilesResource, PdfFileNamingsResource
@@ -1328,7 +1328,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
             example=[deltas.InsertOp(insert="example\n", attributes={})],
             clue=[deltas.InsertOp(insert="clue\n", attributes={})],
             wording=[deltas.InsertOp(insert="wording\n", attributes={})],
-            adaptation=AdaptationV2(
+            adaptation=Adaptation(
                 kind="fill-with-free-text",
                 effects=[FillWithFreeTextAdaptationEffect(kind="fill-with-free-text", placeholder="...")],
             ),

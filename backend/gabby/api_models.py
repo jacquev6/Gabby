@@ -147,7 +147,7 @@ AdaptationEffect = Annotated[
     pydantic.Field(discriminator="kind"),
 ]
 
-class AdaptationV2(PydanticBase):
+class Adaptation(PydanticBase):
     kind: Literal["generic", "fill-with-free-text", "multiple-choices"]
     effects: list[AdaptationEffect]
 
@@ -169,7 +169,7 @@ class Exercise(PydanticBase, CreatedUpdatedByAtMixin):
 
     rectangles: list[PdfRectangle] = []
 
-    adaptation: AdaptationV2 = AdaptationV2(kind="generic", effects=[])
+    adaptation: Adaptation = Adaptation(kind="generic", effects=[])
 
 class ParsedExercise(PydanticBase):
     number: Annotated[str, WriteOnly()]
@@ -179,7 +179,7 @@ class ParsedExercise(PydanticBase):
     clue: Annotated[deltas.Deltas, WriteOnly()]
     text_reference: Annotated[deltas.Deltas, WriteOnly()]
     wording_paragraphs_per_pagelet: Annotated[int | None, WriteOnly()]
-    adaptation: Annotated[AdaptationV2, WriteOnly()]
+    adaptation: Annotated[Adaptation, WriteOnly()]
     adapted: Annotated[renderable.Exercise, Computed()]
 
 

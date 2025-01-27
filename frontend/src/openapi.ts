@@ -151,8 +151,8 @@ export type webhooks = Record<string, never>;
 
 export interface components {
   schemas: {
-    /** AdaptationV2 */
-    "AdaptationV2-Input": {
+    /** Adaptation */
+    "Adaptation-Input": {
       /** Effects */
       effects: (components["schemas"]["FillWithFreeTextAdaptationEffect"] | components["schemas"]["ItemizedAdaptationEffect-Input"])[];
       /**
@@ -161,8 +161,8 @@ export interface components {
        */
       kind: "generic" | "fill-with-free-text" | "multiple-choices";
     };
-    /** AdaptationV2 */
-    "AdaptationV2-Output": {
+    /** Adaptation */
+    "Adaptation-Output": {
       /** Effects */
       effects: (components["schemas"]["FillWithFreeTextAdaptationEffect"] | components["schemas"]["ItemizedAdaptationEffect-Output"])[];
       /**
@@ -508,7 +508,7 @@ export interface components {
        *   "kind": "generic"
        * }
        */
-      adaptation?: components["schemas"]["AdaptationV2-Input"];
+      adaptation?: components["schemas"]["Adaptation-Input"];
       /**
        * Clue
        * @default [
@@ -595,7 +595,7 @@ export interface components {
     };
     /** exerciseOutputItemAttributes */
     exerciseOutputItemAttributes: {
-      adaptation: components["schemas"]["AdaptationV2-Output"];
+      adaptation: components["schemas"]["Adaptation-Output"];
       /** Clue */
       clue: components["schemas"]["InsertOp"][];
       /**
@@ -658,7 +658,7 @@ export interface components {
     };
     /** exerciseUpdateInputDataAttributes */
     exerciseUpdateInputDataAttributes: {
-      adaptation?: components["schemas"]["AdaptationV2-Input"];
+      adaptation?: components["schemas"]["Adaptation-Input"];
       /** Clue */
       clue?: components["schemas"]["InsertOp"][];
       /** Example */
@@ -746,7 +746,7 @@ export interface components {
     };
     /** parsedExerciseCreateInputDataAttributes */
     parsedExerciseCreateInputDataAttributes: {
-      adaptation: components["schemas"]["AdaptationV2-Input"];
+      adaptation: components["schemas"]["Adaptation-Input"];
       /** Clue */
       clue: components["schemas"]["InsertOp"][];
       /** Example */

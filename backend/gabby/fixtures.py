@@ -9,7 +9,7 @@ from . import deltas
 from . import database_utils
 from . import renderable as r
 from . import testing
-from .api_models import AdaptationV2, PdfRectangle, Point
+from .api_models import Adaptation, PdfRectangle, Point
 from .orm_models import Exercise
 from .orm_models import PdfFile, PdfFileNaming, Section
 from .orm_models import Ping
@@ -259,7 +259,7 @@ def create_test_exercises_1(session, admin):
                 attributes={},
             )
         ],
-        adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
+        adaptation=Adaptation(kind="multiple-choices", effects=[]),
         wording_paragraphs_per_pagelet=3,
         created_by=admin,
         updated_by=admin,
@@ -466,7 +466,7 @@ def create_test_exercises_2(session, admin):
                 attributes={},
             ),
         ],
-        adaptation=AdaptationV2(
+        adaptation=Adaptation(
             kind="generic",
             effects=[
                 api_models.ItemizedAdaptationEffect(
@@ -539,7 +539,7 @@ def create_test_exercises_2(session, admin):
                 attributes={},
             )
         ],
-        adaptation=AdaptationV2(
+        adaptation=Adaptation(
             kind="fill-with-free-text",
             effects=[api_models.FillWithFreeTextAdaptationEffect(kind="fill-with-free-text", placeholder="…")],
         ),
@@ -588,7 +588,7 @@ def create_test_exercises_2(session, admin):
                 attributes={},
             )
         ],
-        adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
+        adaptation=Adaptation(kind="multiple-choices", effects=[]),
         wording_paragraphs_per_pagelet=3,
         created_by=admin,
         updated_by=admin,
@@ -641,7 +641,7 @@ def create_test_exercises_3(session, admin):
             )
         ],
         wording_paragraphs_per_pagelet=1,
-        adaptation=AdaptationV2(
+        adaptation=Adaptation(
             kind="generic",
             effects=[
                 api_models.ItemizedAdaptationEffect(
@@ -721,7 +721,7 @@ def create_test_exercises_3(session, admin):
             deltas.InsertOp(insert="\n\n", attributes={}),
         ],
         wording_paragraphs_per_pagelet=3,
-        adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
+        adaptation=Adaptation(kind="multiple-choices", effects=[]),
         created_by=admin,
         updated_by=admin,
     )

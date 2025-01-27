@@ -12,7 +12,7 @@ from . import exercises
 from . import exercises as e
 from . import renderable
 from . import renderable as r
-from .api_models import AdaptationV2, AdaptationEffect, FillWithFreeTextAdaptationEffect, ItemizedAdaptationEffect
+from .api_models import Adaptation, AdaptationEffect, FillWithFreeTextAdaptationEffect, ItemizedAdaptationEffect
 
 
 def adapt(exercise: exercises.Exercise) -> renderable.Exercise:
@@ -408,7 +408,7 @@ class WordingPaginationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="generic", effects=[]),
+                adaptation=Adaptation(kind="generic", effects=[]),
             ),
             r.Exercise(
                 number="number",
@@ -430,7 +430,7 @@ class WordingPaginationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="generic", effects=[]),
+                adaptation=Adaptation(kind="generic", effects=[]),
             ),
             r.Exercise(
                 number="number",
@@ -454,7 +454,7 @@ class WordingPaginationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="generic", effects=[]),
+                adaptation=Adaptation(kind="generic", effects=[]),
             ),
             r.Exercise(
                 number="number",
@@ -480,7 +480,7 @@ class WordingPaginationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="example\n", attributes={})],
                 clue=[d.InsertOp(insert="clue\n", attributes={})],
                 wording_paragraphs_per_pagelet=2,
-                adaptation=AdaptationV2(kind="generic", effects=[]),
+                adaptation=Adaptation(kind="generic", effects=[]),
             ),
             r.Exercise(
                 number="number",
@@ -521,7 +521,7 @@ class WordingPaginationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="example\n", attributes={})],
                 clue=[d.InsertOp(insert="clue\n", attributes={})],
                 wording_paragraphs_per_pagelet=None,
-                adaptation=AdaptationV2(kind="generic", effects=[]),
+                adaptation=Adaptation(kind="generic", effects=[]),
             ),
             r.Exercise(
                 number="number",
@@ -556,7 +556,7 @@ class WordingPaginationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="example\n", attributes={})],
                 clue=[d.InsertOp(insert="clue\n", attributes={})],
                 wording_paragraphs_per_pagelet=None,
-                adaptation=AdaptationV2(kind="generic", effects=[]),
+                adaptation=Adaptation(kind="generic", effects=[]),
             ),
             r.Exercise(
                 number="number",
@@ -600,7 +600,7 @@ class WordingPaginationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="example\n", attributes={})],
                 clue=[d.InsertOp(insert="clue\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="generic", effects=[]),
+                adaptation=Adaptation(kind="generic", effects=[]),
             ),
             r.Exercise(
                 number="number",
@@ -665,7 +665,7 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="fill-with-free-text", effects=[FillWithFreeTextAdaptationEffect(kind="fill-with-free-text", placeholder="...")]),
+                adaptation=Adaptation(kind="fill-with-free-text", effects=[FillWithFreeTextAdaptationEffect(kind="fill-with-free-text", placeholder="...")]),
             ),
             r.Exercise(
                 number="number",
@@ -716,7 +716,7 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="fill-with-free-text", effects=[FillWithFreeTextAdaptationEffect(kind="fill-with-free-text", placeholder="@")]),
+                adaptation=Adaptation(kind="fill-with-free-text", effects=[FillWithFreeTextAdaptationEffect(kind="fill-with-free-text", placeholder="@")]),
             ),
             r.Exercise(
                 number="number",
@@ -754,7 +754,7 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="fill-with-free-text", effects=[FillWithFreeTextAdaptationEffect(kind="fill-with-free-text", placeholder="...")]),
+                adaptation=Adaptation(kind="fill-with-free-text", effects=[FillWithFreeTextAdaptationEffect(kind="fill-with-free-text", placeholder="...")]),
             ),
             r.Exercise(
                 number="number",
@@ -798,7 +798,7 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="fill-with-free-text", effects=[FillWithFreeTextAdaptationEffect(kind="fill-with-free-text", placeholder="...")]),
+                adaptation=Adaptation(kind="fill-with-free-text", effects=[FillWithFreeTextAdaptationEffect(kind="fill-with-free-text", placeholder="...")]),
             ),
             r.Exercise(
                 number="number",
@@ -852,7 +852,7 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="fill-with-free-text", effects=[FillWithFreeTextAdaptationEffect(kind="fill-with-free-text", placeholder="...")]),
+                adaptation=Adaptation(kind="fill-with-free-text", effects=[FillWithFreeTextAdaptationEffect(kind="fill-with-free-text", placeholder="...")]),
             ),
             r.Exercise(
                 number="number",
@@ -894,7 +894,7 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="fill-with-free-text", effects=[FillWithFreeTextAdaptationEffect(kind="fill-with-free-text", placeholder="...")]),
+                adaptation=Adaptation(kind="fill-with-free-text", effects=[FillWithFreeTextAdaptationEffect(kind="fill-with-free-text", placeholder="...")]),
             ),
             r.Exercise(
                 number="number",
@@ -932,7 +932,7 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                     d.InsertOp(insert="This @ is the clue.\n", attributes={}),
                 ],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="fill-with-free-text", effects=[FillWithFreeTextAdaptationEffect(kind="fill-with-free-text", placeholder="@")]),
+                adaptation=Adaptation(kind="fill-with-free-text", effects=[FillWithFreeTextAdaptationEffect(kind="fill-with-free-text", placeholder="@")]),
             ),
             r.Exercise(
                 number="number",
@@ -997,7 +997,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="generic", effects=[ItemizedAdaptationEffect(
+                adaptation=Adaptation(kind="generic", effects=[ItemizedAdaptationEffect(
                     kind="itemized",
                     items={"kind": "characters", "letters": True},
                     effects={"selectable": {"colors": ["red"]}, "boxed": False},
@@ -1049,7 +1049,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="generic", effects=[ItemizedAdaptationEffect(
+                adaptation=Adaptation(kind="generic", effects=[ItemizedAdaptationEffect(
                     kind="itemized",
                     items={"kind": "tokens", "words": True, "punctuation": False},
                     effects={"selectable": {"colors": ["red", "blue"]}, "boxed": False},
@@ -1089,7 +1089,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="generic", effects=[ItemizedAdaptationEffect(
+                adaptation=Adaptation(kind="generic", effects=[ItemizedAdaptationEffect(
                     kind="itemized",
                     items={"kind": "tokens", "words": True, "punctuation": True},
                     effects={"selectable": {"colors": ["green", "yellow", "orange"]}, "boxed": False},
@@ -1129,7 +1129,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="generic", effects=[ItemizedAdaptationEffect(
+                adaptation=Adaptation(kind="generic", effects=[ItemizedAdaptationEffect(
                     kind="itemized",
                     items={"kind": "tokens", "words": False, "punctuation": True},
                     effects={"selectable": {"colors": ["green", "yellow", "orange"]}, "boxed": False},
@@ -1169,7 +1169,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="generic", effects=[ItemizedAdaptationEffect(
+                adaptation=Adaptation(kind="generic", effects=[ItemizedAdaptationEffect(
                     kind="itemized",
                     items={"kind": "tokens", "words": True, "punctuation": False},
                     effects={"selectable": {"colors": ["red", "blue"]}, "boxed": True},
@@ -1209,7 +1209,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=2,
-                adaptation=AdaptationV2(kind="generic", effects=[ItemizedAdaptationEffect(
+                adaptation=Adaptation(kind="generic", effects=[ItemizedAdaptationEffect(
                     kind="itemized",
                     items={"kind": "tokens", "words": True, "punctuation": True},
                     effects={"selectable": {"colors": ["red"]}, "boxed": False},
@@ -1294,7 +1294,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=2,
-                adaptation=AdaptationV2(kind="generic", effects=[ItemizedAdaptationEffect(
+                adaptation=Adaptation(kind="generic", effects=[ItemizedAdaptationEffect(
                     kind="itemized",
                     items={"kind": "tokens", "words": True, "punctuation": True},
                     effects={"selectable": {"colors": ["red"]}, "boxed": False},
@@ -1379,7 +1379,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=2,
-                adaptation=AdaptationV2(kind="generic", effects=[ItemizedAdaptationEffect(
+                adaptation=Adaptation(kind="generic", effects=[ItemizedAdaptationEffect(
                     kind="itemized",
                     items={"kind": "tokens", "words": True, "punctuation": True},
                     effects={"selectable": {"colors": ["red"]}, "boxed": False},
@@ -1461,7 +1461,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="generic", effects=[ItemizedAdaptationEffect(
+                adaptation=Adaptation(kind="generic", effects=[ItemizedAdaptationEffect(
                     kind="itemized",
                     items={"kind": "sentences"},
                     effects={"selectable": {"colors": ["red", "blue"]}, "boxed": True},
@@ -1570,7 +1570,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="generic", effects=[ItemizedAdaptationEffect(
+                adaptation=Adaptation(kind="generic", effects=[ItemizedAdaptationEffect(
                     kind="itemized",
                     items={"kind": "manual"},
                     effects={"selectable": {"colors": ["red", "blue"]}, "boxed": False},
@@ -1616,7 +1616,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="generic", effects=[ItemizedAdaptationEffect(
+                adaptation=Adaptation(kind="generic", effects=[ItemizedAdaptationEffect(
                     kind="itemized",
                     items={"kind": "manual"},
                     effects={"selectable": {"colors": ["red", "blue"]}, "boxed": True},
@@ -1656,7 +1656,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="generic", effects=[ItemizedAdaptationEffect(
+                adaptation=Adaptation(kind="generic", effects=[ItemizedAdaptationEffect(
                     kind="itemized",
                     items={"kind": "tokens", "words": True, "punctuation": False},
                     effects={"selectable": None, "boxed": True},
@@ -1707,7 +1707,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                    adaptation=AdaptationV2(kind="generic", effects=[ItemizedAdaptationEffect(
+                    adaptation=Adaptation(kind="generic", effects=[ItemizedAdaptationEffect(
                         kind="itemized",
                         items={"kind": "tokens", "words": True, "punctuation": False},
                         effects={"selectable": {"colors": ["red", "green", "blue"]}, "boxed": False},
@@ -1755,7 +1755,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
+                adaptation=Adaptation(kind="multiple-choices", effects=[]),
             ),
             r.Exercise(
                 number="number",
@@ -1808,7 +1808,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                     d.InsertOp(insert="This is {choices2||/||||the} @ clue.\n", attributes={}),
                 ],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
+                adaptation=Adaptation(kind="multiple-choices", effects=[]),
             ),
             r.Exercise(
                 number="number",
@@ -1901,7 +1901,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
+                adaptation=Adaptation(kind="multiple-choices", effects=[]),
             ),
             r.Exercise(
                 number="number",
@@ -1950,7 +1950,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
+                adaptation=Adaptation(kind="multiple-choices", effects=[]),
             ),
             r.Exercise(
                 number="number",
@@ -1995,7 +1995,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
+                adaptation=Adaptation(kind="multiple-choices", effects=[]),
             ),
             r.Exercise(
                 number="number",
@@ -2050,7 +2050,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
+                adaptation=Adaptation(kind="multiple-choices", effects=[]),
             ),
             r.Exercise(
                 number="number",
@@ -2105,7 +2105,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
+                adaptation=Adaptation(kind="multiple-choices", effects=[]),
             ),
             r.Exercise(
                 number="number",
@@ -2157,7 +2157,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
+                adaptation=Adaptation(kind="multiple-choices", effects=[]),
             ),
             r.Exercise(
                 number="number",
@@ -2208,7 +2208,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
+                adaptation=Adaptation(kind="multiple-choices", effects=[]),
             ),
             r.Exercise(
                 number="number",
@@ -2271,7 +2271,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
+                adaptation=Adaptation(kind="multiple-choices", effects=[]),
             ),
             r.Exercise(
                 number="number",
@@ -2330,7 +2330,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
+                adaptation=Adaptation(kind="multiple-choices", effects=[]),
             ),
             r.Exercise(
                 number="number",
@@ -2387,7 +2387,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
+                adaptation=Adaptation(kind="multiple-choices", effects=[]),
             ),
             r.Exercise(
                 number="number",
@@ -2440,7 +2440,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
+                adaptation=Adaptation(kind="multiple-choices", effects=[]),
             ),
             r.Exercise(
                 number="number",
@@ -2493,7 +2493,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
+                adaptation=Adaptation(kind="multiple-choices", effects=[]),
             ),
             r.Exercise(
                 number="number",
@@ -2546,7 +2546,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
+                adaptation=Adaptation(kind="multiple-choices", effects=[]),
             ),
             r.Exercise(
                 number="number",
@@ -2599,7 +2599,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
+                adaptation=Adaptation(kind="multiple-choices", effects=[]),
             ),
             r.Exercise(
                 number="number",
@@ -2652,7 +2652,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
+                adaptation=Adaptation(kind="multiple-choices", effects=[]),
             ),
             r.Exercise(
                 number="number",
@@ -2705,7 +2705,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
+                adaptation=Adaptation(kind="multiple-choices", effects=[]),
             ),
             r.Exercise(
                 number="number",
@@ -2761,7 +2761,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
+                adaptation=Adaptation(kind="multiple-choices", effects=[]),
             ),
             r.Exercise(
                 number="number",
@@ -2817,7 +2817,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
+                adaptation=Adaptation(kind="multiple-choices", effects=[]),
             ),
             r.Exercise(
                 number="number",
@@ -2895,7 +2895,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
+                adaptation=Adaptation(kind="multiple-choices", effects=[]),
             ),
             r.Exercise(
                 number="number",
@@ -2974,7 +2974,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
+                adaptation=Adaptation(kind="multiple-choices", effects=[]),
             ),
             r.Exercise(
                 number="number",
@@ -3054,7 +3054,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="multiple-choices", effects=[]),
+                adaptation=Adaptation(kind="multiple-choices", effects=[]),
             ),
             r.Exercise(
                 number="number",
@@ -3109,7 +3109,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(
+                adaptation=Adaptation(
                     kind="generic",
                     effects=[
                         ItemizedAdaptationEffect(
@@ -3179,7 +3179,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(
+                adaptation=Adaptation(
                     kind="generic",
                     effects=[
                         ItemizedAdaptationEffect(
@@ -3232,7 +3232,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(
+                adaptation=Adaptation(
                     kind="generic",
                     effects=[
                         ItemizedAdaptationEffect(
@@ -3278,7 +3278,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(
+                adaptation=Adaptation(
                     kind="generic",
                     effects=[
                         ItemizedAdaptationEffect(
@@ -3334,7 +3334,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(
+                adaptation=Adaptation(
                     kind="generic",
                     effects=[
                         ItemizedAdaptationEffect(
@@ -3390,7 +3390,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(
+                adaptation=Adaptation(
                     kind="generic",
                     effects=[
                         ItemizedAdaptationEffect(
@@ -3444,7 +3444,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(
+                adaptation=Adaptation(
                     kind="generic",
                     effects=[
                         ItemizedAdaptationEffect(
@@ -3494,7 +3494,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                     d.InsertOp(insert="This is the clue.\n", attributes={}),
                 ],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(
+                adaptation=Adaptation(
                     kind="generic",
                     effects=[
                         ItemizedAdaptationEffect(
@@ -3570,7 +3570,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                     d.InsertOp(insert="\n", attributes={}),
                 ],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(
+                adaptation=Adaptation(
                     kind="generic",
                     effects=[
                         ItemizedAdaptationEffect(
@@ -3626,7 +3626,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(
+                adaptation=Adaptation(
                     kind="generic",
                     effects=[
                         ItemizedAdaptationEffect(
@@ -3696,7 +3696,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(
+                adaptation=Adaptation(
                     kind="generic",
                     effects=[
                         ItemizedAdaptationEffect(
@@ -3768,7 +3768,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(
+                adaptation=Adaptation(
                     kind="generic",
                     effects=[
                         ItemizedAdaptationEffect(
@@ -3838,7 +3838,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(
+                adaptation=Adaptation(
                     kind="generic",
                     effects=[
                         ItemizedAdaptationEffect(
@@ -3908,7 +3908,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(
+                adaptation=Adaptation(
                     kind="generic",
                     effects=[
                         ItemizedAdaptationEffect(
@@ -3980,7 +3980,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(
+                adaptation=Adaptation(
                     kind="generic",
                     effects=[
                         ItemizedAdaptationEffect(
@@ -4068,7 +4068,7 @@ class LenientParagraphTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="generic", effects=[])
+                adaptation=Adaptation(kind="generic", effects=[])
             ),
             r.Exercise(
                 number="number",
@@ -4154,7 +4154,7 @@ class LenientParagraphTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(
+                adaptation=Adaptation(
                     kind="generic",
                     effects=[
                         ItemizedAdaptationEffect(
@@ -4232,7 +4232,7 @@ class LenientParagraphTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(
+                adaptation=Adaptation(
                     kind="generic",
                     effects=[
                         ItemizedAdaptationEffect(
@@ -4310,7 +4310,7 @@ class LenientParagraphTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(
+                adaptation=Adaptation(
                     kind="generic",
                     effects=[FillWithFreeTextAdaptationEffect(kind="fill-with-free-text", placeholder="...")],
                 ),
@@ -4383,7 +4383,7 @@ class LenientParagraphTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="generic", effects=[]),
+                adaptation=Adaptation(kind="generic", effects=[]),
             ),
             r.Exercise(
                 number="number",
@@ -4462,7 +4462,7 @@ class MultipleAdaptationEffectsTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="generic", effects=[
+                adaptation=Adaptation(kind="generic", effects=[
                     FillWithFreeTextAdaptationEffect(kind="fill-with-free-text", placeholder="..."),
                 ]),
             ),
@@ -4527,7 +4527,7 @@ class MultipleAdaptationEffectsTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=AdaptationV2(kind="generic", effects=[]),
+                adaptation=Adaptation(kind="generic", effects=[]),
             ),
             r.Exercise(
                 number="number",
@@ -4585,7 +4585,7 @@ class MultipleAdaptationEffectsTestCase(AdaptationTestCase):
                 ],
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
-                adaptation=AdaptationV2(kind="generic", effects=[
+                adaptation=Adaptation(kind="generic", effects=[
                     # Free text
                     FillWithFreeTextAdaptationEffect(kind="fill-with-free-text", placeholder="..."),
                     # Selectable words

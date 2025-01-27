@@ -208,7 +208,7 @@ def dump_database_as_unit_tests():
         yield "from . import exercises as e"
         yield "from . import renderable as r"
         yield "from .adaptation import AdaptationTestCase"
-        yield "from .api_models import AdaptationV2, FillWithFreeTextAdaptationEffect, ItemizedAdaptationEffect"
+        yield "from .api_models import Adaptation, FillWithFreeTextAdaptationEffect, ItemizedAdaptationEffect"
         yield "from .deltas import InsertOp"
         yield "from .renderable import Section, Paragraph, _PlainText, _Whitespace, _FreeTextInput, _SelectableText, _BoxedText, _MultipleChoicesInput, _SelectedText"
         yield ""

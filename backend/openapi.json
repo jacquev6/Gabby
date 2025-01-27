@@ -1,7 +1,7 @@
 {
   "components": {
     "schemas": {
-      "AdaptationV2-Input": {
+      "Adaptation-Input": {
         "additionalProperties": false,
         "properties": {
           "effects": {
@@ -39,10 +39,10 @@
           "kind",
           "effects"
         ],
-        "title": "AdaptationV2",
+        "title": "Adaptation",
         "type": "object"
       },
-      "AdaptationV2-Output": {
+      "Adaptation-Output": {
         "additionalProperties": false,
         "properties": {
           "effects": {
@@ -80,7 +80,7 @@
           "kind",
           "effects"
         ],
-        "title": "AdaptationV2",
+        "title": "Adaptation",
         "type": "object"
       },
       "Body_login_api_token_post": {
@@ -1054,7 +1054,7 @@
         "additionalProperties": false,
         "properties": {
           "adaptation": {
-            "$ref": "#/components/schemas/AdaptationV2-Input",
+            "$ref": "#/components/schemas/Adaptation-Input",
             "default": {
               "effects": [],
               "kind": "generic"
@@ -1236,7 +1236,7 @@
         "additionalProperties": false,
         "properties": {
           "adaptation": {
-            "$ref": "#/components/schemas/AdaptationV2-Output"
+            "$ref": "#/components/schemas/Adaptation-Output"
           },
           "clue": {
             "items": {
@@ -1433,7 +1433,7 @@
         "additionalProperties": false,
         "properties": {
           "adaptation": {
-            "$ref": "#/components/schemas/AdaptationV2-Input"
+            "$ref": "#/components/schemas/Adaptation-Input"
           },
           "clue": {
             "items": {
@@ -1676,7 +1676,7 @@
         "additionalProperties": false,
         "properties": {
           "adaptation": {
-            "$ref": "#/components/schemas/AdaptationV2-Input"
+            "$ref": "#/components/schemas/Adaptation-Input"
           },
           "clue": {
             "items": {

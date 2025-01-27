@@ -117,20 +117,20 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
     _adaptation: orm.Mapped[dict] = orm.mapped_column(sql.JSON, name="adaptation", default={"format": 0}, server_default="{\"format\": 0}")
 
     @property
-    def adaptation(self) -> api_models.AdaptationV2:
+    def adaptation(self) -> api_models.Adaptation:
         if self._adaptation is None:  # Before the first flush to DB if not set in constructor.
             self._adaptation = {"format": 0}
 
         match self._adaptation["format"]:
             case 0:
-                return api_models.AdaptationV2(kind="generic", effects=[])
+                return api_models.Adaptation(kind="generic", effects=[])
             case 2:
-                return api_models.AdaptationV2(**self._adaptation["settings"])
+                return api_models.Adaptation(**self._adaptation["settings"])
             case format:
                 raise ValueError(f"Unknown adaptation format {format}")
 
     @adaptation.setter
-    def adaptation(self, adaptation: api_models.AdaptationV2):
+    def adaptation(self, adaptation: api_models.Adaptation):
         self._adaptation = {
             "format": 2,
             "settings": adaptation.model_dump(),
