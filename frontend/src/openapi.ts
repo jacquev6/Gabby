@@ -310,7 +310,21 @@ export interface components {
     /** Paragraph */
     Paragraph: {
       /** Tokens */
-      tokens: (components["schemas"]["_PlainText"] | components["schemas"]["_BoxedText"] | components["schemas"]["_BoldText"] | components["schemas"]["_ItalicText"] | components["schemas"]["_SelectedText"] | components["schemas"]["_FreeTextInput"] | components["schemas"]["_MultipleChoicesInput"] | components["schemas"]["_Whitespace"] | components["schemas"]["_Selectable"] | components["schemas"]["_Boxed"] | components["schemas"]["_SelectableText"])[];
+      tokens: (components["schemas"]["_PlainText"] | components["schemas"]["_BoxedText"] | components["schemas"]["PassiveFormattedText"] | components["schemas"]["_SelectedText"] | components["schemas"]["_FreeTextInput"] | components["schemas"]["_MultipleChoicesInput"] | components["schemas"]["_Whitespace"] | components["schemas"]["_Selectable"] | components["schemas"]["_Boxed"] | components["schemas"]["_SelectableText"])[];
+    };
+    /** PassiveFormattedText */
+    PassiveFormattedText: {
+      /** Bold */
+      bold: boolean;
+      /** Italic */
+      italic: boolean;
+      /** Text */
+      text: string;
+      /**
+       * Type
+       * @constant
+       */
+      type: "passiveFormattedText";
     };
     /** PdfRectangle */
     PdfRectangle: {
@@ -379,20 +393,10 @@ export interface components {
       /** Error Type */
       type: string;
     };
-    /** _BoldText */
-    _BoldText: {
-      /** Text */
-      text: string;
-      /**
-       * Type
-       * @constant
-       */
-      type: "boldText";
-    };
     /** _Boxed */
     _Boxed: {
       /** Contents */
-      contents: (components["schemas"]["_PlainText"] | components["schemas"]["_BoxedText"] | components["schemas"]["_BoldText"] | components["schemas"]["_ItalicText"] | components["schemas"]["_SelectedText"] | components["schemas"]["_FreeTextInput"] | components["schemas"]["_MultipleChoicesInput"] | components["schemas"]["_Whitespace"])[];
+      contents: (components["schemas"]["_PlainText"] | components["schemas"]["_BoxedText"] | components["schemas"]["PassiveFormattedText"] | components["schemas"]["_SelectedText"] | components["schemas"]["_FreeTextInput"] | components["schemas"]["_MultipleChoicesInput"] | components["schemas"]["_Whitespace"])[];
       /**
        * Type
        * @constant
@@ -416,16 +420,6 @@ export interface components {
        * @constant
        */
       type: "freeTextInput";
-    };
-    /** _ItalicText */
-    _ItalicText: {
-      /** Text */
-      text: string;
-      /**
-       * Type
-       * @constant
-       */
-      type: "italicText";
     };
     /** _MultipleChoicesInput */
     _MultipleChoicesInput: {
@@ -454,7 +448,7 @@ export interface components {
       /** Colors */
       colors: string[];
       /** Contents */
-      contents: (components["schemas"]["_PlainText"] | components["schemas"]["_BoxedText"] | components["schemas"]["_BoldText"] | components["schemas"]["_ItalicText"] | components["schemas"]["_SelectedText"] | components["schemas"]["_FreeTextInput"] | components["schemas"]["_MultipleChoicesInput"] | components["schemas"]["_Whitespace"])[];
+      contents: (components["schemas"]["_PlainText"] | components["schemas"]["_BoxedText"] | components["schemas"]["PassiveFormattedText"] | components["schemas"]["_SelectedText"] | components["schemas"]["_FreeTextInput"] | components["schemas"]["_MultipleChoicesInput"] | components["schemas"]["_Whitespace"])[];
       /**
        * Type
        * @constant

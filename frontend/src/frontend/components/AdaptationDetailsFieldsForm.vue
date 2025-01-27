@@ -162,6 +162,8 @@ export const wysiwygBlots = [
 ]
 
 export const wysiwygContagiousFormats = ['choices2']
+
+export const wysiwygCompatibleFormats = [['bold', 'italic']]
 </script>
 
 <script setup lang="ts">

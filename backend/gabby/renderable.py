@@ -21,22 +21,11 @@ def BoxedText(text: str):
     return _BoxedText(type="boxedText", text=text)
 
 
-class _BoldText(PydanticBase):
-    type: Literal["boldText"]
+class PassiveFormattedText(PydanticBase):
+    type: Literal["passiveFormattedText"]
     text: str
-
-def BoldText(text: str):
-    assert text.__class__ == str, text.__class__
-    return _BoldText(type="boldText", text=text)
-
-
-class _ItalicText(PydanticBase):
-    type: Literal["italicText"]
-    text: str
-
-def ItalicText(text: str):
-    assert text.__class__ == str, text.__class__
-    return _ItalicText(type="italicText", text=text)
+    bold: bool
+    italic: bool
 
 
 class _SelectableText(PydanticBase):
@@ -82,7 +71,7 @@ def Whitespace():
     return _Whitespace(type="whitespace")
 
 
-LeafToken = _PlainText | _BoxedText | _BoldText | _ItalicText | _SelectedText | _FreeTextInput | _MultipleChoicesInput | _Whitespace
+LeafToken = _PlainText | _BoxedText | PassiveFormattedText | _SelectedText | _FreeTextInput | _MultipleChoicesInput | _Whitespace
 
 
 class _Selectable(PydanticBase):

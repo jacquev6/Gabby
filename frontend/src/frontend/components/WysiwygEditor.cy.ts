@@ -9,6 +9,7 @@ describe('WysiwygEditor', () => {
     cy.mount(WysiwygEditor, {props: {
       label: 'Test',
       blots: [],
+      compatibleFormats: [],
       contagiousFormats: [],
       modelValue,
       'onUpdate:modelValue': (m: Model) => {modelValue = m},
@@ -23,6 +24,7 @@ describe('WysiwygEditor', () => {
     cy.mount(WysiwygEditor, {props: {
       label: 'Test',
       blots: [],
+      compatibleFormats: [],
       contagiousFormats: [],
       modelValue,
       'onUpdate:modelValue': (m: Model) => {modelValue = m},
@@ -38,6 +40,7 @@ describe('WysiwygEditor', () => {
     cy.mount(WysiwygEditor, {props: {
       label: 'Test',
       blots: [],
+      compatibleFormats: [],
       contagiousFormats: [],
       modelValue,
       'onUpdate:modelValue': (m: Model) => {modelValue = m},
@@ -52,6 +55,7 @@ describe('WysiwygEditor', () => {
     cy.mount(WysiwygEditor, {props: {
       label: 'Test',
       blots: [],
+      compatibleFormats: [],
       contagiousFormats: [],
       modelValue,
       'onUpdate:modelValue': (m: Model) => {modelValue = m},
@@ -66,6 +70,7 @@ describe('WysiwygEditor', () => {
     cy.mount(WysiwygEditor, {props: {
       label: 'Test',
       blots: [],
+      compatibleFormats: [],
       contagiousFormats: [],
       modelValue,
       'onUpdate:modelValue': (m: Model) => {modelValue = m},
@@ -81,6 +86,7 @@ describe('WysiwygEditor', () => {
     cy.mount(WysiwygEditor, {props: {
       label: 'Test',
       blots: [],
+      compatibleFormats: [],
       contagiousFormats: [],
       modelValue,
       'onUpdate:modelValue': (m: Model) => {modelValue = m},

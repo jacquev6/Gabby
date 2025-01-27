@@ -509,10 +509,7 @@
                   "$ref": "#/components/schemas/_BoxedText"
                 },
                 {
-                  "$ref": "#/components/schemas/_BoldText"
-                },
-                {
-                  "$ref": "#/components/schemas/_ItalicText"
+                  "$ref": "#/components/schemas/PassiveFormattedText"
                 },
                 {
                   "$ref": "#/components/schemas/_SelectedText"
@@ -545,6 +542,36 @@
           "tokens"
         ],
         "title": "Paragraph",
+        "type": "object"
+      },
+      "PassiveFormattedText": {
+        "additionalProperties": false,
+        "properties": {
+          "bold": {
+            "title": "Bold",
+            "type": "boolean"
+          },
+          "italic": {
+            "title": "Italic",
+            "type": "boolean"
+          },
+          "text": {
+            "title": "Text",
+            "type": "string"
+          },
+          "type": {
+            "const": "passiveFormattedText",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "text",
+          "bold",
+          "italic"
+        ],
+        "title": "PassiveFormattedText",
         "type": "object"
       },
       "PdfRectangle": {
@@ -734,26 +761,6 @@
         "title": "ValidationError",
         "type": "object"
       },
-      "_BoldText": {
-        "additionalProperties": false,
-        "properties": {
-          "text": {
-            "title": "Text",
-            "type": "string"
-          },
-          "type": {
-            "const": "boldText",
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "text"
-        ],
-        "title": "_BoldText",
-        "type": "object"
-      },
       "_Boxed": {
         "additionalProperties": false,
         "properties": {
@@ -767,10 +774,7 @@
                   "$ref": "#/components/schemas/_BoxedText"
                 },
                 {
-                  "$ref": "#/components/schemas/_BoldText"
-                },
-                {
-                  "$ref": "#/components/schemas/_ItalicText"
+                  "$ref": "#/components/schemas/PassiveFormattedText"
                 },
                 {
                   "$ref": "#/components/schemas/_SelectedText"
@@ -835,26 +839,6 @@
           "type"
         ],
         "title": "_FreeTextInput",
-        "type": "object"
-      },
-      "_ItalicText": {
-        "additionalProperties": false,
-        "properties": {
-          "text": {
-            "title": "Text",
-            "type": "string"
-          },
-          "type": {
-            "const": "italicText",
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "text"
-        ],
-        "title": "_ItalicText",
         "type": "object"
       },
       "_MultipleChoicesInput": {
@@ -924,10 +908,7 @@
                   "$ref": "#/components/schemas/_BoxedText"
                 },
                 {
-                  "$ref": "#/components/schemas/_BoldText"
-                },
-                {
-                  "$ref": "#/components/schemas/_ItalicText"
+                  "$ref": "#/components/schemas/PassiveFormattedText"
                 },
                 {
                   "$ref": "#/components/schemas/_SelectedText"

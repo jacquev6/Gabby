@@ -120,15 +120,10 @@ class _Adapter:
                     yield renderable.Whitespace()
                     yield renderable.BoxedText(text=choices[-1])
 
-            elif "bold" in delta.attributes:
-                assert delta.attributes == {"bold": delta.attributes["bold"]}
+            elif "bold" in delta.attributes or "italic" in delta.attributes:
+                assert set(delta.attributes.keys()) <= {"bold", "italic"}
 
-                yield renderable.BoldText(text=delta.insert)
-
-            elif "italic" in delta.attributes:
-                assert delta.attributes == {"italic": delta.attributes["italic"]}
-
-                yield renderable.ItalicText(text=delta.insert)
+                yield renderable.PassiveFormattedText(type="passiveFormattedText", text=delta.insert, bold=delta.attributes.get("bold", False), italic=delta.attributes.get("italic", False))
 
             else:
                 assert False, f"Unknown attributes: {delta.attributes}"
@@ -259,15 +254,10 @@ class _Adapter:
                             else:
                                 yield renderable.PlainText(text=text)
 
-            elif "bold" in delta.attributes:
-                assert delta.attributes == {"bold": delta.attributes["bold"]}
+            elif "bold" in delta.attributes or "italic" in delta.attributes:
+                assert set(delta.attributes.keys()) <= {"bold", "italic"}
 
-                yield renderable.BoldText(text=delta.insert)
-
-            elif "italic" in delta.attributes:
-                assert delta.attributes == {"italic": delta.attributes["italic"]}
-
-                yield renderable.ItalicText(text=delta.insert)
+                yield renderable.PassiveFormattedText(type="passiveFormattedText", text=delta.insert, bold=delta.attributes.get("bold", False), italic=delta.attributes.get("italic", False))
 
             elif "choices2" in delta.attributes:
                 assert delta.attributes == {"choices2": delta.attributes["choices2"]}
@@ -4092,11 +4082,11 @@ class LenientParagraphTestCase(AdaptationTestCase):
                             r.Whitespace(),
                             r.PlainText(text="a"),
                             r.Whitespace(),
-                            r.BoldText(text="strict"),
+                            r.PassiveFormattedText(type="passiveFormattedText", text="strict", bold=True, italic=False),
                             r.Whitespace(),
                             r.PlainText(text="instructions"),
                             r.Whitespace(),
-                            r.ItalicText(text="paragraph"),
+                            r.PassiveFormattedText(type="passiveFormattedText", text="paragraph", bold=False, italic=True),
                             r.PlainText(text="."),
                         ]),
                         r.Paragraph(tokens=[
@@ -4108,11 +4098,11 @@ class LenientParagraphTestCase(AdaptationTestCase):
                             r.Whitespace(),
                             r.PlainText(text="a"),
                             r.Whitespace(),
-                            r.BoldText(text="lenient"),
+                            r.PassiveFormattedText(type="passiveFormattedText", text="lenient", bold=True, italic=False),
                             r.Whitespace(),
                             r.PlainText(text="instructions"),
                             r.Whitespace(),
-                            r.ItalicText(text="paragraph"),
+                            r.PassiveFormattedText(type="passiveFormattedText", text="paragraph", bold=False, italic=True),
                         ]),
                     ]),
                     wording=r.Section(paragraphs=[
@@ -4123,11 +4113,11 @@ class LenientParagraphTestCase(AdaptationTestCase):
                             r.Whitespace(),
                             r.PlainText(text="a"),
                             r.Whitespace(),
-                            r.BoldText(text="strict"),
+                            r.PassiveFormattedText(type="passiveFormattedText", text="strict", bold=True, italic=False),
                             r.Whitespace(),
                             r.PlainText(text="wording"),
                             r.Whitespace(),
-                            r.ItalicText(text="paragraph"),
+                            r.PassiveFormattedText(type="passiveFormattedText", text="paragraph", bold=False, italic=True),
                             r.PlainText(text="."),
                         ]),
                         r.Paragraph(tokens=[
@@ -4139,11 +4129,11 @@ class LenientParagraphTestCase(AdaptationTestCase):
                             r.Whitespace(),
                             r.PlainText(text="a"),
                             r.Whitespace(),
-                            r.BoldText(text="lenient"),
+                            r.PassiveFormattedText(type="passiveFormattedText", text="lenient", bold=True, italic=False),
                             r.Whitespace(),
                             r.PlainText(text="wording"),
                             r.Whitespace(),
-                            r.ItalicText(text="paragraph"),
+                            r.PassiveFormattedText(type="passiveFormattedText", text="paragraph", bold=False, italic=True),
                         ]),
                     ]),
                 )],

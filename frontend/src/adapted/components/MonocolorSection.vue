@@ -46,11 +46,8 @@ const style = computed(() => ({
         <template v-else-if="token.type === 'boxedText'">
           <span class="tricolorable boxed">{{ token.text }}</span>
         </template>
-        <template v-else-if="token.type === 'boldText'">
-          <b class="tricolorable">{{ token.text }}</b>
-        </template>
-        <template v-else-if="token.type === 'italicText'">
-          <i class="tricolorable">{{ token.text }}</i>
+        <template v-else-if="token.type === 'passiveFormattedText'">
+          <span class="tricolorable" :class="{passiveBold: token.bold, passiveItalic: token.italic}">{{ token.text }}</span>
         </template>
         <template v-else-if="token.type === 'freeTextInput'">
           <FreeTextInput class="tricolorable" v-model="models[modelKey]" />
@@ -70,11 +67,8 @@ const style = computed(() => ({
               <template v-else-if="subToken.type === 'boxedText'">
                 <span class="tricolorable boxed">{{ subToken.text }}</span>
               </template>
-              <template v-else-if="subToken.type === 'boldText'">
-                <b class="tricolorable">{{ subToken.text }}</b>
-              </template>
-              <template v-else-if="subToken.type === 'italicText'">
-                <i class="tricolorable">{{ subToken.text }}</i>
+              <template v-else-if="subToken.type === 'passiveFormattedText'">
+                <span class="tricolorable" :class="{passiveBold: subToken.bold, passiveItalic: subToken.italic}">{{ subToken.text }}</span>
               </template>
               <template v-else-if="subToken.type === 'freeTextInput'">
                 <FreeTextInput class="tricolorable" v-model="models[modelKey]" />
@@ -103,11 +97,8 @@ const style = computed(() => ({
               <template v-else-if="subToken.type === 'boxedText'">
                 <span class="tricolorable boxed">{{ subToken.text }}</span>
               </template>
-              <template v-else-if="subToken.type === 'boldText'">
-                <b class="tricolorable">{{ subToken.text }}</b>
-              </template>
-              <template v-else-if="subToken.type === 'italicText'">
-                <i class="tricolorable">{{ subToken.text }}</i>
+              <template v-else-if="subToken.type === 'passiveFormattedText'">
+                <span class="tricolorable" :class="{passiveBold: subToken.bold, passiveItalic: subToken.italic}">{{ subToken.text }}</span>
               </template>
               <template v-else-if="subToken.type === 'freeTextInput'">
                 <FreeTextInput class="tricolorable" v-model="models[modelKey]" />
@@ -152,5 +143,13 @@ p.first {
 span.boxed {
   padding: 4px 0;
   outline: 2px solid black;
+}
+
+span.passiveItalic {
+  font-style: italic;
+}
+
+span.passiveBold {
+  font-weight: bold;
 }
 </style>

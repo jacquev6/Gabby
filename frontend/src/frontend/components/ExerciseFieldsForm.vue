@@ -229,7 +229,7 @@ import deepCopy from 'deep-copy'
 
 import { BRow, BCol, BLabeledInput, BLabeledNumberInput, BLabeledSelect } from './opinion/bootstrap'
 import WysiwygEditor from './WysiwygEditor.vue'
-import { wysiwygBlots, wysiwygContagiousFormats } from './AdaptationDetailsFieldsForm.vue'
+import { wysiwygBlots, wysiwygCompatibleFormats, wysiwygContagiousFormats } from './AdaptationDetailsFieldsForm.vue'
 import OptionalWysiwygEditor from './OptionalWysiwygEditor.vue'
 
 
@@ -406,6 +406,7 @@ defineExpose({
       ref="instructionsEditor"
       :label="$t('exerciseInstructions')"
       :blots="wysiwygBlots"
+      :compatibleFormats="wysiwygCompatibleFormats"
       :contagiousFormats="wysiwygContagiousFormats"
       v-model="model.instructions"
       @selectionChange="selectionChangeInInstructions"
@@ -414,6 +415,7 @@ defineExpose({
       ref="wordingEditor"
       :label="$t('exerciseWording')"
       :blots="wysiwygBlots"
+      :compatibleFormats="wysiwygCompatibleFormats"
       :contagiousFormats="wysiwygContagiousFormats"
       v-model="model.wording"
       @selectionChange="selectionChangeInWording"
@@ -425,6 +427,7 @@ defineExpose({
             ref="exampleEditor"
             :label="$t('exerciseExample')"
             :blots="wysiwygBlots"
+            :compatibleFormats="wysiwygCompatibleFormats"
             :contagiousFormats="wysiwygContagiousFormats"
             v-model="model.example"
           />
@@ -434,6 +437,7 @@ defineExpose({
             ref="clueEditor"
             :label="$t('exerciseClue')"
             :blots="wysiwygBlots"
+            :compatibleFormats="wysiwygCompatibleFormats"
             :contagiousFormats="wysiwygContagiousFormats"
             v-model="model.clue"
           />
@@ -443,6 +447,7 @@ defineExpose({
             ref="textReferenceEditor"
             :label="$t('exerciseTextReference')"
             :blots="wysiwygBlots"
+            :compatibleFormats="wysiwygCompatibleFormats"
             :contagiousFormats="wysiwygContagiousFormats"
             v-model="model.textReference"
           />

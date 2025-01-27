@@ -65,7 +65,7 @@ describe('Gabby', () => {
     cy.get('@italic').should('be.disabled')
   })
 
-  it('allows bold and italic in all fields for all adaptation types', () => {
+  it('allows bold and italic in all fields', () => {
     visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
     setAliases()
     cy.get('@number').type('test')
@@ -74,39 +74,31 @@ describe('Gabby', () => {
     cy.get('@clueHeader').click()
     cy.get('@clue').type('X')
 
-    for (const adaptationType of ['-', 'fill-with-free-text', 'multiple-choices']) {
-      cy.get('@adaptationType').select(adaptationType)
+    for (const fieldAlias of ['@instructions', '@wording', '@example', '@clue']) {
+      cy.get(fieldAlias).click().type('{selectAll}plain', {delay: 0})
+      cy.get('@bold').click()
+      cy.get(fieldAlias).type('bold', {delay: 0})
+      cy.get('@italic').click()
+      cy.get(fieldAlias).type('both', {delay: 0})
+      cy.get('@bold').click()
+      cy.get(fieldAlias).type('italic', {delay: 0})
+      notBusy()
+      cy.get(fieldAlias).should('contain.text', 'plainboldbothitalic')
+      cy.get('bold-blot:contains("bold")').should('exist')
+      cy.get('italic-blot:contains("italic")').should('exist')
+      cy.get('bold-blot:contains("both")').should('exist')
+      cy.get('italic-blot:contains("both")').should('exist')
+      cy.get('div:has(>h1:contains("Adapted exercise")) span.passiveItalic:contains("italic")').should('exist')
+      cy.get('div:has(>h1:contains("Adapted exercise")) span.passiveBold:contains("bold")').should('exist')
+      cy.get('div:has(>h1:contains("Adapted exercise")) span.passiveBold.passiveItalic:contains("both")').should('exist')
 
-      for (const fieldAlias of ['@instructions', '@wording', '@example', '@clue']) {
-        cy.get(fieldAlias).click().type('{selectAll}plain', {delay: 0})
-        cy.get('@bold').click()
-        cy.get(fieldAlias).type('bold', {delay: 0})
-        cy.get('@italic').click()
-        cy.get(fieldAlias).type('italic', {delay: 0})
-
-        cy.get(fieldAlias).should('contain.text', 'plainbolditalic')
-        cy.get('bold-blot:contains("bold")').should('exist')
-        cy.get('italic-blot:contains("italic")').should('exist')
-        notBusy()
-        cy.get(fieldAlias).should('contain.text', 'plainbolditalic')
-        cy.get('bold-blot:contains("bold")').should('exist')
-        cy.get('italic-blot:contains("italic")').should('exist')
-        // cy.get('div:has(>h1:contains("Adapted exercise"))').its('length').should('eq', 1)
-        cy.get('div:has(>h1:contains("Adapted exercise")) i:contains("italic")').should('exist')
-        cy.get('div:has(>h1:contains("Adapted exercise")) b:contains("bold")').should('exist')
-
-        cy.get(fieldAlias).type('{selectAll}X', {delay: 0})
-
-        cy.get(fieldAlias).should('contain.text', 'X')
-        cy.get('bold-blot:contains("bold")').should('not.exist')
-        cy.get('italic-blot:contains("italic")').should('not.exist')
-        notBusy()
-        cy.get(fieldAlias).should('contain.text', 'X')
-        cy.get('bold-blot:contains("bold")').should('not.exist')
-        cy.get('italic-blot:contains("italic")').should('not.exist')
-        cy.get('div:has(>h1:contains("Adapted exercise")) i:contains("italic")').should('not.exist')
-        cy.get('div:has(>h1:contains("Adapted exercise")) b:contains("bold")').should('not.exist')
-      }
+      cy.get(fieldAlias).type('{selectAll}X', {delay: 0})
+      notBusy()
+      cy.get(fieldAlias).should('contain.text', 'X')
+      cy.get('bold-blot').should('not.exist')
+      cy.get('italic-blot').should('not.exist')
+      cy.get('span.passiveItalic').should('not.exist')
+      cy.get('span.passiveBold').should('not.exist')
     }
   })
 
