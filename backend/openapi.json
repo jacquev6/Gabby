@@ -33,11 +33,16 @@
             ],
             "title": "Kind",
             "type": "string"
+          },
+          "show_mcq_choices_by_default": {
+            "title": "Show Mcq Choices By Default",
+            "type": "boolean"
           }
         },
         "required": [
           "kind",
-          "effects"
+          "effects",
+          "show_mcq_choices_by_default"
         ],
         "title": "Adaptation",
         "type": "object"
@@ -74,11 +79,16 @@
             ],
             "title": "Kind",
             "type": "string"
+          },
+          "show_mcq_choices_by_default": {
+            "title": "Show Mcq Choices By Default",
+            "type": "boolean"
           }
         },
         "required": [
           "kind",
-          "effects"
+          "effects",
+          "show_mcq_choices_by_default"
         ],
         "title": "Adaptation",
         "type": "object"
@@ -851,6 +861,10 @@
             "title": "Choices",
             "type": "array"
           },
+          "show_choices_by_default": {
+            "title": "Show Choices By Default",
+            "type": "boolean"
+          },
           "type": {
             "const": "multipleChoicesInput",
             "title": "Type",
@@ -859,7 +873,8 @@
         },
         "required": [
           "type",
-          "choices"
+          "choices",
+          "show_choices_by_default"
         ],
         "title": "_MultipleChoicesInput",
         "type": "object"
@@ -1057,7 +1072,8 @@
             "$ref": "#/components/schemas/Adaptation-Input",
             "default": {
               "effects": [],
-              "kind": "generic"
+              "kind": "generic",
+              "show_mcq_choices_by_default": false
             }
           },
           "clue": {

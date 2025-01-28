@@ -9,6 +9,8 @@ describe('MultipleChoicesInput', () => {
 
     cy.mount(MultipleChoicesInput, {props: {
       choices: ['alpha', 'beta'],
+      placeholder: '....',
+      showChoicesByDefault: false,
       modelValue: value,
       'onUpdate:modelValue': (v: string | undefined) => {
         value = v

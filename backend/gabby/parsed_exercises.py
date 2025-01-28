@@ -77,7 +77,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     "clue": [{"insert": "\n", "attributes": {}}],
                     "textReference": [{"insert": "\n", "attributes": {}}],
                     "wordingParagraphsPerPagelet": 3,
-                    "adaptation": {"kind": "generic", "effects": []},
+                    "adaptation": {"kind": "generic", "effects": [], "show_mcq_choices_by_default": False},
                 },
             },
         }
@@ -148,6 +148,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                                 },
                             },
                         ],
+                        "show_mcq_choices_by_default": False,
                     },
                 },
             },
@@ -213,6 +214,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                                 },
                             },
                         ],
+                        "show_mcq_choices_by_default": False,
                     },
                 },
             },
@@ -288,6 +290,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                                 "placeholder": "@",
                             },
                         ],
+                        "show_mcq_choices_by_default": False,
                     },
                 },
             },
@@ -342,7 +345,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     "clue": [{"insert": "\n", "attributes": {}}],
                     "textReference": [{"insert": "\n", "attributes": {}}],
                     "wordingParagraphsPerPagelet": 3,
-                    "adaptation": {"kind": "multiple-choices", "effects": []},
+                    "adaptation": {"kind": "multiple-choices", "effects": [], "show_mcq_choices_by_default": False},
                 },
             },
         }
@@ -363,12 +366,12 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     {"tokens": [
                         {"type": "plainText", "text": "A"},
                         {"type": "whitespace"},
-                        {"type": "multipleChoicesInput", "choices": ["a", "b"]},
+                        {"type": "multipleChoicesInput", "choices": ["a", "b"], "show_choices_by_default": False},
                     ]},
                     {"tokens": [
                         {"type": "plainText", "text": "B"},
                         {"type": "whitespace"},
-                        {"type": "multipleChoicesInput", "choices": ["a", "b"]},
+                        {"type": "multipleChoicesInput", "choices": ["a", "b"], "show_choices_by_default": False},
                     ]},
                 ]},
             }],
@@ -401,7 +404,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     "clue": [{"insert": "\n", "attributes": {}}],
                     "textReference": [{"insert": "\n", "attributes": {}}],
                     "wordingParagraphsPerPagelet": 3,
-                    "adaptation": {"kind": "multiple-choices", "effects": []},
+                    "adaptation": {"kind": "multiple-choices", "effects": [], "show_mcq_choices_by_default": False},
                 },
             },
         }
@@ -418,7 +421,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                 "wording": {"paragraphs": [{"tokens": [
                     {"type": "plainText", "text": "A"},
                     {"type": "whitespace"},
-                    {"type": "multipleChoicesInput", "choices": ["alpha", "beta"]},
+                    {"type": "multipleChoicesInput", "choices": ["alpha", "beta"], "show_choices_by_default": False},
                     {"type": "plainText", "text": "."},
                 ]}]},
             }],
@@ -432,6 +435,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     "adaptation": {
                         "effects": [],
                         "kind": "generic",
+                        "show_mcq_choices_by_default": False,
                     },
                     "clue": [
                         {

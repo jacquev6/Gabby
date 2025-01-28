@@ -160,6 +160,8 @@ export interface components {
        * @enum {string}
        */
       kind: "generic" | "fill-with-free-text" | "multiple-choices";
+      /** Show Mcq Choices By Default */
+      show_mcq_choices_by_default: boolean;
     };
     /** Adaptation */
     "Adaptation-Output": {
@@ -170,6 +172,8 @@ export interface components {
        * @enum {string}
        */
       kind: "generic" | "fill-with-free-text" | "multiple-choices";
+      /** Show Mcq Choices By Default */
+      show_mcq_choices_by_default: boolean;
     };
     /** Body_login_api_token_post */
     Body_login_api_token_post: {
@@ -425,6 +429,8 @@ export interface components {
     _MultipleChoicesInput: {
       /** Choices */
       choices: string[];
+      /** Show Choices By Default */
+      show_choices_by_default: boolean;
       /**
        * Type
        * @constant
@@ -505,7 +511,8 @@ export interface components {
       /**
        * @default {
        *   "effects": [],
-       *   "kind": "generic"
+       *   "kind": "generic",
+       *   "show_mcq_choices_by_default": false
        * }
        */
       adaptation?: components["schemas"]["Adaptation-Input"];

@@ -77,7 +77,7 @@ const style = computed(() => ({
                 <SelectedText class="tricolorable" :color="subToken.color" :boxed="false">{{ subToken.text }}</SelectedText>
               </template>
               <template v-else-if="subToken.type === 'multipleChoicesInput'">
-                <MultipleChoicesInput class="tricolorable" :choices="subToken.choices" v-model="models[modelKey]" />
+                <MultipleChoicesInput class="tricolorable" :choices="subToken.choices" placeholder="...." :showChoicesByDefault="subToken.show_choices_by_default" v-model="models[modelKey]" />
               </template>
               <template v-else>
                 <span>{{ $t('thisIsABug') }} {{ ((t: never) => t)(subToken) }}</span>
@@ -107,7 +107,7 @@ const style = computed(() => ({
                 <SelectedText class="tricolorable" :color="subToken.color" :boxed="false">{{ subToken.text }}</SelectedText>
               </template>
               <template v-else-if="subToken.type === 'multipleChoicesInput'">
-                <MultipleChoicesInput class="tricolorable" :choices="subToken.choices" v-model="models[modelKey]" />
+                <MultipleChoicesInput class="tricolorable" :choices="subToken.choices" placeholder="...." :showChoicesByDefault="subToken.show_choices_by_default" v-model="models[modelKey]" />
               </template>
               <template v-else>
                 <span>{{ $t('thisIsABug') }} {{ ((t: never) => t)(subToken) }}</span>
@@ -119,7 +119,7 @@ const style = computed(() => ({
           <SelectedText class="tricolorable" :color="token.color" :boxed="false">{{ token.text }}</SelectedText>
         </template>
         <template v-else-if="token.type === 'multipleChoicesInput'">
-          <MultipleChoicesInput class="tricolorable" :choices="token.choices" v-model="models[modelKey]" />
+          <MultipleChoicesInput class="tricolorable" :choices="token.choices" placeholder="...." :showChoicesByDefault="token.show_choices_by_default" v-model="models[modelKey]" />
         </template>
         <template v-else>
           <span>{{ $t('thisIsABug') }} {{ ((t: never) => t)(token) }}</span>

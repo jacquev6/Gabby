@@ -259,7 +259,7 @@ def create_test_exercises_1(session, admin):
                 attributes={},
             )
         ],
-        adaptation=Adaptation(kind="multiple-choices", effects=[]),
+        adaptation=Adaptation(kind="multiple-choices", effects=[], show_mcq_choices_by_default=False),
         wording_paragraphs_per_pagelet=3,
         created_by=admin,
         updated_by=admin,
@@ -484,6 +484,7 @@ def create_test_exercises_2(session, admin):
                     ),
                 )
             ],
+            show_mcq_choices_by_default=False,
         ),
         wording_paragraphs_per_pagelet=3,
         created_by=admin,
@@ -542,6 +543,7 @@ def create_test_exercises_2(session, admin):
         adaptation=Adaptation(
             kind="fill-with-free-text",
             effects=[api_models.FillWithFreeTextAdaptationEffect(kind="fill-with-free-text", placeholder="…")],
+            show_mcq_choices_by_default=False,
         ),
         created_by=admin,
         updated_by=admin,
@@ -588,7 +590,7 @@ def create_test_exercises_2(session, admin):
                 attributes={},
             )
         ],
-        adaptation=Adaptation(kind="multiple-choices", effects=[]),
+        adaptation=Adaptation(kind="multiple-choices", effects=[], show_mcq_choices_by_default=False),
         wording_paragraphs_per_pagelet=3,
         created_by=admin,
         updated_by=admin,
@@ -655,6 +657,7 @@ def create_test_exercises_3(session, admin):
                     ),
                 )
             ],
+            show_mcq_choices_by_default=False,
         ),
         created_by=admin,
         updated_by=admin,
@@ -721,7 +724,7 @@ def create_test_exercises_3(session, admin):
             deltas.InsertOp(insert="\n\n", attributes={}),
         ],
         wording_paragraphs_per_pagelet=3,
-        adaptation=Adaptation(kind="multiple-choices", effects=[]),
+        adaptation=Adaptation(kind="multiple-choices", effects=[], show_mcq_choices_by_default=False),
         created_by=admin,
         updated_by=admin,
     )
@@ -895,6 +898,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                                     "elles",
                                                     "ils",
                                                 ],
+                                                show_choices_by_default=False,
                                             ),
                                             r.Whitespace(),
                                             r.PlainText(text="vide"),
@@ -912,6 +916,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                                     "elles",
                                                     "ils",
                                                 ],
+                                                show_choices_by_default=False,
                                             ),
                                             r.Whitespace(),
                                             r.PlainText(text="vident"),
@@ -929,6 +934,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                                     "elles",
                                                     "ils",
                                                 ],
+                                                show_choices_by_default=False,
                                             ),
                                             r.Whitespace(),
                                             r.PlainText(text="dépenses"),
@@ -1016,6 +1022,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                                     "elles",
                                                     "ils",
                                                 ],
+                                                show_choices_by_default=False,
                                             ),
                                             r.Whitespace(),
                                             r.PlainText(text="dépensent"),
@@ -1033,6 +1040,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                                     "elles",
                                                     "ils",
                                                 ],
+                                                show_choices_by_default=False,
                                             ),
                                             r.Whitespace(),
                                             r.PlainText(text="savon"),
@@ -1050,6 +1058,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                                     "elles",
                                                     "ils",
                                                 ],
+                                                show_choices_by_default=False,
                                             ),
                                             r.Whitespace(),
                                             r.PlainText(text="savons"),
@@ -1137,6 +1146,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                                     "elles",
                                                     "ils",
                                                 ],
+                                                show_choices_by_default=False,
                                             ),
                                             r.Whitespace(),
                                             r.PlainText(text="commande"),
@@ -2457,7 +2467,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                             r.PlainText(text="adjectif"),
                                             r.PlainText(text="."),
                                             r.Whitespace(),
-                                            r.MultipleChoicesInput(choices=["vrai", "faux"]),
+                                            r.MultipleChoicesInput(choices=["vrai", "faux"], show_choices_by_default=False),
                                         ]
                                     ),
                                     r.Paragraph(
@@ -2474,7 +2484,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                             r.PlainText(text="verbe"),
                                             r.PlainText(text="."),
                                             r.Whitespace(),
-                                            r.MultipleChoicesInput(choices=["vrai", "faux"]),
+                                            r.MultipleChoicesInput(choices=["vrai", "faux"], show_choices_by_default=False),
                                         ]
                                     ),
                                     r.Paragraph(
@@ -2491,7 +2501,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                             r.PlainText(text="déterminant"),
                                             r.PlainText(text="."),
                                             r.Whitespace(),
-                                            r.MultipleChoicesInput(choices=["vrai", "faux"]),
+                                            r.MultipleChoicesInput(choices=["vrai", "faux"], show_choices_by_default=False),
                                         ]
                                     ),
                                 ]
@@ -2532,7 +2542,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                             r.PlainText(text="verbe"),
                                             r.PlainText(text="."),
                                             r.Whitespace(),
-                                            r.MultipleChoicesInput(choices=["vrai", "faux"]),
+                                            r.MultipleChoicesInput(choices=["vrai", "faux"], show_choices_by_default=False),
                                         ]
                                     ),
                                     r.Paragraph(
@@ -2549,7 +2559,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                             r.PlainText(text="verbe"),
                                             r.PlainText(text="."),
                                             r.Whitespace(),
-                                            r.MultipleChoicesInput(choices=["vrai", "faux"]),
+                                            r.MultipleChoicesInput(choices=["vrai", "faux"], show_choices_by_default=False),
                                         ]
                                     ),
                                     r.Paragraph(
@@ -2566,7 +2576,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                             r.PlainText(text="nom"),
                                             r.PlainText(text="."),
                                             r.Whitespace(),
-                                            r.MultipleChoicesInput(choices=["vrai", "faux"]),
+                                            r.MultipleChoicesInput(choices=["vrai", "faux"], show_choices_by_default=False),
                                         ]
                                     ),
                                 ]
@@ -3383,6 +3393,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                                     "il pleut",
                                                     "il pleuvait",
                                                 ],
+                                                show_choices_by_default=False,
                                             ),
                                             r.PlainText(text="."),
                                         ]
@@ -3400,13 +3411,13 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                             r.Whitespace(),
                                             r.PlainText(text="fait"),
                                             r.Whitespace(),
-                                            r.MultipleChoicesInput(choices=["gris", "beau"]),
+                                            r.MultipleChoicesInput(choices=["gris", "beau"], show_choices_by_default=False),
                                             r.Whitespace(),
                                             r.PlainText(text="et"),
                                             r.Whitespace(),
                                             r.PlainText(text="il"),
                                             r.Whitespace(),
-                                            r.MultipleChoicesInput(choices=["pleut", "pleuvra"]),
+                                            r.MultipleChoicesInput(choices=["pleut", "pleuvra"], show_choices_by_default=False),
                                             r.PlainText(text="."),
                                         ]
                                     ),

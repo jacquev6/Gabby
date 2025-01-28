@@ -173,7 +173,7 @@ def dump_database_as_unit_tests():
             return {
                 "boxedText": lambda: renderable.BoxedText(text=waste_string(token.text)),
                 "freeTextInput": lambda: renderable.FreeTextInput(),
-                "multipleChoicesInput": lambda: renderable.MultipleChoicesInput(choices=[waste_string(choice) for choice in token.choices]),
+                "multipleChoicesInput": lambda: renderable.MultipleChoicesInput(choices=[waste_string(choice) for choice in token.choices], show_choices_by_default=token.show_choices_by_default),
                 "plainText": lambda: renderable.PlainText(text=waste_string(token.text)),
                 "selectableText": lambda: renderable.SelectableText(text=waste_string(token.text), colors=token.colors, boxed=token.boxed),
                 "selectedText": lambda: renderable.SelectedText(text=waste_string(token.text), color=token.color),

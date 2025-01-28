@@ -1671,6 +1671,7 @@ describe('ApiStore - Application - 2', () => {
               boxed: false,
             },
           }],
+          show_mcq_choices_by_default: false,
         },
       },
       {

@@ -59,9 +59,10 @@ def FreeTextInput():
 class _MultipleChoicesInput(PydanticBase):
     type: Literal["multipleChoicesInput"]
     choices: list[str]
+    show_choices_by_default: bool
 
-def MultipleChoicesInput(choices: list[str]):
-    return _MultipleChoicesInput(type="multipleChoicesInput", choices=choices)
+def MultipleChoicesInput(choices: list[str], show_choices_by_default: bool):
+    return _MultipleChoicesInput(type="multipleChoicesInput", choices=choices, show_choices_by_default=show_choices_by_default)
 
 
 class _Whitespace(PydanticBase):

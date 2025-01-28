@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, inject } from 'vue'
+import { ref, computed, inject, watch } from 'vue'
 import { useFloating, shift } from '@floating-ui/vue'
 
 
@@ -7,13 +7,11 @@ defineOptions({
   inheritAttrs: false
 })
 
-const props = withDefaults(defineProps<{
+const props = defineProps<{
   choices: string[],
-  placeholder?: string,
-  // @todo alwaysShowChoices?: boolean = false
-}>(), {
-  placeholder: '....',
-})
+  placeholder: string,
+  showChoicesByDefault: boolean,
+}>()
 
 const model = defineModel<string | undefined>({
   required: true,
@@ -21,9 +19,23 @@ const model = defineModel<string | undefined>({
 
 const showChoices = ref(false)
 
+const showBackdrop = computed(() => !props.showChoicesByDefault)
+
+watch(
+  [() => props.showChoicesByDefault, model],
+  ([showChoicesByDefault, model]) => {
+    if (model === undefined) {
+      showChoices.value = showChoicesByDefault
+    } else {
+      showChoices.value = false
+    }
+  },
+  {immediate: true}
+)
+
 const value = computed(() => model.value || props.placeholder)
 
-function set(choice: string | undefined) {
+function set(choice: string) {
   model.value = choice
   showChoices.value = false
 }
@@ -61,9 +73,11 @@ const backdropCovers = inject<string>('adaptedExerciseBackdropCovers', 'body')
       </span>
     </span>
     <template v-if="showChoices">
-      <Teleport :to="backdropCovers">
-        <div class="backdrop" @click="showChoices = false"></div>
-      </Teleport>
+      <template v-if="showBackdrop">
+        <Teleport :to="backdropCovers">
+          <div class="backdrop" @click="showChoices = false"></div>
+        </Teleport>
+      </template>
       <div ref="floating" class="choices" :style="floatingStyles">
         <div class="choicesColumn">
           <p v-for="choicesLine in choicesLines" class="choicesLine">
