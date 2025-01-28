@@ -166,6 +166,9 @@ def dump_database_as_unit_tests():
         return "".join(waste_char(c) for c in s)
 
     def waste_renderable(section):
+        def waste_selectable_token(token):
+            return renderable.Selectable(contents=[waste_token(content) for content in token.contents], colors=token.colors, boxed=token.boxed)
+
         def waste_token(token):
             return {
                 "boxedText": lambda: renderable.BoxedText(text=waste_string(token.text)),
@@ -175,6 +178,7 @@ def dump_database_as_unit_tests():
                 "selectableText": lambda: renderable.SelectableText(text=waste_string(token.text), colors=token.colors, boxed=token.boxed),
                 "selectedText": lambda: renderable.SelectedText(text=waste_string(token.text), color=token.color),
                 "whitespace": lambda: renderable.Whitespace(),
+                "selectable": lambda: waste_selectable_token(token),
             }[token.type]()
 
         def waste_paragraph(paragraph):
@@ -210,10 +214,12 @@ def dump_database_as_unit_tests():
         yield "from .adaptation import AdaptationTestCase"
         yield "from .api_models import Adaptation, FillWithFreeTextAdaptationEffect, ItemizedAdaptationEffect"
         yield "from .deltas import InsertOp"
-        yield "from .renderable import Section, Paragraph, _PlainText, _Whitespace, _FreeTextInput, _SelectableText, _BoxedText, _MultipleChoicesInput, _SelectedText"
+        yield "from .renderable import Section, Paragraph, _PlainText, _Whitespace, _FreeTextInput, _SelectableText, _BoxedText, _MultipleChoicesInput, _SelectedText, _Selectable"
         yield ""
         yield ""
+        yield "CharactersItems = ItemizedAdaptationEffect.CharactersItems"
         yield "TokensItems = ItemizedAdaptationEffect.TokensItems"
+        yield "SentencesItems = ItemizedAdaptationEffect.SentencesItems"
         yield "ManualItems = ItemizedAdaptationEffect.ManualItems"
         yield "Effects = ItemizedAdaptationEffect.Effects"
         yield "Selectable = ItemizedAdaptationEffect.Effects.Selectable"
@@ -235,6 +241,7 @@ def dump_database_as_unit_tests():
                 yield f"                wording={repr(waste_deltas(exercise.wording))},"
                 yield f"                example={repr(waste_deltas(exercise.example))},"
                 yield f"                clue={repr(waste_deltas(exercise.clue))},"
+                yield f"                text_reference={repr(waste_deltas(exercise.text_reference))},"
                 yield f"                wording_paragraphs_per_pagelet={repr(exercise.wording_paragraphs_per_pagelet)},"
                 yield f"                adaptation={repr(exercise.adaptation)},"
                 yield f"            ),"
