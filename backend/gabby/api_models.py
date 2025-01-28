@@ -150,6 +150,7 @@ AdaptationEffect = Annotated[
 class Adaptation(PydanticBase):
     kind: Literal["generic", "fill-with-free-text", "multiple-choices"]
     effects: list[AdaptationEffect]
+    show_arrow_before_mcq_fields: bool
     show_mcq_choices_by_default: bool
 
 class Exercise(PydanticBase, CreatedUpdatedByAtMixin):
@@ -170,7 +171,7 @@ class Exercise(PydanticBase, CreatedUpdatedByAtMixin):
 
     rectangles: list[PdfRectangle] = []
 
-    adaptation: Adaptation = Adaptation(kind="generic", effects=[], show_mcq_choices_by_default=False)
+    adaptation: Adaptation = Adaptation(kind="generic", effects=[], show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False)
 
 class ParsedExercise(PydanticBase):
     number: Annotated[str, WriteOnly()]

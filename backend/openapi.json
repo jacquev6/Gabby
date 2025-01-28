@@ -34,6 +34,10 @@
             "title": "Kind",
             "type": "string"
           },
+          "show_arrow_before_mcq_fields": {
+            "title": "Show Arrow Before Mcq Fields",
+            "type": "boolean"
+          },
           "show_mcq_choices_by_default": {
             "title": "Show Mcq Choices By Default",
             "type": "boolean"
@@ -42,6 +46,7 @@
         "required": [
           "kind",
           "effects",
+          "show_arrow_before_mcq_fields",
           "show_mcq_choices_by_default"
         ],
         "title": "Adaptation",
@@ -80,6 +85,10 @@
             "title": "Kind",
             "type": "string"
           },
+          "show_arrow_before_mcq_fields": {
+            "title": "Show Arrow Before Mcq Fields",
+            "type": "boolean"
+          },
           "show_mcq_choices_by_default": {
             "title": "Show Mcq Choices By Default",
             "type": "boolean"
@@ -88,6 +97,7 @@
         "required": [
           "kind",
           "effects",
+          "show_arrow_before_mcq_fields",
           "show_mcq_choices_by_default"
         ],
         "title": "Adaptation",
@@ -861,6 +871,10 @@
             "title": "Choices",
             "type": "array"
           },
+          "show_arrow_before": {
+            "title": "Show Arrow Before",
+            "type": "boolean"
+          },
           "show_choices_by_default": {
             "title": "Show Choices By Default",
             "type": "boolean"
@@ -873,6 +887,7 @@
         },
         "required": [
           "type",
+          "show_arrow_before",
           "choices",
           "show_choices_by_default"
         ],
@@ -1073,6 +1088,7 @@
             "default": {
               "effects": [],
               "kind": "generic",
+              "show_arrow_before_mcq_fields": false,
               "show_mcq_choices_by_default": false
             }
           },

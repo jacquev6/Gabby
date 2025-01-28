@@ -77,7 +77,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     "clue": [{"insert": "\n", "attributes": {}}],
                     "textReference": [{"insert": "\n", "attributes": {}}],
                     "wordingParagraphsPerPagelet": 3,
-                    "adaptation": {"kind": "generic", "effects": [], "show_mcq_choices_by_default": False},
+                    "adaptation": {"kind": "generic", "effects": [], "show_arrow_before_mcq_fields": False, "show_mcq_choices_by_default": False},
                 },
             },
         }
@@ -148,6 +148,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                                 },
                             },
                         ],
+                        "show_arrow_before_mcq_fields": False,
                         "show_mcq_choices_by_default": False,
                     },
                 },
@@ -214,6 +215,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                                 },
                             },
                         ],
+                        "show_arrow_before_mcq_fields": False,
                         "show_mcq_choices_by_default": False,
                     },
                 },
@@ -290,6 +292,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                                 "placeholder": "@",
                             },
                         ],
+                        "show_arrow_before_mcq_fields": False,
                         "show_mcq_choices_by_default": False,
                     },
                 },
@@ -345,7 +348,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     "clue": [{"insert": "\n", "attributes": {}}],
                     "textReference": [{"insert": "\n", "attributes": {}}],
                     "wordingParagraphsPerPagelet": 3,
-                    "adaptation": {"kind": "multiple-choices", "effects": [], "show_mcq_choices_by_default": False},
+                    "adaptation": {"kind": "multiple-choices", "effects": [], "show_arrow_before_mcq_fields": False, "show_mcq_choices_by_default": False},
                 },
             },
         }
@@ -366,12 +369,12 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     {"tokens": [
                         {"type": "plainText", "text": "A"},
                         {"type": "whitespace"},
-                        {"type": "multipleChoicesInput", "choices": ["a", "b"], "show_choices_by_default": False},
+                        {"type": "multipleChoicesInput", "show_arrow_before": False, "choices": ["a", "b"], "show_choices_by_default": False},
                     ]},
                     {"tokens": [
                         {"type": "plainText", "text": "B"},
                         {"type": "whitespace"},
-                        {"type": "multipleChoicesInput", "choices": ["a", "b"], "show_choices_by_default": False},
+                        {"type": "multipleChoicesInput", "show_arrow_before": False, "choices": ["a", "b"], "show_choices_by_default": False},
                     ]},
                 ]},
             }],
@@ -404,7 +407,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     "clue": [{"insert": "\n", "attributes": {}}],
                     "textReference": [{"insert": "\n", "attributes": {}}],
                     "wordingParagraphsPerPagelet": 3,
-                    "adaptation": {"kind": "multiple-choices", "effects": [], "show_mcq_choices_by_default": False},
+                    "adaptation": {"kind": "multiple-choices", "effects": [], "show_arrow_before_mcq_fields": False, "show_mcq_choices_by_default": False},
                 },
             },
         }
@@ -421,7 +424,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                 "wording": {"paragraphs": [{"tokens": [
                     {"type": "plainText", "text": "A"},
                     {"type": "whitespace"},
-                    {"type": "multipleChoicesInput", "choices": ["alpha", "beta"], "show_choices_by_default": False},
+                    {"type": "multipleChoicesInput", "show_arrow_before": False, "choices": ["alpha", "beta"], "show_choices_by_default": False},
                     {"type": "plainText", "text": "."},
                 ]}]},
             }],
@@ -435,6 +438,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     "adaptation": {
                         "effects": [],
                         "kind": "generic",
+                        "show_arrow_before_mcq_fields": False,
                         "show_mcq_choices_by_default": False,
                     },
                     "clue": [

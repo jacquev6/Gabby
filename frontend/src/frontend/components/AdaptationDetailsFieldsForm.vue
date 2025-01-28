@@ -487,8 +487,11 @@ defineExpose({
     backdropCovers2="#gutter-2"
   />
 
-  <BLabeledCheckbox :label="$t('alwaysShowMultipleChoices')" v-model="model.adaptation.show_mcq_choices_by_default" />
   <BButton primary sm @click="model.inProgress = {kind: 'multipleChoicesCreation'}">{{ $t('multipleChoicesButton') }}</BButton>
+  <div style="padding-left: 1em; padding-top: 0.5em;">
+    <BLabeledCheckbox :label="$t('alwaysShowMultipleChoices')" v-model="model.adaptation.show_mcq_choices_by_default" />
+    <BLabeledCheckbox :label="$t('showArrowBeforeMultipleChoices')" v-model="model.adaptation.show_arrow_before_mcq_fields" />
+  </div>
 
   <hr />
 

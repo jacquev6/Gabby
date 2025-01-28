@@ -160,6 +160,8 @@ export interface components {
        * @enum {string}
        */
       kind: "generic" | "fill-with-free-text" | "multiple-choices";
+      /** Show Arrow Before Mcq Fields */
+      show_arrow_before_mcq_fields: boolean;
       /** Show Mcq Choices By Default */
       show_mcq_choices_by_default: boolean;
     };
@@ -172,6 +174,8 @@ export interface components {
        * @enum {string}
        */
       kind: "generic" | "fill-with-free-text" | "multiple-choices";
+      /** Show Arrow Before Mcq Fields */
+      show_arrow_before_mcq_fields: boolean;
       /** Show Mcq Choices By Default */
       show_mcq_choices_by_default: boolean;
     };
@@ -429,6 +433,8 @@ export interface components {
     _MultipleChoicesInput: {
       /** Choices */
       choices: string[];
+      /** Show Arrow Before */
+      show_arrow_before: boolean;
       /** Show Choices By Default */
       show_choices_by_default: boolean;
       /**
@@ -512,6 +518,7 @@ export interface components {
        * @default {
        *   "effects": [],
        *   "kind": "generic",
+       *   "show_arrow_before_mcq_fields": false,
        *   "show_mcq_choices_by_default": false
        * }
        */

@@ -68,7 +68,7 @@ function makeModel(options: MakeModelOptions): Model {
     textReference: [{insert: '\n', attributes: {}}],
     wordingParagraphsPerPagelet: null,
     rectangles: [],
-    adaptation: {kind: 'generic', effects: [], show_mcq_choices_by_default: false},
+    adaptation: {kind: 'generic', effects: [], show_arrow_before_mcq_fields: false, show_mcq_choices_by_default: false},
     inProgress: {
       kind: 'nothing',
     },
@@ -116,7 +116,7 @@ export function modelIsEmpty(model: Model) {
     && deepEqual(model.example, emptyDeltas)
     && deepEqual(model.clue, emptyDeltas)
     && deepEqual(model.textReference, emptyDeltas)
-    && deepEqual(model.adaptation, {kind: 'generic', effects: [], show_mcq_choices_by_default: false} as Adaptation)
+    && deepEqual(model.adaptation, {kind: 'generic', effects: [], show_arrow_before_mcq_fields: false, show_mcq_choices_by_default: false} as Adaptation)
 }
 
 export function cleanupModel(model: Model) {

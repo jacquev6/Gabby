@@ -8,6 +8,7 @@ describe('MultipleChoicesInput', () => {
     let value: string | undefined = undefined
 
     cy.mount(MultipleChoicesInput, {props: {
+      showArrowBefore: false,
       choices: ['alpha', 'beta'],
       placeholder: '....',
       showChoicesByDefault: false,
@@ -29,6 +30,7 @@ describe('MultipleChoicesInput', () => {
     let value: string | undefined = undefined
 
     cy.mount(MultipleChoicesInput, {props: {
+      showArrowBefore: false,
       choices: ['alpha', 'beta'],
       placeholder: '....',
       showChoicesByDefault: false,
@@ -50,6 +52,7 @@ describe('MultipleChoicesInput', () => {
     let value: string | undefined = undefined
 
     cy.mount(MultipleChoicesInput, {props: {
+      showArrowBefore: false,
       choices: ['alpha', 'beta'],
       placeholder: '....',
       showChoicesByDefault: true,
@@ -72,6 +75,7 @@ describe('MultipleChoicesInput', () => {
     let value: string | undefined = undefined
 
     cy.mount(MultipleChoicesInput, {props: {
+      showArrowBefore: false,
       choices: ['alpha', 'beta'],
       placeholder: '....',
       showChoicesByDefault: false,
@@ -95,6 +99,7 @@ describe('MultipleChoicesInput', () => {
     let value: string | undefined = undefined
 
     cy.mount(MultipleChoicesInput, {props: {
+      showArrowBefore: false,
       choices: ['alpha', 'beta'],
       placeholder: '....',
       showChoicesByDefault: true,

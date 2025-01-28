@@ -22,6 +22,8 @@ def upgrade():
     with orm.Session(op.get_bind()) as session:
         for exercise in session.query(Exercise).all():
             adaptation = copy.deepcopy(exercise._adaptation)
+            if "show_arrow_before_mcq_fields" not in adaptation["settings"]:
+                adaptation["settings"]["show_arrow_before_mcq_fields"] = False
             if "show_mcq_choices_by_default" not in adaptation["settings"]:
                 adaptation["settings"]["show_mcq_choices_by_default"] = False
 
