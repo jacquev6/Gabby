@@ -115,7 +115,7 @@ describe('Gabby', () => {
   })
 
   it('modifies existing exercise', () => {
-    cy.viewport(1000, 1000)
+    cy.viewport(1000, 1200)
 
     loadFixtures('test-exercises')
     login()
@@ -134,11 +134,12 @@ describe('Gabby', () => {
     notBusy()
     cy.screenshot('project-textbook-page-exercise/project-textbook-page-exercise', {clip: {x: 0, y: 0, width: 1000, height: 330}})
 
+    cy.get('label:contains("Mots")').click()
     cy.get('span[data-cy-colors="3"]').click()
     notBusy()
     cy.get('span.maybe-usable-colors-container').screenshot('project-textbook-page-exercise/select-things-usable-colors')
     cy.get('label:contains("Consigne") + div.ql-container > div.ql-editor').click()
-    cy.screenshot('project-textbook-page-exercise/select-things-color-formatting-button', {clip: {x: 560, y: 720, width: 140, height: 100}})
+    cy.screenshot('project-textbook-page-exercise/select-things-color-formatting-button', {clip: {x: 560, y: 730, width: 140, height: 100}})
     cy.get('span[data-cy-colors="2"]').rightclick()
     cy.screenshot('project-textbook-page-exercise/select-things-color-customization', {clip: {x: 430, y: 660, width: 380, height: 100}})
   })
