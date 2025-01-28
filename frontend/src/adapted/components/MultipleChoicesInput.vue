@@ -64,7 +64,7 @@ const backdropCovers = inject<string>('adaptedExerciseBackdropCovers', 'body')
 
 <template>
   <span v-bind="$attrs" style="display: inline flow-root; vertical-align: top">
-    <span ref="reference" class="main" :class="{open: showChoices}" @click="showChoices = true">{{ value }}</span>
+    <span ref="reference" class="main" :class="{open: showChoices}" @click="showChoices = !showChoices">{{ value }}</span>
     <!-- Insert hidden nodes in the DOM to ensure the floating choices does not cover any text. -->
     <span class="choices" style="display: block; margin-top: -24px; max-width: 0; overflow: hidden; visibility: hidden;">
       <span class="choicesColumn" style="display: block;">
