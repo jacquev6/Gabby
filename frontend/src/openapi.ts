@@ -152,28 +152,19 @@ export type webhooks = Record<string, never>;
 export interface components {
   schemas: {
     /** Adaptation */
-    "Adaptation-Input": {
-      /** Effects */
-      effects: (components["schemas"]["FillWithFreeTextAdaptationEffect"] | components["schemas"]["ItemizedAdaptationEffect-Input"])[];
+    Adaptation: {
+      /** Items */
+      items: components["schemas"]["CharactersItems"] | components["schemas"]["TokensItems"] | components["schemas"]["SentencesItems"] | components["schemas"]["ManualItems"] | null;
+      /** Items Are Boxed */
+      items_are_boxed: boolean;
+      items_are_selectable: components["schemas"]["Selectable"] | null;
       /**
        * Kind
        * @enum {string}
        */
       kind: "generic" | "fill-with-free-text" | "multiple-choices";
-      /** Show Arrow Before Mcq Fields */
-      show_arrow_before_mcq_fields: boolean;
-      /** Show Mcq Choices By Default */
-      show_mcq_choices_by_default: boolean;
-    };
-    /** Adaptation */
-    "Adaptation-Output": {
-      /** Effects */
-      effects: (components["schemas"]["FillWithFreeTextAdaptationEffect"] | components["schemas"]["ItemizedAdaptationEffect-Output"])[];
-      /**
-       * Kind
-       * @enum {string}
-       */
-      kind: "generic" | "fill-with-free-text" | "multiple-choices";
+      /** Placeholder For Fill With Free Text */
+      placeholder_for_fill_with_free_text: string | null;
       /** Show Arrow Before Mcq Fields */
       show_arrow_before_mcq_fields: boolean;
       /** Show Mcq Choices By Default */
@@ -209,12 +200,6 @@ export interface components {
       /** Letters */
       letters: boolean;
     };
-    /** Effects */
-    Effects: {
-      /** Boxed */
-      boxed: boolean;
-      selectable: components["schemas"]["Selectable"] | null;
-    };
     /** Exercise */
     Exercise: {
       /** Number */
@@ -223,16 +208,6 @@ export interface components {
       pagelets: components["schemas"]["Pagelet"][];
       /** Textbook Page */
       textbook_page: number | null;
-    };
-    /** FillWithFreeTextAdaptationEffect */
-    FillWithFreeTextAdaptationEffect: {
-      /**
-       * Kind
-       * @constant
-       */
-      kind: "fill-with-free-text";
-      /** Placeholder */
-      placeholder: string;
     };
     /** HTTPValidationError */
     HTTPValidationError: {
@@ -250,28 +225,6 @@ export interface components {
     ItemLinks: {
       /** Self */
       self: string;
-    };
-    /** ItemizedAdaptationEffect */
-    "ItemizedAdaptationEffect-Input": {
-      effects: components["schemas"]["Effects"];
-      /** Items */
-      items: components["schemas"]["CharactersItems"] | components["schemas"]["TokensItems"] | components["schemas"]["SentencesItems"] | components["schemas"]["ManualItems"];
-      /**
-       * Kind
-       * @constant
-       */
-      kind: "itemized";
-    };
-    /** ItemizedAdaptationEffect */
-    "ItemizedAdaptationEffect-Output": {
-      effects: components["schemas"]["Effects"];
-      /** Items */
-      items: components["schemas"]["CharactersItems"] | components["schemas"]["TokensItems"] | components["schemas"]["SentencesItems"] | components["schemas"]["ManualItems"];
-      /**
-       * Kind
-       * @constant
-       */
-      kind: "itemized";
     };
     /** ManualItems */
     ManualItems: {
@@ -516,13 +469,13 @@ export interface components {
     exerciseCreateInputDataAttributes: {
       /**
        * @default {
-       *   "effects": [],
+       *   "items_are_boxed": false,
        *   "kind": "generic",
        *   "show_arrow_before_mcq_fields": false,
        *   "show_mcq_choices_by_default": false
        * }
        */
-      adaptation?: components["schemas"]["Adaptation-Input"];
+      adaptation?: components["schemas"]["Adaptation"];
       /**
        * Clue
        * @default [
@@ -609,7 +562,7 @@ export interface components {
     };
     /** exerciseOutputItemAttributes */
     exerciseOutputItemAttributes: {
-      adaptation: components["schemas"]["Adaptation-Output"];
+      adaptation: components["schemas"]["Adaptation"];
       /** Clue */
       clue: components["schemas"]["InsertOp"][];
       /**
@@ -672,7 +625,7 @@ export interface components {
     };
     /** exerciseUpdateInputDataAttributes */
     exerciseUpdateInputDataAttributes: {
-      adaptation?: components["schemas"]["Adaptation-Input"];
+      adaptation?: components["schemas"]["Adaptation"];
       /** Clue */
       clue?: components["schemas"]["InsertOp"][];
       /** Example */
@@ -760,7 +713,7 @@ export interface components {
     };
     /** parsedExerciseCreateInputDataAttributes */
     parsedExerciseCreateInputDataAttributes: {
-      adaptation: components["schemas"]["Adaptation-Input"];
+      adaptation: components["schemas"]["Adaptation"];
       /** Clue */
       clue: components["schemas"]["InsertOp"][];
       /** Example */

@@ -77,7 +77,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     "clue": [{"insert": "\n", "attributes": {}}],
                     "textReference": [{"insert": "\n", "attributes": {}}],
                     "wordingParagraphsPerPagelet": 3,
-                    "adaptation": {"kind": "generic", "effects": [], "show_arrow_before_mcq_fields": False, "show_mcq_choices_by_default": False},
+                    "adaptation": {"kind": "generic", "placeholder_for_fill_with_free_text": None, "items": None, "items_are_selectable": None, "items_are_boxed": False, "show_arrow_before_mcq_fields": False, "show_mcq_choices_by_default": False},
                 },
             },
         }
@@ -132,22 +132,16 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     "wordingParagraphsPerPagelet": 3,
                     "adaptation": {
                         "kind": "generic",
-                        "effects": [
-                            {
-                                "kind": "itemized",
-                                "items": {
-                                    "kind": "tokens",
-                                    "words": True,
-                                    "punctuation": False,
-                                },
-                                "effects": {
-                                    "selectable": {
-                                        "colors": ["red", "green", "blue"],
-                                    },
-                                    "boxed": False,
-                                },
-                            },
-                        ],
+                        "placeholder_for_fill_with_free_text": None,
+                        "items": {
+                            "kind": "tokens",
+                            "words": True,
+                            "punctuation": False,
+                        },
+                        "items_are_selectable": {
+                            "colors": ["red", "green", "blue"],
+                        },
+                        "items_are_boxed": False,
                         "show_arrow_before_mcq_fields": False,
                         "show_mcq_choices_by_default": False,
                     },
@@ -199,22 +193,16 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     "wordingParagraphsPerPagelet": 3,
                     "adaptation": {
                         "kind": "generic",
-                        "effects": [
-                            {
-                                "kind": "itemized",
-                                "items": {
-                                    "kind": "tokens",
-                                    "words": True,
-                                    "punctuation": False,
-                                },
-                                "effects": {
-                                    "selectable": {
-                                        "colors": ["red", "green", "blue"],
-                                    },
-                                    "boxed": False,
-                                },
-                            },
-                        ],
+                        "placeholder_for_fill_with_free_text": None,
+                        "items": {
+                            "kind": "tokens",
+                            "words": True,
+                            "punctuation": False,
+                        },
+                        "items_are_selectable": {
+                            "colors": ["red", "green", "blue"],
+                        },
+                        "items_are_boxed": False,
                         "show_arrow_before_mcq_fields": False,
                         "show_mcq_choices_by_default": False,
                     },
@@ -286,12 +274,10 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     "wordingParagraphsPerPagelet": 3,
                     "adaptation": {
                         "kind": "fill-with-free-text",
-                        "effects": [
-                            {
-                                "kind": "fill-with-free-text",
-                                "placeholder": "@",
-                            },
-                        ],
+                        "placeholder_for_fill_with_free_text": "@",
+                        "items": None,
+                        "items_are_selectable": None,
+                        "items_are_boxed": False,
                         "show_arrow_before_mcq_fields": False,
                         "show_mcq_choices_by_default": False,
                     },
@@ -348,7 +334,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     "clue": [{"insert": "\n", "attributes": {}}],
                     "textReference": [{"insert": "\n", "attributes": {}}],
                     "wordingParagraphsPerPagelet": 3,
-                    "adaptation": {"kind": "multiple-choices", "effects": [], "show_arrow_before_mcq_fields": False, "show_mcq_choices_by_default": False},
+                    "adaptation": {"kind": "multiple-choices", "placeholder_for_fill_with_free_text": None, "items": None, "items_are_selectable": None, "items_are_boxed": False, "show_arrow_before_mcq_fields": False, "show_mcq_choices_by_default": False},
                 },
             },
         }
@@ -407,7 +393,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     "clue": [{"insert": "\n", "attributes": {}}],
                     "textReference": [{"insert": "\n", "attributes": {}}],
                     "wordingParagraphsPerPagelet": 3,
-                    "adaptation": {"kind": "multiple-choices", "effects": [], "show_arrow_before_mcq_fields": False, "show_mcq_choices_by_default": False},
+                    "adaptation": {"kind": "multiple-choices", "placeholder_for_fill_with_free_text": None, "items": None, "items_are_selectable": None, "items_are_boxed": False, "show_arrow_before_mcq_fields": False, "show_mcq_choices_by_default": False},
                 },
             },
         }
@@ -436,8 +422,11 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                 "type": "parsedExercise",
                 "attributes": {
                     "adaptation": {
-                        "effects": [],
                         "kind": "generic",
+                        "placeholder_for_fill_with_free_text": None,
+                        "items": None,
+                        "items_are_selectable": None,
+                        "items_are_boxed": False,
                         "show_arrow_before_mcq_fields": False,
                         "show_mcq_choices_by_default": False,
                     },

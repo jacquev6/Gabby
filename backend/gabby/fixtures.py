@@ -259,7 +259,15 @@ def create_test_exercises_1(session, admin):
                 attributes={},
             )
         ],
-        adaptation=Adaptation(kind="multiple-choices", effects=[], show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+        adaptation=Adaptation(
+            kind="multiple-choices",
+            placeholder_for_fill_with_free_text=None,
+            items=None,
+            items_are_selectable=None,
+            items_are_boxed=False,
+            show_arrow_before_mcq_fields=False,
+            show_mcq_choices_by_default=False,
+        ),
         wording_paragraphs_per_pagelet=3,
         created_by=admin,
         updated_by=admin,
@@ -468,22 +476,16 @@ def create_test_exercises_2(session, admin):
         ],
         adaptation=Adaptation(
             kind="generic",
-            effects=[
-                api_models.ItemizedAdaptationEffect(
-                    kind="itemized",
-                    items=api_models.ItemizedAdaptationEffect.TokensItems(
-                        kind="tokens",
-                        words=True,
-                        punctuation=True,
-                    ),
-                    effects=api_models.ItemizedAdaptationEffect.Effects(
-                        selectable=api_models.ItemizedAdaptationEffect.Effects.Selectable(
-                            colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                        ),
-                        boxed=False,
-                    ),
-                )
-            ],
+            placeholder_for_fill_with_free_text=None,
+            items=api_models.TokensItems(
+                kind="tokens",
+                words=True,
+                punctuation=True,
+            ),
+            items_are_selectable=api_models.Selectable(
+                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+            ),
+            items_are_boxed=False,
             show_arrow_before_mcq_fields=False,
             show_mcq_choices_by_default=False,
         ),
@@ -543,7 +545,10 @@ def create_test_exercises_2(session, admin):
         ],
         adaptation=Adaptation(
             kind="fill-with-free-text",
-            effects=[api_models.FillWithFreeTextAdaptationEffect(kind="fill-with-free-text", placeholder="…")],
+            placeholder_for_fill_with_free_text="…",
+            items=None,
+            items_are_selectable=None,
+            items_are_boxed=False,
             show_arrow_before_mcq_fields=False,
             show_mcq_choices_by_default=False,
         ),
@@ -592,7 +597,15 @@ def create_test_exercises_2(session, admin):
                 attributes={},
             )
         ],
-        adaptation=Adaptation(kind="multiple-choices", effects=[], show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+        adaptation=Adaptation(
+            kind="multiple-choices",
+            placeholder_for_fill_with_free_text=None,
+            items=None,
+            items_are_selectable=None,
+            items_are_boxed=False,
+            show_arrow_before_mcq_fields=False,
+            show_mcq_choices_by_default=False,
+        ),
         wording_paragraphs_per_pagelet=3,
         created_by=admin,
         updated_by=admin,
@@ -647,18 +660,12 @@ def create_test_exercises_3(session, admin):
         wording_paragraphs_per_pagelet=1,
         adaptation=Adaptation(
             kind="generic",
-            effects=[
-                api_models.ItemizedAdaptationEffect(
-                    kind="itemized",
-                    items=api_models.ItemizedAdaptationEffect.TokensItems(kind="tokens", words=True, punctuation=False),
-                    effects=api_models.ItemizedAdaptationEffect.Effects(
-                        selectable=api_models.ItemizedAdaptationEffect.Effects.Selectable(
-                            colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"]
-                        ),
-                        boxed=False,
-                    ),
-                )
-            ],
+            placeholder_for_fill_with_free_text=None,
+            items=api_models.TokensItems(kind="tokens", words=True, punctuation=False),
+            items_are_selectable=api_models.Selectable(
+                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"]
+            ),
+            items_are_boxed=False,
             show_arrow_before_mcq_fields=False,
             show_mcq_choices_by_default=False,
         ),
@@ -727,7 +734,15 @@ def create_test_exercises_3(session, admin):
             deltas.InsertOp(insert="\n\n", attributes={}),
         ],
         wording_paragraphs_per_pagelet=3,
-        adaptation=Adaptation(kind="multiple-choices", effects=[], show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+        adaptation=Adaptation(
+            kind="multiple-choices",
+            placeholder_for_fill_with_free_text=None,
+            items=None,
+            items_are_selectable=None,
+            items_are_boxed=False,
+            show_arrow_before_mcq_fields=False,
+            show_mcq_choices_by_default=False,
+        ),
         created_by=admin,
         updated_by=admin,
     )

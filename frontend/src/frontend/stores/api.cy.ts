@@ -1630,12 +1630,14 @@ describe('ApiStore - Application - 2', () => {
       {insert: '.\n', attributes: {}}
     ])
     expect(exercise.attributes.adaptation.kind).to.equal('generic')
-    expect(exercise.attributes.adaptation.effects).to.have.length(1)
-    expect(exercise.attributes.adaptation.effects[0].kind).to.equal('itemized')
-    console.assert(exercise.attributes.adaptation.effects[0].kind === 'itemized')
-    expect(exercise.attributes.adaptation.effects[0].effects.selectable).to.not.be.null
-    console.assert(exercise.attributes.adaptation.effects[0].effects.selectable !== null)
-    expect(exercise.attributes.adaptation.effects[0].effects.selectable.colors).to.deep.equal(['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'])
+    console.assert(exercise.attributes.adaptation.items !== null)
+    expect(exercise.attributes.adaptation.items.kind).to.equal('tokens')
+    console.assert(exercise.attributes.adaptation.items.kind === 'tokens')
+    expect(exercise.attributes.adaptation.items.words).to.be.true
+    expect(exercise.attributes.adaptation.items.punctuation).to.be.true
+    expect(exercise.attributes.adaptation.items_are_selectable).to.not.be.null
+    console.assert(exercise.attributes.adaptation.items_are_selectable !== null)
+    expect(exercise.attributes.adaptation.items_are_selectable.colors).to.deep.equal(['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'])
   })
 
   it('gets an exercise with "fill with free text" adaptation', async () => {
@@ -1646,9 +1648,7 @@ describe('ApiStore - Application - 2', () => {
     expectToBeTrue(exercise.exists)
     expect(exercise.attributes.instructions).to.deep.equal([{insert: 'Ajoute le suffixe –eur aux verbes.\nIndique la classe des mots fabriqués.\n', attributes: {}}])
     expect(exercise.attributes.adaptation.kind).to.equal('fill-with-free-text')
-    expect(exercise.attributes.adaptation.effects).to.have.length(1)
-    console.assert(exercise.attributes.adaptation.effects[0].kind === 'fill-with-free-text')
-    expect(exercise.attributes.adaptation.effects[0].placeholder).to.equal('…')
+    expect(exercise.attributes.adaptation.placeholder_for_fill_with_free_text).to.equal('…')
   })
 
   it('creates an exercise and its adaptation at once', async () => {
@@ -1663,14 +1663,10 @@ describe('ApiStore - Application - 2', () => {
         instructions: [{insert: 'Do this\n', attributes: {}}],
         adaptation: {
           kind: 'generic',
-          effects: [{
-            kind: 'itemized',
-            items: {kind: 'tokens', words: true, punctuation: false},
-            effects: {
-              selectable: {colors: ['red', 'green', 'blue', 'purple']},
-              boxed: false,
-            },
-          }],
+          placeholder_for_fill_with_free_text: null,
+          items: {kind: 'tokens', words: true, punctuation: false},
+          items_are_selectable: {colors: ['red', 'green', 'blue', 'purple']},
+          items_are_boxed: false,
           show_arrow_before_mcq_fields: false,
           show_mcq_choices_by_default: false,
         },
@@ -1683,11 +1679,13 @@ describe('ApiStore - Application - 2', () => {
 
     console.assert(exercise.inCache && exercise.exists)
     expect(exercise.attributes.adaptation.kind).to.equal('generic')
-    expect(exercise.attributes.adaptation.effects).to.have.length(1)
-    expect(exercise.attributes.adaptation.effects[0].kind).to.equal('itemized')
-    console.assert(exercise.attributes.adaptation.effects[0].kind === 'itemized')
-    expect(exercise.attributes.adaptation.effects[0].effects.selectable).to.not.be.null
-    console.assert(exercise.attributes.adaptation.effects[0].effects.selectable !== null)
-    expect(exercise.attributes.adaptation.effects[0].effects.selectable.colors).to.deep.equal(['red', 'green', 'blue', 'purple'])
+    console.assert(exercise.attributes.adaptation.items !== null)
+    expect(exercise.attributes.adaptation.items.kind).to.equal('tokens')
+    console.assert(exercise.attributes.adaptation.items.kind === 'tokens')
+    expect(exercise.attributes.adaptation.items.words).to.be.true
+    expect(exercise.attributes.adaptation.items.punctuation).to.be.false
+    expect(exercise.attributes.adaptation.items_are_selectable).to.not.be.null
+    console.assert(exercise.attributes.adaptation.items_are_selectable !== null)
+    expect(exercise.attributes.adaptation.items_are_selectable.colors).to.deep.equal(['red', 'green', 'blue', 'purple'])
   })
 })

@@ -68,7 +68,15 @@ function makeModel(options: MakeModelOptions): Model {
     textReference: [{insert: '\n', attributes: {}}],
     wordingParagraphsPerPagelet: null,
     rectangles: [],
-    adaptation: {kind: 'generic', effects: [], show_arrow_before_mcq_fields: false, show_mcq_choices_by_default: false},
+    adaptation: {
+      kind: 'generic',
+      placeholder_for_fill_with_free_text: null,
+      items: null,
+      items_are_selectable: null,
+      items_are_boxed: false,
+      show_arrow_before_mcq_fields: false,
+      show_mcq_choices_by_default: false,
+    },
     inProgress: {
       kind: 'nothing',
     },
@@ -116,20 +124,28 @@ export function modelIsEmpty(model: Model) {
     && deepEqual(model.example, emptyDeltas)
     && deepEqual(model.clue, emptyDeltas)
     && deepEqual(model.textReference, emptyDeltas)
-    && deepEqual(model.adaptation, {kind: 'generic', effects: [], show_arrow_before_mcq_fields: false, show_mcq_choices_by_default: false} as Adaptation)
+    && deepEqual(
+      model.adaptation,
+      {
+        kind: 'generic',
+        placeholder_for_fill_with_free_text: null,
+        items: null,
+        items_are_selectable: null,
+        items_are_boxed: false,
+        show_arrow_before_mcq_fields: false,
+        show_mcq_choices_by_default: false,
+      } as Adaptation,
+    )
 }
 
 export function cleanupModel(model: Model) {
   let usableColorsCount = 0
   let hasManualItems = false
-  const itemizedEffects = model.adaptation.effects.filter(effect => effect.kind === 'itemized')
-  console.assert(itemizedEffects.length <= 1)
-  if (itemizedEffects.length === 1) {
-    const itemizedEffect = itemizedEffects[0]
-    if (itemizedEffect.effects.selectable !== null) {
-      usableColorsCount = itemizedEffect.effects.selectable.colors.length
+  if (model.adaptation.items !== null) {
+    if (model.adaptation.items_are_selectable !== null) {
+      usableColorsCount = model.adaptation.items_are_selectable.colors.length
     }
-    hasManualItems = itemizedEffect.items.kind === 'manual'
+    hasManualItems = model.adaptation.items.kind === 'manual'
   }
   for (const fieldName of ['instructions', 'wording', 'example'] as const) {
     const newOps = new Delta()
@@ -308,15 +324,10 @@ const currentWysiwygFormat = computed(() => {
 
 
 const selBlotColors = computed(() => {
-  const selectableEffects = model.value.adaptation.effects.filter(effect => effect.kind === 'itemized' && effect.effects.selectable !== null)
-  console.assert(selectableEffects.length <= 1)
-  if (selectableEffects.length === 0) {
+  if (model.value.adaptation.items === null || model.value.adaptation.items_are_selectable === null) {
     return {}
   } else {
-    const effect = selectableEffects[0]
-    console.assert(effect.kind === 'itemized')
-    console.assert(effect.effects.selectable !== null)
-    return Object.fromEntries(effect.effects.selectable.colors.map((color, i) => [`--sel-blot-color-${i + 1}`, color]))
+    return Object.fromEntries(model.value.adaptation.items_are_selectable.colors.map((color, i) => [`--sel-blot-color-${i + 1}`, color]))
   }
 })
 

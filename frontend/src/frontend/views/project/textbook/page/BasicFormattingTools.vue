@@ -3,7 +3,6 @@ import { BButton } from '$frontend/components/opinion/bootstrap'
 import type ExerciseFieldsForm from '$frontend/components/ExerciseFieldsForm.vue'
 import type AdaptationDetailsFieldsForm from '$frontend/components/AdaptationDetailsFieldsForm.vue'
 import type { Model } from '$frontend/components/ExerciseFieldsForm.vue'
-import { computed } from 'vue'
 
 
 defineProps<{
@@ -12,16 +11,6 @@ defineProps<{
 }>()
 
 const model = defineModel<Model>({required: true})
-
-const itemizedEffect = computed(() => {
-  const itemizedEffects = model.value.adaptation.effects.filter(effect => effect.kind === 'itemized')
-  console.assert(itemizedEffects.length <= 1)
-  if (itemizedEffects.length === 0) {
-    return null
-  } else {
-    return itemizedEffects[0]
-  }
-})
 </script>
 
 <template v-if="fields !== null">
@@ -42,8 +31,8 @@ const itemizedEffect = computed(() => {
     ><img :style="{height: '1.25em'}" src="/italic.svg" /></BButton>
   </p>
 
-  <p v-if="itemizedEffect !== null && itemizedEffect.effects.selectable !== null">
-    <template v-for="i in itemizedEffect.effects.selectable.colors.length">
+  <p v-if="model.adaptation.items !== null && model.adaptation.items_are_selectable !== null">
+    <template v-for="i in model.adaptation.items_are_selectable.colors.length">
       <BButton
         class="format-color"
         sm secondary
@@ -53,7 +42,7 @@ const itemizedEffect = computed(() => {
         :style="{lineHeight: 0, padding: '2px'}"
         :data-cy="`format-color-${i}`"
       >
-        <span :style="{backgroundColor: itemizedEffect.effects.selectable.colors[i - 1]}"></span>
+        <span :style="{backgroundColor: model.adaptation.items_are_selectable.colors[i - 1]}"></span>
       </BButton>
       <wbr />
     </template>

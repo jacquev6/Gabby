@@ -123,7 +123,15 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
 
         match self._adaptation["format"]:
             case 0:
-                return api_models.Adaptation(kind="generic", effects=[], show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False)
+                return api_models.Adaptation(
+                    kind="generic",
+                    placeholder_for_fill_with_free_text=None,
+                    items=None,
+                    items_are_selectable=None,
+                    items_are_boxed=False,
+                    show_arrow_before_mcq_fields=False,
+                    show_mcq_choices_by_default=False,
+                )
             case 2:
                 return api_models.Adaptation(**self._adaptation["settings"])
             case format:

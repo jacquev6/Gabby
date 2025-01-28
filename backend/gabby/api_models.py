@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Annotated, ClassVar, Literal
+from typing import Annotated, Literal
 import datetime
 
 from fastjsonapi import Constant, Computed, Secret, WriteOnly
@@ -105,51 +105,34 @@ class PdfRectangle(PydanticBase):
     role: Literal["bounding", "instructions", "wording", "example", "clue", "textReference"]
 
 
-class FillWithFreeTextAdaptationEffect(PydanticBase):
-    kind: Literal["fill-with-free-text"]
+# To implement #47, this could have been simply 'LettersItems', but 'CharactersItems' is homogeneous with 'TokensItems' below,
+# and future-proof for when we need to support spacing and punctuation items (as characters).
+class CharactersItems(PydanticBase):
+    kind: Literal["characters"]
+    letters: bool
 
-    placeholder: str
+class TokensItems(PydanticBase):
+    kind: Literal["tokens"]
+    words: bool
+    punctuation: bool
 
-class ItemizedAdaptationEffect(PydanticBase):
-    kind: Literal["itemized"]
+class SentencesItems(PydanticBase):
+    kind: Literal["sentences"]
 
-    # To implement #47, this could have been simply 'LettersItems', but 'CharactersItems' is homogeneous with 'TokensItems' below,
-    # and future-proof for when we need to support spacing and punctuation items (as characters).
-    class CharactersItems(PydanticBase):
-        kind: Literal["characters"]
-        letters: bool
+class ManualItems(PydanticBase):
+    kind: Literal["manual"]
 
-    class TokensItems(PydanticBase):
-        kind: Literal["tokens"]
-        words: bool
-        punctuation: bool
+class Selectable(PydanticBase):
+    colors: list[str]
 
-    class SentencesItems(PydanticBase):
-        kind: Literal["sentences"]
-
-    class ManualItems(PydanticBase):
-        kind: Literal["manual"]
-
-    Items: ClassVar = CharactersItems | TokensItems | SentencesItems | ManualItems
-
-    class Effects(PydanticBase):
-        class Selectable(PydanticBase):
-            colors: list[str]
-
-        selectable: Selectable | None
-        boxed: bool
-
-    items: Items
-    effects: Effects
-
-AdaptationEffect = Annotated[
-    FillWithFreeTextAdaptationEffect | ItemizedAdaptationEffect,
-    pydantic.Field(discriminator="kind"),
-]
+Items = CharactersItems | TokensItems | SentencesItems | ManualItems
 
 class Adaptation(PydanticBase):
     kind: Literal["generic", "fill-with-free-text", "multiple-choices"]
-    effects: list[AdaptationEffect]
+    placeholder_for_fill_with_free_text: str | None
+    items: Items | None
+    items_are_selectable: Selectable | None
+    items_are_boxed: bool
     show_arrow_before_mcq_fields: bool
     show_mcq_choices_by_default: bool
 
@@ -171,7 +154,15 @@ class Exercise(PydanticBase, CreatedUpdatedByAtMixin):
 
     rectangles: list[PdfRectangle] = []
 
-    adaptation: Adaptation = Adaptation(kind="generic", effects=[], show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False)
+    adaptation: Adaptation = Adaptation(
+        kind="generic",
+        placeholder_for_fill_with_free_text=None,
+        items=None,
+        items_are_selectable=None,
+        items_are_boxed=False,
+        show_arrow_before_mcq_fields=False,
+        show_mcq_choices_by_default=False,
+    )
 
 class ParsedExercise(PydanticBase):
     number: Annotated[str, WriteOnly()]

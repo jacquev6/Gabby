@@ -205,32 +205,22 @@ const defaultColorsForSelectableEffect = [
   allColorsForSelectableEffect[10],
 ]
 
-type ItemizedEffect = Model['adaptation']['effects'][number] & {kind: 'itemized'}
-
 const model_ = defineModel<Model>({required: true})
 model = model_
 
 const fillWithFreeTextPlaceholder = computed({
   get() {
-    const fillWithFreeTextEffects = model.value.adaptation.effects.filter(effect => effect.kind === 'fill-with-free-text')
-    console.assert(fillWithFreeTextEffects.length <= 1)
-    if (fillWithFreeTextEffects.length === 1) {
-      return fillWithFreeTextEffects[0].placeholder
+    if (model.value.adaptation.placeholder_for_fill_with_free_text !== null) {
+      return model.value.adaptation.placeholder_for_fill_with_free_text
     } else {
       return ''
     }
   },
   set(value: string) {
     if (value === '') {
-      model.value.adaptation.effects = model.value.adaptation.effects.filter(effect => effect.kind !== 'fill-with-free-text')
+      model.value.adaptation.placeholder_for_fill_with_free_text = null
     } else {
-      const fillWithFreeTextEffects = model.value.adaptation.effects.filter(effect => effect.kind === 'fill-with-free-text')
-      console.assert(fillWithFreeTextEffects.length <= 1)
-      if (fillWithFreeTextEffects.length === 0) {
-        model.value.adaptation.effects.push({kind: 'fill-with-free-text', placeholder: value})
-      } else {
-        fillWithFreeTextEffects[0].placeholder = value
-      }
+      model.value.adaptation.placeholder_for_fill_with_free_text = value
     }
   },
 })
@@ -329,91 +319,68 @@ const isManualProxy = computed({
   },
 })
 
-function makeEffect(): ItemizedEffect | null {
-  const hasItems =
-    settings.itemized.items.isLetters
-    || settings.itemized.items.isWords
-    || settings.itemized.items.isPunctuation
-    || settings.itemized.items.isSentences
-    || settings.itemized.items.isManual
-  const hasEffects = settings.itemized.effects.isSelectable || settings.itemized.effects.isBoxed
-  if (hasItems && hasEffects) {
-    const items = ((): ItemizedEffect['items'] => {
-      if (settings.itemized.items.isLetters) {
-        return {kind: 'characters', letters: true}
-      } else if (settings.itemized.items.isWords || settings.itemized.items.isPunctuation) {
-        return {kind: 'tokens', words: settings.itemized.items.isWords, punctuation: settings.itemized.items.isPunctuation}
-      } else if (settings.itemized.items.isSentences) {
-        return {kind: 'sentences'}
-      } else {
-        console.assert(settings.itemized.items.isManual)
-        return {kind: 'manual'}
-      }
-    })()
-
-    const selectable = (() => {
-      if (settings.itemized.effects.isSelectable) {
-        return  {
-          colors: settings.itemized.effects.selectable.allColors.slice(0, settings.itemized.effects.selectable.colorsCount),
-        }
-      } else {
-        return null
-      }
-    })()
-
-    return {
-      kind: 'itemized',
-      items,
-      effects: {
-        selectable,
-        boxed: settings.itemized.effects.isBoxed,
-      },
-    }
-  } else {
-    return null
-  }
-}
-
 watch(
   model,
-  () => {
-    const itemizedEffects = model.value.adaptation.effects.filter(effect => effect.kind === 'itemized')
-    console.assert(itemizedEffects.length <= 1)
+  model => {
+    if (model.adaptation.items === null) {
+      const hasItems =
+        settings.itemized.items.isLetters
+        || settings.itemized.items.isWords
+        || settings.itemized.items.isPunctuation
+        || settings.itemized.items.isSentences
+        || settings.itemized.items.isManual
+      const hasEffects =
+        settings.itemized.effects.isSelectable
+        || settings.itemized.effects.isBoxed
 
-    if (itemizedEffects.length === 0) {
-      const hasItems = settings.itemized.items.isWords || settings.itemized.items.isManual
-      const hasEffects = settings.itemized.effects.isSelectable || settings.itemized.effects.isBoxed
       if (hasItems && hasEffects) {
+        settings.itemized.items.isLetters = false
         settings.itemized.items.isWords = false
         settings.itemized.items.isPunctuation = false
+        settings.itemized.items.isSentences = false
         settings.itemized.items.isManual = false
         settings.itemized.effects.isSelectable = false
         settings.itemized.effects.isBoxed = false
       }
-      console.assert(makeEffect() === null)
     } else {
-      const itemizedEffect = itemizedEffects[0]
-      if (itemizedEffect.items.kind === 'tokens') {
-        settings.itemized.items.isManual = false
-        settings.itemized.items.isWords = itemizedEffect.items.words
-        settings.itemized.items.isPunctuation = itemizedEffect.items.punctuation
-      } else if (itemizedEffect.items.kind === 'manual') {
-        settings.itemized.items.isManual = true
+      if (model.adaptation.items.kind === 'characters') {
+        settings.itemized.items.isLetters = model.adaptation.items.letters
         settings.itemized.items.isWords = false
         settings.itemized.items.isPunctuation = false
+        settings.itemized.items.isSentences = false
+        settings.itemized.items.isManual = false
+      } else if (model.adaptation.items.kind === 'tokens') {
+        settings.itemized.items.isLetters = false
+        settings.itemized.items.isWords = model.adaptation.items.words
+        settings.itemized.items.isPunctuation = model.adaptation.items.punctuation
+        settings.itemized.items.isSentences = false
+        settings.itemized.items.isManual = false
+      } else if (model.adaptation.items.kind === 'manual') {
+        settings.itemized.items.isLetters = false
+        settings.itemized.items.isWords = false
+        settings.itemized.items.isPunctuation = false
+        settings.itemized.items.isSentences = false
+        settings.itemized.items.isManual = true
+      } else if (model.adaptation.items.kind === 'sentences') {
+        settings.itemized.items.isLetters = false
+        settings.itemized.items.isWords = false
+        settings.itemized.items.isPunctuation = false
+        settings.itemized.items.isSentences = true
+        settings.itemized.items.isManual = false
+      } else {
+        console.assert(false, model.adaptation.items as never)
       }
-      if (itemizedEffect.effects.selectable !== null) {
+
+      if (model.adaptation.items_are_selectable !== null) {
         settings.itemized.effects.isSelectable = true
-        settings.itemized.effects.selectable.colorsCount = itemizedEffect.effects.selectable.colors.length
+        settings.itemized.effects.selectable.colorsCount = model.adaptation.items_are_selectable.colors.length
         settings.itemized.effects.selectable.allColors.splice(
           0,
-          itemizedEffect.effects.selectable.colors.length,
-          ...itemizedEffect.effects.selectable.colors
+          model.adaptation.items_are_selectable.colors.length,
+          ...model.adaptation.items_are_selectable.colors
         )
       }
-      settings.itemized.effects.isBoxed = itemizedEffect.effects.boxed
-
-      console.assert(deepEqual(makeEffect(), itemizedEffect))
+      settings.itemized.effects.isBoxed = model.adaptation.items_are_boxed
     }
   },
   {
@@ -425,24 +392,49 @@ watch(
 watch(
   settings,
   () => {
-    const itemizedEffects = model.value.adaptation.effects.filter(effect => effect.kind === 'itemized')
-    console.assert(itemizedEffects.length <= 1)
-    const effect = makeEffect()
+    let isBoxed = settings.itemized.effects.isBoxed
+    let selectable = (() => {
+      if (settings.itemized.effects.isSelectable) {
+        return  {
+          colors: settings.itemized.effects.selectable.allColors.slice(0, settings.itemized.effects.selectable.colorsCount),
+        }
+      } else {
+        return null
+      }
+    })()
+
+    const items = (() => {
+      if (isBoxed || selectable !== null) {
+        if (settings.itemized.items.isLetters) {
+          return {kind: 'characters' as const, letters: true}
+        } else if (settings.itemized.items.isWords || settings.itemized.items.isPunctuation) {
+          return {kind: 'tokens' as const, words: settings.itemized.items.isWords, punctuation: settings.itemized.items.isPunctuation}
+        } else if (settings.itemized.items.isSentences) {
+          return {kind: 'sentences' as const}
+        } else if (settings.itemized.items.isManual) {
+          return {kind: 'manual' as const}
+        } else {
+          return null
+        }
+      } else {
+        return null
+      }
+    })()
+
+    if (items === null) {
+      isBoxed = false
+      selectable = null
+    }
 
     // Break the infinite 'watch' loop by setting the model only if the value has actually changed.
-    if (effect === null) {
-      if (itemizedEffects.length === 1) {
-        model.value.adaptation.effects = model.value.adaptation.effects.filter(effect => effect.kind !== 'itemized')
-      }
-    } else {
-      if (itemizedEffects.length === 0) {
-        model.value.adaptation.effects.push(effect)
-      } else {
-        if (!deepEqual(effect, itemizedEffects[0])) {
-          model.value.adaptation.effects = model.value.adaptation.effects.filter(effect => effect.kind !== 'itemized')
-          model.value.adaptation.effects.push(effect)
-        }
-      }
+    if (!deepEqual(items, model.value.adaptation.items)) {
+      model.value.adaptation.items = items
+    }
+    if (!deepEqual(selectable, model.value.adaptation.items_are_selectable)) {
+      model.value.adaptation.items_are_selectable = selectable
+    }
+    if (isBoxed !== model.value.adaptation.items_are_boxed) {
+      model.value.adaptation.items_are_boxed = isBoxed
     }
 
     cleanupModel(model.value)

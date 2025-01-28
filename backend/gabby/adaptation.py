@@ -12,7 +12,7 @@ from . import exercises
 from . import exercises as e
 from . import renderable
 from . import renderable as r
-from .api_models import Adaptation, AdaptationEffect, FillWithFreeTextAdaptationEffect, ItemizedAdaptationEffect
+from .api_models import Adaptation, TokensItems, Selectable
 
 
 def adapt(exercise: exercises.Exercise) -> renderable.Exercise:
@@ -23,31 +23,6 @@ class _Adapter:
     def __init__(self, exercise: exercises.Exercise):
         self.show_mcq_choices_by_default = exercise.adaptation.show_mcq_choices_by_default
         self.show_arrow_before_mcq_fields = exercise.adaptation.show_arrow_before_mcq_fields
-
-        self.preprocess(exercise.instructions, exercise.adaptation.effects)
-
-        instructions = self.postprocess_section(renderable.Section(paragraphs=list(itertools.chain.from_iterable(
-            self.adapt_instructions(part)
-            for part in [exercise.instructions, exercise.example, exercise.clue]
-        ))))
-
-        pagelets = list(
-            r.Pagelet(
-                instructions=instructions,
-                wording=self.postprocess_section(renderable.Section(paragraphs=wording_paragraphs)),
-            )
-            for wording_paragraphs in self.adapt_wording(exercise.wording, exercise.wording_paragraphs_per_pagelet, exercise.adaptation.effects)
-        )
-
-        if exercise.text_reference != deltas.empty:
-            pagelets.append(r.Pagelet(
-                instructions=self.postprocess_section(renderable.Section(paragraphs=list(self.adapt_instructions(exercise.text_reference)))),
-                wording=renderable.Section(paragraphs=[]),
-            ))
-
-        self.adapted = renderable.Exercise(number=exercise.number, textbook_page=exercise.textbook_page, pagelets=pagelets)
-
-    def preprocess(self, instructions: deltas.Deltas, effects: list[AdaptationEffect]) -> None:
         self.global_placeholders: list[tuple[str, renderable.SentenceToken]] = []
         self.letters_are_items = False
         self.words_are_items = False
@@ -56,24 +31,23 @@ class _Adapter:
         self.manual_items_are_items = False
         self.items_are_selectable = False
         self.items_are_boxed = False
-        self.selectables_colors = []
+        self.colors_for_selectable_items = []
 
-        for effect in effects:
-            if isinstance(effect, FillWithFreeTextAdaptationEffect):
-                self.global_placeholders.append((effect.placeholder, renderable.FreeTextInput()))
-            if isinstance(effect, ItemizedAdaptationEffect):
-                self.letters_are_items = effect.items.kind == "characters" and effect.items.letters
-                self.words_are_items = effect.items.kind == "tokens" and effect.items.words
-                self.punctuation_is_items = effect.items.kind == "tokens" and effect.items.punctuation
-                self.sentences_are_items = effect.items.kind == "sentences"
-                self.manual_items_are_items = effect.items.kind == "manual"
-                self.items_are_boxed = effect.effects.boxed
-                if effect.effects.selectable is not None:
-                    self.items_are_selectable = True
-                    assert self.selectables_colors == []
-                    self.selectables_colors = effect.effects.selectable.colors
+        if exercise.adaptation.placeholder_for_fill_with_free_text is not None:
+            self.global_placeholders.append((exercise.adaptation.placeholder_for_fill_with_free_text, renderable.FreeTextInput()))
 
-        for (start, separator1, separator2, stop, placeholder, text) in self.gather_choices(instructions):
+        if exercise.adaptation.items is not None:
+            self.letters_are_items = exercise.adaptation.items.kind == "characters" and exercise.adaptation.items.letters
+            self.words_are_items = exercise.adaptation.items.kind == "tokens" and exercise.adaptation.items.words
+            self.punctuation_is_items = exercise.adaptation.items.kind == "tokens" and exercise.adaptation.items.punctuation
+            self.sentences_are_items = exercise.adaptation.items.kind == "sentences"
+            self.manual_items_are_items = exercise.adaptation.items.kind == "manual"
+            self.items_are_boxed = exercise.adaptation.items_are_boxed
+            if exercise.adaptation.items_are_selectable is not None:
+                self.items_are_selectable = True
+                self.colors_for_selectable_items = exercise.adaptation.items_are_selectable.colors
+
+        for (start, separator1, separator2, stop, placeholder, text) in self.gather_choices(exercise.instructions):
             if placeholder != "":
                 self.global_placeholders.append(
                     (
@@ -85,6 +59,27 @@ class _Adapter:
                         ),
                     ),
                 )
+
+        instructions = self.postprocess_section(renderable.Section(paragraphs=list(itertools.chain.from_iterable(
+            self.adapt_instructions(part)
+            for part in [exercise.instructions, exercise.example, exercise.clue]
+        ))))
+
+        pagelets = list(
+            r.Pagelet(
+                instructions=instructions,
+                wording=self.postprocess_section(renderable.Section(paragraphs=wording_paragraphs)),
+            )
+            for wording_paragraphs in self.adapt_wording(exercise.wording, exercise.wording_paragraphs_per_pagelet)
+        )
+
+        if exercise.text_reference != deltas.empty:
+            pagelets.append(r.Pagelet(
+                instructions=self.postprocess_section(renderable.Section(paragraphs=list(self.adapt_instructions(exercise.text_reference)))),
+                wording=renderable.Section(paragraphs=[]),
+            ))
+
+        self.adapted = renderable.Exercise(number=exercise.number, textbook_page=exercise.textbook_page, pagelets=pagelets)
 
     def adapt_instructions(self, instructions: deltas.Deltas) -> Iterable[renderable.Paragraph]:
         for paragraph_deltas in self.split_deltas(instructions, r"\s*\n\s*\n\s*"):
@@ -104,8 +99,8 @@ class _Adapter:
             elif "sel" in delta.attributes:
                 assert delta.attributes == {"sel": delta.attributes["sel"]}
 
-                if len(self.selectables_colors) > delta.attributes["sel"] - 1:
-                    yield renderable.SelectedText(text=delta.insert, color=self.selectables_colors[delta.attributes["sel"] - 1])
+                if len(self.colors_for_selectable_items) > delta.attributes["sel"] - 1:
+                    yield renderable.SelectedText(text=delta.insert, color=self.colors_for_selectable_items[delta.attributes["sel"] - 1])
                 else:
                     yield renderable.PlainText(text=delta.insert)
 
@@ -140,12 +135,12 @@ class _Adapter:
             else:
                 assert False, f"Unknown attributes: {delta.attributes}"
 
-    def adapt_wording(self, wording: deltas.Deltas, wording_paragraphs_per_pagelet: int | None, effects: list[AdaptationEffect]) -> Iterable[list[renderable.Paragraph]]:
+    def adapt_wording(self, wording: deltas.Deltas, wording_paragraphs_per_pagelet: int | None) -> Iterable[list[renderable.Paragraph]]:
         current_pagelet = []
         has_yielded = False
         for pagelet_deltas in self.split_deltas(wording, r"\s*\n\s*\n\s*\n\s*"):
             if len(pagelet_deltas) != 0:
-                for paragraph in self.adapt_wording_pagelet(pagelet_deltas, effects):
+                for paragraph in self.adapt_wording_pagelet(pagelet_deltas):
                     current_pagelet.append(paragraph)
                     if len(current_pagelet) == wording_paragraphs_per_pagelet:
                         yield current_pagelet
@@ -158,7 +153,7 @@ class _Adapter:
         if not has_yielded:
             yield []
 
-    def adapt_wording_pagelet(self, pagelet_deltas: deltas.Deltas, effects: list[AdaptationEffect]) -> Iterable[renderable.Paragraph]:
+    def adapt_wording_pagelet(self, pagelet_deltas: deltas.Deltas) -> Iterable[renderable.Paragraph]:
         for delta in pagelet_deltas:
             if delta.attributes == {}:
                 for index, (placeholder, _token) in enumerate(self.global_placeholders):
@@ -212,7 +207,7 @@ class _Adapter:
                 is_first_sentence = False
                 contents = list(self.adapt_wording_sentence(sentence_deltas, sentence_placeholders))
                 if self.items_are_selectable:
-                    yield renderable.Selectable(contents=contents, colors=self.selectables_colors, boxed=self.items_are_boxed)
+                    yield renderable.Selectable(contents=contents, colors=self.colors_for_selectable_items, boxed=self.items_are_boxed)
                 else:
                     assert self.items_are_boxed
                     yield renderable.Boxed(contents=contents)
@@ -234,7 +229,7 @@ class _Adapter:
                             else:
                                 if self.punctuation_is_items:
                                     if self.items_are_selectable:
-                                        yield renderable.SelectableText(text=text, colors=self.selectables_colors, boxed=self.items_are_boxed)
+                                        yield renderable.SelectableText(text=text, colors=self.colors_for_selectable_items, boxed=self.items_are_boxed)
                                     else:
                                         assert self.items_are_boxed
                                         yield renderable.BoxedText(text=text)
@@ -245,13 +240,13 @@ class _Adapter:
                             if self.letters_are_items:
                                 for letter in text:
                                     if self.items_are_selectable:
-                                        yield renderable.SelectableText(text=letter, colors=self.selectables_colors, boxed=self.items_are_boxed)
+                                        yield renderable.SelectableText(text=letter, colors=self.colors_for_selectable_items, boxed=self.items_are_boxed)
                                     else:
                                         assert self.items_are_boxed
                                         yield renderable.BoxedText(text=letter)
                             elif self.words_are_items:
                                 if self.items_are_selectable:
-                                    yield renderable.SelectableText(text=text, colors=self.selectables_colors, boxed=self.items_are_boxed)
+                                    yield renderable.SelectableText(text=text, colors=self.colors_for_selectable_items, boxed=self.items_are_boxed)
                                 else:
                                     assert self.items_are_boxed
                                     yield renderable.BoxedText(text=text)
@@ -268,7 +263,7 @@ class _Adapter:
                         else:
                             if self.manual_items_are_items:
                                 if self.items_are_selectable:
-                                    yield renderable.SelectableText(text=text, colors=self.selectables_colors, boxed=self.items_are_boxed)
+                                    yield renderable.SelectableText(text=text, colors=self.colors_for_selectable_items, boxed=self.items_are_boxed)
                                 else:
                                     assert self.items_are_boxed
                                     yield renderable.BoxedText(text=text)
@@ -433,7 +428,7 @@ class WordingPaginationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind="generic", effects=[], show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind="generic", placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number="number",
@@ -455,7 +450,7 @@ class WordingPaginationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind="generic", effects=[], show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind="generic", placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number="number",
@@ -479,7 +474,7 @@ class WordingPaginationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind="generic", effects=[], show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind="generic", placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number="number",
@@ -505,7 +500,7 @@ class WordingPaginationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="example\n", attributes={})],
                 clue=[d.InsertOp(insert="clue\n", attributes={})],
                 wording_paragraphs_per_pagelet=2,
-                adaptation=Adaptation(kind="generic", effects=[], show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind="generic", placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number="number",
@@ -546,7 +541,7 @@ class WordingPaginationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="example\n", attributes={})],
                 clue=[d.InsertOp(insert="clue\n", attributes={})],
                 wording_paragraphs_per_pagelet=None,
-                adaptation=Adaptation(kind="generic", effects=[], show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind="generic", placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number="number",
@@ -581,7 +576,7 @@ class WordingPaginationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="example\n", attributes={})],
                 clue=[d.InsertOp(insert="clue\n", attributes={})],
                 wording_paragraphs_per_pagelet=None,
-                adaptation=Adaptation(kind="generic", effects=[], show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind="generic", placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number="number",
@@ -625,7 +620,7 @@ class WordingPaginationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="example\n", attributes={})],
                 clue=[d.InsertOp(insert="clue\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind="generic", effects=[], show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind="generic", placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number="number",
@@ -690,7 +685,7 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind="fill-with-free-text", effects=[FillWithFreeTextAdaptationEffect(kind="fill-with-free-text", placeholder="...")], show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind="fill-with-free-text",placeholder_for_fill_with_free_text="...", items=None, items_are_selectable=None, items_are_boxed=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number="number",
@@ -741,7 +736,7 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind="fill-with-free-text", effects=[FillWithFreeTextAdaptationEffect(kind="fill-with-free-text", placeholder="@")], show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind="fill-with-free-text", placeholder_for_fill_with_free_text="@", items=None, items_are_selectable=None, items_are_boxed=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number="number",
@@ -779,7 +774,7 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind="fill-with-free-text", effects=[FillWithFreeTextAdaptationEffect(kind="fill-with-free-text", placeholder="...")], show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind="fill-with-free-text",placeholder_for_fill_with_free_text="...", items=None, items_are_selectable=None, items_are_boxed=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number="number",
@@ -823,7 +818,7 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind="fill-with-free-text", effects=[FillWithFreeTextAdaptationEffect(kind="fill-with-free-text", placeholder="...")], show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind="fill-with-free-text",placeholder_for_fill_with_free_text="...", items=None, items_are_selectable=None, items_are_boxed=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number="number",
@@ -877,7 +872,7 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind="fill-with-free-text", effects=[FillWithFreeTextAdaptationEffect(kind="fill-with-free-text", placeholder="...")], show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind="fill-with-free-text",placeholder_for_fill_with_free_text="...", items=None, items_are_selectable=None, items_are_boxed=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number="number",
@@ -919,7 +914,7 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind="fill-with-free-text", effects=[FillWithFreeTextAdaptationEffect(kind="fill-with-free-text", placeholder="...")], show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind="fill-with-free-text", placeholder_for_fill_with_free_text="...", items=None, items_are_selectable=None, items_are_boxed=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number="number",
@@ -957,7 +952,7 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                     d.InsertOp(insert="This @ is the clue.\n", attributes={}),
                 ],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind="fill-with-free-text", effects=[FillWithFreeTextAdaptationEffect(kind="fill-with-free-text", placeholder="@")], show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind="fill-with-free-text", placeholder_for_fill_with_free_text="@", items=None, items_are_selectable=None, items_are_boxed=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number="number",
@@ -1024,11 +1019,10 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
                 adaptation=Adaptation(
                     kind="generic",
-                    effects=[ItemizedAdaptationEffect(
-                        kind="itemized",
-                        items={"kind": "characters", "letters": True},
-                        effects={"selectable": {"colors": ["red"]}, "boxed": False},
-                    )],
+                    placeholder_for_fill_with_free_text=None,
+                    items={"kind": "characters", "letters": True},
+                    items_are_selectable={"colors": ["red"]},
+                    items_are_boxed=False,
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -1081,11 +1075,10 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
                 adaptation=Adaptation(
                     kind="generic",
-                    effects=[ItemizedAdaptationEffect(
-                        kind="itemized",
-                        items={"kind": "tokens", "words": True, "punctuation": False},
-                        effects={"selectable": {"colors": ["red", "blue"]}, "boxed": False},
-                    )],
+                    placeholder_for_fill_with_free_text=None,
+                    items={"kind": "tokens", "words": True, "punctuation": False},
+                    items_are_selectable={"colors": ["red", "blue"]},
+                    items_are_boxed=False,
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -1126,11 +1119,10 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
                 adaptation=Adaptation(
                     kind="generic",
-                    effects=[ItemizedAdaptationEffect(
-                        kind="itemized",
-                        items={"kind": "tokens", "words": True, "punctuation": True},
-                        effects={"selectable": {"colors": ["green", "yellow", "orange"]}, "boxed": False},
-                    )],
+                    placeholder_for_fill_with_free_text=None,
+                    items={"kind": "tokens", "words": True, "punctuation": True},
+                    items_are_selectable={"colors": ["green", "yellow", "orange"]},
+                    items_are_boxed=False,
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -1171,11 +1163,10 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
                 adaptation=Adaptation(
                     kind="generic",
-                    effects=[ItemizedAdaptationEffect(
-                        kind="itemized",
-                        items={"kind": "tokens", "words": False, "punctuation": True},
-                        effects={"selectable": {"colors": ["green", "yellow", "orange"]}, "boxed": False},
-                    )],
+                    placeholder_for_fill_with_free_text=None,
+                    items={"kind": "tokens", "words": False, "punctuation": True},
+                    items_are_selectable={"colors": ["green", "yellow", "orange"]},
+                    items_are_boxed=False,
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -1216,11 +1207,10 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
                 adaptation=Adaptation(
                     kind="generic",
-                    effects=[ItemizedAdaptationEffect(
-                        kind="itemized",
-                        items={"kind": "tokens", "words": True, "punctuation": False},
-                        effects={"selectable": {"colors": ["red", "blue"]}, "boxed": True},
-                    )],
+                    placeholder_for_fill_with_free_text=None,
+                    items={"kind": "tokens", "words": True, "punctuation": False},
+                    items_are_selectable={"colors": ["red", "blue"]},
+                    items_are_boxed=True,
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -1261,11 +1251,10 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=2,
                 adaptation=Adaptation(
                     kind="generic",
-                    effects=[ItemizedAdaptationEffect(
-                        kind="itemized",
-                        items={"kind": "tokens", "words": True, "punctuation": True},
-                        effects={"selectable": {"colors": ["red"]}, "boxed": False},
-                    )],
+                    placeholder_for_fill_with_free_text=None,
+                    items={"kind": "tokens", "words": True, "punctuation": True},
+                    items_are_selectable={"colors": ["red"]},
+                    items_are_boxed=False,
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -1351,11 +1340,10 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=2,
                 adaptation=Adaptation(
                     kind="generic",
-                    effects=[ItemizedAdaptationEffect(
-                        kind="itemized",
-                        items={"kind": "tokens", "words": True, "punctuation": True},
-                        effects={"selectable": {"colors": ["red"]}, "boxed": False},
-                    )],
+                    placeholder_for_fill_with_free_text=None,
+                    items={"kind": "tokens", "words": True, "punctuation": True},
+                    items_are_selectable={"colors": ["red"]},
+                    items_are_boxed=False,
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -1441,11 +1429,10 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=2,
                 adaptation=Adaptation(
                     kind="generic",
-                    effects=[ItemizedAdaptationEffect(
-                        kind="itemized",
-                        items={"kind": "tokens", "words": True, "punctuation": True},
-                        effects={"selectable": {"colors": ["red"]}, "boxed": False},
-                    )],
+                    placeholder_for_fill_with_free_text=None,
+                    items={"kind": "tokens", "words": True, "punctuation": True},
+                    items_are_selectable={"colors": ["red"]},
+                    items_are_boxed=False,
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -1528,11 +1515,10 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
                 adaptation=Adaptation(
                     kind="generic",
-                    effects=[ItemizedAdaptationEffect(
-                        kind="itemized",
-                        items={"kind": "sentences"},
-                        effects={"selectable": {"colors": ["red", "blue"]}, "boxed": True},
-                    )],
+                    placeholder_for_fill_with_free_text=None,
+                    items={"kind": "sentences"},
+                    items_are_selectable={"colors": ["red", "blue"]},
+                    items_are_boxed=True,
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -1642,11 +1628,10 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
                 adaptation=Adaptation(
                     kind="generic",
-                    effects=[ItemizedAdaptationEffect(
-                        kind="itemized",
-                        items={"kind": "manual"},
-                        effects={"selectable": {"colors": ["red", "blue"]}, "boxed": False},
-                    )],
+                    placeholder_for_fill_with_free_text=None,
+                    items={"kind": "manual"},
+                    items_are_selectable={"colors": ["red", "blue"]},
+                    items_are_boxed=False,
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -1693,11 +1678,10 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
                 adaptation=Adaptation(
                     kind="generic",
-                    effects=[ItemizedAdaptationEffect(
-                        kind="itemized",
-                        items={"kind": "manual"},
-                        effects={"selectable": {"colors": ["red", "blue"]}, "boxed": True},
-                    )],
+                    placeholder_for_fill_with_free_text=None,
+                    items={"kind": "manual"},
+                    items_are_selectable={"colors": ["red", "blue"]},
+                    items_are_boxed=True,
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -1738,11 +1722,10 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
                 adaptation=Adaptation(
                     kind="generic",
-                    effects=[ItemizedAdaptationEffect(
-                        kind="itemized",
-                        items={"kind": "tokens", "words": True, "punctuation": False},
-                        effects={"selectable": None, "boxed": True},
-                    )],
+                    placeholder_for_fill_with_free_text=None,
+                    items={"kind": "tokens", "words": True, "punctuation": False},
+                    items_are_selectable=None,
+                    items_are_boxed=True,
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -1794,11 +1777,10 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
                     adaptation=Adaptation(
                         kind="generic",
-                        effects=[ItemizedAdaptationEffect(
-                            kind="itemized",
-                            items={"kind": "tokens", "words": True, "punctuation": False},
-                            effects={"selectable": {"colors": ["red", "green", "blue"]}, "boxed": False},
-                        )],
+                        placeholder_for_fill_with_free_text=None,
+                        items={"kind": "tokens", "words": True, "punctuation": False},
+                        items_are_selectable={"colors": ["red", "green", "blue"]},
+                        items_are_boxed=False,
                         show_arrow_before_mcq_fields=False,
                         show_mcq_choices_by_default=False,
                     ),
@@ -1845,7 +1827,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind="multiple-choices", effects=[], show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind="multiple-choices", placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number="number",
@@ -1898,7 +1880,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                     d.InsertOp(insert="This is {choices2||/||||the} @ clue.\n", attributes={}),
                 ],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind="multiple-choices", effects=[], show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind="multiple-choices", placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number="number",
@@ -1991,7 +1973,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind="multiple-choices", effects=[], show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind="multiple-choices", placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number="number",
@@ -2040,7 +2022,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind="multiple-choices", effects=[], show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind="multiple-choices", placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number="number",
@@ -2085,7 +2067,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind="multiple-choices", effects=[], show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind="multiple-choices", placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number="number",
@@ -2140,7 +2122,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind="multiple-choices", effects=[], show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind="multiple-choices", placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number="number",
@@ -2195,7 +2177,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind="multiple-choices", effects=[], show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind="multiple-choices", placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number="number",
@@ -2247,7 +2229,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind="multiple-choices", effects=[], show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind="multiple-choices", placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number="number",
@@ -2298,7 +2280,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind="multiple-choices", effects=[], show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind="multiple-choices", placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number="number",
@@ -2361,7 +2343,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind="multiple-choices", effects=[], show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind="multiple-choices", placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number="number",
@@ -2420,7 +2402,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind="multiple-choices", effects=[], show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind="multiple-choices", placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number="number",
@@ -2477,7 +2459,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind="multiple-choices", effects=[], show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind="multiple-choices", placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number="number",
@@ -2530,7 +2512,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind="multiple-choices", effects=[], show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind="multiple-choices", placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number="number",
@@ -2583,7 +2565,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind="multiple-choices", effects=[], show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind="multiple-choices", placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number="number",
@@ -2636,7 +2618,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind="multiple-choices", effects=[], show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind="multiple-choices", placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number="number",
@@ -2689,7 +2671,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind="multiple-choices", effects=[], show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind="multiple-choices", placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number="number",
@@ -2742,7 +2724,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind="multiple-choices", effects=[], show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind="multiple-choices", placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number="number",
@@ -2795,7 +2777,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind="multiple-choices", effects=[], show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind="multiple-choices", placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number="number",
@@ -2851,7 +2833,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind="multiple-choices", effects=[], show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind="multiple-choices", placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number="number",
@@ -2907,7 +2889,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind="multiple-choices", effects=[], show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind="multiple-choices", placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number="number",
@@ -2985,7 +2967,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind="multiple-choices", effects=[], show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind="multiple-choices", placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number="number",
@@ -3064,7 +3046,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind="multiple-choices", effects=[], show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind="multiple-choices", placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number="number",
@@ -3144,7 +3126,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind="multiple-choices", effects=[], show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind="multiple-choices", placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number="number",
@@ -3201,16 +3183,10 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
                 adaptation=Adaptation(
                     kind="generic",
-                    effects=[
-                        ItemizedAdaptationEffect(
-                            kind="itemized",
-                            items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=True, punctuation=False),
-                            effects=ItemizedAdaptationEffect.Effects(
-                                selectable=ItemizedAdaptationEffect.Effects.Selectable(colors=["red", "blue"]),
-                                boxed=False,
-                            ),
-                        ),
-                    ],
+                    placeholder_for_fill_with_free_text=None,
+                    items=TokensItems(kind="tokens", words=True, punctuation=False),
+                    items_are_selectable=Selectable(colors=["red", "blue"]),
+                    items_are_boxed=False,
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -3273,16 +3249,10 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
                 adaptation=Adaptation(
                     kind="generic",
-                    effects=[
-                        ItemizedAdaptationEffect(
-                            kind="itemized",
-                            items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=True, punctuation=False),
-                            effects=ItemizedAdaptationEffect.Effects(
-                                selectable=ItemizedAdaptationEffect.Effects.Selectable(colors=["red", "green", "blue"]),
-                                boxed=False,
-                            ),
-                        ),
-                    ],
+                    placeholder_for_fill_with_free_text=None,
+                    items=TokensItems(kind="tokens", words=True, punctuation=False),
+                    items_are_selectable=Selectable(colors=["red", "green", "blue"]),
+                    items_are_boxed=False,
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -3328,16 +3298,10 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
                 adaptation=Adaptation(
                     kind="generic",
-                    effects=[
-                        ItemizedAdaptationEffect(
-                            kind="itemized",
-                            items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=True, punctuation=False),
-                            effects=ItemizedAdaptationEffect.Effects(
-                                selectable=ItemizedAdaptationEffect.Effects.Selectable(colors=["red"]),
-                                boxed=False,
-                            ),
-                        ),
-                    ],
+                    placeholder_for_fill_with_free_text=None,
+                    items=TokensItems(kind="tokens", words=True, punctuation=False),
+                    items_are_selectable=Selectable(colors=["red"]),
+                    items_are_boxed=False,
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -3376,16 +3340,10 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
                 adaptation=Adaptation(
                     kind="generic",
-                    effects=[
-                        ItemizedAdaptationEffect(
-                            kind="itemized",
-                            items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=True, punctuation=False),
-                            effects=ItemizedAdaptationEffect.Effects(
-                                selectable=ItemizedAdaptationEffect.Effects.Selectable(colors=["red"]),
-                                boxed=False,
-                            ),
-                        ),
-                    ],
+                    placeholder_for_fill_with_free_text=None,
+                    items=TokensItems(kind="tokens", words=True, punctuation=False),
+                    items_are_selectable=Selectable(colors=["red"]),
+                    items_are_boxed=False,
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -3434,16 +3392,10 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
                 adaptation=Adaptation(
                     kind="generic",
-                    effects=[
-                        ItemizedAdaptationEffect(
-                            kind="itemized",
-                            items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=True, punctuation=False),
-                            effects=ItemizedAdaptationEffect.Effects(
-                                selectable=ItemizedAdaptationEffect.Effects.Selectable(colors=["red"]),
-                                boxed=False,
-                            ),
-                        ),
-                    ],
+                    placeholder_for_fill_with_free_text=None,
+                    items=TokensItems(kind="tokens", words=True, punctuation=False),
+                    items_are_selectable=Selectable(colors=["red"]),
+                    items_are_boxed=False,
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -3492,16 +3444,10 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
                 adaptation=Adaptation(
                     kind="generic",
-                    effects=[
-                        ItemizedAdaptationEffect(
-                            kind="itemized",
-                            items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=True, punctuation=False),
-                            effects=ItemizedAdaptationEffect.Effects(
-                                selectable=ItemizedAdaptationEffect.Effects.Selectable(colors=["red"]),
-                                boxed=False,
-                            ),
-                        ),
-                    ],
+                    placeholder_for_fill_with_free_text=None,
+                    items=TokensItems(kind="tokens", words=True, punctuation=False),
+                    items_are_selectable=Selectable(colors=["red"]),
+                    items_are_boxed=False,
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -3548,16 +3494,10 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
                 adaptation=Adaptation(
                     kind="generic",
-                    effects=[
-                        ItemizedAdaptationEffect(
-                            kind="itemized",
-                            items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=True, punctuation=False),
-                            effects=ItemizedAdaptationEffect.Effects(
-                                selectable=ItemizedAdaptationEffect.Effects.Selectable(colors=["red"]),
-                                boxed=False,
-                            ),
-                        ),
-                    ],
+                    placeholder_for_fill_with_free_text=None,
+                    items=TokensItems(kind="tokens", words=True, punctuation=False),
+                    items_are_selectable=Selectable(colors=["red"]),
+                    items_are_boxed=False,
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -3600,16 +3540,10 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
                 adaptation=Adaptation(
                     kind="generic",
-                    effects=[
-                        ItemizedAdaptationEffect(
-                            kind="itemized",
-                            items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=True, punctuation=False),
-                            effects=ItemizedAdaptationEffect.Effects(
-                                selectable=ItemizedAdaptationEffect.Effects.Selectable(colors=["red"]),
-                                boxed=False,
-                            ),
-                        ),
-                    ],
+                    placeholder_for_fill_with_free_text=None,
+                    items=TokensItems(kind="tokens", words=True, punctuation=False),
+                    items_are_selectable=Selectable(colors=["red"]),
+                    items_are_boxed=False,
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -3678,16 +3612,10 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
                 adaptation=Adaptation(
                     kind="generic",
-                    effects=[
-                        ItemizedAdaptationEffect(
-                            kind="itemized",
-                            items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=True, punctuation=False),
-                            effects=ItemizedAdaptationEffect.Effects(
-                                selectable=ItemizedAdaptationEffect.Effects.Selectable(colors=["red", "green", "blue"]),
-                                boxed=False,
-                            ),
-                        ),
-                    ],
+                    placeholder_for_fill_with_free_text=None,
+                    items=TokensItems(kind="tokens", words=True, punctuation=False),
+                    items_are_selectable=Selectable(colors=["red", "green", "blue"]),
+                    items_are_boxed=False,
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -3736,16 +3664,10 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
                 adaptation=Adaptation(
                     kind="generic",
-                    effects=[
-                        ItemizedAdaptationEffect(
-                            kind="itemized",
-                            items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=True, punctuation=False),
-                            effects=ItemizedAdaptationEffect.Effects(
-                                selectable=ItemizedAdaptationEffect.Effects.Selectable(colors=["red"]),
-                                boxed=False,
-                            ),
-                        ),
-                    ],
+                    placeholder_for_fill_with_free_text=None,
+                    items=TokensItems(kind="tokens", words=True, punctuation=False),
+                    items_are_selectable=Selectable(colors=["red"]),
+                    items_are_boxed=False,
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -3808,16 +3730,10 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
                 adaptation=Adaptation(
                     kind="generic",
-                    effects=[
-                        ItemizedAdaptationEffect(
-                            kind="itemized",
-                            items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=False, punctuation=True),
-                            effects=ItemizedAdaptationEffect.Effects(
-                                selectable=ItemizedAdaptationEffect.Effects.Selectable(colors=["red"]),
-                                boxed=False,
-                            ),
-                        ),
-                    ],
+                    placeholder_for_fill_with_free_text=None,
+                    items=TokensItems(kind="tokens", words=False, punctuation=True),
+                    items_are_selectable=Selectable(colors=["red"]),
+                    items_are_boxed=False,
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -3882,16 +3798,10 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
                 adaptation=Adaptation(
                     kind="generic",
-                    effects=[
-                        ItemizedAdaptationEffect(
-                            kind="itemized",
-                            items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=True, punctuation=True),
-                            effects=ItemizedAdaptationEffect.Effects(
-                                selectable=ItemizedAdaptationEffect.Effects.Selectable(colors=["red"]),
-                                boxed=False,
-                            ),
-                        ),
-                    ],
+                    placeholder_for_fill_with_free_text=None,
+                    items=TokensItems(kind="tokens", words=True, punctuation=True),
+                    items_are_selectable=Selectable(colors=["red"]),
+                    items_are_boxed=False,
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -3954,16 +3864,10 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
                 adaptation=Adaptation(
                     kind="generic",
-                    effects=[
-                        ItemizedAdaptationEffect(
-                            kind="itemized",
-                            items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=True, punctuation=False),
-                            effects=ItemizedAdaptationEffect.Effects(
-                                selectable=None,
-                                boxed=True,
-                            ),
-                        ),
-                    ],
+                    placeholder_for_fill_with_free_text=None,
+                    items=TokensItems(kind="tokens", words=True, punctuation=False),
+                    items_are_selectable=None,
+                    items_are_boxed=True,
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -4026,16 +3930,10 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
                 adaptation=Adaptation(
                     kind="generic",
-                    effects=[
-                        ItemizedAdaptationEffect(
-                            kind="itemized",
-                            items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=False, punctuation=True),
-                            effects=ItemizedAdaptationEffect.Effects(
-                                selectable=None,
-                                boxed=True,
-                            ),
-                        ),
-                    ],
+                    placeholder_for_fill_with_free_text=None,
+                    items=TokensItems(kind="tokens", words=False, punctuation=True),
+                    items_are_selectable=None,
+                    items_are_boxed=True,
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -4100,16 +3998,10 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
                 adaptation=Adaptation(
                     kind="generic",
-                    effects=[
-                        ItemizedAdaptationEffect(
-                            kind="itemized",
-                            items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=True, punctuation=True),
-                            effects=ItemizedAdaptationEffect.Effects(
-                                selectable=None,
-                                boxed=True,
-                            ),
-                        ),
-                    ],
+                    placeholder_for_fill_with_free_text=None,
+                    items=TokensItems(kind="tokens", words=True, punctuation=True),
+                    items_are_selectable=None,
+                    items_are_boxed=True,
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -4188,7 +4080,7 @@ class LenientParagraphTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind="generic", effects=[], show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False)
+                adaptation=Adaptation(kind="generic", placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False)
             ),
             r.Exercise(
                 number="number",
@@ -4276,16 +4168,10 @@ class LenientParagraphTestCase(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
                 adaptation=Adaptation(
                     kind="generic",
-                    effects=[
-                        ItemizedAdaptationEffect(
-                            kind="itemized",
-                            items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=True, punctuation=False),
-                            effects=ItemizedAdaptationEffect.Effects(
-                                selectable=ItemizedAdaptationEffect.Effects.Selectable(colors=["red"]),
-                                boxed=False,
-                            ),
-                        ),
-                    ],
+                    placeholder_for_fill_with_free_text=None,
+                    items=TokensItems(kind="tokens", words=True, punctuation=False),
+                    items_are_selectable=Selectable(colors=["red"]),
+                    items_are_boxed=False,
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 )
@@ -4356,16 +4242,10 @@ class LenientParagraphTestCase(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
                 adaptation=Adaptation(
                     kind="generic",
-                    effects=[
-                        ItemizedAdaptationEffect(
-                            kind="itemized",
-                            items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=True, punctuation=True),
-                            effects=ItemizedAdaptationEffect.Effects(
-                                selectable=ItemizedAdaptationEffect.Effects.Selectable(colors=["red"]),
-                                boxed=False,
-                            ),
-                        ),
-                    ],
+                    placeholder_for_fill_with_free_text=None,
+                    items=TokensItems(kind="tokens", words=True, punctuation=True),
+                    items_are_selectable=Selectable(colors=["red"]),
+                    items_are_boxed=False,
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 )
@@ -4436,7 +4316,7 @@ class LenientParagraphTestCase(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
                 adaptation=Adaptation(
                     kind="generic",
-                    effects=[FillWithFreeTextAdaptationEffect(kind="fill-with-free-text", placeholder="...")],
+                   placeholder_for_fill_with_free_text="...", items=None, items_are_selectable=None, items_are_boxed=False,
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -4509,7 +4389,7 @@ class LenientParagraphTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind="generic", effects=[], show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind="generic", placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number="number",
@@ -4590,9 +4470,10 @@ class MultipleAdaptationEffectsTestCase(AdaptationTestCase):
                 wording_paragraphs_per_pagelet=3,
                 adaptation=Adaptation(
                     kind="generic",
-                    effects=[
-                        FillWithFreeTextAdaptationEffect(kind="fill-with-free-text", placeholder="..."),
-                    ],
+                    placeholder_for_fill_with_free_text="...",
+                    items=None,
+                    items_are_selectable=None,
+                    items_are_boxed=False,
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -4658,7 +4539,7 @@ class MultipleAdaptationEffectsTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind="generic", effects=[], show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind="generic", placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number="number",
@@ -4718,19 +4599,10 @@ class MultipleAdaptationEffectsTestCase(AdaptationTestCase):
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
-                    effects=[
-                        # Free text
-                        FillWithFreeTextAdaptationEffect(kind="fill-with-free-text", placeholder="..."),
-                        # Selectable words
-                        ItemizedAdaptationEffect(
-                            kind="itemized",
-                            items=ItemizedAdaptationEffect.TokensItems(kind="tokens", words=True, punctuation=False),
-                            effects=ItemizedAdaptationEffect.Effects(
-                                selectable=ItemizedAdaptationEffect.Effects.Selectable(colors=["red", "yellow"]),
-                                boxed=True,
-                            ),
-                        ),
-                    ],
+                    placeholder_for_fill_with_free_text="...",
+                    items=TokensItems(kind="tokens", words=True, punctuation=False),
+                    items_are_selectable=Selectable(colors=["red", "yellow"]),
+                    items_are_boxed=True,
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),

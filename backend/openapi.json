@@ -1,29 +1,42 @@
 {
   "components": {
     "schemas": {
-      "Adaptation-Input": {
+      "Adaptation": {
         "additionalProperties": false,
         "properties": {
-          "effects": {
-            "items": {
-              "discriminator": {
-                "mapping": {
-                  "fill-with-free-text": "#/components/schemas/FillWithFreeTextAdaptationEffect",
-                  "itemized": "#/components/schemas/ItemizedAdaptationEffect-Input"
-                },
-                "propertyName": "kind"
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CharactersItems"
               },
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/FillWithFreeTextAdaptationEffect"
-                },
-                {
-                  "$ref": "#/components/schemas/ItemizedAdaptationEffect-Input"
-                }
-              ]
-            },
-            "title": "Effects",
-            "type": "array"
+              {
+                "$ref": "#/components/schemas/TokensItems"
+              },
+              {
+                "$ref": "#/components/schemas/SentencesItems"
+              },
+              {
+                "$ref": "#/components/schemas/ManualItems"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Items"
+          },
+          "items_are_boxed": {
+            "title": "Items Are Boxed",
+            "type": "boolean"
+          },
+          "items_are_selectable": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Selectable"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "kind": {
             "enum": [
@@ -33,6 +46,17 @@
             ],
             "title": "Kind",
             "type": "string"
+          },
+          "placeholder_for_fill_with_free_text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Placeholder For Fill With Free Text"
           },
           "show_arrow_before_mcq_fields": {
             "title": "Show Arrow Before Mcq Fields",
@@ -45,58 +69,10 @@
         },
         "required": [
           "kind",
-          "effects",
-          "show_arrow_before_mcq_fields",
-          "show_mcq_choices_by_default"
-        ],
-        "title": "Adaptation",
-        "type": "object"
-      },
-      "Adaptation-Output": {
-        "additionalProperties": false,
-        "properties": {
-          "effects": {
-            "items": {
-              "discriminator": {
-                "mapping": {
-                  "fill-with-free-text": "#/components/schemas/FillWithFreeTextAdaptationEffect",
-                  "itemized": "#/components/schemas/ItemizedAdaptationEffect-Output"
-                },
-                "propertyName": "kind"
-              },
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/FillWithFreeTextAdaptationEffect"
-                },
-                {
-                  "$ref": "#/components/schemas/ItemizedAdaptationEffect-Output"
-                }
-              ]
-            },
-            "title": "Effects",
-            "type": "array"
-          },
-          "kind": {
-            "enum": [
-              "generic",
-              "fill-with-free-text",
-              "multiple-choices"
-            ],
-            "title": "Kind",
-            "type": "string"
-          },
-          "show_arrow_before_mcq_fields": {
-            "title": "Show Arrow Before Mcq Fields",
-            "type": "boolean"
-          },
-          "show_mcq_choices_by_default": {
-            "title": "Show Mcq Choices By Default",
-            "type": "boolean"
-          }
-        },
-        "required": [
-          "kind",
-          "effects",
+          "placeholder_for_fill_with_free_text",
+          "items",
+          "items_are_selectable",
+          "items_are_boxed",
           "show_arrow_before_mcq_fields",
           "show_mcq_choices_by_default"
         ],
@@ -191,31 +167,6 @@
         "title": "CharactersItems",
         "type": "object"
       },
-      "Effects": {
-        "additionalProperties": false,
-        "properties": {
-          "boxed": {
-            "title": "Boxed",
-            "type": "boolean"
-          },
-          "selectable": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/Selectable"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          }
-        },
-        "required": [
-          "selectable",
-          "boxed"
-        ],
-        "title": "Effects",
-        "type": "object"
-      },
       "Exercise": {
         "additionalProperties": false,
         "properties": {
@@ -248,26 +199,6 @@
           "pagelets"
         ],
         "title": "Exercise",
-        "type": "object"
-      },
-      "FillWithFreeTextAdaptationEffect": {
-        "additionalProperties": false,
-        "properties": {
-          "kind": {
-            "const": "fill-with-free-text",
-            "title": "Kind",
-            "type": "string"
-          },
-          "placeholder": {
-            "title": "Placeholder",
-            "type": "string"
-          }
-        },
-        "required": [
-          "kind",
-          "placeholder"
-        ],
-        "title": "FillWithFreeTextAdaptationEffect",
         "type": "object"
       },
       "HTTPValidationError": {
@@ -314,80 +245,6 @@
           "self"
         ],
         "title": "ItemLinks",
-        "type": "object"
-      },
-      "ItemizedAdaptationEffect-Input": {
-        "additionalProperties": false,
-        "properties": {
-          "effects": {
-            "$ref": "#/components/schemas/Effects"
-          },
-          "items": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/CharactersItems"
-              },
-              {
-                "$ref": "#/components/schemas/TokensItems"
-              },
-              {
-                "$ref": "#/components/schemas/SentencesItems"
-              },
-              {
-                "$ref": "#/components/schemas/ManualItems"
-              }
-            ],
-            "title": "Items"
-          },
-          "kind": {
-            "const": "itemized",
-            "title": "Kind",
-            "type": "string"
-          }
-        },
-        "required": [
-          "kind",
-          "items",
-          "effects"
-        ],
-        "title": "ItemizedAdaptationEffect",
-        "type": "object"
-      },
-      "ItemizedAdaptationEffect-Output": {
-        "additionalProperties": false,
-        "properties": {
-          "effects": {
-            "$ref": "#/components/schemas/Effects"
-          },
-          "items": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/CharactersItems"
-              },
-              {
-                "$ref": "#/components/schemas/TokensItems"
-              },
-              {
-                "$ref": "#/components/schemas/SentencesItems"
-              },
-              {
-                "$ref": "#/components/schemas/ManualItems"
-              }
-            ],
-            "title": "Items"
-          },
-          "kind": {
-            "const": "itemized",
-            "title": "Kind",
-            "type": "string"
-          }
-        },
-        "required": [
-          "kind",
-          "items",
-          "effects"
-        ],
-        "title": "ItemizedAdaptationEffect",
         "type": "object"
       },
       "ManualItems": {
@@ -1084,9 +941,9 @@
         "additionalProperties": false,
         "properties": {
           "adaptation": {
-            "$ref": "#/components/schemas/Adaptation-Input",
+            "$ref": "#/components/schemas/Adaptation",
             "default": {
-              "effects": [],
+              "items_are_boxed": false,
               "kind": "generic",
               "show_arrow_before_mcq_fields": false,
               "show_mcq_choices_by_default": false
@@ -1268,7 +1125,7 @@
         "additionalProperties": false,
         "properties": {
           "adaptation": {
-            "$ref": "#/components/schemas/Adaptation-Output"
+            "$ref": "#/components/schemas/Adaptation"
           },
           "clue": {
             "items": {
@@ -1465,7 +1322,7 @@
         "additionalProperties": false,
         "properties": {
           "adaptation": {
-            "$ref": "#/components/schemas/Adaptation-Input"
+            "$ref": "#/components/schemas/Adaptation"
           },
           "clue": {
             "items": {
@@ -1708,7 +1565,7 @@
         "additionalProperties": false,
         "properties": {
           "adaptation": {
-            "$ref": "#/components/schemas/Adaptation-Input"
+            "$ref": "#/components/schemas/Adaptation"
           },
           "clue": {
             "items": {
