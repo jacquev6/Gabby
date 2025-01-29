@@ -38,6 +38,10 @@
               }
             ]
           },
+          "items_have_mcq_below": {
+            "title": "Items Have Mcq Below",
+            "type": "boolean"
+          },
           "items_have_mcq_beside": {
             "title": "Items Have Mcq Beside",
             "type": "boolean"
@@ -78,6 +82,7 @@
           "items_are_selectable",
           "items_are_boxed",
           "items_have_mcq_beside",
+          "items_have_mcq_below",
           "show_arrow_before_mcq_fields",
           "show_mcq_choices_by_default"
         ],
@@ -949,6 +954,7 @@
             "$ref": "#/components/schemas/Adaptation",
             "default": {
               "items_are_boxed": false,
+              "items_have_mcq_below": false,
               "items_have_mcq_beside": false,
               "kind": "generic",
               "show_arrow_before_mcq_fields": false,

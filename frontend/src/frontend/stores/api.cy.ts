@@ -1668,6 +1668,7 @@ describe('ApiStore - Application - 2', () => {
           items_are_selectable: {colors: ['red', 'green', 'blue', 'purple']},
           items_are_boxed: false,
           items_have_mcq_beside: false,
+          items_have_mcq_below: false,
           show_arrow_before_mcq_fields: false,
           show_mcq_choices_by_default: false,
         },

@@ -158,6 +158,8 @@ export interface components {
       /** Items Are Boxed */
       items_are_boxed: boolean;
       items_are_selectable: components["schemas"]["Selectable"] | null;
+      /** Items Have Mcq Below */
+      items_have_mcq_below: boolean;
       /** Items Have Mcq Beside */
       items_have_mcq_beside: boolean;
       /**
@@ -472,6 +474,7 @@ export interface components {
       /**
        * @default {
        *   "items_are_boxed": false,
+       *   "items_have_mcq_below": false,
        *   "items_have_mcq_beside": false,
        *   "kind": "generic",
        *   "show_arrow_before_mcq_fields": false,

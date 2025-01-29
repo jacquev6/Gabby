@@ -133,6 +133,7 @@ class Adaptation(PydanticBase):
     items_are_selectable: Selectable | None
     items_are_boxed: bool
     items_have_mcq_beside: bool
+    items_have_mcq_below: bool
     show_arrow_before_mcq_fields: bool
     show_mcq_choices_by_default: bool
 
@@ -161,6 +162,7 @@ class Exercise(PydanticBase, CreatedUpdatedByAtMixin):
         items_are_selectable=None,
         items_are_boxed=False,
         items_have_mcq_beside=False,
+        items_have_mcq_below=False,
         show_arrow_before_mcq_fields=False,
         show_mcq_choices_by_default=False,
     )

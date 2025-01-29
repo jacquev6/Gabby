@@ -243,6 +243,7 @@ const settings = reactive({
       },
       isBoxed: false,
       hasMcqBeside: false,
+      hasMcqBelow: false,
     },
   },
 })
@@ -334,6 +335,7 @@ watch(
         settings.itemized.effects.isSelectable
         || settings.itemized.effects.isBoxed
         || settings.itemized.effects.hasMcqBeside
+        || settings.itemized.effects.hasMcqBelow
 
       if (hasItems && hasEffects) {
         settings.itemized.items.isLetters = false
@@ -344,6 +346,7 @@ watch(
         settings.itemized.effects.isSelectable = false
         settings.itemized.effects.isBoxed = false
         settings.itemized.effects.hasMcqBeside = false
+        settings.itemized.effects.hasMcqBelow = false
       }
     } else {
       if (model.adaptation.items.kind === 'characters') {
@@ -385,6 +388,7 @@ watch(
       }
       settings.itemized.effects.isBoxed = model.adaptation.items_are_boxed
       settings.itemized.effects.hasMcqBeside = model.adaptation.items_have_mcq_beside
+      settings.itemized.effects.hasMcqBelow = model.adaptation.items_have_mcq_below
     }
   },
   {
@@ -407,9 +411,10 @@ watch(
       }
     })()
     let hasMcqBeside = settings.itemized.effects.hasMcqBeside
+    let hasMcqBelow = settings.itemized.effects.hasMcqBelow
 
     const items = (() => {
-      if (isBoxed || selectable !== null || hasMcqBeside) {
+      if (isBoxed || selectable !== null || hasMcqBeside || hasMcqBelow) {
         if (settings.itemized.items.isLetters) {
           return {kind: 'characters' as const, letters: true}
         } else if (settings.itemized.items.isWords || settings.itemized.items.isPunctuation) {
@@ -430,6 +435,7 @@ watch(
       isBoxed = false
       selectable = null
       hasMcqBeside = false
+      hasMcqBelow = false
     }
 
     // Break the infinite 'watch' loop by setting the model only if the value has actually changed.
@@ -444,6 +450,9 @@ watch(
     }
     if (hasMcqBeside !== model.value.adaptation.items_have_mcq_beside) {
       model.value.adaptation.items_have_mcq_beside = hasMcqBeside
+    }
+    if (hasMcqBelow !== model.value.adaptation.items_have_mcq_below) {
+      model.value.adaptation.items_have_mcq_below = hasMcqBelow
     }
 
     cleanupModel(model.value)
@@ -493,6 +502,7 @@ defineExpose({
     <BLabeledCheckbox :label="$t('alwaysShowMultipleChoices')" v-model="model.adaptation.show_mcq_choices_by_default" />
     <BLabeledCheckbox :label="$t('showArrowBeforeMultipleChoices')" v-model="model.adaptation.show_arrow_before_mcq_fields" />
     <BLabeledCheckbox :label="$t('multipleChoicesBesideEachItem')" v-model="settings.itemized.effects.hasMcqBeside" />
+    <BLabeledCheckbox :label="$t('multipleChoicesBelowEachItem')" v-model="settings.itemized.effects.hasMcqBelow" />
   </div>
 
   <hr />

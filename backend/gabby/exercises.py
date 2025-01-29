@@ -130,6 +130,7 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
                     items_are_selectable=None,
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
+                    items_have_mcq_below=False,
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 )
