@@ -215,6 +215,8 @@ class _Adapter:
                     yield renderable.Whitespace()
                 is_first_sentence = False
                 contents = list(self.adapt_wording_sentence(sentence_deltas, sentence_placeholders))
+                while contents[0].type == "whitespace":
+                    contents.pop(0)
                 if self.items_are_selectable:
                     yield renderable.Selectable(contents=contents, colors=self.colors_for_selectable_items, boxed=self.items_are_boxed)
                 elif self.items_are_boxed:
@@ -1731,7 +1733,6 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                             r.Whitespace(),
                             r.Selectable(
                                 contents=[
-                                    r.Whitespace(),
                                     r.PlainText(text="Exclamative"),
                                     r.Whitespace(),
                                     r.PlainText(text="sentence"),
@@ -1743,7 +1744,6 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                             r.Whitespace(),
                             r.Selectable(
                                 contents=[
-                                    r.Whitespace(),
                                     r.PlainText(text="Phrase"),
                                     r.Whitespace(),
                                     r.PlainText(text="exclamative"),
@@ -1756,7 +1756,6 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                             r.Whitespace(),
                             r.Selectable(
                                 contents=[
-                                    r.Whitespace(),
                                     r.PlainText(text="Interrogative"),
                                     r.Whitespace(),
                                     r.PlainText(text="sentence"),
@@ -1768,7 +1767,6 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                             r.Whitespace(),
                             r.Selectable(
                                 contents=[
-                                    r.Whitespace(),
                                     r.PlainText(text="Phrase"),
                                     r.Whitespace(),
                                     r.PlainText(text="interrogative"),
@@ -1781,7 +1779,6 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                             r.Whitespace(),
                             r.Selectable(
                                 contents=[
-                                    r.Whitespace(),
                                     r.PlainText(text="Suspens"),
                                     r.PlainText(text="..."),
                                 ],
