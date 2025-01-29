@@ -321,6 +321,30 @@ const isManualProxy = computed({
   },
 })
 
+const hasMcqBesideProxy = computed({
+  get() {
+    return settings.itemized.effects.hasMcqBeside
+  },
+  set(value: boolean) {
+    settings.itemized.effects.hasMcqBeside = value
+    if (value) {
+      settings.itemized.effects.hasMcqBelow = false
+    }
+  },
+})
+
+const hasMcqBelowProxy = computed({
+  get() {
+    return settings.itemized.effects.hasMcqBelow
+  },
+  set(value: boolean) {
+    settings.itemized.effects.hasMcqBelow = value
+    if (value) {
+      settings.itemized.effects.hasMcqBeside = false
+    }
+  },
+})
+
 watch(
   model,
   model => {
@@ -501,8 +525,8 @@ defineExpose({
   <div style="padding-left: 1em; padding-top: 0.5em;">
     <BLabeledCheckbox :label="$t('alwaysShowMultipleChoices')" v-model="model.adaptation.show_mcq_choices_by_default" />
     <BLabeledCheckbox :label="$t('showArrowBeforeMultipleChoices')" v-model="model.adaptation.show_arrow_before_mcq_fields" />
-    <BLabeledCheckbox :label="$t('multipleChoicesBesideEachItem')" v-model="settings.itemized.effects.hasMcqBeside" />
-    <BLabeledCheckbox :label="$t('multipleChoicesBelowEachItem')" v-model="settings.itemized.effects.hasMcqBelow" />
+    <BLabeledCheckbox :label="$t('multipleChoicesBesideEachItem')" v-model="hasMcqBesideProxy" />
+    <BLabeledCheckbox :label="$t('multipleChoicesBelowEachItem')" v-model="hasMcqBelowProxy" />
   </div>
 
   <hr />
