@@ -117,7 +117,7 @@ const style = computed(() => ({
           </span>
         </template>
         <template v-else-if="token.type === 'stack'">
-          <span style="display: inline-block">
+          <span style="display: inline-block; vertical-align: top;">
             <p v-for="(subToken, subTokenIndex) in token.contents">
               <template v-if="subToken.type === 'line'">
                 <template v-for="subSubToken in subToken.contents">

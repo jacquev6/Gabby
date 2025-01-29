@@ -672,7 +672,7 @@ describe('Gabby', () => {
     traceRectangle('@canvas', 8, 5, 55, 9)
     cy.get('button:contains("Instructions")').click()
     notBusy()
-    traceRectangle('@canvas', 7, 9.25, 45, 12)
+    traceRectangle('@canvas', 7, 9.25, 28, 15)
     cy.get('button:contains("Wording")').click()
     notBusy()
 
@@ -718,7 +718,7 @@ describe('Gabby', () => {
     traceRectangle('@canvas', 8, 5, 55, 9)
     cy.get('button:contains("Instructions")').click()
     notBusy()
-    traceRectangle('@canvas', 7, 9.25, 45, 12)
+    traceRectangle('@canvas', 7, 9.25, 28, 15)
     cy.get('button:contains("Wording")').click()
     notBusy()
 
@@ -764,7 +764,7 @@ describe('Gabby', () => {
     traceRectangle('@canvas', 8, 5, 75, 9)
     cy.get('button:contains("Instructions")').click()
     notBusy()
-    traceRectangle('@canvas', 7, 9.25, 85, 12)
+    traceRectangle('@canvas', 7, 9.25, 39, 18)
     cy.get('button:contains("Wording")').click()
     notBusy()
 
@@ -810,7 +810,7 @@ describe('Gabby', () => {
     traceRectangle('@canvas', 8, 5, 75, 9)
     cy.get('button:contains("Instructions")').click()
     notBusy()
-    traceRectangle('@canvas', 7, 9.25, 85, 12)
+    traceRectangle('@canvas', 7, 9.25, 39, 18)
     cy.get('button:contains("Wording")').click()
     notBusy()
 
