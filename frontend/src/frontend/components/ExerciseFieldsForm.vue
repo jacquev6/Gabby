@@ -74,6 +74,7 @@ function makeModel(options: MakeModelOptions): Model {
       items: null,
       items_are_selectable: null,
       items_are_boxed: false,
+      items_have_mcq_beside: false,
       show_arrow_before_mcq_fields: false,
       show_mcq_choices_by_default: false,
     },
@@ -126,15 +127,16 @@ export function modelIsEmpty(model: Model) {
     && deepEqual(model.textReference, emptyDeltas)
     && deepEqual(
       model.adaptation,
-      {
+      ((a: Adaptation) => a)({  // I don't know how to annotate expressions in TypeScript. This simply ensures the literal is indeed and Adaptation.
         kind: 'generic',
         placeholder_for_fill_with_free_text: null,
         items: null,
         items_are_selectable: null,
         items_are_boxed: false,
+        items_have_mcq_beside: false,
         show_arrow_before_mcq_fields: false,
         show_mcq_choices_by_default: false,
-      } as Adaptation,
+      }),
     )
 }
 

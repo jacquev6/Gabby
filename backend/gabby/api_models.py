@@ -3,7 +3,6 @@ from typing import Annotated, Literal
 import datetime
 
 from fastjsonapi import Constant, Computed, Secret, WriteOnly
-import pydantic
 
 from . import deltas
 from . import renderable
@@ -133,6 +132,7 @@ class Adaptation(PydanticBase):
     items: Items | None
     items_are_selectable: Selectable | None
     items_are_boxed: bool
+    items_have_mcq_beside: bool
     show_arrow_before_mcq_fields: bool
     show_mcq_choices_by_default: bool
 
@@ -160,6 +160,7 @@ class Exercise(PydanticBase, CreatedUpdatedByAtMixin):
         items=None,
         items_are_selectable=None,
         items_are_boxed=False,
+        items_have_mcq_beside=False,
         show_arrow_before_mcq_fields=False,
         show_mcq_choices_by_default=False,
     )

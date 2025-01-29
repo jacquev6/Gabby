@@ -659,4 +659,50 @@ describe('Gabby', () => {
       screenshot('multiple-choices-for-letter-in-word', 'export-3')
     })
   })
+
+  it('creates a "Multiple choices" exercise with fields beside each word', () => {
+    cy.viewport(1300, 1300)
+    visit('/project-xkopqm/textbook-klxufv/page-12/new-exercise', {pdf: 'demo'})
+    setupAliases()
+
+    cy.get('@number').type('1')
+
+    cy.get('@adaptationType').select('multiple-choices')
+
+    traceRectangle('@canvas', 8, 5, 55, 9)
+    cy.get('button:contains("Instructions")').click()
+    notBusy()
+    traceRectangle('@canvas', 7, 9.25, 45, 12)
+    cy.get('button:contains("Wording")').click()
+    notBusy()
+
+    cy.get('button:contains("Multiple choices")').click()
+    cy.get('@instructions').find('p').then($el => {
+      const node = $el[0].firstChild
+      console.assert(node !== null)
+      selectRange(node, 31, node, 50)
+    })
+    cy.get('button:contains("OK")').should('exist')
+    cy.get('label:contains("Start") + input').should('have.value', '')
+    cy.get('label:contains("Stop") + input').should('have.value', '')
+    cy.get('label:contains("Separators") + input').should('have.value', 'ou')
+    cy.get('label + input').eq(3).should('have.value', '')  // Very fragile selector; sorry, future me!
+    cy.get('label:contains("Placeholder") + input').should('have.value', '')
+    cy.get('button:contains("OK")').click()
+    cy.get('div:contains("Beside each item") > input').click()
+    cy.get('div:contains("Words") > input').click()
+    screenshot('multiple-choices-beside-each-word', 'edit-1')
+
+    cy.get('button:contains("Save then back")').click()
+    visit('/project-xkopqm')
+    cy.get('a:contains("the exported HTML")').should('have.attr', 'href').then(url => {
+      cy.visit(url + '&download=false')
+      cy.get('a').click()
+      screenshot('multiple-choices-beside-each-word', 'export-1')
+      cy.get('span.main').eq(1).click()
+      screenshot('multiple-choices-beside-each-word', 'export-2')
+      cy.get('span.choice0').click()
+      screenshot('multiple-choices-beside-each-word', 'export-3')
+    })
+  })
 })

@@ -1667,6 +1667,7 @@ describe('ApiStore - Application - 2', () => {
           items: {kind: 'tokens', words: true, punctuation: false},
           items_are_selectable: {colors: ['red', 'green', 'blue', 'purple']},
           items_are_boxed: false,
+          items_have_mcq_beside: false,
           show_arrow_before_mcq_fields: false,
           show_mcq_choices_by_default: false,
         },

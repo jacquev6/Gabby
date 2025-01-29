@@ -23,12 +23,13 @@ def upgrade():
         for exercise in session.query(Exercise).all():
             adaptation = copy.deepcopy(exercise._adaptation)
 
-            adaptation["settings"].setdefault("show_arrow_before_mcq_fields", False)
-            adaptation["settings"].setdefault("show_mcq_choices_by_default", False)
             adaptation["settings"].setdefault("placeholder_for_fill_with_free_text", None)
             adaptation["settings"].setdefault("items", None)
             adaptation["settings"].setdefault("items_are_selectable", None)
             adaptation["settings"].setdefault("items_are_boxed", False)
+            adaptation["settings"].setdefault("items_have_mcq_beside", False)
+            adaptation["settings"].setdefault("show_arrow_before_mcq_fields", False)
+            adaptation["settings"].setdefault("show_mcq_choices_by_default", False)
 
             effects = adaptation["settings"].pop("effects", [])
             for effect in effects:

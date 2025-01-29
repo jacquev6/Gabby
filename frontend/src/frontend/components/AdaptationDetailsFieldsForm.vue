@@ -242,6 +242,7 @@ const settings = reactive({
         allColors: [...defaultColorsForSelectableEffect],
       },
       isBoxed: false,
+      hasMcqBeside: false,
     },
   },
 })
@@ -332,6 +333,7 @@ watch(
       const hasEffects =
         settings.itemized.effects.isSelectable
         || settings.itemized.effects.isBoxed
+        || settings.itemized.effects.hasMcqBeside
 
       if (hasItems && hasEffects) {
         settings.itemized.items.isLetters = false
@@ -341,6 +343,7 @@ watch(
         settings.itemized.items.isManual = false
         settings.itemized.effects.isSelectable = false
         settings.itemized.effects.isBoxed = false
+        settings.itemized.effects.hasMcqBeside = false
       }
     } else {
       if (model.adaptation.items.kind === 'characters') {
@@ -381,6 +384,7 @@ watch(
         )
       }
       settings.itemized.effects.isBoxed = model.adaptation.items_are_boxed
+      settings.itemized.effects.hasMcqBeside = model.adaptation.items_have_mcq_beside
     }
   },
   {
@@ -402,9 +406,10 @@ watch(
         return null
       }
     })()
+    let hasMcqBeside = settings.itemized.effects.hasMcqBeside
 
     const items = (() => {
-      if (isBoxed || selectable !== null) {
+      if (isBoxed || selectable !== null || hasMcqBeside) {
         if (settings.itemized.items.isLetters) {
           return {kind: 'characters' as const, letters: true}
         } else if (settings.itemized.items.isWords || settings.itemized.items.isPunctuation) {
@@ -424,6 +429,7 @@ watch(
     if (items === null) {
       isBoxed = false
       selectable = null
+      hasMcqBeside = false
     }
 
     // Break the infinite 'watch' loop by setting the model only if the value has actually changed.
@@ -435,6 +441,9 @@ watch(
     }
     if (isBoxed !== model.value.adaptation.items_are_boxed) {
       model.value.adaptation.items_are_boxed = isBoxed
+    }
+    if (hasMcqBeside !== model.value.adaptation.items_have_mcq_beside) {
+      model.value.adaptation.items_have_mcq_beside = hasMcqBeside
     }
 
     cleanupModel(model.value)
@@ -483,6 +492,7 @@ defineExpose({
   <div style="padding-left: 1em; padding-top: 0.5em;">
     <BLabeledCheckbox :label="$t('alwaysShowMultipleChoices')" v-model="model.adaptation.show_mcq_choices_by_default" />
     <BLabeledCheckbox :label="$t('showArrowBeforeMultipleChoices')" v-model="model.adaptation.show_arrow_before_mcq_fields" />
+    <BLabeledCheckbox :label="$t('multipleChoicesBesideEachItem')" v-model="settings.itemized.effects.hasMcqBeside" />
   </div>
 
   <hr />

@@ -151,6 +151,7 @@
   "multipleChoicesButton": "Multiple choices",
   "alwaysShowMultipleChoices": "Show choices by default",
   "showArrowBeforeMultipleChoices": "Preceded by an arrow",
+  "multipleChoicesBesideEachItem": "Beside each item",
   "multipleChoicesInstructions": "Select a set of choices in the \"Instructions\" or \"Wording\" fields in the \"Edition\" column. Include start, stop and separator characters.",
   "choicesSettingsSeparators": "Separators",
   "choicesSettingsStart": "Start",
