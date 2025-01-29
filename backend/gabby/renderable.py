@@ -94,7 +94,16 @@ def Boxed(contents: list[LeafToken]):
     return _Boxed(type="boxed", contents=contents)
 
 
-SentenceToken = LeafToken | _Selectable | _Boxed | _SelectableText
+class Line(PydanticBase):
+    type: Literal["line"]
+    contents: list[LeafToken]
+
+
+class Stack(PydanticBase):
+    type: Literal["stack"]
+    contents: list[LeafToken | Line]
+
+SentenceToken = LeafToken | Stack | _Selectable | _Boxed | _SelectableText
 
 
 class Paragraph(PydanticBase):

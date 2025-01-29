@@ -34,6 +34,8 @@ class _Adapter:
         self.colors_for_selectable_items = []
         self.items_have_mcq_beside = exercise.adaptation.items_have_mcq_beside
         self.mcq_beside_items = None
+        self.items_have_mcq_below = exercise.adaptation.items_have_mcq_below
+        self.mcq_below_items = None
 
         if exercise.adaptation.placeholder_for_fill_with_free_text is not None:
             self.global_placeholders.append((exercise.adaptation.placeholder_for_fill_with_free_text, renderable.FreeTextInput()))
@@ -51,12 +53,15 @@ class _Adapter:
 
         for (start, separator1, separator2, stop, placeholder, text) in self.gather_choices(exercise.instructions):
             if placeholder == "":
+                mcq = renderable.MultipleChoicesInput(
+                    show_arrow_before=self.show_arrow_before_mcq_fields,
+                    choices=self.separate_choices(start, separator1, separator2, stop, placeholder, text),
+                    show_choices_by_default=self.show_mcq_choices_by_default,
+                )
                 if self.items_have_mcq_beside:
-                    self.mcq_beside_items = renderable.MultipleChoicesInput(
-                        show_arrow_before=self.show_arrow_before_mcq_fields,
-                        choices=self.separate_choices(start, separator1, separator2, stop, placeholder, text),
-                        show_choices_by_default=self.show_mcq_choices_by_default,
-                    )
+                    self.mcq_beside_items = mcq
+                elif self.items_have_mcq_below:
+                    self.mcq_below_items = mcq
             else:
                 self.global_placeholders.append(
                     (
@@ -218,14 +223,18 @@ class _Adapter:
                 while contents[0].type == "whitespace":
                     contents.pop(0)
                 if self.items_are_selectable:
-                    yield renderable.Selectable(contents=contents, colors=self.colors_for_selectable_items, boxed=self.items_are_boxed)
+                    contents = [renderable.Selectable(contents=contents, colors=self.colors_for_selectable_items, boxed=self.items_are_boxed)]
                 elif self.items_are_boxed:
-                    yield renderable.Boxed(contents=contents)
+                    contents = [renderable.Boxed(contents=contents)]
                 else:
+                    pass
+                if self.mcq_below_items is None:
                     yield from contents
-                if self.mcq_beside_items is not None:
-                    yield renderable.Whitespace()
-                    yield self.mcq_beside_items
+                    if self.mcq_beside_items is not None:
+                        yield renderable.Whitespace()
+                        yield self.mcq_beside_items
+                else:
+                    yield renderable.Stack(type="stack", contents=[renderable.Line(type="line", contents=contents), self.mcq_below_items])
         else:
             yield from self.adapt_wording_sentence(paragraph_deltas, sentence_placeholders)
 
@@ -244,14 +253,18 @@ class _Adapter:
                             else:
                                 if self.punctuation_is_items:
                                     if self.items_are_selectable:
-                                        yield renderable.SelectableText(text=text, colors=self.colors_for_selectable_items, boxed=self.items_are_boxed)
+                                        item = renderable.SelectableText(text=text, colors=self.colors_for_selectable_items, boxed=self.items_are_boxed)
                                     elif self.items_are_boxed:
-                                        yield renderable.BoxedText(text=text)
+                                        item = renderable.BoxedText(text=text)
                                     else:
-                                        yield renderable.PlainText(text=text)
-                                    if self.mcq_beside_items is not None:
-                                        yield renderable.Whitespace()
-                                        yield self.mcq_beside_items
+                                        item = renderable.PlainText(text=text)
+                                    if self.mcq_below_items is None:
+                                        yield item
+                                        if self.mcq_beside_items is not None:
+                                            yield renderable.Whitespace()
+                                            yield self.mcq_beside_items
+                                    else:
+                                        yield renderable.Stack(type="stack", contents=[item, self.mcq_below_items])
                                 else:
                                     yield renderable.PlainText(text=text)
                         else:
@@ -259,24 +272,32 @@ class _Adapter:
                             if self.letters_are_items:
                                 for letter in text:
                                     if self.items_are_selectable:
-                                        yield renderable.SelectableText(text=letter, colors=self.colors_for_selectable_items, boxed=self.items_are_boxed)
+                                        item = renderable.SelectableText(text=letter, colors=self.colors_for_selectable_items, boxed=self.items_are_boxed)
                                     elif self.items_are_boxed:
-                                        yield renderable.BoxedText(text=letter)
+                                        item = renderable.BoxedText(text=letter)
                                     else:
-                                        yield renderable.PlainText(text=letter)
+                                        item = renderable.PlainText(text=letter)
+                                    if self.mcq_below_items is None:
+                                        yield item
+                                        if self.mcq_beside_items is not None:
+                                            yield renderable.Whitespace()
+                                            yield self.mcq_beside_items
+                                    else:
+                                        yield renderable.Stack(type="stack", contents=[item, self.mcq_below_items])
+                            elif self.words_are_items:
+                                if self.items_are_selectable:
+                                    item = renderable.SelectableText(text=text, colors=self.colors_for_selectable_items, boxed=self.items_are_boxed)
+                                elif self.items_are_boxed:
+                                    item = renderable.BoxedText(text=text)
+                                else:
+                                    item = renderable.PlainText(text=text)
+                                if self.mcq_below_items is None:
+                                    yield item
                                     if self.mcq_beside_items is not None:
                                         yield renderable.Whitespace()
                                         yield self.mcq_beside_items
-                            elif self.words_are_items:
-                                if self.items_are_selectable:
-                                    yield renderable.SelectableText(text=text, colors=self.colors_for_selectable_items, boxed=self.items_are_boxed)
-                                elif self.items_are_boxed:
-                                    yield renderable.BoxedText(text=text)
                                 else:
-                                    yield renderable.PlainText(text=text)
-                                if self.mcq_beside_items is not None:
-                                    yield renderable.Whitespace()
-                                    yield self.mcq_beside_items
+                                    yield renderable.Stack(type="stack", contents=[item, self.mcq_below_items])
                             else:
                                 yield renderable.PlainText(text=text)
 
@@ -290,14 +311,18 @@ class _Adapter:
                         else:
                             if self.manual_items_are_items:
                                 if self.items_are_selectable:
-                                    yield renderable.SelectableText(text=text, colors=self.colors_for_selectable_items, boxed=self.items_are_boxed)
+                                    item = renderable.SelectableText(text=text, colors=self.colors_for_selectable_items, boxed=self.items_are_boxed)
                                 elif self.items_are_boxed:
-                                    yield renderable.BoxedText(text=text)
+                                    item = renderable.BoxedText(text=text)
                                 else:
-                                    yield renderable.PlainText(text=text)
-                                if self.mcq_beside_items is not None:
-                                    yield renderable.Whitespace()
-                                    yield self.mcq_beside_items
+                                    item = renderable.PlainText(text=text)
+                                if self.mcq_below_items is None:
+                                    yield item
+                                    if self.mcq_beside_items is not None:
+                                        yield renderable.Whitespace()
+                                        yield self.mcq_beside_items
+                                else:
+                                    yield renderable.Stack(type="stack", contents=[item, self.mcq_below_items])
                             else:
                                 yield renderable.PlainText(text=text)
 
@@ -2415,6 +2440,467 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                         r.PlainText(text="the"),
                         r.Whitespace(),
                         r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
+                        r.Whitespace(),
+                        r.PlainText(text="wording"),
+                        r.PlainText(text="."),
+                    ])]),
+                )],
+            ),
+        )
+
+    def test_mcq_below_letters(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions=[
+                    d.InsertOp(insert="Instructions ", attributes={}),
+                    d.InsertOp(insert="alpha, bravo, charlie", attributes={"choices2": {"start": "", "separator1": ",", "separator2": "", "stop": "", "placeholder": ""}}),
+                    d.InsertOp(insert="\n", attributes={}),
+                ],
+                wording=[d.InsertOp(insert="Abcd\n", attributes={})],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
+                wording_paragraphs_per_pagelet=3,
+                adaptation=Adaptation(
+                    kind="generic",
+                    placeholder_for_fill_with_free_text=None,
+                    items={"kind": "characters", "letters": True},
+                    items_are_selectable=None,
+                    items_are_boxed=False,
+                    items_have_mcq_beside=False,
+                    items_have_mcq_below=True,
+                    show_arrow_before_mcq_fields=False,
+                    show_mcq_choices_by_default=False,
+                ),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=42,
+                pagelets=[r.Pagelet(
+                    instructions=r.Section(paragraphs=[
+                        r.Paragraph(tokens=[
+                            r.PlainText(text="Instructions"),
+                            r.Whitespace(),
+                            r.BoxedText(text="alpha"),
+                            r.PlainText(text=","),
+                            r.Whitespace(),
+                            r.BoxedText(text="bravo"),
+                            r.Whitespace(),
+                            r.PlainText(text="ou"),
+                            r.Whitespace(),
+                            r.BoxedText(text="charlie"),
+                        ]),
+                    ]),
+                    wording=r.Section(paragraphs=[r.Paragraph(tokens=[
+                        r.Stack(type="stack", contents=[
+                            r.PlainText(text="A"),
+                            r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
+                        ]),
+                        r.Stack(type="stack", contents=[
+                            r.PlainText(text="b"),
+                            r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
+                        ]),
+                        r.Stack(type="stack", contents=[
+                            r.PlainText(text="c"),
+                            r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
+                        ]),
+                        r.Stack(type="stack", contents=[
+                            r.PlainText(text="d"),
+                            r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
+                        ]),
+                    ])]),
+                )],
+            ),
+        )
+
+    def test_mcq_below_words(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions=[
+                    d.InsertOp(insert="Instructions ", attributes={}),
+                    d.InsertOp(insert="alpha, bravo, charlie", attributes={"choices2": {"start": "", "separator1": ",", "separator2": "", "stop": "", "placeholder": ""}}),
+                    d.InsertOp(insert="\n", attributes={}),
+                ],
+                wording=[d.InsertOp(insert="This is, the wording.\n", attributes={})],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
+                wording_paragraphs_per_pagelet=3,
+                adaptation=Adaptation(
+                    kind="generic",
+                    placeholder_for_fill_with_free_text=None,
+                    items={"kind": "tokens", "words": True, "punctuation": False},
+                    items_are_selectable=None,
+                    items_are_boxed=False,
+                    items_have_mcq_beside=False,
+                    items_have_mcq_below=True,
+                    show_arrow_before_mcq_fields=False,
+                    show_mcq_choices_by_default=False,
+                ),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=42,
+                pagelets=[r.Pagelet(
+                    instructions=r.Section(paragraphs=[
+                        r.Paragraph(tokens=[
+                            r.PlainText(text="Instructions"),
+                            r.Whitespace(),
+                            r.BoxedText(text="alpha"),
+                            r.PlainText(text=","),
+                            r.Whitespace(),
+                            r.BoxedText(text="bravo"),
+                            r.Whitespace(),
+                            r.PlainText(text="ou"),
+                            r.Whitespace(),
+                            r.BoxedText(text="charlie"),
+                        ]),
+                    ]),
+                    wording=r.Section(paragraphs=[r.Paragraph(tokens=[
+                        r.Stack(type="stack", contents=[
+                            r.PlainText(text="This"),
+                            r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
+                        ]),
+                        r.Whitespace(),
+                        r.Stack(type="stack", contents=[
+                            r.PlainText(text="is"),
+                            r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
+                        ]),
+                        r.PlainText(text=","),
+                        r.Whitespace(),
+                        r.Stack(type="stack", contents=[
+                            r.PlainText(text="the"),
+                            r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
+                        ]),
+                        r.Whitespace(),
+                        r.Stack(type="stack", contents=[
+                            r.PlainText(text="wording"),
+                            r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
+                        ]),
+                        r.PlainText(text="."),
+                    ])]),
+                )],
+            ),
+        )
+
+    def test_mcq_below_words_and_punctuation(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions=[
+                    d.InsertOp(insert="Instructions ", attributes={}),
+                    d.InsertOp(insert="alpha, bravo, charlie", attributes={"choices2": {"start": "", "separator1": ",", "separator2": "", "stop": "", "placeholder": ""}}),
+                    d.InsertOp(insert="\n", attributes={}),
+                ],
+                wording=[d.InsertOp(insert="This is, the wording.\n", attributes={})],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
+                wording_paragraphs_per_pagelet=3,
+                adaptation=Adaptation(
+                    kind="generic",
+                    placeholder_for_fill_with_free_text=None,
+                    items={"kind": "tokens", "words": True, "punctuation": True},
+                    items_are_selectable=None,
+                    items_are_boxed=False,
+                    items_have_mcq_beside=False,
+                    items_have_mcq_below=True,
+                    show_arrow_before_mcq_fields=False,
+                    show_mcq_choices_by_default=False,
+                ),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=42,
+                pagelets=[r.Pagelet(
+                    instructions=r.Section(paragraphs=[
+                        r.Paragraph(tokens=[
+                            r.PlainText(text="Instructions"),
+                            r.Whitespace(),
+                            r.BoxedText(text="alpha"),
+                            r.PlainText(text=","),
+                            r.Whitespace(),
+                            r.BoxedText(text="bravo"),
+                            r.Whitespace(),
+                            r.PlainText(text="ou"),
+                            r.Whitespace(),
+                            r.BoxedText(text="charlie"),
+                        ]),
+                    ]),
+                    wording=r.Section(paragraphs=[r.Paragraph(tokens=[
+                        r.Stack(type="stack", contents=[
+                            r.PlainText(text="This"),
+                            r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
+                        ]),
+                        r.Whitespace(),
+                        r.Stack(type="stack", contents=[
+                            r.PlainText(text="is"),
+                            r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
+                        ]),
+                        r.Stack(type="stack", contents=[
+                            r.PlainText(text=","),
+                            r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
+                        ]),
+                        r.Whitespace(),
+                        r.Stack(type="stack", contents=[
+                            r.PlainText(text="the"),
+                            r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
+                        ]),
+                        r.Whitespace(),
+                        r.Stack(type="stack", contents=[
+                            r.PlainText(text="wording"),
+                            r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
+                        ]),
+                        r.Stack(type="stack", contents=[
+                            r.PlainText(text="."),
+                            r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
+                        ]),
+                    ])]),
+                )],
+            ),
+        )
+
+    def test_mcq_below_punctuation(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions=[
+                    d.InsertOp(insert="Instructions ", attributes={}),
+                    d.InsertOp(insert="alpha, bravo, charlie", attributes={"choices2": {"start": "", "separator1": ",", "separator2": "", "stop": "", "placeholder": ""}}),
+                    d.InsertOp(insert="\n", attributes={}),
+                ],
+                wording=[d.InsertOp(insert="This is, the wording.\n", attributes={})],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
+                wording_paragraphs_per_pagelet=3,
+                adaptation=Adaptation(
+                    kind="generic",
+                    placeholder_for_fill_with_free_text=None,
+                    items={"kind": "tokens", "words": False, "punctuation": True},
+                    items_are_selectable=None,
+                    items_are_boxed=False,
+                    items_have_mcq_beside=False,
+                    items_have_mcq_below=True,
+                    show_arrow_before_mcq_fields=False,
+                    show_mcq_choices_by_default=False,
+                ),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=42,
+                pagelets=[r.Pagelet(
+                    instructions=r.Section(paragraphs=[
+                        r.Paragraph(tokens=[
+                            r.PlainText(text="Instructions"),
+                            r.Whitespace(),
+                            r.BoxedText(text="alpha"),
+                            r.PlainText(text=","),
+                            r.Whitespace(),
+                            r.BoxedText(text="bravo"),
+                            r.Whitespace(),
+                            r.PlainText(text="ou"),
+                            r.Whitespace(),
+                            r.BoxedText(text="charlie"),
+                        ]),
+                    ]),
+                    wording=r.Section(paragraphs=[r.Paragraph(tokens=[
+                        r.PlainText(text="This"),
+                        r.Whitespace(),
+                        r.PlainText(text="is"),
+                        r.Stack(type="stack", contents=[
+                            r.PlainText(text=","),
+                            r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
+                        ]),
+                        r.Whitespace(),
+                        r.PlainText(text="the"),
+                        r.Whitespace(),
+                        r.PlainText(text="wording"),
+                        r.Stack(type="stack", contents=[
+                            r.PlainText(text="."),
+                            r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
+                        ]),
+                    ])]),
+                )],
+            ),
+        )
+
+    def test_mcq_below_sentences(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions=[
+                    d.InsertOp(insert="Instructions ", attributes={}),
+                    d.InsertOp(insert="alpha, bravo, charlie", attributes={"choices2": {"start": "", "separator1": ",", "separator2": "", "stop": "", "placeholder": ""}}),
+                    d.InsertOp(insert="\n", attributes={}),
+                ],
+                wording=[d.InsertOp(insert="Affirmative sentence. Exclamative sentence! Phrase exclamative ! Interrogative sentence? Phrase interrogative ? Suspens...\n", attributes={})],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
+                wording_paragraphs_per_pagelet=3,
+                adaptation=Adaptation(
+                    kind="generic",
+                    placeholder_for_fill_with_free_text=None,
+                    items={"kind": "sentences"},
+                    items_are_selectable=None,
+                    items_are_boxed=False,
+                    items_have_mcq_beside=False,
+                    items_have_mcq_below=True,
+                    show_arrow_before_mcq_fields=False,
+                    show_mcq_choices_by_default=False,
+                ),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=42,
+                pagelets=[r.Pagelet(
+                    instructions=r.Section(paragraphs=[
+                        r.Paragraph(tokens=[
+                            r.PlainText(text="Instructions"),
+                            r.Whitespace(),
+                            r.BoxedText(text="alpha"),
+                            r.PlainText(text=","),
+                            r.Whitespace(),
+                            r.BoxedText(text="bravo"),
+                            r.Whitespace(),
+                            r.PlainText(text="ou"),
+                            r.Whitespace(),
+                            r.BoxedText(text="charlie"),
+                        ]),
+                    ]),
+                    wording=r.Section(paragraphs=[
+                        r.Paragraph(tokens=[
+                            r.Stack(type="stack", contents=[
+                                r.Line(type="line", contents=[
+                                    r.PlainText(text="Affirmative"),
+                                    r.Whitespace(),
+                                    r.PlainText(text="sentence"),
+                                    r.PlainText(text="."),
+                                ]),
+                                r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
+                            ]),
+                            r.Whitespace(),
+                            r.Stack(type="stack", contents=[
+                                r.Line(type="line", contents=[
+                                    r.PlainText(text="Exclamative"),
+                                    r.Whitespace(),
+                                    r.PlainText(text="sentence"),
+                                    r.PlainText(text="!"),
+                                ]),
+                                r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
+                            ]),
+                            r.Whitespace(),
+                            r.Stack(type="stack", contents=[
+                                r.Line(type="line", contents=[
+                                    r.PlainText(text="Phrase"),
+                                    r.Whitespace(),
+                                    r.PlainText(text="exclamative"),
+                                    r.Whitespace(),
+                                    r.PlainText(text="!"),
+                                ]),
+                                r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
+                            ]),
+                            r.Whitespace(),
+                            r.Stack(type="stack", contents=[
+                                r.Line(type="line", contents=[
+                                    r.PlainText(text="Interrogative"),
+                                    r.Whitespace(),
+                                    r.PlainText(text="sentence"),
+                                    r.PlainText(text="?"),
+                                ]),
+                                r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
+                            ]),
+                            r.Whitespace(),
+                            r.Stack(type="stack", contents=[
+                                r.Line(type="line", contents=[
+                                    r.PlainText(text="Phrase"),
+                                    r.Whitespace(),
+                                    r.PlainText(text="interrogative"),
+                                    r.Whitespace(),
+                                    r.PlainText(text="?"),
+                                ]),
+                                r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
+                            ]),
+                            r.Whitespace(),
+                            r.Stack(type="stack", contents=[
+                                r.Line(type="line", contents=[
+                                    r.PlainText(text="Suspens"),
+                                    r.PlainText(text="..."),
+                                ]),
+                                r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
+                            ]),
+                        ]),
+                    ]),
+                )],
+            ),
+        )
+
+    def test_mcq_below_manual_items(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions=[
+                    d.InsertOp(insert="Instructions ", attributes={}),
+                    d.InsertOp(insert="alpha, bravo, charlie", attributes={"choices2": {"start": "", "separator1": ",", "separator2": "", "stop": "", "placeholder": ""}}),
+                    d.InsertOp(insert="\n", attributes={}),
+                ],
+                wording=[
+                    d.InsertOp(insert="This ", attributes={}),
+                    d.InsertOp(insert="is", attributes={"manual-item": True}),
+                    d.InsertOp(insert=", ", attributes={}),
+                    d.InsertOp(insert="the", attributes={"manual-item": True}),
+                    d.InsertOp(insert=" wording.\n", attributes={}),
+                ],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
+                wording_paragraphs_per_pagelet=3,
+                adaptation=Adaptation(
+                    kind="generic",
+                    placeholder_for_fill_with_free_text=None,
+                    items={"kind": "manual"},
+                    items_are_selectable=None,
+                    items_are_boxed=False,
+                    items_have_mcq_beside=False,
+                    items_have_mcq_below=True,
+                    show_arrow_before_mcq_fields=False,
+                    show_mcq_choices_by_default=False,
+                ),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=42,
+                pagelets=[r.Pagelet(
+                    instructions=r.Section(paragraphs=[
+                        r.Paragraph(tokens=[
+                            r.PlainText(text="Instructions"),
+                            r.Whitespace(),
+                            r.BoxedText(text="alpha"),
+                            r.PlainText(text=","),
+                            r.Whitespace(),
+                            r.BoxedText(text="bravo"),
+                            r.Whitespace(),
+                            r.PlainText(text="ou"),
+                            r.Whitespace(),
+                            r.BoxedText(text="charlie"),
+                        ]),
+                    ]),
+                    wording=r.Section(paragraphs=[r.Paragraph(tokens=[
+                        r.PlainText(text="This"),
+                        r.Whitespace(),
+                        r.Stack(type="stack", contents=[
+                            r.PlainText(text="is"),
+                            r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
+                        ]),
+                        r.PlainText(text=","),
+                        r.Whitespace(),
+                        r.Stack(type="stack", contents=[
+                            r.PlainText(text="the"),
+                            r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
+                        ]),
                         r.Whitespace(),
                         r.PlainText(text="wording"),
                         r.PlainText(text="."),

@@ -257,6 +257,51 @@
         "title": "ItemLinks",
         "type": "object"
       },
+      "Line": {
+        "additionalProperties": false,
+        "properties": {
+          "contents": {
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/_PlainText"
+                },
+                {
+                  "$ref": "#/components/schemas/_BoxedText"
+                },
+                {
+                  "$ref": "#/components/schemas/PassiveFormattedText"
+                },
+                {
+                  "$ref": "#/components/schemas/_SelectedText"
+                },
+                {
+                  "$ref": "#/components/schemas/_FreeTextInput"
+                },
+                {
+                  "$ref": "#/components/schemas/_MultipleChoicesInput"
+                },
+                {
+                  "$ref": "#/components/schemas/_Whitespace"
+                }
+              ]
+            },
+            "title": "Contents",
+            "type": "array"
+          },
+          "type": {
+            "const": "line",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "contents"
+        ],
+        "title": "Line",
+        "type": "object"
+      },
       "ManualItems": {
         "additionalProperties": false,
         "properties": {
@@ -409,6 +454,9 @@
                 },
                 {
                   "$ref": "#/components/schemas/_Whitespace"
+                },
+                {
+                  "$ref": "#/components/schemas/Stack"
                 },
                 {
                   "$ref": "#/components/schemas/_Selectable"
@@ -588,6 +636,54 @@
           "kind"
         ],
         "title": "SentencesItems",
+        "type": "object"
+      },
+      "Stack": {
+        "additionalProperties": false,
+        "properties": {
+          "contents": {
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/_PlainText"
+                },
+                {
+                  "$ref": "#/components/schemas/_BoxedText"
+                },
+                {
+                  "$ref": "#/components/schemas/PassiveFormattedText"
+                },
+                {
+                  "$ref": "#/components/schemas/_SelectedText"
+                },
+                {
+                  "$ref": "#/components/schemas/_FreeTextInput"
+                },
+                {
+                  "$ref": "#/components/schemas/_MultipleChoicesInput"
+                },
+                {
+                  "$ref": "#/components/schemas/_Whitespace"
+                },
+                {
+                  "$ref": "#/components/schemas/Line"
+                }
+              ]
+            },
+            "title": "Contents",
+            "type": "array"
+          },
+          "type": {
+            "const": "stack",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "contents"
+        ],
+        "title": "Stack",
         "type": "object"
       },
       "TokensItems": {

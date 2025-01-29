@@ -230,6 +230,16 @@ export interface components {
       /** Self */
       self: string;
     };
+    /** Line */
+    Line: {
+      /** Contents */
+      contents: (components["schemas"]["_PlainText"] | components["schemas"]["_BoxedText"] | components["schemas"]["PassiveFormattedText"] | components["schemas"]["_SelectedText"] | components["schemas"]["_FreeTextInput"] | components["schemas"]["_MultipleChoicesInput"] | components["schemas"]["_Whitespace"])[];
+      /**
+       * Type
+       * @constant
+       */
+      type: "line";
+    };
     /** ManualItems */
     ManualItems: {
       /**
@@ -275,7 +285,7 @@ export interface components {
     /** Paragraph */
     Paragraph: {
       /** Tokens */
-      tokens: (components["schemas"]["_PlainText"] | components["schemas"]["_BoxedText"] | components["schemas"]["PassiveFormattedText"] | components["schemas"]["_SelectedText"] | components["schemas"]["_FreeTextInput"] | components["schemas"]["_MultipleChoicesInput"] | components["schemas"]["_Whitespace"] | components["schemas"]["_Selectable"] | components["schemas"]["_Boxed"] | components["schemas"]["_SelectableText"])[];
+      tokens: (components["schemas"]["_PlainText"] | components["schemas"]["_BoxedText"] | components["schemas"]["PassiveFormattedText"] | components["schemas"]["_SelectedText"] | components["schemas"]["_FreeTextInput"] | components["schemas"]["_MultipleChoicesInput"] | components["schemas"]["_Whitespace"] | components["schemas"]["Stack"] | components["schemas"]["_Selectable"] | components["schemas"]["_Boxed"] | components["schemas"]["_SelectableText"])[];
     };
     /** PassiveFormattedText */
     PassiveFormattedText: {
@@ -336,6 +346,16 @@ export interface components {
        * @constant
        */
       kind: "sentences";
+    };
+    /** Stack */
+    Stack: {
+      /** Contents */
+      contents: (components["schemas"]["_PlainText"] | components["schemas"]["_BoxedText"] | components["schemas"]["PassiveFormattedText"] | components["schemas"]["_SelectedText"] | components["schemas"]["_FreeTextInput"] | components["schemas"]["_MultipleChoicesInput"] | components["schemas"]["_Whitespace"] | components["schemas"]["Line"])[];
+      /**
+       * Type
+       * @constant
+       */
+      type: "stack";
     };
     /** TokensItems */
     TokensItems: {
