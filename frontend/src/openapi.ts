@@ -174,6 +174,21 @@ export interface components {
       /** Show Mcq Choices By Default */
       show_mcq_choices_by_default: boolean;
     };
+    /** AnySequence */
+    AnySequence: {
+      /** Contents */
+      contents: (components["schemas"]["Whitespace"] | components["schemas"]["Text"] | components["schemas"]["PassiveSequence"] | components["schemas"]["FreeTextInput"] | components["schemas"]["MultipleChoicesInput"] | components["schemas"]["SelectableInput"] | components["schemas"]["AnySequence"])[];
+      /**
+       * Kind
+       * @constant
+       */
+      kind: "sequence";
+      /**
+       * Vertical
+       * @default false
+       */
+      vertical?: boolean;
+    };
     /** Body_login_api_token_post */
     Body_login_api_token_post: {
       /** Client Id */
@@ -204,14 +219,13 @@ export interface components {
       /** Letters */
       letters: boolean;
     };
-    /** Exercise */
-    Exercise: {
-      /** Number */
-      number: string;
-      /** Pagelets */
-      pagelets: components["schemas"]["Pagelet"][];
-      /** Textbook Page */
-      textbook_page: number | null;
+    /** FreeTextInput */
+    FreeTextInput: {
+      /**
+       * Kind
+       * @constant
+       */
+      kind: "freeTextInput";
     };
     /** HTTPValidationError */
     HTTPValidationError: {
@@ -248,6 +262,26 @@ export interface components {
        */
       kind: "manual";
     };
+    /** MultipleChoicesInput */
+    MultipleChoicesInput: {
+      /** Choices */
+      choices: ((components["schemas"]["Whitespace"] | components["schemas"]["Text"] | components["schemas"]["PassiveSequence"])[])[];
+      /**
+       * Kind
+       * @constant
+       */
+      kind: "multipleChoicesInput";
+      /**
+       * Show Arrow Before
+       * @default false
+       */
+      show_arrow_before?: boolean;
+      /**
+       * Show Choices By Default
+       * @default false
+       */
+      show_choices_by_default?: boolean;
+    };
     /** OutputListRelationShipMeta */
     OutputListRelationShipMeta: {
       /** Count */
@@ -268,11 +302,6 @@ export interface components {
     PageMeta: {
       pagination: components["schemas"]["Pagination"];
     };
-    /** Pagelet */
-    Pagelet: {
-      instructions: components["schemas"]["Section"];
-      wording: components["schemas"]["Section"];
-    };
     /** Pagination */
     Pagination: {
       /** Count */
@@ -281,11 +310,6 @@ export interface components {
       page: number;
       /** Pages */
       pages: number;
-    };
-    /** Paragraph */
-    Paragraph: {
-      /** Tokens */
-      tokens: (components["schemas"]["_PlainText"] | components["schemas"]["_BoxedText"] | components["schemas"]["PassiveFormattedText"] | components["schemas"]["_SelectedText"] | components["schemas"]["_FreeTextInput"] | components["schemas"]["_MultipleChoicesInput"] | components["schemas"]["_Whitespace"] | components["schemas"]["Stack"] | components["schemas"]["_Selectable"] | components["schemas"]["_Boxed"] | components["schemas"]["_SelectableText"])[];
     };
     /** PassiveFormattedText */
     PassiveFormattedText: {
@@ -300,6 +324,21 @@ export interface components {
        * @constant
        */
       type: "passiveFormattedText";
+    };
+    /** PassiveSequence */
+    PassiveSequence: {
+      /**
+       * Boxed
+       * @default false
+       */
+      boxed?: boolean;
+      /** Contents */
+      contents: (components["schemas"]["Whitespace"] | components["schemas"]["Text"])[];
+      /**
+       * Kind
+       * @constant
+       */
+      kind: "passiveSequence";
     };
     /** PdfRectangle */
     PdfRectangle: {
@@ -329,15 +368,27 @@ export interface components {
       /** Y */
       y: number;
     };
-    /** Section */
-    Section: {
-      /** Paragraphs */
-      paragraphs: components["schemas"]["Paragraph"][];
-    };
     /** Selectable */
     Selectable: {
       /** Colors */
       colors: string[];
+    };
+    /** SelectableInput */
+    SelectableInput: {
+      /**
+       * Boxed
+       * @default false
+       */
+      boxed?: boolean;
+      /** Colors */
+      colors: string[];
+      /** Contents */
+      contents: (components["schemas"]["Whitespace"] | components["schemas"]["Text"] | components["schemas"]["PassiveSequence"])[];
+      /**
+       * Kind
+       * @constant
+       */
+      kind: "selectableInput";
     };
     /** SentencesItems */
     SentencesItems: {
@@ -356,6 +407,28 @@ export interface components {
        * @constant
        */
       type: "stack";
+    };
+    /** Text */
+    Text: {
+      /**
+       * Bold
+       * @default false
+       */
+      bold?: boolean;
+      /** Highlighted */
+      highlighted?: string | null;
+      /**
+       * Italic
+       * @default false
+       */
+      italic?: boolean;
+      /**
+       * Kind
+       * @constant
+       */
+      kind: "text";
+      /** Text */
+      text: string;
     };
     /** TokensItems */
     TokensItems: {
@@ -377,6 +450,14 @@ export interface components {
       msg: string;
       /** Error Type */
       type: string;
+    };
+    /** Whitespace */
+    Whitespace: {
+      /**
+       * Kind
+       * @constant
+       */
+      kind: "whitespace";
     };
     /** _Boxed */
     _Boxed: {
@@ -725,6 +806,54 @@ export interface components {
        */
       type: "user";
     };
+    /** Exercise */
+    gabby__new_renderable__Exercise: {
+      /** Number */
+      number: string;
+      /** Pagelets */
+      pagelets: components["schemas"]["gabby__new_renderable__Pagelet"][];
+      /** Textbook Page */
+      textbook_page: number | null;
+    };
+    /** Pagelet */
+    gabby__new_renderable__Pagelet: {
+      instructions: components["schemas"]["gabby__new_renderable__Section"];
+      wording: components["schemas"]["gabby__new_renderable__Section"];
+    };
+    /** Paragraph */
+    gabby__new_renderable__Paragraph: {
+      /** Contents */
+      contents: (components["schemas"]["Whitespace"] | components["schemas"]["Text"] | components["schemas"]["PassiveSequence"] | components["schemas"]["FreeTextInput"] | components["schemas"]["MultipleChoicesInput"] | components["schemas"]["SelectableInput"] | components["schemas"]["AnySequence"])[];
+    };
+    /** Section */
+    gabby__new_renderable__Section: {
+      /** Paragraphs */
+      paragraphs: components["schemas"]["gabby__new_renderable__Paragraph"][];
+    };
+    /** Exercise */
+    gabby__renderable__Exercise: {
+      /** Number */
+      number: string;
+      /** Pagelets */
+      pagelets: components["schemas"]["gabby__renderable__Pagelet"][];
+      /** Textbook Page */
+      textbook_page: number | null;
+    };
+    /** Pagelet */
+    gabby__renderable__Pagelet: {
+      instructions: components["schemas"]["gabby__renderable__Section"];
+      wording: components["schemas"]["gabby__renderable__Section"];
+    };
+    /** Paragraph */
+    gabby__renderable__Paragraph: {
+      /** Tokens */
+      tokens: (components["schemas"]["_PlainText"] | components["schemas"]["_BoxedText"] | components["schemas"]["PassiveFormattedText"] | components["schemas"]["_SelectedText"] | components["schemas"]["_FreeTextInput"] | components["schemas"]["_MultipleChoicesInput"] | components["schemas"]["_Whitespace"] | components["schemas"]["Stack"] | components["schemas"]["_Selectable"] | components["schemas"]["_Boxed"] | components["schemas"]["_SelectableText"])[];
+    };
+    /** Section */
+    gabby__renderable__Section: {
+      /** Paragraphs */
+      paragraphs: components["schemas"]["gabby__renderable__Paragraph"][];
+    };
     /** parsedExerciseCreateInput */
     parsedExerciseCreateInput: {
       data: components["schemas"]["parsedExerciseCreateInputData"];
@@ -774,7 +903,8 @@ export interface components {
     };
     /** parsedExerciseOutputItemAttributes */
     parsedExerciseOutputItemAttributes: {
-      adapted: components["schemas"]["Exercise"];
+      adapted: components["schemas"]["gabby__renderable__Exercise"];
+      newAdapted: components["schemas"]["gabby__new_renderable__Exercise"] | null;
     };
     /** pdfFileCreateInput */
     pdfFileCreateInput: {

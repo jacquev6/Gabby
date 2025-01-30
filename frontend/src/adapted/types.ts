@@ -13,6 +13,12 @@ export type Section = Exercise['pagelets'][number]['instructions']
 
 export type Paragraph = Section['paragraphs'][number]
 
+export type NewExercise = Exclude<paths['/api/parsedExercises/{id}']['get']['responses']['200']['content']['application/vnd.api+json']['data']['attributes']['newAdapted'], null>
+
+export type NewSection = NewExercise['pagelets'][number]['instructions']
+
+export type NewParagraph = NewSection['paragraphs'][number]
+
 
 export interface Data {
   projectId: string,

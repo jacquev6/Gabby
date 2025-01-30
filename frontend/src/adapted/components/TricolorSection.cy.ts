@@ -1,4 +1,4 @@
-import TricolorSection from './TricolorSection.vue'
+import TricolorSection from './OldTricolorSection.vue'
 import type { Paragraph } from '$adapted/types'
 
 

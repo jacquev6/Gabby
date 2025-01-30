@@ -4,8 +4,8 @@ import uuid
 from starlette import status
 
 from . import api_models
-from . import deltas
 from . import renderable
+from . import new_renderable
 from . import settings
 from .exercises import Exercise
 from .testing import LoggedInApiTestCase
@@ -16,6 +16,7 @@ from .users import MandatoryAuthBearerDependable
 class ParsedExerciseItem:
     id: str
     adapted: renderable.Exercise
+    new_adapted: new_renderable.Exercise = None
 
 
 class ParsedExercisesResource:

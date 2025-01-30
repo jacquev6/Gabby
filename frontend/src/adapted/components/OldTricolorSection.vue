@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import type { Paragraph } from '$adapted/types'
 import TricolorLines from './TricolorLines.vue'
-import MonocolorSection from './MonocolorSection.vue'
+import MonocolorSection from './OldMonocolorSection.vue'
 
 
 defineProps<{

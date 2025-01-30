@@ -30,3 +30,11 @@ fi
   frontend-shell \
     npx cypress run \
       --component "$@"
+
+if [ -d ../../frontend/cypress/screenshots/adapted/components/OldTricolorSection.cy.ts ] && [ -d ../../frontend/cypress/screenshots/adapted/components/NewTricolorSection.cy.ts ]
+then
+  cp -r ../../frontend/cypress/screenshots/adapted/components/OldTricolorSection.cy.ts ../../frontend/cypress/screenshots/adapted/components/TricolorSection.cy.ts
+  git add ../../frontend/cypress/screenshots/adapted/components/TricolorSection.cy.ts
+  rm -r ../../frontend/cypress/screenshots/adapted/components/TricolorSection.cy.ts
+  cp -r ../../frontend/cypress/screenshots/adapted/components/NewTricolorSection.cy.ts ../../frontend/cypress/screenshots/adapted/components/TricolorSection.cy.ts
+fi
