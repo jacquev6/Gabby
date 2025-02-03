@@ -15,11 +15,11 @@ import sqlalchemy_data_model_visualizer
 import sqlalchemy_utils.functions
 
 from . import database_utils
+from . import deltas
+from . import exercises
 from . import orm_models
 from . import settings
 from .fixtures import load as load_fixtures
-from . import renderable
-from . import deltas
 
 
 @click.group()
@@ -150,7 +150,15 @@ def restore_database(backup_url, yes, patch_according_to_settings):
 
 
 @main.command()
-def dump_database_as_unit_tests():
+@click.option("--limit", type=int, default=None)
+@click.option("--format/--no-format", is_flag=True, default=True)
+def dump_database_as_unit_tests(limit, format):
+    def limit_query(x):
+        if limit is None:
+            return x.all()
+        else:
+            return x.limit(limit)
+
     # Waste data to avoid issues with copyrighted material (extracted from textbooks)
     def waste_char(c):
         return {
@@ -164,34 +172,6 @@ def dump_database_as_unit_tests():
 
     def waste_string(s):
         return "".join(waste_char(c) for c in s)
-
-    def waste_renderable(section):
-        def waste_selectable_token(token):
-            return renderable.Selectable(contents=[waste_token(content) for content in token.contents], colors=token.colors, boxed=token.boxed)
-
-        def waste_token(token):
-            return {
-                "boxedText": lambda: renderable.BoxedText(text=waste_string(token.text)),
-                "freeTextInput": lambda: renderable.FreeTextInput(),
-                "multipleChoicesInput": lambda: renderable.MultipleChoicesInput(
-                    show_arrow_before=token.show_arrow_before,
-                    choices=[waste_string(choice) for choice in token.choices],
-                    show_choices_by_default=token.show_choices_by_default,
-                ),
-                "plainText": lambda: renderable.PlainText(text=waste_string(token.text)),
-                "selectableText": lambda: renderable.SelectableText(text=waste_string(token.text), colors=token.colors, boxed=token.boxed),
-                "selectedText": lambda: renderable.SelectedText(text=waste_string(token.text), color=token.color),
-                "whitespace": lambda: renderable.Whitespace(),
-                "selectable": lambda: waste_selectable_token(token),
-            }[token.type]()
-
-        def waste_paragraph(paragraph):
-            return renderable.Paragraph(tokens=[waste_token(token) for token in paragraph.tokens])
-
-        def waste_section(section):
-            return renderable.Section(paragraphs=[waste_paragraph(paragraph) for paragraph in section.paragraphs])
-
-        return waste_section(section)
 
     def waste_delta(delta):
         attributes = delta.attributes
@@ -210,6 +190,19 @@ def dump_database_as_unit_tests():
     def waste_deltas(deltas):
         return [waste_delta(delta) for delta in deltas]
 
+    def waste_exercise(exercise):
+        return exercises.Exercise(
+            number=waste_string(exercise.number),
+            textbook_page=exercise.textbook_page,
+            instructions=waste_deltas(exercise.instructions),
+            wording=waste_deltas(exercise.wording),
+            example=waste_deltas(exercise.example),
+            clue=waste_deltas(exercise.clue),
+            text_reference=waste_deltas(exercise.text_reference),
+            wording_paragraphs_per_pagelet=exercise.wording_paragraphs_per_pagelet,
+            adaptation=exercise.adaptation,
+        )
+
     def gen():
         yield "# WARNING: this file is generated (from database content). Manual changes will be lost."
         yield ""
@@ -225,39 +218,43 @@ def dump_database_as_unit_tests():
 
         database_engine = database_utils.create_engine(settings.DATABASE_URL)
         with orm.Session(database_engine) as session:
-            for exercise in session.query(orm_models.Exercise).order_by(orm_models.Exercise.id).all():
-                adapted = exercise.make_adapted()
+            for exercise in limit_query(session.query(orm_models.Exercise).order_by(orm_models.Exercise.id)):
+                wasted_exercise = waste_exercise(exercise)
+                adapted = wasted_exercise.make_adapted()
 
-                yield f"    def test_exercise_{exercise.id}(self):"
+                yield f"    def test_exercise_{exercise.id:04}(self):"
                 yield f"        self.do_test("
                 yield f"            e.Exercise("
-                yield f"                number={repr(waste_string(exercise.number))},"
-                yield f"                textbook_page={repr(exercise.textbook_page)},"
-                yield f"                instructions={repr(waste_deltas(exercise.instructions))},"
-                yield f"                wording={repr(waste_deltas(exercise.wording))},"
-                yield f"                example={repr(waste_deltas(exercise.example))},"
-                yield f"                clue={repr(waste_deltas(exercise.clue))},"
-                yield f"                text_reference={repr(waste_deltas(exercise.text_reference))},"
-                yield f"                wording_paragraphs_per_pagelet={repr(exercise.wording_paragraphs_per_pagelet)},"
-                yield f"                adaptation={repr(exercise.adaptation)},"
+                yield f"                number={repr(wasted_exercise.number)},"
+                yield f"                textbook_page={repr(wasted_exercise.textbook_page)},"
+                yield f"                instructions={repr(wasted_exercise.instructions)},"
+                yield f"                wording={repr(wasted_exercise.wording)},"
+                yield f"                example={repr(wasted_exercise.example)},"
+                yield f"                clue={repr(wasted_exercise.clue)},"
+                yield f"                text_reference={repr(wasted_exercise.text_reference)},"
+                yield f"                wording_paragraphs_per_pagelet={repr(wasted_exercise.wording_paragraphs_per_pagelet)},"
+                yield f"                adaptation={repr(wasted_exercise.adaptation)},"
                 yield f"            ),"
                 yield f"            r.Exercise("
-                yield f"                number={repr(waste_string(exercise.number))},"
-                yield f"                textbook_page={repr(exercise.textbook_page)},"
+                yield f"                number={repr(wasted_exercise.number)},"
+                yield f"                textbook_page={repr(wasted_exercise.textbook_page)},"
                 yield f"                pagelets=["
                 for pagelet in adapted.pagelets:
                     yield f"                    r.Pagelet("
-                    yield f"                        instructions={repr(waste_renderable(pagelet.instructions))},"
-                    yield f"                        wording={repr(waste_renderable(pagelet.wording))},"
+                    yield f"                        instructions={repr(pagelet.instructions)},"
+                    yield f"                        wording={repr(pagelet.wording)},"
                     yield f"                    ),"
                 yield f"                ],"
                 yield f"            ),"
                 yield f"        )"
                 yield f""
 
-    # Black does not have a Python API, so use it as a command-line tool.
-    # https://black.readthedocs.io/en/stable/faq.html#does-black-have-an-api
-    subprocess.run(["black", "--line-length", "120", "-"], universal_newlines=True, input="\n".join(gen()), check=True)
+    test = "\n".join(gen())
+    if format:
+        # Black does not have a Python API, so use it as a command-line tool.
+        # https://black.readthedocs.io/en/stable/faq.html#does-black-have-an-api
+        test = subprocess.run(["black", "--line-length", "120", "-"], universal_newlines=True, input=test, check=True, capture_output=True).stdout
+    print(test, end='')
 
 
 @main.command(name="load-fixtures")
