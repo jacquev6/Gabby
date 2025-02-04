@@ -146,8 +146,11 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
             "settings": adaptation.model_dump(),
         }
 
-    def make_adapted(self):
-        return adaptation.adapt(self)
+    def make_old_adapted(self):
+        return adaptation.old_adapt(self)
+
+    def make_new_adapted(self):
+        return adaptation.new_adapt(self)
 
 
 class ExerciseTestCase(TransactionTestCase):

@@ -1,3 +1,5 @@
+import itertools
+import time
 from urllib.parse import urlparse
 import datetime
 import io
@@ -150,9 +152,11 @@ def restore_database(backup_url, yes, patch_according_to_settings):
 
 
 @main.command()
+@click.argument("output-module")
+@click.option("--tests-per-file", type=int, default=10)
 @click.option("--limit", type=int, default=None)
 @click.option("--format/--no-format", is_flag=True, default=True)
-def dump_database_as_unit_tests(limit, format):
+def dump_database_as_unit_tests(output_module, tests_per_file, limit, format):
     def limit_query(x):
         if limit is None:
             return x.all()
@@ -203,58 +207,96 @@ def dump_database_as_unit_tests(limit, format):
             adaptation=exercise.adaptation,
         )
 
-    def gen():
+    def nr_repr(section):
+        return (
+            repr(section)
+            .replace("Paragraph(", "nr.Paragraph(")
+            .replace("Section(", "nr.Section(")
+            .replace("Pagelet(", "nr.Pagelet(")
+            .replace("Text(", "nr.Text(")
+            .replace("Whitespace(", "nr.Whitespace(")
+            .replace("FreeTextInput(", "nr.FreeTextInput(")
+            .replace("MultipleChoicesInput(", "nr.MultipleChoicesInput(")
+            .replace("SelectableInput(", "nr.SelectableInput(")
+            .replace("PassiveSequence(", "nr.PassiveSequence(")
+        )
+
+    def gen(batch_index, exercises_batch):
         yield "# WARNING: this file is generated (from database content). Manual changes will be lost."
         yield ""
-        yield "from . import exercises as e"
-        yield "from . import renderable as r"
-        yield "from .adaptation import AdaptationTestCase"
-        yield "from .api_models import Adaptation, CharactersItems, TokensItems, SentencesItems, ManualItems, Selectable"
-        yield "from .deltas import InsertOp"
-        yield "from .renderable import Section, Paragraph, _PlainText, _Whitespace, _FreeTextInput, _SelectableText, _BoxedText, _MultipleChoicesInput, _SelectedText, _Selectable"
+        yield "from .. import exercises as e"
+        yield "from .. import renderable as r"
+        yield "from .. import new_renderable as nr"
+        yield "from ..adaptation import AdaptationTestCase"
+        yield "from ..api_models import Adaptation, CharactersItems, TokensItems, SentencesItems, ManualItems, Selectable"
+        yield "from ..deltas import InsertOp"
+        yield "from ..renderable import Section, Paragraph, _PlainText, _Whitespace, _FreeTextInput, _SelectableText, _BoxedText, _MultipleChoicesInput, _SelectedText, _Selectable"
         yield ""
         yield ""
-        yield "class DatabaseAsUnitTests(AdaptationTestCase):"
+        yield f"class DatabaseAsUnitTests{batch_index:04}(AdaptationTestCase):"
+        yield "    generate_frontend_tests = False"  # Ideally we would generate frontend tests, but they take too long to run. I ran them once, OK.
+        yield ""
 
-        database_engine = database_utils.create_engine(settings.DATABASE_URL)
-        with orm.Session(database_engine) as session:
-            for exercise in limit_query(session.query(orm_models.Exercise).order_by(orm_models.Exercise.id)):
-                wasted_exercise = waste_exercise(exercise)
-                adapted = wasted_exercise.make_adapted()
+        for exercise in exercises_batch:
+            yield f"    def test_exercise_{exercise.id:04}(self):"
 
-                yield f"    def test_exercise_{exercise.id:04}(self):"
-                yield f"        self.do_test("
-                yield f"            e.Exercise("
-                yield f"                number={repr(wasted_exercise.number)},"
-                yield f"                textbook_page={repr(wasted_exercise.textbook_page)},"
-                yield f"                instructions={repr(wasted_exercise.instructions)},"
-                yield f"                wording={repr(wasted_exercise.wording)},"
-                yield f"                example={repr(wasted_exercise.example)},"
-                yield f"                clue={repr(wasted_exercise.clue)},"
-                yield f"                text_reference={repr(wasted_exercise.text_reference)},"
-                yield f"                wording_paragraphs_per_pagelet={repr(wasted_exercise.wording_paragraphs_per_pagelet)},"
-                yield f"                adaptation={repr(wasted_exercise.adaptation)},"
-                yield f"            ),"
-                yield f"            r.Exercise("
-                yield f"                number={repr(wasted_exercise.number)},"
-                yield f"                textbook_page={repr(wasted_exercise.textbook_page)},"
-                yield f"                pagelets=["
-                for pagelet in adapted.pagelets:
-                    yield f"                    r.Pagelet("
-                    yield f"                        instructions={repr(pagelet.instructions)},"
-                    yield f"                        wording={repr(pagelet.wording)},"
-                    yield f"                    ),"
-                yield f"                ],"
-                yield f"            ),"
-                yield f"        )"
-                yield f""
+            exercise = waste_exercise(exercise)
+            old_adapted = exercise.make_old_adapted()
+            new_adapted = exercise.make_new_adapted()
 
-    test = "\n".join(gen())
-    if format:
-        # Black does not have a Python API, so use it as a command-line tool.
-        # https://black.readthedocs.io/en/stable/faq.html#does-black-have-an-api
-        test = subprocess.run(["black", "--line-length", "120", "-"], universal_newlines=True, input=test, check=True, capture_output=True).stdout
-    print(test, end='')
+            yield f"        self.do_test("
+            yield f"            e.Exercise("
+            yield f"                number={repr(exercise.number)},"
+            yield f"                textbook_page={repr(exercise.textbook_page)},"
+            yield f"                instructions={repr(exercise.instructions)},"
+            yield f"                wording={repr(exercise.wording)},"
+            yield f"                example={repr(exercise.example)},"
+            yield f"                clue={repr(exercise.clue)},"
+            yield f"                text_reference={repr(exercise.text_reference)},"
+            yield f"                wording_paragraphs_per_pagelet={repr(exercise.wording_paragraphs_per_pagelet)},"
+            yield f"                adaptation={repr(exercise.adaptation)},"
+            yield f"            ),"
+            yield f"            r.Exercise("
+            yield f"                number={repr(exercise.number)},"
+            yield f"                textbook_page={repr(exercise.textbook_page)},"
+            yield f"                pagelets=["
+            for pagelet in old_adapted.pagelets:
+                yield f"                    r.Pagelet("
+                yield f"                        instructions={repr(pagelet.instructions)},"
+                yield f"                        wording={repr(pagelet.wording)},"
+                yield f"                    ),"
+            yield f"                ],"
+            yield f"            ),"
+            yield f"            nr.Exercise("
+            yield f"                number={repr(exercise.number)},"
+            yield f"                textbook_page={repr(exercise.textbook_page)},"
+            yield f"                pagelets=["
+            for pagelet in new_adapted.pagelets:
+                yield f"                    nr.Pagelet("
+                yield f"                        instructions={nr_repr(pagelet.instructions)},"
+                yield f"                        wording={nr_repr(pagelet.wording)},"
+                yield f"                    ),"
+            yield f"                ],"
+            yield f"            ),"
+            yield f"        )"
+            yield f""
+
+    database_engine = database_utils.create_engine(settings.DATABASE_URL)
+
+    with orm.Session(database_engine) as session:
+        for batch_index, exercises_batch in enumerate(itertools.batched(limit_query(session.query(orm_models.Exercise).order_by(orm_models.Exercise.id)), tests_per_file)):
+            test = "\n".join(gen(batch_index, exercises_batch))
+            if format:
+                # Black does not have a Python API, so use it as a command-line tool.
+                # https://black.readthedocs.io/en/stable/faq.html#does-black-have-an-api
+                t0 = time.perf_counter()
+                test = subprocess.run(["black", "--line-length", "120", "-"], universal_newlines=True, input=test, check=True, capture_output=True).stdout
+                print(f"Formatted batch {batch_index} in {time.perf_counter() - t0:.2f}s", file=sys.stderr)
+            with open(f"gabby/{output_module}/tests_{batch_index:04}.py", "w") as f:
+                f.write(test)
+
+    with open(f"gabby/{output_module}/__init__.py", "w") as f:
+        pass
 
 
 @main.command(name="load-fixtures")

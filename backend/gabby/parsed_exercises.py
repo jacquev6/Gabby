@@ -15,8 +15,8 @@ from .users import MandatoryAuthBearerDependable
 @dataclasses.dataclass
 class ParsedExerciseItem:
     id: str
-    adapted: renderable.Exercise
-    new_adapted: new_renderable.Exercise = None
+    old_adapted: renderable.Exercise
+    new_adapted: new_renderable.Exercise
 
 
 class ParsedExercisesResource:
@@ -51,7 +51,8 @@ class ParsedExercisesResource:
         )
         return ParsedExerciseItem(
             id=uuid.uuid4().hex,
-            adapted=exercise.make_adapted(),
+            old_adapted=exercise.make_old_adapted(),
+            new_adapted=exercise.make_new_adapted(),
         )
 
     def get_item(
@@ -94,7 +95,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
         }
         response = self.post("http://server/parsedExercises", payload)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
-        self.assertEqual(response.json()["data"]["attributes"]["adapted"], {
+        self.assertEqual(response.json()["data"]["attributes"]["oldAdapted"], {
             "number": "C",
             "textbook_page": None,  # @todo Rename to textbookPage
             "pagelets": [{
@@ -163,7 +164,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
         }
         response = self.post("http://server/parsedExercises", payload)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
-        self.assertEqual(response.json()["data"]["attributes"]["adapted"], {
+        self.assertEqual(response.json()["data"]["attributes"]["oldAdapted"], {
             "number": "A.1",
             "textbook_page": None,  # @todo Rename to textbookPage
             "pagelets": [{
@@ -226,7 +227,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
         }
         response = self.post("http://server/parsedExercises", payload)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
-        self.assertEqual(response.json()["data"]["attributes"]["adapted"], {
+        self.assertEqual(response.json()["data"]["attributes"]["oldAdapted"], {
             "number": "A.1",
             "textbook_page": None,  # @todo Rename to textbookPage
             "pagelets": [{
@@ -303,7 +304,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
         }
         response = self.post("http://server/parsedExercises", payload)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
-        self.assertEqual(response.json()["data"]["attributes"]["adapted"], {
+        self.assertEqual(response.json()["data"]["attributes"]["oldAdapted"], {
             "number": "A.1",
             "textbook_page": None,  # @todo Rename to textbookPage
             "pagelets": [{
@@ -367,7 +368,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
         }
         response = self.post("http://server/parsedExercises", payload)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
-        self.assertEqual(response.json()["data"]["attributes"]["adapted"], {
+        self.assertEqual(response.json()["data"]["attributes"]["oldAdapted"], {
             "number": "A.1",
             "textbook_page": None,  # @todo Rename to textbookPage
             "pagelets": [{
@@ -436,7 +437,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
         }
         response = self.post("http://server/parsedExercises", payload)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
-        self.assertEqual(response.json()["data"]["attributes"]["adapted"], {
+        self.assertEqual(response.json()["data"]["attributes"]["oldAdapted"], {
             "number": "A.1",
             "textbook_page": None,  # @todo Rename to textbookPage
             "pagelets": [{
@@ -523,7 +524,7 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
         }
         response = self.post("http://server/parsedExercises", payload)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
-        self.assertEqual(response.json()["data"]["attributes"]["adapted"], {
+        self.assertEqual(response.json()["data"]["attributes"]["oldAdapted"], {
             "number": "",
             "textbook_page": None,
             "pagelets": [

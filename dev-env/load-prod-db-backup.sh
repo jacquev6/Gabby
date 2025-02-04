@@ -21,11 +21,14 @@ then
     backend-shell \
       alembic upgrade head
 
+  rm -rf ../backend/gabby/prod_data_as_unit_tests
+  mkdir -p ../backend/gabby/prod_data_as_unit_tests
   ./docker-compose.sh exec \
     backend-shell \
-      python -m gabby \
-        dump-database-as-unit-tests \
-  >../backend/gabby/prod_data_as_unit_tests.py
+    python -m gabby dump-database-as-unit-tests \
+      --tests-per-file 50 \
+      --no-format \
+      prod_data_as_unit_tests
 fi
 
 ./docker-compose.sh exec \

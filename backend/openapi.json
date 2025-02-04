@@ -2148,9 +2148,6 @@
       "parsedExerciseOutputItemAttributes": {
         "additionalProperties": false,
         "properties": {
-          "adapted": {
-            "$ref": "#/components/schemas/gabby__renderable__Exercise"
-          },
           "newAdapted": {
             "anyOf": [
               {
@@ -2160,10 +2157,13 @@
                 "type": "null"
               }
             ]
+          },
+          "oldAdapted": {
+            "$ref": "#/components/schemas/gabby__renderable__Exercise"
           }
         },
         "required": [
-          "adapted",
+          "oldAdapted",
           "newAdapted"
         ],
         "title": "parsedExerciseOutputItemAttributes",

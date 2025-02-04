@@ -903,8 +903,8 @@ export interface components {
     };
     /** parsedExerciseOutputItemAttributes */
     parsedExerciseOutputItemAttributes: {
-      adapted: components["schemas"]["gabby__renderable__Exercise"];
       newAdapted: components["schemas"]["gabby__new_renderable__Exercise"] | null;
+      oldAdapted: components["schemas"]["gabby__renderable__Exercise"];
     };
     /** pdfFileCreateInput */
     pdfFileCreateInput: {
