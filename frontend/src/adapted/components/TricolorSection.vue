@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { NewParagraph as Paragraph } from '$adapted/types'
+import type { Paragraph } from '$adapted/types'
 import TricolorLines from './TricolorLines.vue'
-import MonocolorSection from './NewMonocolorSection.vue'
+import MonocolorSection from './MonocolorSection.vue'
 
 
 defineProps<{

@@ -5,7 +5,7 @@ import datetime
 from fastjsonapi import Constant, Computed, Secret, WriteOnly
 
 from . import deltas
-from . import new_renderable
+from . import renderable
 from mydantic import PydanticBase
 
 
@@ -176,7 +176,7 @@ class ParsedExercise(PydanticBase):
     text_reference: Annotated[deltas.Deltas, WriteOnly()]
     wording_paragraphs_per_pagelet: Annotated[int | None, WriteOnly()]
     adaptation: Annotated[Adaptation, WriteOnly()]
-    new_adapted: Annotated[new_renderable.Exercise | None, Computed()] = None
+    adapted: Annotated[renderable.Exercise | None, Computed()] = None
 
 
 class SyntheticError(PydanticBase):

@@ -2,7 +2,7 @@
 import { computed, watch } from 'vue'
 import { nextTick } from 'vue'
 
-import type { NewParagraph as Paragraph } from '$adapted/types'
+import type { Paragraph } from '$adapted/types'
 import Renderable from './Renderable.vue'
 
 

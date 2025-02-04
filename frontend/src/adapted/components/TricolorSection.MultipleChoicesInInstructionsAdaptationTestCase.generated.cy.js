@@ -1,4 +1,4 @@
-import TricolorSection from './NewTricolorSection.vue'
+import TricolorSection from './TricolorSection.vue'
 
 describe('TricolorSection for MultipleChoicesInInstructionsAdaptationTestCase', () => {
   beforeEach(() => {

@@ -6,16 +6,16 @@ export interface Settings {
   tricolorWording: boolean
 }
 
-export type NewExercise = Exclude<paths['/api/parsedExercises/{id}']['get']['responses']['200']['content']['application/vnd.api+json']['data']['attributes']['newAdapted'], null>
+export type Exercise = Exclude<paths['/api/parsedExercises/{id}']['get']['responses']['200']['content']['application/vnd.api+json']['data']['attributes']['adapted'], null>
 
-export type NewSection = NewExercise['pagelets'][number]['instructions']
+export type Section = Exercise['pagelets'][number]['instructions']
 
-export type NewParagraph = NewSection['paragraphs'][number]
+export type Paragraph = Section['paragraphs'][number]
 
 
 export interface Data {
   projectId: string,
   exercises: {
-    [id: string]: NewExercise,
+    [id: string]: Exercise,
   },
 }

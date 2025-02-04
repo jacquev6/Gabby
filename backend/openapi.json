@@ -1642,7 +1642,7 @@
       "parsedExerciseOutputItemAttributes": {
         "additionalProperties": false,
         "properties": {
-          "newAdapted": {
+          "adapted": {
             "anyOf": [
               {
                 "$ref": "#/components/schemas/Exercise"
@@ -1654,7 +1654,7 @@
           }
         },
         "required": [
-          "newAdapted"
+          "adapted"
         ],
         "title": "parsedExerciseOutputItemAttributes",
         "type": "object"

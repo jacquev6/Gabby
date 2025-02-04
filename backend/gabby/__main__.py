@@ -207,25 +207,25 @@ def dump_database_as_unit_tests(output_module, tests_per_file, limit, format):
             adaptation=exercise.adaptation,
         )
 
-    def nr_repr(section):
+    def renderable_repr(section):
         return (
             repr(section)
-            .replace("Paragraph(", "nr.Paragraph(")
-            .replace("Section(", "nr.Section(")
-            .replace("Pagelet(", "nr.Pagelet(")
-            .replace("Text(", "nr.Text(")
-            .replace("Whitespace(", "nr.Whitespace(")
-            .replace("FreeTextInput(", "nr.FreeTextInput(")
-            .replace("MultipleChoicesInput(", "nr.MultipleChoicesInput(")
-            .replace("SelectableInput(", "nr.SelectableInput(")
-            .replace("PassiveSequence(", "nr.PassiveSequence(")
+            .replace("Paragraph(", "r.Paragraph(")
+            .replace("Section(", "r.Section(")
+            .replace("Pagelet(", "r.Pagelet(")
+            .replace("Text(", "r.Text(")
+            .replace("Whitespace(", "r.Whitespace(")
+            .replace("FreeTextInput(", "r.FreeTextInput(")
+            .replace("MultipleChoicesInput(", "r.MultipleChoicesInput(")
+            .replace("SelectableInput(", "r.SelectableInput(")
+            .replace("PassiveSequence(", "r.PassiveSequence(")
         )
 
     def gen(batch_index, exercises_batch):
         yield "# WARNING: this file is generated (from database content). Manual changes will be lost."
         yield ""
         yield "from .. import exercises as e"
-        yield "from .. import new_renderable as nr"
+        yield "from .. import renderable as r"
         yield "from ..adaptation import AdaptationTestCase"
         yield "from ..api_models import Adaptation, CharactersItems, TokensItems, SentencesItems, ManualItems, Selectable"
         yield "from ..deltas import InsertOp"
@@ -239,7 +239,7 @@ def dump_database_as_unit_tests(output_module, tests_per_file, limit, format):
             yield f"    def test_exercise_{exercise.id:04}(self):"
 
             exercise = waste_exercise(exercise)
-            new_adapted = exercise.make_new_adapted()
+            adapted = exercise.make_adapted()
 
             yield f"        self.do_test("
             yield f"            e.Exercise("
@@ -253,14 +253,14 @@ def dump_database_as_unit_tests(output_module, tests_per_file, limit, format):
             yield f"                wording_paragraphs_per_pagelet={repr(exercise.wording_paragraphs_per_pagelet)},"
             yield f"                adaptation={repr(exercise.adaptation)},"
             yield f"            ),"
-            yield f"            nr.Exercise("
+            yield f"            r.Exercise("
             yield f"                number={repr(exercise.number)},"
             yield f"                textbook_page={repr(exercise.textbook_page)},"
             yield f"                pagelets=["
-            for pagelet in new_adapted.pagelets:
-                yield f"                    nr.Pagelet("
-                yield f"                        instructions={nr_repr(pagelet.instructions)},"
-                yield f"                        wording={nr_repr(pagelet.wording)},"
+            for pagelet in adapted.pagelets:
+                yield f"                    r.Pagelet("
+                yield f"                        instructions={renderable_repr(pagelet.instructions)},"
+                yield f"                        wording={renderable_repr(pagelet.wording)},"
                 yield f"                    ),"
             yield f"                ],"
             yield f"            ),"

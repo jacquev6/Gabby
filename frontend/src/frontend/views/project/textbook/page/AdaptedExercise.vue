@@ -2,7 +2,7 @@
 import { ref, computed, watch, provide } from 'vue'
 import { useWindowSize, useElementBounding } from '@vueuse/core'
 
-import type { NewExercise as Exercise } from '$adapted/types'
+import type { Exercise } from '$adapted/types'
 import { BButton } from '$frontend/components/opinion/bootstrap'
 import ExerciseComponent from '$adapted/components/Exercise.vue'
 import PageletsNavigationControls from '$adapted/components/PageletsNavigationControls.vue'

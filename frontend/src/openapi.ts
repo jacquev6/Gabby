@@ -745,7 +745,7 @@ export interface components {
     };
     /** parsedExerciseOutputItemAttributes */
     parsedExerciseOutputItemAttributes: {
-      newAdapted: components["schemas"]["Exercise"] | null;
+      adapted: components["schemas"]["Exercise"] | null;
     };
     /** pdfFileCreateInput */
     pdfFileCreateInput: {

@@ -1,5 +1,5 @@
-import TricolorSection from './NewTricolorSection.vue'
-import type { NewParagraph as Paragraph } from '$adapted/types'
+import TricolorSection from './TricolorSection.vue'
+import type { Paragraph } from '$adapted/types'
 
 
 const lipsum: Paragraph = {
