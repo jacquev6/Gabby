@@ -219,7 +219,7 @@ describe('Gabby', () => {
     cy.get('label:contains("Placeholder") + input').click().type('...')
     cy.get('button:contains("OK")').click()
     cy.get('div:contains("Show choices by default") > input').click()
-    cy.get('div:contains("2 lines per page") > input').click()
+    cy.get('span[title="2 lines per page"]').click()
     cy.get('button:contains("Full screen")').click()
 
     cy.get('span.choice0').eq(0).should('be.visible')
@@ -252,7 +252,7 @@ describe('Gabby', () => {
     cy.get('label:contains("Placeholder") + input').click().type('...')
     cy.get('button:contains("OK")').click()
     cy.get('div:contains("Show choices by default") > input').click()
-    cy.get('div:contains("2 lines per page") > input').click()
+    cy.get('span[title="2 lines per page"]').click()
     cy.get('button:contains("Full screen")').click()
 
     cy.get('span.choice0').should('have.length', 2)

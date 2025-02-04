@@ -2,9 +2,8 @@
 import { computed, ref, watch } from 'vue'
 import deepCopy from 'deep-copy'
 import deepEqual from 'deep-equal'
-import { useI18n } from 'vue-i18n'
 
-import { BBusy, BButton, BLabeledCheckboxes } from '$frontend/components/opinion/bootstrap'
+import { BBusy, BButton } from '$frontend/components/opinion/bootstrap'
 import TwoResizableColumns from '$frontend/components/TwoResizableColumns.vue'
 import type { Exists, InCache, ParsedExercise } from '$frontend/stores/api'
 import { type Model, getParsed } from '$frontend/components/ExerciseFieldsForm.vue'
@@ -14,6 +13,7 @@ import UndoRedoTool from './UndoRedoTool.vue'
 import ToolsGutter from './ToolsGutter.vue'
 import BasicFormattingTools from './BasicFormattingTools.vue'
 import AdaptationDetailsFieldsForm from '$frontend/components/AdaptationDetailsFieldsForm.vue'
+import DistributionToggles from './DistributionToggles.vue'
 
 
 defineProps<{
@@ -24,8 +24,6 @@ defineProps<{
 }>()
 
 const model = defineModel<Model>({required: true})
-
-const i18n = useI18n()
 
 const fields = ref<InstanceType<typeof ExerciseFieldsForm> | null>(null)
 const adaptationDetails = ref<InstanceType<typeof AdaptationDetailsFieldsForm> | null>(null)
@@ -61,11 +59,6 @@ const toolSlotNames = [
   'basicFormatting',
   'distribution',
 ]
-
-const wordingParagraphsPerPageletOptions = computed(() => [1, 2, 3, 4, 5].map(value => ({
-  label: i18n.t('exerciseLinesPerPage', value),
-  value,
-})))
 
 const doResetUndoRedo = ref(0)
 function resetUndoRedo() {
@@ -116,7 +109,10 @@ defineExpose({
                     <BasicFormattingTools v-if="fields !== null && adaptationDetails !== null" v-model="model" :fields :adaptationDetails />
                   </template>
                   <template #distribution>
-                    <BLabeledCheckboxes :label="$t('exerciseDistribution')" v-model="model.wordingParagraphsPerPagelet" :options="wordingParagraphsPerPageletOptions" />
+                    <div class="mb-3">
+                      <p class="form-label">{{ $t('exerciseDistribution') }}</p>
+                      <DistributionToggles v-model="model.wordingParagraphsPerPagelet" />
+                    </div>
                   </template>
                 </ToolsGutter>
               </div>
