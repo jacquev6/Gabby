@@ -225,12 +225,10 @@ def dump_database_as_unit_tests(output_module, tests_per_file, limit, format):
         yield "# WARNING: this file is generated (from database content). Manual changes will be lost."
         yield ""
         yield "from .. import exercises as e"
-        yield "from .. import renderable as r"
         yield "from .. import new_renderable as nr"
         yield "from ..adaptation import AdaptationTestCase"
         yield "from ..api_models import Adaptation, CharactersItems, TokensItems, SentencesItems, ManualItems, Selectable"
         yield "from ..deltas import InsertOp"
-        yield "from ..renderable import Section, Paragraph, _PlainText, _Whitespace, _FreeTextInput, _SelectableText, _BoxedText, _MultipleChoicesInput, _SelectedText, _Selectable"
         yield ""
         yield ""
         yield f"class DatabaseAsUnitTests{batch_index:04}(AdaptationTestCase):"
@@ -241,7 +239,6 @@ def dump_database_as_unit_tests(output_module, tests_per_file, limit, format):
             yield f"    def test_exercise_{exercise.id:04}(self):"
 
             exercise = waste_exercise(exercise)
-            old_adapted = exercise.make_old_adapted()
             new_adapted = exercise.make_new_adapted()
 
             yield f"        self.do_test("
@@ -255,17 +252,6 @@ def dump_database_as_unit_tests(output_module, tests_per_file, limit, format):
             yield f"                text_reference={repr(exercise.text_reference)},"
             yield f"                wording_paragraphs_per_pagelet={repr(exercise.wording_paragraphs_per_pagelet)},"
             yield f"                adaptation={repr(exercise.adaptation)},"
-            yield f"            ),"
-            yield f"            r.Exercise("
-            yield f"                number={repr(exercise.number)},"
-            yield f"                textbook_page={repr(exercise.textbook_page)},"
-            yield f"                pagelets=["
-            for pagelet in old_adapted.pagelets:
-                yield f"                    r.Pagelet("
-                yield f"                        instructions={repr(pagelet.instructions)},"
-                yield f"                        wording={repr(pagelet.wording)},"
-                yield f"                    ),"
-            yield f"                ],"
             yield f"            ),"
             yield f"            nr.Exercise("
             yield f"                number={repr(exercise.number)},"

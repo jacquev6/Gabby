@@ -227,6 +227,40 @@
         "title": "CharactersItems",
         "type": "object"
       },
+      "Exercise": {
+        "additionalProperties": false,
+        "properties": {
+          "number": {
+            "title": "Number",
+            "type": "string"
+          },
+          "pagelets": {
+            "items": {
+              "$ref": "#/components/schemas/Pagelet"
+            },
+            "title": "Pagelets",
+            "type": "array"
+          },
+          "textbook_page": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Textbook Page"
+          }
+        },
+        "required": [
+          "number",
+          "textbook_page",
+          "pagelets"
+        ],
+        "title": "Exercise",
+        "type": "object"
+      },
       "FreeTextInput": {
         "additionalProperties": false,
         "properties": {
@@ -286,51 +320,6 @@
           "self"
         ],
         "title": "ItemLinks",
-        "type": "object"
-      },
-      "Line": {
-        "additionalProperties": false,
-        "properties": {
-          "contents": {
-            "items": {
-              "anyOf": [
-                {
-                  "$ref": "#/components/schemas/_PlainText"
-                },
-                {
-                  "$ref": "#/components/schemas/_BoxedText"
-                },
-                {
-                  "$ref": "#/components/schemas/PassiveFormattedText"
-                },
-                {
-                  "$ref": "#/components/schemas/_SelectedText"
-                },
-                {
-                  "$ref": "#/components/schemas/_FreeTextInput"
-                },
-                {
-                  "$ref": "#/components/schemas/_MultipleChoicesInput"
-                },
-                {
-                  "$ref": "#/components/schemas/_Whitespace"
-                }
-              ]
-            },
-            "title": "Contents",
-            "type": "array"
-          },
-          "type": {
-            "const": "line",
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "contents"
-        ],
-        "title": "Line",
         "type": "object"
       },
       "ManualItems": {
@@ -464,6 +453,23 @@
         "title": "PageMeta",
         "type": "object"
       },
+      "Pagelet": {
+        "additionalProperties": false,
+        "properties": {
+          "instructions": {
+            "$ref": "#/components/schemas/Section"
+          },
+          "wording": {
+            "$ref": "#/components/schemas/Section"
+          }
+        },
+        "required": [
+          "instructions",
+          "wording"
+        ],
+        "title": "Pagelet",
+        "type": "object"
+      },
       "Pagination": {
         "additionalProperties": false,
         "properties": {
@@ -488,34 +494,43 @@
         "title": "Pagination",
         "type": "object"
       },
-      "PassiveFormattedText": {
+      "Paragraph": {
         "additionalProperties": false,
         "properties": {
-          "bold": {
-            "title": "Bold",
-            "type": "boolean"
-          },
-          "italic": {
-            "title": "Italic",
-            "type": "boolean"
-          },
-          "text": {
-            "title": "Text",
-            "type": "string"
-          },
-          "type": {
-            "const": "passiveFormattedText",
-            "title": "Type",
-            "type": "string"
+          "contents": {
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/Whitespace"
+                },
+                {
+                  "$ref": "#/components/schemas/Text"
+                },
+                {
+                  "$ref": "#/components/schemas/PassiveSequence"
+                },
+                {
+                  "$ref": "#/components/schemas/FreeTextInput"
+                },
+                {
+                  "$ref": "#/components/schemas/MultipleChoicesInput"
+                },
+                {
+                  "$ref": "#/components/schemas/SelectableInput"
+                },
+                {
+                  "$ref": "#/components/schemas/AnySequence"
+                }
+              ]
+            },
+            "title": "Contents",
+            "type": "array"
           }
         },
         "required": [
-          "type",
-          "text",
-          "bold",
-          "italic"
+          "contents"
         ],
-        "title": "PassiveFormattedText",
+        "title": "Paragraph",
         "type": "object"
       },
       "PassiveSequence": {
@@ -633,6 +648,23 @@
         "title": "Point",
         "type": "object"
       },
+      "Section": {
+        "additionalProperties": false,
+        "properties": {
+          "paragraphs": {
+            "items": {
+              "$ref": "#/components/schemas/Paragraph"
+            },
+            "title": "Paragraphs",
+            "type": "array"
+          }
+        },
+        "required": [
+          "paragraphs"
+        ],
+        "title": "Section",
+        "type": "object"
+      },
       "Selectable": {
         "additionalProperties": false,
         "properties": {
@@ -709,54 +741,6 @@
           "kind"
         ],
         "title": "SentencesItems",
-        "type": "object"
-      },
-      "Stack": {
-        "additionalProperties": false,
-        "properties": {
-          "contents": {
-            "items": {
-              "anyOf": [
-                {
-                  "$ref": "#/components/schemas/_PlainText"
-                },
-                {
-                  "$ref": "#/components/schemas/_BoxedText"
-                },
-                {
-                  "$ref": "#/components/schemas/PassiveFormattedText"
-                },
-                {
-                  "$ref": "#/components/schemas/_SelectedText"
-                },
-                {
-                  "$ref": "#/components/schemas/_FreeTextInput"
-                },
-                {
-                  "$ref": "#/components/schemas/_MultipleChoicesInput"
-                },
-                {
-                  "$ref": "#/components/schemas/_Whitespace"
-                },
-                {
-                  "$ref": "#/components/schemas/Line"
-                }
-              ]
-            },
-            "title": "Contents",
-            "type": "array"
-          },
-          "type": {
-            "const": "stack",
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "contents"
-        ],
-        "title": "Stack",
         "type": "object"
       },
       "Text": {
@@ -871,270 +855,6 @@
           "kind"
         ],
         "title": "Whitespace",
-        "type": "object"
-      },
-      "_Boxed": {
-        "additionalProperties": false,
-        "properties": {
-          "contents": {
-            "items": {
-              "anyOf": [
-                {
-                  "$ref": "#/components/schemas/_PlainText"
-                },
-                {
-                  "$ref": "#/components/schemas/_BoxedText"
-                },
-                {
-                  "$ref": "#/components/schemas/PassiveFormattedText"
-                },
-                {
-                  "$ref": "#/components/schemas/_SelectedText"
-                },
-                {
-                  "$ref": "#/components/schemas/_FreeTextInput"
-                },
-                {
-                  "$ref": "#/components/schemas/_MultipleChoicesInput"
-                },
-                {
-                  "$ref": "#/components/schemas/_Whitespace"
-                }
-              ]
-            },
-            "title": "Contents",
-            "type": "array"
-          },
-          "type": {
-            "const": "boxed",
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "contents"
-        ],
-        "title": "_Boxed",
-        "type": "object"
-      },
-      "_BoxedText": {
-        "additionalProperties": false,
-        "properties": {
-          "text": {
-            "title": "Text",
-            "type": "string"
-          },
-          "type": {
-            "const": "boxedText",
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "text"
-        ],
-        "title": "_BoxedText",
-        "type": "object"
-      },
-      "_FreeTextInput": {
-        "additionalProperties": false,
-        "properties": {
-          "type": {
-            "const": "freeTextInput",
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type"
-        ],
-        "title": "_FreeTextInput",
-        "type": "object"
-      },
-      "_MultipleChoicesInput": {
-        "additionalProperties": false,
-        "properties": {
-          "choices": {
-            "items": {
-              "type": "string"
-            },
-            "title": "Choices",
-            "type": "array"
-          },
-          "show_arrow_before": {
-            "title": "Show Arrow Before",
-            "type": "boolean"
-          },
-          "show_choices_by_default": {
-            "title": "Show Choices By Default",
-            "type": "boolean"
-          },
-          "type": {
-            "const": "multipleChoicesInput",
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "show_arrow_before",
-          "choices",
-          "show_choices_by_default"
-        ],
-        "title": "_MultipleChoicesInput",
-        "type": "object"
-      },
-      "_PlainText": {
-        "additionalProperties": false,
-        "properties": {
-          "text": {
-            "title": "Text",
-            "type": "string"
-          },
-          "type": {
-            "const": "plainText",
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "text"
-        ],
-        "title": "_PlainText",
-        "type": "object"
-      },
-      "_Selectable": {
-        "additionalProperties": false,
-        "properties": {
-          "boxed": {
-            "title": "Boxed",
-            "type": "boolean"
-          },
-          "colors": {
-            "items": {
-              "type": "string"
-            },
-            "title": "Colors",
-            "type": "array"
-          },
-          "contents": {
-            "items": {
-              "anyOf": [
-                {
-                  "$ref": "#/components/schemas/_PlainText"
-                },
-                {
-                  "$ref": "#/components/schemas/_BoxedText"
-                },
-                {
-                  "$ref": "#/components/schemas/PassiveFormattedText"
-                },
-                {
-                  "$ref": "#/components/schemas/_SelectedText"
-                },
-                {
-                  "$ref": "#/components/schemas/_FreeTextInput"
-                },
-                {
-                  "$ref": "#/components/schemas/_MultipleChoicesInput"
-                },
-                {
-                  "$ref": "#/components/schemas/_Whitespace"
-                }
-              ]
-            },
-            "title": "Contents",
-            "type": "array"
-          },
-          "type": {
-            "const": "selectable",
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "contents",
-          "colors",
-          "boxed"
-        ],
-        "title": "_Selectable",
-        "type": "object"
-      },
-      "_SelectableText": {
-        "additionalProperties": false,
-        "properties": {
-          "boxed": {
-            "title": "Boxed",
-            "type": "boolean"
-          },
-          "colors": {
-            "items": {
-              "type": "string"
-            },
-            "title": "Colors",
-            "type": "array"
-          },
-          "text": {
-            "title": "Text",
-            "type": "string"
-          },
-          "type": {
-            "const": "selectableText",
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "text",
-          "colors",
-          "boxed"
-        ],
-        "title": "_SelectableText",
-        "type": "object"
-      },
-      "_SelectedText": {
-        "additionalProperties": false,
-        "properties": {
-          "color": {
-            "title": "Color",
-            "type": "string"
-          },
-          "text": {
-            "title": "Text",
-            "type": "string"
-          },
-          "type": {
-            "const": "selectedText",
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "text",
-          "color"
-        ],
-        "title": "_SelectedText",
-        "type": "object"
-      },
-      "_Whitespace": {
-        "additionalProperties": false,
-        "properties": {
-          "type": {
-            "const": "whitespace",
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type"
-        ],
-        "title": "_Whitespace",
         "type": "object"
       },
       "exerciseCreateInput": {
@@ -1763,232 +1483,6 @@
         "title": "exercise_updatedBy_Relationship_ObjectId",
         "type": "object"
       },
-      "gabby__new_renderable__Exercise": {
-        "additionalProperties": false,
-        "properties": {
-          "number": {
-            "title": "Number",
-            "type": "string"
-          },
-          "pagelets": {
-            "items": {
-              "$ref": "#/components/schemas/gabby__new_renderable__Pagelet"
-            },
-            "title": "Pagelets",
-            "type": "array"
-          },
-          "textbook_page": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Textbook Page"
-          }
-        },
-        "required": [
-          "number",
-          "textbook_page",
-          "pagelets"
-        ],
-        "title": "Exercise",
-        "type": "object"
-      },
-      "gabby__new_renderable__Pagelet": {
-        "additionalProperties": false,
-        "properties": {
-          "instructions": {
-            "$ref": "#/components/schemas/gabby__new_renderable__Section"
-          },
-          "wording": {
-            "$ref": "#/components/schemas/gabby__new_renderable__Section"
-          }
-        },
-        "required": [
-          "instructions",
-          "wording"
-        ],
-        "title": "Pagelet",
-        "type": "object"
-      },
-      "gabby__new_renderable__Paragraph": {
-        "additionalProperties": false,
-        "properties": {
-          "contents": {
-            "items": {
-              "anyOf": [
-                {
-                  "$ref": "#/components/schemas/Whitespace"
-                },
-                {
-                  "$ref": "#/components/schemas/Text"
-                },
-                {
-                  "$ref": "#/components/schemas/PassiveSequence"
-                },
-                {
-                  "$ref": "#/components/schemas/FreeTextInput"
-                },
-                {
-                  "$ref": "#/components/schemas/MultipleChoicesInput"
-                },
-                {
-                  "$ref": "#/components/schemas/SelectableInput"
-                },
-                {
-                  "$ref": "#/components/schemas/AnySequence"
-                }
-              ]
-            },
-            "title": "Contents",
-            "type": "array"
-          }
-        },
-        "required": [
-          "contents"
-        ],
-        "title": "Paragraph",
-        "type": "object"
-      },
-      "gabby__new_renderable__Section": {
-        "additionalProperties": false,
-        "properties": {
-          "paragraphs": {
-            "items": {
-              "$ref": "#/components/schemas/gabby__new_renderable__Paragraph"
-            },
-            "title": "Paragraphs",
-            "type": "array"
-          }
-        },
-        "required": [
-          "paragraphs"
-        ],
-        "title": "Section",
-        "type": "object"
-      },
-      "gabby__renderable__Exercise": {
-        "additionalProperties": false,
-        "properties": {
-          "number": {
-            "title": "Number",
-            "type": "string"
-          },
-          "pagelets": {
-            "items": {
-              "$ref": "#/components/schemas/gabby__renderable__Pagelet"
-            },
-            "title": "Pagelets",
-            "type": "array"
-          },
-          "textbook_page": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Textbook Page"
-          }
-        },
-        "required": [
-          "number",
-          "textbook_page",
-          "pagelets"
-        ],
-        "title": "Exercise",
-        "type": "object"
-      },
-      "gabby__renderable__Pagelet": {
-        "additionalProperties": false,
-        "properties": {
-          "instructions": {
-            "$ref": "#/components/schemas/gabby__renderable__Section"
-          },
-          "wording": {
-            "$ref": "#/components/schemas/gabby__renderable__Section"
-          }
-        },
-        "required": [
-          "instructions",
-          "wording"
-        ],
-        "title": "Pagelet",
-        "type": "object"
-      },
-      "gabby__renderable__Paragraph": {
-        "additionalProperties": false,
-        "properties": {
-          "tokens": {
-            "items": {
-              "anyOf": [
-                {
-                  "$ref": "#/components/schemas/_PlainText"
-                },
-                {
-                  "$ref": "#/components/schemas/_BoxedText"
-                },
-                {
-                  "$ref": "#/components/schemas/PassiveFormattedText"
-                },
-                {
-                  "$ref": "#/components/schemas/_SelectedText"
-                },
-                {
-                  "$ref": "#/components/schemas/_FreeTextInput"
-                },
-                {
-                  "$ref": "#/components/schemas/_MultipleChoicesInput"
-                },
-                {
-                  "$ref": "#/components/schemas/_Whitespace"
-                },
-                {
-                  "$ref": "#/components/schemas/Stack"
-                },
-                {
-                  "$ref": "#/components/schemas/_Selectable"
-                },
-                {
-                  "$ref": "#/components/schemas/_Boxed"
-                },
-                {
-                  "$ref": "#/components/schemas/_SelectableText"
-                }
-              ]
-            },
-            "title": "Tokens",
-            "type": "array"
-          }
-        },
-        "required": [
-          "tokens"
-        ],
-        "title": "Paragraph",
-        "type": "object"
-      },
-      "gabby__renderable__Section": {
-        "additionalProperties": false,
-        "properties": {
-          "paragraphs": {
-            "items": {
-              "$ref": "#/components/schemas/gabby__renderable__Paragraph"
-            },
-            "title": "Paragraphs",
-            "type": "array"
-          }
-        },
-        "required": [
-          "paragraphs"
-        ],
-        "title": "Section",
-        "type": "object"
-      },
       "parsedExerciseCreateInput": {
         "additionalProperties": false,
         "properties": {
@@ -2151,19 +1645,15 @@
           "newAdapted": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/gabby__new_renderable__Exercise"
+                "$ref": "#/components/schemas/Exercise"
               },
               {
                 "type": "null"
               }
             ]
-          },
-          "oldAdapted": {
-            "$ref": "#/components/schemas/gabby__renderable__Exercise"
           }
         },
         "required": [
-          "oldAdapted",
           "newAdapted"
         ],
         "title": "parsedExerciseOutputItemAttributes",

@@ -219,6 +219,15 @@ export interface components {
       /** Letters */
       letters: boolean;
     };
+    /** Exercise */
+    Exercise: {
+      /** Number */
+      number: string;
+      /** Pagelets */
+      pagelets: components["schemas"]["Pagelet"][];
+      /** Textbook Page */
+      textbook_page: number | null;
+    };
     /** FreeTextInput */
     FreeTextInput: {
       /**
@@ -243,16 +252,6 @@ export interface components {
     ItemLinks: {
       /** Self */
       self: string;
-    };
-    /** Line */
-    Line: {
-      /** Contents */
-      contents: (components["schemas"]["_PlainText"] | components["schemas"]["_BoxedText"] | components["schemas"]["PassiveFormattedText"] | components["schemas"]["_SelectedText"] | components["schemas"]["_FreeTextInput"] | components["schemas"]["_MultipleChoicesInput"] | components["schemas"]["_Whitespace"])[];
-      /**
-       * Type
-       * @constant
-       */
-      type: "line";
     };
     /** ManualItems */
     ManualItems: {
@@ -302,6 +301,11 @@ export interface components {
     PageMeta: {
       pagination: components["schemas"]["Pagination"];
     };
+    /** Pagelet */
+    Pagelet: {
+      instructions: components["schemas"]["Section"];
+      wording: components["schemas"]["Section"];
+    };
     /** Pagination */
     Pagination: {
       /** Count */
@@ -311,19 +315,10 @@ export interface components {
       /** Pages */
       pages: number;
     };
-    /** PassiveFormattedText */
-    PassiveFormattedText: {
-      /** Bold */
-      bold: boolean;
-      /** Italic */
-      italic: boolean;
-      /** Text */
-      text: string;
-      /**
-       * Type
-       * @constant
-       */
-      type: "passiveFormattedText";
+    /** Paragraph */
+    Paragraph: {
+      /** Contents */
+      contents: (components["schemas"]["Whitespace"] | components["schemas"]["Text"] | components["schemas"]["PassiveSequence"] | components["schemas"]["FreeTextInput"] | components["schemas"]["MultipleChoicesInput"] | components["schemas"]["SelectableInput"] | components["schemas"]["AnySequence"])[];
     };
     /** PassiveSequence */
     PassiveSequence: {
@@ -368,6 +363,11 @@ export interface components {
       /** Y */
       y: number;
     };
+    /** Section */
+    Section: {
+      /** Paragraphs */
+      paragraphs: components["schemas"]["Paragraph"][];
+    };
     /** Selectable */
     Selectable: {
       /** Colors */
@@ -397,16 +397,6 @@ export interface components {
        * @constant
        */
       kind: "sentences";
-    };
-    /** Stack */
-    Stack: {
-      /** Contents */
-      contents: (components["schemas"]["_PlainText"] | components["schemas"]["_BoxedText"] | components["schemas"]["PassiveFormattedText"] | components["schemas"]["_SelectedText"] | components["schemas"]["_FreeTextInput"] | components["schemas"]["_MultipleChoicesInput"] | components["schemas"]["_Whitespace"] | components["schemas"]["Line"])[];
-      /**
-       * Type
-       * @constant
-       */
-      type: "stack";
     };
     /** Text */
     Text: {
@@ -458,106 +448,6 @@ export interface components {
        * @constant
        */
       kind: "whitespace";
-    };
-    /** _Boxed */
-    _Boxed: {
-      /** Contents */
-      contents: (components["schemas"]["_PlainText"] | components["schemas"]["_BoxedText"] | components["schemas"]["PassiveFormattedText"] | components["schemas"]["_SelectedText"] | components["schemas"]["_FreeTextInput"] | components["schemas"]["_MultipleChoicesInput"] | components["schemas"]["_Whitespace"])[];
-      /**
-       * Type
-       * @constant
-       */
-      type: "boxed";
-    };
-    /** _BoxedText */
-    _BoxedText: {
-      /** Text */
-      text: string;
-      /**
-       * Type
-       * @constant
-       */
-      type: "boxedText";
-    };
-    /** _FreeTextInput */
-    _FreeTextInput: {
-      /**
-       * Type
-       * @constant
-       */
-      type: "freeTextInput";
-    };
-    /** _MultipleChoicesInput */
-    _MultipleChoicesInput: {
-      /** Choices */
-      choices: string[];
-      /** Show Arrow Before */
-      show_arrow_before: boolean;
-      /** Show Choices By Default */
-      show_choices_by_default: boolean;
-      /**
-       * Type
-       * @constant
-       */
-      type: "multipleChoicesInput";
-    };
-    /** _PlainText */
-    _PlainText: {
-      /** Text */
-      text: string;
-      /**
-       * Type
-       * @constant
-       */
-      type: "plainText";
-    };
-    /** _Selectable */
-    _Selectable: {
-      /** Boxed */
-      boxed: boolean;
-      /** Colors */
-      colors: string[];
-      /** Contents */
-      contents: (components["schemas"]["_PlainText"] | components["schemas"]["_BoxedText"] | components["schemas"]["PassiveFormattedText"] | components["schemas"]["_SelectedText"] | components["schemas"]["_FreeTextInput"] | components["schemas"]["_MultipleChoicesInput"] | components["schemas"]["_Whitespace"])[];
-      /**
-       * Type
-       * @constant
-       */
-      type: "selectable";
-    };
-    /** _SelectableText */
-    _SelectableText: {
-      /** Boxed */
-      boxed: boolean;
-      /** Colors */
-      colors: string[];
-      /** Text */
-      text: string;
-      /**
-       * Type
-       * @constant
-       */
-      type: "selectableText";
-    };
-    /** _SelectedText */
-    _SelectedText: {
-      /** Color */
-      color: string;
-      /** Text */
-      text: string;
-      /**
-       * Type
-       * @constant
-       */
-      type: "selectedText";
-    };
-    /** _Whitespace */
-    _Whitespace: {
-      /**
-       * Type
-       * @constant
-       */
-      type: "whitespace";
     };
     /** exerciseCreateInput */
     exerciseCreateInput: {
@@ -806,54 +696,6 @@ export interface components {
        */
       type: "user";
     };
-    /** Exercise */
-    gabby__new_renderable__Exercise: {
-      /** Number */
-      number: string;
-      /** Pagelets */
-      pagelets: components["schemas"]["gabby__new_renderable__Pagelet"][];
-      /** Textbook Page */
-      textbook_page: number | null;
-    };
-    /** Pagelet */
-    gabby__new_renderable__Pagelet: {
-      instructions: components["schemas"]["gabby__new_renderable__Section"];
-      wording: components["schemas"]["gabby__new_renderable__Section"];
-    };
-    /** Paragraph */
-    gabby__new_renderable__Paragraph: {
-      /** Contents */
-      contents: (components["schemas"]["Whitespace"] | components["schemas"]["Text"] | components["schemas"]["PassiveSequence"] | components["schemas"]["FreeTextInput"] | components["schemas"]["MultipleChoicesInput"] | components["schemas"]["SelectableInput"] | components["schemas"]["AnySequence"])[];
-    };
-    /** Section */
-    gabby__new_renderable__Section: {
-      /** Paragraphs */
-      paragraphs: components["schemas"]["gabby__new_renderable__Paragraph"][];
-    };
-    /** Exercise */
-    gabby__renderable__Exercise: {
-      /** Number */
-      number: string;
-      /** Pagelets */
-      pagelets: components["schemas"]["gabby__renderable__Pagelet"][];
-      /** Textbook Page */
-      textbook_page: number | null;
-    };
-    /** Pagelet */
-    gabby__renderable__Pagelet: {
-      instructions: components["schemas"]["gabby__renderable__Section"];
-      wording: components["schemas"]["gabby__renderable__Section"];
-    };
-    /** Paragraph */
-    gabby__renderable__Paragraph: {
-      /** Tokens */
-      tokens: (components["schemas"]["_PlainText"] | components["schemas"]["_BoxedText"] | components["schemas"]["PassiveFormattedText"] | components["schemas"]["_SelectedText"] | components["schemas"]["_FreeTextInput"] | components["schemas"]["_MultipleChoicesInput"] | components["schemas"]["_Whitespace"] | components["schemas"]["Stack"] | components["schemas"]["_Selectable"] | components["schemas"]["_Boxed"] | components["schemas"]["_SelectableText"])[];
-    };
-    /** Section */
-    gabby__renderable__Section: {
-      /** Paragraphs */
-      paragraphs: components["schemas"]["gabby__renderable__Paragraph"][];
-    };
     /** parsedExerciseCreateInput */
     parsedExerciseCreateInput: {
       data: components["schemas"]["parsedExerciseCreateInputData"];
@@ -903,8 +745,7 @@ export interface components {
     };
     /** parsedExerciseOutputItemAttributes */
     parsedExerciseOutputItemAttributes: {
-      newAdapted: components["schemas"]["gabby__new_renderable__Exercise"] | null;
-      oldAdapted: components["schemas"]["gabby__renderable__Exercise"];
+      newAdapted: components["schemas"]["Exercise"] | null;
     };
     /** pdfFileCreateInput */
     pdfFileCreateInput: {
